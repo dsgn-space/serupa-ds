@@ -19,10 +19,10 @@ type Story = StoryObj<typeof meta>;
 
 // A fixed moment, so the times read the same in every picture.
 const at = (min: number) => new Date(Date.UTC(2026, 9, 24, 9, 0) + min * 60_000);
-const Frame = ({ children }: { children: React.ReactNode }) => <div className="flex flex-col border rounded-lg" style={{ height: 460, maxWidth: 520 }}>{children}</div>;
+const Frame = ({ children }: { children: React.ReactNode }) => <div className="flex flex-col border border-border rounded-lg" style={{ height: 460, maxWidth: 520 }}>{children}</div>;
 // The support agent follows Storybook's Content menu (a long name in the worst case).
 const Conversation = (props: { sending?: boolean; failed?: boolean }) => { const name = useName('Rina Kusuma'), Rina = <Avatar size="sm" name={name} />; return <>
-  <ChatDivider date={at(0)}>24 Oct 2026</ChatDivider>
+  <ChatDivider date={at(0)} />
   <ChatMessage author={name} avatar={Rina} time={at(0)}>Hi! How can I help you today?</ChatMessage>
   <ChatMessage own time={at(1)}>My invoice for March shows the wrong address.</ChatMessage>
   <ChatMessage own hideAuthor attachments={<Attachment name="Invoice March 2026.pdf" bytes={1_482_000} href="#invoice" />}>Here it is.</ChatMessage>
@@ -174,9 +174,9 @@ const Rina = <Avatar size="sm" name="Rina Kusuma" />;
 export const DoDateDividers: Story = {
   name: 'Do: mark where the day changes',
   render: (args) => <Frame><Chat {...args} className="flex-auto">
-    <ChatDivider date={at(-1440)}>23 Oct 2026</ChatDivider>
+    <ChatDivider date={at(-1440)} />
     <ChatMessage own time={at(-1440)}>Is the March invoice ready?</ChatMessage>
-    <ChatDivider date={at(0)}>24 Oct 2026</ChatDivider>
+    <ChatDivider date={at(0)} />
     <ChatMessage author="Rina Kusuma" avatar={Rina} time={at(0)}>Yes, it's on its way to your inbox.</ChatMessage>
   </Chat></Frame>,
 };

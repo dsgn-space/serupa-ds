@@ -393,4 +393,5 @@ export const labels: SerupaLabels = {
   transferEmpty: '无',
   transferMoved: (items, list) => '已将' + items + '移到' + list + '。',
   fieldListLimit: (max) => '已达上限：' + max + '。',
+  tabCloseHint: '按 Delete 键关闭。',
 };

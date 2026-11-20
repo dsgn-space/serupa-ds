@@ -394,4 +394,5 @@ export const labels: SerupaLabels = {
   transferEmpty: 'Inga',
   transferMoved: (items, list) => items + ' flyttades till ' + list + '.',
   fieldListLimit: (max) => 'Gränsen är nådd: ' + max + '.',
+  tabCloseHint: 'Tryck på Delete för att stänga.',
 };

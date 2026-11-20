@@ -19,7 +19,7 @@ export interface MaskedValueProps extends Omit<React.HTMLAttributes<HTMLSpanElem
   end?: number | undefined;
   /** How many characters to keep at the start, such as an email's first letter or a key's prefix. Default: 0. */
   start?: number | undefined;
-  /** A Show button after it, for the person the value belongs to. Pressed, it shows the whole value; it hides again
+  /** A Show button before it, for the person the value belongs to. Pressed, it shows the whole value; it hides again
    *  when they leave the page (another tab, the app in the background). Default: false. */
   revealable?: boolean | undefined;
   /** Whether the whole value shows (controlled). Use with onRevealedChange. */
@@ -56,11 +56,14 @@ export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValu
   const said = kept ? sds.labels.maskedEnding(props.label, kept) : sds.labels.maskedHidden(props.label);
   return (
     <span {...rest} ref={ref} className={cn('dk-masked-value', shown && 'dk-masked-value--revealed', props.className)} data-component="masked-value">
+      {/* Show comes first, so it stays where it was as the value appears and a second press hides it again. After the
+          value it moved as far as the value grew; the value's width isn't kept free while masked, as that would give
+          the secret's length away. */}
+      {props.revealable ? <IconButton className="dk-masked-value__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={sds.labels.showValue(props.label)} hideTitle
+        size="sm" variant="ghost" aria-pressed={shown} onClick={() => set.current?.(!shown)} /> : null}
       {shown
         ? <span className="dk-masked-value__text">{props.value}</span>
         : <><span className="dk-masked-value__text" aria-hidden>{masked}</span><span className="dk-visually-hidden">{said}</span></>}
-      {props.revealable ? <IconButton className="dk-masked-value__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={sds.labels.showValue(props.label)} hideTitle
-        size="sm" variant="ghost" aria-pressed={shown} onClick={() => set.current?.(!shown)} /> : null}
     </span>
   );
 });

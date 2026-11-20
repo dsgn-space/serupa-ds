@@ -10,6 +10,10 @@ import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { activeIn } from '../../internal/root';
 import { useTabRow } from './tabRow';
 import { useControllable } from '../../internal/controllable';
+import { useSettings } from '../../internal/provider';
+import { Icon } from '../Icon/Icon';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -30,7 +34,7 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'o
   orientation?: 'horizontal' | 'vertical' | undefined;
 }
 
-interface Ctx { base: string; value: string | null; select: (v: string) => void; manual: boolean; vertical: boolean; panels: Record<string, number>; register: (v: string, d: number) => void; stop: string | null; before: { current: (() => void) | null }; keyed: boolean }
+interface Ctx { closed: { current: string | null }; size: 'sm' | 'md' | 'lg'; base: string; value: string | null; select: (v: string) => void; manual: boolean; vertical: boolean; panels: Record<string, number>; register: (v: string, d: number) => void; stop: string | null; before: { current: (() => void) | null }; keyed: boolean }
 const TabsContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 const useTabs = (who: string): Ctx => {
   const c = React.useContext(TabsContext);
@@ -95,7 +99,10 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
   // focus, so its tabindex 0 left the list out of the Tab order: the first shown enabled tab takes the stop (GR67).
   const [hiddenStop, setHiddenStop] = React.useState<string | null>(null);
   const tabStop = stop != null ? stop : hiddenStop;
-  const ctx = React.useMemo(() => ({ base, value, select, manual: props.activation === 'manual', vertical, panels, register, stop: tabStop, before, keyed }), [base, value, select, props.activation, vertical, panels, register, tabStop, keyed]);
+  // The tab a Delete key or a × closed while it had focus, by value, and the tab next to it: once the closed tab is
+  // gone, focus goes there (the selected tab's own removal above hands focus on too).
+  const closed = React.useRef<string | null>(null);
+  const ctx = React.useMemo(() => ({ closed, size, base, value, select, manual: props.activation === 'manual', vertical, panels, register, stop: tabStop, before, keyed }), [size, base, value, select, props.activation, vertical, panels, register, tabStop, keyed]);
   // After each render: uncontrolled with no defaultValue, and the tabs out of firstTab's sight, the first enabled tab.
   // When the selected tab is removed (a closable tab), the nearest enabled one: the next, or else the previous. So a
   // tab is always selected and the tab list stays in the Tab order. Controlled Tabs leave it to you, with a warning.
@@ -109,6 +116,15 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     const all = tabs.map((t) => t.dataset.value as string), enabled = tabs.filter((t) => !t.hasAttribute('disabled')).map((t) => t.dataset.value as string);
     const before = order.current;
     order.current = all;
+    const gone = closed.current;
+    if (gone != null && !all.includes(gone)) {
+      closed.current = null;
+      const at = before.indexOf(gone), active = activeIn(self.current);
+      const near = before.slice(at + 1).find((v) => enabled.includes(v)) ?? before.slice(0, at).reverse().find((v) => enabled.includes(v));
+      const t = near != null && near !== value ? tabs.find((x) => x.dataset.value === near) : undefined;
+      // Only when focus was lost with the tab: a selected tab's removal below hands focus to the newly selected one.
+      if (t && value != null && all.includes(value) && focusedIn.current && (!active || active === document.body || !active.isConnected)) t.focus();
+    }
     const matched = value != null && all.includes(value);
     setStop(matched ? null : enabled[0] ?? null);
     const first = enabled[0];
@@ -157,16 +173,32 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
 
 /* TabList: the row (or column) of tabs. When the tabs don't fit, it scrolls with no scrollbar; the edge with more
    tabs past it fades out, so it's plain there's more, and the selected tab is scrolled into view whenever it changes. */
-export type TabListProps = React.HTMLAttributes<HTMLDivElement>;
+export type TabListProps = React.HTMLAttributes<HTMLDivElement> & ({
+  /** Shows a + button after the tabs that calls this, for tabs people open (a new document, a new query). Select
+   *  the new tab in it, and focus goes with the selection. Needs addLabel. */
+  onAdd: () => void;
+  /** The + button's words, shown beside the +: "New query". */
+  addLabel: string;
+} | { onAdd?: undefined; addLabel?: undefined });
 
 /** The row of tabs. Give it an aria-label when the page doesn't already say what the tabs are for. */
 export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('TabList', function TabList(props, ref) {
   const ctx = useTabs('TabList');
+  const { onAdd, addLabel, ...own } = props;
   const [list, fade, place] = useTabRow<HTMLDivElement>('[role="tab"]', '[role="tab"][aria-selected="true"]', ctx.vertical, ctx.value);
   // every render: place reads ctx and the list as they are now; it only swaps a function, so it costs nothing.
   useIsoLayoutEffect(() => { ctx.before.current = () => place(true); return () => { ctx.before.current = null; }; });
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.onKeyDown) props.onKeyDown(e);
+    // Delete closes the focused tab, when it can be closed (its × is for the pointer, and hidden from screen readers).
+    if (!e.defaultPrevented && e.key === 'Delete' && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      const tab = activeIn(e.currentTarget) as HTMLElement | null;
+      if (tab && tab.getAttribute('role') === 'tab' && tab.hasAttribute('data-closable') && !tab.hasAttribute('disabled')) {
+        e.preventDefault();
+        tab.dispatchEvent(new CustomEvent('dk-tab-close'));
+        return;
+      }
+    }
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     // A tab hidden by CSS or the hidden attribute can't take focus: the keys skip it rather than select it out of
@@ -188,8 +220,11 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('
     if (!ctx.manual && tab.dataset.value != null) ctx.select(tab.dataset.value);
   };
   const mergedRef2 = useMergedRef(ref, (n) => { list.current = n; });
-  return <div {...props} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
+  const tablist = <div {...own} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
     className={cn('dk-tabs__list', props.className)} data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined} onKeyDown={onKeyDown} />;
+  // The + sits beside the tab list, not in it: a tablist holds only tabs. It's drawn as a tab, with its words shown, so
+  // it needs no tooltip to say what it adds.
+  return onAdd ? <div className="dk-tabs__bar">{tablist}<button type="button" className="dk-tabs__tab dk-tabs__add" onClick={onAdd}><span className="dk-tabs__icon" aria-hidden="true"><Icon icon={icons.Add} /></span><span className="dk-tabs__label">{addLabel}</span></button></div> : tablist;
 });
 
 export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
@@ -197,20 +232,48 @@ export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
   value: string;
   /** An icon before the label: an icon name or any element. */
   icon?: IconSource | undefined;
+  /** Makes the tab closable: a × at its end for the pointer, and the Delete key while it has focus, both call this.
+   *  Remove the tab in it; when it was selected, the tab after it (or before) is selected and takes focus. */
+  onClose?: (() => void) | undefined;
 }
 
 /** One tab: a button that selects its panel. */
 export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>('Tab', function Tab(props, ref) {
   const ctx = useTabs('Tab');
-  const rest = omit(props, { value: 1, icon: 1, className: 1, children: 1 });
+  const rest = omit(props, { value: 1, icon: 1, className: 1, children: 1, onClose: 1 });
+  const L = useSettings(words).labels;
+  const own = React.useRef<HTMLButtonElement | null>(null);
+  const close = React.useRef(props.onClose); close.current = props.onClose;
+  const closes = !!props.onClose;
+  const closed = ctx.closed, value = props.value;
+  const shut = React.useCallback(() => { closed.current = value; if (close.current) close.current(); }, [closed, value]);
+  // TabList's Delete key reaches the focused tab through this event, so the tab's own onClose runs.
+  React.useEffect(() => {
+    const el = own.current;
+    if (!el || !closes) return;
+    el.addEventListener('dk-tab-close', shut);
+    return () => el.removeEventListener('dk-tab-close', shut);
+  }, [closes, shut]);
+  const hintId = closes ? ctx.base + '-close-' + safe(props.value) : undefined;
+  const refs = useMergedRef(ref, (n) => { own.current = n; });
   const selected = ctx.value === props.value;
   const id = ctx.base + '-tab-' + safe(props.value), panel = ctx.base + '-panel-' + safe(props.value);
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) ctx.select(props.value); };
   return (
-    <button {...rest} ref={ref} type="button" role="tab" id={id} aria-controls={ctx.panels[props.value] ? panel : undefined} aria-selected={selected} data-instant={selected && ctx.keyed ? '' : undefined} tabIndex={selected || ctx.stop === props.value ? 0 : -1}
+    <button {...rest} ref={refs} type="button" role="tab" id={id} data-closable={closes ? '' : undefined} aria-keyshortcuts={closes ? 'Delete' : undefined} aria-describedby={cn(hintId, props['aria-describedby']) || undefined} aria-controls={ctx.panels[props.value] ? panel : undefined} aria-selected={selected} data-instant={selected && ctx.keyed ? '' : undefined} tabIndex={selected || ctx.stop === props.value ? 0 : -1}
       data-value={props.value} data-state={selected ? 'active' : 'inactive'} className={cn('dk-tabs__tab', props.className)} onClick={onClick}>
       {props.icon != null ? <span className="dk-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
       <span className="dk-tabs__label">{props.children}</span>
+      {closes ? (
+        // A × inside the tab, for the pointer: a button can't hold another button, and the keyboard closes with Delete
+        // (said in the tab's description), so it's a hidden span that takes the press and leaves the tab unselected.
+        <span className="dk-tabs__close" aria-hidden="true" data-closes=""
+          onPointerDown={(e) => { e.preventDefault(); }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); shut(); }}>
+          <Icon icon={icons.Close} />
+        </span>
+      ) : null}
+      {closes ? <span className="dk-tabs__close-hint" id={hintId} hidden>{L.tabCloseHint}</span> : null}
     </button>
   );
 });

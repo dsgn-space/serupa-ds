@@ -62,7 +62,7 @@
 .dk-radio__input:disabled { --dk-radio-bd: var(--radio-border-disabled, var(--disabled-border)); --dk-radio-fill: var(--radio-fill-disabled, var(--disabled-surface)); }
 .dk-radio__input:disabled:checked { border-color: var(--radio-border-disabled, var(--disabled-border)); }
 .dk-radio__input:disabled + .dk-radio__dot { background: var(--radio-text-disabled, var(--disabled-text)); }
-.dk-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--surface-muted)); }
+.dk-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--field-readonly)); }   /* a disabled field's fill: surface-muted is a recess, a black hole in dark */
 /* Card: the radio, label and description in a bordered card, pressed as a whole, a 2px primary border once checked
    (drawn inside, so nothing moves; the dot says it too, so it isn't colour alone), the focus ring around the card. In a group the cards
    fill the column, or share a wrapping row. */

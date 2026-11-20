@@ -393,4 +393,5 @@ export const labels: SerupaLabels = {
   transferEmpty: 'कोई नहीं',
   transferMoved: (items, list) => items + ' को ' + list + ' में ले जाया गया।',
   fieldListLimit: (max) => 'सीमा पूरी हुई: ' + max + '।',
+  tabCloseHint: 'बंद करने के लिए Delete दबाएँ।',
 };

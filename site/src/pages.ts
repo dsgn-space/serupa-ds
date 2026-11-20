@@ -2,6 +2,7 @@
 import type * as React from 'react';
 import list from 'virtual:site-pages';
 import propsOf from 'virtual:site-props';
+import SECTIONS from './sections.json';
 
 export interface Page {
   /** The .mdx file, from the repository's root. */
@@ -70,19 +71,18 @@ export interface NavSection {
 
 const START = ['Introduction', 'Getting started', 'Versioning and tools', 'Upgrading', 'Changelog', 'Accessibility statement'];
 const components = inSection('Components');
-export const sections: NavSection[] = [
-  { id: 'start', label: 'Get started', path: '/getting-started', groups: [{ title: '', pages: ordered(pages.filter((p) => START.includes(p.title)), START) }] },
-  { id: 'foundations', label: 'Foundations', path: '/foundations', lead: 'The decisions every component is built from: color, type, space, shape, depth and motion, each one a design token.',
-    groups: [{ title: '', pages: ordered(inSection('Foundations'), FOUNDATIONS) }] },
-  { id: 'components', label: 'Components', path: '/components', lead: `${components.filter((p) => p.component).length} accessible React components, each with its states, props, tokens and a usage guide.`,
-    groups: [...new Set(components.map((p) => p.group))].sort().map((g) => ({ title: g, pages: components.filter((p) => p.group === g).sort(az) })) },
-  { id: 'patterns', label: 'Patterns', path: '/patterns', lead: 'Whole screens and flows built from the components, ready to copy: sign-in, checkout, settings, dashboards.',
-    groups: [{ title: '', pages: ordered(inSection('Patterns'), ['Introduction']) }] },
-  { id: 'blocks', label: 'Blocks', path: '/blocks', lead: 'Sections of a page, bigger than a component and smaller than a screen: a pricing table, a page header, an FAQ.',
-    groups: [{ title: '', pages: ordered(inSection('Blocks'), ['Introduction']) }] },
-  { id: 'guides', label: 'Guides', path: '/guides', lead: 'How the components work together for the jobs every app has: forms, feedback, loading, destructive actions.',
-    groups: [{ title: '', pages: inSection('Guides').sort(az) }] },
-];
+// The sections' names, addresses and leads are in sections.json, which the build reads too for each index page's
+// description (tools/site/head.mjs).
+const lead = (id: string) => SECTIONS.find((s) => s.id === id)?.lead?.replace('{count}', String(components.filter((p) => p.component).length));
+const GROUPS: Record<string, NavGroup[]> = {
+  start: [{ title: '', pages: ordered(pages.filter((p) => START.includes(p.title)), START) }],
+  foundations: [{ title: '', pages: ordered(inSection('Foundations'), FOUNDATIONS) }],
+  components: [...new Set(components.map((p) => p.group))].sort().map((g) => ({ title: g, pages: components.filter((p) => p.group === g).sort(az) })),
+  patterns: [{ title: '', pages: ordered(inSection('Patterns'), ['Introduction']) }],
+  blocks: [{ title: '', pages: ordered(inSection('Blocks'), ['Introduction']) }],
+  guides: [{ title: '', pages: inSection('Guides').sort(az) }],
+};
+export const sections: NavSection[] = SECTIONS.map((s) => ({ id: s.id, label: s.label, path: s.path, lead: lead(s.id), groups: GROUPS[s.id] ?? [] }));
 /** The section a path belongs to: a page's, or a section's own index. */
 export const sectionOf = (path: string): NavSection | undefined => sections.find((s) => s.path === path || s.groups.some((g) => g.pages.some((p) => p.path === path)));
 /** A section's pages in reading order, for "previous" and "next". */

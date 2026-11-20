@@ -122,12 +122,14 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
             <Card as="li" key={plan.id} padding="lg" variant={plan.recommended ? 'elevated' : 'outline'} aria-labelledby={`${uid}-${plan.id}-name`}
-              className={plan.recommended ? 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere border-primary' : 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere'}>
+              className={plan.recommended ? 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere border-primary' : 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere'}>
               <div className="flex flex-wrap items-center gap-2">
                 <Heading level={headingLevel} id={`${uid}-${plan.id}-name`}>{plan.name}</Heading>
                 {plan.recommended && <Badge tone="primary">{l.recommended}</Badge>}
               </div>
-              {plan.description && <p className="text-sm text-text-muted">{plan.description}</p>}
+              {/* Each card's five parts sit on the list's rows (subgrid), so the prices, the lists and the buttons line up across
+                 the cards when one description runs longer; a plan without one keeps its row, empty. */}
+              {plan.description ? <p className="text-sm text-text-muted">{plan.description}</p> : <div />}
               <p className="flex flex-wrap items-baseline gap-x-2">
                 <span className="text-3xl font-semibold">{money(perMonth)}</span>
                 <span className="text-sm text-text-muted">{l.perMonth}</span>
@@ -136,7 +138,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
               <ul role="list" aria-label={l.included(plan.name)} className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
                 {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" size="sm" className="shrink-0 text-success" />{f}</li>)}
               </ul>
-              <div className="mt-auto">
+              <div className="self-center">
                 {plan.current
                   ? <p className="text-sm font-semibold">{l.current}</p>
                   : <Button className="w-full" variant={plan.recommended ? 'primary' : 'secondary'} onClick={() => onChoose(plan.id, shown)}>{l.choose(plan.name)}</Button>}

@@ -9,7 +9,7 @@ import { MaskedValue, maskValue } from "@diki-stwn/serupa-ds";
 
 <MaskedValue value={card.number} label="Card number" />                      // •••• 1208
 <MaskedValue value={user.phone} label="Phone" end={3} />                     // •••• 402
-<MaskedValue value={key.secret} label="API key" start={8} end={0} revealable />  // sk_live_•••• and a Show button
+<MaskedValue value={key.secret} label="API key" start={8} end={0} revealable />  // a Show button, then sk_live_••••
 
 maskValue("4111111111111208")   // "•••• 1208", the same text outside React
 ```
@@ -29,8 +29,8 @@ maskValue("4111111111111208")   // "•••• 1208", the same text outside Re
 
 Drawn from the `Revealable` story.
 
-1. **Value** (`.dk-masked-value__text`): the kept characters after four bullets, or the whole value once shown. Hidden from screen readers while masked.
-2. **Show button** (`.dk-masked-value__toggle`): with `revealable`, an IconButton that shows and hides the value.
+1. **Show button** (`.dk-masked-value__toggle`): with `revealable`, an IconButton before the value that shows and hides it. It comes first so it stays put as the value appears.
+2. **Value** (`.dk-masked-value__text`): the kept characters after four bullets, or the whole value once shown. Hidden from screen readers while masked.
 
 ## Usage
 
@@ -60,7 +60,7 @@ Drawn from the `Revealable` story.
 | `label` | string | required | What it is, as a noun ("Card number"): read with the end kept, and names the Show button |
 | `end` | number | `4` | Characters kept at the end. `0` hides it all |
 | `start` | number | `0` | Characters kept at the start, such as an email's first letter or a key's prefix |
-| `revealable` | boolean | `false` | A Show button after it (`aria-pressed`); the value hides again when the page is left |
+| `revealable` | boolean | `false` | A Show button before it (`aria-pressed`); the value hides again when the page is left |
 | `revealed` | boolean | | Whether the whole value shows (controlled), with `revealable` |
 | `defaultRevealed` | boolean | `false` | Whether the whole value shows at first (uncontrolled), with `revealable` |
 | `onRevealedChange` | (revealed) => void | | Called when Show is pressed, or the value hides because the page was left |

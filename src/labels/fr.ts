@@ -399,4 +399,5 @@ export const labels: SerupaLabels = {
   transferEmpty: 'Aucun',
   transferMoved: (items, list) => items + ' déplacés vers ' + list + '.',
   fieldListLimit: (max) => 'Limite atteinte : ' + max + '.',
+  tabCloseHint: 'Appuyez sur Suppr pour fermer.',
 };

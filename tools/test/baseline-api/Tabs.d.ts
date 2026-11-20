@@ -1,4 +1,7 @@
 // exports: Tab, TabList, type TabListProps, TabPanel, type TabPanelProps, type TabProps, Tabs, type TabsProps, type TabsVariant
+interface TabsLabels {
+    tabCloseHint: string;
+}
 type TabsVariant = "line" | "pill";
 interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: string | undefined;
@@ -10,11 +13,18 @@ interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultV
     orientation?: "horizontal" | "vertical" | undefined;
 }
 declare const Tabs: React.ForwardRefExoticComponent<TabsProps & React.RefAttributes<HTMLDivElement>>;
-type TabListProps = React.HTMLAttributes<HTMLDivElement>;
+type TabListProps = React.HTMLAttributes<HTMLDivElement> & ({
+    onAdd: () => void;
+    addLabel: string;
+} | {
+    onAdd?: undefined;
+    addLabel?: undefined;
+});
 declare const TabList: React.ForwardRefExoticComponent<TabListProps & React.RefAttributes<HTMLDivElement>>;
 interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "value"> {
     value: string;
     icon?: IconSource | undefined;
+    onClose?: (() => void) | undefined;
 }
 declare const Tab: React.ForwardRefExoticComponent<TabProps & React.RefAttributes<HTMLButtonElement>>;
 interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {

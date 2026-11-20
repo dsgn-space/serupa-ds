@@ -394,4 +394,5 @@ export const labels: SerupaLabels = {
   transferEmpty: 'Tiada',
   transferMoved: (items, list) => items + ' dipindahkan ke ' + list + '.',
   fieldListLimit: (max) => 'Had dicapai: ' + max + '.',
+  tabCloseHint: 'Tekan Delete untuk menutup.',
 };

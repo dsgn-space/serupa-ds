@@ -16,21 +16,21 @@
 - definition: Email, hidden
 - term: Balance
 - definition:
-  - text: Balance, hidden
   - button "Show Balance"
+  - text: Balance, hidden
 
 # LongText
-- text: GB82WEST12345698765432GB82WEST12345698765432
 - button "Show Account number" [pressed]
+- text: GB82WEST12345698765432GB82WEST12345698765432
 
 # Playground
 - text: Card number ending in 1208
 
 # Revealable
-- text: API key, hidden
 - button "Show API key"
+- text: API key, hidden
 
 # Revealed
-- text: +62 812 3456 7402
 - button "Show Phone" [pressed]
+- text: +62 812 3456 7402
 

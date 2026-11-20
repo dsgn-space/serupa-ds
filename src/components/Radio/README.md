@@ -139,7 +139,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--radio-bg` | `field` | The circle while unchecked |
-| `--radio-bg-disabled` | `surface-muted` | The circle when disabled and unchecked |
+| `--radio-bg-disabled` | `field-readonly` | The circle when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
 | `--radio-bg-checked` | `primary` | Fill and border when checked |
 | `--radio-bg-checked-hover` | `primary-hover` | The same, on hover |
 | `--radio-border` | `field-border` | Border while unchecked |

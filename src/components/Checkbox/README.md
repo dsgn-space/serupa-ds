@@ -160,7 +160,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--checkbox-bg` | `field` | The box while unchecked |
-| `--checkbox-bg-disabled` | `surface-muted` | The box when disabled and unchecked |
+| `--checkbox-bg-disabled` | `field-readonly` | The box when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
 | `--checkbox-bg-checked` | `primary` | Fill and border when checked or indeterminate |
 | `--checkbox-bg-checked-hover` | `primary-hover` | The same, on hover |
 | `--checkbox-border` | `field-border` | Border while unchecked |
