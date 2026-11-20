@@ -5,7 +5,9 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-number-input--steppers { padding-inline-end: var(--number-input-stepper-padding, var(--spacing-1)); }
-.dk-number-input .dk-input__field { font-variant-numeric: tabular-nums; }
+/* The digits take the alignment of where the field sits: start in a form, end in an end-aligned table column, so the
+   hours typed in a timesheet line up with the totals under them. */
+.dk-number-input .dk-input__field { font-variant-numeric: tabular-nums; text-align: inherit; }
 .dk-number-input__steppers { display: inline-flex; align-items: center; gap: var(--number-input-stepper-gap, var(--spacing-0\.5)); flex-shrink: 0; }
 .dk-number-input__step {
   display: inline-flex; align-items: center; justify-content: center; padding: var(--number-input-stepper-padding, var(--spacing-1));

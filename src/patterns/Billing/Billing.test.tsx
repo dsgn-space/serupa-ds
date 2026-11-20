@@ -36,6 +36,14 @@ describe('Patterns/Billing', () => {
     expect(active().getAttribute('href')).toBe('#main');
   });
 
+  test('the invoices\' amounts end-align, as figures in every table do, and Download sits at the row\'s end', async () => {
+    const screen = await render(<Billing />);
+    const table = screen.getByRole('table');
+    const heads = table.getByRole('columnheader').elements();
+    const first = table.getByRole('row').elements()[1]!.querySelectorAll('td');
+    expect([heads[1], first[1], first[3]].map((c) => getComputedStyle(c!).textAlign)).toEqual(['end', 'end', 'end']);
+  });
+
   test('a failed payment says so at the top with Update card, and its invoice says so in words', async () => {
     const screen = await render(<Billing updateCardHref="#pay" invoices={[{ id: 'x', date: '2026-11-01', amount: 24, status: 'failed', href: '#x' }]} />);
     const alert = screen.getByRole('alert');

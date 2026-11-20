@@ -124,7 +124,7 @@ The box and the number use Input's tokens. These style the country part; each is
 | --- | --- | --- |
 | `--phone-input-dial` | `text` | The calling code (4.5:1 on the field). |
 | `--phone-input-chevron` | `text-muted` | The chevron (3:1 on the field). |
-| `--phone-input-divider` | `border` | The line between the country part and the number. |
+| `--phone-input-divider` | `field-border` | The line between the country part and the number: the field's own edge colour. |
 | `--phone-input-bg-hover` | `field-hover` | The country part's background on hover, as the other buttons inside fields. |
 | `--phone-input-bg-pressed` | `field-pressed` | The country picker's background while it's held down, one step past hover. |
 | `--phone-input-focus-ring` | `focus-ring` | The menu's keyboard focus ring. |
