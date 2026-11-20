@@ -13,7 +13,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 npm install github:dsgn-space/serupa-ds#v16.1.0
 ```
 
-Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
+Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
 
 ```js
 import '@diki-stwn/serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
@@ -35,7 +35,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 <html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 ```
 
-Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). A brand changes the accent color only; every corner, shadow, space and motion is the same in all of them. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
+Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
 One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`; its `size="sm"` (or `"lg"`) sets every form control's default size, so don't repeat `size` on each one. For router links, call `configure({ link: Link })` once at startup.
 
@@ -49,11 +49,12 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
    5. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
 3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary`, `on-primary`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For text in a status color, use the `*-text` alias, never the fill.
-4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa. `Icon` has Material Symbols, and the motion tokens and the components' own transitions cover animation.
+4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa.
 5. **Shared props.** `size` is `'sm' | 'md' | 'lg'`, at heights of 24, 32 and 44px. Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
 6. **Pick feedback by how long it stays.** To confirm that something worked ("Saved", "Invite sent"), call `toast("Saved")`, and render one `<Toaster />` near the app's root. It goes away on its own and screen readers hear it. Use an `Alert` for a message that must stay on the page until it's dealt with, and `SaveStatus` for autosave.
 7. **Words.** Every button starts with a verb that says what it does ("Save changes", "Send message"), never "OK", "Submit" or "Click here", and a dialog's title uses the same verb ("Delete project?" has a "Delete" button). Sentence case everywhere. No exclamation marks, emoji or "Oops". An error says what to do: "Enter your email", not "This field is required" or "Invalid input"; "We couldn't load your projects. Try again.", not "Something went wrong". An empty state says what goes here and offers to add the first one. The rest is in Content and voice: https://github.com/dsgn-space/serupa-ds/blob/main/docs/foundations.md#content-and-voice
 8. **In an existing app, change only what the task needs.** Leave the other code, its formatting and its names as they are, even a hand-built button or a raw color next to your change. Use Serupa for what you add, and end the answer by naming the parts that could move to Serupa rather than moving them.
+9. **Respect people's work.** Act at once and offer Undo with `toast.undo({ title, commit, onUndo })` rather than asking "Are you sure?"; confirm only what can't be undone. Progress and "Saved" show real work, never a timer. Ask only what the task needs. Leaving a flow keeps what was typed.
 
 ## Accessibility: what the app must do
 
