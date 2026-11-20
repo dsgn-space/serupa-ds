@@ -1256,10 +1256,10 @@ How values read on a screen: numbers, money, dates, values that are missing and 
 
 | Value | Write it | With |
 | --- | --- | --- |
-| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `Intl.DateTimeFormat` with `dateStyle: "medium"` and `useLocale()` |
-| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `dateStyle: "medium", timeStyle: "short"` |
-| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `timeZoneName: "short"` |
-| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `formatRange()` of `Intl.DateTimeFormat` |
+| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `FormattedDate`, `formatDate()` |
+| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `timeStyle="short"` |
+| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `options={{ timeZoneName: "short" }}` with the parts, or `timeStyle="long"` |
+| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `to` |
 | Something recent, where how long ago matters more than when | Words, then the date after a week: "3 minutes ago", "Yesterday", "24 Oct 2026" | `RelativeTime` |
 | Time left until a deadline | A count that runs down | `Countdown` |
 

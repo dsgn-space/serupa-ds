@@ -1,0 +1,61 @@
+# DateStyles
+- term: full
+- definition:
+  - time: Friday, November 20, 2026
+- term: long
+- definition:
+  - time: November 20, 2026
+- term: medium
+- definition:
+  - time: Nov 20, 2026
+- term: short
+- definition:
+  - time: 11/20/26
+
+# Locales
+- paragraph:
+  - text: Jatuh tempo
+  - time: 20 November 2026
+  - text: ·
+  - time: "20"
+  - text: –
+  - time: "22"
+  - text: Nov 2026
+- paragraph:
+  - time: الجمعة، ٢٠ نوفمبر ٢٠٢٦
+
+# LongTextNarrow
+- paragraph:
+  - text: Starts
+  - time: Wednesday, September 30, 2026 at 11:45:00 AM Argentina Standard Time
+
+# Parts
+- paragraph:
+  - time: November 2026
+  - text: ·
+  - time: Fri, Nov 20
+
+# Playground
+- time: Nov 20, 2026
+
+# Range
+- list:
+  - listitem:
+    - text: Nov
+    - time: "20"
+    - text: –
+    - time: "22"
+    - text: ", 2026"
+  - listitem:
+    - time: Nov 28
+    - text: –
+    - time: Dec 3
+    - text: ", 2026"
+  - listitem:
+    - time: December 30, 2026
+    - text: –
+    - time: January 2, 2027
+
+# WithTime
+- time: November 20, 2026 at 9:30 AM
+
