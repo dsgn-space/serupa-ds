@@ -83,7 +83,7 @@ Drawn from the `Alphanumeric` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the native `<input>`, so a `<label htmlFor>` works. |
-| `length` | number | `6` | How many characters, one box each. |
+| `length` | number | `6` | How many characters, one box each, up to 32. |
 | `value` | string | | Controlled. |
 | `defaultValue` | string | | Uncontrolled. |
 | `onValueChange` | `(value: string) => void` | | Called with the code as it changes. |
