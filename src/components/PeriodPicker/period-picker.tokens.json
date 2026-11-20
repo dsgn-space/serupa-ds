@@ -114,8 +114,8 @@
       },
       "period-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "A period under the pointer.",
+        "$value": "{color.secondary}",
+        "$description": "A period under the pointer: as Calendar's, a step lighter in dark (it was zinc-950, darker than the panel, while pressed is lighter).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--period-picker-period-bg-hover"
