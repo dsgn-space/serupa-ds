@@ -2,9 +2,11 @@
 // ignores them). The build (tools/site/vite.config.mjs) calls writeHostFiles after it writes index.html:
 // - a copy of index.html for every address (/components/button is components/button.html), each with its own title,
 //   description, canonical address and link-preview tags (tools/site/head.mjs), so a crawler or a chat app that
-//   reads the page without running it gets that page, not the front page's;
+//   reads the page without running it gets that page, not the front page's, with the page itself drawn in it
+//   (prerender.mjs) so it shows before the scripts run;
 // - 404.html, which the host sends with a 404 for an address the site has no page for: the site's own "no page here";
-// - _redirects, which serves /frame/<story> (one story drawn alone for a frame on the site's own pages) from index.html;
+// - _redirects, which serves /frame/<story> (one story drawn alone for a frame on the site's own pages) from frame.html,
+//   index.html with nothing drawn in it;
 // - _headers: hashed assets cached for a year, and the security headers, the Content-Security-Policy with the hash of
 //   each inline script (theme.js, which sets the theme before the first paint);
 // - sitemap.xml and robots.txt. The sitemap, the canonical addresses and the preview image need the site's own
@@ -43,16 +45,17 @@ export const inlineScripts = (html) => [...html.matchAll(/<script(?![^>]*\bsrc=)
 /**
  * Writes the host's files beside the built index.html.
  * @param {string} outDir
- * @param {{ base?: string, siteUrl?: string, root?: string }} [options]
+ * @param {{ base?: string, siteUrl?: string, root?: string, draw?: (paths: string[]) => Promise<Map<string, string>> }} [options]
+ *   draw: each page drawn as HTML (prerender.mjs), put inside its <div id="root"> so it shows before the scripts run.
  */
-export function writeHostFiles(outDir, { base = '/', siteUrl = '', root } = {}) {
+export async function writeHostFiles(outDir, { base = '/', siteUrl = '', root, draw } = {}) {
   const url = siteUrl.replace(/\/+$/, '');
   const at = (p) => base.replace(/\/$/, '') + p;
   const absolute = (p) => url + at(p);
   const index = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
 
   /** index.html with this title and description, and the tags that go with them. */
-  const page = (title, description, p, { noindex = false } = {}) => {
+  const page = (title, description, p, { noindex = false, body = '' } = {}) => {
     const tags = [
       `<meta property="og:type" content="website" />`,
       `<meta property="og:site_name" content="Serupa" />`,
@@ -67,18 +70,24 @@ export function writeHostFiles(outDir, { base = '/', siteUrl = '', root } = {}) 
     return index
       .replace(/<title>[^<]*<\/title>/, () => `<title>${escape(title)}</title>`)
       .replace(/<meta name="description" content="[^"]*"\s*\/?>/, () => `<meta name="description" content="${escape(description)}" />`)
-      .replace('</head>', () => `    ${tags.join('\n    ')}\n  </head>`);
+      .replace('</head>', () => `    ${tags.join('\n    ')}\n  </head>`)
+      .replace('<div id="root"></div>', () => `<div id="root">${body}</div>`);
   };
 
   const routes = siteRoutes(root);
+  if (!index.includes('<div id="root"></div>')) throw new Error('index.html has no empty <div id="root"></div> to draw the pages into');
+  const drawn = draw ? await draw(routes.map((r) => r.path)) : new Map();
   for (const r of routes) {
     const file = r.path === '/' ? 'index.html' : r.path.slice(1) + '.html';
     fs.mkdirSync(path.dirname(path.join(outDir, file)), { recursive: true });
-    fs.writeFileSync(path.join(outDir, file), page(r.title, r.description, r.path));
+    fs.writeFileSync(path.join(outDir, file), page(r.title, r.description, r.path, { body: drawn.get(r.path) ?? '' }));
   }
   fs.writeFileSync(path.join(outDir, '404.html'), page('Page not found · Serupa', 'There’s no page at this address on the Serupa site.', '', { noindex: true }));
+  // A story drawn alone, for a frame on the site's own pages: the page with nothing drawn in it, as the front page
+  // (index.html) now has the front page in it.
+  fs.writeFileSync(path.join(outDir, 'frame.html'), page('Serupa', 'A story drawn alone.', '', { noindex: true }));
 
-  fs.writeFileSync(path.join(outDir, '_redirects'), `${at('/frame/*')} ${at('/')} 200\n`);
+  fs.writeFileSync(path.join(outDir, '_redirects'), `${at('/frame/*')} ${at('/frame.html')} 200\n`);
   fs.writeFileSync(path.join(outDir, '_headers'), [
     `${at('/assets/*')}`,
     '  Cache-Control: public, max-age=31536000, immutable',

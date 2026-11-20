@@ -14,6 +14,7 @@ import { Markdown } from './markdown';
 import since from '../../docs/since.json';
 import { sinceText, type Since } from '../../docs/since';
 import type { ComponentDoc, Page } from './pages';
+import { drawAlone, takingOver } from './drawn';
 import { StoryView, entryOf, parameter, sourceOf, type StoryEntry } from './stories';
 
 export { Markdown };
@@ -134,8 +135,19 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
         <p>This example opens over the page.</p>
         <Button variant="outline" leftIcon="play_arrow" onClick={() => setMode('run')}>Open the example<span className="sr-only">: {entry.name}</span></Button>
       </div>
-      : <StoryView key={mode} entry={entry} />}
+      : <Drawn key={mode}><StoryView entry={entry} /></Drawn>}
   </div>;
+}
+
+/** A story as the page first shows it. Drawn ahead of time (tools/site/prerender.mjs), it is its HTML on its own, so a
+ *  story that throws (an error boundary's example) leaves its frame empty rather than stopping the page. Taking the
+ *  page over, the browser keeps that HTML for the first render, then draws the story itself in its place: the page
+ *  doesn't move, and the story's own state starts in the browser. */
+function Drawn({ children }: { children: React.ReactNode }) {
+  const [live, setLive] = React.useState(() => typeof window !== 'undefined' && !takingOver());
+  React.useEffect(() => setLive(true), []);
+  if (live) return children;
+  return <div style={{ display: 'contents' }} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: typeof window === 'undefined' ? drawAlone(children) : '' }} />;
 }
 
 /** One story in its frame: the live example, and its code on request. */
