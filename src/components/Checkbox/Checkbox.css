@@ -92,6 +92,8 @@
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
 .dk-checkbox { position: relative; isolation: isolate; }
+/* Pressed twice (ticked and unticked), the label highlights none of its words: it is part of the control, as a Button's is. */
+.dk-checkbox { -webkit-user-select: none; user-select: none; }
 .dk-checkbox::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
 /* Touch (EQ1): 44px to press, as Apple and Material ask. In a group it stops halfway into the gap
    to a neighbour, so two never overlap. */

@@ -53,6 +53,17 @@ const setup = async (tref?: React.Ref<HTMLTableElement>) => {
 };
 
 describe('Table', () => {
+  test('a row header (scope="row") reads as its row\'s first cell: the row\'s text on the row\'s fill, shading with it on selection, not the column header\'s muted band', async () => {
+    const screen = await render(<Table caption="Rows"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Count</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableHeaderCell scope="row">Apples</TableHeaderCell><TableCell>3</TableCell></TableRow><TableRow selected><TableHeaderCell scope="row">Pears</TableHeaderCell><TableCell>4</TableCell></TableRow></TableBody></Table>);
+    const [apples, pears] = screen.getByRole('rowheader').elements();
+    const cell = screen.getByRole('cell').elements()[0]!;
+    expect([css(apples!).color, css(apples!).backgroundColor]).toEqual([css(cell).color, 'rgba(0, 0, 0, 0)']);
+    expect(css(screen.getByRole('columnheader').elements()[0]!).backgroundColor).toBe(color('var(--surface-muted)'));
+    expect(css(pears!.closest('tr')).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(css(pears!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
+
   test('a Table filling a Card with no padding takes the card\'s frame: no second border inside the card\'s, and corners that follow the card\'s curve', async () => {
     await render(<Card id="tcard" padding="none"><Table caption="Projects" hideCaption>{head()}{body()}</Table></Card>);
     const card = el('tcard'), frame = page.getByRole('table').element().parentElement!;

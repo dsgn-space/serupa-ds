@@ -44,7 +44,7 @@
   inline-size: var(--period-picker-panel-width, var(--spacing-64)); max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4));
   margin: var(--spacing-0); padding: var(--period-picker-panel-padding, var(--spacing-3));
   border: var(--border-width-1) solid var(--period-picker-panel-border, var(--border-overlay)); border-radius: var(--period-picker-panel-radius, var(--radius-surface));
-  background: var(--period-picker-panel-bg, var(--surface-overlay)); --surface-behind: var(--period-picker-panel-bg, var(--surface-overlay)); color: var(--period-picker-text, var(--text)); box-shadow: var(--period-picker-panel-shadow, var(--elevation-overlay));
+  background: var(--period-picker-panel-bg, var(--surface-overlay)); --surface-behind: var(--period-picker-panel-bg, var(--surface-overlay)); --border: var(--period-picker-panel-divider, var(--border-overlay)); color: var(--period-picker-text, var(--text)); box-shadow: var(--period-picker-panel-shadow, var(--elevation-overlay));
   cursor: default; transform-origin: var(--dk-layer-origin, top);
 }
 /* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when

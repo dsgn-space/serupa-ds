@@ -393,5 +393,6 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Hãy chọn mục cần bỏ trước',
   transferEmpty: 'Không có',
   transferMoved: (items, list) => 'Đã chuyển ' + items + ' sang ' + list + '.',
+  fieldListLimit: (max) => 'Đã đạt giới hạn: ' + max + '.',
   tabCloseHint: 'Nhấn Delete để đóng.',
 };

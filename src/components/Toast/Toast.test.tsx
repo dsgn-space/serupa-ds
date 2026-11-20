@@ -897,6 +897,18 @@ describe('Toast on a phone (GQ1)', () => {
     const text = [...b.querySelectorAll('*')].find((x) => x.textContent === label) as HTMLElement;
     expect([r.right <= q.right + 0.5, text.scrollWidth <= text.clientWidth + 1, r.height > 30, b.textContent]).toEqual([true, true, true, label]);
   });
+  test('at full width an action of more than a word or two goes under the text, so the text keeps its width; a short one stays beside it', async () => {
+    const desc = 'Download it within 7 days from Settings.';
+    await render(<Toaster style={{ '--toast-width': '384px' } as React.CSSProperties} />);
+    React.act(() => { toast({ title: 'Your export is ready', description: desc, action: { label: 'Download the export', onClick: () => {} } }); toast({ title: 'Archived', description: desc, action: { label: 'Undo', onClick: () => {} } }); });
+    await expect.poll(() => toasts().length).toBe(2);
+    await landed();
+    const probe = toasts().map((t) => {
+      const text = t.querySelector('p')!.parentElement!.getBoundingClientRect(), act = undoButton(t).getBoundingClientRect();
+      return [t.dataset.action ?? null, act.top >= text.bottom, Math.round(act.left - text.left) === 0];
+    });
+    expect(probe.sort()).toEqual([[null, false, false], ['below', true, true]].sort());
+  });
 });
 
 describe('Toaster on a short screen (GQ1b)', () => {

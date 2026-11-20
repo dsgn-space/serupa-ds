@@ -137,6 +137,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-group-label` | `text-muted` | A group's name over its options. |
 | `--select-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--select-picker-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
 
 **Sizing**
 

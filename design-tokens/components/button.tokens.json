@@ -124,8 +124,8 @@
       },
       "outline-border": {
         "$type": "color",
-        "$value": "{color.border}",
-        "$description": "Outline border.",
+        "$value": "{color.border-overlay}",
+        "$description": "Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-outline-border"

@@ -531,7 +531,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
-| 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
+| 0 · Page | The page itself; Navbar, Sidebar and tables on it | `surface-page` behind; `surface` for the bars and tables | `border` between regions | none |
 | 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border` | `shadow-md` |
@@ -1120,7 +1120,7 @@ Rules of thumb:
 - Carousels: `snap-x snap-mandatory` on the track and `snap-start` (or `snap-center`) on each slide; `scrollbar-none` only if there are other controls.
 - Scrollbars: `scrollbar-thin scrollbar-thumb-border-strong scrollbar-track-transparent` in dense panels; `scrollbar-gutter-stable` stops layouts from jumping when content starts to scroll.
 - `pointer-events-none` on decorative overlays and icons inside inputs; never on something that should be reachable by keyboard, since it doesn't stop focus.
-- `select-none` on drag handles and buttons, `select-all` on codes and IDs people copy.
+- `select-none` on drag handles and buttons, `select-all` on codes and IDs people copy. The components do the same: a double-click on a button, a menu item, a tag you pick, or the label of a checkbox, radio or switch highlights no words, while field labels, cells and other text stay selectable.
 - `touch-manipulation` on buttons removes the double-tap zoom delay; `touch-none` on canvases and sliders that handle gestures themselves.
 - Use `will-change-transform` only while an animation runs, then remove it.
 
