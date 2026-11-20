@@ -1,0 +1,57 @@
+/* ---------------------------------------------------------------
+   ImageCropper: a frame of the crop's shape, with the picture behind it filling it edge to edge, and a zoom row under
+   it (−, a small slider, +). A round crop dims the picture outside a circle and rings the circle in white. While the
+   picture is being dragged, thin white lines split the frame in thirds, for lining a face or a horizon up. Every
+   value reads one of its own tokens (image-cropper.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-image-cropper { display: flex; flex-direction: column; gap: var(--image-cropper-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); inline-size: var(--sizing-full); max-inline-size: var(--image-cropper-max-width, var(--container-xs)); }
+.dk-image-cropper__frame {
+  position: relative; overflow: hidden; aspect-ratio: var(--dk-image-cropper-aspect); inline-size: var(--sizing-full);
+  border-radius: var(--image-cropper-radius, var(--radius-control)); background: var(--image-cropper-bg, var(--surface-muted));
+  touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; isolation: isolate;
+}
+.dk-image-cropper__frame[data-dragging] { cursor: grabbing; }
+.dk-image-cropper__frame:not([data-state="ready"]), .dk-image-cropper--disabled .dk-image-cropper__frame { cursor: default; }
+.dk-image-cropper__frame:focus-visible { outline: var(--focus-ring-width) solid var(--image-cropper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-image-cropper__img { position: absolute; display: block; max-inline-size: none; pointer-events: none; -webkit-user-drag: none; }
+.dk-image-cropper__frame:not([data-state="ready"]) .dk-image-cropper__img { opacity: var(--opacity-0); }
+/* The frame's edge: a hairline over the picture so a pale photo doesn't melt into the page, as Image and Lightbox draw it. */
+.dk-image-cropper__frame::after {
+  content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
+  outline: var(--outline-width-1) solid var(--image-cropper-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
+}
+.dk-image-cropper__mask { position: absolute; inset: var(--spacing-0); pointer-events: none; }
+/* Round: everything outside the circle under the scrim (a spread shadow far past the frame, which clips it), and a ring on the circle. */
+.dk-image-cropper__frame[data-shape="round"][data-state="ready"] .dk-image-cropper__mask {
+  border-radius: var(--rounded-full);
+  box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--sizing-dvh) var(--image-cropper-scrim, var(--overlay));
+  outline: var(--outline-width-2) solid var(--image-cropper-guide, var(--white)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2));
+}
+/* The thirds: the box's own sides are the two upright lines, its ::before the two across. */
+.dk-image-cropper__grid, .dk-image-cropper__grid::before {
+  position: absolute; pointer-events: none; border: var(--spacing-0) solid var(--image-cropper-grid, var(--white));
+}
+.dk-image-cropper__grid {
+  inset-block: var(--spacing-0); inset-inline: var(--sizing-1-3); border-inline-width: var(--outline-width-1); opacity: var(--opacity-0);
+  transition: opacity var(--motion-exit-sm) var(--ease-exit);
+}
+.dk-image-cropper__grid::before {
+  content: ""; inset-block: var(--sizing-1-3); inset-inline: calc(var(--spacing-0) - var(--sizing-full)); border-block-width: var(--outline-width-1);
+}
+.dk-image-cropper__frame[data-dragging] .dk-image-cropper__grid { opacity: var(--image-cropper-grid-opacity, var(--opacity-60)); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
+.dk-image-cropper__fallback {
+  position: absolute; inset: var(--spacing-0); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2);
+  padding: var(--spacing-4); text-align: center; color: var(--image-cropper-fallback-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+}
+.dk-image-cropper__fallback .dk-icon { inline-size: var(--spacing-6); block-size: var(--spacing-6); }
+.dk-image-cropper__zoom { display: flex; align-items: center; gap: var(--image-cropper-zoom-gap, var(--spacing-1)); }
+.dk-image-cropper__slider { flex: auto; min-inline-size: var(--spacing-0); }
+.dk-image-cropper--disabled .dk-image-cropper__frame { opacity: var(--opacity-disabled); }
+@media (prefers-reduced-motion: reduce) { .dk-image-cropper__grid, .dk-image-cropper__frame[data-dragging] .dk-image-cropper__grid { transition: none; } }
+@media (forced-colors: active) {
+  .dk-image-cropper__frame::after { outline-color: CanvasText; }
+  .dk-image-cropper__frame[data-shape="round"][data-state="ready"] .dk-image-cropper__mask { outline-color: CanvasText; }
+  .dk-image-cropper__frame:focus-visible { outline-color: Highlight; }
+}
+}

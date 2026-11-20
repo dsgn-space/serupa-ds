@@ -170,6 +170,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **FieldList** (beta): Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. Also called: repeater, dynamic fields, form list.
 - **FileUpload**: A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. Also called: dropzone, file input, file uploader.
 - **FilterBar** (beta): The filters on a list or a table, as a row of chips. Also called: filters, filter chips, faceted search.
+- **ImageCropper** (beta): A picture in a frame of a fixed shape, which people move and zoom to choose the part to keep: a profile photo, a team logo, a cover. Also called: image crop, avatar editor, photo cropper.
 - **InlineEdit**: Text people can change where it is: a project name, a card title, a slug. Also called: click to edit, editable text.
 - **Input**: A single-line text field: a native `<input>` in a box that can hold icons. Also called: text input, text field.
 - **MentionInput** (beta): A multi-line text field where typing "@" opens a list of people to mention, at the caret. Also called: mentions, @-mentions, user tagging.
