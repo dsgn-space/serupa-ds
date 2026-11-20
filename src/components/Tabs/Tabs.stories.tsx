@@ -58,6 +58,26 @@ export const Overflow: Story = {
 };
 export const Vertical: Story = { args: { orientation: 'vertical' } };
 
+/** Closable: tabs people open and close, like queries. Each has a × (Delete from the keyboard) but the pinned Overview, and + opens a new one. */
+export const Closable: Story = {
+  render: function Render(args) {
+    const [tabs, setTabs] = React.useState(['Q3 revenue', 'Churn by plan', 'Signups this week']);
+    const [value, setValue] = React.useState('overview');
+    const next = React.useRef(1);
+    const close = (t: string) => { setTabs((all) => all.filter((x) => x !== t)); if (value === t) setValue('overview'); };
+    return (
+      <Tabs {...args} value={value} onValueChange={setValue}>
+        <TabList aria-label="Queries" addLabel="New query" onAdd={() => { const t = 'Untitled ' + next.current++; setTabs((all) => [...all, t]); setValue(t); }}>
+          <Tab value="overview">Overview</Tab>
+          {tabs.map((t) => <Tab key={t} value={t} onClose={() => close(t)}>{t}</Tab>)}
+        </TabList>
+        <TabPanel value="overview">Every saved query, by the last time it ran.</TabPanel>
+        {tabs.map((t) => <TabPanel key={t} value={t}>The results of {t}.</TabPanel>)}
+      </Tabs>
+    );
+  },
+};
+
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Do: a word or two per tab, so every tab is in view. */
 export const DoShortLabels: Story = {

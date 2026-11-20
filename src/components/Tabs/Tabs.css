@@ -93,6 +93,17 @@
 .dk-tabs--lg .dk-tabs__tab { height: var(--tabs-height-lg, var(--control-height-lg)); padding-inline: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-tabs--lg .dk-tabs__icon .dk-icon { font-size: var(--spacing-5); }
 .dk-tabs__icon { display: inline-flex; }
+/* A closable tab's ×: a 24px target at the tab's end (pulled into its padding), with a fill on hover. */
+.dk-tabs__close { display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); margin-inline-end: calc(var(--spacing-0) - var(--spacing-1\.5)); border-radius: var(--tabs-close-radius, var(--radius-inner)); color: inherit; cursor: var(--cursor-interactive); }
+.dk-tabs__close .dk-icon { font-size: var(--spacing-4); }
+@media (hover: hover) { .dk-tabs__close:hover { background: var(--tabs-close-bg-hover, var(--secondary)); color: var(--tabs-text-hover, var(--text)); } }
+.dk-tabs__tab:disabled .dk-tabs__close { cursor: var(--cursor-disabled); }
+/* The tab list and its + side by side: the list scrolls, the + stays. */
+.dk-tabs__bar { display: flex; align-items: center; gap: var(--tabs-gap, var(--spacing-1)); min-inline-size: var(--spacing-0); }
+.dk-tabs__bar > .dk-tabs__list { flex: auto; min-inline-size: var(--spacing-0); }
+.dk-tabs__add { flex: none; }
+.dk-tabs--line .dk-tabs__bar { align-items: stretch; border-bottom: var(--border-width-1) solid var(--tabs-border, var(--border)); }
+.dk-tabs--line .dk-tabs__bar > .dk-tabs__list { border-bottom: var(--spacing-0); }
 .dk-tabs__icon .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }
 .dk-tabs__tab:focus-visible { outline: var(--focus-ring-width) solid transparent; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */

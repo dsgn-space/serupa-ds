@@ -121,6 +121,16 @@
             "cssVar": "--tabs-text-disabled"
           }
         }
+      },
+      "close-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "A closable tab's × under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-close-bg-hover"
+          }
+        }
       }
     },
     "sizing": {
@@ -173,6 +183,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tabs-radius"
+          }
+        }
+      },
+      "close-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "The corners of a closable tab's ×.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-close-radius"
           }
         }
       }
