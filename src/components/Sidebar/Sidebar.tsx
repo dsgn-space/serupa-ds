@@ -15,6 +15,7 @@ import { useSettings } from '../../internal/provider';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import * as icons from '../../material/builtin';
 import { useControllable } from '../../internal/controllable';
+import { hideUntilFound } from '../../internal/untilFound';
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -211,7 +212,7 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   React.useEffect(function () {
     const el = nested.current;
     if (!el || !shut) return;
-    el.setAttribute('hidden', 'until-found');
+    hideUntilFound(el);
     const onMatch = function () { toggleRef.current(); };
     el.addEventListener('beforematch', onMatch);
     return function () { el.removeEventListener('beforematch', onMatch); };
