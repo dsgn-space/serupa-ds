@@ -16,7 +16,7 @@
   font-size: var(--text-sm); line-height: var(--text-sm--line-height); cursor: default; touch-action: manipulation;
 }
 .dk-tag-group__tag:has(.dk-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
-.dk-tag-group__tag[aria-selected] { cursor: var(--cursor-interactive); touch-action: manipulation; }
+.dk-tag-group__tag[aria-selected] { cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none; }   /* picked and dropped, no word highlights */
 .dk-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-tag-group__tag--selected {
   border-color: var(--tag-group-border-selected, var(--primary)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary));
