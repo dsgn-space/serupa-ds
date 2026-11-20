@@ -265,7 +265,7 @@ describe('CommandPalette', () => {
   });
 
   test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in every theme', async () => {
-    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0]!, shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
+    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0]!, shortcut: ['mod', 'shift', 'H'], description: 'Your projects' }, { ...COMMANDS[1]!, description: 'Profile and appearance' }, ...COMMANDS.slice(2)]} />);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -274,6 +274,7 @@ describe('CommandPalette', () => {
       check('field', field());
       check('heading', document.getElementById(document.querySelector('[role="group"]')!.getAttribute('aria-labelledby')!)!);
       check('row', options()[1]!);
+      check('description', document.getElementById(options()[1]!.getAttribute('aria-describedby')!)!);
       const act = document.querySelector('[role="option"][aria-selected="true"]')!;
       const actBg = css(act).backgroundColor;
       check('active', act, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
@@ -283,6 +284,17 @@ describe('CommandPalette', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
   });
+
+  test('a description is a muted line under the label, read after it, and found by what it says', async () => {
+    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[1]!, description: 'Profile, notifications and appearance' }, ...COMMANDS.filter((c) => c.id !== 'settings')]} />);
+    const row = options()[0]!;
+    const d = document.getElementById(row.getAttribute('aria-describedby')!)!;
+    expect([d.textContent, row.contains(d), options()[1]!.hasAttribute('aria-describedby')]).toEqual(['Profile, notifications and appearance', true, false]);
+    expect(parseFloat(css(d).fontSize)).toBeLessThan(parseFloat(css(row).fontSize));
+    await userEvent.type(field(), 'notif');
+    expect(labels()).toEqual(['SettingsProfile, notifications and appearance']);
+  });
+
   test('searching a server: onQueryChange gets what is typed (and "" when it opens again); filter={false} lists the commands as given; loading shows a row, marks the list busy and holds back "No matching commands"', async () => {
     const asked: string[] = [];
     const ALL = [{ id: 'a', label: 'Invoice 1042' }, { id: 'b', label: 'Refund 1042' }];

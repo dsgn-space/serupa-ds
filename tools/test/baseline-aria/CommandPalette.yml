@@ -8,7 +8,7 @@
       - text: Pages
       - option "Home" [selected]
       - option "Projects"
-      - option "Settings"
+      - option "Settings Profile, notifications and appearance"
     - group "Actions":
       - text: Actions
       - option "New project Control N"
@@ -103,7 +103,7 @@
       - text: Pages
       - option "Home" [selected]
       - option "Projects"
-      - option "Settings"
+      - option "Settings Profile, notifications and appearance"
     - group "Actions":
       - text: Actions
       - option "New project Control N"
@@ -121,7 +121,7 @@
       - text: Commands
       - option "Home" [selected]
       - option "Projects"
-      - option "Settings"
+      - option "Settings Profile, notifications and appearance"
       - option "New project Control N"
       - option "Invite people"
       - option "Switch to dark theme Control Shift L"

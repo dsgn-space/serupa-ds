@@ -6,7 +6,10 @@ name: Cross-browser
 # It also runs on demand from the Actions tab.
 on:
   schedule:
-    - cron: '0 3 * * *'
+    # GitHub starts a scheduled run hours late when it falls on the hour (cron '0 3' began near 11:00, during the
+    # working day, 17 to 20 Nov). An odd minute in the quiet evening hours (UTC) keeps it clear of pull requests
+    # even when it is late.
+    - cron: '41 19 * * *'
   workflow_dispatch:
 
 # Read the code; nothing here writes to the repository. The report job also writes one issue.

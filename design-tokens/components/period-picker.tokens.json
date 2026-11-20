@@ -114,8 +114,8 @@
       },
       "period-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "A period under the pointer.",
+        "$value": "{color.secondary}",
+        "$description": "A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--period-picker-period-bg-hover"

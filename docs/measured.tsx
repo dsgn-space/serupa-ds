@@ -192,7 +192,8 @@ const cell: React.CSSProperties = { borderBlockEnd: '1px solid var(--border)', p
 
 /** Every sample component measured in this browser, at the density of the section it sits in. */
 export function MeasuredStates() {
-  return <div data-measured style={{ overflowX: 'auto' }}>
+  // eslint-disable-next-line jsx-a11y-x/no-noninteractive-tabindex -- a region that scrolls sideways must take focus so a keyboard can scroll it (WCAG 2.1.1)
+  return <div data-measured role="region" aria-label="Measured components" tabIndex={0} style={{ overflowX: 'auto' }}>
     <table className="sb-unstyled" style={{ borderCollapse: 'collapse', inlineSize: '100%', fontSize: 13 }}>
       <caption style={{ textAlign: 'start', paddingBlockEnd: 8 }}>Measured at the default size, in this browser and theme</caption>
       <thead><tr>{['Component', 'As drawn', 'Height', 'Corner radius', 'Padding (start)', 'Text size / line', 'Focus ring'].map((h) => <th key={h} scope="col" style={{ ...cell, fontWeight: 600 }}>{h}</th>)}</tr></thead>
