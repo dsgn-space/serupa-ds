@@ -57,7 +57,7 @@ Drawn from the `Months` story.
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the icon in `text-muted` |
 | Placeholder | "Choose a month" (or `placeholder`) in the `placeholder` color |
-| Hover | `field-border-hover`; a period under the pointer is `surface-muted` |
+| Hover | `field-border-hover`; a period under the pointer is `secondary`, as in Calendar |
 | Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the popup is open; a period in the popup gets an outline |
 | Open | The popup under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
@@ -129,7 +129,7 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-focus-ring` | `focus-ring` | The focus ring, on the button and on a period. |
 | `--period-picker-panel-bg` | `surface-overlay` | The popup's background. |
 | `--period-picker-panel-border` | `border-overlay` | The popup's outline. |
-| `--period-picker-period-bg-hover` | `surface-muted` | A period under the pointer. |
+| `--period-picker-period-bg-hover` | `secondary` | A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed. |
 | `--period-picker-period-bg-pressed` | `pressed` | A period while pressed. |
 | `--period-picker-current` | `primary` | This month, quarter or year (4.5:1 on panel-bg). |
 | `--period-picker-bg-selected` | `primary` | The chosen period's fill. |

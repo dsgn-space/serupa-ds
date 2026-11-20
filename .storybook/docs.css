@@ -111,8 +111,9 @@ html, body { background-color: var(--surface-page); }
    pushing it wider. The props table leaves out its Control column (the story's Controls panel has them) and uses
    less padding. A wide screen keeps the tables as they were: breaking anywhere would narrow their columns there too. */
 @media (max-width: 639.98px) {
-  .sbdocs-content :not(pre) > code { white-space: normal; overflow-wrap: anywhere; }
-  .sbdocs-content :is(td, th) { overflow-wrap: anywhere; }
+  .sbdocs-content :not(pre) > code:not([role="region"] *) { white-space: normal; overflow-wrap: anywhere; }
+  /* Not a table that scrolls in its own frame (the contrast matrix, the token explorer): there a cell keeps its words. */
+  .sbdocs-content :is(td, th):not([role="region"] *) { overflow-wrap: anywhere; }
   .docblock-argstable :is(th, td):nth-child(4) { display: none; }
   .docblock-argstable :is(th, td) { padding-inline: 8px !important; }
   .docblock-argstable th { overflow-wrap: normal; }

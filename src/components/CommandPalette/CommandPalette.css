@@ -30,6 +30,9 @@
 .dk-command-palette__option--active .dk-command-palette__icon { color: inherit; }
 .dk-command-palette__option--active { --kbd-separator: currentColor; }   /* the shortcut's "+": muted, it is under 4.5:1 on the highlight */
 .dk-command-palette__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.dk-command-palette__text { display: flex; flex: auto; flex-direction: column; min-width: var(--spacing-0); }
+.dk-command-palette__description { font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--command-palette-muted, var(--text-muted)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-command-palette__option--active .dk-command-palette__description { color: inherit; }
 .dk-command-palette__keys { flex: none; margin-inline-start: auto; }
 .dk-command-palette__empty { margin: var(--spacing-0); padding: var(--spacing-6) var(--spacing-2); text-align: center; color: var(--command-palette-muted, var(--text-muted)); }
 /* Loading: the ring beside its words, centred as the empty text is; under rows already listed it takes less room. */
