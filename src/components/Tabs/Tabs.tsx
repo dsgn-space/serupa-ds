@@ -5,7 +5,7 @@ import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { named } from '../../internal/component';
 import { warnOnce } from '../../internal/warn';
-import { revealInvalid } from '../../internal/untilFound';
+import { hideUntilFound, revealInvalid } from '../../internal/untilFound';
 import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { activeIn } from '../../internal/root';
 import { useTabRow } from './tabRow';
@@ -318,7 +318,7 @@ function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<H
   // every render: the panel's tab can be enabled or disabled in any render of the tab list; nothing is measured.
   useIsoLayoutEffect(() => {
     const el = own.current, t = tabOf();
-    if (el && !selected && keep && t && !t.hasAttribute('disabled')) el.setAttribute('hidden', 'until-found');
+    if (el && !selected && keep && t && !t.hasAttribute('disabled')) hideUntilFound(el);
   });
   React.useEffect(() => {
     const el = own.current;

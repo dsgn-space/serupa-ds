@@ -5,7 +5,7 @@ A strip of bars, one a day, for uptime or a job's history: up, degraded, down or
 **Also called:** uptime bar, uptime tracker, status page bar.
 
 ```jsx
-const { StatusTracker } = window.Serupa;
+import { StatusTracker } from '@diki-stwn/serupa-ds';
 
 <StatusTracker label="API" days={[
   { date: "2026-11-04", state: "up" },

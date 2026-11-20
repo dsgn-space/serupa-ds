@@ -5,7 +5,7 @@ A heading, `h1` to `h6`, in the system's type. `level` sets the element, which i
 **Also called:** title, headline.
 
 ```jsx
-const { Heading } = window.Serupa;
+import { Heading } from '@diki-stwn/serupa-ds';
 
 <Heading level={1}>Projects</Heading>
 <Heading>Recent activity</Heading>                 {/* h2 */}

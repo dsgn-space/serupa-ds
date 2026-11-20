@@ -14,6 +14,7 @@ import { Features } from 'lightningcss';
 import { buildUtilities } from '../utilities/build.mjs';
 import { buildRegistry, components } from '../build/registry.mjs';
 import { sitePages } from './pages.mjs';
+import { describe, DEFAULT_DESCRIPTION } from './head.mjs';
 import { componentProps } from './props.mjs';
 import { siteFacts } from './facts.mjs';
 import { writeHostFiles } from './host.mjs';
@@ -41,7 +42,9 @@ function site() {
     name: 'serupa-site',
     resolveId: (id) => (id === PAGES || id === FACTS || id === PROPS || id.startsWith(PROPS + '/') ? '\0' + id : null),
     async load(id) {
-      if (id === '\0' + PAGES) return `export default ${js(sitePages(ROOT))};`;
+      // A page with no guide of its own (a pattern, a block, a foundation) shows on its index card what its <meta>
+      // description says, so every card in a grid has its line.
+      if (id === '\0' + PAGES) return `export default ${js(sitePages(ROOT).map((p) => ({ ...p, summary: p.summary || (describe(p, ROOT) === DEFAULT_DESCRIPTION ? '' : describe(p, ROOT)) })))};`;
       if (id === '\0' + FACTS) return `export default ${js(siteFacts(ROOT))};`;
       // One chunk per component, fetched with its page.
       if (id === '\0' + PROPS) return `export default {${components(ROOT).map((n) => `${js(n)}: () => import(${js(`${PROPS}/${n}`)})`).join(', ')}};`;

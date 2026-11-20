@@ -5,7 +5,7 @@ Triggers an action: submitting a form, opening a dialog, confirming or cancellin
 **Also called:** call to action, CTA.
 
 ```jsx
-const { Button, IconButton, buttonClass } = window.Serupa;
+import { Button, IconButton, buttonClass } from '@diki-stwn/serupa-ds';
 
 <Button>Save changes</Button>
 <Button variant="outline">Cancel</Button>

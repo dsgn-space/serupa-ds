@@ -5,7 +5,7 @@ A modal window over a dimmed page, for a task or a decision that needs attention
 **Also called:** modal, modal window, popup.
 
 ```jsx
-const { Dialog, Button, Input, Field } = window.Serupa;
+import { Dialog, Button, Input, Field } from '@diki-stwn/serupa-ds';
 
 const [open, setOpen] = React.useState(false);
 

@@ -5,7 +5,7 @@ A button that shows only an icon: a menu trigger, a close button, a toolbar acti
 **Also called:** icon-only button.
 
 ```jsx
-const { IconButton } = window.Serupa;
+import { IconButton } from '@diki-stwn/serupa-ds';
 
 <IconButton icon="more_vert" label="More actions" onClick={openMenu} />
 <IconButton icon="edit" label="Edit" variant="secondary" shape="round" />

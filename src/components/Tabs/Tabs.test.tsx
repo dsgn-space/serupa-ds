@@ -336,6 +336,22 @@ describe('Tabs on the server', () => {
     expect(dis.map((p) => p.getAttribute('hidden'))).toEqual([null, '', '']);
   });
 
+  test('in a browser without until-found (Safari), a kept panel of another tab is plainly hidden: not shown, and not a second copy of its buttons for a screen reader', async () => {
+    const had = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'onbeforematch');
+    delete (HTMLElement.prototype as { onbeforematch?: unknown }).onbeforematch;
+    try {
+      const screen = await render(<Tabs aria-label="Days" defaultValue="one"><TabList><Tab value="one">One</Tab><Tab value="two">Two</Tab></TabList>
+        <TabPanel value="one"><button type="button">Save one</button></TabPanel><TabPanel value="two" className="flex"><button type="button">Save two</button></TabPanel></Tabs>);
+      const panels = [...document.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+      expect(panels.map((p) => p.getAttribute('hidden'))).toEqual([null, '']);
+      expect(getComputedStyle(panels[1]!).display).toBe('none');
+      expect(screen.getByRole('button', { name: 'Save two' }).query()).toBeNull();
+      await screen.getByRole('tab', { name: 'Two' }).click();
+      await expect.poll(() => screen.getByRole('button', { name: 'Save two' }).query()).not.toBeNull();
+      expect(panels[0]!.getAttribute('hidden')).toBe('');
+    } finally { if (had) Object.defineProperty(HTMLElement.prototype, 'onbeforematch', had); }
+  });
+
   test('only the shown panel is in the Tab order: a kept panel of another tab has no size to land on (CO1)', async () => {
     await setup();
     const panels = [...el('un').querySelectorAll<HTMLElement>('[role="tabpanel"]')];

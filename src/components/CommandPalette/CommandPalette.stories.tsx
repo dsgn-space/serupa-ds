@@ -36,6 +36,35 @@ export const Playground: Story = {};
 export const Default: Story = { args: { defaultOpen: true } };
 // No groups: one list under "Commands".
 export const Ungrouped: Story = { args: { defaultOpen: true, commands: COMMANDS.map(({ group: _g, ...c }) => c) } };
+// Searching a server: filter={false} lists what the search found, and loading shows a row until it comes back.
+// Type "inv" or "1042": the answer takes half a second.
+const RECORDS: Command[] = [
+  { id: 'i1042', label: 'Invoice 1042, Acme Corp', group: 'Invoices', icon: 'receipt' },
+  { id: 'i1043', label: 'Invoice 1043, Globex', group: 'Invoices', icon: 'receipt' },
+  { id: 'r1042', label: 'Refund for invoice 1042', group: 'Refunds', icon: 'undo' },
+];
+export const ServerSearch: Story = {
+  render: function Render(args: CommandPaletteProps) {
+    const [open, setOpen] = React.useState(true);
+    const [query, setQuery] = React.useState('');
+    const [found, setFound] = React.useState<Command[]>([]);
+    const [loading, setLoading] = React.useState(false);
+    React.useEffect(() => {
+      const q = query.trim().toLowerCase();
+      if (!q) { setFound([]); setLoading(false); return; }
+      setLoading(true);
+      const t = setTimeout(() => { setFound(RECORDS.filter((r) => r.label.toLowerCase().includes(q))); setLoading(false); }, 500);
+      return () => clearTimeout(t);
+    }, [query]);
+    return <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Search records</Button>
+      <CommandPalette {...args} open={open} onOpenChange={setOpen} placeholder="Search invoices and refunds" filter={false}
+        commands={query.trim() ? found : COMMANDS} loading={loading} onQueryChange={setQuery} />
+    </>;
+  },
+};
+// Loading before anything is listed, as the first answer comes back.
+export const Loading: Story = { args: { defaultOpen: true, commands: [], filter: false, loading: true } };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
 export const LongText: Story = {
   args: {

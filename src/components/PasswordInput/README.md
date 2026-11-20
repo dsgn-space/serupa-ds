@@ -5,7 +5,7 @@ A password field with a button at the end that shows and hides what was typed, s
 **Also called:** password field, show password field.
 
 ```jsx
-const { PasswordInput, Field } = window.Serupa;
+import { PasswordInput, Field } from '@diki-stwn/serupa-ds';
 
 <Field label="Password"><PasswordInput /></Field>
 

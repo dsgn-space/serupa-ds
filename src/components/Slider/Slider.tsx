@@ -92,6 +92,45 @@ function markList(marks: SliderProps['marks'], min: number, max: number, step: n
 // The text a slider nudges inward to keep inside its box (GM2).
 const FIT = '.dk-slider__mark-label > span, .dk-slider__value > span';
 
+/** Mark labels too long for the room between their points wrap, between words. Each first gets the track up to halfway
+ *  to its neighbours, less the gap between labels (one at an end also the room its nudge inward gives it), but never
+ *  less than its longest word; where two still meet, the one with more to give wraps further. The slider then grows
+ *  to hold the tallest one's lines. Labels with room keep their one line. */
+function share(el: HTMLElement) {
+  const labels = Array.from(el.querySelectorAll<HTMLElement>('.dk-slider__mark-label > span'));
+  for (const p of labels) { p.removeAttribute('data-wrap'); p.style.removeProperty('--dk-slider-share'); }
+  el.style.removeProperty('--dk-slider-labels-h');
+  if (labels.length < 2) return;
+  const box = el.getBoundingClientRect(), gap = parseFloat(getComputedStyle(labels[0]!.parentElement!).columnGap) || 0;
+  const at = labels.map((p) => {
+    const w = p.getBoundingClientRect().width;
+    p.setAttribute('data-wrap', '');
+    p.style.setProperty('--dk-slider-share', '0px');   // as narrow as it goes: its longest word
+    const least = p.getBoundingClientRect().width;
+    p.removeAttribute('data-wrap'); p.style.removeProperty('--dk-slider-share');
+    return { p, c: p.parentElement!.getBoundingClientRect().left, w, least, cap: w };
+  }).sort((a, b) => a.c - b.c);
+  const n = at.length;
+  at.forEach((x, i) => {
+    const left = i === 0 ? x.c - box.left : (x.c - at[i - 1]!.c) / 2, right = i === n - 1 ? box.right - x.c : (at[i + 1]!.c - x.c) / 2;
+    const room = i === 0 ? Math.min(left, right - gap / 2) + right - gap / 2 : i === n - 1 ? Math.min(right, left - gap / 2) + left - gap / 2 : 2 * Math.min(left, right) - gap;
+    x.cap = Math.max(x.least, Math.min(x.w, room));
+  });
+  // Where it sits at a width: centered on its point, nudged inside the slider (as fit() does).
+  const span = (x: typeof at[0], w: number) => { const l = Math.min(Math.max(x.c - w / 2, box.left), box.right - w); return [l, l + w] as const; };
+  for (let i = 0, guard = 0; i < n - 1 && guard < 2000; guard++) {
+    const a = at[i]!, b = at[i + 1]!;
+    if (span(a, a.cap)[1] + gap <= span(b, b.cap)[0] + 0.5) { i++; continue; }
+    const give = (x: typeof a) => x.cap - x.least;
+    const x = give(a) >= give(b) ? a : b;
+    if (give(x) <= 0) { i++; continue; }   // both at their longest word: nothing more to give
+    x.cap = Math.max(x.least, x.cap - 1);
+  }
+  let wrapped = false;
+  for (const x of at) if (x.cap < x.w - 0.5) { x.p.setAttribute('data-wrap', ''); x.p.style.setProperty('--dk-slider-share', Math.ceil(x.cap) + 'px'); wrapped = true; }
+  if (wrapped) el.style.setProperty('--dk-slider-labels-h', Math.max(...labels.map((p) => p.getBoundingClientRect().height)) + 'px');
+}
+
 function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Slider', NAME_HOW.field);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: a Slider in a row with its unit
@@ -232,12 +271,13 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   const labelled = marks.some((m) => m.label != null && m.label !== false && m.label !== '');
   // The value chip and the mark labels center on their points, but one near an end would hang past the slider and
   // widen the page (a hidden chip too): each is nudged inward to stay inside the slider's box (GM2).
-  const fit = React.useCallback(() => {
+  const fit = React.useCallback((wrap = true) => {
     const el = root.current;
     if (!el || el.classList.contains('dk-slider--vertical')) return;   // vertical: the text sits beside the track, not past its ends
     const parts = Array.from(el.querySelectorAll<HTMLElement>(FIT));
     if (!parts.length) return;
     for (const p of parts) p.style.removeProperty('--dk-slider-nudge');
+    if (wrap) share(el);
     const box = el.getBoundingClientRect();
     const by = parts.map((p) => { const r = p.getBoundingClientRect(); return r.width >= box.width ? 0 : Math.max(0, box.left - r.left) - Math.max(0, r.right - box.right); });
     parts.forEach((p, i) => { if (by[i]) p.style.setProperty('--dk-slider-nudge', by[i] + 'px'); });
@@ -253,10 +293,13 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   useIsoLayoutEffect(() => { fit(); watch(); });   // every render: the values, marks and their text may have moved them
   React.useEffect(() => {
     if (typeof ResizeObserver === 'undefined') return;
-    const o = new ResizeObserver(fit);
+    // The nudges at once (they only translate); the wrapping a frame later, since it resizes the labels and the slider,
+    // and resizing what's observed inside its own callback leaves the browser a loop it reports as an error.
+    let later = 0;
+    const o = new ResizeObserver(() => { fit(false); cancelAnimationFrame(later); later = requestAnimationFrame(() => fit()); });
     ro.current = [o, new WeakSet()];
     watch();
-    return () => o.disconnect();
+    return () => { o.disconnect(); cancelAnimationFrame(later); };
   }, [fit]);
   // inputs: a number field per thumb, named as its thumb is, between the other thumb (a range) or min and max. A
   // number typed inside them moves the thumb at once; onValueCommit runs when the field is left or Enter is pressed

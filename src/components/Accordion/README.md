@@ -5,7 +5,7 @@ A stack of items whose content shows and hides under a title button: FAQs, setti
 **Also called:** collapsible, disclosure, expander, expandable section.
 
 ```jsx
-const { Accordion, AccordionItem } = window.Serupa;
+import { Accordion, AccordionItem } from '@diki-stwn/serupa-ds';
 
 <Accordion defaultValue={['shipping']}>
   <AccordionItem value="shipping" title="How long does shipping take?">Orders ship within 2 business days.</AccordionItem>

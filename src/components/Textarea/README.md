@@ -5,7 +5,7 @@ A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three 
 **Also called:** text box, multiline text field.
 
 ```jsx
-const { Textarea } = window.Serupa;
+import { Textarea } from '@diki-stwn/serupa-ds';
 
 <label htmlFor="notes">Notes</label>
 <Textarea id="notes" placeholder="Anything the team should know" />

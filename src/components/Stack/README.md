@@ -5,7 +5,7 @@ Lays its children out in a column, or a row, with the same space between each, t
 **Also called:** flex stack, VStack, HStack.
 
 ```jsx
-const { Stack, Button } = window.Serupa;
+import { Stack, Button } from '@diki-stwn/serupa-ds';
 
 <Stack gap={6}>
   <Field label="Name"><Input /></Field>

@@ -5,7 +5,7 @@ What a page or a panel shows when there's nothing in it yet, or nothing matches:
 **Also called:** blank slate, zero state.
 
 ```jsx
-const { EmptyState, Button } = window.Serupa;
+import { EmptyState, Button } from '@diki-stwn/serupa-ds';
 
 <EmptyState
   icon="folder_open"

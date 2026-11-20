@@ -5,7 +5,7 @@ A small panel next to its trigger for content people interact with: a short form
 **Also called:** floating panel, dropdown panel.
 
 ```jsx
-const { Popover, Button, Field, Input } = window.Serupa;
+import { Popover, Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 <Popover title="Share" trigger={<Button variant="outline" leftIcon="share">Share</Button>}>
   {(close) => (

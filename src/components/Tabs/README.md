@@ -5,7 +5,7 @@ Switches between related panels in one place, such as a project's Overview, Acti
 **Also called:** tabbed interface.
 
 ```jsx
-const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
+import { Tabs, TabList, Tab, TabPanel } from '@diki-stwn/serupa-ds';
 
 <Tabs defaultValue="overview">
   <TabList aria-label="Project">

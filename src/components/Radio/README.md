@@ -5,7 +5,7 @@ Native radios for one choice from a short list. `RadioGroup` names them, holds t
 **Also called:** radio button, radio group.
 
 ```jsx
-const { Radio, RadioGroup, Field } = window.Serupa;
+import { Radio, RadioGroup, Field } from '@diki-stwn/serupa-ds';
 
 <Field group label="Plan" hint="You can change it later." error={error}>
   <RadioGroup name="plan" value={plan} onValueChange={(value) => setPlan(value)}>
