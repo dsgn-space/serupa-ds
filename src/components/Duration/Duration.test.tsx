@@ -52,6 +52,16 @@ describe('Duration', () => {
     ].map(plain)).toEqual(['38 hours, 30 minutes', '1 day, 14 hours, 30 minutes', '25:00:00', '2:30']);
   });
 
+  test('a clock under an hour starts at the minutes, as a media player writes it, unless largest asks for hours', () => {
+    expect([45, 724, 3725].map((s) => formatDuration(s, 'en', { display: 'digital' })).concat(formatDuration(45, 'en', { display: 'digital', largest: 'hour' }), formatDuration(30, 'en', { unit: 'minute', display: 'digital' })))
+      .toEqual(['0:45', '12:04', '1:02:05', '0:00:45', '0:30']);
+  });
+
+  test('in a right-to-left page, English words keep their own order', async () => {
+    await render(<div dir="rtl"><Duration id="d" value={75} unit="minute" locale="en" /></div>);
+    expect(el('d').matches(':dir(ltr)')).toBe(true);
+  });
+
   test('a negative value is written as its size; NaN is empty', async () => {
     expect([plain(formatDuration(-90, 'en', { unit: 'minute' })), formatDuration(NaN, 'en'), isoDuration(NaN)]).toEqual(['1 hr, 30 min', '', '']);
     await render(<Duration id="n" value={NaN} />);

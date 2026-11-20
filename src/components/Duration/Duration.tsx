@@ -17,7 +17,8 @@ export interface FormatDurationOptions {
   display?: DurationDisplay | undefined;
   /** The finest unit shown; the rest is rounded to it. Default: the unit given ('second' for milliseconds, 'minute' for hours and days, so 1.5 hours is "1 hr, 30 min"). */
   smallest?: Exclude<DurationUnit, 'millisecond'> | undefined;
-  /** The biggest unit shown; more of it keeps counting ("36 hours" with 'hour'). Default: 'day' ('hour' with 'digital'). */
+  /** The biggest unit shown; more of it keeps counting ("36 hours" with 'hour'). Default: 'day'; with 'digital', 'hour',
+   *  left out under an hour ("0:45"), and said outright it's kept ("0:00:45"). */
   largest?: Exclude<DurationUnit, 'millisecond'> | undefined;
 }
 
@@ -47,6 +48,8 @@ function split(value: number, o: FormatDurationOptions): Array<[number, Unit]> {
     left -= n * SECONDS[u];
     out.push([n, u]);
   }
+  // A clock under an hour starts at the minutes, as a media player writes it ("0:45", "12:04"), unless largest asks for hours.
+  if (digital && !o.largest && out.length > 2 && out[0]![0] === 0) out.shift();
   return out;
 }
 
@@ -87,7 +90,9 @@ function DurationRender({ ref, ...props }: DurationProps & React.RefAttributes<H
   const digital = props.display === 'digital' && !!text;
   // Shown, each unit's number and word stay together ("1\u00a0hr"), so words wrap only between units.
   const shown = digital ? text : text.replace(/(?<=\d) /g, '\u00a0');
-  return <time lang={lang} {...rest} ref={ref} dateTime={isoDuration(props.value, o) || undefined}
+  // dir="auto": the words take their own language's direction, so "1 hr, 15 min" in a right-to-left page doesn't
+  // read "hr, 15 min 1" (its number is a weak character that would follow the page's direction).
+  return <time lang={lang} dir="auto" {...rest} ref={ref} dateTime={isoDuration(props.value, o) || undefined}
     className={cn('dk-duration', digital && 'dk-duration--digital', props.className)} data-component="duration">
     {digital ? <><span aria-hidden="true">{shown}</span><span className="dk-visually-hidden">{formatDuration(props.value, locale, { ...o, display: 'long' })}</span></> : shown}
   </time>;
