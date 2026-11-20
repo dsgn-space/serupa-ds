@@ -42,7 +42,7 @@ describe('FieldList', () => {
 
   test('Add puts a new row at the end, focuses its first field, says so politely and reports the rows', async () => {
     const got: string[][] = [];
-    await render(<Phones onChange={(rows) => got.push(rows)} />);
+    await render(<Phones onValueChange={(rows) => got.push(rows)} />);
     await userEvent.click(page.getByRole('button', { name: 'Add phone' }));
     expect(groups().map((g) => g.getAttribute('aria-label'))).toEqual(['Phone 1', 'Phone 2', 'Phone 3']);
     expect(document.activeElement).toBe(page.getByRole('textbox', { name: 'Number 3' }).element());
@@ -78,10 +78,12 @@ describe('FieldList', () => {
 
   test('max: Add stays in the Tab order but does nothing, and says why, to the eye and to screen readers', async () => {
     await render(<Phones max={2} />);
+    // The limit in the browser's own digits, as the component writes it (the tests also run with the browser in Arabic).
+    const limit = 'Limit reached: ' + new Intl.NumberFormat(navigator.language).format(2) + '.';
     const add = page.getByRole('button', { name: 'Add phone' }).element() as HTMLButtonElement;
-    expect([add.disabled, add.getAttribute('aria-disabled'), el('fl').textContent.includes('Limit reached: 2.')]).toEqual([false, 'true', true]);
+    expect([add.disabled, add.getAttribute('aria-disabled'), el('fl').textContent.includes(limit)]).toEqual([false, 'true', true]);
     const reason = (add.getAttribute('aria-describedby') || '').split(' ').map((id) => document.getElementById(id)?.textContent).join(' ');
-    expect(reason).toContain('Limit reached: 2.');
+    expect(reason).toContain(limit);
     add.focus();
     await userEvent.keyboard('{Enter}');
     add.click();
@@ -98,10 +100,10 @@ describe('FieldList', () => {
     expect(page.getByRole('textbox', { name: 'Number 2' }).element().getAttribute('aria-invalid')).toBe('true');
   });
 
-  test('controlled: value and onChange; the rows follow the value it is given', async () => {
+  test('controlled: value and onValueChange; the rows follow the value it is given', async () => {
     function Demo() {
       const [rows, setRows] = React.useState(['x']);
-      return <><Phones value={rows} onChange={setRows} defaultValue={undefined} /><button id="reset" onClick={() => setRows(['p', 'q', 'r'])}>Reset</button><output id="o">{rows.join(',')}</output></>;
+      return <><Phones value={rows} onValueChange={setRows} defaultValue={undefined} /><button id="reset" onClick={() => setRows(['p', 'q', 'r'])}>Reset</button><output id="o">{rows.join(',')}</output></>;
     }
     await render(<Demo />);
     await userEvent.type(page.getByRole('textbox', { name: 'Number 1' }), 'y');
@@ -112,7 +114,7 @@ describe('FieldList', () => {
 
   test('reorderable: each row has a handle that moves it with the keyboard, and the rows are reported in the new order', async () => {
     const got: string[][] = [];
-    await render(<Phones reorderable defaultValue={['a', 'b', 'c']} onChange={(rows) => got.push(rows)} />);
+    await render(<Phones reorderable defaultValue={['a', 'b', 'c']} onValueChange={(rows) => got.push(rows)} />);
     const handle = page.getByRole('button', { name: /Phone 1/ }).elements().find((b) => b.classList.length && !/^Remove/.test(b.getAttribute('aria-label') || b.textContent || '')) as HTMLElement;
     handle.focus();
     await userEvent.keyboard(' ');

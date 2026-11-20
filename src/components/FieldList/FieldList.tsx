@@ -37,12 +37,12 @@ export interface FieldListProps<T> extends Omit<React.FieldsetHTMLAttributes<HTM
   /** Each row's name, from its place (counted from 0): `(i) => 'Phone ' + (i + 1)`. Rows are groups with this name,
    *  their Remove buttons say it ("Remove Phone 2"), and adding or removing one is announced with it. */
   itemLabel: (index: number) => string;
-  /** The rows' values, controlled. Use with onChange. */
+  /** The rows' values, controlled. Use with onValueChange. */
   value?: readonly T[] | undefined;
   /** The rows' values to start with, uncontrolled. Default: min rows made by newItem. */
   defaultValue?: readonly T[] | undefined;
   /** Called with the new rows when one is added, removed, changed or moved. */
-  onChange?: ((rows: T[]) => void) | undefined;
+  onValueChange?: ((rows: T[]) => void) | undefined;
   /** Makes the value of a row people add: `() => ({ number: '' })`. */
   newItem: () => T;
   /** One row's fields, up to three side by side: `(row, { name, update }) => <Field …><Input …/></Field>`. */
@@ -65,7 +65,7 @@ export interface FieldListProps<T> extends Omit<React.FieldsetHTMLAttributes<HTM
   disabled?: boolean | undefined;
 }
 
-const OWN = { label: 1, hint: 1, itemLabel: 1, value: 1, defaultValue: 1, onChange: 1, newItem: 1, children: 1, addLabel: 1, min: 1, max: 1, name: 1, error: 1, errors: 1, reorderable: 1, className: 1 } as const;
+const OWN = { label: 1, hint: 1, itemLabel: 1, value: 1, defaultValue: 1, onValueChange: 1, newItem: 1, children: 1, addLabel: 1, min: 1, max: 1, name: 1, error: 1, errors: 1, reorderable: 1, className: 1 } as const;
 const allWords = /* @__PURE__ */ Object.assign({}, words, tagWords, comboWords);
 // The first field of a row, skipping its Remove button and the reorder handle.
 const FIELD = 'input:not([type="hidden"]), select, textarea, button, a[href], [tabindex]:not([tabindex="-1"])';
@@ -86,7 +86,7 @@ export const FieldList = /* @__PURE__ */ component<HTMLFieldSetElement, FieldLis
   const base = domId('dk-fl', React.useId());
   const min = Math.max(0, Math.floor(props.min || 0));
   const max = props.max != null && props.max >= Math.max(1, min) ? Math.floor(props.max) : Infinity;
-  const { newItem, itemLabel, onChange } = props;
+  const { newItem, itemLabel, onValueChange } = props;
   const [start] = React.useState(() => props.defaultValue ? props.defaultValue.slice() : Array.from({ length: min }, () => newItem()));
   const [rows, setOwn] = useControllable<readonly unknown[]>(props.value, start, 'FieldList', 'value');
   // Each row's key, beside its value: kept in step by add, remove and move, and padded or cut when the caller
@@ -106,7 +106,7 @@ export const FieldList = /* @__PURE__ */ component<HTMLFieldSetElement, FieldLis
     keys.current = order;
     latest.current = list;
     setOwn(list);
-    if (onChange) onChange(list);
+    if (onValueChange) onValueChange(list);
   };
   const add = () => {
     if (rows.length >= max || props.disabled) return;

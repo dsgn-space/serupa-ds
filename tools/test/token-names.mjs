@@ -19,6 +19,7 @@ const ALLOW = {
   '--badge-active-layer': 'the press layer, as the hover layer above',
   '--field-error-color': 'the error is a part: the message under the field',
   '--file-upload-error-color': 'the error message under the drop area, as Field\'s',
+  '--field-list-error-color': 'the error messages under a row and under the list, as Field\'s',
 };
 
 /** Every cssVar in one tokens.json, but a renamed token's old name, deprecated until the next major. */

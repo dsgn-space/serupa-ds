@@ -1,4 +1,4 @@
-// exports: FieldList, type FieldListProps
+// exports: FieldList, type FieldListProps, type FieldListRow
 interface FieldListLabels {
     fieldListLimit: (max: string) => string;
 }
@@ -15,7 +15,7 @@ interface FieldListProps<T> extends Omit<React.FieldsetHTMLAttributes<HTMLFieldS
     itemLabel: (index: number) => string;
     value?: readonly T[] | undefined;
     defaultValue?: readonly T[] | undefined;
-    onChange?: ((rows: T[]) => void) | undefined;
+    onValueChange?: ((rows: T[]) => void) | undefined;
     newItem: () => T;
     children: (row: T, state: FieldListRow<T>) => React.ReactNode;
     addLabel: string;

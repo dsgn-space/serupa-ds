@@ -71,6 +71,7 @@ Drawn from the `Errors` story.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
+| `id` | `string` | | Goes to the `<fieldset>` |
 | `label` | `ReactNode` | | The legend: the list's name |
 | `hint` | `ReactNode` | none | Under the legend |
 | `itemLabel` | `(index) => string` | | Each row's name from its place, counted from 0 |
@@ -78,7 +79,7 @@ Drawn from the `Errors` story.
 | `newItem` | `() => T` | | The value of a row people add |
 | `addLabel` | `string` | | The Add button's words |
 | `value` / `defaultValue` | `T[]` | `min` new rows | The rows, controlled or to start with |
-| `onChange` | `(rows) => void` | | Called with the rows when one is added, removed, changed or moved |
+| `onValueChange` | `(rows) => void` | | Called with the rows when one is added, removed, changed or moved |
 | `min` | number | `0` | The fewest rows: Remove is hidden while it has this many |
 | `max` | number | none | The most rows: Add then does nothing and says why |
 | `name` | `string` | none | The start of each field's native name (`phones[0].number`) |

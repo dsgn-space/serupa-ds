@@ -11,8 +11,8 @@
 .dk-field-list__hint, .dk-field-list__limit { color: var(--field-list-hint-color, var(--text-muted)); overflow-wrap: anywhere; }
 .dk-field-list__rows { display: flex; flex-direction: column; gap: var(--field-list-gap, var(--spacing-3)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-field-list__row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--field-list-row-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); }
-.dk-field-list__fields { display: flex; flex: 1 1 var(--spacing-0); flex-wrap: wrap; gap: var(--field-list-row-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); }
-.dk-field-list__fields > * { flex: 1 1 var(--field-list-field-min-width, var(--spacing-40)); min-inline-size: var(--spacing-0); }
+.dk-field-list__fields { display: flex; flex: auto; flex-basis: var(--spacing-0); flex-wrap: wrap; gap: var(--field-list-row-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); }
+.dk-field-list__fields > * { flex: auto; flex-basis: var(--field-list-field-min-width, var(--spacing-40)); min-inline-size: var(--spacing-0); }
 .dk-field-list__remove { flex: none; }
 .dk-field-list__row-error { flex-basis: var(--sizing-full); }
 .dk-field-list__error { display: flex; align-items: flex-start; gap: var(--field-list-error-gap, var(--spacing-1)); color: var(--field-list-error-color, var(--danger-text)); overflow-wrap: anywhere; }
