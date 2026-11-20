@@ -153,6 +153,21 @@ await inParallel(opened, workers, async (p, w) => {
   t('/guides/localization: a press inside an example keeps the page where it was', before > 0 && after === before, `the page was at ${before}px before the press and at ${after}px after it`);
 }
 
+// A component's own focus ring stays its own on the page. The site's ring for its scrolling regions once took over
+// CodeBlock's: drawn outside the code, which the block clips, it showed as one line along the top.
+{
+  const w = workers[0];
+  await openUrl(w.page, base + '/components/codeblock'); await ready(w.page, true);
+  const pre = w.page.locator('#article [data-site-demo] [role="region"][tabindex="0"]').first();
+  await pre.scrollIntoViewIfNeeded();
+  await w.page.waitForTimeout(500);   // the example draws once it is in view
+  // After a key press, as a keyboard user reaches it, so the ring shows.
+  await w.page.keyboard.press('Shift');
+  await pre.focus();
+  const offset = await pre.evaluate((el) => (el.matches(':focus-visible') ? parseFloat(getComputedStyle(el).outlineOffset) : NaN));
+  t('/components/codeblock: the code\'s focus ring is drawn inside it, where the block doesn\'t clip it', offset < 0, Number.isNaN(offset) ? 'Tab didn\'t reach the code' : `the ring is drawn ${offset}px outside the code`);
+}
+
 // "On this page" is the contents' rail (site/src/Doc.tsx): pointing at it opens the list, inside the window even on a
 // page with more headings than the window is tall.
 {

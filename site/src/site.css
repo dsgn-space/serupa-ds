@@ -88,7 +88,7 @@ ol.site-list { list-style: decimal; }
 :is(.sb-tested, .sb-changes) details { margin-block-start: var(--spacing-4); }
 :is(.sb-tested, .sb-changes) summary { cursor: pointer; font-weight: var(--font-semibold); }
 .sb-tested li { margin-block: var(--spacing-1); }
-.site-doc [role="region"][tabindex="0"]:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+.site-doc [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 @media (max-width: 39.99rem) { .site-doc :is(td, th):not(.site-table--props *) { overflow-wrap: anywhere; } }
 
 /* ── A story in its frame ──────────────────────────────────────────────────────────────────────────────────── */
