@@ -283,4 +283,50 @@ describe('CommandPalette', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
   });
+  test('searching a server: onQueryChange gets what is typed (and "" when it opens again); filter={false} lists the commands as given; loading shows a row, marks the list busy and holds back "No matching commands"', async () => {
+    const asked: string[] = [];
+    const ALL = [{ id: 'a', label: 'Invoice 1042' }, { id: 'b', label: 'Refund 1042' }];
+    function Server() {
+      const [open, setOpen] = React.useState(true);
+      const [q, setQ] = React.useState('');
+      const [loading, setLoading] = React.useState(false);
+      const [found, setFound] = React.useState<Command[]>([]);
+      React.useEffect(() => {
+        if (!q) { setFound([]); setLoading(false); return; }
+        setLoading(true);
+        const t = setTimeout(() => { setFound(ALL.filter((c) => c.label.includes(q))); setLoading(false); }, 150);
+        return () => clearTimeout(t);
+      }, [q]);
+      return <>
+        <button id="again" onClick={() => setOpen(true)}>Search</button>
+        <CommandPalette id="sv" open={open} onOpenChange={setOpen} commands={found} filter={false} loading={loading} loadingText="Searching…"
+          onQueryChange={(x) => { asked.push(x); setQ(x); }} />
+      </>;
+    }
+    await render(<Server />);
+    await expect.poll(() => document.activeElement).toBe(field());
+    const list = () => document.getElementById(field().getAttribute('aria-controls')!)!;
+    const status = () => document.querySelector('dialog [role="status"]')?.textContent ?? null;
+    await userEvent.keyboard('10');
+    await expect.poll(() => status()).toBe('Searching…');
+    expect([list().getAttribute('aria-busy'), document.querySelector('dialog')!.textContent.includes('No matching commands')]).toEqual(['true', false]);
+    await expect.poll(() => labels()).toEqual(['Invoice 1042', 'Refund 1042']);   // as given: "Refund" doesn't start with "10" and still shows, in order
+    expect([status(), list().hasAttribute('aria-busy'), activeLabel()]).toEqual([null, false, 'Invoice 1042']);
+    await userEvent.keyboard('9');
+    await expect.poll(() => status()).toBe(null);
+    await expect.poll(() => document.querySelector('dialog')!.textContent.includes('No matching commands')).toBe(true);
+    expect(asked).toEqual(['1', '10', '109']);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => isOpen('sv')).toBe(false);
+    await userEvent.click(el('again'));
+    await expect.poll(() => asked.at(-1)).toBe('');
+    expect(labels()).toEqual([]);
+  });
+
+  test('loading with nothing typed or listed yet: "Loading…" by default, "Memuat…" in Indonesian', async () => {
+    const r = await render(<CommandPalette id="ld" defaultOpen commands={[]} loading />);
+    await expect.poll(() => document.querySelector('dialog [role="status"]')?.textContent).toBe('Loading…');
+    await r.rerender(<SerupaProvider labels={idLabels}><CommandPalette id="ld" defaultOpen commands={[]} loading /></SerupaProvider>);
+    await expect.poll(() => document.querySelector('dialog [role="status"]')?.textContent).toBe('Memuat…');
+  });
 });

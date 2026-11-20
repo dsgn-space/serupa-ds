@@ -24,5 +24,9 @@ interface CommandPaletteProps extends Omit<DialogProps, "alert" | "children" | "
     placeholder?: string | undefined;
     emptyText?: React.ReactNode | undefined;
     limit?: number | undefined;
+    onQueryChange?: ((query: string) => void) | undefined;
+    filter?: boolean | undefined;
+    loading?: boolean | undefined;
+    loadingText?: string | undefined;
 }
 declare const CommandPalette: React.ForwardRefExoticComponent<CommandPaletteProps & React.RefAttributes<HTMLDialogElement>>;
