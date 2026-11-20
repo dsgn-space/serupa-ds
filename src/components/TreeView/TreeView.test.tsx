@@ -480,6 +480,13 @@ describe('TreeView: cascade, a checkbox tree', () => {
     expect(el('got').textContent).toBe('a,b,readme');
   });
 
+  test('Shift+click checks every item from the one picked last, folders and all, as a range does', async () => {
+    await render(<Tree cascadeValue="leaves" />);
+    await userEvent.click(row('a'));
+    await userEvent.click(row('c'), { modifiers: ['Shift'] });
+    expect([el('got').textContent, checked().lib, checked().src]).toEqual(['a,b,c', 'mixed', 'mixed']);
+  });
+
   test('cascadeValue="leaves" reports only items with no children; a folder id in value checks the folder\'s items', async () => {
     await render(<Tree cascadeValue="leaves" defaultValue={['lib']} />);
     expect([checked().c, checked().d, checked().lib]).toEqual(['true', 'true', 'true']);

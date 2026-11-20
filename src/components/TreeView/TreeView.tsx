@@ -67,6 +67,7 @@ const TreeContext = /* @__PURE__ */ React.createContext<{ store: Store; api: Rea
 const textOf = (it: TreeViewItem) => it.textValue ?? (typeof it.label === 'string' || typeof it.label === 'number' ? String(it.label) : '');
 const opens = (it: TreeViewItem) => it.children !== undefined;
 const within = (item: TreeViewItem, id: string): boolean => !!item.children && item.children.some((c) => c.id === id || within(c, id));
+// module state: an empty set that is never added to, only read (no item is mixed outside cascade), so no request can leave anything in it for another.
 const NO_MIXED: Set<string> = /* @__PURE__ */ new Set();
 
 /* For cascade: every item's leaves (itself, when it has no children), and which of them can be changed (not
