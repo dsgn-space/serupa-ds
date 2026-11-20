@@ -64,17 +64,17 @@
 # DoDateDividers
 - log "Conversation with Support":
   - text: 23 Oct 2026 You
-  - time: Oct 23, 2026
+  - time: 9:00 AM
   - text: Is the March invoice ready? 24 Oct 2026 Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Yes, it's on its way to your inbox.
 
 # DontNoDividers
 - log "Conversation with Support":
   - text: You
-  - time: Oct 23, 2026
+  - time: 9:00 AM
   - text: Is the March invoice ready? Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Yes, it's on its way to your inbox.
 
 # Empty
@@ -87,49 +87,49 @@
 - log "Conversation with Support":
   - button "Loading earlier messages" [disabled]
   - text: 24 Oct 2026 Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Hi! How can I help you today? You
-  - time: Oct 24, 2026
+  - time: 9:01 AM
   - text: My invoice for March shows the wrong address. You Here it is.
   - link "Invoice March 2026.pdf":
     - /url: "#invoice"
   - text: PDF 1.5 MB Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:04 AM
   - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
 
 # LongText
 - log "Conversation with Support":
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung Raden Ajeng Kartini Djojo Adhiningrat Soerjaningrat
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 🎉🎉 and a sentence long enough to wrap twice in a narrow conversation. You
-  - time: Oct 24, 2026
+  - time: 9:02 AM
   - text: Line one Line two after a break سارة مرحبا، كيف يمكنني مساعدتك؟
 
 # Older
 - log "Conversation with Support":
   - button "Load earlier messages"
   - text: 24 Oct 2026 Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Hi! How can I help you today? You
-  - time: Oct 24, 2026
+  - time: 9:01 AM
   - text: My invoice for March shows the wrong address. You Here it is.
   - link "Invoice March 2026.pdf":
     - /url: "#invoice"
   - text: PDF 1.5 MB Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:04 AM
   - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
 
 # Playground
 - log "Conversation with Support":
   - text: 24 Oct 2026 Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Hi! How can I help you today? You
-  - time: Oct 24, 2026
+  - time: 9:01 AM
   - text: My invoice for March shows the wrong address. You Here it is.
   - link "Invoice March 2026.pdf":
     - /url: "#invoice"
   - text: PDF 1.5 MB Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:04 AM
   - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
 - textbox "Message"
 - button "Send" [disabled]
@@ -149,14 +149,14 @@
 # Statuses
 - log "Conversation with Support":
   - text: 24 Oct 2026 Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:00 AM
   - text: Hi! How can I help you today? You
-  - time: Oct 24, 2026
+  - time: 9:01 AM
   - text: My invoice for March shows the wrong address. You Here it is.
   - link "Invoice March 2026.pdf":
     - /url: "#invoice"
   - text: PDF 1.5 MB Rina Kusuma
-  - time: Oct 24, 2026
+  - time: 9:04 AM
   - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox. You Great, thank you! Sending… You Can you also send the receipt? Not sent
   - button "Try again"
 - textbox "Message": Draft reply
