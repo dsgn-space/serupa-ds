@@ -221,7 +221,7 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   }), [latest]);
   const cp = props.containerProps || {};
   return (
-    <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid">
+    <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid" data-range={range && range.r1 === range.r2 && range.c1 === range.c2 ? 'cell' : undefined}>
       <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
         role="grid" aria-busy={loading || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
         className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>

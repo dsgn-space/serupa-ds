@@ -24,7 +24,7 @@ env:
 
 jobs:
   # Where the x86 jobs go: the project's machines while a self-hosted runner has started a job in the last 100 minutes,
-  # GitHub's runners otherwise. The burst VM deletes itself after two idle hours, and a job sent to it then waits a day
+  # GitHub's runners otherwise. The burst VM deletes itself after a day with nothing to do, and a job sent to it then waits a day
   # and is cancelled (Nightly and Cross-browser, 18 to 20 Nov). tools/runner-watch.mjs --pick.
   runner:
     runs-on: ubuntu-24.04
