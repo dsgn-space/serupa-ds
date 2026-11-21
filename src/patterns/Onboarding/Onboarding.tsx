@@ -83,7 +83,10 @@ function load(key: string | undefined): Partial<OnboardingState> | null {
   if (!key) return null;
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as Partial<OnboardingState>) : null;
+    const s = raw ? (JSON.parse(raw) as { done?: unknown; hidden?: unknown } | null) : null;
+    // Only the shape this page writes: anything else under the key (another script's value, an older shape) would
+    // throw on every visit until the storage was cleared.
+    return s && typeof s === 'object' ? { done: Array.isArray(s.done) ? s.done.filter((id): id is string => typeof id === 'string') : [], hidden: s.hidden === true } : null;
   } catch { return null; }
 }
 function save(key: string | undefined, state: OnboardingState) {
