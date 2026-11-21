@@ -44,6 +44,8 @@ export interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'c
 // The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
 // trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
 const Panel = 'span' as 'div';
+// What goes in it is a <span> too, for the same reason, laid out as a block in Menu.css.
+const Box = 'span' as 'div';
 const OWN_MENU = { trigger: 1, children: 1, 'aria-label': 1, 'aria-labelledby': 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
 interface Ctx { close: (reason: OpenChangeReason, focusTrigger: boolean) => void; open: boolean; typed: React.RefObject<Typed> }
@@ -379,7 +381,7 @@ function MenuItemBaseRender({ ref, ...props }: MenuItemBaseProps & React.RefAttr
   if (isLink && rest.target === '_blank' && rest.rel == null) rest.rel = 'noopener noreferrer';
   // MenuCheckboxItem and MenuRadioItem pass their role and aria-checked: a check slot goes before the label.
   const checkable = !isLink && (rest.role === 'menuitemcheckbox' || rest.role === 'menuitemradio');
-  return React.createElement(isLink ? props.as || config.link : 'div', Object.assign(rest, {
+  return React.createElement(isLink ? props.as || config.link : 'span', Object.assign(rest, {
     ref: ref, role: checkable ? rest.role : 'menuitem', tabIndex: -1, 'aria-disabled': props.disabled || undefined,
     className: cn('dk-menu__item', props.destructive && 'dk-menu__item--destructive', props.className),
     onClick: onClick, onKeyDown: onKeyDown, onPointerMove: (e: React.PointerEvent<HTMLElement>) => { if (own.onPointerMove) own.onPointerMove(e); if (activeIn(e.currentTarget) !== e.currentTarget) e.currentTarget.focus(); },
@@ -561,7 +563,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
   const mergedRef3 = useMergedRef(ref, (n) => { itemRef.current = n; });
   return (
     <>
-      {React.createElement('div', Object.assign(rest, {
+      {React.createElement('span', Object.assign(rest, {
         ref: mergedRef3,
         role: 'menuitem', tabIndex: -1, 'aria-haspopup': 'menu', 'aria-expanded': open, 'aria-controls': open ? id : undefined,
         'aria-disabled': props.disabled || undefined, 'data-state': open ? 'open' : 'closed',
@@ -582,10 +584,10 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
         props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
         <span className="dk-menu__label" id={id + '-label'}>{props.label}</span>,
         <span className="dk-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>)}
-      <div ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} data-instant={exit.instant ? '' : undefined} aria-labelledby={id + '-label'}
+      <Box ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} data-instant={exit.instant ? '' : undefined} aria-labelledby={id + '-label'}
         className="dk-menu dk-menu--sub" data-component="menu" data-state={open ? 'open' : 'closed'} inert={!open || undefined} onKeyDown={onPanelKey}>
         {open || exit.leaving ? props.children : null}
-      </div>
+      </Box>
     </>
   );
 }
@@ -602,10 +604,10 @@ function MenuGroupRender({ ref, ...props }: MenuGroupProps & React.RefAttributes
   const rest = omit(props, { label: 1, className: 1, children: 1 });
   const id = domId('dk-mg', React.useId());
   return (
-    <div {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn('dk-menu__group', props.className)}>
-      {props.label != null ? <div className="dk-menu__group-label" id={id} role="presentation">{props.label}</div> : null}
+    <Box {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn('dk-menu__group', props.className)}>
+      {props.label != null ? <span className="dk-menu__group-label" id={id} role="presentation">{props.label}</span> : null}
       {props.children}
-    </div>
+    </Box>
   );
 }
 
@@ -615,7 +617,7 @@ export const MenuGroup = /* @__PURE__ */ named('MenuGroup', MenuGroupRender);
 export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 
 function MenuSeparatorRender({ ref, ...props }: MenuSeparatorProps & React.RefAttributes<HTMLDivElement>) {
-  return <div {...props} ref={ref} role="separator" className={cn('dk-menu__separator', props.className)} />;
+  return <Box {...props} ref={ref} role="separator" className={cn('dk-menu__separator', props.className)} />;
 }
 
 /** A line between groups of items. */
