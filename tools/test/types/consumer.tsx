@@ -86,7 +86,7 @@ export const tagsPicker = <Combobox multiple aria-label="Tags" options={['a']} v
 // @ts-expect-error: with multiple, the value is a list
 export const tagsWrong = <Combobox multiple aria-label="Tags" options={['a']} value="a" />;
 is<Equal<ParamOf<React.ComponentProps<typeof DatePicker>['onValueChange']>, Date | null>>();
-is<Equal<Parameters<NonNullable<React.ComponentProps<typeof DatePicker>['onValueChange']>>[1], string | null>>();
+is<Equal<Parameters<NonNullable<React.ComponentProps<typeof DatePicker>['onValueChange']>>[1], { iso: string | null }>>();
 is<Equal<ParamOf<React.ComponentProps<typeof DateRangePicker>['onValueChange']>, DateRange>>();
 is<Equal<ParamOf<React.ComponentProps<typeof NumberInput>['onValueChange']>, number | null>>();
 is<Equal<ParamOf<React.ComponentProps<typeof SegmentedControl>['onValueChange']>, string>>();
