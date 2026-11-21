@@ -8,7 +8,7 @@ import { Switch } from '../../components/Switch/Switch';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Card } from '../../components/Card/Card';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -129,7 +129,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
         <PageHeader breadcrumb={[{ label: 'Headphones', href: '#shop' }, { label: 'Compare' }]} title="Compare headphones"
           description="Up to four side by side. Add more from any product page." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the products" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the products" /></Card> : (
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the products" /></Card> : (
         <section aria-labelledby="compare-table" className="flex flex-col gap-4 pt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="compare-table" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">

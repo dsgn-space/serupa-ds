@@ -13,7 +13,7 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Saved items: things kept for later, with what changed since (a lower price, few left, sold out), and a way to move
@@ -146,7 +146,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Saved items' }]} title="Saved items"
           description="Kept for later. We’ll show here when a price drops or few are left." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your saved items" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading saved items" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading saved items" /></Card> : (<>
         <section aria-labelledby="saved-list" className="flex flex-col gap-4 pt-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 id="saved-list" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Your list</h2>

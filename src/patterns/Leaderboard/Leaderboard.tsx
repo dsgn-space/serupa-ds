@@ -9,7 +9,7 @@ import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -114,7 +114,7 @@ export function Leaderboard({ players = demo, me = 'ana', top = 5, loading = fal
         <PageHeader breadcrumb={[{ label: 'Challenges', href: '#challenges' }, { label: 'Leaderboard' }]} title="Leaderboard"
           description={loading || loadFailed ? undefined : mine ? `You’re ${placeWords(mine).toLowerCase()} of ${num(players.length)} ${long}, with ${num(mine.points[period])} points.` : `${num(players.length)} people taking part.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the leaderboard" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the leaderboard" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the leaderboard" /></Card> : (<>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <SegmentedControl aria-label="Period" value={period} onValueChange={setPeriod} options={PERIODS.map(({ value, label }) => ({ value, label }))} />
           <p role="status" id="board-period" className="m-0 text-sm text-text-muted">Showing points {long}</p>

@@ -29,7 +29,7 @@ import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 
 ## Usage
 
-- Group related toggles in a [ButtonGroup](../ButtonGroup/README.md) with an `aria-label` that says what they're for ("Text formatting").
+- Group a few related, independent toggles in a [ButtonGroup](../ButtonGroup/README.md) with an `aria-label` that says what they're for ("View options"); many tools in an editor go in a [Toolbar](../Toolbar/README.md).
 - To give a set of toggles one value, with one on at a time (alignment) or any number (text styles), use a [ToggleGroup](../ToggleGroup/README.md).
 - Use `variant="ghost"` in toolbars and the default `outline` elsewhere.
 - Give the toggles in one group the same `size`.

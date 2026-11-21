@@ -95,6 +95,7 @@ const NAME_GAPS = {};
 const NAME_KEPT = {
   'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",
   'LoaderProps.delay': 'how long a load runs before the spinner shows: not an overlay, so not openDelay',
+  'SkeletonProps.delay': 'how long a load runs before the placeholder shows: not an overlay, so not openDelay',
   'DescriptionListProps.layout': "'stacked', 'inline' or 'split': how each term sits beside its description, not an orientation",
   'ComboboxProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
   'ComboboxSingleProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',

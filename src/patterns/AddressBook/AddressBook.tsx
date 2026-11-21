@@ -12,7 +12,7 @@ import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -156,7 +156,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
         <section aria-labelledby="saved" className="flex flex-col gap-4 pt-6">
           <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
+            : loading ? <Card><Skeleton shape="text" lines={5} label="Loading addresses" /></Card>
             : !shown.length ? <EmptyState icon="location_on" title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} />
             : (
               <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-2">

@@ -8,7 +8,7 @@ import { List, ListItem } from '../../components/List/List';
 import { Splitter } from '../../components/Splitter/Splitter';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
@@ -156,7 +156,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
             <Heading level={2} size="lg" id="messages-title">Messages</Heading>
             <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
               {/* One name for all of them: the first row is named, the others are only pictures. */}
-              {[0, 1, 2, 3].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading messages' : ''} /></li>)}
+              {[0, 1, 2, 3].map((i) => <li key={i}><Skeleton shape="text" size="sm" lines={2} label={i === 0 ? 'Loading messages' : ''} /></li>)}
             </ul>
           </section>
         ) : messages.length ? <div className="min-w-0 rounded-lg border border-border bg-surface">

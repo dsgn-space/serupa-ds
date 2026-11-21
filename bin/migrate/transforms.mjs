@@ -97,10 +97,10 @@ export function removeProp(src, component, prop) {
   for (const [s, e] of openTags(src, component).reverse()) {
     let attrs = src.slice(s, e);
     for (const m of [...topLevel(attrs).matchAll(attrAt(prop))].reverse()) {
-      let i = m.index + prop.length;
-      while (/\s/.test(attrs[i] || '')) i++;
-      if (attrs[i] === '=') {
-        i++;
+      let i = m.index + prop.length, j = i;
+      while (/\s/.test(attrs[j] || '')) j++;
+      if (attrs[j] === '=') {
+        i = j + 1;
         while (/\s/.test(attrs[i] || '')) i++;
         if (attrs[i] === '"' || attrs[i] === "'") i = attrs.indexOf(attrs[i], i + 1) + 1;
         else if (attrs[i] === '{') i = closeBrace(attrs, i) + 1;
@@ -567,7 +567,73 @@ export const TRANSFORMS = [
       return { text: b.text, count: a.count + b.count, notes: [] };
     },
   },
+  {
+    version: '17.0.0', id: 'loader-skeleton', exts: CODE,
+    title: 'Loader: `variant="skeleton"` is its own component, `<Skeleton>`, with the same `shape`, `lines`, `size`, `label`, `delay` and `loading`',
+    run: (src) => (/\bLoader\b/.test(src) ? loaderToSkeleton(src) : { text: src, count: 0, notes: [] }),
+  },
+  {
+    version: '17.0.0', id: 'skeleton-tokens', exts: ALL,
+    title: 'Skeleton\'s tokens are its own: `--loader-skeleton-*` is `--skeleton-*`; the `--loader-pixel-*` tokens are removed',
+    run(src) {
+      let count = 0;
+      const text = src.replace(/--loader-skeleton-(fill|shine|radius|text-radius|rect-height)(?![\w-])/g, (_, name) => { count++; return '--skeleton-' + name; });
+      return { text, count, notes: notesFor(text, /--loader-pixel-[\w-]+/g, 'The pixel Loader is removed in 17.0.0, with its --loader-pixel-* tokens: take this out') };
+    },
+  },
+  {
+    version: '17.0.0', id: 'loader-pixel', exts: CODE,
+    title: 'Loader: `variant="pixel"`, `pattern` and `glow` are removed; a pixel loader becomes `variant="dots"`',
+    run(src) {
+      if (!/\bLoader\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const a = renameValue(src, 'Loader', 'variant', 'pixel', 'dots');
+      const b = removeProp(a.text, 'Loader', 'pattern');
+      const c = removeProp(b.text, 'Loader', 'glow');
+      return { text: c.text, count: a.count + b.count + c.count, notes: [] };
+    },
+  },
 ];
+
+/** `<Loader variant="skeleton" …>` as `<Skeleton …>`: the tag renamed, variant dropped, a tone it ignored (primary,
+ * muted) dropped too, and Skeleton imported beside Loader from the package. A variant that isn't written out is listed. */
+function loaderToSkeleton(src) {
+  let count = 0;
+  const notes = [];
+  const skeleton = /^(\s*=\s*\{?\s*)(["'])skeleton\2\s*\}?/;
+  for (const [s, e] of openTags(src, 'Loader').reverse()) {
+    const attrs = src.slice(s, e), m = attrAt('variant').exec(topLevel(attrs));
+    attrAt('variant').lastIndex = 0;
+    if (!m) continue;
+    const at = m.index + 'variant'.length;
+    if (!skeleton.test(attrs.slice(at))) {
+      if (!/^\s*=\s*\{?\s*["']/.test(attrs.slice(at))) notes.push({ line: lineOf(src, s), message: 'Loader `variant` is worked out here: where it is "skeleton", render <Skeleton> instead' });
+      continue;
+    }
+    let tag = '<Skeleton' + attrs;
+    tag = removeProp(tag, 'Skeleton', 'variant').text;
+    for (const t of ['primary', 'muted']) if (new RegExp(`(?<=\\s)tone\\s*=\\s*\\{?\\s*(["'])${t}\\1`).test(tag)) tag = removeProp(tag, 'Skeleton', 'tone').text;
+    let end = e;
+    // <Loader …></Loader> (no children: it takes none) closes as Skeleton too
+    const close = /^>\s*<\/Loader>/.exec(src.slice(e));
+    const tail = close ? '></Skeleton>' : '';
+    if (close) end = e + close[0].length;
+    src = src.slice(0, s - '<Loader'.length) + tag + (close ? tail : '') + src.slice(close ? end : e);
+    count++;
+  }
+  if (count) {
+    // Import Skeleton beside Loader from the package; drop Loader when nothing else uses it.
+    src = src.replace(/import\s*(type\s+)?\{([^}]*)\}\s*from\s*(["'])([^"'.][^"']*)\3/g, (all, type, names, q, from) => {
+      if (type || !/\bLoader\b/.test(names) || /\bSkeleton\b/.test(names)) return all;
+      const rest = src.replace(all, '');
+      const list = names.split(',').map((n) => n.trim()).filter(Boolean);
+      const keep = /\bLoader\b/.test(rest) ? list : list.filter((n) => n !== 'Loader');
+      const multi = /\n/.test(names);
+      const out = [...keep, 'Skeleton'];
+      return `import {${multi ? '\n  ' + out.join(',\n  ') + ',\n' : ' ' + out.join(', ') + ' '}} from ${q}${from}${q}`;
+    });
+  }
+  return { text: src, count, notes };
+}
 
 // The brands 17.0.0 moved out of tokens.css, as a page names them: data-brand="violet", data-theme="violet-dark", or
 // brand: 'violet' (Serupa.theme.set, useTheme().set).

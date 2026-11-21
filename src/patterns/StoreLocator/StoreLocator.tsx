@@ -15,7 +15,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Store locator: find a shop by town or postcode, or by where you are, with each one's distance, whether it's open
@@ -126,7 +126,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading stores" /></Card> : (<>
         <div className="flex flex-col gap-6 pt-6">
           <div role="search" aria-label="Shops" className="flex flex-col gap-3">
             <div className="flex flex-wrap items-end gap-3">

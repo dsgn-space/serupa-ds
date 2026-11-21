@@ -13,7 +13,7 @@ import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
@@ -105,7 +105,7 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: account }]} title={`${account}: transactions`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your transactions" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading transactions" /></Card> : (<>
         <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">
           <Field label="Month" id="tx-month">
             <Select value={month} onChange={(e) => { setMonth(e.target.value); setCategory(''); }} options={months.map((m) => ({ value: m, label: monthName(m) }))} />

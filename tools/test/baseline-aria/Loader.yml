@@ -7,23 +7,8 @@
 # LongLabel
 - progressbar "Loading every report for the last twelve months"
 
-# PixelPatterns
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
-
 # Playground
 - progressbar "Loading…"
-
-# Skeleton
-- progressbar "Loading…"
-- progressbar "Loading profile"
 
 # SpinnerSpeeds
 - progressbar "Loading, one turn every 1000ms"
@@ -40,9 +25,6 @@
 - progressbar "Loading…"
 
 # VariantsAndSizes
-- progressbar "Loading…"
-- progressbar "Loading…"
-- progressbar "Loading…"
 - progressbar "Loading…"
 - progressbar "Loading…"
 - progressbar "Loading…"

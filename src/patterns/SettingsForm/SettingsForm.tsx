@@ -3,7 +3,7 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
@@ -118,7 +118,7 @@ function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormPr
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-4">
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
-            <Loader variant="skeleton" shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
+            <Skeleton shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
           </section>
         ))}
       </main>

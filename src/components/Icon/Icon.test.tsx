@@ -19,7 +19,7 @@ describe('Icon', () => {
   test('before the stylesheet arrives, every inline svg is 1em, not the width of its container (FEC7)', () => {
     const html = renderToString(<div>
       <Icon icon={Close} /><Icon name="close" /><Checkbox defaultChecked aria-label="Done" />
-      {(['ring', 'spokes', 'dots', 'pixel'] as const).map((v) => <Loader key={v} variant={v} />)}
+      {(['ring', 'spokes', 'dots'] as const).map((v) => <Loader key={v} variant={v} />)}
       <Progress variant="circle" value={40} aria-label="Upload" /><Rating defaultValue={3} aria-label="Score" />
     </div>);
     // A shadow root keeps the page's stylesheets out, as if bundle.css hadn't loaded.

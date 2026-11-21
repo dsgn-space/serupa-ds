@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
-import { Loader } from '../Loader/Loader';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { Timeline, TimelineItem } from './Timeline';
 
 const events = <>
@@ -81,8 +81,8 @@ function States(args: React.ComponentProps<typeof Timeline>) {
         : state === 'loaded' ? <Timeline {...args} />
         : <Timeline {...args} aria-busy>
             {[0, 1, 2, 3].map((i) => <TimelineItem key={i}
-              title={<Loader variant="skeleton" size="lg" className="w-40" label={i === 0 ? 'Loading history' : ''} />}
-              time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />)}
+              title={<Skeleton size="lg" className="w-40" label={i === 0 ? 'Loading history' : ''} />}
+              time={<Skeleton size="md" className="w-24" label="" />} />)}
           </Timeline>}
     </div>
   );

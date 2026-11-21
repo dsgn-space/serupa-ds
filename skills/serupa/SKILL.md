@@ -111,6 +111,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **DataGrid** (beta): A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. Also called: spreadsheet, editable data table.
 - **DescriptionList** (beta): A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. Also called: key-value list, definition list, property list.
 - **Duration**: How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". Also called: formatted duration, time span, elapsed time.
+- **FormattedDate**: Writes a date, a time or a range of dates the way the reader's language does: "November 20, 2026" in English, "20 November 2026" in Indonesian, "٢٠ نوفمبر ٢٠٢٦" in Egyptian Arabic. Also called: date format, date display, formatted time.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. Also called: number format, currency display.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette. Also called: mark, match highlighting.
 - **Icon**: Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Also called: glyph, symbol.
@@ -147,11 +148,12 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **EmptyState**: What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it. Also called: blank slate, zero state.
 - **ErrorBoundary**: Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page. Also called: error fallback, crash screen.
 - **Illustration** (beta): A small line drawing for an empty state, an error page or a finished flow. Also called: spot illustration, artwork.
-- **Loader**: Shows that something is loading when you can't say how far along it is. Also called: spinner, skeleton, loading indicator.
+- **Loader**: Shows that something is loading when you can't say how far along it is. Also called: spinner, loading indicator.
 - **Meter**: Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level. Also called: gauge.
 - **OfflineBanner** (beta): Says when the connection drops and when it comes back, on screen and to screen readers. Also called: connection banner, offline indicator.
 - **Progress**: Shows how far along a task is when you can tell: an upload, a setup, a quota. Also called: progress bar.
 - **SaveStatus**: A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. Also called: autosave indicator, sync status.
+- **Skeleton** (beta): Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Also called: placeholder, shimmer, loading placeholder. Before 17.0.0 it was `<Loader variant="skeleton">`.
 - **Toast**: A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Also called: snackbar, notification.
 
 ### Forms

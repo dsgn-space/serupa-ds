@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, lowContrast } from '../../../tools/test/vitest/helpers';
-import { Loader } from '../Loader/Loader';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { Timeline, TimelineItem } from './Timeline';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -200,7 +200,7 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     function History(p: { busy: boolean }) {
       return <div style={{ width: 480 }}><Timeline id="tl" aria-label="Order history" aria-busy={p.busy || undefined}>
         {[0, 1, 2].map((i) => p.busy
-          ? <TimelineItem key={i} title={<Loader variant="skeleton" size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />} time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />
+          ? <TimelineItem key={i} title={<Skeleton size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />} time={<Skeleton size="md" className="w-24" label="" />} />
           : <TimelineItem key={i} title="Order placed" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" />)}
       </Timeline></div>;
     }

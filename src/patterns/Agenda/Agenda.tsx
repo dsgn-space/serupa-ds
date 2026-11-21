@@ -13,7 +13,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
@@ -123,7 +123,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the agenda" /></Card> : (<>
         <div className="flex flex-wrap items-end justify-between gap-3 pt-6">
           <Field label="Track">
             <Select value={track} onChange={(e) => setTrack(e.target.value)} options={[{ value: '', label: 'Every track' }, ...tracks.map((t) => ({ value: t, label: t }))]} />

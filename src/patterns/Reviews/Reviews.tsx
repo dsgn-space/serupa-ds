@@ -12,7 +12,7 @@ import { ToggleButton } from '../../components/ToggleButton/ToggleButton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Card } from '../../components/Card/Card';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -105,7 +105,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading reviews" /></Card> : (<>
         <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-3">
           <section aria-labelledby="reviews-summary" className="flex flex-col gap-4">
             <h2 id="reviews-summary" className="m-0 text-lg font-semibold">Overall</h2>

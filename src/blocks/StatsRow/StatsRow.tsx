@@ -4,7 +4,7 @@ import { Card } from '../../components/Card/Card';
 import { Badge } from '../../components/Badge/Badge';
 import { Heading } from '../../components/Heading/Heading';
 import { Sparkline } from '../../components/Sparkline/Sparkline';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Stats row (BL2): a row of key numbers for the top of a dashboard, built from the components only, for an app to copy.
@@ -96,7 +96,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
           ? Array.from({ length: loadingCount }, (_, i) => (
             <Card as="li" key={i} padding="md">
               {/* One name for all of them: the first skeleton is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? w.loading(title) : ''} />
+              <Skeleton shape="text" lines={3} label={i === 0 ? w.loading(title) : ''} />
             </Card>
           ))
           : stats.map((s) => {

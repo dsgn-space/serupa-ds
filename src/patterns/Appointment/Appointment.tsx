@@ -10,7 +10,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Calendar } from '../../components/Calendar/Calendar';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -174,7 +174,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
 
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
+            : loading ? <Card><Skeleton shape="text" lines={6} label="Loading times" /></Card>
             : booked ? (
               <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
                 <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked for {slotWords(booked.day, booked.time, locale)}</h2>

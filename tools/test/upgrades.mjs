@@ -202,6 +202,13 @@ t('17.0.0: an Accordion with no type gets selectionMode="single", one with a typ
   && a17.notes.length === 1 && a17.notes[0].line === 6, JSON.stringify(a17));
 const n17 = fix('<Accordion>\n<Accordion selectionMode="single">', 'a.tsx');
 t('17.0.0: with no --from (the code may be 17.0.0\'s already), an Accordion with no type is listed, not changed', n17.text === '<Accordion>\n<Accordion selectionMode="single">' && n17.notes.length === 1 && n17.notes[0].line === 1, JSON.stringify(n17));
+const sk17 = fix('import { Card, Loader } from "@diki-stwn/serupa-ds";\n<Loader variant="skeleton" lines={3} label="" />\n<Loader variant={"skeleton"} shape="circle" tone="primary"></Loader>\n<Loader variant={v} />\n<Loader variant="pixel" pattern="snake" glow size="lg" />', 'a.tsx', '16.1.0');
+t('17.0.0: a skeleton Loader is a Skeleton, imported from the package; a pixel Loader is dots without pattern or glow; a variant worked out in code is listed', sk17.text === 'import { Card, Loader, Skeleton } from "@diki-stwn/serupa-ds";\n<Skeleton lines={3} label="" />\n<Skeleton shape="circle"></Skeleton>\n<Loader variant={v} />\n<Loader variant="dots" size="lg" />'
+  && sk17.notes.length === 1 && sk17.notes[0].line === 4, JSON.stringify(sk17));
+const sk17b = fix('import { Loader } from "@diki-stwn/serupa-ds";\n<Loader variant="skeleton" />', 'a.tsx', '16.1.0');
+t('17.0.0: a file whose only Loader was a skeleton imports Skeleton instead', sk17b.text === 'import { Skeleton } from "@diki-stwn/serupa-ds";\n<Skeleton />', sk17b.text);
+const skt = fix('.gallery { --loader-skeleton-rect-height: 12rem; --loader-pixel-dim: 0.2; --loader-size-md: 2rem; }', 'a.css', '16.1.0');
+t('17.0.0: a --loader-skeleton-* token is --skeleton-*, a --loader-pixel-* one is listed, and the others are left', skt.text === '.gallery { --skeleton-rect-height: 12rem; --loader-pixel-dim: 0.2; --loader-size-md: 2rem; }' && skt.notes.length === 1, JSON.stringify(skt));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 

@@ -10,7 +10,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -132,7 +132,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
         <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"
           description="Choose what people in each role can do. Changes apply to everyone in the role once you save." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the roles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading roles" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading roles" /></Card> : (<>
         {locked.length ? <p className="m-0 pt-6">{locked.map((r) => r.name).join(', ')} can do everything, and that can’t be changed, so the workspace always has someone who can.</p> : null}
         <div className="pt-4">
           <Table caption="What each role can do" hideCaption pinStart>
