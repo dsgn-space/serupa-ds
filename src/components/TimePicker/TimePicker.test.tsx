@@ -21,7 +21,7 @@ const readsLeftToRight = (root: Element, text: string) => {
   throw new Error(`no text "${text}"`);
 };
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
-const announcerA = () => document.querySelector<HTMLElement>('[data-dk-announcer-assertive]');
+const announcerA = () => document.querySelector<HTMLElement>('[data-srp-announcer-assertive]');
 const listOf = (id: string) => document.getElementById(el(id).getAttribute('aria-controls')!) as HTMLUListElement;
 const button = (id: string) => document.querySelector(`#${id} ~ span button`) as HTMLButtonElement;
 const time = (o: Element | undefined | null) => (o ? o.querySelector('span')!.textContent : undefined);
@@ -131,12 +131,12 @@ describe('TimePicker', () => {
     await expect.poll(() => announcerA()?.textContent).toContain('“22:00” wasn’t accepted');
   });
 
-  test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a dk-input box, labelled by Field; a "Choose a time" clock button out of the tab order; ref and className', async () => {
+  test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a srp-input box, labelled by Field; a "Choose a time" clock button out of the tab order; ref and className', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Meeting tref={ref} />);
     const i = el('tp'), l = listOf('tp'), b = button('tp');
     expect(ref.current).toBe(i);
-    expect(i.parentElement!.className).toMatch(/dk-input.*extra/);
+    expect(i.parentElement!.className).toMatch(/srp-input.*extra/);
     expect([i.getAttribute('role'), i.getAttribute('aria-haspopup'), i.getAttribute('aria-expanded'), i.placeholder]).toEqual(['combobox', 'listbox', 'false', 'hh:mm AM/PM']);
     expect([l.getAttribute('role'), l.getAttribute('aria-label'), b.getAttribute('aria-label'), b.tabIndex]).toEqual(['listbox', 'Choose a time', 'Choose a time', -1]);
     expect(document.querySelector('label')!.htmlFor).toBe('tp');

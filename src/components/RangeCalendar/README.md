@@ -24,10 +24,10 @@ import { RangeCalendar } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **Months** (`.dk-range-calendar__months`): one Calendar month, or two side by side.
-2. **Ends** (`.dk-calendar__day--selected`): the start and end days, filled.
-3. **Range** (`.dk-calendar__day--in-range`): the days between, shaded.
-4. **Status** (`.dk-range-calendar__status`): what to pick next, or the range once it's picked.
+1. **Months** (`.srp-range-calendar__months`): one Calendar month, or two side by side.
+2. **Ends** (`.srp-calendar__day--selected`): the start and end days, filled.
+3. **Range** (`.srp-calendar__day--in-range`): the days between, shaded.
+4. **Status** (`.srp-range-calendar__status`): what to pick next, or the range once it's picked.
 
 ## Usage
 

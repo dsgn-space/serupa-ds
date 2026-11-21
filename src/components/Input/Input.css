@@ -1,83 +1,83 @@
 /* ---------------------------------------------------------------
    Input: a single-line text field. Sizes sm, md, lg at the control heights (24, 32, 44px, like Button), with
    text-xs, text-sm and text-base. Field colors come from the alias tokens (field, field-border, placeholder),
-   so it keeps 4.5:1 text and a 3:1 border in every theme. Structure: .dk-input (the box) > .dk-input__icon--left,
-   .dk-input__field (the native <input>), .dk-input__count, .dk-input__icon--right. Every value goes through --input-* tokens.
+   so it keeps 4.5:1 text and a 3:1 border in every theme. Structure: .srp-input (the box) > .srp-input__icon--left,
+   .srp-input__field (the native <input>), .srp-input__count, .srp-input__icon--right. Every value goes through --input-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* Under DatePicker, DateRangePicker, TimePicker or NumberInput when typed text was put back (GR232): why, in the
    hint's color and size, until the text changes. A block of its own after the field's box. */
-.dk-input-rejected { display: block; margin-block-start: var(--spacing-1); color: var(--input-rejected-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
-.dk-input {
-  --dk-input-h: var(--input-height-md, var(--control-height-md));
-  --dk-input-px: var(--input-padding-x-md, var(--spacing-3));
-  --dk-input-icon: var(--input-icon-size-md, var(--spacing-4));
-  --dk-input-bd: var(--input-border, var(--field-border));
-  --dk-input-ring: var(--input-focus-ring, var(--focus-ring));
+.srp-input-rejected { display: block; margin-block-start: var(--spacing-1); color: var(--input-rejected-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
+.srp-input {
+  --srp-input-h: var(--input-height-md, var(--control-height-md));
+  --srp-input-px: var(--input-padding-x-md, var(--spacing-3));
+  --srp-input-icon: var(--input-icon-size-md, var(--spacing-4));
+  --srp-input-bd: var(--input-border, var(--field-border));
+  --srp-input-ring: var(--input-focus-ring, var(--focus-ring));
   display: inline-flex; align-items: center; gap: var(--input-gap, var(--spacing-2));
-  box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); height: var(--dk-input-h);
-  padding: var(--spacing-0) var(--dk-input-px);
+  box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); height: var(--srp-input-h);
+  padding: var(--spacing-0) var(--srp-input-px);
   background: var(--input-bg, var(--field)); color: var(--input-text, var(--text));
-  border: var(--input-border-width, var(--border-width-1)) solid var(--dk-input-bd);
+  border: var(--input-border-width, var(--border-width-1)) solid var(--srp-input-bd);
   border-radius: var(--input-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   cursor: text; vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
-.dk-input--size-sm { --dk-input-h: var(--input-height-sm, var(--control-height-sm)); --dk-input-px: var(--input-padding-x-sm, var(--spacing-2)); --dk-input-icon: var(--input-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-input--size-lg { --dk-input-h: var(--input-height-lg, var(--control-height-lg)); --dk-input-px: var(--input-padding-x-lg, var(--spacing-4)); --dk-input-icon: var(--input-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-input__field {
+.srp-input--size-sm { --srp-input-h: var(--input-height-sm, var(--control-height-sm)); --srp-input-px: var(--input-padding-x-sm, var(--spacing-2)); --srp-input-icon: var(--input-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-input--size-lg { --srp-input-h: var(--input-height-lg, var(--control-height-lg)); --srp-input-px: var(--input-padding-x-lg, var(--spacing-4)); --srp-input-icon: var(--input-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-input__field {
   flex: auto; width: var(--spacing-0); min-width: var(--spacing-0); height: var(--sizing-full);   /* grows from 0, so the box's own width rules, not the field's 20 characters (GR23) */
   margin: var(--spacing-0); padding: var(--spacing-0); border: 0; background: transparent; outline: none;
   color: inherit; font: inherit; letter-spacing: inherit;
 }
-.dk-input__field::placeholder { color: var(--input-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
+.srp-input__field::placeholder { color: var(--input-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
 /* A field the browser filled in (a saved login, an address) keeps its look. The browser's own fill, pale blue or
    yellow, covers only the native field: a rectangle inside the box, short of its padding, icons and corners. Clipped
    to the text it shows nowhere, and the text keeps the field's color, which the browser replaces too (GR411). */
-.dk-input__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--input-text, var(--text)); }
+.srp-input__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--input-text, var(--text)); }
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
    people edit the text or focus the field, whose ring is the mark then. */
-.dk-input:has(.dk-input__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-bd); }
+.srp-input:has(.srp-input__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--input-border-width, var(--border-width-1)) var(--srp-input-bd); }
 /* prefix and suffix: text in the box, muted; a press on it focuses the field (Input's handler). Whole while there's
    room; in a box too narrow for them and the count, they give way with an ellipsis rather than push the count out of
    the box (GR23: in a 156px grid column, or with a wider font before Inter loads). The field shrinks first: it grows
    from 0. */
-.dk-input__affix { min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; color: var(--input-affix, var(--placeholder)); white-space: nowrap; -webkit-user-select: none; user-select: none; cursor: text; }
-.dk-input__icon { display: inline-flex; flex-shrink: 0; color: var(--input-icon-color, var(--text-muted)); pointer-events: none; }
-.dk-input__icon .dk-icon { font-size: var(--dk-input-icon); }
+.srp-input__affix { min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; color: var(--input-affix, var(--placeholder)); white-space: nowrap; -webkit-user-select: none; user-select: none; cursor: text; }
+.srp-input__icon { display: inline-flex; flex-shrink: 0; color: var(--input-icon-color, var(--text-muted)); pointer-events: none; }
+.srp-input__icon .srp-icon { font-size: var(--srp-input-icon); }
 /* The count sits at the end of the field, in text-xs with tabular digits, like Textarea's; text-colored at maxLength. */
-.dk-input__count {
+.srp-input__count {
   flex-shrink: 0; color: var(--input-count, var(--placeholder)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
-.dk-input__count--full { color: var(--input-count-full, var(--text)); }
-@media (hover: hover) { .dk-input:hover:not(.dk-input--disabled, :has(.dk-input__field:disabled), .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-border-hover, var(--field-border-hover)); } }
+.srp-input__count--full { color: var(--input-count-full, var(--text)); }
+@media (hover: hover) { .srp-input:hover:not(.srp-input--disabled, :has(.srp-input__field:disabled), .srp-input--readonly, :focus-within) { --srp-input-bd: var(--input-border-hover, var(--field-border-hover)); } }
 /* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that
    forced-colors mode draws, since box-shadow rings disappear there. The ring shows at once (it fades only on the
    way out), so focus is never late, and a field a popup focuses as it opens doesn't animate on its first frame. */
-.dk-input:focus-within { transition-duration: var(--duration-0); --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); --dk-input-ring: var(--input-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-input--invalid:hover:not(.dk-input--disabled, :has(.dk-input__field:disabled), .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
+.srp-input:focus-within { transition-duration: var(--duration-0); --srp-input-bd: var(--srp-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--srp-input-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.srp-input--invalid { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); --srp-input-ring: var(--input-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-input--invalid:hover:not(.srp-input--disabled, :has(.srp-input__field:disabled), .srp-input--readonly, :focus-within) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
 /* A native constraint (required, type="email", pattern, min…) that fails after people edit the field or try to send the
    form takes the invalid look too (:user-invalid, never on first paint). Separate rules, so a browser without it skips only these. */
-.dk-input:has(.dk-input__field:user-invalid) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); --dk-input-ring: var(--input-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-input:has(.dk-input__field:user-invalid):hover:not(:focus-within) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
-.dk-input--readonly { background: var(--input-bg-readonly, var(--field-readonly)); }
+.srp-input:has(.srp-input__field:user-invalid) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); --srp-input-ring: var(--input-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-input:has(.srp-input__field:user-invalid):hover:not(:focus-within) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
+.srp-input--readonly { background: var(--input-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.dk-input--disabled, .dk-input:where(:has(.dk-input__field:disabled)) { --dk-input-bd: var(--input-border-disabled, var(--disabled-border)); background: var(--input-bg-readonly, var(--field-readonly)); color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-input--disabled .dk-input__field, .dk-input__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-input--disabled, .srp-input:where(:has(.srp-input__field:disabled)) { --srp-input-bd: var(--input-border-disabled, var(--disabled-border)); background: var(--input-bg-readonly, var(--field-readonly)); color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-input--disabled .srp-input__field, .srp-input__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
-@supports (-webkit-touch-callout: none) { .dk-input:not(.dk-input--size-lg) .dk-input__field { font-size: var(--text-base); } }
+@supports (-webkit-touch-callout: none) { .srp-input:not(.srp-input--size-lg) .srp-input__field { font-size: var(--text-base); } }
 /* actions: InputAction buttons at the end of the box, a 2px inset from its edge. A text action ("Apply") is the field's
    height less the border and that inset, in the primary color. An icon action is a muted icon with 4px round it (22,
    24 or 28px by size), centred and shaded on hover: the same button as SearchInput's ×, PasswordInput's eye and the
    pickers' buttons, which are InputActions. Each has its own focus ring inside the box's. Under 24px, a box behind it
    reaches out to 24px to press (WCAG 2.5.8). */
-.dk-input:has(> .dk-input__actions) { padding-inline-end: var(--input-actions-inset, var(--spacing-0\.5)); }
-.dk-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); }
-.dk-input-action {
+.srp-input:has(> .srp-input__actions) { padding-inline-end: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input-action {
   position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   box-sizing: border-box;
   margin: var(--spacing-0); padding: var(--spacing-0) var(--input-action-padding-x, var(--spacing-2));
@@ -86,29 +86,29 @@
   cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-.dk-input-action--text { margin-block: var(--input-actions-inset, var(--spacing-0\.5)); }
-.dk-input-action--icon { align-self: center; padding: var(--input-action-icon-padding, var(--spacing-1)); color: var(--input-action, var(--text-muted)); }
-.dk-input-action__icon { display: inline-flex; }
-.dk-input-action__icon .dk-icon { font-size: var(--dk-input-icon); }
+.srp-input-action--text { margin-block: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input-action--icon { align-self: center; padding: var(--input-action-icon-padding, var(--spacing-1)); color: var(--input-action, var(--text-muted)); }
+.srp-input-action__icon { display: inline-flex; }
+.srp-input-action__icon .srp-icon { font-size: var(--srp-input-icon); }
 @media (hover: hover) {
-  .dk-input-action--text:hover:not(:disabled) { background: var(--input-action-text-bg-hover, var(--primary-subtle)); }
-  .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--field-hover)); color: var(--input-action-hover, var(--text)); }
+  .srp-input-action--text:hover:not(:disabled) { background: var(--input-action-text-bg-hover, var(--primary-subtle)); }
+  .srp-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--field-hover)); color: var(--input-action-hover, var(--text)); }
 }
 /* Held down: the text action's tint deepens toward its own text color, so it follows a brand. */
-.dk-input-action--text:active:not(:disabled) { background: color-mix(in oklab, var(--input-action-text-bg-hover, var(--primary-subtle)), currentColor var(--opacity-10)); }
+.srp-input-action--text:active:not(:disabled) { background: color-mix(in oklab, var(--input-action-text-bg-hover, var(--primary-subtle)), currentColor var(--opacity-10)); }
 /* Held down: one step past hover, with or without a pointer that hovers. */
-.dk-input-action--icon:active:not(:disabled) { background: var(--input-action-bg-pressed, var(--field-pressed)); color: var(--input-action-hover, var(--text)); }
-.dk-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-input-action--icon:active:not(:disabled) { background: var(--input-action-bg-pressed, var(--field-pressed)); color: var(--input-action-hover, var(--text)); }
+.srp-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 /* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
    field the whole box is dimmed already, so the action isn't dimmed twice. */
-.dk-input-action:disabled { color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-input--readonly .dk-input-action:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
-.dk-input--disabled .dk-input-action:disabled, .dk-input:where(:has(.dk-input__field:disabled)) .dk-input-action:disabled { opacity: var(--opacity-100); }
-.dk-input-action::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
-@media (prefers-reduced-motion: reduce) { .dk-input-action { transition: none; } }
+.srp-input-action:disabled { color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-input--readonly .srp-input-action:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
+.srp-input--disabled .srp-input-action:disabled, .srp-input:where(:has(.srp-input__field:disabled)) .srp-input-action:disabled { opacity: var(--opacity-100); }
+.srp-input-action::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
+@media (prefers-reduced-motion: reduce) { .srp-input-action { transition: none; } }
 /* Touch: an icon action takes a press up the field's whole height and 10px toward the text, so a finger a little off
    it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {
-  .dk-input-action--icon::after { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+  .srp-input-action--icon::after { --srp-reach-block: min(var(--spacing-0), calc((100% - var(--srp-input-h)) / 2)); --srp-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--srp-reach-block); inset-inline: var(--srp-reach-text) var(--spacing-0); }
 }
 }

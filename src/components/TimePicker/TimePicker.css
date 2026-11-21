@@ -1,14 +1,14 @@
 /* ---------------------------------------------------------------
-   TimePicker: an Input box (dk-input) with a muted clock button at the end, and a list of times under it: surface,
+   TimePicker: an Input box (srp-input) with a muted clock button at the end, and a list of times under it: surface,
    a 1px border, 8px corners, shadow-lg, 4px padding, at most 240px tall and as wide as the field (at least
    160px). Options are 32px; the highlighted one gets highlight with a 2px primary bar at its start, the chosen one a primary check.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); }
+@layer srp.components {
+.srp-time-picker { --srp-tp-offset: var(--time-picker-offset, var(--spacing-1)); }
 /* The clock button is an InputAction (Input's button inside the box), 4px from its edge; this picker's tokens still set
    its colors. */
-.dk-time-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--time-picker-button, var(--text-muted)); --input-action-hover: var(--time-picker-button-hover, var(--text)); --input-action-bg-hover: var(--time-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--time-picker-button-bg-pressed, var(--field-pressed)); }
-.dk-time-picker__list {
+.srp-time-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--time-picker-button, var(--text-muted)); --input-action-hover: var(--time-picker-button-hover, var(--text)); --input-action-bg-hover: var(--time-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--time-picker-button-bg-pressed, var(--field-pressed)); }
+.srp-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));
   min-width: var(--time-picker-list-min-width, var(--spacing-40)); max-height: var(--time-picker-list-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
   /* Its rows lay out and paint inside it (it scrolls, so it clips already): a row changing never relays out the page (I3). */
@@ -19,40 +19,40 @@
   box-shadow: var(--time-picker-list-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; cursor: default;
 }
-.dk-time-picker__list[hidden] { display: none; }
+.srp-time-picker__list[hidden] { display: none; }
 /* Motion (EF1, GK1): the list fades in and grows from the edge facing the field, as Menu, Popover and Combobox do,
    in motion-enter-sm, and fades and shrinks back out over motion-exit-sm. Transitions from @starting-style rather
    than keyframes, so a list closed mid-way turns back from where it is. On close it's kept shown and in the top layer
    (display and overlay, allow-discrete) until it has faded, inert meanwhile (its times stay, TimePicker.tsx); a
    browser that can't keep it in the top layer (no overlay) closes it at once. Reduced motion: the fade alone. */
-.dk-time-picker__list { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
-.dk-time-picker__list:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+.srp-time-picker__list { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.srp-time-picker__list:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
 @supports (overlay: auto) {
-  .dk-time-picker__list[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+  .srp-time-picker__list[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
-.dk-time-picker__list[hidden] { opacity: var(--opacity-0); pointer-events: none; }
+.srp-time-picker__list[hidden] { opacity: var(--opacity-0); pointer-events: none; }
 /* Closed from the keyboard (data-instant, KW1): gone at once, no fade. */
-.dk-time-picker__list[hidden][data-instant] { transition: none; }
-.dk-time-picker__list[data-side="bottom"] { transform-origin: top; }
-.dk-time-picker__list[data-side="top"] { transform-origin: bottom; }
-@starting-style { .dk-time-picker__list:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-time-picker__list[hidden][data-instant] { transition: none; }
+.srp-time-picker__list[data-side="bottom"] { transform-origin: top; }
+.srp-time-picker__list[data-side="top"] { transform-origin: bottom; }
+@starting-style { .srp-time-picker__list:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-time-picker__list[hidden] { scale: var(--scale-95); }
-  @starting-style { .dk-time-picker__list:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+  .srp-time-picker__list[hidden] { scale: var(--scale-95); }
+  @starting-style { .srp-time-picker__list:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
-.dk-time-picker__option {
+.srp-time-picker__option {
   display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); box-sizing: border-box;
   min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-1\.5) var(--spacing-2);   /* Combobox's rows: 6px above and below, so a wrapped label keeps them */
   /* Its corners nest in the list's, as Combobox's do: the list's radius less the padding and border between them (8 - 4 - 1 = 3px). */
   border-radius: max(var(--spacing-0), calc(var(--time-picker-list-radius, var(--radius-surface)) - var(--time-picker-list-padding, var(--spacing-1)) - var(--border-width-1))); font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
-.dk-time-picker__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
-.dk-time-picker__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
-.dk-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4); }
-@media (forced-colors: active) { .dk-time-picker__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .dk-time-picker__list { border-color: CanvasText; } }
+.srp-time-picker__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
+.srp-time-picker__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
+.srp-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
+.srp-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4); }
+@media (forced-colors: active) { .srp-time-picker__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .srp-time-picker__list { border-color: CanvasText; } }
 /* Touch: 44px options. */
 @media (pointer: coarse) {
-  .dk-time-picker__option { min-height: max(var(--time-picker-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
+  .srp-time-picker__option { min-height: max(var(--time-picker-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
 }
 }

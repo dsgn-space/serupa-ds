@@ -4,16 +4,16 @@
    as wide as the field. With multiple, the picked options are tags that wrap with the text inside the box. Options are 32px with an optional muted second line; the highlighted one gets
    highlight with a 2px primary bar at its start, and the selected one has a primary check. Empty and loading messages are muted.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* The × and the chevron are InputActions (Input's buttons inside the box); the chevron's tokens still set their colors,
    and they sit 4px from the box's edge. The chevron turns while the list is open. */
-.dk-combobox { --input-actions-inset: var(--spacing-1); --input-action: var(--combobox-chevron, var(--text-muted)); --input-action-hover: var(--combobox-chevron-hover, var(--text)); --input-action-bg-hover: var(--combobox-chevron-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--combobox-chevron-bg-pressed, var(--field-pressed)); }
-.dk-combobox__toggle .dk-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
-.dk-combobox[data-state="open"] .dk-combobox__toggle .dk-icon { --dk-combobox-turn: 180deg; rotate: var(--dk-combobox-turn); }
+.srp-combobox { --input-actions-inset: var(--spacing-1); --input-action: var(--combobox-chevron, var(--text-muted)); --input-action-hover: var(--combobox-chevron-hover, var(--text)); --input-action-bg-hover: var(--combobox-chevron-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--combobox-chevron-bg-pressed, var(--field-pressed)); }
+.srp-combobox__toggle .srp-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
+.srp-combobox[data-state="open"] .srp-combobox__toggle .srp-icon { --srp-combobox-turn: 180deg; rotate: var(--srp-combobox-turn); }
 /* An option's corners nest in the list's: its radius less the padding and border between them (8 - 4 - 1 = 3px). */
-.dk-combobox__popup {
-  --dk-combobox-nest: max(var(--spacing-0), calc(var(--combobox-listbox-radius, var(--radius-surface)) - var(--combobox-listbox-padding, var(--spacing-1)) - var(--border-width-1)));
-  --dk-combobox-offset: var(--combobox-offset, var(--spacing-1));
+.srp-combobox__popup {
+  --srp-combobox-nest: max(var(--spacing-0), calc(var(--combobox-listbox-radius, var(--radius-surface)) - var(--combobox-listbox-padding, var(--spacing-1)) - var(--border-width-1)));
+  --srp-combobox-offset: var(--combobox-offset, var(--spacing-1));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--combobox-z-index, var(--z-popover));
   /* At least as wide as the field (set by the script), at most 28rem, so one long label wraps instead of widening the list. */
   max-width: min(calc(var(--sizing-full) - var(--spacing-4)), var(--combobox-listbox-max-width, var(--container-md)));
@@ -28,65 +28,65 @@
   box-shadow: var(--combobox-listbox-shadow, var(--elevation-overlay));
   color: var(--combobox-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }
-.dk-combobox__popup[hidden] { display: none; }
+.srp-combobox__popup[hidden] { display: none; }
 /* The listbox scrolls, and only the rows in view are drawn (Combobox.tsx): an empty ::before and ::after, as tall as
    the rows above and below, stand in for the rest, as in VirtualList. */
-.dk-combobox__listbox { position: relative; flex: auto; min-height: var(--spacing-0); overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; }
-.dk-combobox__listbox::before { content: ""; display: block; height: var(--dk-cbx-before, var(--spacing-0)); }
-.dk-combobox__listbox::after { content: ""; display: block; height: var(--dk-cbx-after, var(--spacing-0)); }
+.srp-combobox__listbox { position: relative; flex: auto; min-height: var(--spacing-0); overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; }
+.srp-combobox__listbox::before { content: ""; display: block; height: var(--srp-cbx-before, var(--spacing-0)); }
+.srp-combobox__listbox::after { content: ""; display: block; height: var(--srp-cbx-after, var(--spacing-0)); }
 /* Motion (EF1, GK1): the list fades in and grows from the edge facing the field, as Menu and Popover do, in
    motion-enter-sm, and fades and shrinks back out over motion-exit-sm. Transitions from @starting-style rather than
    keyframes, so a list closed mid-way turns back from where it is. On close it's kept shown and in the top layer
    (display and overlay, allow-discrete) until it has faded, inert meanwhile (its options stay, Combobox.tsx); a
    browser that can't keep it in the top layer (no overlay) closes it at once. Reduced motion: the fade alone. */
-.dk-combobox__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
-.dk-combobox__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+.srp-combobox__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.srp-combobox__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
 @supports (overlay: auto) {
-  .dk-combobox__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+  .srp-combobox__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
-.dk-combobox__popup[hidden] { opacity: var(--opacity-0); pointer-events: none; }
+.srp-combobox__popup[hidden] { opacity: var(--opacity-0); pointer-events: none; }
 /* Closed from the keyboard (data-instant, KW1): gone at once, no fade. */
-.dk-combobox__popup[hidden][data-instant] { transition: none; }
-.dk-combobox__popup[data-side="bottom"] { transform-origin: top; }
-.dk-combobox__popup[data-side="top"] { transform-origin: bottom; }
-@starting-style { .dk-combobox__popup:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-combobox__popup[hidden][data-instant] { transition: none; }
+.srp-combobox__popup[data-side="bottom"] { transform-origin: top; }
+.srp-combobox__popup[data-side="top"] { transform-origin: bottom; }
+@starting-style { .srp-combobox__popup:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-combobox__popup[hidden] { scale: var(--scale-95); }
-  @starting-style { .dk-combobox__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+  .srp-combobox__popup[hidden] { scale: var(--scale-95); }
+  @starting-style { .srp-combobox__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dk-combobox__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit); }
-  .dk-combobox__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter); }
+  .srp-combobox__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit); }
+  .srp-combobox__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter); }
   @supports (overlay: auto) {
-    .dk-combobox__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+    .srp-combobox__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
   }
 }
-.dk-combobox__option {
+.srp-combobox__option {
   display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-height: var(--combobox-option-height, var(--control-height-md));
   padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2));
-  border-radius: var(--combobox-option-radius, var(--dk-combobox-nest, var(--radius-control))); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  border-radius: var(--combobox-option-radius, var(--srp-combobox-nest, var(--radius-control))); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
-.dk-combobox__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
-.dk-combobox__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-combobox__option--active { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--combobox-option-indicator, var(--highlight-indicator)); }
+.srp-combobox__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
+.srp-combobox__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
+.srp-combobox__option--active { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--combobox-option-indicator, var(--highlight-indicator)); }
 /* Held down: one step past the highlight, as a Menu item and a CascadeSelect option are, so a press shows before the list closes. */
-.dk-combobox__option:active:not([aria-disabled="true"]) { background: var(--combobox-option-bg-pressed, var(--pressed)); }
-.dk-combobox__option[aria-disabled="true"], .dk-combobox__option[aria-disabled="true"] * { color: var(--combobox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-combobox__group-label { padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); -webkit-user-select: none; user-select: none; }
-.dk-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
-.dk-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-combobox__option--active .dk-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
-.dk-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary)); font-size: var(--spacing-4); }
-.dk-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
+.srp-combobox__option:active:not([aria-disabled="true"]) { background: var(--combobox-option-bg-pressed, var(--pressed)); }
+.srp-combobox__option[aria-disabled="true"], .srp-combobox__option[aria-disabled="true"] * { color: var(--combobox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-combobox__group-label { padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); -webkit-user-select: none; user-select: none; }
+.srp-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-combobox__option--active .srp-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
+.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary)); font-size: var(--spacing-4); }
+.srp-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
 /* multiple: the tags and the text wrap inside the box, which grows a row at a time; the buttons stay at the end. */
-.dk-combobox--multiple { height: auto; min-height: var(--dk-input-h); }
-.dk-combobox__values { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); padding-block: var(--spacing-0\.5); }
-.dk-combobox__tags { display: contents; }
-.dk-combobox--multiple .dk-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
-@media (prefers-reduced-motion: reduce) { .dk-combobox__toggle .dk-icon { transition: none; } }
-@media (forced-colors: active) { .dk-combobox__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
+.srp-combobox--multiple { height: auto; min-height: var(--srp-input-h); }
+.srp-combobox__values { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); padding-block: var(--spacing-0\.5); }
+.srp-combobox__tags { display: contents; }
+.srp-combobox--multiple .srp-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
+@media (prefers-reduced-motion: reduce) { .srp-combobox__toggle .srp-icon { transition: none; } }
+@media (forced-colors: active) { .srp-combobox__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
 /* Touch: 44px options. */
 @media (pointer: coarse) {
-  .dk-combobox__option { min-height: max(var(--combobox-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
+  .srp-combobox__option { min-height: max(var(--combobox-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
 }
 }

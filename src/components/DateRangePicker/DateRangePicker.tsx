@@ -134,7 +134,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   // nothing can be picked (L8E79).
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
   const [base, setBase] = React.useState(() => system.start(value.start || home()));
-  const popId = domId('dk-drp', React.useId());
+  const popId = domId('srp-drp', React.useId());
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the fields
   const box = React.useRef<HTMLSpanElement | null>(null);
   const startField = React.useRef<HTMLInputElement | null>(null);
@@ -180,7 +180,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   };
   // The calendar stays (inert) while the popup fades out (DZ1).
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
+  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--srp-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   const off = !!disabled || !!readOnly;
   const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels, max)
@@ -188,7 +188,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
   const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(system.start(it.start)); };
   const field = (which: 'start' | 'end') => (
-    <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
+    <input type="text" inputMode="numeric" autoComplete="off" className="srp-input__field srp-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
       aria-label={which === 'start' ? startLabel || sds.labels.startDate : endLabel || sds.labels.endDate} aria-describedby={cn(describedBy, popId + '-format', rejected && popId + '-rejected')} aria-errormessage={invalid ? errorMessage : undefined} aria-required={required} aria-invalid={invalid || undefined}
       value={text[which]} placeholder={datePattern(locale)} disabled={disabled} readOnly={readOnly} required={requiredProp} form={form}
@@ -204,7 +204,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   const starts = { onStart: (d: Date) => { commit({ start: d, end: null }); } };
   const months = (
     <RangePickContext.Provider value={starts}>
-      <RangeCalendar className="dk-date-range-picker__calendar" aria-label={buttonLabel || sds.labels.chooseDates} value={value} months={two ? 2 : 1} month={base} onMonthChange={setBase}
+      <RangeCalendar className="srp-date-range-picker__calendar" aria-label={buttonLabel || sds.labels.chooseDates} value={value} months={two ? 2 : 1} month={base} onMonthChange={setBase}
         min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={focusIn}
         onValueChange={(r) => { commit(r); close(true, 'select'); }} />
     </RangePickContext.Provider>
@@ -213,22 +213,22 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   return (
     <>
     <span {...rest} ref={mergedRef} role="group"
-      className={cn('dk-input', 'dk-input--size-' + size, 'dk-date-range-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)}
+      className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-range-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)}
       data-component="date-range-picker" data-state={open ? 'open' : 'closed'} data-size={size}>
       {field('start')}
-      <span className="dk-date-range-picker__dash" aria-hidden>–</span>
+      <span className="srp-date-range-picker__dash" aria-hidden>–</span>
       <span id={popId + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {field('end')}
-      <span className="dk-input__actions dk-date-range-picker__actions">
-        <InputAction ref={button} className="dk-date-picker__button dk-date-range-picker__button" icon={icons.DateRange} label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
+      <span className="srp-input__actions srp-date-range-picker__actions">
+        <InputAction ref={button} className="srp-date-picker__button srp-date-range-picker__button" icon={icons.DateRange} label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
           disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }} />
       </span>
       {startName ? <input type="hidden" name={startName} form={form} value={value.start ? isoDate(value.start) : ''} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} form={form} value={value.end ? isoDate(value.end) : ''} disabled={disabled} /> : null}
-      <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup dk-date-range-picker__popup"
+      <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-date-picker__popup srp-date-range-picker__popup"
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
         {open || exit.leaving ? <>
-          {presets ? <div className="dk-date-range-picker__body">
+          {presets ? <div className="srp-date-range-picker__body">
             {months}
             <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
           </div> : months}
@@ -236,7 +236,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
       </div>
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
-      {rejected && <span id={popId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+      {rejected && <span id={popId + '-rejected'} className="srp-input-rejected">{rejected}</span>}
     </>
   );
 }

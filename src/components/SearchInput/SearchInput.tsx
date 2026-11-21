@@ -63,16 +63,16 @@ function SearchInputRender({ ref, ...props }: SearchInputProps & React.RefAttrib
   };
   const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
-    <span className={cn('dk-input dk-search-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
+    <span className={cn('srp-input srp-search-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="search-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
-      <span className="dk-input__icon dk-input__icon--left dk-search-input__icon" aria-hidden={props.loading ? undefined : true}>
+      <span className="srp-input__icon srp-input__icon--left srp-search-input__icon" aria-hidden={props.loading ? undefined : true}>
         {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? sds.labels.searching} /> : <Icon icon={icons.Search} />}
       </span>
       <input {...rest} ref={mergedRef}
-        type="search" enterKeyHint={rest.enterKeyHint || 'search'} className="dk-input__field" onChange={onChange} onKeyDown={onKeyDown} />
+        type="search" enterKeyHint={rest.enterKeyHint || 'search'} className="srp-input__field" onChange={onChange} onKeyDown={onKeyDown} />
       {text !== '' && !locked ? (
-        <span className="dk-input__actions">
-          <InputAction className="dk-search-input__clear" icon={icons.Close} label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}
+        <span className="srp-input__actions">
+          <InputAction className="srp-search-input__clear" icon={icons.Close} label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}
             onClick={clear} onMouseDown={(e) => e.preventDefault()} />
         </span>
       ) : null}

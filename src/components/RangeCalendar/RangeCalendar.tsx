@@ -65,7 +65,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   const root = React.useRef<HTMLDivElement | null>(null);
   const merged = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; });
   // autoFocus lands on the first month's day that holds the Tab stop: the start, else today.
-  useAutoFocus(props.autoFocus, () => root.current && root.current.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]'));
+  useAutoFocus(props.autoFocus, () => root.current && root.current.querySelector<HTMLElement>('.srp-calendar__day[tabindex="0"]'));
   const locale = useLocale(props.locale);
   const system = calendarOf(props.calendar, 'RangeCalendar');
   const [held, setOwn, controlled] = useControllable<DateRangeInput | null>(props.value, norm(props.defaultValue), 'RangeCalendar', 'value');
@@ -75,7 +75,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   const [anchor, setAnchor] = React.useState<Date | null>(null);
   const [hover, setHover] = React.useState<Date | null>(null);
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
-  const monthsId = domId('dk-range-calendar', React.useId()) + '-months';
+  const monthsId = domId('srp-range-calendar', React.useId()) + '-months';
   // With no month, defaultMonth or value, the month is today's, and the server's today may be in another month than
   // the visitor's (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws
   // the month the server's HTML shows (data-month carries it), so nothing mismatches; then an effect moves to the
@@ -125,7 +125,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
     return {
       isEnd: (d: Date) => sameDay(d, s) || sameDay(d, e),
       // The ends join the band between them, so each is square on the band's side (none when they're the same day).
-      dayClass: (d: Date) => (inside(d) ? 'dk-calendar__day--in-range' : s && e && s < e ? (sameDay(d, s) ? 'dk-calendar__day--range-start' : sameDay(d, e) ? 'dk-calendar__day--range-end' : undefined) : undefined),
+      dayClass: (d: Date) => (inside(d) ? 'srp-calendar__day--in-range' : s && e && s < e ? (sameDay(d, s) ? 'srp-calendar__day--range-start' : sameDay(d, e) ? 'srp-calendar__day--range-end' : undefined) : undefined),
       dayLabel: (d: Date, name: string) => {
         if (sameDay(d, s)) return name + ', ' + (sameDay(d, e) ? L.startDate + ', ' + L.endDate : L.startDate);
         if (sameDay(d, e)) return name + ', ' + L.endDate;
@@ -156,15 +156,15 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   );
   return (
     <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}
-      className={cn('dk-range-calendar', two && 'dk-range-calendar--two', props.className)} data-component="range-calendar">
+      className={cn('srp-range-calendar', two && 'srp-range-calendar--two', props.className)} data-component="range-calendar">
       {/* Escape drops a half-picked range, and goes no further (a Dialog around it stays open); in DateRangePicker the
           start is already its value, so Escape is the popup's. Leaving the days takes the preview away. */}
-      <div className="dk-range-calendar__months" role="presentation" id={monthsId} data-month={isoDate(base)}
+      <div className="srp-range-calendar__months" role="presentation" id={monthsId} data-month={isoDate(base)}
         onKeyDown={(e) => { if (e.key === 'Escape' && anchor && !inPicker) { e.preventDefault(); e.stopPropagation(); setAnchor(null); setHover(null); } }}
         onMouseLeave={() => { if (open) setHover(null); }}>
         {cal(base, true)}{two ? cal(system.add(base, 1), false) : null}
       </div>
-      <p className="dk-range-calendar__status" aria-live="polite">{status}</p>
+      <p className="srp-range-calendar__status" aria-live="polite">{status}</p>
     </div>
   );
 }

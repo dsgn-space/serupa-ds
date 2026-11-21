@@ -1,39 +1,39 @@
 /* ---------------------------------------------------------------
-   DatePicker: an Input box (dk-input) with a muted calendar button at the end, and a Calendar in a popup under
+   DatePicker: an Input box (srp-input) with a muted calendar button at the end, and a Calendar in a popup under
    it: surface, a 1px border, 8px corners, shadow-lg, 12px padding, 4px from the field. The button is the icon
    size of the field and takes the field's focus ring look on its own focus.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-date-picker { --dk-dp-offset: var(--date-picker-offset, var(--spacing-1)); }
+@layer srp.components {
+.srp-date-picker { --srp-dp-offset: var(--date-picker-offset, var(--spacing-1)); }
 /* The calendar button is an InputAction (Input's button inside the box), 4px from its edge; this picker's tokens still
    set its colors and focus ring. */
-.dk-date-picker, .dk-date-range-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--date-picker-button, var(--text-muted)); --input-action-hover: var(--date-picker-button-hover, var(--text)); --input-action-bg-hover: var(--date-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--date-picker-button-bg-pressed, var(--field-pressed)); --input-action-focus-ring: var(--date-picker-focus-ring, var(--focus-ring)); }
-.dk-date-picker__popup {
+.srp-date-picker, .srp-date-range-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--date-picker-button, var(--text-muted)); --input-action-hover: var(--date-picker-button-hover, var(--text)); --input-action-bg-hover: var(--date-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--date-picker-button-bg-pressed, var(--field-pressed)); --input-action-focus-ring: var(--date-picker-focus-ring, var(--focus-ring)); }
+.srp-date-picker__popup {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--date-picker-z-index, var(--z-popover));
   margin: var(--spacing-0); padding: var(--date-picker-popup-padding, var(--spacing-3));
   border: var(--border-width-1) solid var(--date-picker-popup-border, var(--border-overlay)); border-radius: var(--date-picker-popup-radius, var(--radius-surface));
   background: var(--date-picker-popup-bg, var(--surface-overlay)); --surface-behind: var(--date-picker-popup-bg, var(--surface-overlay)); --border: var(--date-picker-popup-divider, var(--border-overlay)); color: var(--date-picker-popup-text, var(--text));
   box-shadow: var(--date-picker-popup-shadow, var(--elevation-overlay));
   cursor: default;
-  transform-origin: var(--dk-layer-origin, top);
+  transform-origin: var(--srp-layer-origin, top);
 }
-.dk-date-picker__popup[hidden] { display: none; }
+.srp-date-picker__popup[hidden] { display: none; }
 /* Motion (DZ1): transitions, not keyframes, so closing while it opens turns back from where it is. In from
    @starting-style over motion-enter-sm; out over motion-exit-sm, kept shown and in the top layer (display and overlay,
    allow-discrete) until it has faded, inert meanwhile (the calendar stays, DatePicker.tsx). A browser that can't keep
    it in the top layer (no overlay) closes it at once. Reduced motion: the fade alone. DateRangePicker's popup is the same. */
-.dk-date-picker__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
-.dk-date-picker__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+.srp-date-picker__popup { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.srp-date-picker__popup:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
 @supports (overlay: auto) {
-  .dk-date-picker__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+  .srp-date-picker__popup[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
-.dk-date-picker__popup[hidden] { opacity: var(--opacity-0); pointer-events: none; }
+.srp-date-picker__popup[hidden] { opacity: var(--opacity-0); pointer-events: none; }
 /* Closed from the keyboard (data-instant, KW1): gone at once, no fade. */
-.dk-date-picker__popup[hidden][data-instant] { transition: none; }
-@starting-style { .dk-date-picker__popup:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-date-picker__popup[hidden][data-instant] { transition: none; }
+@starting-style { .srp-date-picker__popup:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-date-picker__popup[hidden] { scale: var(--scale-95); }
-  @starting-style { .dk-date-picker__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+  .srp-date-picker__popup[hidden] { scale: var(--scale-95); }
+  @starting-style { .srp-date-picker__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
-@media (forced-colors: active) { .dk-date-picker__popup { border-color: CanvasText; } }
+@media (forced-colors: active) { .srp-date-picker__popup { border-color: CanvasText; } }
 }

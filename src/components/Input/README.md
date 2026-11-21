@@ -43,10 +43,10 @@ import { Input, InputAction } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Icons` story.
 
-1. **Field** (`.dk-input__field`): where the text is typed.
-2. **Leading icon** (`.dk-input__icon--left`): an optional picture of what goes in, such as a search glass.
-3. **Trailing icon** (`.dk-input__icon--right`): an optional picture or status at the end.
-4. **Actions** (`.dk-input__actions`): InputAction buttons at the very end of the box: a text action is the field's height less 6px (26px at md), an icon action its icon with 4px round it (24px at md).
+1. **Field** (`.srp-input__field`): where the text is typed.
+2. **Leading icon** (`.srp-input__icon--left`): an optional picture of what goes in, such as a search glass.
+3. **Trailing icon** (`.srp-input__icon--right`): an optional picture or status at the end.
+4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box: a text action is the field's height less 6px (26px at md), an icon action its icon with 4px round it (24px at md).
 
 ## Usage
 

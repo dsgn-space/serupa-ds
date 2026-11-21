@@ -3,11 +3,11 @@
    a muted icon at the field's icon size, shaded on hover, with its own focus ring. The browser's own clear
    button and decoration are hidden so there's only one.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-search-input__icon { color: var(--search-input-icon-color, var(--text-muted)); }
-.dk-search-input__icon .dk-loader { --dk-loader-size: var(--dk-input-icon); }
-.dk-search-input .dk-input__field::-webkit-search-cancel-button, .dk-search-input .dk-input__field::-webkit-search-decoration { appearance: none; }
+@layer srp.components {
+.srp-search-input__icon { color: var(--search-input-icon-color, var(--text-muted)); }
+.srp-search-input__icon .srp-loader { --srp-loader-size: var(--srp-input-icon); }
+.srp-search-input .srp-input__field::-webkit-search-cancel-button, .srp-search-input .srp-input__field::-webkit-search-decoration { appearance: none; }
 /* The × is an InputAction (Input's button inside the box); this field's own tokens still set its colors, corner and
    the inset around it. */
-.dk-search-input { --input-action: var(--search-input-clear, var(--text-muted)); --input-action-hover: var(--search-input-clear-hover, var(--text)); --input-action-bg-hover: var(--search-input-clear-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--search-input-clear-bg-pressed, var(--field-pressed)); --input-action-focus-ring: var(--search-input-focus-ring, var(--focus-ring)); --input-action-radius: var(--search-input-clear-radius, var(--radius-inner)); --input-actions-inset: var(--search-input-clear-padding, var(--spacing-1)); --input-action-icon-padding: var(--search-input-clear-padding, var(--spacing-1)); }
+.srp-search-input { --input-action: var(--search-input-clear, var(--text-muted)); --input-action-hover: var(--search-input-clear-hover, var(--text)); --input-action-bg-hover: var(--search-input-clear-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--search-input-clear-bg-pressed, var(--field-pressed)); --input-action-focus-ring: var(--search-input-focus-ring, var(--focus-ring)); --input-action-radius: var(--search-input-clear-radius, var(--radius-inner)); --input-actions-inset: var(--search-input-clear-padding, var(--spacing-1)); --input-action-icon-padding: var(--search-input-clear-padding, var(--spacing-1)); }
 }
