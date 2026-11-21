@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
@@ -125,7 +127,8 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
+      <Center as="main" id="main" vertical className="outline-none">
+        <Stack gap={6}>
         <p className="m-0 text-base font-semibold">Acme</p>
         <Card className="flex flex-col gap-4">
           {step === 'form' ? (
@@ -192,7 +195,8 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
             </>
           )}
         </Card>
-      </main>
+        </Stack>
+      </Center>
     </div>
   );
 }
