@@ -24,13 +24,11 @@
 /* With presets, the shortcuts sit after the months, and under them on a narrow screen (RU11). */
 .dk-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
 @media (max-width: 639.98px) { .dk-date-range-picker__body { flex-direction: column; } }
-.dk-date-range-picker__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--date-range-picker-months-gap, var(--spacing-6)); }
-.dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: hidden; }
+/* The months and the status line are RangeCalendar's; this picker's own tokens still set their gap and color. */
+.dk-date-range-picker__calendar { --range-calendar-months-gap: var(--date-range-picker-months-gap, var(--spacing-6)); --range-calendar-status-color: var(--date-range-picker-status-color, var(--text-muted)); }
 /* Stacked, the popup is as wide as one month (or the status line, wrapped to it), not as wide as two across, so it
    keeps 8px from both sides of a phone screen as DatePicker's does (GR9). */
 @media (max-width: 639.98px) { .dk-date-range-picker__popup { width: min-content; } }
-@media (max-width: 639.98px) { .dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: visible; } }
-.dk-date-range-picker__status { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--date-range-picker-status-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 /* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
    off it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {

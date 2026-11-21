@@ -151,6 +151,13 @@ describe('DateRangePicker', () => {
     expect(inRange('trip')).toBe('03-11,03-12,03-13');
   });
 
+  test('in the popup, the ends and the days between are named in words, not by color alone, as RangeCalendar names them', async () => {
+    await render(<Trip value={{ start: new Date(2025, 2, 18), end: new Date(2025, 2, 20) }} />);
+    await userEvent.click(btn('trip'));
+    expect(['2025-03-18', '2025-03-19', '2025-03-20'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
+      'Tuesday, March 18, 2025, Start date', 'Wednesday, March 19, 2025, in the range', 'Thursday, March 20, 2025, End date']);
+  });
+
   test('picking: the first pick sets the start and clears the end, asking for the end; pointing previews the range across both months; a day before the start moves it; the second pick sets the end, closes and returns focus to the start field', async () => {
     await render(<Trip />);
     await userEvent.click(btn('trip'));
@@ -400,7 +407,7 @@ describe('DateRangePicker presets (RU11)', () => {
     expect(vals('own')).toBe('03/24/2025 – 03/28/2025');
     expect(inRange('own')).toBe('03-25,03-26,03-27');
     await userEvent.click(btn('none'));
-    expect(pop('none').querySelector('[role=group]')).toBe(null);
+    expect(pop('none').querySelector('[role=group][aria-label=Shortcuts]')).toBe(null);
   });
 });
 
