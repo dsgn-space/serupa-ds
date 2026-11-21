@@ -17,7 +17,7 @@ import { ThemeControls } from './theme';
 // Every page, for the search: its section is its group, and its summary shows under the name and finds it by what it does.
 const commands: Command[] = [
   ...sections.filter((s) => s.lead).map((s) => ({ id: s.path, label: s.label, group: 'Sections', onSelect: () => navigate(s.path) })),
-  ...pages.map((p) => ({ id: p.path, label: p.name, group: p.section, description: p.summary || undefined, keywords: p.group ? [p.group] : undefined, onSelect: () => navigate(p.path) })),
+  ...pages.map((p) => ({ id: p.path, label: p.name, group: p.section, description: p.summary || undefined, keywords: [p.group, ...p.also].filter(Boolean), onSelect: () => navigate(p.path) })),
 ];
 
 // The site's own pages, after the docs' sections.
