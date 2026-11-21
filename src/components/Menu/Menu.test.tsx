@@ -61,7 +61,7 @@ describe('Menu', () => {
       for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(px(cs.left) + ' ' + px(cs.top)); } await new Promise(requestAnimationFrame); }
       return [...seen];
     };
-      await render(<div style={{ padding: 80 }}><Menu placement="bottom-start" trigger={<Button id="mpress">Actions</Button>}><MenuItem>Edit</MenuItem></Menu></div>);
+      await render(<div style={{ padding: 80 }}><Menu placement="bottom-start" trigger={<Button id="mpress" style={{ '--button-press-scale': 'var(--scale-97)' } as React.CSSProperties}>Actions</Button>}><MenuItem>Edit</MenuItem></Menu></div>);
       const b = document.getElementById('mpress')!;
       b.focus();
       await userEvent.keyboard('[Space>]');
