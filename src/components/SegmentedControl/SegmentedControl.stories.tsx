@@ -14,6 +14,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm beside a chart's title, md by default, lg as a page's main switch. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <SegmentedControl key={s} {...args} aria-label={'Period, ' + s} size={s} />)}
+  </div>,
+};
 export const WithIcons: Story = { args: { 'aria-label': 'View', defaultValue: 'list', options: [{ value: 'list', icon: 'list', label: 'List' }, { value: 'board', icon: 'view_kanban', label: 'Board' }, { value: 'calendar', icon: 'calendar_month', label: 'Calendar' }] } };
 export const IconOnly: Story = { args: { 'aria-label': 'Text alignment', size: 'sm', defaultValue: 'left', options: [{ value: 'left', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'center', icon: 'format_align_center', 'aria-label': 'Center' }, { value: 'right', icon: 'format_align_right', 'aria-label': 'Right' }] } };
 export const FullWidth: Story = { args: { fullWidth: true }, decorators: [(Story) => <div style={{ maxWidth: 'var(--container-sm)' }}><Story /></div>] };
