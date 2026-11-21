@@ -17,7 +17,7 @@ describe('ShowMore', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<ShowMore id="x" ref={ref} className="extra" data-x="y">Hello</ShowMore>);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-show-more extra', 'y', 'show-more']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-show-more extra', 'y', 'show-more']);
   });
 
   test('closed: cut after `lines` lines, with a Show more button that opens it and becomes Show less; the whole text is always in the page', async () => {

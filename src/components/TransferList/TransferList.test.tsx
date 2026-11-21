@@ -15,7 +15,7 @@ const options = [
 const active = () => document.activeElement as HTMLElement;
 const list = (n: string) => page.getByRole('group', { name: new RegExp('^' + n) });
 const items = (n: string) => list(n).getByRole('checkbox').elements().map((e) => e.closest('label')?.textContent?.trim() || e.getAttribute('aria-label'));
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent || '';
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent || '';
 // A list's title: what names its group of boxes; its parent is the bordered list.
 const title = (n: string) => document.getElementById(list(n).element().getAttribute('aria-labelledby')!)!;
 const en = (ui: React.ReactNode) => <SerupaProvider locale="en-US">{ui}</SerupaProvider>;
@@ -26,7 +26,7 @@ describe('TransferList', () => {
     await render(en(<TransferList id="t" ref={ref} className="extra" data-x="y" aria-label="Columns" options={options} defaultValue={['email', 'id']} />));
     const root = document.getElementById('t')!;
     expect([root.getAttribute('role'), root.getAttribute('aria-label'), ref.current === root, root.className, root.dataset.x, root.dataset.component])
-      .toEqual(['group', 'Columns', true, 'dk-transfer-list extra', 'y', 'transfer-list']);
+      .toEqual(['group', 'Columns', true, 'srp-transfer-list extra', 'y', 'transfer-list']);
     expect([list('Available').element().getAttribute('aria-labelledby') !== null, document.getElementById(list('Available').element().getAttribute('aria-labelledby')!)?.textContent]).toEqual([true, 'Available (3)']);
     expect(items('Available')).toEqual(['All', 'Name', 'Phone', 'Company']);
     expect(items('Chosen')).toEqual(['All', 'Email', 'ID']);

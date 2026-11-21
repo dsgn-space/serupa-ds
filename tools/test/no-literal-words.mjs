@@ -23,7 +23,7 @@ const t = (name, code, want, allow) => {
   R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` });
 };
 
-t('words from labels, symbols and non-spoken attributes pass', `const a = <div className="dk-x" aria-label={l.close} title={open ? l.hide : l.show} data-x="Words here">{l.more} × {count} {\`\${n}\`}</div>;`, []);
+t('words from labels, symbols and non-spoken attributes pass', `const a = <div className="srp-x" aria-label={l.close} title={open ? l.hide : l.show} data-x="Words here">{l.more} × {count} {\`\${n}\`}</div>;`, []);
 t('JSX text and a literal in a spoken attribute', '<b title="Close">Open now</b>', ['Close', 'Open now']);
 t('a string child in braces', `<b>{'Close'}</b>`, ['Close']);
 t('the fixed text of a template literal, in a child and an attribute', '<b aria-label={`${n} more`}>{`Page ${n}`}</b>', ['more', 'Page']);

@@ -39,9 +39,9 @@ import { Button, IconButton, buttonClass } from '@diki-stwn/serupa-ds';
 
 Drawn from the `States` story.
 
-1. **Icon** (`.dk-btn__icon`): an optional picture before the label (`leftIcon`) or after it (`rightIcon`), or the whole of an icon-only button.
-2. **Label** (`.dk-btn__label`): what the button does, in words.
-3. **Loader** (`.dk-btn__loader`): the spinner while `loading`, over the label, which keeps the button's width.
+1. **Icon** (`.srp-btn__icon`): an optional picture before the label (`leftIcon`) or after it (`rightIcon`), or the whole of an icon-only button.
+2. **Label** (`.srp-btn__label`): what the button does, in words.
+3. **Loader** (`.srp-btn__loader`): the spinner while `loading`, over the label, which keeps the button's width.
 
 When an action succeeds (`success`), a check takes the loader's place for a moment.
 
@@ -176,7 +176,7 @@ function SaveForm() {
 }
 ```
 
-**Data attributes** for tests, analytics and styling: every button has `data-component="button"`, `data-variant` and `data-size`, plus `data-destructive`, `data-icon-only`, `data-loading`, `data-success` and `data-disabled` when they apply. Select with `[data-component="button"][data-loading]`, for example; don't select by the `dk-btn` class names.
+**Data attributes** for tests, analytics and styling: every button has `data-component="button"`, `data-variant` and `data-size`, plus `data-destructive`, `data-icon-only`, `data-loading`, `data-success` and `data-disabled` when they apply. Select with `[data-component="button"][data-loading]`, for example; don't select by the `srp-btn` class names.
 
 ### Micro-interactions
 

@@ -32,8 +32,8 @@ import { Link, Text } from '@diki-stwn/serupa-ds';
 
 Drawn from the `External` story.
 
-1. **Link** (`.dk-link`): the words that go somewhere.
-2. **External icon** (`.dk-link__icon`): says it opens another site or a new tab, also in words for screen readers.
+1. **Link** (`.srp-link`): the words that go somewhere.
+2. **External icon** (`.srp-link__icon`): says it opens another site or a new tab, also in words for screen readers.
 
 ## Usage
 

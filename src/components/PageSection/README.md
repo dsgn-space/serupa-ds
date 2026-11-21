@@ -30,8 +30,8 @@ import { PageSection, Heading, Button } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **Band** (`.dk-page-section`): the full-width `<section>`, with its tone, its spacing above and below, and its divider.
-2. **Inner box** (`.dk-page-section__inner`): the Container inside the band, which keeps the content to `size` and lays it out with `gap`.
+1. **Band** (`.srp-page-section`): the full-width `<section>`, with its tone, its spacing above and below, and its divider.
+2. **Inner box** (`.srp-page-section__inner`): the Container inside the band, which keeps the content to `size` and lays it out with `gap`.
 
 ## Usage
 
@@ -66,7 +66,7 @@ Drawn from the `Playground` story.
 | `gap` | a spacing step: `0` to `24` | `8` (32px) | The space between the children |
 | `as` | `'section'` \| `'div'` \| `'header'` \| `'footer'` \| `'aside'` | `'section'` | The element |
 
-A value that isn't on the list falls back to the default. `className`, `style`, `ref` and everything else go to the outer element, which has `data-component="page-section"`; the content is in a Container with `.dk-page-section__inner`.
+A value that isn't on the list falls back to the default. `className`, `style`, `ref` and everything else go to the outer element, which has `data-component="page-section"`; the content is in a Container with `.srp-page-section__inner`.
 
 ## Component tokens
 

@@ -269,8 +269,8 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
     setDragging(false);   // back to the slide it was on
   };
 
-  const style = { ...props.style, '--dk-carousel-count': count,
-    ...(perMap ? { '--dk-carousel-per-base': perMap.base, '--dk-carousel-per-sm': perMap.sm, '--dk-carousel-per-md': perMap.md, '--dk-carousel-per-lg': perMap.lg } as Record<string, number> : { '--dk-carousel-per': per }) } as React.CSSProperties;
+  const style = { ...props.style, '--srp-carousel-count': count,
+    ...(perMap ? { '--srp-carousel-per-base': perMap.base, '--srp-carousel-per-sm': perMap.sm, '--srp-carousel-per-md': perMap.md, '--srp-carousel-per-lg': perMap.lg } as Record<string, number> : { '--srp-carousel-per': per }) } as React.CSSProperties;
   const multi = perMap ? Math.max(perMap.base, perMap.sm, perMap.md, perMap.lg) > 1 : per > 1;
   // The widths where a dot is past the last page, so CSS hides it there until the dots are counted again after mount.
   const pastAt = (k: number) => perMap ? (['sm', 'md', 'lg'] as const).filter((b) => k >= Math.ceil(count / perMap[b])).join(' ') || undefined : undefined;
@@ -278,20 +278,20 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
   const prevOff = !loop && index === 0, nextOff = !loop && index >= last;
 
   return (
-    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', (multi || props.peek) && 'dk-carousel--multi', props.peek && 'dk-carousel--peek', props.className)} style={style}
+    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('srp-carousel', (multi || props.peek) && 'srp-carousel--multi', props.peek && 'srp-carousel--peek', props.className)} style={style}
       aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
-      <div className="dk-carousel__frame">
+      <div className="srp-carousel__frame">
         {/* A scroll container is a keyboard stop of its own (WCAG 2.1.1, axe's scrollable-region-focusable): focused,
             the arrow keys scroll it a slide at a time, and it's named by the slides in view ("2 of 5"). */}
-        <div className="dk-carousel__viewport" ref={viewport} role={last > 0 ? 'group' : undefined} tabIndex={last > 0 ? 0 : undefined}
+        <div className="srp-carousel__viewport" ref={viewport} role={last > 0 ? 'group' : undefined} tabIndex={last > 0 ? 0 : undefined}
           aria-label={last > 0 ? (per > 1 ? sds.labels.slidesOf(index + 1, index + per, count) : name(index, count)) : undefined} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onLostPointerCapture={onPointerCancel}
           onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
           onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click
           data-dragging={dragging ? '' : undefined}>
-          <div className="dk-carousel__track" aria-live="polite" ref={track}>
+          <div className="srp-carousel__track" aria-live="polite" ref={track}>
             {slides.map((s, i) => (
-              <div key={(s as React.ReactElement).key ?? i} className="dk-carousel__slide" role="group" aria-roledescription={sds.labels.slideRole} aria-label={name(i, count)}
+              <div key={(s as React.ReactElement).key ?? i} className="srp-carousel__slide" role="group" aria-roledescription={sds.labels.slideRole} aria-label={name(i, count)}
                 aria-hidden={shown(i) ? undefined : true} inert={!shown(i)} data-active={shown(i) ? '' : undefined}>
                 {s}
               </div>
@@ -299,18 +299,18 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
           </div>
         </div>
         {props.arrows !== false && last > 0 ? <>
-          <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" hideTitle
-            icon={<><Icon icon={icons.ChevronLeft} className="dk-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronRight} className="dk-carousel__rtl" mirror={false} /></>}
+          <IconButton className="srp-carousel__arrow srp-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" hideTitle
+            icon={<><Icon icon={icons.ChevronLeft} className="srp-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronRight} className="srp-carousel__rtl" mirror={false} /></>}
             ref={prevBtn} disabled={prevOff} onClick={() => arrow(-1)} />
-          <IconButton className="dk-carousel__arrow dk-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="round" hideTitle
-            icon={<><Icon icon={icons.ChevronRight} className="dk-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronLeft} className="dk-carousel__rtl" mirror={false} /></>}
+          <IconButton className="srp-carousel__arrow srp-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="round" hideTitle
+            icon={<><Icon icon={icons.ChevronRight} className="srp-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronLeft} className="srp-carousel__rtl" mirror={false} /></>}
             ref={nextBtn} disabled={nextOff} onClick={() => arrow(1)} />
         </> : null}
       </div>
       {props.dots !== false && last > 0 ? (
-        <div className="dk-carousel__dots" ref={dotsRef} onKeyDown={onDotsKey}>
+        <div className="srp-carousel__dots" ref={dotsRef} onKeyDown={onDotsKey}>
           {Array.from({ length: pages }, (_, k) => (
-            <button key={k} type="button" className="dk-carousel__dot" aria-label={dotName(k)} aria-current={k === page ? 'true' : undefined}
+            <button key={k} type="button" className="srp-carousel__dot" aria-label={dotName(k)} aria-current={k === page ? 'true' : undefined}
               tabIndex={k === page ? 0 : -1} data-past={pastAt(k)} onClick={() => go(pageStart(k))} />
           ))}
         </div>

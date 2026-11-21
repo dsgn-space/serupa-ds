@@ -16,7 +16,7 @@ describe('MaskedValue', () => {
     const ref = React.createRef<HTMLSpanElement>();
     await render(<MaskedValue id="x" ref={ref} className="extra" data-x="y" value="4111111111111208" label="Card number" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['SPAN', true, 'dk-masked-value extra', 'y', 'masked-value']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['SPAN', true, 'srp-masked-value extra', 'y', 'masked-value']);
     expect(visible('x')).toBe('•••• 1208');
   });
 

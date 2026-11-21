@@ -52,7 +52,7 @@ describe('CascadeSelect', () => {
     await render(<CascadeSelect ref={ref} aria-label="Wilayah" className="extra" data-x="y" options={regions} />);
     const b = button(), root = b.parentElement!;
     expect([b.tagName, b.getAttribute('role'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded'), b.getAttribute('aria-label'), b.dataset.x, ref.current === b]).toEqual(['BUTTON', 'combobox', 'dialog', 'false', 'Wilayah', 'y', true]);
-    expect([root.dataset.component, root.className]).toEqual(['cascade-select', 'dk-cascade-select dk-cascade-select--size-md extra']);
+    expect([root.dataset.component, root.className]).toEqual(['cascade-select', 'srp-cascade-select srp-cascade-select--size-md extra']);
     expect(b.textContent).toBe('Choose…');
     expect([css(b).height, css(b).borderTopWidth, css(b).borderRadius]).toEqual(['32px', '1px', '6px']);
   });
@@ -233,7 +233,7 @@ describe('CascadeSelect', () => {
     const b = button();
     expect([b.labels?.[0]?.textContent?.includes('Alamat'), b.getAttribute('aria-invalid'), b.getAttribute('aria-required')]).toEqual([true, 'true', 'true']);
     expect(document.getElementById(b.getAttribute('aria-describedby')!.split(' ')[0]!)!.textContent).toContain('Pilih kecamatan.');
-    expect(b.parentElement!.className).toContain('dk-cascade-select--invalid');
+    expect(b.parentElement!.className).toContain('srp-cascade-select--invalid');
     await userEvent.click(b);
     expect(panel().getAttribute('aria-label')).toContain('Alamat');
   });

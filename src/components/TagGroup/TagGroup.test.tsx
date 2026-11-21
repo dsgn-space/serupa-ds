@@ -25,7 +25,7 @@ describe('TagGroup', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><TagGroup id="x" ref={ref} className="extra" data-x="y" label="Labels" items={tags} onRemove={() => {}} /></SerupaProvider>);
     const e = document.getElementById('x')!;
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-tag-group extra', 'y', 'tag-group']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-tag-group extra', 'y', 'tag-group']);
     await expect.element(page.getByRole('grid', { name: 'Labels' })).toBeVisible();
     expect(page.getByRole('row').elements().map((r) => r.textContent)).toEqual(['Design', 'Bug', 'Checkout', 'Mobile']);
     await expect.element(page.getByRole('button', { name: 'Remove Design' })).toBeVisible();
@@ -129,7 +129,7 @@ describe('TagGroup', () => {
 
   test('Delete removes the focused tag and focus moves to the next (the one before at the end), "Bug removed" is said; the × removes too; the last one gone leaves the empty text', async () => {
     const log: string[] = [], said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<Removable log={log} />);
     row('bug').focus();

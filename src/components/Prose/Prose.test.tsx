@@ -19,7 +19,7 @@ describe('Prose', () => {
     const ref = React.createRef<HTMLElement>();
     await render(<><Prose id="x" ref={ref} className="extra" data-x="y">Hi</Prose><Prose id="y" as="article" /></>);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-prose extra', 'y', 'prose']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-prose extra', 'y', 'prose']);
     expect(el('y').tagName).toBe('ARTICLE');
   });
 
@@ -112,7 +112,7 @@ describe('Prose', () => {
     ];
     await render(<><div id="out">{parts}</div><Prose id="in"><p>First</p>{parts}</Prose></>);
     const PROPS = ['display', 'margin-top', 'padding-inline-start', 'list-style-type', 'font-family', 'font-size', 'block-size', 'max-inline-size'];
-    const look = (root: Element) => [...root.querySelectorAll('*')].filter((e) => ![root, null].includes(e.closest('[class^="dk-"]'))).map((e) => `${e.tagName} ${PROPS.map((p) => (p === 'margin-top' && e.parentElement === root ? '' : css(e as HTMLElement).getPropertyValue(p))).join(' ')}`);   // a root's own margin is the flow's
+    const look = (root: Element) => [...root.querySelectorAll('*')].filter((e) => ![root, null].includes(e.closest('[class^="srp-"]'))).map((e) => `${e.tagName} ${PROPS.map((p) => (p === 'margin-top' && e.parentElement === root ? '' : css(e as HTMLElement).getPropertyValue(p))).join(' ')}`);   // a root's own margin is the flow's
     expect(look(el('in'))).toEqual(look(el('out')));
     expect(parseFloat(css(el('in').children[1] as HTMLElement).marginTop)).toBe(16);   // still spaced from the paragraph before it
   });

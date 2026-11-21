@@ -67,7 +67,7 @@ const OWN = { label: 1, hint: 1, error: 1, warning: 1, checking: 1, name: 1, req
 
 function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, OWN);
-  const base = domId('dk-f', React.useId());
+  const base = domId('srp-f', React.useId());
   const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
   const controlId = props.id || (child && child.props.id) || base + '-control';
   // Inside FormErrors: the message for this field's name, unless error is given, and gone once the field is edited.
@@ -122,18 +122,18 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   // group is read as "Contact by, Required" whatever it holds.
   const labelKids = <>
     {props.label}
-    {props.required ? <span className="dk-field__required" aria-hidden>*</span> : null}
-    {props.required && group ? <span className="dk-visually-hidden">{' ' + sds.labels.required}</span> : null}
-    {!props.required && props.optional ? <span className="dk-field__optional">{typeof props.optional === 'string' ? props.optional : sds.labels.fieldOptional}</span> : null}
+    {props.required ? <span className="srp-field__required" aria-hidden>*</span> : null}
+    {props.required && group ? <span className="srp-visually-hidden">{' ' + sds.labels.required}</span> : null}
+    {!props.required && props.optional ? <span className="srp-field__optional">{typeof props.optional === 'string' ? props.optional : sds.labels.fieldOptional}</span> : null}
   </>;
   const label = props.label == null ? null : group
-    ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, labelKids)
-    : <label className="dk-field__label" htmlFor={controlId} id={base + '-label'} key="label" onClick={focusControl} ref={labelRef}>{labelKids}</label>;
-  const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
-  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div>
+    ? React.createElement('legend', { className: 'srp-field__label', key: 'label' }, labelKids)
+    : <label className="srp-field__label" htmlFor={controlId} id={base + '-label'} key="label" onClick={focusControl} ref={labelRef}>{labelKids}</label>;
+  const hint = props.hint ? <div className="srp-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
+  const error = hasError ? <div className="srp-field__error" key="error"><Icon icon={icons.Error} className="srp-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div>
     // The same slot, and the same polite announcement, for advice and for "checking…": neither makes the control invalid.
-    : kind === 'warning' ? <div className="dk-field__warning" key="warning"><Icon icon={icons.Warning} className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.warning}</span></div>
-    : kind === 'checking' ? <div className="dk-field__checking" key="checking"><LoaderRing size="sm" className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.checking}</span></div>
+    : kind === 'warning' ? <div className="srp-field__warning" key="warning"><Icon icon={icons.Warning} className="srp-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.warning}</span></div>
+    : kind === 'checking' ? <div className="srp-field__checking" key="checking"><LoaderRing size="sm" className="srp-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.checking}</span></div>
     : null;
   const described = cn(hintId, errorId, noteId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
@@ -156,7 +156,7 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   };
   const rootRef = useRoot(ref, native.root);
   const horizontal = !group && props.orientation === 'horizontal';
-  const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', kind === 'warning' && 'dk-field--warning', kind === 'checking' && 'dk-field--checking', props.disabled && 'dk-field--disabled', props.className);
+  const cls = cn('srp-field', group && 'srp-field--group', horizontal && 'srp-field--horizontal', hasError && 'srp-field--invalid', kind === 'warning' && 'srp-field--warning', kind === 'checking' && 'srp-field--checking', props.disabled && 'srp-field--disabled', props.className);
   const busy = kind === 'checking' || undefined;
   if (group) {
     return (
@@ -164,7 +164,7 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
         {label}
         {hint}
         <FieldContext.Provider value={null}>
-          <div className="dk-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
+          <div className="srp-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
         </FieldContext.Provider>
         {error}
       </fieldset>
@@ -173,12 +173,12 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   // The control can be any depth down (in a Tooltip, a wrapper component): it reads this.
   const control: FieldControl = { id: controlId, labelId: props.label == null ? undefined : base + '-label', describedBy: described || undefined, errorMessage: errorId || undefined, required: props.required || undefined, invalid: hasError || undefined, disabled: props.disabled || undefined };
   const body = <FieldContext.Provider value={control} key="body">
-    <div className="dk-field__control" key="control">
+    <div className="srp-field__control" key="control">
       <FieldLabel value={label ? { control: controlId, label: base + '-label' } : null}>{child ? pass(child, true) : props.children}</FieldLabel>
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="srp-field__body">{body}{hint}{error}</div></div>;
   return (
     <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field">
       {label}

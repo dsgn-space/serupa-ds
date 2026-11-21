@@ -51,12 +51,12 @@ function SplitButtonRender({ ref, ...props }: SplitButtonProps & React.RefAttrib
   const label = rest['aria-label'], labelledBy = rest['aria-labelledby'];
   delete rest['aria-label']; delete rest['aria-labelledby'];
   return (
-    <div {...rest} ref={ref} className={cn('dk-split-button', props.className)} data-component="split-button">
+    <div {...rest} ref={ref} className={cn('srp-split-button', props.className)} data-component="split-button">
     {/* ButtonGroup's markup and classes, attached, but never coming apart: a long label shortens with an ellipsis instead. */}
-    <div role="group" aria-label={label} aria-labelledby={labelledBy} data-component="button-group" data-orientation="horizontal" className="dk-button-group dk-button-group--attached">
+    <div role="group" aria-label={label} aria-labelledby={labelledBy} data-component="button-group" data-orientation="horizontal" className="srp-button-group srp-button-group--attached">
       <Button size={size} variant={variant} destructive={props.destructive} leftIcon={props.leftIcon} disabled={props.disabled} loading={props.loading} onClick={props.onClick}>{props.children}</Button>
       <Menu placement={props.placement ?? 'bottom-end'} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
-        trigger={<IconButton className="dk-split-button__menu" size={size} variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
+        trigger={<IconButton className="srp-split-button__menu" size={size} variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
         {props.menu}
       </Menu>
     </div>

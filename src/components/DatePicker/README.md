@@ -30,8 +30,8 @@ const [due, setDue] = React.useState<Date | null>(null);
 
 Drawn from the `Disabled` story.
 
-1. **Field** (`.dk-input__field`): where the date is typed, in the format shown in the hint.
-2. **Calendar button** (`.dk-date-picker__button`): opens a calendar to choose the date instead.
+1. **Field** (`.srp-input__field`): where the date is typed, in the format shown in the hint.
+2. **Calendar button** (`.srp-date-picker__button`): opens a calendar to choose the date instead.
 
 ## Usage
 
@@ -111,7 +111,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The chosen day, controlled or not: a Date, or a plain `"yyyy-mm-dd"` string. |
 | `onValueChange` | `(date: Date \| null, iso: string \| null) => void` | | Called with the new day (local midnight) and the same day as `"yyyy-mm-dd"`, or `null` twice when the field is cleared. |
-| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.dk-input-rejected`, read with it) until the text changes. |
+| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.srp-input-rejected`, read with it) until the text changes. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. `min` and `max` take a Date or `"yyyy-mm-dd"`. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
@@ -154,7 +154,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-z-index` | `z-popover` | The panel's stacking order, where the top layer isn't available. |
 <!-- token-table:end -->
 
-The field itself uses Input's box (the `dk-input` classes and `--input-*` tokens), so it lines up with other fields.
+The field itself uses Input's box (the `srp-input` classes and `--input-*` tokens), so it lines up with other fields.
 
 ## Related
 

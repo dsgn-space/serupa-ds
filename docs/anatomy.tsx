@@ -5,7 +5,7 @@
 //
 //   Drawn from the `Confirmation` story.        (", opened." after it: the diagram opens the story's menu or popover)
 //
-//   1. **Panel** (`.dk-dialog__panel`): the box over the dimmed page.
+//   1. **Panel** (`.srp-dialog__panel`): the box over the dimmed page.
 import * as React from 'react';
 import { DocsContext, Story } from '@storybook/addon-docs/blocks';
 

@@ -40,9 +40,9 @@ import { Textarea } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Actions` story.
 
-1. **Field** (`.dk-textarea__field`): where the text is typed; it can grow with it.
-2. **Count** (`.dk-textarea__count`): how many characters are left, announced as the limit nears.
-3. **Actions** (`.dk-textarea__actions`): an optional row of buttons under the text, inside the box.
+1. **Field** (`.srp-textarea__field`): where the text is typed; it can grow with it.
+2. **Count** (`.srp-textarea__count`): how many characters are left, announced as the limit nears.
+3. **Actions** (`.srp-textarea__actions`): an optional row of buttons under the text, inside the box.
 
 ## Usage
 

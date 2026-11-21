@@ -124,7 +124,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
   const rest = omit(props, OWN);
   const sds = useSettings(words), L = sds.labels;
   const locale = useLocale();
-  const base = domId('dk-df', React.useId());
+  const base = domId('srp-df', React.useId());
   const root = React.useRef<HTMLDivElement | null>(null);
   const inDisabledFieldset = useFieldsetDisabled(root);
   const disabled = !!props.disabled || inDisabledFieldset;
@@ -240,17 +240,17 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, firstBox); setRef(ref, n); nameRef(n); }} role="group"
       aria-labelledby={labelledBy} aria-describedby={cn(props['aria-describedby'], said && errorId) || undefined}
       onBlur={(e) => { if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) && (parts.day || parts.month || parts.year)) check(); }}
-      className={cn('dk-date-field', disabled && 'dk-date-field--disabled', props.className)} data-component="date-field">
+      className={cn('srp-date-field', disabled && 'srp-date-field--disabled', props.className)} data-component="date-field">
       <FieldContext.Provider value={null}>
         {order.map((k) => (
-          <div key={k} className={cn('dk-date-field__part', 'dk-date-field__part--' + k)}>
-            <label className="dk-date-field__label" htmlFor={`${base}-${k}`}>{label[k]}</label>
+          <div key={k} className={cn('srp-date-field__part', 'srp-date-field__part--' + k)}>
+            <label className="srp-date-field__label" htmlFor={`${base}-${k}`}>{label[k]}</label>
             {k === 'month' && props.monthInput === 'select'
-              ? <Select id={`${base}-${k}`} className="dk-date-field__input dk-date-field__input--select" size={props.size} options={months} placeholder={L.dateFieldMonth}
+              ? <Select id={`${base}-${k}`} className="srp-date-field__input srp-date-field__input--select" size={props.size} options={months} placeholder={L.dateFieldMonth}
                 autoComplete={props.autoComplete === 'bday' ? 'bday-month' : 'off'} value={parts.month} disabled={disabled} readOnly={props.readOnly} required={k === order[0] && required} onInvalid={k === order[0] ? onInvalid : undefined}
                 invalid={marked.includes(k) || undefined} aria-required={ariaRequired} aria-describedby={marked.includes(k) && said ? errorId : undefined}
                 onChange={(e) => change({ ...parts, month: e.target.value }, 'type')} />
-              : <Input id={`${base}-${k}`} className="dk-date-field__input" size={props.size} inputMode="numeric" spellCheck={false}
+              : <Input id={`${base}-${k}`} className="srp-date-field__input" size={props.size} inputMode="numeric" spellCheck={false}
                 autoComplete={props.autoComplete === 'bday' ? `bday-${k}` : 'off'} maxLength={k === 'year' ? 4 : 2}
                 value={parts[k]} disabled={disabled} readOnly={props.readOnly} invalid={marked.includes(k) || undefined}
                 aria-required={ariaRequired} aria-describedby={marked.includes(k) && said ? errorId : undefined}
@@ -259,7 +259,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
           </div>
         ))}
       </FieldContext.Provider>
-      {said ? <div className="dk-date-field__error"><Icon icon={icons.Error} className="dk-date-field__error-icon" /><span id={errorId}>{said}</span></div> : null}
+      {said ? <div className="srp-date-field__error"><Icon icon={icons.Error} className="srp-date-field__error-icon" /><span id={errorId}>{said}</span></div> : null}
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={now.value} disabled={disabled} /> : null}
     </div>
   );

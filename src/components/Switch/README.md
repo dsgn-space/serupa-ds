@@ -32,10 +32,10 @@ import { Switch } from '@diki-stwn/serupa-ds';
 
 Drawn from the `LongLabel` story.
 
-1. **Track** (`.dk-switch__control`): the pill that shows on or off, over the native checkbox.
-2. **Thumb** (`.dk-switch__thumb`): slides to the on side when it's on.
-3. **Label** (`.dk-switch__text`): what it turns on; clicking it switches too.
-4. **Description** (`.dk-switch__description`): optional detail under the label.
+1. **Track** (`.srp-switch__control`): the pill that shows on or off, over the native checkbox.
+2. **Thumb** (`.srp-switch__thumb`): slides to the on side when it's on.
+3. **Label** (`.srp-switch__text`): what it turns on; clicking it switches too.
+4. **Description** (`.srp-switch__description`): optional detail under the label.
 
 ## Usage
 

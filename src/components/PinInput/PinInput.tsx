@@ -70,15 +70,15 @@ function PinInputRender({ ref, ...props }: PinInputProps & React.RefAttributes<H
   const boxes: React.ReactNode[] = [];
   for (let i = 0; i < length; i++) {
     const ch = code.charAt(i);
-    boxes.push(<span key={i} className={cn('dk-pin-input__box', ch && 'dk-pin-input__box--filled', focused && i === active && 'dk-pin-input__box--active', focused && i === active && !ch && 'dk-pin-input__box--caret')}>
+    boxes.push(<span key={i} className={cn('srp-pin-input__box', ch && 'srp-pin-input__box--filled', focused && i === active && 'srp-pin-input__box--active', focused && i === active && !ch && 'srp-pin-input__box--caret')}>
       {ch ? (props.mask ? '•' : ch) : null}
     </span>);
   }
   const mergedRef = useMergedRef(ref, (n) => { input.current = n; nameRef(n); });
   return (
-    <span className={cn('dk-pin-input', 'dk-pin-input--size-' + size, invalid && 'dk-pin-input--invalid', rest.disabled && 'dk-pin-input--disabled', rest.readOnly && 'dk-pin-input--readonly', props.className)}
+    <span className={cn('srp-pin-input', 'srp-pin-input--size-' + size, invalid && 'srp-pin-input--invalid', rest.disabled && 'srp-pin-input--disabled', rest.readOnly && 'srp-pin-input--readonly', props.className)}
       style={props.style} data-component="pin-input" data-size={size}>
-      <span className="dk-pin-input__boxes" aria-hidden>{boxes}</span>
+      <span className="srp-pin-input__boxes" aria-hidden>{boxes}</span>
       <input autoComplete="one-time-code" pattern={type === 'numeric' ? '[0-9]{' + length + '}' : '[0-9A-Za-z]{' + length + '}'}
         inputMode={type === 'numeric' ? 'numeric' : 'text'} autoCapitalize="off" autoCorrect="off" spellCheck={false} {...rest}
         type={props.mask ? 'password' : 'text'} value={code} onChange={onChange}
@@ -94,7 +94,7 @@ function PinInputRender({ ref, ...props }: PinInputProps & React.RefAttributes<H
           const el = e.currentTarget;
           if (!e.defaultPrevented && clean(e.clipboardData.getData('text')).length === length) el.setSelectionRange(0, el.value.length);
         }}
-        ref={mergedRef} className="dk-pin-input__field" />
+        ref={mergedRef} className="srp-pin-input__field" />
     </span>
   );
 }

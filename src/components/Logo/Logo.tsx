@@ -54,9 +54,9 @@ function LogoRender({ ref, ...props }: LogoProps & React.RefAttributes<HTMLImage
   ];
   const offered = sources.filter((s): s is [string, string] => !!s[0] && s[1] !== null);
   const picture = <img {...rest} ref={mergedRef} src={mark === 'all' ? markSrc : src} alt={alt}
-    className={cn('dk-logo', 'dk-logo--' + oneOf(['sm', 'md', 'lg'] as const, size, 'md'), className)} data-component="logo" />;
+    className={cn('srp-logo', 'srp-logo--' + oneOf(['sm', 'md', 'lg'] as const, size, 'md'), className)} data-component="logo" />;
   return offered.length
-    ? <picture className="dk-logo__picture">{offered.map(([s, media]) => <source key={s + media} srcSet={s} media={media} />)}{picture}</picture>
+    ? <picture className="srp-logo__picture">{offered.map(([s, media]) => <source key={s + media} srcSet={s} media={media} />)}{picture}</picture>
     : picture;
 }
 

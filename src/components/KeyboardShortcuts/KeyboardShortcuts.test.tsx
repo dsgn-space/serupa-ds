@@ -137,7 +137,7 @@ describe('KeyboardShortcuts', () => {
     el('before').focus();
     await userEvent.keyboard('?');
     await expect.poll(() => dialog()?.id).toBe('ks');
-    expect([dialog()!.querySelector('h2')!.textContent, dialog()!.classList.contains('dk-keyboard-shortcuts')]).toEqual(['Keyboard shortcuts', true]);
+    expect([dialog()!.querySelector('h2')!.textContent, dialog()!.classList.contains('srp-keyboard-shortcuts')]).toEqual(['Keyboard shortcuts', true]);
     expect(listed()).toEqual([
       ['Messages', [['Bold', 'Ctrl+B'], ['New message', 'C']]],
       ['Navigation', [['Search', 'Ctrl+K']]],

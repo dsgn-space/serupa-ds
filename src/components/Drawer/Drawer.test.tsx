@@ -1012,7 +1012,7 @@ describe('Drawer: unsaved (13)', () => {
 
     test('other sides, and a single stop, have no handle', async () => {
       await render(<><Drawer id="r" defaultOpen title="R" snapPoints={[0.5, 1]} /><Drawer id="one" placement="bottom" title="One" snapPoints={[0.5]} /></>);
-      expect([handleOf(el('r')), handleOf(el('one')), el('r').classList.contains('dk-drawer--snaps')]).toEqual([null, null, false]);
+      expect([handleOf(el('r')), handleOf(el('one')), el('r').classList.contains('srp-drawer--snaps')]).toEqual([null, null, false]);
     });
 
     test('the grip reads 3:1 on the sheet in every theme', async () => {

@@ -46,14 +46,14 @@ export function TeamSettings({ onInvite }: { onInvite?: () => void }) {
         </Stack>
 
         <Table>
-          <caption className="dk-visually-hidden">Team members</caption>
+          <caption className="srp-visually-hidden">Team members</caption>
           <thead>
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Role</th>
               <th scope="col">
-                <span className="dk-visually-hidden">Actions</span>
+                <span className="srp-visually-hidden">Actions</span>
               </th>
             </tr>
           </thead>

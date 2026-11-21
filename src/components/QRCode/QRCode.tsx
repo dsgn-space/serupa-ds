@@ -67,20 +67,20 @@ const QUIET = 4;   function QRCodeRender({ ref, ...props }: QRCodeProps & React.
   const logo = props.logo && path ? Math.round(n * 0.2) | 1 : 0;   // an odd number of modules, centred on a module
   const at = QUIET + (n - logo) / 2;
   return (
-    <div {...rest} ref={ref} className={cn('dk-qr-code', 'dk-qr-code--' + size, status !== 'active' && 'dk-qr-code--' + status, props.className)} data-component="qr-code" data-status={status}>
-      <svg className="dk-qr-code__code" viewBox={'0 0 ' + box + ' ' + box} role="img" aria-label={props.label} shapeRendering="crispEdges" focusable="false">
-        <rect className="dk-qr-code__light" width={box} height={box} />
-        {path ? <path className="dk-qr-code__dark" d={path.d} /> : null}
+    <div {...rest} ref={ref} className={cn('srp-qr-code', 'srp-qr-code--' + size, status !== 'active' && 'srp-qr-code--' + status, props.className)} data-component="qr-code" data-status={status}>
+      <svg className="srp-qr-code__code" viewBox={'0 0 ' + box + ' ' + box} role="img" aria-label={props.label} shapeRendering="crispEdges" focusable="false">
+        <rect className="srp-qr-code__light" width={box} height={box} />
+        {path ? <path className="srp-qr-code__dark" d={path.d} /> : null}
         {logo ? <>
-          <rect className="dk-qr-code__light" x={at - 0.5} y={at - 0.5} width={logo + 1} height={logo + 1} />
+          <rect className="srp-qr-code__light" x={at - 0.5} y={at - 0.5} width={logo + 1} height={logo + 1} />
           <image href={props.logo} x={at} y={at} width={logo} height={logo} preserveAspectRatio="xMidYMid meet" />
         </> : null}
       </svg>
-      {status !== 'active' ? <div className="dk-qr-code__status">
+      {status !== 'active' ? <div className="srp-qr-code__status">
         {status === 'loading' ? <Loader size={size === 'sm' ? 'sm' : 'md'} label={sds.labels.loading} /> : null}
-        {status === 'scanned' ? <p className="dk-qr-code__message"><Icon icon={icons.CheckCircle} className="dk-qr-code__icon" />{sds.labels.qrScanned}</p> : null}
+        {status === 'scanned' ? <p className="srp-qr-code__message"><Icon icon={icons.CheckCircle} className="srp-qr-code__icon" />{sds.labels.qrScanned}</p> : null}
         {status === 'expired' ? <>
-          <p className="dk-qr-code__message">{sds.labels.qrExpired}</p>
+          <p className="srp-qr-code__message">{sds.labels.qrExpired}</p>
           {props.onRefresh ? <Button size="sm" variant="outline" onClick={props.onRefresh}>{sds.labels.qrRefresh}</Button> : null}
         </> : null}
       </div> : null}

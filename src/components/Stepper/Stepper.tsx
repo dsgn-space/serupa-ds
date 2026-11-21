@@ -68,18 +68,18 @@ function StepperRender({ ref, ...props }: StepperProps & React.RefAttributes<HTM
     el.setAttribute('data-fit', '');
     const fit = () => {
       const list = el.firstElementChild as HTMLElement, has = (c: string) => el.classList.contains(c);
-      el.classList.add('dk-stepper--measure');
+      el.classList.add('srp-stepper--measure');
       const need = list.scrollWidth;
-      el.classList.remove('dk-stepper--measure');
+      el.classList.remove('srp-stepper--measure');
       const narrow = need > el.clientWidth;
       // Circles only and still too wide (many steps): the sm circles (GN2). Lay the row out compact with md circles
       // for a moment to tell.
       let small = false;
       if (narrow && size === 'md') {
-        const was = [has('dk-stepper--compact'), has('dk-stepper--tight')];
-        el.classList.add('dk-stepper--compact'); el.classList.remove('dk-stepper--tight');
+        const was = [has('srp-stepper--compact'), has('srp-stepper--tight')];
+        el.classList.add('srp-stepper--compact'); el.classList.remove('srp-stepper--tight');
         small = list.scrollWidth > el.clientWidth;
-        el.classList.toggle('dk-stepper--compact', was[0]); el.classList.toggle('dk-stepper--tight', was[1]);
+        el.classList.toggle('srp-stepper--compact', was[0]); el.classList.toggle('srp-stepper--tight', was[1]);
       }
       setCompact(narrow); setTight(small);
     };
@@ -105,42 +105,42 @@ function StepperRender({ ref, ...props }: StepperProps & React.RefAttributes<HTM
     // is read in the stepper's own document or shadow root, where document.activeElement is the shadow host (GR95).
     const active = activeIn(el);
     if (active && active !== document.body) return;
-    const head = el.querySelectorAll<HTMLElement>('.dk-stepper__head')[current];
+    const head = el.querySelectorAll<HTMLElement>('.srp-stepper__head')[current];
     if (head) head.focus();
   }, [current]);
   const shown = Math.min(current, steps.length - 1);
   const mergedRef = useMergedRef(ref, (node) => { nav.current = node; });
   return (
     <nav {...rest} ref={mergedRef} aria-label={rest['aria-label'] || (rest['aria-labelledby'] ? undefined : sds.labels.progress)}
-      className={cn('dk-stepper', vertical ? 'dk-stepper--vertical' : 'dk-stepper--horizontal', compact && 'dk-stepper--compact', compact && tight && 'dk-stepper--tight', 'dk-stepper--size-' + size, props.className)}
+      className={cn('srp-stepper', vertical ? 'srp-stepper--vertical' : 'srp-stepper--horizontal', compact && 'srp-stepper--compact', compact && tight && 'srp-stepper--tight', 'srp-stepper--size-' + size, props.className)}
       data-component="stepper" data-orientation={vertical ? 'vertical' : 'horizontal'} data-size={size}>
-      <ol className="dk-stepper__list">
+      <ol className="srp-stepper__list">
         {steps.map((s, i) => {
           const state = s.status === 'error' || s.status === 'warning' ? s.status : i < current ? 'complete' : i === current ? 'current' : 'upcoming';
           const clickable = !!props.onStepClick && (props.clickable === 'all' ? i !== current : i < current);
           const Head: React.ElementType = clickable ? 'button' : 'div';
           const hasDesc = s.description != null && s.description !== '';
           return (
-            <li key={i} className={cn('dk-stepper__step', 'dk-stepper__step--' + state, i < current && 'dk-stepper__step--done')} data-state={state} aria-current={i === current ? 'step' : undefined}>
-              <Head className="dk-stepper__head" {...(clickable ? { type: 'button', onClick: () => { going.current = i; props.onStepClick!(i); } } : props.onStepClick && i === current ? { tabIndex: -1 } : {})}>
-                <span className="dk-stepper__indicator" aria-hidden>
+            <li key={i} className={cn('srp-stepper__step', 'srp-stepper__step--' + state, i < current && 'srp-stepper__step--done')} data-state={state} aria-current={i === current ? 'step' : undefined}>
+              <Head className="srp-stepper__head" {...(clickable ? { type: 'button', onClick: () => { going.current = i; props.onStepClick!(i); } } : props.onStepClick && i === current ? { tabIndex: -1 } : {})}>
+                <span className="srp-stepper__indicator" aria-hidden>
                   {state === 'complete' ? <Icon icon={icons.Check} /> : state === 'error' ? <Icon icon={icons.PriorityHigh} /> : state === 'warning' ? <Icon icon={icons.Warning} /> : displayNumber(i + 1, locale)}
                 </span>
-                <span className="dk-stepper__text">
-                  <span className="dk-stepper__title">
+                <span className="srp-stepper__text">
+                  <span className="srp-stepper__title">
                     {s.title}
                     {state === 'complete' ? <VisuallyHidden>{', ' + L.completed}</VisuallyHidden> : state === 'error' ? <VisuallyHidden>{', ' + L.error}</VisuallyHidden> : state === 'warning' ? <VisuallyHidden>{', ' + L.warning}</VisuallyHidden> : null}
                   </span>
-                  {hasDesc ? <span className="dk-stepper__description">{s.description}</span> : null}
-                  {s.optional ? <span className="dk-stepper__description dk-stepper__optional">{L.optional}</span> : null}
+                  {hasDesc ? <span className="srp-stepper__description">{s.description}</span> : null}
+                  {s.optional ? <span className="srp-stepper__description srp-stepper__optional">{L.optional}</span> : null}
                 </span>
               </Head>
-              {i < steps.length - 1 ? <span className="dk-stepper__connector" aria-hidden /> : null}
+              {i < steps.length - 1 ? <span className="srp-stepper__connector" aria-hidden /> : null}
             </li>
           );
         })}
       </ol>
-      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, numberFormat(locale).format(shown + 1), numberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown]?.title}</span></p> : null}
+      {compact && shown >= 0 ? <p className="srp-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, numberFormat(locale).format(shown + 1), numberFormat(locale).format(steps.length)) + ': '}<span className="srp-stepper__title">{steps[shown]?.title}</span></p> : null}
     </nav>
   );
 }

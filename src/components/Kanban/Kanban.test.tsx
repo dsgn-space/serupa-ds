@@ -14,7 +14,7 @@ const START = (): KanbanColumn<T>[] => [
   { id: 'doing', title: 'Doing', limit: 1, items: [{ id: 'd', t: 'Delta' }] },
   { id: 'done', title: 'Done', items: [] },
 ];
-const said = (text: string | RegExp) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
+const said = (text: string | RegExp) => expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
 // Columns are the board's sections; a column's count sits after its heading.
 const columns = () => [...document.querySelectorAll<HTMLElement>('section[data-column]')];
 const count = (col: Element) => col.querySelector('h1, h2, h3, h4, h5, h6')!.nextElementSibling!;
@@ -79,7 +79,7 @@ describe('Kanban', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Kanban ref={ref} id="k" className="extra" data-x="y" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     const k = document.getElementById('k')!;
-    expect([ref.current === k, k.className, k.dataset.x, k.dataset.component]).toEqual([true, 'dk-kanban extra', 'y', 'kanban']);
+    expect([ref.current === k, k.className, k.dataset.x, k.dataset.component]).toEqual([true, 'srp-kanban extra', 'y', 'kanban']);
     await expect.element(page.getByRole('group', { name: 'Sprint' })).toBeVisible();
     await expect.element(page.getByRole('region', { name: 'To do' })).toBeVisible();
     await expect.element(page.getByRole('list', { name: 'To do' })).toBeVisible();

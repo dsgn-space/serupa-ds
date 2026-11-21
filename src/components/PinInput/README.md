@@ -33,9 +33,9 @@ import { PinInput, Field } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Alphanumeric` story.
 
-1. **Boxes** (`.dk-pin-input__boxes`): one box per character, so you see how many are left.
-2. **Box** (`.dk-pin-input__box`): one character.
-3. **Filled box** (`.dk-pin-input__box--filled`): a character already typed.
+1. **Boxes** (`.srp-pin-input__boxes`): one box per character, so you see how many are left.
+2. **Box** (`.srp-pin-input__box`): one character.
+3. **Filled box** (`.srp-pin-input__box--filled`): a character already typed.
 
 ## Usage
 

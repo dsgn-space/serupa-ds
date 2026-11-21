@@ -39,7 +39,7 @@ export default {
         'serupa/own-block': [true, { known: { Combobox: ['srp-input'], NumberInput: ['srp-input'], PasswordInput: ['srp-input'], SearchInput: ['srp-input'], AvatarGroup: ['srp-avatar'], Image: ['srp-dialog'] } }],
         // A specificity budget (79): no component selector above 0,5,0 (classes, attributes and pseudo-classes; no
         // IDs). An app's own CSS outside a layer beats srp.components at any specificity, but an app that puts its
-        // styles in a layer after dk still has to match these, and a component that styles another (Field's Input)
+        // styles in a layer after srp still has to match these, and a component that styles another (Field's Input)
         // has to outrank it. Today 29 selectors sit at 0,5,0; Card and Table each have one at 0,6,0 (below).
         'selector-max-specificity': ['0,5,0', { message: (s, max) => `"${s}" is more specific than ${max}: wrap the conditions in :where() or give the state a modifier class (79, specificity budget)` }],
         // BEM-style names: srp-block, srp-block__element, srp-block--modifier (and srp-block__element--modifier).

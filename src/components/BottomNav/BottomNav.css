@@ -1,23 +1,23 @@
 /* ---------------------------------------------------------------
    BottomNav: a bar fixed along the bottom edge on phones, its links side by side in equal columns, each an icon over
    a short label, the current one in the brand color on a tinted pill. env(safe-area-inset-bottom) pads it under the
-   home indicator. While it shows, :root gets --dk-bottom-nav-space (its height and that inset): the spacer before it
+   home indicator. While it shows, :root gets --srp-bottom-nav-space (its height and that inset): the spacer before it
    takes that much room at the end of the page, scroll-padding keeps focused content clear of it, and a bottom
    Toaster, OfflineBanner and Fab sit above it. It hides from hideFrom up (768px by default), where Navbar shows its
    links. Every value reads one of its own tokens (bottom-nav.tokens.json), which fall back to the shared ones.
-   Structure: .dk-bottom-nav__spacer, .dk-bottom-nav (<nav>) > .dk-bottom-nav__list (<ul>) > .dk-bottom-nav__item (<li>)
-   > .dk-bottom-nav__link > .dk-bottom-nav__icon (> .dk-bottom-nav__badge), .dk-bottom-nav__label.
+   Structure: .srp-bottom-nav__spacer, .srp-bottom-nav (<nav>) > .srp-bottom-nav__list (<ul>) > .srp-bottom-nav__item (<li>)
+   > .srp-bottom-nav__link > .srp-bottom-nav__icon (> .srp-bottom-nav__badge), .srp-bottom-nav__label.
    --------------------------------------------------------------- */
-@layer dk.components {
-:root:has(.dk-bottom-nav--always) { --dk-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--dk-bottom-nav-space); }
-@media (max-width: 639.98px) { :root:has(.dk-bottom-nav--hide-sm) { --dk-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--dk-bottom-nav-space); } }
-@media (max-width: 767.98px) { :root:has(.dk-bottom-nav--hide-md) { --dk-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--dk-bottom-nav-space); } }
-@media (max-width: 1023.98px) { :root:has(.dk-bottom-nav--hide-lg) { --dk-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--dk-bottom-nav-space); } }
-@media (min-width: 640px) { .dk-bottom-nav--hide-sm { display: none; } }
-@media (min-width: 768px) { .dk-bottom-nav--hide-md { display: none; } }
-@media (min-width: 1024px) { .dk-bottom-nav--hide-lg { display: none; } }
-.dk-bottom-nav__spacer { block-size: var(--dk-bottom-nav-space, var(--spacing-0)); }
-.dk-bottom-nav {
+@layer srp.components {
+:root:has(.srp-bottom-nav--always) { --srp-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--srp-bottom-nav-space); }
+@media (max-width: 639.98px) { :root:has(.srp-bottom-nav--hide-sm) { --srp-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--srp-bottom-nav-space); } }
+@media (max-width: 767.98px) { :root:has(.srp-bottom-nav--hide-md) { --srp-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--srp-bottom-nav-space); } }
+@media (max-width: 1023.98px) { :root:has(.srp-bottom-nav--hide-lg) { --srp-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--srp-bottom-nav-space); } }
+@media (min-width: 640px) { .srp-bottom-nav--hide-sm { display: none; } }
+@media (min-width: 768px) { .srp-bottom-nav--hide-md { display: none; } }
+@media (min-width: 1024px) { .srp-bottom-nav--hide-lg { display: none; } }
+.srp-bottom-nav__spacer { block-size: var(--srp-bottom-nav-space, var(--spacing-0)); }
+.srp-bottom-nav {
   position: fixed;
   inset-inline: var(--spacing-0);
   inset-block-end: var(--spacing-0);
@@ -27,31 +27,31 @@
   border-top: var(--border-width-1) solid var(--bottom-nav-border, var(--border));
   background: var(--bottom-nav-bg, var(--surface)); --surface-behind: var(--bottom-nav-bg, var(--surface));
 }
-.dk-bottom-nav__list { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; block-size: var(--bottom-nav-height, var(--spacing-16)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-bottom-nav__item { display: flex; min-width: var(--spacing-0); }
-.dk-bottom-nav__link {
+.srp-bottom-nav__list { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; block-size: var(--bottom-nav-height, var(--spacing-16)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-bottom-nav__item { display: flex; min-width: var(--spacing-0); }
+.srp-bottom-nav__link {
   display: flex; flex: auto; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-1);
   min-width: var(--spacing-0); padding-inline: var(--spacing-1);
   color: var(--bottom-nav-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium);
   text-decoration: none; -webkit-tap-highlight-color: transparent;
 }
-.dk-bottom-nav__icon { display: inline-flex; align-items: center; justify-content: center; inline-size: var(--spacing-14); block-size: var(--spacing-8); border-radius: var(--rounded-full); font-size: var(--spacing-6); transition: background-color var(--motion-hover) var(--ease-move); }
-.dk-bottom-nav__icon:has(> .dk-bottom-nav__badge) { position: relative; }
+.srp-bottom-nav__icon { display: inline-flex; align-items: center; justify-content: center; inline-size: var(--spacing-14); block-size: var(--spacing-8); border-radius: var(--rounded-full); font-size: var(--spacing-6); transition: background-color var(--motion-hover) var(--ease-move); }
+.srp-bottom-nav__icon:has(> .srp-bottom-nav__badge) { position: relative; }
 /* A count or dot on the icon's top-end corner: it starts 4px past the middle of the 56px pill, and a count grows away
    from the icon. */
-.dk-bottom-nav__badge { position: absolute; inset-block-start: var(--bottom-nav-badge-offset-y, var(--spacing-0)); inset-inline-start: var(--bottom-nav-badge-offset-x, var(--spacing-8)); display: inline-flex; font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.srp-bottom-nav__badge { position: absolute; inset-block-start: var(--bottom-nav-badge-offset-y, var(--spacing-0)); inset-inline-start: var(--bottom-nav-badge-offset-x, var(--spacing-8)); display: inline-flex; font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Not on the current item: under the pointer it keeps its own color and fill, as it does while held (GR414).
    The hover rule used to outrank the current one, so the current item looked like any other item pointed at. */
-@media (hover: hover) { .dk-bottom-nav__link:not(.dk-bottom-nav__link--active):hover { color: var(--bottom-nav-text-hover, var(--text)); } .dk-bottom-nav__link:not(.dk-bottom-nav__link--active):hover .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-bottom-nav__link:not(.srp-bottom-nav__link--active):hover { color: var(--bottom-nav-text-hover, var(--text)); } .srp-bottom-nav__link:not(.srp-bottom-nav__link--active):hover .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
 /* The label and the pill fade to their hover colors as the controls beside them do, and the pill fills at once while held. */
-.dk-bottom-nav__link { transition: color var(--motion-hover) var(--ease-move); }
-.dk-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }
-.dk-bottom-nav__link:not(.dk-bottom-nav__link--active):active .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
-@media (prefers-reduced-motion: reduce) { .dk-bottom-nav__link, .dk-bottom-nav__icon { transition: none; } }
-.dk-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary)); }
-.dk-bottom-nav__link--active .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
-.dk-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media print { .dk-bottom-nav, .dk-bottom-nav__spacer { display: none; } }
-@media (forced-colors: active) { .dk-bottom-nav__link--active .dk-bottom-nav__icon { outline: var(--outline-width-2) solid CanvasText; } }
+.srp-bottom-nav__link { transition: color var(--motion-hover) var(--ease-move); }
+.srp-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }
+.srp-bottom-nav__link:not(.srp-bottom-nav__link--active):active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { .srp-bottom-nav__link, .srp-bottom-nav__icon { transition: none; } }
+.srp-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary)); }
+.srp-bottom-nav__link--active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
+.srp-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media print { .srp-bottom-nav, .srp-bottom-nav__spacer { display: none; } }
+@media (forced-colors: active) { .srp-bottom-nav__link--active .srp-bottom-nav__icon { outline: var(--outline-width-2) solid CanvasText; } }
 }

@@ -113,11 +113,11 @@ function ChatRender({ ref, ...props }: ChatProps & React.RefAttributes<HTMLDivEl
     if (el) el.focus({ preventScroll: true });
   };
   return (
-    <div {...rest} ref={ref} className={cn('dk-chat', props.className)} data-component="chat">
+    <div {...rest} ref={ref} className={cn('srp-chat', props.className)} data-component="chat">
       {/* A region that scrolls is focusable, so keyboard people can scroll it; role="log" reads new messages politely. */}
-      <div ref={scroller} className="dk-chat__log" role="log" {...SCROLL_STOP} aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby']} onScroll={onScroll}>
+      <div ref={scroller} className="srp-chat__log" role="log" {...SCROLL_STOP} aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby']} onScroll={onScroll}>
         {props.hasOlder ? (
-          <div className="dk-chat__older" ref={older}>
+          <div className="srp-chat__older" ref={older}>
             <Button variant="ghost" size="sm" loading={!!props.loadingOlder} onClick={() => { if (!props.loadingOlder && props.onLoadOlder) { asked.current = first; props.onLoadOlder(); } }}>
               {props.loadingOlder ? L.chatLoadingOlder : L.chatLoadOlder}
             </Button>
@@ -126,7 +126,7 @@ function ChatRender({ ref, ...props }: ChatProps & React.RefAttributes<HTMLDivEl
         {props.children}
       </div>
       {unread ? (
-        <Button className="dk-chat__jump" variant="secondary" size="sm" rightIcon={<Icon icon={icons.ArrowDownward} />} onClick={jump}>
+        <Button className="srp-chat__jump" variant="secondary" size="sm" rightIcon={<Icon icon={icons.ArrowDownward} />} onClick={jump}>
           {L.chatNewMessages(unread, displayNumber(unread, locale))}
         </Button>
       ) : null}
@@ -197,40 +197,40 @@ function ChatMessageRender({ ref, ...props }: ChatMessageProps & React.RefAttrib
     announce(L.chatResponseOf(to, count));   // the text changes in place, which the log doesn't read
   };
   return (
-    <div {...rest} ref={ref} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
+    <div {...rest} ref={ref} className={cn('srp-chat-message', own && 'srp-chat-message--own', failed && 'srp-chat-message--failed', props.hideAuthor && 'srp-chat-message--follow', props.className)}
       data-component="chat-message" aria-busy={props.streaming || undefined}>
-      <span className="dk-chat-message__avatar" aria-hidden>{props.hideAuthor ? null : props.avatar}</span>
-      <div className="dk-chat-message__main">
+      <span className="srp-chat-message__avatar" aria-hidden>{props.hideAuthor ? null : props.avatar}</span>
+      <div className="srp-chat-message__main">
         {showAuthor || (props.time != null && !props.hideAuthor) ? (
-          <div className="dk-chat-message__head">
-            {showAuthor ? <span className="dk-chat-message__author">{own && props.author == null ? L.chatYou : props.author}</span> : null}
+          <div className="srp-chat-message__head">
+            {showAuthor ? <span className="srp-chat-message__author">{own && props.author == null ? L.chatYou : props.author}</span> : null}
             {/* Past a day, the time of day: the day divider above already says which day (the full date is on hover). */}
-            {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} absoluteAfter={1} absoluteFormat={TIME_OF_DAY} /> : null}
+            {props.time != null ? <RelativeTime className="srp-chat-message__time" date={props.time} absoluteAfter={1} absoluteFormat={TIME_OF_DAY} /> : null}
           </div>
-        ) : props.hideAuthor ? <span className="dk-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
+        ) : props.hideAuthor ? <span className="srp-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
         {props.reasoning != null ? (
-          <details className="dk-chat-message__reasoning">
-            <summary className="dk-chat-message__reasoning-toggle">
-              <Icon icon={icons.ExpandMore} className="dk-chat-message__reasoning-icon" />
+          <details className="srp-chat-message__reasoning">
+            <summary className="srp-chat-message__reasoning-toggle">
+              <Icon icon={icons.ExpandMore} className="srp-chat-message__reasoning-icon" />
               {props.reasoningTime != null && isFinite(time) && time >= 0 ? L.chatThoughtFor(Math.round(time)) : L.chatReasoning}
             </summary>
-            <div className="dk-chat-message__reasoning-text" dir="auto">{props.reasoning}</div>
+            <div className="srp-chat-message__reasoning-text" dir="auto">{props.reasoning}</div>
           </details>
         ) : null}
         {props.steps && props.steps.length ? <ChatSteps steps={props.steps} /> : null}
-        {hasText ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {hasText ? <div className="srp-chat-message__bubble" dir="auto">{props.children}</div> : null}
         {count > 1 ? (
-          <div className="dk-chat-message__branches" role="group" aria-label={L.chatResponseOf(at, count)}>
+          <div className="srp-chat-message__branches" role="group" aria-label={L.chatResponseOf(at, count)}>
             <IconButton icon={icons.ChevronLeft} label={L.chatPreviousResponse} size="sm" aria-disabled={at <= 1 || undefined} onClick={() => go(at - 1)} />
-            <span className="dk-chat-message__branch" aria-hidden>{num.format(at) + ' / ' + num.format(count)}</span>
+            <span className="srp-chat-message__branch" aria-hidden>{num.format(at) + ' / ' + num.format(count)}</span>
             <IconButton icon={icons.ChevronRight} label={L.chatNextResponse} size="sm" aria-disabled={at >= count || undefined} onClick={() => go(at + 1)} />
           </div>
         ) : null}
-        {props.thinking && !hasText ? <Loader variant="text" size="sm" delay={0} label={L.chatThinking} className="dk-chat-message__thinking" /> : null}
-        {props.attachments ? <div className="dk-chat-message__attachments">{props.attachments}</div> : null}
-        {props.status === 'sending' ? <span className="dk-chat-message__status">{L.chatSending}</span> : null}
+        {props.thinking && !hasText ? <Loader variant="text" size="sm" delay={0} label={L.chatThinking} className="srp-chat-message__thinking" /> : null}
+        {props.attachments ? <div className="srp-chat-message__attachments">{props.attachments}</div> : null}
+        {props.status === 'sending' ? <span className="srp-chat-message__status">{L.chatSending}</span> : null}
         {failed ? (
-          <span className="dk-chat-message__status dk-chat-message__status--failed">
+          <span className="srp-chat-message__status srp-chat-message__status--failed">
             <Icon icon={icons.Error} />{L.chatNotSent}
             {props.onRetry ? <Button variant="link" size="sm" onClick={props.onRetry}>{L.chatRetry}</Button> : null}
           </span>
@@ -266,15 +266,15 @@ function ChatStepsRender({ ref, ...props }: ChatStepsProps & React.RefAttributes
   const rest = omit(props, { steps: 1, children: 1, className: 1 } as const);
   const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
   return (
-    <ol role="list" {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
+    <ol role="list" {...rest} ref={ref} className={cn('srp-chat-steps', props.className)} data-component="chat-steps">
       {(props.steps || []).map((step) => {
         const status: ChatStepStatus = step.status === 'done' || step.status === 'failed' ? step.status : 'running';
         return (
-          <li key={step.id} className={cn('dk-chat-steps__step', 'dk-chat-steps__step--' + status)} data-status={status}>
-            {status === 'running' ? <Loader size="sm" delay={0} label="" className="dk-chat-steps__icon" /> : <Icon icon={STEP_ICON[status]} className="dk-chat-steps__icon" />}
-            <span className="dk-chat-steps__text">
-              <span className="dk-chat-steps__label">{step.label}<span className="dk-visually-hidden">{', ' + said[status]}</span></span>
-              {step.detail != null ? <span className="dk-chat-steps__detail">{step.detail}</span> : null}
+          <li key={step.id} className={cn('srp-chat-steps__step', 'srp-chat-steps__step--' + status)} data-status={status}>
+            {status === 'running' ? <Loader size="sm" delay={0} label="" className="srp-chat-steps__icon" /> : <Icon icon={STEP_ICON[status]} className="srp-chat-steps__icon" />}
+            <span className="srp-chat-steps__text">
+              <span className="srp-chat-steps__label">{step.label}<span className="srp-visually-hidden">{', ' + said[status]}</span></span>
+              {step.detail != null ? <span className="srp-chat-steps__detail">{step.detail}</span> : null}
             </span>
           </li>
         );
@@ -306,7 +306,7 @@ function ChatApprovalRender({ ref, ...props }: ChatApprovalProps & React.RefAttr
   const L = useSettings(words).labels;
   const rest = omit(props, { children: 1, detail: 1, status: 1, onApprove: 1, onDeny: 1, className: 1 } as const);
   const status: ChatApprovalStatus = props.status === 'approved' || props.status === 'denied' ? props.status : 'pending';
-  const titleId = domId('dk-chat-approval', React.useId());
+  const titleId = domId('srp-chat-approval', React.useId());
   const node = React.useRef<HTMLDivElement | null>(null);
   const pressed = React.useRef(false), was = React.useRef(status);
   const own = useMergedRef(ref, (el: HTMLDivElement | null) => { node.current = el; });
@@ -321,16 +321,16 @@ function ChatApprovalRender({ ref, ...props }: ChatApprovalProps & React.RefAttr
   }, [status]);
   const answer = (fn: (() => void) | undefined) => () => { pressed.current = true; if (fn) fn(); };
   if (status !== 'pending') return (
-    <div {...rest} ref={own} tabIndex={-1} className={cn('dk-chat-approval', 'dk-chat-approval--' + status, props.className)} data-component="chat-approval" data-status={status}>
-      <Icon icon={status === 'approved' ? icons.CheckCircle : icons.Close} className="dk-chat-approval__icon" />
+    <div {...rest} ref={own} tabIndex={-1} className={cn('srp-chat-approval', 'srp-chat-approval--' + status, props.className)} data-component="chat-approval" data-status={status}>
+      <Icon icon={status === 'approved' ? icons.CheckCircle : icons.Close} className="srp-chat-approval__icon" />
       <span>{(status === 'approved' ? L.chatApproved : L.chatDenied) + ': '}{props.children}</span>
     </div>
   );
   return (
-    <div {...rest} ref={own} role="group" aria-labelledby={titleId} className={cn('dk-chat-approval', props.className)} data-component="chat-approval" data-status={status}>
-      <div className="dk-chat-approval__title" id={titleId} dir="auto">{props.children}</div>
-      {props.detail != null ? <div className="dk-chat-approval__detail" dir="auto">{props.detail}</div> : null}
-      <div className="dk-chat-approval__actions">
+    <div {...rest} ref={own} role="group" aria-labelledby={titleId} className={cn('srp-chat-approval', props.className)} data-component="chat-approval" data-status={status}>
+      <div className="srp-chat-approval__title" id={titleId} dir="auto">{props.children}</div>
+      {props.detail != null ? <div className="srp-chat-approval__detail" dir="auto">{props.detail}</div> : null}
+      <div className="srp-chat-approval__actions">
         <Button size="sm" variant="primary" onClick={answer(props.onApprove)}>{L.chatApprove}</Button>
         <Button size="sm" variant="secondary" onClick={answer(props.onDeny)}>{L.chatDeny}</Button>
       </div>
@@ -366,7 +366,7 @@ function ChatReplyActionsRender({ ref, ...props }: ChatReplyActionsProps & React
     announce(next ? L.chatFeedbackNoted : L.chatFeedbackRemoved);
   };
   return (
-    <div {...rest} ref={ref} role="group" aria-label={rest['aria-label'] || L.chatReplyActions} className={cn('dk-chat-reply-actions', props.className)} data-component="chat-reply-actions">
+    <div {...rest} ref={ref} role="group" aria-label={rest['aria-label'] || L.chatReplyActions} className={cn('srp-chat-reply-actions', props.className)} data-component="chat-reply-actions">
       {props.copyText != null ? <CopyButton value={props.copyText} iconOnly variant="ghost" size="sm">{L.copy}</CopyButton> : null}
       {props.onRegenerate ? <IconButton icon={icons.Refresh} label={L.chatRegenerate} size="sm" onClick={props.onRegenerate} /> : null}
       {props.onFeedback ? (
@@ -400,9 +400,9 @@ function ChatCitationRender({ ref, ...props }: ChatCitationProps & React.RefAttr
   let host = '';
   try { host = new URL(props.href, 'https://localhost').host.replace(/^www\./, ''); } catch { host = props.href; }
   return (
-    <a {...rest} ref={ref} className={cn('dk-chat-citation', props.className)} data-component="chat-citation">
-      <span className="dk-chat-citation__index">{num.format(props.index)}</span>
-      <span className="dk-chat-citation__source" dir="auto">{props.children != null ? props.children : host}</span>
+    <a {...rest} ref={ref} className={cn('srp-chat-citation', props.className)} data-component="chat-citation">
+      <span className="srp-chat-citation__index">{num.format(props.index)}</span>
+      <span className="srp-chat-citation__source" dir="auto">{props.children != null ? props.children : host}</span>
     </a>
   );
 }
@@ -449,8 +449,8 @@ function ChatDividerRender({ ref, ...props }: ChatDividerProps & React.RefAttrib
     } else text = dateFormat(locale, { dateStyle: 'medium' }).format(d);
   }
   return (
-    <div {...rest} ref={ref} className={cn('dk-chat-divider', props.className)} data-component="chat-divider">
-      <span className="dk-chat-divider__text">{text}</span>
+    <div {...rest} ref={ref} className={cn('srp-chat-divider', props.className)} data-component="chat-divider">
+      <span className="srp-chat-divider__text">{text}</span>
     </div>
   );
 }
@@ -500,11 +500,11 @@ function ChatComposerRender({ ref, ...props }: ChatComposerProps & React.RefAttr
     if (field.current) field.current.focus();
   };
   return (
-    <form {...rest} ref={ref} className={cn('dk-chat-composer', props.className)} data-component="chat-composer"
+    <form {...rest} ref={ref} className={cn('srp-chat-composer', props.className)} data-component="chat-composer"
       onSubmit={(e) => { e.preventDefault(); send(); }}>
-      {props.attachments ? <div className="dk-chat-composer__attachments">{props.attachments}</div> : null}
-      <div className="dk-chat-composer__row">
-        <Textarea ref={field} className="dk-chat-composer__field" rows={1} autoResize maxRows={props.maxRows ?? 6} resize="none"
+      {props.attachments ? <div className="srp-chat-composer__attachments">{props.attachments}</div> : null}
+      <div className="srp-chat-composer__row">
+        <Textarea ref={field} className="srp-chat-composer__field" rows={1} autoResize maxRows={props.maxRows ?? 6} resize="none"
           aria-label={props['aria-label'] || L.chatMessage} placeholder={props.placeholder} disabled={disabled} value={value}
           onChange={(e) => set(e.target.value)}
           onKeyDown={(e) => {

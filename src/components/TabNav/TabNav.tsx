@@ -32,10 +32,10 @@ function TabNavRender({ ref, ...props }: TabNavProps & React.RefAttributes<HTMLE
   const rest = omit(props, { variant: 1, size: 1, className: 1, children: 1 });
   const variant = oneOf(['line', 'pill'] as const, props.variant, 'line');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
-  const [list, fade] = useTabRow<HTMLUListElement>('.dk-tabs__tab', '.dk-tabs__tab[aria-current="page"]', false, currentHref(props.children));
+  const [list, fade] = useTabRow<HTMLUListElement>('.srp-tabs__tab', '.srp-tabs__tab[aria-current="page"]', false, currentHref(props.children));
   return (
-    <nav {...rest} ref={ref} className={cn('dk-tabs', 'dk-tabs--' + variant, size !== 'md' && 'dk-tabs--' + size, 'dk-tab-nav', props.className)} data-component="tab-nav" data-variant={variant}>
-      <ul ref={list} className="dk-tabs__list dk-tab-nav__list" data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined}>
+    <nav {...rest} ref={ref} className={cn('srp-tabs', 'srp-tabs--' + variant, size !== 'md' && 'srp-tabs--' + size, 'srp-tab-nav', props.className)} data-component="tab-nav" data-variant={variant}>
+      <ul ref={list} className="srp-tabs__list srp-tab-nav__list" data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined}>
         {props.children}
       </ul>
     </nav>
@@ -71,13 +71,13 @@ function TabNavLinkBaseRender({ ref, ...props }: TabNavLinkProps & React.RefAttr
     ref,
     'aria-current': props.current ? 'page' : undefined,
     'data-state': props.current ? 'active' : 'inactive',
-    className: cn('dk-tabs__tab', props.className),
+    className: cn('srp-tabs__tab', props.className),
   };
   return (
-    <li className="dk-tab-nav__item">
+    <li className="srp-tab-nav__item">
       {React.createElement(props.as || config.link, attrs,
-        props.icon != null ? <span className="dk-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
-        <span className="dk-tabs__label">{props.children}</span>)}
+        props.icon != null ? <span className="srp-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
+        <span className="srp-tabs__label">{props.children}</span>)}
     </li>
   );
 }

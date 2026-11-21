@@ -9,8 +9,8 @@ import { idLabels } from './labels';
 import { useCopyToClipboard, type CopyToClipboardOptions } from './clipboard';
 import { useCopyToClipboard as exported } from '../index';
 
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
-const shout = () => document.querySelector('[data-dk-announcer-assertive]')?.textContent;
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
+const shout = () => document.querySelector('[data-srp-announcer-assertive]')?.textContent;
 let clip: string[];
 let writeText: ReturnType<typeof vi.fn>;
 beforeEach(() => {

@@ -34,12 +34,12 @@ import { Timeline, TimelineItem } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Alternate` story.
 
-1. **Rail** (`.dk-timeline__rail`): the line the events hang on, oldest to newest.
-2. **Event** (`.dk-timeline__item`): one thing that happened.
-3. **Marker** (`.dk-timeline__marker`): a dot or an icon on the rail, in the event's tone.
-4. **Time** (`.dk-timeline__time`): when it happened.
-5. **Title** (`.dk-timeline__title`): what happened.
-6. **Body** (`.dk-timeline__body`): more about it.
+1. **Rail** (`.srp-timeline__rail`): the line the events hang on, oldest to newest.
+2. **Event** (`.srp-timeline__item`): one thing that happened.
+3. **Marker** (`.srp-timeline__marker`): a dot or an icon on the rail, in the event's tone.
+4. **Time** (`.srp-timeline__time`): when it happened.
+5. **Title** (`.srp-timeline__title`): what happened.
+6. **Body** (`.srp-timeline__body`): more about it.
 
 ## Usage
 

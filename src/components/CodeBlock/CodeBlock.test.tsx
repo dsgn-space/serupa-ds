@@ -20,9 +20,9 @@ describe('CodeBlock', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<CodeBlock id="x" ref={ref} className="extra" data-x="y" code={CODE} language="js" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.language]).toEqual(['DIV', true, 'dk-code-block extra', 'y', 'code-block', 'js']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.language]).toEqual(['DIV', true, 'srp-code-block extra', 'y', 'code-block', 'js']);
     expect(pre().textContent).toBe('const a = 1;\nconst b = 2;\nconst c = a + b;');   // the last line break left out
-    expect(pre().querySelector('code')!.className).toBe('dk-code-block__code language-js');
+    expect(pre().querySelector('code')!.className).toBe('srp-code-block__code language-js');
   });
 
   test('the copy button copies the whole code, and is named', async () => {
@@ -64,13 +64,13 @@ describe('CodeBlock', () => {
     await render(<CodeBlock code={'a\nb\nc\nd\ne'} lineNumbers startLine={9} highlight={[9, [11, 12], 40]} />);
     const lines = [...pre().querySelector('code')!.children];
     // Drawn, but not read: the counter's alternative text is empty, so a screen reader doesn't say "9 a 10 b…".
-    expect(lines.map((l) => getComputedStyle(l, '::before').content)).toEqual(Array(5).fill('counter(dk-code-line) / ""'));
+    expect(lines.map((l) => getComputedStyle(l, '::before').content)).toEqual(Array(5).fill('counter(srp-code-line) / ""'));
     expect(await commands.ariaSnapshot('pre')).not.toMatch(/\b(9|10|11)\b/);
     expect(lines.map((l) => l.tagName)).toEqual(['MARK', 'SPAN', 'MARK', 'MARK', 'SPAN']);
     expect(pre().textContent).toBe('a\nb\nc\nd\ne');
     // The numbers are counters: 9 to 13, the gutter two digits wide.
-    expect(pre().style.counterReset).toBe('dk-code-line 8');
-    expect(pre().style.getPropertyValue('--dk-code-digits')).toBe('2');
+    expect(pre().style.counterReset).toBe('srp-code-line 8');
+    expect(pre().style.getPropertyValue('--srp-code-digits')).toBe('2');
   });
 
   test('copied by hand, the code keeps its blank lines and indents, with line numbers or without (GR114)', async () => {

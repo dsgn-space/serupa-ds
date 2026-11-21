@@ -21,7 +21,7 @@ function HeadingRender({ ref, ...props }: HeadingProps & React.RefAttributes<HTM
   const level = [1, 2, 3, 4, 5, 6].indexOf(lv as number) < 0 ? 2 : (lv as number);
   const size = SIZES.indexOf(sz as HeadingSize) < 0 ? null : sz;
   return React.createElement('h' + level, Object.assign(rest, {
-    ref: ref, className: cn('dk-heading', 'dk-heading--' + level, size && 'dk-heading--size-' + size, className), 'data-component': 'heading',
+    ref: ref, className: cn('srp-heading', 'srp-heading--' + level, size && 'srp-heading--size-' + size, className), 'data-component': 'heading',
   }));
 }
 

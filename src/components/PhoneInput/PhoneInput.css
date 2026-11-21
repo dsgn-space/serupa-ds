@@ -2,38 +2,38 @@
    PhoneInput: Input's box with a country part at the start: the calling code ("+62") and a chevron, with a
    native <select> laid over them (see-through, so a click or tap opens the real menu and it reads as a menu),
    and a divider before the tel field. The part shades on hover and draws its own focus ring inside the box,
-   so it's clear whether the menu or the field has focus. Structure: .dk-phone-input (.dk-input) >
-   .dk-phone-input__country > .dk-phone-input__dial, .dk-phone-input__chevron, .dk-phone-input__select; then
-   .dk-input__field.
+   so it's clear whether the menu or the field has focus. Structure: .srp-phone-input (.srp-input) >
+   .srp-phone-input__country > .srp-phone-input__dial, .srp-phone-input__chevron, .srp-phone-input__select; then
+   .srp-input__field.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-phone-input { padding-inline-start: var(--spacing-0); }
-.dk-phone-input__country {
+@layer srp.components {
+.srp-phone-input { padding-inline-start: var(--spacing-0); }
+.srp-phone-input__country {
   position: relative; display: inline-flex; align-items: center; flex-shrink: 0; align-self: stretch;
   gap: var(--phone-input-gap, var(--spacing-1));
-  padding-inline: var(--dk-input-px) var(--phone-input-gap, var(--spacing-1));
+  padding-inline: var(--srp-input-px) var(--phone-input-gap, var(--spacing-1));
   border-inline-end: var(--input-border-width, var(--border-width-1)) solid var(--phone-input-divider, var(--field-border));   /* the field's own edge colour: --border all but vanishes on the field in dark */
   border-start-start-radius: inherit; border-end-start-radius: inherit;
   color: var(--phone-input-dial, var(--text)); font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 /* The calling code reads left to right in any page: "+62", not "62+" in a right-to-left one (GR49). */
-.dk-phone-input__dial { direction: ltr; unicode-bidi: isolate; }
-.dk-phone-input__chevron { font-size: var(--dk-input-icon); color: var(--phone-input-chevron, var(--text-muted)); }
-.dk-phone-input__select {
+.srp-phone-input__dial { direction: ltr; unicode-bidi: isolate; }
+.srp-phone-input__chevron { font-size: var(--srp-input-icon); color: var(--phone-input-chevron, var(--text-muted)); }
+.srp-phone-input__select {
   position: absolute; inset: var(--spacing-0); width: var(--sizing-full); height: var(--sizing-full);
   margin: var(--spacing-0); padding: var(--spacing-0); border: 0; opacity: var(--opacity-0);
   font: inherit; cursor: inherit; appearance: none; -webkit-appearance: none;
 }
-.dk-phone-input__select option { background-color: var(--input-bg, var(--field)); color: var(--input-text, var(--text)); }
-@media (hover: hover) { .dk-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
-.dk-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
-.dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
+.srp-phone-input__select option { background-color: var(--input-bg, var(--field)); color: var(--input-text, var(--text)); }
+@media (hover: hover) { .srp-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
+.srp-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
+.srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
    arrow, as on every read-only control (Combobox, Select). */
-.dk-input--disabled .dk-phone-input__dial, .dk-input:where(:has(.dk-input__field:disabled)) .dk-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
-.dk-input--readonly .dk-phone-input__country:has(:disabled) { cursor: default; }
-@media (forced-colors: active) { .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline-color: Highlight; } }
-@media (prefers-reduced-motion: reduce) { .dk-phone-input__country { transition: none; } }
+.srp-input--disabled .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
+.srp-input--readonly .srp-phone-input__country:has(:disabled) { cursor: default; }
+@media (forced-colors: active) { .srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline-color: Highlight; } }
+@media (prefers-reduced-motion: reduce) { .srp-phone-input__country { transition: none; } }
 }

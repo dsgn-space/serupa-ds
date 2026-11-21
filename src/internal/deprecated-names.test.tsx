@@ -17,7 +17,7 @@ describe('TimelineItem: tone, the name every component gives what a color means'
   test('tone colors the marker, with no warning', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<Timeline><TimelineItem id="t" title="Paid" tone="success" /></Timeline>);
-    expect(el('t').classList.contains('dk-timeline__item--success')).toBe(true);
+    expect(el('t').classList.contains('srp-timeline__item--success')).toBe(true);
     expect(deprecations(warn)).toEqual([]);
   });
 });
@@ -52,8 +52,8 @@ describe('PasswordInput: revealed, as MaskedValue says showing a hidden value', 
 describe('MaskedValue: defaultRevealed, as every controlled state has a default', () => {
   test('defaultRevealed shows the whole value at first, and Hide still hides it', async () => {
     await render(<MaskedValue id="m" value="4111111111111208" label="Card number" revealable defaultRevealed />);
-    expect(el('m').classList.contains('dk-masked-value--revealed')).toBe(true);
+    expect(el('m').classList.contains('srp-masked-value--revealed')).toBe(true);
     await userEvent.click(el('m').querySelector('button')!);
-    expect(el('m').classList.contains('dk-masked-value--revealed')).toBe(false);
+    expect(el('m').classList.contains('srp-masked-value--revealed')).toBe(false);
   });
 });

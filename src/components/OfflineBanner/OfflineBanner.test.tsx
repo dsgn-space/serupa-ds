@@ -7,12 +7,12 @@ import { Navbar, NavbarLink } from '../Navbar/Navbar';
 import { OfflineBanner } from './OfflineBanner';
 
 const q = (s: string) => document.querySelector<HTMLElement>(s);
-const bar = () => q('.dk-offline-banner');
+const bar = () => q('.srp-offline-banner');
 // Everything the shared polite live region says from now on (each time its text changes to something).
 function listen() {
   const said: string[] = [];
   let last = '';
-  const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent || ''; if (t && t !== last) said.push(t); last = t; });
+  const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent || ''; if (t && t !== last) said.push(t); last = t; });
   seen.observe(document.body, { subtree: true, childList: true, characterData: true });
   return { said, stop: () => seen.disconnect() };
 }
@@ -34,7 +34,7 @@ describe('OfflineBanner', () => {
     await rerender(<OfflineBanner id="x" online={false} ref={ref} className="extra" data-x="y" placement="inline">Changes are kept.</OfflineBanner>);
     const e = document.getElementById('x')!;
     expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.state])
-      .toEqual(['DIV', 'You’re offline Changes are kept.', true, 'dk-offline-banner dk-offline-banner--inline extra', 'y', 'offline-banner', 'offline']);
+      .toEqual(['DIV', 'You’re offline Changes are kept.', true, 'srp-offline-banner srp-offline-banner--inline extra', 'y', 'offline-banner', 'offline']);
     expect(e.getAttribute('role')).toBe(null);   // said through the live region once, not read again as a live region
   });
 
@@ -90,7 +90,7 @@ describe('OfflineBanner', () => {
 
   test('its words read 4.5:1 and its icons 3:1 on its background in every theme', async () => {
     const { rerender } = await render(<OfflineBanner id="c" online={false} placement="inline" />);
-    const icon = () => q('#c .dk-offline-banner__icon')!;
+    const icon = () => q('#c .srp-offline-banner__icon')!;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(document.getElementById('c')).backgroundColor;
@@ -117,16 +117,16 @@ describe('OfflineBanner', () => {
       if (r.bottom > b.top && r.top < b.bottom) covered.push(f.id);
     }
     expect([covered, document.activeElement!.id]).toEqual([[], 'f39']);
-    expect(document.documentElement.style.getPropertyValue('--dk-offline-banner-space')).toMatch(/^\d+px$/);
+    expect(document.documentElement.style.getPropertyValue('--srp-offline-banner-space')).toMatch(/^\d+px$/);
     await screen.rerender(<OfflineBanner online />);
     await expect.poll(() => document.querySelector('[data-component=offline-banner]')).toBe(null);
-    expect([document.documentElement.style.getPropertyValue('--dk-offline-banner-space'), getComputedStyle(document.documentElement).scrollPaddingBottom, document.body.style.paddingBlockEnd]).toEqual(['', 'auto', '']);
+    expect([document.documentElement.style.getPropertyValue('--srp-offline-banner-space'), getComputedStyle(document.documentElement).scrollPaddingBottom, document.body.style.paddingBlockEnd]).toEqual(['', 'auto', '']);
   });
   test('GR124: the room is measured where the bar comes to rest, not where it is as it slides in', async () => withMotion(async () => {
     const screen = await render(<OfflineBanner online />);
     await screen.rerender(<OfflineBanner online={false}>Changes are kept and sent when you're back.</OfflineBanner>);
     const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
-    const space = () => parseFloat(document.documentElement.style.getPropertyValue('--dk-offline-banner-space'));
+    const space = () => parseFloat(document.documentElement.style.getPropertyValue('--srp-offline-banner-space'));
     const early = space();
     await wait(600);
     const settled = Math.ceil(window.innerHeight - banner.getBoundingClientRect().top + 8);
@@ -162,7 +162,7 @@ describe('OfflineBanner', () => {
         {Array.from({ length: 30 }, (_, i) => <input key={i} id={'n' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}
         <OfflineBanner online={false} placement="top">Changes are kept and sent when you're back.</OfflineBanner>
       </>);
-      const banner = bar()!, nav = q('.dk-navbar')!;
+      const banner = bar()!, nav = q('.srp-navbar')!;
       await expect.poll(() => Math.round(banner.getBoundingClientRect().top) >= Math.round(nav.getBoundingClientRect().bottom)).toBe(true);
       // Each control in the Navbar that shows is what a tap on its middle reaches.
       const shown = [...nav.querySelectorAll<HTMLElement>('a, button')].filter((e) => e.getClientRects().length && e.getBoundingClientRect().width > 0);
@@ -182,7 +182,7 @@ describe('OfflineBanner', () => {
 
   test('GR172: two bottom bars at once: the page gets the larger room, keeps it while one shows, and gets its own padding back after both, in either order', async () => {
     const room = () => Number(/^calc\((\d+)px\)$/.exec(document.body.style.paddingBlockEnd)?.[1] ?? 0);
-    const space = () => document.documentElement.style.getPropertyValue('--dk-offline-banner-space');
+    const space = () => document.documentElement.style.getPropertyValue('--srp-offline-banner-space');
     const A = <OfflineBanner key="a" online={false}>Changes are kept.</OfflineBanner>, B = <OfflineBanner key="b" online={false} />;
     document.body.style.paddingBlockEnd = '3px';
     try {
