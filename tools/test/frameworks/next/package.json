@@ -2,5 +2,5 @@
   "name": "serupa-example-next",
   "private": true,
   "scripts": { "build": "next build", "start": "next start" },
-  "dependencies": { "next": "16.4.3" }
+  "dependencies": { "next": "16.4.6" }
 }
