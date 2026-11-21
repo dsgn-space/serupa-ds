@@ -24,7 +24,7 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: 'Розгорнути все',
-  chartKind: (type) => ({ line: 'Лінійна діаграма', bar: 'Стовпчаста діаграма', area: 'Діаграма з областями', donut: 'Кільцева діаграма' })[type],
+  chartKind: (type) => ({ line: 'Лінійна діаграма', bar: 'Стовпчаста діаграма', area: 'Діаграма з областями', donut: 'Кільцева діаграма', heatmap: 'Теплова карта' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + p3(series, 'ряд', 'ряди', 'рядів') + ', ' + p3(points, 'точка', 'точки', 'точок') + (points > 1 ? ' від ' + first + ' до ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': мінімум ' + low + ' (' + lowAt + '), максимум ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
