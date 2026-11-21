@@ -182,7 +182,7 @@ npx serupa-usage src
 
 ### For your own components
 
-The package also exports what the components use themselves, so a component you build follows the same settings. Guides › Hooks and helpers in Storybook gives each one an example (`docs/HooksAndHelpers.mdx`):
+The package also exports what the components use themselves, so a component you build follows the same settings. Guides › Hooks and helpers in the docs gives each one an example (`docs/HooksAndHelpers.mdx`):
 
 | Export | What it gives |
 | --- | --- |
@@ -363,6 +363,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [FieldList](src/components/FieldList/README.md) (beta) | Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. |
 | [FileUpload](src/components/FileUpload/README.md) | A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. |
 | [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
+| [ImageCropper](src/components/ImageCropper/README.md) (beta) | A picture in a frame of a fixed shape, which people move and zoom to choose the part to keep: a profile photo, a team logo, a cover. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
 | [Input](src/components/Input/README.md) | A single-line text field: a native `<input>` in a box that can hold icons. |
 | [MentionInput](src/components/MentionInput/README.md) (beta) | A multi-line text field where typing "@" opens a list of people to mention, at the caret. |

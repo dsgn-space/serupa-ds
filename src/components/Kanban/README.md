@@ -126,6 +126,8 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-target-border` | `primary` | The outline of the column a moving card would land in (3:1). |
 | `--kanban-over` | `danger-text` | A count over its column's limit (4.5:1 on the column). |
 | `--kanban-handle-active` | `primary-subtle` | A picked-up card's handle. |
+| `--kanban-handle-bg-hover` | `secondary` | The drag handle's background on hover, as SortableList's. |
+| `--kanban-handle-bg-pressed` | `secondary-hover` | The drag handle's background while held down, a step past its hover. |
 | `--kanban-focus-ring` | `focus-ring` | The ring around a focused handle. |
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |

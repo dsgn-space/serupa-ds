@@ -153,9 +153,11 @@ if (D) {
   // every line in size.mjs met; this stays a backstop.
   // 20 Nov 2026: 225 KB. Main reached 219.8 KB (merge of #2152), with every line in size.mjs met, so every pull request
   // that adds code failed here; this stays a backstop.
-  // 20 Nov 2026: 260 KB. The React Compiler's memoization (ADR-0017) took it to 253 KB.
+  // 20 Nov 2026: 230 KB. Duration and the other merges of the day took main to about 222 KB, and ImageCropper (its
+  // gestures, the cropImage helper) to 225, with every line in size.mjs met; this stays a backstop.
+  // 21 Nov 2026: 270 KB. The React Compiler's memoization (ADR-0017) took it to 259 KB.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 260 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 260 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 270 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 270 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;

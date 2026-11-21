@@ -191,6 +191,17 @@ export function Primary({ placed }: { placed?: boolean }) {
   return first ? <Demo entry={first} /> : null;
 }
 
+// A Do or Don't story's description opens with its verdict ("Do: a label above the field, …"), which its heading
+// ("Do: a label above") has just said: under the heading it starts at the advice.
+const VERDICT = /^(Do|Don['’]t):\s*/;
+const lead = (entry: { name: string; description: string }) => {
+  const said = VERDICT.exec(entry.description), named = VERDICT.exec(entry.name);
+  const word = (m: RegExpExecArray) => (m[1] ?? '').replace('’', "'");
+  if (!said || !named || word(named) !== word(said)) return entry.description;
+  const rest = entry.description.slice(said[0].length);
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+};
+
 /** Every story of the page, each under its name. */
 export function Stories({ title, includePrimary = true }: { title?: string; includePrimary?: boolean }) {
   const all = useDocs().componentStories();
@@ -199,7 +210,7 @@ export function Stories({ title, includePrimary = true }: { title?: string; incl
     {title ? <Heading level={2} className="site-h site-h2">{title}</Heading> : null}
     {list.map((entry) => <section key={entry.id} className="site-story" aria-labelledby={entry.slug}>
       <Heading level={3} id={entry.slug} className="site-h site-h3">{entry.name}</Heading>
-      {entry.description && <Markdown plain>{entry.description}</Markdown>}
+      {entry.description && <Markdown plain>{lead(entry)}</Markdown>}
       <Demo entry={entry} />
     </section>)}
   </>;

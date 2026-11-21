@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { TagGroup, type TagItem } from './TagGroup';
@@ -169,6 +169,16 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements()).toHaveLength(4);
     await userEvent.click(page.getByRole('button', { name: 'Show less' }));
     expect(page.getByRole('row').elements()).toHaveLength(2);
+  });
+
+  test('"Show more" is underlined as a link is, 1px and 2px below the words, and pointed at turns primary-hover with a 2px underline', async () => {
+    await render(<Removable max={2} />);
+    const more = page.getByRole('button', { name: 'Show more' });
+    const look = () => { const c = css(more.element()); return [c.color, c.textDecorationThickness, c.textUnderlineOffset]; };
+    expect(look()).toEqual([color('var(--primary)'), '1px', '2px']);
+    await more.hover();
+    await expect.poll(look).toEqual([color('var(--primary-hover)'), '2px', '2px']);
+    await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 
   test('with max, removing the last tag shown moves focus to the next one, which takes its place, not back to the one before', async () => {
