@@ -274,7 +274,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
     const g = document.querySelector('#serupa-debug-theme[role="group"]');
     return g ? { mode: Serupa.theme.get().mode, names: [...g.querySelectorAll('select')].map((x) => x.name + '=' + x.value + ':' + (x.labels[0]?.textContent || '')), text: g.textContent } : null;
   });
-  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 8 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
+  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 7 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
   await p.selectOption('#serupa-debug-theme-radius', 'round');
   await p.selectOption('#serupa-debug-theme-mode', 'dark');
   await p.waitForFunction(() => /-dark$/.test(document.documentElement.getAttribute('data-theme')), null, { timeout: 3000 }).catch(() => {});
@@ -282,6 +282,9 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   t('debug.js: picking a setting applies it to the page live, brand and mode through theme.js', picked.radius === 'round' && /-dark$/.test(picked.theme) && picked.mode === 'dark', JSON.stringify(picked));
   const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: /** @type {HTMLSelectElement | null} */ (document.getElementById('serupa-debug-theme-density'))?.value }));
   t('debug.js: theme(o) changes settings, \'\' puts one back, and the pairs are checked again in the new theme', tried.theme.radius === '' && tried.theme.contrast === 'more' && tried.theme.density === 'compact' && tried.lowContrast.length === 0 && !tried.attr && tried.select === 'compact', JSON.stringify(tried));
+  // Every brand tokens.json has, and no setting the tokens no longer read (depth went with the tactile look in 16.0.0).
+  const debugBrands = await p.evaluate(() => ({ brands: [...(/** @type {HTMLSelectElement | null} */ (document.getElementById('serupa-debug-theme-brand'))?.options ?? [])].map((o) => o.value).filter(Boolean).length, depth: !!document.getElementById('serupa-debug-theme-depth') }));
+  t('debug.js: the Theme panel offers all 17 brands and no depth setting', debugBrands.brands === 17 && !debugBrands.depth, JSON.stringify(debugBrands));
   await p.evaluate(() => Serupa.debug.theme({ contrast: '', density: '', mode: 'auto' }));
   await p.keyboard.press('Escape');
   t('debug.js: Escape turns it off and takes its outline and panels away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && !document.getElementById('serupa-debug-theme') && sessionStorage.getItem('serupa-debug') === null));

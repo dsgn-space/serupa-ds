@@ -12,7 +12,7 @@ const meta = {
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
   },
   render: (args) => (
-    <TabNav {...args} aria-label="Project" style={{ maxWidth: 520 }}>
+    <TabNav {...args} aria-label="Project">
       <TabNavLink href="#overview" current>Overview</TabNavLink>
       <TabNavLink href="#activity" icon="history">Activity</TabNavLink>
       <TabNavLink href="#members">Members</TabNavLink>

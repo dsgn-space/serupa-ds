@@ -14,7 +14,7 @@ const meta = {
     orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
   },
   render: (args) => (
-    <Tabs {...args} style={{ maxWidth: 520 }}>
+    <Tabs {...args}>
       <TabList aria-label="Project">
         <Tab value="overview">Overview</Tab>
         <Tab value="activity" icon="history">Activity</Tab>
