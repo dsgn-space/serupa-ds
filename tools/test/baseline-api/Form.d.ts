@@ -38,6 +38,7 @@ interface FormProps<S extends StandardSchemaV1 | undefined = undefined> extends 
     onSubmit?: ((values: Out<S>, form: FormHandle) => FormSubmitResult | Promise<FormSubmitResult | undefined | void> | void) | undefined;
     checks?: Readonly<Record<string, FormCheck>> | undefined;
     errors?: null | Readonly<Record<string, React.ReactNode>> | undefined;
+    message?: React.ReactNode;
     draft?: string | undefined;
     warnUnsaved?: boolean | undefined;
     summary?: boolean | undefined;
