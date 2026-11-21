@@ -8,6 +8,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Prose } from '../../components/Prose/Prose';
 import { TableOfContents } from '../../components/TableOfContents/TableOfContents';
 import { Card, CardHeader } from '../../components/Card/Card';
+import { Divider } from '../../components/Divider/Divider';
 import { Link } from '../../components/Link/Link';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
 import { useLocale } from '../../internal/provider';
@@ -120,8 +121,9 @@ export function Article({ title = 'Projects now open on what’s due this week',
             </div>
           </div>
         </div>
+        {related.length ? <Divider decorative data-print="hide" /> : null}
         {related.length ? (
-          <section aria-labelledby="article-next" data-print="hide" className="flex flex-col gap-4 border-t border-border pt-8">
+          <section aria-labelledby="article-next" data-print="hide" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="article-next">Read next</Heading>
             <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
               {related.map((r) => (

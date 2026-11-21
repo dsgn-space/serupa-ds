@@ -12,7 +12,7 @@ describe('Patterns/Landing page', () => {
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length, document.querySelector('h1')?.textContent]).toEqual([1, 1, 'Plan the work']);
     const regions = [...document.querySelectorAll('main section[aria-labelledby]')].filter((s) => !s.parentElement?.closest('section'))
       .map((s) => document.getElementById(s.getAttribute('aria-labelledby')!)?.textContent);
-    expect(regions).toEqual(['Plan the work', 'What it does', 'Pricing', 'Questions', 'Try it with your team']);
+    expect(regions).toEqual(['Plan the work', 'What it does', 'Pricing', 'What teams say', 'Questions', 'Try it with your team']);
     await userEvent.keyboard('{Tab}');
     expect(document.activeElement?.getAttribute('href')).toBe('#main');
     expect(document.querySelector('footer')).not.toBeNull();
@@ -68,5 +68,14 @@ describe('Patterns/Landing page', () => {
   test('logo={null}: the header brand is the product’s name as text', async () => {
     const screen = await render(<Landing product="Orbit" logo={null} />);
     expect(screen.getByRole('link', { name: 'Orbit' }).element().querySelector('img')).toBeNull();
+  });
+
+  test('what customers say: each Quote with who said it and their role; quotes={[]} leaves the section out', async () => {
+    const screen = await render(<Landing />);
+    const region = screen.getByRole('region', { name: 'What teams say' });
+    const figures = [...region.element().querySelectorAll('figure')].map((f) => [f.querySelector('blockquote') !== null, f.querySelector('figcaption')?.textContent]);
+    expect(figures).toEqual([[true, expect.stringContaining('Dewi Lestari')], [true, expect.stringContaining('Chen Wei')]]);
+    await screen.rerender(<Landing quotes={[]} />);
+    expect(screen.getByRole('region', { name: 'What teams say' }).elements()).toHaveLength(0);
   });
 });

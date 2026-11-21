@@ -43,8 +43,12 @@ describe('Patterns/Article', () => {
     const screen = await render(<Article />);
     const next = page.getByRole('region', { name: 'Read next' });
     expect(next.getByRole('link', { name: 'Saved views, shared with a link' }).element().getAttribute('href')).toBe('#saved-views');
+    // A Divider sets it off from the post, a line only: nothing for a screen reader.
+    const line = next.element().previousElementSibling;
+    expect([line?.getAttribute('data-component'), line?.getAttribute('aria-hidden') ?? line?.getAttribute('role')]).toEqual(['divider', expect.stringMatching(/true|none|presentation/)]);
     await screen.rerender(<Article related={[]} />);
     expect(page.getByRole('region', { name: 'Read next' }).elements().length).toBe(0);
+    expect(document.querySelector('main [data-component="divider"]')).toBeNull();
   });
 
   test('a post in another language says so', async () => {
