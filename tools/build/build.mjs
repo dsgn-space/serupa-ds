@@ -171,7 +171,9 @@ fs.copyFileSync(path.join(P, 'src', 'testing.d.ts'), path.join(D, 'testing.d.ts'
 // with these types beside it.
 fs.mkdirSync(path.join(D, 'labels'), { recursive: true });
 for (const f of fs.readdirSync(path.join(P, 'src', 'labels')).filter((x) => x.endsWith('.ts'))) {
-  fs.writeFileSync(path.join(D, 'labels', f.replace(/\.ts$/, '.d.ts')), `import type { SerupaLabels } from "../index.js";\n/** Every built-in word, in this language: <SerupaProvider locale={locale} labels={labels}>. */\nexport declare const labels: SerupaLabels;\n/** The locale the words are written for. */\nexport declare const locale: string;\n`);
+  fs.writeFileSync(path.join(D, 'labels', f.replace(/\.ts$/, '.d.ts')), `import type { SerupaLabels } from "../index.js";\n/** Every built-in word, in this language: <SerupaProvider locale={locale} labels={labels}>. */\nexport declare const labels: SerupaLabels;\n/** The locale the words are written for. */\nexport declare const locale: string;\n`
+    // The pseudo-locale also gives its two helpers, for an app's own words.
+    + (f === 'pseudo.ts' ? `/** Pseudo text: accented, about 40% longer, between ⟦ ⟧, for an app's own words beside these labels. */\nexport declare function pseudo(text: string): string;\n/** A whole label set in the pseudo-locale, the text each function label is given left as it was. */\nexport declare function pseudoLabels<T extends object>(labels: T): T;\n` : ''));
 }
 // purge.js (D11): serupa-purge as a Vite and a PostCSS plugin (serupa-ds/purge), as written; it imports bin/serupa-purge.mjs.
 fs.writeFileSync(path.join(D, 'purge.js'), stamp(read('src/purge.js')));

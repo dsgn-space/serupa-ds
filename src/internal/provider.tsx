@@ -16,6 +16,11 @@ export interface SerupaProviderProps {
   /** Replaces some or all of the words the components say on their own, such as { close: "Tutup" }, or a whole
    *  set (idLabels). Keys left out keep the outer provider's words, else English. */
   labels?: Partial<SerupaLabels>;
+  /** Language packs to choose the words from by `locale`, so one setting switches the words with the dates, numbers
+   *  and direction: languages={[en, id]} with `import * as id from "@diki-stwn/serupa-ds/labels/id"`. The pack whose
+   *  locale matches (the whole tag, else its language: "id-ID" takes id) gives every word; `labels` still wins over
+   *  it. Nested providers inherit the list, so an inner locale picks from it too. Include en to switch back to English. */
+  languages?: readonly LanguagePack[];
   /** Icons that work by name inside this provider, in the shape registerIcons takes: one icon, or a module of them. */
   icons?: Array<IconData | Readonly<Record<string, IconData>>> | IconData | Readonly<Record<string, IconData>>;
   /** The device's platform, for Kbd's key names (⌘ or Ctrl): 'apple' or 'other'. Set it from the request (the
@@ -28,6 +33,20 @@ export interface SerupaProviderProps {
   size?: 'sm' | 'md' | 'lg';
   /** The part of the page these settings apply to. */
   children?: React.ReactNode;
+}
+
+/** A language pack, as each serupa-ds/labels/<language> entry exports it: the words and the locale they're written for. */
+export interface LanguagePack {
+  locale: string;
+  labels: Partial<SerupaLabels>;
+}
+
+/** The pack written for `locale`: the same tag, else the same language ("id-ID" takes the id pack). */
+function packFor(packs: readonly LanguagePack[], locale: string | undefined): LanguagePack | undefined {
+  const want = locale && canonicalLocale(locale)?.toLowerCase();
+  if (!want) return undefined;
+  const tag = (p: LanguagePack) => canonicalLocale(p.locale)?.toLowerCase();
+  return packs.find((p) => tag(p) === want) ?? packs.find((p) => tag(p)?.split('-')[0] === want.split('-')[0]);
 }
 
 /** What the components read: the nearest provider's settings, merged with the outer ones. */
@@ -44,8 +63,10 @@ interface Settings extends Omit<SerupaSettings, 'labels'> {
   /** At run time it also holds the component words a provider set; typed as the shared ones so a component can't
       read its own words without passing them to useSettings. */
   labels: SharedLabels;
+  /** The nearest provider's language packs, for an inner provider that sets only a locale. */
+  languages: readonly LanguagePack[] | undefined;
 }
-const NONE: Settings = { locale: undefined, labels: SHARED_LABELS, icons: new Map(), platform: undefined };
+const NONE: Settings = { locale: undefined, labels: SHARED_LABELS, icons: new Map(), platform: undefined, languages: undefined };
 const Context = /* @__PURE__ */ React.createContext<Settings>(NONE);
 
 /* SerupaProvider: settings for every component inside it (ADR-0010), as React context rather than module state, so
@@ -58,10 +79,14 @@ export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
   const outer = React.useContext(Context);
   const { locale, platform } = props;
   const labels = useSameAsBefore(props.labels, 0), icons = useSameAsBefore(props.icons, 1);   // icons={[{ Star }]}: one level deeper
+  const languages = useSameAsBefore(props.languages, 0);   // languages={[en, id]}: the same pack modules each render
   const value = React.useMemo<Settings>(() => {
     const merged: SharedLabels & Partial<ComponentLabels> = { ...outer.labels };
-    if (labels) for (const k of Object.keys(labels) as (keyof SerupaLabels)[]) {
-      const v = labels[k];
+    const packs = languages ?? outer.languages;
+    // A pack only where this provider changes the locale or the packs; otherwise the outer words stand as they are.
+    const pack = (locale || languages) && packs ? packFor(packs, locale || outer.locale) : undefined;
+    for (const set of [pack?.labels, labels]) if (set) for (const k of Object.keys(set) as (keyof SerupaLabels)[]) {
+      const v = set[k];
       if (v != null && v !== '') (merged as unknown as Record<string, unknown>)[k] = v;
     }
     let map = outer.icons;
@@ -73,8 +98,8 @@ export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
       }
       map = m;
     }
-    return { locale: locale || outer.locale, labels: merged, icons: map, platform: platform === 'apple' || platform === 'other' ? platform : outer.platform };
-  }, [outer, locale, labels, icons, platform]);
+    return { locale: locale || outer.locale, labels: merged, icons: map, platform: platform === 'apple' || platform === 'other' ? platform : outer.platform, languages: packs };
+  }, [outer, locale, labels, icons, platform, languages]);
   const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
   const inner = <Context.Provider value={value}>{props.children}</Context.Provider>;
   return size ? <ControlSize.Provider value={size}>{inner}</ControlSize.Provider> : inner;
@@ -111,7 +136,7 @@ export function useSettings(own?: object): Settings {
 /** The nearest SerupaProvider's settings, or the defaults (browser locale, English words) without one. */
 export function useSerupa(): SerupaSettings {
   const settings = React.useContext(Context);
-  return React.useMemo(() => ({ ...settings, labels: Object.assign({}, DEFAULT_LABELS, settings.labels) }), [settings]);
+  return React.useMemo(() => ({ locale: settings.locale, labels: Object.assign({}, DEFAULT_LABELS, settings.labels), icons: settings.icons, platform: settings.platform }), [settings]);
 }
 
 /* With no locale from a prop or a provider, a component follows the browser's. The server can't know it, so
