@@ -313,6 +313,9 @@ const SortableRow = /* @__PURE__ */ React.memo(function SortableRow(props: {
   );
 });
 
+// Lays the page out now. A call, not a bare `void el.offsetWidth`, which the React Compiler drops as unused.
+function reflow(el: HTMLElement) { return el.offsetWidth; }
+
 /** items with the one at `from` moved to `to`. */
 function move<T>(items: readonly T[], from: number, to: number): T[] {
   const out = items.slice();
