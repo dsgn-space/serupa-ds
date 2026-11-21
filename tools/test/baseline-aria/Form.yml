@@ -15,7 +15,7 @@
   - button "Show password"
   - text: Confirm password
   - textbox "Confirm password"
-  - button "Show password"
+  - button "Show confirmed password"
   - checkbox "I agree to the terms"
   - text: I agree to the terms
   - button "Create account"
@@ -84,7 +84,7 @@
   - button "Show password"
   - text: Confirm password
   - textbox "Confirm password"
-  - button "Show password"
+  - button "Show confirmed password"
   - checkbox "I agree to the terms"
   - text: I agree to the terms
   - button "Create account"
@@ -120,7 +120,7 @@
   - button "Show password"
   - text: Confirm password
   - textbox "Confirm password"
-  - button "Show password"
+  - button "Show confirmed password"
   - checkbox "I agree to the terms"
   - text: I agree to the terms
   - button "Create account"
@@ -147,7 +147,7 @@
   - button "Show password"
   - text: Confirm password
   - textbox "Confirm password"
-  - button "Show password"
+  - button "Show confirmed password"
   - checkbox "I agree to the terms" [invalid]
   - text: I agree to the terms Agree to the terms to create an account
   - button "Create account"

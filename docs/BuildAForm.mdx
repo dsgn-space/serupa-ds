@@ -83,7 +83,7 @@ export function SignUpPage() {
       <Field label="Username" hint="Lowercase letters, numbers and _"><Input name="username" autoComplete="username" spellCheck={false} /></Field>
       <Field label="Email"><Input name="email" type="email" autoComplete="email" /></Field>
       <Field label="Password" hint="12 characters or more"><PasswordInput name="password" autoComplete="new-password" /></Field>
-      <Field label="Confirm password"><PasswordInput name="confirm" autoComplete="new-password" /></Field>
+      <Field label="Confirm password"><PasswordInput name="confirm" autoComplete="new-password" toggleLabel="Show confirmed password" /></Field>
       <Field><Checkbox name="terms">I agree to the terms</Checkbox></Field>
       <Button type="submit">Create account</Button>
     </Form>

@@ -29,7 +29,7 @@ function SignUpFields() {
     <Field label="Full name"><Input name="name" autoComplete="name" /></Field>
     <Field label="Email" hint="Like name@example.com"><Input name="email" type="email" autoComplete="email" /></Field>
     <Field label="Password" hint="12 characters or more"><PasswordInput name="password" autoComplete="new-password" /></Field>
-    <Field label="Confirm password"><PasswordInput name="confirm" autoComplete="new-password" /></Field>
+    <Field label="Confirm password"><PasswordInput name="confirm" autoComplete="new-password" toggleLabel="Show confirmed password" /></Field>
     <Field><Checkbox name="terms">I agree to the terms</Checkbox></Field>
     <div><Button type="submit">Create account</Button></div>
   </>;
