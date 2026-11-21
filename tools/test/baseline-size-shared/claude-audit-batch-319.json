@@ -2,5 +2,9 @@
   "All components (index.js)": [
     0.1,
     "+0.1 KiB on 21 Nov 2026: DateRangePicker names the range days in its popup (deep-audit fix)"
+  ],
+  "STARTER": [
+    0.1,
+    "+0.1 KiB on 21 Nov 2026: Fuchsia hover and pressed tokens in their own hue; DateRangePicker range day names"
   ]
 }
