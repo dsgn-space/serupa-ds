@@ -94,6 +94,17 @@ await lone.goto(`${srv.base}/${path.relative(PROJECT, fileURLToPath(writePage('i
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`, { react: true })))}`);
 await lone.waitForTimeout(300);
 t('when serupa-icons.iife.js is missing, the icon stays empty and the warning says to include it', !(await lone.evaluate(() => document.querySelector('#r svg'))) && said.some((w) => w.includes('include serupa-icons.iife.js')), said.join(' | '));
+// An element named "currentScript" in the page's HTML answers for document.currentScript (<img name>, which HTML
+// sanitizers let through): its src must not choose where the icons' script comes from. The icon stays empty instead.
+const named = await b.newPage();
+const asked = [];
+named.on('request', (r) => asked.push(r.url()));
+await named.route('https://elsewhere.invalid/**', (r) => r.abort());
+const libs = ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/serupa.iife.js'].map((s) => `<script src="../${s}"></script>`).join('');
+await named.goto(`${srv.base}/${path.relative(PROJECT, fileURLToPath(writePage('icon-named.html', `<img name="currentScript" src="https://elsewhere.invalid/x/" alt=""><div id="root"></div>${libs}<script>
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`)))}`);
+await named.waitForTimeout(300);
+t('an element named "currentScript" on the page doesn\'t choose where serupa-icons.iife.js comes from', !asked.some((u) => u.startsWith('https://elsewhere.invalid/') && u.includes('.js')), asked.filter((u) => u.includes('elsewhere')).join(' | '));
 await b.close();
 srv.close();
 cleanup();

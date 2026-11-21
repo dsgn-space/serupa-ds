@@ -235,6 +235,8 @@ function ContextMenuRender({ ref, ...props }: ContextMenuProps & React.RefAttrib
 
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
+  // Once it has closed and faded, the spot goes: opened from outside again, it measures the target where it is then.
+  if (!open && !exit.leaving && at) setAt(null);
   useAnchoredLayer(open && !!spot, menuRef, point, { placement: 'bottom-start', offsetVar: '--srp-menu-offset', onOutside: () => close('outside', false), watch: spot && spot.x + ',' + spot.y });
   useIsoLayoutEffect(() => {
     const menu = menuRef.current;
