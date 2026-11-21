@@ -72,7 +72,7 @@
 /* Pressed: a held segment takes a wash of the text color over the track or the selection (its held fill) and the
    hover text, like a Button's held fill. Nothing shrinks by default; --segmented-control-press-scale opts in to
    one. Not read-only or disabled. */
-.dk-segmented:not(.dk-segmented--readonly) .dk-segmented__item:active:not(:disabled) { background-color: color-mix(in srgb, var(--segmented-control-pressed-wash, var(--text)) var(--segmented-control-pressed-layer, var(--opacity-10)), transparent); color: var(--segmented-control-text-hover, var(--text)); scale: var(--segmented-control-press-scale, var(--scale-100)); transition: color var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+.dk-segmented:not(.dk-segmented--readonly) .dk-segmented__item:active:not(:disabled) { background-color: color-mix(in srgb, var(--segmented-control-wash-pressed, var(--text)) var(--segmented-control-layer-pressed, var(--opacity-10)), transparent); color: var(--segmented-control-text-hover, var(--text)); scale: var(--segmented-control-press-scale, var(--scale-100)); transition: color var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
 .dk-segmented--invalid { border-color: var(--segmented-control-invalid, var(--danger)); }
 .dk-segmented--readonly .dk-segmented__item { cursor: default; }
 /* Read-only: hovering an unselected segment doesn't brighten it, since a click won't choose it. */

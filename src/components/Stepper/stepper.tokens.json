@@ -42,13 +42,13 @@
           }
         }
       },
-      "pressed-wash": {
+      "wash-pressed": {
         "$type": "color",
         "$value": "{color.text}",
-        "$description": "The color washed over a step's indicator while its head is held down, at pressed-layer strength.",
+        "$description": "The color washed over a step's indicator while its head is held down, at layer-pressed strength.",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--stepper-pressed-wash"
+            "cssVar": "--stepper-wash-pressed"
           }
         }
       },
@@ -255,20 +255,20 @@
       "press-scale": {
         "$type": "number",
         "$value": "{transforms.scale-100}",
-        "$description": "Size of a step's indicator while its head is held down. 100%: off by default, since a press shows as the held wash (pressed-layer). Set it, e.g. to `var(--scale-95)`, to add a shrink.",
+        "$description": "Size of a step's indicator while its head is held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-95)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--stepper-press-scale"
           }
         }
       },
-      "pressed-layer": {
+      "layer-pressed": {
         "$type": "number",
         "$value": "{opacity.opacity-10}",
         "$description": "How strong the wash of the text color is on a step's indicator while its head is held down (10%).",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--stepper-pressed-layer"
+            "cssVar": "--stepper-layer-pressed"
           }
         }
       }

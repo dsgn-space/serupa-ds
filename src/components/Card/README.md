@@ -139,7 +139,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-description-color` | `text-muted` | The description |
 | `--card-text` | `text` | Text in the body and footer |
 | `--card-border-hover` | `border-strong` | A linked card's border on hover |
-| `--card-pressed-wash` | `text` | The color washed over a card with `href` while it's held down, at pressed-layer strength: darker in light themes, lighter in dark. |
+| `--card-wash-pressed` | `text` | The color washed over a card with `href` while it's held down, at layer-pressed strength: darker in light themes, lighter in dark. |
 | `--card-text-muted-pressed` | `text-muted-shaded` | Muted text on a card with `href` while it's held down (4.5:1 on the washed fill). |
 | `--card-focus-ring` | `focus-ring` | A linked card's keyboard focus ring |
 | `--card-divider-elevated` | `border-overlay` | What a divider or separator inside an elevated card reads as `border`: the top-layer edge color, since in dark `border` is the raised surface's own color and a line in it vanished |
@@ -178,8 +178,8 @@ Each is an optional override: set it on the page, a container or one card. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--card-press-scale` | `scale-100` | Size of a card with `href` while it's held down. 100%: off by default, since a press shows as the held wash (pressed-layer). Set it, e.g. to `var(--scale-97)`, to add a shrink. |
-| `--card-pressed-layer` | `opacity-10` | How strong the wash of the text color is on a card with `href` while it's held down (10%). |
+| `--card-press-scale` | `scale-100` | Size of a card with `href` while it's held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-97)`, to add a shrink. |
+| `--card-layer-pressed` | `opacity-10` | How strong the wash of the text color is on a card with `href` while it's held down (10%). |
 <!-- token-table:end -->
 
 ## Related

@@ -113,7 +113,7 @@ Each is an optional override: set it on the page, a container or one control. Th
 | `--segmented-control-text` | `text-muted` | The other segments' labels (4.5:1 on bg). |
 | `--segmented-control-text-selected` | `text` | The selected segment's label. |
 | `--segmented-control-text-hover` | `text` | A segment's label on hover. |
-| `--segmented-control-pressed-wash` | `text` | The color washed over a segment while it's held down, at pressed-layer strength. |
+| `--segmented-control-wash-pressed` | `text` | The color washed over a segment while it's held down, at layer-pressed strength. |
 | `--segmented-control-focus-ring` | `focus-ring` | A segment's keyboard focus ring. |
 | `--segmented-control-invalid` | `danger` | The outline when invalid (3:1 on the surface). |
 | `--segmented-control-border-disabled` | `disabled-border` | Disabled: the edge. |
@@ -160,6 +160,6 @@ Each is an optional override: set it on the page, a container or one control. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--segmented-control-duration` | `motion-change-md` | How long the selection takes to slide to a new segment. |
-| `--segmented-control-press-scale` | `scale-100` | Size of a segment while it's held down. 100%: off by default, since a press shows as the held wash (pressed-layer). Set it, e.g. to `var(--scale-95)`, to add a shrink. |
-| `--segmented-control-pressed-layer` | `opacity-10` | How strong the wash of the text color is on a segment while it's held down (10%). |
+| `--segmented-control-press-scale` | `scale-100` | Size of a segment while it's held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-95)`, to add a shrink. |
+| `--segmented-control-layer-pressed` | `opacity-10` | How strong the wash of the text color is on a segment while it's held down (10%). |
 <!-- token-table:end -->

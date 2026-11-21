@@ -145,7 +145,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | `--stepper-indicator-border` | `border-control` | An upcoming step's ring (3:1 on the surface). |
 | `--stepper-indicator-text` | `text-muted` | An upcoming step's number. |
 | `--stepper-indicator-text-shaded` | `text-muted-shaded` | An upcoming step's number while its head is held down (4.5:1 on the washed fill). |
-| `--stepper-pressed-wash` | `text` | The color washed over a step's indicator while its head is held down, at pressed-layer strength. |
+| `--stepper-wash-pressed` | `text` | The color washed over a step's indicator while its head is held down, at layer-pressed strength. |
 | `--stepper-bg-active` | `primary` | The current and completed steps' circle. |
 | `--stepper-text-active` | `on-primary` | The number or check on them. |
 | `--stepper-bg-error` | `danger` | A step with an error. |
@@ -190,6 +190,6 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--stepper-press-scale` | `scale-100` | Size of a step's indicator while its head is held down. 100%: off by default, since a press shows as the held wash (pressed-layer). Set it, e.g. to `var(--scale-95)`, to add a shrink. |
-| `--stepper-pressed-layer` | `opacity-10` | How strong the wash of the text color is on a step's indicator while its head is held down (10%). |
+| `--stepper-press-scale` | `scale-100` | Size of a step's indicator while its head is held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-95)`, to add a shrink. |
+| `--stepper-layer-pressed` | `opacity-10` | How strong the wash of the text color is on a step's indicator while its head is held down (10%). |
 <!-- token-table:end -->

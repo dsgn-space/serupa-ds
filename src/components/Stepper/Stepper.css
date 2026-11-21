@@ -31,7 +31,7 @@ button.dk-stepper__head { cursor: var(--cursor-interactive); touch-action: manip
    fill, a step darker in light themes and lighter in dark, as a Button's held fill; its muted number turns
    text-muted-shaded to keep 4.5:1 on it. Nothing shrinks by default; --stepper-press-scale opts in to one. */
 button.dk-stepper__head .dk-stepper__indicator { transition: scale var(--motion-release) var(--ease-spring); }
-button.dk-stepper__head:active .dk-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-muted-shaded)); background-image: linear-gradient(var(--dk-step-held), var(--dk-step-held)); --dk-step-held: color-mix(in srgb, var(--stepper-pressed-wash, var(--text)) var(--stepper-pressed-layer, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+button.dk-stepper__head:active .dk-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-muted-shaded)); background-image: linear-gradient(var(--dk-step-held), var(--dk-step-held)); --dk-step-held: color-mix(in srgb, var(--stepper-wash-pressed, var(--text)) var(--stepper-layer-pressed, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { button.dk-stepper__head .dk-stepper__indicator { transition: none; } button.dk-stepper__head:active .dk-stepper__indicator { scale: none; } }
 .dk-stepper__head:focus { outline: none; }
 .dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
