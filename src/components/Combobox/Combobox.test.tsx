@@ -47,6 +47,13 @@ describe('Combobox', () => {
     if (r) expect(r).toEqual(['solid', '2px', true]);
   });
 
+  test('an option held down fills one step past the highlight (pressed), as a Menu item does', async () => {
+    await render(<Countries />);
+    await open();
+    const o = activeOf('cb');
+    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--pressed)'));
+  });
+
   test('as the list narrows, the typed text is marked in each option, as it was matched: ignoring case and accents (185)', async () => {
     await render(<>
       <Combobox id="chl" aria-label="City" options={['Łódź', 'Kłodzko', 'Lodi', 'Paris']} />
