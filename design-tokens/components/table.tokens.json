@@ -72,6 +72,16 @@
           }
         }
       },
+      "row-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A linked row's background while it is held down, a step past its hover, as a List row's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-row-bg-pressed"
+          }
+        }
+      },
       "row-bg-selected": {
         "$type": "color",
         "$value": "{color.surface-hover}",

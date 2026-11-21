@@ -28,22 +28,26 @@ export const Playground: Story = { decorators: narrow };
 /** Read from the headings of an article beside it, as a page's side column would. */
 export const FromHeadings: Story = {
   name: 'From the page\'s headings',
-  args: { items: undefined, container: '#toc-article' },
+  args: { items: undefined },
   // In the page's own column beside the text, wider than the default box; on a narrow page, above the text
-  // (wrap-reverse flips the cross axis, so flex-end is the top).
-  decorators: [(Story) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap-reverse', alignItems: 'flex-end', gap: 32 }}>
-      <div id="toc-article" style={{ flex: '1 1 240px', minWidth: 0 }}>
-        {sections.map((s) => (
-          <section key={s.id}>
-            {React.createElement(s.level === 2 ? 'h2' : 'h3', { id: s.id }, s.title)}
-            <p style={{ minHeight: 160 }}>Text of the {s.title.toLowerCase()} section.</p>
-          </section>
-        ))}
+  // (wrap-reverse flips the cross axis, so flex-end is the top). The article's ids are its own (useId), so the
+  // contents lead to this article's headings wherever else they're shown.
+  render: function Render(args) {
+    const article = React.useId();
+    return (
+      <div style={{ display: 'flex', flexWrap: 'wrap-reverse', alignItems: 'flex-end', gap: 32 }}>
+        <div id={article} style={{ flex: '1 1 240px', minWidth: 0 }}>
+          {sections.map((s) => (
+            <section key={s.id}>
+              {React.createElement(s.level === 2 ? 'h2' : 'h3', { id: `${article}-${s.id}` }, s.title)}
+              <p style={{ minHeight: 160 }}>Text of the {s.title.toLowerCase()} section.</p>
+            </section>
+          ))}
+        </div>
+        <div style={{ position: 'sticky', top: 16, flex: '0 1 200px' }}><TableOfContents {...args} container={`[id="${article}"]`} /></div>
       </div>
-      <div style={{ position: 'sticky', top: 16, flex: '0 1 200px' }}><Story /></div>
-    </div>
-  )],
+    );
+  },
 };
 
 export const NoTitle: Story = { name: 'Without a title', args: { title: null, 'aria-label': 'Sections' }, decorators: narrow };

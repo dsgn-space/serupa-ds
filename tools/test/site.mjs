@@ -168,7 +168,10 @@ await inParallel(opened, workers, async (p, w) => {
   w.errors.length = 0;
   const failed = await openUrl(w.page, base + p.path) || await ready(w.page, true);
   if (!t(`${p.path} opens (${p.file})`, !failed, failed)) return;
-  // The stories wake a moment after the page (site/src/blocks.tsx), and a late error is still an error.
+  // The stories wake a moment after the page (site/src/blocks.tsx), and a late error is still an error. The article is
+  // there before the browser takes the page over (it is drawn ahead of time), so the wait starts once every stage has
+  // woken: before that an anatomy diagram may still be opening its story's popover to copy it, for a moment.
+  await w.page.waitForFunction(() => !document.querySelector('[data-site-demo][inert]'), null, { timeout: 15000 }).catch(() => {});
   await w.page.waitForTimeout(500);
   const seen = await w.page.evaluate(() => ({
     h1: [...document.querySelectorAll('#article h1')].filter((h) => !h.closest('[data-site-demo]')).map((h) => h.textContent.trim()),
@@ -184,7 +187,15 @@ await inParallel(opened, workers, async (p, w) => {
     over: [...document.querySelectorAll('dialog, [popover]')].filter((e) => e.matches(':modal, :popover-open') && e.getAttribute('role') !== 'tooltip').map((e) => String(e.className || e.localName).split(' ')[0]),
     heldInFrame: document.querySelectorAll('.site-demo .site-held').length,
     classes: [...new Set([...document.querySelectorAll('[class]')].flatMap((e) => [...e.classList]))],
+    // A reference inside an example (a label's for, an aria-labelledby, -describedby or -controls, a #link) that leads
+    // to an element outside that example: a label that focuses another example's field, a link into another example.
+    crossed: [...document.querySelectorAll('[data-site-demo]')].flatMap((demo) => [...demo.querySelectorAll('label[for], [aria-labelledby], [aria-describedby], [aria-controls], a[href^="#"]')].flatMap((el) => {
+      const ids = el.matches('label[for]') ? [el.getAttribute('for')] : el.matches('a[href^="#"]') ? [decodeURIComponent(el.getAttribute('href').slice(1))]
+        : ['aria-labelledby', 'aria-describedby', 'aria-controls'].flatMap((a) => (el.getAttribute(a) || '').split(/\s+/));
+      return ids.filter((id) => { const to = id && document.getElementById(id); return to && !demo.contains(to); });
+    })),
   }));
+  t(`${p.path}: each example's labels and links stay inside it`, !seen.crossed.length, `they lead out of their example to #${[...new Set(seen.crossed)].slice(0, 6).join(', #')}`);
   const unstyled = seen.classes.filter((c) => UTILITIES.has(c) && !STYLED.has(c));
   t(`${p.path} has the utility classes it uses`, !unstyled.length, `the site's stylesheet left out ${unstyled.slice(0, 8).join(', ')}`);
   // A story that opens something as it arrives waits behind a button (site/src/blocks.tsx): the page itself comes first.
@@ -312,6 +323,23 @@ await inParallel(opened, workers, async (p, w) => {
   });
   t('/components/button: the lead comes before the first example, which shows once above the guide', order.lead && order.leadFirst && order.above === 1,
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
+}
+
+// The search finds a component by the other names its guide gives ("**Also called:**"): someone who types "modal"
+// or "snackbar" is looking for Dialog or Toast.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 900 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  await w.page.locator('.site-search').click();
+  const missed = [];
+  for (const [query, page] of [['modal', 'Dialog'], ['snackbar', 'Toast'], ['spinner', 'Loader'], ['collapsible', 'Accordion'], ['facepile', 'AvatarGroup']]) {
+    await w.page.keyboard.press('ControlOrMeta+A'); await w.page.keyboard.type(query); await w.page.waitForTimeout(150);
+    const found = await w.page.evaluate(() => [...document.querySelectorAll('[role="option"]')].map((o) => o.firstChild?.textContent?.trim() || o.textContent.trim()));
+    if (!found.some((f) => f.startsWith(page))) missed.push(`"${query}" lists ${found.slice(0, 3).join(', ') || 'nothing'}, not ${page}`);
+  }
+  await w.page.keyboard.press('Escape');
+  t('the search finds a component by its other names', !missed.length, missed.join('; '));
 }
 
 // Printed, a component's page is its guide: the screen's controls (search, the theme switches, the section list,

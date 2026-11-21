@@ -18,13 +18,18 @@ export const IconLabel: Story = {
   render: () => <a href="#" className="inline-flex text-text"><Icon name="settings" /><VisuallyHidden>Settings</VisuallyHidden></a>,
 };
 
+// The content it skips to is the example's own (useId), so the link stays inside it wherever it's shown.
 export const SkipLink: Story = {
-  render: () => (
-    <div className="text-sm text-text">
-      <p>Press Tab to show the skip link.</p>
-      <VisuallyHidden focusable as="div"><a href="#main" className="text-primary underline">Skip to content</a></VisuallyHidden>
-    </div>
-  ),
+  render: function Render() {
+    const content = React.useId();
+    return (
+      <div className="text-sm text-text">
+        <p>Press Tab to show the skip link.</p>
+        <VisuallyHidden focusable as="div"><a href={`#${content}`} className="text-primary underline">Skip to content</a></VisuallyHidden>
+        <div id={content} tabIndex={-1}>The content.</div>
+      </div>
+    );
+  },
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").

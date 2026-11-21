@@ -6,11 +6,13 @@ import { Prose } from './Prose';
 // Written as elements here, since a story may not write HTML from a string (Trusted Types); an app passes its
 // sanitized HTML the same way, or renders its Markdown to elements.
 function Article() {
+  // Its own id (useId), so the link leads to this article's heading wherever else an article is shown.
+  const install = React.useId();
   return <>
     <h2>Getting started</h2>
-    <p>Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has <a href="#install">plain links</a>, <strong>bold</strong>, <em>emphasis</em> and <code>inline code</code>.</p>
+    <p>Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has <a href={`#${install}`}>plain links</a>, <strong>bold</strong>, <em>emphasis</em> and <code>inline code</code>.</p>
     <ul><li>Install the package.</li><li>Import the styles once.<ul><li>Or link the CSS file from a plain page.</li></ul></li><li>Render a component.</li></ul>
-    <h3 id="install">Install</h3>
+    <h3 id={install}>Install</h3>
     <ol><li>Run the installer.</li><li>Restart the dev server.</li></ol>
     <pre><code>{'npm install @diki-stwn/serupa-ds\nimport "@diki-stwn/serupa-ds/styles.css";'}</code></pre>
     <blockquote><p>Good defaults make the right thing the easy thing.</p></blockquote>

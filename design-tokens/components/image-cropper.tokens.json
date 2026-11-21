@@ -1,0 +1,135 @@
+{
+  "imageCropper": {
+    "$description": "ImageCropper's component tokens. Each one is an optional override: set the CSS variable (--image-cropper-<name>) on the page, a container or one ImageCropper, and every ImageCropper inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The frame behind the picture, seen while it loads or when it can't.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-bg"
+          }
+        }
+      },
+      "edge": {
+        "$type": "color",
+        "$value": "{color.picture-edge}",
+        "$description": "The hairline round the frame, so a pale picture keeps its edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-edge"
+          }
+        }
+      },
+      "scrim": {
+        "$type": "color",
+        "$value": "{color.overlay}",
+        "$description": "A round crop: what dims the picture outside the circle.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-scrim"
+          }
+        }
+      },
+      "guide": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "A round crop: the ring on the circle, over the picture.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-guide"
+          }
+        }
+      },
+      "grid": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "The lines in thirds shown while the picture is dragged.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-grid"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The frame's focus ring.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-focus-ring"
+          }
+        }
+      },
+      "fallback-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The icon and words in the frame when the picture can't be loaded.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-fallback-color"
+          }
+        }
+      }
+    },
+    "opacity": {
+      "grid-opacity": {
+        "$type": "number",
+        "$value": "{opacity.opacity-60}",
+        "$description": "How strongly the thirds show while dragging.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-grid-opacity"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The frame's corners, as a field's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-xs}",
+        "$description": "The widest it grows (20rem); it fills a narrower column.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-max-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Between the frame and the zoom row (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-gap"
+          }
+        }
+      },
+      "zoom-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Between the zoom buttons and the slider (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-cropper-zoom-gap"
+          }
+        }
+      }
+    }
+  }
+}

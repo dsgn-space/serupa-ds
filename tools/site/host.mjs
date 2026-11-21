@@ -5,8 +5,8 @@
 //   reads the page without running it gets that page, not the front page's, with the page itself drawn in it
 //   (prerender.mjs) so it shows before the scripts run;
 // - 404.html, which the host sends with a 404 for an address the site has no page for: the site's own "no page here";
-// - _redirects, which serves /frame/<story> (one story drawn alone for a frame on the site's own pages) from frame.html,
-//   index.html with nothing drawn in it;
+// - frame/<story>.html for each story the site shows in a frame of its own (a pattern's screens, a whole-screen
+//   example on a docs page), drawn ahead of time too;
 // - _headers: hashed assets cached for a year, and the security headers, the Content-Security-Policy with the hash of
 //   each inline script (theme.js, which sets the theme before the first paint);
 // - sitemap.xml and robots.txt. The sitemap, the canonical addresses and the preview image need the site's own
@@ -83,11 +83,15 @@ export async function writeHostFiles(outDir, { base = '/', siteUrl = '', root, d
     fs.writeFileSync(path.join(outDir, file), page(r.title, r.description, r.path, { body: drawn.get(r.path) ?? '' }));
   }
   fs.writeFileSync(path.join(outDir, '404.html'), page('Page not found · Serupa', 'There’s no page at this address on the Serupa site.', '', { noindex: true }));
-  // A story drawn alone, for a frame on the site's own pages: the page with nothing drawn in it, as the front page
-  // (index.html) now has the front page in it.
-  fs.writeFileSync(path.join(outDir, 'frame.html'), page('Serupa', 'A story drawn alone.', '', { noindex: true }));
-
-  fs.writeFileSync(path.join(outDir, '_redirects'), `${at('/frame/*')} ${at('/frame.html')} 200\n`);
+  // Each story the site shows in a frame of its own (a pattern's screens, a whole-screen example on a docs page), drawn
+  // ahead of time: /frame/patterns-dashboard--default is frame/patterns-dashboard--default.html.
+  for (const [p, body] of drawn) {
+    if (!p.startsWith('/frame/')) continue;
+    fs.mkdirSync(path.join(outDir, 'frame'), { recursive: true });
+    fs.writeFileSync(path.join(outDir, p.slice(1) + '.html'), page('Example · Serupa', 'One example from the Serupa docs, on a page of its own.', '', { noindex: true, body }));
+  }
+  // No rewrite for them: Pages follows a _redirects rule even where a file matches, so one would hide these files.
+  fs.rmSync(path.join(outDir, '_redirects'), { force: true });
   fs.writeFileSync(path.join(outDir, '_headers'), [
     `${at('/assets/*')}`,
     '  Cache-Control: public, max-age=31536000, immutable',

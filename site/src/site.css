@@ -100,6 +100,9 @@ ol.site-list { list-style: decimal; }
 /* With room, code in a written table breaks only when one word is wider than its column, so a prop's name in the
    first column (onOpenChange) isn't split to give a long Notes column one more character. */
 @media (min-width: 64rem) { .site-table:not(.site-table--props) .site-code { overflow-wrap: break-word; } }
+/* …and a name in the first column stays on one line: motion-stagger-limit, not motion-stagger- over limit. A hyphen is
+   a break the browser takes on its own, so break-word alone doesn't keep it. */
+@media (min-width: 64rem) { .site-table:not(.site-table--props) td:first-child > .site-code:only-child { white-space: nowrap; } }
 /* On a phone a written table of three columns or more stands each row as a block: its first cell names the row, and
    each other cell starts with its column's name (data-label, set in markdown.tsx). Squeezed into the width instead,
    it broke words a letter a line and ran rows hundreds of pixels tall. The header row stays for screen readers, and
@@ -123,19 +126,15 @@ ol.site-list { list-style: decimal; }
 .site-demo { margin-block-start: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface); overflow: clip; }
 .site-demo__stage { padding: var(--spacing-8) var(--spacing-6); overflow-x: auto; }
 .site-demo[data-layout="centered"] .site-demo__stage { display: grid; place-items: safe center; }
-/* A whole screen (a pattern): it scrolls inside its frame, and what it fixes or sticks stays inside too. */
-.site-demo[data-layout="fullscreen"] .site-demo__stage { padding: 0; max-block-size: 44rem; overflow: auto; transform: translateZ(0); }
-/* A screen taller than the frame fades out at the frame's foot while there is more of it below, so a cut-off heading
-   reads as "scroll for more", not as broken. Only where the frame scrolls (a scroll timeline that isn't active leaves
-   the fade at its base opacity, 0), and gone once the end is reached. */
-.site-demo[data-layout="fullscreen"] .site-demo__stage::after { content: ""; position: sticky; inset-block-end: 0; display: block; block-size: var(--spacing-12); margin-block-start: calc(-1 * var(--spacing-12)); background: linear-gradient(transparent, var(--surface-page)); pointer-events: none; opacity: 0; animation: site-more-below linear both; animation-timeline: scroll(nearest block); }
-@keyframes site-more-below { 0%, 90% { opacity: 1; } 100% { opacity: 0; } }
+/* A whole screen (a pattern): a page of its own in a frame (site/src/blocks.tsx Demo), as tall as a laptop's window
+   or nine tenths of this one, whichever is less. It scrolls inside, and what it fixes or sticks stays inside too. */
+.site-demo[data-layout="fullscreen"] .site-demo__stage { padding: 0; overflow: clip; }
+.site-demo__frame { display: block; inline-size: 100%; block-size: min(44rem, 90dvh); border: 0; background: var(--surface-page); }
 .site-demo__stage:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
 .site-demo__bar { display: flex; justify-content: flex-end; padding: var(--spacing-1) var(--spacing-2); border-block-start: var(--border-width-1) solid var(--border); background: var(--surface-muted); }
 .site-demo__code:not([hidden]) { padding: var(--spacing-3); border-block-start: var(--border-width-1) solid var(--border); background: var(--surface-muted); }
 [data-site-away] [role="tooltip"] { visibility: hidden; }
 .site-held { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--spacing-3) var(--spacing-4); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.site-demo[data-layout="fullscreen"] .site-held { padding: var(--spacing-8) var(--spacing-6); }
 .site-story > .site-p { margin-block-start: var(--spacing-2); color: var(--text-muted); }
 
 .site-prevnext { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); margin-block-start: var(--spacing-16); }
