@@ -68,14 +68,16 @@ export function toNested(flat: FlatValues | Readonly<Record<string, unknown>>): 
 }
 function setPath(root: Record<string, unknown>, key: string, value: unknown) {
   const parts = key.split('.');
-  if (parts.some((p) => UNSAFE.has(p))) return;
   let at = root;
-  for (let i = 0; i < parts.length - 1; i++) {
-    const p = parts[i] as string, next = at[p];
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i] as string;
+    // A name can't reach an object's machinery (a control named "__proto__.x" sets nothing).
+    if (p === '__proto__' || p === 'constructor' || p === 'prototype') return;
+    if (i === parts.length - 1) { at[p] = value; return; }
+    const next = Object.prototype.hasOwnProperty.call(at, p) ? at[p] : undefined;
     if (next == null || typeof next !== 'object') at[p] = /^\d+$/.test(parts[i + 1] as string) ? [] : {};
     at = at[p] as Record<string, unknown>;
   }
-  at[parts[parts.length - 1] as string] = value;
 }
 
 /** The value at a path ("addresses.1.city") in a nested object, or undefined. */
@@ -93,7 +95,10 @@ export function merge(base: unknown, over: unknown): unknown {
   if (over === undefined) return base;
   if (!base || !over || typeof base !== 'object' || typeof over !== 'object') return over;
   const out = (Array.isArray(base) ? base.slice() : { ...base }) as Record<string, unknown>;
-  for (const [k, v] of Object.entries(over)) if (!UNSAFE.has(k)) out[k] = merge(out[k], v);
+  for (const [k, v] of Object.entries(over)) {
+    if (k === '__proto__' || k === 'constructor' || k === 'prototype') continue;
+    out[k] = merge(Object.prototype.hasOwnProperty.call(out, k) ? out[k] : undefined, v);
+  }
   return out;
 }
 

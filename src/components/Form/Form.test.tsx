@@ -198,6 +198,21 @@ describe('Form', () => {
     expect(onSubmit.mock.calls[0]![0]).toEqual({ name: 'Ani', news: true, plan: 'pro', addresses: [{ city: 'Bandung' }, { city: 'Jakarta' }] });
   });
 
+  test('a control named after an object’s machinery sets nothing on any object', async () => {
+    const onSubmit = vi.fn();
+    await render(<Form onSubmit={onSubmit} defaultValues={{ ['__proto__']: { hacked: 'yes' } }}>
+      <input name="__proto__.polluted" defaultValue="yes" aria-label="x" />
+      <input name="constructor.prototype.polluted" defaultValue="yes" aria-label="y" />
+      <input name="a.b" defaultValue="ok" aria-label="z" />
+      <button id="send" type="submit">Send</button>
+    </Form>);
+    await userEvent.click(el('send'));
+    await expect.poll(() => onSubmit.mock.calls.length).toBe(1);
+    expect(onSubmit.mock.calls[0]![0]).toEqual({ a: { b: 'ok' } });
+    expect(({} as Record<string, unknown>).polluted).toBe(undefined);
+    expect(({} as Record<string, unknown>).hacked).toBe(undefined);
+  });
+
   test('useFormValue: a field that depends on another shows as that one changes; a hidden input a component sets counts too', async () => {
     function Region() {
       const country = useFormValue<string>('country');
