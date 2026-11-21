@@ -106,15 +106,6 @@
 
 # Playground
 - button "Invite people"
-- dialog "Invite people":
-  - heading "Invite people" [level=2]
-  - paragraph: They’ll get an email with a link.
-  - button "Close"
-  - text: Email
-  - textbox "Email":
-    - /placeholder: name@company.com
-  - button "Cancel"
-  - button "Send invite"
 
 # Small
 - button "Invite people"

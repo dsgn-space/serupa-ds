@@ -10,24 +10,27 @@ const meta = {
   component: Dialog,
   args: { open: false, title: 'Invite people', description: 'They’ll get an email with a link.', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
-  // Open in its own canvas, so each size, placement and long story is in a picture; closed on the docs page, so it
-  // doesn't cover the guide.
-  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
-    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
-    return <>
-      <Button onClick={() => setOpen(true)}>Invite people</Button>
-      <Dialog {...args} open={open} onOpenChange={setOpen}
-        footer={args.alert ? <><Button variant="secondary" onClick={() => setOpen(false)}>Keep</Button><Button destructive onClick={() => setOpen(false)}>Delete</Button></>
-          : <><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={() => setOpen(false)}>Send invite</Button></>}>
-        {args.alert ? null : <Field label="Email"><Input type="email" placeholder="name@company.com" /></Field>}
-      </Dialog>
-    </>;
-  },
+  // Open in its own canvas, so each size and long story is in a picture; closed on the docs page, so it doesn't cover
+  // the guide.
+  render: (args: DialogProps, ctx: { viewMode?: string }) => <InviteDialog {...args} initiallyOpen={ctx.viewMode !== 'docs'} />,
 } satisfies Meta<typeof Dialog>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+function InviteDialog({ initiallyOpen, ...args }: DialogProps & { initiallyOpen: boolean }) {
+  const [open, setOpen] = React.useState(initiallyOpen);
+  return <>
+    <Button onClick={() => setOpen(true)}>Invite people</Button>
+    <Dialog {...args} open={open} onOpenChange={setOpen}
+      footer={args.alert ? <><Button variant="secondary" onClick={() => setOpen(false)}>Keep</Button><Button destructive onClick={() => setOpen(false)}>Delete</Button></>
+        : <><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={() => setOpen(false)}>Send invite</Button></>}>
+      {args.alert ? null : <Field label="Email"><Input type="email" placeholder="name@company.com" /></Field>}
+    </Dialog>
+  </>;
+}
+
+/** Closed, as a page starts: the trigger, ready to open it. */
+export const Playground: Story = { render: (args: DialogProps) => <InviteDialog {...args} initiallyOpen={false} /> };
 export const Confirmation: Story = { args: { alert: true, size: 'sm', title: 'Delete Atlas?', description: 'This removes the project and its files. It can’t be undone.' } };
 export const Small: Story = { args: { size: 'sm', title: 'Rename project', description: undefined } };
 export const Large: Story = { args: { size: 'lg', title: 'Share Atlas', description: 'Anyone you invite can view and comment.' } };

@@ -122,19 +122,6 @@
 
 # Playground
 - button "Open filters"
-- dialog "Filters":
-  - heading "Filters" [level=2]
-  - paragraph: Narrow the list of projects.
-  - button "Close"
-  - text: Name
-  - textbox "Name":
-    - /placeholder: Search projects
-  - checkbox "Only mine"
-  - text: Only mine
-  - checkbox "Include archived"
-  - text: Include archived
-  - button "Reset"
-  - button "Apply"
 
 # Small
 - button "Open filters"

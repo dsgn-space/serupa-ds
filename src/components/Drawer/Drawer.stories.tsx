@@ -45,22 +45,25 @@ const meta = {
   argTypes: { placement: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom', 'start', 'end'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   // Open in its own canvas, so each size, placement and long story is in a picture; closed on the docs page, so it
   // doesn't cover the guide.
-  render: function Render(args: DrawerProps, ctx: { viewMode?: string }) {
-    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
-    // Each placement's story opens a drawer that fits its title, from a button that says what it opens: a share
-    // sheet with a link, not the filters under "Share".
-    const { trigger, body, footer } = (typeof args.title === 'string' && CONTENT[args.title]) || CONTENT.Filters!;
-    const close = () => setOpen(false);
-    return <>
-      <Button onClick={() => setOpen(true)}>{trigger}</Button>
-      <Drawer {...args} open={open} onOpenChange={setOpen} footer={footer?.(close)}>{body}</Drawer>
-    </>;
-  },
+  render: (args: DrawerProps, ctx: { viewMode?: string }) => <DemoDrawer {...args} initiallyOpen={ctx.viewMode !== 'docs'} />,
 } satisfies Meta<typeof Drawer>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+function DemoDrawer({ initiallyOpen, ...args }: DrawerProps & { initiallyOpen: boolean }) {
+  const [open, setOpen] = React.useState(initiallyOpen);
+  // Each placement's story opens a drawer that fits its title, from a button that says what it opens: a share sheet
+  // with a link, not the filters under "Share".
+  const { trigger, body, footer } = (typeof args.title === 'string' && CONTENT[args.title]) || CONTENT.Filters!;
+  const close = () => setOpen(false);
+  return <>
+    <Button onClick={() => setOpen(true)}>{trigger}</Button>
+    <Drawer {...args} open={open} onOpenChange={setOpen} footer={footer?.(close)}>{body}</Drawer>
+  </>;
+}
+
+/** Closed, as a page starts: the trigger, ready to open it. */
+export const Playground: Story = { render: (args: DrawerProps) => <DemoDrawer {...args} initiallyOpen={false} /> };
 export const Left: Story = { args: { placement: 'left', size: 'sm', title: 'Menu', description: undefined } };
 export const Bottom: Story = { args: { placement: 'bottom', title: 'Share', description: 'Anyone with the link can view.' } };
 // A sheet that stops at 40% and 90% of the screen: pull it up by its handle or header, or press the handle.
