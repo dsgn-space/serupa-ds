@@ -9,6 +9,17 @@ import { TimePicker } from './TimePicker';
 import { Schedule as ScheduleOutlined } from '../../material/outlined';
 const modded = (t: Element, key: string) => ['ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
+// Whether the words read left to right on screen, as a reader sees them: the box of the first character of the text
+// node that holds them sits left of the last one's.
+const readsLeftToRight = (root: Element, text: string) => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    if (n.textContent !== text) continue;
+    const at = (i: number) => { const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 1); return r.getBoundingClientRect().left; };
+    return at(0) < at(text.length - 1);
+  }
+  throw new Error(`no text "${text}"`);
+};
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const announcerA = () => document.querySelector<HTMLElement>('[data-dk-announcer-assertive]');
 const listOf = (id: string) => document.getElementById(el(id).getAttribute('aria-controls')!) as HTMLUListElement;
@@ -385,5 +396,18 @@ describe('TimePicker held state', () => {
       return out;
     });
     expect(low).toEqual([]);
+  });
+
+  test('with a locale of its own the time keeps that locale\'s order in a page of the other direction: "3:30 PM" in a right-to-left page, "٣:٣٠ م" in a left-to-right one', async () => {
+    const page2 = async (dir: 'rtl' | 'ltr', locale: string, text: string) => {
+      const { unmount } = await render(<div dir={dir}><TimePicker id="d" aria-label="Start" defaultValue="15:45" locale={locale} /></div>);
+      button('d').click();
+      await expect.poll(() => listOf('d').hidden).toBe(false);
+      const out = [getComputedStyle(el('d')).direction, readsLeftToRight(listOf('d'), text)];
+      await unmount();
+      return out;
+    };
+    expect(await page2('rtl', 'en', '3:30 PM')).toEqual(['ltr', true]);
+    expect(await page2('ltr', 'ar-EG', '٣:٣٠ م')).toEqual(['rtl', false]);
   });
 });
