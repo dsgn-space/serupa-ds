@@ -99,7 +99,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   if (was !== open) { setWas(open); setLeaving(!open); }
   const toggle = React.useRef<HTMLButtonElement>(null);
   const bar = React.useRef<HTMLElement | null>(null);
-  const id = domId('dk-nav', React.useId());
+  const id = domId('srp-nav', React.useId());
   const size = oneOf(WIDTHS, String(props.size), 'xl');   // String(): a plain string for the compiler, so ctx's memo holds
   const links = flattenChildren(props.children);
   const hasLinks = links.length > 0;
@@ -151,7 +151,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   useIsoLayoutEffect(() => {
     const h = bar.current, inner = h && h.firstElementChild as HTMLElement | null;
     if (!wide || !linkCount || !inner) { setFold(false); return; }
-    const nav = inner.querySelector<HTMLElement>(':scope > .dk-navbar__nav');
+    const nav = inner.querySelector<HTMLElement>(':scope > .srp-navbar__nav');
     // The effect runs again after each fold and unfold, so a local copy is as new as the state.
     let now = fold;
     const set = (to: boolean) => { now = to; setFold(to); };
@@ -245,7 +245,7 @@ function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttr
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
   const Tag = (props.as || config.link);   // JSX, not createElement, which the React Compiler skips with a ref
   return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
-    className={cn('dk-navbar__link', props.active && 'dk-navbar__link--active', props.className)}
+    className={cn('srp-navbar__link', props.active && 'srp-navbar__link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }} />;
 }
 
@@ -343,10 +343,10 @@ function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React
   const Tag = (props.as || config.link);   // JSX, as NavbarLink
   return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
     aria-labelledby={has ? id + '-name' : undefined} aria-describedby={has ? id + '-desc' : undefined}
-    className={cn('dk-navbar__menu-link', props.active && 'dk-navbar__menu-link--active', props.className)}
+    className={cn('srp-navbar__menu-link', props.active && 'srp-navbar__menu-link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }}>
-    <span id={id + '-name'} className="dk-navbar__menu-name">{props.children}</span>
-    {has ? <span id={id + '-desc'} className="dk-navbar__menu-desc">{props.description}</span> : null}
+    <span id={id + '-name'} className="srp-navbar__menu-name">{props.children}</span>
+    {has ? <span id={id + '-desc'} className="srp-navbar__menu-desc">{props.description}</span> : null}
   </Tag>;
 }
 

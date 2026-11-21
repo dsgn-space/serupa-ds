@@ -265,9 +265,9 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, nameRef, el);
   return (
     <>
-    <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
+    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
-      {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--left" aria-hidden>{left}</span> : null}
       {affix.prefix}
       <input {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
@@ -278,12 +278,12 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
       {affix.suffix}
       {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? '' : String(out(value))} /> : null}
       {props.steppers !== false ? (
-        <span className="dk-number-input__steppers">
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
+        <span className="srp-number-input__steppers">
+          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
             disabled={atEnd(-1)} onPointerDown={(e) => holdDown(e, -1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(-1)}>
             <Icon icon={icons.Remove} />
           </button>
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
+          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
             disabled={atEnd(1)} onPointerDown={(e) => holdDown(e, 1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(1)}>
             <Icon icon={icons.Add} />
           </button>

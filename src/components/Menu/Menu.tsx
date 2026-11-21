@@ -171,7 +171,7 @@ function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivEl
       {trigger}
       <Panel {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-label={props['aria-label']} aria-labelledby={props['aria-label'] || props['aria-labelledby'] ? props['aria-labelledby'] : cp.id || triggerId || own + '-button'}
-        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
+        className={cn('srp-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </Panel>
@@ -392,14 +392,14 @@ function MenuItemBaseRender({ ref, ...props }: MenuItemBaseProps & React.RefAttr
   const Tag = (isLink ? props.as || config.link : Box);   // JSX, not createElement: see Menu's trigger
   return <Tag {...rest} ref={ref} {...{
     role: checkable ? rest.role : 'menuitem', tabIndex: -1, 'aria-disabled': props.disabled || undefined,
-    className: cn('dk-menu__item', props.destructive && 'dk-menu__item--destructive', props.className),
+    className: cn('srp-menu__item', props.destructive && 'srp-menu__item--destructive', props.className),
     onClick: onClick, onKeyDown: onKeyDown, onPointerMove: (e: React.PointerEvent<HTMLElement>) => { if (own.onPointerMove) own.onPointerMove(e); if (activeIn(e.currentTarget) !== e.currentTarget) e.currentTarget.focus(); },
   }}>
-    {checkable ? <span className="dk-menu__check" aria-hidden="true"><Icon icon={icons.Check} /></span> : null}
-    {props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
-    <span className="dk-menu__label">{props.children}</span>
+    {checkable ? <span className="srp-menu__check" aria-hidden="true"><Icon icon={icons.Check} /></span> : null}
+    {props.icon != null ? <span className="srp-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
+    <span className="srp-menu__label">{props.children}</span>
     {/* Shown, but not part of the item's name ("Copy", not "Copy command K"): aria-keyshortcuts says it. */}
-    {shown ? <kbd className="dk-menu__shortcut" aria-hidden="true">{shown}</kbd> : null}
+    {shown ? <kbd className="srp-menu__shortcut" aria-hidden="true">{shown}</kbd> : null}
   </Tag>;
 }
 
@@ -535,7 +535,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
 
   // Its items stay, inert, while it fades out (DZ1).
   const exit = useExit(open, panelRef);
-  useAnchoredLayer(open, panelRef, itemRef, { placement: left ? 'left-start' : 'right-start', fallback: 'right-start', offsetVar: '--dk-menu-sub-offset' });
+  useAnchoredLayer(open, panelRef, itemRef, { placement: left ? 'left-start' : 'right-start', fallback: 'right-start', offsetVar: '--srp-menu-sub-offset' });
   useIsoLayoutEffect(() => {
     if (!open || !focusFirst.current) return;
     focusFirst.current = false;
@@ -579,7 +579,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
       <Box {...rest} ref={mergedRef3}
         role="menuitem" tabIndex={-1} aria-haspopup="menu" aria-expanded={open} aria-controls={open ? id : undefined}
         aria-disabled={props.disabled || undefined} data-state={open ? 'open' : 'closed'}
-        className={cn('dk-menu__item', 'dk-menu__item--sub', props.className)}
+        className={cn('srp-menu__item', 'srp-menu__item--sub', props.className)}
         onClick={(e: React.MouseEvent<HTMLElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) show(true); }}
         onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
           if (props.onKeyDown) props.onKeyDown(e);
@@ -592,9 +592,9 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
           if (!open && !props.disabled && !hover.current) { later(() => { show(false); }); hover.current = true; }
         }}
         onPointerLeave={(e: React.PointerEvent<HTMLElement>) => { if (props.onPointerLeave) props.onPointerLeave(e); if (hover.current) stop(); }}>
-        {props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
-        <span className="dk-menu__label" id={id + '-label'}>{props.label}</span>
-        <span className="dk-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>
+        {props.icon != null ? <span className="srp-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
+        <span className="srp-menu__label" id={id + '-label'}>{props.label}</span>
+        <span className="srp-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>
       </Box>
       <Box ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} data-instant={exit.instant ? '' : undefined} aria-labelledby={id + '-label'}
         className="srp-menu srp-menu--sub" data-component="menu" data-state={open ? 'open' : 'closed'} inert={!open || undefined} onKeyDown={onPanelKey}>

@@ -83,10 +83,10 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
   const empty = hasPh && (cur == null || cur === '');
   const left = asIcon(props.leftIcon);
   return (
-    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', props.disabled && 'dk-select--disabled', readOnly && 'dk-select--readonly', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
-      {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
-      <select {...rest} {...handlers} ref={setRefs} className="dk-select__field" key="field">
-        {hasPh ? <option value="" disabled key="__placeholder" className="dk-select__placeholder">{props.placeholder}</option> : null}
+    <span className={cn('srp-select', 'srp-select--size-' + size, invalid && 'srp-select--invalid', props.disabled && 'srp-select--disabled', readOnly && 'srp-select--readonly', empty && 'srp-select--empty', left != null && left !== false && 'srp-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
+      {left == null || left === false ? null : <span className="srp-select__icon srp-select__icon--left" aria-hidden key="left">{left}</span>}
+      <select {...rest} {...handlers} ref={setRefs} className="srp-select__field" key="field">
+        {hasPh ? <option value="" disabled key="__placeholder" className="srp-select__placeholder">{props.placeholder}</option> : null}
         {optionNodes(props.options)}
         {props.children}
       </select>
