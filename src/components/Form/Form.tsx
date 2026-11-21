@@ -430,6 +430,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   };
 
   // No summary: focus the first field with a message, as the summary would have.
+  // every render: the failed submit's messages land a render after the submit; the flag says which one.
   React.useEffect(() => {
     if (!first.current || !st.failed) return;
     first.current = false;
