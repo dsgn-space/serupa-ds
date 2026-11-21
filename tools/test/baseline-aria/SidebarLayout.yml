@@ -1,0 +1,41 @@
+# AlignStart
+- text: "The narrow column, 256px The wide column takes the rest. Make the window narrower: once it would be narrower than half, the narrow column moves above it."
+
+# Default
+- text: "The narrow column, 256px The wide column takes the rest. Make the window narrower: once it would be narrower than half, the narrow column moves above it."
+
+# DoSupportingSide
+- text: Filters Results
+
+# DontMainInSide
+- text: The article people came to read Related links
+
+# FiltersAndResults
+- region "Filters":
+  - heading "Filters" [level=2]
+  - checkbox "Open" [checked]
+  - text: Open
+  - checkbox "Closed"
+  - text: Closed
+  - checkbox "Assigned to me"
+  - text: Assigned to me
+- list:
+  - listitem: Website redesign
+  - listitem: Mobile app
+  - listitem: Billing migration
+
+# LongText
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a filter label long enough to wrap Rechtsschutzversicherungsgesellschaften and a paragraph long enough to wrap several times in the wide column, as a page's content does.
+
+# Playground
+- text: "The narrow column, 256px The wide column takes the rest. Make the window narrower: once it would be narrower than half, the narrow column moves above it."
+
+# SideAtEnd
+- text: The form people fill in Order summary
+
+# Stacked
+- text: "The narrow column, 256px The wide column takes the rest. Make the window narrower: once it would be narrower than half, the narrow column moves above it."
+
+# WiderSide
+- text: "The narrow column, 256px The wide column takes the rest. Make the window narrower: once it would be narrower than half, the narrow column moves above it."
+

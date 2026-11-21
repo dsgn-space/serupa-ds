@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SidebarLayout — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); font-size: 14px; }
+  .b { background: var(--surface-muted); border-radius: var(--radius-md); padding: 12px; min-height: 120px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(D.SidebarLayout, { side: h('div', { className: 'b' }, 'Filters') }, h('div', { className: 'b' }, 'Results: narrow the window and the filters move above them')));
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "sidebar-layout": {
+    "$description": "SidebarLayout's component tokens. Each one is an optional override: set the CSS variable (--sidebar-layout-<name>) on the page, a container or one SidebarLayout, and every one inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "sizing": {
+      "side-width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-3xs}",
+        "$description": "The narrow column's width side by side, when sideWidth isn't given (256px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-layout-side-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The space between the columns when gap isn't given (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-layout-gap"
+          }
+        }
+      }
+    }
+  }
+}

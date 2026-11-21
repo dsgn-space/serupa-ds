@@ -299,6 +299,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [DataGrid](src/components/DataGrid/README.md) (beta) | A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. |
 | [DescriptionList](src/components/DescriptionList/README.md) (beta) | A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. |
 | [Duration](src/components/Duration/README.md) | How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". |
+| [FormattedDate](src/components/FormattedDate/README.md) | Writes a date, a time or a range of dates the way the reader's language does: "November 20, 2026" in English, "20 November 2026" in Indonesian, "٢٠ نوفمبر ٢٠٢٦" in Egyptian Arabic. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
 | [Icon](src/components/Icon/README.md) | Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. |
@@ -391,12 +392,16 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
+| [AppShell](src/components/AppShell/README.md) (beta) | The frame around an app's pages: a skip link, the header, the sidebar, main, the footer and a bottom navigation, laid out and kept in place as the page scrolls. |
+| [Center](src/components/Center/README.md) (beta) | Keeps content to a maximum width in the middle of the space it's in, and with `vertical`, in the middle of the screen's height too. |
 | [Container](src/components/Container/README.md) | Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide. |
 | [Divider](src/components/Divider/README.md) | A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or". |
 | [Grid](src/components/Grid/README.md) | Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. |
 | [Heading](src/components/Heading/README.md) | A heading, `h1` to `h6`, in the system's type. |
+| [PageSection](src/components/PageSection/README.md) (beta) | One full-width band of a long page, such as a landing page's hero, features, pricing or questions. |
 | [Prose](src/components/Prose/README.md) | Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. |
 | [ScrollArea](src/components/ScrollArea/README.md) (beta) | A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. |
+| [SidebarLayout](src/components/SidebarLayout/README.md) (beta) | Puts a narrow column beside a wide one, and stacks them once the space gets too narrow for both. |
 | [Splitter](src/components/Splitter/README.md) | Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |

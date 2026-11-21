@@ -1,0 +1,274 @@
+# CollapsedSidebar
+- link "Skip to content":
+  - /url: "#shell-collapsed"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Projects" [level=1]
+  - paragraph: Twelve active projects in the Acme workspace.
+- contentinfo: © 2026 Acme
+
+# Default
+- link "Skip to content":
+  - /url: "#shell-default"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Projects" [level=1]
+  - paragraph: Twelve active projects in the Acme workspace.
+- contentinfo: © 2026 Acme
+
+# DoMutedCards
+- link "Skip to content":
+  - /url: "#shell-do"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Dashboard" [level=1]
+  - region "Revenue":
+    - paragraph: Revenue
+    - paragraph: 1,204
+  - region "Orders":
+    - paragraph: Orders
+    - paragraph: 1,204
+  - region "Visitors":
+    - paragraph: Visitors
+    - paragraph: 1,204
+- contentinfo: © 2026 Acme
+
+# DontPlainCards
+- link "Skip to content":
+  - /url: "#shell-dont"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Dashboard" [level=1]
+  - region "Revenue":
+    - paragraph: Revenue
+    - paragraph: 1,204
+  - region "Orders":
+    - paragraph: Orders
+    - paragraph: 1,204
+  - region "Visitors":
+    - paragraph: Visitors
+    - paragraph: 1,204
+- contentinfo: © 2026 Acme
+
+# LongText
+- link "Skip to content":
+  - /url: "#shell-long"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung" [level=1]
+  - paragraph: Rechtsschutzversicherungsgesellschaften and a paragraph long enough to wrap several times inside main.
+- contentinfo: © 2026 Acme Incorporated, every right reserved, with a footer line long enough to wrap onto a second line on a phone.
+
+# MutedForCards
+- link "Skip to content":
+  - /url: "#shell-muted"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Dashboard" [level=1]
+  - region "Revenue":
+    - paragraph: Revenue
+    - paragraph: 1,204
+  - region "Orders":
+    - paragraph: Orders
+    - paragraph: 1,204
+  - region "Visitors":
+    - paragraph: Visitors
+    - paragraph: 1,204
+- contentinfo: © 2026 Acme
+
+# NoSidebar
+- link "Skip to content":
+  - /url: "#shell-nosidebar"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- main:
+  - heading "Projects" [level=1]
+  - paragraph: Twelve active projects in the Acme workspace.
+- contentinfo: © 2026 Acme
+
+# Playground
+- link "Skip to content":
+  - /url: "#shell-playground"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Projects" [level=1]
+  - paragraph: Twelve active projects in the Acme workspace.
+- contentinfo: © 2026 Acme
+
+# WithBottomNav
+- link "Skip to content":
+  - /url: "#shell-bottom"
+- banner:
+  - text: Acme
+  - navigation "Main navigation":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+- navigation "Workspace":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Projects":
+        - /url: "#projects"
+    - listitem:
+      - link "Team":
+        - /url: "#team"
+- main:
+  - heading "Projects" [level=1]
+  - paragraph: Twelve active projects in the Acme workspace.
+- contentinfo: © 2026 Acme
+
