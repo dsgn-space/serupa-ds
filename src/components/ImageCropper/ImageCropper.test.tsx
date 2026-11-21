@@ -196,7 +196,7 @@ describe('ImageCropper', () => {
     expect([frame().tabIndex, frame().getAttribute('role'), frame().dataset.state]).toEqual([-1, null, 'error']);
   });
 
-  test('disabled: no Tab stop, keys and drags do nothing, the zoom row is off', async () => {
+  test('disabled: no Tab stop, keys and drags do nothing, the zoom row is off, and the frame shows the disabled cursor as the zoom slider does', async () => {
     const calls: CropArea[] = [];
     await render(<div style={{ width: 300 }}><ImageCropper aria-label="Photo" src={WIDE} disabled onCropChange={(a) => calls.push(a)} /></div>);
     await loaded(calls);
@@ -206,6 +206,7 @@ describe('ImageCropper', () => {
     await drag(f, { x: 150, y: 150 }, { x: 50, y: 150 });
     expect([calls.length, f.tabIndex, f.getAttribute('role')]).toEqual([1, -1, null]);
     await expect.element(page.getByRole('button', { name: 'Zoom in' })).toBeDisabled();
+    expect(css(f).cursor).toBe(css(document.documentElement).getPropertyValue('--cursor-disabled').trim());
   });
 
   test('crossOrigin reaches the picture, so cropImage can read another site\'s', async () => {
