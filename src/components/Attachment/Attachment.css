@@ -33,6 +33,9 @@
 .dk-attachment__name { display: flex; min-inline-size: var(--spacing-0); color: inherit; font-weight: var(--font-medium); border-radius: var(--radius-inner); }
 a.dk-attachment__name { color: var(--attachment-link, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
 @media (hover: hover) { a.dk-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+/* The name fades to its hover color as a Link does (motion-hover); reduced motion: at once. */
+a.dk-attachment__name { transition: color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { a.dk-attachment__name { transition: none; } }
 a.dk-attachment__name:focus-visible { outline: var(--focus-ring-width) solid var(--attachment-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-attachment__name-text { display: flex; min-inline-size: var(--spacing-0); white-space: pre; text-decoration: inherit; }
 /* Cut and not in a link, the name takes a tab stop of its own, so the keyboard can show it in full: the ring sits inside its edge, which clips. */

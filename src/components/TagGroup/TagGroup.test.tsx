@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { TagGroup, type TagItem } from './TagGroup';
@@ -70,6 +70,27 @@ describe('TagGroup', () => {
     const s = withMotion(() => [css(x).transitionProperty, css(x).transitionDuration]);
     expect(s[0]).toContain('background-color');
     expect(parseFloat(s[1]!)).toBeGreaterThan(0);
+  });
+
+  test('a tag that can be picked answers the pointer: surface-hover under it, pressed while held, and a picked one keeps its colors', async () => {
+    await render(<SerupaProvider locale="en-US"><TagGroup label="Kinds" items={tags} selectionMode="multiple" defaultSelected={['bug']} /></SerupaProvider>);
+    const off = page.getByRole('row', { name: /^Design/ }).element(), on = page.getByRole('row', { name: /^Bug/ }).element();
+    const tag = (r: Element) => r as HTMLElement;
+    expect(css(tag(off)).backgroundColor).toBe(color('var(--surface)'));
+    await userEvent.hover(tag(off));
+    await expect.poll(() => css(tag(off)).backgroundColor).toBe(color('var(--surface-hover)'));
+    expect(await press(tag(off), () => css(tag(off)).backgroundColor)).toBe(color('var(--pressed)'));
+    const picked = css(tag(on)).backgroundColor;
+    await userEvent.hover(tag(on));
+    await new Promise((r) => setTimeout(r, 200));
+    expect(css(tag(on)).backgroundColor).toBe(picked);
+  });
+
+  test('"Show more" fades to its hover color over motion-hover, as a Link does', async () => {
+    await render(<SerupaProvider locale="en-US"><TagGroup label="Labels" items={tags} max={2} /></SerupaProvider>);
+    const m = page.getByRole('button', { name: /Show/ }).element();
+    const s = withMotion(() => [css(m).transitionProperty, css(m).transitionDuration]);
+    expect(s).toEqual(['color', '0.15s']);
   });
 
   test('one Tab stop: the arrow keys move between tags, Home and End to the ends, and Tab returns to the last tag focused', async () => {

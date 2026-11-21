@@ -15,6 +15,7 @@ export const PAIRS = [
   ['text-inverse', 'surface-inverse', 4.5, 'Text on an inverse surface (Tooltip)'],
   ['text', 'secondary', 4.5, 'Secondary button text'],
   ['text', 'secondary-hover', 4.5, 'Secondary button text on hover'],
+  ['text', 'secondary-pressed', 4.5, 'AvatarGroup\'s +N while it\'s held'],
   ['text', 'pressed', 4.5, 'Text on a pressed control'],
   ['text', 'field', 4.5, 'Text in a field'],
   ['placeholder', 'field', 4.5, 'Placeholder in a field'],

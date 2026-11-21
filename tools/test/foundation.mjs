@@ -89,6 +89,35 @@ for (const c of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
     walk(JSON.parse(read(rel)));
   }
 }
+
+// A state's color is a step from the one before it in every theme: X-hover differs from X, and X-pressed from
+// X-hover (or from X, when there's no hover). Carousel's dot-hover was text-muted over a dot of border-control, the
+// same zinc in all 34 themes, so a dot under the pointer didn't change.
+const colorOf = new Map(groups.color.tokens.map((x) => [x.name, x.value]));
+const inTheme = (name, theme) => {
+  for (let n = name, i = 0; i < 12; i++) {
+    const v = colorOf.get(n);
+    if (!v || typeof v !== 'object') return n;
+    const x = String(v[theme] ?? Object.values(v)[0]);
+    const ref = /^\{(.+)\}$/.exec(x);
+    if (!ref) return x.toLowerCase();
+    n = ref[1];
+  }
+  return name;
+};
+const STATE_THEMES = Object.keys(colorOf.get('text') || {});
+const sameAs = [];
+for (const [cssVar, [rel, v]] of COMP) {
+  const m = /^(.*?)(?:-(hover|pressed))$/.exec(cssVar);
+  if (!m || typeof v.$value !== 'string' || !v.$value.startsWith('{color.')) continue;
+  const before = (m[2] === 'pressed' && COMP.has(`${m[1]}-hover`) ? `${m[1]}-hover` : m[1]);
+  const b = COMP.get(before);
+  if (!b || typeof b[1].$value !== 'string' || !b[1].$value.startsWith('{color.')) continue;
+  const [x, y] = [v.$value.slice(7, -1), b[1].$value.slice(7, -1)];
+  const equal = STATE_THEMES.filter((th) => inTheme(x, th) === inTheme(y, th));
+  if (equal.length) sameAs.push(`${rel}: --${cssVar} (${x}) is --${before} (${y}) in ${equal.length} of ${STATE_THEMES.length} themes`);
+}
+check('component tokens: a hover or pressed color differs from the state before it in every theme', !sameAs.length, sameAs.join('; '));
 const baseFile = path.join(P, 'design-tokens', 'serupa.tokens.json');
 const DT_BASE = fs.existsSync(baseFile) ? JSON.parse(fs.readFileSync(baseFile, 'utf8')) : {};
 // A shared token with no DTCG type (a keyword, a gradient) is in css-values.json instead, under its own name.

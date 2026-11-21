@@ -9,10 +9,11 @@
 .dk-image-cropper__frame {
   position: relative; overflow: hidden; aspect-ratio: var(--dk-image-cropper-aspect); inline-size: var(--sizing-full);
   border-radius: var(--image-cropper-radius, var(--radius-control)); background: var(--image-cropper-bg, var(--surface-muted));
-  touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; isolation: isolate;
+  touch-action: none; cursor: var(--cursor-grab); user-select: none; -webkit-user-select: none; isolation: isolate;
 }
-.dk-image-cropper__frame[data-dragging] { cursor: grabbing; }
-.dk-image-cropper__frame:not([data-state="ready"]), .dk-image-cropper--disabled .dk-image-cropper__frame { cursor: default; }
+.dk-image-cropper__frame[data-dragging] { cursor: var(--cursor-grabbing); }
+.dk-image-cropper__frame:not([data-state="ready"]) { cursor: default; }   /* loading or failed: nothing to drag yet */
+.dk-image-cropper--disabled .dk-image-cropper__frame { cursor: var(--cursor-disabled); }   /* as a disabled Slider beside it */
 .dk-image-cropper__frame:focus-visible { outline: var(--focus-ring-width) solid var(--image-cropper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-image-cropper__img { position: absolute; display: block; max-inline-size: none; pointer-events: none; -webkit-user-drag: none; }
 .dk-image-cropper__frame:not([data-state="ready"]) .dk-image-cropper__img { opacity: var(--opacity-0); }

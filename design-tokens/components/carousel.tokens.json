@@ -14,8 +14,8 @@
       },
       "dot-hover": {
         "$type": "color",
-        "$value": "{color.text-muted}",
-        "$description": "A dot under the pointer.",
+        "$value": "{color.border-control-hover}",
+        "$description": "A dot under the pointer, a step past dot, as a field's border darkens (text-muted is dot's own gray).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--carousel-dot-hover"

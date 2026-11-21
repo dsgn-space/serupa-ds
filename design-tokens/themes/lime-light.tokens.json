@@ -60,6 +60,16 @@
         }
       }
     },
+    "secondary-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. Pressed state of `secondary`, a step past `secondary-hover` (`pressed` is the same gray as `secondary-hover` in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--secondary-pressed"
+        }
+      }
+    },
     "highlight": {
       "$type": "color",
       "$value": "{color.zinc-100}",

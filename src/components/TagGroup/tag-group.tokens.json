@@ -32,6 +32,26 @@
           }
         }
       },
+      "bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover}",
+        "$description": "A tag that can be picked, under the pointer. A picked tag keeps its own colors, as a pressed ToggleButton does.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-bg-hover"
+          }
+        }
+      },
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A tag that can be picked, while it's held down, one step past bg-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-bg-pressed"
+          }
+        }
+      },
       "bg-selected": {
         "$type": "color",
         "$value": "{color.primary-subtle}",

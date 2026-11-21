@@ -110,7 +110,7 @@ Each is an optional override: set it on the page, a container or one carousel. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--carousel-dot` | `border-control` | The dots for the slides not shown (3:1 on surface). |
-| `--carousel-dot-hover` | `text-muted` | A dot under the pointer. |
+| `--carousel-dot-hover` | `border-control-hover` | A dot under the pointer, a step past dot, as a field's border darkens (text-muted is dot's own gray). |
 | `--carousel-dot-pressed` | `text` | A dot while it's held down, a step past hover. |
 | `--carousel-dot-active` | `primary` | The current slide's dot. |
 | `--carousel-focus-ring` | `focus-ring` | A dot's keyboard focus ring. |

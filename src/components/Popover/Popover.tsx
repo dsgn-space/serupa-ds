@@ -145,7 +145,7 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
         inert={!open || undefined} onKeyDown={onKeyDown} onBlur={onBlur}>
         {open || exit.leaving ? <>
           {titled ? <H id={id + '-title'} className="dk-popover__title">{props.title}</H> : null}
-          <div className="dk-popover__body">{content}</div>
+          <span className="dk-popover__body">{content}</span>
         </> : null}
       </Panel>
     </>
