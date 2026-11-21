@@ -25,12 +25,13 @@ const NOT_SHIPPED = /\.(test|stories)\.tsx$/;
 /** True for a source file the compiler goes over. */
 export const compiles = (file, code) => SOURCE.test(file) && !NOT_SHIPPED.test(file) && isClient(code);
 
-/** The file compiled (TypeScript and JSX kept for the next step), with its map. */
-export async function compileReact(file, code) {
+/** The file compiled (TypeScript and JSX kept for the next step), with its map. `onEvent` hears the compiler's own
+ *  report on each function (tools/test/compiler.mjs lists the ones it skips). */
+export async function compileReact(file, code, onEvent) {
   const out = await babel.transformAsync(code, {
     filename: file, babelrc: false, configFile: false, sourceMaps: true,
     parserOpts: { plugins: ['typescript', 'jsx'] },
-    plugins: [[compiler, { target: '19', panicThreshold: 'none' }]],
+    plugins: [[compiler, { target: '19', panicThreshold: 'none', ...(onEvent ? { logger: { logEvent: (_file, event) => onEvent(event) } } : {}) }]],
   });
   // The cache comes from src/internal/memoCache.ts, not react/compiler-runtime, which Preact's compatibility lacks.
   const runtime = path.relative(path.dirname(file), path.join(file.slice(0, file.search(/[\\/]src[\\/]/)), 'src', 'internal', 'memoCache')).split(path.sep).join('/');

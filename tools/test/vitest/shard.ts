@@ -16,7 +16,7 @@ export const SECONDS: Record<string, number> = {
   'tools/test/tree-shake.mjs': 111, 'tools/test/site.mjs': 380, 'tools/test/purge-components.mjs': 86, 'tools/test/size.mjs': 44,
   'tools/test/reproducible.mjs': 27, 'tools/test/utilities.mjs': 15, 'tools/test/no-css.mjs': 14,
   'tools/test/browser-baseline.mjs': 10, 'tools/test/package-lint.mjs': 9, 'tools/test/package.mjs': 9,
-  'tools/test/props.mjs': 9, 'tools/test/page.mjs': 8, 'tools/test/unused.mjs': 8, 'tools/test/create-app.mjs': 5,
+  'tools/test/props.mjs': 9, 'tools/test/compiler.mjs': 13, 'tools/test/page.mjs': 8, 'tools/test/unused.mjs': 8, 'tools/test/create-app.mjs': 5,
   // The component tests: the story-wide ones go through every story.
   'src/internal/activity.test.tsx': 372, 'src/internal/motion.test.tsx': 284,
   'src/internal/hydrateStoriesCsp.test.tsx': 206, 'src/internal/tabWalk.test.tsx': 205,
