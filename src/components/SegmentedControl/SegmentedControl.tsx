@@ -55,9 +55,6 @@ export interface SegmentedControlProps<V extends string = string> extends Omit<R
 
 const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, form: 1, invalid: 1, required: 1, readOnly: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-readonly': 1, autoFocus: 1, className: 1 } as const;
 
-// Lays the page out now. A call, not a bare `void el.offsetWidth`, which the React Compiler drops as unused.
-function reflow(el: HTMLElement) { return el.offsetWidth; }
-
 function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('SegmentedControl', NAME_HOW.group);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: one in a row with a note after it
