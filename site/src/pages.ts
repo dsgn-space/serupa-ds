@@ -19,6 +19,8 @@ export interface Page {
   name: string;
   /** The first sentence of its guide, for a component, block or pattern. */
   summary: string;
+  /** The other names its guide gives ("**Also called:**"), which the search matches too. */
+  also: string[];
   status: 'alpha' | 'beta' | 'stable' | 'deprecated';
   /** Its stories file, when its <Meta /> names one. */
   stories: string | null;

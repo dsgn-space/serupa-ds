@@ -82,11 +82,11 @@ describe('SignaturePad', () => {
   });
 
   test('in a Field: the label names the group, the hint and error describe it, and it is marked invalid', async () => {
-    await render(<Field label="Sign here" hint="Draw or type." error="Please sign."><SignaturePad id="fs" /></Field>);
+    await render(<Field label="Sign here" hint="Draw or type." error="Sign before you continue."><SignaturePad id="fs" /></Field>);
     const g = el('fs');
     await expect.element(page.getByRole('group', { name: 'Sign here' })).toBeInTheDocument();
     const said = g.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent).join(' | ');
-    expect([said.includes('Draw or type.'), said.includes('Please sign.'), g.querySelector('[role=radiogroup]')!.getAttribute('aria-invalid')]).toEqual([true, true, 'true']);
+    expect([said.includes('Draw or type.'), said.includes('Sign before you continue.'), g.querySelector('[role=radiogroup]')!.getAttribute('aria-invalid')]).toEqual([true, true, 'true']);
     // the switch inside keeps its own name, not the Field's
     await expect.element(page.getByRole('radiogroup', { name: 'Signature method' })).toBeInTheDocument();
   });

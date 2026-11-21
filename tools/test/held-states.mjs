@@ -24,7 +24,6 @@ const EXEMPT = {
   'Calendar .dk-calendar__period--selected': 'the chosen month or year keeps its primary fill, as the chosen day does; the plain one has the held fill',
   'Navbar .dk-navbar__link--active': 'the current page keeps its fill; the plain link has the held fill',
   'Navbar .dk-navbar__menu-link--active': 'the current page keeps its fill; the plain menu link has the held fill',
-  'Table .dk-table__row': 'rows are not buttons: the hover only follows the pointer along a long table',
 };
 const GAPS = {};
 

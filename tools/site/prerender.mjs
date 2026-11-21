@@ -7,7 +7,8 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 /**
- * Each path's page as HTML, to go inside <div id="root">.
+ * Each path's page as HTML, to go inside <div id="root">, and each frame's (/frame/<page>--<story>) that the site
+ * draws ahead of time (site/src/server.tsx's frames).
  * @param {string} configFile the site's Vite config
  * @param {string} mode the build's mode
  * @param {string[]} paths
@@ -26,10 +27,10 @@ export async function drawPages(configFile, mode, paths) {
     });
     const entry = fs.readdirSync(out).find((f) => /^server\.m?js$/.test(f));
     if (!entry) throw new Error(`the site's server build wrote no server.js (${fs.readdirSync(out).join(', ')})`);
-    /** @type {{ render: (path: string) => Promise<string> }} */
+    /** @type {{ render: (path: string) => Promise<string>, frames: () => Promise<string[]> }} */
     const server = await import(pathToFileURL(path.join(out, entry)).href);
     const drawn = new Map();
-    for (const p of paths) drawn.set(p, await server.render(p));
+    for (const p of [...paths, ...await server.frames()]) drawn.set(p, await server.render(p));
     return drawn;
   } finally {
     fs.rmSync(out, { recursive: true, force: true });

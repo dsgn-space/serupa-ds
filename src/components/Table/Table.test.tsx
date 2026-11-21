@@ -631,6 +631,22 @@ describe('TableRow href (TF3)', () => {
     expect(follow).toHaveBeenCalledTimes(1);
   });
 
+  test('held down, a linked row shades a step past its hover (--pressed), as a List row does; its words keep 4.5:1 on it in every theme', async () => {
+    const s = await render(<Linked />);
+    const a = s.getByRole('link').element() as HTMLAnchorElement;
+    a.addEventListener('click', (e) => e.preventDefault());
+    const low: string[] = [];
+    await press(el('c2'), async () => {
+      await expect.poll(() => css(el('r1')).backgroundColor).toBe(color('var(--pressed)'));
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        for (const id of ['c1', 'c2']) { const r = contrast(css(el(id)).color, css(el('r1')).backgroundColor); if (r < 4.5) low.push(`${th} ${id}: ${r.toFixed(2)}`); }
+      }
+      document.documentElement.removeAttribute('data-theme');
+    }, { x: 8, y: 8 });
+    expect(low).toEqual([]);
+  });
+
   test('the keyboard reaches the link with Tab and follows it with Enter; the row shows its focus ring', async () => {
     const s = await render(<Linked />);
     const a = s.getByRole('link').element() as HTMLAnchorElement;

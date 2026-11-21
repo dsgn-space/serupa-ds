@@ -14,5 +14,6 @@
 # SkipLink
 - paragraph: Press Tab to show the skip link.
 - link "Skip to content":
-  - /url: "#main"
+  - /url: "#_id1_"
+- text: The content.
 

@@ -210,13 +210,13 @@ describe('Button', () => {
     const onClick = vi.fn(), onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
     await render(<form onSubmit={onSubmit}>
       <input id="dr-in" />
-      <Button id="dr" type="submit" disabled disabledReason="Fill in your name first" onClick={onClick}>Save</Button>
+      <Button id="dr" type="submit" disabled disabledReason="Enter your name first" onClick={onClick}>Save</Button>
       <Button id="dr-on" disabledReason="Never shown">Save</Button>
       <Button id="dr-link" href="#x" disabled disabledReason="Not yet">Docs</Button>
     </form>);
     const b = el('dr');
-    expect([b.hasAttribute('disabled'), b.getAttribute('aria-disabled'), document.getElementById(b.getAttribute('aria-describedby')!)?.textContent]).toEqual([false, 'true', 'Fill in your name first']);
-    await expect.element(page.getByRole('button', { name: 'Save', exact: true, disabled: true })).toHaveAccessibleDescription('Fill in your name first');
+    expect([b.hasAttribute('disabled'), b.getAttribute('aria-disabled'), document.getElementById(b.getAttribute('aria-describedby')!)?.textContent]).toEqual([false, 'true', 'Enter your name first']);
+    await expect.element(page.getByRole('button', { name: 'Save', exact: true, disabled: true })).toHaveAccessibleDescription('Enter your name first');
     el('dr-in').focus();
     await userEvent.tab();
     expect(document.activeElement).toBe(b);
@@ -232,7 +232,7 @@ describe('Button', () => {
   });
 
   test('disabledReason in a Tooltip with the same words: focus shows the tooltip (a disabled button never could), and the reason is read once, from the tooltip', async () => {
-    await render(<Tooltip content="Fill in your name first" openDelay={0}><Button id="drt" disabled disabledReason="Fill in your name first">Save</Button></Tooltip>);
+    await render(<Tooltip content="Enter your name first" openDelay={0}><Button id="drt" disabled disabledReason="Enter your name first">Save</Button></Tooltip>);
     await userEvent.tab();
     expect(document.activeElement).toBe(el('drt'));
     const tip = document.querySelector('[role=tooltip]') as HTMLElement;

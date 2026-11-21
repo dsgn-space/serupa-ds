@@ -47,7 +47,7 @@ interface ButtonOwnProps {
   loading?: boolean | undefined;
   /** Said to screen readers (polite status region) when loading starts, not shown. Default: "Loading…" (labels.loading). Pass '' to stay silent. */
   loadingLabel?: string | undefined;
-  /** Why it's disabled ("Fill in your name first"). With disabled, the button stays focusable (aria-disabled, so
+  /** Why it's disabled ("Enter your name first"). With disabled, the button stays focusable (aria-disabled, so
       keyboard and screen reader users can reach it and hear why) and this is its description; clicks still do
       nothing. Wrap it in a Tooltip with the same words to show them on hover and focus too. */
   disabledReason?: string | undefined;

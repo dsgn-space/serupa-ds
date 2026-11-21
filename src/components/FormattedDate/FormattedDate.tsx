@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
-import { canonicalLocale } from '../../internal/locale';
+import { canonicalLocale, localeDir } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 
@@ -126,16 +126,17 @@ function FormattedDateRender({ ref, ...props }: FormattedDateProps & React.RefAt
     if (process.env.NODE_ENV !== 'production' && invalid) warnOnce('date-value', `FormattedDate: ${JSON.stringify(String(props.value))} isn't a date, so it shows nothing. Pass a Date, a timestamp in ms, an ISO date and time, or a "yyyy-mm-dd" day.`);
   }, [invalid, props.value]);
   const cls = cn('dk-formatted-date', props.className);
-  // dir="auto": the words take their own language's direction, so "Nov 20, 2026" in a right-to-left page keeps its order.
+  // A locale of its own brings its direction with its lang, so "Nov 20, 2026" in a right-to-left page keeps its order.
+  const dir = props.locale ? localeDir(props.locale) : undefined;
   // The server's ICU and the browser's can space or join the same date a little differently ("Nov 20 – 22" with a
   // thin space or a plain one); the browser re-renders right after hydrating (browser above), so its words win.
   // A range: one <time> for the start's own words and one for the end's, with the words both share between them.
   if (made?.to && made.pieces.some((p) => p.source !== 'shared')) {
-    return <span lang={lang} dir="auto" {...rest} ref={ref} className={cls} data-component="formatted-date" suppressHydrationWarning>
+    return <span lang={lang} dir={dir} {...rest} ref={ref} className={cls} data-component="formatted-date" suppressHydrationWarning>
       {made.pieces.map((p, i) => p.source === 'shared' ? p.text : <time key={i} dateTime={(p.source === 'startRange' ? made.from : made.to!).iso} suppressHydrationWarning>{p.text}</time>)}
     </span>;
   }
-  return <time lang={lang} dir="auto" {...rest} ref={ref as React.Ref<HTMLTimeElement>} dateTime={made?.from.iso} className={cls} data-component="formatted-date" suppressHydrationWarning>
+  return <time lang={lang} dir={dir} {...rest} ref={ref as React.Ref<HTMLTimeElement>} dateTime={made?.from.iso} className={cls} data-component="formatted-date" suppressHydrationWarning>
     {made?.pieces[0]?.text}
   </time>;
 }
