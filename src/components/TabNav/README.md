@@ -35,9 +35,9 @@ import { TabNav, TabNavLink } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Default` story.
 
-1. **Link list** (`.dk-tabs__list`): the links, in one row that scrolls when they don't fit.
-2. **Link** (`.dk-tabs__tab`): goes to its page; the current one has the line (or fill) under it.
-3. **Icon** (`.dk-tabs__icon`): an optional picture beside the link's name.
+1. **Link list** (`.srp-tabs__list`): the links, in one row that scrolls when they don't fit.
+2. **Link** (`.srp-tabs__tab`): goes to its page; the current one has the line (or fill) under it.
+3. **Icon** (`.srp-tabs__icon`): an optional picture beside the link's name.
 
 ## Usage
 

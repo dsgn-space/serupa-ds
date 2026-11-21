@@ -42,7 +42,7 @@ describe('Alert', () => {
     const r = React.createRef<HTMLDivElement>();
     await render(<Alert id="def" ref={r} className="extra" data-x="y">Plain message</Alert>);
     const e = el('def');
-    expect([e.tagName, e.className, e.dataset.component, e.dataset.tone, e.getAttribute('role'), r.current === e, e.dataset.x]).toEqual(['DIV', 'dk-alert dk-alert--info extra', 'alert', 'info', 'status', true, 'y']);
+    expect([e.tagName, e.className, e.dataset.component, e.dataset.tone, e.getAttribute('role'), r.current === e, e.dataset.x]).toEqual(['DIV', 'srp-alert srp-alert--info extra', 'alert', 'info', 'status', true, 'y']);
     expect([iconName(e), e.querySelector(':scope > span[aria-hidden]')!.getAttribute('aria-hidden'), !!e.querySelector(':scope > div > p'), e.textContent, !!e.querySelector('button')])
       .toEqual(['info', 'true', false, 'Plain message', false]);
   });
@@ -114,7 +114,7 @@ describe('Alert', () => {
       document.documentElement.setAttribute('data-theme', th);
       for (const t of TONES) {
         const e = tone(t), bg = css(e).backgroundColor;
-        for (const [sel, min] of [['.dk-alert__title', 4.5], ['.dk-alert__message', 4.5], ['.dk-alert__icon', 3]] as const) {
+        for (const [sel, min] of [['.srp-alert__title', 4.5], ['.srp-alert__message', 4.5], ['.srp-alert__icon', 3]] as const) {
           const r = contrast(css(e.querySelector(sel)).color, bg); n++;
           if (r < min) low.push(`${th} ${t} ${sel}: ${r.toFixed(2)}`);
         }

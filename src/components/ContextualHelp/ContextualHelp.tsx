@@ -38,12 +38,12 @@ function ContextualHelpRender({ ref, ...props }: ContextualHelpProps & React.Ref
   const info = variant === 'info';
   const name = label || (info ? sds.labels.contextualInfo : sds.labels.contextualHelp);
   const trigger = (
-    <IconButton className={cn('dk-contextual-help__button', info && 'dk-contextual-help__button--info')} shape="round" size="sm"
+    <IconButton className={cn('srp-contextual-help__button', info && 'srp-contextual-help__button--info')} shape="round" size="sm"
       icon={<Icon icon={info ? icons.Info : icons.Help} />} label={name} />
   );
   return (
     <Popover {...rest} ref={ref} trigger={trigger} title={title} headingLevel={headingLevel} placement={placement}
-      aria-label={title == null ? name : undefined} className={cn('dk-contextual-help', className)}>
+      aria-label={title == null ? name : undefined} className={cn('srp-contextual-help', className)}>
       {children}
     </Popover>
   );

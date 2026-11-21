@@ -32,13 +32,13 @@ const pages = await Promise.all(Array.from({ length: PAGES }, async () => (await
 
 function scan(LEAK) {
   const found = [];
-  const name = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || el.tagName.toLowerCase();
+  const name = (el) => [...el.classList].find((c) => c.startsWith('srp-')) || el.tagName.toLowerCase();
   const root = document.querySelector('#storybook-root');
-  const els = [root, ...root.querySelectorAll('*'), ...document.querySelectorAll('[popover], dialog, .dk-toaster *, body > div:not(#storybook-root) *')];
+  const els = [root, ...root.querySelectorAll('*'), ...document.querySelectorAll('[popover], dialog, .srp-toaster *, body > div:not(#storybook-root) *')];
   for (const el of new Set(els)) {
     const s = getComputedStyle(el), r = el.getBoundingClientRect();
     if (s.display === 'none' || s.visibility === 'hidden' || !r.width || !r.height) continue;
-    const owner = el.closest('[class*="dk-"]');
+    const owner = el.closest('[class*="srp-"]');
     if (!owner) continue;   // the story's own markup, not a component's
     const who = name(owner);
     const rad = Math.max(...['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].map((c) => parseFloat(s[`border${c}Radius`]) || 0));

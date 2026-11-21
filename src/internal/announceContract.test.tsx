@@ -187,7 +187,7 @@ describe('every announcement is heard inside an open Dialog', () => {
   test.each(Object.entries(SITES))('%s', async (_name, site) => {
     const r = await render(<InDialog site={site} step={0} />);
     await expect.poll(() => !!document.querySelector('dialog[open]')).toBe(true);
-    const sel = site.assertive ? '[data-dk-announcer-assertive]' : '[data-dk-announcer]';
+    const sel = site.assertive ? '[data-srp-announcer-assertive]' : '[data-srp-announcer]';
     // Every message said from here on, wherever it was said.
     const heard: string[] = [];
     const watch = new MutationObserver(() => {

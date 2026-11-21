@@ -39,7 +39,7 @@ describe('EmptyState', () => {
     const r = React.createRef<HTMLDivElement>();
     await render(<div style={{ width: '600px' }}><Projects r={r} /></div>);
     const e = el('edef'), i = part('edef', 'icon')!, s = css(e);
-    expect([e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['dk-empty-state extra', 'empty-state', true, 'y']);
+    expect([e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['srp-empty-state extra', 'empty-state', true, 'y']);
     expect([s.paddingTop, s.textAlign]).toEqual(['48px', 'center']);
     expect(near((rect(i).left + rect(i).right) / 2, (rect(e).left + rect(e).right) / 2)).toBe(true);
   });
@@ -76,7 +76,7 @@ describe('EmptyState', () => {
 
   test('unknown size, variant and headingLevel fall back to md, plain and h3; no icon when none is given', async () => {
     await render(<EmptyState id="ebad" size={'xl' as never} variant={'boxed' as never} headingLevel={9 as never} title="Bad" />);
-    expect([el('ebad').className, !!el('ebad').querySelector('h3'), part('ebad', 'icon')]).toEqual(['dk-empty-state', true, null]);
+    expect([el('ebad').className, !!el('ebad').querySelector('h3'), part('ebad', 'icon')]).toEqual(['srp-empty-state', true, null]);
   });
 
   test('tokens (--empty-state-icon-box, --empty-state-title-color) override one empty state; the actions are reachable with the keyboard', async () => {
@@ -89,7 +89,7 @@ describe('EmptyState', () => {
   test('announce: the title and description are said politely as it appears, once; without announce nothing is said (FK1)', async () => {
     await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);
     const heard: string[] = [];
-    const watch = new MutationObserver(() => { const a = document.querySelector('[data-dk-announcer]'); if (a && a.textContent !== heard[heard.length - 1]) heard.push(a.textContent || ''); });
+    const watch = new MutationObserver(() => { const a = document.querySelector('[data-srp-announcer]'); if (a && a.textContent !== heard[heard.length - 1]) heard.push(a.textContent || ''); });
     watch.observe(document.body, { childList: true, characterData: true, subtree: true });
     try {
       const Results = ({ q, found }: { q: string; found: boolean }) => found ? <p>3 projects</p>
@@ -97,7 +97,7 @@ describe('EmptyState', () => {
       const r = await render(<Results q="m" found />);
       await r.rerender(<Results q="mars" found={false} />);
       await expect.poll(() => heard.filter(Boolean).join(' | '), { timeout: 3000 }).toBe('No results for “mars”. Try another word or clear the filters.');
-      const region = document.querySelector('[data-dk-announcer]')!;
+      const region = document.querySelector('[data-srp-announcer]')!;
       expect([region.getAttribute('role'), region.getAttribute('aria-live')]).toEqual(['status', 'polite']);
       await r.rerender(<Results q="marsx" found={false} />);
       await r.rerender(<EmptyState title="Nothing here" />);
@@ -112,7 +112,7 @@ describe('EmptyState', () => {
   test('announce with suggestions: the searches are said apart ("Did you mean: mars, maze."), not run together into one word (L8E62)', async () => {
     await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);
     const heard: string[] = [];
-    const watch = new MutationObserver(() => { const a = document.querySelector('[data-dk-announcer]'); if (a && a.textContent) heard.push(a.textContent); });
+    const watch = new MutationObserver(() => { const a = document.querySelector('[data-srp-announcer]'); if (a && a.textContent) heard.push(a.textContent); });
     watch.observe(document.body, { childList: true, characterData: true, subtree: true });
     try {
       await render(<EmptyState announce title="No results for “marz”" suggestions={['mars', 'maze']} onSuggestion={() => {}} />);
@@ -131,7 +131,7 @@ describe('EmptyState', () => {
     const line = part('esug', 'suggestions')!;
     const buttons = [...line.querySelectorAll('button')];
     expect([line.tagName, line.textContent, buttons.map((b) => b.textContent)]).toEqual(['P', 'Did you mean:marsmaze', ['mars', 'maze']]);
-    expect(line.parentElement!.className).toBe('dk-empty-state__text');
+    expect(line.parentElement!.className).toBe('srp-empty-state__text');
     expect(buttons.every((b) => b.offsetHeight >= 24 && css(b).textDecorationLine === 'underline')).toBe(true);
     buttons[1]!.click();
     expect(picked).toEqual(['maze']);

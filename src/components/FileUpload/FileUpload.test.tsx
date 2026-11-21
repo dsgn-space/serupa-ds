@@ -319,7 +319,7 @@ describe('FileUpload', () => {
     expect(seen.filter((m) => /invalid|required|readOnly/i.test(m))).toEqual([]);
     const zone = (id: string) => getComputedStyle(rootOf(id).querySelector(ZONE)!);
     expect([rootOf('fi2').className, zone('fi2').borderTopStyle, zone('fi2').borderTopColor === zone('fi3').borderTopColor, input(rootOf('fi3')).hasAttribute('aria-invalid')])
-      .toEqual(['dk-file-upload dk-file-upload--invalid', 'solid', false, false]);
+      .toEqual(['srp-file-upload srp-file-upload--invalid', 'solid', false, false]);
   });
 
   test('invalid with your own aria-errormessage: the message joins the button\'s description once, and the drop area is presentational with no state (TF1b)', async () => {
@@ -336,7 +336,7 @@ describe('FileUpload', () => {
     const el = rootOf('ro'), w = watchPicker(el), b = choose(el);
     await expect.poll(() => input(el).files?.length).toBe(1);
     expect([names(el), el.querySelector('ul[aria-label] > li button'), b.disabled, b.getAttribute('aria-disabled'), input(el).disabled, el.className])
-      .toEqual(['a.pdf', null, false, 'true', false, 'dk-file-upload dk-file-upload--readonly']);
+      .toEqual(['a.pdf', null, false, 'true', false, 'srp-file-upload srp-file-upload--readonly']);
     b.focus();
     expect(document.activeElement).toBe(b);
     await userEvent.keyboard('{Enter}');
@@ -363,13 +363,13 @@ describe('FileUpload', () => {
       const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(el.querySelector('ul[aria-label] > li')!).backgroundColor;
       const c = (sel: string) => getComputedStyle(el.querySelector(sel)!).color;
       const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['zone outline', zs.borderTopColor, pg, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
-      zone.classList.add('dk-file-upload__zone--over');
+      zone.classList.add('srp-file-upload__zone--over');
       const zo = getComputedStyle(zone).backgroundColor;
       pairs.push(['hint while dragging', c(HINT), zo, 4.5], ['title while dragging', c(TITLE), zo, 4.5]);
-      zone.classList.remove('dk-file-upload__zone--over');
-      el.classList.add('dk-file-upload--invalid');
+      zone.classList.remove('srp-file-upload__zone--over');
+      el.classList.add('srp-file-upload--invalid');
       pairs.push(['invalid outline', getComputedStyle(zone).borderTopColor, pg, 3]);
-      el.classList.remove('dk-file-upload--invalid');
+      el.classList.remove('srp-file-upload--invalid');
       for (const [k, fg, bg, min] of pairs) { const r = contrast(fg, bg); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove(); document.body.style.background = prevBg;
@@ -449,7 +449,7 @@ describe('FileUpload', () => {
 });
 
 describe('FileUpload: drops, folders and what is said (FQ1)', () => {
-  const said = () => document.querySelector('[data-dk-announcer]')?.textContent ?? '';
+  const said = () => document.querySelector('[data-srp-announcer]')?.textContent ?? '';
   const fileDrag = (type: string, target: EventTarget) => {
     const dt = new DataTransfer(); dt.items.add(file('stray.png', 'image/png', 10));
     const e = new DragEvent(type, { bubbles: true, cancelable: true, dataTransfer: dt });
@@ -598,7 +598,7 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
 });
 
 describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
-  const said = () => document.querySelector('[data-dk-announcer]')?.textContent ?? '';
+  const said = () => document.querySelector('[data-srp-announcer]')?.textContent ?? '';
   const PNG = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), (ch) => ch.charCodeAt(0));
   const a = file('a.png', 'image/png', 10), b = file('b.pdf', 'application/pdf', 10), c = file('c.pdf', 'application/pdf', 10);
   type S = import('./FileUpload').FileUploadStatus;

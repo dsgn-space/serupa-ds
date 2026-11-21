@@ -24,10 +24,10 @@ function CenterRender({ ref, ...props }: CenterProps & React.RefAttributes<HTMLE
   const rest = omit(props, { maxWidth: 1, vertical: 1, intrinsic: 1, centerText: 1, padded: 1, as: 1, className: 1, style: 1 });
   const max = props.maxWidth;
   const vars: Record<string, string> = {};
-  if (max) vars['--dk-center-max'] = /^[a-z][a-z0-9-]*$/.test(max) ? 'var(--' + max + ')' : max;
+  if (max) vars['--srp-center-max'] = /^[a-z][a-z0-9-]*$/.test(max) ? 'var(--' + max + ')' : max;
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
     ref: ref, 'data-component': 'center',
-    className: cn('dk-center', props.vertical && 'dk-center--vertical', props.intrinsic && 'dk-center--intrinsic', props.centerText && 'dk-center--text', props.padded !== false && 'dk-center--padded', props.className),
+    className: cn('srp-center', props.vertical && 'srp-center--vertical', props.intrinsic && 'srp-center--intrinsic', props.centerText && 'srp-center--text', props.padded !== false && 'srp-center--padded', props.className),
     style: max ? Object.assign(vars, props.style) : props.style,
   }));
 }

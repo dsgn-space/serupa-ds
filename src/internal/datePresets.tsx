@@ -39,12 +39,12 @@ export function PresetList(p: { label: string; items: PresetItem[]; allowed: (d:
   // today mark is (GR210), so the server HTML and the first render agree and the visitor's day wins (GR286).
   const hydrated = React.useSyncExternalStore(never, yes, no);
   return (
-    <div role="group" aria-label={p.label} className="dk-calendar__presets">
+    <div role="group" aria-label={p.label} className="srp-calendar__presets">
       {p.items.map((it, i) => {
         const off = !it.start || (hydrated && (!p.allowed(it.start) || (!!it.end && !p.allowed(it.end))));
         const on = hydrated && sameDay(it.start, p.current.start) && (it.end ? sameDay(it.end, p.current.end) : true);
         return (
-          <button key={i} type="button" className="dk-calendar__preset" aria-pressed={on} aria-disabled={off || undefined} onClick={() => { if (!off) p.onPick(it); }}>
+          <button key={i} type="button" className="srp-calendar__preset" aria-pressed={on} aria-disabled={off || undefined} onClick={() => { if (!off) p.onPick(it); }}>
             {it.label}
           </button>
         );

@@ -15,7 +15,7 @@ const readsLeftToRight = (e: HTMLElement) => {
   const first = nodes[0]!, last = nodes[nodes.length - 1]!;
   return at(first, 0) < at(last, last.length - 1);
 };
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent || '';
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent || '';
 afterEach(() => { vi.useRealTimers(); });
 
 describe('Countdown', () => {
@@ -24,7 +24,7 @@ describe('Countdown', () => {
     await render(<SerupaProvider locale="en-US"><Countdown id="c" seconds={299} label="Offer ends in" ref={ref} className="extra" data-x="y" /></SerupaProvider>);
     const t = el('c');
     expect([t.tagName, t.getAttribute('role'), t.textContent, t.getAttribute('aria-label'), t.dateTime, ref.current === t, t.className, t.dataset.x, t.dataset.component])
-      .toEqual(['TIME', 'timer', '4:59', 'Offer ends in: 4 minutes, 59 seconds', 'PT299S', true, 'dk-countdown extra', 'y', 'countdown']);
+      .toEqual(['TIME', 'timer', '4:59', 'Offer ends in: 4 minutes, 59 seconds', 'PT299S', true, 'srp-countdown extra', 'y', 'countdown']);
     // Not a live region: it would speak every second.
     expect(t.getAttribute('aria-live')).toBeNull();
   });
@@ -43,7 +43,7 @@ describe('Countdown', () => {
       <Countdown id="w" seconds={3600 + 120} label="Time left" format="words" />
       <Countdown id="e" seconds={0} label="Offer ends in" endText="The offer has ended" />
     </SerupaProvider>);
-    expect([el('w').textContent.replace(/\u00a0/g, ' '), el('e').textContent, el('e').getAttribute('aria-label'), el('e').classList.contains('dk-countdown--ended')])
+    expect([el('w').textContent.replace(/\u00a0/g, ' '), el('e').textContent, el('e').getAttribute('aria-label'), el('e').classList.contains('srp-countdown--ended')])
       .toEqual(['1 hour, 2 minutes', 'The offer has ended', 'Offer ends in: The offer has ended', true]);
   });
 

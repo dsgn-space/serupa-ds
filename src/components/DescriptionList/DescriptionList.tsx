@@ -21,7 +21,7 @@ function DescriptionListRender({ ref, ...props }: DescriptionListProps & React.R
   const { className, layout = 'inline', dividers, ...rest } = props;
   return (
     <dl {...rest} ref={ref} data-component="description-list"
-      className={cn('dk-description-list', `dk-description-list--${layout}`, dividers && 'dk-description-list--dividers', className)} />
+      className={cn('srp-description-list', `srp-description-list--${layout}`, dividers && 'srp-description-list--dividers', className)} />
   );
 }
 
@@ -42,9 +42,9 @@ export interface DescriptionItemProps extends Omit<React.HTMLAttributes<HTMLDivE
 function DescriptionItemRender({ ref, ...props }: DescriptionItemProps & React.RefAttributes<HTMLDivElement>) {
   const { className, term, children, emphasis, ...rest } = props;
   return (
-    <div {...rest} ref={ref} className={cn('dk-description-list__item', emphasis && 'dk-description-list__item--emphasis', className)}>
-      <dt className="dk-description-list__term">{term}</dt>
-      <dd className="dk-description-list__details">{children}</dd>
+    <div {...rest} ref={ref} className={cn('srp-description-list__item', emphasis && 'srp-description-list__item--emphasis', className)}>
+      <dt className="srp-description-list__term">{term}</dt>
+      <dd className="srp-description-list__details">{children}</dd>
     </div>
   );
 }

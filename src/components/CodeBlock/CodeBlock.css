@@ -5,63 +5,63 @@
    to right in every script. Every value reads one of its own tokens (code-block.tokens.json), which fall back to the
    shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-code-block {
-  --dk-code-block-tab: 2;   /* a tab stop, counted in characters: no token measures one */
+@layer srp.components {
+.srp-code-block {
+  --srp-code-block-tab: 2;   /* a tab stop, counted in characters: no token measures one */
   min-inline-size: 0; overflow: hidden;
   border: var(--border-width-1) solid var(--code-block-border, var(--border));
   border-radius: var(--code-block-radius, var(--radius-control));
   background: var(--code-block-bg, var(--surface-muted)); color: var(--code-block-text, var(--text));
 }
 /* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
-.dk-card--padding-none > .dk-code-block { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
-.dk-code-block__header {
+.srp-card--padding-none > .srp-code-block { border: var(--spacing-0); border-radius: var(--srp-card-inner-radius); }
+.srp-code-block__header {
   display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2);
   min-block-size: var(--spacing-10); padding-block: var(--spacing-1); padding-inline: var(--code-block-padding, var(--spacing-4)) var(--spacing-1);
   border-block-end: var(--border-width-1) solid var(--code-block-border, var(--border));
   font-size: var(--text-xs); line-height: var(--leading-4);
 }
-.dk-code-block__title { text-wrap: balance; min-inline-size: 0; font-weight: var(--font-medium); overflow-wrap: anywhere; }
-.dk-code-block__language { color: var(--code-block-muted, var(--text-muted)); font-family: var(--font-mono); text-transform: lowercase; }
-.dk-code-block__copy { flex: none; }
-.dk-code-block__pre {
+.srp-code-block__title { text-wrap: balance; min-inline-size: 0; font-weight: var(--font-medium); overflow-wrap: anywhere; }
+.srp-code-block__language { color: var(--code-block-muted, var(--text-muted)); font-family: var(--font-mono); text-transform: lowercase; }
+.srp-code-block__copy { flex: none; }
+.srp-code-block__pre {
   margin: 0; padding-block: var(--code-block-padding, var(--spacing-4)); overflow: auto;
   overscroll-behavior-inline: contain;   /* a long line scrolled to its end doesn't go on to swipe the page back */
   font-family: var(--font-mono); font-size: var(--code-block-font-size, var(--text-sm)); line-height: var(--leading-5);
-  white-space: pre; overflow-wrap: normal; tab-size: var(--dk-code-block-tab);
+  white-space: pre; overflow-wrap: normal; tab-size: var(--srp-code-block-tab);
   direction: ltr; unicode-bidi: isolate; text-align: start;   /* run(); never reads ;()run on a right-to-left page */
-  counter-reset: dk-code-line;
+  counter-reset: srp-code-line;
 }
-.dk-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--code-block-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-code-block__code { display: block; inline-size: max-content; min-inline-size: var(--sizing-full); font: inherit; }
-.dk-code-block__line { display: block; padding-inline: var(--code-block-padding, var(--spacing-4)); }
-.dk-code-block--numbered .dk-code-block__line {
+.srp-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--code-block-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-code-block__code { display: block; inline-size: max-content; min-inline-size: var(--sizing-full); font: inherit; }
+.srp-code-block__line { display: block; padding-inline: var(--code-block-padding, var(--spacing-4)); }
+.srp-code-block--numbered .srp-code-block__line {
   /* Not a grid: a grid item holding only a line break drops out of copied text, so blank lines went (GR114). The
      number hangs in the start padding instead, and a wrapped line's rest lines up under the code. */
-  --dk-code-gutter: calc(var(--dk-code-digits, 2) * 1ch);   /* stylelint-disable-line serupa/no-raw-value -- as many characters wide as the last line's number has digits: no token measures a character */
-  padding-inline-start: calc(var(--spacing-3) + var(--dk-code-gutter) + var(--spacing-4)); counter-increment: dk-code-line;
+  --srp-code-gutter: calc(var(--srp-code-digits, 2) * 1ch);   /* stylelint-disable-line serupa/no-raw-value -- as many characters wide as the last line's number has digits: no token measures a character */
+  padding-inline-start: calc(var(--spacing-3) + var(--srp-code-gutter) + var(--spacing-4)); counter-increment: srp-code-line;
 }
-.dk-code-block--numbered .dk-code-block__line::before {
-  content: counter(dk-code-line); content: counter(dk-code-line) / ""; display: inline-block; inline-size: var(--dk-code-gutter); text-align: end;
-  margin-inline: calc(var(--spacing-0) - var(--dk-code-gutter) - var(--spacing-4)) var(--spacing-4); color: var(--code-block-muted, var(--text-muted));
+.srp-code-block--numbered .srp-code-block__line::before {
+  content: counter(srp-code-line); content: counter(srp-code-line) / ""; display: inline-block; inline-size: var(--srp-code-gutter); text-align: end;
+  margin-inline: calc(var(--spacing-0) - var(--srp-code-gutter) - var(--spacing-4)) var(--spacing-4); color: var(--code-block-muted, var(--text-muted));
   user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
 }
-.dk-code-block__line--marked {
+.srp-code-block__line--marked {
   background: var(--code-block-mark-bg, var(--primary-subtle)); color: inherit;
   box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--primary));
 }
 /* text-muted is under 4.5:1 on the tint in Blue Light, so a marked line's number takes the code's color. */
-.dk-code-block--numbered .dk-code-block__line--marked::before { color: inherit; }
-.dk-code-block--wrap .dk-code-block__pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-.dk-code-block--wrap .dk-code-block__code { inline-size: auto; }
+.srp-code-block--numbered .srp-code-block__line--marked::before { color: inherit; }
+.srp-code-block--wrap .srp-code-block__pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.srp-code-block--wrap .srp-code-block__code { inline-size: auto; }
 
 @media (forced-colors: active) {
-  .dk-code-block__line--marked { forced-color-adjust: none; background: Mark; color: MarkText; box-shadow: inset var(--border-width-2) 0 0 MarkText; }
-  .dk-code-block--numbered .dk-code-block__line--marked::before { color: MarkText; }
+  .srp-code-block__line--marked { forced-color-adjust: none; background: Mark; color: MarkText; box-shadow: inset var(--border-width-2) 0 0 MarkText; }
+  .srp-code-block--numbered .srp-code-block__line--marked::before { color: MarkText; }
 }
 @media print {
-  .dk-code-block__copy { display: none; }
-  .dk-code-block__pre { overflow: visible; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .dk-code-block__code { inline-size: auto; }
+  .srp-code-block__copy { display: none; }
+  .srp-code-block__pre { overflow: visible; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .srp-code-block__code { inline-size: auto; }
 }
 }

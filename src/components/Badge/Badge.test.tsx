@@ -231,7 +231,7 @@ describe('Badge', () => {
     await show();
     const e = el('dot'), d = e.querySelector(DOT) as HTMLElement, bx = d.parentElement!, s = css(d), br = bx.getBoundingClientRect(), dr = d.getBoundingClientRect();
     expect(e.firstElementChild).toBe(bx);
-    expect(bx.classList.contains('dk-badge__icon--dot')).toBe(true);
+    expect(bx.classList.contains('srp-badge__icon--dot')).toBe(true);
     expect([br.width, br.height]).toEqual([10, 12]);
     expect(Math.abs((dr.left + dr.width / 2) - (br.left + br.width / 2))).toBeLessThan(0.5);
     expect(Math.abs((dr.top + dr.height / 2) - (br.top + br.height / 2))).toBeLessThan(0.5);
@@ -358,9 +358,9 @@ describe('Badge', () => {
   test('interactive: onClick renders <button type="button">, href a link (rel noopener for new tabs); a plain badge stays a span with no states', async () => {
     await show();
     const b = el('btn') as HTMLButtonElement, l = el('lnk') as HTMLAnchorElement, d = el('def');
-    expect([b.tagName, b.type, b.classList.contains('dk-badge--interactive'), 'interactive' in b.dataset, css(b).cursor]).toEqual(['BUTTON', 'button', true, true, 'pointer']);
-    expect([l.tagName, l.getAttribute('href'), l.rel, l.classList.contains('dk-badge--interactive'), css(l).textDecorationLine]).toEqual(['A', '#here', 'noopener noreferrer', true, 'none']);
-    expect([d.classList.contains('dk-badge--interactive'), css(d).cursor, getComputedStyle(d, '::before').content]).toEqual([false, 'auto', 'none']);
+    expect([b.tagName, b.type, b.classList.contains('srp-badge--interactive'), 'interactive' in b.dataset, css(b).cursor]).toEqual(['BUTTON', 'button', true, true, 'pointer']);
+    expect([l.tagName, l.getAttribute('href'), l.rel, l.classList.contains('srp-badge--interactive'), css(l).textDecorationLine]).toEqual(['A', '#here', 'noopener noreferrer', true, 'none']);
+    expect([d.classList.contains('srp-badge--interactive'), css(d).cursor, getComputedStyle(d, '::before').content]).toEqual([false, 'auto', 'none']);
   });
 
   test('L8E73 a disabled link badge: no href, so it can\'t be followed or focused; role="link" and aria-disabled say what it is; your onClick doesn\'t run; drawn in the neutral disabled colors', async () => {
@@ -420,7 +420,7 @@ describe('Badge', () => {
   test.each(VARIANTS)(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × %s × 2 states in every theme`, async (v) => {
     await show();
     const off = document.createElement('style');
-    off.textContent = '.dk-badge, .dk-badge::before { transition: none !important; }';
+    off.textContent = '.srp-badge, .srp-badge::before { transition: none !important; }';
     document.head.appendChild(off);
     const low: string[] = [];
     let n = 0;
@@ -458,7 +458,7 @@ describe('Badge', () => {
   test('loading, interactive: a ring at the icon size (12px) centered over the hidden content (a 150ms cross-fade, the ring grows in), width kept, aria-busy and aria-disabled, announced "Loading"; clicks and Enter do nothing, focus stays; off again, it works again', async () => {
     await show();
     const ld = el('ld');
-    const announcer = q('[data-dk-announcer]');
+    const announcer = q('[data-srp-announcer]');
     announcer.textContent = '';
     setLoading(true);
     await expect.poll(() => ld.getAttribute('aria-busy')).toBe('true');
@@ -472,9 +472,9 @@ describe('Badge', () => {
     await expect.poll(() => [sp, ...content()].every((x) => x.getAnimations().every((a) => a.playState === 'finished'))).toBe(true);
     const xf = { lab: css(ld.querySelector(LABEL)).transitionDuration, ldr: css(sp).animationName, ldd: css(sp).animationDuration };
     expect(xf.lab).toMatch(/0\.15s/);
-    expect([xf.ldr, xf.ldd]).toEqual(['dk-badge-loader-in', '0.15s']);
+    expect([xf.ldr, xf.ldd]).toEqual(['srp-badge-loader-in', '0.15s']);
     // They cross as one change, as on Button: the content ends blurred (blur-xs) and the ring sharpens from the same blur.
-    const grow = sp.getAnimations().find((a) => (a as CSSAnimation).animationName === 'dk-badge-loader-in')!;
+    const grow = sp.getAnimations().find((a) => (a as CSSAnimation).animationName === 'srp-badge-loader-in')!;
     // Paused first, as on Button: WebKit lets a running animation move on from 0 before the style is read.
     grow.pause();
     grow.currentTime = 0;
@@ -600,7 +600,7 @@ describe('Badge', () => {
     expect(css(dot).width).toBe('6px');
     expect(a(ind)).toMatchObject({ name: 'ping', bg: css(ind).backgroundColor, w: '8px' });
     expect([css(ind).position, css(el('pgabs')).position]).toEqual(['relative', 'absolute']);
-    expect([el('pgnodot').classList.contains('dk-badge--ping'), el('pgicon').classList.contains('dk-badge--ping')]).toEqual([false, false]);
+    expect([el('pgnodot').classList.contains('srp-badge--ping'), el('pgicon').classList.contains('srp-badge--ping')]).toEqual([false, false]);
   });
 
   test('ref, className and other attributes pass through', async () => {
@@ -615,12 +615,12 @@ describe('Badge', () => {
       await show();
       const o = await hold(el('mion'), async () => {
         await new Promise(requestAnimationFrame);
-        return { ping: getComputedStyle((el('pg').querySelector(DOT) as HTMLElement), '::after').animationName + '/' + getComputedStyle(el('pgind'), '::after').display, scale: css(el('mion')).scale, blur: css(el('ldspan').querySelector(LABEL)).filter, from: css(el('ldspan')).getPropertyValue('--dk-badge-loader-from').trim(), anim: css(el('ldspan').querySelector('[data-component=loader]')!.parentElement).animationName };
+        return { ping: getComputedStyle((el('pg').querySelector(DOT) as HTMLElement), '::after').animationName + '/' + getComputedStyle(el('pgind'), '::after').display, scale: css(el('mion')).scale, blur: css(el('ldspan').querySelector(LABEL)).filter, from: css(el('ldspan')).getPropertyValue('--srp-badge-loader-from').trim(), anim: css(el('ldspan').querySelector('[data-component=loader]')!.parentElement).animationName };
       }, { ms: 200, at: { x: 6, y: 6 } });
       expect(o.ping).toBe('none/none');
       expect(['1', 'none']).toContain(o.scale);
       expect(o.blur).toBe('none');
-      expect([o.from, o.anim]).toEqual([expect.stringMatching(/100%/), 'dk-loader-in']);
+      expect([o.from, o.anim]).toEqual([expect.stringMatching(/100%/), 'srp-loader-in']);
     } finally { restore(); }
   });
 });

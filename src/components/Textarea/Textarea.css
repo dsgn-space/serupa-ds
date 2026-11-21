@@ -1,88 +1,88 @@
 /* ---------------------------------------------------------------
    Textarea: a multi-line text field, Input's sibling. Sizes sm, md, lg with Input's text sizes (text-xs, text-sm,
    text-base) and side padding; the height comes from rows (or the text, with autoResize). Field colors come
-   from the alias tokens (field, field-border, placeholder), like Input. Structure: .dk-textarea (the box) >
-   .dk-textarea__field (the native <textarea>), .dk-textarea__count, .dk-textarea__actions. Every value goes through --textarea-* tokens.
+   from the alias tokens (field, field-border, placeholder), like Input. Structure: .srp-textarea (the box) >
+   .srp-textarea__field (the native <textarea>), .srp-textarea__count, .srp-textarea__actions. Every value goes through --textarea-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-textarea {
-  --dk-ta-px: var(--textarea-padding-x-md, var(--spacing-3));
-  --dk-ta-py: var(--textarea-padding-y-md, var(--spacing-1\.5));
-  --dk-ta-bd: var(--textarea-border, var(--field-border));
-  --dk-ta-ring: var(--textarea-focus-ring, var(--focus-ring));
+@layer srp.components {
+.srp-textarea {
+  --srp-ta-px: var(--textarea-padding-x-md, var(--spacing-3));
+  --srp-ta-py: var(--textarea-padding-y-md, var(--spacing-1\.5));
+  --srp-ta-bd: var(--textarea-border, var(--field-border));
+  --srp-ta-ring: var(--textarea-focus-ring, var(--focus-ring));
   display: inline-flex; flex-direction: column;
   box-sizing: border-box; width: var(--sizing-full);
   background: var(--textarea-bg, var(--field)); color: var(--textarea-text, var(--text));
-  border: var(--textarea-border-width, var(--border-width-1)) solid var(--dk-ta-bd);
+  border: var(--textarea-border-width, var(--border-width-1)) solid var(--srp-ta-bd);
   border-radius: var(--textarea-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   cursor: text; vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
-.dk-textarea--size-sm { --dk-ta-px: var(--textarea-padding-x-sm, var(--spacing-2)); --dk-ta-py: var(--textarea-padding-y-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-textarea--size-lg { --dk-ta-px: var(--textarea-padding-x-lg, var(--spacing-4)); --dk-ta-py: var(--textarea-padding-y-lg, var(--spacing-2\.5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-textarea__field {
+.srp-textarea--size-sm { --srp-ta-px: var(--textarea-padding-x-sm, var(--spacing-2)); --srp-ta-py: var(--textarea-padding-y-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-textarea--size-lg { --srp-ta-px: var(--textarea-padding-x-lg, var(--spacing-4)); --srp-ta-py: var(--textarea-padding-y-lg, var(--spacing-2\.5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-textarea__field {
   display: block; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0);
-  margin: var(--spacing-0); padding: var(--dk-ta-py) var(--dk-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
+  margin: var(--spacing-0); padding: var(--srp-ta-py) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
 }
-.dk-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
+.srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
 /* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */
-.dk-textarea__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--textarea-text, var(--text)); }
+.srp-textarea__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--textarea-text, var(--text)); }
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
    people edit the text or focus the field, whose ring is the mark then. */
-.dk-textarea:has(.dk-textarea__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--dk-ta-bd); }
-.dk-textarea--resize-none .dk-textarea__field, .dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled), .dk-textarea--readonly .dk-textarea__field { resize: none; }
-.dk-textarea--auto .dk-textarea__field { overflow-y: hidden; }
+.srp-textarea:has(.srp-textarea__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--srp-ta-bd); }
+.srp-textarea--resize-none .srp-textarea__field, .srp-textarea--disabled .srp-textarea__field, .srp-textarea__field:where(:disabled), .srp-textarea--readonly .srp-textarea__field { resize: none; }
+.srp-textarea--auto .srp-textarea__field { overflow-y: hidden; }
 /* autoResize where the browser sizes a field to its content: rows lines at least, maxRows at most (unset: no limit,
    since the max-height is then invalid and falls back to none), scrolling past that. Textarea.tsx measures elsewhere. */
 @supports (field-sizing: content) {
-  .dk-textarea--auto .dk-textarea__field {
-    --dk-ta-min: calc(var(--dk-ta-rows) * 1lh + 2 * var(--dk-ta-py));
-    --dk-ta-max: calc(var(--dk-ta-max-rows) * 1lh + 2 * var(--dk-ta-py));
-    field-sizing: content; min-height: var(--dk-ta-min); max-height: var(--dk-ta-max); overflow-y: auto; overscroll-behavior: contain;
+  .srp-textarea--auto .srp-textarea__field {
+    --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
+    --srp-ta-max: calc(var(--srp-ta-max-rows) * 1lh + 2 * var(--srp-ta-py));
+    field-sizing: content; min-height: var(--srp-ta-min); max-height: var(--srp-ta-max); overflow-y: auto; overscroll-behavior: contain;
   }
 }
 /* Print: the field grows to all of its text (its height may be the app's or a drag's, set inline, hence !important),
    rows lines at least so a blank one keeps room to write in, instead of printing only the lines scrolled into view. */
 @media print {
   @supports (field-sizing: content) {
-    .dk-textarea__field {
-      --dk-ta-min: calc(var(--dk-ta-rows) * 1lh + 2 * var(--dk-ta-py));
-      field-sizing: content; min-block-size: var(--dk-ta-min);
+    .srp-textarea__field {
+      --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
+      field-sizing: content; min-block-size: var(--srp-ta-min);
       block-size: auto !important; max-block-size: none !important; overflow: visible; resize: none;
     }
   }
 }
 /* The count sits under the text, at the end, in text-xs with tabular digits; it turns text-colored at maxLength. */
-.dk-textarea__count {
-  align-self: flex-end; padding: var(--spacing-0) var(--dk-ta-px) var(--dk-ta-py);
+.srp-textarea__count {
+  align-self: flex-end; padding: var(--spacing-0) var(--srp-ta-px) var(--srp-ta-py);
   color: var(--textarea-count, var(--placeholder)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
-.dk-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
+.srp-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
 /* actions: a row under the text, inside the box, with the buttons at the end; the count, when shown, starts it. */
-.dk-textarea__actions {
+.srp-textarea__actions {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--textarea-actions-gap, var(--spacing-1));
   min-width: var(--spacing-0); margin: var(--spacing-0); border: 0;
   padding: var(--spacing-0) var(--textarea-actions-padding, var(--spacing-1\.5)) var(--textarea-actions-padding, var(--spacing-1\.5));
   cursor: default;
 }
-.dk-textarea__actions .dk-textarea__count { align-self: center; margin-inline-end: auto; padding: var(--spacing-0); padding-inline-start: calc(var(--dk-ta-px) - var(--textarea-actions-padding, var(--spacing-1\.5))); }   /* its text lines up with the field's */
-@media (hover: hover) { .dk-textarea:hover:not(.dk-textarea--disabled, :has(.dk-textarea__field:disabled), .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-border-hover, var(--field-border-hover)); } }
+.srp-textarea__actions .srp-textarea__count { align-self: center; margin-inline-end: auto; padding: var(--spacing-0); padding-inline-start: calc(var(--srp-ta-px) - var(--textarea-actions-padding, var(--spacing-1\.5))); }   /* its text lines up with the field's */
+@media (hover: hover) { .srp-textarea:hover:not(.srp-textarea--disabled, :has(.srp-textarea__field:disabled), .srp-textarea--readonly, :focus-within) { --srp-ta-bd: var(--textarea-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws, since box-shadow rings disappear there. */
-.dk-textarea:focus-within { transition-duration: var(--duration-0); --dk-ta-bd: var(--dk-ta-ring); box-shadow: 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--dk-ta-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.dk-textarea--invalid { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --dk-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-textarea--invalid:hover:not(.dk-textarea--disabled, :has(.dk-textarea__field:disabled), .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
+.srp-textarea:focus-within { transition-duration: var(--duration-0); --srp-ta-bd: var(--srp-ta-ring); box-shadow: 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--srp-ta-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.srp-textarea--invalid { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-textarea--invalid:hover:not(.srp-textarea--disabled, :has(.srp-textarea__field:disabled), .srp-textarea--readonly, :focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
 /* A native constraint that fails after people edit it or try to send the form: as Input (:user-invalid). */
-.dk-textarea:has(.dk-textarea__field:user-invalid) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --dk-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-textarea:has(.dk-textarea__field:user-invalid):hover:not(:focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
-.dk-textarea--readonly { background: var(--textarea-bg-readonly, var(--field-readonly)); }
+.srp-textarea:has(.srp-textarea__field:user-invalid) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-textarea:has(.srp-textarea__field:user-invalid):hover:not(:focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
+.srp-textarea--readonly { background: var(--textarea-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.dk-textarea--disabled, .dk-textarea:where(:has(.dk-textarea__field:disabled)) { --dk-ta-bd: var(--textarea-border-disabled, var(--disabled-border)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-textarea--disabled, .srp-textarea:where(:has(.srp-textarea__field:disabled)) { --srp-ta-bd: var(--textarea-border-disabled, var(--disabled-border)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-textarea--disabled .srp-textarea__field, .srp-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
-@supports (-webkit-touch-callout: none) { .dk-textarea:not(.dk-textarea--size-lg) .dk-textarea__field { font-size: var(--text-base); } }
+@supports (-webkit-touch-callout: none) { .srp-textarea:not(.srp-textarea--size-lg) .srp-textarea__field { font-size: var(--text-base); } }
 }

@@ -111,7 +111,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   const fieldLabel = useFieldLabel(props.id);
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
-  const base = domId('dk-crop', React.useId());
+  const base = domId('srp-crop', React.useId());
   const root = React.useRef<HTMLDivElement | null>(null);
   const frame = React.useRef<HTMLDivElement | null>(null);
   const disabled = useFieldsetDisabled(root) || !!props.disabled;
@@ -244,25 +244,25 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   const percent = (z: number) => Math.round(z * 100) + '%';
   return (
     <div {...rest} ref={mergedRef} role="group" aria-labelledby={labelledBy}
-      className={cn('dk-image-cropper', disabled && 'dk-image-cropper--disabled', props.className)} data-component="image-cropper"
-      style={{ ...props.style, '--dk-image-cropper-aspect': String(aspect) } as React.CSSProperties}>
+      className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-component="image-cropper"
+      style={{ ...props.style, '--srp-image-cropper-aspect': String(aspect) } as React.CSSProperties}>
       <FieldContext.Provider value={null}>
-        <div ref={frame} className="dk-image-cropper__frame" data-shape={props.shape === 'round' ? 'round' : 'rect'}
+        <div ref={frame} className="srp-image-cropper__frame" data-shape={props.shape === 'round' ? 'round' : 'rect'}
           data-state={failed ? 'error' : area ? 'ready' : 'loading'} data-dragging={dragging || undefined}
           tabIndex={live ? 0 : undefined} role={live ? 'application' : undefined} aria-label={live ? L.cropArea : undefined} aria-describedby={live ? base + '-how' : undefined}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onKeyDown={onKey}>
-          <img ref={imgRef} key={props.src} className="dk-image-cropper__img" src={props.src} alt="" draggable={false} crossOrigin={props.crossOrigin}
+          <img ref={imgRef} key={props.src} className="srp-image-cropper__img" src={props.src} alt="" draggable={false} crossOrigin={props.crossOrigin}
             style={imgStyle} onLoad={(e) => loaded(e.currentTarget)} onError={() => { read.current = props.src; setFailed(true); }} />
-          {failed ? <span className="dk-image-cropper__fallback"><Icon icon={icons.BrokenImage} />{L.cropFailed}</span> : null}
-          <span className="dk-image-cropper__mask" aria-hidden="true" />
-          <span className="dk-image-cropper__grid" aria-hidden="true" />
+          {failed ? <span className="srp-image-cropper__fallback"><Icon icon={icons.BrokenImage} />{L.cropFailed}</span> : null}
+          <span className="srp-image-cropper__mask" aria-hidden="true" />
+          <span className="srp-image-cropper__grid" aria-hidden="true" />
         </div>
         <span id={base + '-how'} hidden>{L.cropHint}</span>
         {/* While the picture loads the zoom row is on but does nothing yet, so it doesn't flash from off to on; when
             the picture can't be loaded there's nothing to zoom, so the row goes rather than turning off. */}
-        {failed ? null : <div className="dk-image-cropper__zoom">
+        {failed ? null : <div className="srp-image-cropper__zoom">
           <IconButton icon={icons.Remove} label={L.cropZoomOut} size="sm" disabled={off || zoom <= 1} onClick={() => zoomTo(zoom - STEP)} />
-          <Slider className="dk-image-cropper__slider" size="sm" aria-label={L.cropZoom} min={1} max={maxZoom} step={0.01} largeStep={10}
+          <Slider className="srp-image-cropper__slider" size="sm" aria-label={L.cropZoom} min={1} max={maxZoom} step={0.01} largeStep={10}
             value={zoom} disabled={off} formatValue={percent} onValueChange={(z) => zoomTo(z)} />
           <IconButton icon={icons.Add} label={L.cropZoomIn} size="sm" disabled={off || zoom >= maxZoom} onClick={() => zoomTo(zoom + STEP)} />
         </div>}

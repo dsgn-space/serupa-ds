@@ -203,6 +203,21 @@ export function renamePackage(src, to) {
   return { text, count };
 }
 
+/** 17.0.0: the `dk` prefix is `srp`: classes (`dk-btn` → `srp-btn`), the internal custom properties (`--dk-*` →
+ * `--srp-*`), data attributes (`data-dk-*`), ids, events and the cascade layers (`dk.components` → `srp.components`,
+ * and `dk` in an `@layer` list). A `dk` that isn't followed by `-` or one of the layers (a word, a country code) stays. */
+export function renamePrefix(src) {
+  let count = 0;
+  const to = () => { count++; return 'srp'; };
+  let text = src.replace(/(?<![A-Za-z0-9_$]|[A-Za-z0-9_$]-)dk(?=-)/g, to)
+    .replace(/(?<=(?<![A-Za-z0-9_$-])data-)dk(?=-)/g, to)
+    .replace(/(?<=(?<![A-Za-z0-9_$-])--)dk(?![A-Za-z0-9_$-])/g, to)
+    .replace(/(?<=\\b)dk(?=-)/g, to)   // in a regular expression: /\bdk-…/
+    .replace(/(?<![A-Za-z0-9_$-])dk(?=\.(?:tokens|base|components|utilities)\b|\.\*)/g, to);
+  text = text.replace(/@layer\s+[^{;]+/g, (m) => m.replace(/(?<![A-Za-z0-9_$.-])dk(?![A-Za-z0-9_$.-])/g, to));
+  return { text, count };
+}
+
 /** Every change, oldest major first. `version` is the major that made the change. */
 export const TRANSFORMS = [
   {
@@ -440,6 +455,11 @@ export const TRANSFORMS = [
       }
       return { text: src, count, notes };
     },
+  },
+  {
+    version: '17.0.0', id: 'prefix-srp', exts: ALL,
+    title: 'The `dk` prefix is `srp`: `dk-*` classes, `--dk-*` properties, `data-dk-*` attributes and the `dk.*` cascade layers',
+    run: (src) => ({ ...renamePrefix(src), notes: [] }),
   },
 ];
 

@@ -29,8 +29,8 @@ const [start, setStart] = React.useState<string | null>("09:00");
 
 Drawn from the `Disabled` story.
 
-1. **Field** (`.dk-input__field`): where the time is typed.
-2. **Clock button** (`.dk-time-picker__button`): opens a list of times to choose from instead.
+1. **Field** (`.srp-input__field`): where the time is typed.
+2. **Clock button** (`.srp-time-picker__button`): opens a list of times to choose from instead.
 
 ## Usage
 
@@ -89,7 +89,7 @@ Drawn from the `Disabled` story.
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `value` / `defaultValue` | `string \| null` | | The time as `"HH:mm"` (24-hour), controlled or not. The same format as `<input type="time">`; seconds (`"14:05:00"`, as a database's time column gives) are read and dropped. |
 | `onValueChange` | `(value: string \| null) => void` | | Called with `"HH:mm"`, or `null` when the field is cleared. |
-| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a time) or `"unavailable"` (outside `min`..`max`). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.dk-input-rejected`, read with it) until the text changes. |
+| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a time) or `"unavailable"` (outside `min`..`max`). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.srp-input-rejected`, read with it) until the text changes. |
 | `min`, `max` | `string` | `"00:00"`, `"23:59"` | The earliest and latest times, typed or picked. |
 | `step` | `number` | `30` | **Minutes** between the times in the list, counted from `min` (or midnight). Under 1, it's 30. Typed times don't have to fall on a step. `<input type="time">` counts its `step` in seconds, so a native `step={900}` (15 minutes) becomes `step={15}` here; `step={900}` would list a time every 15 hours. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | How times are written. When it differs from the provider's, the field and the options carry `lang`, so screen readers read them in that language. |

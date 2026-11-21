@@ -48,7 +48,7 @@ async function hidden(ui: React.ReactElement, exportName: string, problems: stri
   await frame();
   await wait(50);
   // The live regions (internal/announce.ts) are shared by the page and show nothing.
-  for (const el of document.body.children) if (!before.has(el) && el !== host && !el.matches('[data-dk-announcer], [data-dk-announcer-assertive]') && shown(el)) problems.push(`${exportName}: ${describeEl(el)} in <body> is still shown`);
+  for (const el of document.body.children) if (!before.has(el) && el !== host && !el.matches('[data-srp-announcer], [data-srp-announcer-assertive]') && shown(el)) problems.push(`${exportName}: ${describeEl(el)} in <body> is still shown`);
   for (const el of document.querySelectorAll(':popover-open, dialog[open]')) if (shown(el)) problems.push(`${exportName}: ${describeEl(el)} is still open in the top layer`);
   const left = [...intervals].filter((id) => !ivBefore.has(id));
   if (left.length) problems.push(`${exportName}: ${left.length} interval(s) still running`);

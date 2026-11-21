@@ -12,11 +12,11 @@ import { Textarea } from '../components/Textarea/Textarea';
 const $ = (sel: string) => document.querySelector(sel) as HTMLElement;
 // The border each part reads, resolved to a color: [the part holding it, its variable].
 const PARTS: [string, string, string][] = [
-  ['input', '.u-input', '--dk-input-bd'],
-  ['textarea', '.u-textarea', '--dk-ta-bd'],
-  ['select', '.u-select', '--dk-select-bd'],
-  ['checkbox', '.u-checkbox .dk-checkbox__input', '--dk-checkbox-bd'],
-  ['radio', '.u-radio .dk-radio__input', '--dk-radio-bd'],
+  ['input', '.u-input', '--srp-input-bd'],
+  ['textarea', '.u-textarea', '--srp-ta-bd'],
+  ['select', '.u-select', '--srp-select-bd'],
+  ['checkbox', '.u-checkbox .srp-checkbox__input', '--srp-checkbox-bd'],
+  ['radio', '.u-radio .srp-radio__input', '--srp-radio-bd'],
 ];
 const border = (sel: string, v: string) => getComputedStyle($(sel)).getPropertyValue(v).trim();
 
@@ -38,7 +38,7 @@ describe('native constraints show as invalid after interaction (171)', () => {
       <Input className="ok-input" aria-label="Plain" />
     </>);
     const danger = Object.fromEntries(PARTS.map(([k, , v]) => [k, border(PARTS.find((p) => p[0] === k)![1].replace('.u-', '.ref-'), v)]));
-    const plain = border('.ok-input', '--dk-input-bd');
+    const plain = border('.ok-input', '--srp-input-bd');
     expect(danger.input).not.toBe(plain);
     // Already invalid (empty and required) but untouched: the plain border.
     for (const [k, sel, v] of PARTS) expect(border(sel, v), k).not.toBe(danger[k]);
@@ -46,19 +46,19 @@ describe('native constraints show as invalid after interaction (171)', () => {
     for (const [k, sel, v] of PARTS) await expect.poll(() => border(sel, v), { message: k }).toBe(danger[k]);
     // A fix takes the danger off again.
     await screen.getByLabelText('u email').fill('a@b.co');
-    await expect.poll(() => border('.u-input', '--dk-input-bd')).not.toBe(danger.input);
+    await expect.poll(() => border('.u-input', '--srp-input-bd')).not.toBe(danger.input);
     await screen.getByLabelText('u email').fill('not an email');
-    await expect.poll(() => border('.u-input', '--dk-input-bd')).toBe(danger.input);
+    await expect.poll(() => border('.u-input', '--srp-input-bd')).toBe(danger.input);
   });
 
   test('editing a field and leaving it bad is enough, without sending the form', async () => {
     const screen = await render(<><Input className="e-input" aria-label="Code" pattern="[0-9]{4}" /><Input className="ref-input" aria-label="Ref" invalid /></>);
-    const danger = border('.ref-input', '--dk-input-bd');
+    const danger = border('.ref-input', '--srp-input-bd');
     await screen.getByLabelText('Code').fill('12a');
     await screen.getByLabelText('Ref').click();
-    await expect.poll(() => border('.e-input', '--dk-input-bd')).toBe(danger);
+    await expect.poll(() => border('.e-input', '--srp-input-bd')).toBe(danger);
     // Under the pointer it stays danger, rather than taking the hover border.
     await screen.getByLabelText('Code').hover();
-    await expect.poll(() => border('.e-input', '--dk-input-bd')).toBe(danger);
+    await expect.poll(() => border('.e-input', '--srp-input-bd')).toBe(danger);
   });
 });

@@ -39,10 +39,10 @@ const regions = [
 
 Drawn from the `Open` story.
 
-1. **Button** (`.dk-cascade-select__button`): the chosen path, joined with ›, or the placeholder; a chevron at the end.
-2. **Panel** (`.dk-cascade-select__panel`): a dialog holding one column per level.
-3. **Column** (`.dk-cascade-select__column`): its level's name (`levels`, or "Level 2") over a listbox of options, scrolling on its own past 288px.
-4. **Option** (`.dk-cascade-select__option`): the highlighted one in each column is `primary-subtle`; one with children ends in a chevron, the chosen last step in a check.
+1. **Button** (`.srp-cascade-select__button`): the chosen path, joined with ›, or the placeholder; a chevron at the end.
+2. **Panel** (`.srp-cascade-select__panel`): a dialog holding one column per level.
+3. **Column** (`.srp-cascade-select__column`): its level's name (`levels`, or "Level 2") over a listbox of options, scrolling on its own past 288px.
+4. **Option** (`.srp-cascade-select__option`): the highlighted one in each column is `primary-subtle`; one with children ends in a chevron, the chosen last step in a check.
 
 ## Usage
 

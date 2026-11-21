@@ -19,7 +19,7 @@ describe('TypeToConfirm', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Confirm ref={ref} className="extra" data-x="y" hint="It can’t be undone." />);
     const { root, input, button } = parts('t');
-    expect([root.tagName, ref.current === root, root.className, root.dataset.x, root.dataset.component]).toEqual(['DIV', true, 'dk-type-to-confirm extra', 'y', 'type-to-confirm']);
+    expect([root.tagName, ref.current === root, root.className, root.dataset.x, root.dataset.component]).toEqual(['DIV', true, 'srp-type-to-confirm extra', 'y', 'type-to-confirm']);
     expect(input.labels![0]!.textContent).toBe('To confirm, type acme/web');
     expect([input.autocomplete, input.spellcheck, input.getAttribute('autocapitalize'), input.getAttribute('autocorrect')]).toEqual(['off', false, 'off', 'off']);
     expect(described(input)).toContain('It can’t be undone.');

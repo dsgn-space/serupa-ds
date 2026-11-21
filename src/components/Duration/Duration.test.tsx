@@ -15,7 +15,7 @@ describe('Duration', () => {
     await render(<Duration id="x" ref={ref} value={5400} locale="en" className="extra" data-x="y" />);
     const e = el('x');
     expect([e.tagName, e.getAttribute('datetime'), plain(e.textContent), ref.current === e, e.className, e.dataset.x, e.dataset.component])
-      .toEqual(['TIME', 'PT1H30M', '1 hr, 30 min', true, 'dk-duration extra', 'y', 'duration']);
+      .toEqual(['TIME', 'PT1H30M', '1 hr, 30 min', true, 'srp-duration extra', 'y', 'duration']);
   });
 
   test('each display: short, long, narrow and digital', () => {
@@ -83,7 +83,7 @@ describe('Duration', () => {
     await render(<Duration id="c" value={5400} locale="en" display="digital" />);
     await expect.element(page.getByText('1 hour, 30 minutes')).toBeInTheDocument();
     const e = el('c');
-    expect([e.querySelector('[aria-hidden="true"]')!.textContent, css(e).fontVariantNumeric, css(e).whiteSpace, e.className]).toEqual(['1:30:00', 'tabular-nums', 'nowrap', 'dk-duration dk-duration--digital']);
+    expect([e.querySelector('[aria-hidden="true"]')!.textContent, css(e).fontVariantNumeric, css(e).whiteSpace, e.className]).toEqual(['1:30:00', 'tabular-nums', 'nowrap', 'srp-duration srp-duration--digital']);
   });
 
   test('each unit\'s number and word stay together, so it wraps only between units', async () => {

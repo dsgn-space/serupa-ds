@@ -3,13 +3,13 @@
 // stops they read) are a quarter of the rules: a page that wants them imports serupa-ds/utilities-extra.css after
 // bundle.css or utilities.css. Storybook and the tests load both, so the template keeps them where they belong.
 //   split(css) → { core, extra }, each a stylesheet in the same order, with the same @layer, @media and @supports
-//   blocks around its rules; the @property rules for --dk-mask-* and --dk-gradient-* go with the extras.
+//   blocks around its rules; the @property rules for --srp-mask-* and --srp-gradient-* go with the extras.
 
 /** The classes that ship in utilities-extra.css, without a responsive prefix (md:from-primary is from-primary), negative
  *  ones (-mask-linear-45) included. */
 export const EXTRA = /^-?(?:mask-|bg-(?:linear|radial|conic)\b|(?:from|via|to)-)/;
 /** The internal variables only those classes set or read. */
-export const EXTRA_VARS = /^--dk-(?:mask|gradient)-/;
+export const EXTRA_VARS = /^--srp-(?:mask|gradient)-/;
 
 const unescape = (c) => c.replace(/\\([0-9a-fA-F]{1,6}) ?/g, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
 // The classes a selector names, and the class prefixes it matches ([class^="from-"], [class*=" mask-t-"]).

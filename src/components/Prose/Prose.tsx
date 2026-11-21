@@ -49,7 +49,7 @@ function ProseRender({ ref, ...props }: ProseProps & React.RefAttributes<HTMLEle
     return () => { if (ro) ro.disconnect(); if (mo) mo.disconnect(); stop(); };
   }, []);
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
-    ref: rootRefs, 'data-component': 'prose', className: cn('dk-prose', props.className),
+    ref: rootRefs, 'data-component': 'prose', className: cn('srp-prose', props.className),
   }));
 }
 

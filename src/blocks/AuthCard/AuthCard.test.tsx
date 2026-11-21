@@ -129,7 +129,7 @@ describe('Blocks/Auth card', () => {
 
   test('a second wrong code is said again, though the words under the field are the same', async () => {
     await render(<AuthCard start="code" idPrefix="again" check={() => true} verify={() => false} forgotHref="#" />);
-    const region = document.querySelector('[data-dk-announcer]') as HTMLElement;
+    const region = document.querySelector('[data-srp-announcer]') as HTMLElement;
     await userEvent.click(document.getElementById('again-code') as HTMLElement);
     await userEvent.keyboard('111111');
     await userEvent.click(page.getByRole('button', { name: 'Verify' }));

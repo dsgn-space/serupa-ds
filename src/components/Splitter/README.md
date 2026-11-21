@@ -33,9 +33,9 @@ import { Splitter } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **First pane** (`.dk-splitter__pane--first`): one side.
-2. **Handle** (`.dk-splitter__handle`): drag it, or focus it and use the arrow keys, to share the space; Enter collapses a pane.
-3. **Second pane** (`.dk-splitter__pane--second`): the other side.
+1. **First pane** (`.srp-splitter__pane--first`): one side.
+2. **Handle** (`.srp-splitter__handle`): drag it, or focus it and use the arrow keys, to share the space; Enter collapses a pane.
+3. **Second pane** (`.srp-splitter__pane--second`): the other side.
 
 ## Usage
 

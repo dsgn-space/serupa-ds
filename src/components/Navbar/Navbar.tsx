@@ -99,7 +99,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   if (was !== open) { setWas(open); setLeaving(!open); }
   const toggle = React.useRef<HTMLButtonElement>(null);
   const bar = React.useRef<HTMLElement | null>(null);
-  const id = domId('dk-nav', React.useId());
+  const id = domId('srp-nav', React.useId());
   const size = oneOf(WIDTHS, String(props.size), 'xl');   // String(): a plain string for the compiler, so ctx's memo holds
   const links = flattenChildren(props.children);
   const hasLinks = links.length > 0;
@@ -111,7 +111,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
     const h = bar.current;
     if (!props.sticky || !h) return;
     const root = document.documentElement;
-    const set = () => root.style.setProperty('--dk-navbar-offset', h.getBoundingClientRect().height + 'px');
+    const set = () => root.style.setProperty('--srp-navbar-offset', h.getBoundingClientRect().height + 'px');
     set();
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(set) : null;
     if (ro) ro.observe(h);
@@ -138,7 +138,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
       });
     };
     document.addEventListener('focusin', onFocus);
-    return () => { if (ro) ro.disconnect(); cancelAnimationFrame(raf); document.removeEventListener('focusin', onFocus); root.style.removeProperty('--dk-navbar-offset'); };
+    return () => { if (ro) ro.disconnect(); cancelAnimationFrame(raf); document.removeEventListener('focusin', onFocus); root.style.removeProperty('--srp-navbar-offset'); };
   }, [props.sticky]);
   const wide = useBreakpoint('md');
   /* Wider than 768px the links still fold behind the menu button when they don't fit between the brand and the
@@ -151,7 +151,7 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   useIsoLayoutEffect(() => {
     const h = bar.current, inner = h && h.firstElementChild as HTMLElement | null;
     if (!wide || !linkCount || !inner) { setFold(false); return; }
-    const nav = inner.querySelector<HTMLElement>(':scope > .dk-navbar__nav');
+    const nav = inner.querySelector<HTMLElement>(':scope > .srp-navbar__nav');
     // The effect runs again after each fold and unfold, so a local copy is as new as the state.
     let now = fold;
     const set = (to: boolean) => { now = to; setFold(to); };
@@ -210,21 +210,21 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   // (the panel opens under the bar), so Tab goes from the button into them. Closed, and on wide screens, they sit
   // between the brand and the actions.
   const nav = hasLinks ? (
-    <nav ref={panel} id={id} aria-label={props['aria-label'] || sds.labels.mainNavigation} className={cn('dk-navbar__nav', leaving && 'dk-navbar__nav--leaving')} inert={leaving || undefined}
+    <nav ref={panel} id={id} aria-label={props['aria-label'] || sds.labels.mainNavigation} className={cn('srp-navbar__nav', leaving && 'srp-navbar__nav--leaving')} inert={leaving || undefined}
       onTransitionEnd={(e) => { if (e.target === e.currentTarget && e.propertyName === 'opacity' && !open) setLeaving(false); }}>
-      <ul className="dk-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
+      <ul className="srp-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
     </nav>
   ) : null;
   const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   return (
     <NavbarContext.Provider value={ctx}>
-      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} data-fold={wide && fold ? '' : undefined} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.sticky && props.condense && 'dk-navbar--condense', props.className)}>
-        <div className={cn('dk-navbar__inner dk-container dk-container--padded', 'dk-container--' + size)}>
-          {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <TruncatedText>{String(props.brand)}</TruncatedText> : props.brand}</div> : null}
+      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} data-fold={wide && fold ? '' : undefined} className={cn('srp-navbar', props.sticky && 'srp-navbar--sticky', props.sticky && props.condense && 'srp-navbar--condense', props.className)}>
+        <div className={cn('srp-navbar__inner srp-container srp-container--padded', 'srp-container--' + size)}>
+          {props.brand != null ? <div className="srp-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <TruncatedText>{String(props.brand)}</TruncatedText> : props.brand}</div> : null}
           {open || leaving ? null : nav}
-          {props.actions != null ? <div className="dk-navbar__actions">{props.actions}</div> : null}
+          {props.actions != null ? <div className="srp-navbar__actions">{props.actions}</div> : null}
           {hasLinks ? (
-            <IconButton ref={toggle} className="dk-navbar__toggle" icon={open ? icons.Close : icons.Menu} label={props.menuLabel || sds.labels.menu} hideTitle
+            <IconButton ref={toggle} className="srp-navbar__toggle" icon={open ? icons.Close : icons.Menu} label={props.menuLabel || sds.labels.menu} hideTitle
               aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)} />
           ) : null}
           {open || leaving ? nav : null}
@@ -245,7 +245,7 @@ function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttr
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
   const Tag = (props.as || config.link);   // JSX, not createElement, which the React Compiler skips with a ref
   return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
-    className={cn('dk-navbar__link', props.active && 'dk-navbar__link--active', props.className)}
+    className={cn('srp-navbar__link', props.active && 'srp-navbar__link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }} />;
 }
 
@@ -261,7 +261,7 @@ export const NavbarLink = NavbarLinkBase as {
 function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { label: 1, children: 1, active: 1, className: 1 });
-  const id = domId('dk-navbar-menu', React.useId());
+  const id = domId('srp-navbar-menu', React.useId());
   const [own, setOwn] = React.useState(false);
   const open = ctx ? ctx.menu === id : own;
   const set = React.useCallback((v: boolean) => { if (ctx) ctx.setMenu((was) => (v ? id : was === id ? null : was)); else setOwn(v); }, [ctx, id]);
@@ -291,7 +291,7 @@ function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttribut
   const parts: React.ReactNode[] = [];
   let loose: React.ReactNode[] = [];
   const flush = () => {
-    if (loose.length) parts.push(<ul key={'list' + parts.length} role="list" className="dk-navbar__menu-list">{loose.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>);
+    if (loose.length) parts.push(<ul key={'list' + parts.length} role="list" className="srp-navbar__menu-list">{loose.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>);
     loose = [];
   };
   for (const c of flattenChildren(props.children)) {
@@ -300,14 +300,14 @@ function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttribut
   flush();
   const mergedRef2 = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={mergedRef2} data-state={open ? 'open' : 'closed'} className={cn('dk-navbar__menu', props.className)}>
-      <button ref={button} type="button" className={cn('dk-navbar__link dk-navbar__menu-button', props.active && 'dk-navbar__link--active')}
+    <div {...rest} ref={mergedRef2} data-state={open ? 'open' : 'closed'} className={cn('srp-navbar__menu', props.className)}>
+      <button ref={button} type="button" className={cn('srp-navbar__link srp-navbar__menu-button', props.active && 'srp-navbar__link--active')}
         // active: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
         aria-current={props.active ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
-        {props.label}<Icon icon={icons.ExpandMore} className="dk-navbar__chevron" />
+        {props.label}<Icon icon={icons.ExpandMore} className="srp-navbar__chevron" />
       </button>
-      <div id={id} className="dk-navbar__menu-panel" hidden={!open}>
-        <div className={cn('dk-navbar__menu-inner dk-container dk-container--padded', 'dk-container--' + (ctx ? ctx.size : 'xl'))}>{parts}</div>
+      <div id={id} className="srp-navbar__menu-panel" hidden={!open}>
+        <div className={cn('srp-navbar__menu-inner srp-container srp-container--padded', 'srp-container--' + (ctx ? ctx.size : 'xl'))}>{parts}</div>
       </div>
     </div>
   );
@@ -323,11 +323,11 @@ export const NavbarMenu = /* @__PURE__ */ named('NavbarMenu', NavbarMenuRender);
 
 function NavbarMenuGroupRender({ ref, ...props }: NavbarMenuGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { title: 1, children: 1, className: 1 });
-  const id = domId('dk-navbar-group', React.useId());
+  const id = domId('srp-navbar-group', React.useId());
   return (
-    <div {...rest} ref={ref} role="group" aria-labelledby={id} className={cn('dk-navbar__menu-group', props.className)}>
-      <div id={id} className="dk-navbar__menu-title">{props.title}</div>
-      <ul role="list" className="dk-navbar__menu-list">{flattenChildren(props.children).map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
+    <div {...rest} ref={ref} role="group" aria-labelledby={id} className={cn('srp-navbar__menu-group', props.className)}>
+      <div id={id} className="srp-navbar__menu-title">{props.title}</div>
+      <ul role="list" className="srp-navbar__menu-list">{flattenChildren(props.children).map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
     </div>
   );
 }
@@ -338,15 +338,15 @@ export const NavbarMenuGroup = /* @__PURE__ */ named('NavbarMenuGroup', NavbarMe
 function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1, description: 1, children: 1 });
-  const id = domId('dk-navbar-link', React.useId());
+  const id = domId('srp-navbar-link', React.useId());
   const has = props.description != null && props.description !== false && props.description !== '';
   const Tag = (props.as || config.link);   // JSX, as NavbarLink
   return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
     aria-labelledby={has ? id + '-name' : undefined} aria-describedby={has ? id + '-desc' : undefined}
-    className={cn('dk-navbar__menu-link', props.active && 'dk-navbar__menu-link--active', props.className)}
+    className={cn('srp-navbar__menu-link', props.active && 'srp-navbar__menu-link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }}>
-    <span id={id + '-name'} className="dk-navbar__menu-name">{props.children}</span>
-    {has ? <span id={id + '-desc'} className="dk-navbar__menu-desc">{props.description}</span> : null}
+    <span id={id + '-name'} className="srp-navbar__menu-name">{props.children}</span>
+    {has ? <span id={id + '-desc'} className="srp-navbar__menu-desc">{props.description}</span> : null}
   </Tag>;
 }
 

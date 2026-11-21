@@ -125,7 +125,7 @@ function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<
 
 function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, GROUP_OWN);
-  const autoName = domId('dk-cbg', React.useId());
+  const autoName = domId('srp-cbg', React.useId());
   const [chosen, setOwn, controlled] = useControllable<readonly (string | number)[]>(props.value, props.defaultValue || [], 'CheckboxGroup', 'value');
   const raw = chosen || [];
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -186,7 +186,7 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
   });
   return (
     <div {...rest} ref={groupRef} role="group" aria-disabled={props.disabled || undefined}
-      className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, props.variant === 'card' && 'dk-checkbox-group--card', invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
+      className={cn('srp-checkbox-group', 'srp-checkbox-group--' + orientation, props.variant === 'card' && 'srp-checkbox-group--card', invalid && 'srp-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
       <GroupContext.Provider value={st.ctx}>{props.children}</GroupContext.Provider>
     </div>
   );
@@ -197,7 +197,7 @@ export const CheckboxGroup = /* @__PURE__ */ named('CheckboxGroup', CheckboxGrou
 
 /* Checkbox: a native checkbox and its label. size "sm", "md" (default) or "lg"; children (the label);
    description (a second, muted line, linked with aria-describedby); indeterminate (the "some" state of a
-   select-all box, drawn as a dash and announced as mixed); invalid. Renders <label class="dk-checkbox"> around the
+   select-all box, drawn as a dash and announced as mixed); invalid. Renders <label class="srp-checkbox"> around the
    box and the text, so a click anywhere on it toggles: className and style go to the label, every other prop
    (checked, defaultChecked, onChange, name, value, disabled, required, aria-*…) and ref to the <input>. */
 const OWN = { size: 1, variant: 1, invalid: 1, indeterminate: 1, selectAll: 1, onCheckedChange: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
@@ -283,21 +283,21 @@ function CheckboxRender({ ref, ...props }: CheckboxProps & React.RefAttributes<H
   // The ring for keyboard focus where the browser's :focus-visible leaves one out (internal/keyFocus.ts).
   markKeyFocus(rest);
   useIsoLayoutEffect(listenForInput, []);
-  const base = domId('dk-cb', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const base = domId('srp-cb', React.useId()), labelId = base + '-label', descId = base + '-desc';
   const hasLabel = props.children != null && props.children !== false && props.children !== '';
   const hasDesc = props.description != null && props.description !== false && props.description !== '';
   if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
   // the description sits inside the <label> (so it's clickable too); naming by the label text alone keeps it out of the name
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;
   return (
-    <label className={cn('dk-checkbox', 'dk-checkbox--size-' + size, card && 'dk-checkbox--card', (invalid || (group && group.invalid)) && 'dk-checkbox--invalid', rest.disabled && 'dk-checkbox--disabled', readOnly && 'dk-checkbox--readonly', !hasLabel && !hasDesc && 'dk-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
-      <span className="dk-checkbox__control" key="control">
-        <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" data-indeterminate={mixed ? '' : undefined} key="input" />
-        <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
+    <label className={cn('srp-checkbox', 'srp-checkbox--size-' + size, card && 'srp-checkbox--card', (invalid || (group && group.invalid)) && 'srp-checkbox--invalid', rest.disabled && 'srp-checkbox--disabled', readOnly && 'srp-checkbox--readonly', !hasLabel && !hasDesc && 'srp-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
+      <span className="srp-checkbox__control" key="control">
+        <input {...rest} ref={setRefs} type="checkbox" className="srp-checkbox__input" data-indeterminate={mixed ? '' : undefined} key="input" />
+        <span className="srp-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
       </span>
-      {hasLabel || hasDesc ? <span className="dk-checkbox__text" key="text">
-        {hasLabel ? <span className="dk-checkbox__label" id={labelId} key="label">{props.children}</span> : null}
-        {hasDesc ? <span className="dk-checkbox__description" id={descId} key="desc">{props.description}</span> : null}
+      {hasLabel || hasDesc ? <span className="srp-checkbox__text" key="text">
+        {hasLabel ? <span className="srp-checkbox__label" id={labelId} key="label">{props.children}</span> : null}
+        {hasDesc ? <span className="srp-checkbox__description" id={descId} key="desc">{props.description}</span> : null}
       </span> : null}
     </label>
   );
