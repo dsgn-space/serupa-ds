@@ -115,7 +115,7 @@ export const Loading: Story = {
 /** disabledReason: a disabled button that stays focusable and says why, here with a Tooltip showing the same words. */
 export const DisabledWithReason: Story = {
   render: (args) => (
-    <Tooltip content="Fill in your name first"><Button {...args} disabled disabledReason="Fill in your name first">Save</Button></Tooltip>
+    <Tooltip content="Enter your name first"><Button {...args} disabled disabledReason="Enter your name first">Save</Button></Tooltip>
   ),
 };
 
