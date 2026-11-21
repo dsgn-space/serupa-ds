@@ -95,7 +95,7 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, required: 1, readOnly: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
   const unit: PeriodUnit = props.unit === 'quarter' || props.unit === 'year' ? props.unit : 'month';
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
-  const base = domId('dk-pp', React.useId());
+  const base = domId('srp-pp', React.useId());
   const sized = useControlSize(props.size);
   const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
@@ -175,7 +175,7 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   };
   useFormReset(hidden, () => { if (!controlled) setOwn(periodIndex(props.defaultValue, unit)); setOpenState(false, 'api'); }, props.form);
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--dk-pp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
+  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--srp-pp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   // Opening or a key asks for focus, and the period's button is there only after the render (and after
   // useAnchoredLayer has shown the popup: a hidden popover can't take focus).
@@ -193,29 +193,29 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   for (let i = 0; i < cells.length; i += cols) rows.push(cells.slice(i, i + cols));
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('dk-period-picker', 'dk-period-picker--size-' + size, (invalid || missing) && 'dk-period-picker--invalid', disabled && 'dk-period-picker--disabled', readOnly && 'dk-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
-      <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-period-picker__button" lang={rest.lang ?? lang}
+    <div className={cn('srp-period-picker', 'srp-period-picker--size-' + size, (invalid || missing) && 'srp-period-picker--invalid', disabled && 'srp-period-picker--disabled', readOnly && 'srp-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
+      <button {...rest} ref={mergedRef} type="button" role="combobox" className="srp-period-picker__button" lang={rest.lang ?? lang}
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
-        <TruncatedText className={cn('dk-period-picker__value', value == null && 'dk-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
-        <Icon icon={icons.CalendarToday} className="dk-period-picker__icon" />
+        <TruncatedText className={cn('srp-period-picker__value', value == null && 'srp-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
+        <Icon icon={icons.CalendarToday} className="srp-period-picker__icon" />
       </button>
       <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value == null ? '' : periodValue(value, unit)} disabled={disabled || !props.name} />
       {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
-      {required ? <input key={value != null ? 'filled' : 'empty'} className="dk-period-picker__validity" tabIndex={-1} aria-hidden required defaultValue={value != null ? 'filled' : ''}
+      {required ? <input key={value != null ? 'filled' : 'empty'} className="srp-period-picker__validity" tabIndex={-1} aria-hidden required defaultValue={value != null ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={L.periodPlaceholder(unit)} lang={lang}
-        {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-period-picker__panel">
+        {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-period-picker__panel">
         {open || exit.leaving ? <>
-          <div className="dk-period-picker__header">
-            <IconButton ref={prevNav} icon={icons.ChevronLeft} className="dk-period-picker__nav" label={L.periodPrevious(unit)} size="sm" variant="ghost" hideTitle onKeyDown={escape}
+          <div className="srp-period-picker__header">
+            <IconButton ref={prevNav} icon={icons.ChevronLeft} className="srp-period-picker__nav" label={L.periodPrevious(unit)} size="sm" variant="ghost" hideTitle onKeyDown={escape}
               disabled={min != null && page - 1 < min} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); setFocus(clamp(focus - count)); }} />
-            <h2 className="dk-period-picker__title" id={base + '-title'} aria-live="polite">{title}</h2>
-            <IconButton ref={nextNav} icon={icons.ChevronRight} className="dk-period-picker__nav" label={L.periodNext(unit)} size="sm" variant="ghost" hideTitle onKeyDown={escape}
+            <h2 className="srp-period-picker__title" id={base + '-title'} aria-live="polite">{title}</h2>
+            <IconButton ref={nextNav} icon={icons.ChevronRight} className="srp-period-picker__nav" label={L.periodNext(unit)} size="sm" variant="ghost" hideTitle onKeyDown={escape}
               disabled={max != null && page + count > max} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); setFocus(clamp(focus + count)); }} />
           </div>
-          <table ref={grid} role="grid" className="dk-period-picker__grid" aria-labelledby={base + '-title'} onKeyDown={onKeyDown}>
+          <table ref={grid} role="grid" className="srp-period-picker__grid" aria-labelledby={base + '-title'} onKeyDown={onKeyDown}>
             <tbody>
               {rows.map((row) => (
                 <tr key={row[0]}>
@@ -224,10 +224,10 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
                     return (
                       <td key={n} role="gridcell" aria-selected={sel}>
                         <button type="button" tabIndex={n === focus ? 0 : -1} aria-disabled={no || undefined} aria-current={here ? 'date' : undefined}
-                          className={cn('dk-period-picker__period', sel && 'dk-period-picker__period--selected', here && 'dk-period-picker__period--current', no && 'dk-period-picker__period--disabled')}
+                          className={cn('srp-period-picker__period', sel && 'srp-period-picker__period--selected', here && 'srp-period-picker__period--current', no && 'srp-period-picker__period--disabled')}
                           data-value={periodValue(n, unit)} onClick={() => pick(n)} onFocus={() => { if (n !== focus) setFocus(n); }}>
                           {/* "Jan" shown, "January 2025" read: the name holds the year the page shows once, over the grid. */}
-                          <span aria-hidden>{cellText(n)}</span><span className="dk-visually-hidden">{name(n)}</span>
+                          <span aria-hidden>{cellText(n)}</span><span className="srp-visually-hidden">{name(n)}</span>
                         </button>
                       </td>
                     );

@@ -10872,7 +10872,7 @@
       "$description": "`transition` (default) animates `transition-colors` plus these: opacity, shadow, transforms, filters and discrete properties like display."
     },
     "transition-colors": {
-      "$value": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --dk-gradient-from, --dk-gradient-via, --dk-gradient-to",
+      "$value": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --srp-gradient-from, --srp-gradient-via, --srp-gradient-to",
       "$description": "`transition-colors`: hover and focus color changes, gradients included."
     },
     "transition-opacity": {

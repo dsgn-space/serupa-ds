@@ -33,11 +33,11 @@ import { Tour } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story, opened.
 
-1. **Title** (`.dk-tour__title`): the step's heading, which names its panel. The panel is a non-modal dialog next to the step's element, or in the middle of the screen when there's none.
-2. **Close button** (`.dk-tour__close`): ends the tour.
-3. **Text** (`.dk-tour__text`): what the step says, which describes the panel.
-4. **Step count** (`.dk-tour__count`): "Step 1 of 3", when there's more than one step.
-5. **Actions** (`.dk-tour__actions`): Back (from the second step) and Next, or Done on the last step.
+1. **Title** (`.srp-tour__title`): the step's heading, which names its panel. The panel is a non-modal dialog next to the step's element, or in the middle of the screen when there's none.
+2. **Close button** (`.srp-tour__close`): ends the tour.
+3. **Text** (`.srp-tour__text`): what the step says, which describes the panel.
+4. **Step count** (`.srp-tour__count`): "Step 1 of 3", when there's more than one step.
+5. **Actions** (`.srp-tour__actions`): Back (from the second step) and Next, or Done on the last step.
 
 The element the step points at gets a 2px primary ring (`[data-tour-target]`), set by the tour and taken off when it moves on.
 

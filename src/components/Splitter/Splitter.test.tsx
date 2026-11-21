@@ -46,7 +46,7 @@ describe('Splitter', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Two ref={ref} className="extra" data-x="y" defaultSize={25} separatorLabel="Folders" />);
     const h = handle('s');
-    expect([ref.current === el('s'), el('s').className, el('s').dataset.x, el('s').dataset.component]).toEqual([true, 'dk-splitter dk-splitter--horizontal extra', 'y', 'splitter']);
+    expect([ref.current === el('s'), el('s').className, el('s').dataset.x, el('s').dataset.component]).toEqual([true, 'srp-splitter srp-splitter--horizontal extra', 'y', 'splitter']);
     expect([h.tabIndex, h.getAttribute('aria-orientation'), now('s'), h.getAttribute('aria-valuemin'), h.getAttribute('aria-valuemax'), h.getAttribute('aria-label')]).toEqual([0, 'vertical', 25, '10', '90', 'Folders']);
     expect([first('s').contains(el('nav')), el('main').parentElement !== first('s')]).toEqual([true, true]);
     // 25% of the 408px Splitter is 102px.
@@ -144,7 +144,7 @@ describe('Splitter', () => {
     await render(<div onClick={(e) => clicks.push((e.target as HTMLElement).textContent || '')}><Two /></div>);
     const box = el('s').getBoundingClientRect(), reply = el('main').querySelector('button')!;
     await userEvent.click(handle('s'));
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent).toBe('Press where the handle should go, or press the handle again to cancel.');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent).toBe('Press where the handle should go, or press the handle again to cancel.');
     expect([el('s').hasAttribute('data-placing'), now('s')]).toEqual([true, 50]);
     const r = reply.getBoundingClientRect(), want = Math.round((r.left + 4 - box.left) / box.width * 100);
     await userEvent.click(reply, { position: { x: 4, y: 4 } });
@@ -176,16 +176,16 @@ describe('Splitter', () => {
       const [n, setN] = React.useState(40);
       return <><Splitter id="c" size={n} onSizeChange={setN} style={{ width: '208px' }}><p>A</p><p>B</p></Splitter><output id="cv">{n}</output></>;
     }
-    localStorage.setItem('dk-test-split', '33');
-    await render(<div><Ctl /><Splitter id="k" storageKey="dk-test-split" style={{ width: '208px' }}><p>A</p><p>B</p></Splitter><Splitter id="o" defaultSize={99} style={{ width: '208px' }}><p>A</p><p>B</p></Splitter></div>);
+    localStorage.setItem('srp-test-split', '33');
+    await render(<div><Ctl /><Splitter id="k" storageKey="srp-test-split" style={{ width: '208px' }}><p>A</p><p>B</p></Splitter><Splitter id="o" defaultSize={99} style={{ width: '208px' }}><p>A</p><p>B</p></Splitter></div>);
     handle('c').focus();
     await userEvent.keyboard('{ArrowRight}');
     expect([el('cv').textContent, now('c')]).toEqual(['45', 45]);
     await expect.poll(() => now('k')).toBe(33);
     handle('k').focus();
     await userEvent.keyboard('{ArrowRight}');
-    expect([localStorage.getItem('dk-test-split'), now('o')]).toEqual(['38', 90]);
-    localStorage.removeItem('dk-test-split');
+    expect([localStorage.getItem('srp-test-split'), now('o')]).toEqual(['38', 90]);
+    localStorage.removeItem('srp-test-split');
   });
 
   test('the handle\'s line is 3:1 on the page in every theme; the default name comes from the resizePanes label', async () => {
@@ -210,7 +210,7 @@ describe('Splitter collapse motion (GN3b)', () => {
     await render(<Splitter id="m" collapsible defaultSize={40} style={{ width: '500px', height: '80px' }}><p>A</p><p>B</p></Splitter>);
     const root = document.getElementById('m')!, [a, h] = [...root.children] as HTMLElement[];
     const ran: string[] = [];
-    root.addEventListener('transitionrun', (ev) => { const t = ev.target as HTMLElement; if (t.parentElement === root && !ev.pseudoElement) ran.push([...t.classList].pop()!.replace('dk-splitter__', '') + ' ' + ev.propertyName); });
+    root.addEventListener('transitionrun', (ev) => { const t = ev.target as HTMLElement; if (t.parentElement === root && !ev.pseudoElement) ran.push([...t.classList].pop()!.replace('srp-splitter__', '') + ' ' + ev.propertyName); });
     h!.focus();
     await userEvent.keyboard('{Enter}');
     // Closing: already laid out collapsed (the handle at the start), while the first pane stays over its old place, inert.

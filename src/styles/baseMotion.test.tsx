@@ -22,10 +22,10 @@ function reduceMotion() {
 }
 
 describe('base.css: reduced motion', () => {
-  // GD6: the page-wide rule was !important in dk.base, so it beat every component's own reduced-motion fade.
+  // GD6: the page-wide rule was !important in srp.base, so it beat every component's own reduced-motion fade.
   test('page elements lose their transitions; a component keeps the short fade its own reduced-motion rule gives it, but no color or movement', () => withMotion(() => {
     const host = document.body.appendChild(document.createElement('div'));
-    host.innerHTML = '<p id="bm-page" style="transition: opacity 300ms"></p><div class="dk-combobox__popup" id="bm-popup"><span id="bm-inner" style="transition: opacity 300ms"></span></div><b class="dk-zz" id="bm-color" style="transition: background-color 300ms, translate 300ms"></b>';
+    host.innerHTML = '<p id="bm-page" style="transition: opacity 300ms"></p><div class="srp-combobox__popup" id="bm-popup"><span id="bm-inner" style="transition: opacity 300ms"></span></div><b class="srp-zz" id="bm-color" style="transition: background-color 300ms, translate 300ms"></b>';
     const restore = reduceMotion();
     try {
       const dur = (id: string) => getComputedStyle(document.getElementById(id)!).transitionDuration;

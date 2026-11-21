@@ -5,7 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { Messages, lastLine, unreadWords, type Conversation } from './Messages';
 
 const active = () => document.activeElement as HTMLElement;
-const said = () => [...document.querySelectorAll('[data-dk-announcer], [data-dk-announcer-assertive]')].map((e) => e.textContent).join(' ');
+const said = () => [...document.querySelectorAll('[data-srp-announcer], [data-srp-announcer-assertive]')].map((e) => e.textContent).join(' ');
 const talks = (): Conversation[] => [
   { id: 'ana', name: 'Ana Lima', unread: 2, messages: [
     { id: 'a1', own: true, text: 'Ready?', at: '2025-03-04T09:12:00' },

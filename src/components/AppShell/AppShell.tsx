@@ -33,13 +33,13 @@ function AppShellRender({ ref, ...props }: AppShellProps & React.RefAttributes<H
   const from = oneOf(['sm', 'md', 'lg'] as const, props.sidebarFrom, 'sm');
   const mainId = props.mainId || 'main';
   return (
-    <div {...rest} ref={ref} data-component="app-shell" className={cn('dk-app-shell', props.background === 'muted' && 'dk-app-shell--muted', props.className)}>
+    <div {...rest} ref={ref} data-component="app-shell" className={cn('srp-app-shell', props.background === 'muted' && 'srp-app-shell--muted', props.className)}>
       {props.skipLink === false ? null : <SkipLink target={mainId} />}
       {props.header}
-      {props.sidebar == null ? null : <div className={'dk-app-shell__side dk-app-shell__side--from-' + from}>{props.sidebar}</div>}
-      <main id={mainId} tabIndex={-1} className={cn('dk-app-shell__main', props.padded !== false && 'dk-app-shell__main--padded')}>{props.children}</main>
-      {props.footer == null ? null : <footer className="dk-app-shell__footer">{props.footer}</footer>}
-      {props.bottomNav == null ? null : <div className="dk-app-shell__bottom">{props.bottomNav}</div>}
+      {props.sidebar == null ? null : <div className={'srp-app-shell__side srp-app-shell__side--from-' + from}>{props.sidebar}</div>}
+      <main id={mainId} tabIndex={-1} className={cn('srp-app-shell__main', props.padded !== false && 'srp-app-shell__main--padded')}>{props.children}</main>
+      {props.footer == null ? null : <footer className="srp-app-shell__footer">{props.footer}</footer>}
+      {props.bottomNav == null ? null : <div className="srp-app-shell__bottom">{props.bottomNav}</div>}
     </div>
   );
 }

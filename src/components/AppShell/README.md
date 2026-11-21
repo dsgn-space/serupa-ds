@@ -33,11 +33,11 @@ import { AppShell, Navbar, Sidebar, SidebarItem } from "@diki-stwn/serupa-ds";
 
 Drawn from the `WithBottomNav` story.
 
-1. **Skip link** (`.dk-skip-link`): "Skip to content", the first Tab stop, shown only while it has focus.
-2. **Sidebar** (`.dk-app-shell__side`): the column beside main, from `sidebarFrom` up, holding your Sidebar.
-3. **Main** (`.dk-app-shell__main`): the page's content, the skip link's target.
-4. **Footer** (`.dk-app-shell__footer`): the footer landmark below main.
-5. **Bottom navigation** (`.dk-app-shell__bottom`): the last thing in the page, holding a BottomNav for phones.
+1. **Skip link** (`.srp-skip-link`): "Skip to content", the first Tab stop, shown only while it has focus.
+2. **Sidebar** (`.srp-app-shell__side`): the column beside main, from `sidebarFrom` up, holding your Sidebar.
+3. **Main** (`.srp-app-shell__main`): the page's content, the skip link's target.
+4. **Footer** (`.srp-app-shell__footer`): the footer landmark below main.
+5. **Bottom navigation** (`.srp-app-shell__bottom`): the last thing in the page, holding a BottomNav for phones.
 
 ## Usage
 

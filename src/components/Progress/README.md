@@ -30,10 +30,10 @@ import { Progress } from "@diki-stwn/serupa-ds";
 
 Drawn from the `AnnounceComplete` story.
 
-1. **Label** (`.dk-progress__label`): what is in progress.
-2. **Value** (`.dk-progress__value`): how far along, as a percentage.
-3. **Track** (`.dk-progress__track`): the whole task.
-4. **Fill** (`.dk-progress__fill`): the part done.
+1. **Label** (`.srp-progress__label`): what is in progress.
+2. **Value** (`.srp-progress__value`): how far along, as a percentage.
+3. **Track** (`.srp-progress__track`): the whole task.
+4. **Fill** (`.srp-progress__fill`): the part done.
 
 ## Usage
 

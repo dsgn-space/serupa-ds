@@ -43,15 +43,15 @@ function EmptyStateRender({ ref, ...props }: EmptyStateProps & React.RefAttribut
   const suggestions = (props.suggestions || []).filter(Boolean);
   const clear = props.onClearFilters ? <ClearFilters action={props.onClearFilters} small={size === 'sm'} /> : null;
   return (
-    <div {...rest} ref={ref} data-component="empty-state" className={cn('dk-empty-state', size === 'sm' && 'dk-empty-state--sm', variant === 'dashed' && 'dk-empty-state--dashed', props.className)}>
-      {icon != null ? <div className={cn('dk-empty-state__icon', typeof props.icon !== 'string' && 'dk-empty-state__icon--custom')} aria-hidden="true">{icon}</div> : null}
-      <div className="dk-empty-state__text">
-        <H className="dk-empty-state__title">{props.title}</H>
-        {props.description != null ? <p className="dk-empty-state__description">{props.description}</p> : null}
+    <div {...rest} ref={ref} data-component="empty-state" className={cn('srp-empty-state', size === 'sm' && 'srp-empty-state--sm', variant === 'dashed' && 'srp-empty-state--dashed', props.className)}>
+      {icon != null ? <div className={cn('srp-empty-state__icon', typeof props.icon !== 'string' && 'srp-empty-state__icon--custom')} aria-hidden="true">{icon}</div> : null}
+      <div className="srp-empty-state__text">
+        <H className="srp-empty-state__title">{props.title}</H>
+        {props.description != null ? <p className="srp-empty-state__description">{props.description}</p> : null}
         {suggestions.length ? <Suggestions items={suggestions} pick={props.onSuggestion} /> : null}
         {props.announce ? <AnnounceText /> : null}
       </div>
-      {props.actions != null || clear ? <div className="dk-empty-state__actions">{props.actions}{clear}</div> : null}
+      {props.actions != null || clear ? <div className="srp-empty-state__actions">{props.actions}{clear}</div> : null}
     </div>
   );
 }

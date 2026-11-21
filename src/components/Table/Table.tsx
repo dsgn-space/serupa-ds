@@ -134,18 +134,18 @@ function TableRender({ ref, ...props }: TableProps & React.RefAttributes<HTMLTab
   const loading = !!props.loading;
   const frame = React.useRef<HTMLDivElement>(null);
   const scrolls = useScrolls(frame);
-  const cid = domId('dk-tc', React.useId());
-  // A sticky header covers the top of the frame: measured, so focus scrolls in below it (the CSS reads --dk-table-head).
-  useStickyHead(frame, !!props.stickyHeader, '.dk-table__head', '--dk-table-head');
+  const cid = domId('srp-tc', React.useId());
+  // A sticky header covers the top of the frame: measured, so focus scrolls in below it (the CSS reads --srp-table-head).
+  useStickyHead(frame, !!props.stickyHeader, '.srp-table__head', '--srp-table-head');
   // A name on the frame belongs to its region role: a plain div that doesn't scroll can't carry one (axe aria-prohibited-attr).
   const { 'aria-label': frameLabel, 'aria-labelledby': frameLabelledBy, ...cp } = props.containerProps || {};
   const hasCaption = props.caption != null && props.caption !== false && props.caption !== '';
   const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: 'region', 'aria-labelledby': cid }
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
-    <div {...cp} {...region} ref={(n) => { frame.current = n; restyle(n); }} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
-      <table aria-busy={loading || undefined} {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
-        {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
+    <div {...cp} {...region} ref={(n) => { frame.current = n; restyle(n); }} data-component="table" className={cn('srp-table', size === 'sm' && 'srp-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'srp-table--fixed', props.striped && 'srp-table--striped', props.stickyHeader && 'srp-table--sticky', props.pinStart && 'srp-table--pin-start', props.pinEnd && 'srp-table--pin-end', cp.className)}>
+      <table aria-busy={loading || undefined} {...rest} ref={ref} className={cn('srp-table__table', props.className)}>
+        {hasCaption ? <caption id={cid} className={cn('srp-table__caption', props.hideCaption && 'srp-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
       </table>
     </div>
@@ -163,14 +163,14 @@ export type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 export type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
 
 function TableHeadRender({ ref, ...props }: TableHeadProps & React.RefAttributes<HTMLTableSectionElement>) {
-  return <thead {...props} ref={ref} className={cn('dk-table__head', props.className)} />;
+  return <thead {...props} ref={ref} className={cn('srp-table__head', props.className)} />;
 }
 
 /** The header rows (<thead>). */
 export const TableHead = /* @__PURE__ */ named('TableHead', TableHeadRender);
 
 function TableBodyRender({ ref, ...props }: TableBodyProps & React.RefAttributes<HTMLTableSectionElement>) {
-  return <tbody {...props} ref={ref} className={cn('dk-table__body', props.className)} />;
+  return <tbody {...props} ref={ref} className={cn('srp-table__body', props.className)} />;
 }
 
 /** The body rows (<tbody>). */
@@ -205,7 +205,7 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
     rows: () => body.current,
     // The rows start under the caption and the header: where this body starts in the frame's scrolling content.
     origin: () => {
-      const b = body.current, f = b && b.closest<HTMLElement>('.dk-table');
+      const b = body.current, f = b && b.closest<HTMLElement>('.srp-table');
       return b && f ? b.getBoundingClientRect().top - f.getBoundingClientRect().top - f.clientTop + f.scrollTop : 0;
     },
   });
@@ -213,9 +213,9 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
   const attach = r.ref;
   const [head, setHead] = React.useState(0);
   useIsoLayoutEffect(() => {
-    const b = body.current, f = b && b.closest<HTMLElement>('.dk-table'), t = b && b.closest('table');
+    const b = body.current, f = b && b.closest<HTMLElement>('.srp-table'), t = b && b.closest('table');
     attach(f);
-    setSmall(!!f && f.classList.contains('dk-table--sm'));
+    setSmall(!!f && f.classList.contains('srp-table--sm'));
     // The rows of the head and foot, by their <tr>s (a DOM without HTMLTableSectionElement.rows, as happy-dom, has these).
     const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(':scope > tr').length : 0);
     const h = t ? rowsOf(t.querySelector(':scope > thead')) : 0;
@@ -259,12 +259,12 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
   };
   const setNode = useMergedRef(ref, (n: HTMLTableSectionElement | null) => { body.current = n; });
   return (
-    <tbody {...rest} ref={setNode} className={cn('dk-table__body', 'dk-table__body--virtual', props.className)}
+    <tbody {...rest} ref={setNode} className={cn('srp-table__body', 'srp-table__body--virtual', props.className)}
       onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
-      {lead.map((h, n) => <tr key={'lead' + n} aria-hidden="true" className="dk-table__spacer" style={{ height: h }} />)}
+      {lead.map((h, n) => <tr key={'lead' + n} aria-hidden="true" className="srp-table__spacer" style={{ height: h }} />)}
       {rows}
-      {!printing && r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
+      {!printing && r.after > 0 ? <tr aria-hidden="true" className="srp-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
   );
 }
@@ -280,7 +280,7 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
 export const TableVirtualBody = /* @__PURE__ */ named('TableVirtualBody', TableVirtualBodyRender);
 
 function TableFootRender({ ref, ...props }: TableFootProps & React.RefAttributes<HTMLTableSectionElement>) {
-  return <tfoot {...props} ref={ref} className={cn('dk-table__foot', props.className)} />;
+  return <tfoot {...props} ref={ref} className={cn('srp-table__foot', props.className)} />;
 }
 
 /** Footer rows such as totals (<tfoot>). */
@@ -305,7 +305,7 @@ function TableRowRender({ ref, ...props }: TableRowProps & React.RefAttributes<H
       if (first >= 0) children = kids.map(function (k, i) { return i === first ? React.cloneElement(k as React.ReactElement<TableCellProps>, { link: true }) : k; });
     }
   }
-  return <tr {...rest} ref={ref} className={cn('dk-table__row', props.selected && 'dk-table__row--selected', isLink && 'dk-table__row--link', props.className)}>
+  return <tr {...rest} ref={ref} className={cn('srp-table__row', props.selected && 'srp-table__row--selected', isLink && 'srp-table__row--link', props.className)}>
     {link ? <RowLinkContext.Provider value={link}>{children}</RowLinkContext.Provider> : children}
   </tr>;
 }
@@ -320,8 +320,8 @@ function TableSelectCellRender({ ref, ...props }: TableSelectCellProps & React.R
   const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
   const cp = cellProps || {};
   const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
-  const cls = cn('dk-table__cell dk-table__select', cp.className);
-  return header ? <th scope="col" {...cp} className={cn(cls, 'dk-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
+  const cls = cn('srp-table__cell srp-table__select', cp.className);
+  return header ? <th scope="col" {...cp} className={cn(cls, 'srp-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
 }
 
 /* TableSelectCell: a narrow cell holding a checkbox named by label, for picking rows ("Select Alpha") or, with
@@ -472,14 +472,14 @@ const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeader
   // The handle's name: the column's text, read once it's drawn. With no width set yet, its value is the drawn width.
   const [name, setName] = React.useState('');
   const [drawn, setDrawn] = React.useState<number | null>(null);
-  const hint = domId('dk-th-hint', React.useId());
+  const hint = domId('srp-th-hint', React.useId());
   // The header's text and drawn width can change with any child or the table's layout, and both are read from the
   // DOM; each sets state only when it differs, so it settles after one pass.
   // every render: what it reads isn't in props or state.
   useIsoLayoutEffect(() => {
     const cell = th.current;
     if (!resizable || !cell) return;
-    const text = Array.from(cell.childNodes).filter((n) => !(n instanceof HTMLElement && (n.hidden || n.classList.contains('dk-table__resize') || n.classList.contains('dk-popover')))).map((n) => n.textContent || '').join('').trim();
+    const text = Array.from(cell.childNodes).filter((n) => !(n instanceof HTMLElement && (n.hidden || n.classList.contains('srp-table__resize') || n.classList.contains('srp-popover')))).map((n) => n.textContent || '').join('').trim();
     if (text !== name) setName(text);
     const w = current == null ? Math.round(cell.getBoundingClientRect().width) : null;
     if (w !== drawn) setDrawn(w);
@@ -493,17 +493,17 @@ const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeader
   const step = (by: number) => { const a = act.current; if (a) a.set(a.now() + by); };
   return (
     <th scope="col" {...rest} ref={setTh} style={style} aria-sort={sort && sort !== 'none' ? sort : undefined}
-      className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', resizable && 'dk-table__header--resizable', props.className)}>
+      className={cn('srp-table__cell srp-table__header', align !== 'start' && 'srp-table__cell--' + align, sort && 'srp-table__header--sortable', resizable && 'srp-table__header--resizable', props.className)}>
       {sort ? (
-        <button type="button" ref={button} className="dk-table__sort" onClick={props.onSort}>
+        <button type="button" ref={button} className="srp-table__sort" onClick={props.onSort}>
           <span>{props.children}</span>
-          <Icon icon={NEXT_ICON[sort]} className={cn('dk-table__sort-icon', sort === 'none' && 'dk-table__sort-icon--idle')} />
+          <Icon icon={NEXT_ICON[sort]} className={cn('srp-table__sort-icon', sort === 'none' && 'srp-table__sort-icon--idle')} />
         </button>
       ) : props.children}
-      {separator ? <span {...separator} ref={handle} className="dk-table__resize" /> : null}
+      {separator ? <span {...separator} ref={handle} className="srp-table__resize" /> : null}
       {separator ? <span id={hint} hidden>{labels.tableResizeHint}</span> : null}
       {separator ? (
-        <div ref={panel} {...{ popover: 'auto' }} role="dialog" aria-label={labels.tableResizeColumn(name)} tabIndex={-1} className="dk-popover dk-table-width">
+        <div ref={panel} {...{ popover: 'auto' }} role="dialog" aria-label={labels.tableResizeColumn(name)} tabIndex={-1} className="srp-popover srp-table-width">
           <Button variant="outline" size="sm" disabled={value != null && value <= min} onClick={() => step(-STEP)}>{labels.tableNarrower}</Button>
           <Button variant="outline" size="sm" disabled={value != null && value >= max} onClick={() => step(STEP)}>{labels.tableWider}</Button>
           <Button variant="outline" size="sm" onClick={() => { if (act.current) act.current.fit(); }}>{labels.tableFitColumn}</Button>
@@ -526,8 +526,8 @@ function TableCellRender({ ref, ...props }: TableCellProps & React.RefAttributes
   const row = React.useContext(RowLinkContext);
   const n = props.children;
   const content = typeof n === 'number' && Number.isFinite(n) ? displayNumber(n, locale, PLAIN) : n;
-  return <td {...rest} ref={ref} className={cn('dk-table__cell', align !== 'start' && 'dk-table__cell--' + align, props.className)}>
-    {row && props.link ? <a className="dk-table__row-link" href={row.href} target={row.target} rel={row.rel}>{content}</a> : content}
+  return <td {...rest} ref={ref} className={cn('srp-table__cell', align !== 'start' && 'srp-table__cell--' + align, props.className)}>
+    {row && props.link ? <a className="srp-table__row-link" href={row.href} target={row.target} rel={row.rel}>{content}</a> : content}
   </td>;
 }
 
@@ -545,14 +545,14 @@ function TableActionBarRender({ ref, ...props }: TableActionBarProps & React.Ref
   const format = (x: number) => numberFormat(locale).format(x);
   const self = React.useRef<HTMLDivElement | null>(null);
   const setRefs = useMergedRef(ref, (e: HTMLDivElement | null) => { self.current = e; });
-  const id = domId('dk-tab', React.useId());
+  const id = domId('srp-tab', React.useId());
   const said = all ? labels.tableAllSelected(total, format(total)) : labels.tableSelected(count, format(count));
   // "Select all 1,240" goes once every row is selected: focus it had moves to the bar's next button, not the page.
   const moveOn = React.useRef(false);
   useIsoLayoutEffect(() => {
     if (!all || !moveOn.current) return;
     moveOn.current = false;
-    const next = self.current && self.current.querySelector<HTMLElement>('.dk-table-action-bar__clear, .dk-table-action-bar__actions button:not(:disabled)');
+    const next = self.current && self.current.querySelector<HTMLElement>('.srp-table-action-bar__clear, .srp-table-action-bar__actions button:not(:disabled)');
     if (next) next.focus();
   }, [all]);
   // Hidden (not removed) at 0, so focus is still in it here and can go to the table's "Select all" before it's lost.
@@ -571,11 +571,11 @@ function TableActionBarRender({ ref, ...props }: TableActionBarProps & React.Ref
     if (count) announce(said);   // not 0: the hidden bar says nothing, and the checkbox that cleared it says its own state
   }, [count, said]);
   return (
-    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn('dk-table-action-bar', props.sticky && 'dk-table-action-bar--sticky', props.className)}>
-      <span id={id} className="dk-table-action-bar__count">{said}</span>
-      {offer ? <Button variant="ghost" size="sm" className="dk-table-action-bar__all" onClick={() => { moveOn.current = !!self.current && self.current.contains(activeIn(self.current)); props.onSelectAll!(); }}>{labels.tableSelectAll(total, format(total))}</Button> : null}
-      <div className="dk-table-action-bar__actions">{props.children}</div>
-      {props.onClear ? <Button variant="ghost" size="sm" className="dk-table-action-bar__clear" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
+    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn('srp-table-action-bar', props.sticky && 'srp-table-action-bar--sticky', props.className)}>
+      <span id={id} className="srp-table-action-bar__count">{said}</span>
+      {offer ? <Button variant="ghost" size="sm" className="srp-table-action-bar__all" onClick={() => { moveOn.current = !!self.current && self.current.contains(activeIn(self.current)); props.onSelectAll!(); }}>{labels.tableSelectAll(total, format(total))}</Button> : null}
+      <div className="srp-table-action-bar__actions">{props.children}</div>
+      {props.onClear ? <Button variant="ghost" size="sm" className="srp-table-action-bar__clear" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
     </div>
   );
 }
@@ -620,7 +620,7 @@ function TableColumnsMenuRender({ ref, ...props }: TableColumnsMenuProps & React
   return (
     <Popover title={label} placement="bottom-end"
       trigger={<Button {...rest} ref={ref} variant="outline" size="sm">{label}</Button>}>
-      <div className="dk-table-columns">
+      <div className="srp-table-columns">
         {props.columns.map((c) => (
           <Checkbox key={c.id} checked={c.visible || !!c.required} disabled={!!c.required || (c.visible && shown <= 1)}
             onChange={(e) => { const v = e.currentTarget.checked; props.onColumnsChange(props.columns.map((x) => (x.id === c.id ? { ...x, visible: v } : x)), { id: c.id, visible: v }); }}>{c.label}</Checkbox>
@@ -651,13 +651,13 @@ export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCe
 function TableExpandCellRender({ ref, ...props }: TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>) {
   const labels = useSettings(words).labels;
   const rest = omit(props, { expanded: 1, onExpandedChange: 1, label: 1, controls: 1, header: 1, className: 1, children: 1 });
-  const cls = cn('dk-table__cell dk-table__expand', props.className);
-  if (props.header) return <th scope="col" {...rest} ref={ref} className={cn(cls, 'dk-table__header')}><span className="dk-visually-hidden">{labels.tableDetails}</span></th>;
+  const cls = cn('srp-table__cell srp-table__expand', props.className);
+  if (props.header) return <th scope="col" {...rest} ref={ref} className={cn(cls, 'srp-table__header')}><span className="srp-visually-hidden">{labels.tableDetails}</span></th>;
   const open = !!props.expanded;
   return (
     <td {...rest} ref={ref} className={cls}>
       <IconButton icon={<Icon icon={icons.ChevronRight} mirror />} label={props.label ? labels.tableRowDetails(props.label) : labels.tableDetails} variant="ghost" size="sm"
-        className={cn('dk-table__expand-button', open && 'dk-table__expand-button--open')} aria-expanded={open} aria-controls={props.controls}
+        className={cn('srp-table__expand-button', open && 'srp-table__expand-button--open')} aria-expanded={open} aria-controls={props.controls}
         onClick={() => { if (props.onExpandedChange) props.onExpandedChange(!open); }} />
     </td>
   );
@@ -676,8 +676,8 @@ export interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowEl
 function TableDetailRowRender({ ref, ...props }: TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>) {
   const rest = omit(props, { open: 1, colSpan: 1, className: 1, children: 1 });
   return (
-    <tr {...rest} ref={ref} hidden={!props.open} className={cn('dk-table__detail', props.className)}>
-      <td colSpan={props.colSpan} className="dk-table__cell dk-table__detail-cell">{props.children}</td>
+    <tr {...rest} ref={ref} hidden={!props.open} className={cn('srp-table__detail', props.className)}>
+      <td colSpan={props.colSpan} className="srp-table__cell srp-table__detail-cell">{props.children}</td>
     </tr>
   );
 }
@@ -704,10 +704,10 @@ function TableLoadingRowsRender({ ref, ...props }: TableLoadingRowsProps & React
   for (let r = 0; r < rows; r++) {
     const cells: React.ReactNode[] = [];
     for (let c = 0; c < columns; c++)
-      cells.push(<td key={c} className="dk-table__cell"><SkeletonArt waiting={waiting} /></td>);
-    out.push(<tr key={r} className="dk-table__loading-row">{cells}</tr>);
+      cells.push(<td key={c} className="srp-table__cell"><SkeletonArt waiting={waiting} /></td>);
+    out.push(<tr key={r} className="srp-table__loading-row">{cells}</tr>);
   }
-  return <tbody {...rest} ref={ref} className={cn('dk-table__body dk-table__loading', props.className)}>{out}</tbody>;
+  return <tbody {...rest} ref={ref} className={cn('srp-table__body srp-table__loading', props.className)}>{out}</tbody>;
 }
 
 /* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
@@ -724,8 +724,8 @@ export interface TableMessageRowProps extends React.HTMLAttributes<HTMLTableRowE
 function TableMessageRowRender({ ref, ...props }: TableMessageRowProps & React.RefAttributes<HTMLTableRowElement>) {
   const rest = omit(props, { colSpan: 1, className: 1, children: 1 });
   return (
-    <tr {...rest} ref={ref} className={cn('dk-table__message', props.className)}>
-      <td colSpan={props.colSpan} className="dk-table__cell dk-table__message-cell">{props.children}</td>
+    <tr {...rest} ref={ref} className={cn('srp-table__message', props.className)}>
+      <td colSpan={props.colSpan} className="srp-table__cell srp-table__message-cell">{props.children}</td>
     </tr>
   );
 }

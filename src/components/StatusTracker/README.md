@@ -31,10 +31,10 @@ import { StatusTracker } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story.
 
-1. **Day** (`.dk-status-tracker__day`): one bar. Up is solid, degraded striped, down half as tall, no data an outline.
-2. **Caption** (`.dk-status-tracker__caption`): the focused or pointed day in words.
-3. **Summary** (`.dk-status-tracker__summary`): the share of days up and the number of incidents, or your own line.
-4. **Legend** (`.dk-status-tracker__legend`): the four states with their shapes.
+1. **Day** (`.srp-status-tracker__day`): one bar. Up is solid, degraded striped, down half as tall, no data an outline.
+2. **Caption** (`.srp-status-tracker__caption`): the focused or pointed day in words.
+3. **Summary** (`.srp-status-tracker__summary`): the share of days up and the number of incidents, or your own line.
+4. **Legend** (`.srp-status-tracker__legend`): the four states with their shapes.
 
 ## Usage
 

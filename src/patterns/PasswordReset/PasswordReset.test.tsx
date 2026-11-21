@@ -6,11 +6,11 @@ import { PasswordReset, resetEmailProblem, resetPasswordRules } from './Password
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
-const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-srp-announcer], [data-srp-announcer-assertive]'));
 const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const h1 = () => document.querySelector('h1');
-const status = () => document.querySelector('[role="status"]:not([data-dk-announcer])')?.textContent || '';
+const status = () => document.querySelector('[role="status"]:not([data-srp-announcer])')?.textContent || '';
 
 // Password reset: an email step that names a missing or malformed address, a sent step that says the same for every
 // address and can send again, a new-password step a password manager can fill, and focus on each step's heading.

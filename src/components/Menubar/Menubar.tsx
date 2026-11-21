@@ -35,7 +35,7 @@ interface Bar {
 const BarContext = /* @__PURE__ */ React.createContext<Bar | null>(null);
 const IndexContext = /* @__PURE__ */ React.createContext(0);
 const OWN = { className: 1, children: 1, onKeyDown: 1 } as const;
-const TOP = ':scope > .dk-menubar__item';
+const TOP = ':scope > .srp-menubar__item';
 
 function MenubarRender({ ref, ...props }: MenubarProps & React.RefAttributes<HTMLDivElement>) {
   const menus = React.Children.toArray(props.children).filter(React.isValidElement);
@@ -81,7 +81,7 @@ function MenubarRender({ ref, ...props }: MenubarProps & React.RefAttributes<HTM
 
   return (
     <BarContext.Provider value={bar}><MenuSwap.Provider value={swap}>
-      <div {...omit(props, OWN)} ref={ref} role="menubar" tabIndex={-1} className={cn('dk-menubar', props.className)} data-component="menubar" onKeyDown={onKeyDown}>
+      <div {...omit(props, OWN)} ref={ref} role="menubar" tabIndex={-1} className={cn('srp-menubar', props.className)} data-component="menubar" onKeyDown={onKeyDown}>
         {menus.map((m, i) => <IndexContext.Provider key={m.key ?? i} value={i}>{m}</IndexContext.Provider>)}
       </div>
     </MenuSwap.Provider></BarContext.Provider>
@@ -111,7 +111,7 @@ function MenubarMenuRender({ ref, ...props }: MenubarMenuProps & React.RefAttrib
     else bar.setOpen((o) => (o === i ? null : o));
   };
   const trigger = (
-    <button {...rest} ref={ref} type="button" role="menuitem" className={cn('dk-menubar__item', className)}
+    <button {...rest} ref={ref} type="button" role="menuitem" className={cn('srp-menubar__item', className)}
       tabIndex={bar ? (bar.at === i ? 0 : -1) : 0} aria-disabled={disabled || undefined}
       onFocus={(e) => { if (onFocus) onFocus(e); if (bar) bar.setAt(i); }}
       onPointerEnter={(e) => {

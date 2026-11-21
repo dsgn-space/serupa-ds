@@ -10,7 +10,7 @@ import { Loader } from '../Loader/Loader';
 import { SaveStatus } from './SaveStatus';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
 
 describe('SaveStatus', () => {
   test('each status: its words, an icon hidden from screen readers, and Try again only after an error; props reach the <div>', async () => {
@@ -18,7 +18,7 @@ describe('SaveStatus', () => {
     const retry = vi.fn();
     const screen = await render(<SaveStatus id="s" ref={ref} className="extra" data-x="y" status="idle" onRetry={retry} />);
     const e = el('s');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.state, e.textContent]).toEqual(['DIV', true, 'dk-save-status dk-save-status--idle extra', 'y', 'save-status', 'idle', '']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.state, e.textContent]).toEqual(['DIV', true, 'srp-save-status srp-save-status--idle extra', 'y', 'save-status', 'idle', '']);
     const idle = e.getBoundingClientRect().height;
     await screen.rerender(<SaveStatus id="s" status="saving" onRetry={retry} />);
     expect([e.textContent, e.querySelectorAll('button').length]).toEqual(['Saving…', 0]);
@@ -97,7 +97,7 @@ describe('SaveStatus', () => {
     await expect.poll(() => announcerIdle() && said()).toBe('Saved');
     await screen.rerender(<SaveStatus id="s" status="error" errorText="Couldn’t save: you’re offline" />);
     await expect.poll(() => announcerIdle() && said()).toBe('Couldn’t save: you’re offline');
-    expect(document.querySelector('[data-dk-announcer]')!.getAttribute('aria-live')).toBe('polite');
+    expect(document.querySelector('[data-srp-announcer]')!.getAttribute('aria-live')).toBe('polite');
   });
 
   test('L8E39: a SaveStatus rendered only once a save fails says the error', async () => {
@@ -163,7 +163,7 @@ describe('saving ring', () => {
     expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
     await render(<>
       <SaveStatus id="ring-save" status="saving" />
-      <div id="ring-loader"><Loader className="dk-save-status__icon" size="sm" label="" delay={0} /></div>
+      <div id="ring-loader"><Loader className="srp-save-status__icon" size="sm" label="" delay={0} /></div>
     </>);
     const ring = () => document.querySelector('#ring-save [data-component="loader"]');
     await expect.poll(ring).toBeTruthy();

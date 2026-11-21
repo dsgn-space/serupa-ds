@@ -60,7 +60,7 @@ function ToggleGroupRender({ ref, ...props }: ToggleGroupProps & React.RefAttrib
     // ButtonGroup's markup and classes, so it looks and lays out the same.
     <div role="group" {...rest} ref={mergedRef} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
       data-wrapped={wrapped || undefined}
-      className={cn('dk-button-group dk-toggle-group', vertical && 'dk-button-group--vertical', props.attached !== false && !wrapped && 'dk-button-group--attached', props.className)}>
+      className={cn('srp-button-group srp-toggle-group', vertical && 'srp-button-group--vertical', props.attached !== false && !wrapped && 'srp-button-group--attached', props.className)}>
       {children}
     </div>
   );

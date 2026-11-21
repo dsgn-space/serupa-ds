@@ -22,9 +22,9 @@ describe('DescriptionList', () => {
     const ref = React.createRef<HTMLDListElement>(), item = React.createRef<HTMLDivElement>();
     await render(<DescriptionList id="x" ref={ref} className="extra" data-x="y"><DescriptionItem ref={item} id="i" className="mine" term="T">D</DescriptionItem></DescriptionList>);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DL', true, 'dk-description-list dk-description-list--inline extra', 'y', 'description-list']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DL', true, 'srp-description-list srp-description-list--inline extra', 'y', 'description-list']);
     expect([...el('i').children].map((c) => c.tagName)).toEqual(['DT', 'DD']);
-    expect([item.current === el('i'), el('i').className, el('i').textContent]).toEqual([true, 'dk-description-list__item mine', 'TD']);
+    expect([item.current === el('i'), el('i').className, el('i').textContent]).toEqual([true, 'srp-description-list__item mine', 'TD']);
     expect(css(el('i').querySelector('dd')).marginInlineStart).toBe('0px');
   });
 

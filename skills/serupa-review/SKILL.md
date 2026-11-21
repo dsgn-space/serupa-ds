@@ -30,7 +30,7 @@ This skill reviews a change to an app built with Serupa. It checks what lint and
 
 - **Raw values instead of tokens**: a hex, `rgb()` or `hsl()` color, a pixel size, a duration or a shadow in a style prop, CSS or an arbitrary class (`p-[12px]`). Give the token or utility class that replaces it (`p-4`, `bg-surface`, `var(--spacing-4)`).
 - **A palette color where an alias fits**: `blue-600` instead of `primary`, or a status fill used for text instead of its `*-text` alias. It won't follow the theme.
-- **Restyling the internals**: overriding a `dk-*` class instead of the component's own tokens (`--button-*`, `--input-*`).
+- **Restyling the internals**: overriding a `srp-*` class instead of the component's own tokens (`--button-*`, `--input-*`).
 - **A wrapper or a second kit**: a `ui/Button.tsx` that only sets defaults on Button, another component, icon, animation or CSS-in-JS library beside Serupa.
 - **The wrong feedback for how long it stays.** A toast for a message that must stay until it's dealt with (an error, a warning that blocks), where an `Alert` belongs. An `Alert` for "Saved", where `toast("Saved")` belongs. A second `Toaster`. A status change said only by a visual change, where `announce()` belongs. Autosave without `SaveStatus`.
 - **Words** (Content and voice): a button that doesn't start with a verb ("OK", "Submit", "Yes"), a dialog title and button that use different verbs, Title Case, an exclamation mark, emoji or "Oops", "Something went wrong" with nothing more, "Invalid input" or "This field is required", an empty state that doesn't say what goes there or offer to add the first one.

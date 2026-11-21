@@ -3,9 +3,9 @@
    shared edge (in the text color between two primary halves) and the outer corners. The wrapper only keeps it inline
    and inside its container; the arrow half is as wide as the control is tall.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-split-button { display: inline-flex; vertical-align: middle; max-inline-size: var(--sizing-full); }
-.dk-split-button > .dk-button-group { --button-group-divider: var(--split-button-divider, var(--opacity-40)); }
+@layer srp.components {
+.srp-split-button { display: inline-flex; vertical-align: middle; max-inline-size: var(--sizing-full); }
+.srp-split-button > .srp-button-group { --button-group-divider: var(--split-button-divider, var(--opacity-40)); }
 /* The main half gives way in a narrow container, its label ending in an ellipsis; the arrow keeps its size. */
-.dk-split-button > .dk-button-group > .dk-btn:first-child { flex-shrink: initial; min-inline-size: var(--spacing-0); }
+.srp-split-button > .srp-button-group > .srp-btn:first-child { flex-shrink: initial; min-inline-size: var(--spacing-0); }
 }

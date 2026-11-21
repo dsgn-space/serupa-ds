@@ -34,11 +34,11 @@ import { Breadcrumb, BreadcrumbItem } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Collapsed` story.
 
-1. **List** (`.dk-breadcrumb__list`): the pages from the top level down to this one.
-2. **Link** (`.dk-breadcrumb__link`): a page above this one.
-3. **Separator** (`.dk-breadcrumb__separator`): the mark between pages; screen readers skip it.
-4. **More** (`.dk-breadcrumb__more`): opens the pages hidden when the trail is too long.
-5. **Current page** (`.dk-breadcrumb__item--current`): this page, last, not a link.
+1. **List** (`.srp-breadcrumb__list`): the pages from the top level down to this one.
+2. **Link** (`.srp-breadcrumb__link`): a page above this one.
+3. **Separator** (`.srp-breadcrumb__separator`): the mark between pages; screen readers skip it.
+4. **More** (`.srp-breadcrumb__more`): opens the pages hidden when the trail is too long.
+5. **Current page** (`.srp-breadcrumb__item--current`): this page, last, not a link.
 
 ## Usage
 

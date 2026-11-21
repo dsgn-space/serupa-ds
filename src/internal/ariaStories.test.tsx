@@ -46,7 +46,7 @@ async function tree(ui: React.ReactElement) {
     flushSync(() => root.render(ui));
     await frame();
     await new Promise((r) => setTimeout(r, 50));
-    const live = [...document.querySelectorAll<HTMLElement>('[data-dk-announcer], [data-dk-announcer-assertive]')];
+    const live = [...document.querySelectorAll<HTMLElement>('[data-srp-announcer], [data-srp-announcer-assertive]')];
     for (const el of live) el.hidden = true;
     try { return sameIds(await commands.ariaSnapshot('body')); } finally { for (const el of live) el.hidden = false; }
   } finally {

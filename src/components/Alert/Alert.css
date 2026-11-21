@@ -1,21 +1,21 @@
 /* ---------------------------------------------------------------
    Alert: a message about the page or a task. A tinted box (each tone's -subtle color) with a border in the tone's
    color at 30%, an icon in the tone's color (3:1 on the tint), and the title and message in text (4.5:1).
-   Tones info (default), success, warning, danger and neutral. Structure: .dk-alert > .dk-alert__icon,
-   .dk-alert__content (.dk-alert__title, .dk-alert__message, .dk-alert__actions), .dk-alert__dismiss (a ghost
+   Tones info (default), success, warning, danger and neutral. Structure: .srp-alert > .srp-alert__icon,
+   .srp-alert__content (.srp-alert__title, .srp-alert__message, .srp-alert__actions), .srp-alert__dismiss (a ghost
    Button). Every value goes through --alert-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-alert {
-  --dk-alert-bg: var(--alert-bg-info, var(--info-subtle));
-  --dk-alert-icon: var(--alert-icon-info, var(--info));
+@layer srp.components {
+.srp-alert {
+  --srp-alert-bg: var(--alert-bg-info, var(--info-subtle));
+  --srp-alert-icon: var(--alert-icon-info, var(--info));
   display: flex;
   align-items: flex-start;
   gap: var(--alert-gap, var(--spacing-3));
   min-width: var(--spacing-0);
   padding: var(--alert-padding-y, var(--spacing-3)) var(--alert-padding-x, var(--spacing-4));
-  background: var(--dk-alert-bg);
-  border: var(--alert-border-width, var(--border-width-1)) solid color-mix(in srgb, var(--dk-alert-icon) var(--alert-border-strength, var(--opacity-30)), transparent);
+  background: var(--srp-alert-bg);
+  border: var(--alert-border-width, var(--border-width-1)) solid color-mix(in srgb, var(--srp-alert-icon) var(--alert-border-strength, var(--opacity-30)), transparent);
   border-radius: var(--alert-radius, var(--radius-surface));
   color: var(--alert-text, var(--text));
   font-family: var(--font-sans);
@@ -23,30 +23,30 @@
   line-height: var(--text-sm--line-height);
   text-align: start;
 }
-.dk-alert--success { --dk-alert-bg: var(--alert-bg-success, var(--success-subtle)); --dk-alert-icon: var(--alert-icon-success, var(--success)); }
-.dk-alert--warning { --dk-alert-bg: var(--alert-bg-warning, var(--warning-subtle)); --dk-alert-icon: var(--alert-icon-warning, var(--warning)); }
-.dk-alert--danger { --dk-alert-bg: var(--alert-bg-danger, var(--danger-subtle)); --dk-alert-icon: var(--alert-icon-danger, var(--danger)); }
-.dk-alert--neutral { --dk-alert-bg: var(--alert-bg-neutral, var(--surface-muted)); --dk-alert-icon: var(--alert-icon-neutral, var(--text-muted)); }
+.srp-alert--success { --srp-alert-bg: var(--alert-bg-success, var(--success-subtle)); --srp-alert-icon: var(--alert-icon-success, var(--success)); }
+.srp-alert--warning { --srp-alert-bg: var(--alert-bg-warning, var(--warning-subtle)); --srp-alert-icon: var(--alert-icon-warning, var(--warning)); }
+.srp-alert--danger { --srp-alert-bg: var(--alert-bg-danger, var(--danger-subtle)); --srp-alert-icon: var(--alert-icon-danger, var(--danger)); }
+.srp-alert--neutral { --srp-alert-bg: var(--alert-bg-neutral, var(--surface-muted)); --srp-alert-icon: var(--alert-icon-neutral, var(--text-muted)); }
 
-.dk-alert__icon { display: flex; flex-shrink: 0; color: var(--dk-alert-icon); }
-.dk-alert__icon .dk-icon { font-size: var(--spacing-5); }
+.srp-alert__icon { display: flex; flex-shrink: 0; color: var(--srp-alert-icon); }
+.srp-alert__icon .srp-icon { font-size: var(--spacing-5); }
 /* A word longer than the line (a German compound, a URL) wraps inside the alert instead of widening the page. */
 /* Only words of 10 letters or more hyphenate, 4 on each side, so ordinary words still wrap whole ("recur-ring"
    isn't split) where hyphenate-limit-chars is supported (191). */
-.dk-alert__content { --dk-alert-hyphen-limit: 10 4 4; hyphenate-limit-chars: var(--dk-alert-hyphen-limit); }   /* letter counts, not a design value */
-.dk-alert__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--alert-content-gap, var(--spacing-1)); flex: auto; min-width: var(--spacing-0); }
-.dk-alert__title { text-wrap: balance; margin: var(--spacing-0); color: var(--alert-title-color, var(--text)); font-weight: var(--alert-title-weight, var(--font-semibold)); }
+.srp-alert__content { --srp-alert-hyphen-limit: 10 4 4; hyphenate-limit-chars: var(--srp-alert-hyphen-limit); }   /* letter counts, not a design value */
+.srp-alert__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--alert-content-gap, var(--spacing-1)); flex: auto; min-width: var(--spacing-0); }
+.srp-alert__title { text-wrap: balance; margin: var(--spacing-0); color: var(--alert-title-color, var(--text)); font-weight: var(--alert-title-weight, var(--font-semibold)); }
 /* In a wide box (an alert across a page) the words keep a reading measure, about 65 characters a line, as Prose
    and Quote do; the box, its icon and its close button still span the width. */
-.dk-alert__title, .dk-alert__message { max-inline-size: var(--container-prose); }
-.dk-alert__message > :first-child { margin-top: var(--spacing-0); }
-.dk-alert__message > :last-child { margin-bottom: var(--spacing-0); }
-.dk-alert__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-2); max-inline-size: var(--sizing-full); }
+.srp-alert__title, .srp-alert__message { max-inline-size: var(--container-prose); }
+.srp-alert__message > :first-child { margin-top: var(--spacing-0); }
+.srp-alert__message > :last-child { margin-bottom: var(--spacing-0); }
+.srp-alert__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-2); max-inline-size: var(--sizing-full); }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the row is narrowest
    and there is no hover to show the rest. The Button keeps its size's height as the least it can be. */
-.dk-alert__actions > .dk-btn:not(.dk-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-alert__actions > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-.dk-alert__actions > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
-.dk-alert__dismiss { flex-shrink: 0; color: var(--alert-text, var(--text)); }
-@media (forced-colors: active) { .dk-alert { border-color: CanvasText; } .dk-alert__icon { color: CanvasText; } }
+.srp-alert__actions > .srp-btn:not(.srp-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-alert__actions > .srp-btn--size-sm:not(.srp-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+.srp-alert__actions > .srp-btn--size-lg:not(.srp-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
+.srp-alert__dismiss { flex-shrink: 0; color: var(--alert-text, var(--text)); }
+@media (forced-colors: active) { .srp-alert { border-color: CanvasText; } .srp-alert__icon { color: CanvasText; } }
 }

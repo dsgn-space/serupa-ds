@@ -29,7 +29,7 @@ function find(root: Element, text: string | RegExp): HTMLElement | null {
   const all = [...root.querySelectorAll<HTMLElement>('*')].filter(ok);
   return all.find((e) => !all.some((x) => x !== e && e.contains(x))) || null;
 }
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
 const jumpButton = () => page.getByRole('button', { name: /new message/ }).query();
 
 describe('Chat', () => {
@@ -37,7 +37,7 @@ describe('Chat', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<><button>before</button><Chat ref={ref} id="c" className="extra" data-x="y" aria-label="Support"><ChatMessage author="Rina">Hi</ChatMessage></Chat></>);
     const e = document.getElementById('c')!;
-    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual([true, 'dk-chat extra', 'y', 'chat']);
+    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual([true, 'srp-chat extra', 'y', 'chat']);
     await expect.element(page.getByRole('log', { name: 'Support' })).toBeVisible();
     await userEvent.click(page.getByRole('button', { name: 'before' }));
     await userEvent.tab();
@@ -175,7 +175,7 @@ describe('ChatMessage', () => {
     let tries = 0;
     await render(<><ChatMessage id="s" own status="sending">A</ChatMessage><ChatMessage id="f" own status="failed" onRetry={() => tries++}>B</ChatMessage></>);
     expect(find(document.getElementById('s')!, 'Sending…')).not.toBe(null);
-    expect(document.getElementById('f')!.classList.contains('dk-chat-message--failed')).toBe(true);
+    expect(document.getElementById('f')!.classList.contains('srp-chat-message--failed')).toBe(true);
     await userEvent.click(page.getByRole('button', { name: 'Try again' }));
     expect(tries).toBe(1);
   });

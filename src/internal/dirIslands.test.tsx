@@ -30,11 +30,11 @@ function sides(root: HTMLElement) {
   // Breadcrumb's separator, Pagination's previous and next, Calendar's previous and next month: as drawn left to right,
   // they point right, left, right, left, right.
   const ways = [...root.querySelectorAll('[data-icon^="chevron_"]')].map(iconPoints).join();
-  const fill = [...root.querySelector('[role="progressbar"]')!.querySelectorAll('*')].find((e) => getComputedStyle(e).getPropertyValue('--dk-progress-from'))!;
+  const fill = [...root.querySelector('[role="progressbar"]')!.querySelectorAll('*')].find((e) => getComputedStyle(e).getPropertyValue('--srp-progress-from'))!;
   const bar = (e: Element) => { const s = getComputedStyle(e).boxShadow; return s === 'none' ? 'none' : /\) -\d/.test(s) ? 'right' : 'left'; };
   return {
     chevrons: [ways === 'right,left,right,left,right' ? 'ltr' : ways === 'left,right,left,right,left' ? 'rtl' : 'mixed ' + ways],
-    progressFrom: getComputedStyle(fill).getPropertyValue('--dk-progress-from').trim(),
+    progressFrom: getComputedStyle(fill).getPropertyValue('--srp-progress-from').trim(),
     listBar: bar(picked(root, 'li')),
     tableBar: bar(picked(root, 'td')),
   };

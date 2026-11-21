@@ -20,7 +20,7 @@ describe('SignaturePad', () => {
     const e = el('x');
     await expect.element(page.getByRole('group', { name: 'Signature' })).toBeInTheDocument();
     const how = document.getElementById(e.getAttribute('aria-describedby')!.split(' ')[0]!)!;
-    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component, how.textContent]).toEqual([true, 'dk-signature-pad extra', 'y', 'signature-pad', 'Draw your signature with a mouse, pen or finger, or choose Type to type your name.']);
+    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component, how.textContent]).toEqual([true, 'srp-signature-pad extra', 'y', 'signature-pad', 'Draw your signature with a mouse, pen or finger, or choose Type to type your name.']);
     await expect.element(page.getByRole('radiogroup', { name: 'Signature method' })).toBeInTheDocument();
     await expect.element(page.getByRole('radio', { name: 'Draw' })).toBeChecked();
     await expect.element(page.getByRole('img', { name: 'Signature area, empty' })).toBeInTheDocument();

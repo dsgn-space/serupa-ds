@@ -14,7 +14,7 @@ export function useRowWrap(root: React.RefObject<HTMLElement | null>, fits: bool
       const kids = [...el.children] as HTMLElement[];
       // Attached, it's capped at its container's width, so a row that doesn't fit overflows. Wrapped, it's as wide as
       // its container, and the row fits once the buttons side by side are no wider.
-      if (el.classList.contains('dk-button-group--attached')) { if (el.scrollWidth > el.clientWidth + 1) setWrapped(true); }
+      if (el.classList.contains('srp-button-group--attached')) { if (el.scrollWidth > el.clientWidth + 1) setWrapped(true); }
       else if (kids.reduce((w, k) => w + k.offsetWidth, 0) <= el.clientWidth) setWrapped(false);
     };
     const ro = new ResizeObserver(measure);

@@ -101,12 +101,12 @@ export function placeLayer(layer: HTMLElement, anchor: Element, placement: strin
     }
   }
   layer.scrollTop = scroll;
-  // --dk-layer-origin: the point on the layer's edge facing the anchor, level with the anchor's centre, so a layer that
+  // --srp-layer-origin: the point on the layer's edge facing the anchor, level with the anchor's centre, so a layer that
   // scales in grows out of what opened it (wherever it slid to stay on screen, and mirrored in right to left on its own).
   const w = layer.offsetWidth, h = layer.offsetHeight, clamp = (v: number, max: number) => Math.round(Math.min(Math.max(v, 0), max));
   const ox = r.side === 'left' ? w : r.side === 'right' ? 0 : clamp(a.left + a.width / 2 - r.x, w);
   const oy = r.side === 'top' ? h : r.side === 'bottom' ? 0 : clamp(a.top + a.height / 2 - r.y, h);
-  layer.style.setProperty('--dk-layer-origin', ox + 'px ' + oy + 'px');
+  layer.style.setProperty('--srp-layer-origin', ox + 'px ' + oy + 'px');
 }
 
 // module state: a counter for unique anchor names.
@@ -114,7 +114,7 @@ let anchors = 0;
 /** Gives `el` an anchor name of its own, added to any it has (a Button can anchor a Tooltip and a Menu at once), and
     returns it with the function that takes it off again. */
 export function anchorName(el: HTMLElement): [string, () => void] {
-  const name = '--dk-anchor-' + ++anchors;
+  const name = '--srp-anchor-' + ++anchors;
   const list = () => el.style.getPropertyValue('anchor-name').split(',').map((x) => x.trim()).filter((x) => x && x !== 'none');
   el.style.setProperty('anchor-name', [...list(), name].join(', '));
   return [name, () => { const rest = list().filter((x) => x !== name); if (rest.length) el.style.setProperty('anchor-name', rest.join(', ')); else el.style.removeProperty('anchor-name'); }];

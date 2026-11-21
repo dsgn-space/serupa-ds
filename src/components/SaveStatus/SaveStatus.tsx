@@ -82,20 +82,20 @@ function SaveStatusRender({ ref, ...props }: SaveStatusProps & React.RefAttribut
     return () => window.clearTimeout(t);
   }, [gone]);
   const face = (st: SaveState, out: boolean) => st === 'idle' ? null : (
-    <span key={st} ref={out ? leaving : undefined} className={'dk-save-status__face dk-save-status__face--' + st} data-leaving={out ? '' : undefined} data-entering={!out && changed ? '' : undefined} inert={out || undefined} aria-hidden={out || undefined}
+    <span key={st} ref={out ? leaving : undefined} className={'srp-save-status__face srp-save-status__face--' + st} data-leaving={out ? '' : undefined} data-entering={!out && changed ? '' : undefined} inert={out || undefined} aria-hidden={out || undefined}
       onTransitionEnd={out ? (e) => { if (e.target === e.currentTarget && e.propertyName === 'opacity') setGone(null); } : undefined}>
-      {st === 'saving' ? <><LoaderRing className="dk-save-status__icon" size="sm" /><span className="dk-save-status__text">{sds.labels.saving}</span></> : null}
-      {st === 'saved' ? <><Icon className="dk-save-status__icon" icon={icons.Check} /><span className="dk-save-status__text">{sds.labels.saved}{savedAt != null ? <> <RelativeTime date={savedAt} /></> : null}</span></> : null}
+      {st === 'saving' ? <><LoaderRing className="srp-save-status__icon" size="sm" /><span className="srp-save-status__text">{sds.labels.saving}</span></> : null}
+      {st === 'saved' ? <><Icon className="srp-save-status__icon" icon={icons.Check} /><span className="srp-save-status__text">{sds.labels.saved}{savedAt != null ? <> <RelativeTime date={savedAt} /></> : null}</span></> : null}
       {st === 'error' ? <>
-        <Icon className="dk-save-status__icon" icon={icons.Error} />
-        <span className="dk-save-status__text" ref={out ? undefined : text}>{errorText != null ? errorText : sds.labels.saveFailed}</span>
-        {onRetry ? <Button className="dk-save-status__retry" variant="link" size="sm" onClick={() => onRetry()}>{sds.labels.retrySave}</Button> : null}
+        <Icon className="srp-save-status__icon" icon={icons.Error} />
+        <span className="srp-save-status__text" ref={out ? undefined : text}>{errorText != null ? errorText : sds.labels.saveFailed}</span>
+        {onRetry ? <Button className="srp-save-status__retry" variant="link" size="sm" onClick={() => onRetry()}>{sds.labels.retrySave}</Button> : null}
       </> : null}
     </span>
   );
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} className={cn('dk-save-status', 'dk-save-status--' + status, className)} data-component="save-status" data-state={status}>
+    <div {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} className={cn('srp-save-status', 'srp-save-status--' + status, className)} data-component="save-status" data-state={status}>
       {/* In one fixed order, not "leaving, then coming": a status that comes back while it's still fading out
           (saving, saved, saving within a moment) would otherwise be moved in the page, which starts its fade over
           from nothing, and the label blinked out for a few frames (GR127). Kept where it is, it turns back. */}

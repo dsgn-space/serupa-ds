@@ -58,7 +58,7 @@ formatDuration(5400, "id", { display: "long" })   // "1 jam, 30 menit", for a ti
 | `largest` | `'second' \| 'minute' \| 'hour' \| 'day'` | `'day'` (`'hour'` with `'digital'`, left out under an hour) | The biggest unit shown; more of it keeps counting. |
 | `locale` | `string` | the provider's, else the browser's | When it differs from the provider's, the element carries `lang`. |
 
-Every other prop, `className` and `ref` go to the `<time>`, which has `data-component="duration"`, and `dk-duration--digital` for a clock.
+Every other prop, `className` and `ref` go to the `<time>`, which has `data-component="duration"`, and `srp-duration--digital` for a clock.
 
 ## Component tokens
 

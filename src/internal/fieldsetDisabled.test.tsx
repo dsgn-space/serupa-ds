@@ -24,14 +24,14 @@ describe('in a <fieldset disabled>', () => {
         <InlineEdit label="Name" defaultValue="Apollo" />
       </fieldset>
     </>);
-    for (const cls of ['.dk-textarea', '.dk-select', '.dk-color-picker']) {
+    for (const cls of ['.srp-textarea', '.srp-select', '.srp-color-picker']) {
       expect([cls, look(q('#fs ' + cls))]).toEqual([cls, look(q('#prop ' + cls))]);
     }
-    for (const cls of ['.dk-textarea__field', '.dk-select__field']) expect(css(q('#fs ' + cls)).cursor).toBe('not-allowed');
-    const ta = q('#fs .dk-textarea'), before = css(ta).getPropertyValue('--dk-ta-bd');
+    for (const cls of ['.srp-textarea__field', '.srp-select__field']) expect(css(q('#fs ' + cls)).cursor).toBe('not-allowed');
+    const ta = q('#fs .srp-textarea'), before = css(ta).getPropertyValue('--srp-ta-bd');
     await userEvent.hover(ta, { force: true });
-    expect(css(ta).getPropertyValue('--dk-ta-bd')).toBe(before);
-    const view = q('#fs .dk-inline-edit__view') as HTMLButtonElement;
+    expect(css(ta).getPropertyValue('--srp-ta-bd')).toBe(before);
+    const view = q('#fs .srp-inline-edit__view') as HTMLButtonElement;
     await userEvent.hover(view, { force: true });
     expect([view.matches(':disabled'), css(view).cursor, css(view).backgroundColor, css(view.querySelector('[data-icon]')).display]).toEqual([true, 'auto', 'rgba(0, 0, 0, 0)', 'none']);
   });

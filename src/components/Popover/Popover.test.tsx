@@ -114,7 +114,7 @@ describe('Popover', () => {
     expect(b.getAttribute('aria-expanded')).toBe('true');
     expect(b.getAttribute('aria-controls')).toBe(p.id);
     expect(p.getAttribute('aria-labelledby')).toBe(title.id);
-    expect([title.textContent, getComputedStyle(title).fontWeight, p.className, p.dataset.component]).toEqual(['Share', '600', 'dk-popover extra', 'popover']);
+    expect([title.textContent, getComputedStyle(title).fontWeight, p.className, p.dataset.component]).toEqual(['Share', '600', 'srp-popover extra', 'popover']);
     expect(p.dataset.side).toBe('bottom');
     expect(near(rect(p).top - rect(b).bottom, 8)).toBe(true);
     expect(Math.abs((rect(p).left + rect(p).right) / 2 - (rect(b).left + rect(b).right) / 2)).toBeLessThanOrEqual(1);
@@ -404,7 +404,7 @@ describe('Popover inside a shadow root (GR60)', () => {
       const p = panel('tsheet'), r = rect(p), cs = getComputedStyle(p);
       expect([Math.round(r.left), Math.round(r.width), Math.round(r.bottom)]).toEqual([0, document.documentElement.clientWidth, window.innerHeight]);
       expect([cs.borderTopLeftRadius, cs.borderTopRightRadius, cs.borderBottomLeftRadius, cs.borderBottomWidth]).toEqual(['12px', '12px', '0px', '0px']);
-      expect(p.classList.contains('dk-popover--sheet')).toBe(true);
+      expect(p.classList.contains('srp-popover--sheet')).toBe(true);
       expect(p.getAttribute('role')).toBe('dialog');
       expect(active()).toBe('sheet-q');
       await userEvent.keyboard('{Escape}');
@@ -440,14 +440,14 @@ describe('Popover inside a shadow root (GR60)', () => {
       await expect.poll(() => isOpen('tsheet')).toBe(true);
       await settled();
       const p = panel('tsheet');
-      expect(p.classList.contains('dk-popover--sheet')).toBe(false);
+      expect(p.classList.contains('srp-popover--sheet')).toBe(false);
       expect(near(rect(p).top, rect(el('tsheet')).bottom + 8)).toBe(true);
       await page.viewport(400, 700);
-      await expect.poll(() => p.classList.contains('dk-popover--sheet')).toBe(true);
+      await expect.poll(() => p.classList.contains('srp-popover--sheet')).toBe(true);
       await settled();
       expect([Math.round(rect(p).left), Math.round(rect(p).width), Math.round(rect(p).bottom)]).toEqual([0, document.documentElement.clientWidth, window.innerHeight]);
       await page.viewport(900, 700);
-      await expect.poll(() => p.classList.contains('dk-popover--sheet')).toBe(false);
+      await expect.poll(() => p.classList.contains('srp-popover--sheet')).toBe(false);
       await settled();
       expect(near(rect(p).top, rect(el('tsheet')).bottom + 8)).toBe(true);
       await userEvent.click(document.body, { position: { x: 5, y: 650 } });

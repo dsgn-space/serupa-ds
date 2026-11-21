@@ -46,7 +46,7 @@ const Panel = 'span' as 'div';
 const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onBlur: 1, onFocus: 1, onPointerEnter: 1, onPointerLeave: 1 } as const;
 
 function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes<HTMLDivElement>) {
-  const own = domId('dk-hcard', React.useId());
+  const own = domId('srp-hcard', React.useId());
   const id = props.id || own;
   const [shown, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'HoverCard', 'open');
   const open = !props.disabled && !!shown;
@@ -84,7 +84,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
 
   // Closing: the content stays (inert) while the card fades out; one open on arrival doesn't fade in.
   const exit = useExit(open, cardRef);
-  useAnchoredLayer(open, cardRef, triggerRef, { placement: props.placement, offsetVar: '--dk-hover-card-offset', watch: props.children, onOutside: () => set(false, 'outside'), inside: triggerRef });
+  useAnchoredLayer(open, cardRef, triggerRef, { placement: props.placement, offsetVar: '--srp-hover-card-offset', watch: props.children, onOutside: () => set(false, 'outside'), inside: triggerRef });
 
   // Escape closes it from anywhere while it's open (the trigger may only be hovered). It's the top layer, so it
   // takes that Escape: caught first and stopped, so a Dialog around it stays open. From inside, focus goes back.
@@ -144,7 +144,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
     <>
       {trigger}
       <Panel {...omit(props, OWN)} ref={mergedRef} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
-        className={cn('dk-hover-card', props.className)} style={props.style} data-component="hover-card" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
+        className={cn('srp-hover-card', props.className)} style={props.style} data-component="hover-card" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined}
         onPointerEnter={(e) => { if (props.onPointerEnter) props.onPointerEnter(e); stay(); }}
         onPointerLeave={(e) => { if (props.onPointerLeave) props.onPointerLeave(e); if (!touch(e)) later(false, closeDelay, 'hover'); }}

@@ -12,5 +12,5 @@ export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: bool
   const v = oneOf(BUTTON_VARIANTS, opts.variant, 'primary');
   const s = oneOf(SIZES, opts.size, 'md');
   const iconOnly = !!opts.iconOnly, pos = opts.iconPosition;
-  return cn('dk-btn', 'dk-btn--' + v, opts.destructive && 'dk-btn--destructive', 'dk-btn--size-' + s, iconOnly && 'dk-btn--icon-only', !iconOnly && (pos === 'left' || pos === 'right') && 'dk-btn--icon-' + pos, !iconOnly && opts.wrap && 'dk-btn--wrap', opts.className);
+  return cn('srp-btn', 'srp-btn--' + v, opts.destructive && 'srp-btn--destructive', 'srp-btn--size-' + s, iconOnly && 'srp-btn--icon-only', !iconOnly && (pos === 'left' || pos === 'right') && 'srp-btn--icon-' + pos, !iconOnly && opts.wrap && 'srp-btn--wrap', opts.className);
 }

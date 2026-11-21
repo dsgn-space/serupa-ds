@@ -74,7 +74,7 @@ export function OrdersTable({ orders = ORDERS }: { orders?: Order[] }) {
         <Heading level={2}>Orders</Heading>
 
         <Table>
-          <caption className="dk-visually-hidden">
+          <caption className="srp-visually-hidden">
             Orders, sorted by {COLUMNS.find((c) => c.key === sortKey)?.label.toLowerCase()},{' '}
             {sortDir === 'asc' ? 'ascending' : 'descending'}
           </caption>

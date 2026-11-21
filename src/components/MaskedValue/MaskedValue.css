@@ -3,8 +3,8 @@
    and an optional Show button beside it. Every value reads one of its own tokens (masked-value.tokens.json), which
    fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-masked-value { display: inline-flex; align-items: center; gap: var(--masked-value-gap, var(--spacing-1)); max-width: var(--sizing-full); vertical-align: middle; }
-.dk-masked-value__text { min-width: var(--spacing-0); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-.dk-masked-value__toggle { flex: none; margin-block: calc(var(--spacing-0) - var(--spacing-1)); }
+@layer srp.components {
+.srp-masked-value { display: inline-flex; align-items: center; gap: var(--masked-value-gap, var(--spacing-1)); max-width: var(--sizing-full); vertical-align: middle; }
+.srp-masked-value__text { min-width: var(--spacing-0); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.srp-masked-value__toggle { flex: none; margin-block: calc(var(--spacing-0) - var(--spacing-1)); }
 }

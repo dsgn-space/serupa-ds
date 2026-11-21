@@ -4,10 +4,10 @@
    the secondary background, and the focused row a focus ring inside it. Disabled rows are faded. Every value
    reads one of its own tokens (tree-view.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-tree-view {
-  --dk-tree-closed: 0deg; --dk-tree-open: 90deg;   /* the chevron points along the row (left right to left), then down once open */
-  --dk-bar: var(--highlight-indicator-width);
+@layer srp.components {
+.srp-tree-view {
+  --srp-tree-closed: 0deg; --srp-tree-open: 90deg;   /* the chevron points along the row (left right to left), then down once open */
+  --srp-bar: var(--highlight-indicator-width);
   margin: var(--spacing-0); list-style: none;
   padding: var(--tree-view-padding, var(--spacing-1));
   border-radius: var(--tree-view-radius, var(--radius-control));
@@ -15,14 +15,14 @@
   color: var(--tree-view-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-tree-view:dir(rtl) { --dk-tree-closed: 180deg; --dk-bar: calc(var(--highlight-indicator-width) * -1); }
-.dk-tree-view__group { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-tree-view__item { outline: none; }
-.dk-tree-view__row {
+.srp-tree-view:dir(rtl) { --srp-tree-closed: 180deg; --srp-bar: calc(var(--highlight-indicator-width) * -1); }
+.srp-tree-view__group { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-tree-view__item { outline: none; }
+.srp-tree-view__row {
   display: flex; align-items: center; gap: var(--tree-view-gap, var(--spacing-1));
   min-height: var(--tree-view-item-height, var(--control-height-md));
   padding-block: var(--spacing-1);
-  padding-inline: calc(var(--tree-view-indent, var(--spacing-4)) * var(--dk-tree-level, 0) + var(--tree-view-item-padding-x, var(--spacing-1))) var(--tree-view-item-padding-x, var(--spacing-1));
+  padding-inline: calc(var(--tree-view-indent, var(--spacing-4)) * var(--srp-tree-level, 0) + var(--tree-view-item-padding-x, var(--spacing-1))) var(--tree-view-item-padding-x, var(--spacing-1));
   border-radius: var(--tree-view-item-radius, var(--radius-inner));
   cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
   /* A row out of view isn't laid out until it scrolls near, at its own height while it waits (once drawn, the
@@ -32,35 +32,35 @@
   contain-intrinsic-block-size: auto calc(var(--tree-view-item-height, var(--control-height-md)) - var(--spacing-2));   /* the padding, above and below */
 }
 /* 44px to press on a touch screen, as Menu's items, and held at that height while out of view. */
-@media (pointer: coarse) { .dk-tree-view__row { min-height: max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)); contain-intrinsic-block-size: auto calc(max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)) - var(--spacing-2)); } }
-@media (hover: hover) { .dk-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
+@media (pointer: coarse) { .srp-tree-view__row { min-height: max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)); contain-intrinsic-block-size: auto calc(max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)) - var(--spacing-2)); } }
+@media (hover: hover) { .srp-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
 /* Pressed: one step past hover while held, at once. Not on the picked row or a disabled one. */
-.dk-tree-view__item:not(.dk-tree-view__item--selected, .dk-tree-view__item--disabled) > .dk-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
-.dk-tree-view__item--selected > .dk-tree-view__row {
+.srp-tree-view__item:not(.srp-tree-view__item--selected, .srp-tree-view__item--disabled) > .srp-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
+.srp-tree-view__item--selected > .srp-tree-view__row {
   background: var(--tree-view-item-bg-selected, var(--highlight));
-  box-shadow: inset var(--dk-bar) 0 0 var(--tree-view-item-indicator, var(--highlight-indicator));
+  box-shadow: inset var(--srp-bar) 0 0 var(--tree-view-item-indicator, var(--highlight-indicator));
 }
-.dk-tree-view__item:focus-visible > .dk-tree-view__row { outline: var(--focus-ring-width) solid var(--tree-view-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-tree-view__item--disabled > .dk-tree-view__row, .dk-tree-view__item--disabled > .dk-tree-view__row * { color: var(--tree-view-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-tree-view__toggle { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--spacing-5); height: var(--spacing-5); color: var(--tree-view-icon-color, var(--text-muted)); }
+.srp-tree-view__item:focus-visible > .srp-tree-view__row { outline: var(--focus-ring-width) solid var(--tree-view-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-tree-view__item--disabled > .srp-tree-view__row, .srp-tree-view__item--disabled > .srp-tree-view__row * { color: var(--tree-view-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-tree-view__toggle { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--spacing-5); height: var(--spacing-5); color: var(--tree-view-icon-color, var(--text-muted)); }
 /* The chevron is the only pointer way to open an item when items can be picked: 20px to see, a 24px target (WCAG 2.5.8,
    GQ6) that fits the 32px row without moving anything. */
-.dk-tree-view__toggle { position: relative; }
-.dk-tree-view__toggle::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--spacing-0\.5)); }
-.dk-tree-view__toggle .dk-icon { font-size: var(--spacing-4); rotate: var(--dk-tree-closed); transition: rotate var(--motion-change-md) var(--ease-move); }
-.dk-tree-view__item[aria-expanded="true"] > .dk-tree-view__row .dk-tree-view__toggle .dk-icon { rotate: var(--dk-tree-open); }
+.srp-tree-view__toggle { position: relative; }
+.srp-tree-view__toggle::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--spacing-0\.5)); }
+.srp-tree-view__toggle .srp-icon { font-size: var(--spacing-4); rotate: var(--srp-tree-closed); transition: rotate var(--motion-change-md) var(--ease-move); }
+.srp-tree-view__item[aria-expanded="true"] > .srp-tree-view__row .srp-tree-view__toggle .srp-icon { rotate: var(--srp-tree-open); }
 /* cascade: a checkbox before the icon and label, drawn as Checkbox's box: a field-colored square with a 3:1 border,
    filled in primary with a check (or a dash for some) once checked. */
-.dk-tree-view__check { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; box-sizing: border-box; width: var(--tree-view-check-size, var(--spacing-4)); height: var(--tree-view-check-size, var(--spacing-4)); border: var(--border-width-1) solid var(--tree-view-check-border, var(--field-border)); border-radius: var(--tree-view-check-radius, var(--radius-inner)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-check-mark, var(--on-primary)); }
-.dk-tree-view__check:not([data-state="unchecked"]) { border-color: var(--tree-view-check-bg-checked, var(--primary)); background: var(--tree-view-check-bg-checked, var(--primary)); }
-.dk-tree-view__check .dk-icon { font-size: var(--spacing-3\.5); }
-.dk-tree-view__item--disabled > .dk-tree-view__row .dk-tree-view__check { border-color: var(--tree-view-text-disabled, var(--disabled-text)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-text-disabled, var(--disabled-text)); }
-@media (forced-colors: active) { .dk-tree-view__check { border-color: CanvasText; } .dk-tree-view__check:not([data-state="unchecked"]) { background: Highlight; color: HighlightText; } }
-.dk-tree-view__icon { display: inline-flex; flex-shrink: 0; color: var(--tree-view-icon-color, var(--text-muted)); }
-.dk-tree-view__icon .dk-icon { font-size: var(--spacing-4); }
-.dk-tree-view__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-tree-view__check { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; box-sizing: border-box; width: var(--tree-view-check-size, var(--spacing-4)); height: var(--tree-view-check-size, var(--spacing-4)); border: var(--border-width-1) solid var(--tree-view-check-border, var(--field-border)); border-radius: var(--tree-view-check-radius, var(--radius-inner)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-check-mark, var(--on-primary)); }
+.srp-tree-view__check:not([data-state="unchecked"]) { border-color: var(--tree-view-check-bg-checked, var(--primary)); background: var(--tree-view-check-bg-checked, var(--primary)); }
+.srp-tree-view__check .srp-icon { font-size: var(--spacing-3\.5); }
+.srp-tree-view__item--disabled > .srp-tree-view__row .srp-tree-view__check { border-color: var(--tree-view-text-disabled, var(--disabled-text)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-text-disabled, var(--disabled-text)); }
+@media (forced-colors: active) { .srp-tree-view__check { border-color: CanvasText; } .srp-tree-view__check:not([data-state="unchecked"]) { background: Highlight; color: HighlightText; } }
+.srp-tree-view__icon { display: inline-flex; flex-shrink: 0; color: var(--tree-view-icon-color, var(--text-muted)); }
+.srp-tree-view__icon .srp-icon { font-size: var(--spacing-4); }
+.srp-tree-view__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 /* Opened or closed from the keyboard (data-instant, KW1): turned at once, no spin to wait for under a held key. */
-.dk-tree-view[data-instant] .dk-tree-view__toggle .dk-icon { transition: none; }
-@media (prefers-reduced-motion: reduce) { .dk-tree-view__toggle .dk-icon { transition: none; } }
-@media (forced-colors: active) { .dk-tree-view__item--selected > .dk-tree-view__row { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+.srp-tree-view[data-instant] .srp-tree-view__toggle .srp-icon { transition: none; }
+@media (prefers-reduced-motion: reduce) { .srp-tree-view__toggle .srp-icon { transition: none; } }
+@media (forced-colors: active) { .srp-tree-view__item--selected > .srp-tree-view__row { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 }

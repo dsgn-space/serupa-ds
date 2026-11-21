@@ -6,7 +6,7 @@ import { useIsoLayoutEffect } from '../../internal/cn';
    with more tabs past it fades out, so it's plain there's more; the selected tab is scrolled into view whenever it
    changes; and its line or fill slides from the tab selected before (Tabs.css, EG1). */
 
-const FROM = ['--dk-tabs-from-shift', '--dk-tabs-from-scale', '--dk-tabs-span-l', '--dk-tabs-span-r', '--dk-tabs-span-t', '--dk-tabs-span-b', '--dk-tabs-from-l', '--dk-tabs-from-r', '--dk-tabs-from-t', '--dk-tabs-from-b'];
+const FROM = ['--srp-tabs-from-shift', '--srp-tabs-from-scale', '--srp-tabs-span-l', '--srp-tabs-span-r', '--srp-tabs-span-t', '--srp-tabs-span-b', '--srp-tabs-from-l', '--srp-tabs-from-r', '--srp-tabs-from-t', '--srp-tabs-from-b'];
 
 /* Where the selected tab's line or fill is now, as a tab-sized box in the list: the tab's own box at rest, or, mid-slide,
    where the slide has got to. The line: the tab's box moved by its translate and stretched by its scale (from its top
@@ -19,7 +19,7 @@ const shown = (on: HTMLElement) => {
   if (line.scale && line.scale !== 'none') { const [sx = 1, sy = sx] = nums(line.scale); w *= sx; h *= sy; }
   if (/^inset\(/.test(fill.clipPath)) {
     const [t = 0, r = t, b = t, l = r] = nums(fill.clipPath.split(' round')[0] ?? '');
-    const span = (k: string) => parseFloat(on.style.getPropertyValue('--dk-tabs-span-' + k)) || 0;
+    const span = (k: string) => parseFloat(on.style.getPropertyValue('--srp-tabs-span-' + k)) || 0;
     const left = x - span('l') + l, top = y - span('t') + t;
     w = x + w + span('r') - r - left; h = y + h + span('b') - b - top; x = left; y = top;
   }
@@ -34,12 +34,12 @@ const slideIfStill = (sel: HTMLElement) => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // there at once, as the CSS has it
   const running = (pseudo: string) => document.getAnimations().some((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === sel && e.pseudoElement === pseudo; });
   const time = (cs: CSSStyleDeclaration) => ({ duration: (parseFloat(cs.transitionDuration) || 0) * (/ms$/.test(cs.transitionDuration.split(',')[0] ?? '') ? 1 : 1000), easing: (cs.transitionTimingFunction.split(/,(?![^(]*\))/)[0] ?? '').trim() || 'ease' });
-  const shift = sel.style.getPropertyValue('--dk-tabs-from-shift');
+  const shift = sel.style.getPropertyValue('--srp-tabs-from-shift');
   const line = getComputedStyle(sel, '::after'), fill = getComputedStyle(sel, '::before');
   if (shift && line.content !== 'none' && time(line).duration > 0 && !running('::after')) {
-    sel.animate({ translate: [shift, 'none'], scale: [sel.style.getPropertyValue('--dk-tabs-from-scale') || 'none', 'none'] }, { ...time(line), pseudoElement: '::after' });
+    sel.animate({ translate: [shift, 'none'], scale: [sel.style.getPropertyValue('--srp-tabs-from-scale') || 'none', 'none'] }, { ...time(line), pseudoElement: '::after' });
   }
-  const from = ['t', 'r', 'b', 'l'].map((k) => sel.style.getPropertyValue('--dk-tabs-from-' + k));
+  const from = ['t', 'r', 'b', 'l'].map((k) => sel.style.getPropertyValue('--srp-tabs-from-' + k));
   if (from.every(Boolean) && fill.content !== 'none' && /^inset\(/.test(fill.clipPath) && time(fill).duration > 0 && !running('::before')) {
     const round = fill.clipPath.includes(' round ') ? ' round ' + (fill.clipPath.split(' round ')[1] ?? '').replace(/\)$/, '') : '';
     sel.animate({ clipPath: [`inset(${from.join(' ')}${round})`, fill.clipPath] }, { ...time(fill), pseudoElement: '::before' });
@@ -51,13 +51,13 @@ const slideIfStill = (sel: HTMLElement) => {
 const aim = (t: HTMLElement, b: { x: number; y: number; w: number; h: number } | null) => {
   if (!b || !t.offsetWidth || !t.offsetHeight) { for (const k of FROM) t.style.removeProperty(k); return; }
   const dx = b.x - t.offsetLeft, dy = b.y - t.offsetTop, w = t.offsetWidth, h = t.offsetHeight;
-  t.style.setProperty('--dk-tabs-from-shift', dx + 'px ' + dy + 'px');
-  t.style.setProperty('--dk-tabs-from-scale', b.w / w + ' ' + b.h / h);
+  t.style.setProperty('--srp-tabs-from-shift', dx + 'px ' + dy + 'px');
+  t.style.setProperty('--srp-tabs-from-scale', b.w / w + ' ' + b.h / h);
   // The pill's fill (GO1) spans this tab and the selected one, cut to this tab; it starts cut to the selected one.
   const l = Math.max(0, -dx), r = Math.max(0, dx + b.w - w), u = Math.max(0, -dy), d = Math.max(0, dy + b.h - h);
   const set = (k: string, n: number) => t.style.setProperty(k, n + 'px');
-  set('--dk-tabs-span-l', l); set('--dk-tabs-span-r', r); set('--dk-tabs-span-t', u); set('--dk-tabs-span-b', d);
-  set('--dk-tabs-from-l', l + dx); set('--dk-tabs-from-r', w + r - dx - b.w); set('--dk-tabs-from-t', u + dy); set('--dk-tabs-from-b', h + d - dy - b.h);
+  set('--srp-tabs-span-l', l); set('--srp-tabs-span-r', r); set('--srp-tabs-span-t', u); set('--srp-tabs-span-b', d);
+  set('--srp-tabs-from-l', l + dx); set('--srp-tabs-from-r', w + r - dx - b.w); set('--srp-tabs-from-t', u + dy); set('--srp-tabs-from-b', h + d - dy - b.h);
 };
 
 /** Runs the row. tab and on are selectors for the tabs and the selected one; value is what's selected, so the row
@@ -119,7 +119,7 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     const el = list.current;
     const sel = el && value != null ? el.querySelector<HTMLElement>(on) : null;
     if (!el || !sel) return;
-    const room = parseFloat(getComputedStyle(el).getPropertyValue('--dk-tabs-fade')) || 0;
+    const room = parseFloat(getComputedStyle(el).getPropertyValue('--srp-tabs-fade')) || 0;
     const box = el.getBoundingClientRect(), t = sel.getBoundingClientRect();
     if (vertical) {
       if (t.top < box.top + room) el.scrollTop -= box.top + room - t.top;

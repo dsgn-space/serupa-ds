@@ -85,7 +85,7 @@ describe('Avatar', () => {
       <Avatar id="bad" src="data:image/png;base64,broken" name="Linus T" imgProps={{ onError: err }} />
     </Row>);
     const img = (id: string) => el(id).querySelector('img')!;
-    expect([img('lazy').loading, img('lazy').decoding, img('eager').loading, img('eager').referrerPolicy, img('eager').className]).toEqual(['lazy', 'async', 'eager', 'no-referrer', 'dk-avatar__img mine']);
+    expect([img('lazy').loading, img('lazy').decoding, img('eager').loading, img('eager').referrerPolicy, img('eager').className]).toEqual(['lazy', 'async', 'eager', 'no-referrer', 'srp-avatar__img mine']);
     await expect.poll(() => el('bad').querySelector(':scope > span:first-child > span[aria-hidden]:not([data-icon])')?.textContent).toBe('LT');
     expect(err).toHaveBeenCalledTimes(1);
   });
@@ -98,8 +98,8 @@ describe('Avatar', () => {
     </Row>);
     expect(SIZES.map((s) => { const e = q(`[data-s="${s}"]`); return Math.round(e.getBoundingClientRect().width) + '/' + css(e).fontSize; }))
       .toEqual(['24/12px', '32/12px', '40/14px', '48/16px', '64/20px']);
-    expect(SIZES.map((s) => css(q(`[data-is="${s}"] .dk-icon`)).fontSize)).toEqual(['14px', '20px', '24px', '28px', '40px']);
-    expect(css(q('#alt2 .dk-avatar__frame')).borderTopLeftRadius).toBe('8px');
+    expect(SIZES.map((s) => css(q(`[data-is="${s}"] .srp-icon`)).fontSize)).toEqual(['14px', '20px', '24px', '28px', '40px']);
+    expect(css(q('#alt2 .srp-avatar__frame')).borderTopLeftRadius).toBe('8px');
   });
 
   test('unknown size, shape and status fall back to md, circle and none', async () => {
@@ -132,13 +132,13 @@ describe('Avatar', () => {
   // DR1: color alone failed 1.4.1, and forced colors turned all four into the same dot.
   test('each status has its own shape (filled, bar, ring with a dot, empty ring), still four shapes in forced colors', async () => {
     await render(<Row>{STATUSES.map((s) => <Avatar key={s} data-st={s} status={s} name="Ada Lovelace" />)}</Row>);
-    const shape = (s: AvatarStatus) => { const d = q(`[data-st="${s}"] [aria-hidden="true"]:not(.dk-avatar__frame *)`), a = getComputedStyle(d, '::after');
+    const shape = (s: AvatarStatus) => { const d = q(`[data-st="${s}"] [aria-hidden="true"]:not(.srp-avatar__frame *)`), a = getComputedStyle(d, '::after');
       return [css(d).borderTopWidth !== '0px', a.width !== '0px' && a.backgroundColor !== 'rgba(0, 0, 0, 0)' ? Math.round(parseFloat(a.width) / parseFloat(a.height)) : 0].join(); };
     expect(STATUSES.map(shape)).toEqual(['false,0', 'false,2', 'true,1', 'true,0']);
     const restore = forcedColors();
     try {
       expect(STATUSES.map(shape)).toEqual(['false,0', 'false,2', 'true,1', 'true,0']);
-      const d = q('[data-st="busy"] [aria-hidden="true"]:not(.dk-avatar__frame *)');
+      const d = q('[data-st="busy"] [aria-hidden="true"]:not(.srp-avatar__frame *)');
       expect(getComputedStyle(d, '::after').backgroundColor).not.toBe(css(d).backgroundColor);
     } finally { restore(); }
   });
@@ -249,8 +249,8 @@ describe('Avatar: a picture that is slow to arrive (GR410)', () => {
     expect([css(i).position, b.width, b.height, b.left - f.left, b.top - f.top, i.complete]).toEqual(['absolute', 40, 40, 0, 0, false]);
     // It arrives: it fades in over the initials, and once it has they leave the page.
     await expect.poll(() => i.complete && /--in/.test(i.className), { timeout: 5000 }).toBe(true);
-    expect([css(i).animationName, !!under('late')]).toEqual(['dk-avatar-in', true]);
-    await expect.poll(() => [under('late'), under('anon'), css(i).position, i.className], { timeout: 5000 }).toEqual([null, null, 'static', 'dk-avatar__img']);
+    expect([css(i).animationName, !!under('late')]).toEqual(['srp-avatar-in', true]);
+    await expect.poll(() => [under('late'), under('anon'), css(i).position, i.className], { timeout: 5000 }).toEqual([null, null, 'static', 'srp-avatar__img']);
   }));
 
   test('a quick picture never shows them, and imgProps.onLoad still runs', async () => {
@@ -258,6 +258,6 @@ describe('Avatar: a picture that is slow to arrive (GR410)', () => {
     await render(<Avatar id="quick" src={IMG} name="Ada Lovelace" imgProps={{ onLoad }} />);
     await expect.poll(() => onLoad.mock.calls.length).toBe(1);
     await new Promise((r) => setTimeout(r, 400));
-    expect([under('quick'), el('quick').querySelector('img')!.className]).toEqual([null, 'dk-avatar__img']);
+    expect([under('quick'), el('quick').querySelector('img')!.className]).toEqual([null, 'srp-avatar__img']);
   });
 });

@@ -6,39 +6,39 @@
    toward it), and the others and the waiting line glide to their new place; with reduced motion they fade, and
    the others move at once.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* Focus Not Obscured (WCAG 2.4.11, GR222): while toasts show, the page's scroll padding at their edge is the room they
-   take (--dk-toaster-space-top or -bottom, measured by the Toaster), so tabbing to a control under them scrolls it clear
+   take (--srp-toaster-space-top or -bottom, measured by the Toaster), so tabbing to a control under them scrolls it clear
    instead of leaving it behind a toast. Only while one shows at that edge, and in the components layer, so a page's
    own scroll-padding (a sticky header's) still wins; a Fab's padding at the same edge is the Fab's (it rises above
    the toasts). */
-:root:has([data-position^="top"] [data-toast]:not([data-leaving])) { scroll-padding-top: var(--dk-toaster-space-top, var(--spacing-0)); }
-:root:has([data-position^="bottom"] [data-toast]:not([data-leaving])) { scroll-padding-bottom: var(--dk-toaster-space-bottom, var(--spacing-0)); }
-.dk-toaster {
-  --dk-toast-offset: var(--toast-offset, var(--spacing-4));
+:root:has([data-position^="top"] [data-toast]:not([data-leaving])) { scroll-padding-top: var(--srp-toaster-space-top, var(--spacing-0)); }
+:root:has([data-position^="bottom"] [data-toast]:not([data-leaving])) { scroll-padding-bottom: var(--srp-toaster-space-bottom, var(--spacing-0)); }
+.srp-toaster {
+  --srp-toast-offset: var(--toast-offset, var(--spacing-4));
   position: fixed;
   z-index: var(--toast-z-index, var(--z-toast));
   width: var(--toast-width, var(--container-sm));
-  max-width: calc(var(--sizing-full) - var(--dk-toast-offset) - var(--dk-toast-offset));
+  max-width: calc(var(--sizing-full) - var(--srp-toast-offset) - var(--srp-toast-offset));
   pointer-events: none;
   /* The glide of the toasts left when one closes or arrives (Toast.tsx reads these, FLIP). On the arriving toast's
      own time and curve, so the stack makes room as fast as it comes in: on ease-move (slow to start) a new toast
      was in place, over the one below it, before that one had moved. */
-  --dk-toast-move: var(--motion-enter-md);
-  --dk-toast-move-ease: var(--ease-enter);
+  --srp-toast-move: var(--motion-enter-md);
+  --srp-toast-move-ease: var(--ease-enter);
 }
 /* Clear of a phone's notch and home indicator too (the safe area, with viewport-fit=cover). */
-.dk-toaster--top-start, .dk-toaster--top-center, .dk-toaster--top-end { inset-block-start: max(var(--dk-toast-offset), env(safe-area-inset-top)); }
-.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end { inset-block-end: max(var(--dk-toast-offset), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--dk-toast-offset))); }
+.srp-toaster--top-start, .srp-toaster--top-center, .srp-toaster--top-end { inset-block-start: max(var(--srp-toast-offset), env(safe-area-inset-top)); }
+.srp-toaster--bottom-start, .srp-toaster--bottom-center, .srp-toaster--bottom-end { inset-block-end: max(var(--srp-toast-offset), env(safe-area-inset-bottom), calc(var(--srp-bottom-nav-space, var(--spacing-0)) + var(--srp-toast-offset))); }
 /* Stacked above an OfflineBanner on the same edge rather than on it (GR123): while one shows, it measures the room
-   it takes into --dk-offline-banner-space (its height, its gap from the edge and a little more). */
-:root:has(.dk-offline-banner--bottom:not([data-leaving])) :is(.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end) { inset-block-end: var(--dk-offline-banner-space, max(var(--dk-toast-offset), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--dk-toast-offset)))); }
-:root:has(.dk-offline-banner--top:not([data-leaving])) :is(.dk-toaster--top-start, .dk-toaster--top-center, .dk-toaster--top-end) { inset-block-start: var(--dk-offline-banner-space, max(var(--dk-toast-offset), env(safe-area-inset-top))); }
-.dk-toaster--top-start, .dk-toaster--bottom-start { inset-inline-start: max(var(--dk-toast-offset), env(safe-area-inset-left)); }
-.dk-toaster--top-end, .dk-toaster--bottom-end { inset-inline-end: max(var(--dk-toast-offset), env(safe-area-inset-right)); }
-.dk-toaster--top-center, .dk-toaster--bottom-center { inset-inline: var(--spacing-0); margin-inline: auto; }
-.dk-toaster__list { position: relative; display: flex; flex-direction: column; gap: var(--toast-stack-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-toast {
+   it takes into --srp-offline-banner-space (its height, its gap from the edge and a little more). */
+:root:has(.srp-offline-banner--bottom:not([data-leaving])) :is(.srp-toaster--bottom-start, .srp-toaster--bottom-center, .srp-toaster--bottom-end) { inset-block-end: var(--srp-offline-banner-space, max(var(--srp-toast-offset), env(safe-area-inset-bottom), calc(var(--srp-bottom-nav-space, var(--spacing-0)) + var(--srp-toast-offset)))); }
+:root:has(.srp-offline-banner--top:not([data-leaving])) :is(.srp-toaster--top-start, .srp-toaster--top-center, .srp-toaster--top-end) { inset-block-start: var(--srp-offline-banner-space, max(var(--srp-toast-offset), env(safe-area-inset-top))); }
+.srp-toaster--top-start, .srp-toaster--bottom-start { inset-inline-start: max(var(--srp-toast-offset), env(safe-area-inset-left)); }
+.srp-toaster--top-end, .srp-toaster--bottom-end { inset-inline-end: max(var(--srp-toast-offset), env(safe-area-inset-right)); }
+.srp-toaster--top-center, .srp-toaster--bottom-center { inset-inline: var(--spacing-0); margin-inline: auto; }
+.srp-toaster__list { position: relative; display: flex; flex-direction: column; gap: var(--toast-stack-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-toast {
   box-sizing: border-box;
   display: flex;
   align-items: flex-start;
@@ -56,77 +56,77 @@
   /* Motion (DZ1): in from @starting-style over motion-enter-md, so one closed mid-way turns back from where it is;
      out (data-leaving, inert, kept by Toast.tsx until it ends) over motion-exit-md, back toward its edge. One there
      as the Toaster arrives (data-instant) has no starting style. Reduced motion: the fade alone. */
-  --dk-toast-from: var(--spacing-0) var(--spacing-2);
+  --srp-toast-from: var(--spacing-0) var(--spacing-2);
   transition: opacity var(--motion-enter-md) var(--ease-enter), translate var(--motion-enter-md) var(--ease-enter);
 }
-.dk-toaster--top-start .dk-toast, .dk-toaster--top-center .dk-toast, .dk-toaster--top-end .dk-toast { --dk-toast-from: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); }
-.dk-toast[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
-@starting-style { .dk-toast:not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-toaster--top-start .srp-toast, .srp-toaster--top-center .srp-toast, .srp-toaster--top-end .srp-toast { --srp-toast-from: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); }
+.srp-toast[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
+@starting-style { .srp-toast:not([data-instant]) { opacity: var(--opacity-0); } }
 /* Leaving, it's out of the flow at the top it had (Toast.tsx), so the others close up while it fades. */
-.dk-toast[data-gone] { position: absolute; inset-inline: var(--spacing-0); }
+.srp-toast[data-gone] { position: absolute; inset-inline: var(--spacing-0); }
 /* Pushed into the waiting line by a newer one (data-leaving="queued", FO1): it folds toward the line, shrinking
    and fading on its far side, rather than leaving by its edge like one that was closed. */
-.dk-toast { --dk-toast-fold: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); transform-origin: top center; }
-.dk-toaster--top-start .dk-toast, .dk-toaster--top-center .dk-toast, .dk-toaster--top-end .dk-toast { --dk-toast-fold: var(--spacing-0) var(--spacing-2); transform-origin: bottom center; }
-.dk-toast[data-leaving="queued"] { transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit), scale var(--motion-exit-md) var(--ease-exit); }
+.srp-toast { --srp-toast-fold: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); transform-origin: top center; }
+.srp-toaster--top-start .srp-toast, .srp-toaster--top-center .srp-toast, .srp-toaster--top-end .srp-toast { --srp-toast-fold: var(--spacing-0) var(--spacing-2); transform-origin: bottom center; }
+.srp-toast[data-leaving="queued"] { transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit), scale var(--motion-exit-md) var(--ease-exit); }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-toast[data-leaving] { translate: var(--dk-toast-from); }
-  .dk-toast[data-leaving="queued"] { translate: var(--dk-toast-fold); scale: var(--scale-95); }
-  @starting-style { .dk-toast:not([data-instant]) { translate: var(--dk-toast-from); } }
+  .srp-toast[data-leaving] { translate: var(--srp-toast-from); }
+  .srp-toast[data-leaving="queued"] { translate: var(--srp-toast-fold); scale: var(--scale-95); }
+  @starting-style { .srp-toast:not([data-instant]) { translate: var(--srp-toast-from); } }
 }
 /* Swipe to dismiss (Toast.tsx): sideways drags are the toast's, vertical ones still scroll; under the finger it
    follows with no transition. */
-.dk-toast { touch-action: pan-y; }
-.dk-toast[data-dragging] { transition: none; }
+.srp-toast { touch-action: pan-y; }
+.srp-toast[data-dragging] { transition: none; }
 /* F8 moves focus to the newest toast itself, so a screen reader reads it and Tab reaches its buttons next. */
-.dk-toast:focus { outline: none; }
-.dk-toast:focus-visible { outline: var(--focus-ring-width) solid var(--toast-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-toast__icon { display: flex; flex-shrink: 0; }
-.dk-toast__icon .dk-icon { font-size: var(--spacing-5); }
-.dk-toast--info .dk-toast__icon { color: var(--toast-icon-info, var(--info)); }
-.dk-toast--success .dk-toast__icon { color: var(--toast-icon-success, var(--success)); }
-.dk-toast--warning .dk-toast__icon { color: var(--toast-icon-warning, var(--warning)); }
-.dk-toast--danger .dk-toast__icon { color: var(--toast-icon-danger, var(--danger)); }
+.srp-toast:focus { outline: none; }
+.srp-toast:focus-visible { outline: var(--focus-ring-width) solid var(--toast-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-toast__icon { display: flex; flex-shrink: 0; }
+.srp-toast__icon .srp-icon { font-size: var(--spacing-5); }
+.srp-toast--info .srp-toast__icon { color: var(--toast-icon-info, var(--info)); }
+.srp-toast--success .srp-toast__icon { color: var(--toast-icon-success, var(--success)); }
+.srp-toast--warning .srp-toast__icon { color: var(--toast-icon-warning, var(--warning)); }
+.srp-toast--danger .srp-toast__icon { color: var(--toast-icon-danger, var(--danger)); }
 /* A long word in a narrow toast breaks where its language hyphenates it (191), with a hyphen, before
    overflow-wrap cuts it anywhere. It follows the nearest lang. */
 /* Only words of 10 letters or more hyphenate, 4 on each side, so ordinary words still wrap whole ("recur-ring"
    isn't split) where hyphenate-limit-chars is supported (191). */
-.dk-toast__content { --dk-toast-hyphen-limit: 10 4 4; hyphenate-limit-chars: var(--dk-toast-hyphen-limit); }   /* letter counts, not a design value */
-.dk-toast__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
-.dk-toast__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
+.srp-toast__content { --srp-toast-hyphen-limit: 10 4 4; hyphenate-limit-chars: var(--srp-toast-hyphen-limit); }   /* letter counts, not a design value */
+.srp-toast__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
+.srp-toast__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
 /* "×12": the same message came 12 times. */
-.dk-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
+.srp-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
 /* "+2 more": toasts waiting past the Toaster's limit. */
-.dk-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
+.srp-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
   transition: opacity var(--motion-enter-md) var(--ease-enter); }
 /* It fades in as toasts start to wait, and out once none do (FO1); there as the Toaster arrives, it's just there. */
-@starting-style { .dk-toaster__more:not([data-instant]) { opacity: var(--opacity-0); } }
-.dk-toaster__more[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit); }
-.dk-toast__description { margin: var(--spacing-0); color: var(--toast-description-color, var(--text-muted)); }
-.dk-toast__action, .dk-toast__close { flex-shrink: 0; }
+@starting-style { .srp-toaster__more:not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-toaster__more[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit); }
+.srp-toast__description { margin: var(--spacing-0); color: var(--toast-description-color, var(--text-muted)); }
+.srp-toast__action, .srp-toast__close { flex-shrink: 0; }
 /* On a phone (the Toaster is the screen less 32px), an action beside the text left the text ~90px wide, breaking
    words mid-word and making each toast twice as tall (GQ1). Below the Toaster's full width, the action goes under
    the text, lined up with it, and × stays at the top end. */
-.dk-toaster { container: dk-toaster / inline-size; }
-@container dk-toaster (inline-size < 384px) {
-  .dk-toast:has(> .dk-toast__action) { display: grid; grid-template: "text close" "action ." / minmax(var(--spacing-0), 1fr) auto; }
-  .dk-toast:has(> .dk-toast__icon):has(> .dk-toast__action) { grid-template: "icon text close" ". action ." / auto minmax(var(--spacing-0), 1fr) auto; }
-  .dk-toast__icon { grid-area: icon; }
-  .dk-toast__content { grid-area: text; }
-  .dk-toast__action { grid-area: action; justify-self: start; }
+.srp-toaster { container: srp-toaster / inline-size; }
+@container srp-toaster (inline-size < 384px) {
+  .srp-toast:has(> .srp-toast__action) { display: grid; grid-template: "text close" "action ." / minmax(var(--spacing-0), 1fr) auto; }
+  .srp-toast:has(> .srp-toast__icon):has(> .srp-toast__action) { grid-template: "icon text close" ". action ." / auto minmax(var(--spacing-0), 1fr) auto; }
+  .srp-toast__icon { grid-area: icon; }
+  .srp-toast__content { grid-area: text; }
+  .srp-toast__action { grid-area: action; justify-self: start; }
   /* A long action label wraps onto more lines under the text instead of ending in an ellipsis (GR74): there is no
      hover on a phone to show the rest. It keeps a sm Button's height as the least it can be. */
-  .dk-toast > .dk-toast__action { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: start; height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-  .dk-toast__close { grid-area: close; }
+  .srp-toast > .srp-toast__action { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: start; height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+  .srp-toast__close { grid-area: close; }
 }
 /* An action label of more than a word or two (data-action="below", Toast.tsx) goes under the text at any width, in
    the same way: beside it, a title and description of a few words each ran to eight lines in a narrow column. A short
    one ("Undo", "View") stays beside the text, where the toast reads as one line. */
-.dk-toast[data-action="below"] { display: grid; grid-template: "text close" "action ." / minmax(var(--spacing-0), 1fr) auto; }
-.dk-toast[data-action="below"]:has(> .dk-toast__icon) { grid-template: "icon text close" ". action ." / auto minmax(var(--spacing-0), 1fr) auto; }
-.dk-toast[data-action="below"] > .dk-toast__icon { grid-area: icon; }
-.dk-toast[data-action="below"] > .dk-toast__content { grid-area: text; }
-.dk-toast[data-action="below"] > .dk-toast__action { grid-area: action; justify-self: start; }
-.dk-toast[data-action="below"] > .dk-toast__close { grid-area: close; }
-@media (forced-colors: active) { .dk-toast { border-color: CanvasText; } .dk-toaster__more { border: var(--border-width-1) solid CanvasText; } }
+.srp-toast[data-action="below"] { display: grid; grid-template: "text close" "action ." / minmax(var(--spacing-0), 1fr) auto; }
+.srp-toast[data-action="below"]:has(> .srp-toast__icon) { grid-template: "icon text close" ". action ." / auto minmax(var(--spacing-0), 1fr) auto; }
+.srp-toast[data-action="below"] > .srp-toast__icon { grid-area: icon; }
+.srp-toast[data-action="below"] > .srp-toast__content { grid-area: text; }
+.srp-toast[data-action="below"] > .srp-toast__action { grid-area: action; justify-self: start; }
+.srp-toast[data-action="below"] > .srp-toast__close { grid-area: close; }
+@media (forced-colors: active) { .srp-toast { border-color: CanvasText; } .srp-toaster__more { border: var(--border-width-1) solid CanvasText; } }
 }

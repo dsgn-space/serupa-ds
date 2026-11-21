@@ -25,7 +25,7 @@ const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider lo
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
 const count = (id: string) => box(id).querySelector(':scope > span[id]') as HTMLElement;
-const announcer = () => document.querySelector<HTMLElement>('[data-dk-announcer]');
+const announcer = () => document.querySelector<HTMLElement>('[data-srp-announcer]');
 
 describe('Input', () => {
   test('the box takes its container\'s width in a grid and a flex row too, at 320px: it never pushes the page sideways or squeezes a button beside it (with flex-1); the fields built on it as well (GR23)', async () => {
@@ -95,11 +95,11 @@ describe('Input', () => {
     expect([at, sent]).toEqual(['kb-in', ['Dana']]);
   });
 
-  test('a native <input type="text"> in a .dk-input box; md is 32px, text-sm, 12px padding, a 1px border and 6px corners', async () => {
+  test('a native <input type="text"> in a .srp-input box; md is 32px, text-sm, 12px padding, a 1px border and 6px corners', async () => {
     await render(<Input id="md" aria-label="Name" />);
     const s = css(box('md'));
     expect([field('md').tagName, field('md').type]).toEqual(['INPUT', 'text']);
-    expect(box('md').className).toMatch(/dk-input dk-input--size-md/);
+    expect(box('md').className).toMatch(/srp-input srp-input--size-md/);
     expect(box('md').dataset.component).toBe('input');
     expect([s.height, s.fontSize, s.paddingLeft, s.borderTopWidth, s.borderTopLeftRadius]).toEqual(['32px', '14px', '12px', '1px', '6px']);
   });
@@ -209,9 +209,9 @@ describe('Input', () => {
     const ref = css(box('fdref')), b = css(box('fdin'));
     expect(field('fdin').matches(':disabled')).toBe(true);
     expect([disabledLook(box('fdin')), b.backgroundColor, b.cursor, css(field('fdin')).cursor]).toEqual(['neutral', ref.backgroundColor, 'not-allowed', 'not-allowed']);
-    const border = css(box('fdin')).getPropertyValue('--dk-input-bd');
+    const border = css(box('fdin')).getPropertyValue('--srp-input-bd');
     await userEvent.hover(box('fdin'), { force: true });
-    expect(css(box('fdin')).getPropertyValue('--dk-input-bd')).toBe(border);
+    expect(css(box('fdin')).getPropertyValue('--srp-input-bd')).toBe(border);
     const num = field('fdnum').parentElement as HTMLElement;
     expect(disabledLook(num)).toBe('neutral');
     expect([...num.querySelectorAll<HTMLElement>('button[aria-controls]')].map((s) => disabledLook(s))).toEqual(['neutral', 'neutral']);
@@ -220,7 +220,7 @@ describe('Input', () => {
   test('icons: decorative, 16px at md, before and after the field, and they don\'t take clicks', async () => {
     await render(<Input id="ic" leftIcon="search" rightIcon="mail" aria-label="Icons" />);
     const w = box('ic'), l = w.querySelector(':scope > span:first-child')!, r = w.querySelector(':scope > span:last-child')!;
-    expect([...w.children].map((c) => c.className.split(' ')[0])).toEqual(['dk-input__icon', 'dk-input__field', 'dk-input__icon']);
+    expect([...w.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-input__icon', 'srp-input__field', 'srp-input__icon']);
     expect(w.firstElementChild).toBe(l);
     expect(w.lastElementChild).toBe(r);
     expect([l.getAttribute('aria-hidden'), r.getAttribute('aria-hidden')]).toEqual(['true', 'true']);
@@ -243,9 +243,9 @@ describe('Input', () => {
   test('showCount: "2 / 5" at the end of the field, linked by aria-describedby after the field\'s own; stops at maxLength and turns text-colored', async () => {
     await render(<><span id="hint">Up to 5</span><Input id="cnt" showCount maxLength={5} defaultValue="ab" aria-describedby="hint" aria-label="Code" rightIcon={<b>i</b>} /></>, { wrapper: EnUS });
     const c0 = count('cnt'), col0 = css(c0).color;
-    expect([c0.textContent, field('cnt').getAttribute('aria-describedby'), c0.nextElementSibling!.className, field('cnt').hasAttribute('maxlength')]).toEqual(['2 / 5', 'hint ' + c0.id, 'dk-input__icon dk-input__icon--right', false]);
+    expect([c0.textContent, field('cnt').getAttribute('aria-describedby'), c0.nextElementSibling!.className, field('cnt').hasAttribute('maxlength')]).toEqual(['2 / 5', 'hint ' + c0.id, 'srp-input__icon srp-input__icon--right', false]);
     await userEvent.type(field('cnt'), 'cdefg');
-    expect([field('cnt').value, count('cnt').textContent, count('cnt').classList.contains('dk-input__count--full')]).toEqual(['abcde', '5 / 5', true]);
+    expect([field('cnt').value, count('cnt').textContent, count('cnt').classList.contains('srp-input__count--full')]).toEqual(['abcde', '5 / 5', true]);
     expect(css(count('cnt')).color).not.toBe(col0);
   });
 
@@ -306,7 +306,7 @@ describe('Input', () => {
     } };
     for (const sheet of Array.from(document.styleSheets)) { try { walk(sheet.cssRules); } catch { /* another origin */ } }
     const fill = (f: string) => { const r = rules.find((x) => x.includes('.' + f + ':autofill')) || ''; return [/background-clip: text/.test(r), (/-webkit-text-fill-color: ([^;]+);/.exec(r) || [])[1]]; };
-    expect([fill('dk-input__field'), fill('dk-textarea__field'), fill('dk-select__field'), fill('dk-pin-input__field')])
+    expect([fill('srp-input__field'), fill('srp-textarea__field'), fill('srp-select__field'), fill('srp-pin-input__field')])
       .toEqual([[true, 'var(--input-text, var(--text))'], [true, 'var(--textarea-text, var(--text))'], [true, 'var(--select-text, var(--text))'], [true, 'transparent']]);
   });
   test('a field the browser filled in says so in more than colour: its border doubles inward (nothing moves) until it is focused, in Input, Textarea and Select', async () => {
@@ -320,11 +320,11 @@ describe('Input', () => {
       const r = rules.find((x) => x.selectorText.startsWith('.' + box + ':has(.' + box + '__field:autofill)'));
       return r ? [r.selectorText.includes(':not(:focus-within)'), r.style.boxShadow.startsWith('inset ')] : null;
     };
-    expect([mark('dk-input'), mark('dk-textarea'), mark('dk-select')]).toEqual([[true, true], [true, true], [true, true]]);
+    expect([mark('srp-input'), mark('srp-textarea'), mark('srp-select')]).toEqual([[true, true], [true, true], [true, true]]);
     // The mark drawn on a real box: 2px of border colour inside, the box's size unchanged.
     await render(<Input id="af" aria-label="Email" />);
     const box = field('af').parentElement as HTMLElement, before = box.getBoundingClientRect();
-    box.style.boxShadow = rules.find((x) => x.selectorText.startsWith('.dk-input:has('))!.style.boxShadow;
+    box.style.boxShadow = rules.find((x) => x.selectorText.startsWith('.srp-input:has('))!.style.boxShadow;
     expect([getComputedStyle(box).boxShadow, box.getBoundingClientRect().height]).toEqual([`${getComputedStyle(box).borderTopColor} 0px 0px 0px 1px inset`, before.height]);
   });
   test('iOS: Input, Textarea, Select and PinInput fields get 16px text where Safari would zoom into a smaller one (the rule only applies there)', () => {
@@ -334,7 +334,7 @@ describe('Input', () => {
       else if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules);
     } };
     for (const sheet of Array.from(document.styleSheets)) { try { walk(sheet.cssRules); } catch { /* another origin */ } }
-    for (const f of ['dk-input__field', 'dk-textarea__field', 'dk-select__field', 'dk-pin-input__field']) {
+    for (const f of ['srp-input__field', 'srp-textarea__field', 'srp-select__field', 'srp-pin-input__field']) {
       expect(rules.find((r) => r.includes('.' + f))).toMatch(/font-size: var\(--text-base\)/);
     }
   });
@@ -512,7 +512,7 @@ describe('Input actions (RU15)', () => {
     let sent = 0;
     await render(<form onSubmit={(e) => { e.preventDefault(); sent++; }}><Input id="cp" aria-label="Coupon code" rightIcon={<b>i</b>} actions={<InputAction label="Apply" />} /></form>);
     const b = actions('cp')[0]!;
-    expect([box('cp').lastElementChild!.className, b.previousElementSibling, b.type, b.textContent]).toEqual(['dk-input__actions', null, 'button', 'Apply']);
+    expect([box('cp').lastElementChild!.className, b.previousElementSibling, b.type, b.textContent]).toEqual(['srp-input__actions', null, 'button', 'Apply']);
     await userEvent.click(b);
     expect(sent).toBe(0);
   });

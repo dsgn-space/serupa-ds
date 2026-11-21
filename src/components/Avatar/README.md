@@ -31,9 +31,9 @@ import { Avatar } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Status` story.
 
-1. **Frame** (`.dk-avatar__frame`): the circle or square that clips the picture.
-2. **Picture** (`.dk-avatar__img`): the person's photo; initials or an icon take its place when there is none.
-3. **Status** (`.dk-avatar__status`): the presence dot: online, busy, away or offline, also given in words to screen readers.
+1. **Frame** (`.srp-avatar__frame`): the circle or square that clips the picture.
+2. **Picture** (`.srp-avatar__img`): the person's photo; initials or an icon take its place when there is none.
+3. **Status** (`.srp-avatar__status`): the presence dot: online, busy, away or offline, also given in words to screen readers.
 
 ## Usage
 

@@ -53,8 +53,8 @@ function VirtualListRender({ ref, ...props }: VirtualListProps & React.RefAttrib
   return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
     ref: setNode,
     'data-component': 'virtual-list', role: rest.role ?? 'list', tabIndex: rest.tabIndex ?? (count ? 0 : undefined),
-    className: cn('dk-list', 'dk-virtual-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', props.className),
-    style: { ...props.style, '--dk-vl-before': r.before + 'px', '--dk-vl-after': r.after + 'px' } as React.CSSProperties,
+    className: cn('srp-list', 'srp-virtual-list', variant === 'card' && 'srp-list--card', props.divided !== false && 'srp-list--divided', props.className),
+    style: { ...props.style, '--srp-vl-before': r.before + 'px', '--srp-vl-after': r.after + 'px' } as React.CSSProperties,
     // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed
     // heights, and the rows measured on the way left the focused one below the view. scrollToIndex keeps it in view
     // while they're measured; a row already in view doesn't move.

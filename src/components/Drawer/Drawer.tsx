@@ -82,7 +82,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const sds = useSettings(words);
   const restyle = useServerStyles<HTMLDialogElement>();   // a sheet's height share, under a strict CSP
   const rest = omit(props, OWN);
-  const base = domId('dk-drw', React.useId());
+  const base = domId('srp-drw', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
   const side = oneOf(['right', 'left', 'top', 'bottom', 'start', 'end'] as const, props.placement, 'right');
@@ -222,7 +222,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
     const t = e.target as Element;
     // swipeToClose={false} turns off closing by a drag, not a sheet's drag between its stops.
     if ((!swipe && !snaps.length) || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
-    if (!horiz && t.closest('.dk-drawer__body')) return;
+    if (!horiz && t.closest('.srp-drawer__body')) return;
     const away = side === 'start' || side === 'end' ? ((side === 'end') !== isRtl(e.currentTarget) ? 1 : -1) : side === 'right' || side === 'bottom' ? 1 : -1;
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }], away };
   };
@@ -244,7 +244,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
     p.style.transition = 'none';   // the start is placed at once: from the handle, no drag has turned transitions off
     p.style.height = tall + 'px';
     p.style.translate = shift(tall - from + at, 1);
-    p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
+    p.style.setProperty('--srp-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
     reflow(p);   // the start, laid out before the transition's end is set
     p.style.transition = '';
     p.dataset.settling = '';
@@ -273,7 +273,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
       close('swipe'); requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) { p.style.height = ''; p.style.translate = ''; } }));
     };
     const dist = p.offsetHeight - g.at;
-    p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
+    p.style.setProperty('--srp-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
     p.dataset.settling = '';
     if (!dist || !parseFloat(getComputedStyle(p).transitionDuration)) { done(); return; }
     const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === 'translate') { stop(); done(); } };
@@ -335,7 +335,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
       requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) p.style.translate = ''; }));
     };
     // Carries on at the finger's speed when it was moving that way; from a stop or a flick back, briskly.
-    p.style.setProperty('--dk-drawer-settle', settleTime(left, (out ? v : -v) > 0 ? v : 0) + 'ms');
+    p.style.setProperty('--srp-drawer-settle', settleTime(left, (out ? v : -v) > 0 ? v : 0) + 'ms');
     p.dataset.settling = '';
     if (!left || !parseFloat(getComputedStyle(p).transitionDuration)) { done(); return; }
     const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === 'translate') { stop(); done(); } };
@@ -358,24 +358,24 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
       aria-modal={modal ? 'true' : undefined}
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
-      className={cn('dk-drawer', 'dk-drawer--' + side, 'dk-drawer--' + size, !modal && 'dk-drawer--nonmodal', snaps.length > 0 && 'dk-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived.current ? '' : undefined}
+      className={cn('srp-drawer', 'srp-drawer--' + side, 'srp-drawer--' + size, !modal && 'srp-drawer--nonmodal', snaps.length > 0 && 'srp-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived.current ? '' : undefined}
       onKeyDown={onKeyDown} onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
-      <div ref={panel} className="dk-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--dk-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
+      <div ref={panel} className="srp-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--srp-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
         {snaps.length > 1 ? (
-          <button type="button" className="dk-drawer__handle" aria-label={snapAt < snaps.length - 1 ? sds.labels.drawerExpand : sds.labels.drawerCollapse}
-            onClick={onHandle}><span className="dk-drawer__grip" aria-hidden="true" /></button>
+          <button type="button" className="srp-drawer__handle" aria-label={snapAt < snaps.length - 1 ? sds.labels.drawerExpand : sds.labels.drawerCollapse}
+            onClick={onHandle}><span className="srp-drawer__grip" aria-hidden="true" /></button>
         ) : null}
         {has(props.title) || has(props.description) || showClose ? (
-          <div className="dk-drawer__header">
-            <div className="dk-drawer__heading">
-              {has(props.title) ? <h2 className="dk-drawer__title" id={base + '-title'}>{props.title}</h2> : null}
-              {has(props.description) ? <p className="dk-drawer__description" id={base + '-desc'}>{props.description}</p> : null}
+          <div className="srp-drawer__header">
+            <div className="srp-drawer__heading">
+              {has(props.title) ? <h2 className="srp-drawer__title" id={base + '-title'}>{props.title}</h2> : null}
+              {has(props.description) ? <p className="srp-drawer__description" id={base + '-desc'}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request('close')} /> : null}
+            {showClose ? <IconButton className="srp-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request('close')} /> : null}
           </div>
         ) : null}
-        {has(props.children) ? <div {...region} ref={setBody} className="dk-drawer__body">{props.children}</div> : null}
-        {has(props.footer) ? <div className="dk-drawer__footer">{props.footer}</div> : null}
+        {has(props.children) ? <div {...region} ref={setBody} className="srp-drawer__body">{props.children}</div> : null}
+        {has(props.footer) ? <div className="srp-drawer__footer">{props.footer}</div> : null}
       </div>
       {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || 'close'; setAsking(null); close(why); }} /> : null}
     </dialog>
