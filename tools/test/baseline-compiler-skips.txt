@@ -29,7 +29,6 @@ src/components/Kanban/Kanban.tsx KanbanRender
 src/components/KeyboardShortcuts/KeyboardShortcuts.tsx KeyboardShortcutsRender
 src/components/List/List.tsx ListRender
 src/components/LoadMore/LoadMore.tsx LoadMoreRender
-src/components/MentionInput/MentionInput.tsx MentionInputRender
 src/components/Menu/Menu.tsx ContextMenuRender
 src/components/Menu/Menu.tsx MenuItemBaseRender
 src/components/Menu/Menu.tsx MenuRadioGroupRender
