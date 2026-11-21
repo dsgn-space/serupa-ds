@@ -10,9 +10,12 @@ window.Serupa = Object.assign(window.Serupa || {}, Serupa);
 // components' own icons and the everyday ones are here (src/material/builtin.ts, named.ts); the first time an Icon
 // meets any other name, that script is added to the page from this script's own folder (same origin, so
 // script-src 'self' covers it). A page that names many icons can include serupa-icons.iife.js itself to skip the wait.
-// Read now: document.currentScript is only set while this script first runs.
+// Read now: document.currentScript is only set while this script first runs. Only a real script element counts: an
+// element named "currentScript" in the page's own HTML (<img name="currentScript" src="https://elsewhere/">, which a
+// sanitizer lets through) answers for document.currentScript, and its src would choose where the icons' script
+// comes from.
 const self = document.currentScript as HTMLScriptElement | null;
-const from = self && self.src ? new URL('serupa-icons.iife.js', self.src).href : '';
+const from = self && self.tagName === 'SCRIPT' && self.src ? new URL('serupa-icons.iife.js', self.src).href : '';
 iconChunks.all = () => window.SerupaIcons ? Promise.resolve(window.SerupaIcons) : new Promise((resolve, reject) => {
   const fail = (why: string) => { tag.remove(); reject(new Error(`${why}; include serupa-icons.iife.js on the page to draw every icon by name`)); };
   const tag = document.createElement('script');

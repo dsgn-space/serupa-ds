@@ -6,8 +6,11 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
 import { announce } from '../../internal/announce';
+import { leave } from '../../internal/leave';
 import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
+import { latinDigits } from '../../internal/digits';
+import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
 import { paginationRange } from './paginationRange';
 import { useFocusHandover } from '../../internal/focus';
@@ -151,17 +154,20 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
   const jumpId = React.useId();
   const [typed, setTyped] = React.useState('');
   const jumpTo = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== 'Enter' || isComposing(e)) return;
     e.preventDefault();
-    const n = parseInt(typed.replace(/[^\d]/g, ''), 10);
-    if (!isFinite(n) || count < 1) return;
+    // In the digits the pages are written in ("١٢" in ar-EG), or full width from an IME, with or without the marks
+    // that group thousands ("1,200"); "2.5" is no page.
+    const t = latinDigits(typed.normalize('NFKC')).trim().replace(/[\s,.'\u066c\u2019](?=\d{3}(?!\d))/g, '');
+    if (!/^\d+$/.test(t) || count < 1) return;
+    const n = Number(t);
     const to = Math.min(Math.max(n, 1), count);
     setTyped('');
     announce(said(to));
     if (to === page) return;
     if (!controlled) setOwn(to);
     if (props.onPageChange) props.onPageChange(to);
-    else if (props.getHref && typeof window !== 'undefined') window.location.assign(props.getHref(to));
+    else if (props.getHref && typeof window !== 'undefined') leave(props.getHref(to));   // a web page only: never a javascript: URL
   };
   const jump = props.jump && count > 1 ? <span className="dk-pagination__jump"><label htmlFor={jumpId}>{sds.labels.goToPage}</label>
     {/* Input's box and field classes, without Input's own code (its masks, count and actions) in Pagination's bundle. */}
