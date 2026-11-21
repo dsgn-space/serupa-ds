@@ -126,8 +126,15 @@ const steps = [
     // SERUPA_SHARD with SERUPA_PART=locale (CI): every third file of each, like the base shards (GR322: the whole run
     // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
     // with none passes.
-    const shard = process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests'] : [];
-    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...(direct || [])].sort().join(','), ...more }];
+    // Each language's run turns the shard number by the language's place in LOCALES, so a file that is a shard on its
+    // own lands on a different job in each language. Without the turn, every language put activity.test.tsx (about
+    // 7.5 minutes) alone on shard 1, and a change that edits it ran it four times in one job, past the job's limit
+    // (the srp rename, 21 Nov). The turn is a permutation, so the jobs together still run every shard in every language.
+    const [shardIndex, shardCount] = (process.env.SERUPA_SHARD || '').split('/').map(Number);
+    const shardIn = (l) => !(process.env.SERUPA_SHARD && arg('--group') === 'components') ? []
+      : [`--shard=${((shardIndex - 1 + Math.max(0, LOCALES.indexOf(l))) % shardCount) + 1}/${shardCount}`, '--passWithNoTests'];
+    const shard = shardIn(locale);
+    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shardIn(l), ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...(direct || [])].sort().join(','), ...more }];
     // A narrowed pull request runs no locale jobs, so its base jobs take the changed components' own tests in all four
     // languages: a test that failed only in one of them was found in the queue, where it drops every group behind it.
     // The queue does the same in seconds, so it costs about a minute (SERUPA_OWN keeps the steps in the base part).
