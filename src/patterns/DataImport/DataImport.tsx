@@ -194,7 +194,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
   const h2 = (text: string) => <Heading level={2} size="lg" ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>

@@ -71,7 +71,7 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
   };
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       {banner === 'gone' ? null : (
         <section aria-labelledby="consent-title" className="border-b border-border bg-surface px-4 py-4">

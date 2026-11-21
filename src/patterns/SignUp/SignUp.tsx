@@ -123,7 +123,7 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
   };
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
         <p className="m-0 text-base font-semibold">Acme</p>

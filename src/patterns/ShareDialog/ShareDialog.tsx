@@ -159,7 +159,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
   };
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="flex flex-wrap items-center gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 flex-1 text-base font-semibold">Acme Docs</p>

@@ -95,7 +95,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
   const count = loading ? 'Loading activity' : found.length === 1 ? '1 event' : `${formatNumber(found.length, locale)} events`;
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>

@@ -171,7 +171,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
   const h2 = (i: number) => <Heading level={2} size="xl" {...s.headingProps(i)} className="outline-none">{STEPS[i]?.title}</Heading>;
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>

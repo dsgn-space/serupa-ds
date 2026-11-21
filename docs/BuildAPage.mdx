@@ -47,6 +47,14 @@ The components take care of themselves: their roles, names, focus, keyboard and 
 - **The theme, before anything paints.** Load `theme.js` first in `<head>`, before the stylesheets, so the page never flashes the wrong theme. It also keeps `<meta name="theme-color">` on the page's surface, so a phone's status bar and address bar follow light and dark. And it keeps `<meta name="color-scheme">` on the mode shown, so a dark page's canvas, scrollbars and form controls are dark from the first paint, before the stylesheets arrive. A `theme-color` or `color-scheme` meta the page writes itself is left as it is ([Themes](?path=/docs/foundations-themes--docs)).
 - **Preload the font.** Inter comes split by script, and tokens.css gives each file its `unicode-range`, so a page downloads only the scripts its text uses. Each file is variable, with every weight, so one preload of the script your page is written in (`fonts/InterVariable-latin.woff2` for English and most of Western Europe, 103 KiB instead of 344 for the whole font) covers the regular, medium and semibold text at the top of the page. Also preload `-latin-ext`, `-cyrillic` or `-greek` when your page's language needs it. Text then appears in Inter on the first paint instead of swapping in. Keep `crossorigin` even on your own server: fonts are fetched that way, and a preload without it is downloaded twice. Preload the italic file only when italic text shows at the top of the page.
 
+## The page's background
+
+The page is `bg-surface` unless its content is built from Cards or panels. Then it's `bg-surface-muted`, a step below, so each Card's edge and its `surface` fill stand off the page. A dashboard, settings made of Card sections, a grid or list of Cards, a board and a list beside its detail all take the muted page. A page you read or fill in keeps the plain `surface`, even when one Card sits in it: a form or a flow of steps, sign-in, checkout, an article, a table or a list of rows, and an error page. The header, sidebar and footer around it stay `bg-surface` either way.
+
+{/* muted-pages: ApiKeys, Billing, Dashboard, DetailPage, EmailPreferences, HelpCenter, Integrations, ListDetail, Notifications, TeamMembers */}
+
+The patterns follow this. The list above is the one `src/internal/pageBackground.test.tsx` holds them to, so a new pattern picks a side on purpose.
+
 ## What stays the app's
 
 The components can't know these, so they're the app's to check on every page: the words in labels, links and errors; `alt` text for meaningful images; color carrying meaning only together with a second cue in your own content; captions for media; and a way to pause anything that moves for more than five seconds. Test each flow with the keyboard alone, a screen reader and 400% zoom.
