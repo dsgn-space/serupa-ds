@@ -31,12 +31,12 @@ const SWATCHES = [{ value: "#1d4ed8", label: "Blue" }, { value: "#047857", label
 
 Drawn from the `ContrastCheck` story.
 
-1. **Swatches** (`.dk-color-picker__swatches`): the colors to choose from, each named for screen readers.
-2. **Chosen swatch** (`.dk-color-picker__swatch--checked`): the color chosen now, with a check.
-3. **Custom color** (`.dk-color-picker__custom`): any other color, from the system picker or as a hex code.
-4. **Hex code** (`.dk-color-picker__hex`): the chosen color as a hex code, to read or type.
-5. **Contrast** (`.dk-color-picker__contrast`): the contrast against the background it will sit on.
-6. **Warning** (`.dk-color-picker__warning`): says when that contrast is too low to read.
+1. **Swatches** (`.srp-color-picker__swatches`): the colors to choose from, each named for screen readers.
+2. **Chosen swatch** (`.srp-color-picker__swatch--checked`): the color chosen now, with a check.
+3. **Custom color** (`.srp-color-picker__custom`): any other color, from the system picker or as a hex code.
+4. **Hex code** (`.srp-color-picker__hex`): the chosen color as a hex code, to read or type.
+5. **Contrast** (`.srp-color-picker__contrast`): the contrast against the background it will sit on.
+6. **Warning** (`.srp-color-picker__warning`): says when that contrast is too low to read.
 
 ## Usage
 

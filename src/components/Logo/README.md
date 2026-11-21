@@ -27,8 +27,8 @@ import { Logo } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Picture** (`.dk-logo__picture`): with a dark version or a mark, a `<picture>` that offers them to the browser ahead of the full logo. It takes no room of its own.
-2. **Logo** (`.dk-logo`): the `<img>`, at the size's height, named by `alt`.
+1. **Picture** (`.srp-logo__picture`): with a dark version or a mark, a `<picture>` that offers them to the browser ahead of the full logo. It takes no room of its own.
+2. **Logo** (`.srp-logo`): the `<img>`, at the size's height, named by `alt`.
 
 ## Usage
 

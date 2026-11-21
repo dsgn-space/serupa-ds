@@ -20,11 +20,11 @@ describe('AppShell', () => {
     const r = React.createRef<HTMLDivElement>();
     await render(shell({ ref: r, className: 'extra', 'data-x': 'y' } as never));
     const root = el('shell');
-    expect([root.tagName, root.className, root.dataset.component, r.current === root, root.dataset.x]).toEqual(['DIV', 'dk-app-shell extra', 'app-shell', true, 'y']);
+    expect([root.tagName, root.className, root.dataset.component, r.current === root, root.dataset.x]).toEqual(['DIV', 'srp-app-shell extra', 'app-shell', true, 'y']);
     const kids = [...root.children].map((k) => k.tagName + (k.className ? '.' + k.className.split(' ')[0] : ''));
-    expect(kids).toEqual(['A.dk-skip-link', 'HEADER', 'DIV.dk-app-shell__side', 'MAIN.dk-app-shell__main', 'FOOTER.dk-app-shell__footer']);
+    expect(kids).toEqual(['A.srp-skip-link', 'HEADER', 'DIV.srp-app-shell__side', 'MAIN.srp-app-shell__main', 'FOOTER.srp-app-shell__footer']);
     const main = q('main');
-    expect([main.id, main.tabIndex, main.contains(el('title')), q('.dk-app-shell__side').contains(el('nav')), q('footer').textContent]).toEqual(['main', -1, true, true, '© Acme']);
+    expect([main.id, main.tabIndex, main.contains(el('title')), q('.srp-app-shell__side').contains(el('nav')), q('footer').textContent]).toEqual(['main', -1, true, true, '© Acme']);
     expect([Math.round(main.getBoundingClientRect().left - root.getBoundingClientRect().left), css(main).paddingLeft]).toEqual([200, '24px']);
   });
 
@@ -32,23 +32,23 @@ describe('AppShell', () => {
     await page.viewport(900, 600);
     await expect.poll(() => window.innerHeight).toBe(600);
     await render(shell());
-    const measure = () => { const root = el('shell').getBoundingClientRect(); return [Math.round(root.height), Math.round(q('footer').getBoundingClientRect().bottom - root.top), Math.round(q('.dk-app-shell__side').getBoundingClientRect().height)]; };
+    const measure = () => { const root = el('shell').getBoundingClientRect(); return [Math.round(root.height), Math.round(q('footer').getBoundingClientRect().bottom - root.top), Math.round(q('.srp-app-shell__side').getBoundingClientRect().height)]; };
     const plain = measure();
-    document.documentElement.style.setProperty('--dk-navbar-offset', '50px');
-    try { expect([plain, measure()]).toEqual([[600, 600, 550], [600, 600, 550]]); } finally { document.documentElement.style.removeProperty('--dk-navbar-offset'); }
+    document.documentElement.style.setProperty('--srp-navbar-offset', '50px');
+    try { expect([plain, measure()]).toEqual([[600, 600, 550], [600, 600, 550]]); } finally { document.documentElement.style.removeProperty('--srp-navbar-offset'); }
   });
 
   test('the skip link moves focus into main', async () => {
     await render(shell());
     await userEvent.tab();
-    expect(document.activeElement?.className).toContain('dk-skip-link');
+    expect(document.activeElement?.className).toContain('srp-skip-link');
     await userEvent.keyboard('{Enter}');
     expect(document.activeElement).toBe(q('main'));
   });
 
   test('skipLink={false}, mainId, no sidebar or footer', async () => {
     await render(shell({ skipLink: false, mainId: 'content', sidebar: undefined, footer: undefined }));
-    expect([q('.dk-skip-link'), q('.dk-app-shell__side'), q('footer'), q('main').id]).toEqual([null, null, null, 'content']);
+    expect([q('.srp-skip-link'), q('.srp-app-shell__side'), q('footer'), q('main').id]).toEqual([null, null, null, 'content']);
   });
 
   test('the sidebar is gone below sidebarFrom: 640px by default, or md and lg', async () => {
@@ -61,12 +61,12 @@ describe('AppShell', () => {
   test('the sidebar sticks below a sticky bar, as tall as the screen less the bar on a long page', async () => {
     await page.viewport(900, 600);
     await expect.poll(() => window.innerHeight).toBe(600);
-    document.documentElement.style.setProperty('--dk-navbar-offset', '50px');
+    document.documentElement.style.setProperty('--srp-navbar-offset', '50px');
     try {
       await render(shell({ children: <div style={{ height: '2000px' }}>Long</div> }));
-      const s = css(q('.dk-app-shell__side'));
+      const s = css(q('.srp-app-shell__side'));
       expect([s.position, s.top, s.height]).toEqual(['sticky', '50px', '550px']);
-    } finally { document.documentElement.style.removeProperty('--dk-navbar-offset'); }
+    } finally { document.documentElement.style.removeProperty('--srp-navbar-offset'); }
   });
 
   test('padding grows with the screen (16, 24, 32px); padded={false} has none', async () => {
@@ -86,6 +86,6 @@ describe('AppShell', () => {
 
   test('a bottomNav comes last', async () => {
     await render(shell({ bottomNav: <nav id="bn" aria-label="Phone">x</nav> }));
-    expect([el('shell').lastElementChild?.className, el('shell').lastElementChild?.firstElementChild?.id]).toEqual(['dk-app-shell__bottom', 'bn']);
+    expect([el('shell').lastElementChild?.className, el('shell').lastElementChild?.firstElementChild?.id]).toEqual(['srp-app-shell__bottom', 'bn']);
   });
 });

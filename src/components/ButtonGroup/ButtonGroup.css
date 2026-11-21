@@ -4,30 +4,30 @@
    first and last buttons are found among the buttons, not the children: a Menu or Tooltip puts its popup right after
    its trigger.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* Never wider than its container, so a button's own max-inline-size (100%) is the container's too: a label too long
    for one line is cut with an ellipsis and a title, as a lone Button's is, instead of running out of it (GR108). */
-.dk-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2)); --dk-touch-gap: var(--button-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); }
-.dk-button-group--vertical { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
+.srp-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2)); --srp-touch-gap: var(--button-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); }
+.srp-button-group--vertical { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
 /* min-inline-size 0: in a grid track or a flex row, the row is held to its container too, so it can tell it doesn't fit (GP2). */
-.dk-button-group--attached { flex-wrap: nowrap; gap: var(--spacing-0); --dk-touch-gap: var(--spacing-0); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
+.srp-button-group--attached { flex-wrap: nowrap; gap: var(--spacing-0); --srp-touch-gap: var(--spacing-0); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
 /* Attached, a row that doesn't fit its container wraps as separate buttons instead (ButtonGroup.tsx sets data-wrapped
    and drops the attached class): the buttons keep their size so it can tell, rather than shrinking to ellipses. */
-.dk-button-group--attached > .dk-btn { position: relative; flex-shrink: 0; }
+.srp-button-group--attached > .srp-btn { position: relative; flex-shrink: 0; }
 /* Front to back: focused, then on (pressed), then hovered, so a hovered neighbour never paints over the border line
    an on toggle shares with it, nor an on one over a focus ring. */
-@media (hover: hover) { .dk-button-group--attached > .dk-btn:hover { z-index: var(--z-10); } }
-.dk-button-group--attached > .dk-btn[aria-pressed="true"] { z-index: var(--z-20); }
-.dk-button-group--attached > .dk-btn:focus-visible { z-index: var(--z-30); }
-.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn ~ .dk-btn { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
-.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:has(~ .dk-btn) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+@media (hover: hover) { .srp-button-group--attached > .srp-btn:hover { z-index: var(--z-10); } }
+.srp-button-group--attached > .srp-btn[aria-pressed="true"] { z-index: var(--z-20); }
+.srp-button-group--attached > .srp-btn:focus-visible { z-index: var(--z-30); }
+.srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn ~ .srp-btn { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
+.srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn:has(~ .srp-btn) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 /* Two solid buttons side by side get an edge between them, in their text color, as a split button has. */
-.dk-button-group--attached:not(.dk-button-group--vertical) > :is(.dk-btn--primary, .dk-btn--primary + :not(.dk-btn)) + .dk-btn--primary { border-inline-start-color: color-mix(in srgb, currentColor var(--button-group-divider, var(--opacity-40)), transparent); }
-.dk-button-group--attached.dk-button-group--vertical > .dk-btn ~ .dk-btn { margin-top: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-start-end-radius: var(--spacing-0); }
-.dk-button-group--attached.dk-button-group--vertical > .dk-btn:has(~ .dk-btn) { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+.srp-button-group--attached:not(.srp-button-group--vertical) > :is(.srp-btn--primary, .srp-btn--primary + :not(.srp-btn)) + .srp-btn--primary { border-inline-start-color: color-mix(in srgb, currentColor var(--button-group-divider, var(--opacity-40)), transparent); }
+.srp-button-group--attached.srp-button-group--vertical > .srp-btn ~ .srp-btn { margin-top: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-start-end-radius: var(--spacing-0); }
+.srp-button-group--attached.srp-button-group--vertical > .srp-btn:has(~ .srp-btn) { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 /* A small button is 24px across, the WCAG 2.2 minimum target (2.5.8). The buttons on either side overlap it by 1px (the
    next one, and the one before when it comes to the front pressed, hovered or focused), which would leave 22px of it
    showing: an icon-only one is wider by both overlaps in a row, and every one taller by them in a column. */
-.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn--icon-only.dk-btn--size-sm { width: calc(var(--button-height-sm, var(--control-height-sm)) + var(--button-group-overlap, var(--border-width-1)) + var(--button-group-overlap, var(--border-width-1))); }
-.dk-button-group--attached.dk-button-group--vertical > .dk-btn--size-sm { height: calc(var(--button-height-sm, var(--control-height-sm)) + var(--button-group-overlap, var(--border-width-1)) + var(--button-group-overlap, var(--border-width-1))); }
+.srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn--icon-only.srp-btn--size-sm { width: calc(var(--button-height-sm, var(--control-height-sm)) + var(--button-group-overlap, var(--border-width-1)) + var(--button-group-overlap, var(--border-width-1))); }
+.srp-button-group--attached.srp-button-group--vertical > .srp-btn--size-sm { height: calc(var(--button-height-sm, var(--control-height-sm)) + var(--button-group-overlap, var(--border-width-1)) + var(--button-group-overlap, var(--border-width-1))); }
 }

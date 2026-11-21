@@ -13,7 +13,7 @@ const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) 
 // Text shown in the open dialog itself, not in the page's live region, which can sit inside the dialog and still hold
 // what it last said.
 const inDialog = (text: string | RegExp) => [...document.querySelectorAll('dialog[open] *')]
-  .some((e) => !e.closest('[data-dk-announcer]') && (typeof text === 'string' ? e.textContent?.trim() === text : text.test(e.textContent?.trim() || '')));
+  .some((e) => !e.closest('[data-srp-announcer]') && (typeof text === 'string' ? e.textContent?.trim() === text : text.test(e.textContent?.trim() || '')));
 const current = () => page.getByLabelText(/^Current password/);
 const next = () => page.getByLabelText(/^New password/);
 

@@ -51,7 +51,7 @@ describe('ErrorSummary', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en"><ErrorSummary id="x" ref={ref} className="extra" data-x="y" autoFocus={false} errors={ERRORS} /></SerupaProvider>);
     const e = el('x'), h = e.querySelector('h2')!;
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.tabIndex]).toEqual(['DIV', true, 'dk-error-summary extra', 'y', 'error-summary', -1]);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.tabIndex]).toEqual(['DIV', true, 'srp-error-summary extra', 'y', 'error-summary', -1]);
     expect([e.getAttribute('aria-labelledby'), h.textContent]).toEqual([h.id, 'There are 2 problems']);
     expect(e.querySelector('ul')!.getAttribute('role')).toBe('list');   // list-style: none drops the list role in Safari
     expect([...e.querySelectorAll('li > a')].map((a) => [a.getAttribute('href'), a.textContent])).toEqual([['#f-name', 'Enter your full name'], ['#f-plan-basic', 'Choose a plan']]);
@@ -125,7 +125,7 @@ describe('ErrorSummary', () => {
 
   test('GR54: when it takes focus, the Fields in its form don\'t also say their new errors; a Field elsewhere still does', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const Form = ({ failed, other }: { failed: boolean; other?: string }) => <>
       <form>

@@ -50,7 +50,7 @@
   - list:
     - listitem:
       - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column":
-        - /url: "#dk-f_id1_-control"
+        - /url: "#srp-f_id1_-control"
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer
   - textbox "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer" [invalid]
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column
@@ -110,7 +110,7 @@
   - list:
     - listitem:
       - link "That email already has an account. Sign in instead":
-        - /url: "#dk-f_id1_-control"
+        - /url: "#srp-f_id1_-control"
   - text: Full name
   - textbox "Full name": Ani Wijaya
   - text: Email Like name@example.com
@@ -131,13 +131,13 @@
   - list:
     - listitem:
       - link "Enter your full name":
-        - /url: "#dk-f_id1_-control"
+        - /url: "#srp-f_id1_-control"
     - listitem:
       - link "Enter an email address like name@example.com":
-        - /url: "#dk-f_id2_-control"
+        - /url: "#srp-f_id2_-control"
     - listitem:
       - link "Agree to the terms to create an account":
-        - /url: "#dk-f_id3_-control"
+        - /url: "#srp-f_id3_-control"
   - text: Full name
   - textbox "Full name" [invalid]
   - text: Enter your full name Email Like name@example.com

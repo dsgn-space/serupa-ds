@@ -30,8 +30,8 @@ describe('ToggleButton', () => {
     await render(<Formatting boldRef={ref} />);
     const e = el('tbold') as HTMLButtonElement;
     expect([e.tagName, e.type, pressed('tbold'), e.getAttribute('aria-label'), e.dataset.component, (e.querySelector<HTMLElement>('[data-icon]'))?.dataset.icon]).toEqual(['BUTTON', 'button', 'false', 'Bold', 'button', 'format_bold']);
-    expect(e.className).toMatch(/dk-btn--outline/);
-    expect(e.className).toMatch(/dk-toggle-button extra/);
+    expect(e.className).toMatch(/srp-btn--outline/);
+    expect(e.className).toMatch(/srp-toggle-button extra/);
     expect(ref.current).toBe(e);
   });
 
@@ -81,8 +81,8 @@ describe('ToggleButton', () => {
       {/* @ts-expect-error: not a ToggleButton variant */}
       <ToggleButton id="tbad" variant="primary">Bad</ToggleButton>
     </>);
-    expect([pressed('tghost'), /dk-btn--ghost/.test(el('tghost').className), pressed('titalic')]).toEqual(['true', true, 'true']);
-    expect(el('tbad').className).toMatch(/dk-btn--outline/);
+    expect([pressed('tghost'), /srp-btn--ghost/.test(el('tghost').className), pressed('titalic')]).toEqual(['true', true, 'true']);
+    expect(el('tbad').className).toMatch(/srp-btn--outline/);
   });
 
   test('controlled: onPressedChange gets the new state, the parent sets it', async () => {
@@ -155,9 +155,9 @@ describe('ToggleButton onMedia', () => {
   test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
     await render(<div><ToggleButton id="om-dark" icon="format_bold" aria-label="Bold" onMedia="dark" /><ToggleButton id="om-light" icon="format_italic" aria-label="Italic" onMedia="light" /></div>);
     const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
-    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(document.getElementById('om-dark')!.className).toContain('srp-btn--on-dark');
     expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
-    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(document.getElementById('om-light')!.className).toContain('srp-btn--on-light');
     expect(inks('om-light')).toContain('rgb(0, 0, 0)');
   });
 });

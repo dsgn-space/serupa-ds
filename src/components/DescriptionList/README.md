@@ -33,10 +33,10 @@ import { DescriptionList, DescriptionItem } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **List** (`.dk-description-list`): the `<dl>`, a term beside its details from 480px wide, under it when narrower.
-2. **Item** (`.dk-description-list__item`): one term and its details, in a `<div>`.
-3. **Term** (`.dk-description-list__term`): the `<dt>`, what the value is, muted and medium weight.
-4. **Details** (`.dk-description-list__details`): the `<dd>`, the value itself.
+1. **List** (`.srp-description-list`): the `<dl>`, a term beside its details from 480px wide, under it when narrower.
+2. **Item** (`.srp-description-list__item`): one term and its details, in a `<div>`.
+3. **Term** (`.srp-description-list__term`): the `<dt>`, what the value is, muted and medium weight.
+4. **Details** (`.srp-description-list__details`): the `<dd>`, the value itself.
 
 ## Usage
 

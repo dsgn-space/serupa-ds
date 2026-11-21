@@ -19,7 +19,7 @@ describe('SplitButton', () => {
     const log: string[] = [], ref = React.createRef<HTMLDivElement>();
     await render(<SplitButton ref={ref} id="r" className="extra" data-x="y" aria-label="Save" menuLabel="More save options" menu={<MenuItem>Save a copy</MenuItem>} onClick={() => log.push('save')}>Save</SplitButton>);
     const w = el('r');
-    expect([ref.current === w, w.className, w.dataset.x, w.dataset.component]).toEqual([true, 'dk-split-button extra', 'y', 'split-button']);
+    expect([ref.current === w, w.className, w.dataset.x, w.dataset.component]).toEqual([true, 'srp-split-button extra', 'y', 'split-button']);
     await expect.element(page.getByRole('group', { name: 'Save' })).toBeInTheDocument();
     const arrow = page.getByRole('button', { name: 'More save options' });
     await expect.element(arrow).toHaveAttribute('aria-haspopup', 'menu');

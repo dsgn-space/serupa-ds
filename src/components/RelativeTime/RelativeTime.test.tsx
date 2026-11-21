@@ -26,7 +26,7 @@ describe('RelativeTime', () => {
     await render(<SerupaProvider locale="en-US"><RelativeTime id="t1" date={at} ref={ref} className="extra" data-x="y" /></SerupaProvider>);
     const t = el('t1');
     expect([t.tagName, t.textContent, t.dateTime, t.title, ref.current === t, t.className, t.dataset.x, t.dataset.component])
-      .toEqual(['TIME', '3 minutes ago', new Date(at).toISOString(), new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(at), true, 'dk-relative-time extra', 'y', 'relative-time']);
+      .toEqual(['TIME', '3 minutes ago', new Date(at).toISOString(), new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(at), true, 'srp-relative-time extra', 'y', 'relative-time']);
   });
 
   test('the unit follows the gap, past and future: now, minutes, hours, yesterday, days, months, years, in 2 hours', () => {

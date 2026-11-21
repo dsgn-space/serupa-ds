@@ -57,24 +57,24 @@ try {
 
   // A selector list with nested parentheses (ButtonGroup's :is(.x, .y + :not(.z)), GR217): split only at its top-level
   // commas, so a dropped component's selector goes whole and the rest stays valid CSS.
-  const nested = purge('.dk-button-group > :is(.dk-btn--primary, .dk-btn--primary + :not(.dk-btn)) + .dk-btn--primary, .dk-btn { color: red }', new Set(), new Set(['dk-button-group']));
-  t('splits a selector list only at its top-level commas', nested.trim() === '.dk-btn { color: red }', nested);
-  const kept = purge('.dk-btn:is(.a, .b + :not(.c)), .dk-x[title="1,2"] { color: red }', new Set(['a', 'b', 'c']));
-  t('keeps a selector whose parentheses or attribute value hold commas, whole', kept.includes('.dk-btn:is(.a, .b + :not(.c))') && kept.includes('.dk-x[title="1,2"]'), kept);
+  const nested = purge('.srp-button-group > :is(.srp-btn--primary, .srp-btn--primary + :not(.srp-btn)) + .srp-btn--primary, .srp-btn { color: red }', new Set(), new Set(['srp-button-group']));
+  t('splits a selector list only at its top-level commas', nested.trim() === '.srp-btn { color: red }', nested);
+  const kept = purge('.srp-btn:is(.a, .b + :not(.c)), .srp-x[title="1,2"] { color: red }', new Set(['a', 'b', 'c']));
+  t('keeps a selector whose parentheses or attribute value hold commas, whole', kept.includes('.srp-btn:is(.a, .b + :not(.c))') && kept.includes('.srp-x[title="1,2"]'), kept);
 
   // @starting-style holds rules like @media does: a dropped component's or an unused class's go with it.
-  const start = purge('@starting-style { .dk-dialog { opacity: 0 } .dk-btn { opacity: 0 } .grid { opacity: 0 } }', new Set(), new Set(['dk-dialog']));
-  t('trims the rules inside @starting-style', start.includes('.dk-btn') && !start.includes('dk-dialog') && !start.includes('.grid'), start);
+  const start = purge('@starting-style { .srp-dialog { opacity: 0 } .srp-btn { opacity: 0 } .grid { opacity: 0 } }', new Set(), new Set(['srp-dialog']));
+  t('trims the rules inside @starting-style', start.includes('.srp-btn') && !start.includes('srp-dialog') && !start.includes('.grid'), start);
 
   // @scope goes with its root: a dropped component's scope goes whole; a kept one's rules are trimmed as the rest are.
-  const scoped = purge('@scope (.dk-prose) to (.dk-x) { :scope :where(ul) { color: red } } @scope (.dk-card) { :scope .grid { color: red } :scope p { color: blue } }', new Set(), new Set(['dk-prose']));
-  t('drops an @scope whose root is a dropped component, and trims the rules inside a kept one', !scoped.includes('dk-prose') && scoped.includes('@scope (.dk-card)') && scoped.includes(':scope p') && !scoped.includes('.grid'), scoped);
+  const scoped = purge('@scope (.srp-prose) to (.srp-x) { :scope :where(ul) { color: red } } @scope (.srp-card) { :scope .grid { color: red } :scope p { color: blue } }', new Set(), new Set(['srp-prose']));
+  t('drops an @scope whose root is a dropped component, and trims the rules inside a kept one', !scoped.includes('srp-prose') && scoped.includes('@scope (.srp-card)') && scoped.includes(':scope p') && !scoped.includes('.grid'), scoped);
 
   // --components: a word every component's label sets share (en, id) marks none of them used (GR99).
   const manifest = JSON.parse(fs.readFileSync(path.join(PROJECT, 'dist', 'components.json'), 'utf8'));
   const dropped = (words) => [...unusedComponentClasses(manifest, new Set(words))].sort();
   const button = dropped(['Button', 'Save']);
-  t('--components: id="save" or lang="en" in the sources keeps no more components than without', JSON.stringify(dropped(['Button', 'Save', 'id', 'en', 'lang'])) === JSON.stringify(button) && !button.includes('dk-btn') && button.includes('dk-toast'), `${dropped(['Button', 'id', 'en']).length} classes dropped, ${button.length} without id and en`);
+  t('--components: id="save" or lang="en" in the sources keeps no more components than without', JSON.stringify(dropped(['Button', 'Save', 'id', 'en', 'lang'])) === JSON.stringify(button) && !button.includes('srp-btn') && button.includes('srp-toast'), `${dropped(['Button', 'id', 'en']).length} classes dropped, ${button.length} without id and en`);
 } finally {
   fs.rmSync(dir, { recursive: true, force: true });
 }

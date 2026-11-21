@@ -89,7 +89,7 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
   // right-to-left name keeps its end on the left.
   const chars = middle && cut ? graphemes(children) : [];
   const at = chars.length ? middleCutAt(children, chars) : 0;
-  const content = at > 0 ? <span className="dk-truncated-text__start">{children}</span> : children;
+  const content = at > 0 ? <span className="srp-truncated-text__start">{children}</span> : children;
   const Tag = as === 'p' || as === 'div' ? as : 'span';
   const attrs = {
     ...rest,
@@ -100,7 +100,7 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
     'data-end': at > 0 ? chars.slice(at).join('') : undefined,
     dir: middle ? rest.dir || 'auto' : rest.dir,
     tabIndex: cut && !inside ? 0 : rest.tabIndex,
-    className: cn('dk-truncated-text', clamp && 'dk-truncated-text--clamp', at > 0 && 'dk-truncated-text--middle', className),
+    className: cn('srp-truncated-text', clamp && 'srp-truncated-text--clamp', at > 0 && 'srp-truncated-text--middle', className),
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => { press.current = { touch: e.pointerType !== 'mouse', open }; if (onPointerDown) onPointerDown(e); },
     onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && !inside && press.current.touch && !press.current.open) setOpen(true); },
   };

@@ -4,16 +4,16 @@
    one of its own tokens (date-field.tokens.json), which fall back to the shared ones; the boxes are Inputs, so their
    colors, border, focus ring and invalid border are Input's.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-date-field { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--date-field-gap, var(--spacing-4)); min-width: var(--spacing-0); }
-.dk-date-field__part { display: flex; flex-direction: column; gap: var(--date-field-label-gap, var(--spacing-1)); min-width: var(--spacing-0); }
-.dk-date-field__label { font-size: var(--date-field-label-size, var(--text-sm)); line-height: var(--text-sm--line-height); color: var(--date-field-label, var(--text)); }
-.dk-date-field__part--day, .dk-date-field__part--month { width: var(--date-field-short-width, var(--spacing-16)); }
-.dk-date-field__part--year { width: var(--date-field-year-width, var(--spacing-24)); }
-.dk-date-field__input { width: var(--sizing-full); font-variant-numeric: tabular-nums; }
-.dk-date-field--disabled .dk-date-field__label { color: var(--date-field-text-disabled, var(--disabled-text)); }
+@layer srp.components {
+.srp-date-field { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--date-field-gap, var(--spacing-4)); min-width: var(--spacing-0); }
+.srp-date-field__part { display: flex; flex-direction: column; gap: var(--date-field-label-gap, var(--spacing-1)); min-width: var(--spacing-0); }
+.srp-date-field__label { font-size: var(--date-field-label-size, var(--text-sm)); line-height: var(--text-sm--line-height); color: var(--date-field-label, var(--text)); }
+.srp-date-field__part--day, .srp-date-field__part--month { width: var(--date-field-short-width, var(--spacing-16)); }
+.srp-date-field__part--year { width: var(--date-field-year-width, var(--spacing-24)); }
+.srp-date-field__input { width: var(--sizing-full); font-variant-numeric: tabular-nums; }
+.srp-date-field--disabled .srp-date-field__label { color: var(--date-field-text-disabled, var(--disabled-text)); }
 /* What's wrong, on a line of its own under the boxes, as a Field's error is drawn. */
-.dk-date-field__error { display: flex; flex-basis: var(--sizing-full); align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); margin-block-start: calc(var(--spacing-0) - var(--date-field-gap, var(--spacing-4)) + var(--spacing-1\.5)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
-.dk-date-field__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); }
-.dk-date-field__part--month:has(.dk-date-field__input--select) { width: auto; min-width: var(--date-field-year-width, var(--spacing-24)); }
+.srp-date-field__error { display: flex; flex-basis: var(--sizing-full); align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); margin-block-start: calc(var(--spacing-0) - var(--date-field-gap, var(--spacing-4)) + var(--spacing-1\.5)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
+.srp-date-field__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); }
+.srp-date-field__part--month:has(.srp-date-field__input--select) { width: auto; min-width: var(--date-field-year-width, var(--spacing-24)); }
 }

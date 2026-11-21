@@ -4,130 +4,130 @@
    selected day is filled in primary, a day under the pointer is secondary (a day of another month reads in full text there), and pressed while held. Disabled days are faded and
    struck through. Always six weeks tall, so it doesn't jump between months.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-calendar {
+@layer srp.components {
+.srp-calendar {
   /* Seven days fit a narrow screen with large text (320px at 125%, GR71): a day shrinks to a seventh of the screen
      less a gutter for the page and a popover's padding, never past the day size. It snaps down to a whole pixel (178): a
      seventh of the screen is a fraction (37.14px at 320px), which blurs the day circles' and the range band's edges
      and leaves the columns a hair apart. */
-  --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12) - var(--dk-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
+  --srp-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12) - var(--srp-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
   /* Space between the weeks, so the rows read apart and a range is a band per week. */
-  --dk-cal-row-gap: var(--calendar-row-gap, var(--spacing-1));
+  --srp-cal-row-gap: var(--calendar-row-gap, var(--spacing-1));
   display: inline-flex; flex-direction: column; gap: var(--calendar-gap, var(--spacing-2));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--calendar-day-color, var(--text));
 }
 /* Touch (EQ1): at least 44px days, as Apple and Material ask, still shrinking to a seventh of a narrow screen. */
-@media (pointer: coarse) { .dk-calendar { --dk-cal-day: min(max(var(--calendar-day-size, var(--control-height-md)), var(--spacing-11)), round(down, calc((100vw - var(--spacing-12) - var(--dk-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
-.dk-calendar__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
-.dk-calendar__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--calendar-title-color, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--calendar-title-weight, var(--font-semibold)); }
+@media (pointer: coarse) { .srp-calendar { --srp-cal-day: min(max(var(--calendar-day-size, var(--control-height-md)), var(--spacing-11)), round(down, calc((100vw - var(--spacing-12) - var(--srp-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
+.srp-calendar__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
+.srp-calendar__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--calendar-title-color, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--calendar-title-weight, var(--font-semibold)); }
 /* monthYearPicker: the month and year menus where the title was, native selects with the field's look. */
-.dk-calendar__menus { display: flex; flex: auto; justify-content: center; gap: var(--spacing-1); }
-.dk-calendar__menu {
+.srp-calendar__menus { display: flex; flex: auto; justify-content: center; gap: var(--spacing-1); }
+.srp-calendar__menu {
   height: var(--control-height-sm); padding-block: var(--spacing-0); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--calendar-menu-border, var(--field-border));
   border-radius: var(--radius-control); background: var(--calendar-menu-bg, var(--field)); color: var(--calendar-title-color, var(--text));
   font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold)); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-calendar__menu:focus { outline: none; }
-.dk-calendar__menu:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-calendar__grid { border-collapse: collapse; border-spacing: var(--spacing-0); }
-.dk-calendar__grid th { width: var(--dk-cal-day); height: var(--dk-cal-day); padding: var(--spacing-0); color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); text-align: center; }
-.dk-calendar__grid td { padding: var(--spacing-0); text-align: center; }
-.dk-calendar__grid tbody tr + tr td { padding-block-start: var(--dk-cal-row-gap); }
+.srp-calendar__menu:focus { outline: none; }
+.srp-calendar__menu:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-calendar__grid { border-collapse: collapse; border-spacing: var(--spacing-0); }
+.srp-calendar__grid th { width: var(--srp-cal-day); height: var(--srp-cal-day); padding: var(--spacing-0); color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); text-align: center; }
+.srp-calendar__grid td { padding: var(--spacing-0); text-align: center; }
+.srp-calendar__grid tbody tr + tr td { padding-block-start: var(--srp-cal-row-gap); }
 /* The heading (Calendar.tsx): the month and year as a button that opens the year's months, and there the year, which
    opens twelve years. A ghost button, as tall as the month buttons beside it. */
-.dk-calendar__heading {
+.srp-calendar__heading {
   display: inline-flex; flex: auto; align-items: center; justify-content: center; gap: var(--spacing-1); height: var(--control-height-sm);
   margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2); border: var(--spacing-0); border-radius: var(--radius-control);
   background: transparent; color: var(--calendar-title-color, var(--text)); font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold));
   white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation; transition: background-color var(--motion-hover) var(--ease-move);
 }
-.dk-calendar__heading-icon { color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--spacing-4); }
-@media (hover: hover) { button.dk-calendar__heading:hover { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, var(--pressed)); }
-.dk-calendar__heading--static { cursor: default; }
-.dk-calendar__heading:focus { outline: none; }
-.dk-calendar__heading:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-calendar__heading-icon { color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--spacing-4); }
+@media (hover: hover) { button.srp-calendar__heading:hover { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.srp-calendar__heading--static { cursor: default; }
+.srp-calendar__heading:focus { outline: none; }
+.srp-calendar__heading:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 /* The months or years: three by four, the size of the weekday row and six weeks with their gaps. */
-.dk-calendar__periods {
-  --dk-cal-periods-w: calc(7 * var(--dk-cal-day));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days: a count, not a length */
-  --dk-cal-periods-h: calc(7 * var(--dk-cal-day) + 5 * var(--dk-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- the weekday row and six weeks, with the five gaps between them: counts */
+.srp-calendar__periods {
+  --srp-cal-periods-w: calc(7 * var(--srp-cal-day));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days: a count, not a length */
+  --srp-cal-periods-h: calc(7 * var(--srp-cal-day) + 5 * var(--srp-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- the weekday row and six weeks, with the five gaps between them: counts */
   /* min-width too: WebKit sizes the calendar around a fixed-layout table less its border spacing (208px for 224px). */
-  width: var(--dk-cal-periods-w); min-width: var(--dk-cal-periods-w); height: var(--dk-cal-periods-h);
+  width: var(--srp-cal-periods-w); min-width: var(--srp-cal-periods-w); height: var(--srp-cal-periods-h);
   border-collapse: separate; border-spacing: var(--spacing-1); table-layout: fixed;
 }
-.dk-calendar__periods td { padding: var(--spacing-0); }
-.dk-calendar__period {
-  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--sizing-full); height: var(--sizing-full); min-height: var(--dk-cal-day);
+.srp-calendar__periods td { padding: var(--spacing-0); }
+.srp-calendar__period {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--sizing-full); height: var(--sizing-full); min-height: var(--srp-cal-day);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .dk-calendar__period:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-.dk-calendar__period:active:not([aria-disabled="true"], .dk-calendar__period--selected) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
-.dk-calendar__period:focus { outline: none; }
-.dk-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-calendar__period--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
-@media (hover: hover) { .dk-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
-.dk-calendar__period--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
-@media (hover: hover) { .dk-calendar__period--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.dk-calendar__period--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
+@media (hover: hover) { .srp-calendar__period:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+.srp-calendar__period:active:not([aria-disabled="true"], .srp-calendar__period--selected) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.srp-calendar__period:focus { outline: none; }
+.srp-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-calendar__period--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
+@media (hover: hover) { .srp-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
+.srp-calendar__period--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
+@media (hover: hover) { .srp-calendar__period--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
+.srp-calendar__period--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* weekNumbers: a narrow column of week numbers before the days, which take its width off their share of a narrow screen. */
-.dk-calendar--weeks { --dk-cal-weeks: var(--calendar-week-width, var(--spacing-7)); }
-.dk-calendar__grid .dk-calendar__week { width: var(--dk-cal-weeks); color: var(--calendar-week-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; text-align: center; }
-.dk-calendar__grid tbody tr + tr th.dk-calendar__week { padding-block-start: var(--dk-cal-row-gap); }
-.dk-calendar__day {
-  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);
+.srp-calendar--weeks { --srp-cal-weeks: var(--calendar-week-width, var(--spacing-7)); }
+.srp-calendar__grid .srp-calendar__week { width: var(--srp-cal-weeks); color: var(--calendar-week-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; text-align: center; }
+.srp-calendar__grid tbody tr + tr th.srp-calendar__week { padding-block-start: var(--srp-cal-row-gap); }
+.srp-calendar__day {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--srp-cal-day); height: var(--srp-cal-day);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .dk-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-.dk-calendar__day:active:not([aria-disabled="true"], .dk-calendar__day--selected, .dk-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
-.dk-calendar__day:focus { outline: none; }
-.dk-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-calendar__day--outside { color: var(--calendar-outside-color, var(--text-muted)); }
-@media (hover: hover) { .dk-calendar__day--outside:hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
-.dk-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
-@media (hover: hover) { .dk-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
-.dk-calendar__day--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
-@media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.dk-calendar__day--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
+@media (hover: hover) { .srp-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+.srp-calendar__day:active:not([aria-disabled="true"], .srp-calendar__day--selected, .srp-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.srp-calendar__day:focus { outline: none; }
+.srp-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-calendar__day--outside { color: var(--calendar-outside-color, var(--text-muted)); }
+@media (hover: hover) { .srp-calendar__day--outside:hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
+.srp-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
+@media (hover: hover) { .srp-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
+.srp-calendar__day--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
+@media (hover: hover) { .srp-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
+.srp-calendar__day--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
    turns both; stacked on a narrow screen, each keeps both. */
-@media (min-width: 640px) { .dk-calendar--paired-next .dk-calendar__nav--next, .dk-calendar--paired-previous .dk-calendar__nav--prev { visibility: hidden; } }
+@media (min-width: 640px) { .srp-calendar--paired-next .srp-calendar__nav--next, .srp-calendar--paired-previous .srp-calendar__nav--prev { visibility: hidden; } }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
-.dk-calendar__day--in-range { border-radius: var(--spacing-0); background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
+.srp-calendar__day--in-range { border-radius: var(--spacing-0); background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
 /* The ends join the band: square on the side it runs to, round on the outer side. A ring in the band sits over its
    neighbours. */
-.dk-calendar__day--range-start { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
-.dk-calendar__day--range-end { border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
-.dk-calendar__day:focus-visible { position: relative; z-index: var(--z-10); }
-@media (hover: hover) { .dk-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }
-@media (forced-colors: active) { .dk-calendar__day--selected, .dk-calendar__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
+.srp-calendar__day--range-start { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+.srp-calendar__day--range-end { border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
+.srp-calendar__day:focus-visible { position: relative; z-index: var(--z-10); }
+@media (hover: hover) { .srp-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }
+@media (forced-colors: active) { .srp-calendar__day--selected, .srp-calendar__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .srp-calendar__day--today { text-decoration: underline; } .srp-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
 /* Presets (RU11): shortcuts in a column after the days, past a divider, each a button as tall as a day. The one the
    value matches is pressed and filled like a range; one that can't be picked is faded. On a narrow screen they wrap
    in rows under the days. */
-.dk-calendar--presets { display: inline-grid; grid-template-columns: auto auto; grid-template-areas: "header presets" "grid presets"; column-gap: var(--spacing-4); align-items: start; }
-.dk-calendar--presets > .dk-calendar__header { grid-area: header; }
-.dk-calendar--presets > .dk-calendar__grid { grid-area: grid; }
-.dk-calendar--presets > .dk-calendar__presets { grid-area: presets; }
-.dk-calendar__presets { display: flex; flex-direction: column; gap: var(--spacing-1); padding-inline-start: var(--spacing-4); border-inline-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }
-.dk-calendar__preset {
-  display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--dk-cal-day, var(--calendar-day-size, var(--control-height-md)));
+.srp-calendar--presets { display: inline-grid; grid-template-columns: auto auto; grid-template-areas: "header presets" "grid presets"; column-gap: var(--spacing-4); align-items: start; }
+.srp-calendar--presets > .srp-calendar__header { grid-area: header; }
+.srp-calendar--presets > .srp-calendar__grid { grid-area: grid; }
+.srp-calendar--presets > .srp-calendar__presets { grid-area: presets; }
+.srp-calendar__presets { display: flex; flex-direction: column; gap: var(--spacing-1); padding-inline-start: var(--spacing-4); border-inline-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }
+.srp-calendar__preset {
+  display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--srp-cal-day, var(--calendar-day-size, var(--control-height-md)));
   margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-3); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .dk-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
-.dk-calendar__preset { transition: background-color var(--motion-hover) var(--ease-move); }
-@media (prefers-reduced-motion: reduce) { .dk-calendar__preset, .dk-calendar__heading { transition: none; } }
-.dk-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
-.dk-calendar__preset:focus { outline: none; }
-.dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
-@media (hover: hover) { .dk-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
-.dk-calendar__preset[aria-disabled="true"] { color: var(--calendar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-calendar__preset { transition: background-color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .srp-calendar__preset, .srp-calendar__heading { transition: none; } }
+.srp-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.srp-calendar__preset:focus { outline: none; }
+.srp-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
+@media (hover: hover) { .srp-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
+.srp-calendar__preset[aria-disabled="true"] { color: var(--calendar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 @media (max-width: 639.98px) {
-  .dk-calendar--presets { display: inline-flex; }
-  .dk-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }
+  .srp-calendar--presets { display: inline-flex; }
+  .srp-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }
 }
-@media (forced-colors: active) { .dk-calendar__preset[aria-pressed="true"] { border: var(--border-width-1) solid Highlight; } }
+@media (forced-colors: active) { .srp-calendar__preset[aria-pressed="true"] { border: var(--border-width-1) solid Highlight; } }
 }

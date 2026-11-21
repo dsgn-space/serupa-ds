@@ -35,7 +35,7 @@ function CodeBlockRender({ ref, ...props }: CodeBlockProps & React.RefAttributes
   const rest = omit(props, OWN);
   const restyle = useServerStyles(ref);
   const labels = useSettings(words).labels;
-  const base = domId('dk-code', React.useId());
+  const base = domId('srp-code', React.useId());
   const code = String(props.code ?? '').replace(/\r\n?/g, '\n').replace(/\n$/, '');
   const lines = code.split('\n');
   const start = Number.isFinite(Number(props.startLine)) ? Math.round(Number(props.startLine) || 1) : 1;
@@ -54,23 +54,23 @@ function CodeBlockRender({ ref, ...props }: CodeBlockProps & React.RefAttributes
   const name = hasTitle ? { 'aria-labelledby': base + '-title' } : { 'aria-label': lang || labels.codeName };
 
   return (
-    <div {...rest} ref={restyle} className={cn('dk-code-block', props.wrap && 'dk-code-block--wrap', props.lineNumbers && 'dk-code-block--numbered', props.className)}
+    <div {...rest} ref={restyle} className={cn('srp-code-block', props.wrap && 'srp-code-block--wrap', props.lineNumbers && 'srp-code-block--numbered', props.className)}
       data-component="code-block" data-language={lang || undefined}>
       {header ? (
-        <div className="dk-code-block__header">
-          {hasTitle ? <div className="dk-code-block__title" id={base + '-title'}>{props.title}</div>
-            : lang ? <div className="dk-code-block__language">{lang}</div> : <span />}
-          {copyable ? <CopyButton className="dk-code-block__copy" value={code} variant="ghost" size="sm" iconOnly>{labels.codeCopy}</CopyButton> : null}
+        <div className="srp-code-block__header">
+          {hasTitle ? <div className="srp-code-block__title" id={base + '-title'}>{props.title}</div>
+            : lang ? <div className="srp-code-block__language">{lang}</div> : <span />}
+          {copyable ? <CopyButton className="srp-code-block__copy" value={code} variant="ghost" size="sm" iconOnly>{labels.codeCopy}</CopyButton> : null}
         </div>
       ) : null}
-      <pre ref={pre} className="dk-code-block__pre" {...(scrolls ? { tabIndex: 0, role: 'region', ...name } : {})}
-        style={props.lineNumbers ? ({ '--dk-code-digits': String(start + lines.length - 1).length, ...(start !== 1 ? { counterReset: `dk-code-line ${start - 1}` } : {}) } as React.CSSProperties) : undefined}>
-        <code className={cn('dk-code-block__code', lang && 'language-' + lang)}>
+      <pre ref={pre} className="srp-code-block__pre" {...(scrolls ? { tabIndex: 0, role: 'region', ...name } : {})}
+        style={props.lineNumbers ? ({ '--srp-code-digits': String(start + lines.length - 1).length, ...(start !== 1 ? { counterReset: `srp-code-line ${start - 1}` } : {}) } as React.CSSProperties) : undefined}>
+        <code className={cn('srp-code-block__code', lang && 'language-' + lang)}>
           {lines.map((line, i) => {
             const n = start + i, end = i < lines.length - 1 ? '\n' : '';
             return marked.has(n)
-              ? <mark key={i} className="dk-code-block__line dk-code-block__line--marked">{line}{end}</mark>
-              : <span key={i} className="dk-code-block__line">{line}{end}</span>;
+              ? <mark key={i} className="srp-code-block__line srp-code-block__line--marked">{line}{end}</mark>
+              : <span key={i} className="srp-code-block__line">{line}{end}</span>;
           })}
         </code>
       </pre>

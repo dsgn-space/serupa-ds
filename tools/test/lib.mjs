@@ -237,7 +237,7 @@ const NEUTRAL = new RegExp('^(' + [
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
 // own, named by file as storybook.mjs names a page ("Introduction.mdx").
 export const FOLDERS = ['components', 'blocks', 'patterns'];
-// A component's name in kebab case, as its classes (dk-<kebab>), data-component and tokens file use it: DatePicker is
+// A component's name in kebab case, as its classes (srp-<kebab>), data-component and tokens file use it: DatePicker is
 // date-picker, and a run of capitals stays one word, so OTPInput is otp-input and QRCode qr-code (R7: the generator,
 // the contract and the --since scope each had their own, and they disagreed on names like these).
 export const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
@@ -355,11 +355,11 @@ export function withDependents(names) {
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
     .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
-  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
-  // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
+  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .srp-input box, Fab
+  // reads .srp-navbar--sticky. "srp-date-picker__x" is DatePicker's; a class no component is named after counts for none.
   const byKebab = new Map(folders.map((n) => [kebab(n), n]));
   const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bsrp-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
     .filter((c) => c && c !== n));
   const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));

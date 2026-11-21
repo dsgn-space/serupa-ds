@@ -74,7 +74,7 @@ React 19 is a peer dependency, so the components use your app's React, and they 
 
 In React Server Components (the Next.js App Router), import them straight into a server component. The interactive ones (Button, Dialog, Combobox…) are client components (`"use client"`); layout and text (Container, Stack, Grid, Heading, Text, Divider…) render on the server, and so do the helpers `buttonClass`, `paginationRange`, `formatFileSize` and `initials`.
 
-Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
+Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `srp.tokens`, `srp.base`, `srp.components`, `srp.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, srp, app;` (the `srp.*` layers sit inside `srp`).
 
 On a plain page without a bundler:
 
@@ -165,7 +165,7 @@ npx serupa-usage src
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, `data-print="hide"` leaves out anything marked only for the screen, and `data-print-urls` on a container prints each outside link's address after it. |
-| `dist/components.css` | The component styles (`dk-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
+| `dist/components.css` | The component styles (`srp-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
 | `dist/utilities.css` | The utility classes, apart from masks and gradients. |
 | `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
@@ -462,7 +462,7 @@ The system follows [Semantic Versioning](https://semver.org): the version is in 
 | **Minor** (1.1.0) | Something new; everything existing keeps working | New tokens, classes, components or props; a new theme |
 | **Patch** (1.0.1) | A fix that doesn't change what correct code gets | A contrast fix inside the rules, a bug in a component, docs |
 
-From 16.0.0, the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`, any `dk-<block>__<part>`) are private too: they may change in any release. The styling API that keeps the major-only promise is the component tokens, `data-component`, `data-state` and the ARIA states, and the block and modifier classes (`.dk-btn`, `.dk-btn--primary`); `npx serupa-migrate` lists the lines that select an inner class.
+From 16.0.0, the classes of a component's inner parts (`.srp-btn__label`, `.srp-card__header`, any `srp-<block>__<part>`) are private too: they may change in any release. The styling API that keeps the major-only promise is the component tokens, `data-component`, `data-state` and the ARIA states, and the block and modifier classes (`.srp-btn`, `.srp-btn--primary`); `npx serupa-migrate` lists the lines that select an inner class.
 
 From 15.0.0, the palette and effect primitives that no component or theme reads (208 of the 635 typed tokens) are a tier of their own: they may change in a minor release, and they stay out of the Figma and native exports. Read the semantic tokens instead, which keep the major-only promise with every component token.
 
@@ -584,7 +584,7 @@ Two features set the oldest versions that get the whole system, so the baseline 
 | CSS anchor positioning (`anchor()`, `position-area`, `position-try-fallbacks`) | Chrome and Edge 129, Safari 26, Firefox 147 | Menus, popovers, tooltips and the picker lists can't be placed by CSS next to what opens them. |
 | `@scope`, which keeps each component's styles to its own markup | Chrome and Edge 118, Safari 26.4, Firefox 146 | A component's styles reach into whatever is nested inside it. |
 | `light-dark()`, behind `data-brand` and `data-mode` | Chrome and Edge 123, Safari 17.5, Firefox 120 | A page or section themed only by `data-brand` / `data-mode` loses its theme colors. |
-| `@property`, which gives the `--dk-*` variables their starting values | Chrome and Edge 85, Safari 16.4, Firefox 128 | The utilities that combine through those variables (`translate-*`, `rotate-*`, `scale-*`, `skew-*`, `shadow-*`, `ring-*`, gradients, filters and `mask-*`) do nothing unless every part is set. |
+| `@property`, which gives the `--srp-*` variables their starting values | Chrome and Edge 85, Safari 16.4, Firefox 128 | The utilities that combine through those variables (`translate-*`, `rotate-*`, `scale-*`, `skew-*`, `shadow-*`, `ring-*`, gradients, filters and `mask-*`) do nothing unless every part is set. |
 | The `popover` attribute (the top layer) | Chrome and Edge 114, Safari 17, Firefox 125 | Menu, Popover, Tooltip and the picker lists open in the page instead of the top layer, where a parent's `overflow: hidden` can clip them. |
 
 Every browser at the baseline also has `@starting-style`, `transition-behavior`, view transitions, `content-visibility`, scrollbar styling, `scrollbar-gutter`, `round()` and `*-safe` alignment, so the components use them without asking first.

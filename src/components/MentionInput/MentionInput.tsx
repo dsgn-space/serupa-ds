@@ -135,7 +135,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const caret = React.useRef<number | null>(null);
   // The textarea's value comes from state, so a form reset puts the text back to defaultValue here.
   useFormReset(field, () => { if (value === undefined) setOwn(defaultValue || ''); setQuery(null); }, rest.form);   // where to put the caret after a pick, once the text is rendered
-  const base = domId('dk-mention', React.useId()), listId = base + '-list';
+  const base = domId('srp-mention', React.useId()), listId = base + '-list';
   const fieldLabel = React.useContext(FieldContext)?.labelId;
 
   const q = query && query.start !== dismissed ? query : null;
@@ -205,7 +205,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     a.style.top = el.offsetTop + el.clientTop + Math.max(0, Math.min(c.top, el.clientHeight - c.height)) + 'px';
     a.style.height = c.height + 'px';
   }, [open, q && q.start, text]);
-  useAnchoredLayer(open, pop, anchor, { placement: 'bottom-start', offsetVar: '--dk-mention-input-offset', watch: shown.length,
+  useAnchoredLayer(open, pop, anchor, { placement: 'bottom-start', offsetVar: '--srp-mention-input-offset', watch: shown.length,
     onOutside: () => setQuery(null), onFocusOutside: () => setQuery(null) });
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -230,7 +230,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const setRefs = useMergedRef(ref, (n: HTMLTextAreaElement | null) => { field.current = n; });
   const keep = (e: React.MouseEvent) => e.preventDefault();   // a press in the list leaves focus in the field
   return (
-    <span ref={wrap} className={cn('dk-mention-input', className)} style={style} data-component="mention-input" data-state={open ? 'open' : 'closed'}>
+    <span ref={wrap} className={cn('srp-mention-input', className)} style={style} data-component="mention-input" data-state={open ? 'open' : 'closed'}>
       <Textarea {...rest} ref={setRefs} value={text}
         aria-autocomplete="list" aria-controls={open ? listId : undefined}
         aria-activedescendant={open && current >= 0 ? base + '-opt-' + current : undefined}
@@ -238,23 +238,23 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
         onSelect={(e) => { if (onSelectProp) onSelectProp(e); read(e.currentTarget); }}
         onKeyDown={onKeyDown}
         onBlur={(e) => { if (onBlurProp) onBlurProp(e); setQuery(null); }} />
-      <span ref={anchor} className="dk-mention-input__anchor" aria-hidden />
-      <div ref={pop} className="dk-mention-input__popup" {...{ popover: 'manual' }} hidden={!open || undefined} onMouseDown={keep}>
-        <div id={listId} role="listbox" className="dk-mention-input__listbox"
+      <span ref={anchor} className="srp-mention-input__anchor" aria-hidden />
+      <div ref={pop} className="srp-mention-input__popup" {...{ popover: 'manual' }} hidden={!open || undefined} onMouseDown={keep}>
+        <div id={listId} role="listbox" className="srp-mention-input__listbox"
           aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
           {open ? shown.map((o, i) => (
             <div key={o.id} id={base + '-opt-' + i} role="option" aria-selected={i === current} aria-disabled={o.disabled || undefined}
-              className={cn('dk-mention-input__option', i === current && 'dk-mention-input__option--active')}
+              className={cn('srp-mention-input__option', i === current && 'srp-mention-input__option--active')}
               onMouseMove={() => { if (!o.disabled && i !== current) setActive(i); }} onClick={() => pick(o)}>
               <Avatar size="xs" name={o.label} src={o.avatar} alt="" />
-              <span className="dk-mention-input__text">
+              <span className="srp-mention-input__text">
                 <span>{o.label}</span>
-                {o.description != null ? <span className="dk-mention-input__description">{o.description}</span> : null}
+                {o.description != null ? <span className="srp-mention-input__description">{o.description}</span> : null}
               </span>
             </div>
           )) : null}
         </div>
-        {open && !shown.length ? <div className="dk-mention-input__message">{L.noResults}</div> : null}
+        {open && !shown.length ? <div className="srp-mention-input__message">{L.noResults}</div> : null}
       </div>
     </span>
   );

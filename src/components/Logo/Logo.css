@@ -3,14 +3,14 @@
    It sits on the text's baseline like an inline picture, middle-aligned. Every value reads one of its own tokens
    (logo.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-logo__picture { display: contents; }
-.dk-logo {
+@layer srp.components {
+.srp-logo__picture { display: contents; }
+.srp-logo {
   display: inline-block; vertical-align: middle; flex-shrink: 0;
   height: var(--logo-height-md, var(--spacing-8)); width: auto; max-width: var(--sizing-full);
   object-fit: contain; object-position: left center;
 }
-.dk-logo:dir(rtl) { object-position: right center; }
-.dk-logo--sm { height: var(--logo-height-sm, var(--spacing-6)); }
-.dk-logo--lg { height: var(--logo-height-lg, var(--spacing-10)); }
+.srp-logo:dir(rtl) { object-position: right center; }
+.srp-logo--sm { height: var(--logo-height-sm, var(--spacing-6)); }
+.srp-logo--lg { height: var(--logo-height-lg, var(--spacing-10)); }
 }

@@ -65,7 +65,7 @@ const SLOP = 4;       // px a press moves before it counts as a drag
    text. The first column's label is said once, after the loader's delay (a quick load says nothing). */
 function KanbanLoadingCards(props: { label: string }) {
   const waiting = !useSkeletonShown(props.label);
-  return <>{[0, 1].map((i) => <li key={i} className="dk-kanban__card dk-kanban__loading"><SkeletonArt lines={2} waiting={waiting} /></li>)}</>;
+  return <>{[0, 1].map((i) => <li key={i} className="srp-kanban__card srp-kanban__loading"><SkeletonArt lines={2} waiting={waiting} /></li>)}</>;
 }
 
 /** columns with the card at `from` moved to `to`. */
@@ -101,18 +101,18 @@ interface KanbanCardProps {
 const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanCardProps) {
   const { itemKey: key, name, api, labels: L } = props;
   return (
-    <li data-key={String(key)} className={cn('dk-kanban__card', props.dragging && 'dk-kanban__card--dragging')} data-state={props.dragging ? 'dragging' : undefined}>
+    <li data-key={String(key)} className={cn('srp-kanban__card', props.dragging && 'srp-kanban__card--dragging')} data-state={props.dragging ? 'dragging' : undefined}>
       {props.disabled ? null : (
-        <button type="button" className="dk-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={props.hint} aria-pressed={props.pressed}
+        <button type="button" className="srp-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={props.hint} aria-pressed={props.pressed}
           ref={(n) => api.current.handle(key, n)}
           onClick={() => api.current.click(key)} onKeyDown={(e) => api.current.keyDown(e)} onBlur={() => api.current.blur()}
           onPointerDown={(e) => api.current.pointerDown(key, e)}>
           <Icon icon={icons.DragIndicator} />
         </button>
       )}
-      <div className="dk-kanban__content">{props.renderCard(props.item, { column: props.column, index: props.index, dragging: props.dragging })}</div>
+      <div className="srp-kanban__content">{props.renderCard(props.item, { column: props.column, index: props.index, dragging: props.dragging })}</div>
       {props.disabled || props.targets.length < 2 ? null : (
-        <Menu placement="bottom-end" trigger={<IconButton className="dk-kanban__menu" icon={icons.MoreVert} label={L.kanbanMoveTo(name)} size="sm" variant="ghost" />}>
+        <Menu placement="bottom-end" trigger={<IconButton className="srp-kanban__menu" icon={icons.MoreVert} label={L.kanbanMoveTo(name)} size="sm" variant="ghost" />}>
           {props.targets.map((target, t) => t === props.c ? null : <MenuItem key={target.id} onSelect={() => api.current.moveTo(key, t)}>{target.title}</MenuItem>)}
         </Menu>
       )}
@@ -125,7 +125,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
   const columns = props.columns || [];
-  const base = domId('dk-kb', React.useId());
+  const base = domId('srp-kb', React.useId());
   const [drag, setDrag] = React.useState<Drag | null>(null);
   const current = React.useRef(drag);
   current.current = drag;
@@ -231,7 +231,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
     const card = e.currentTarget.closest('li')!.getBoundingClientRect();
     pointer.current = { id: e.pointerId, key, sx: e.clientX, sy: e.clientY, x: e.clientX, y: e.clientY, gx: e.clientX - card.left, gy: e.clientY - card.top, moved: false };
-    const lists = () => board.current ? [...board.current.querySelectorAll<HTMLElement>('.dk-kanban__cards')] : [];
+    const lists = () => board.current ? [...board.current.querySelectorAll<HTMLElement>('.srp-kanban__cards')] : [];
     const placeAt = (p: NonNullable<typeof pointer.current>): Drag | undefined => {
       const at = latest.current.find(p.key);
       if (!at) return undefined;
@@ -352,27 +352,27 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   return (<>
     {/* Disabled or loading, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
     <div tabIndex={off ? 0 : undefined} aria-busy={props.loading || undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
-      className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
+      className={cn('srp-kanban', drag && 'srp-kanban--moving', props.disabled && 'srp-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
         const count = columns[c]?.items.length ?? 0, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;
         return (
-          <section key={col.id} className={cn('dk-kanban__column', drag && drag.to.column === c && 'dk-kanban__column--target', over && 'dk-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
-            <div className="dk-kanban__header">
-              <H className="dk-kanban__title" id={titleId}>{col.title}</H>
-              <span className={cn('dk-kanban__count', over && 'dk-kanban__count--over')}>
+          <section key={col.id} className={cn('srp-kanban__column', drag && drag.to.column === c && 'srp-kanban__column--target', over && 'srp-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
+            <div className="srp-kanban__header">
+              <H className="srp-kanban__title" id={titleId}>{col.title}</H>
+              <span className={cn('srp-kanban__count', over && 'srp-kanban__count--over')}>
                 {over ? <Icon icon={icons.Warning} /> : null}
                 {loading != null ? null : col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
-                {over ? <span className="dk-kanban__over">{L.kanbanOverLimit}</span> : null}
+                {over ? <span className="srp-kanban__over">{L.kanbanOverLimit}</span> : null}
               </span>
             </div>
-            <ul role="list" className="dk-kanban__cards" aria-labelledby={titleId}>
+            <ul role="list" className="srp-kanban__cards" aria-labelledby={titleId}>
               {loading != null ? <KanbanLoadingCards label={c === 0 ? loading : ''} /> : col.items.map((it, index) => {
                 const key = getKey(it), dragging = !!drag && drag.key === key;
                 return <KanbanCard key={key} item={it} itemKey={key} name={getLabel(it)} column={col.id} c={c} index={index}
                   dragging={dragging} pressed={dragging && !drag.pointer} disabled={!!props.disabled} targets={targets}
                   renderCard={props.renderCard} labels={L} hint={base + '-hint'} api={api} />;
               })}
-              {loading != null || col.items.length ? null : <li className="dk-kanban__empty">{L.kanbanEmpty}</li>}
+              {loading != null || col.items.length ? null : <li className="srp-kanban__empty">{L.kanbanEmpty}</li>}
             </ul>
           </section>
         );

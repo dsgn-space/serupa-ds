@@ -82,7 +82,7 @@ if (D) {
   for (const [name, el] of Object.entries(cases)) {
     let html = '', e = null;
     try { html = renderToString(el); } catch (x) { e = x; }
-    t(`${name} renders on the server`, !e && /class="dk-/.test(html), e ? e.message : html.slice(0, 160));
+    t(`${name} renders on the server`, !e && /class="srp-/.test(html), e ? e.message : html.slice(0, 160));
   }
   [console.error, console.warn] = keep;
   // Several cases write numbers or dates without a locale: Serupa says once that the HTML is en-US until hydration.
@@ -110,7 +110,7 @@ if (D) {
   // Checkboxes instead, so with defaultValue ['a'] of a and b it's enabled and mixed (a dash) from the first paint.
   const all = (renderToString(await ssrCase('CheckboxGroup')).match(/<label[^>]*>.*?<\/label>/) || [''])[0];
   t('CheckboxGroup on the server: select-all is enabled and mixed when defaultValue checks some boxes',
-    !/ disabled=""/.test(all) && !/ checked=""/.test(all) && /data-icon="remove"/.test(all) && !/dk-checkbox--disabled/.test(all), all.slice(0, 400));
+    !/ disabled=""/.test(all) && !/ checked=""/.test(all) && /data-icon="remove"/.test(all) && !/srp-checkbox--disabled/.test(all), all.slice(0, 400));
   t('version matches package.json', D.version === pkg.version, D.version);
   // base.css and theme.js say __VERSION__ in src/, which the build replaces (tools/build/build.mjs).
   const unstamped = ['dist/base.css', 'dist/theme.js'].filter((f) => read(f).includes('__VERSION__') || !read(f).includes(`Serupa v${pkg.version} `));
@@ -179,7 +179,7 @@ if (D) {
   const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });
   let sc = null;
   try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
-  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 kB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
+  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'srp-btn srp-btn--outline srp-btn--size-md' && sc.helpers.formatFileSize === '1.5 kB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
   const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
   // Blocks and patterns don't ship, but an app pastes them into its own files, so a Next.js App Router page needs the line too (GR164).
@@ -187,7 +187,7 @@ if (D) {
     .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
     .filter((f) => { const src = read(`src/${f}`); return clientOnly.test(src) && !/^(["'])use client\1;/.test(src); });
   t('every component, block and pattern module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
-  t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'dk-btn dk-btn--outline dk-btn--size-md' && typeof D.configure === 'function');
+  t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'srp-btn srp-btn--outline srp-btn--size-md' && typeof D.configure === 'function');
 }
 
 // 3. types and CSS
@@ -198,7 +198,7 @@ t('dist/index.d.ts declares every component and its props', dts && !missingTypes
 // Each file starts with its banner and the cascade layer order; the rest is the styles.
 const body = (f) => read(f).replace(/^\/\*![^\n]*\*\/\n@layer [^;]*;\n/, '');
 t('bundle.css = components.css + utilities.css', body('dist/bundle.css') === body('dist/components.css') + body('dist/utilities.css'));
-t('components.css holds no utility classes (only dk-* and the keyframes they use)', !/^\.(?!dk-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
+t('components.css holds no utility classes (only srp-* and the keyframes they use)', !/^\.(?!srp-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
 t('the old bundle.js alias is gone (removed in 8.0.0)', !fs.existsSync(path.join(PROJECT, 'dist', 'bundle.js')));
 
 // 4. The files the package ships (npm pack): the fixed list in baseline-package.txt, plus a module and its source map (none for the icon table)

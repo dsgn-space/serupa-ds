@@ -2,6 +2,6 @@
    bundle.css is these files joined; components.css is the component ones, utilities.css the last.
    The component list is generated from the folders (tools/build/registry.mjs): the order is
    src/styles/cascade.txt, then any component it doesn't list, A to Z. */
-@layer dk.tokens, dk.base, dk.components, dk.utilities;
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
 @import "../generated/components.css";
 @import "./utilities.css";

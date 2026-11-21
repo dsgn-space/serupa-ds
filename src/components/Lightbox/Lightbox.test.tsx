@@ -16,7 +16,7 @@ const title = () => document.getElementById(dialog().getAttribute('aria-labelled
 const described = () => document.getElementById(dialog().getAttribute('aria-describedby') || '')?.textContent;
 const prev = () => page.getByRole('button', { name: 'Previous image' });
 const next = () => page.getByRole('button', { name: 'Next image' });
-const said = (text: string) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain(text);
+const said = (text: string) => expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain(text);
 
 function Gallery(p: Partial<React.ComponentProps<typeof Lightbox>>) {
   const [open, setOpen] = React.useState(false);
@@ -138,7 +138,7 @@ describe('Lightbox', () => {
   test('a picture takes its own shape once loaded, and the given width and height before that', async () => {
     await render(<Lightbox items={[{ src: pic('blue', 50, 80), alt: 'Tall', width: 50, height: 80 }]} defaultOpen />);
     const stage = dialog().querySelector<HTMLElement>('[data-state]')!;
-    expect(stage.style.getPropertyValue('--dk-lightbox-ratio')).toBe('50 / 80');
+    expect(stage.style.getPropertyValue('--srp-lightbox-ratio')).toBe('50 / 80');
     await expect.poll(() => stage.getAttribute('data-state')).toBe('loaded');
     const r = stage.getBoundingClientRect();
     expect(Math.round((r.width / r.height) * 100) / 100).toBeCloseTo(0.63, 1);

@@ -23,7 +23,7 @@ function ContainerRender({ ref, ...props }: ContainerProps & React.RefAttributes
   const size = oneOf(SIZES, props.size, 'xl');
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
     ref: ref, 'data-component': 'container', 'data-size': size,
-    className: cn('dk-container', 'dk-container--' + size, props.padded !== false && 'dk-container--padded', props.className),
+    className: cn('srp-container', 'srp-container--' + size, props.padded !== false && 'srp-container--padded', props.className),
   }));
 }
 

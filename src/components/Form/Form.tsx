@@ -518,15 +518,15 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   }), [latestDefaults]);
 
   return (
-    <form noValidate {...rest} ref={mergedRef} className={cn('dk-form', className)} data-component="form" aria-busy={st.submitting || undefined}
+    <form noValidate {...rest} ref={mergedRef} className={cn('srp-form', className)} data-component="form" aria-busy={st.submitting || undefined}
       onSubmit={onFormSubmit} onReset={onFormReset} onInput={changed} onChange={changed} onBlur={left}>
       <FormContext.Provider value={handle}>
         <StoreContext.Provider value={store}>
           <FormInternals.Provider value={internals}>
             <FormErrorsContext.Provider value={errorsValue}>
               <FormSubmittingContext.Provider value={st.submitting}>
-                {shows(st.message) ? <Alert tone="danger" role="alert" className="dk-form__message">{st.message}</Alert> : null}
-                {summary !== false ? <ErrorSummary className="dk-form__summary" /> : null}
+                {shows(st.message) ? <Alert tone="danger" role="alert" className="srp-form__message">{st.message}</Alert> : null}
+                {summary !== false ? <ErrorSummary className="srp-form__summary" /> : null}
                 <React.Fragment key={generation}>{children}</React.Fragment>
               </FormSubmittingContext.Provider>
             </FormErrorsContext.Provider>

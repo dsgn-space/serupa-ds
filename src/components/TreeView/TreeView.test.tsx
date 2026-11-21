@@ -38,7 +38,7 @@ describe('TreeView', () => {
     const ref = React.createRef<HTMLUListElement>();
     await render(<TreeView id="x" ref={ref} aria-label="Fruit" items={TREE} defaultExpanded={['a']} className="extra" data-x="y" />);
     const e = el('x');
-    expect([e.tagName, e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['UL', 'tree', 'Fruit', true, 'dk-tree-view extra', 'y', 'tree-view']);
+    expect([e.tagName, e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['UL', 'tree', 'Fruit', true, 'srp-tree-view extra', 'y', 'tree-view']);
     expect(shown()).toBe('a,a1,a2,b,c,d');   // closed items' children aren't in the page
     const a2 = item('a2');
     expect([a2.getAttribute('aria-level'), a2.getAttribute('aria-posinset'), a2.getAttribute('aria-setsize'), a2.getAttribute('aria-expanded'), item('c').getAttribute('aria-expanded')])
@@ -130,7 +130,7 @@ describe('TreeView', () => {
     await userEvent.keyboard('{End} ');
     expect(onValueChange.mock.calls.at(-1)![0]).toEqual(['d']);
     await userEvent.click(row('c'));
-    expect([onValueChange.mock.calls.at(-1)![0], focused(), item('c').classList.contains('dk-tree-view__item--selected')]).toEqual([['c'], 'c', true]);
+    expect([onValueChange.mock.calls.at(-1)![0], focused(), item('c').classList.contains('srp-tree-view__item--selected')]).toEqual([['c'], 'c', true]);
     expect(el('t').hasAttribute('aria-multiselectable')).toBe(false);
   });
 

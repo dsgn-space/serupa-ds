@@ -32,11 +32,11 @@ import { Quote, Avatar } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Large` story.
 
-1. **Rule** (`.dk-quote`): a line along the start edge, as Prose draws a quote.
-2. **Words** (`.dk-quote__text`): the `<blockquote>`.
-3. **Caption** (`.dk-quote__by`): the `<figcaption>`, with the optional picture before the name.
-4. **Author** (`.dk-quote__author`): who said it.
-5. **Source** (`.dk-quote__source`): their role and company, or where it's from.
+1. **Rule** (`.srp-quote`): a line along the start edge, as Prose draws a quote.
+2. **Words** (`.srp-quote__text`): the `<blockquote>`.
+3. **Caption** (`.srp-quote__by`): the `<figcaption>`, with the optional picture before the name.
+4. **Author** (`.srp-quote__author`): who said it.
+5. **Source** (`.srp-quote__source`): their role and company, or where it's from.
 
 ## Usage
 

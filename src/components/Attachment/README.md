@@ -29,13 +29,13 @@ import { Attachment } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Upload` story.
 
-1. **Icon** (`.dk-attachment__icon`): the kind of file, by shape. It's decorative: the kind is also written out.
-2. **Name** (`.dk-attachment__name`): the file name, a link with `href`; a long one is cut in the middle so its ending stays.
-3. **Kind and size** (`.dk-attachment__meta`): "PDF · 1.5 MB", in the locale's digits and units.
-4. **Bar** (`.dk-attachment__progress`): the upload, while `progress` is set.
-5. **Message** (`.dk-attachment__error`): why the upload failed.
-6. **Try again** (`.dk-attachment__retry`): starts the upload again, after an error with `onRetry`.
-7. **Remove** (`.dk-attachment__remove`): takes the file away, with `onRemove`.
+1. **Icon** (`.srp-attachment__icon`): the kind of file, by shape. It's decorative: the kind is also written out.
+2. **Name** (`.srp-attachment__name`): the file name, a link with `href`; a long one is cut in the middle so its ending stays.
+3. **Kind and size** (`.srp-attachment__meta`): "PDF · 1.5 MB", in the locale's digits and units.
+4. **Bar** (`.srp-attachment__progress`): the upload, while `progress` is set.
+5. **Message** (`.srp-attachment__error`): why the upload failed.
+6. **Try again** (`.srp-attachment__retry`): starts the upload again, after an error with `onRetry`.
+7. **Remove** (`.srp-attachment__remove`): takes the file away, with `onRemove`.
 
 ## Usage
 

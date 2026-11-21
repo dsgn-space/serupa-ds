@@ -24,9 +24,9 @@ import { Sparkline } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Area` story.
 
-1. **Area** (`.dk-sparkline__area`): with `area`, the fill under the line.
-2. **Line** (`.dk-sparkline__line`): the values, oldest on the left, 2px wide whatever the box's shape.
-3. **Dot** (`.dk-sparkline__dot`): the latest value.
+1. **Area** (`.srp-sparkline__area`): with `area`, the fill under the line.
+2. **Line** (`.srp-sparkline__line`): the values, oldest on the left, 2px wide whatever the box's shape.
+3. **Dot** (`.srp-sparkline__dot`): the latest value.
 
 ## Usage
 

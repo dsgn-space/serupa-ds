@@ -51,7 +51,7 @@ describe('SearchInput', () => {
     await render(<Wrap><Main calls={[]} sref={ref} /></Wrap>);
     const i = field('q'), b = box('q'), ic = b.querySelector(':scope > span:first-child')!;
     expect([i.type, i.getAttribute('enterkeyhint'), ref.current === i, b.className, b.dataset.component, b.getBoundingClientRect().height, i.labels![0]!.textContent])
-      .toEqual(['search', 'search', true, 'dk-input dk-search-input dk-input--size-md extra', 'search-input', 32, 'Search projects']);
+      .toEqual(['search', 'search', true, 'srp-input srp-search-input srp-input--size-md extra', 'search-input', 32, 'Search projects']);
     expect([(ic.querySelector('[data-icon]') as HTMLElement).dataset.icon, ic.getAttribute('aria-hidden'), clearBtn('q')]).toEqual(['search', 'true', null]);
   });
 
@@ -132,7 +132,7 @@ describe('SearchInput', () => {
       for (const e of [box('slg'), ...box('slg').querySelectorAll('*')]) void css(e).color;
       await settled();
       const bg = css(box('slg')).backgroundColor;
-      for (const [sel, min] of [['.dk-search-input__icon', 3], ['.dk-search-input__clear', 3], ['.dk-input__field', 4.5]] as const) {
+      for (const [sel, min] of [['.srp-search-input__icon', 3], ['.srp-search-input__clear', 3], ['.srp-input__field', 4.5]] as const) {
         const r = contrast(css(box('slg').querySelector(sel)).color, bg); n++;
         if (r < min) low.push(`${th} ${sel} ${r.toFixed(2)}`);
       }

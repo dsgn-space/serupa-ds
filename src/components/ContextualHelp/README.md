@@ -28,8 +28,8 @@ import { ContextualHelp } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Button** (`.dk-contextual-help__button`): a small round "?" (or "i" with variant info) beside the term it explains.
-2. **Panel** (`.dk-contextual-help`): the non-modal dialog the button opens, with an optional title, text and links.
+1. **Button** (`.srp-contextual-help__button`): a small round "?" (or "i" with variant info) beside the term it explains.
+2. **Panel** (`.srp-contextual-help`): the non-modal dialog the button opens, with an optional title, text and links.
 
 ## Usage
 

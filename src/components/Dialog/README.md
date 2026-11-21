@@ -37,12 +37,12 @@ const [open, setOpen] = React.useState(false);
 
 Drawn from the `FullScreen` story.
 
-1. **Panel** (`.dk-dialog__panel`): the box over the dimmed page; focus stays inside while it's open.
-2. **Title** (`.dk-dialog__title`): what the dialog is for; it names the dialog for screen readers.
-3. **Description** (`.dk-dialog__description`): an optional line under the title.
-4. **Close** (`.dk-dialog__close`): closes it, as Escape does.
-5. **Body** (`.dk-dialog__body`): the content; it scrolls when it's taller than the screen.
-6. **Footer** (`.dk-dialog__footer`): the actions, the main one last.
+1. **Panel** (`.srp-dialog__panel`): the box over the dimmed page; focus stays inside while it's open.
+2. **Title** (`.srp-dialog__title`): what the dialog is for; it names the dialog for screen readers.
+3. **Description** (`.srp-dialog__description`): an optional line under the title.
+4. **Close** (`.srp-dialog__close`): closes it, as Escape does.
+5. **Body** (`.srp-dialog__body`): the content; it scrolls when it's taller than the screen.
+6. **Footer** (`.srp-dialog__footer`): the actions, the main one last.
 
 ## Usage
 

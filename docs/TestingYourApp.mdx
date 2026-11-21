@@ -10,7 +10,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Testers for the widgets that take more than a click
 
-A tester takes the widget's element and a `user`, and gives you what a person would do with it. Each finds the widget's parts by role, state and name, never by a `dk-` class, and waits for the widget to open, close or change before it returns, so a test written with one keeps passing when Serupa's markup changes.
+A tester takes the widget's element and a `user`, and gives you what a person would do with it. Each finds the widget's parts by role, state and name, never by a `srp-` class, and waits for the widget to open, close or change before it returns, so a test written with one keeps passing when Serupa's markup changes.
 
 ```tsx
 // not compiled: it needs your test runner, Testing Library and your app's own Checkout

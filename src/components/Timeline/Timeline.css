@@ -5,59 +5,59 @@
    tokens (timeline.tokens.json), which fall back to the shared ones. A word longer than the body (a URL, a German
    compound) breaks inside, so a 320px page doesn't scroll sideways (WCAG 1.4.10).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-timeline { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--timeline-text, var(--text)); }
-.dk-timeline__item {
-  --dk-timeline-dot: var(--timeline-dot-neutral, var(--border-strong)); --dk-timeline-tint: var(--timeline-icon-bg-neutral, var(--surface-muted)); --dk-timeline-ink: var(--timeline-icon-neutral, var(--text-muted));
+@layer srp.components {
+.srp-timeline { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--timeline-text, var(--text)); }
+.srp-timeline__item {
+  --srp-timeline-dot: var(--timeline-dot-neutral, var(--border-strong)); --srp-timeline-tint: var(--timeline-icon-bg-neutral, var(--surface-muted)); --srp-timeline-ink: var(--timeline-icon-neutral, var(--text-muted));
   display: grid; grid-template-columns: var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), auto); column-gap: var(--timeline-gap, var(--spacing-3)); grid-template-areas: "rail body";
   justify-content: start;
 }
-.dk-timeline__item--primary { --dk-timeline-dot: var(--timeline-dot-primary, var(--primary)); --dk-timeline-tint: var(--timeline-icon-bg-primary, var(--primary-subtle)); --dk-timeline-ink: var(--timeline-icon-primary, var(--primary)); }
-.dk-timeline__item--success { --dk-timeline-dot: var(--timeline-dot-success, var(--success)); --dk-timeline-tint: var(--timeline-icon-bg-success, var(--success-subtle)); --dk-timeline-ink: var(--timeline-icon-success, var(--success-text)); }
-.dk-timeline__item--warning { --dk-timeline-dot: var(--timeline-dot-warning, var(--warning)); --dk-timeline-tint: var(--timeline-icon-bg-warning, var(--warning-subtle)); --dk-timeline-ink: var(--timeline-icon-warning, var(--warning-text)); }
-.dk-timeline__item--danger { --dk-timeline-dot: var(--timeline-dot-danger, var(--danger)); --dk-timeline-tint: var(--timeline-icon-bg-danger, var(--danger-subtle)); --dk-timeline-ink: var(--timeline-icon-danger, var(--danger-text)); }
-.dk-timeline__item--info { --dk-timeline-dot: var(--timeline-dot-info, var(--info)); --dk-timeline-tint: var(--timeline-icon-bg-info, var(--info-subtle)); --dk-timeline-ink: var(--timeline-icon-info, var(--info-text)); }
-.dk-timeline__rail { display: flex; flex-direction: column; align-items: center; grid-area: rail; }
+.srp-timeline__item--primary { --srp-timeline-dot: var(--timeline-dot-primary, var(--primary)); --srp-timeline-tint: var(--timeline-icon-bg-primary, var(--primary-subtle)); --srp-timeline-ink: var(--timeline-icon-primary, var(--primary)); }
+.srp-timeline__item--success { --srp-timeline-dot: var(--timeline-dot-success, var(--success)); --srp-timeline-tint: var(--timeline-icon-bg-success, var(--success-subtle)); --srp-timeline-ink: var(--timeline-icon-success, var(--success-text)); }
+.srp-timeline__item--warning { --srp-timeline-dot: var(--timeline-dot-warning, var(--warning)); --srp-timeline-tint: var(--timeline-icon-bg-warning, var(--warning-subtle)); --srp-timeline-ink: var(--timeline-icon-warning, var(--warning-text)); }
+.srp-timeline__item--danger { --srp-timeline-dot: var(--timeline-dot-danger, var(--danger)); --srp-timeline-tint: var(--timeline-icon-bg-danger, var(--danger-subtle)); --srp-timeline-ink: var(--timeline-icon-danger, var(--danger-text)); }
+.srp-timeline__item--info { --srp-timeline-dot: var(--timeline-dot-info, var(--info)); --srp-timeline-tint: var(--timeline-icon-bg-info, var(--info-subtle)); --srp-timeline-ink: var(--timeline-icon-info, var(--info-text)); }
+.srp-timeline__rail { display: flex; flex-direction: column; align-items: center; grid-area: rail; }
 /* The line from this marker to the next one; the last item has none. */
-.dk-timeline__rail::after { content: ""; flex: auto; width: var(--timeline-line-width, var(--border-width-2)); margin-block: var(--spacing-1); background: var(--timeline-line, var(--border)); }
-.dk-timeline__item:last-child .dk-timeline__rail::after { visibility: hidden; }
-.dk-timeline__marker { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--timeline-marker-size, var(--spacing-6)); height: var(--timeline-marker-size, var(--spacing-6)); border-radius: var(--rounded-full); }
-.dk-timeline__marker::before { content: ""; width: var(--timeline-dot-size, var(--spacing-2\.5)); height: var(--timeline-dot-size, var(--spacing-2\.5)); border-radius: var(--rounded-full); background: var(--dk-timeline-dot); }
-.dk-timeline__marker--icon { background: var(--dk-timeline-tint); color: var(--dk-timeline-ink); }
-.dk-timeline__marker--icon::before { content: none; }
-.dk-timeline__marker--icon .dk-icon { font-size: var(--timeline-icon-size, var(--spacing-4)); }
-.dk-timeline__body { grid-area: body; min-width: var(--spacing-0); overflow-wrap: anywhere; padding-block-end: var(--timeline-item-gap, var(--spacing-6)); }
-.dk-timeline__item:last-child .dk-timeline__body { padding-block-end: var(--spacing-0); }
+.srp-timeline__rail::after { content: ""; flex: auto; width: var(--timeline-line-width, var(--border-width-2)); margin-block: var(--spacing-1); background: var(--timeline-line, var(--border)); }
+.srp-timeline__item:last-child .srp-timeline__rail::after { visibility: hidden; }
+.srp-timeline__marker { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--timeline-marker-size, var(--spacing-6)); height: var(--timeline-marker-size, var(--spacing-6)); border-radius: var(--rounded-full); }
+.srp-timeline__marker::before { content: ""; width: var(--timeline-dot-size, var(--spacing-2\.5)); height: var(--timeline-dot-size, var(--spacing-2\.5)); border-radius: var(--rounded-full); background: var(--srp-timeline-dot); }
+.srp-timeline__marker--icon { background: var(--srp-timeline-tint); color: var(--srp-timeline-ink); }
+.srp-timeline__marker--icon::before { content: none; }
+.srp-timeline__marker--icon .srp-icon { font-size: var(--timeline-icon-size, var(--spacing-4)); }
+.srp-timeline__body { grid-area: body; min-width: var(--spacing-0); overflow-wrap: anywhere; padding-block-end: var(--timeline-item-gap, var(--spacing-6)); }
+.srp-timeline__item:last-child .srp-timeline__body { padding-block-end: var(--spacing-0); }
 /* The title's first line sits level with the 24px marker. */
-.dk-timeline__title { text-wrap: balance; color: var(--timeline-title-color, var(--text)); font-weight: var(--font-semibold); line-height: var(--timeline-marker-size, var(--spacing-6)); }
-.dk-timeline__time { display: block; color: var(--timeline-time-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-timeline__content { margin-block-start: var(--spacing-2); }
+.srp-timeline__title { text-wrap: balance; color: var(--timeline-title-color, var(--text)); font-weight: var(--font-semibold); line-height: var(--timeline-marker-size, var(--spacing-6)); }
+.srp-timeline__time { display: block; color: var(--timeline-time-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-timeline__content { margin-block-start: var(--spacing-2); }
 @media (min-width: 768px) {
-  .dk-timeline--alternate .dk-timeline__item { grid-template-columns: minmax(var(--spacing-0), 1fr) var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), 1fr); grid-template-areas: "before rail after"; justify-content: stretch; }
-  .dk-timeline--alternate .dk-timeline__body { grid-area: after; }
-  .dk-timeline--alternate .dk-timeline__item:nth-child(even) .dk-timeline__body { grid-area: before; text-align: end; }
+  .srp-timeline--alternate .srp-timeline__item { grid-template-columns: minmax(var(--spacing-0), 1fr) var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), 1fr); grid-template-areas: "before rail after"; justify-content: stretch; }
+  .srp-timeline--alternate .srp-timeline__body { grid-area: after; }
+  .srp-timeline--alternate .srp-timeline__item:nth-child(even) .srp-timeline__body { grid-area: before; text-align: end; }
 }
 /* orientation="horizontal": the items in a row, each a column: the rail across the top (the marker, then the line
    on to the next marker), the body under it. In a box that scrolls sideways on its own (no scroll chaining to the
    page), with a focus ring when the keyboard is in it. stackWhenNarrow: under 480px of container, back to the
    vertical layout. The row follows the text direction, so right-to-left runs right to left. */
-.dk-timeline-scroll { container: dk-timeline / inline-size; max-inline-size: var(--sizing-full); overflow-x: auto; overscroll-behavior-inline: contain; border-radius: var(--timeline-radius, var(--radius-inner)); }
-.dk-timeline-scroll:focus-visible { outline: var(--focus-ring-width) solid var(--timeline-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-timeline--horizontal { display: flex; align-items: start; inline-size: max-content; min-inline-size: var(--sizing-full); }
-.dk-timeline--horizontal .dk-timeline__item { flex: auto; inline-size: var(--timeline-item-width, var(--spacing-48)); min-inline-size: var(--timeline-item-width, var(--spacing-48)); grid-template-columns: minmax(var(--spacing-0), 1fr); grid-template-areas: "rail" "body"; row-gap: var(--timeline-gap, var(--spacing-3)); }
-.dk-timeline--horizontal .dk-timeline__rail { flex-direction: row; }
-.dk-timeline--horizontal .dk-timeline__rail::after { inline-size: auto; block-size: var(--timeline-line-width, var(--border-width-2)); margin-block: var(--spacing-0); margin-inline: var(--spacing-1); }
-.dk-timeline--horizontal .dk-timeline__body { padding-block-end: var(--spacing-0); padding-inline-end: var(--timeline-gap, var(--spacing-3)); }
-@container dk-timeline (max-width: 480px) {
-  .dk-timeline-scroll--stack .dk-timeline--horizontal { display: block; inline-size: auto; min-inline-size: var(--spacing-0); }
-  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__item { inline-size: auto; min-inline-size: var(--spacing-0); grid-template-columns: var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), auto); grid-template-areas: "rail body"; row-gap: var(--spacing-0); }
-  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__rail { flex-direction: column; }
-  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__rail::after { inline-size: var(--timeline-line-width, var(--border-width-2)); block-size: auto; margin-block: var(--spacing-1); margin-inline: var(--spacing-0); }
-  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__body { padding-block-end: var(--timeline-item-gap, var(--spacing-6)); padding-inline-end: var(--spacing-0); }
-  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__item:last-child .dk-timeline__body { padding-block-end: var(--spacing-0); }
+.srp-timeline-scroll { container: srp-timeline / inline-size; max-inline-size: var(--sizing-full); overflow-x: auto; overscroll-behavior-inline: contain; border-radius: var(--timeline-radius, var(--radius-inner)); }
+.srp-timeline-scroll:focus-visible { outline: var(--focus-ring-width) solid var(--timeline-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-timeline--horizontal { display: flex; align-items: start; inline-size: max-content; min-inline-size: var(--sizing-full); }
+.srp-timeline--horizontal .srp-timeline__item { flex: auto; inline-size: var(--timeline-item-width, var(--spacing-48)); min-inline-size: var(--timeline-item-width, var(--spacing-48)); grid-template-columns: minmax(var(--spacing-0), 1fr); grid-template-areas: "rail" "body"; row-gap: var(--timeline-gap, var(--spacing-3)); }
+.srp-timeline--horizontal .srp-timeline__rail { flex-direction: row; }
+.srp-timeline--horizontal .srp-timeline__rail::after { inline-size: auto; block-size: var(--timeline-line-width, var(--border-width-2)); margin-block: var(--spacing-0); margin-inline: var(--spacing-1); }
+.srp-timeline--horizontal .srp-timeline__body { padding-block-end: var(--spacing-0); padding-inline-end: var(--timeline-gap, var(--spacing-3)); }
+@container srp-timeline (max-width: 480px) {
+  .srp-timeline-scroll--stack .srp-timeline--horizontal { display: block; inline-size: auto; min-inline-size: var(--spacing-0); }
+  .srp-timeline-scroll--stack .srp-timeline--horizontal .srp-timeline__item { inline-size: auto; min-inline-size: var(--spacing-0); grid-template-columns: var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), auto); grid-template-areas: "rail body"; row-gap: var(--spacing-0); }
+  .srp-timeline-scroll--stack .srp-timeline--horizontal .srp-timeline__rail { flex-direction: column; }
+  .srp-timeline-scroll--stack .srp-timeline--horizontal .srp-timeline__rail::after { inline-size: var(--timeline-line-width, var(--border-width-2)); block-size: auto; margin-block: var(--spacing-1); margin-inline: var(--spacing-0); }
+  .srp-timeline-scroll--stack .srp-timeline--horizontal .srp-timeline__body { padding-block-end: var(--timeline-item-gap, var(--spacing-6)); padding-inline-end: var(--spacing-0); }
+  .srp-timeline-scroll--stack .srp-timeline--horizontal .srp-timeline__item:last-child .srp-timeline__body { padding-block-end: var(--spacing-0); }
 }
 @media (forced-colors: active) {
-  .dk-timeline__marker::before, .dk-timeline__rail::after { background: CanvasText; }
-  .dk-timeline__marker--icon { border: var(--border-width-1) solid CanvasText; }
+  .srp-timeline__marker::before, .srp-timeline__rail::after { background: CanvasText; }
+  .srp-timeline__marker--icon { border: var(--border-width-1) solid CanvasText; }
 }
 }

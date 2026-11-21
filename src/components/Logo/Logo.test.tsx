@@ -20,7 +20,7 @@ describe('Logo', () => {
     const ref = React.createRef<HTMLImageElement>();
     await render(<Logo id="x" ref={ref} src={logo} alt="Acme" className="extra" data-x="y" />);
     const e = el('x');
-    expect([e.tagName, e.alt, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.parentElement!.tagName]).toEqual(['IMG', 'Acme', true, 'dk-logo dk-logo--md extra', 'y', 'logo', 'DIV']);
+    expect([e.tagName, e.alt, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.parentElement!.tagName]).toEqual(['IMG', 'Acme', true, 'srp-logo srp-logo--md extra', 'y', 'logo', 'DIV']);
     await expect.element(page.getByRole('img', { name: 'Acme' })).toBeVisible();
   });
 

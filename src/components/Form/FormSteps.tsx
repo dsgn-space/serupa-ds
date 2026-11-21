@@ -55,7 +55,7 @@ function FormStepsRender({ ref, ...props }: FormStepsProps & React.RefAttributes
   const [raw, setOwn] = useControllable(step, defaultStep || 0, 'FormSteps', 'step');
   const current = Math.min(Math.max(0, raw), last);
   const [startAt] = React.useState(current);
-  const base = domId('dk-form-steps', React.useId());
+  const base = domId('srp-form-steps', React.useId());
   const panels = React.useRef<Array<HTMLElement | null>>([]);
   const moved = React.useRef(false);
   const go = (to: number) => { moved.current = true; setOwn(to); if (onStepChange) onStepChange(to); };
@@ -83,7 +83,7 @@ function FormStepsRender({ ref, ...props }: FormStepsProps & React.RefAttributes
   React.useEffect(() => {
     if (!moved.current) return;
     moved.current = false;
-    const h = panels.current[current] && panels.current[current].querySelector<HTMLElement>('.dk-form-steps__title');
+    const h = panels.current[current] && panels.current[current].querySelector<HTMLElement>('.srp-form-steps__title');
     if (h) { if (typeof h.scrollIntoView === 'function') h.scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); }
   }, [current]);
   const next = async () => {
@@ -113,17 +113,17 @@ function FormStepsRender({ ref, ...props }: FormStepsProps & React.RefAttributes
   }, [latestKey]);
   const H = ('h' + ([2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : headingLevel)) as 'h2';
   return (
-    <div {...rest} ref={mergedRef} className={cn('dk-form-steps', className)} data-component="form-steps">
-      <Stepper className="dk-form-steps__progress" current={current} onStepClick={(i) => { if (i < current) go(i); }}
+    <div {...rest} ref={mergedRef} className={cn('srp-form-steps', className)} data-component="form-steps">
+      <Stepper className="srp-form-steps__progress" current={current} onStepClick={(i) => { if (i < current) go(i); }}
         steps={steps.map((s) => ({ title: s.props.title, description: s.props.description, optional: s.props.optional }))} />
       {steps.map((s, i) => (
-        <section key={i} ref={(n) => { panels.current[i] = n; }} className="dk-form-steps__panel" aria-labelledby={base + '-' + i}
+        <section key={i} ref={(n) => { panels.current[i] = n; }} className="srp-form-steps__panel" aria-labelledby={base + '-' + i}
           hidden={i !== startAt || undefined}>
-          <H id={base + '-' + i} className="dk-form-steps__title" tabIndex={-1}>{s.props.title}</H>
+          <H id={base + '-' + i} className="srp-form-steps__title" tabIndex={-1}>{s.props.title}</H>
           {s}
         </section>
       ))}
-      <div className="dk-form-steps__actions">
+      <div className="srp-form-steps__actions">
         {current < last ? <Button type="button" onClick={next}>{sds.labels.formNext}</Button> : <Button type="submit">{submitLabel}</Button>}
         {current > 0 ? <Button type="button" variant="secondary" onClick={() => { go(current - 1); }}>{sds.labels.formBack}</Button> : null}
       </div>

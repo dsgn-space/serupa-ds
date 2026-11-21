@@ -21,7 +21,7 @@ export const MonthsAndYears: Story = {
   name: 'Jump by month and year',
   render: function Render(args) {
     const at = React.useRef<HTMLDivElement | null>(null);
-    React.useEffect(() => { at.current?.querySelector<HTMLButtonElement>('.dk-calendar__heading')?.click(); }, []);
+    React.useEffect(() => { at.current?.querySelector<HTMLButtonElement>('.srp-calendar__heading')?.click(); }, []);
     return <Calendar {...args} ref={at} />;
   },
 };

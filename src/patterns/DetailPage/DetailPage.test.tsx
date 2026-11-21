@@ -10,7 +10,7 @@ const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
-const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-srp-announcer], [data-srp-announcer-assertive]'));
 const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const h1 = () => document.querySelector('main h1')?.textContent;

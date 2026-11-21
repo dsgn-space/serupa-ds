@@ -59,7 +59,7 @@ describe('Form', () => {
     const ref = React.createRef<HTMLFormElement>();
     await render(<Form id="x" ref={ref} className="extra" data-x="y" aria-label="Profile">Hello</Form>);
     const e = el('x') as unknown as HTMLFormElement;
-    expect([e.tagName, e.noValidate, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.getAttribute('aria-label')]).toEqual(['FORM', true, true, 'dk-form extra', 'y', 'form', 'Profile']);
+    expect([e.tagName, e.noValidate, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.getAttribute('aria-label')]).toEqual(['FORM', true, true, 'srp-form extra', 'y', 'form', 'Profile']);
   });
 
   test('a field is checked when it is left, not while it is typed in; then again as it changes, until it is right', async () => {

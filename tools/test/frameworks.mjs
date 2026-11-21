@@ -105,7 +105,7 @@ for (const app of names) {
     const links = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*>/g)].map((m) => /href="([^"]+)"/.exec(m[0])?.[1]).filter(Boolean);
     const inline = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]);
     const sheets = [...inline, ...(await Promise.all(links.map((h) => page.get(h).catch(() => ''))))];
-    const has = sheets.some((s) => s.includes('.dk-button') && /@layer dk\b/.test(s));
+    const has = sheets.some((s) => s.includes('.srp-button') && /@layer srp\b/.test(s));
     t(app, "a stylesheet on the page holds the components' styles in Serupa's layers", has, `${links.length} linked (${links.join(', ')}), ${inline.length} inline`);
     const tab = await br.newPage();
     const said = [];

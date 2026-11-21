@@ -33,7 +33,7 @@ function IconButtonRender({ ref, ...props }: IconButtonProps & React.RefAttribut
   // aria-label isn't in the props, but from JavaScript (or a spread) it's taken as label, as Button takes it.
   const name = label || (rest as { 'aria-label'?: string })['aria-label'];
   const button = <ButtonBase variant="ghost" {...rest} aria-label={name} data-shape={round ? 'round' : 'square'}
-    ref={ref} icon={icon} className={cn('dk-icon-btn', round && 'dk-icon-btn--round', className)} />;
+    ref={ref} icon={icon} className={cn('srp-icon-btn', round && 'srp-icon-btn--round', className)} />;
   // role="label": the tooltip says the button's name, so it isn't read a second time as a description.
   return own || !name ? button : <Tooltip content={name} role="label" disabled={!!rest.disabled}>{button}</Tooltip>;
 }

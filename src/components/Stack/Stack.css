@@ -1,51 +1,51 @@
 /* ---------------------------------------------------------------
-   Stack: a flex column (or row) with gap from the spacing scale (--dk-stack-gap, set from the gap prop, else
+   Stack: a flex column (or row) with gap from the spacing scale (--srp-stack-gap, set from the gap prop, else
    --stack-gap). Lists lose their bullets and margins.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-stack { display: flex; flex-direction: column; gap: var(--dk-stack-gap, var(--stack-gap, var(--spacing-4))); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-fieldset.dk-stack { border: var(--spacing-0); }
-.dk-stack--row { flex-direction: row; }
-.dk-stack--wrap { flex-wrap: wrap; }
-.dk-stack--align-stretch { align-items: stretch; }
-.dk-stack--align-start { align-items: flex-start; }
-.dk-stack--align-center { align-items: center; }
-.dk-stack--align-end { align-items: flex-end; }
-.dk-stack--align-baseline { align-items: baseline; }
-.dk-stack--justify-center { justify-content: center; }
-.dk-stack--justify-end { justify-content: flex-end; }
-.dk-stack--justify-between { justify-content: space-between; }
+@layer srp.components {
+.srp-stack { display: flex; flex-direction: column; gap: var(--srp-stack-gap, var(--stack-gap, var(--spacing-4))); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+fieldset.srp-stack { border: var(--spacing-0); }
+.srp-stack--row { flex-direction: row; }
+.srp-stack--wrap { flex-wrap: wrap; }
+.srp-stack--align-stretch { align-items: stretch; }
+.srp-stack--align-start { align-items: flex-start; }
+.srp-stack--align-center { align-items: center; }
+.srp-stack--align-end { align-items: flex-end; }
+.srp-stack--align-baseline { align-items: baseline; }
+.srp-stack--justify-center { justify-content: center; }
+.srp-stack--justify-end { justify-content: flex-end; }
+.srp-stack--justify-between { justify-content: space-between; }
 /* Per screen width (direction, align and gap as { base, sm, md, lg }): a class where a width changes the value,
-   and the gap's value at each width in --dk-stack-gap-<width>. Later widths come later, so they win. */
-.dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-base); }
+   and the gap's value at each width in --srp-stack-gap-<width>. Later widths come later, so they win. */
+.srp-stack--gaps { --srp-stack-gap: var(--srp-stack-gap-base); }
 @media (min-width: 640px) {
-  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-sm); }
-  .dk-stack--sm-row { flex-direction: row; }
-  .dk-stack--sm-column { flex-direction: column; }
-  .dk-stack--sm-align-stretch { align-items: stretch; }
-  .dk-stack--sm-align-start { align-items: flex-start; }
-  .dk-stack--sm-align-center { align-items: center; }
-  .dk-stack--sm-align-end { align-items: flex-end; }
-  .dk-stack--sm-align-baseline { align-items: baseline; }
+  .srp-stack--gaps { --srp-stack-gap: var(--srp-stack-gap-sm); }
+  .srp-stack--sm-row { flex-direction: row; }
+  .srp-stack--sm-column { flex-direction: column; }
+  .srp-stack--sm-align-stretch { align-items: stretch; }
+  .srp-stack--sm-align-start { align-items: flex-start; }
+  .srp-stack--sm-align-center { align-items: center; }
+  .srp-stack--sm-align-end { align-items: flex-end; }
+  .srp-stack--sm-align-baseline { align-items: baseline; }
 }
 @media (min-width: 768px) {
-  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-md); }
-  .dk-stack--md-row { flex-direction: row; }
-  .dk-stack--md-column { flex-direction: column; }
-  .dk-stack--md-align-stretch { align-items: stretch; }
-  .dk-stack--md-align-start { align-items: flex-start; }
-  .dk-stack--md-align-center { align-items: center; }
-  .dk-stack--md-align-end { align-items: flex-end; }
-  .dk-stack--md-align-baseline { align-items: baseline; }
+  .srp-stack--gaps { --srp-stack-gap: var(--srp-stack-gap-md); }
+  .srp-stack--md-row { flex-direction: row; }
+  .srp-stack--md-column { flex-direction: column; }
+  .srp-stack--md-align-stretch { align-items: stretch; }
+  .srp-stack--md-align-start { align-items: flex-start; }
+  .srp-stack--md-align-center { align-items: center; }
+  .srp-stack--md-align-end { align-items: flex-end; }
+  .srp-stack--md-align-baseline { align-items: baseline; }
 }
 @media (min-width: 1024px) {
-  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-lg); }
-  .dk-stack--lg-row { flex-direction: row; }
-  .dk-stack--lg-column { flex-direction: column; }
-  .dk-stack--lg-align-stretch { align-items: stretch; }
-  .dk-stack--lg-align-start { align-items: flex-start; }
-  .dk-stack--lg-align-center { align-items: center; }
-  .dk-stack--lg-align-end { align-items: flex-end; }
-  .dk-stack--lg-align-baseline { align-items: baseline; }
+  .srp-stack--gaps { --srp-stack-gap: var(--srp-stack-gap-lg); }
+  .srp-stack--lg-row { flex-direction: row; }
+  .srp-stack--lg-column { flex-direction: column; }
+  .srp-stack--lg-align-stretch { align-items: stretch; }
+  .srp-stack--lg-align-start { align-items: flex-start; }
+  .srp-stack--lg-align-center { align-items: center; }
+  .srp-stack--lg-align-end { align-items: flex-end; }
+  .srp-stack--lg-align-baseline { align-items: baseline; }
 }
 }

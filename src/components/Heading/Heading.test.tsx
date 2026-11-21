@@ -28,7 +28,7 @@ describe('Heading', () => {
     const r = React.createRef<HTMLHeadingElement>();
     await render(<Heading id="hdef" ref={r} className="extra" data-x="y">Default</Heading>);
     const e = el('hdef');
-    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['H2', 'dk-heading dk-heading--2 extra', 'heading', true, 'y']);
+    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['H2', 'srp-heading srp-heading--2 extra', 'heading', true, 'y']);
   });
 
   test('levels: h1 3xl to h6 sm with the scale\'s line heights, font-semibold, no margins, 2xl and up tracked tight', async () => {
@@ -47,7 +47,7 @@ describe('Heading', () => {
 
   test('an unknown level falls back to h2, an unknown size is ignored', async () => {
     await render(<Heading id="hbad" level={9 as never} size={'huge' as never}>Bad</Heading>);
-    expect([el('hbad').tagName, el('hbad').className].join(' ')).toBe('H2 dk-heading dk-heading--2');
+    expect([el('hbad').tagName, el('hbad').className].join(' ')).toBe('H2 srp-heading srp-heading--2');
   });
 
   test('size: an h1 can look lg (and loses the tight tracking), an h4 can look 4xl', async () => {

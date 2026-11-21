@@ -35,10 +35,10 @@ const SignUp = z.object({
 
 Drawn from the `MultiStep` story. The parts are FormSteps'.
 
-1. **Progress** (`.dk-form-steps__progress`): the Stepper above the steps, showing which one people are on.
-2. **Step** (`.dk-form-steps__panel`): one step's fields; the steps not showing stay in the form, hidden.
-3. **Step heading** (`.dk-form-steps__title`): the step's title; focus moves here when people move to the step.
-4. **Buttons** (`.dk-form-steps__actions`): Next (or the last step's submit button), then Back.
+1. **Progress** (`.srp-form-steps__progress`): the Stepper above the steps, showing which one people are on.
+2. **Step** (`.srp-form-steps__panel`): one step's fields; the steps not showing stay in the form, hidden.
+3. **Step heading** (`.srp-form-steps__title`): the step's title; focus moves here when people move to the step.
+4. **Buttons** (`.srp-form-steps__actions`): Next (or the last step's submit button), then Back.
 
 ## Usage
 
