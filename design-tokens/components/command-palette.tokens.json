@@ -32,6 +32,16 @@
           }
         }
       },
+      "option-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An option while it's held down, one step past option-bg-active, as a Menu item is.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--command-palette-option-bg-pressed"
+          }
+        }
+      },
       "muted": {
         "$type": "color",
         "$value": "{color.text-muted}",

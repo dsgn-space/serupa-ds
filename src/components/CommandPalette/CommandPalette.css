@@ -23,6 +23,8 @@
 }
 .dk-command-palette__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-command-palette__option--active { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
+/* Held down: one step past the highlight, as a Menu item is, so a press shows before the palette closes. */
+.dk-command-palette__option:active:not(.dk-command-palette__option--disabled) { background: var(--command-palette-option-bg-pressed, var(--pressed)); }
 .dk-command-palette__option--disabled, .dk-command-palette__option--disabled * { color: var(--command-palette-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 /* 20px beside the 14px label in a 44px row, as Sidebar's items: an Icon's own default is 24px. */

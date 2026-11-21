@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { CommandPalette, type Command } from './CommandPalette';
@@ -40,6 +40,14 @@ describe('CommandPalette', () => {
     expect(labels()).toEqual(['Home', 'Settings', 'New project', 'Archive project', 'Switch theme']);
     expect(activeLabel()).toBe('Home');
     expect(options()[3]!.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  test('an option held down fills one step past the highlight (pressed), as a Menu item does; a disabled one doesn\'t', async () => {
+    await render(<CommandPalette id="pp" defaultOpen commands={COMMANDS} />);
+    await expect.poll(() => options().length).toBe(5);
+    const o = options()[0]!, off = options()[3]!;
+    expect(await press(off, () => css(off).backgroundColor)).not.toBe(color('var(--pressed)'));
+    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--pressed)'));   // last: letting go runs it and closes
   });
 
   test('a command\'s icon is 20px beside its 14px label, as a Sidebar item\'s, not an icon\'s 24px default; --command-palette-icon-size sets it (GR421)', async () => {

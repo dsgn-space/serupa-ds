@@ -82,6 +82,16 @@
           }
         }
       },
+      "option-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An option while it's held down, one step past option-bg-active, as a Menu item is.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--combobox-option-bg-pressed"
+          }
+        }
+      },
       "option-indicator": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
