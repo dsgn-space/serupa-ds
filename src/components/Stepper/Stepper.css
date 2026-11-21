@@ -5,98 +5,98 @@
    warning-subtle circle, ringed and marked in warning text. Horizontal: the lines stretch between steps, level
    with the circles' middle. Vertical: the lines run down from each circle.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-stepper {
-  --dk-step-size: var(--stepper-indicator-size-md, var(--spacing-8));
-  --dk-step-line: var(--stepper-connector-width, var(--border-width-2));
-  --dk-step-line-top: calc((var(--dk-step-size) - var(--dk-step-line)) / 2);
-  --dk-step-line-start: calc((var(--dk-step-size) - var(--dk-step-line)) / 2);
+@layer srp.components {
+.srp-stepper {
+  --srp-step-size: var(--stepper-indicator-size-md, var(--spacing-8));
+  --srp-step-line: var(--stepper-connector-width, var(--border-width-2));
+  --srp-step-line-top: calc((var(--srp-step-size) - var(--srp-step-line)) / 2);
+  --srp-step-line-start: calc((var(--srp-step-size) - var(--srp-step-line)) / 2);
   /* As a grid or flex item it takes the width it's given, not its circles' width, so compact mode can fit them (GN2b). */
   min-inline-size: var(--spacing-0);
   color: var(--stepper-title-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-stepper--size-sm { --dk-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-stepper__list { display: flex; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-stepper--vertical .dk-stepper__list { flex-direction: column; }
-.dk-stepper__step { position: relative; display: flex; min-width: var(--spacing-0); }
-.dk-stepper--horizontal .dk-stepper__step:not(:last-child) { flex: auto; }
-.dk-stepper--vertical .dk-stepper__step:not(:last-child) { padding-bottom: var(--spacing-6); }
-.dk-stepper__head {
+.srp-stepper--size-sm { --srp-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-stepper__list { display: flex; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-stepper--vertical .srp-stepper__list { flex-direction: column; }
+.srp-stepper__step { position: relative; display: flex; min-width: var(--spacing-0); }
+.srp-stepper--horizontal .srp-stepper__step:not(:last-child) { flex: auto; }
+.srp-stepper--vertical .srp-stepper__step:not(:last-child) { padding-bottom: var(--spacing-6); }
+.srp-stepper__head {
   display: flex; align-items: flex-start; gap: var(--stepper-gap, var(--spacing-3)); min-width: var(--spacing-0);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: inherit; font: inherit; text-align: start;
 }
-button.dk-stepper__head { cursor: var(--cursor-interactive); touch-action: manipulation; border-radius: var(--radius-control); }
-@media (hover: hover) { button.dk-stepper__head:hover .dk-stepper__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
+button.srp-stepper__head { cursor: var(--cursor-interactive); touch-action: manipulation; border-radius: var(--radius-control); }
+@media (hover: hover) { button.srp-stepper__head:hover .srp-stepper__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
 /* Pressed: while a step's head is held (pointer or Space) its indicator takes a wash of the text color over its
    fill, a step darker in light themes and lighter in dark, as a Button's held fill; its muted number turns
    text-muted-shaded to keep 4.5:1 on it. Nothing shrinks by default; --stepper-press-scale opts in to one. */
-button.dk-stepper__head .dk-stepper__indicator { transition: scale var(--motion-release) var(--ease-spring); }
-button.dk-stepper__head:active .dk-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-muted-shaded)); background-image: linear-gradient(var(--dk-step-held), var(--dk-step-held)); --dk-step-held: color-mix(in srgb, var(--stepper-wash-pressed, var(--text)) var(--stepper-layer-pressed, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
-@media (prefers-reduced-motion: reduce) { button.dk-stepper__head .dk-stepper__indicator { transition: none; } button.dk-stepper__head:active .dk-stepper__indicator { scale: none; } }
-.dk-stepper__head:focus { outline: none; }
-.dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-stepper__indicator {
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--dk-step-size); height: var(--dk-step-size);
+button.srp-stepper__head .srp-stepper__indicator { transition: scale var(--motion-release) var(--ease-spring); }
+button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-muted-shaded)); background-image: linear-gradient(var(--srp-step-held), var(--srp-step-held)); --srp-step-held: color-mix(in srgb, var(--stepper-wash-pressed, var(--text)) var(--stepper-layer-pressed, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+@media (prefers-reduced-motion: reduce) { button.srp-stepper__head .srp-stepper__indicator { transition: none; } button.srp-stepper__head:active .srp-stepper__indicator { scale: none; } }
+.srp-stepper__head:focus { outline: none; }
+.srp-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-stepper__indicator {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--srp-step-size); height: var(--srp-step-size);
   border: var(--border-width-2) solid var(--stepper-indicator-border, var(--border-control)); border-radius: var(--stepper-radius, var(--radius-pill));
   background: var(--stepper-indicator-bg, var(--surface)); --surface-behind: var(--stepper-indicator-bg, var(--surface)); color: var(--stepper-indicator-text, var(--text-muted));
   font-weight: var(--font-semibold); font-variant-numeric: tabular-nums;
 }
-.dk-stepper__indicator .dk-icon { font-size: var(--spacing-4); }
-.dk-stepper--size-sm .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
-.dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator {
+.srp-stepper__indicator .srp-icon { font-size: var(--spacing-4); }
+.srp-stepper--size-sm .srp-stepper__indicator .srp-icon { font-size: var(--spacing-3\.5); }
+.srp-stepper__step--current .srp-stepper__indicator, .srp-stepper__step--complete .srp-stepper__indicator {
   border-color: var(--stepper-bg-active, var(--primary)); background: var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));
 }
-.dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
-.dk-stepper__step--error .dk-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
-.dk-stepper__step--warning .dk-stepper__indicator { border-color: var(--stepper-warning-border, var(--warning-text)); background: var(--stepper-warning-bg, var(--warning-subtle)); color: var(--stepper-warning-text, var(--warning-text)); }
-.dk-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--dk-step-text-pad); overflow-wrap: anywhere; }
-.dk-stepper { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-sm--line-height)) / 2); }
-.dk-stepper--size-sm { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-xs--line-height)) / 2); }
-.dk-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
-.dk-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
-.dk-stepper__step--done .dk-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
-.dk-stepper--horizontal .dk-stepper__connector {
-  align-self: flex-start; min-width: var(--spacing-4); height: var(--dk-step-line);
-  margin: var(--dk-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);
+.srp-stepper__step--current .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
+.srp-stepper__step--error .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
+.srp-stepper__step--warning .srp-stepper__indicator { border-color: var(--stepper-warning-border, var(--warning-text)); background: var(--stepper-warning-bg, var(--warning-subtle)); color: var(--stepper-warning-text, var(--warning-text)); }
+.srp-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--srp-step-text-pad); overflow-wrap: anywhere; }
+.srp-stepper { --srp-step-text-pad: calc((var(--srp-step-size) - var(--text-sm--line-height)) / 2); }
+.srp-stepper--size-sm { --srp-step-text-pad: calc((var(--srp-step-size) - var(--text-xs--line-height)) / 2); }
+.srp-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
+.srp-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
+.srp-stepper__step--done .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
+.srp-stepper--horizontal .srp-stepper__connector {
+  align-self: flex-start; min-width: var(--spacing-4); height: var(--srp-step-line);
+  margin: var(--srp-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);
 }
-.dk-stepper--horizontal .dk-stepper__head { flex-shrink: 0; max-width: calc(var(--sizing-full) - var(--spacing-8)); }
+.srp-stepper--horizontal .srp-stepper__head { flex-shrink: 0; max-width: calc(var(--sizing-full) - var(--spacing-8)); }
 /* The last step has no line after it, so its head may take the step's whole width. Leaving room for a line there
    squeezed its title to a letter or two a line ("Re / vi / e / w"), as the step is only as wide as its head. While
    the script measures, the step is its head's full width, so this leaves it whole. */
-.dk-stepper--horizontal .dk-stepper__step:last-child .dk-stepper__head { max-width: var(--sizing-full); }
-.dk-stepper--vertical .dk-stepper__connector {
-  position: absolute; inset-inline-start: var(--dk-step-line-start); width: var(--dk-step-line);
-  top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
+.srp-stepper--horizontal .srp-stepper__step:last-child .srp-stepper__head { max-width: var(--sizing-full); }
+.srp-stepper--vertical .srp-stepper__connector {
+  position: absolute; inset-inline-start: var(--srp-step-line-start); width: var(--srp-step-line);
+  top: calc(var(--srp-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
 }
 /* Before the script measures (server HTML, or no JavaScript), nothing can switch to compact, so on a phone titles
    would shrink to a letter a line ("Profile" 140px tall). There, until the script takes over (no data-fit), a title
    is never narrower than its longest word, and a row that still doesn't fit scrolls in its own box instead of running
    off the page. Wider screens keep the layout the script keeps, so nothing moves when it takes over (GR62). */
 @media (max-width: 639.98px) {
-  .dk-stepper--horizontal:not([data-fit]) .dk-stepper__list { overflow-x: auto; overscroll-behavior-x: contain; }
-  .dk-stepper--horizontal:not([data-fit]) .dk-stepper__step, .dk-stepper--horizontal:not([data-fit]) .dk-stepper__head, .dk-stepper--horizontal:not([data-fit]) .dk-stepper__text { min-width: auto; }
-  .dk-stepper--horizontal:not([data-fit]) .dk-stepper__text { overflow-wrap: break-word; }
+  .srp-stepper--horizontal:not([data-fit]) .srp-stepper__list { overflow-x: auto; overscroll-behavior-x: contain; }
+  .srp-stepper--horizontal:not([data-fit]) .srp-stepper__step, .srp-stepper--horizontal:not([data-fit]) .srp-stepper__head, .srp-stepper--horizontal:not([data-fit]) .srp-stepper__text { min-width: auto; }
+  .srp-stepper--horizontal:not([data-fit]) .srp-stepper__text { overflow-wrap: break-word; }
 }
 /* Too narrow for the titles side by side: the circles and lines only, and one line under them for the current
    step. The titles stay in the list, clipped, for screen readers. --measure lays the titles out at full width for a
    moment, so the script can tell whether they fit. */
-.dk-stepper--measure .dk-stepper__list { width: max-content; }
-.dk-stepper--measure .dk-stepper__head { max-width: none; }
-.dk-stepper--compact:not(.dk-stepper--measure) .dk-stepper__text {
+.srp-stepper--measure .srp-stepper__list { width: max-content; }
+.srp-stepper--measure .srp-stepper__head { max-width: none; }
+.srp-stepper--compact:not(.srp-stepper--measure) .srp-stepper__text {
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0);
   overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
 }
-.dk-stepper--compact:not(.dk-stepper--measure) .dk-stepper__connector { min-width: var(--spacing-1); margin-inline: var(--spacing-0\.5); }
+.srp-stepper--compact:not(.srp-stepper--measure) .srp-stepper__connector { min-width: var(--spacing-1); margin-inline: var(--spacing-0\.5); }
 /* Many steps: the lines shrink to 4px and the circles still don't fit, so they take the sm size (GN2). */
-.dk-stepper--tight:not(.dk-stepper--measure) { --dk-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); }
-.dk-stepper--tight:not(.dk-stepper--measure) .dk-stepper__indicator { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-stepper--tight:not(.dk-stepper--measure) .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
+.srp-stepper--tight:not(.srp-stepper--measure) { --srp-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); }
+.srp-stepper--tight:not(.srp-stepper--measure) .srp-stepper__indicator { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-stepper--tight:not(.srp-stepper--measure) .srp-stepper__indicator .srp-icon { font-size: var(--spacing-3\.5); }
 /* A long word wraps, here and in the titles, so a narrow stepper never makes the page scroll sideways (RF1). */
-.dk-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); font-variant-numeric: tabular-nums; color: var(--stepper-description-color, var(--text-muted)); overflow-wrap: anywhere; }
-.dk-stepper__summary .dk-stepper__title { color: var(--stepper-title-color, var(--text)); }
+.srp-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); font-variant-numeric: tabular-nums; color: var(--stepper-description-color, var(--text-muted)); overflow-wrap: anywhere; }
+.srp-stepper__summary .srp-stepper__title { color: var(--stepper-title-color, var(--text)); }
 @media (forced-colors: active) {
-  .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
-  .dk-stepper__connector { background: CanvasText; }
+  .srp-stepper__step--current .srp-stepper__indicator, .srp-stepper__step--complete .srp-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
+  .srp-stepper__connector { background: CanvasText; }
 }
 }

@@ -3,19 +3,19 @@
    when it doesn't fit; with lines, up to six lines before the cut. Cut, it takes keyboard focus and shows the focus
    ring. Its one token (truncated-text.tokens.json) falls back to the shared one.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-truncated-text { display: block; min-inline-size: 0; max-inline-size: var(--sizing-full); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+@layer srp.components {
+.srp-truncated-text { display: block; min-inline-size: 0; max-inline-size: var(--sizing-full); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* Cut in the middle: the whole text shrinks to an ellipsis and its last few characters (data-end) are drawn after
    it, as generated content with empty alternative text: screen readers skip it and a copy leaves it out. */
-.dk-truncated-text--middle { display: flex; text-overflow: clip; white-space: pre; }
-.dk-truncated-text--middle::after { content: attr(data-end); content: attr(data-end) / ""; flex: none; }
-.dk-truncated-text__start { overflow: hidden; min-inline-size: var(--spacing-0); text-overflow: ellipsis; }
-.dk-truncated-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-truncated-text-lines); line-clamp: var(--dk-truncated-text-lines); white-space: normal; overflow-wrap: anywhere; }
-.dk-truncated-text--clamp[data-lines="2"] { --dk-truncated-text-lines: var(--line-clamp-2); }
-.dk-truncated-text--clamp[data-lines="3"] { --dk-truncated-text-lines: var(--line-clamp-3); }
-.dk-truncated-text--clamp[data-lines="4"] { --dk-truncated-text-lines: var(--line-clamp-4); }
-.dk-truncated-text--clamp[data-lines="5"] { --dk-truncated-text-lines: var(--line-clamp-5); }
-.dk-truncated-text--clamp[data-lines="6"] { --dk-truncated-text-lines: var(--line-clamp-6); }
+.srp-truncated-text--middle { display: flex; text-overflow: clip; white-space: pre; }
+.srp-truncated-text--middle::after { content: attr(data-end); content: attr(data-end) / ""; flex: none; }
+.srp-truncated-text__start { overflow: hidden; min-inline-size: var(--spacing-0); text-overflow: ellipsis; }
+.srp-truncated-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--srp-truncated-text-lines); line-clamp: var(--srp-truncated-text-lines); white-space: normal; overflow-wrap: anywhere; }
+.srp-truncated-text--clamp[data-lines="2"] { --srp-truncated-text-lines: var(--line-clamp-2); }
+.srp-truncated-text--clamp[data-lines="3"] { --srp-truncated-text-lines: var(--line-clamp-3); }
+.srp-truncated-text--clamp[data-lines="4"] { --srp-truncated-text-lines: var(--line-clamp-4); }
+.srp-truncated-text--clamp[data-lines="5"] { --srp-truncated-text-lines: var(--line-clamp-5); }
+.srp-truncated-text--clamp[data-lines="6"] { --srp-truncated-text-lines: var(--line-clamp-6); }
 /* The ring sits inside its edge: the box clips its own text, and a row or cell around it often clips too. */
-.dk-truncated-text:focus-visible { outline: var(--focus-ring-width) solid var(--truncated-text-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-truncated-text:focus-visible { outline: var(--focus-ring-width) solid var(--truncated-text-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 }

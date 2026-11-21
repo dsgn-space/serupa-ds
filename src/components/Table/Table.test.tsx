@@ -86,7 +86,7 @@ describe('Table', () => {
     const ref = React.createRef<HTMLTableElement>();
     await setup(ref);
     const t = el('tdef') as HTMLTableElement, f = t.parentElement!;
-    expect([t.tagName, t.className, ref.current === t, f.className, f.dataset.component, f.dataset.frame, t.caption?.textContent]).toEqual(['TABLE', 'dk-table__table extra', true, 'dk-table', 'table', 'f', 'Team members']);
+    expect([t.tagName, t.className, ref.current === t, f.className, f.dataset.component, f.dataset.frame, t.caption?.textContent]).toEqual(['TABLE', 'srp-table__table extra', true, 'srp-table', 'table', 'f', 'Team members']);
     expect([...t.querySelectorAll('th')].map((x) => x.scope)).toEqual(['col', 'col', 'col']);
     expect([f.getAttribute('tabindex'), f.getAttribute('role')]).toEqual([null, null]);
   });
@@ -126,7 +126,7 @@ describe('Table', () => {
 
   test('header: surface-muted, muted text, font-medium; align="end": right-aligned, tabular digits', async () => {
     await setup();
-    const h = css(q('#tdef th')), e = css(q('#tdef td.dk-table__cell--end'));
+    const h = css(q('#tdef th')), e = css(q('#tdef td.srp-table__cell--end'));
     expect([h.backgroundColor, h.color, h.fontWeight]).toEqual([bg('var(--surface-muted)'), color('var(--text-muted)'), '500']);
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
@@ -174,12 +174,12 @@ describe('Table', () => {
       </Table>;
     }
     await render(<><Pick /><Table id="tun"><TableBody><TableRow data-i="u"><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table></>);
-    const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .dk-table__select');
+    const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .srp-table__select');
     expect([head.tagName, head.getAttribute('scope'), boxes.map((b) => b.getAttribute('aria-label')).join('|'), boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate, r.current === boxes[1], boxes[1]!.name, boxes[1]!.value, (boxes[1]!.closest('td') as HTMLElement).dataset.c])
       .toEqual(['TH', 'col', 'Select all rows|Select Ada|Select Grace|Select Linus', 'false,false,true,false', true, true, 'who', 'Ada', 'c']);
     expect(Math.round(head.getBoundingClientRect().width) < 48).toBe(true);
     await userEvent.click(boxes[1]!);
-    expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('dk-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
+    expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('srp-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
     await userEvent.click(boxes[0]!);
     expect([boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate]).toEqual(['true,true,true,true', false]);
     const u = q('#tun [data-i="u"]');
@@ -225,7 +225,7 @@ describe('Table', () => {
 
   test('pressing it calls onSort: aria-sort and the arrow follow the order', async () => {
     await setup();
-    const state = () => [el('hsort').getAttribute('aria-sort'), [...el('tsort').querySelectorAll('tbody tr td:first-child')].map((x) => x.textContent).join(), q('#hsort .dk-icon').dataset.icon];
+    const state = () => [el('hsort').getAttribute('aria-sort'), [...el('tsort').querySelectorAll('tbody tr td:first-child')].map((x) => x.textContent).join(), q('#hsort .srp-icon').dataset.icon];
     q('#hsort button').focus();
     await userEvent.keyboard('{Enter}');
     expect(state()).toEqual(['ascending', 'Grace,Linus,Ada', 'arrow_upward']);
@@ -235,7 +235,7 @@ describe('Table', () => {
 
   test('a new order is read out ("Sorted by Calls, ascending."), not on the first render; Indonesian words (180)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await setup();
     await new Promise((r) => setTimeout(r, 700));
@@ -266,7 +266,7 @@ describe('Table', () => {
     const walk = (list: CSSRuleList, inPrint: boolean) => { for (const r of Array.from(list)) { if (r instanceof CSSMediaRule) walk(r.cssRules, inPrint || /print/.test(r.conditionText)); else if (r instanceof CSSStyleRule) { if (inPrint) rules.push(r); } else if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules, inPrint); } };
     for (const sh of Array.from(document.styleSheets)) { try { walk(sh.cssRules, false); } catch { /* another origin */ } }
     const get = (sel: string) => rules.find((r) => r.selectorText === sel)?.style;
-    expect([get('.dk-table')?.overflow, get('.dk-table__head')?.display, get('.dk-table__row')?.breakInside, get('.dk-card')?.breakInside]).toEqual(['visible', 'table-header-group', 'avoid', 'avoid']);
+    expect([get('.srp-table')?.overflow, get('.srp-table__head')?.display, get('.srp-table__row')?.breakInside, get('.srp-card')?.breakInside]).toEqual(['visible', 'table-header-group', 'avoid', 'avoid']);
   });
 
   test('the sort button fills the header, lines up with align="end", and shows a focus ring', async () => {
@@ -352,7 +352,7 @@ describe('Table', () => {
 
   test('unknown size and align fall back to md and start', async () => {
     await setup();
-    expect([el('tbad').parentElement!.className, q('#tbad td').className]).toEqual(['dk-table', 'dk-table__cell']);
+    expect([el('tbad').parentElement!.className, q('#tbad td').className]).toEqual(['srp-table', 'srp-table__cell']);
   });
 
   test('Table tokens (--table-header-bg, --table-padding-x) override one table', async () => {
@@ -369,7 +369,7 @@ describe('Table', () => {
       document.documentElement.setAttribute('data-theme', th);
       const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)'), shaded = bg('var(--surface-hover)');
       // Muted text in a selected row (shaded like a hovered or striped one) is read from that row: it steps to text-muted-shaded.
-      const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .dk-text')).color, mts = css(q('#tdef [data-i="1"] .dk-text')).color, hd = css(q('#tdef th')).color;
+      const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .srp-text')).color, mts = css(q('#tdef [data-i="1"] .srp-text')).color, hd = css(q('#tdef th')).color;
       const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
       const bar = contrast('var(--primary)', shaded); n++;
@@ -385,14 +385,14 @@ describe('Table', () => {
 });
 
 describe('Table: stickyHeader and focus', () => {
-  test('walking up the rows with Shift+Tab, no focused link ends up under the sticky header (WCAG 2.4.11); the frame measures the header into --dk-table-head', async () => {
+  test('walking up the rows with Shift+Tab, no focused link ends up under the sticky header (WCAG 2.4.11); the frame measures the header into --srp-table-head', async () => {
     const rows = []; for (let i = 0; i < 40; i++) rows.push(<TableRow key={i}><TableCell>Invoice {i}</TableCell><TableCell><a href={'#e' + i} id={'e' + i}>Edit</a></TableCell></TableRow>);
     await render(<Table stickyHeader caption="Invoices" containerProps={{ style: { maxHeight: '240px' } }}>
       <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Action</TableHeaderCell></TableRow></TableHead>
       <TableBody>{rows}</TableBody>
     </Table>);
     const head = document.querySelector('thead') as HTMLElement, frame = head.closest('[data-component="table"]') as HTMLElement;
-    await expect.poll(() => frame.style.getPropertyValue('--dk-table-head')).toBe(head.getBoundingClientRect().height + 'px');
+    await expect.poll(() => frame.style.getPropertyValue('--srp-table-head')).toBe(head.getBoundingClientRect().height + 'px');
     el('e39').focus();
     const covered: number[] = [];
     for (let i = 38; i >= 0; i--) {
@@ -491,7 +491,7 @@ describe('TableActionBar (62)', () => {
 
   test('a new count is read out ("3 selected"), not on the first render or at 0; Indonesian words', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<SerupaProvider locale="en"><Picker log={[]} /></SerupaProvider>);
     await new Promise((r) => setTimeout(r, 300));
@@ -504,7 +504,7 @@ describe('TableActionBar (62)', () => {
 
   test('GR55: a bar rendered only while rows are selected reads out its first count', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const screen = await render(<div />);
     await screen.rerender(<SerupaProvider locale="en"><TableActionBar id="bar" count={1} /></SerupaProvider>);
@@ -1067,7 +1067,7 @@ describe('Table loading and messages (GR316)', () => {
     }
     // One name for the whole table: the rest of the placeholders are hidden from screen readers.
     // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
     // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);

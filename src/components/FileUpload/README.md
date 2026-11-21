@@ -28,13 +28,13 @@ import { FileUpload } from "@diki-stwn/serupa-ds";
 
 Drawn from the `ReadOnly` story.
 
-1. **Drop zone** (`.dk-file-upload__zone`): where files are dropped, with a button to choose them.
-2. **Title** (`.dk-file-upload__title`): what to add.
-3. **Hint** (`.dk-file-upload__hint`): which types and sizes are accepted.
-4. **File list** (`.dk-file-upload__list`): the files added so far.
-5. **File** (`.dk-file-upload__file`): one file: its type, name and size.
-6. **Name** (`.dk-file-upload__name`): the file name; a long one is cut in the middle so its ending stays.
-7. **Size** (`.dk-file-upload__size`): the file's size.
+1. **Drop zone** (`.srp-file-upload__zone`): where files are dropped, with a button to choose them.
+2. **Title** (`.srp-file-upload__title`): what to add.
+3. **Hint** (`.srp-file-upload__hint`): which types and sizes are accepted.
+4. **File list** (`.srp-file-upload__list`): the files added so far.
+5. **File** (`.srp-file-upload__file`): one file: its type, name and size.
+6. **Name** (`.srp-file-upload__name`): the file name; a long one is cut in the middle so its ending stays.
+7. **Size** (`.srp-file-upload__size`): the file's size.
 
 ## Usage
 

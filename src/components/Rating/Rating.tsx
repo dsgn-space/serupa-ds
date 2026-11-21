@@ -62,7 +62,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   const value = controlled ? fit(chosen) : chosen;
   const [hover, setHover] = React.useState<number | null>(null);
   const root = React.useRef<HTMLDivElement | null>(null);
-  const auto = domId('dk-rating', React.useId());
+  const auto = domId('srp-rating', React.useId());
   // form: a rating outside the form it names is reset with that form too, as Slider and SegmentedControl are.
   useFormReset(root, () => { if (!controlled) setOwn(fit(defaultValue)); }, form);
   // A disabled <fieldset> around it turns the radios off natively; the stars then act and look disabled too (L8E71).
@@ -82,9 +82,9 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
     return { i, fill: Math.round(share * 100) + '%' };
   });
   const box = (children: React.ReactNode, i: number, fill: string) => (
-    <span key={i} className="dk-rating__star" style={{ '--dk-rating-share': fill } as React.CSSProperties}>
-      <span className="dk-rating__empty"><Star /></span>
-      <span className="dk-rating__fill"><Star /></span>
+    <span key={i} className="srp-rating__star" style={{ '--srp-rating-share': fill } as React.CSSProperties}>
+      <span className="srp-rating__empty"><Star /></span>
+      <span className="srp-rating__fill"><Star /></span>
       {children}
     </span>
   );
@@ -94,7 +94,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   // A read-only Rating has no inputs, so the delegated focus finds nothing there and does nothing, as the <div>'s own.
   const ref2 = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled'))); nameRef(n); styled(n); });
   useAutoFocus(autoFocus, () => root.current);   // through the delegation above; the <div> ignored it (L8E92)
-  const classes = cn('dk-rating', 'dk-rating--size-' + size, readOnly && 'dk-rating--readonly', off && 'dk-rating--disabled', className);
+  const classes = cn('srp-rating', 'srp-rating--size-' + size, readOnly && 'srp-rating--readonly', off && 'srp-rating--disabled', className);
 
   if (readOnly) {
     const said = value == null ? 0 : Math.round(value * 10) / 10;
@@ -111,7 +111,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
     const choices = allowHalf ? [i + 0.5, i + 1] : [i + 1];
     return choices.map((v) => {
       const whole = v === i + 1, split = allowHalf && whole;
-      return <input key={v} type="radio" className={cn('dk-rating__choice', allowHalf && !whole && 'dk-rating__choice--half')}
+      return <input key={v} type="radio" className={cn('srp-rating__choice', allowHalf && !whole && 'srp-rating__choice--half')}
         name={name || auto} form={form} value={v} checked={picked === v} disabled={disabled} required={required} aria-label={sds.labels.ratingStars(v, displayNumber(v, locale))}
         onChange={(e) => { if (!split || !((e.nativeEvent as MouseEvent).detail > 0)) set(v); }}
         onClick={(e) => {

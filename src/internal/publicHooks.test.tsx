@@ -22,7 +22,7 @@ test('useSerupa gives the provider\'s words', async () => {
 test('announce says text politely, or assertively for an error', async () => {
   announce('Draft saved');
   announce('Upload failed', { assertive: true });
-  await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent, { timeout: 3000 }).toBe('Draft saved');
-  await expect.poll(() => document.querySelector('[data-dk-announcer-assertive]')?.textContent, { timeout: 3000 }).toBe('Upload failed');
-  expect(document.querySelector('[data-dk-announcer-assertive]')?.getAttribute('role')).toBe('alert');
+  await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent, { timeout: 3000 }).toBe('Draft saved');
+  await expect.poll(() => document.querySelector('[data-srp-announcer-assertive]')?.textContent, { timeout: 3000 }).toBe('Upload failed');
+  expect(document.querySelector('[data-srp-announcer-assertive]')?.getAttribute('role')).toBe('alert');
 });

@@ -74,7 +74,7 @@ React 19 is a peer dependency, so the components use your app's React, and they 
 
 In React Server Components (the Next.js App Router), import them straight into a server component. The interactive ones (Button, Dialog, Combobox…) are client components (`"use client"`); layout and text (Container, Stack, Grid, Heading, Text, Divider…) render on the server, and so do the helpers `buttonClass`, `paginationRange`, `formatFileSize` and `initials`.
 
-Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
+Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `srp.tokens`, `srp.base`, `srp.components`, `srp.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, srp, app;` (the `srp.*` layers sit inside `srp`).
 
 On a plain page without a bundler:
 
@@ -122,7 +122,7 @@ import { serupaPurge } from '@diki-stwn/serupa-ds/purge';
 export default { plugins: [react(), serupaPurge()] };
 ```
 
-`vite build` then ships the component styles (about 450 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+`vite build` then ships the component styles (about 530 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
 
 ```js
 // postcss.config.mjs
@@ -165,7 +165,7 @@ npx serupa-usage src
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, `data-print="hide"` leaves out anything marked only for the screen, and `data-print-urls` on a container prints each outside link's address after it. |
-| `dist/components.css` | The component styles (`dk-*`), about 450 KB (60 KB gzipped, 46 KB with Brotli). |
+| `dist/components.css` | The component styles (`srp-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
 | `dist/utilities.css` | The utility classes, apart from masks and gradients. |
 | `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
@@ -173,7 +173,7 @@ npx serupa-usage src
 | `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |
 | `dist/serupa-icons.iife.js` | Every Material Symbol by name, for a plain page. `serupa.iife.js` loads it from its own folder when an Icon needs it, so keep the two together. |
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
-| `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. A Theme panel in the corner switches brand, mode, contrast, density, radius, depth, shadow and type scale live, and checks the colors again in each. Escape turns it off. `Serupa.debug.inspect(element)`, `Serupa.debug.contrast(element)` and `Serupa.debug.theme(settings)` do the same from code. Leave it out of production. |
+| `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. A Theme panel in the corner switches brand, mode, contrast, density, radius, shadow and type scale live, and checks the colors again in each. Escape turns it off. `Serupa.debug.inspect(element)`, `Serupa.debug.contrast(element)` and `Serupa.debug.theme(settings)` do the same from code. Leave it out of production. |
 | `dist/eslint.js` (`@diki-stwn/serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
 | `dist/stylelint.js` (`@diki-stwn/serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
 | `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | For your app's own tests. Testers that drive a widget as people do: `combobox()`, `menu()`, `tabs()`, `table()`, `calendar()` and `datePicker()` (`await combobox(field, { user }).choose('Canada')`), finding parts by role and name so your tests don't depend on Serupa's markup. And `forEachTheme(page, fn)`, which draws a Playwright page in each theme, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. See Guides › Testing your app in Storybook. |
@@ -391,12 +391,16 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
+| [AppShell](src/components/AppShell/README.md) (beta) | The frame around an app's pages: a skip link, the header, the sidebar, main, the footer and a bottom navigation, laid out and kept in place as the page scrolls. |
+| [Center](src/components/Center/README.md) (beta) | Keeps content to a maximum width in the middle of the space it's in, and with `vertical`, in the middle of the screen's height too. |
 | [Container](src/components/Container/README.md) | Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide. |
 | [Divider](src/components/Divider/README.md) | A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or". |
 | [Grid](src/components/Grid/README.md) | Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. |
 | [Heading](src/components/Heading/README.md) | A heading, `h1` to `h6`, in the system's type. |
+| [PageSection](src/components/PageSection/README.md) (beta) | One full-width band of a long page, such as a landing page's hero, features, pricing or questions. |
 | [Prose](src/components/Prose/README.md) | Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. |
 | [ScrollArea](src/components/ScrollArea/README.md) (beta) | A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. |
+| [SidebarLayout](src/components/SidebarLayout/README.md) (beta) | Puts a narrow column beside a wide one, and stacks them once the space gets too narrow for both. |
 | [Splitter](src/components/Splitter/README.md) | Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |
@@ -458,7 +462,7 @@ The system follows [Semantic Versioning](https://semver.org): the version is in 
 | **Minor** (1.1.0) | Something new; everything existing keeps working | New tokens, classes, components or props; a new theme |
 | **Patch** (1.0.1) | A fix that doesn't change what correct code gets | A contrast fix inside the rules, a bug in a component, docs |
 
-From 16.0.0, the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`, any `dk-<block>__<part>`) are private too: they may change in any release. The styling API that keeps the major-only promise is the component tokens, `data-component`, `data-state` and the ARIA states, and the block and modifier classes (`.dk-btn`, `.dk-btn--primary`); `npx serupa-migrate` lists the lines that select an inner class.
+From 16.0.0, the classes of a component's inner parts (`.srp-btn__label`, `.srp-card__header`, any `srp-<block>__<part>`) are private too: they may change in any release. The styling API that keeps the major-only promise is the component tokens, `data-component`, `data-state` and the ARIA states, and the block and modifier classes (`.srp-btn`, `.srp-btn--primary`); `npx serupa-migrate` lists the lines that select an inner class.
 
 From 15.0.0, the palette and effect primitives that no component or theme reads (208 of the 635 typed tokens) are a tier of their own: they may change in a minor release, and they stay out of the Figma and native exports. Read the semantic tokens instead, which keep the major-only promise with every component token.
 
@@ -580,7 +584,7 @@ Two features set the oldest versions that get the whole system, so the baseline 
 | CSS anchor positioning (`anchor()`, `position-area`, `position-try-fallbacks`) | Chrome and Edge 129, Safari 26, Firefox 147 | Menus, popovers, tooltips and the picker lists can't be placed by CSS next to what opens them. |
 | `@scope`, which keeps each component's styles to its own markup | Chrome and Edge 118, Safari 26.4, Firefox 146 | A component's styles reach into whatever is nested inside it. |
 | `light-dark()`, behind `data-brand` and `data-mode` | Chrome and Edge 123, Safari 17.5, Firefox 120 | A page or section themed only by `data-brand` / `data-mode` loses its theme colors. |
-| `@property`, which gives the `--dk-*` variables their starting values | Chrome and Edge 85, Safari 16.4, Firefox 128 | The utilities that combine through those variables (`translate-*`, `rotate-*`, `scale-*`, `skew-*`, `shadow-*`, `ring-*`, gradients, filters and `mask-*`) do nothing unless every part is set. |
+| `@property`, which gives the `--srp-*` variables their starting values | Chrome and Edge 85, Safari 16.4, Firefox 128 | The utilities that combine through those variables (`translate-*`, `rotate-*`, `scale-*`, `skew-*`, `shadow-*`, `ring-*`, gradients, filters and `mask-*`) do nothing unless every part is set. |
 | The `popover` attribute (the top layer) | Chrome and Edge 114, Safari 17, Firefox 125 | Menu, Popover, Tooltip and the picker lists open in the page instead of the top layer, where a parent's `overflow: hidden` can clip them. |
 
 Every browser at the baseline also has `@starting-style`, `transition-behavior`, view transitions, `content-visibility`, scrollbar styling, `scrollbar-gutter`, `round()` and `*-safe` alignment, so the components use them without asking first.

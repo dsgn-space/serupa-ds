@@ -63,11 +63,11 @@ function HighlightRender({ ref, ...props }: HighlightProps & React.RefAttributes
   let at = 0;
   ranges.forEach(([s, e], i) => {
     if (s > at) parts.push(text.slice(at, s));
-    parts.push(<mark key={i} className="dk-highlight__mark">{text.slice(s, e)}</mark>);
+    parts.push(<mark key={i} className="srp-highlight__mark">{text.slice(s, e)}</mark>);
     at = e;
   });
   if (at < text.length) parts.push(text.slice(at));
-  return <span {...rest} ref={ref} className={cn('dk-highlight', props.className)} data-component="highlight">{parts}</span>;
+  return <span {...rest} ref={ref} className={cn('srp-highlight', props.className)} data-component="highlight">{parts}</span>;
 }
 
 /* Highlight: text with the parts that match a query in <mark>, for search results, Combobox options and a

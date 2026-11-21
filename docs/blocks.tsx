@@ -298,7 +298,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
     // The tile sits in a muted well with room around it, so its shadow shows (and isn't clipped by the cell) on
     // every row, not only on the striped ones.
     if (preview === 'shadow') return <div style={{ display: 'inline-block', padding: 16, borderRadius: 8, background: 'var(--surface-muted)' }}><div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div></div>;
-    if (preview === 'duration' && /^(duration|delay)-/.test(t.name)) return <span className="dk-sb-pulse" style={{ display: 'inline-block', height: 12, width: 12, borderRadius: 6, background: 'var(--primary)', animationDuration: `calc(${v} * 2 + 200ms)` }} />;
+    if (preview === 'duration' && /^(duration|delay)-/.test(t.name)) return <span className="srp-sb-pulse" style={{ display: 'inline-block', height: 12, width: 12, borderRadius: 6, background: 'var(--primary)', animationDuration: `calc(${v} * 2 + 200ms)` }} />;
     return null;
   };
   return <div data-token-sheet={group}>

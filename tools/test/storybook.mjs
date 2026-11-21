@@ -261,7 +261,7 @@ async function pageRules(page) {
   const landed = await page.evaluate(() => {
     const a = document.activeElement, main = document.querySelector('main');
     if (!main || !a || !main.contains(a)) return `following the skip link leaves focus on <${a ? a.tagName.toLowerCase() : 'nothing'}>, not in main (give main tabIndex={-1})`;
-    const bar = document.querySelector('.dk-navbar--sticky');
+    const bar = document.querySelector('.srp-navbar--sticky');
     const under = bar ? bar.getBoundingClientRect().bottom - a.getBoundingClientRect().top : 0;
     return under > 1 ? `after the skip link, the top ${Math.round(under)}px of main is under the sticky Navbar (WCAG 2.4.11)` : '';
   });
@@ -279,7 +279,7 @@ async function themeRun(w, e, th, loaded) {
   const v = await w.page.evaluate(async () => {
     const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
     // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
-    const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
+    const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.srp-field--disabled, .srp-input--disabled, :disabled, [aria-disabled="true"]');
     return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
       .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
   });

@@ -29,9 +29,9 @@ const [q, setQ] = React.useState("");
 
 Drawn from the `Invalid` story.
 
-1. **Search icon** (`.dk-search-input__icon`): says the field searches.
-2. **Field** (`.dk-input__field`): where the search is typed.
-3. **Clear** (`.dk-search-input__clear`): empties the field, as Escape does.
+1. **Search icon** (`.srp-search-input__icon`): says the field searches.
+2. **Field** (`.srp-input__field`): where the search is typed.
+3. **Clear** (`.srp-search-input__clear`): empties the field, as Escape does.
 
 ## Usage
 

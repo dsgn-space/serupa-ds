@@ -83,7 +83,7 @@ const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '
 function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<HTMLTableElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(words).labels, locale = useLocale();
-  const base = domId('dk-dg', React.useId());
+  const base = domId('srp-dg', React.useId());
   const { columns, rows } = props;
   const key = props.rowKey || 'id';
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
@@ -204,8 +204,8 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   // With no rows: placeholders the height of real rows while loading (only the first says "Loading", once), otherwise
   // the app's message in one cell across every column. Neither is a cell the arrow keys reach.
   const frame = React.useRef<HTMLDivElement>(null);
-  // A sticky header covers the top of the frame: measured, so the active cell scrolls in below it (the CSS reads --dk-data-grid-head).
-  useStickyHead(frame, !!props.stickyHeader, 'thead', '--dk-data-grid-head');
+  // A sticky header covers the top of the frame: measured, so the active cell scrolls in below it (the CSS reads --srp-data-grid-head).
+  useStickyHead(frame, !!props.stickyHeader, 'thead', '--srp-data-grid-head');
   const loading = !!props.loading;
   const placeholders = !rows.length && loading ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
@@ -221,15 +221,15 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   }), [latest]);
   const cp = props.containerProps || {};
   return (
-    <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid" data-range={range && range.r1 === range.r2 && range.c1 === range.c2 ? 'cell' : undefined}>
+    <div {...cp} ref={frame} className={cn('srp-data-grid', size !== 'md' && 'srp-data-grid--' + size, props.stickyHeader && 'srp-data-grid--sticky', props.className, cp.className)} data-component="data-grid" data-range={range && range.r1 === range.r2 && range.c1 === range.c2 ? 'cell' : undefined}>
       <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
         role="grid" aria-busy={loading || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
-        className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>
+        className="srp-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>
         <thead>
           <tr role="row" aria-rowindex={1}>
             {columns.map((col, c) => (
               <th key={col.key} role="columnheader" scope="col" aria-colindex={c + 1} tabIndex={tabStop(0, c)} data-cell={`0-${c}`}
-                className={cn('dk-data-grid__header', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align)}
+                className={cn('srp-data-grid__header', col.align && col.align !== 'start' && 'srp-data-grid__cell--' + col.align)}
                 style={col.width != null ? { width: col.width } : undefined} onClick={(e) => pick({ r: 0, c }, e)}>{col.header}</th>
             ))}
           </tr>
@@ -243,7 +243,7 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
           {placeholders ? <LoadingRows rows={placeholders} columns={columns} label={props.loadingLabel == null ? L.loading : props.loadingLabel} /> : null}
           {message != null && (
             <tr role="row" aria-rowindex={2}>
-              <td role="gridcell" colSpan={columns.length} aria-colspan={columns.length} className="dk-data-grid__cell dk-data-grid__message">{message}</td>
+              <td role="gridcell" colSpan={columns.length} aria-colspan={columns.length} className="srp-data-grid__cell srp-data-grid__message">{message}</td>
             </tr>
           )}
         </tbody>
@@ -277,10 +277,10 @@ const GridRow = /* @__PURE__ */ React.memo(function GridRow(p: { row: DataGridRo
         return (
           <td key={col.key} role="gridcell" aria-colindex={c + 1} tabIndex={active && !editing ? 0 : -1} data-cell={`${r}-${c}`}
             aria-selected={sel} aria-readonly={p.canEdit && !col.editable ? true : undefined}
-            className={cn('dk-data-grid__cell', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align, sel && 'dk-data-grid__cell--selected', editing && 'dk-data-grid__cell--editing')}
+            className={cn('srp-data-grid__cell', col.align && col.align !== 'start' && 'srp-data-grid__cell--' + col.align, sel && 'srp-data-grid__cell--selected', editing && 'srp-data-grid__cell--editing')}
             onClick={(e) => api.pick({ r, c }, e)} onDoubleClick={() => api.begin({ r, c }, textOf(col, row))}>
             {editing ? (
-              <input className="dk-data-grid__input" aria-label={p.editLabel(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={editing.text}
+              <input className="srp-data-grid__input" aria-label={p.editLabel(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={editing.text}
                 onFocus={(e) => { const n = e.currentTarget.value.length; e.currentTarget.setSelectionRange(n, n); }}
                 onBlur={(e) => api.blur(e.currentTarget.value)}
                 onKeyDown={(e) => {
@@ -302,8 +302,8 @@ const GridRow = /* @__PURE__ */ React.memo(function GridRow(p: { row: DataGridRo
 function LoadingRows(props: { rows: number; columns: DataGridColumn[]; label: string }) {
   const waiting = !useSkeletonShown(props.label);
   return Array.from({ length: props.rows }, (_, r) => (
-    <tr key={'loading-' + r} role="row" className="dk-data-grid__loading">
-      {props.columns.map((col) => <td key={col.key} role="gridcell" className="dk-data-grid__cell"><SkeletonArt waiting={waiting} /></td>)}
+    <tr key={'loading-' + r} role="row" className="srp-data-grid__loading">
+      {props.columns.map((col) => <td key={col.key} role="gridcell" className="srp-data-grid__cell"><SkeletonArt waiting={waiting} /></td>)}
     </tr>
   ));
 }

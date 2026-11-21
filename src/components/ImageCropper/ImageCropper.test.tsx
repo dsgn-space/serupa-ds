@@ -25,7 +25,7 @@ describe('ImageCropper', () => {
     const f = page.getByRole('application', { name: 'Crop area' }).element() as HTMLElement;
     const how = document.getElementById(f.getAttribute('aria-describedby')!)!;
     expect([ref.current === e, e.className, e.dataset.x, e.dataset.component, f.tabIndex, how.textContent, css(f).touchAction])
-      .toEqual([true, 'dk-image-cropper extra', 'y', 'image-cropper', 0, 'Drag the picture or use the arrow keys to move it, and plus or minus to zoom.', 'none']);
+      .toEqual([true, 'srp-image-cropper extra', 'y', 'image-cropper', 0, 'Drag the picture or use the arrow keys to move it, and plus or minus to zoom.', 'none']);
     await expect.element(page.getByRole('slider', { name: 'Zoom' })).toHaveAttribute('aria-valuetext', '100%');
     await expect.element(page.getByRole('button', { name: 'Zoom out' })).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Zoom in' })).toBeEnabled();

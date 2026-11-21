@@ -35,11 +35,11 @@ import { Accordion, AccordionItem } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story.
 
-1. **Item** (`.dk-accordion__item`): one section: its heading and its panel.
-2. **Trigger** (`.dk-accordion__trigger`): the button in the heading that opens and closes the section.
-3. **Title** (`.dk-accordion__title`): the section's name, inside the trigger.
-4. **Chevron** (`.dk-accordion__icon`): turns to show whether the section is open.
-5. **Panel** (`.dk-accordion__panel`): the section's content, shown when it's open.
+1. **Item** (`.srp-accordion__item`): one section: its heading and its panel.
+2. **Trigger** (`.srp-accordion__trigger`): the button in the heading that opens and closes the section.
+3. **Title** (`.srp-accordion__title`): the section's name, inside the trigger.
+4. **Chevron** (`.srp-accordion__icon`): turns to show whether the section is open.
+5. **Panel** (`.srp-accordion__panel`): the section's content, shown when it's open.
 
 ## Usage
 

@@ -57,7 +57,7 @@ describe('Link', () => {
     const r = React.createRef<HTMLAnchorElement>();
     await render(<Para r={r} />);
     const e = el('ldef');
-    expect([e.tagName, e.getAttribute('href'), e.className, e.dataset.component, r.current === e, e.dataset.x, e.target, css(e).display]).toEqual(['A', '#a', 'dk-link extra', 'link', true, 'y', '', 'inline']);
+    expect([e.tagName, e.getAttribute('href'), e.className, e.dataset.component, r.current === e, e.dataset.x, e.target, css(e).display]).toEqual(['A', '#a', 'srp-link extra', 'link', true, 'y', '', 'inline']);
   });
 
   test('primary, underlined 1px, 2px below the text; on hover primary-hover and the underline thickens to 2px', async () => {
@@ -102,7 +102,7 @@ describe('Link', () => {
 
   test('unknown tone and underline fall back to primary and always', async () => {
     await render(<Link id="lbad" href="#d" tone={'gold' as never} underline={'never' as never}>Bad</Link>);
-    expect(el('lbad').className).toBe('dk-link');
+    expect(el('lbad').className).toBe('srp-link');
   });
 
   test('external: target _blank, rel keeps yours and adds noopener noreferrer, a 1em hidden new-tab icon and "(opens in a new tab)" for screen readers', async () => {
@@ -126,7 +126,7 @@ describe('Link', () => {
     for (let w = 90; w <= 200; w += 5) widths.push(w);
     await render(<>{widths.map((w) => <p key={w} id={'lw' + w} style={{ width: w + 'px', margin: 0 }}>See <Link href="#g" external>Read the guide</Link></p>)}</>);
     const apart = widths.filter((w) => {
-      const i = document.querySelector('#lw' + w + ' .dk-link__icon')!, icon = i.getBoundingClientRect();
+      const i = document.querySelector('#lw' + w + ' .srp-link__icon')!, icon = i.getBoundingClientRect();
       // The last letter before the icon.
       const r = document.createRange(), t = i.parentElement!.firstChild!;
       r.setStart(t, t.textContent!.length - 1); r.setEnd(t, t.textContent!.length);
@@ -144,7 +144,7 @@ describe('Link', () => {
   test('as: renders your router link with className and the rest', async () => {
     await render(<Link id="lrouter" as={RouterLink} to="/settings">Settings</Link>);
     const e = el('lrouter');
-    expect([e.hasAttribute('data-router'), e.getAttribute('href'), e.className]).toEqual([true, '#router/settings', 'dk-link']);
+    expect([e.hasAttribute('data-router'), e.getAttribute('href'), e.className]).toEqual([true, '#router/settings', 'srp-link']);
   });
 
   test('as is typed (G10): the props and ref of the element it names, an <a>\'s by default', async () => {
@@ -233,7 +233,7 @@ describe('Link onMedia', () => {
     expect(css(document.getElementById('lm-dark')).color).toBe('rgb(255, 255, 255)');
     document.getElementById('lm-light')!.focus();
     expect(css(document.getElementById('lm-light')).outlineColor).toBe('rgb(0, 0, 0)');
-    expect(document.getElementById('lm-bad')!.className).toBe('dk-link');
+    expect(document.getElementById('lm-bad')!.className).toBe('srp-link');
     style.remove();
   });
 });

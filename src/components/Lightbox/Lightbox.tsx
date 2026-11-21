@@ -61,10 +61,10 @@ function Stage({ item }: { item: LightboxItem }) {
   const given: [number, number] | null = item.width && item.height ? [item.width, item.height] : null;
   const [w, h] = own || given || [4, 3];
   return (
-    <span className="dk-lightbox__stage" data-state={state} data-fades={fades || undefined} style={{ '--dk-lightbox-ratio': w + ' / ' + h, '--dk-lightbox-w': own || given ? w + 'px' : '100%' } as React.CSSProperties}>
+    <span className="srp-lightbox__stage" data-state={state} data-fades={fades || undefined} style={{ '--srp-lightbox-ratio': w + ' / ' + h, '--srp-lightbox-w': own || given ? w + 'px' : '100%' } as React.CSSProperties}>
       {state === 'error'
-        ? <span className="dk-lightbox__fallback" aria-hidden="true"><Icon icon={icons.BrokenImage} /></span>
-        : <img src={item.src} alt="" className="dk-lightbox__img" decoding="async"
+        ? <span className="srp-lightbox__fallback" aria-hidden="true"><Icon icon={icons.BrokenImage} /></span>
+        : <img src={item.src} alt="" className="srp-lightbox__img" decoding="async"
             onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setFades(performance.now() - since.current > quickArrival); setState('loaded'); }}
             onError={() => setState('error')} />}
     </span>
@@ -150,17 +150,17 @@ function LightboxRender({ ref, ...props }: LightboxProps & React.RefAttributes<H
   return (
     <Dialog {...rest} ref={ref} onKeyDown={onKeyDown} open={open && !!item} onOpenChange={setOpen} size="lg" title={item ? item.alt : undefined}
       aria-describedby={rest['aria-describedby'] || (count > 1 ? countId : undefined)}
-      className={cn('dk-lightbox', className)} data-component="lightbox">
+      className={cn('srp-lightbox', className)} data-component="lightbox">
       {item ? (
-        <div ref={restyle} className="dk-lightbox__body" data-index={index} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { start.current = null; }}>
-          <figure className="dk-lightbox__figure">
+        <div ref={restyle} className="srp-lightbox__body" data-index={index} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { start.current = null; }}>
+          <figure className="srp-lightbox__figure">
             <Stage key={item.src} item={item} />
-            {item.caption != null ? <figcaption className="dk-lightbox__caption">{item.caption}</figcaption> : null}
+            {item.caption != null ? <figcaption className="srp-lightbox__caption">{item.caption}</figcaption> : null}
           </figure>
           {count > 1 ? (
-            <div className="dk-lightbox__nav">
+            <div className="srp-lightbox__nav">
               <IconButton icon={prevIcon} label={sds.labels.previousImage} variant="secondary" shape="round" ref={prevNav} disabled={first} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); go(index - 1); }} />
-              <span className="dk-lightbox__count" id={countId}>{sds.labels.imageOf(index + 1, count)}</span>
+              <span className="srp-lightbox__count" id={countId}>{sds.labels.imageOf(index + 1, count)}</span>
               <IconButton icon={nextIcon} label={sds.labels.nextImage} variant="secondary" shape="round" ref={nextNav} disabled={last} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); go(index + 1); }} />
             </div>
           ) : null}

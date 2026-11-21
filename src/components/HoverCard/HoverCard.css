@@ -4,9 +4,9 @@
    and shrinks back faster when it closes. Every value reads one of its own tokens (hover-card.tokens.json), which
    fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-hover-card {
-  --dk-hover-card-offset: var(--hover-card-offset, var(--spacing-2));
+@layer srp.components {
+.srp-hover-card {
+  --srp-hover-card-offset: var(--hover-card-offset, var(--spacing-2));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--hover-card-z-index, var(--z-popover));
   width: var(--hover-card-width, var(--container-xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4));
   margin: var(--spacing-0); padding: var(--hover-card-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
@@ -14,25 +14,25 @@
   background: var(--hover-card-bg, var(--surface-overlay)); --surface-behind: var(--hover-card-bg, var(--surface-overlay)); --border: var(--hover-card-divider, var(--border-overlay)); color: var(--hover-card-text, var(--text));
   box-shadow: var(--hover-card-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; overflow-wrap: break-word;
-  transform-origin: var(--dk-layer-origin, top);
+  transform-origin: var(--srp-layer-origin, top);
 }
-.dk-hover-card[hidden] { display: none; }
+.srp-hover-card[hidden] { display: none; }
 /* Motion, as Popover's (DZ1): transitions, so closing while it opens turns back from where it is. In from
    @starting-style over motion-enter-sm; out over motion-exit-sm, kept shown and in the top layer (display and overlay,
    allow-discrete) until it has faded, inert meanwhile. Open on arrival (data-instant), no starting style. Reduced
    motion: the fade alone. */
-.dk-hover-card { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
-.dk-hover-card:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+.srp-hover-card { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.srp-hover-card:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
 @supports (overlay: auto) {
-  .dk-hover-card[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+  .srp-hover-card[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
-.dk-hover-card[hidden] { opacity: var(--opacity-0); pointer-events: none; }
-.dk-hover-card[hidden][data-instant] { transition: none; }
-@starting-style { .dk-hover-card:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-hover-card[hidden] { opacity: var(--opacity-0); pointer-events: none; }
+.srp-hover-card[hidden][data-instant] { transition: none; }
+@starting-style { .srp-hover-card:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-hover-card[hidden] { scale: var(--scale-95); }
-  @starting-style { .dk-hover-card:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+  .srp-hover-card[hidden] { scale: var(--scale-95); }
+  @starting-style { .srp-hover-card:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
   /* A card floating over the page has no place on paper: printing leaves it out. */
-  @media print { .dk-hover-card { display: none !important; } }
+  @media print { .srp-hover-card { display: none !important; } }
 }

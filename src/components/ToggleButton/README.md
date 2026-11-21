@@ -62,7 +62,7 @@ import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 | `onPressedChange` | `(pressed) => void` | none | Called with the new state |
 | `variant` | `'outline'` \| `'ghost'` | `'outline'` | Ghost suits toolbars |
 
-Every other Button prop works (`size`, `icon`, `leftIcon`, `rightIcon`, `disabled`, `onClick`…), except `destructive` and `loading`. An `onClick` that calls `preventDefault()` stops the toggle. Disabled while on, it is drawn in neutrals (the highlight fill, muted text, the control border), so it still reads as on but not as something to press. It renders Button's element, with `data-component="button"` and the class `dk-toggle-button`.
+Every other Button prop works (`size`, `icon`, `leftIcon`, `rightIcon`, `disabled`, `onClick`…), except `destructive` and `loading`. An `onClick` that calls `preventDefault()` stops the toggle. Disabled while on, it is drawn in neutrals (the highlight fill, muted text, the control border), so it still reads as on but not as something to press. It renders Button's element, with `data-component="button"` and the class `srp-toggle-button`.
 
 ## Component tokens
 

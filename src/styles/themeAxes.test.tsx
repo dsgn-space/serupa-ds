@@ -32,9 +32,9 @@ function read(host: HTMLElement): Record<string, string> {
 }
 const badge = (host: HTMLElement) => {
   const b = document.createElement('span');
-  b.className = 'dk-badge dk-badge--subtle';
+  b.className = 'srp-badge srp-badge--subtle';
   b.setAttribute('data-tone', 'red');
-  b.style.background = 'var(--dk-bdg-red-sbg)';
+  b.style.background = 'var(--srp-bdg-red-sbg)';
   host.appendChild(b);
   const c = getComputedStyle(b).backgroundColor;
   b.remove();
@@ -364,6 +364,14 @@ describe('Density axis', () => {
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
     expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed']);
+    // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
+    // hue so a visited link isn't the primary; a neutral or white (on-primary on yellow, lime) is left to the check above.
+    const offHue: string[] = [];
+    for (const [, t] of varied) if (['field-action', 'focus-ring', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
+      const ramp = /^\{([a-z]+)-\d+\}$/.exec(v)?.[1];
+      if (ramp && !/^(zinc|slate|gray|neutral|stone)$/.test(ramp) && ramp !== th.replace(/-(light|dark)$/, '')) offHue.push(`${t.name} ${th}: ${v}`);
+    }
+    expect(offHue).toEqual([]);
     // A theme for every accent color of the palette, blue first, each light and dark and named after its color.
     expect(BRANDS).toEqual(['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']);
     expect(tokens.color.themes.map((t: { id: string; name: string }) => `${t.id}: ${t.name}`)).toEqual(BRANDS.flatMap((b) => [`${b}-light: ${b[0]!.toUpperCase()}${b.slice(1)} Light`, `${b}-dark: ${b[0]!.toUpperCase()}${b.slice(1)} Dark`]));

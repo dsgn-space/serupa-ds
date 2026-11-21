@@ -76,7 +76,7 @@ describe('EventCalendar', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<EventCalendar id="x" ref={ref} className="extra" data-x="y" events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-event-calendar extra', 'y', 'event-calendar']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-event-calendar extra', 'y', 'event-calendar']);
     await expect.element(page.getByRole('grid', { name: 'March 2025' })).toBeInTheDocument();
     await expect.element(page.getByRole('heading', { level: 2, name: 'March 2025' })).toBeInTheDocument();
     expect(document.querySelectorAll('tbody tr')).toHaveLength(6);   // Feb 23 to Apr 5: March 2025 reaches six weeks
@@ -480,7 +480,7 @@ const middle = (n: Element) => { const r = n.getBoundingClientRect(); return [r.
 // A day's all-day row and its hours, in the week and day views: after its hidden name, in that order.
 const pinned = (d: string) => cell(d).children[1]!, hoursOf = (d: string) => cell(d).lastElementChild!;
 // The slot being dragged out: the one place in the hours with a length but no event.
-const ghostIn = (d: string) => hoursOf(d).querySelector<HTMLElement>(':scope > [aria-hidden][style*="--dk-evc-for"]');
+const ghostIn = (d: string) => hoursOf(d).querySelector<HTMLElement>(':scope > [aria-hidden][style*="--srp-evc-for"]');
 // A point in a day's hours (week and day views), at an hour of the day.
 const at = (d: string, hour: number) => { const r = hoursOf(d).getBoundingClientRect(); return [r.left + r.width / 2, r.top + (r.height * hour) / 24] as const; };
 // A drag with a mouse (or another pointer) from a point, through the next ones, letting React draw after each step.
@@ -490,7 +490,7 @@ async function drag(from: Element, points: (readonly [number, number])[], start 
   if (release) { const [x, y] = points.at(-1) ?? start; fire('pointerup', document, x, y, pointerType); await tick(); }
 }
 const eventIn = (d: string, id: string) => cell(d).querySelector<HTMLElement>(`[data-event-id="${id}"]`);
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
 
 describe('EventCalendar creating and moving', () => {
   test('onSlotSelect: a press on a day\'s empty space, or Enter or Space on a day, chooses the whole day; a press on an event doesn\'t', async () => {
@@ -513,7 +513,7 @@ describe('EventCalendar creating and moving', () => {
     await drag(hours, [], at('2025-03-05', 10.2));
     await drag(hours, [at('2025-03-05', 10.6), at('2025-03-05', 11.4)], at('2025-03-05', 10.2), 'mouse', false);
     const ghost = ghostIn('2025-03-05')!;
-    expect([ghost.style.getPropertyValue('--dk-evc-at'), ghost.style.getPropertyValue('--dk-evc-for')]).toEqual(['10', '1.5']);
+    expect([ghost.style.getPropertyValue('--srp-evc-at'), ghost.style.getPropertyValue('--srp-evc-for')]).toEqual(['10', '1.5']);
     fire('pointerup', document, ...at('2025-03-05', 11.4)); await tick();
     // The all-day row is the whole day, as the month's days are.
     await drag(pinned('2025-03-05'), []);
@@ -525,9 +525,9 @@ describe('EventCalendar creating and moving', () => {
     const log: string[] = [], clicked: string[] = [];
     await render(<Planner log={log} onEventClick={(e) => clicked.push(e.id)} />);
     const b = eventIn('2025-03-04', 'b')!;
-    expect([b.classList.contains('dk-event-calendar__event--movable'), b.getAttribute('aria-keyshortcuts')]).toEqual([true, 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown']);
+    expect([b.classList.contains('srp-event-calendar__event--movable'), b.getAttribute('aria-keyshortcuts')]).toEqual([true, 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown']);
     await drag(b, [middle(cell('2025-03-05')), middle(cell('2025-03-06'))], middle(b), 'mouse', false);
-    expect([eventIn('2025-03-04', 'b'), eventIn('2025-03-06', 'b')?.classList.contains('dk-event-calendar__event--dragging'), document.querySelector('[data-component=event-calendar]')!.hasAttribute('data-dragging')]).toEqual([null, true, true]);
+    expect([eventIn('2025-03-04', 'b'), eventIn('2025-03-06', 'b')?.classList.contains('srp-event-calendar__event--dragging'), document.querySelector('[data-component=event-calendar]')!.hasAttribute('data-dragging')]).toEqual([null, true, true]);
     fire('pointerup', document, ...middle(cell('2025-03-06'))); await tick();
     expect(log).toEqual(['b 2025-03-06T14:00 2025-03-06T15:00']);
     await expect.poll(said).toBe('Design review, now Thursday, March 6, 2:00 PM to 3:00 PM');
@@ -593,7 +593,7 @@ describe('EventCalendar creating and moving', () => {
     const clicked: string[] = [];
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => clicked.push(e.id)} />);
     const b = eventIn('2025-03-04', 'b')!;
-    expect([b.classList.contains('dk-event-calendar__event--movable'), b.hasAttribute('aria-keyshortcuts')]).toEqual([false, false]);
+    expect([b.classList.contains('srp-event-calendar__event--movable'), b.hasAttribute('aria-keyshortcuts')]).toEqual([false, false]);
     await drag(b, [middle(cell('2025-03-05')), middle(cell('2025-03-06'))]);
     b.focus();
     await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');

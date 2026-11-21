@@ -24,6 +24,6 @@ export function useAffixes(prefix: React.ReactNode, suffix: React.ReactNode, bas
   const ids = [has(prefix) ? base + '-prefix' : '', has(suffix) ? base + '-suffix' : ''].filter(Boolean).join(' ');
   const focus = (e: React.MouseEvent) => { e.preventDefault(); if (field.current && !field.current.disabled) field.current.focus(); };
   const part = (node: React.ReactNode, side: 'prefix' | 'suffix') => has(node)
-    ? <span className={'dk-input__affix dk-input__affix--' + side} id={base + '-' + side} key={side} onMouseDown={focus}>{node}</span> : null;
+    ? <span className={'srp-input__affix srp-input__affix--' + side} id={base + '-' + side} key={side} onMouseDown={focus}>{node}</span> : null;
   return { ids, prefix: part(prefix, 'prefix'), suffix: part(suffix, 'suffix') };
 }

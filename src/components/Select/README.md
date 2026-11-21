@@ -41,9 +41,9 @@ import { Select, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `WithIcon` story.
 
-1. **Leading icon** (`.dk-select__icon--left`): an optional picture of what is chosen.
-2. **Field** (`.dk-select__field`): the native select, showing the chosen option.
-3. **Chevron** (`.dk-select__icon--chevron`): says it opens a list.
+1. **Leading icon** (`.srp-select__icon--left`): an optional picture of what is chosen.
+2. **Field** (`.srp-select__field`): the native select, showing the chosen option.
+3. **Chevron** (`.srp-select__icon--chevron`): says it opens a list.
 
 ## Usage
 

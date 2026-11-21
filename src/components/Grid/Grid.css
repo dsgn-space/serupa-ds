@@ -1,21 +1,21 @@
 /* ---------------------------------------------------------------
-   Grid: equal columns (--dk-grid-cols), as many as fit (auto-fill, each at least --dk-grid-min, never wider
-   than the grid), or up to --dk-grid-cols (a track is at least (100% + gap) / n - gap, the width that fits n,
-   so no more fit), with gap from the spacing scale (--dk-grid-gap, else --grid-gap). --dk-grid-fit: auto-fit
+   Grid: equal columns (--srp-grid-cols), as many as fit (auto-fill, each at least --srp-grid-min, never wider
+   than the grid), or up to --srp-grid-cols (a track is at least (100% + gap) / n - gap, the width that fits n,
+   so no more fit), with gap from the spacing scale (--srp-grid-gap, else --grid-gap). --srp-grid-fit: auto-fit
    stretches a short row. The private variables start over on each grid, so a nested one doesn't take its
    parent's. Lists lose their bullets.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-grid { --dk-grid-gap: initial; --dk-grid-min: initial; --dk-grid-cols: initial; --dk-grid-fit: auto-fill; --dk-grid-g: var(--dk-grid-gap, var(--grid-gap, var(--spacing-4))); display: grid; gap: var(--dk-grid-g); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-grid--fixed { grid-template-columns: repeat(var(--dk-grid-cols), minmax(0, 1fr)); }
-.dk-grid--auto { grid-template-columns: repeat(var(--dk-grid-fit), minmax(min(var(--dk-grid-min, var(--grid-min-column, var(--container-3xs))), var(--sizing-full)), 1fr)); }
-.dk-grid--upto { grid-template-columns: repeat(var(--dk-grid-fit), minmax(min(max(var(--dk-grid-min), (var(--sizing-full) + var(--dk-grid-g)) / var(--dk-grid-cols) - var(--dk-grid-g)), var(--sizing-full)), 1fr)); }
-.dk-grid--fill { --dk-grid-fit: auto-fit; }
-/* Per screen width (columns and gap as { base, sm, md, lg }): the value at each width is in --dk-grid-cols-<width>
-   and --dk-grid-gap-<width>; these come after .dk-grid, so they win over its reset. */
-.dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-base); }
-.dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-base); }
-@media (min-width: 640px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-sm); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-sm); } }
-@media (min-width: 768px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-md); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-md); } }
-@media (min-width: 1024px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-lg); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-lg); } }
+@layer srp.components {
+.srp-grid { --srp-grid-gap: initial; --srp-grid-min: initial; --srp-grid-cols: initial; --srp-grid-fit: auto-fill; --srp-grid-g: var(--srp-grid-gap, var(--grid-gap, var(--spacing-4))); display: grid; gap: var(--srp-grid-g); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-grid--fixed { grid-template-columns: repeat(var(--srp-grid-cols), minmax(0, 1fr)); }
+.srp-grid--auto { grid-template-columns: repeat(var(--srp-grid-fit), minmax(min(var(--srp-grid-min, var(--grid-min-column, var(--container-3xs))), var(--sizing-full)), 1fr)); }
+.srp-grid--upto { grid-template-columns: repeat(var(--srp-grid-fit), minmax(min(max(var(--srp-grid-min), (var(--sizing-full) + var(--srp-grid-g)) / var(--srp-grid-cols) - var(--srp-grid-g)), var(--sizing-full)), 1fr)); }
+.srp-grid--fill { --srp-grid-fit: auto-fit; }
+/* Per screen width (columns and gap as { base, sm, md, lg }): the value at each width is in --srp-grid-cols-<width>
+   and --srp-grid-gap-<width>; these come after .srp-grid, so they win over its reset. */
+.srp-grid--cols { --srp-grid-cols: var(--srp-grid-cols-base); }
+.srp-grid--gaps { --srp-grid-gap: var(--srp-grid-gap-base); }
+@media (min-width: 640px) { .srp-grid--cols { --srp-grid-cols: var(--srp-grid-cols-sm); } .srp-grid--gaps { --srp-grid-gap: var(--srp-grid-gap-sm); } }
+@media (min-width: 768px) { .srp-grid--cols { --srp-grid-cols: var(--srp-grid-cols-md); } .srp-grid--gaps { --srp-grid-gap: var(--srp-grid-gap-md); } }
+@media (min-width: 1024px) { .srp-grid--cols { --srp-grid-cols: var(--srp-grid-cols-lg); } .srp-grid--gaps { --srp-grid-gap: var(--srp-grid-gap-lg); } }
 }

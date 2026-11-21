@@ -46,12 +46,12 @@ import { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Tabl
 
 Drawn from the `Sortable` story.
 
-1. **Caption** (`.dk-table__caption`): names the table for everyone, screen readers too.
-2. **Header row** (`.dk-table__head`): the column names.
-3. **Sortable header** (`.dk-table__header--sortable`): a column you can sort by; the arrow says which way.
-4. **Row** (`.dk-table__row`): one record.
-5. **Cell** (`.dk-table__cell`): one value; numbers line up at the end.
-6. **Footer** (`.dk-table__foot`): totals or a summary.
+1. **Caption** (`.srp-table__caption`): names the table for everyone, screen readers too.
+2. **Header row** (`.srp-table__head`): the column names.
+3. **Sortable header** (`.srp-table__header--sortable`): a column you can sort by; the arrow says which way.
+4. **Row** (`.srp-table__row`): one record.
+5. **Cell** (`.srp-table__cell`): one value; numbers line up at the end.
+6. **Footer** (`.srp-table__foot`): totals or a summary.
 
 ## Usage
 
@@ -68,7 +68,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - A button that removes its own row (Delete, Archive) takes focus away with the row, and focus then falls to the top of the page. Move it yourself once the row is gone: to the same button in the next row, else the one before, else the table's heading. With a confirmation Dialog, pass that element as its `finalFocus`.
 - Let people widen a column whose content gets cut or wraps a lot: `resizable` on its `TableHeaderCell`, in a table with `layout="fixed"`, starting from a `width` in pixels. A handle at the header's end edge drags; with focus, the arrow keys move it 16px at a time and Home and End go to `minWidth` (48) and `maxWidth` (800); a double-click fits the column to its widest cell on one line. A click on the handle (or Enter or Space on it) opens Narrower, Wider and Fit to content, so a width never needs a drag (WCAG 2.5.7). Uncontrolled, the column keeps its own width; to remember widths, pass `width` and `onWidthChange` together and keep the number.
 - When a table scrolls sideways, keep the column that names each row in view with `pinStart`, and a column of row actions with `pinEnd`. Pinned cells take their row's shading, and lift with a shadow while there's more to scroll to under them (where scroll-state container queries are supported). It's the first and the last cell of each row, so put a select or expand column after the name, or leave it unpinned.
-- The column tools' parts: a resize handle (`.dk-table__resize`) at a resizable header's end edge; a pinned first or last column (`pinStart`, `pinEnd`) that stays in view; an expand button (`.dk-table__expand-button`) whose chevron turns down while the row's details (`.dk-table__detail`) show under it; and the Columns button (`TableColumnsMenu`).
+- The column tools' parts: a resize handle (`.srp-table__resize`) at a resizable header's end edge; a pinned first or last column (`pinStart`, `pinEnd`) that stays in view; an expand button (`.srp-table__expand-button`) whose chevron turns down while the row's details (`.srp-table__detail`) show under it; and the Columns button (`TableColumnsMenu`).
 - For tables with more columns than people need at once, put a `TableColumnsMenu` above the table with the same list you draw the columns from (`columns`, each `{ id, label, visible, required? }`), and draw the table from the list `onColumnsChange(columns, { id, visible })` gives back. Mark the column that names each row `required`; the last one shown can't be cleared either, so the table is never empty.
 - For rows with more than fits in their cells (an order's note, a log entry's message), start each row with a `TableExpandCell` (`label`: the row's name, `expanded`, `onExpandedChange`, `controls`: the detail row's id) and follow it with a `TableDetailRow` (`id`, `open`, `colSpan` of every column). The header row gets a `TableExpandCell header`. `striped` counts only the rows of data, so open details don't swap the shading.
 - With `stickyHeader`, give the frame a height through `containerProps`. The frame measures the header and keeps that much scroll padding at the top, so a focused link or button in a row scrolls into view below the header, not under it (WCAG 2.4.11).

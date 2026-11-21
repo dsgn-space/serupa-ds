@@ -33,10 +33,10 @@ import { PeriodPicker, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Months` story.
 
-1. **Button** (`.dk-period-picker__button`): the chosen period in words, or the placeholder, and a calendar icon at the end.
-2. **Popup** (`.dk-period-picker__panel`): a dialog named "Choose a month" (or quarter, or year).
-3. **Header** (`.dk-period-picker__header`): the year, or the twelve years shown, between the arrows to the page before and after.
-4. **Period** (`.dk-period-picker__period`): one month, quarter or year in the grid. The chosen one is filled with `primary`, the current one is `primary` text in semibold, and ones outside `min` and `max` are faded and struck through.
+1. **Button** (`.srp-period-picker__button`): the chosen period in words, or the placeholder, and a calendar icon at the end.
+2. **Popup** (`.srp-period-picker__panel`): a dialog named "Choose a month" (or quarter, or year).
+3. **Header** (`.srp-period-picker__header`): the year, or the twelve years shown, between the arrows to the page before and after.
+4. **Period** (`.srp-period-picker__period`): one month, quarter or year in the grid. The chosen one is filled with `primary`, the current one is `primary` text in semibold, and ones outside `min` and `max` are faded and struck through.
 
 ## Usage
 

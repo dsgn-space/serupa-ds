@@ -3,7 +3,7 @@
    don't shift the text after it. A clock stays on one line; words ("2 days, 3 hours") and an end text wrap between
    units like the sentence around them, so a narrow column or wider letter spacing never pushes them past its edge.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-countdown { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.dk-countdown--wraps { white-space: normal; }
+@layer srp.components {
+.srp-countdown { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.srp-countdown--wraps { white-space: normal; }
 }

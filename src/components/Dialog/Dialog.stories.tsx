@@ -10,22 +10,27 @@ const meta = {
   component: Dialog,
   args: { open: false, title: 'Invite people', description: 'They’ll get an email with a link.', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false);
-    return <>
-      <Button onClick={() => setOpen(true)}>Invite people</Button>
-      <Dialog {...args} open={open} onOpenChange={setOpen}
-        footer={args.alert ? <><Button variant="secondary" onClick={() => setOpen(false)}>Keep</Button><Button destructive onClick={() => setOpen(false)}>Delete</Button></>
-          : <><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={() => setOpen(false)}>Send invite</Button></>}>
-        {args.alert ? null : <Field label="Email"><Input type="email" placeholder="name@company.com" /></Field>}
-      </Dialog>
-    </>;
-  },
+  // Open in its own canvas, so each size and long story is in a picture; closed on the docs page, so it doesn't cover
+  // the guide.
+  render: (args: DialogProps, ctx: { viewMode?: string }) => <InviteDialog {...args} initiallyOpen={ctx.viewMode !== 'docs'} />,
 } satisfies Meta<typeof Dialog>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+function InviteDialog({ initiallyOpen, ...args }: DialogProps & { initiallyOpen: boolean }) {
+  const [open, setOpen] = React.useState(initiallyOpen);
+  return <>
+    <Button onClick={() => setOpen(true)}>Invite people</Button>
+    <Dialog {...args} open={open} onOpenChange={setOpen}
+      footer={args.alert ? <><Button variant="secondary" onClick={() => setOpen(false)}>Keep</Button><Button destructive onClick={() => setOpen(false)}>Delete</Button></>
+        : <><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={() => setOpen(false)}>Send invite</Button></>}>
+      {args.alert ? null : <Field label="Email"><Input type="email" placeholder="name@company.com" /></Field>}
+    </Dialog>
+  </>;
+}
+
+/** Closed, as a page starts: the trigger, ready to open it. */
+export const Playground: Story = { render: (args: DialogProps) => <InviteDialog {...args} initiallyOpen={false} /> };
 export const Confirmation: Story = { args: { alert: true, size: 'sm', title: 'Delete Atlas?', description: 'This removes the project and its files. It can’t be undone.' } };
 export const Small: Story = { args: { size: 'sm', title: 'Rename project', description: undefined } };
 export const Large: Story = { args: { size: 'lg', title: 'Share Atlas', description: 'Anyone you invite can view and comment.' } };
@@ -36,8 +41,8 @@ const TERMS = Array.from({ length: 24 }, (_, i) => <p key={i}>Section {i + 1}. Y
 export const LongText: Story = {
   name: 'Long text',
   args: { title: 'Terms of use', description: undefined },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false);
+  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
     return <>
       <Button onClick={() => setOpen(true)}>Read the terms</Button>
       <Dialog {...args} open={open} onOpenChange={setOpen} footer={<Button onClick={() => setOpen(false)}>Accept</Button>}>{TERMS}</Dialog>
@@ -54,8 +59,8 @@ export const OpenOnArrival: Story = {
 export const UnsavedChanges: Story = {
   name: 'Unsaved changes',
   args: { title: 'Rename project', description: undefined, size: 'sm' },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
+  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs'), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
     const show = () => { setName(saved); setOpen(true); };
     return <>
       <Button onClick={show}>Rename {saved}</Button>
@@ -70,9 +75,9 @@ export const UnsavedChanges: Story = {
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't"). A modal dialog opens
 // over the whole page, so these draw its panel in place, with the Dialog's own classes, to sit side by side.
 function Sketch({ title, description, footer }: { title: string; description?: string; footer: React.ReactNode }) {
-  return <div className="dk-dialog__panel" style={{ width: 360, boxShadow: 'none', border: '1px solid var(--border)' }}>
-    <div className="dk-dialog__header"><div className="dk-dialog__heading"><h2 className="dk-dialog__title">{title}</h2>{description ? <p className="dk-dialog__description">{description}</p> : null}</div></div>
-    <div className="dk-dialog__footer">{footer}</div>
+  return <div className="srp-dialog__panel" style={{ width: 360, boxShadow: 'none', border: '1px solid var(--border)' }}>
+    <div className="srp-dialog__header"><div className="srp-dialog__heading"><h2 className="srp-dialog__title">{title}</h2>{description ? <p className="srp-dialog__description">{description}</p> : null}</div></div>
+    <div className="srp-dialog__footer">{footer}</div>
   </div>;
 }
 /** Do: a title that asks the question, and buttons named for what they do. */

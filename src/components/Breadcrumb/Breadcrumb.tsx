@@ -52,13 +52,13 @@ function BreadcrumbItemBaseRender({ ref, ...props }: BreadcrumbItemProps & React
   React.useEffect(function () {
     if (process.env.NODE_ENV !== 'production' && !named) warnOnce('no-name', 'BreadcrumbItem has no accessible name, so a screen reader announces only its role. Give it text, or an aria-label.', 'name:BreadcrumbItem');
   }, [named]);
-  const content = <>{props.icon ? <span className="dk-breadcrumb__icon">{asIcon(props.icon)}</span> : null}{props.children}</>;
+  const content = <>{props.icon ? <span className="srp-breadcrumb__icon">{asIcon(props.icon)}</span> : null}{props.children}</>;
   if (props.current) {
     delete rest.href;
-    return <span {...rest} ref={ref} aria-current="page" className={cn('dk-breadcrumb__item dk-breadcrumb__item--current', props.className)}>{content}</span>;
+    return <span {...rest} ref={ref} aria-current="page" className={cn('srp-breadcrumb__item srp-breadcrumb__item--current', props.className)}>{content}</span>;
   }
   const Tag = props.as || config.link;
-  return <Tag {...rest} ref={ref} className={cn('dk-breadcrumb__item dk-breadcrumb__link', props.className)}>{content}</Tag>;
+  return <Tag {...rest} ref={ref} className={cn('srp-breadcrumb__item srp-breadcrumb__link', props.className)}>{content}</Tag>;
 }
 
 /* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
@@ -96,14 +96,14 @@ function BreadcrumbRender({ ref, ...props }: BreadcrumbProps & React.RefAttribut
       if (a) a.focus();
     }
   }, [expanded]);
-  const sep = <span className="dk-breadcrumb__separator" aria-hidden="true">{separator === 'slash' ? '/' : <Icon icon={icons.ChevronRight} />}</span>;
+  const sep = <span className="srp-breadcrumb__separator" aria-hidden="true">{separator === 'slash' ? '/' : <Icon icon={icons.ChevronRight} />}</span>;
   const out: React.ReactNode[] = [];
   shown.forEach(({ el, i }, n) => {
     if (collapse && n === 1) {
       const label = props.expandLabel || (asMenu ? sds.labels.morePages : sds.labels.showHiddenPages);
-      const more = <button type="button" className="dk-breadcrumb__item dk-breadcrumb__more" aria-label={label}
+      const more = <button type="button" className="srp-breadcrumb__item srp-breadcrumb__more" aria-label={label}
         onClick={asMenu ? undefined : () => { focusAfter.current = true; setExpanded(true); }}>…</button>;
-      out.push(<li key="more" className="dk-breadcrumb__li">{sep}
+      out.push(<li key="more" className="srp-breadcrumb__li">{sep}
         {asMenu ? <Menu trigger={more} aria-label={label}>
           {items.slice(1, items.length - (max - 1)).map((h, k) => {
             // A hidden page keeps its own props in the menu: a router link's to, target, data-*, onClick (L8E64). Its
@@ -115,14 +115,14 @@ function BreadcrumbRender({ ref, ...props }: BreadcrumbProps & React.RefAttribut
       </li>);
     }
     const last = i === items.length - 1;
-    out.push(<li key={el.key != null ? el.key : i} className="dk-breadcrumb__li" ref={expanded && max > 0 && i === 1 ? firstHidden : undefined}>
+    out.push(<li key={el.key != null ? el.key : i} className="srp-breadcrumb__li" ref={expanded && max > 0 && i === 1 ? firstHidden : undefined}>
       {n > 0 ? sep : null}{React.cloneElement(el, { current: last || el.props.current })}
     </li>);
   });
   if (!items.length) return null;   // no pages: no empty nav landmark
   return (
-    <nav aria-label={sds.labels.breadcrumb} {...rest} ref={ref} data-component="breadcrumb" className={cn('dk-breadcrumb', props.className)}>
-      <ol className="dk-breadcrumb__list">{out}</ol>
+    <nav aria-label={sds.labels.breadcrumb} {...rest} ref={ref} data-component="breadcrumb" className={cn('srp-breadcrumb', props.className)}>
+      <ol className="srp-breadcrumb__list">{out}</ol>
     </nav>
   );
 }

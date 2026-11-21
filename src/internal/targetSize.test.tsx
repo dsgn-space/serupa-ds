@@ -32,13 +32,13 @@ describe('target size', () => {
       <Breadcrumb><BreadcrumbItem href="#home">Home</BreadcrumbItem><BreadcrumbItem href="#docs">Docs</BreadcrumbItem><BreadcrumbItem>Page</BreadcrumbItem></Breadcrumb>
     </div>);
     const targets: Array<[string, HTMLElement]> = [
-      ['checkbox row', q('.dk-checkbox:not(.dk-checkbox--bare)')], ['bare checkbox', q('.dk-checkbox--bare')], ['radio row', q('.dk-radio')], ['switch row', q('.dk-switch')],
-      ['slider', q('.dk-slider')], ['segment', q('.dk-segmented__item')], ['breadcrumb link', q('.dk-breadcrumb__link')],
+      ['checkbox row', q('.srp-checkbox:not(.srp-checkbox--bare)')], ['bare checkbox', q('.srp-checkbox--bare')], ['radio row', q('.srp-radio')], ['switch row', q('.srp-switch')],
+      ['slider', q('.srp-slider')], ['segment', q('.srp-segmented__item')], ['breadcrumb link', q('.srp-breadcrumb__link')],
     ];
     expect(targets.map(([k, e]) => [k, Math.round(e.getBoundingClientRect().height), reach(e) >= 24]))
       .toEqual([['checkbox row', 20, true], ['bare checkbox', 16, true], ['radio row', 20, true], ['switch row', 20, true], ['slider', 20, true], ['segment', 18, true], ['breadcrumb link', 20, true]]);
     // The bare checkbox reaches 24px across too.
-    const bare = q('.dk-checkbox--bare'), r = bare.getBoundingClientRect(), y = r.top + r.height / 2;
+    const bare = q('.srp-checkbox--bare'), r = bare.getBoundingClientRect(), y = r.top + r.height / 2;
     expect([document.elementFromPoint(r.left - 3.5, y) === bare, document.elementFromPoint(r.right + 3.5, y) === bare]).toEqual([true, true]);
   });
 });

@@ -48,11 +48,11 @@ These attributes go on `<html>` or on any element, and reach everything inside:
 
 For the controls' size, `<SerupaProvider size="sm">` (or `"lg"`) sets the default `size` of every form control inside it; a control's own `size` still wins. Cursors come from four tokens: `--cursor-interactive` (`pointer`), `--cursor-disabled` (`not-allowed`), `--cursor-grab` and `--cursor-grabbing`. Set `--cursor-interactive: default` on `:root` for the desktop-app feel where only links show the hand.
 
-To try every setting on your own screens, load the debug overlay (below): its Theme panel switches brand, mode, contrast, density, radius, depth, shadow and type scale live, and says when a color pair fails contrast in the theme you picked.
+To try every setting on your own screens, load the debug overlay (below): its Theme panel switches brand, mode, contrast, density, radius, shadow and type scale live, and says when a color pair fails contrast in the theme you picked.
 
 ## Your CSS always wins
 
-Serupa's styles sit in cascade layers (`dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`). Your own CSS, outside any layer, beats all of them whatever its specificity, so an override never needs `!important` or a longer selector. If your CSS is in layers of its own, declare them after Serupa's.
+Serupa's styles sit in cascade layers (`srp.tokens`, `srp.base`, `srp.components`, `srp.utilities`). Your own CSS, outside any layer, beats all of them whatever its specificity, so an override never needs `!important` or a longer selector. If your CSS is in layers of its own, declare them after Serupa's.
 
 ## Selectors you can rely on
 
@@ -63,9 +63,9 @@ When a token can't do it, select on what's promised to stay the same between min
 | `[data-component="button"]` | Every instance of a component, whatever its variant |
 | `[data-state="open"]`, `[data-state="active"]` … | Its state, from the one vocabulary every component shares ([ADR-0012](https://github.com/dsgn-space/serupa-ds/blob/main/docs/adr/0012-data-state.md)) |
 | `[aria-expanded="true"]`, `[aria-invalid="true"]`, `:checked`, `:disabled` | States that native controls and ARIA already say |
-| `.dk-btn`, `.dk-btn--primary` | The component's own class and its variant and size modifiers |
+| `.srp-btn`, `.srp-btn--primary` | The component's own class and its variant and size modifiers |
 
-Avoid the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`) and selectors that depend on how its markup nests (`.dk-card > div`). They move when a component is fixed or improved, and from 16.0.0 the Versioning rules say so: they may change in any release. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
+Avoid the classes of a component's inner parts (`.srp-btn__label`, `.srp-card__header`) and selectors that depend on how its markup nests (`.srp-card > div`). They move when a component is fixed or improved, and from 16.0.0 the Versioning rules say so: they may change in any release. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
 
 The [debug overlay](https://github.com/dsgn-space/serupa-ds#whats-in-the-package) (`dist/debug.js`, then `?serupa-debug` on the page) shows, for whatever you point at, its component, variant, state and the component tokens set on it, and checks that the colors you changed still pass contrast. Its Theme panel tries the page in every theme setting.
 
@@ -73,7 +73,7 @@ The [debug overlay](https://github.com/dsgn-space/serupa-ds#whats-in-the-package
 
 | Do | Don't |
 | --- | --- |
-| `.promo { --button-primary-bg: var(--emerald-700); }` | `.promo .dk-btn { background: #047857 !important; }` |
+| `.promo { --button-primary-bg: var(--emerald-700); }` | `.promo .srp-btn { background: #047857 !important; }` |
 | `data-density="compact"` on the table's section | Shrink each control's height and padding by hand |
-| Select `[data-component="dialog"][data-state="open"]` | Select `.dk-dialog__body > :first-child` |
+| Select `[data-component="dialog"][data-state="open"]` | Select `.srp-dialog__body > :first-child` |
 | A theme from your brand color with `serupa-brand` | Override the alias tokens one by one for a brand |

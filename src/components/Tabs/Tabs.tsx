@@ -63,7 +63,7 @@ function put<T>(r: React.RefObject<T>, v: T) { r.current = v; }
 function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, orientation: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
-  const base = domId('dk-tabs', React.useId());
+  const base = domId('srp-tabs', React.useId());
   const [value, setInner, controlled] = useControllable<string | null>(props.value, props.defaultValue != null ? props.defaultValue : firstTab(props.children), 'Tabs', 'value');
   const onChange = useLatest(props.onValueChange);
   // TabList's hook to note where the line or fill is just before the selection changes, so a slide that is still
@@ -165,7 +165,7 @@ function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivEl
       <div {...rest} ref={mergedRef}
         onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
         onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}
-        className={cn('dk-tabs', 'dk-tabs--' + variant, size !== 'md' && 'dk-tabs--' + size, vertical && 'dk-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
+        className={cn('srp-tabs', 'srp-tabs--' + variant, size !== 'md' && 'srp-tabs--' + size, vertical && 'srp-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
     </TabsContext.Provider>
   );
 }
@@ -201,7 +201,7 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
       const tab = activeIn(e.currentTarget) as HTMLElement | null;
       if (tab && tab.getAttribute('role') === 'tab' && tab.hasAttribute('data-closable') && !tab.hasAttribute('disabled')) {
         e.preventDefault();
-        tab.dispatchEvent(new CustomEvent('dk-tab-close'));
+        tab.dispatchEvent(new CustomEvent('srp-tab-close'));
         return;
       }
     }
@@ -227,10 +227,10 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
   };
   const mergedRef2 = useMergedRef(ref, undefined, list);
   const tablist = <div {...own} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
-    className={cn('dk-tabs__list', props.className)} data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined} onKeyDown={onKeyDown} />;
+    className={cn('srp-tabs__list', props.className)} data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined} onKeyDown={onKeyDown} />;
   // The + sits beside the tab list, not in it: a tablist holds only tabs. It's drawn as a tab, with its words shown, so
   // it needs no tooltip to say what it adds.
-  return onAdd ? <div className="dk-tabs__bar">{tablist}<button type="button" className="dk-tabs__tab dk-tabs__add" onClick={onAdd}><span className="dk-tabs__icon" aria-hidden="true"><Icon icon={icons.Add} /></span><span className="dk-tabs__label">{addLabel}</span></button></div> : tablist;
+  return onAdd ? <div className="srp-tabs__bar">{tablist}<button type="button" className="srp-tabs__tab srp-tabs__add" onClick={onAdd}><span className="srp-tabs__icon" aria-hidden="true"><Icon icon={icons.Add} /></span><span className="srp-tabs__label">{addLabel}</span></button></div> : tablist;
 }
 
 /** The row of tabs. Give it an aria-label when the page doesn't already say what the tabs are for. */
@@ -260,8 +260,8 @@ function TabRender({ ref, ...props }: TabProps & React.RefAttributes<HTMLButtonE
     const el = own.current;
     if (!el || !closes) return;
     const onClose = () => { put(closed, value); if (close.current) close.current(); };
-    el.addEventListener('dk-tab-close', onClose);
-    return () => el.removeEventListener('dk-tab-close', onClose);
+    el.addEventListener('srp-tab-close', onClose);
+    return () => el.removeEventListener('srp-tab-close', onClose);
   }, [closes, closed, value, close]);
   const hintId = closes ? ctx.base + '-close-' + safe(props.value) : undefined;
   const refs = useMergedRef(ref, (n) => { own.current = n; });
@@ -270,19 +270,19 @@ function TabRender({ ref, ...props }: TabProps & React.RefAttributes<HTMLButtonE
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) ctx.select(props.value); };
   return (
     <button {...rest} ref={refs} type="button" role="tab" id={id} data-closable={closes ? '' : undefined} aria-keyshortcuts={closes ? 'Delete' : undefined} aria-describedby={cn(hintId, props['aria-describedby']) || undefined} aria-controls={ctx.panels[props.value] ? panel : undefined} aria-selected={selected} data-instant={selected && ctx.keyed ? '' : undefined} tabIndex={selected || ctx.stop === props.value ? 0 : -1}
-      data-value={props.value} data-state={selected ? 'active' : 'inactive'} className={cn('dk-tabs__tab', props.className)} onClick={onClick}>
-      {props.icon != null ? <span className="dk-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
-      <span className="dk-tabs__label">{props.children}</span>
+      data-value={props.value} data-state={selected ? 'active' : 'inactive'} className={cn('srp-tabs__tab', props.className)} onClick={onClick}>
+      {props.icon != null ? <span className="srp-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
+      <span className="srp-tabs__label">{props.children}</span>
       {closes ? (
         // A × inside the tab, for the pointer: a button can't hold another button, and the keyboard closes with Delete
         // (said in the tab's description), so it's a hidden span that takes the press and leaves the tab unselected.
-        <span className="dk-tabs__close" aria-hidden="true" data-closes=""
+        <span className="srp-tabs__close" aria-hidden="true" data-closes=""
           onPointerDown={(e) => { e.preventDefault(); }}
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); shut(); }}>
           <Icon icon={icons.Close} />
         </span>
       ) : null}
-      {closes ? <span className="dk-tabs__close-hint" id={hintId} hidden>{L.tabCloseHint}</span> : null}
+      {closes ? <span className="srp-tabs__close-hint" id={hintId} hidden>{L.tabCloseHint}</span> : null}
     </button>
   );
 }
@@ -351,7 +351,7 @@ function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<H
   const mergedRef3 = useMergedRef(ref, (n) => { own.current = n; });
   return (
     <div tabIndex={selected ? 0 : -1} {...rest} ref={mergedRef3} role="tabpanel" id={ctx.base + '-panel-' + safe(props.value)} aria-labelledby={ctx.base + '-tab-' + safe(props.value)}
-      hidden={!selected} data-state={selected ? 'active' : 'inactive'} className={cn('dk-tabs__panel', props.className)}>
+      hidden={!selected} data-state={selected ? 'active' : 'inactive'} className={cn('srp-tabs__panel', props.className)}>
       {selected || keep ? props.children : null}
     </div>
   );

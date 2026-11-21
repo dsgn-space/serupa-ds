@@ -38,12 +38,12 @@ const [page, setPage] = React.useState(1);
 
 Drawn from the `PageSize` story.
 
-1. **Summary** (`.dk-pagination__summary`): which items are shown of how many.
-2. **Previous and next** (`.dk-pagination__arrow`): go one page back or forward.
-3. **Page** (`.dk-pagination__item`): a page to go to.
-4. **Current page** (`.dk-pagination__item--current`): the page you're on.
-5. **Gap** (`.dk-pagination__ellipsis`): stands for the pages not shown.
-6. **Page size** (`.dk-pagination__page-size`): how many items a page holds.
+1. **Summary** (`.srp-pagination__summary`): which items are shown of how many.
+2. **Previous and next** (`.srp-pagination__arrow`): go one page back or forward.
+3. **Page** (`.srp-pagination__item`): a page to go to.
+4. **Current page** (`.srp-pagination__item--current`): the page you're on.
+5. **Gap** (`.srp-pagination__ellipsis`): stands for the pages not shown.
+6. **Page size** (`.srp-pagination__page-size`): how many items a page holds.
 
 ## Usage
 

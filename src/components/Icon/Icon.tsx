@@ -114,18 +114,18 @@ function IconRender({ ref, ...props }: IconProps & React.RefAttributes<HTMLSpanE
   const name = props.icon ? props.icon.name : props.name;
   if (name != null) rest['data-icon'] = name;
   // Which icons flip in right-to-left text is in Icon.css (by data-icon), so the list costs no script.
-  const mirror = props.mirror === true ? 'dk-icon--mirror' : props.mirror === false ? 'dk-icon--fixed' : null;
+  const mirror = props.mirror === true ? 'srp-icon--mirror' : props.mirror === false ? 'srp-icon--fixed' : null;
   // width and height 1em on the svg itself: before the stylesheet arrives (a slow page, or bundle.css failing), an svg with
   // only a viewBox stretches to its container's width; Icon.css still sizes it (FEC7).
   if (custom) {
     return (
-      <span {...rest} ref={restyle} className={cn('dk-icon dk-icon--custom', mirror, props.className)} style={style}>
+      <span {...rest} ref={restyle} className={cn('srp-icon srp-icon--custom', mirror, props.className)} style={style}>
         <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false">{shapes(ICONS[props.name as string] ?? '')}</svg>
       </span>
     );
   }
   return (
-    <span {...rest} ref={restyle} className={cn('dk-icon', mirror, props.weight && 'dk-icon--' + props.weight, props.className)} style={style}>
+    <span {...rest} ref={restyle} className={cn('srp-icon', mirror, props.weight && 'srp-icon--' + props.weight, props.className)} style={style}>
       {data && <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden focusable="false"><path d={data.d} /></svg>}
     </span>
   );

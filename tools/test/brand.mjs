@@ -42,8 +42,8 @@ const any = Object.values(made)[0];
 if (any) {
   const missing = Object.entries(any.themes).flatMap(([th, v]) => shippedAliases.filter((a) => !(a in v)).map((a) => `${th}: ${a}`));
   t('the themes set every alias the shipped themes set', !missing.length, missing.join(', '));
-  t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited|field-action)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
-  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-pressed|primary-subtle|primary-subtle-pressed|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
+  t('only the brand aliases name the brand shades', !/--(?!acme-|srp-more-|primary|on-primary|focus-ring|link-visited|field-action)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
+  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-pressed|primary-subtle|primary-subtle-pressed|on-primary|focus-ring|srp-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
 }
 // --motion brisk|calm: every surface and change role one step quicker or calmer, each still a step of the scale and
 // each exit still shorter than its enter; the loops and the press keep their pace.
@@ -122,7 +122,7 @@ try {
     t('data-theme="acme-light" and "acme-dark" give the brand\'s primary and the system\'s surface', got.probe.l.primary === rgb(L.primary) && got.probe.d.primary === rgb(D.primary) && got.probe.d.surface === rgb(D.surface) && got.probe.l.surface === rgb(L.surface), JSON.stringify(got.probe));
     t('acme-light nested in acme-dark is light again, text and all', got.probe.nl.primary === rgb(L.primary) && got.probe.nl.text === rgb(L.text), JSON.stringify(got.probe.nl));
     t('data-brand="acme" with data-mode="dark" in another theme gives the dark brand', got.probe.bd.primary === rgb(D.primary), JSON.stringify(got.probe.bd));
-    t('more contrast gives the stronger primary', got.probe.m.primary === rgb(L['dk-more-primary']) && got.probe.m.primary !== got.probe.l.primary, JSON.stringify(got.probe.m));
+    t('more contrast gives the stronger primary', got.probe.m.primary === rgb(L['srp-more-primary']) && got.probe.m.primary !== got.probe.l.primary, JSON.stringify(got.probe.m));
     t('--corners round sets the radius roles', got.radius[0] && got.radius[0] === got.radius[1], got.radius.join(' vs '));
     // The brand's own corners: data-radius still beats them, and data-radius="default" puts the system's back.
     await page.setContent(`<!doctype html><html><head><style>${tokensCss}\n${fs.readFileSync(file, 'utf8')}</style></head><body>

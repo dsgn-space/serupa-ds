@@ -5,102 +5,102 @@
    muted text-xs labels under it, centered on their values, with room made below. showValue: the value in a small inverse
    chip over the thumb while it's focused, hovered or dragged. Invalid: the fill and ring turn danger. Read-only: no grab cursor, and presses and keys do nothing. Disabled: faded.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-slider {
-  --dk-slider-track: var(--slider-track-height-md, var(--spacing-1\.5));
-  --dk-slider-thumb: var(--slider-thumb-size-md, var(--spacing-5));
-  --dk-slider-half: calc(var(--dk-slider-thumb) / 2);
-  --dk-slider-thumb-top: calc((var(--dk-slider-track) - var(--dk-slider-thumb)) / 2);
+@layer srp.components {
+.srp-slider {
+  --srp-slider-track: var(--slider-track-height-md, var(--spacing-1\.5));
+  --srp-slider-thumb: var(--slider-thumb-size-md, var(--spacing-5));
+  --srp-slider-half: calc(var(--srp-slider-thumb) / 2);
+  --srp-slider-thumb-top: calc((var(--srp-slider-track) - var(--srp-slider-thumb)) / 2);
   position: relative; display: flex; align-items: center; box-sizing: border-box;
-  inline-size: var(--sizing-full); block-size: var(--dk-slider-thumb);
-  padding-block: var(--spacing-0); padding-inline: var(--dk-slider-half);
+  inline-size: var(--sizing-full); block-size: var(--srp-slider-thumb);
+  padding-block: var(--spacing-0); padding-inline: var(--srp-slider-half);
   /* A swipe across the page that starts on the slider scrolls the page (the browser then cancels the press, and the
      thumb goes back): only a press along the track moves it (modern web guidance, accessibility: target sizes). */
   touch-action: pan-y; -webkit-user-select: none; user-select: none; cursor: var(--cursor-interactive);
 }
 /* inputs: a number field at each end of the strip (or after it, for one thumb), as tall as a control, so the strip
    grows to fit them; the fields keep the text cursor and let text be selected. */
-.dk-slider--inputs { block-size: auto; gap: var(--slider-input-gap, var(--spacing-3)); padding-inline: var(--spacing-0); }
-.dk-slider--inputs .dk-slider__track { margin-inline: var(--dk-slider-half); }
-.dk-slider__input { flex: none; inline-size: var(--slider-input-width, var(--spacing-20)); cursor: auto; touch-action: auto; -webkit-user-select: auto; user-select: auto; }
-.dk-slider--size-sm { --dk-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --dk-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
-.dk-slider--size-lg { --dk-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --dk-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
-.dk-slider__track { position: relative; flex: auto; block-size: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); }
-.dk-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
-.dk-slider__thumb {
-  position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; inline-size: var(--dk-slider-thumb); block-size: var(--dk-slider-thumb);
-  margin-inline-start: calc(var(--spacing-0) - var(--dk-slider-half));
+.srp-slider--inputs { block-size: auto; gap: var(--slider-input-gap, var(--spacing-3)); padding-inline: var(--spacing-0); }
+.srp-slider--inputs .srp-slider__track { margin-inline: var(--srp-slider-half); }
+.srp-slider__input { flex: none; inline-size: var(--slider-input-width, var(--spacing-20)); cursor: auto; touch-action: auto; -webkit-user-select: auto; user-select: auto; }
+.srp-slider--size-sm { --srp-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --srp-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
+.srp-slider--size-lg { --srp-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --srp-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
+.srp-slider__track { position: relative; flex: auto; block-size: var(--srp-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); }
+.srp-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
+.srp-slider__thumb {
+  position: absolute; inset-block-start: var(--srp-slider-thumb-top); box-sizing: border-box; inline-size: var(--srp-slider-thumb); block-size: var(--srp-slider-thumb);
+  margin-inline-start: calc(var(--spacing-0) - var(--srp-slider-half));
   border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
   border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
   box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
   cursor: var(--cursor-grab); transition: scale var(--motion-change-sm) var(--ease-settle);
 }
-.dk-slider__range {
+.srp-slider__range {
   /* The native range over the drawn thumb: unseen and not in the way of presses, but the same box, so a screen
      reader's touch exploration finds it where the thumb is. */
-  --dk-slider-ring: var(--slider-thumb-border-width, var(--border-width-2));
-  position: absolute; inset-block-start: calc(var(--spacing-0) - var(--dk-slider-ring)); inset-inline-start: calc(var(--spacing-0) - var(--dk-slider-ring));
-  inline-size: var(--dk-slider-thumb); block-size: var(--dk-slider-thumb); box-sizing: border-box;
+  --srp-slider-ring: var(--slider-thumb-border-width, var(--border-width-2));
+  position: absolute; inset-block-start: calc(var(--spacing-0) - var(--srp-slider-ring)); inset-inline-start: calc(var(--spacing-0) - var(--srp-slider-ring));
+  inline-size: var(--srp-slider-thumb); block-size: var(--srp-slider-thumb); box-sizing: border-box;
   margin: var(--spacing-0); border: none; padding: var(--spacing-0); opacity: var(--opacity-0); appearance: none; pointer-events: none;
 }
-.dk-slider__thumb:has(> .dk-slider__range:focus-visible) { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
-.dk-slider--mark-labels {
-  --dk-slider-labels: calc(var(--spacing-1) + var(--dk-slider-labels-h, var(--text-xs--line-height)));
-  block-size: calc(var(--dk-slider-thumb) + var(--dk-slider-labels)); padding-block-end: var(--dk-slider-labels);
+.srp-slider__thumb:has(> .srp-slider__range:focus-visible) { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-slider:not(.srp-slider--disabled, .srp-slider--readonly) .srp-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
+.srp-slider--mark-labels {
+  --srp-slider-labels: calc(var(--spacing-1) + var(--srp-slider-labels-h, var(--text-xs--line-height)));
+  block-size: calc(var(--srp-slider-thumb) + var(--srp-slider-labels)); padding-block-end: var(--srp-slider-labels);
 }
 /* Each mark is a zero-wide point on the track; its tick and label center on it in either direction. */
-.dk-slider__mark { position: absolute; inset-block: var(--spacing-0); inline-size: var(--spacing-0); display: flex; justify-content: center; }
-.dk-slider__tick { flex: none; inline-size: var(--border-width-2); background: var(--slider-mark, var(--field)); }
-.dk-slider__mark-label {
-  --dk-slider-under: calc(var(--sizing-full) + var(--dk-slider-half) - var(--dk-slider-track) / 2 + var(--spacing-1));
-  position: absolute; inset-block-start: var(--dk-slider-under);
+.srp-slider__mark { position: absolute; inset-block: var(--spacing-0); inline-size: var(--spacing-0); display: flex; justify-content: center; }
+.srp-slider__tick { flex: none; inline-size: var(--border-width-2); background: var(--slider-mark, var(--field)); }
+.srp-slider__mark-label {
+  --srp-slider-under: calc(var(--sizing-full) + var(--srp-slider-half) - var(--srp-slider-track) / 2 + var(--spacing-1));
+  position: absolute; inset-block-start: var(--srp-slider-under);
   inset-inline: var(--spacing-0); display: flex; justify-content: center; white-space: nowrap; column-gap: var(--slider-mark-label-gap, var(--spacing-2));
   color: var(--slider-mark-label, var(--text-muted)); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
 }
-/* Near an end, a label or the value chip moves inward by --dk-slider-nudge, so it stays inside the slider (GM2). */
-.dk-slider__mark-label > span, .dk-slider__value > span { flex: none; translate: var(--dk-slider-nudge, none); }
+/* Near an end, a label or the value chip moves inward by --srp-slider-nudge, so it stays inside the slider (GM2). */
+.srp-slider__mark-label > span, .srp-slider__value > span { flex: none; translate: var(--srp-slider-nudge, none); }
 /* A label too long for its room between the marks wraps within it (the slider sets the width, and grows for the lines).
    column-gap above is the space kept between two labels; the label itself is one flex item, so it lays out nothing. */
-.dk-slider__mark-label > [data-wrap] { white-space: normal; text-wrap: balance; text-align: center; inline-size: max-content; min-inline-size: min-content; max-inline-size: var(--dk-slider-share); }
-.dk-slider__value {
+.srp-slider__mark-label > [data-wrap] { white-space: normal; text-wrap: balance; text-align: center; inline-size: max-content; min-inline-size: min-content; max-inline-size: var(--srp-slider-share); }
+.srp-slider__value {
   position: absolute; inset-block-end: calc(var(--sizing-full) + var(--spacing-1\.5)); inset-inline: var(--spacing-0);
   display: flex; justify-content: center; pointer-events: none; opacity: var(--opacity-0);
   transition: opacity var(--motion-change-sm) var(--ease-settle);
 }
-.dk-slider__value > span {
+.srp-slider__value > span {
   flex: none; white-space: nowrap; padding: var(--spacing-0\.5) var(--spacing-1\.5); border-radius: var(--radius-control);
   background: var(--slider-value-bg, var(--surface-inverse)); color: var(--slider-value-text, var(--text-inverse));
   font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium);
   /* Digits of one width, so the bubble keeps its width while a drag changes the number (GR162). */
   font-variant-numeric: tabular-nums;
 }
-.dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:focus-within > .dk-slider__value { opacity: var(--opacity-100); }
-@media (hover: hover) { .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:hover > .dk-slider__value { opacity: var(--opacity-100); } }
+.srp-slider:not(.srp-slider--disabled) .srp-slider__thumb:focus-within > .srp-slider__value { opacity: var(--opacity-100); }
+@media (hover: hover) { .srp-slider:not(.srp-slider--disabled) .srp-slider__thumb:hover > .srp-slider__value { opacity: var(--opacity-100); } }
 /* Vertical: the same layout turned a quarter, by writing mode, so every inline (along the track) and block (across
    it) rule above still holds. The track runs top to bottom; Slider.tsx counts places from the top, so min sits at the
    bottom. The text (mark labels, the value chip, the number fields) stays upright; the labels sit to the right of the
    track and the chip to its left. */
-.dk-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
-.dk-slider--vertical .dk-slider__mark-label > span, .dk-slider--vertical .dk-slider__value > span, .dk-slider--vertical .dk-slider__input { writing-mode: horizontal-tb; }
-.dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
-.dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
-.dk-slider--readonly, .dk-slider--readonly .dk-slider__thumb { cursor: default; }
-.dk-slider--disabled { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
-.dk-slider--disabled .dk-slider__thumb { cursor: var(--cursor-disabled); }
-@media (prefers-reduced-motion: reduce) { .dk-slider__thumb, .dk-slider__value { transition: none; } }
+.srp-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
+.srp-slider--vertical .srp-slider__mark-label > span, .srp-slider--vertical .srp-slider__value > span, .srp-slider--vertical .srp-slider__input { writing-mode: horizontal-tb; }
+.srp-slider--invalid .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
+.srp-slider--invalid .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
+.srp-slider--readonly, .srp-slider--readonly .srp-slider__thumb { cursor: default; }
+.srp-slider--disabled { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
+.srp-slider--disabled .srp-slider__thumb { cursor: var(--cursor-disabled); }
+@media (prefers-reduced-motion: reduce) { .srp-slider__thumb, .srp-slider__value { transition: none; } }
 @media (forced-colors: active) {
-  .dk-slider__track { background: CanvasText; }
-  .dk-slider__fill { background: Highlight; }
-  .dk-slider__thumb { border-color: Highlight; background: Canvas; }
-  .dk-slider__thumb:has(> .dk-slider__range:focus-visible) { outline-color: Highlight; }
-  .dk-slider__tick { background: Canvas; }
-  .dk-slider__value > span { border: var(--border-width-1) solid CanvasText; }
+  .srp-slider__track { background: CanvasText; }
+  .srp-slider__fill { background: Highlight; }
+  .srp-slider__thumb { border-color: Highlight; background: Canvas; }
+  .srp-slider__thumb:has(> .srp-slider__range:focus-visible) { outline-color: Highlight; }
+  .srp-slider__tick { background: Canvas; }
+  .srp-slider__value > span { border: var(--border-width-1) solid CanvasText; }
 }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the slider is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
-.dk-slider { position: relative; isolation: isolate; }
-.dk-slider::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+.srp-slider { position: relative; isolation: isolate; }
+.srp-slider::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 /* Touch (EQ1): a 44px strip to press and drag, as Apple and Material ask. */
-@media (pointer: coarse) { .dk-slider::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); } }
+@media (pointer: coarse) { .srp-slider::after { --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); } }
 }

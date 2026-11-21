@@ -10,7 +10,7 @@ import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
 const vis = (sel: string) => { const e = document.querySelector(sel); return !!e && getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().height > 0; };
-const toggle = () => q('#nav .dk-navbar__toggle') as HTMLButtonElement;
+const toggle = () => q('#nav .srp-navbar__toggle') as HTMLButtonElement;
 const RouterLink = React.forwardRef<HTMLAnchorElement, { to: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>>(function RouterLink({ to, ...p }, ref) {
   return <a {...p} ref={ref} href={'#router' + to} data-router="" />;
 });
@@ -67,16 +67,16 @@ describe('Navbar', () => {
     await render(<Main r={r} lr={lr} />);
     const n = el('nav'), nav = n.querySelector('nav')!;
     expect([n.tagName, n.className, n.dataset.component, r.current === n, n.dataset.x, n.getBoundingClientRect().height, css(n).borderBottomWidth, nav.getAttribute('aria-label'), nav.querySelectorAll('li').length, lr.current?.tagName])
-      .toEqual(['HEADER', 'dk-navbar extra', 'navbar', true, 'y', 65, '1px', 'Main', 3, 'A']);
+      .toEqual(['HEADER', 'srp-navbar extra', 'navbar', true, 'y', 65, '1px', 'Main', 3, 'A']);
   });
 
   test('wide screens: brand, links, then actions on the right, in a Container xl (1280px max, padded); no menu button', async () => {
     await render(<Main />);
     const [b, n, a] = ['#brand', '#nav nav', '#act'].map((s) => Math.round(q(s).getBoundingClientRect().left));
     expect(b! < n! && n! < a! && a! > 900).toBe(true);
-    const inner = q('#nav .dk-navbar__inner');
+    const inner = q('#nav .srp-navbar__inner');
     expect([Math.round(inner.getBoundingClientRect().width), css(inner).paddingLeft]).toEqual([1100, '32px']);
-    expect(vis('#nav .dk-navbar__toggle')).toBe(false);
+    expect(vis('#nav .srp-navbar__toggle')).toBe(false);
   });
 
   test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored; no bar along the bottom of the current page (2px with more contrast), and it darkens under the pointer', async () => {
@@ -109,7 +109,7 @@ describe('Navbar', () => {
   test('as: a router link with the link styles', async () => {
     await render(<Main />);
     const a = el('lr');
-    expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'dk-navbar__link']);
+    expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'srp-navbar__link']);
   });
 
   test('keyboard: Tab goes brand, links, actions; links show a focus ring', async () => {
@@ -123,7 +123,7 @@ describe('Navbar', () => {
     await render(<Navbar id="nbare" brand="Only a brand" size={'huge' as never} />);
     const n = el('nbare');
     expect([n.querySelector('nav'), n.querySelector('button[aria-controls]'), n.firstElementChild!.className])
-      .toEqual([null, null, 'dk-navbar__inner dk-container dk-container--padded dk-container--xl']);
+      .toEqual([null, null, 'srp-navbar__inner srp-container srp-container--padded srp-container--xl']);
   });
 
   test('sticky: stays at the top (z-40) while the page scrolls; aria-label names the nav; size lg', async () => {
@@ -210,7 +210,7 @@ describe('Navbar', () => {
     await expect.poll(() => window.scrollY).toBe(600);
     await expect.poll(shadow).toBe(full);
     // A bar that isn't sticky never lifts.
-    n.classList.remove('dk-navbar--sticky');
+    n.classList.remove('srp-navbar--sticky');
     expect(shows()).toBe(false);
   }));
 
@@ -285,12 +285,12 @@ describe('Navbar', () => {
     await expect.poll(() => field.getBoundingClientRect().top).toBeGreaterThanOrEqual(bar.getBoundingClientRect().bottom - 1);
     await r.rerender(<div><Navbar id="nfocus" brand="Docs" /></div>);
     expect(getComputedStyle(document.documentElement).scrollPaddingTop).toBe('auto');
-    expect(document.documentElement.style.getPropertyValue('--dk-navbar-offset')).toBe('');
+    expect(document.documentElement.style.getPropertyValue('--srp-navbar-offset')).toBe('');
   });
 
   test('tokens (--navbar-height, --navbar-link-text) override one navbar', async () => {
     await render(<Navbar id="ntok" style={{ '--navbar-height': '48px', '--navbar-link-text': 'rgb(1, 2, 3)' } as React.CSSProperties}><NavbarLink href="#t">T</NavbarLink></Navbar>);
-    expect([q('#ntok .dk-navbar__inner').getBoundingClientRect().height, css(q('#ntok .dk-navbar__link')).color]).toEqual([48, 'rgb(1, 2, 3)']);
+    expect([q('#ntok .srp-navbar__inner').getBoundingClientRect().height, css(q('#ntok .srp-navbar__link')).color]).toEqual([48, 'rgb(1, 2, 3)']);
   });
 
   test('below 768px: the links hide behind a menu button (aria-expanded, aria-controls), at the right; menuLabel names the button', async () => {
@@ -300,7 +300,7 @@ describe('Navbar', () => {
     expect(vis('#nav nav')).toBe(false);
     expect([b.getAttribute('aria-label'), b.getAttribute('aria-expanded'), b.getAttribute('aria-controls') === q('#nav nav').id, b.querySelector<HTMLElement>('[data-icon]')?.dataset.icon, Math.round(b.getBoundingClientRect().right)])
       .toEqual(['Menu', 'false', true, 'menu', 484]);
-    expect(q('#nsticky .dk-navbar__toggle').getAttribute('aria-label')).toBe('Open the menu');
+    expect(q('#nsticky .srp-navbar__toggle').getAttribute('aria-label')).toBe('Open the menu');
   });
 
   test('small screens with wide actions: the brand shrinks and ends in an ellipsis, so the menu button stays on screen and nothing scrolls sideways (GH1)', async () => {
@@ -327,14 +327,14 @@ describe('Navbar', () => {
     </Navbar>);
     for (const w of [390, 320]) {
       await resize(w);
-      const acts = q('#nav .dk-navbar__actions');
+      const acts = q('#nav .srp-navbar__actions');
       expect([w, Math.round(toggle().getBoundingClientRect().right) <= w, document.documentElement.scrollWidth <= w, w > 320 || acts.scrollWidth > acts.clientWidth]).toEqual([w, true, true, true]);
     }
     // The last action is reached by Tab: focus scrolls it into view inside the bar, with its focus ring unclipped.
     el('last').focus();
-    await expect.poll(() => Math.round(el('last').getBoundingClientRect().right) <= Math.round(q('#nav .dk-navbar__actions').getBoundingClientRect().right)).toBe(true);
+    await expect.poll(() => Math.round(el('last').getBoundingClientRect().right) <= Math.round(q('#nav .srp-navbar__actions').getBoundingClientRect().right)).toBe(true);
     await resize(1100);
-    expect(q('#nav .dk-navbar__actions').scrollWidth > q('#nav .dk-navbar__actions').clientWidth).toBe(false);
+    expect(q('#nav .srp-navbar__actions').scrollWidth > q('#nav .srp-navbar__actions').clientWidth).toBe(false);
   });
 
   test('360px: a Menu among scrolling actions opens in full, not clipped by the bar (it opens in the top layer)', async () => {
@@ -351,7 +351,7 @@ describe('Navbar', () => {
     await expect.poll(() => q('[role=menu]')?.getBoundingClientRect().height ?? 0).toBeGreaterThan(60);
     // What's drawn at the last item's middle is that item: nothing cut it off at the bar's edge.
     const r = el('out').getBoundingClientRect();
-    expect([r.top > q('#nav .dk-navbar__actions').getBoundingClientRect().bottom, el('out').contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2))]).toEqual([true, true]);
+    expect([r.top > q('#nav .srp-navbar__actions').getBoundingClientRect().bottom, el('out').contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2))]).toEqual([true, true]);
   });
 
   test('320px: a brand given as plain text ends in an ellipsis too, and never runs under the actions (GR79, GR81)', async () => {
@@ -361,13 +361,13 @@ describe('Navbar', () => {
     await resize(320);
     // A string brand gets a span of its own, so the ellipsis rule reaches it (GR81): text-overflow on the flex
     // brand box itself never reaches its anonymous text, which was cut off with no ellipsis.
-    const b = q('#nav .dk-navbar__brand > span');
+    const b = q('#nav .srp-navbar__brand > span');
     expect(b?.textContent).toBe('Kommunikationsplattform');
     // Measured against the actions' box, the edge people see: the actions scroll sideways inside it, and Firefox's
     // run had the Sign in button 34px left of the brand's end with the brand ending at the box. The message gives the
     // edges and the box's scroll, so a failure says by how much.
-    const edges = () => JSON.stringify({ brandEnd: b.getBoundingClientRect().right, boxEnd: q('#nav .dk-navbar__brand').getBoundingClientRect().right, actionsStart: el('act').getBoundingClientRect().left, actionsBox: q('#nav .dk-navbar__actions').getBoundingClientRect().left, scrolled: q('#nav .dk-navbar__actions').scrollLeft, brand: [b.scrollWidth, b.clientWidth] });
-    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(q('#nav .dk-navbar__actions').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320], edges()).toEqual([true, true, 'hidden', 'ellipsis', true]);
+    const edges = () => JSON.stringify({ brandEnd: b.getBoundingClientRect().right, boxEnd: q('#nav .srp-navbar__brand').getBoundingClientRect().right, actionsStart: el('act').getBoundingClientRect().left, actionsBox: q('#nav .srp-navbar__actions').getBoundingClientRect().left, scrolled: q('#nav .srp-navbar__actions').scrollLeft, brand: [b.scrollWidth, b.clientWidth] });
+    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(q('#nav .srp-navbar__actions').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320], edges()).toEqual([true, true, 'hidden', 'ellipsis', true]);
     await resize(1100);
     expect(b.scrollWidth > b.clientWidth).toBe(false);
   });
@@ -464,18 +464,18 @@ describe('Navbar', () => {
     await render(<Navbar id="nav" brand="Firma" actions={<Button>Abmelden</Button>}>{labels.map((l, i) => <NavbarLink key={l} id={'l' + i} href={'#' + i}>{l}</NavbarLink>)}</Navbar>);
     await resize(800);
     // Folded: no link runs under the actions, the menu button shows, and it opens the links in the panel.
-    await expect.poll(() => vis('#nav .dk-navbar__toggle')).toBe(true);
+    await expect.poll(() => vis('#nav .srp-navbar__toggle')).toBe(true);
     expect(vis('#nav nav')).toBe(false);
     await userEvent.click(toggle());
     await expect.poll(() => vis('#nav nav')).toBe(true);
-    expect(el('l6').getBoundingClientRect().bottom > q('#nav .dk-navbar__inner').getBoundingClientRect().bottom).toBe(true);
+    expect(el('l6').getBoundingClientRect().bottom > q('#nav .srp-navbar__inner').getBoundingClientRect().bottom).toBe(true);
     // With room for them all, back in the bar, the menu closed and its button gone.
     await resize(1400);
-    await expect.poll(() => [vis('#nav .dk-navbar__toggle'), el('nav').dataset.state]).toEqual([false, 'closed']);
-    expect([vis('#nav nav'), el('l6').getBoundingClientRect().right <= q('#nav .dk-navbar__actions').getBoundingClientRect().left]).toEqual([true, true]);
+    await expect.poll(() => [vis('#nav .srp-navbar__toggle'), el('nav').dataset.state]).toEqual([false, 'closed']);
+    expect([vis('#nav nav'), el('l6').getBoundingClientRect().right <= q('#nav .srp-navbar__actions').getBoundingClientRect().left]).toEqual([true, true]);
     // Narrow again: folded again.
     await resize(800);
-    await expect.poll(() => vis('#nav .dk-navbar__toggle')).toBe(true);
+    await expect.poll(() => vis('#nav .srp-navbar__toggle')).toBe(true);
   });
 
   test('growing past 768px closes it, so it\'s closed when the screen shrinks again', async () => {
@@ -510,8 +510,8 @@ describe('Navbar', () => {
     const links = []; for (let i = 0; i < 25; i++) links.push(<NavbarLink key={i} href={'#l' + i} id={'l' + i}>Link {i}</NavbarLink>);
     await render(<div style={{ height: '2000px' }}><Navbar id="nav" sticky brand="Docs">{links}</Navbar></div>);
     await userEvent.click(toggle());
-    const panel = q('#nav .dk-navbar__nav');
-    await expect.poll(() => vis('#nav .dk-navbar__nav')).toBe(true);
+    const panel = q('#nav .srp-navbar__nav');
+    await expect.poll(() => vis('#nav .srp-navbar__nav')).toBe(true);
     expect([Math.round(panel.getBoundingClientRect().bottom) <= 400, panel.scrollHeight > panel.clientHeight, css(panel).overscrollBehaviorY]).toEqual([true, true, 'contain']);
     el('l24').focus();
     await expect.poll(() => el('l24').getBoundingClientRect().bottom <= 400).toBe(true);
@@ -680,9 +680,9 @@ describe('Navbar in print', () => {
     await render(<Main />);
     await commands.printMedia(true);
     try {
-      const inner = q('#nav .dk-navbar__inner'), links = q('#nav .dk-navbar__links');
-      expect([getComputedStyle(inner).flexWrap, getComputedStyle(links).flexWrap, getComputedStyle(q('#nav .dk-navbar__nav')).flexBasis]).toEqual(['wrap', 'wrap', '0px']);
+      const inner = q('#nav .srp-navbar__inner'), links = q('#nav .srp-navbar__links');
+      expect([getComputedStyle(inner).flexWrap, getComputedStyle(links).flexWrap, getComputedStyle(q('#nav .srp-navbar__nav')).flexBasis]).toEqual(['wrap', 'wrap', '0px']);
     } finally { await commands.printMedia(false); }
-    expect(getComputedStyle(q('#nav .dk-navbar__links')).flexWrap).toBe('nowrap');
+    expect(getComputedStyle(q('#nav .srp-navbar__links')).flexWrap).toBe('nowrap');
   });
 });

@@ -5,13 +5,13 @@
    is dimmed (--dialog-overlay) and doesn't scroll. Fades and grows in (motion-enter-md), and fades and shrinks out
    faster (motion-exit-md); the fade alone with reduced motion.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* Under 640px wide, space-surface is 16px inside the dialog (24px elsewhere): its panel, and a Card in it, keep most
    of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
    --dialog-padding still sets the panel's padding everywhere. */
-@media (max-width: 639.98px) { .dk-dialog { --space-surface: var(--spacing-4); } }
-.dk-dialog {
-  --dk-dialog-width: var(--dialog-width-md, var(--container-lg));
+@media (max-width: 639.98px) { .srp-dialog { --space-surface: var(--spacing-4); } }
+.srp-dialog {
+  --srp-dialog-width: var(--dialog-width-md, var(--container-lg));
   box-sizing: border-box;
   position: fixed;
   inset: var(--spacing-0);
@@ -34,25 +34,25 @@
   /* Centered whether open or closing (FM1): on [open] alone, the panel jumped to the top-left corner as it faded out. */
   align-items: center; justify-content: center;
 }
-.dk-dialog:where(:dir(rtl)) { padding-inline: max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-right)) max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-left)); }
-.dk-dialog[open] { display: flex; }
-.dk-dialog--sm { --dk-dialog-width: var(--dialog-width-sm, var(--container-sm)); }
-.dk-dialog--lg { --dk-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
-.dk-dialog::backdrop { background: var(--dialog-overlay, var(--overlay)); }
-:root:has(.dk-dialog[open]) { overflow: hidden; }
-/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-dk-gutter). */
-:root[data-dk-gutter]:has(.dk-dialog[open]) { scrollbar-gutter: stable; }
-.dk-dialog__panel {
+.srp-dialog:where(:dir(rtl)) { padding-inline: max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-right)) max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-left)); }
+.srp-dialog[open] { display: flex; }
+.srp-dialog--sm { --srp-dialog-width: var(--dialog-width-sm, var(--container-sm)); }
+.srp-dialog--lg { --srp-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
+.srp-dialog::backdrop { background: var(--dialog-overlay, var(--overlay)); }
+:root:has(.srp-dialog[open]) { overflow: hidden; }
+/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-srp-gutter). */
+:root[data-srp-gutter]:has(.srp-dialog[open]) { scrollbar-gutter: stable; }
+.srp-dialog__panel {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: var(--dialog-gap, var(--spacing-4));
-  width: var(--dk-dialog-width);
+  width: var(--srp-dialog-width);
   max-width: var(--sizing-full);
   max-height: var(--sizing-full);
   padding: var(--dialog-padding, var(--space-surface));
   background: var(--dialog-bg, var(--surface-overlay)); --surface-behind: var(--dialog-bg, var(--surface-overlay)); --border: var(--dialog-divider, var(--border-overlay));
-  --dk-row-hover: var(--dialog-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
+  --srp-row-hover: var(--dialog-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
   --field: var(--dialog-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
   border-radius: var(--dialog-radius, var(--radius-container));
   box-shadow: var(--dialog-shadow, var(--elevation-modal));
@@ -62,69 +62,69 @@
    the panel and backdrop have faded, together, so the backdrop never trails the panel. Focus goes back at once, and
    presses go through to the page while it fades. A browser that can't keep it in the top layer (no overlay) closes it
    at once, rather than fading it out under the page's own layers. */
-@supports (overlay: auto) { .dk-dialog { transition: display var(--motion-exit-md) allow-discrete, overlay var(--motion-exit-md) allow-discrete; } }
-.dk-dialog:not([open]), .dk-dialog:not([open])::backdrop { pointer-events: none; }
-.dk-dialog__panel, .dk-dialog::backdrop { transition: opacity var(--motion-exit-md) var(--ease-exit), scale var(--motion-exit-md) var(--ease-exit); }
-.dk-dialog[open] .dk-dialog__panel, .dk-dialog[open]::backdrop { transition: opacity var(--motion-enter-md) var(--ease-enter), scale var(--motion-enter-md) var(--ease-enter); }
-.dk-dialog:not([open]) .dk-dialog__panel, .dk-dialog:not([open])::backdrop { opacity: var(--opacity-0); }
-@starting-style { .dk-dialog[open] .dk-dialog__panel, .dk-dialog[open]::backdrop { opacity: var(--opacity-0); } }
+@supports (overlay: auto) { .srp-dialog { transition: display var(--motion-exit-md) allow-discrete, overlay var(--motion-exit-md) allow-discrete; } }
+.srp-dialog:not([open]), .srp-dialog:not([open])::backdrop { pointer-events: none; }
+.srp-dialog__panel, .srp-dialog::backdrop { transition: opacity var(--motion-exit-md) var(--ease-exit), scale var(--motion-exit-md) var(--ease-exit); }
+.srp-dialog[open] .srp-dialog__panel, .srp-dialog[open]::backdrop { transition: opacity var(--motion-enter-md) var(--ease-enter), scale var(--motion-enter-md) var(--ease-enter); }
+.srp-dialog:not([open]) .srp-dialog__panel, .srp-dialog:not([open])::backdrop { opacity: var(--opacity-0); }
+@starting-style { .srp-dialog[open] .srp-dialog__panel, .srp-dialog[open]::backdrop { opacity: var(--opacity-0); } }
 /* In, as a sequence: the backdrop starts, then the panel motion-sequence later, so the page dims and the panel
    arrives on it rather than both at once. Out, they leave together. */
-.dk-dialog[open] .dk-dialog__panel { transition-delay: var(--motion-sequence); }
+.srp-dialog[open] .srp-dialog__panel { transition-delay: var(--motion-sequence); }
 /* Open on arrival (data-instant): shown from the first frame, not faded in. */
-.dk-dialog[data-instant] .dk-dialog__panel, .dk-dialog[data-instant]::backdrop { transition: none; }
+.srp-dialog[data-instant] .srp-dialog__panel, .srp-dialog[data-instant]::backdrop { transition: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-dialog:not([open]) .dk-dialog__panel { scale: var(--scale-95); }
-  @starting-style { .dk-dialog[open] .dk-dialog__panel { scale: var(--scale-95); } }
+  .srp-dialog:not([open]) .srp-dialog__panel { scale: var(--scale-95); }
+  @starting-style { .srp-dialog[open] .srp-dialog__panel { scale: var(--scale-95); } }
 }
-.dk-dialog__header { display: flex; align-items: flex-start; gap: var(--spacing-3); }
+.srp-dialog__header { display: flex; align-items: flex-start; gap: var(--spacing-3); }
 /* Long words wrap inside the panel rather than overflow it. */
-.dk-dialog__panel { overflow-wrap: anywhere; }
-.dk-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
-.dk-dialog__title { text-wrap: balance; margin: var(--spacing-0); font-family: var(--font-heading, var(--font-sans)), var(--font-sans); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--dialog-title-weight, var(--font-semibold)); }
-.dk-dialog__description { margin: var(--spacing-0); color: var(--dialog-description-color, var(--text-muted)); }
+.srp-dialog__panel { overflow-wrap: anywhere; }
+.srp-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
+.srp-dialog__title { text-wrap: balance; margin: var(--spacing-0); font-family: var(--font-heading, var(--font-sans)), var(--font-sans); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--dialog-title-weight, var(--font-semibold)); }
+.srp-dialog__description { margin: var(--spacing-0); color: var(--dialog-description-color, var(--text-muted)); }
 /* The × centers on the title's first line (28px), not on its top: 2px down, as Tour's and Alert's sit on theirs. */
-.dk-dialog__close { --dk-dialog-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--dk-dialog-close-nudge); }
+.srp-dialog__close { --srp-dialog-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--srp-dialog-close-nudge); }
 /* Room for a focus ring on every side: the body scrolls, so it clips, and a control at its edge would lose part of
    its ring. Padding gives the room and an equal negative margin takes it back, so the content stays where it was;
    scroll-padding keeps the room when focus scrolls a control into view. */
-.dk-dialog__body { --dk-dialog-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--dk-dialog-ring-room); margin: calc(var(--spacing-0) - var(--dk-dialog-ring-room)); scroll-padding: var(--dk-dialog-ring-room); }
-.dk-dialog__body:focus-visible { outline: var(--focus-ring-width) solid var(--dialog-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-dialog__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }
+.srp-dialog__body { --srp-dialog-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--srp-dialog-ring-room); margin: calc(var(--spacing-0) - var(--srp-dialog-ring-room)); scroll-padding: var(--srp-dialog-ring-room); }
+.srp-dialog__body:focus-visible { outline: var(--focus-ring-width) solid var(--dialog-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-dialog__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the footer is narrowest
    and there is no hover to show the rest. The Button keeps its size's height as the least it can be. */
-.dk-dialog__footer > .dk-btn:not(.dk-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-dialog__footer > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-.dk-dialog__footer > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
+.srp-dialog__footer > .srp-btn:not(.srp-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-dialog__footer > .srp-btn--size-sm:not(.srp-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+.srp-dialog__footer > .srp-btn--size-lg:not(.srp-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
 /* fullScreen: the panel fills the screen with square corners, the body takes the room between header and footer,
    and the padding clears a phone's notch and home bar (and its sides in landscape). "mobile" does this only under 640px (the sm breakpoint). */
-.dk-dialog--full { padding: var(--spacing-0); }
-.dk-dialog--full .dk-dialog__panel {
+.srp-dialog--full { padding: var(--spacing-0); }
+.srp-dialog--full .srp-dialog__panel {
   width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
   padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
   padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
   padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right));
 }
-.dk-dialog--full .dk-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
-.dk-dialog--full .dk-dialog__body { flex: auto; }
+.srp-dialog--full .srp-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
+.srp-dialog--full .srp-dialog__body { flex: auto; }
 @media (max-width: 639.98px) {
-  .dk-dialog--full-mobile { padding: var(--spacing-0); }
-  .dk-dialog--full-mobile .dk-dialog__panel {
+  .srp-dialog--full-mobile { padding: var(--spacing-0); }
+  .srp-dialog--full-mobile .srp-dialog__panel {
     width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
     padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
     padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
     padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right));
   }
-  .dk-dialog--full-mobile .dk-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
-  .dk-dialog--full-mobile .dk-dialog__body { flex: auto; }
+  .srp-dialog--full-mobile .srp-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
+  .srp-dialog--full-mobile .srp-dialog__body { flex: auto; }
 }
 /* A short screen (GR52: 400% zoom makes 1024px tall 256px): the header and footer alone can fill the panel, which
    squeezed the body to nothing and pushed the footer past the screen, where nothing scrolled to it. Below 480px tall
    the panel scrolls as a whole instead, with the body at its own height, so every control can be scrolled to and
    focusing one brings it into view. */
 @media (max-height: 479.98px) {
-  .dk-dialog__panel { overflow-y: auto; overscroll-behavior: contain; }
-  .dk-dialog__body { flex: none; overflow: visible; }
+  .srp-dialog__panel { overflow-y: auto; overscroll-behavior: contain; }
+  .srp-dialog__body { flex: none; overflow: visible; }
 }
-@media (forced-colors: active) { .dk-dialog__panel { border: var(--border-width-1) solid CanvasText; } }
+@media (forced-colors: active) { .srp-dialog__panel { border: var(--border-width-1) solid CanvasText; } }
 }

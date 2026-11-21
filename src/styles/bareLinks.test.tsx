@@ -8,7 +8,7 @@ afterEach(() => { host?.remove(); host = null; });
 
 describe('base.css: a bare link looks and behaves like Link (PT1)', () => {
   test('underlined at Link\'s 1px with its offset, in the --link-text color; a section\'s --link-text reaches it as it reaches Link', () => {
-    mount('<p><a id="bl-a" href="#x">Docs</a> <a id="bl-l" class="dk-link" href="#y">Link</a></p><p style="--link-text: rgb(1, 2, 3)"><a id="bl-tinted" href="#z">Tinted</a> <a id="bl-tl" class="dk-link" href="#w">Link</a></p>');
+    mount('<p><a id="bl-a" href="#x">Docs</a> <a id="bl-l" class="srp-link" href="#y">Link</a></p><p style="--link-text: rgb(1, 2, 3)"><a id="bl-tinted" href="#z">Tinted</a> <a id="bl-tl" class="srp-link" href="#w">Link</a></p>');
     expect([css('bl-a').textDecorationLine, css('bl-a').textDecorationThickness, css('bl-a').textUnderlineOffset]).toEqual(['underline', '1px', '2px']);
     expect(css('bl-a').color).toBe(css('bl-l').color);
     expect([css('bl-tinted').color, css('bl-tl').color]).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)']);

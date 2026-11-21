@@ -58,23 +58,23 @@ function AvatarGroupRender({ ref, ...props }: AvatarGroupProps & React.RefAttrib
   // A label that ignores `formatted` still gets the count in those digits.
   const moreText = (n: number) => (props.moreLabel || sds.labels.avatarMore)(n, displayNumber(n, locale)).replace(new RegExp('(?<!\\d)' + n + '(?!\\d)', 'g'), digits(n));
   const moreName = moreText(more);
-  const face = <span className="dk-avatar__frame"><span className="dk-avatar__initials" aria-hidden="true">{more > cap ? digits(cap) + '+' : '+' + digits(more)}</span></span>;
-  const cls = 'dk-avatar dk-avatar--' + size + ' dk-avatar-group__more';
+  const face = <span className="srp-avatar__frame"><span className="srp-avatar__initials" aria-hidden="true">{more > cap ? digits(cap) + '+' : '+' + digits(more)}</span></span>;
+  const cls = 'srp-avatar srp-avatar--' + size + ' srp-avatar-group__more';
   // Static, "+N" is one image; with showMore or onMore it's a button with the same name.
   const plus = (onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void) => props.onMore || props.showMore
     ? <button type="button" className={cls} aria-label={moreName} onClick={onClick} data-component="avatar" data-size={size}>{face}</button>
     : <span className={cls} role="img" aria-label={moreName} data-component="avatar" data-size={size}>{face}</span>;
   return (
-    <div {...rest} ref={restyle} role="group" className={cn('dk-avatar-group', 'dk-avatar-group--' + size, props.className)}
+    <div {...rest} ref={restyle} role="group" className={cn('srp-avatar-group', 'srp-avatar-group--' + size, props.className)}
       data-component="avatar-group" data-size={size}>
       <AvatarGroupSize.Provider value={size}>
-        {shown.map((el, i) => <span key={el.key ?? i} className="dk-avatar-group__item" style={{ zIndex: count - i }}>{el}</span>)}
+        {shown.map((el, i) => <span key={el.key ?? i} className="srp-avatar-group__item" style={{ zIndex: count - i }}>{el}</span>)}
       </AvatarGroupSize.Provider>
       {more > 0 ? (
-        <span className="dk-avatar-group__item" style={{ zIndex: 1 }}>
+        <span className="srp-avatar-group__item" style={{ zIndex: 1 }}>
           {props.onMore || !props.showMore ? plus(props.onMore) : (
             <Popover trigger={plus()} aria-label={moreName} placement="bottom-start">
-              <ul className="dk-avatar-group__list" role="list">
+              <ul className="srp-avatar-group__list" role="list">
                 {all.slice(shown.length).map((el, i) => {
                   const name = (el.props as { name?: string }).name;
                   // An Avatar is shown with its name written next to it (alt="", so it isn't read twice); a wrapped one as it is.

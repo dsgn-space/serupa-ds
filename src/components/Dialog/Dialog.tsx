@@ -61,7 +61,7 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
   const nameRef = useNameCheck('Dialog', NAME_HOW.title);   // warns when it has no accessible name
   const sds = useSettings();
   const rest = omit(props, OWN);
-  const base = domId('dk-dlg', React.useId());
+  const base = domId('srp-dlg', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
@@ -168,20 +168,20 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
       role={alert ? 'alertdialog' : undefined} aria-modal="true"
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
-      className={cn('dk-dialog', 'dk-dialog--' + size, props.fullScreen === true && 'dk-dialog--full', props.fullScreen === 'mobile' && 'dk-dialog--full-mobile', props.className)} data-component="dialog" data-size={size} data-state={open ? 'open' : 'closed'} data-instant={arrived.current ? '' : undefined}
+      className={cn('srp-dialog', 'srp-dialog--' + size, props.fullScreen === true && 'srp-dialog--full', props.fullScreen === 'mobile' && 'srp-dialog--full-mobile', props.className)} data-component="dialog" data-size={size} data-state={open ? 'open' : 'closed'} data-instant={arrived.current ? '' : undefined}
       onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
-      <div className="dk-dialog__panel">
+      <div className="srp-dialog__panel">
         {has(props.title) || has(props.description) || showClose ? (
-          <div className="dk-dialog__header">
-            <div className="dk-dialog__heading">
-              {has(props.title) ? <h2 className="dk-dialog__title" id={base + '-title'}>{props.title}</h2> : null}
-              {has(props.description) ? <p className="dk-dialog__description" id={base + '-desc'}>{props.description}</p> : null}
+          <div className="srp-dialog__header">
+            <div className="srp-dialog__heading">
+              {has(props.title) ? <h2 className="srp-dialog__title" id={base + '-title'}>{props.title}</h2> : null}
+              {has(props.description) ? <p className="srp-dialog__description" id={base + '-desc'}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-dialog__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request('close')} /> : null}
+            {showClose ? <IconButton className="srp-dialog__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request('close')} /> : null}
           </div>
         ) : null}
-        {has(props.children) ? <div {...region} ref={setBody} className="dk-dialog__body">{props.children}</div> : null}
-        {has(props.footer) ? <div className="dk-dialog__footer">{props.footer}</div> : null}
+        {has(props.children) ? <div {...region} ref={setBody} className="srp-dialog__body">{props.children}</div> : null}
+        {has(props.footer) ? <div className="srp-dialog__footer">{props.footer}</div> : null}
       </div>
       {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || 'close'; setAsking(null); close(why); }} /> : null}
     </dialog>

@@ -27,11 +27,11 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 
 Drawn from the `Marks` story.
 
-1. **Track** (`.dk-slider__track`): the whole range.
-2. **Fill** (`.dk-slider__fill`): the part up to the value.
-3. **Thumb** (`.dk-slider__thumb`): drag it, or focus it and use the arrow keys, to set the value.
-4. **Mark** (`.dk-slider__mark-label`): a named value along the track.
-5. **Value** (`.dk-slider__value`): the value, in words or numbers.
+1. **Track** (`.srp-slider__track`): the whole range.
+2. **Fill** (`.srp-slider__fill`): the part up to the value.
+3. **Thumb** (`.srp-slider__thumb`): drag it, or focus it and use the arrow keys, to set the value.
+4. **Mark** (`.srp-slider__mark-label`): a named value along the track.
+5. **Value** (`.srp-slider__value`): the value, in words or numbers.
 
 ## Usage
 
@@ -43,7 +43,7 @@ Drawn from the `Marks` story.
 - For a value with a middle, such as a balance or an offset from -10 to +10, set `origin={0}` so the fill starts in the middle and shows which way it leans.
 - Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short: they sit on one line under the track while there's room, and wrap when it's narrow.
 - Use `showValue` when people need to see the number while they drag, and there is no label nearby that shows it.
-- Use `inputs` when an exact number matters as much as the rough one, such as a price filter: a number field (`.dk-slider__input`, a [NumberInput](../NumberInput/README.md)) sits beside each thumb, after the track for one and at either end for a range. It brings NumberInput's code with it, so a page that imports Slider and not NumberInput grows by about 6.5 KiB.
+- Use `inputs` when an exact number matters as much as the rough one, such as a price filter: a number field (`.srp-slider__input`, a [NumberInput](../NumberInput/README.md)) sits beside each thumb, after the track for one and at either end for a range. It brings NumberInput's code with it, so a page that imports Slider and not NumberInput grows by about 6.5 KiB.
 
 ## Behavior
 

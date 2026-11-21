@@ -38,7 +38,7 @@ function SkipLinkRender({ ref, ...props }: SkipLinkProps & React.RefAttributes<H
     to.focus();
     if (typeof history !== 'undefined' && history.replaceState && location.hash !== '#' + target) history.replaceState(history.state, '', '#' + target);
   };
-  return <a {...rest} ref={ref} href={'#' + target} onClick={follow} className={cn('dk-skip-link', props.className)} data-component="skip-link">
+  return <a {...rest} ref={ref} href={'#' + target} onClick={follow} className={cn('srp-skip-link', props.className)} data-component="skip-link">
     {props.children != null ? props.children : labels.skipToContent}
   </a>;
 }

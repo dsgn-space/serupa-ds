@@ -10,7 +10,7 @@ const rules = (extra = {}) => ({
   rules: { 'serupa/component-layer': true, 'serupa/no-raw-value': true, 'serupa/color-through-component-token': true, 'serupa/focus-ring-outline': true, 'serupa/no-physical-shorthand': true, ...extra },
 });
 const found = async (code, extra, codeFilename) => (await stylelint.lint({ code, codeFilename, config: rules(extra) })).results[0].warnings.map((w) => w.rule);
-const layered = (body) => `/* A comment may sit outside. */\n@layer dk.components {\n${body}\n}\n`;
+const layered = (body) => `/* A comment may sit outside. */\n@layer srp.components {\n${body}\n}\n`;
 
 const R = [];
 const t = async (name, code, want, extra, file) => {
@@ -18,66 +18,66 @@ const t = async (name, code, want, extra, file) => {
   R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` });
 };
 
-await t('a component as the components write it passes', layered(`.dk-card { padding: var(--card-padding, var(--spacing-4)); color: var(--card-text, var(--text)); margin: 0; width: 1em; }
-.dk-card:focus-visible { outline: var(--focus-ring-width) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-grid { grid-template-columns: repeat(var(--dk-grid-cols), minmax(0, 1fr)); --dk-grid-gap: 12px; }
-.dk-tab:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }
-@media (min-width: 640px) { .dk-card { padding: var(--spacing-6); } }`), []);
-await t('component-layer: a rule outside the layer, a second block and another layer', `.dk-x { color: var(--card-text, var(--text)); }\n@layer dk.components { }\n@layer dk.components { }\n@layer dk.utilities { }`, ['serupa/component-layer', 'serupa/component-layer', 'serupa/component-layer']);
-await t('no-raw-value: px, ms and a bare number outside a var()', layered('.dk-x { min-width: 120px; transition: opacity 150ms; z-index: 10; }'), ['serupa/no-raw-value', 'serupa/no-raw-value', 'serupa/no-raw-value']);
-await t('no-raw-value: a cursor a token names (pointer, grab), while one with no token (zoom-in) passes', layered('.dk-x { cursor: pointer; } .dk-y { cursor: grab; } .dk-z { cursor: zoom-in; } .dk-w { cursor: var(--cursor-grabbing); }'), ['serupa/no-raw-value', 'serupa/no-raw-value']);
-await t('color-through-component-token: an alias and a palette step read directly', layered('.dk-x { color: var(--text); border-color: var(--blue-600); }'), ['serupa/color-through-component-token', 'serupa/color-through-component-token']);
-await t('color-through-component-token with allowPalette: palette steps pass, aliases still fail', layered('.dk-x { color: var(--blue-600); background: var(--surface); }'), ['serupa/color-through-component-token'], { 'serupa/color-through-component-token': [true, { allowPalette: true }] });
-await t('focus-ring-outline: a box-shadow ring on :focus-visible (not inset, not :focus-within)', layered(`.dk-x:focus-visible { box-shadow: 0 0 0 var(--focus-ring-width) var(--card-focus-ring, var(--focus-ring)); }
-.dk-y:focus-within { box-shadow: 0 0 0 var(--focus-ring-width) var(--card-focus-ring, var(--focus-ring)); }`), ['serupa/focus-ring-outline']);
-await t('no-physical-shorthand: symmetric shorthands and logical corners pass', layered(`.dk-x { padding: var(--spacing-2) var(--spacing-4); margin: var(--spacing-1) var(--spacing-2) var(--spacing-3); inset: 0; border-radius: var(--radius-md) var(--radius-md) 0 0; }
-.dk-y { padding: var(--spacing-1) var(--spacing-2) var(--spacing-3) var(--spacing-2); border-radius: var(--radius-sm) / var(--radius-md); }`), []);
-await t('no-physical-shorthand: right and left differ (padding, inset, border-width) and corners differ left to right', layered(`.dk-x { padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-6); inset: 0 auto 0 0; border-width: 0 var(--border-width-1) 0 0; }
-.dk-y { border-radius: var(--radius-md) 0 0 var(--radius-md); }
-.dk-z { border-radius: 0 var(--radius-md); }`), ['serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand']);
+await t('a component as the components write it passes', layered(`.srp-card { padding: var(--card-padding, var(--spacing-4)); color: var(--card-text, var(--text)); margin: 0; width: 1em; }
+.srp-card:focus-visible { outline: var(--focus-ring-width) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-grid { grid-template-columns: repeat(var(--srp-grid-cols), minmax(0, 1fr)); --srp-grid-gap: 12px; }
+.srp-tab:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }
+@media (min-width: 640px) { .srp-card { padding: var(--spacing-6); } }`), []);
+await t('component-layer: a rule outside the layer, a second block and another layer', `.srp-x { color: var(--card-text, var(--text)); }\n@layer srp.components { }\n@layer srp.components { }\n@layer srp.utilities { }`, ['serupa/component-layer', 'serupa/component-layer', 'serupa/component-layer']);
+await t('no-raw-value: px, ms and a bare number outside a var()', layered('.srp-x { min-width: 120px; transition: opacity 150ms; z-index: 10; }'), ['serupa/no-raw-value', 'serupa/no-raw-value', 'serupa/no-raw-value']);
+await t('no-raw-value: a cursor a token names (pointer, grab), while one with no token (zoom-in) passes', layered('.srp-x { cursor: pointer; } .srp-y { cursor: grab; } .srp-z { cursor: zoom-in; } .srp-w { cursor: var(--cursor-grabbing); }'), ['serupa/no-raw-value', 'serupa/no-raw-value']);
+await t('color-through-component-token: an alias and a palette step read directly', layered('.srp-x { color: var(--text); border-color: var(--blue-600); }'), ['serupa/color-through-component-token', 'serupa/color-through-component-token']);
+await t('color-through-component-token with allowPalette: palette steps pass, aliases still fail', layered('.srp-x { color: var(--blue-600); background: var(--surface); }'), ['serupa/color-through-component-token'], { 'serupa/color-through-component-token': [true, { allowPalette: true }] });
+await t('focus-ring-outline: a box-shadow ring on :focus-visible (not inset, not :focus-within)', layered(`.srp-x:focus-visible { box-shadow: 0 0 0 var(--focus-ring-width) var(--card-focus-ring, var(--focus-ring)); }
+.srp-y:focus-within { box-shadow: 0 0 0 var(--focus-ring-width) var(--card-focus-ring, var(--focus-ring)); }`), ['serupa/focus-ring-outline']);
+await t('no-physical-shorthand: symmetric shorthands and logical corners pass', layered(`.srp-x { padding: var(--spacing-2) var(--spacing-4); margin: var(--spacing-1) var(--spacing-2) var(--spacing-3); inset: 0; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.srp-y { padding: var(--spacing-1) var(--spacing-2) var(--spacing-3) var(--spacing-2); border-radius: var(--radius-sm) / var(--radius-md); }`), []);
+await t('no-physical-shorthand: right and left differ (padding, inset, border-width) and corners differ left to right', layered(`.srp-x { padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-6); inset: 0 auto 0 0; border-width: 0 var(--border-width-1) 0 0; }
+.srp-y { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.srp-z { border-radius: 0 var(--radius-md); }`), ['serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand']);
 
-await t('radius-through-role: roles, a component token, none, xs and full pass', layered(`.dk-x { border-radius: var(--x-radius, var(--radius-control)); }
-.dk-y { border-start-start-radius: var(--radius-surface); border-radius: var(--rounded-full); --dk-y-r: var(--rounded-none); }
-.dk-z { border-radius: var(--z-radius, var(--rounded-xs)); }`), [], { 'serupa/radius-through-role': true });
-await t('radius-through-role: a middle step of the rounded scale, alone or as a default, is flagged', layered(`.dk-x { border-radius: var(--rounded-md); }
-.dk-y { border-radius: var(--y-radius, var(--rounded-lg)); }
-.dk-z { border-end-end-radius: var(--rounded-sm); --z-item-radius: var(--rounded-xl); }`), ['serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role'], { 'serupa/radius-through-role': true });
-await t('shadow-through-role: elevation roles, a component token and shadow-none pass', layered(`.dk-x { box-shadow: var(--x-shadow, var(--elevation-overlay)); }
-.dk-y { --dk-y-shadow: var(--shadow-none); box-shadow: var(--elevation-rest), var(--elevation-part); }`), [], { 'serupa/shadow-through-role': true });
-await t('shadow-through-role: a step of the shadow scale, alone, as a default or in a custom property, is flagged', layered(`.dk-x { box-shadow: var(--shadow-md); }
-.dk-y { box-shadow: var(--y-shadow, var(--shadow-lg)); }
-.dk-z { --dk-z-shadow: var(--shadow-xs); }`), ['serupa/shadow-through-role', 'serupa/shadow-through-role', 'serupa/shadow-through-role'], { 'serupa/shadow-through-role': true });
-await t('outline-width-token: outline-width and focus-ring-width tokens pass', layered(`.dk-x { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
-.dk-y { outline-width: var(--focus-ring-width); border: var(--border-width-1) solid CanvasText; }`), [], { 'serupa/outline-width-token': true });
-await t('outline-width-token: a border-width token in an outline is flagged', layered(`.dk-x { outline: var(--border-width-1) solid Highlight; }
-.dk-y { outline-width: var(--border-width-2); }`), ['serupa/outline-width-token', 'serupa/outline-width-token'], { 'serupa/outline-width-token': true });
+await t('radius-through-role: roles, a component token, none, xs and full pass', layered(`.srp-x { border-radius: var(--x-radius, var(--radius-control)); }
+.srp-y { border-start-start-radius: var(--radius-surface); border-radius: var(--rounded-full); --srp-y-r: var(--rounded-none); }
+.srp-z { border-radius: var(--z-radius, var(--rounded-xs)); }`), [], { 'serupa/radius-through-role': true });
+await t('radius-through-role: a middle step of the rounded scale, alone or as a default, is flagged', layered(`.srp-x { border-radius: var(--rounded-md); }
+.srp-y { border-radius: var(--y-radius, var(--rounded-lg)); }
+.srp-z { border-end-end-radius: var(--rounded-sm); --z-item-radius: var(--rounded-xl); }`), ['serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role'], { 'serupa/radius-through-role': true });
+await t('shadow-through-role: elevation roles, a component token and shadow-none pass', layered(`.srp-x { box-shadow: var(--x-shadow, var(--elevation-overlay)); }
+.srp-y { --srp-y-shadow: var(--shadow-none); box-shadow: var(--elevation-rest), var(--elevation-part); }`), [], { 'serupa/shadow-through-role': true });
+await t('shadow-through-role: a step of the shadow scale, alone, as a default or in a custom property, is flagged', layered(`.srp-x { box-shadow: var(--shadow-md); }
+.srp-y { box-shadow: var(--y-shadow, var(--shadow-lg)); }
+.srp-z { --srp-z-shadow: var(--shadow-xs); }`), ['serupa/shadow-through-role', 'serupa/shadow-through-role', 'serupa/shadow-through-role'], { 'serupa/shadow-through-role': true });
+await t('outline-width-token: outline-width and focus-ring-width tokens pass', layered(`.srp-x { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.srp-y { outline-width: var(--focus-ring-width); border: var(--border-width-1) solid CanvasText; }`), [], { 'serupa/outline-width-token': true });
+await t('outline-width-token: a border-width token in an outline is flagged', layered(`.srp-x { outline: var(--border-width-1) solid Highlight; }
+.srp-y { outline-width: var(--border-width-2); }`), ['serupa/outline-width-token', 'serupa/outline-width-token'], { 'serupa/outline-width-token': true });
 const combobox = path.join(PROJECT, 'src', 'components', 'Combobox', 'Combobox.css');
 const own = (known) => ({ 'serupa/own-block': known ? [true, { known }] : true });
-await t('own-block: its own elements, and another block placed or sized, fed a custom property, or used as context, pass', layered(`.dk-combobox__popup { inset-block-start: var(--spacing-1); }
-.dk-combobox .dk-input { inline-size: var(--sizing-full); --input-height: var(--sizing-9); }
-.dk-input__field .dk-combobox__mark { color: inherit; }`), [], own(), combobox);
-await t('own-block: styling another block\'s element (Input\'s field, Button\'s icon) is flagged', layered(`.dk-combobox .dk-input__field { cursor: var(--cursor-interactive); }
-.dk-combobox > .dk-btn__icon { opacity: 0; }`), ['serupa/own-block', 'serupa/own-block'], own(), combobox);
-await t('own-block: a known crossing passes, and a known one no longer there is flagged', layered('.dk-combobox .dk-input__field { cursor: var(--cursor-interactive); }'), ['serupa/own-block'], own({ Combobox: ['dk-input', 'dk-calendar'] }), combobox);
+await t('own-block: its own elements, and another block placed or sized, fed a custom property, or used as context, pass', layered(`.srp-combobox__popup { inset-block-start: var(--spacing-1); }
+.srp-combobox .srp-input { inline-size: var(--sizing-full); --input-height: var(--sizing-9); }
+.srp-input__field .srp-combobox__mark { color: inherit; }`), [], own(), combobox);
+await t('own-block: styling another block\'s element (Input\'s field, Button\'s icon) is flagged', layered(`.srp-combobox .srp-input__field { cursor: var(--cursor-interactive); }
+.srp-combobox > .srp-btn__icon { opacity: 0; }`), ['serupa/own-block', 'serupa/own-block'], own(), combobox);
+await t('own-block: a known crossing passes, and a known one no longer there is flagged', layered('.srp-combobox .srp-input__field { cursor: var(--cursor-interactive); }'), ['serupa/own-block'], own({ Combobox: ['srp-input', 'srp-calendar'] }), combobox);
 
 // The project's own config (stylelint.config.mjs) on a component file: raw colors are flagged (GR276), and the ways the
 // components legitimately name a color pass: transparent, currentColor, color-mix() of tokens, black in a mask.
 const configured = async (code) => (await stylelint.lint({ code, codeFilename: path.join(PROJECT, 'src', 'components', 'Card', 'Card.css'), configFile: path.join(PROJECT, 'stylelint.config.mjs') })).results[0].warnings.map((w) => w.rule).filter((r) => !r.startsWith('serupa/')).sort();
 const tc = async (name, code, want) => { const got = await configured(code); R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` }); };
-await tc('raw colors in a component: hex, a named color and a color function are flagged', layered('.dk-card { color: #1a1a1a; border-color: red; background: rgb(0 0 0); }'), ['color-named', 'color-no-hex', 'function-disallowed-list']);
-await tc('colors from tokens pass, and so do transparent, currentColor, color-mix() and black in a mask', layered(`.dk-card { color: var(--card-text, var(--text)); border-color: transparent; fill: currentColor; background: color-mix(in oklch, var(--card-bg, var(--surface)) 80%, transparent); }
-.dk-card__fade { mask-image: linear-gradient(transparent, black); --dk-card-fade: color-mix(in srgb, black 16%, transparent); }`), []);
+await tc('raw colors in a component: hex, a named color and a color function are flagged', layered('.srp-card { color: #1a1a1a; border-color: red; background: rgb(0 0 0); }'), ['color-named', 'color-no-hex', 'function-disallowed-list']);
+await tc('colors from tokens pass, and so do transparent, currentColor, color-mix() and black in a mask', layered(`.srp-card { color: var(--card-text, var(--text)); border-color: transparent; fill: currentColor; background: color-mix(in oklch, var(--card-bg, var(--surface)) 80%, transparent); }
+.srp-card__fade { mask-image: linear-gradient(transparent, black); --srp-card-fade: color-mix(in srgb, black 16%, transparent); }`), []);
 
 const NA = { 'serupa/no-accent-on-current': [true, { known: ['x-bg-selected'] }], 'serupa/color-through-component-token': null };
-await t('no-accent-on-current: a current row marked by the fill, a neutral line and the shared bar token pass; so does a focus ring, a child of a selected item, and a known filled pick', layered(`.dk-x__item[aria-current="page"] { background: var(--x-item-bg-active, var(--highlight)); box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--highlight-indicator)); }
-.dk-x__tab[aria-selected="true"]::after { background: var(--x-indicator, var(--text)); }
-.dk-x__tab[aria-selected="true"]:focus-visible { outline: var(--focus-ring-width) solid var(--x-ring, var(--primary)); }
-.dk-x__option--selected .dk-x__tick { color: var(--x-tick, var(--primary)); }
-.dk-x__day--selected { background: var(--x-bg-selected, var(--x-selected-bg, var(--primary))); }
-.dk-x__item:not(.dk-x__item--active):hover { color: var(--x-hover, var(--primary)); }`), [], NA);
-await t('no-accent-on-current: the accent on a selected, current, active or highlighted item is flagged, bare, as a default, and behind an old token name', layered(`.dk-x__item[aria-current="page"] { box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--primary)); }
-.dk-x__tab[aria-selected="true"]::after { background: var(--primary); }
-.dk-x__link--active { color: var(--x-text-active, var(--x-active-text, var(--primary-hover))); }
-.dk-x__option--highlighted { background: var(--x-option-bg, var(--primary-subtle)); }`), ['serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current'], NA);
+await t('no-accent-on-current: a current row marked by the fill, a neutral line and the shared bar token pass; so does a focus ring, a child of a selected item, and a known filled pick', layered(`.srp-x__item[aria-current="page"] { background: var(--x-item-bg-active, var(--highlight)); box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--highlight-indicator)); }
+.srp-x__tab[aria-selected="true"]::after { background: var(--x-indicator, var(--text)); }
+.srp-x__tab[aria-selected="true"]:focus-visible { outline: var(--focus-ring-width) solid var(--x-ring, var(--primary)); }
+.srp-x__option--selected .srp-x__tick { color: var(--x-tick, var(--primary)); }
+.srp-x__day--selected { background: var(--x-bg-selected, var(--x-selected-bg, var(--primary))); }
+.srp-x__item:not(.srp-x__item--active):hover { color: var(--x-hover, var(--primary)); }`), [], NA);
+await t('no-accent-on-current: the accent on a selected, current, active or highlighted item is flagged, bare, as a default, and behind an old token name', layered(`.srp-x__item[aria-current="page"] { box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--primary)); }
+.srp-x__tab[aria-selected="true"]::after { background: var(--primary); }
+.srp-x__link--active { color: var(--x-text-active, var(--x-active-text, var(--primary-hover))); }
+.srp-x__option--highlighted { background: var(--x-option-bg, var(--primary-subtle)); }`), ['serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current'], NA);
 
 done(report('Stylelint rules', R));
