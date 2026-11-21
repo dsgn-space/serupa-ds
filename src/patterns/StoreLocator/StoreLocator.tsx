@@ -177,7 +177,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
               })}
             </ul>
           ) : (
-            <EmptyState variant="dashed" headingLevel={2} title="No shops match"
+            <EmptyState icon="search_off" headingLevel={2} title="No shops match"
               description={openOnly ? 'None that match are open now. Turn off “Open now only” to see the rest.' : 'Try a town or a postcode near you, or use your location.'} />
           )}
         </div>

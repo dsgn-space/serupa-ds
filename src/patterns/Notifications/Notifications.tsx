@@ -129,7 +129,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
             {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}
           </ul>
         ) : !items.length ? (
-          <EmptyState icon="notifications" title="No notifications yet" headingLevel={2} variant="dashed"
+          <EmptyState icon="notifications" title="No notifications yet" headingLevel={2}
             description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
             actions={<Button variant="outline" leftIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
         ) : shown.length ? (

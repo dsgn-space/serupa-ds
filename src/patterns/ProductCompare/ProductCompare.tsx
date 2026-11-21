@@ -182,7 +182,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
               </Table>
             </>
           ) : (
-            <EmptyState variant="dashed" headingLevel={3} title="Nothing to compare"
+            <EmptyState icon="compare_arrows" headingLevel={3} title="Nothing to compare"
               description="Choose Compare on two or more products to see them side by side." actions={<Link href="#shop">Back to headphones</Link>} />
           )}
         </section>
