@@ -7,11 +7,11 @@ Puts a narrow column beside a wide one, and stacks them once the space gets too 
 ```tsx
 import { SidebarLayout, Card } from "@diki-stwn/serupa-ds";
 
-<SidebarLayout side={<Card>…filters…</Card>}>
+<SidebarLayout sidebar={<Card>…filters…</Card>}>
   …results…
 </SidebarLayout>
 
-<SidebarLayout sidePosition="end" sideWidth="container-xs" side={<Card>…order summary…</Card>}>
+<SidebarLayout sidebarPlacement="end" sidebarWidth="container-xs" sidebar={<Card>…order summary…</Card>}>
   …the form…
 </SidebarLayout>
 ```
@@ -27,10 +27,17 @@ import { SidebarLayout, Card } from "@diki-stwn/serupa-ds";
 - Columns of equal width: use [Grid](../Grid/README.md) instead.
 - Two panes people resize by dragging: use [Splitter](../Splitter/README.md) instead.
 
+## Anatomy
+
+Drawn from the `Playground` story.
+
+1. **Sidebar** (`.dk-sidebar-layout__side`): the narrow column, `sidebarWidth` wide while the two share a line.
+2. **Content** (`.dk-sidebar-layout__content`): the wide column, which takes the rest.
+
 ## Usage
 
-- Put what supports the content in the narrow column, and the content itself in `children`. On a phone the narrow column comes first (or last, with `sidePosition="end"`), so keep it short.
-- `sideWidth` takes a sizing token name: `container-3xs` (256px, the default) for filters, `container-xs` (320px) for a summary with prices.
+- Put what supports the content in the narrow column, and the content itself in `children`. On a phone the narrow column comes first (or last, with `sidebarPlacement="end"`), so keep it short.
+- `sidebarWidth` takes a sizing token name: `container-3xs` (256px, the default) for filters, `container-xs` (320px) for a summary with prices.
 - `contentMin` (50 by default) is how narrow the wide column may get, as a percentage of the whole, before the two stack. Raise it when the content needs more room, such as a table.
 - `align="start"` keeps each column its own height, so a short side doesn't stretch down beside a long page. Leave it at `stretch` for two panels side by side.
 
@@ -43,7 +50,7 @@ import { SidebarLayout, Card } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** none of its own: a layout box. Give each column the landmark or heading it needs, such as `<aside aria-label="Filters">` or a Card `as="section"` with `aria-labelledby`.
 - **Keyboard:** none: a layout box, not focusable.
-- **Reading order:** the HTML follows what people see: the narrow column first with `sidePosition="start"`, last with `"end"`, side by side or stacked, so the Tab order matches the screen (WCAG 1.3.2, 2.4.3). Nothing is reordered with CSS.
+- **Reading order:** the HTML follows what people see: the narrow column first with `sidebarPlacement="start"`, last with `"end"`, side by side or stacked, so the Tab order matches the screen (WCAG 1.3.2, 2.4.3). Nothing is reordered with CSS.
 - **Reflow:** at 320px, or at 400% zoom, the columns stack and nothing scrolls sideways (1.4.10).
 - **What's still yours:** the headings and landmarks inside each column.
 
@@ -51,10 +58,11 @@ import { SidebarLayout, Card } from "@diki-stwn/serupa-ds";
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
-| `side` | ReactNode | required | The narrow column |
+| `id` | string | none | Goes to the root element (`as`). |
+| `sidebar` | ReactNode | required | The narrow column |
 | `children` | ReactNode | none | The wide column |
-| `sidePosition` | `'start'` \| `'end'` | `'start'` | Which side the narrow column is on, in the HTML too |
-| `sideWidth` | string | `'container-3xs'` (256px) | The narrow column's width side by side: a sizing token name or a CSS length |
+| `sidebarPlacement` | `'start'` \| `'end'` | `'start'` | Which side the narrow column is on, in the HTML too |
+| `sidebarWidth` | string | `'container-3xs'` (256px) | The narrow column's width side by side: a sizing token name or a CSS length |
 | `contentMin` | number, 1 to 99 | `50` | The narrowest the wide column gets, as a percentage of the whole, before the two stack |
 | `gap` | a spacing step: `0` to `24` | `6` (24px) | The space between the columns |
 | `align` | `'stretch'` \| `'start'` | `'stretch'` | Both as tall as the taller, or each its own height |
@@ -69,6 +77,6 @@ Each is an optional override: set it on the page, a container or one SidebarLayo
 <!-- token-table:start (made from sidebar-layout.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--sidebar-layout-side-width` | `container-3xs` | The narrow column's width side by side, when sideWidth isn't given (256px). |
+| `--sidebar-layout-side-width` | `container-3xs` | The narrow column's width side by side, when sidebarWidth isn't given (256px). |
 | `--sidebar-layout-gap` | `spacing-6` | The space between the columns when gap isn't given (24px). |
 <!-- token-table:end -->

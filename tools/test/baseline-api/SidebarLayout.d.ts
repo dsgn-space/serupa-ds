@@ -1,9 +1,9 @@
 // exports: SidebarLayout, type SidebarLayoutProps
 interface SidebarLayoutProps extends React.HTMLAttributes<HTMLElement> {
-    side: React.ReactNode;
+    sidebar: React.ReactNode;
     children?: React.ReactNode | undefined;
-    sidePosition?: "end" | "start" | undefined;
-    sideWidth?: string | undefined;
+    sidebarPlacement?: "end" | "start" | undefined;
+    sidebarWidth?: string | undefined;
     contentMin?: number | undefined;
     gap?: Space | undefined;
     align?: "start" | "stretch" | undefined;

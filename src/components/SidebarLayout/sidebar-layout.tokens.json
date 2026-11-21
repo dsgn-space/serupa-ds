@@ -5,7 +5,7 @@
       "side-width": {
         "$type": "dimension",
         "$value": "{sizing.container-3xs}",
-        "$description": "The narrow column's width side by side, when sideWidth isn't given (256px).",
+        "$description": "The narrow column's width side by side, when sidebarWidth isn't given (256px).",
         "$extensions": { "com.serupa": { "cssVar": "--sidebar-layout-side-width" } }
       }
     },

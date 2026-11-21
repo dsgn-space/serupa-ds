@@ -49,6 +49,7 @@ import { Center, Card } from "@diki-stwn/serupa-ds";
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
+| `id` | string | none | Goes to the root element (`as`). |
 | `maxWidth` | string | `'container-md'` (448px) | The widest the content gets: a sizing token name or a CSS length |
 | `vertical` | boolean | `false` | Also centers it from top to bottom, in a box at least as tall as the screen |
 | `intrinsic` | boolean | `false` | Each child at its own width, centered, instead of stretched across |

@@ -18,13 +18,20 @@ import { PageSection, Heading, Button } from "@diki-stwn/serupa-ds";
 ## When to use
 
 - The bands of a marketing or landing page: a hero, features, pricing, questions, a closing call to action.
-- Any long page split into parts that each span the page, such as a help centre's home.
+- Any long page split into parts that each span the page, such as a help center's home.
 
 ## When not to use
 
 - A group of related content inside an app's page: use a [Card](../Card/README.md), or a heading and a [Stack](../Stack/README.md).
 - A page's width alone, with no band: use [Container](../Container/README.md) instead.
 - A short centered page, such as sign-in: use [Center](../Center/README.md) instead.
+
+## Anatomy
+
+Drawn from the `Playground` story.
+
+1. **Band** (`.dk-page-section`): the full-width `<section>`, with its tone, its spacing above and below, and its divider.
+2. **Inner box** (`.dk-page-section__inner`): the Container inside the band, which keeps the content to `size` and lays it out with `gap`.
 
 ## Usage
 
@@ -50,6 +57,7 @@ import { PageSection, Heading, Button } from "@diki-stwn/serupa-ds";
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
+| `id` | string | none | Goes to the band's element (`as`), so a link can point at the section. |
 | `tone` | `'plain'` \| `'muted'` | `'plain'` | The page's own background, or a step below it |
 | `divider` | boolean | `false` | A line across the top |
 | `spacing` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Space above and below: 32px; 48px, 64px from 768px; 64px, 96px from 768px |

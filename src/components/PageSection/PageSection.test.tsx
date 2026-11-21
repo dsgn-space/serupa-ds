@@ -47,6 +47,11 @@ describe('PageSection', () => {
     expect([el('s').tagName, css(i).alignItems, css(i).textAlign, i.dataset.size, css(i).rowGap]).toEqual(['HEADER', 'center', 'center', 'md', '16px']);
   });
 
+  test('size passes every Container width on: prose, 2xl and full', async () => {
+    await render(<><PageSection id="a" size="prose"><p>x</p></PageSection><PageSection id="b" size="2xl"><p>x</p></PageSection><PageSection id="c" size="full"><p>x</p></PageSection></>);
+    expect(['a', 'b', 'c'].map((id) => inner(id).dataset.size)).toEqual(['prose', '2xl', 'full']);
+  });
+
   test('unknown tone, spacing and as fall back to plain, md and <section>', async () => {
     await render(<PageSection id="s" tone={'loud' as never} spacing={'xl' as never} as={'table' as never} aria-label="a">x</PageSection>);
     expect([el('s').tagName, el('s').className]).toEqual(['SECTION', 'dk-page-section dk-page-section--md']);

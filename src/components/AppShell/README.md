@@ -29,6 +29,16 @@ import { AppShell, Navbar, Sidebar, SidebarItem } from "@diki-stwn/serupa-ds";
 - A marketing page of full-width bands: use a [Navbar](../Navbar/README.md), [PageSection](../PageSection/README.md)s and a Footer instead.
 - Two columns inside a page, such as filters beside results: use [SidebarLayout](../SidebarLayout/README.md) inside main.
 
+## Anatomy
+
+Drawn from the `WithBottomNav` story.
+
+1. **Skip link** (`.dk-skip-link`): "Skip to content", the first Tab stop, shown only while it has focus.
+2. **Sidebar** (`.dk-app-shell__side`): the column beside main, from `sidebarFrom` up, holding your Sidebar.
+3. **Main** (`.dk-app-shell__main`): the page's content, the skip link's target.
+4. **Footer** (`.dk-app-shell__footer`): the footer landmark below main.
+5. **Bottom navigation** (`.dk-app-shell__bottom`): the last thing in the page, holding a BottomNav for phones.
+
 ## Usage
 
 - Pass a sticky [Navbar](../Navbar/README.md) as `header`: the sidebar then sticks below it and is the screen's height less the bar, with its own scroll. With a header that doesn't stick, the sidebar runs down beside main and the footer.
@@ -45,6 +55,7 @@ import { AppShell, Navbar, Sidebar, SidebarItem } from "@diki-stwn/serupa-ds";
 ## Accessibility
 
 - **Landmarks:** your header (a Navbar is a banner), the sidebar's `nav`, one `main` and one `footer` (contentinfo). Give the Sidebar a name of its own ("Workspace"), told apart from the Navbar's.
+- **Keyboard:** Tab starts at the skip link; Enter on it moves focus into main. The rest is the header's, the sidebar's and the page's own controls, in the order they show.
 - **Skip link:** "Skip to content" is the first Tab stop. It moves focus into main, past the header and the sidebar (WCAG 2.4.1); main has `tabindex="-1"` so focus lands there in every browser, with no outline of its own.
 - **Focus not hidden:** a sticky Navbar sets the page's scroll padding, so a focused element in main is never under the bar (2.4.11).
 - **Contrast:** text reads 4.5:1 on main's plain and muted backgrounds, and the footer's muted text on its own, in every theme (`AppShell.test.tsx`).
@@ -55,6 +66,7 @@ import { AppShell, Navbar, Sidebar, SidebarItem } from "@diki-stwn/serupa-ds";
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
+| `id` | string | none | Goes to the outer `<div>`. main's own id is `mainId`. |
 | `header` | ReactNode | none | The bar across the top: a Navbar |
 | `sidebar` | ReactNode | none | Beside main, on the start side: a Sidebar |
 | `sidebarFrom` | `'sm'` \| `'md'` \| `'lg'` | `'sm'` | The width the sidebar shows from: 640, 768 or 1024px |

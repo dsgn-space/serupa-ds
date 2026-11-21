@@ -8,6 +8,6 @@
 .dk-sidebar-layout { --dk-sidebar-layout-side: initial; --dk-sidebar-layout-min: initial; --dk-sidebar-layout-gap: initial; display: flex; flex-wrap: wrap; gap: var(--dk-sidebar-layout-gap, var(--sidebar-layout-gap, var(--spacing-6))); min-width: var(--spacing-0); }
 .dk-sidebar-layout--align-start { align-items: flex-start; }
 .dk-sidebar-layout__side { flex: auto; flex-basis: var(--dk-sidebar-layout-side, var(--sidebar-layout-side-width, var(--container-3xs))); min-width: var(--spacing-0); }
-/* stylelint-disable-next-line serupa/no-raw-value -- a weight, not a size: so much more than the side's 1 that the side keeps its width (to a fraction of a pixel) while the two share a line */
-.dk-sidebar-layout__content { flex-basis: var(--spacing-0); flex-grow: 9999; min-inline-size: var(--dk-sidebar-layout-min, 50%); }
+/* --dk-sidebar-layout-weight is a weight, not a size: so much more than the side's 1 that the side keeps its width (to a fraction of a pixel) while the two share a line */
+.dk-sidebar-layout__content { --dk-sidebar-layout-weight: 9999; flex-basis: var(--spacing-0); flex-grow: var(--dk-sidebar-layout-weight); min-inline-size: var(--dk-sidebar-layout-min, 50%); }
 }
