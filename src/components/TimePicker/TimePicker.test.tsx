@@ -403,11 +403,15 @@ describe('TimePicker held state', () => {
       const { unmount } = await render(<div dir={dir}><TimePicker id="d" aria-label="Start" defaultValue="15:45" locale={locale} /></div>);
       button('d').click();
       await expect.poll(() => listOf('d').hidden).toBe(false);
-      const out = [getComputedStyle(el('d')).direction, readsLeftToRight(listOf('d'), text)];
+      // The time starts on the page's side of its option, by the check mark's side: right in a right-to-left page.
+      const option = [...listOf('d').children].find((o) => o.textContent === text)!, words = document.createRange();
+      words.selectNodeContents(option);
+      const box = option.getBoundingClientRect(), at = words.getBoundingClientRect();
+      const out = [getComputedStyle(el('d')).direction, readsLeftToRight(listOf('d'), text), at.left - box.left > box.right - at.right ? 'right' : 'left'];
       await unmount();
       return out;
     };
-    expect(await page2('rtl', 'en', '3:30 PM')).toEqual(['ltr', true]);
-    expect(await page2('ltr', 'ar-EG', '٣:٣٠ م')).toEqual(['rtl', false]);
+    expect(await page2('rtl', 'en', '3:30 PM')).toEqual(['ltr', true, 'right']);
+    expect(await page2('ltr', 'ar-EG', '٣:٣٠ م')).toEqual(['rtl', false, 'left']);
   });
 });

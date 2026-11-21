@@ -197,7 +197,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
           <li key={n} id={`${id}-${i}`} lang={lang} role="option" aria-selected={n === value} data-value={toHHmm(n)}
             className={cn('dk-time-picker__option', i === active && 'dk-time-picker__option--active', n === value && 'dk-time-picker__option--selected')}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
-            <span className="dk-time-picker__time" dir={dir}>{fmt(n)}</span>
+            <span className="dk-time-picker__time">{dir ? <span dir={dir}>{fmt(n)}</span> : fmt(n)}</span>
             {n === value ? <Icon icon={icons.Check} className="dk-time-picker__check" /> : null}
           </li>
         )) : null}

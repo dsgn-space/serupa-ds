@@ -601,10 +601,13 @@ describe('EventCalendar creating and moving', () => {
   });
 
   test('with a locale of its own its times and heading keep that locale\'s order in a page of the other direction, while the grid stays the page\'s', async () => {
-    const week = [{ id: 'a', title: 'Standup', start: '2026-11-17T09:00', end: '2026-11-17T09:30' }];
+    const week = [{ id: 'a', title: 'Standup', start: '2026-11-17T09:00', end: '2026-11-17T09:30' }, { id: 'b', title: 'Review', start: '2026-11-18T10:00', end: '2026-11-18T11:00' }];
     const { unmount } = await render(<div dir="rtl"><EventCalendar id="en" events={week} locale="en" defaultView="week" defaultMonth={new Date(2026, 10, 16)} /></div>);
     const grid = el('en').querySelector('[role="grid"]')!;
     expect([readsLeftToRight(el('en'), '9:00 AM'), readsLeftToRight(el('en'), '9 AM'), readsLeftToRight(el('en'), 'November 15 – 21, 2026'), getComputedStyle(grid).direction]).toEqual([true, true, true, 'rtl']);
+    // An hour-long event puts its time over its title: both start on the page's side, the right.
+    const right = (text: string) => { const w = document.createTreeWalker(el('en'), NodeFilter.SHOW_TEXT); for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent === text) { const r = document.createRange(); r.selectNodeContents(n); return Math.round(r.getBoundingClientRect().right); } return NaN; };
+    expect(right('10:00 AM')).toBe(right('Review'));
     await unmount();
     await render(<EventCalendar id="ar" events={week} locale="ar-EG" defaultView="week" defaultMonth={new Date(2026, 10, 16)} />);
     const heading = el('ar').querySelector('[role="heading"], h2, h3')!.textContent;

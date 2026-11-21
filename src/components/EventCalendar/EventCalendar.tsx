@@ -209,7 +209,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
     <button type="button" tabIndex={tab} aria-label={nameOf(s, day, detail)} data-event-id={s.e.id} onClick={() => on.eventClick(s.e)}
       aria-keyshortcuts={movable && !detail ? 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown' : undefined}
       className={cn('dk-event-calendar__event', 'dk-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'dk-event-calendar__event--all-day', movable && !detail && 'dk-event-calendar__event--movable', p.dragging === s.e.id && 'dk-event-calendar__event--dragging')}>
-      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time" dir={p.dir}>{shownTime(s, detail)}</span>{' '}</>}
+      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{p.dir ? <span dir={p.dir}>{shownTime(s, detail)}</span> : shownTime(s, detail)}</span>{' '}</>}
       <TruncatedText className="dk-event-calendar__title">{s.e.title}</TruncatedText>
       {s.e.repeating ? <span className="dk-event-calendar__repeat" aria-hidden>↻</span> : null}
     </button>
@@ -336,7 +336,8 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const rest = omit(props, { events: 1, onEventClick: 1, onSlotSelect: 1, onEventMove: 1, month: 1, defaultMonth: 1, onMonthChange: 1, view: 1, defaultView: 1, onViewChange: 1, maxPerDay: 1, locale: 1, weekStartsOn: 1, headingLevel: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   // A locale of its own brings its direction to its words (the times, the heading), so "9:00 AM" in a right-to-left page
-  // keeps its order; the grid itself stays in the page's direction, with the buttons around it.
+  // keeps its order; the grid itself stays in the page's direction, with the buttons around it. The dir goes on an inline
+  // span around the words, so their box still lines up on the page's side, with the title.
   const dir = props.locale ? localeDir(props.locale) : undefined;
   const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
