@@ -28,6 +28,12 @@ export function summaryOf(guide) {
   return (/^.*?[.!?](?=\s|$)/.exec(intro) || [intro])[0].replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/`/g, '').replace(/\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*/g, '$1$2');
 }
 
+/** The other names a guide gives under its first paragraph ("**Also called:** modal, popup."), so the docs' search
+ *  finds Dialog for "modal" as the package's registry does (tools/build/registry.mjs). */
+export function alsoOf(guide) {
+  return ((/^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(guide) || [])[1] ?? '').split(/,\s*/).filter(Boolean);
+}
+
 /** A component's status from the doc comment on its export (as tools/build/registry.mjs reads it). */
 function statusOf(file, name) {
   if (!fs.existsSync(file)) return 'stable';
@@ -67,9 +73,7 @@ export function sitePages(root = ROOT) {
     const folder = /^src\/(components|blocks|patterns)\/(\w+)\/\2\.mdx$/.exec(file);
     const readme = folder && path.join(path.dirname(abs), 'README.md');
     const guide = readme && fs.existsSync(readme) ? fs.readFileSync(readme, 'utf8') : '';
-    const summary = guide ? summaryOf(guide) : '';
-    // The other names it's known by ("snackbar" for Toast), from its guide's "**Also called:**" line, for the search.
-    const also = /^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(guide)?.[1].split(/,\s*/) ?? [];
+    const summary = guide ? summaryOf(guide) : '', also = guide ? alsoOf(guide) : [];
     const component = folder?.[1] === 'components' ? folder[2] : null;
     pages.push({
       file, title, id: storybookId(title), section, group, name, summary, also, stories, component,

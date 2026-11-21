@@ -110,7 +110,7 @@ const s = useSteps({ steps, validate: (i) => checkStep(i), onComplete: submit })
     </section>
   ))}
   <Button variant="secondary" onClick={s.back} disabled={s.isFirst}>Back</Button>
-  <Button type="submit">{s.isLast ? "Submit" : "Next"}</Button>
+  <Button type="submit">{s.isLast ? "Send application" : "Next"}</Button>
 </form>
 ```
 

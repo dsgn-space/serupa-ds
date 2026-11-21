@@ -94,6 +94,8 @@
 .dk-table__row-link::after { content: ""; position: absolute; inset: var(--spacing-0); z-index: var(--z-0); }
 .dk-table__row--link :is(a[href], button, input:not(label input), select, textarea, label, summary, [tabindex]):not(.dk-table__row-link) { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .dk-table__row--link:hover .dk-table__row-link { text-decoration: underline; } }
+/* Held down, a linked row shades a step past its hover, as a List row does; its own buttons and checkboxes press on their own. */
+.dk-table .dk-table__body .dk-table__row--link:has(.dk-table__row-link:active) { --dk-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); }
 .dk-table__row--link:has(.dk-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
