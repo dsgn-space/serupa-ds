@@ -122,7 +122,7 @@ import { serupaPurge } from '@diki-stwn/serupa-ds/purge';
 export default { plugins: [react(), serupaPurge()] };
 ```
 
-`vite build` then ships the component styles (about 450 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+`vite build` then ships the component styles (about 530 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
 
 ```js
 // postcss.config.mjs
@@ -165,7 +165,7 @@ npx serupa-usage src
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, `data-print="hide"` leaves out anything marked only for the screen, and `data-print-urls` on a container prints each outside link's address after it. |
-| `dist/components.css` | The component styles (`dk-*`), about 450 KB (60 KB gzipped, 46 KB with Brotli). |
+| `dist/components.css` | The component styles (`dk-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
 | `dist/utilities.css` | The utility classes, apart from masks and gradients. |
 | `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
