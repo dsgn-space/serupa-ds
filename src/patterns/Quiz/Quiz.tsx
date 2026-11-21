@@ -65,8 +65,8 @@ const demo: QuizQuestion[] = [
     answer: ['autocomplete', 'types'], why: 'Autofill and the right keyboard save typing. A puzzle slows everyone down, and some can’t solve it at all.' },
   { id: 'q4', question: 'After a form is sent, where should focus go?', options: [{ value: 'answer', label: 'To the heading of what happened' }, { value: 'top', label: 'Back to the top of the page' }, { value: 'stay', label: 'Nowhere: leave it on the button' }],
     answer: ['answer'], why: 'The heading says what happened, and a screen reader reads it at once.' },
-  { id: 'q5', question: 'Which fields should say they’re optional?', options: [{ value: 'optional', label: 'The optional ones' }, { value: 'none', label: 'None: a star on required ones is enough' }],
-    answer: ['optional'], why: 'Mark both: a star on each required field and “(optional)” on the rest. People skip the note that explains a star, so each field says what it is.' },
+  { id: 'q5', question: 'How should a form mark which fields people must fill?', options: [{ value: 'both', label: 'A star on required fields and “(optional)” on the rest' }, { value: 'optional', label: 'Only “(optional)” on the optional ones' }, { value: 'star', label: 'Only a star on the required ones' }],
+    answer: ['both'], why: 'People skip the note that explains a convention, so each field should say what it is. A sign-in form needs neither.' },
 ];
 
 /** How many questions are answered right: every right option chosen and no other. */
