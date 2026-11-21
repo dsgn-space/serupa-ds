@@ -1,0 +1,6 @@
+{
+  "STARTER": [
+    0.2,
+    "+0.2 KiB on 21 Nov 2026: SerupaProvider's languages prop, which picks a language pack by locale (about 0.1 KiB in provider.js), plus main's growth since the branch began that left the starter page 27 B over"
+  ]
+}
