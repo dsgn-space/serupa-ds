@@ -45,10 +45,10 @@ function Sink() {
             <Avatar name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Alan Turing" /><Avatar name="Katherine Johnson" />
           </AvatarGroup>
           <ButtonGroup aria-label="Share">
-            <Button variant="outline" leftIcon="link">Copy link</Button>
+            <Button variant="outline" startIcon="link">Copy link</Button>
             <IconButton variant="outline" icon="more_horiz" label="More actions" />
           </ButtonGroup>
-          <Button leftIcon="add">New task</Button>
+          <Button startIcon="add">New task</Button>
         </div>
       </div>
     </div>
@@ -75,7 +75,7 @@ function Sink() {
             <Badge tone="success" dot>Online</Badge>
             <Badge variant="solid" tone="primary">New</Badge>
             <Badge variant="outline" tone="info">Beta</Badge>
-            <Badge tone="warning" leftIcon="schedule">Pending</Badge>
+            <Badge tone="warning" startIcon="schedule">Pending</Badge>
           </div>
           <Table caption="Team members">
             <TableHead>

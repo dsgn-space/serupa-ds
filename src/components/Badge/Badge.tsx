@@ -25,12 +25,12 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   variant?: BadgeVariant | undefined;
   /** 'neutral' (default) and 'primary' use the alias colors; 'success' (green), 'warning' (amber), 'danger' (red) and 'info' (sky) are statuses; the palette families are for categories and tags. Every tone and variant keeps 4.5:1 text in light and dark. */
   tone?: BadgeTone | undefined;
-  /** A small status dot before the label, in the badge's text color. Ignored with leftIcon or count. With no label, icon or count, renders a lone indicator dot ("something new"): decorative unless given aria-label. */
+  /** A small status dot before the label, in the badge's text color. Ignored with startIcon or count. With no label, icon or count, renders a lone indicator dot ("something new"): decorative unless given aria-label. */
   dot?: boolean | undefined;
   /** With dot (in a label or the lone indicator): a copy of the dot grows and fades every second (the system's ping animation), for live states. Off under reduced motion. Ignored without a dot. Default false. */
   ping?: boolean | undefined;
   /** A Material Symbols (or custom) icon name, or an element, before the label. Decorative. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** Makes it a count badge: a round pill with the number. 0 renders nothing unless showZero. */
   count?: number | undefined;
   /** With count: above this, shows "max+" (default 99: "99+"). */
@@ -62,7 +62,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
 /* Badge: a short label for status, counts and categories. variant "subtle" (default: a tint), "solid" (a full
    fill) or "outline" (a border); tone "neutral" (default), "primary", "success", "warning", "danger", "info" or a
    palette family for categories ("violet", "teal"…). One size: 20px tall, text-xs, 12px icons. Extras: a status
-   dot (dot; with no label, icon or count, dot alone renders a lone indicator dot; ping adds the system's ping animation to the dot), a leading icon (leftIcon: a Material Symbols or custom icon name, or an element), a count (count,
+   dot (dot; with no label, icon or count, dot alone renders a lone indicator dot; ping adds the system's ping animation to the dot), a leading icon (startIcon: a Material Symbols or custom icon name, or an element), a count (count,
    max: shows "99+" past max, and nothing at 0 unless showZero) and a remove button (onRemove; its accessible
    name is removeLabel + the label, "Remove Design"). Interactive: with onClick it renders a <button type="button">,
    with href a link (the configured link component, like Button), and only then has hover, focus and active
@@ -71,7 +71,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
 const VARIANTS: readonly BadgeVariant[] = ['subtle', 'solid', 'outline'];
 const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const PLAIN = { useGrouping: false } as const;
-const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
+const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, startIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
 
 function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
@@ -121,7 +121,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   // Indicator: dot with no label, icon or count is a lone dot ("something new", no number): a solid circle in the
   // tone with a ring in the surface color, for the corner of an icon or avatar. Decorative unless you name it.
   const hasLabel = !(label == null || label === false || label === '');
-  if (!isCount && props.dot && !hasLabel && (props.leftIcon == null || props.leftIcon === false)) {
+  if (!isCount && props.dot && !hasLabel && (props.startIcon == null || props.startIcon === false)) {
     if (process.env.NODE_ENV !== 'production' && (interactive || typeof props.onRemove === 'function')) warnOnce('badge-indicator', "Badge: a dot indicator can't be clicked or removed (it's too small to target); name and handle the control it sits on.");
     delete rest.href; delete rest.onClick; delete rest.type; delete rest.disabled; delete rest.target; delete rest.rel;
     rest['data-component'] = 'badge';
@@ -143,8 +143,8 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
       rest.onClick = block;           // clicks, Space and Enter do nothing while it loads
     }
   }
-  const icon = !isCount && props.leftIcon != null && props.leftIcon !== false
-    ? <span className="srp-badge__icon" aria-hidden key="icon">{asIcon(props.leftIcon)}</span> : null;
+  const icon = !isCount && props.startIcon != null && props.startIcon !== false
+    ? <span className="srp-badge__icon" aria-hidden key="icon">{asIcon(props.startIcon)}</span> : null;
   const dot = !isCount && !icon && props.dot   // in an icon-sized box, so a dot badge lines up with icon badges
     ? <span className="srp-badge__icon srp-badge__icon--dot" aria-hidden key="dot"><span className="srp-badge__dot" /></span> : null;
   const named = typeof label === 'string' || typeof label === 'number' ? ' ' + label : '';

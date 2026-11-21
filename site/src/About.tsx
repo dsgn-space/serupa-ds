@@ -35,7 +35,7 @@ export function About() {
           <p className="site-principle__line">{p.line}</p>
         </li>)}
       </ol>
-      <p className="site-more"><Button href="/foundations/design-principles" variant="outline" rightIcon="arrow_forward">Each principle, with examples</Button></p>
+      <p className="site-more"><Button href="/foundations/design-principles" variant="outline" endIcon="arrow_forward">Each principle, with examples</Button></p>
 
       <Heading level={2} id="decisions" className="site-h site-h2">Decisions on record</Heading>
       <p className="site-p">The choices that shape the system are written down with the options that were weighed, so a later change starts from the reasons and not from a guess. There are {facts.decisions.length} so far{replaced ? `, ${replaced} of them since replaced by a later one` : ''}.</p>
@@ -49,7 +49,7 @@ export function About() {
 
       <Heading level={2} id="next" className="site-h site-h2">See it at work</Heading>
       <p className="site-p">The showcase puts the patterns on a phone, a tablet and a laptop, and the themes page shows one piece of product under every theme.</p>
-      <p className="site-more flex flex-wrap gap-3"><Button href="/showcase" rightIcon="arrow_forward">Open the showcase</Button><Button href="/themes" variant="outline">Compare the themes</Button></p>
+      <p className="site-more flex flex-wrap gap-3"><Button href="/showcase" endIcon="arrow_forward">Open the showcase</Button><Button href="/themes" variant="outline">Compare the themes</Button></p>
     </article>
   </Shell>;
 }

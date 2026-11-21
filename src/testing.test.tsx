@@ -210,7 +210,7 @@ describe('calendar() and datePicker()', () => {
     expect(c.selected()).toEqual(['2027-02-03']);
     await c.pick(new Date(2025, 9, 31));
     expect(c.selected()).toEqual(['2025-10-31']);
-    expect(onValueChange).toHaveBeenLastCalledWith(expect.any(Date), '2025-10-31');
+    expect(onValueChange).toHaveBeenLastCalledWith(expect.any(Date), { iso: '2025-10-31' });
   });
 
   test('opens a DatePicker, picks a date, and the field shows it', async () => {

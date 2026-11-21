@@ -43,7 +43,7 @@ export interface BottomNavLinkOwnProps {
   /** The icon over the label: an icon name (Material Symbols) or element. */
   icon: IconSource;
   /** The current page: in the brand color, with aria-current="page". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
   /** The label: one or two short words. */
   children: React.ReactNode;
   /** A count or dot on the icon's top-end corner, such as <Badge count={4} /> for unread items. Screen readers read
@@ -59,19 +59,19 @@ export type BottomNavLinkProps<C extends React.ElementType = 'a'> = BottomNavLin
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof BottomNavLinkOwnProps | 'as'>;
 
 function BottomNavLinkBaseRender({ ref, ...props }: BottomNavLinkProps & React.RefAttributes<HTMLAnchorElement>) {
-  const rest = omit(props, { active: 1, as: 1, className: 1, icon: 1, children: 1, badge: 1 });
+  const rest = omit(props, { current: 1, as: 1, className: 1, icon: 1, children: 1, badge: 1 });
   // The badge sits in the icon's pill, which is hidden from screen readers with the icon; aria-describedby reads it
   // after the name, as Sidebar's rail does.
   const badgeId = React.useId(), badge = props.badge != null && props.badge !== false;
   if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   const Tag = props.as || config.link;
-  return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
-    className={cn('srp-bottom-nav__link', props.active && 'srp-bottom-nav__link--active', props.className)}><span className="srp-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="srp-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="srp-bottom-nav__label">{props.children}</TruncatedText> : <span className="srp-bottom-nav__label">{props.children}</span>}</Tag>;
+  return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
+    className={cn('srp-bottom-nav__link', props.current && 'srp-bottom-nav__link--active', props.className)}><span className="srp-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="srp-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="srp-bottom-nav__label">{props.children}</TruncatedText> : <span className="srp-bottom-nav__label">{props.children}</span>}</Tag>;
 }
 
 const BottomNavLinkBase = /* @__PURE__ */ named('BottomNavLink', BottomNavLinkBaseRender);
 
-/** A destination in a BottomNav: an icon over a short label. active marks the current page. `as` renders your router's link, typed with its props. */
+/** A destination in a BottomNav: an icon over a short label. current marks the current page. `as` renders your router's link, typed with its props. */
 export const BottomNavLink = BottomNavLinkBase as {
   <C extends React.ElementType = 'a'>(props: BottomNavLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;

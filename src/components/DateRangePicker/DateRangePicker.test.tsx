@@ -104,7 +104,7 @@ describe('DateRangePicker', () => {
     const calls: string[] = [];
     function Plain() {
       const [v, setV] = React.useState<{ start: string | null; end: string | null }>({ start: '2026-10-05', end: '2026-10-09' });
-      return <DateRangePicker data-testid="drps" locale="en-US" value={v} max="2026-10-31" onValueChange={(r, iso) => { calls.push(str(r) + ' ' + iso.start + '..' + iso.end); setV(iso); }} />;
+      return <DateRangePicker data-testid="drps" locale="en-US" value={v} max="2026-10-31" onValueChange={(r, { iso }) => { calls.push(str(r) + ' ' + iso.start + '..' + iso.end); setV(iso); }} />;
     }
     await render(<Plain />);
     expect(vals('drps')).toBe('10/05/2026 – 10/09/2026');
@@ -359,7 +359,7 @@ describe('DateRangePicker presets (RU11)', () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
     const min = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 10);
-    await render(<DateRangePicker data-testid="pre" aria-label="Report" locale="en-US" min={min} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await render(<DateRangePicker data-testid="pre" aria-label="Report" locale="en-US" min={min} presets onValueChange={(_r, { iso: s }) => got.push(s.start + '..' + s.end)} />);
     await userEvent.click(btn('pre'));
     const group = pop('pre').querySelector('[role=group][aria-label=Shortcuts]')!;
     expect(group.getAttribute('aria-label')).toBe('Shortcuts');
@@ -381,7 +381,7 @@ describe('DateRangePicker presets (RU11)', () => {
   test('with max today, "This month" is the month so far and can be picked (GR287)', async () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
-    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, { iso: s }) => got.push(s.start + '..' + s.end)} />);
     await userEvent.click(btn('mx'));
     const month = presetBtns('mx')[4]!;
     expect([month.textContent, month.getAttribute('aria-disabled')]).toEqual(['This month', null]);

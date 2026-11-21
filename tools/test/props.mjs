@@ -72,14 +72,6 @@ const NAMING_GAPS = {
 // string or number, so a project can read one more field without a new signature (TF7). These came before the rule;
 // they move in the next major, one component per PR, with a warnOnce a minor before. This list only shrinks.
 const SHAPE_GAPS = {
-  'CalendarProps.onValueChange': 'the ISO date string',
-  'DatePickerProps.onValueChange': 'the ISO date string',
-  'CheckboxProps.onCheckedChange': 'the change event',
-  'CheckboxGroupProps.onValueChange': 'the change event',
-  'RadioGroupProps.onValueChange': 'the change event',
-  'SwitchProps.onCheckedChange': 'the change event',
-  'TableSelectCellProps.onCheckedChange': 'the change event',
-  'PaginationProps.onPageSizeChange': 'the page it moves to, as a number',
 };
 const shapes = new Set();
 let seconds = 0;
@@ -93,7 +85,7 @@ const isBoolean = (p) => {
 };
 // One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
 // the name to use instead.
-const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)', loadingText: 'loadingLabel, when the words are only said' };
+const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)', loadingText: 'loadingLabel, when the words are only said', leftIcon: 'startIcon', rightIcon: 'endIcon', active: 'current' };
 // Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
 // the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
 const NAME_GAPS = {};

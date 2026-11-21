@@ -148,6 +148,38 @@ const propRename = (version, id, component, from, to, { leftovers = true } = {})
   },
 });
 
+// Props renamed on several components at once (17.0.0's icon and nav names). As propRename, what's left of an old name
+// in a file that names one of them is listed to check by hand.
+const ICON_PROP_COMPONENTS = ['Button', 'SplitButton', 'Badge', 'Input', 'Select', 'Combobox', 'NumberInput', 'PasswordInput', 'PhoneInput'];
+function propsRename(version, id, title, components, pairs, { leftovers = true } = {}) {
+  return {
+    version, id, exts: CODE, title,
+    run(src) {
+      const here = components.filter((c) => new RegExp(`\\b${c}\\b`).test(src));
+      if (!here.length) return { text: src, count: 0, notes: [] };
+      let text = src, count = 0;
+      for (const c of here) for (const [from, to] of pairs) { const r = renameProp(text, c, from, to); text = r.text; count += r.count; }
+      const notes = leftovers ? pairs.flatMap(([from, to]) => notesFor(text, new RegExp(`\\b${from}\\b`, 'g'), `\`${from}\` here isn't on a <${here.join('>, <')}> tag: if it reaches one (in a props object or a spread), rename it to \`${to}\``)) : [];
+      return { text, count, notes };
+    },
+  };
+}
+
+// The callbacks whose second argument became a details object in 17.0.0: [component, prop, what it was, what it is].
+const DETAILS_17 = [
+  ['Calendar', 'onValueChange', 'the day as "yyyy-mm-dd"', '{ iso }'],
+  ['DatePicker', 'onValueChange', 'the day as "yyyy-mm-dd"', '{ iso }'],
+  ['DateRangePicker', 'onValueChange', 'the range as "yyyy-mm-dd" strings ({ start, end })', '{ iso: { start, end } }'],
+  ['RangeCalendar', 'onValueChange', 'the range as "yyyy-mm-dd" strings ({ start, end })', '{ iso: { start, end } }'],
+  ['PeriodPicker', 'onValueChange', 'the first and last days ({ start, end })', '{ range: { start, end } }'],
+  ['Checkbox', 'onCheckedChange', 'the change event', '{ event }'],
+  ['CheckboxGroup', 'onValueChange', 'the change event', '{ event }'],
+  ['RadioGroup', 'onValueChange', 'the change event', '{ event }'],
+  ['Switch', 'onCheckedChange', 'the change event', '{ event }'],
+  ['TableSelectCell', 'onCheckedChange', 'the change event', '{ event }'],
+  ['Pagination', 'onPageSizeChange', 'the page, as a number', '{ page }'],
+];
+
 // Component tokens that put the state before the property, renamed with the state last in 14.x (the old names read as
 // fallbacks until 15.0.0). tools/test/upgrades.mjs checks this list against each $deprecated token.
 export const TOKENS_15 = {
@@ -487,6 +519,30 @@ export const TRANSFORMS = [
       return { text: src, count: 0, notes: [{ line: lineOf(src, found[0].index),
         message: `${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} ${names.length === 1 ? 'is' : 'are'} no longer in bundle.css: use a role class (bg-primary, text-text-muted, border-border), which follows the theme, or import '@diki-stwn/serupa-ds/utilities-palette.css' after the bundle` }] };
     },
+  },
+  propsRename('17.0.0', 'icon-start-end', 'The icon props say start and end, not left and right: `leftIcon` is `startIcon`, `rightIcon` is `endIcon`',
+    ICON_PROP_COMPONENTS, [['leftIcon', 'startIcon'], ['rightIcon', 'endIcon']]),
+  propsRename('17.0.0', 'nav-current', 'A nav link marks the current page with `current`, as BreadcrumbItem and TabNavLink do: `active` is `current`',
+    ['BottomNavLink', 'NavbarLink', 'NavbarMenu', 'NavbarMenuLink', 'SidebarItem'], [['active', 'current']], { leftovers: false }),
+  {
+    version: '17.0.0', id: 'callback-details', exts: CODE,
+    title: 'A callback\'s second argument is a details object on the eleven callbacks that took a bare value: `(value, { iso })`, `(value, { event })`, `(pageSize, { page })`',
+    run(src) {
+      const notes = [];
+      for (const [component, prop, was, now] of DETAILS_17) {
+        if (!new RegExp(`\\b${component}\\b`).test(src)) continue;
+        for (const [s, e] of openTags(src, component)) {
+          const m = attrAt(prop).exec(topLevel(src.slice(s, e)));
+          if (m) notes.push({ line: lineOf(src, s + m.index), message: `${component} ${prop}: the second argument was ${was}, and is now ${now}. A handler that reads it changes; one that takes only the first doesn't` });
+        }
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
+  {
+    version: '17.0.0', id: 'text-tone-neutral', exts: CODE,
+    title: 'Text: `tone="default"` is `tone="neutral"`, the name every other tone uses',
+    run: (src) => (/\bText\b/.test(src) ? { ...renameValue(src, 'Text', 'tone', 'default', 'neutral'), notes: [] } : { text: src, count: 0, notes: [] }),
   },
 ];
 

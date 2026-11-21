@@ -168,7 +168,10 @@ One idea has one name in every component. A new prop takes the name in the first
 | An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
 | Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
 | Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
-| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
+| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color; `default` for neutral |
+| The current page or item | `current` (it sets `aria-current`) | `active`, `selected` for a page |
+| An icon at the start or end of a label | `startIcon`, `endIcon` (they mirror in right-to-left text) | `leftIcon`, `rightIcon` |
+| A callback's second argument | a details object: `{ iso }`, `{ event }`, `{ reason }`, `{ page }` | a bare event, string or number |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
 | Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |
@@ -177,9 +180,11 @@ One idea has one name in every component. A new prop takes the name in the first
 | Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
 | Size of a control | `size`: `'sm' \| 'md' \| 'lg'` | `small`, `compact` |
 
+**Button is the one exception to the tone and variant rows** (Diki, 21 Nov 2026): it keeps `variant="primary" | "secondary" | "outline" | "ghost" | "link"` and `destructive`, as SplitButton does, because every app writes them and no button would look different.
+
 A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
 
-`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words, delay, current-page and icon rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
 
 ### Token names
 

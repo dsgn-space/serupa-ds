@@ -247,7 +247,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
               <NumberInput name="quantity" value={quantity} onValueChange={setQuantity} min={1} max={max} steppers />
             </Field>
             {failed ? <Alert tone="danger">Couldn’t add it to your cart. Try again.</Alert> : null}
-            <div><Button type="submit" size="lg" leftIcon="shopping_cart" loading={busy}>Add to cart</Button></div>
+            <div><Button type="submit" size="lg" startIcon="shopping_cart" loading={busy}>Add to cart</Button></div>
           </form>
         )}
       </div>

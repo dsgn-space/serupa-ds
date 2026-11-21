@@ -168,7 +168,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
             {others.map((p) => <Avatar key={p.id} name={p.name} src={p.avatar} />)}
           </AvatarGroup>
         ) : null}
-        <Button leftIcon="share" onClick={() => close(true)}>Share</Button>
+        <Button startIcon="share" onClick={() => close(true)}>Share</Button>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-8 outline-none">
         <Heading level={1}>{name}</Heading>

@@ -26,7 +26,7 @@ const near = (a: number, b: number) => Math.abs(a - b) <= 1;
 
 function Actions({ chosen }: { chosen: string[] }) {
   const pick = (k: string) => () => { chosen.push(k); };
-  return <Menu trigger={<Button id="mb" variant="secondary" rightIcon="expand_more">Actions</Button>}>
+  return <Menu trigger={<Button id="mb" variant="secondary" endIcon="expand_more">Actions</Button>}>
     <MenuItem icon="edit" shortcut="⌘E" onSelect={pick('edit')}>Edit</MenuItem>
     <MenuItem icon="content_copy" onSelect={pick('dup')}>Duplicate</MenuItem>
     <MenuItem disabled onSelect={pick('arch')}>Archive</MenuItem>

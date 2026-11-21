@@ -5,7 +5,7 @@
       "color": {
         "$type": "color",
         "$value": "{color.text}",
-        "$description": "tone=\"default\".",
+        "$description": "tone=\"neutral\".",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--text-color"

@@ -48,12 +48,12 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
       <Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
         actions={<><Button variant="ghost" size="sm">Docs</Button><Me /></>}>
-        <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
+        <NavbarLink href="#dashboard" current>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
         {/* The Sidebar's links, for a phone, where the Sidebar is gone (the adaptive shell has a BottomNav instead). */}
         {adaptive ? null : <NavbarMenu label="Workspace" className="page-shell__phone">
-          <NavbarMenuLink href="#home" active>Home</NavbarMenuLink>
+          <NavbarMenuLink href="#home" current>Home</NavbarMenuLink>
           <NavbarMenuLink href="#workspace-projects">Projects</NavbarMenuLink>
           <NavbarMenuLink href="#team">Team</NavbarMenuLink>
         </NavbarMenu>}
@@ -62,7 +62,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
         <div className="page-shell__side">
           <Sidebar aria-label="Workspace" collapsed={rail}>
             <SidebarSection>
-              <SidebarItem href="#home" icon="home" label="Home" active />
+              <SidebarItem href="#home" icon="home" label="Home" current />
               <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
               <SidebarItem href="#team" icon="group" label="Team" />
             </SidebarSection>
@@ -82,7 +82,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
       <footer className="border-t border-border p-6 text-sm text-text-muted">© 2026 Acme</footer>
       {adaptive ? (
         <BottomNav label="Workspace">
-          <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+          <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
           <BottomNavLink href="#workspace-projects" icon="folder">Projects</BottomNavLink>
           <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
         </BottomNav>

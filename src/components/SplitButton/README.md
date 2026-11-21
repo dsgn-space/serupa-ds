@@ -61,7 +61,7 @@ Drawn from the `Default` story.
 | `variant` | `'primary'` \| `'secondary'` \| `'outline'` | `'primary'` | Both halves |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Both halves |
 | `destructive` | `boolean` | `false` | The danger color, for a main action that deletes or can't be undone |
-| `leftIcon` | icon | | An icon before the main label |
+| `startIcon` | icon | | An icon before the main label |
 | `disabled` | `boolean` | `false` | Turns off both halves |
 | `loading` | `boolean` | `false` | The main button shows a Loader and can't be pressed again; the menu stays usable |
 | `placement` | placement | `'bottom-end'` | Where the menu opens |

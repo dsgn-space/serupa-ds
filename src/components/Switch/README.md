@@ -98,7 +98,7 @@ The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle ta
 | `icon` | boolean | `false` | A check on the thumb while on, so on and off differ by shape as well as by color; decorative, the name stays the label |
 | `loading` | boolean | `false` | While a change is saved: a ring on the thumb, `aria-busy`, and clicks and Space don't flip it |
 
-`onCheckedChange(checked, event)` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not while read-only or loading.
+`onCheckedChange(checked, { event })` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not while read-only or loading.
 
 Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox" role="switch">` (`type` and `role` can't be changed). `className` and `style` go to the `<label>` around it, which has `data-component="switch"` and `data-size`.
 

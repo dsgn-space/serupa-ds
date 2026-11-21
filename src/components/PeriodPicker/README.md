@@ -93,7 +93,7 @@ Keys stop at `min` and `max`.
 | `unit` | `'month'` \| `'quarter'` \| `'year'` | `'month'` | What is chosen |
 | `value` | string \| null | | The chosen period (controlled): `"2026-11"`, `"2026-Q4"` or `"2026"` |
 | `defaultValue` | string \| null | | The period it starts with (uncontrolled), written the same way |
-| `onValueChange` | `(value, { start, end }) => void` | | Called with the picked period and its first and last days |
+| `onValueChange` | `(value, details: { range: { start, end } }) => void` | | Called with the picked period, and details: `range` is its first and last days |
 | `min`, `max` | string | | The earliest and latest periods that can be chosen, written as `value` is |
 | `locale` | string | the provider's, else the browser's | Month names and digits |
 | `placeholder` | string | "Choose a month" | Shown with nothing chosen |

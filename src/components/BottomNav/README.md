@@ -9,7 +9,7 @@ import { BottomNav, BottomNavLink } from "@diki-stwn/serupa-ds";
 
 <BottomNav label="Main">
   <BottomNavLink href="/" icon="home">Home</BottomNavLink>
-  <BottomNavLink href="/inbox" icon="inbox" active>Inbox</BottomNavLink>
+  <BottomNavLink href="/inbox" icon="inbox" current>Inbox</BottomNavLink>
   <BottomNavLink as={RouterLink} to="/account" icon="person">Account</BottomNavLink>
 </BottomNav>
 ```
@@ -38,7 +38,7 @@ Drawn from the `WithBadges` story.
 
 ## Usage
 
-- **Links:** BottomNavLink takes an `icon` and a label of one or two short words; `active` marks the current page, and `badge` puts a count on its icon (`badge={<Badge count={4} tone="danger" variant="solid" />}`, or a lone `<Badge dot />` for "something new"). `as` renders your router's link, typed with its props, or set it once with `configure({ link })`.
+- **Links:** BottomNavLink takes an `icon` and a label of one or two short words; `current` marks the current page, and `badge` puts a count on its icon (`badge={<Badge count={4} tone="danger" variant="solid" />}`, or a lone `<Badge dot />` for "something new"). `as` renders your router's link, typed with its props, or set it once with `configure({ link })`.
 - **Widths:** `hideFrom` is the width from which it hides: `'md'` (768px, default), `'sm'` (640px), `'lg'` (1024px) or `false` to keep it at every width. Show the same destinations in the Navbar or Sidebar above that width.
 - **Room on the page:** while it shows, a spacer before it takes its height at the end of the page, so the last content scrolls clear of it, and `scroll-padding-bottom` keeps anything focused or scrolled to from hiding under it.
 - **Other things on the bottom edge:** a bottom [Toaster](../Toast/README.md), [OfflineBanner](../OfflineBanner/README.md) and [Fab](../Fab/README.md) move up above the bar while it shows.
@@ -58,7 +58,7 @@ Drawn from the `WithBadges` story.
 - **Target size:** each link fills its column and the bar's 64px height.
 - **Contrast:** labels and the current page read 4.5:1 on the bar in every theme (`BottomNav.test.tsx`). In forced-colors mode the current page keeps an outline.
 - **Print:** it and its spacer are hidden.
-- **What's still yours:** short labels that make sense alone, `active` on the right link, and the same destinations reachable above `hideFrom`.
+- **What's still yours:** short labels that make sense alone, `current` on the right link, and the same destinations reachable above `hideFrom`.
 
 ## Props
 
@@ -78,7 +78,7 @@ Drawn from the `WithBadges` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `icon` | icon name, icon or element | | Over the label |
-| `active` | `boolean` | `false` | The current page |
+| `current` | `boolean` | `false` | The current page |
 | `badge` | `ReactNode` | none | A count or dot on the icon's top-end corner, such as `<Badge count={4} />`; read after the link's name |
 | `as` | component | `configure({ link })` or `'a'` | Your router's link |
 | `children` | `ReactNode` | | The label |

@@ -200,7 +200,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
                     <p className="m-0 text-sm text-text-muted">Choose your first day away, then your last. Weekends and holidays are struck through and aren’t counted.</p>
                     <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'leave-problem' : undefined} months={2}
                       month={month} onMonthChange={setMonth} min={today} isDateDisabled={closed} value={range}
-                      onValueChange={(_, iso) => { setFailed(false); setRange(iso); }} />
+                      onValueChange={(_, { iso }) => { setFailed(false); setRange(iso); }} />
                     {range ? (
                       <p className="m-0 font-semibold">
                         {formatNumber(days, locale)} working {days === 1 ? 'day' : 'days'}{inside.length ? <span className="font-normal">, without {inside.map((h) => `${h.name} (${dayWords(locale, h.date)})`).join(', ')}</span> : null}

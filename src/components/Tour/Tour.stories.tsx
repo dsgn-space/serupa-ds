@@ -14,7 +14,7 @@ function Page(props: Omit<TourProps, 'steps'> & { steps?: (parts: Parts) => Tour
     <div style={{ minHeight: 420, padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
         <div ref={search} style={{ flex: '1 1 200px' }}><SearchInput aria-label="Search projects" placeholder="Search projects" /></div>
-        <Button ref={create} leftIcon="add">New project</Button>
+        <Button ref={create} startIcon="add">New project</Button>
         <IconButton ref={help} icon="help" label="Help" />
       </div>
       {start ? <p style={{ marginTop: 24 }}><Button variant="outline" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>Take the tour</Button></p> : null}

@@ -12,7 +12,7 @@ const links = () => [...nav().querySelectorAll('a')] as HTMLElement[];
 const Bar = (p: Partial<React.ComponentProps<typeof BottomNav>>) => (
   <BottomNav label="Main" {...p}>
     <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
-    <BottomNavLink href="#inbox" icon="inbox" active>Inbox</BottomNavLink>
+    <BottomNavLink href="#inbox" icon="inbox" current>Inbox</BottomNavLink>
     <BottomNavLink href="#me" icon="person">Account</BottomNavLink>
   </BottomNav>
 );

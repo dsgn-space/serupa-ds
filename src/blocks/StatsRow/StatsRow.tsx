@@ -109,7 +109,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
                 <p className="m-0 text-2xl font-semibold tabular-nums">{s.value}</p>
                 {c ? (
                   <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <Badge tone={tone} leftIcon={ARROW[c.direction]}>{c.direction === 'flat' ? w.flat : w[c.direction](c.amount)}</Badge>
+                    <Badge tone={tone} startIcon={ARROW[c.direction]}>{c.direction === 'flat' ? w.flat : w[c.direction](c.amount)}</Badge>
                     {period ? <span>{period}</span> : null}
                   </p>
                 ) : null}

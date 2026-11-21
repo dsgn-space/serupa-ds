@@ -45,7 +45,7 @@ describe('Switch', () => {
   test('onCheckedChange gets the new state and the event after onChange; not while read-only or pending', async () => {
     const calls: string[] = [];
     await render(<div>
-      <Switch id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, e) => calls.push(v + ' ' + e.type)}>Wi-Fi</Switch>
+      <Switch id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, { event: e }) => calls.push(v + ' ' + e.type)}>Wi-Fi</Switch>
       <Switch id="ocr" readOnly onCheckedChange={(v) => calls.push('ro ' + v)}>Locked</Switch>
       <Switch id="ocp" loading onCheckedChange={(v) => calls.push('busy ' + v)}>Saving</Switch>
     </div>);

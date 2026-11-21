@@ -328,7 +328,7 @@ describe('Pagination', () => {
     const calls: Array<[number, number]> = [];
     function App() {
       const [per, setPer] = React.useState(10);
-      return <Pagination id="ps" count={Math.ceil(245 / per)} defaultPage={5} total={245} pageSize={per} pageSizeOptions={[10, 25, 50]} onPageSizeChange={(n, p) => { calls.push([n, p]); setPer(n); }} />;
+      return <Pagination id="ps" count={Math.ceil(245 / per)} defaultPage={5} total={245} pageSize={per} pageSizeOptions={[10, 25, 50]} onPageSizeChange={(n, { page: p }) => { calls.push([n, p]); setPer(n); }} />;
     }
     await render(<App />, { wrapper: EnUS });
     const sel = el('ps').querySelector('select')!;

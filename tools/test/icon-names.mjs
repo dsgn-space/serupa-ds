@@ -34,7 +34,7 @@ D.registerIcons({ name: 'test_registered', d: 'M0 0h960v-960H0z' });
 ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
   ${JSON.stringify(names)}.map(function (n) { return h(D.Icon, { key: n, name: n, size: 24 }); }),
   h(D.Icon, { id: 'data', icon: { name: 'test_imported', d: 'M0 0h960v-960H0z' } }),
-  h(D.Button, { id: 'btn', leftIcon: { name: 'test_imported', d: 'M0 0h960v-960H0z' } }, 'Imported'),
+  h(D.Button, { id: 'btn', startIcon: { name: 'test_imported', d: 'M0 0h960v-960H0z' } }, 'Imported'),
   h(D.Icon, { id: 'reg', name: 'test_registered' }),
   h(D.Icon, { id: 'unknown', name: 'not_a_real_icon' })));
 </script>`;
@@ -71,7 +71,7 @@ const one = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);
   return { data: [q('#data').dataset.icon, !!q('#data svg path')], btn: !!q('#btn .srp-btn__icon svg path'), reg: !!q('#reg svg path'), unknown: [q('#unknown').dataset.icon, !!q('#unknown svg'), q('#unknown').getBoundingClientRect().width] };
 });
-t('icon={…} (an import from serupa-ds/icons) draws it, and Button leftIcon takes one too', one.data[0] === 'test_imported' && one.data[1] && one.btn, JSON.stringify(one));
+t('icon={…} (an import from serupa-ds/icons) draws it, and Button startIcon takes one too', one.data[0] === 'test_imported' && one.data[1] && one.btn, JSON.stringify(one));
 t('registerIcons() makes a name work', one.reg);
 t('an unknown name keeps its 24px box, draws nothing and warns where to find the names', one.unknown[0] === 'not_a_real_icon' && !one.unknown[1] && one.unknown[2] === 24 && warnings.some((w) => w.includes('"not_a_real_icon"') && w.includes('Icons page')), JSON.stringify([one.unknown, warnings]));
 

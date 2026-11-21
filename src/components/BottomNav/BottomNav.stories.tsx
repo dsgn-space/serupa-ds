@@ -22,7 +22,7 @@ function Bar(args: React.ComponentProps<typeof BottomNav>) {
       <Page />
       <BottomNav {...args}>
         <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
-        <BottomNavLink href="#inbox" icon="inbox" active>Inbox</BottomNavLink>
+        <BottomNavLink href="#inbox" icon="inbox" current>Inbox</BottomNavLink>
         <BottomNavLink href="#search" icon="search">Search</BottomNavLink>
         <BottomNavLink href="#account" icon="person">Account</BottomNavLink>
       </BottomNav>
@@ -56,7 +56,7 @@ export const WithBadges: Story = {
       <Page />
       <BottomNav {...args}>
         <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
-        <BottomNavLink href="#inbox" icon="inbox" active badge={<Badge variant="solid" tone="danger" count={4} />}>Inbox</BottomNavLink>
+        <BottomNavLink href="#inbox" icon="inbox" current badge={<Badge variant="solid" tone="danger" count={4} />}>Inbox</BottomNavLink>
         <BottomNavLink href="#activity" icon="notifications" badge={<Badge variant="solid" tone="danger" count={120} />}>Activity</BottomNavLink>
         <BottomNavLink href="#account" icon="person" badge={<Badge dot tone="danger" aria-label="New sign-in" />}>Account</BottomNavLink>
       </BottomNav>
@@ -69,7 +69,7 @@ export const LongText: Story = {
     <>
       <Page />
       <BottomNav {...args}>
-        <BottomNavLink href="#a" icon="home" active>Donaudampfschifffahrtsgesellschaft</BottomNavLink>
+        <BottomNavLink href="#a" icon="home" current>Donaudampfschifffahrtsgesellschaft</BottomNavLink>
         <BottomNavLink href="#b" icon="inbox">Notifications and messages</BottomNavLink>
         <BottomNavLink href="#c" icon="search">Search</BottomNavLink>
         <BottomNavLink href="#d" icon="calendar_today">Calendar</BottomNavLink>
@@ -84,7 +84,7 @@ export const LongText: Story = {
 export const DoShortLabels: Story = {
   name: 'Do: one or two short words',
   render: (args) => <BottomNav {...args}>
-    <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+    <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
     <BottomNavLink href="#inbox" icon="inbox">Inbox</BottomNavLink>
     <BottomNavLink href="#search" icon="search">Search</BottomNavLink>
     <BottomNavLink href="#account" icon="person">Account</BottomNavLink>
@@ -94,7 +94,7 @@ export const DoShortLabels: Story = {
 export const DontLongLabels: Story = {
   name: "Don't: write long labels",
   render: (args) => <BottomNav {...args}>
-    <BottomNavLink href="#home" icon="home" active>Your home feed</BottomNavLink>
+    <BottomNavLink href="#home" icon="home" current>Your home feed</BottomNavLink>
     <BottomNavLink href="#inbox" icon="inbox">Messages and mentions</BottomNavLink>
     <BottomNavLink href="#search" icon="search">Search everything</BottomNavLink>
     <BottomNavLink href="#account" icon="person">Account settings</BottomNavLink>

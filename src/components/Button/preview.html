@@ -34,8 +34,8 @@
     ]),
     Row('Content', [
       h(T.Button, { key: 1 }, 'Label'),
-      h(T.Button, { key: 2, leftIcon: 'add' }, 'Left icon'),
-      h(T.Button, { key: 3, variant: 'outline', rightIcon: 'arrow_forward' }, 'Right icon'),
+      h(T.Button, { key: 2, startIcon: 'add' }, 'Left icon'),
+      h(T.Button, { key: 3, variant: 'outline', endIcon: 'arrow_forward' }, 'Right icon'),
       h(T.Button, { key: 4, variant: 'outline', icon: 'add', 'aria-label': 'Add' })
     ]),
     Row('Icon only', [
@@ -46,8 +46,8 @@
     ]),
     Row('Loading', [
       h(T.Button, { key: 1, loading: true }, 'Save changes'),
-      h(T.Button, { key: 2, loading: true, variant: 'outline', leftIcon: 'save' }, 'Save'),
-      h(T.Button, { key: 3, loading: true, variant: 'secondary', rightIcon: 'arrow_forward' }, 'Continue'),
+      h(T.Button, { key: 2, loading: true, variant: 'outline', startIcon: 'save' }, 'Save'),
+      h(T.Button, { key: 3, loading: true, variant: 'secondary', endIcon: 'arrow_forward' }, 'Continue'),
       h(T.Button, { key: 4, loading: true, variant: 'outline', icon: 'refresh', 'aria-label': 'Refresh' }),
       h(T.Button, { key: 5, loading: true, destructive: true }, 'Delete')
     ]),

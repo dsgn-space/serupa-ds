@@ -25,8 +25,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   loading?: boolean | undefined;
   /** A check mark on the thumb while the switch is on, so on and off differ by shape as well as by color. Decorative: the switch still says on or off. */
   icon?: boolean | undefined;
-  /** Called with the new state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
-  onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  /** Called with the new state and details (event: the change event), after onChange: the same shape as ToggleButton's onPressedChange. */
+  onCheckedChange?: ((checked: boolean, details: { event: React.ChangeEvent<HTMLInputElement> }) => void) | undefined;
 }
 
 /* Switch: an on/off setting that applies at once. A native checkbox with role="switch" (announced as on or off),
@@ -51,7 +51,7 @@ function SwitchRender({ ref, ...props }: SwitchProps & React.RefAttributes<HTMLI
   const checkedChange = props.onCheckedChange;
   if (checkedChange) {
     const before = rest.onChange;
-    rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, e); };
+    rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, { event: e }); };
   }
   // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
   // puts the switch back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.

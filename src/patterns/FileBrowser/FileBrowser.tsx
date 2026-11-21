@@ -211,14 +211,14 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the files" onRetry={() => onRetry?.()} headingLevel={2} />
             : !loading && !files.length ? (
               <EmptyState icon="folder_open" title="This folder is empty" headingLevel={2} description="Upload files to keep them here, or move some in from another folder."
-                actions={<Button leftIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
+                actions={<Button startIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
             ) : <>
               {loading ? null : (
                 <div className="flex min-h-10 flex-wrap items-center gap-3">
                   <ListSelectAll values={files.map((f) => f.id)} selected={chosen} onSelectedChange={setPicked} />
                   <TableActionBar count={chosen.length} onClear={() => setPicked([])} className="flex-1">
-                    <Button size="sm" variant="outline" leftIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
-                    <Button size="sm" variant="outline" destructive leftIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
+                    <Button size="sm" variant="outline" startIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
+                    <Button size="sm" variant="outline" destructive startIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
                   </TableActionBar>
                 </div>
               )}

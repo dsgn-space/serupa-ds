@@ -206,7 +206,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
                 <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
               </Field>
               <Field label="Day" id="event-day" error={problems.day} required>
-                <DatePicker name="day" value={draft.day || null} onValueChange={(_, iso) => edit({ day: iso ?? '' })} />
+                <DatePicker name="day" value={draft.day || null} onValueChange={(_, { iso }) => edit({ day: iso ?? '' })} />
               </Field>
               <Switch checked={draft.allDay} onCheckedChange={(on) => edit({ allDay: on })}>All day</Switch>
               {draft.allDay ? null : (
@@ -231,7 +231,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
           description={open ? whenWords(open, locale) + (open.repeating ? '. Repeats.' : '') : undefined}>
           {open ? (
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" destructive leftIcon="delete" onClick={() => remove(open)}>Delete event</Button>
+              <Button variant="outline" destructive startIcon="delete" onClick={() => remove(open)}>Delete event</Button>
             </div>
           ) : null}
         </Dialog>

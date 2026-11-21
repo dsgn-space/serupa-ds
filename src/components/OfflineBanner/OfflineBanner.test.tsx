@@ -156,7 +156,7 @@ describe('OfflineBanner', () => {
     try {
       await render(<>
         <Navbar sticky brand={<a href="#home">Acme</a>} actions={<button type="button">Sign in</button>}>
-          <NavbarLink href="#dash" active>Dashboard</NavbarLink>
+          <NavbarLink href="#dash" current>Dashboard</NavbarLink>
           <NavbarLink href="#projects">Projects</NavbarLink>
         </Navbar>
         {Array.from({ length: 30 }, (_, i) => <input key={i} id={'n' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}

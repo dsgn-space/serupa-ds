@@ -85,7 +85,7 @@ export function Article({ title = 'Projects now open on what’s due this week',
       <SkipLink />
       <Navbar brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}>
         <NavbarLink href="#product">Product</NavbarLink>
-        <NavbarLink href="#blog" active>Blog</NavbarLink>
+        <NavbarLink href="#blog" current>Blog</NavbarLink>
       </Navbar>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-8 outline-none">
         <Breadcrumb>
