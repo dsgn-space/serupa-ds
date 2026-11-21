@@ -60,6 +60,7 @@ function FormStepsRender({ ref, ...props }: FormStepsProps & React.RefAttributes
   const moved = React.useRef(false);
   const go = (to: number) => { moved.current = true; setOwn(to); if (onStepChange) onStepChange(to); };
   // The steps not showing are hidden="until-found": a summary's link to one of their fields opens the step (beforematch).
+  // every render: React leaves hidden to this after the first render, so each render puts it right for the current step.
   useIsoLayoutEffect(() => {
     panels.current.forEach((p, i) => {
       if (!p) return;
