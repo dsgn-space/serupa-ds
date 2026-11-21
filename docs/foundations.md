@@ -1176,7 +1176,6 @@ One word for one act, so a form reads in one voice and someone using voice contr
 **Buttons and links**
 
 - Start with a verb that says what happens: "Save", "Send invite", "Delete project". Avoid "OK", "Yes", "Submit" and "Click here".
-- A button that moves to the next step says where it goes: "Continue to payment", not "Next" or "Continue" alone.
 - Use the same verb in the title and the button: a dialog titled "Delete project?" has a "Delete" button, not "Confirm".
 - A link says where it goes: "Billing settings", not "Learn more" on its own. If several links on a page would read the same, give each a distinct name.
 - Icon-only buttons need a name (`aria-label`) that is the same verb you'd write on a text button.

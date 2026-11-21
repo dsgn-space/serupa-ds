@@ -23,7 +23,6 @@ People wait best when they can see that something is happening and, where you kn
 - **300ms before it shows.** A Loader, and a Button's spinner, wait 300ms before appearing. Most requests finish sooner, so nothing flashes on and off. Use `delay={0}` only where the wait is sure to be long.
 - **500ms once it shows.** Once a loader is showing, it stays at least 500ms, so work ending at 320ms doesn't flash a spinner for 20ms. For this to work, keep the Loader mounted and pass `loading={false}` when the work ends, rather than removing it.
 - **Past 10 seconds, show how far it has got.** People give up on a ring that turns for longer than about 10 seconds. Use [Progress](?path=/docs/components-feedback-progress--docs) with a value, count the items when the work goes one by one ("12 of 40 files"), give the time left when you can estimate it, and offer Cancel when stopping is safe.
-- **Skeletons for a page or a region, shaped like its content.** A skeleton of a whole list or a profile tells people what's coming; one small part, such as a single number in a card, takes a Loader. Never a frame with no content shapes in it, and keep the shimmer subtle: the `reduced-motion` setting already stills it.
 - **Keep the space.** A loader, a skeleton and a loading button keep the size of what they stand for, so nothing on the page jumps when the content arrives.
 
 ## For screen readers

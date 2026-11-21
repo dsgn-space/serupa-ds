@@ -36,7 +36,6 @@ Use the tone that matches what happened, and no louder: `success` for something 
 
 - A toast goes by itself after 5 seconds, so it never holds anything people must read. One that needs action, such as a failed upload with Retry, takes `autoDismiss: false` and stays until it's closed.
 - Never put an error about the page in a toast: it can go before people see it, and it isn't next to what failed. A failed save, a payment that didn't go through or a list that didn't load is an Alert beside it. A toast holds an error only for work people have already left, such as an upload that carried on in the background, and then it stays until it's closed.
-- Show a confirmation where people's eyes are: a "Saved" beside the Save button, a count on the cart that just changed. A toast is for when the page itself doesn't change.
 - An Alert stays until what it says is no longer true, or until people dismiss it, if it's dismissible.
 - An error on a field stays until the answer is right.
 
