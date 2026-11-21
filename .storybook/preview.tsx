@@ -86,14 +86,14 @@ channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply
 // Story text stays as written; only the built-in words, dates and numbers change. "ar" also turns the page right to left.
 const PACKS = import.meta.glob<{ labels: SerupaLabels; locale: string }>('../src/labels/*.ts');
 const LANGUAGES = Object.keys(PACKS).map((f) => f.replace(/^.*\/|\.ts$/g, '')).filter((l) => l !== 'en').sort();
-const languageName = (l: string) => { try { return `${new Intl.DisplayNames(['en'], { type: 'language' }).of(l)} (${l})`; } catch { return l; } };
+const languageName = (l: string) => { if (l === 'pseudo') return 'Pseudo-locale: 40% longer, accented (pseudo)'; try { return `${new Intl.DisplayNames(['en'], { type: 'language' }).of(l)} (${l})`; } catch { return l; } };
 const WithLanguage: Decorator = (Story, context) => {
   const language = LANGUAGES.includes(context.globals.language) ? context.globals.language as string : 'en';
-  const [pack, setPack] = React.useState<{ labels: SerupaLabels; locale: string } | null>(null);
+  const [pack, setPack] = React.useState<{ labels: SerupaLabels; locale: string; language: string } | null>(null);
   React.useEffect(() => {
     let live = true;
     if (language === 'en') { setPack(null); return; }
-    void PACKS[`../src/labels/${language}.ts`]?.().then((m) => { if (live) setPack(m); });
+    void PACKS[`../src/labels/${language}.ts`]?.().then((m) => { if (live) setPack({ labels: m.labels, locale: m.locale, language }); });
     return () => { live = false; };
   }, [language]);
   React.useEffect(() => {
@@ -101,7 +101,7 @@ const WithLanguage: Decorator = (Story, context) => {
     if (pack?.locale === 'ar') document.documentElement.setAttribute('dir', 'rtl');
   }, [pack, context.globals.dir]);
   if (language === 'en') return <Story />;
-  if (!pack || pack.locale !== language) return <></>;   // the pack is on its way: nothing in English flashes first
+  if (!pack || pack.language !== language) return <></>;   // the pack is on its way: nothing in English flashes first
   return <SerupaProvider locale={pack.locale} labels={pack.labels}><Story /></SerupaProvider>;
 };
 

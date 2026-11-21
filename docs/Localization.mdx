@@ -3,9 +3,9 @@ import * as Stories from '../src/internal/provider.stories';
 
 <Meta title="Guides/Localization" />
 
-{/* also: i18n, internationalization, l10n, translation, right to left, RTL, server rendering, SSR */}
+{/* also: i18n, internationalization, l10n, translation, right to left, RTL, server rendering, SSR, pseudo-locale, pseudolocalization, plural, translatable copy */}
 
-{/* description: Show the components in another language and locale with SerupaProvider: the words they say, dates and numbers, server rendering and right to left. */}
+{/* description: Show the components in another language and locale with SerupaProvider: one locale for the words, dates, numbers and direction, language packs, plurals, the pseudo-locale, writing copy that translates, server rendering and right to left. */}
 
 # Localization and app settings
 
@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
 | Prop | What it changes |
 |---|---|
 | `locale` | Every component that writes a date, time or number. Calendar, DatePicker, DateRangePicker and TimePicker: how dates and times are written and typed, month and weekday names, the first day of the week. NumberInput: how numbers are typed and shown. FormattedNumber, Meter, Progress, Badge counts, Pagination's page numbers, Stepper's step numbers, Input and Textarea's character counts, and ColorPicker's values: the locale's digits and signs. RelativeTime: "3 hari yang lalu". PhoneInput: country names. `useCollator`: how text sorts. Default: the browser's. A tag with an underscore, such as `en_US` from a server's `LANG`, is read as `en-US`; one Intl can't read at all is skipped for the browser's, with a warning in development, so a bad locale never breaks the page. |
+| `languages` | Language packs to take the words from by `locale`, so one setting switches the words with the dates, numbers and direction (below). |
 | `labels` | The built-in words: close and dismiss buttons, loading text, pagination, date and time buttons, file upload text and so on (the `SerupaLabels` type lists every key). Pass `idLabels` for Indonesian, or only the keys you want to change. |
 | `icons` | Icons that work by name inside it, in the shape `registerIcons` takes. |
 
@@ -42,7 +43,30 @@ import { labels, locale } from '@diki-stwn/serupa-ds/labels/id';
 <SerupaProvider locale={locale} labels={labels}>{children}</SerupaProvider>
 ```
 
-Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`, with `dir="rtl"` on the page), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`) and Malay (`ms`). `node tools/test/label-packs.mjs` checks each pack has every word, says something for each case (a count of one and of several, each reason a field can fail), and leaves nothing in English.
+Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`, with `dir="rtl"` on the page), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`) and Malay (`ms`), plus the pseudo-locale (`pseudo`, below). `node tools/test/label-packs.mjs` checks each pack has every word, says something for each case (a count of one and of several, each reason a field can fail), and leaves nothing in English.
+
+## One locale for everything
+
+Give the provider the packs your app offers in `languages`, and its `locale` picks the words from them along with the dates and numbers: the pack written for the whole tag, else for its language, so `id-ID` takes `id`. Set `lang` and `dir` from the same locale on the element around it, and `localeDir(locale)` gives the direction, `"rtl"` for Arabic, Hebrew, Persian or Urdu and `"ltr"` for the rest:
+
+```tsx
+import { localeDir, SerupaProvider } from '@diki-stwn/serupa-ds';
+import * as en from '@diki-stwn/serupa-ds/labels/en';
+import * as id from '@diki-stwn/serupa-ds/labels/id';
+import * as ar from '@diki-stwn/serupa-ds/labels/ar';
+
+export function AppShell({ locale, children }: { locale: string; children: React.ReactNode }) {
+  return (
+    <div lang={locale} dir={localeDir(locale)}>
+      <SerupaProvider locale={locale} languages={[en, id, ar]}>{children}</SerupaProvider>
+    </div>
+  );
+}
+```
+
+`labels` still wins over the pack, for the few words your product says its own way. A nested provider that sets only `locale` picks from the outer provider's packs. A locale with no pack in the list keeps the words it had, so list `en` too when people can switch back to English. Each pack is a module of its own, so an app carries only the languages it lists.
+
+<Canvas of={Stories.OneLocale} />
 
 What wins, in order: the component's own prop (`dismissLabel`, `locale`, …), the nearest provider, an outer provider, then the defaults. A nested provider changes only the keys it sets.
 
@@ -59,6 +83,63 @@ const ruLabels = {
 
 <SerupaProvider locale="ru-RU" labels={ruLabels}>{children}</SerupaProvider>;
 ```
+
+Gender and other differences work the same way: when the words change with the kind of thing or person, pass the kind and let each language choose, rather than writing one form and hoping it fits. A label for a notification in a language with grammatical gender:
+
+```ts
+// not compiled: a sketch of an app's own label, not a SerupaLabels key
+const invitedBy = (name: string, gender: 'female' | 'male' | 'other') =>
+  ({ female: `${name} vous a invitée`, male: `${name} vous a invité`, other: `${name} vous a invité·e` })[gender];
+```
+
+## The pseudo-locale
+
+`@diki-stwn/serupa-ds/labels/pseudo` is every built-in word accented, about 40% longer and between ⟦ ⟧: "Next page" becomes "⟦Ñééẋţ þááĝéé ~⟧". It reads well enough to use the page, and it shows three problems before any translation exists:
+
+- **A layout that won't hold a longer language.** German and Finnish run about 30% longer than English, and short labels can double. Text that overflows, clips or wraps under its icon shows up at once.
+- **Words written into the code.** Anything still in plain English among the accented words didn't come from a label.
+- **Text cut short.** A missing ⟧ means the end was clipped or truncated.
+
+```tsx
+import { SerupaProvider } from '@diki-stwn/serupa-ds';
+import { labels, locale, pseudo } from '@diki-stwn/serupa-ds/labels/pseudo';
+
+<SerupaProvider locale={locale} labels={labels}>
+  <h1>{pseudo('Billing settings')}</h1>
+</SerupaProvider>
+```
+
+`pseudo(text)` does the same to your own words, and `pseudoLabels(set)` to a whole set of them, leaving the names and numbers a function label is given as they are. In Storybook, pick "Pseudo-locale" in the Language toolbar to see any story this way.
+
+<Canvas of={Stories.PseudoLocale} />
+
+## Writing copy that translates
+
+The words in a component come from its labels, in every language the package ships, and two checks keep it that way: the `serupa/no-literal-words` lint rule fails on a word written into a component (JSX text, a spoken attribute such as `aria-label`, the text given to `announce()` or `setAttribute`), and `tools/test/label-packs.mjs` fails when a pack is missing a word, says nothing for a case, or leaves a word in English. The same habits make an app's own copy translate well:
+
+- **Write whole sentences, and pass the values in.** Word order changes between languages, so never build a sentence from pieces ("Delete " + name + "?"). Make it a function of the value: `deleteTitle: (name) => 'Delete ' + name + '?'` in English and `(name) => 'Hapus ' + name + '?'` in Indonesian, and the translator moves the value where the language needs it.
+- **Counts go through `plural()`.** Never `n + ' item' + (n === 1 ? '' : 's')`: it is wrong in every language with more or fewer forms than English.
+- **Let the locale write numbers, dates, money and lists.** `Intl.NumberFormat`, `Intl.DateTimeFormat` and `Intl.ListFormat` with `useLocale()`, never a hand-built "Rp" + amount or "A, B and C".
+- **One key for each meaning.** The same English word can be two words elsewhere: "Open" the verb is "Buka", "Open" the status is "Terbuka". Give each its own key, so one change doesn't break the other.
+- **Say where each word appears.** A short comment above the key ("the button that closes a dialog") is what a translator works from. The comments in the components' `labels.ts` files are shown with every word on the Content and voice page.
+- **Leave room.** Don't give text a fixed width or height; let it wrap. Check with the pseudo-locale.
+- **No words in images, icons alone or CSS `content`.** They can't be translated or read out.
+- **Plain words.** No idioms, puns or abbreviations a translator has to guess at. Content and voice lists the terms to use for each act, one word for one thing, in English and Indonesian.
+
+## Adding a language
+
+For your app, write the words as a `Partial<SerupaLabels>` (or a whole `SerupaLabels`, so TypeScript lists any word you missed), with the locale it's written for, and pass it in `languages` like any pack:
+
+```tsx
+import { SerupaProvider, plural, type SerupaLabels } from '@diki-stwn/serupa-ds';
+import * as en from '@diki-stwn/serupa-ds/labels/en';
+
+const fi = { locale: 'fi', labels: { close: 'Sulje', nextPage: 'Seuraava sivu', resultsCount: (n: number) => plural('fi', n, { one: '# tulos', other: '# tulosta' }) } satisfies Partial<SerupaLabels> };
+
+<SerupaProvider locale="fi-FI" languages={[en, fi]}>{children}</SerupaProvider>;
+```
+
+To add one to the package, copy an existing pack in `src/labels/` to `src/labels/<language>.ts`, translate each word, and run `npm run build && node tools/test/label-packs.mjs`: it names any word missing, empty or still in English.
 
 ## Server-rendered pages
 
