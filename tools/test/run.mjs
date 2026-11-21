@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents, builtUnchanged, BUILT_CHECKS } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, languageTests, onlyComponents, withDependents, touchedComponents, builtUnchanged, BUILT_CHECKS } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -123,7 +123,13 @@ const steps = [
     // A test file the change edits outside the component folders (src/styles/touchTargets.test.tsx, say) runs in every
     // language too: on 14 Nov one new test read Pagination's page numbers as 0 to 9, passed its pull request in English,
     // and failed in ar-EG in the queue, dropping three pull requests behind it.
-    const own = [...new Set([...(direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : []), ...changedTests])];
+    // Against a base (--since: pull requests and the queue), only the tests a language can break (languageTests,
+    // lib.mjs), and any shared test the change edits but the story-wide ones: those go through every story and none
+    // reads a language (activity and motion took 372 and 284 s each, on one shard in every language, and ran the
+    // queue's locale jobs past 30 minutes, 21 Nov). The nightly Languages jobs run everything in each language.
+    const lang = arg('--since') ? languageTests() : null;
+    const forLanguage = (files) => (lang ? files.filter((f) => lang.has(f) || (changedTests.includes(f) && !STORY_WIDE.includes(f))) : files);
+    const own = forLanguage([...new Set([...(direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : []), ...changedTests])]);
     // SERUPA_SHARD with SERUPA_PART=locale (CI): every third file of each, like the base shards (GR322: the whole run
     // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
     // with none passes.
@@ -144,9 +150,10 @@ const steps = [
     // own tests are then every component's: in all four languages that was five whole passes in each base job, and
     // ES1's (20 Nov) ran past the job's 30 minutes. It takes the commit's language over everything instead, and the
     // queue's locale jobs the other three.
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard), { SERUPA_LOCALE: locale, SERUPA_OWN: '1' }]];
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...(lang ? [...lang] : [])), { SERUPA_LOCALE: locale, SERUPA_OWN: '1' }]];
+    const inLocale = lang ? forLanguage(only ? covered : [...lang]) : covered;
     return [
-      [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...covered), { SERUPA_LOCALE: locale }],
+      ...(inLocale.length || !lang ? [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...inLocale), { SERUPA_LOCALE: locale }]] : []),
       ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => ownIn(l)) : []),
     ];
   })() : []),
