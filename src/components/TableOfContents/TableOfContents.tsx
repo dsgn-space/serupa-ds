@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { reducedMotion as reduced } from '../../internal/mediaList';
 import { named } from '../../internal/component';
+import { pageHash } from '../../internal/hash';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
 import { en as words } from './labels';
@@ -71,7 +72,7 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
       // A shared link to a heading whose id is made here (#beta-part): the browser looked for it before it existed,
       // so the page opened at the top. Go there once, as the browser would have, the first time the id exists.
       if (!hashDone) {
-        const hash = decodeURIComponent(window.location.hash.slice(1));
+        const hash = pageHash();
         const h = hash ? document.getElementById(hash) : null;
         if (!hash) hashDone = true;
         else if (h && used.has(hash)) { hashDone = true; h.scrollIntoView({ block: 'start' }); }

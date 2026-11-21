@@ -65,6 +65,18 @@ describe('Pagination', () => {
     } finally { history.replaceState(null, '', location.pathname + location.search + before); }
   });
 
+  test('jump with a getHref that gives a javascript: URL runs nothing: only a web page is followed', async () => {
+    const w = window as unknown as { __jumpRan?: number };
+    w.__jumpRan = 0;
+    try {
+      await render(<EnUS><Pagination id="pj4" count={50} jump getHref={(n) => 'javascript:window.__jumpRan=' + n} /></EnUS>);
+      el('pj4').querySelector('input')!.focus();
+      await userEvent.keyboard('7{Enter}');
+      await new Promise((r) => setTimeout(r, 50));
+      expect(w.__jumpRan).toBe(0);
+    } finally { delete w.__jumpRan; }
+  });
+
   test('the arrows are the icon of an icon-only Button of the same size: 14, 16 and 20px (GR420)', async () => {
     await render(<>
       {(['sm', 'md', 'lg'] as const).map((size) => <span key={size} id={'pg' + size}><Pagination size={size} count={5} /><IconButton size={size} icon="chevron_right" label="Next thing" /></span>)}
