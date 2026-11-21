@@ -20,10 +20,10 @@
 .dk-radio--size-lg { --dk-radio-box: var(--radio-size-lg, var(--spacing-5)); --dk-radio-dot: var(--radio-dot-size-lg, var(--spacing-2)); --dk-radio-lh: var(--text-base--line-height); font-size: var(--text-base); }
 .dk-radio__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; height: var(--dk-radio-lh); }
 .dk-radio--bare .dk-radio__control { height: var(--dk-radio-box); }
-/* Pressed: the circle shrinks a little while the row is held (pointer, or Space on it) and springs back, as
-   Checkbox's box does. Only scale moves; not when disabled, and not under reduced motion. */
+/* Pressed: while the row is held (pointer, or Space on it) the circle takes its held colors (below), a step past
+   hover. Nothing shrinks by default; --radio-press-scale opts in to one. Not when read-only or disabled. */
 .dk-radio__control { transition: scale var(--motion-release) var(--ease-spring); }
-.dk-radio:active:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) .dk-radio__control { scale: var(--radio-press-scale, var(--scale-90)); transition: scale var(--motion-press) var(--ease-settle); }
+.dk-radio:active:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) .dk-radio__control { scale: var(--radio-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { .dk-radio__control { transition: none; } .dk-radio:active .dk-radio__control { scale: none; } }
 .dk-radio__input {
   --dk-radio-bd: var(--radio-border, var(--field-border));
@@ -31,13 +31,16 @@
   --dk-radio-ring: var(--radio-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
   box-sizing: border-box; flex-shrink: 0; width: var(--dk-radio-box); height: var(--dk-radio-box); margin: var(--spacing-0);
-  background: var(--radio-bg, var(--field));
+  --dk-radio-bg: var(--radio-bg, var(--field));
+  background: var(--dk-radio-bg);
   border: var(--radio-border-width, var(--border-width-1)) solid var(--dk-radio-bd);
   border-radius: var(--rounded-full);
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
 @media (hover: hover) { .dk-radio:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
+.dk-radio:active .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bg: var(--radio-bg-pressed, var(--secondary)); --dk-radio-fill: var(--radio-bg-checked-pressed, var(--primary-pressed)); }
+.dk-radio:not(.dk-radio--invalid):active .dk-radio__input:not(:disabled, [readonly], :user-invalid) { --dk-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
 .dk-radio__input:checked { background: var(--dk-radio-fill); border-color: var(--dk-radio-fill); }
 .dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }

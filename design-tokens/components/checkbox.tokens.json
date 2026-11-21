@@ -42,6 +42,26 @@
           }
         }
       },
+      "bg-checked-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-pressed}",
+        "$description": "The checked box's fill while held down, one step past bg-checked-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-bg-checked-pressed"
+          }
+        }
+      },
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The unchecked box's background while held down.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-bg-pressed"
+          }
+        }
+      },
       "border": {
         "$type": "color",
         "$value": "{color.field-border}",
@@ -59,6 +79,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--checkbox-border-hover"
+          }
+        }
+      },
+      "border-pressed": {
+        "$type": "color",
+        "$value": "{color.field-border-pressed}",
+        "$description": "The unchecked box's border while held down, one step past border-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-border-pressed"
           }
         }
       },
@@ -366,8 +396,8 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-90}",
-        "$description": "Size of the box while it's held down (90%). 1 turns it off",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size of the box while it's held down. 100%: off by default, since a press shows as the held colors (bg-pressed, border-pressed, bg-checked-pressed). Set it, e.g. to `var(--scale-90)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--checkbox-press-scale"

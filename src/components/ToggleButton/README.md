@@ -74,6 +74,8 @@ Each is an optional override: set it on the page, a container or one toggle. The
 | `--toggle-button-bg-pressed` | `primary-subtle` | The background while pressed (on). |
 | `--toggle-button-text-pressed` | `primary` | Text and icon while pressed (4.5:1 on bg-pressed). |
 | `--toggle-button-border-pressed` | `primary` | The outline variant's border while pressed (3:1 on surface). |
+| `--toggle-button-bg-pressed-held` | `primary-subtle-pressed` | The background of an on toggle while held down, one step past bg-pressed. |
+| `--toggle-button-text-pressed-held` | `primary-hover` | Text and icon of an on toggle while held down (4.5:1 on bg-pressed-held). |
 | `--toggle-button-bg-pressed-disabled` | `highlight` | The background while on and disabled. |
 | `--toggle-button-text-pressed-disabled` | `text-muted` | Text and icon while on and disabled (3.4:1 and up on bg-pressed-disabled, as on a disabled Button). |
 | `--toggle-button-border-pressed-disabled` | `border-control` | The outline variant's border while on and disabled (3:1 on surface). |

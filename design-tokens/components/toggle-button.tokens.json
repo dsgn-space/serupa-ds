@@ -32,6 +32,26 @@
           }
         }
       },
+      "bg-pressed-held": {
+        "$type": "color",
+        "$value": "{color.primary-subtle-pressed}",
+        "$description": "The background of an on toggle while held down, one step past bg-pressed.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toggle-button-bg-pressed-held"
+          }
+        }
+      },
+      "text-pressed-held": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "Text and icon of an on toggle while held down (4.5:1 on bg-pressed-held).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toggle-button-text-pressed-held"
+          }
+        }
+      },
       "bg-pressed-disabled": {
         "$type": "color",
         "$value": "{color.highlight}",

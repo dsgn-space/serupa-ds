@@ -184,14 +184,14 @@ Small motion that confirms what happened, all built in:
 
 | Interaction | What it does | Turn off or tune |
 | --- | --- | --- |
-| Press | While held (pointer, Space or Enter) the button shrinks to 97% in 100ms and comes back on release over 300ms (`motion-release`) with `ease-enter`, settling at full size with no overshoot | `--button-press-scale: 1` |
+| Press | While held (pointer, Space or Enter) the button takes its held fill, one step past hover: `primary-pressed`, `primary-subtle-pressed`, `secondary-hover` or `danger-pressed` and `danger-subtle-hover` when destructive. It never shrinks unless you ask: a shrink is hard to see under a finger and reads as a glitch on a small button | Fills: the `--button-…-bg-pressed` tokens. A shrink: `--button-press-scale: var(--scale-97)` |
 | Icon nudge (off by default) | When turned on, a right icon slides in its direction on hover (on devices that hover), mirrored in right-to-left text. Left icons stay still. It suits forward arrows ("Continue →"), not chevrons or other icons, so it's off unless you turn it on | On: `--button-icon-nudge: var(--spacing-0\.5)` (2px) |
 | Loading | The label and icons fade out while the spinner fades and grows in, in 150ms; both blur a little (`blur-xs`) as they cross, so it reads as one change; they fade back when done | `--button-loading-duration: 0ms` |
 
 - They animate only `scale`, `translate`, `opacity` and the loading blur (`filter`), so nothing around the button reflows, and they never change its size, name or behavior: clicks, keys, forms and your own `onPointerDown`, `onKeyDown` and `onKeyUp` work as before.
 - No press on disabled, loading or `link`-variant buttons (the link variant reads as text).
 - Hover colors apply only on devices that hover (a mouse or trackpad). A phone keeps hover on the last button tapped, so on touch screens a tapped button goes straight back to its resting color, and the press is the feedback. This holds for every component's hover styles (`tools/test/touch-hover.mjs`).
-- With reduced motion turned on (an operating-system setting), there's no press or nudge, and loading only fades (no blur).
+- With reduced motion turned on (an operating-system setting), there's no shrink (if you turned one on) or nudge, and loading only fades (no blur). The held fill stays: it's a color, not motion.
 - `buttonClass()` on another element gets the press, nudge and loading fade (they're all CSS).
 - To turn the icon nudge on for a flow of "next" buttons:
 
@@ -207,7 +207,7 @@ Small motion that confirms what happened, all built in:
 | --- | --- | --- |
 | Default | Variant colors, `shadow-xs` on filled and outline buttons | `pointer` |
 | Hover | `primary` darkens one step (`primary-hover`); secondary gains a `primary-subtle` tint and its text and border darken to `primary-hover`; outline and ghost gain a `secondary` fill; link underlines; a right icon slides 2px forward | `pointer` |
-| Pressed | Hover colors, shrinks to 97% (`scale-97`) | `pointer` |
+| Pressed | One step past hover: `primary-pressed`; secondary `primary-subtle-pressed`; outline and ghost `secondary-hover`; destructive `danger-pressed` (primary) or `danger-subtle-hover`. Full size | `pointer` |
 | Focus (keyboard) | A 2px `focus-ring` outline 2px out (`danger` when destructive). The gap is transparent, so it reads on tinted backgrounds; forced-colors (high-contrast) mode draws it in the system color | `pointer` |
 | Disabled | 50% opacity, no shadow, no hover change, ignores clicks | `not-allowed` |
 | Loading | Full color, the content fades into a spinner, no hover change, no press, ignores clicks, keeps focus | `progress` |
@@ -272,6 +272,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | --- | --- | --- |
 | `--button-primary-bg` | `primary` | Primary background. |
 | `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker in light themes, lighter in dark. |
+| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker in light themes, lighter in dark. |
 | `--button-primary-text` | `on-primary` | Primary text and icons. |
 | `--button-secondary-bg` | `surface-raised` | Secondary background. |
 | `--button-secondary-bg-hover` | `primary-subtle` | Secondary background on hover. |
@@ -279,26 +280,33 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-secondary-text-hover` | `primary-hover` | Secondary text and icons on hover. |
 | `--button-secondary-border` | `primary` | Secondary border. |
 | `--button-secondary-border-hover` | `primary-hover` | Secondary border on hover. |
+| `--button-secondary-bg-pressed` | `primary-subtle-pressed` | Secondary background while held down, one step past hover. |
 | `--button-outline-bg` | `surface-raised` | Outline background. |
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
+| `--button-outline-bg-pressed` | `secondary-hover` | Outline background while held down, one step past hover. |
 | `--button-outline-text` | `text` | Outline text and icons. |
 | `--button-outline-border` | `border-overlay` | Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill. |
 | `--button-ghost-bg` | `transparent` | Ghost background (transparent). |
 | `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
+| `--button-ghost-bg-pressed` | `secondary-hover` | Ghost background while held down, one step past hover. |
 | `--button-ghost-text` | `text` | Ghost text and icons. |
 | `--button-link-text` | `primary` | Link text. |
 | `--button-destructive-primary-bg` | `danger` | Destructive primary background. |
 | `--button-destructive-primary-bg-hover` | `danger-hover` | Destructive primary background on hover. |
+| `--button-destructive-primary-bg-pressed` | `danger-pressed` | Destructive primary background while held down, one step past hover. |
 | `--button-destructive-primary-text` | `on-danger` | Destructive primary text and icons. |
 | `--button-destructive-secondary-bg` | `surface-raised` | Destructive secondary background. |
 | `--button-destructive-secondary-bg-hover` | `danger-subtle` | Destructive secondary background on hover. |
+| `--button-destructive-secondary-bg-pressed` | `danger-subtle-hover` | Destructive secondary background while held down, one step past hover. |
 | `--button-destructive-secondary-text` | `danger-text` | Destructive secondary text and icons. |
 | `--button-destructive-secondary-border` | `danger` | Destructive secondary border (solid red, stronger than the outline's). |
 | `--button-destructive-outline-bg` | `surface-raised` | Destructive outline background. |
 | `--button-destructive-outline-bg-hover` | `danger-subtle` | Destructive outline background on hover. |
+| `--button-destructive-outline-bg-pressed` | `danger-subtle-hover` | Destructive outline background while held down, one step past hover. |
 | `--button-destructive-outline-text` | `danger-text` | Destructive outline text and icons. |
 | `--button-destructive-outline-border` | `danger-border` | Destructive outline border. |
 | `--button-destructive-ghost-bg-hover` | `danger-subtle` | Destructive ghost background on hover. |
+| `--button-destructive-ghost-bg-pressed` | `danger-subtle-hover` | Destructive ghost background while held down, one step past hover. |
 | `--button-destructive-ghost-text` | `danger-text` | Destructive ghost text and icons. |
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
@@ -347,7 +355,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--button-press-scale` | `scale-97` | Size while pressed (97%). 1 turns press feedback off. |
+| `--button-press-scale` | `scale-100` | Size while held down. 100%: off by default, since a press shows as the held fill (the `…-bg-pressed` tokens). Set it, e.g. to `var(--scale-97)`, to add a shrink. |
 | `--button-press-duration` | `motion-press` | How fast the press scales down (100ms). The release comes back over `motion-release`. |
 | `--button-icon-nudge` | `spacing-0` | How far a right icon slides on hover. Off by default (0); set it to `var(--spacing-0\.5)` (2px) where right icons are forward arrows. |
 | `--button-icon-nudge-duration` | `motion-change-sm` | How fast the right icon slides (150ms). |

@@ -48,6 +48,24 @@ describe('ToggleButton', () => {
     expect(pressed('tbold')).toBe('false');
   });
 
+  test('held down, an on toggle steps past its fill (primary-subtle-pressed, primary-hover text at 4.5:1), as every Button variant does, in every theme', async () => {
+    await render(<Formatting />);
+    const bad: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const id of ['titalic', 'tghost']) {
+        const rest = getComputedStyle(el(id)).backgroundColor;
+        el(id).setAttribute('data-pressed', '');
+        const s = getComputedStyle(el(id));
+        if (s.backgroundColor !== color('var(--primary-subtle-pressed)') || s.backgroundColor === rest) bad.push(`${th} ${id} fill ${s.backgroundColor}`);
+        if (contrast(s.color, s.backgroundColor) < 4.5) bad.push(`${th} ${id} text ${contrast(s.color, s.backgroundColor).toFixed(2)}`);
+        el(id).removeAttribute('data-pressed');
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(bad).toEqual([]);
+  });
+
   test('keyboard table: Tab reaches the button; Enter and Space each turn it on or off (FH1)', async () => {
     await render(<div><button id="tb-before">before</button><Formatting /></div>);
     el('tb-before').focus();

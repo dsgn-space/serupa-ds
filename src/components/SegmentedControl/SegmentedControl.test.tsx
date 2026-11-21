@@ -329,18 +329,17 @@ describe('SegmentedControl', () => {
     expect(warned.filter((w) => /invalid|required/i.test(String(w)))).toEqual([]);
   });
 
-  test('pressed: a held segment shrinks to 95% and springs back; not when read-only (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<><SegmentedControl id="sp" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" />
-        <SegmentedControl id="sr" aria-label="Locked" readOnly options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" /></>);
-      const seg = (id: string) => el(id).querySelectorAll('button')[1]!;
-      expect(css(seg('sp')).transitionProperty).toContain('scale');
-      await press(seg('sp'), () => expect.poll(() => css(seg('sp')).scale).toBe('0.95'));
-      await expect.poll(() => css(seg('sp')).scale).toBe('none');
-      await press(seg('sr'), () => expect(css(seg('sr')).scale).toBe('none'));
-    });
+  test('pressed: a held segment takes a wash of the text color (its held fill) and the hover text, and stays full size; not when read-only (ED1)', async () => {
+    await render(<><SegmentedControl id="sp" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" />
+      <SegmentedControl id="sr" aria-label="Locked" readOnly options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" /></>);
+    const seg = (id: string) => el(id).querySelectorAll('button')[1]!;
+    const look = (id: string) => [css(seg(id)).backgroundColor, css(seg(id)).color, css(seg(id)).scale.replace('none', '1')];
+    const rest = look('sr');
+    const held = await press(seg('sp'), () => look('sp'));
+    expect([held[0] === rest[0], held[1], held[2]]).toEqual([false, color('var(--text)'), '1']);
+    expect(await press(seg('sr'), () => look('sr'))).toEqual(rest);
   });
-  test('a segment picked by a press held as long as a finger holds it: the indicator comes to rest on the whole segment, not on its pressed (95%) size', async () => {
+  test('a segment picked by a press held as long as a finger holds it: the indicator comes to rest on the whole segment', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="hp" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }, { value: 'c', label: 'Calendar' }]} defaultValue="a" />);
       await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
@@ -348,8 +347,8 @@ describe('SegmentedControl', () => {
       const ind = el('hp').firstElementChild as HTMLElement;
       for (const i of [2, 0, 1]) {
         const b = items('hp')[i]!;
-        // Held until it has shrunk all the way, so it is let go at its smallest.
-        await press(b, () => expect.poll(() => css(b).scale).toBe('0.95'));
+        // Held until its held fill shows, as long as a finger holds it.
+        await press(b, () => expect.poll(() => css(b).backgroundColor).not.toBe('rgba(0, 0, 0, 0)'));
         await expect.poll(() => [b.getAttribute('aria-checked') ?? b.getAttribute('aria-pressed'), css(b).scale, ind.hasAttribute('data-slide')]).toEqual(['true', 'none', false]);
         const r = b.getBoundingClientRect(), at = ind.getBoundingClientRect();
         expect([Math.abs(at.left - r.left) < 0.6, Math.abs(at.width - r.width) < 0.6]).toEqual([true, true]);

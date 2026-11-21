@@ -72,6 +72,16 @@
           }
         }
       },
+      "wash-pressed": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The color washed over a segment while it's held down, at layer-pressed strength.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--segmented-control-wash-pressed"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",
@@ -248,11 +258,21 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-95}",
-        "$description": "Size of a segment's label while it's held down (95%). 1 turns it off.",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size of a segment while it's held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-95)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-press-scale"
+          }
+        }
+      },
+      "layer-pressed": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "How strong the wash of the text color is on a segment while it's held down (10%).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--segmented-control-layer-pressed"
           }
         }
       }

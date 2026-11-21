@@ -119,7 +119,7 @@
 }
 .dk-badge--interactive > :not(.dk-badge__loader) { position: relative; }   /* positioned, so the content paints above the layer */
 @media (hover: hover) { .dk-badge--interactive:hover:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-hover-layer, var(--opacity-10)); } }
-.dk-badge--interactive:active:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-active-layer, var(--opacity-15)); }
+.dk-badge--interactive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-active-layer, var(--opacity-15)); }
 /* …and on subtle and outline the text moves away from the layer (darker in light themes, lighter in dark), so it keeps 4.5:1 */
 @media (hover: hover) { .dk-badge--interactive.dk-badge--subtle:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-sfg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); } }
 @media (hover: hover) { .dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); } }
@@ -138,8 +138,9 @@
    clickable badges only; the loading cross-fade is on every badge. Under reduced motion the press stops and
    loading only fades.
    Release: back to size at motion-release with ease-enter, with no overshoot.
-   Press: shrinks to --badge-press-scale while held (pointer, Space, or Enter through data-pressed). */
-.dk-badge { --dk-badge-press: var(--badge-press-scale, var(--scale-97)); --dk-badge-loader-from: var(--scale-50); }
+   Press: the state layer above darkens while held (pointer, Space, or Enter through data-pressed). Nothing shrinks
+   by default; --badge-press-scale opts in to one. */
+.dk-badge { --dk-badge-press: var(--badge-press-scale, var(--scale-100)); --dk-badge-loader-from: var(--scale-50); }
 .dk-badge--interactive {
   transition-property: color, scale;
   transition-duration: var(--motion-hover), var(--motion-release);

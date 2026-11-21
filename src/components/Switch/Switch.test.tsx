@@ -300,15 +300,14 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: the thumb shrinks to 90% while the row is held and springs back; not when disabled (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<><Switch id="ps">Press me</Switch><Switch id="pd" disabled>Off</Switch></>);
-      const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
-      expect(css(thumb('ps')).transitionProperty).toContain('scale');
-      await press(el('ps').closest('label')!, () => expect.poll(() => css(thumb('ps')).scale).toBe('0.9'));
-      await expect.poll(() => css(thumb('ps')).scale).toBe('none');
-      await press(el('pd').closest('label')!, () => expect(css(thumb('pd')).scale).toBe('none'));
-    });
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control-pressed; on: primary-pressed), and the thumb stays full size; not when disabled (ED1)', async () => {
+    await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
+    const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
+    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1')];
+    const rest = look('pd');
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control-pressed)'), '1']);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1']);
+    expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 });
 

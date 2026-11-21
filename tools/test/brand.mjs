@@ -43,7 +43,7 @@ if (any) {
   const missing = Object.entries(any.themes).flatMap(([th, v]) => shippedAliases.filter((a) => !(a in v)).map((a) => `${th}: ${a}`));
   t('the themes set every alias the shipped themes set', !missing.length, missing.join(', '));
   t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited|field-action)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
-  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-subtle|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
+  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-pressed|primary-subtle|primary-subtle-pressed|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
 }
 // --motion brisk|calm: every surface and change role one step quicker or calmer, each still a step of the scale and
 // each exit still shorter than its enter; the loops and the press keep their pace.

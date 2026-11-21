@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Stepper, type StepperStep } from './Stepper';
 
@@ -287,14 +287,12 @@ describe('Stepper', () => {
     }
   });
 
-  test('pressed: a step\'s indicator shrinks to 95% while its head is held, on scale alone, and springs back (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<Stepper id="sp" steps={STEPS} current={2} onStepClick={() => {}} />);
-      const head = document.querySelector('#sp button') as HTMLButtonElement, dot = head.firstElementChild as HTMLElement;
-      expect(css(dot).transitionProperty).toBe('scale');
-      await press(head, () => expect.poll(() => css(dot).scale).toBe('0.95'));
-      await expect.poll(() => css(dot).scale).toBe('none');
-    });
+  test('pressed: while a step\'s head is held its indicator takes a wash of the text color over its fill (its held fill), and stays full size (ED1)', async () => {
+    await render(<Stepper id="sp" steps={STEPS} current={2} onStepClick={() => {}} />);
+    const head = document.querySelector('#sp button') as HTMLButtonElement, dot = head.firstElementChild as HTMLElement;
+    const rest = css(dot).backgroundImage;
+    const held = await press(head, () => [css(dot).backgroundImage, css(dot).scale.replace('none', '1')]);
+    expect([rest, /gradient/.test(held[0]!), held[1]]).toEqual(['none', true, '1']);
   });
 });
 

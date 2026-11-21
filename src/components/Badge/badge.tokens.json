@@ -604,8 +604,8 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-97}",
-        "$description": "Clickable badges: size while pressed (97%); `100%` turns it off",
+        "$value": "{transforms.scale-100}",
+        "$description": "Clickable badges: size while pressed. 100%: off by default, since a press shows as the stronger state layer (active-layer). Set it, e.g. to `var(--scale-97)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--badge-press-scale"

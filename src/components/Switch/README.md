@@ -113,8 +113,10 @@ Each is an optional override: set it on the page, a container or one switch. The
 | --- | --- | --- |
 | `--switch-track` | `border-control` | The track while off |
 | `--switch-track-hover` | `border-control-hover` | The track while off, on hover |
+| `--switch-track-pressed` | `border-control-pressed` | The off track while held down, one step past track-hover. |
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
+| `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
 | `--switch-thumb` | `field` | The thumb while off |
 | `--switch-thumb-checked` | `on-primary` | The thumb while on |
 | `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
@@ -152,5 +154,5 @@ Each is an optional override: set it on the page, a container or one switch. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--switch-press-scale` | `scale-90` | Size of the thumb while it's held down (90%). 1 turns it off |
+| `--switch-press-scale` | `scale-100` | Size of the thumb while it's held down. 100%: off by default, since a press shows as the held track (track-pressed, track-checked-pressed). Set it, e.g. to `var(--scale-90)`, to add a shrink. |
 <!-- token-table:end -->

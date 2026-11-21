@@ -32,6 +32,26 @@
           }
         }
       },
+      "indicator-text-shaded": {
+        "$type": "color",
+        "$value": "{color.text-muted-shaded}",
+        "$description": "An upcoming step's number while its head is held down (4.5:1 on the washed fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stepper-indicator-text-shaded"
+          }
+        }
+      },
+      "wash-pressed": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The color washed over a step's indicator while its head is held down, at layer-pressed strength.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stepper-wash-pressed"
+          }
+        }
+      },
       "bg-active": {
         "$type": "color",
         "$value": "{color.primary}",
@@ -234,11 +254,21 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-95}",
-        "$description": "Size of a step's indicator while its head is held down (95%). 1 turns it off.",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size of a step's indicator while its head is held down. 100%: off by default, since a press shows as the held wash (layer-pressed). Set it, e.g. to `var(--scale-95)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--stepper-press-scale"
+          }
+        }
+      },
+      "layer-pressed": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "How strong the wash of the text color is on a step's indicator while its head is held down (10%).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stepper-layer-pressed"
           }
         }
       }

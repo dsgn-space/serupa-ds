@@ -45,9 +45,9 @@ describe('Popover', () => {
     await userEvent.keyboard('{Escape}');
     expect(isOpen('pt')).toBe(false);
   });
-  test('opened from a pressed Button, it stays put while the Button grows back from its press, where it rode the scale', async () => {
+  test('opened from a pressed Button, it stays put while the Button grows back from its press, where it rode the scale (a Button that opts in to a shrink)', async () => {
     await withMotion(async () => {
-      await render(<div style={{ padding: 80 }}><Popover title="Share" placement="bottom-start" trigger={<Button id="tpress">Share</Button>}><input aria-label="Email" /></Popover></div>);
+      await render(<div style={{ padding: 80 }}><Popover title="Share" placement="bottom-start" trigger={<Button id="tpress" style={{ '--button-press-scale': 'var(--scale-97)' } as React.CSSProperties}>Share</Button>}><input aria-label="Email" /></Popover></div>);
       const b = document.getElementById('tpress')!;
       b.focus();
       await userEvent.keyboard('[Space>]');

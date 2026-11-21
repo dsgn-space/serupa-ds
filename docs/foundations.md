@@ -631,11 +631,11 @@ Transforms move how an element is drawn, not where it sits in the layout, so nei
 
 Rules of thumb:
 
-- Micro-interactions: in your own CSS, scale a card up a little on hover and a control down while it's pressed, with `transition-transform duration-150` on the element (utilities have no `hover:` or `active:` prefix):
+- Micro-interactions: show a press as a darker color, one step past hover, not a shrink, as the components do (see States): a shrink is hard to see under a finger and breaks the look of small controls. In your own CSS (utilities have no `hover:` or `active:` prefix):
 
   ```css
-  @media (hover: hover) { .card-link:hover { scale: var(--scale-105); } }
-  .pressable:active { scale: var(--scale-95); }
+  @media (hover: hover) { .pressable:hover { background: var(--secondary); } }
+  .pressable:active { background: var(--secondary-hover); }
   ```
 - Menus and dialogs enter from `scale-95 opacity-0` to `scale-100 opacity-100`, with `origin-top` for menus that drop down.
 - Center an absolutely positioned element with `left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`.
@@ -1072,7 +1072,7 @@ Every interactive component moves through the same eight states, in this order o
 | --- | --- | --- | --- |
 | Rest | Nothing is happening | The component's own colors | — |
 | Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-hover` or `highlight`), or darker text | `secondary`, `surface-hover`, `highlight` |
-| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
+| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover, as a color, never a shrink: `pressed` for rows, tabs, days and page buttons; `primary-pressed`, `primary-subtle-pressed`, `secondary-hover` and `danger-pressed` for buttons; `field-border-pressed` and `border-control-pressed` for checkboxes, radios and switches; a wash of the text color over a linked card. A shrink is hard to see under a finger and reads as a glitch on a small control, so only Slider's thumb changes size, growing while it's dragged | `pressed`, `primary-pressed`, `danger-pressed`, the `…-bg-pressed` component tokens |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
 | Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |

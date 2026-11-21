@@ -94,7 +94,7 @@ function App() {
     <Badge id="lnk" tone="info" href="#here" target="_blank">Link</Badge>
     <Badge id="dis" onClick={hit} disabled>Off</Badge>
     <Badge id="mi" tone="violet" onClick={hit} style={{ width: '160px' }}>Press me</Badge>
-    <Badge id="mioff" onClick={hit} style={{ '--badge-press-scale': '100%' } as React.CSSProperties}>Calm</Badge>
+    <Badge id="mion" onClick={hit} style={{ '--badge-press-scale': 'var(--scale-97)' } as React.CSSProperties}>Shrinks</Badge>
     <Badge id="mipd" onClick={hit} onPointerDown={(e) => e.preventDefault()}>Mine</Badge>
     <Badge id="both" onClick={hit} onRemove={() => {}}>Both</Badge>
     <Badge id="ld" tone="success" leftIcon="check" onClick={hit} loading={loading}>Approve request</Badge>
@@ -522,16 +522,20 @@ describe('Badge', () => {
     expect(css(e).transitionTimingFunction).toMatch(/cubic-bezier\(0\.25, 1, 0\.5, 1\)$/);
   });
 
-  test('press: shrinks to 97% while held, adds nothing inside the badge, and comes back on release without growing past full size', async () => {
+  test('press: the layer goes to its held strength (15%) while held, nothing shrinks and nothing is added inside the badge; --badge-press-scale opts in to a shrink that comes back on release without growing past full size', async () => {
     await show();
+    const layer = (e: Element) => getComputedStyle(e, '::before').opacity;
     const e = el('mi'), kids = () => [...e.children].map((c) => c.className), before = kids();
-    const during = await hold(e, async () => { await expect.poll(() => css(e).scale).toBe('0.97'); return kids(); }, { at: { x: 12, y: 12 } });
-    expect(during).toEqual(before);
+    const during = await hold(e, async () => { await expect.poll(() => layer(e)).toBe('0.15'); ended(e); return { kids: kids(), scale: css(e).scale }; }, { at: { x: 12, y: 12 } });
+    expect(during.kids).toEqual(before);
+    expect(['none', '1']).toContain(during.scale);
+    const o = el('mion');
+    await hold(o, () => expect.poll(() => css(o).scale).toBe('0.97'), { at: { x: 12, y: 12 } });
     const seen: number[] = [];
     const t0 = performance.now();
-    while (performance.now() - t0 < 400) { seen.push(parseFloat(css(e).scale) || 1); await new Promise(requestAnimationFrame); }
+    while (performance.now() - t0 < 400) { seen.push(parseFloat(css(o).scale) || 1); await new Promise(requestAnimationFrame); }
     expect(Math.max(...seen)).toBeLessThanOrEqual(1);
-    await expect.poll(() => ['none', '1'].includes(css(e).scale)).toBe(true);
+    await expect.poll(() => ['none', '1'].includes(css(o).scale)).toBe(true);
   });
 
   test('Enter shows the press like Space (data-pressed while held)', async () => {
@@ -541,23 +545,24 @@ describe('Badge', () => {
     await userEvent.keyboard('{Enter>}');
     expect(e.hasAttribute('data-pressed')).toBe(true);
     ended(e);
-    expect(css(e).scale).toBe('0.97');
+    await expect.poll(() => getComputedStyle(e, '::before').opacity).toBe('0.15');
     await userEvent.keyboard('{/Enter}');
     expect(e.hasAttribute('data-pressed')).toBe(false);
   });
 
-  test('--badge-press-scale: 100% turns the press off; no press on disabled or plain badges; your onPointerDown preventing the default still presses', async () => {
+  test('only a badge that opts in (--badge-press-scale) shrinks; no press on disabled or plain badges; your onPointerDown preventing the default still presses', async () => {
     await show();
     const press = (id: string) => hold(el(id), async () => {
-      if (id === 'mioff' || id === 'def') await expect.poll(() => el(id).matches(':active')).toBe(true);
+      if (id === 'mion' || id === 'def') await expect.poll(() => el(id).matches(':active')).toBe(true);
       await new Promise(requestAnimationFrame);
       ended(el(id));
-      return { scale: css(el(id)).scale };
+      if (id === 'mipd') await expect.poll(() => getComputedStyle(el(id), '::before').opacity).toBe('0.15');
+      return { scale: css(el(id)).scale, layer: getComputedStyle(el(id), '::before').opacity };
     }, { ms: 250, at: { x: 6, y: 6 } });
     const unscaled = (s: string) => s === 'none' || s === '1';
-    const off = await press('mioff'), pd = await press('mipd'), plain = await press('def');
+    const on = await press('mion'), pd = await press('mipd'), plain = await press('def');
     const dis = await hold(el('dis'), () => ({ scale: css(el('dis')).scale }), { ms: 150, at: { x: 6, y: 6 } });
-    expect([unscaled(off.scale), unscaled(pd.scale), unscaled(dis.scale), unscaled(plain.scale)]).toEqual([true, false, true, true]);
+    expect([unscaled(on.scale), unscaled(pd.scale), pd.layer, unscaled(dis.scale), unscaled(plain.scale)]).toEqual([false, true, '0.15', true, true]);
   });
 
   test('optical balance, like Button: an icon on one side only (leading icon or dot / the ×) gives the text side 2px more padding; both or neither stay even; mirrored in right-to-left', async () => {
@@ -608,9 +613,9 @@ describe('Badge', () => {
     const restore = reduceMotion();
     try {
       await show();
-      const o = await hold(el('mi'), async () => {
+      const o = await hold(el('mion'), async () => {
         await new Promise(requestAnimationFrame);
-        return { ping: getComputedStyle((el('pg').querySelector(DOT) as HTMLElement), '::after').animationName + '/' + getComputedStyle(el('pgind'), '::after').display, scale: css(el('mi')).scale, blur: css(el('ldspan').querySelector(LABEL)).filter, from: css(el('ldspan')).getPropertyValue('--dk-badge-loader-from').trim(), anim: css(el('ldspan').querySelector('[data-component=loader]')!.parentElement).animationName };
+        return { ping: getComputedStyle((el('pg').querySelector(DOT) as HTMLElement), '::after').animationName + '/' + getComputedStyle(el('pgind'), '::after').display, scale: css(el('mion')).scale, blur: css(el('ldspan').querySelector(LABEL)).filter, from: css(el('ldspan')).getPropertyValue('--dk-badge-loader-from').trim(), anim: css(el('ldspan').querySelector('[data-component=loader]')!.parentElement).animationName };
       }, { ms: 200, at: { x: 6, y: 6 } });
       expect(o.ping).toBe('none/none');
       expect(['1', 'none']).toContain(o.scale);

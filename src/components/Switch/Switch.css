@@ -56,9 +56,11 @@
 .dk-switch__description { color: var(--switch-description-color, var(--text-muted)); }
 /* Read-only: no pointer cursor or hover, since a click won't flip it. */
 .dk-switch--readonly { cursor: default; }
-/* Pressed: the thumb shrinks a little while the row is held (pointer, or Space on the switch) and springs back.
-   Only scale; not when read-only, pending or disabled, and not under reduced motion (below). */
-.dk-switch:active:not(.dk-switch--readonly, .dk-switch--pending, :has(.dk-switch__input:disabled)) .dk-switch__thumb { scale: var(--switch-press-scale, var(--scale-90)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+/* Pressed: while the row is held (pointer, or Space on the switch) the track takes its held color, a step past
+   hover. Nothing shrinks by default; --switch-press-scale opts in to a smaller thumb. Not when read-only, pending
+   or disabled. */
+.dk-switch:not(.dk-switch--readonly, .dk-switch--pending):active .dk-switch__input:not(:disabled, [readonly]) { --dk-switch-track: var(--switch-track-pressed, var(--border-control-pressed)); --dk-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
+.dk-switch:active:not(.dk-switch--readonly, .dk-switch--pending, :has(.dk-switch__input:disabled)) .dk-switch__thumb { scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
 /* Pending: Loader's ring on the thumb (EE1): a quarter arc in primary (3:1 on the off thumb's field, and on the
    on thumb's on-primary) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */

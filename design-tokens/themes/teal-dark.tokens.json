@@ -20,6 +20,16 @@
         }
       }
     },
+    "primary-pressed": {
+      "$type": "color",
+      "$value": "{color.teal-200}",
+      "$description": "Alias. Pressed state of `primary`: one step past `primary-hover` (darker in light themes, lighter in dark), so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-pressed"
+        }
+      }
+    },
     "primary-subtle": {
       "$type": "color",
       "$value": "{color.teal-950}",
@@ -27,6 +37,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary-subtle"
+        }
+      }
+    },
+    "primary-subtle-pressed": {
+      "$type": "color",
+      "$value": "{color.teal-900}",
+      "$description": "Alias. Pressed state of a fill in `primary-subtle` (a secondary button held down): one step past it (brand 100 light, brand 900 dark). `primary-hover` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-subtle-pressed"
         }
       }
     },
@@ -258,6 +278,16 @@
         }
       }
     },
+    "field-border-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-500 in light, zinc-500 in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-pressed"
+        }
+      }
+    },
     "border-control": {
       "$type": "color",
       "$value": "{color.zinc-400}",
@@ -275,6 +305,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-control-hover"
+        }
+      }
+    },
+    "border-control-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. `border-control` while held down, one step past `border-control-hover` (Switch's track).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--border-control-pressed"
         }
       }
     },
@@ -631,6 +671,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--danger-hover"
+        }
+      }
+    },
+    "danger-pressed": {
+      "$type": "color",
+      "$value": "{color.red-800}",
+      "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--danger-pressed"
         }
       }
     },

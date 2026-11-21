@@ -342,7 +342,7 @@ describe('Density axis', () => {
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-subtle']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed']);
     // A theme for every accent color of the palette, blue first, each light and dark and named after its color.
     expect(BRANDS).toEqual(['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']);
     expect(tokens.color.themes.map((t: { id: string; name: string }) => `${t.id}: ${t.name}`)).toEqual(BRANDS.flatMap((b) => [`${b}-light: ${b[0]!.toUpperCase()}${b.slice(1)} Light`, `${b}-dark: ${b[0]!.toUpperCase()}${b.slice(1)} Dark`]));

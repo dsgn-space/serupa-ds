@@ -478,25 +478,30 @@ function Motion() {
     <Button id="busy" loading={busy} leftIcon="save">Save</Button>
     <Button id="big" size="lg" style={{ width: '240px' }}>Wide</Button>
     <Button id="nopress" style={vars({ '--button-press-scale': '1' })}>No press</Button>
+    <Button id="shrink" variant="secondary" style={vars({ '--button-press-scale': 'var(--scale-97)' })}>Shrink</Button>
     <div style={nudge}><div style={vars({ '--button-icon-nudge': '0px' })}><Button id="nonudge" rightIcon="arrow_forward">No nudge</Button></div></div>
     <Button id="mine" onPointerDown={() => log.push('mine-down')} onKeyDown={() => log.push('mine-key')} onKeyUp={() => log.push('mine-up')}>Mine</Button>
   </div>;
 }
 
 describe('Button micro-interactions', () => {
-  test('press: held down, the button shrinks to 97% (scale-97); released, it comes back and the click still fires', async () => {
+  test('press: held down, the button takes its held fill, one step past hover, and stays full size; released, it comes back and the click still fires', async () => {
     await render(<Motion />);
     take();
-    await hold(el('press'), () => expect.poll(() => scale('press')).toBe('0.97'), { ms: 1500 });
+    const rest = getComputedStyle(el('press')).backgroundColor;
+    const held = await hold(el('press'), () => { const s = getComputedStyle(el('press')); return { bg: s.backgroundColor, scale: s.scale }; }, { ms: 1500 });
+    expect(held.bg).toBe(color('var(--primary-subtle-pressed)'));
+    expect(held.bg).not.toBe(color('var(--primary-subtle)'));
+    expect(still).toContain(held.scale);
     await eased(el('press'));
-    expect(still).toContain(scale('press'));
+    expect([getComputedStyle(el('press')).backgroundColor === held.bg, rest === held.bg]).toEqual([false, false]);
     expect(take()).toEqual(['click']);
   });
 
-  test('press: animates scale only, down at --button-press-duration (100ms) with ease-settle, and comes back on release over motion-release (300ms) with ease-enter, never past full size', async () => {
+  test('press: --button-press-scale opts in to a shrink, animating scale only, down at --button-press-duration (100ms) with ease-settle, and back on release over motion-release (300ms) with ease-enter, never past full size', async () => {
     await render(<Motion />);
-    const timing = () => { const s = getComputedStyle(el('press')), props = s.transitionProperty.split(', '), i = props.indexOf('scale'); return { i, props, d: s.transitionDuration.split(', ')[i], e: s.transitionTimingFunction.split(/, (?=c|l|e)/)[i] }; };
-    const rest = timing(), down = await hold(el('press'), async () => { await expect.poll(() => getComputedStyle(el('press')).scale).toBe('0.97'); return timing(); }, { ms: 1000 });
+    const timing = () => { const s = getComputedStyle(el('shrink')), props = s.transitionProperty.split(', '), i = props.indexOf('scale'); return { i, props, d: s.transitionDuration.split(', ')[i], e: s.transitionTimingFunction.split(/, (?=c|l|e)/)[i] }; };
+    const rest = timing(), down = await hold(el('shrink'), async () => { await expect.poll(() => getComputedStyle(el('shrink')).scale).toBe('0.97'); return timing(); }, { ms: 1000 });
     expect(rest.i).toBeGreaterThanOrEqual(0);
     expect([rest.d, down.d]).toEqual(['0.3s', '0.1s']);
     expect(rest.e).toMatch(/cubic-bezier\(0.25, 1, 0.5, 1\)/);
@@ -505,11 +510,65 @@ describe('Button micro-interactions', () => {
     expect([props.includes('all'), props.includes('width')]).toEqual([false, false]);
     // Let go: no overshoot, so it never grows past 100% on the way back.
     const seen: number[] = [];
-    await hold(el('press'), () => expect.poll(() => scale('press')).toBe('0.97'), { ms: 1000 });
+    await hold(el('shrink'), () => expect.poll(() => scale('shrink')).toBe('0.97'), { ms: 1000 });
     const t0 = performance.now();
-    while (performance.now() - t0 < 400) { seen.push(parseFloat(getComputedStyle(el('press')).scale) || 1); await frame(); }
+    while (performance.now() - t0 < 400) { seen.push(parseFloat(getComputedStyle(el('shrink')).scale) || 1); await frame(); }
     expect(Math.min(...seen)).toBeLessThan(1);
     expect(Math.max(...seen)).toBeLessThanOrEqual(1);
+  });
+
+  test('press: every variant, destructive or not, takes a held fill that is its own token, differs from its hover and rest fills, and keeps its text at 4.5:1, in every theme', async () => {
+    const variants = ['primary', 'outline', 'secondary', 'ghost'] as const;
+    await render(<div id="vs" style={vars({ transition: 'none' })}>{variants.flatMap((v) => [false, true].map((d) => <Button key={v + d} id={`h-${v}${d ? '-d' : ''}`} variant={v} destructive={d} style={vars({ transition: 'none' })}>Save</Button>))}</div>);
+    const want: Record<string, string> = {
+      primary: 'var(--primary-pressed)', outline: 'var(--secondary-hover)', secondary: 'var(--primary-subtle-pressed)', ghost: 'var(--secondary-hover)',
+      'primary-d': 'var(--danger-pressed)', 'outline-d': 'var(--danger-subtle-hover)', 'secondary-d': 'var(--danger-subtle-hover)', 'ghost-d': 'var(--danger-subtle-hover)',
+    };
+    const hover: Record<string, string> = {
+      primary: 'var(--primary-hover)', outline: 'var(--secondary)', secondary: 'var(--primary-subtle)', ghost: 'var(--secondary)',
+      'primary-d': 'var(--danger-hover)', 'outline-d': 'var(--danger-subtle)', 'secondary-d': 'var(--danger-subtle)', 'ghost-d': 'var(--danger-subtle)',
+    };
+    const bad: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const k of Object.keys(want)) {
+        const b = el(`h-${k}`), rest = getComputedStyle(b).backgroundColor;
+        b.setAttribute('data-pressed', '');
+        const s = getComputedStyle(b), bg = s.backgroundColor;
+        if (bg !== color(want[k]!)) bad.push(`${th} ${k}: ${bg}, not ${want[k]}`);
+        if (bg === color(hover[k]!) || bg === rest) bad.push(`${th} ${k}: held looks like hover or rest`);
+        if (contrast(s.color, bg) < 4.5) bad.push(`${th} ${k}: text ${contrast(s.color, bg).toFixed(2)}`);
+        if (!still.includes(s.scale)) bad.push(`${th} ${k}: scale ${s.scale}`);
+        b.removeAttribute('data-pressed');
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(bad.slice(0, 12)).toEqual([]);
+  });
+
+  test('press: a primary button given its own background works out a held fill a step past its worked-out hover, darker in light themes, lighter in dark; onMedia takes a stronger wash of its ink', async () => {
+    await render(<div>
+      <div data-theme="blue-light"><Button id="own-l" style={vars({ '--button-primary-bg': '#0f766e' })}>Own</Button></div>
+      <div data-theme="blue-dark"><Button id="own-d" style={vars({ '--button-primary-bg': '#2dd4bf' })}>Own</Button></div>
+      <div style={{ background: '#000' }}><Button id="od" onMedia="dark" variant="outline">On photo</Button><Button id="odp" onMedia="dark">On photo</Button></div>
+    </div>);
+    const cv = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d', { willReadFrequently: true })!;
+    const lum = (c: string) => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const [r, g, b] = cv.getImageData(0, 0, 1, 1).data; return contrast(`rgb(${r}, ${g}, ${b})`, 'rgb(0, 0, 0)'); };
+    const fills = async (id: string) => {
+      const rest = getComputedStyle(el(id)).backgroundColor;
+      await userEvent.hover(el(id)); await eased(el(id));
+      const hov = getComputedStyle(el(id)).backgroundColor;
+      el(id).setAttribute('data-pressed', ''); await eased(el(id));
+      const held = getComputedStyle(el(id)).backgroundColor;
+      el(id).removeAttribute('data-pressed'); await userEvent.unhover(el(id));
+      return { rest, hov, held };
+    };
+    const l = await fills('own-l'), d = await fills('own-d');
+    expect([lum(l.held) < lum(l.hov), lum(l.hov) < lum(l.rest)]).toEqual([true, true]);
+    expect([lum(d.held) > lum(d.hov), lum(d.hov) > lum(d.rest)]).toEqual([true, true]);
+    const o = await fills('od'), p = await fills('odp');
+    expect(new Set([o.rest, o.hov, o.held]).size).toBe(3);
+    expect(new Set([p.rest, p.hov, p.held]).size).toBe(3);
   });
 
   test('press: Enter shows it too (data-pressed while the key is down); releasing clears it and the click fired once; moving focus away mid-press clears it', async () => {
@@ -517,7 +576,7 @@ describe('Button micro-interactions', () => {
     take();
     el('press').focus();
     await userEvent.keyboard('{Enter>}');
-    await expect.poll(() => scale('press')).toBe('0.97');
+    await expect.poll(() => getComputedStyle(el('press')).backgroundColor).toBe(color('var(--primary-subtle-pressed)'));
     expect(el('press').hasAttribute('data-pressed')).toBe(true);
     await userEvent.keyboard('{/Enter}');
     expect(el('press').hasAttribute('data-pressed')).toBe(false);
@@ -529,9 +588,14 @@ describe('Button micro-interactions', () => {
     expect(el('press').hasAttribute('data-pressed')).toBe(false);
   });
 
-  test('press: none on the link variant (it reads as text) or a disabled button; --button-press-scale: 1 turns it off', async () => {
+  test('press: no held fill on the link variant (it reads as text) or a disabled button, and nothing shrinks', async () => {
     await render(<Motion />);
-    for (const id of ['lnk', 'dis', 'nopress']) expect(still, id).toContain(await hold(el(id), () => scale(id), { ms: 300 }));
+    for (const id of ['lnk', 'dis', 'nopress']) {
+      const rest = getComputedStyle(el(id)).backgroundColor;
+      const held = await hold(el(id), () => ({ scale: scale(id), bg: getComputedStyle(el(id)).backgroundColor }), { ms: 300 });
+      expect(still, id).toContain(held.scale);
+      if (id !== 'nopress') expect(held.bg, id).toBe(rest);
+    }
   });
 
   test('nudge: off by default; --button-icon-nudge: var(--spacing-0.5) slides a right icon 2px forward on hover (the other way in right-to-left text), never a left icon; 0 turns it off again inside an area that turned it on; back in place after hover', async () => {
