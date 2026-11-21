@@ -88,7 +88,7 @@ describe('TagGroup', () => {
 
   test('"Show more" fades to its hover color over motion-hover, as a Link does', async () => {
     await render(<SerupaProvider locale="en-US"><TagGroup label="Labels" items={tags} max={2} /></SerupaProvider>);
-    const m = document.querySelector('.dk-tag-group__more')!;
+    const m = page.getByRole('button', { name: /Show/ }).element();
     const s = withMotion(() => [css(m).transitionProperty, css(m).transitionDuration]);
     expect(s).toEqual(['color', '0.15s']);
   });

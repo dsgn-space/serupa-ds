@@ -220,7 +220,7 @@ describe('ChatMessage: an agent at work', () => {
 
   test('"Thought for …" fades to its hover color over motion-hover, as a Link does', async () => {
     await render(<ChatMessage id="rf" author="Assistant" reasoning="First I checked the order." reasoningTime={12}>Done</ChatMessage>);
-    const t = document.querySelector('#rf .dk-chat-message__reasoning-toggle')!;
+    const t = document.querySelector('#rf summary')!;
     const s = withMotion(() => [css(t).transitionProperty, css(t).transitionDuration]);
     expect(s).toEqual(['color', '0.15s']);
   });

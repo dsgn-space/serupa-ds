@@ -144,7 +144,7 @@ describe('TableOfContents', () => {
 describe('TableOfContents hover', () => {
   test('a link fades to its hover color over motion-hover, as a Link does', async () => {
     await render(<TableOfContents id="tf" items={[{ id: 'x', label: 'One' }, { id: 'y', label: 'Two' }]} />);
-    const l = document.querySelector('#tf .dk-toc__link')!;
+    const l = page.getByRole('link', { name: 'One' }).element();
     const s = withMotion(() => [css(l).transitionProperty, css(l).transitionDuration]);
     expect(s).toEqual(['color', '0.15s']);
   });

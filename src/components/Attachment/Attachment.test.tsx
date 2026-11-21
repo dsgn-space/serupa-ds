@@ -102,7 +102,7 @@ describe('Attachment', () => {
 
   test('a linked name fades to its hover color over motion-hover, as a Link does', async () => {
     await render(<Attachment id="fade" name="Q3.xlsx" href="/files/q3" />);
-    const a = document.querySelector('#fade a.dk-attachment__name')!;
+    const a = page.getByRole('link', { name: /Q3\.xlsx/ }).element();
     const s = withMotion(() => [css(a).transitionProperty, css(a).transitionDuration]);
     expect(s).toEqual(['color', '0.15s']);
   });
