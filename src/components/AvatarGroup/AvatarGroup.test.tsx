@@ -306,17 +306,19 @@ describe('AvatarGroup token names', () => {
 });
 
 describe('AvatarGroup held state', () => {
-  test('held down: the "+N" button fills one step past its hover (--avatar-group-more-bg-pressed), and its text or icon keeps 4.5:1 on it in every theme', async () => {
+  test('held down: the "+N" button fills one step past its hover (--avatar-group-more-bg-pressed) in every theme, dark too, and its text or icon keeps 4.5:1 on it', async () => {
     await render(<AvatarGroup id="held" max={3} onMore={() => {}}>{av(5)}</AvatarGroup>);
     const b = more('held')!;
     const f = () => b.firstElementChild;
     const low = await press(b, async () => {
-      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--pressed)'));
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--secondary-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);
         const r = contrast(css(f()).color, css(f()).backgroundColor);
         if (r < 4.5) out.push(`${th}: ${r.toFixed(2)}`);
+        // pressed was secondary-hover's own zinc-600 in dark, so holding the button changed nothing.
+        if (css(f()).backgroundColor === color('var(--secondary-hover)')) out.push(`${th}: held is the hover fill`);
       }
       document.documentElement.removeAttribute('data-theme');
       return out;

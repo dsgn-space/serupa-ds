@@ -25,6 +25,7 @@ await t('a component as the components write it passes', layered(`.dk-card { pad
 @media (min-width: 640px) { .dk-card { padding: var(--spacing-6); } }`), []);
 await t('component-layer: a rule outside the layer, a second block and another layer', `.dk-x { color: var(--card-text, var(--text)); }\n@layer dk.components { }\n@layer dk.components { }\n@layer dk.utilities { }`, ['serupa/component-layer', 'serupa/component-layer', 'serupa/component-layer']);
 await t('no-raw-value: px, ms and a bare number outside a var()', layered('.dk-x { min-width: 120px; transition: opacity 150ms; z-index: 10; }'), ['serupa/no-raw-value', 'serupa/no-raw-value', 'serupa/no-raw-value']);
+await t('no-raw-value: a cursor a token names (pointer, grab), while one with no token (zoom-in) passes', layered('.dk-x { cursor: pointer; } .dk-y { cursor: grab; } .dk-z { cursor: zoom-in; } .dk-w { cursor: var(--cursor-grabbing); }'), ['serupa/no-raw-value', 'serupa/no-raw-value']);
 await t('color-through-component-token: an alias and a palette step read directly', layered('.dk-x { color: var(--text); border-color: var(--blue-600); }'), ['serupa/color-through-component-token', 'serupa/color-through-component-token']);
 await t('color-through-component-token with allowPalette: palette steps pass, aliases still fail', layered('.dk-x { color: var(--blue-600); background: var(--surface); }'), ['serupa/color-through-component-token'], { 'serupa/color-through-component-token': [true, { allowPalette: true }] });
 await t('focus-ring-outline: a box-shadow ring on :focus-visible (not inset, not :focus-within)', layered(`.dk-x:focus-visible { box-shadow: 0 0 0 var(--focus-ring-width) var(--card-focus-ring, var(--focus-ring)); }
@@ -55,9 +56,9 @@ const own = (known) => ({ 'serupa/own-block': known ? [true, { known }] : true }
 await t('own-block: its own elements, and another block placed or sized, fed a custom property, or used as context, pass', layered(`.dk-combobox__popup { inset-block-start: var(--spacing-1); }
 .dk-combobox .dk-input { inline-size: var(--sizing-full); --input-height: var(--sizing-9); }
 .dk-input__field .dk-combobox__mark { color: inherit; }`), [], own(), combobox);
-await t('own-block: styling another block\'s element (Input\'s field, Button\'s icon) is flagged', layered(`.dk-combobox .dk-input__field { cursor: pointer; }
+await t('own-block: styling another block\'s element (Input\'s field, Button\'s icon) is flagged', layered(`.dk-combobox .dk-input__field { cursor: var(--cursor-interactive); }
 .dk-combobox > .dk-btn__icon { opacity: 0; }`), ['serupa/own-block', 'serupa/own-block'], own(), combobox);
-await t('own-block: a known crossing passes, and a known one no longer there is flagged', layered('.dk-combobox .dk-input__field { cursor: pointer; }'), ['serupa/own-block'], own({ Combobox: ['dk-input', 'dk-calendar'] }), combobox);
+await t('own-block: a known crossing passes, and a known one no longer there is flagged', layered('.dk-combobox .dk-input__field { cursor: var(--cursor-interactive); }'), ['serupa/own-block'], own({ Combobox: ['dk-input', 'dk-calendar'] }), combobox);
 
 // The project's own config (stylelint.config.mjs) on a component file: raw colors are flagged (GR276), and the ways the
 // components legitimately name a color pass: transparent, currentColor, color-mix() of tokens, black in a mask.

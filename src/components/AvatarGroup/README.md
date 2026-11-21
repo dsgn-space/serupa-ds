@@ -96,7 +96,7 @@ Each is an optional override: set it on the page, a container or one group. The 
 | `--avatar-group-more-bg` | `secondary` | The "+N" avatar's background. |
 | `--avatar-group-more-color` | `text` | The "+N" text (4.5:1 on more-bg). |
 | `--avatar-group-more-bg-hover` | `secondary-hover` | The "+N" button's background on hover, with `showMore` or `onMore`. |
-| `--avatar-group-more-bg-pressed` | `pressed` | The "+N" button's background while it's held down, one step past hover. |
+| `--avatar-group-more-bg-pressed` | `secondary-pressed` | The "+N" button's background while it's held down, one step past hover. |
 | `--avatar-group-focus-ring` | `focus-ring` | The focus ring round the "+N" button. |
 | `--avatar-group-ring-width` | `border-width-2` | The ring's width (2px). |
 | `--avatar-group-overlap-sm` | `spacing-0.5` | How far each avatar overlaps the one before at size sm (2px). At xs the avatars sit edge to edge, unless this is set. |

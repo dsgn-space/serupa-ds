@@ -8,6 +8,7 @@
   --on-primary: var(--white);
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
+  --secondary-pressed: var(--zinc-300);
   --highlight: var(--zinc-100);
   --pressed: var(--zinc-300);
   --surface: var(--white);
@@ -371,6 +372,7 @@
 [data-theme$="-light"] {
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
+  --secondary-pressed: var(--zinc-300);
   --highlight: var(--zinc-100);
   --pressed: var(--zinc-300);
   --surface: var(--white);
@@ -462,6 +464,7 @@
 [data-theme$="-dark"] {
   --secondary: var(--zinc-700);
   --secondary-hover: var(--zinc-600);
+  --secondary-pressed: var(--zinc-500);
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
@@ -987,6 +990,7 @@
   --on-primary: light-dark(var(--white), var(--blue-950));
   --secondary: light-dark(var(--zinc-100), var(--zinc-700));
   --secondary-hover: light-dark(var(--zinc-200), var(--zinc-600));
+  --secondary-pressed: light-dark(var(--zinc-300), var(--zinc-500));
   --highlight: light-dark(var(--zinc-100), var(--zinc-700));
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
