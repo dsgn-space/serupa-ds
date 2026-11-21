@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { SerupaProvider } from '../../internal/provider';
 import { Timesheet, weekProblems, weekTotals } from './Timesheet';
 
 const active = () => document.activeElement as HTMLElement;
@@ -37,6 +38,12 @@ describe('Patterns/Timesheet', () => {
     await userEvent.tab();
     await expect.poll(total).toMatch(/^(24|٢٤) hours this week/);
     await expect.poll(() => document.body.textContent).toMatch(/Week total (24|٢٤) hours/);
+  });
+
+  test('the week is one range in the locale\'s words, its shared month and year said once: "9.–15. Februar 2026", not "9. Februar to 15. Februar 2026"', async () => {
+    await render(<SerupaProvider locale="de"><Timesheet weekStart="2026-02-09" /></SerupaProvider>);
+    const range = new Intl.DateTimeFormat('de', { dateStyle: 'long', timeZone: 'UTC' }).formatRange(new Date(Date.UTC(2026, 1, 9)), new Date(Date.UTC(2026, 1, 15))).replace(/[\u2009\u202f]/g, ' ');
+    expect(document.querySelector('h1')?.textContent).toBe(`Week of ${range}`);
   });
 
   test('adding a project moves focus to its first day; removing one moves it to the next Remove, or to Add', async () => {

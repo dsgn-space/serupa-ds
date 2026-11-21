@@ -19,6 +19,7 @@ Each record says why Serupa is built the way it is: the context, the options wei
 | [0014](0014-dtcg-token-source.md) | Write the tokens in the W3C Design Tokens format | Accepted |
 | [0015](0015-upgrades.md) | Majors start as an RFC, and a script makes their renames | Accepted |
 | [0016](0016-draw-main-to-compare.md) | A pull request's pictures are compared with main's drawn on the spot | Accepted |
+| [0017](0017-react-compiler-output.md) | The package ships its client components compiled by the React Compiler | Accepted |
 
 There is no 0008: that number was never used.
 

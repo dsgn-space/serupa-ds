@@ -11,6 +11,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -76,7 +77,7 @@ const demo: Project[] = NAMES.map((name, i) => ({
 function shortDay(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
-  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+  return formatDate(iso, locale) || iso;
 }
 
 /** The view from a query string, with anything missing or unknown at its default. */

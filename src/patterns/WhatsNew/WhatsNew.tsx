@@ -11,6 +11,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* What's new: the product's changes, newest first, by month; what's new since your last visit marked; a filter by kind;
    and older months on request. For an app to copy. What it carries (WCAG 2.2):
@@ -75,8 +76,8 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, 
   const visible = groups.slice(0, shown);
   const count = visible.reduce((n, g) => n + g.changes.length, 0);
   const unseen = changes.filter((c) => c.date > lastSeen).length;
-  const monthName = (m: string) => new Date(`${m}-01T00:00`).toLocaleDateString(locale, { month: 'long', year: 'numeric' });
-  const dayName = (d: string) => new Date(`${d}T00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long' });
+  const monthName = (m: string) => formatDate(`${m}-01`, locale, { options: { month: 'long', year: 'numeric' } });
+  const dayName = (d: string) => formatDate(d, locale, { options: { day: 'numeric', month: 'long' } });
 
   const more = () => {
     firstAdded.current = groups[shown]?.changes[0]?.id ?? null;

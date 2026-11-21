@@ -13,6 +13,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Status page: is it working now, each service's last 90 days, what's being done about a problem, and email updates.
@@ -96,7 +97,6 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
   const overall = overallState(services);
   const open = incidents.filter((i) => !i.resolved);
   const past = incidents.filter((i) => i.resolved);
-  const when = (at: string) => new Date(at).toLocaleString(locale, { day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' });
   const names = (ids: string[]) => ids.map((id) => services.find((s) => s.id === id)?.name ?? id).join(', ');
 
   const subscribe = (e: React.FormEvent) => {
@@ -118,7 +118,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
       <ol className="m-0 flex list-none flex-col gap-3 border-s-2 border-border ps-4">
         {i.updates.map((u) => (
           <li key={u.at}>
-            <p className="m-0"><strong>{u.status}</strong> · <time dateTime={u.at} className="text-sm text-text-muted">{when(u.at)}</time></p>
+            <p className="m-0"><strong>{u.status}</strong> · <FormattedDate value={u.at} options={{ day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' }} className="text-sm text-text-muted" /></p>
             <p className="m-0">{u.text}</p>
           </li>
         ))}
