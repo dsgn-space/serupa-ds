@@ -5,6 +5,7 @@
 // A file without "use client" is a server component or plain helpers: the compiler's cache hook can't run on the
 // server, so those stay as they are. A function the compiler can't prove safe (the findings eslint-suppressions.json
 // holds) is left as written: panicThreshold 'none' skips it instead of failing the build.
+import path from 'node:path';
 import babel from '@babel/core';
 import compiler from 'babel-plugin-react-compiler';
 
@@ -31,5 +32,8 @@ export async function compileReact(file, code) {
     parserOpts: { plugins: ['typescript', 'jsx'] },
     plugins: [[compiler, { target: '19', panicThreshold: 'none' }]],
   });
-  return { code: out.code, map: out.map };
+  // The cache comes from src/internal/memoCache.ts, not react/compiler-runtime, which Preact's compatibility lacks.
+  const runtime = path.relative(path.dirname(file), path.join(file.slice(0, file.search(/[\\/]src[\\/]/)), 'src', 'internal', 'memoCache')).split(path.sep).join('/');
+  const compiled = out.code.replace(/(["'])react\/compiler-runtime\1/, JSON.stringify(runtime.startsWith('.') ? runtime : './' + runtime));
+  return { code: compiled, map: out.map };
 }

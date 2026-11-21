@@ -29,7 +29,7 @@ export default defineConfig({
   // make React 19 warn "outdated JSX transform" in dev, which the tests that fail on a console warning catch.
   oxc: { jsx: { runtime: 'automatic' } },
   // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
-  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'react/compiler-runtime', 'axe-core'] },
+  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'axe-core'] },
   // No file watcher in CI: a run never re-runs on a change, and the watcher walks the whole checkout, npm's cache
   // (.npm/) included. With 28 jobs on one runner it ran the host out of inotify handles: EMFILE on every file, 4 MB of
   // log, and a failed shard on main (pipeline 3053377020, 11 Nov 2026).

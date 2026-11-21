@@ -23,7 +23,7 @@ Measured on 20 November 2026, with the compiler over every "use client" file in 
 - **The tests run the compiled code.** `vitest.config.ts` goes through the same function, so what the component tests check is what ships.
 - **A function the compiler can't prove safe is left as written** (`panicThreshold: 'none'`). The lint rules that find those (`eslint-plugin-react-hooks`) keep their findings in `eslint-suppressions.json`; each one fixed lets the compiler take that function too.
 - **The browser script (`serupa.iife.js`) isn't compiled.** It takes React from `window.React`, and it keeps development warnings for plain pages, where speed matters less than being told what went wrong.
-- **React 19 is the floor already**, so `react/compiler-runtime` comes with the React an app has.
+- **The cache comes from the package, not from React.** The compiled code imports `src/internal/memoCache.ts` in place of `react/compiler-runtime`, which Preact's React compatibility doesn't have (a Preact app couldn't import the package). It keeps one array per component instance with `useState`, as `react/compiler-runtime` does on React 18.
 
 ## Consequences
 
