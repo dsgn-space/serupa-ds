@@ -1,5 +1,10 @@
 # Confirmation
 - button "Invite people"
+- alertdialog "Delete Atlas?":
+  - heading "Delete Atlas?" [level=2]
+  - paragraph: This removes the project and its files. It can’t be undone.
+  - button "Keep"
+  - button "Delete"
 
 # DoAskTheQuestion
 - heading "Delete Atlas?" [level=2]
@@ -27,15 +32,70 @@
 
 # FullScreen
 - button "Invite people"
+- dialog "Edit profile":
+  - heading "Edit profile" [level=2]
+  - paragraph: Changes show on your public page.
+  - button "Close"
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@company.com
+  - button "Cancel"
+  - button "Send invite"
 
 # Large
 - button "Invite people"
+- dialog "Share Atlas":
+  - heading "Share Atlas" [level=2]
+  - paragraph: Anyone you invite can view and comment.
+  - button "Close"
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@company.com
+  - button "Cancel"
+  - button "Send invite"
 
 # LongText
 - button "Read the terms"
+- dialog "Terms of use":
+  - heading "Terms of use" [level=2]
+  - button "Close"
+  - region "Terms of use":
+    - paragraph: Section 1. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 2. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 3. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 4. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 5. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 6. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 7. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 8. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 9. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 10. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 11. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 12. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 13. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 14. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 15. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 16. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 17. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 18. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 19. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 20. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 21. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 22. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 23. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+    - paragraph: Section 24. You keep the rights to what you upload. We store it only to show it to the people you share it with, and delete it 30 days after you remove it.
+  - button "Accept"
 
 # NoCloseButton
 - button "Invite people"
+- dialog "Invite people":
+  - heading "Invite people" [level=2]
+  - paragraph: They’ll get an email with a link.
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@company.com
+  - button "Cancel"
+  - button "Send invite"
 
 # OpenOnArrival
 - dialog "Welcome to Atlas":
@@ -49,7 +109,22 @@
 
 # Small
 - button "Invite people"
+- dialog "Rename project":
+  - heading "Rename project" [level=2]
+  - button "Close"
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@company.com
+  - button "Cancel"
+  - button "Send invite"
 
 # UnsavedChanges
 - button "Rename Atlas"
+- dialog "Rename project":
+  - heading "Rename project" [level=2]
+  - button "Close"
+  - text: Name
+  - textbox "Name": Atlas
+  - button "Cancel"
+  - button "Save"
 
