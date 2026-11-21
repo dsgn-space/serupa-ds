@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import { flushSync } from 'react-dom';
-import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { AppShell } from '../../components/AppShell/AppShell';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { List, ListItem } from '../../components/List/List';
@@ -142,12 +144,11 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
   ) : null;
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
-      <SkipLink />
-      <header className="border-b border-border bg-surface px-4 py-3">
-        <p className="m-0 text-base font-semibold">Acme</p>
-      </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
+    <AppShell background="muted" header={<header className="border-b border-border px-4 py-3">
+      <p className="m-0 text-base font-semibold">Acme</p>
+    </header>}>
+      <Center maxWidth="container-6xl" padded={false}>
+        <Stack gap={6}>
         <PageHeader title="Inbox" />
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
@@ -169,7 +170,8 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
           <EmptyState icon="inbox" title="No messages yet" headingLevel={2}
             description="When someone writes to you, their message shows up here." />
         )}
-      </main>
-    </div>
+        </Stack>
+      </Center>
+    </AppShell>
   );
 }

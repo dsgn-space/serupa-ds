@@ -18,6 +18,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm for a stepper inside a Card or Dialog, md on a page. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 32 }}>
+    <Stepper {...args} size="sm" />
+    <Stepper {...args} size="md" />
+  </div>,
+};
 export const Interactive: Story = {
   render: function Render() {
     const [step, setStep] = React.useState(0);

@@ -75,6 +75,14 @@ describe('DateRangePicker', () => {
     expect([f.value, calls]).toEqual(['5/1', []]);
   });
 
+  test('in the popup the ends and the days between have names, as RangeCalendar\'s do, so the range isn\'t carried by color alone', async () => {
+    await render(<Trip />);
+    await userEvent.click(btn('trip'));
+    await expect.poll(() => isOpen('trip')).toBe(true);
+    expect(['2025-03-10', '2025-03-12', '2025-03-14', '2025-03-15'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
+      'Monday, March 10, 2025, Start date', 'Wednesday, March 12, 2025, in the range', 'Friday, March 14, 2025, End date', 'Saturday, March 15, 2025']);
+  });
+
   test('both fields are described by the Field hint and the format to type', async () => {
     await render(<Trip />);
     expect(fields('trip').map((f) => (f.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)!.textContent).join(' | '))).toEqual(['mm/dd/yyyy | Format: mm/dd/yyyy', 'mm/dd/yyyy | Format: mm/dd/yyyy']);

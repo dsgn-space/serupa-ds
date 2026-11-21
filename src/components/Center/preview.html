@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Center — preview</title>
+<style>
+  body { margin: 0; background: var(--surface-muted); color: var(--text); font-family: var(--font-sans); font-size: 14px; }
+  .b { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(D.Center, { vertical: true, maxWidth: 'container-sm' }, h('div', { className: 'b' }, 'A sign-in card, in the middle of the screen')));
+</script>
+</body>
+</html>

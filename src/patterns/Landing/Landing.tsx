@@ -6,6 +6,9 @@ import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
 import { IconTile } from '../../components/IconTile/IconTile';
+import { PageSection } from '../../components/PageSection/PageSection';
+import { Grid } from '../../components/Grid/Grid';
+import { Stack } from '../../components/Stack/Stack';
 import { Pricing, type PricingPeriod, type PricingPlan } from '../../blocks/Pricing/Pricing';
 import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
@@ -95,57 +98,53 @@ export function Landing({ product = 'Acme', headline = 'Plan the work, and see i
         <NavbarLink href="#questions">Questions</NavbarLink>
       </Navbar>
       <main id="main" className="outline-none">
-        <section aria-labelledby="landing-title" className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-16 text-center sm:py-24">
+        <PageSection spacing="lg" size="md" align="center" gap={6} aria-labelledby="landing-title">
           <Heading level={1} size="4xl" id="landing-title" className="text-balance">{headline}</Heading>
           <p className="m-0 max-w-2xl text-lg text-text-muted">{lead}</p>
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex flex-wrap justify-center gap-3">
+          <Stack gap={2} align="center">
+            <Stack direction="row" wrap gap={3} justify="center">
               {start}
               <Button variant="outline" href="#features">See what it does</Button>
-            </div>
+            </Stack>
             <p className="m-0 text-sm text-text-muted">{actionNote}</p>
-          </div>
-        </section>
+          </Stack>
+        </PageSection>
 
-        <section id="features" aria-labelledby="landing-features" className="scroll-mt-16 border-t border-border bg-surface-muted">
-          <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-16">
-            <Heading level={2} size="2xl" id="landing-features">What it does</Heading>
-            <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2">
-              {features.map((f) => (
-                <li key={f.id} className="flex gap-4">
+        <PageSection id="features" tone="muted" divider size="lg" aria-labelledby="landing-features" className="scroll-mt-16">
+          <Heading level={2} size="2xl" id="landing-features">What it does</Heading>
+          <Grid as="ul" columns={{ base: 1, sm: 2 }} gap={8}>
+            {features.map((f) => (
+              <li key={f.id}>
+                <Stack direction="row" gap={4} align="start">
                   <IconTile icon={f.icon} tone="primary" />
-                  <div className="flex flex-col gap-1">
+                  <Stack gap={1}>
                     <Heading level={3} size="lg">{f.title}</Heading>
                     <p className="m-0 text-text-muted">{f.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+                  </Stack>
+                </Stack>
+              </li>
+            ))}
+          </Grid>
+        </PageSection>
 
-        <section id="pricing" aria-labelledby="landing-pricing" className="mx-auto flex max-w-5xl scroll-mt-16 flex-col gap-8 px-4 py-16">
-          <div className="flex flex-col gap-2">
+        <PageSection id="pricing" size="lg" aria-labelledby="landing-pricing" className="scroll-mt-16">
+          <Stack gap={2}>
             <Heading level={2} size="2xl" id="landing-pricing">Pricing</Heading>
             <p className="m-0 text-text-muted">Every plan has every feature above. Pay for the people and projects you need.</p>
-          </div>
+          </Stack>
           <Pricing plans={plans} currency={currency} headingLevel={3} onChoose={(id, period) => onChoose?.(id, period)} />
-        </section>
+        </PageSection>
 
-        <div id="questions" className="scroll-mt-16 border-t border-border">
-          <div className="mx-auto max-w-3xl px-4 py-16">
-            <Faq groups={questions} headingLevel={2} searchable={false} labels={{ title: 'Questions' }}
-              contact={<p className="m-0">Something else? <Link href="#contact">Write to us</Link> and a person answers within a day.</p>} />
-          </div>
-        </div>
+        <PageSection as="div" id="questions" divider size="md" className="scroll-mt-16">
+          <Faq groups={questions} headingLevel={2} searchable={false} labels={{ title: 'Questions' }}
+            contact={<p className="m-0">Something else? <Link href="#contact">Write to us</Link> and a person answers within a day.</p>} />
+        </PageSection>
 
-        <section aria-labelledby="landing-last" className="border-t border-border bg-surface-muted">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 px-4 py-16 text-center">
-            <Heading level={2} size="2xl" id="landing-last">Try it with your team</Heading>
-            {start}
-            <p className="m-0 text-sm text-text-muted">{actionNote}</p>
-          </div>
-        </section>
+        <PageSection tone="muted" divider size="md" align="center" gap={4} aria-labelledby="landing-last">
+          <Heading level={2} size="2xl" id="landing-last">Try it with your team</Heading>
+          {start}
+          <p className="m-0 text-sm text-text-muted">{actionNote}</p>
+        </PageSection>
       </main>
       <Footer groups={footer} legal={<p className="m-0">© 2026 {product}, Inc. <Link href="#terms">Terms</Link> · <Link href="#privacy">Privacy</Link></p>} />
     </div>

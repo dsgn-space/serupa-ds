@@ -2,7 +2,7 @@
 
 Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. Use it for most layout inside a page: a form's fields, a card's content, a row of buttons.
 
-**Also called:** flex stack, VStack, HStack.
+**Also called:** flex stack, VStack, HStack, inline, cluster.
 
 ```jsx
 import { Stack, Button } from '@diki-stwn/serupa-ds';
@@ -34,7 +34,7 @@ import { Stack, Button } from '@diki-stwn/serupa-ds';
 ## Usage
 
 - Use a larger gap between groups and a smaller one inside them, such as `gap={6}` between fields and `gap={2}` between buttons.
-- Set `wrap` on a row that may not fit on narrow screens.
+- Set `wrap` on a row that may not fit on narrow screens. `direction="row" wrap` is the cluster (or inline) layout: tags, filters or buttons side by side, wrapping onto more lines as the space runs out, the same gap across and down.
 - To change the layout with the screen's width, give `direction`, `gap` or `align` one value per width: `direction={{ base: 'column', md: 'row' }}` stacks on a phone and sits side by side from 768px. The widths are `sm` (640px), `md` (768px) and `lg` (1024px); each holds until the next one set. Media queries draw it, so server HTML is already laid out.
 - Pick the element with `as`: `ul` or `ol` for a list, `form` or `fieldset` for a form's fields.
 - Nest Stacks for more complex layouts, such as a row of buttons at the end of a column of fields.

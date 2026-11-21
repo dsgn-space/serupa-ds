@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------------
+   Center: the content at most --srp-center-max wide (else --center-max-width, 448px), in the middle of the space
+   it's in, with the side padding outside that width. vertical: a flex column at least the screen's height, its
+   content in the middle. intrinsic: each child at its own width, centered. The private variable starts over on
+   each Center, so a nested one doesn't take its parent's.
+   --------------------------------------------------------------- */
+@layer srp.components {
+.srp-center { --srp-center-max: initial; --srp-center-pad: var(--spacing-0); box-sizing: content-box; max-inline-size: var(--srp-center-max, var(--center-max-width, var(--container-md))); margin-inline: auto; padding-inline: var(--srp-center-pad); }
+.srp-center--padded { --srp-center-pad: var(--center-padding-x, var(--spacing-4)); padding-inline: max(var(--srp-center-pad), env(safe-area-inset-left, var(--spacing-0)), env(safe-area-inset-right, var(--spacing-0))); }
+.srp-center--vertical { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; min-block-size: var(--sizing-dvh); max-inline-size: calc(var(--srp-center-max, var(--center-max-width, var(--container-md))) + var(--srp-center-pad) + var(--srp-center-pad)); }
+.srp-center--vertical.srp-center--padded { padding-block: var(--center-padding-y, var(--spacing-8)); }
+.srp-center--intrinsic { display: flex; flex-direction: column; align-items: center; }
+.srp-center--text { text-align: center; }
+}
