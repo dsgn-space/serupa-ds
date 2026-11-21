@@ -8,7 +8,7 @@ A month, a quarter or a year, picked from a grid: for a report's month, a billin
 import { PeriodPicker, Field } from '@diki-stwn/serupa-ds';
 
 <Field label="Report month">
-  <PeriodPicker name="month" value={month} onValueChange={(value, { start, end }) => setMonth(value)} />
+  <PeriodPicker name="month" value={month} onValueChange={(value, { range }) => setMonth(value)} />
 </Field>
 
 // a quarter, no earlier than the first one on record and no later than this one
