@@ -4,6 +4,7 @@ import { cn } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { fold } from '../../internal/fold';
 import { useLocale, useSettings } from '../../internal/provider';
+import { localeDir } from '../../internal/locale';
 import { Combobox, type ComboboxSingleProps } from '../Combobox/Combobox';
 import { en as words } from './labels';
 
@@ -64,6 +65,9 @@ export function allTimeZones(): string[] {
   const list = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone').map((z) => RENAMED[z] || z) : [];
   return [...new Set(list.includes('UTC') ? list : ['UTC', ...list])];
 }
+/** Text in a direction of its own, isolated from what's around it (U+2066 or U+2067 to U+2069): unchanged without one. */
+const isolate = (text: string, dir: 'ltr' | 'rtl' | undefined) => (dir ? (dir === 'rtl' ? '\u2067' : '\u2066') + text + '\u2069' : text);
+
 /** A zone's city, offset and name at a moment, in a locale, under its current name. null for a name the browser doesn't know. */
 // Each zone's two formatters, made once per zone and language: building some 800 of them was most of a mount's time,
 // and every picker on the page, and every later mount, uses the same ones.
@@ -97,6 +101,7 @@ function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.Ref
   // A value under an old or other spelling of a listed zone matches it ("Europe/Kiev", "Asia/Calcutta").
   const canon = (v: string | null | undefined) => (typeof v === 'string' && v ? currentTimeZone(v) : v);
   const locale = useLocale(ownLocale);
+  const dir = ownLocale ? localeDir(ownLocale) : undefined;
   const labels = useSettings(words).labels;
   // The reader's own zone, known only in the browser: read after hydrating, so the server's list matches.
   const [mine, setMine] = React.useState<string | null>(null);
@@ -124,9 +129,12 @@ function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.Ref
     const ordered = own ? [own, ...infos.filter((i) => i !== own)] : infos;
     return ordered.map((i) => ({
       value: i.zone, label: i.city,
-      description: i === own ? `${i.offsetText} · ${labels.timeZoneYours}` : i.name ? `${i.offsetText} · ${i.name}` : i.offsetText,
+      // A name in a locale of its own reads in that locale's direction: "UTC+07:00 · توقيت غرب إندونيسيا" right to
+      // left in a left-to-right page. Unicode isolates, not a dir span, since Combobox reads a description out only
+      // when it's a string. "Your time zone" is in the page's language, so that line stays the page's.
+      description: i === own ? `${i.offsetText} · ${labels.timeZoneYours}` : i.name ? isolate(`${i.offsetText} · ${i.name}`, dir) : i.offsetText,
     }));
-  }, [infos, byZone, mine, labels]);
+  }, [infos, byZone, mine, labels, dir]);
   // A typed offset ("+7", "07:00", "utc-5", "−3:30") finds the zones at it; anything else is looked for in the city,
   // the zone's name and its IANA name.
   const filter = React.useCallback((o: { value: string; label: string }, text: string) => {
