@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { AuthCard, type AuthStep } from '../../blocks/AuthCard/AuthCard';
 
 /* Sign-in: email and password, then a one-time code, as a page of its own, for an app to copy. The card is the
@@ -23,17 +25,19 @@ export interface SignInProps {
 const demoCheck = (email: string, password: string) => email === 'ada@example.com' && password === 'correct horse';
 const demoVerify = (code: string) => code === '123456';
 
-/** The sign-in page: a skip link, then main with the step's form. */
+/** The sign-in page: a skip link, then main with the step's form, in the middle of the screen (Center). */
 export function SignIn({ start = 'password', failed, check = demoCheck, verify = demoVerify }: SignInProps) {
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
+      <Center as="main" id="main" vertical className="outline-none">
+        <Stack gap={6}>
         <p className="m-0 text-base font-semibold">Acme</p>
         <AuthCard idPrefix="sign-in" start={start} failed={failed} check={check} verify={verify} forgotHref="#forgot" doneHref="#dashboard"
           defaultEmail={failed === 'wrong' ? 'ada@example.com' : ''} defaultPassword={failed === 'wrong' ? 'correct hose' : ''}
           labels={{ title: 'Sign in to Acme' }} />
-      </main>
+        </Stack>
+      </Center>
     </div>
   );
 }

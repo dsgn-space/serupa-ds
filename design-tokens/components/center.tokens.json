@@ -1,0 +1,39 @@
+{
+  "center": {
+    "$description": "Center's component tokens. Each one is an optional override: set the CSS variable (--center-<name>) on the page, a container or one Center, and every Center inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "sizing": {
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-md}",
+        "$description": "The widest the content gets when maxWidth isn't given (448px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--center-max-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Side padding, outside the maximum width (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--center-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "Space above and below with vertical (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--center-padding-y"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------------
+   Center: the content at most --dk-center-max wide (else --center-max-width, 448px), in the middle of the space
+   it's in, with the side padding outside that width. vertical: a flex column at least the screen's height, its
+   content in the middle. intrinsic: each child at its own width, centered. The private variable starts over on
+   each Center, so a nested one doesn't take its parent's.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-center { --dk-center-max: initial; --dk-center-pad: var(--spacing-0); box-sizing: content-box; max-inline-size: var(--dk-center-max, var(--center-max-width, var(--container-md))); margin-inline: auto; padding-inline: var(--dk-center-pad); }
+.dk-center--padded { --dk-center-pad: var(--center-padding-x, var(--spacing-4)); padding-inline: max(var(--dk-center-pad), env(safe-area-inset-left, var(--spacing-0)), env(safe-area-inset-right, var(--spacing-0))); }
+.dk-center--vertical { display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; min-block-size: var(--sizing-dvh); max-inline-size: calc(var(--dk-center-max, var(--center-max-width, var(--container-md))) + var(--dk-center-pad) + var(--dk-center-pad)); }
+.dk-center--vertical.dk-center--padded { padding-block: var(--center-padding-y, var(--spacing-8)); }
+.dk-center--intrinsic { display: flex; flex-direction: column; align-items: center; }
+.dk-center--text { text-align: center; }
+}
