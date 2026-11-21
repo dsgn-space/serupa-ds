@@ -139,7 +139,10 @@ describe('Patterns: states everywhere', () => {
     const main = screen.container.querySelector('main')!;
     const bar = main.querySelector('[data-component="offline-banner"]');
     expect(bar?.textContent).toMatch(/^You’re offline .+\.$/);
-    expect(main.firstElementChild).toBe(bar);
+    // First in main: main's first child, or the first child of the layout wrapper (Center, Stack) main holds.
+    let first = main.firstElementChild;
+    while (first && first !== bar && first.matches('[data-component="center"], [data-component="stack"], [data-component="container"]')) first = first.firstElementChild;
+    expect(first).toBe(bar);
   });
   test.each(offline)('$name says nothing about the connection online', async ({ mod }) => {
     const meta = mod.default as Meta;
