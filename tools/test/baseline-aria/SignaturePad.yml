@@ -39,7 +39,7 @@
   - img "Signature area, empty"
   - button "Undo" [disabled]
   - button "Clear" [disabled]
-- text: Please sign before you continue.
+- text: Sign before you continue.
 
 # LongText
 - group "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung signature":
