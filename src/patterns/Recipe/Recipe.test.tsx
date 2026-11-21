@@ -3,6 +3,13 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Recipe, scaleAmount } from './Recipe';
+import { SerupaProvider } from '../../internal/provider';
+import { formatDuration } from '../../components/Duration/Duration';
+
+// A time as the browser's own language writes it, which the second-language runs change.
+const mins = (n: number, locale?: string) => formatDuration(n, locale, { unit: 'minute' });
+// Shown, a number and its unit are held together with a no-break space.
+const spaced = (t: string | null | undefined) => (t ?? '').replace(/\u00a0/g, ' ');
 
 const active = () => document.activeElement as HTMLElement;
 const norm = (t: string | null | undefined) => (t ?? '').replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660)).replace(/٫/g, '.');
@@ -21,8 +28,13 @@ describe('Patterns/Recipe', () => {
     expect(active().getAttribute('href')).toBe('#main');
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Red lentil soup']);
     expect(screen.getByRole('img', { name: /^A bowl of orange lentil soup/ }).elements()).toHaveLength(1);
-    expect(norm(document.querySelector('dl')?.textContent)).toMatch(/Prep10 min.*Cook35 min.*Ready in45 min/);
+    expect(spaced(document.querySelector('dl')?.textContent)).toBe(`Prep${mins(10)}Cook${mins(35)}Ready in${mins(45)}`);
     expect(document.querySelectorAll('[aria-labelledby="recipe-steps"] ol > li')).toHaveLength(4);
+  });
+
+  test('the times read in the page\'s language, as Indonesian writes them: "10 mnt", not "10 min"', async () => {
+    await render(<SerupaProvider locale="id"><Recipe /></SerupaProvider>);
+    expect([spaced(document.querySelector('dl')?.textContent), document.querySelector('dl time')?.getAttribute('datetime')]).toEqual([`Prep${mins(10, 'id')}Cook${mins(35, 'id')}Ready in${mins(45, 'id')}`, 'PT10M']);
   });
 
   test('Servings rescales every amount and says so', async () => {

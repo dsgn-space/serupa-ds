@@ -12,6 +12,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
@@ -146,7 +147,11 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
     void Promise.resolve().then(() => onSend?.(hours, note.trim())).then(() => setSent(true), () => setFailed(true)).finally(() => setBusy(false));
   };
   React.useEffect(() => { if (sent) answer.current?.focus(); }, [sent]);
-  const range = `${dates[0]!.toLocaleDateString(locale, { day: 'numeric', month: 'long' })} to ${dates[6]!.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  // The week as one range, its shared month and year said once: "February 9 – 15, 2026", "9.–15. Februar 2026".
+  const last = dates[6]!, lastDay = `${last.getFullYear()}-${String(last.getMonth() + 1).padStart(2, '0')}-${String(last.getDate()).padStart(2, '0')}`;
+  // The server's ICU puts thin spaces around the dash where Chromium's puts plain ones, and this text has no
+  // FormattedDate to re-render it after hydrating, so both write plain spaces.
+  const range = formatDate(weekStart, locale, { to: lastDay, dateStyle: 'long' }).replace(/[\u2009\u202f]/g, ' ');
 
   return (
     <div className="min-h-screen bg-surface text-text">

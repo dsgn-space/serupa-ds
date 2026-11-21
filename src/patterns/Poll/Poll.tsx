@@ -13,6 +13,7 @@ import { ErrorSummary } from '../../components/ErrorSummary/ErrorSummary';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Poll: one question, a few answers, a vote, then the results so far, with yours marked, and a way to change it while
    it's open. For an app to copy. What it carries (WCAG 2.2):
@@ -85,7 +86,7 @@ export function Poll({ question = 'Where should the summer party be?', options =
   const shown = React.useRef(false);
   const results = React.useRef<HTMLHeadingElement>(null);
   const { total, rows } = pollResults(options, counts);
-  const closeDay = new Date(`${closes}T00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long' });
+  const closeDay = formatDate(closes, locale, { options: { day: 'numeric', month: 'long' } });
   const votesWords = (n: number) => (n === 1 ? '1 vote' : `${formatNumber(n, locale)} votes`);
 
   const send = (e: React.FormEvent) => {

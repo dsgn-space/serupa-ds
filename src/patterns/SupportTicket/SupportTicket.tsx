@@ -12,7 +12,7 @@ import { FileUpload } from '../../components/FileUpload/FileUpload';
 import { Link } from '../../components/Link/Link';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Toaster, toast } from '../../components/Toast/Toast';
-import { useLocale } from '../../internal/provider';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Support ticket: one request to a support team, as the person who asked sees it. Where it's got to, the
@@ -87,7 +87,6 @@ export function replyProblem(body: string, files: readonly File[]): string | nul
 
 /** The ticket's page: a skip link, a header, then main with the h1, where it's got to, the conversation and the reply box. */
 export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: SupportTicketProps) {
-  const locale = useLocale();
   const [state, setState] = React.useState<TicketState>(ticket.state);
   const [messages, setMessages] = React.useState(ticket.messages);
   const [body, setBody] = React.useState('');
@@ -98,7 +97,6 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
   const solvedHeading = React.useRef<HTMLHeadingElement>(null);
   const reply = React.useRef<HTMLTextAreaElement>(null);
   const focusNext = React.useRef<'solved' | 'reply' | null>(null);
-  const when = (iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
 
   const send = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,7 +140,7 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
               <p className="m-0">{STATE[state].means}</p>
               <DescriptionList>
                 <DescriptionItem term="Reference">{ticket.reference}</DescriptionItem>
-                <DescriptionItem term="Opened"><time dateTime={ticket.opened}>{when(ticket.opened)}</time></DescriptionItem>
+                <DescriptionItem term="Opened"><FormattedDate value={ticket.opened} timeStyle="short" /></DescriptionItem>
                 <DescriptionItem term="Priority">{ticket.priority}</DescriptionItem>
               </DescriptionList>
             </section>
@@ -162,7 +160,7 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
                         <h3 id={`msg-${m.id}`} className="m-0 flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
                           <span>{who}</span>
                           {/* Yours is named "You" already, so only the time follows; theirs says "Support" too. */}
-                          <span className="font-normal text-text-muted">{mine ? null : 'Support, '}<time dateTime={m.at}>{when(m.at)}</time></span>
+                          <span className="font-normal text-text-muted">{mine ? null : 'Support, '}<FormattedDate value={m.at} timeStyle="short" /></span>
                         </h3>
                         <p className="m-0 whitespace-pre-line wrap-break-word">{m.body}</p>
                         {m.files?.length ? <p className="m-0 text-sm text-text-muted">Attached: {m.files.join(', ')}</p> : null}
