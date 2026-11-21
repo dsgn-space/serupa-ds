@@ -6,7 +6,6 @@ import { Heading } from '../../components/Heading/Heading';
 import { Highlight, highlightRanges } from '../../components/Highlight/Highlight';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
-import { pageHash } from '../../internal/hash';
 import { useLocale } from '../../internal/provider';
 
 /* FAQ (RU17): questions and answers in groups, for an app to copy. What it carries (WCAG 2.2):
@@ -98,7 +97,9 @@ export function Faq({ groups, headingLevel = 2, searchable, contact, defaultOpen
   const ids = all.map((x) => x.id).join(' ');
   React.useEffect(() => {
     const go = () => {
-      const target = pageHash();
+      // A fragment that isn't valid percent-encoding ("#%") makes decodeURIComponent throw: it names no question.
+      let target = '';
+      try { target = decodeURIComponent(window.location.hash.slice(1)); } catch { return; }
       if (!target || ids.split(' ').indexOf(target) < 0) return;
       setQuery('');
       setOpen((o) => (o.indexOf(target) >= 0 ? o : o.concat(target)));
