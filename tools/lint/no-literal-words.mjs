@@ -3,8 +3,15 @@
 // attributes people hear or read: aria-label, aria-description, aria-roledescription, aria-valuetext,
 // aria-placeholder, title, alt, placeholder. A string reaches them, or a JSX child ({'Close'}), as a literal, as the
 // fixed text of a template literal (`${n} more`), or as either side of a condition (open ? 'Hide' : 'Show', a || 'None')
-// (GR276). Symbols and punctuation (×, →, ·) pass; so does anything in the "allow" option.
+// (GR276). Outside JSX it flags the same words where they reach people another way: the text given to announce() or
+// announcePage(), setAttribute('aria-label', …), an element's ariaLabel, title, placeholder or textContent set by
+// assignment, and a spoken key in an object of props ({ 'aria-label': … }). Symbols and punctuation (×, →, ·) pass;
+// so does anything in the "allow" option.
 const SPOKEN = new Set(['aria-label', 'aria-description', 'aria-roledescription', 'aria-valuetext', 'aria-placeholder', 'title', 'alt', 'placeholder']);
+// The same, as DOM properties an element's text is set through.
+const SPOKEN_PROPS = new Set(['ariaLabel', 'ariaDescription', 'ariaRoleDescription', 'ariaValueText', 'ariaPlaceholder', 'title', 'alt', 'placeholder', 'textContent', 'innerText']);
+const SAYS = new Set(['announce', 'announcePage']);
+const keyName = (k) => (k?.type === 'Identifier' ? k.name : k?.type === 'Literal' ? String(k.value) : '');
 
 // The fixed strings an expression can evaluate to, with the node each one sits in.
 const strings = (e, out = []) => {
@@ -30,6 +37,19 @@ export default {
         if (!SPOKEN.has(name) || !node.value) return;
         if (node.value.type === 'Literal' && typeof node.value.value === 'string') flag(node.value, node.value.value);
         else if (node.value.type === 'JSXExpressionContainer') for (const [n, t] of strings(node.value.expression)) flag(n, t);
+      },
+      CallExpression(node) {
+        const c = node.callee, fn = c.type === 'Identifier' ? c.name : c.type === 'MemberExpression' ? keyName(c.property) : '';
+        if (SAYS.has(fn)) for (const [n, t] of strings(node.arguments[0])) flag(n, t);
+        else if (fn === 'setAttribute' && SPOKEN.has(node.arguments[0]?.type === 'Literal' ? String(node.arguments[0].value) : '')) for (const [n, t] of strings(node.arguments[1])) flag(n, t);
+      },
+      AssignmentExpression(node) {
+        if (node.left.type === 'MemberExpression' && !node.left.computed && SPOKEN_PROPS.has(keyName(node.left.property))) for (const [n, t] of strings(node.right)) flag(n, t);
+      },
+      Property(node) {
+        // { 'aria-label': 'Close' }: props spread onto an element. title and alt alone are too often data ({ title: … }).
+        const k = keyName(node.key);
+        if (node.parent.type === 'ObjectExpression' && (k.startsWith('aria-') || k === 'placeholder') && SPOKEN.has(k)) for (const [n, t] of strings(node.value)) flag(n, t);
       },
       JSXExpressionContainer(node) {
         if (node.parent.type !== 'JSXElement' && node.parent.type !== 'JSXFragment') return;   // a child, not an attribute's value

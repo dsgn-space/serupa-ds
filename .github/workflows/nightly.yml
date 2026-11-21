@@ -1,7 +1,7 @@
 name: Nightly
 
 # Every night on main (02:00 Jakarta): the whole suite twice more (a flake
-# hunt; the queue tests each group narrowed, so this is main's whole run, with the coverage floors on the first pass), mutation testing, the benchmarks and the bundle size trend, and the SBOM. Cross-browser, Canary and Screen
+# hunt; the queue tests each group narrowed, so this is main's whole run, with the coverage floors on the first pass), mutation testing, the benchmarks and the bundle size trend, the SBOM, and the health page's numbers from all of them (tools/health.mjs). Cross-browser, Canary and Screen
 # readers have their own workflows. A red run here is something to look at, not a broken main.
 on:
   schedule:
@@ -24,7 +24,7 @@ env:
 
 jobs:
   # Where the x86 jobs go: the project's machines while a self-hosted runner has started a job in the last 100 minutes,
-  # GitHub's runners otherwise. The burst VM deletes itself after two idle hours, and a job sent to it then waits a day
+  # GitHub's runners otherwise. The burst VM deletes itself after a day with nothing to do, and a job sent to it then waits a day
   # and is cancelled (Nightly and Cross-browser, 18 to 20 Nov). tools/runner-watch.mjs --pick.
   runner:
     runs-on: ubuntu-24.04
@@ -83,8 +83,26 @@ jobs:
           npm run build && npm run build-storybook
           set -o pipefail
           # The first pass of the component tests measures coverage against the floors (vitest.config.ts).
-          if [ "$GROUP" = components ]; then SERUPA_COVERAGE=1 node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; else node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
+          # The Storybook group's first pass also keeps each story's axe result, for the health job.
+          if [ "$GROUP" = components ]; then SERUPA_COVERAGE=1 node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt
+          elif [ "$GROUP" = storybook ]; then SERUPA_A11Y_JSON="$PWD/a11y.json" node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt
+          else node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
           node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt
+      # The coverage and axe results for the health job, whether or not the pass was green.
+      - if: ${{ !cancelled() && matrix.group == 'components' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage-summary
+          path: coverage/coverage-summary.json
+          retention-days: 7
+          if-no-files-found: ignore
+      - if: ${{ !cancelled() && matrix.group == 'storybook' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: a11y
+          path: a11y.json
+          retention-days: 7
+          if-no-files-found: ignore
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -245,3 +263,38 @@ jobs:
           name: sbom
           path: sbom.cdx.json
           retention-days: 90
+
+  # The health page's numbers (docs/Health.mdx): the repository's, with tonight's coverage, axe results and sizes, and the
+  # open issues. Written to this run's summary page and kept as the health artifact, which
+  # node tools/health.mjs --from-nightly fetches. Runs whatever the jobs before it found, red or green.
+  health:
+    needs: [flake-hunt, size-trend]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # tools/health.mjs reads files and GitHub's API with Node's own modules: no npm ci.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: '{coverage-summary,a11y,size}'
+          path: results
+      - shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          arg() { if [ -f "results/$1/$2" ]; then echo "$3 results/$1/$2"; fi; }
+          node tools/health.mjs --out health.json --issues --summary $(arg coverage-summary coverage-summary.json --coverage) $(arg a11y a11y.json --a11y) $(arg size size.json --size)
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: health
+          path: health.json
+          retention-days: 30
