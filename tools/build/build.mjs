@@ -7,6 +7,7 @@
 //   components.css         the srp-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
 //   utilities-extra.css    the masks and gradients, which utilities.css and bundle.css leave out (tools/utilities/extra.mjs)
+//   utilities-palette.css  the classes on a palette step (bg-red-500), which utilities.css and bundle.css leave out (17.0.0)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   debug.js               the opt-in debug overlay (?serupa-debug), from src/
@@ -78,9 +79,12 @@ const bare = (css) => compactCss(withMotionAttribute(css.replace(/\/\*(?!!)[\s\S
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
 // The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
 // the few pages that use them.
-const { core, extra } = split(utilities);
+// The classes on a palette step (bg-red-500) ship apart too, in utilities-palette.css (17.0.0): the roles
+// (bg-primary) follow the theme, and nothing in the system uses a palette step.
+const { core, extra, palette } = split(utilities);
 fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(core));
 fs.writeFileSync(path.join(D, 'utilities-extra.css'), banner('masks and gradients, after utilities.css or bundle.css') + bare(extra));
+fs.writeFileSync(path.join(D, 'utilities-palette.css'), banner('the palette steps (bg-red-500), after utilities.css or bundle.css') + bare(palette));
 fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(core));
 // base.css and theme.js say __VERSION__ in src/; the build writes package.json's version there, so a release changes
 // the number in one place.
@@ -177,7 +181,8 @@ for (const f of fs.readdirSync(path.join(P, 'src', 'labels')).filter((x) => x.en
 fs.writeFileSync(path.join(D, 'purge.js'), stamp(read('src/purge.js')));
 fs.copyFileSync(path.join(P, 'src', 'purge.d.ts'), path.join(D, 'purge.d.ts'));
 // VS Code custom data: the utility classes and tokens, for editor autocomplete (tools/build/editor-data.mjs).
-const editor = editorData(utilities, read('tokens.css'), tokenDescriptions(JSON.parse(read('tokens.json'))));
+// Every brand's themes: tokens.css has blue, brands/all.css the rest (17.0.0).
+const editor = editorData(utilities, read('tokens.css') + read('brands/all.css'), tokenDescriptions(JSON.parse(read('tokens.json'))));
 fs.mkdirSync(path.join(D, 'vscode'), { recursive: true });
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.html-data.json'), JSON.stringify(editor.html) + '\n');
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.css-data.json'), JSON.stringify(editor.css) + '\n');

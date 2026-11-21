@@ -1,0 +1,68 @@
+/* Serupa — the fuchsia brand, generated from tokens.json. Load it after tokens.css. */
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.tokens {
+[data-theme="fuchsia-light"] {
+  --primary: var(--fuchsia-600);
+  --primary-hover: var(--violet-700);
+  --primary-pressed: var(--violet-800);
+  --primary-subtle: var(--fuchsia-50);
+  --primary-subtle-pressed: var(--fuchsia-100);
+  --on-primary: var(--white);
+  --field-action: var(--fuchsia-600);
+  --focus-ring: var(--fuchsia-500);
+  --link-visited: var(--violet-700);
+  --srp-more-primary: var(--fuchsia-800);
+  --srp-more-primary-hover: var(--fuchsia-900);
+  --srp-more-primary-pressed: var(--fuchsia-950);
+  --srp-more-field-action: var(--fuchsia-800);
+  --srp-more-focus-ring: var(--violet-700);
+}
+[data-theme="fuchsia-dark"] {
+  --primary: var(--fuchsia-400);
+  --primary-hover: var(--violet-300);
+  --primary-pressed: var(--violet-200);
+  --primary-subtle: var(--fuchsia-950);
+  --primary-subtle-pressed: var(--fuchsia-900);
+  --on-primary: var(--fuchsia-950);
+  --field-action: var(--fuchsia-400);
+  --focus-ring: var(--fuchsia-400);
+  --link-visited: var(--violet-300);
+  --srp-more-primary: var(--fuchsia-300);
+  --srp-more-primary-hover: var(--fuchsia-200);
+  --srp-more-primary-pressed: var(--fuchsia-100);
+  --srp-more-field-action: var(--fuchsia-300);
+  --srp-more-focus-ring: var(--violet-300);
+}
+:root[data-brand="fuchsia"]:not([data-theme]), [data-brand="fuchsia"]:not([data-theme]) {
+  --primary: light-dark(var(--fuchsia-600), var(--fuchsia-400));
+  --primary-hover: light-dark(var(--violet-700), var(--violet-300));
+  --primary-pressed: light-dark(var(--violet-800), var(--violet-200));
+  --primary-subtle: light-dark(var(--fuchsia-50), var(--fuchsia-950));
+  --primary-subtle-pressed: light-dark(var(--fuchsia-100), var(--fuchsia-900));
+  --on-primary: light-dark(var(--white), var(--fuchsia-950));
+  --field-action: light-dark(var(--fuchsia-600), var(--fuchsia-400));
+  --focus-ring: light-dark(var(--fuchsia-500), var(--fuchsia-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--fuchsia-800), var(--fuchsia-300));
+  --srp-more-primary-hover: light-dark(var(--fuchsia-900), var(--fuchsia-200));
+  --srp-more-primary-pressed: light-dark(var(--fuchsia-950), var(--fuchsia-100));
+  --srp-more-field-action: light-dark(var(--fuchsia-800), var(--fuchsia-300));
+  --srp-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
+}
+:is([data-theme^="fuchsia-"], [data-brand="fuchsia"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--fuchsia-600), var(--fuchsia-400));
+  --primary-hover: light-dark(var(--violet-700), var(--violet-300));
+  --primary-pressed: light-dark(var(--violet-800), var(--violet-200));
+  --primary-subtle: light-dark(var(--fuchsia-50), var(--fuchsia-950));
+  --primary-subtle-pressed: light-dark(var(--fuchsia-100), var(--fuchsia-900));
+  --on-primary: light-dark(var(--white), var(--fuchsia-950));
+  --field-action: light-dark(var(--fuchsia-600), var(--fuchsia-400));
+  --focus-ring: light-dark(var(--fuchsia-500), var(--fuchsia-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--fuchsia-800), var(--fuchsia-300));
+  --srp-more-primary-hover: light-dark(var(--fuchsia-900), var(--fuchsia-200));
+  --srp-more-primary-pressed: light-dark(var(--fuchsia-950), var(--fuchsia-100));
+  --srp-more-field-action: light-dark(var(--fuchsia-800), var(--fuchsia-300));
+  --srp-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
+}
+}

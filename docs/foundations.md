@@ -14,7 +14,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 ## Naming
 
-A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `text-blue-500` as classes, and `var(--blue-500)` in CSS.
+A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `text-blue-500` as classes, and `var(--blue-500)` in CSS. The classes on a palette step ship in `utilities-palette.css`, not in `bundle.css`: import `@diki-stwn/serupa-ds/utilities-palette.css` after it to use them. Prefer the roles (`bg-primary`, `text-text-muted`), which follow the theme.
 
 ## Using the shades
 
@@ -68,7 +68,10 @@ The neutral colors, the status colors and the chart colors don't follow the bran
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
+Blue is in `tokens.css`. Each other brand is its own file, `brands/<brand>.css`, loaded after `tokens.css`: a page loads only the brands it uses, about 0.6 KB gzipped each, and `brands/all.css` holds every one for a page where people switch brands.
+
 ```html
+<link rel="stylesheet" href="node_modules/@diki-stwn/serupa-ds/brands/violet.css">   <!-- after tokens.css -->
 <html data-brand="violet" data-mode="auto">           <!-- follows the operating system from the first paint -->
 <section data-mode="dark">…</section>                 <!-- a dark section inside a light page -->
 <div data-brand="emerald">…</div>                     <!-- another brand for one part of the page -->
@@ -317,7 +320,7 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 | line-height | `leading-none`, `-tight`, `-snug`, `-normal`, `-relaxed`, `-loose`, and `leading-<spacing>` |
 | list-style-image / position / type | `list-image-none`; `list-inside`, `list-outside`; `list-disc`, `list-decimal`, `list-none` |
 | text-align | `text-left`, `-center`, `-right`, `-justify`, `-start`, `-end` |
-| color | `text-<color>` for every palette color and alias (`text-blue-600`, `text-primary`, `text-text-muted`), `text-inherit`, `text-current`, `text-transparent` |
+| color | `text-<color>` for every alias (`text-primary`, `text-text-muted`) and palette color (`text-blue-600`, in `utilities-palette.css`), `text-inherit`, `text-current`, `text-transparent` |
 | text-decoration-line | `underline`, `overline`, `line-through`, `no-underline` |
 | placeholder color | `placeholder-<color>` for every palette color and alias, `placeholder-inherit`, `placeholder-current`, `placeholder-transparent` (use `placeholder-text-muted`) |
 | text-decoration-color | `decoration-<color>`, `decoration-current`, `decoration-inherit`, `decoration-transparent` |
@@ -366,7 +369,7 @@ Background utilities, as classes in `bundle.css`. Backgrounds have no scale of t
 | --- | --- |
 | background-attachment | `bg-fixed`, `bg-local`, `bg-scroll` |
 | background-clip | `bg-clip-border`, `bg-clip-padding`, `bg-clip-content`, `bg-clip-text` |
-| background-color | `bg-<color>` for every palette color and alias (`bg-gray-100`, `bg-surface`, `bg-primary`), `bg-inherit`, `bg-current`, `bg-transparent` |
+| background-color | `bg-<color>` for every alias (`bg-surface`, `bg-primary`) and palette color (`bg-gray-100`, in `utilities-palette.css`), `bg-inherit`, `bg-current`, `bg-transparent` |
 | background-image | `bg-none`; linear gradients `bg-linear-to-t`, `-tr`, `-r`, `-br`, `-b`, `-bl`, `-l`, `-tl` and `bg-linear-45` (any of 0–315° in 45° steps, negatives too); `bg-radial`; `bg-conic`, `bg-conic-90`… |
 | gradient stops | `from-<color>`, `via-<color>`, `to-<color>`; positions `from-0%` … `to-100%` in 5% steps |
 

@@ -13,7 +13,8 @@ const t = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
 const json = tokens();
 const names = Object.values(json).flatMap((g) => (g && Array.isArray(g.tokens) ? g.tokens.map((x) => x.name) : []));
 const { css, themes } = tokensCss(json);
-const real = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
+// What a page that lets people switch to any brand loads: tokens.css and brands/all.css.
+const real = ['tokens.css', 'brands/all.css'].map((f) => fs.readFileSync(path.join(PROJECT, f), 'utf8')).join('\n');
 
 const b = await browser();
 const page = await b.newPage();
@@ -31,7 +32,22 @@ const read = async (sheet) => {
   }, { names, themes });
 };
 const test = await read(css), shipped = await read(real);
+// 17.0.0: tokens.css alone draws blue, and one brand's file is all a page needs for that brand. Each brand is read on
+// the root (data-brand) and as a flat theme (data-theme), with --primary worked out to a color.
+const primary = async (sheet, attrs) => {
+  await page.setContent(`<!doctype html><html ${attrs}><head><style>${sheet}</style></head><body><i style="color: var(--primary)"></i></body></html>`);
+  return page.evaluate(() => getComputedStyle(document.querySelector('i')).color);
+};
+const file = (f) => fs.readFileSync(path.join(PROJECT, f), 'utf8');
+const blue = await primary(file('tokens.css'), 'data-brand="blue" data-mode="light"');
+const own = { violet: await primary(file('tokens.css') + file('brands/violet.css'), 'data-brand="violet" data-mode="light"'), flat: await primary(file('tokens.css') + file('brands/violet.css'), 'data-theme="violet-dark"') };
+const without = await primary(file('tokens.css'), 'data-brand="violet" data-mode="light"');
+const fromAll = await primary(file('tokens.css') + file('brands/all.css'), 'data-brand="violet" data-mode="light"');
+const others = await primary(file('tokens.css') + file('brands/pink.css'), 'data-brand="violet" data-mode="light"');
 await b.close();
+t('tokens.css alone has blue only: data-brand="violet" without brands/violet.css draws blue', without === blue, `${without} against ${blue}`);
+t('brands/violet.css after tokens.css draws violet, on data-brand and on a flat data-theme, the same as brands/all.css', own.violet !== blue && own.violet === fromAll && own.flat !== blue && own.flat !== own.violet, JSON.stringify({ ...own, fromAll, blue }));
+t('another brand\'s file doesn\'t draw violet', others === blue, `${others} against ${blue}`);
 
 for (const where of Object.keys(shipped)) {
   const empty = names.filter((n) => shipped[where][n] !== '' && test[where][n] === '');

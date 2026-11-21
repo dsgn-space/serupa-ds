@@ -55,9 +55,11 @@ In a React app (Vite, Next.js, Remix):
 
 ```js
 import '@diki-stwn/serupa-ds/tokens.css';
+// import '@diki-stwn/serupa-ds/brands/violet.css';   // a brand other than blue: its own file, after tokens.css
 import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
 import '@diki-stwn/serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
 // import '@diki-stwn/serupa-ds/utilities-extra.css';   // masks and gradients (mask-*, bg-linear-*, from-*…), if you use them
+// import '@diki-stwn/serupa-ds/utilities-palette.css';   // classes on a palette step (bg-red-500), if you use them
 import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 export function SignUp() {
@@ -87,7 +89,7 @@ On a plain page without a bundler:
   <link rel="preload" href="fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="dist/base.css">
-  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.5 MB of utility classes would hold up the first paint -->
+  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.3 MB of utility classes would hold up the first paint -->
 </head>
 <body>
   <main id="root"></main>
@@ -112,7 +114,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (about 1.5 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
+`bundle.css` holds the utility classes (about 1.3 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
 
 ```js
 // vite.config.js
@@ -163,11 +165,13 @@ npx serupa-usage src
 
 | File | What it is |
 | --- | --- |
-| `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
+| `tokens.css` | Every token as a CSS variable, the blue themes, and the fonts. Load it first. |
+| `brands/<brand>.css` | One brand other than blue (`brands/violet.css`): its light and dark themes, about 0.6 KB gzipped. Load it after `tokens.css` for each brand the app uses. `brands/all.css` holds every one, for an app where people switch brands. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, `data-print="hide"` leaves out anything marked only for the screen, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`srp-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
-| `dist/utilities.css` | The utility classes, apart from masks and gradients. |
+| `dist/utilities.css` | The utility classes, apart from masks, gradients and palette steps. |
 | `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
+| `dist/utilities-palette.css` | The classes on a palette step (`bg-red-500`, `text-slate-700`, `border-zinc-200`) rather than a role (`bg-primary`, `text-text-muted`). A role follows the theme and a palette step doesn't, so the components use roles only. Import it after `bundle.css` or `utilities.css` if your code uses them. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
 | `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
 | `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |

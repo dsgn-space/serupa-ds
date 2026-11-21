@@ -2,6 +2,8 @@ import * as React from 'react';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import { addons } from 'storybook/internal/preview-api';
 import '../tokens.css';
+// Every brand, so the toolbar can switch to any of them (an app loads only the ones it uses).
+import '../brands/all.css';
 import '../src/styles/base.css';
 import '../src/styles/index.css';
 import './docs.css';

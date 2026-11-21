@@ -268,7 +268,7 @@ check('tokens.json is exactly what tokens/serupa.tokens.json gives (npm run toke
 
 // 12. cascade layers: every shipped stylesheet declares the same layer order and keeps its rules inside its layer
 const ORDER = '@layer srp.tokens, srp.base, srp.components, srp.utilities;';
-const layered = { 'tokens.css': 'srp.tokens', 'dist/base.css': 'srp.base', 'dist/components.css': 'srp.components', 'dist/utilities.css': 'srp.utilities', 'dist/utilities-extra.css': 'srp.utilities' };
+const layered = { 'tokens.css': 'srp.tokens', 'brands/all.css': 'srp.tokens', 'brands/violet.css': 'srp.tokens', 'dist/base.css': 'srp.base', 'dist/components.css': 'srp.components', 'dist/utilities.css': 'srp.utilities', 'dist/utilities-extra.css': 'srp.utilities', 'dist/utilities-palette.css': 'srp.utilities' };
 const unlayered = [];
 for (const [f, layer] of Object.entries(layered)) {
   // Read with the whitespace a minifier may drop put back: "@layer a,b{" is "@layer a, b {".

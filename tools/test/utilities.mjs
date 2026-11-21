@@ -1,4 +1,4 @@
-// Utility classes: renders every class in dist/bundle.css and dist/utilities-extra.css on its own and compares what it
+// Utility classes: renders every class in dist/bundle.css, dist/utilities-extra.css and dist/utilities-palette.css on its own and compares what it
 // does (computed styles on the element and its children) with the saved baseline.
 //   node tools/test/utilities.mjs            check against baseline-utilities.json
 //   node tools/test/utilities.mjs --update   accept the current output as the new baseline
@@ -16,7 +16,7 @@ import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done, 
 const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
 const update = process.argv.includes('--update');
 
-const css = (read('dist/bundle.css') + read('dist/utilities-extra.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+const css = (read('dist/bundle.css') + read('dist/utilities-extra.css') + read('dist/utilities-palette.css')).replace(/\/\*[\s\S]*?\*\//g, '');
 // CSS escapes: "\32 xl\:flex" is the class "2xl:flex" (a class can't start with a digit unescaped).
 const unescape = (n) => n.replace(/\\([0-9a-f]{1,6}) ?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
 const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))]

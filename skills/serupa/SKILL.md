@@ -16,7 +16,8 @@ npm install github:dsgn-space/serupa-ds#v16.1.0
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
 
 ```js
-import '@diki-stwn/serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
+import '@diki-stwn/serupa-ds/tokens.css';   // every token, the blue themes, the fonts: always first
+// import '@diki-stwn/serupa-ds/brands/violet.css';   // only for a brand other than blue: after tokens.css
 import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding Serupa to an existing app
 import '@diki-stwn/serupa-ds/bundle.css';   // components and utility classes (or components.css, plus utilities.css)
 // import '@diki-stwn/serupa-ds/utilities-extra.css';   // only for masks and gradients: mask-*, bg-linear-*, from-*, via-*, to-*
@@ -35,7 +36,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 <html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 ```
 
-Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
+Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`); each brand but blue is its own file, `brands/<brand>.css`, imported after `tokens.css`. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
 One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`; its `size="sm"` (or `"lg"`) sets every form control's default size, so don't repeat `size` on each one. For router links, call `configure({ link: Link })` once at startup.
 
