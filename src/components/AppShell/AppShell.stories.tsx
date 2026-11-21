@@ -12,7 +12,7 @@ import { Stack } from '../Stack/Stack';
 /* Each story's main gets its own id, since the guide's page shows several shells at once. */
 const header = <Navbar brand={<span className="text-base font-semibold">Acme</span>} aria-label="Main navigation">
   <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
-  <NavbarLink href="#projects">Projects</NavbarLink>
+  <NavbarLink href="#docs">Docs</NavbarLink>
 </Navbar>;
 const sidebar = (collapsed = false) => <Sidebar aria-label="Workspace" collapsed={collapsed}>
   <SidebarSection>

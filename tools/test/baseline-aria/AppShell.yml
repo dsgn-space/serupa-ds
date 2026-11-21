@@ -9,8 +9,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -38,8 +38,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -67,8 +67,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -104,8 +104,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -141,8 +141,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -170,8 +170,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -207,8 +207,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - main:
   - heading "Projects" [level=1]
   - paragraph: Twelve active projects in the Acme workspace.
@@ -225,8 +225,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:
@@ -254,8 +254,8 @@
         - link "Dashboard":
           - /url: "#dashboard"
       - listitem:
-        - link "Projects":
-          - /url: "#projects"
+        - link "Docs":
+          - /url: "#docs"
 - navigation "Workspace":
   - list:
     - listitem:

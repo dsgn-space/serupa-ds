@@ -53,7 +53,7 @@ describe('AppShell', () => {
 
   test('the sidebar is gone below sidebarFrom: 640px by default, or md and lg', async () => {
     await render(<>{shell()}{shell({ id: 'md', sidebarFrom: 'md', mainId: 'm2' })}{shell({ id: 'lg', sidebarFrom: 'lg', mainId: 'm3' })}</>);
-    const shown = () => [...document.querySelectorAll('.dk-app-shell__side')].map((s) => css(s as HTMLElement).display !== 'none');
+    const shown = () => [...document.querySelectorAll('nav[aria-label="Workspace"]')].map((n) => (n as HTMLElement).offsetParent !== null);
     const at = async (w: number) => { await page.viewport(w, 700); await expect.poll(() => window.innerWidth).toBe(w); return shown(); };
     expect([await at(600), await at(700), await at(900), await at(1100)]).toEqual([[false, false, false], [true, false, false], [true, true, false], [true, true, true]]);
   });
