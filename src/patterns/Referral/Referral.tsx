@@ -12,6 +12,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { StatsRow } from '../../blocks/StatsRow/StatsRow';
@@ -86,7 +87,6 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, maximumFractionDigits: 0 });
-  const date = (iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${iso}T00:00`));
   const joined = list.filter((r) => r.state !== 'invited').length;
   const earned = list.filter((r) => r.state === 'rewarded').length * reward;
 
@@ -158,7 +158,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
                 <TableBody>{list.map((r) => (
                   <TableRow key={r.email}>
                     <TableCell className="wrap-break-word">{r.email}</TableCell>
-                    <TableCell className="whitespace-nowrap"><time dateTime={r.invited}>{date(r.invited)}</time></TableCell>
+                    <TableCell className="whitespace-nowrap"><FormattedDate value={r.invited} /></TableCell>
                     <TableCell><Badge tone={STATE[r.state].tone}>{r.state === 'rewarded' ? `${STATE.rewarded.label} ${money(reward)}` : STATE[r.state].label}</Badge></TableCell>
                   </TableRow>
                 ))}</TableBody>

@@ -11,6 +11,7 @@ import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, Tabl
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 
 /* Activity log: what people did in a workspace, newest first, with a search, a type filter, more on request, and an
@@ -91,10 +92,6 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
   const filtered = !!query.trim() || kind !== 'all';
   // A new search or filter starts from the first page again.
   const refine = (f: () => void) => { f(); setShownCount(pageSize); };
-  const when = (t: number | string) => {
-    const d = new Date(t);
-    try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(d); } catch { return d.toISOString(); }
-  };
   const count = loading ? 'Loading activity' : found.length === 1 ? '1 event' : `${formatNumber(found.length, locale)} events`;
 
   return (
@@ -135,7 +132,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
               <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
               <TableBody>{rows.map((e) => (
                 <TableRow key={e.id}>
-                  <TableCell className="whitespace-nowrap"><time dateTime={new Date(e.time).toISOString()}>{when(e.time)}</time></TableCell>
+                  <TableCell className="whitespace-nowrap"><FormattedDate value={e.time} timeStyle="short" /></TableCell>
                   <TableCell>{e.actor}</TableCell>
                   <TableCell><span className="me-2">{e.action}</span><Badge>{kindLabel(e.kind)}</Badge></TableCell>
                 </TableRow>

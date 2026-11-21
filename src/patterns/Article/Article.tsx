@@ -11,6 +11,7 @@ import { Card, CardHeader } from '../../components/Card/Card';
 import { Link } from '../../components/Link/Link';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
 import { useLocale } from '../../internal/provider';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Article: one post of a blog, a changelog or a help article, for an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: an <article> with one h1, its sections as h2s, and the byline's date in a <time> with the machine date,
@@ -78,7 +79,7 @@ export function Article({ title = 'Projects now open on what’s due this week',
   footer = demoFooter }: ArticleProps) {
   const locale = useLocale();
   // The date in the page's language, and in UTC so a date-only ISO string is the same day everywhere.
-  const date = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${published}T00:00:00Z`));
+  const date = formatDate(published, locale, { dateStyle: 'long' });
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />

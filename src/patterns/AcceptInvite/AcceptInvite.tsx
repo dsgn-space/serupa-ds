@@ -9,6 +9,7 @@ import { Card } from '../../components/Card/Card';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Link } from '../../components/Link/Link';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 
 /* Accept invite: the page a workspace invite links to. Who invited you, to what, as what, and Join or Decline; or
@@ -75,7 +76,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
   const [done, setDone] = React.useState<'joined' | 'declined' | null>(null);
   const answer = React.useRef<HTMLHeadingElement>(null);
   const other = signedInAs.toLowerCase() !== invite.email.toLowerCase();
-  const ends = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short' }).format(new Date(invite.expires));
+  const ends = <FormattedDate value={invite.expires} dateStyle="long" timeStyle="short" />;
   const shown = invite.members.slice(0, 4);
 
   const join = () => {
@@ -107,7 +108,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
             <>
               <h1 className="m-0 text-2xl font-semibold">{state === 'used' ? 'This invite has been used' : 'This invite has ended'}</h1>
               <p className="m-0">
-                {state === 'used' ? `Someone has already joined ${invite.workspace} with it. If that was you, sign in to open it.` : `Invites last 7 days, and this one ended on ${ends}.`}
+                {state === 'used' ? `Someone has already joined ${invite.workspace} with it. If that was you, sign in to open it.` : <>Invites last 7 days, and this one ended on {ends}.</>}
                 {' '}Ask {invite.from} for a new one if you still need to join.
               </p>
               {state === 'used' ? <Link href="#sign-in">Sign in</Link> : null}
@@ -128,7 +129,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
                     <span>{formatNumber(invite.members.length, locale)} people</span>
                   </span>
                 </DescriptionItem>
-                <DescriptionItem term="Invite ends"><time dateTime={invite.expires}>{ends}</time></DescriptionItem>
+                <DescriptionItem term="Invite ends">{ends}</DescriptionItem>
               </DescriptionList>
               {other ? (
                 <Alert tone="warning" title="You’re signed in with another account">

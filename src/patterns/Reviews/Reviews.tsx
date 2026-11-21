@@ -14,6 +14,7 @@ import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Reviews: the average and how the stars split, then the reviews themselves, filtered by stars and sorted, a few at a
@@ -85,7 +86,6 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
   const visible = list.slice(0, shown);
   const reviewsWords = (n: number) => (n === 1 ? '1 review' : `${num(n)} reviews`);
   const helpfulWords = (n: number) => (!n ? 'No one has marked this helpful yet' : n === 1 ? '1 person found this helpful' : `${num(n)} people found this helpful`);
-  const day = (d: string) => new Date(`${d}T00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 
   const more = () => { firstAdded.current = list[shown]?.id ?? null; setShown((s) => s + pageSize); };
   React.useEffect(() => {
@@ -143,7 +143,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
                   <Rating readOnly value={r.stars} size="sm" />
                   <h3 id={`review-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{r.title}</h3>
                   <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <span>{r.author}</span>·<time dateTime={r.date}>{day(r.date)}</time>{r.bought ? <Badge tone="success">Bought it</Badge> : null}
+                    <span>{r.author}</span>·<FormattedDate value={r.date} dateStyle="long" />{r.bought ? <Badge tone="success">Bought it</Badge> : null}
                   </p>
                   <p className="m-0">{r.body}</p>
                   <div className="flex flex-wrap items-center gap-3">

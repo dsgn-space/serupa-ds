@@ -15,6 +15,7 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Billing: the plan with what it costs and when it renews, how much of it is used, how it's paid (a card, a direct
    debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
@@ -93,8 +94,7 @@ const demoInvoices: BillingInvoice[] = [
 export function billingDate(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(iso);
   if (!m) return iso;
-  const at = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3] ?? 1));
-  try { return new Intl.DateTimeFormat(locale, m[3] ? { dateStyle: 'long' } : { month: 'long', year: 'numeric' }).format(at); } catch { return iso; }
+  return (m[3] ? formatDate(iso, locale, { dateStyle: 'long' }) : formatDate(`${iso}-01`, locale, { options: { month: 'long', year: 'numeric' } })) || iso;
 }
 
 /** An amount in the reader's locale: "$24.00". */

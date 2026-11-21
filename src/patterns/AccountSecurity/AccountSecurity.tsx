@@ -22,6 +22,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
    with Sign out. For an app to copy. What it carries (WCAG 2.2):
@@ -119,7 +120,7 @@ function isoIn(days: number): string {
 function day(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
-  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+  return formatDate(iso, locale, { dateStyle: 'long' }) || iso;
 }
 
 /** What's wrong with a password change, in the order of its fields. */

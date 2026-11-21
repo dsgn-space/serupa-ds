@@ -14,6 +14,7 @@ import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/Acti
 import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
    the team did, with skeletons while it loads and a first-run state before there's anything to show. For an app to
@@ -99,7 +100,7 @@ const demo: DashboardData = {
 function shortDay(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
-  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+  return formatDate(iso, locale) || iso;
 }
 
 const PAGE = 4;

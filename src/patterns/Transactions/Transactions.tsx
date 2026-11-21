@@ -15,6 +15,7 @@ import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Transactions: an account's money in and out by month, found by what it was or its category, with the month's
    totals first. For an app to copy. What it carries (WCAG 2.2):
@@ -82,8 +83,8 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
   const months = monthsOf(transactions);
-  const monthName = (m: string) => new Date(`${m}-15T12:00:00Z`).toLocaleDateString(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' });
-  const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const monthName = (m: string) => formatDate(`${m}-15`, locale, { options: { month: 'long', year: 'numeric' } });
+  const day = (iso: string) => formatDate(iso, locale, { options: { day: 'numeric', month: 'short' } });
   const [month, setMonth] = React.useState(months[0] ?? '');
   const [query, setQuery] = React.useState('');
   const [category, setCategory] = React.useState('');

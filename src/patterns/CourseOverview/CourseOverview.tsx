@@ -13,6 +13,7 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
+import { Duration } from '../../components/Duration/Duration';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Course overview: a course's modules and lessons, how far you are, where to carry on, and marking lessons done.
@@ -72,12 +73,6 @@ export function courseProgress(modules: CourseModule[], done: string[]) {
   return { done: all.filter((l) => done.includes(l.id)).length, total: all.length, next, nextModule: modules.find((m) => m.lessons.includes(next!))?.id ?? null };
 }
 
-/** Minutes in words: "45 min", "1 h 30 min", "2 h". */
-export function durationWords(minutes: number, num: (n: number) => string = String) {
-  const h = Math.floor(minutes / 60), m = minutes % 60;
-  return [h ? `${num(h)} h` : '', m || !h ? `${num(m)} min` : ''].filter(Boolean).join(' ');
-}
-
 /** The course page: a skip link, a header, then main with the h1, progress, Continue, and the modules. */
 export function CourseOverview({ title = 'Typography for the screen', description = 'Choose, set and pair type so that it reads well on any screen.',
   teacher = 'Lena Vogel', modules = demoModules, defaultDone = ['l1', 'l2', 'l3', 'l4'], onDoneChange, loading = false, loadFailed = false, onRetry }: CourseOverviewProps) {
@@ -86,7 +81,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
   const [done, setDone] = React.useState(defaultDone);
   const p = courseProgress(modules, done);
   const [open, setOpen] = React.useState<string[]>(p.nextModule ? [p.nextModule] : []);
-  const total = durationWords(modules.flatMap((m) => m.lessons).reduce((a, l) => a + l.minutes, 0), num);
+  const total = <Duration value={modules.flatMap((m) => m.lessons).reduce((a, l) => a + l.minutes, 0)} unit="minute" />;
   const lessonsWords = (d: number, t: number) => `${num(d)} of ${num(t)} lessons`;
 
   const mark = (id: string, on: boolean) => {
@@ -141,7 +136,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
                       <li key={l.id} className="flex flex-wrap items-center justify-between gap-3">
                         <span className="min-w-0">
                           <Link href={`#lesson-${l.id}`}>{l.title}</Link>
-                          <span className="block text-sm text-text-muted">{durationWords(l.minutes, num)}{l.id === p.next?.id ? ' · Up next' : ''}</span>
+                          <span className="block text-sm text-text-muted"><Duration value={l.minutes} unit="minute" />{l.id === p.next?.id ? ' · Up next' : ''}</span>
                         </span>
                         <Checkbox aria-label={`Done: ${l.title}`} checked={done.includes(l.id)} onCheckedChange={(on) => mark(l.id, on)}>Done</Checkbox>
                       </li>

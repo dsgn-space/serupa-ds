@@ -15,6 +15,7 @@ import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Download your data: choose what to include and in which format, see how big it will be, ask for it, and download
    it once it's ready, before its link runs out. For an app to copy. What it carries (WCAG 2.2):
@@ -83,7 +84,7 @@ export function sizeWords(bytes: number, locale?: string) {
 /** The page: a skip link, a header, then main with the h1, the choices, and the exports asked for before. */
 export function DataExport({ parts = demoParts, exports = demoExports, today, onRequest, loading = false, loadFailed = false, onRetry }: DataExportProps) {
   const locale = useLocale();
-  const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const day = (iso: string) => formatDate(iso, locale, { dateStyle: 'long' });
   const size = (b: number) => sizeWords(b, locale);
   const [chosen, setChosen] = React.useState<string[]>(parts.map((p) => p.id));
   const [format, setFormat] = React.useState<ExportFormat>('json');

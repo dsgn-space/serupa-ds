@@ -15,6 +15,7 @@ import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Conference agenda: the sessions of each day by time, filtered by track, saved to your own agenda, with clashes said.
    For an app to copy. What it carries (WCAG 2.2):
@@ -75,7 +76,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
   const shown = sessions.filter((s) => !track || s.track === track);
   const clash = clashes(sessions, saved);
   const time = (day: string, t: string) => new Date(`${day}T${t}`).toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' });
-  const dayName = (d: string) => new Date(`${d}T00:00`).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+  const dayName = (d: string) => formatDate(d, locale, { options: { weekday: 'long', day: 'numeric', month: 'long' } });
   const sessionsWords = (n: number) => (n === 1 ? '1 session' : `${num(n)} sessions`);
 
   const toggle = (id: string, on: boolean) => {

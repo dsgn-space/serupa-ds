@@ -17,6 +17,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Gift card: choose an amount and a design, say who it's for and when to send it, see what they'll get, and add it to
    the bag. For an app to copy. What it carries (WCAG 2.2):
@@ -88,7 +89,7 @@ export function giftProblems(d: Draft, today: string, min: number, max: number, 
 export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, max = 500, today = iso(new Date()), onAdd }: GiftCardProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, maximumFractionDigits: 0 });
-  const day = (s: string) => new Date(`${s}T00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
+  const day = (s: string) => formatDate(s, locale, { dateStyle: 'long' });
   const [d, setD] = React.useState<Draft>({ amount: '', other: null, design: 'confetti', to: '', email: '', message: '', send: today, from: '' });
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
