@@ -38,6 +38,13 @@ describe('TableOfContents', () => {
     expect(document.querySelector('h3')!.id).toBe('beta-part');
   });
 
+  test('a link whose #fragment isn\'t valid percent-encoding ("#%E0%A4%A") still shows the page and its list', async () => {
+    history.replaceState(null, '', '#%E0%A4%A');
+    await render(<Page />);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma']);
+    await expect.element(page.getByRole('heading', { name: 'Gamma' })).toBeInTheDocument();
+  });
+
   test('an h3 steps in from the h2s', async () => {
     await render(<Page />);
     await expect.poll(() => links().length).toBe(3);

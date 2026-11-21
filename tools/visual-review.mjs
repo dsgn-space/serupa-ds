@@ -33,6 +33,11 @@ export function readChanges(dir) {
 /** The files a change has: after (this branch) unless removed, before (main) unless added. */
 export const filesOf = (c) => [...(c.kind !== 'removed' ? [`${c.name}.png`] : []), ...(c.kind !== 'added' ? [`${c.name}.before.png`] : [])];
 
+/** A change's detail as plain text in a table cell. It comes from a run of the branch's code, like the name, so no
+ *  HTML, link, picture or new row of its own reaches the summary: 200 characters, on one line, with the characters
+ *  HTML and Markdown read as markup written as entities. */
+const plain = (text) => String(text).replace(/\s+/g, ' ').slice(0, 200).replace(/[&<>|[\]()`*_~!\\]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+
 /** The sheet in Markdown: each changed picture before and after. url(file) is where a picture is published. */
 export function sheet(changes, url, max = 40) {
   if (!changes.length) return '## Visual review\n\nEvery picture matches main\'s: nothing to review.\n';
@@ -45,7 +50,7 @@ export function sheet(changes, url, max = 40) {
   for (const c of changes.slice(0, max)) {
     const before = c.kind === 'added' ? 'new story' : img(`${c.name}.before.png`, 'main');
     const after = c.kind === 'removed' ? 'story removed' : img(`${c.name}.png`, 'this pull request');
-    out.push(`| ${c.name}${c.detail ? `<br><sub>${c.detail}</sub>` : ''} | ${before} | ${after} |`);
+    out.push(`| ${c.name}${c.detail ? `<br><sub>${plain(c.detail)}</sub>` : ''} | ${before} | ${after} |`);
   }
   if (changes.length > max) out.push('', `And ${changes.length - max} more: the visual-review artifacts of this run hold them all.`);
   return `${out.join('\n')}\n`;

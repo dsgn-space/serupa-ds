@@ -72,9 +72,19 @@ curl -fsSL https://get.docker.com | sh
 
 id runner >/dev/null 2>&1 || useradd -m -G docker runner
 chown runner /data/work
-V=$(curl -fsSL https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name | tr -d v)
+# The runner is checked before it is unpacked: its SHA-256 must be the one GitHub's API lists for the release's file
+# (asked from api.github.com, while the file itself comes from the download servers). A file that doesn't match stops
+# the setup here, with no runner registered. A release that lists no digest is unpacked with a warning in the log.
+REL=$(curl -fsSL https://api.github.com/repos/actions/runner/releases/latest)
+V=$(jq -r .tag_name <<< "$REL" | tr -d v)
+TAR="actions-runner-linux-x64-$V.tar.gz"
+WANT=$(jq -r --arg n "$TAR" '.assets[] | select(.name == $n) | .digest // empty' <<< "$REL" | sed 's/^sha256://')
 mkdir -p /opt/runner
-curl -fsSL -o /opt/runner/runner.tar.gz "https://github.com/actions/runner/releases/download/v$V/actions-runner-linux-x64-$V.tar.gz"
+curl -fsSL -o /opt/runner/runner.tar.gz "https://github.com/actions/runner/releases/download/v$V/$TAR"
+GOT=$(sha256sum /opt/runner/runner.tar.gz | cut -d' ' -f1)
+if [ -z "$WANT" ]; then echo "WARNING: GitHub lists no SHA-256 for $TAR; unpacking it unchecked ($GOT)"
+elif [ "$GOT" != "$WANT" ]; then echo "$TAR: SHA-256 $GOT is not the $WANT GitHub lists; not unpacking it"; exit 1
+else echo "$TAR: SHA-256 matches the release"; fi
 for i in $(seq 1 "$CONCURRENT"); do
   d=/opt/runner/slot$i; mkdir -p "$d" /data/work/slot$i; tar xzf /opt/runner/runner.tar.gz -C "$d"; chown -R runner "$d" /data/work/slot$i
   (cd "$d" && sudo -u runner ./config.sh --unattended --url "$REPO_URL" --token "$REG_TOKEN" \
