@@ -121,7 +121,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
               <TableLoadingRows columns={3} rows={5} label="" />
             </Table>
           ) : !events.length ? (
-            <EmptyState icon="history" title="Nothing has happened yet" headingLevel={2} variant="dashed"
+            <EmptyState icon="history" title="Nothing has happened yet" headingLevel={2}
               description="When people join, change settings or edit projects, it’s recorded here." />
           ) : !found.length ? (
             <EmptyNoResults query={query.trim() || kindLabel(kind as ActivityKind)} headingLevel={2}
