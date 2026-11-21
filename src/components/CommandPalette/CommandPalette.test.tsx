@@ -69,6 +69,19 @@ describe('CommandPalette', () => {
     expect([labels(), document.querySelector('dialog[open] p')?.textContent, field().hasAttribute('aria-activedescendant')]).toEqual([[], 'No matching commands', false]);
   });
 
+  test('the label itself comes first, then the shorter of labels that match alike', async () => {
+    const pages = ['Table toolbar', 'TableOfContents', 'Table', 'TabNav', 'Tabs', 'Icons', 'Icon'].map((label) => ({ id: label, label }));
+    await render(<CommandPalette defaultOpen commands={pages} />);
+    await userEvent.type(field(), 'tab');
+    expect(labels()).toEqual(['Tabs', 'Table', 'TabNav', 'Table toolbar', 'TableOfContents']);
+    await userEvent.clear(field());
+    await userEvent.type(field(), 'table');
+    expect(labels()[0]).toBe('Table');
+    await userEvent.clear(field());
+    await userEvent.type(field(), 'icon');
+    expect(labels()).toEqual(['Icon', 'Icons']);
+  });
+
   test('ArrowDown and ArrowUp move over the enabled rows and wrap; PageUp and PageDown go to the ends; Enter chooses', async () => {
     const onSelect = vi.fn(), log: string[] = [], onOpenChange = vi.fn();
     const commands = COMMANDS.map((c) => ({ ...c, onSelect: () => log.push(c.id) }));
