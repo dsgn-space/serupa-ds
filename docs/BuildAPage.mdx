@@ -55,6 +55,20 @@ The page is `bg-surface` unless its content is built from Cards or panels. Then 
 
 The patterns follow this. The list above is the one `src/internal/pageBackground.test.tsx` holds them to, so a new pattern picks a side on purpose.
 
+## Page templates
+
+Five layout components build the structure of every common page, so a page needs no CSS of its own: [AppShell](?path=/docs/components-layout-and-type-appshell--docs) is the frame (skip link, header, sidebar, main and footer), [Center](?path=/docs/components-layout-and-type-center--docs) puts a short task in the middle of the screen, [SidebarLayout](?path=/docs/components-layout-and-type-sidebarlayout--docs) puts a narrow column beside a wide one, [PageSection](?path=/docs/components-layout-and-type-pagesection--docs) is one band of a long page, and [Stack](?path=/docs/components-layout-and-type-stack--docs), [Grid](?path=/docs/components-layout-and-type-grid--docs) and [Container](?path=/docs/components-layout-and-type-container--docs) lay out what's inside. Each template is a pattern to copy:
+
+| Template | Built from | Background | Pattern |
+| --- | --- | --- | --- |
+| App shell | AppShell with a sticky Navbar and a Sidebar | plain, or muted for Cards | [Page shell](?path=/docs/patterns-page-shell--docs) |
+| Settings | AppShell, Center (`container-4xl`), a SettingsSection per group | plain | [Settings form](?path=/docs/patterns-settings-form--docs) |
+| List and detail | AppShell, Center (`container-6xl`), a Splitter that becomes one pane at a time on a phone | muted | [List and detail](?path=/docs/patterns-list-and-detail--docs) |
+| Sign-in | Center with `vertical`, as main, around the Auth card | plain | [Sign in](?path=/docs/patterns-sign-in--docs) |
+| Marketing | Navbar, PageSections (a `lg` hero, then plain and muted bands), Footer | plain, bands muted in turn | [Landing](?path=/docs/patterns-landing-page--docs) |
+
+The layouts follow the screen with the same widths everywhere: `sm` 640px, `md` 768px and `lg` 1024px, the breakpoints the responsive props (`{ base, sm, md, lg }`) and the utilities use. SidebarLayout and Grid's `minColumnWidth` follow the space they're in instead, so they also work inside a Dialog or a Card.
+
 ## What stays the app's
 
 The components can't know these, so they're the app's to check on every page: the words in labels, links and errors; `alt` text for meaningful images; color carrying meaning only together with a second cue in your own content; captions for media; and a way to pause anything that moves for more than five seconds. Test each flow with the keyboard alone, a screen reader and 400% zoom.
