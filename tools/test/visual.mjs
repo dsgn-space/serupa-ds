@@ -1,23 +1,21 @@
 // Visual snapshots: renders every Storybook story (from storybook-static/, npm run build-storybook) and compares it
-// with the saved image in baseline-visual/<Component>/: at rest in every theme, and hovered and focused in the
+// with the same story drawn from the commit this tree starts from: at rest in every theme, and hovered and focused in the
 // first theme (blue-light), and for the components in FORCED once more with forced colors on (Windows High Contrast),
 // where states shown only by colour disappear unless the CSS has a forced-colors rule. Every story is also shot once
 // on the page's other axes together (right to left, more contrast, compact density; <Story>-axes.png), so a mirroring,
 // contrast-token or control-height regression shows up too.
-//   node tools/test/visual.mjs            check
-//   node tools/test/visual.mjs --update   accept the current look as the new baseline (in Chromium a picture
-//                                         that differs past 0.01%; in Firefox and WebKit past the tolerance)
-//   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third story, starting with the second (CI runs the shards
-//                                                in parallel)
-// A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
-// Against main, drawn on the spot (CI on a pull request, ADR-0016): no committed picture can be stale.
+// No picture is committed (ADR-0016): node tools/test/run.mjs --group visual draws main's and this tree's and compares
+// them, which is how to run it. Its two steps:
 //   SERUPA_STORYBOOK=<main's storybook-static> SERUPA_VISUAL_DIR=<dir> node tools/test/visual.mjs --update
 //                                         draws main's pictures into an empty folder
 //   SERUPA_VISUAL_DIR=<dir> SERUPA_VISUAL_REPORT=<out> node tools/test/visual.mjs
 //                                         compares this tree with them: a picture that differs, a new story and a
 //                                         story gone are the change to review, written to <out> (before and after,
 //                                         and changes-<shard>.json), not failures. A story that can't be drawn still
-//                                         fails.
+//                                         fails. Without SERUPA_VISUAL_REPORT a picture that differs fails (run.mjs
+//                                         on main: the same tree drawn twice).
+//   SERUPA_SHARD=2/3                      every third story, starting with the second (CI runs the shards in parallel)
+//   SERUPA_VISUAL_REST=1                  each story at rest in the first theme only (the release notes' pictures)
 // Left out: the Playground stories (the default story with Storybook's controls, which another story shows), the
 // components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file, which takes away the
 // "visual" tag .storybook/preview.tsx gives every story: index.json lists the tags left, never the "!" ones).
@@ -34,11 +32,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { measure, print as printConsistency } from './consistency.mjs';
 import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
-import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents, inShard } from './lib.mjs';
+import { ENGINE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, onlyComponents, inShard } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
-const REDRAW = 0.0001;            // share past which Chromium's --update rewrites a picture (see "--update in Chromium")
-const DIR = process.env.SERUPA_VISUAL_DIR ? path.resolve(process.env.SERUPA_VISUAL_DIR) : path.join(HERE, `baseline-visual${suffix}`);
+if (!process.env.SERUPA_VISUAL_DIR) {
+  console.log('FAIL  No pictures to compare with: run Visual through node tools/test/run.mjs --group visual, which draws main\'s first (ADR-0016).');
+  process.exit(1);
+}
+const DIR = path.resolve(process.env.SERUPA_VISUAL_DIR);
 const REPORT = process.env.SERUPA_VISUAL_REPORT ? path.resolve(process.env.SERUPA_VISUAL_REPORT) : '';
 /** @type {{ name: string, kind: 'changed' | 'added' | 'removed', detail?: string }[]} */
 const changes = [];
@@ -50,18 +51,19 @@ function keep(name, shot, kind, detail) {
   changes.push({ name, kind, ...(detail ? { detail } : {}) });
 }
 const update = process.argv.includes('--update');
-// Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
+// Firefox and WebKit (SERUPA_BROWSER): what differs between engines is layout, text and
 // the CSS each supports, not the theme's colours, so a lighter set: each story at rest in blue-light and on the other
 // axes, two pictures where Chromium has up to twenty. Nightly (cross-browser visual in .gitlab-ci.yml).
 const LIGHT = ENGINE !== 'chromium';
-const THEMES = LIGHT ? ['blue-light'] : SHOWN_THEMES;   // the themes with pictures (tools/design-qa.mjs)
-const STATES = LIGHT ? [] : ['hover', 'focus'];
+const REST = process.env.SERUPA_VISUAL_REST === '1';
+const THEMES = LIGHT || REST ? ['blue-light'] : SHOWN_THEMES;   // the themes with pictures (tools/design-qa.mjs)
+const STATES = LIGHT || REST ? [] : ['hover', 'focus'];
 const SKIP = ['VisuallyHidden'];  // nothing to see
 // Components whose states (checked, selected, current, progress, drag-over) are easy to lose in forced colors: each
 // story is also shot with forced-colors: active, as <Story>-forced-colors.png.
 // The other axes, all at once in blue-light at rest: one picture per story catches a change on any of them.
 const AXES = 'dir:rtl;contrast:more;density:compact';
-const FORCED = LIGHT ? [] : ['Checkbox', 'Combobox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
+const FORCED = LIGHT || REST ? [] : ['Checkbox', 'Combobox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
 
 const SB = process.env.SERUPA_STORYBOOK ? path.resolve(process.env.SERUPA_STORYBOOK) : path.join(PROJECT, 'storybook-static');
 fs.mkdirSync(DIR, { recursive: true });
@@ -81,7 +83,7 @@ const stories = all.filter((e) => !only || only.has(component(e))).filter((e) =>
 const expected = new Set(all.flatMap((e) => [
   ...THEMES.map((th) => `${component(e)}/${e.exportName}-${th}-rest.png`), ...STATES.map((s) => `${component(e)}/${e.exportName}-${THEMES[0]}-${s}.png`),
   ...(FORCED.includes(component(e)) ? [`${component(e)}/${e.exportName}-forced-colors.png`] : []),
-  `${component(e)}/${e.exportName}-axes.png`,
+  ...(REST ? [] : [`${component(e)}/${e.exportName}-axes.png`]),
 ]));
 const saved = () => fs.readdirSync(DIR, { recursive: true }).map((f) => String(f).split(path.sep).join('/')).filter((f) => f.endsWith('.png') && !f.endsWith('.actual.png'));
 
@@ -226,7 +228,7 @@ async function switchTo(page, theme) {
   return '';
 }
 
-// Shoots the page (or one element of it) and compares it with baseline-visual/<name>.png (or writes it, with --update).
+// Shoots the page (or one element of it) and compares it with <DIR>/<name>.png (or writes it, with --update).
 // null when nothing to report.
 async function compare(page, name, el) {
   // A story that crashed after it first drew (on a theme switched in place, a hover, a focus) shows Storybook's error
@@ -241,22 +243,12 @@ async function compare(page, name, el) {
   const after = await crashed();
   if (after) return after;
   const file = path.join(DIR, `${name}.png`);
-  // --update in Chromium rewrites a baseline that differs past 0.01%, well under the tolerance: on CI's pinned image a
-  // render is the same run to run, so such a difference is a real change, and keeping one under the tolerance leaves a
-  // stale picture that the next pull request to redraw would commit instead (Menu kept ⌘ for weeks after it drew
-  // Ctrl). The floor is for the few stories that flip a pixel or two between runs (Popover's arrow edge), which would
-  // otherwise be rewritten every time. Firefox and WebKit keep the tolerance. Update baselines also redraws after each
-  // push to main, since a picture redrawn before another change to a shared look merges with the old one.
-  if (update) {
-    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > (LIGHT ? TOLERANCE : REDRAW)) fs.writeFileSync(file, shot);
-    return null;
-  }
-  // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a
-  // story can't pass without being compared.
+  // --update draws the pictures to compare with (main's, or this tree's first pass) into an empty folder.
+  if (update) { fs.writeFileSync(file, shot); return null; }
   if (REPORT && !fs.existsSync(file)) { keep(name, shot, 'added'); return null; }
   if (!fs.existsSync(file)) {
     fs.writeFileSync(path.join(DIR, `${name}.actual.png`), shot);
-    return { name, ok: false, detail: 'no baseline; add the "update-visual-baselines" label to the pull request (or run node tools/test/visual.mjs --update) and review the new images' };
+    return { name, ok: false, detail: 'no picture from the first pass to compare with (it failed to draw there)' };
   }
   const { share, box } = await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'));
   if (REPORT) { if (share > TOLERANCE) keep(name, shot, 'changed', `${(share * 100).toFixed(2)}% of pixels differ (${box})`); return null; }
@@ -310,7 +302,7 @@ async function checkStory(e, page) {
       if (r) out.push(r);
     }
   }
-  {
+  if (!REST) {
     const name = `${c}/${e.exportName}-axes`;
     const notReady = await open(page, e, THEMES[0], AXES);
     const on = !notReady && await page.evaluate(() => { const h = document.documentElement; return h.dir === 'rtl' && h.dataset.contrast === 'more' && h.dataset.density === 'compact'; });
@@ -350,7 +342,7 @@ R.push(...(await (update ? inParallel(stories, slots, guarded) : inParallelRetry
 pages.splice(0, pages.length, ...slots.map((s) => s.page));
 
 // The token sheets: each Foundations page, one picture per data-token-sheet element.
-const sheetPages = shard === 1 && !only ? Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
+const sheetPages = shard === 1 && !only && !REST ? Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
   .filter((e) => e.type === 'docs' && e.title.startsWith('Foundations/')).sort((a, b) => a.id.localeCompare(b.id)) : [];
 let sheetsFailed = false;
 async function checkSheets(e, page) {
@@ -377,12 +369,11 @@ async function checkSheets(e, page) {
 R.push(...(await inParallel(sheetPages, pages, checkSheets)).flat());
 await b.close();
 close();
-// A baseline whose story is gone: --update removes it (in shard 1, since every shard knows every story), and the check fails on it.
+// A picture of main's whose story is gone: the report lists it as removed (in shard 1, since every shard knows every story).
 // Foundations/ pictures count only when the sheets ran, and none is removed when a page didn't render.
 const orphans = saved().filter((f) => !expected.has(f) && (!only || only.has(f.split('/')[0])) && (f.split('/')[0] !== 'Foundations' || (sheetPages.length && !sheetsFailed)));
 if (update) {
-  if (shard === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
-  console.log(`Visual baseline saved: ${stories.length} stories, ${sheetPages.length} Foundations pages.`);
+  console.log(`Pictures drawn: ${stories.length} stories, ${sheetPages.length} Foundations pages.`);
   process.exit(sheetsFailed ? 1 : 0);
 }
 if (REPORT) {
@@ -391,7 +382,7 @@ if (REPORT) {
   fs.writeFileSync(path.join(REPORT, `changes-${shard}.json`), JSON.stringify(changes, null, 2));
   console.log(changes.length ? `${changes.length} pictures differ from main's, to review:` : 'Every picture matches main\'s.');
   for (const c of changes) console.log(`${c.kind.toUpperCase().padEnd(8)}${c.name}${c.detail ? `: ${c.detail}` : ''}`);
-} else if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
+} else if (shard === 1) R.push({ name: 'every picture of the first pass belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}` });
 console.log(`(${stories.length} stories, ${sheetPages.length} Foundations pages)`);
 if (measured.size) printConsistency(consistency, measuring);
 process.exitCode = report('Visual', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe
