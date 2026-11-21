@@ -1,0 +1,25 @@
+/* ---------------------------------------------------------------
+   AppShell: a grid at least the screen's height. The header spans the top; below it the sidebar runs down the start
+   side, beside main and then the footer, which take the rest; a BottomNav comes last. With a sticky Navbar
+   (--dk-navbar-offset set), the sidebar sticks below the bar and is the screen's height less the bar, so a long one
+   scrolls inside itself and a short page never scrolls; without one, it's as tall as main and the footer. It's gone
+   below its width. main is plain or muted; the rest stays on --app-shell-bg.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-app-shell { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; grid-template-areas: "header header" "side main" "side footer" "bottom bottom"; min-block-size: var(--sizing-dvh); background: var(--app-shell-bg, var(--surface)); color: var(--app-shell-text, var(--text)); }
+.dk-app-shell > * { grid-column: header; }
+.dk-app-shell > .dk-app-shell__side { grid-area: side; position: sticky; inset-block-start: var(--dk-navbar-offset, var(--spacing-0)); align-self: stretch; block-size: calc(var(--sizing-dvh) - var(--dk-navbar-offset)); }
+/* Without --dk-navbar-offset that block-size is invalid at computed-value time, so it falls back to auto and the sidebar stretches down beside main and the footer. */
+.dk-app-shell > .dk-app-shell__main { grid-area: main; min-width: var(--spacing-0); outline: none; }
+.dk-app-shell > .dk-app-shell__footer { grid-area: footer; }
+.dk-app-shell > .dk-app-shell__bottom { grid-area: bottom; }
+.dk-app-shell--muted .dk-app-shell__main { background: var(--app-shell-bg-muted, var(--surface-muted)); --surface-behind: var(--app-shell-bg-muted, var(--surface-muted)); }
+.dk-app-shell__main--padded { padding: var(--app-shell-padding, var(--spacing-4)); }
+.dk-app-shell__footer { border-block-start: var(--border-width-1) solid var(--app-shell-border, var(--border)); padding: var(--app-shell-footer-padding, var(--spacing-6)); color: var(--app-shell-footer-text, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+@media (min-width: 640px) { .dk-app-shell__main--padded { padding: var(--app-shell-padding-sm, var(--spacing-6)); } }
+@media (min-width: 1024px) { .dk-app-shell__main--padded { padding: var(--app-shell-padding-lg, var(--spacing-8)); } }
+@media (max-width: 639.98px) { .dk-app-shell > .dk-app-shell__side--from-sm { display: none; } }
+@media (max-width: 767.98px) { .dk-app-shell > .dk-app-shell__side--from-md { display: none; } }
+@media (max-width: 1023.98px) { .dk-app-shell > .dk-app-shell__side--from-lg { display: none; } }
+@media print { .dk-app-shell > .dk-app-shell__side { display: none; } .dk-app-shell { min-block-size: auto; } }
+}
