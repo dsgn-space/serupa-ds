@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 // The patterns' empty states look alike: an icon over the words, with no frame. EmptyState's dashed frame is for a
 // drop zone or a slot to fill (its README), and no pattern's empty list is either; the blocks' empties (EmptyStates)
 // already follow this.
-const sources = import.meta.glob(['../patterns/*/*.tsx', '!../patterns/*/*.stories.tsx', '!../patterns/*/*.test.tsx'], { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
+const sources = import.meta.glob<string>(['../patterns/*/*.tsx', '!../patterns/*/*.stories.tsx', '!../patterns/*/*.test.tsx'], { eager: true, query: '?raw', import: 'default' });
 
 /** Each `<EmptyState …>` opening tag in a source, read up to the `>` outside any `{…}`, so `actions={<Link …/>}` stays inside. */
 function emptyStateTags(src: string): string[] {

@@ -24,9 +24,9 @@ describe('Blocks/Empty states', () => {
   test('size: md on a page and sm inside a card, as EmptyState (48px against 24px round the words), on each of the four', async () => {
     const pad = (name: string) => getComputedStyle(page.getByRole('heading', { name }).element().closest('[data-component="empty-state"]')!).paddingTop;
     await render(<div>
-      <EmptyFirstRun title="A" headingLevel={2} /><EmptyFirstRun title="B" headingLevel={2} size="sm" />
-      <EmptyNoResults query="q" title={() => 'C'} headingLevel={2} size="sm" /><EmptyNoAccess title="D" headingLevel={2} size="sm" />
-      <EmptyLoadFailed title="E" headingLevel={2} size="sm" />
+      <EmptyFirstRun title="A" createLabel="New" onCreate={() => {}} headingLevel={2} /><EmptyFirstRun title="B" createLabel="New" onCreate={() => {}} headingLevel={2} size="sm" />
+      <EmptyNoResults query="q" title={() => 'C'} headingLevel={2} size="sm" /><EmptyNoAccess title="D" description="Ask the owner." headingLevel={2} size="sm" />
+      <EmptyLoadFailed title="E" onRetry={() => {}} headingLevel={2} size="sm" />
     </div>);
     expect(['A', 'B', 'C', 'D', 'E'].map(pad)).toEqual(['48px', '24px', '24px', '24px', '24px']);
   });
