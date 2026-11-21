@@ -83,7 +83,7 @@ describe('Menu', () => {
       <MenuItem id="mt-y" to="/y">Stray to</MenuItem>
     </Menu>);
     expect([el('mt-a').tagName, el('mt-h').getAttribute('rel'), el('mt-r').getAttribute('href'), el('mt-r').getAttribute('role'), r.current === el('mt-r')])
-      .toEqual(['DIV', 'noopener noreferrer', '#router/settings', 'menuitem', true]);
+      .toEqual(['SPAN', 'noopener noreferrer', '#router/settings', 'menuitem', true]);
   });
 
   test('with Alt, Ctrl or ⌘ the arrows, Home and End are left to the browser, on the trigger and in the open menu (L8E36)', async () => {
