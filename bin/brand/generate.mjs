@@ -7,7 +7,8 @@
 //
 //   light  primary          the color itself when it passes, else the lightest of 500 to 800: white text at 4.5:1,
 //                           4.5:1 on the surface and on surface-muted, and a hover one step darker that passes too (and 4.5:1 on
-//                           primary-subtle, brand 50)
+//                           primary-subtle, brand 50); held down, primary steps once more (primary-pressed) and
+//                           primary-subtle to brand 100 (primary-subtle-pressed), where the hover text keeps 4.5:1
 //          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on primary-subtle
 //          more contrast    primary the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
 //                           darker; focus ring the lightest at 4.5:1
@@ -22,6 +23,7 @@
 const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
+  ['on-primary', 'primary-pressed', 4.5], ['primary-hover', 'primary-subtle-pressed', 4.5], ['on-primary', 'more:primary-pressed', 4.5],
   ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
   ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3], ['focus-ring', 'field', 3], ['field-action', 'field', 4.5],
   ['more:primary', 'surface', 7], ['more:primary', 'primary-subtle', 7], ['more:primary-hover', 'surface', 7],
@@ -32,7 +34,7 @@ const STEPS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '90
 // Chroma at each step, as a share of the color's own (peaks at 600, like the shipped hues).
 const CHROMA = [0.06, 0.13, 0.24, 0.43, 0.67, 0.87, 1, 0.99, 0.81, 0.6, 0.37];
 // The aliases the brand sets; every other one is copied.
-export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-action'];
+export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action'];
 const CORNERS = {
   sharp: { 'radius-inner': 'rounded-none', 'radius-control': 'rounded-xs', 'radius-surface': 'rounded-sm', 'radius-container': 'rounded-md' },
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
@@ -151,13 +153,15 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b), field = hexAt(b.field, b);
     const light = mode === 'light';
     const on = light ? palette.get('white') : S('950');
-    const subtle = light ? S('50') : S('950');
+    const subtle = light ? S('50') : S('950'), subtleHeld = light ? S('100') : S('900');
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
+    // Held down, a step past hover, stopping at the end of the scale.
+    const held = (s) => next(s) ?? s;
     // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
     const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3;
-    const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5;
+    const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && contrast(on, S(held(next(s)))) >= 4.5;
     // The color itself when it passes, so the buttons are the brand's own; else the shade nearest the page's end.
     const cands = order(light ? '500' : '200', light ? '800' : '500');
     const primary = cands.includes(seedStep) && passes(seedStep) ? seedStep : cands.find(passes);
@@ -179,9 +183,10 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     if (!action) fail(mode, 'a text action at 4.5:1 on the field');
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus };
     Object.assign(b, {
-      primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-subtle': `{${name}-${light ? '50' : '950'}}`,
+      primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-pressed': `{${name}-${held(next(primary))}}`,
+      'primary-subtle': `{${name}-${light ? '50' : '950'}}`, 'primary-subtle-pressed': `{${name}-${light ? '100' : '900'}}`,
       'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-action': `{${name}-${action}}`,
-      'dk-more-primary': `{${name}-${more}}`, 'dk-more-primary-hover': `{${name}-${next(more)}}`, 'dk-more-focus-ring': `{${name}-${moreFocus}}`,
+      'dk-more-primary': `{${name}-${more}}`, 'dk-more-primary-hover': `{${name}-${next(more)}}`, 'dk-more-primary-pressed': `{${name}-${held(next(more))}}`, 'dk-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;
   }
@@ -203,7 +208,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
   const v = (x) => { const r = ref(x); return r ? `var(--${r})` : x; };
   const block = (sel, own) => `${sel} {\n${Object.entries(own).map(([k, x]) => `  --${k}: ${v(x)};\n`).join('')}}\n`;
   const L = picks.light.values, D = picks.dark.values;
-  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
+  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-primary-pressed', 'dk-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
   // A corners preset sets the radius roles and a motion preset the durations, the same in light and dark.
   const roles = Object.fromEntries([...Object.entries(CORNERS[corners] ?? {}), ...Object.entries(MOTION[motion] ?? {})].map(([k, x]) => [k, `{${x}}`]));
