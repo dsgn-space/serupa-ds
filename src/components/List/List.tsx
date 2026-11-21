@@ -145,15 +145,17 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
   const theirs = { key: rest.onKeyDown, click: rest.onClick, focus: rest.onFocus };
   const ctx = React.useMemo<Pick | null>(() => (mode ? { mode, has: (v) => picked.includes(v) } : null), [mode, picked]);
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
-  const el = React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
-    ref: merged, 'data-component': 'list', role: rest.role ?? (mode ? 'grid' : 'list'), 'aria-busy': rest['aria-busy'] ?? (props.loading || undefined),
+  const Tag = props.as === 'ol' ? 'ol' : 'ul';
+  const attrs = {
+    ...rest,
+    'data-component': 'list', role: rest.role ?? (mode ? 'grid' : 'list'), 'aria-busy': rest['aria-busy'] ?? (props.loading || undefined),
     'aria-multiselectable': mode === 'multiple' || undefined,
     onKeyDown: mode ? (e: React.KeyboardEvent<HTMLUListElement>) => { if (theirs.key) theirs.key(e); if (!e.defaultPrevented) onKeyDown(e); } : theirs.key,
     onClick: mode ? (e: React.MouseEvent<HTMLUListElement>) => { if (theirs.click) theirs.click(e); onClick(e); } : theirs.click,
     onFocus: mode ? (e: React.FocusEvent<HTMLUListElement>) => { if (theirs.focus) theirs.focus(e); onFocus(e); } : theirs.focus,
     className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided === 'inset' ? 'dk-list--inset' : props.divided !== false && 'dk-list--divided', mode && 'dk-list--selectable', props.className),
-  }));
-  return <PickContext.Provider value={ctx}>{el}</PickContext.Provider>;
+  };
+  return <PickContext.Provider value={ctx}><Tag {...attrs} ref={merged} /></PickContext.Provider>;
 }
 
 /* List: rows of related things (people, files, settings), each a title with an optional description, leading

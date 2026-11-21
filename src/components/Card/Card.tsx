@@ -39,7 +39,6 @@ type CardLinkProps = { href: string; target?: string; rel?: string; 'aria-label'
 const CardLinkContext = /* @__PURE__ */ React.createContext<CardLinkProps | null>(null);
 const VARIANTS: readonly CardVariant[] = ['outline', 'elevated', 'filled'];
 const PADDINGS: readonly CardPadding[] = ['none', 'sm', 'md', 'lg'];
-const TAGS = ['div', 'section', 'article', 'li'] as const;
 
 function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, OWN);
@@ -48,11 +47,11 @@ function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLEleme
   const base = domId('dk-card', React.useId());
   const isLink = props.href != null;
   const cls = cn('dk-card', variant !== 'outline' && 'dk-card--' + variant, padding !== 'md' && 'dk-card--padding-' + padding, isLink && 'dk-card--link', props.className);
-  const tag = oneOf(TAGS, props.as, 'div');
+  const Tag = props.as === 'section' || props.as === 'article' || props.as === 'li' ? props.as : 'div';
   // A plain Card inside a link Card's content ends that card's link: its own CardHeader title stays text (L8E65).
   const inLink = React.useContext(CardLinkContext) != null;
-  if (!isLink) return React.createElement(tag, Object.assign(rest, { ref: ref, className: cls, 'data-component': 'card', 'data-variant': variant }),
-    inLink ? <CardLinkContext.Provider value={null}>{props.children}</CardLinkContext.Provider> : props.children);
+  if (!isLink) return <Tag {...rest} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} className={cls} data-component="card" data-variant={variant}>
+    {inLink ? <CardLinkContext.Provider value={null}>{props.children}</CardLinkContext.Provider> : props.children}</Tag>;
   const link: CardLinkProps = { href: props.href!, target: props.target, rel: props.target === '_blank' && props.rel == null ? 'noopener noreferrer' : props.rel, 'aria-label': rest['aria-label'] };
   delete rest['aria-label'];
   // A direct CardHeader with a title takes the link; otherwise the card gets an empty one, named by its own text.
@@ -86,9 +85,9 @@ function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLEleme
     const a = e.button === 1 ? target(e) : null;
     if (a) away(a);
   };
-  return React.createElement(tag, Object.assign(rest, { id: id, ref: ref, className: cls, 'data-component': 'card', 'data-variant': variant, onClick: onClick, onAuxClick: onAuxClick }),
-    titled ? null : React.createElement(config.link, { ...link, className: 'dk-card__link dk-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' }),
-    <CardLinkContext.Provider value={titled ? link : null} key="content">{props.children}</CardLinkContext.Provider>);
+  return <Tag {...rest} id={id} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} className={cls} data-component="card" data-variant={variant} onClick={onClick} onAuxClick={onAuxClick}>
+    {titled ? null : React.createElement(config.link, { ...link, className: 'dk-card__link dk-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' })}
+    <CardLinkContext.Provider value={titled ? link : null} key="content">{props.children}</CardLinkContext.Provider></Tag>;
 }
 
 /** A surface that groups related content and actions: CardHeader, CardBody and CardFooter inside. With href, the whole card is a link. */

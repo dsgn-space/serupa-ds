@@ -15,11 +15,6 @@
       "count": 2
     }
   },
-  "src/components/Card/Card.tsx": {
-    "react-hooks/refs": {
-      "count": 2
-    }
-  },
   "src/components/Carousel/Carousel.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
@@ -35,9 +30,6 @@
   },
   "src/components/Chart/Chart.tsx": {
     "react-hooks/preserve-manual-memoization": {
-      "count": 1
-    },
-    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -126,11 +118,6 @@
       "count": 7
     }
   },
-  "src/components/Divider/Divider.tsx": {
-    "react-hooks/refs": {
-      "count": 2
-    }
-  },
   "src/components/Drawer/Drawer.tsx": {
     "jsx-a11y-x/no-noninteractive-element-interactions": {
       "count": 1
@@ -147,6 +134,14 @@
       "count": 2
     },
     "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/Field/Field.tsx": {
+    "jsx-a11y-x/click-events-have-key-events": {
+      "count": 1
+    },
+    "jsx-a11y-x/no-noninteractive-element-interactions": {
       "count": 1
     }
   },
@@ -209,9 +204,6 @@
   },
   "src/components/List/List.tsx": {
     "react-hooks/preserve-manual-memoization": {
-      "count": 1
-    },
-    "react-hooks/refs": {
       "count": 1
     }
   },

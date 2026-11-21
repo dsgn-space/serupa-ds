@@ -125,8 +125,8 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
     props.required && group ? <span className="dk-visually-hidden" key="req-said">{' ' + sds.labels.required}</span> : null,
     !props.required && props.optional ? <span className="dk-field__optional" key="opt">{typeof props.optional === 'string' ? props.optional : sds.labels.fieldOptional}</span> : null];
   const label = props.label == null ? null : group
-    ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, ...labelKids)
-    : React.createElement('label', { className: 'dk-field__label', htmlFor: controlId, id: base + '-label', key: 'label', onClick: focusControl, ref: labelRef }, ...labelKids);
+    ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, labelKids)
+    : <label className="dk-field__label" htmlFor={controlId} id={base + '-label'} key="label" onClick={focusControl} ref={labelRef}>{labelKids}</label>;
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
   const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div>
     // The same slot, and the same polite announcement, for advice and for "checking…": neither makes the control invalid.

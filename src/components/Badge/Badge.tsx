@@ -172,12 +172,12 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
       rest.role = 'link';
       rest['aria-disabled'] = true;
       rest.onClick = block;
-      return React.createElement('a', Object.assign(rest, { ref: setNode, className: classes }), ...content);
+      return React.createElement('a', Object.assign(rest, { ref: setNode, className: classes }), content);
     }
-    return React.createElement(config.link, Object.assign(rest, { ref: setNode, className: classes }), ...content);
+    return React.createElement(config.link, Object.assign(rest, { ref: setNode, className: classes }), content);
   }
   if (interactive && rest.type === undefined) rest.type = 'button';   // never submits a form by accident
-  return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), ...content);
+  return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), content);
 }
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
