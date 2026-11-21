@@ -127,9 +127,9 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
   );
 
   return (
-    <div className="min-h-screen bg-surface text-text">
+    <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme status</p>
         <Link underline="hover" href="#support">Contact support</Link>
       </header>
