@@ -142,7 +142,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
   Field: 'a label around a control: its name only picks the control\'s message from FormErrors',
   FieldList: 'the start of its rows\' field names (phones[0].number): the fields inside submit their own values',
   CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', FabMenu: 'a button that opens a menu', Tab: 'a button', ToggleButton: 'a button',
-  Attachment: "the file's name, shown and read", ChatComposer: "the <form> element's own name attribute, not a value", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
+  Attachment: "the file's name, shown and read", ChatComposer: "the <form> element's own name attribute, not a value", Form: "the <form> element's own name attribute, not a value", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
 };
 const TABLE = Object.entries(CONTROLS).filter((e): e is [string, Control] => typeof e[1] !== 'string').map(([name, c]) => ({ name, ...c }));
 

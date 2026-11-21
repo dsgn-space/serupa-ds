@@ -8,6 +8,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 A form asks people for something, tells them clearly when an answer won't do, and keeps what they typed. Each component below handles its own part. This page is how the parts work together, with links to the details.
 
+[Form](?path=/docs/components-forms-form--docs) does most of this page for you: give it a schema (Zod, Valibot or ArkType) and it checks each field at the right moment, shows the summary on a failed submit, and maps the server's errors onto their fields. [Build a form](?path=/docs/guides-build-a-form--docs) walks through sign-up, checkout and settings with it.
+
 ## Labels
 
 - Every control has a visible label: wrap it in a [Field](?path=/docs/components-forms-field--docs). A row checkbox in a table, with no room for one, takes an `aria-label` instead.
@@ -78,6 +80,8 @@ Phone numbers, line items, team members to invite: people add, change and remove
 - Say the limit before people reach it ("Up to 5 numbers"), and keep at least one entry when one is required.
 
 ## With a form library or a server action
+
+Form is the simplest way ([Build a form](?path=/docs/guides-build-a-form--docs)). The fields also work without it:
 
 Serupa's fields are native form controls underneath, so they work with a plain `<form>`, a React form `action` and form libraries without adapters. Wire each piece by what it is:
 

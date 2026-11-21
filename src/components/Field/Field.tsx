@@ -84,7 +84,9 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   const edited = form && name && fromForm != null ? () => form.clear(name) : undefined;
   // One message under the control, the most urgent: an error, then "checking…", then a warning.
   const shows = (v: React.ReactNode) => v != null && v !== false && v !== '';
-  const kind = hasError ? 'error' : shows(props.checking) ? 'checking' : shows(props.warning) ? 'warning' : null;
+  // Inside a Form, "Checking…" while one of its checks runs for this field.
+  const checking = shows(props.checking) ? props.checking : form && form.checking && name ? form.checking(name) : null;
+  const kind = hasError ? 'error' : shows(checking) ? 'checking' : shows(props.warning) ? 'warning' : null;
   const hintId = props.hint ? base + '-hint' : null, errorId = hasError ? base + '-error' : null;
   const noteId = kind === 'checking' || kind === 'warning' ? base + '-' + kind : null;
   const group = !!props.group;
@@ -133,7 +135,7 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div>
     // The same slot, and the same polite announcement, for advice and for "checking…": neither makes the control invalid.
     : kind === 'warning' ? <div className="dk-field__warning" key="warning"><Icon icon={icons.Warning} className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.warning}</span></div>
-    : kind === 'checking' ? <div className="dk-field__checking" key="checking"><LoaderRing size="sm" className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.checking}</span></div>
+    : kind === 'checking' ? <div className="dk-field__checking" key="checking"><LoaderRing size="sm" className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{checking}</span></div>
     : null;
   const described = cn(hintId, errorId, noteId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
@@ -151,6 +153,12 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
       if (props.required && p['aria-required'] == null) add['aria-required'] = true;
     }
     if (hasError) { if (dom) add['aria-invalid'] = true; else add.invalid = true; }
+    // Inside a Form with defaultValues: the value it starts with, unless the control has its own.
+    const start = form && form.defaultValue && p.name ? form.defaultValue(p.name) : undefined;
+    if (start !== undefined && !('value' in p) && !('defaultValue' in p) && !('checked' in p) && !('defaultChecked' in p)) {
+      if (typeof start === 'boolean') (add as { defaultChecked?: boolean }).defaultChecked = start;
+      else (add as { defaultValue?: unknown }).defaultValue = start;
+    }
     if (props.disabled && !group) add.disabled = true;
     return React.cloneElement(el, add);
   };
