@@ -114,7 +114,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
-          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like.`} />
+          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like. Questions marked * need an answer.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
         <div className="flex flex-col gap-6 pt-6">
@@ -143,7 +143,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
                 const error = missing.includes(q.id) ? 'Choose an answer.' : undefined;
                 return (
                   <li key={q.id} className="flex flex-col gap-3">
-                    <Field label={label} error={error} group disabled={checked}>
+                    <Field label={label} error={error} group required disabled={checked}>
                       {many ? (
                         <CheckboxGroup id={`quiz-${q.id}`} value={mine} onValueChange={(v: string[]) => choose(q.id, v)}>
                           {q.options.map((o) => <Checkbox key={o.value} value={o.value}>{o.label}</Checkbox>)}
