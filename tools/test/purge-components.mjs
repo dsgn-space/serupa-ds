@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
-import { ENGINE, PROJECT, writePage, browser, cleanup, report, done, inParallel } from './lib.mjs';
+import { ENGINE, PROJECT, writePage, browser, cleanup, report, done, inParallel, onlyComponents } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -16,7 +16,12 @@ const b = await browser();
 {
   const dir = path.join(PROJECT, '.test-tmp');
   fs.mkdirSync(dir, { recursive: true });
-  const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')));
+  const previews = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')));
+  // A run narrowed to some components (SERUPA_ONLY, run.mjs --since: a pull request that changes only component folders,
+  // with the components that use them) checks their previews; the others trim and render as on its base, and the queue
+  // and main check every one. Loading 160 previews twice was 86 s of a checks shard on every pull request (21 Nov).
+  const only = onlyComponents();
+  const comps = only ? previews.filter((c) => only.has(c)) : previews;
   const styles = async (url) => {
     const p = await b.newPage({ viewport: { width: 1000, height: 700 } });
     await p.goto(url);
@@ -61,7 +66,8 @@ const b = await browser();
   const bundleSize = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size;
   const full = bundleSize * jobs.length, small = jobs.reduce((n, { out }) => n + fs.statSync(out).size, 0);
   jobs.forEach(({ c }, i) => t(`serupa-purge --components: ${c}'s preview renders identically`, !diffs[i].length, diffs[i].slice(0, 3).join(' | ')));
-  t(`serupa-purge --components: ${comps.length} previews average ${(small / comps.length / 1024).toFixed(0)} KB of CSS`, small < full);
+  if (comps.length) t(`serupa-purge --components: ${comps.length} previews average ${(small / comps.length / 1024).toFixed(0)} KB of CSS`, small < full);
+  else t(`serupa-purge --components: no preview among the ${only.size} changed components`, true);
 }
 
 await b.close();
