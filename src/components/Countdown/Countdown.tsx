@@ -4,7 +4,7 @@ import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
-import { canonicalLocale } from '../../internal/locale';
+import { canonicalLocale, localeDir } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { countdownTick } from '../../internal/timing';
@@ -131,7 +131,8 @@ function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes
   const text = !valid ? '' : ended && endText ? endText : props.format === 'words' ? wordsOf(left, locale, true) : countdownClock(left, locale);
   // A clock stays on one line; words and an end text wrap like the sentence around them, so a narrow column keeps them.
   const wraps = valid && ((ended && !!endText) || props.format === 'words');
-  return <time lang={lang} {...rest} ref={ref} role="timer" aria-label={valid ? `${label}: ${ended && endText ? endText : words}` : label}
+  // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
+  return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} role="timer" aria-label={valid ? `${label}: ${ended && endText ? endText : words}` : label}
     dateTime={valid ? `PT${left}S` : undefined} className={cn('dk-countdown', wraps && 'dk-countdown--wraps', ended && 'dk-countdown--ended', props.className)}
     data-component="countdown" suppressHydrationWarning>{text}</time>;
 }

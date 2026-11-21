@@ -49,6 +49,7 @@ import { Countdown } from "@diki-stwn/serupa-ds";
 - **Role and name:** a `<time role="timer">` with a machine-readable `datetime` ("PT299S"), named by `label` and the time left in words: "Offer ends in: 4 minutes, 59 seconds", so a screen reader never reads "4:59" as a time of day.
 - A timer isn't a live region: one that spoke every second would drown out everything else. It speaks only at its steps and when it ends (4.1.3).
 - **Keyboard:** none: inline text, not focusable.
+- With a `locale` of its own it carries that locale's direction (`dir`) with its `lang`, so "4 minutes, 59 seconds" in English keeps its order in a right-to-left page.
 - **What's still yours:** a time limit people can turn off, adjust or extend, warned of with at least 20 seconds to act (2.2.1), and keeping what they typed when it ends. Don't make the countdown the only way someone learns it ended: change the page too.
 
 ## Props

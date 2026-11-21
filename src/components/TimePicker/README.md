@@ -67,6 +67,7 @@ Drawn from the `Disabled` story.
 
 - The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.
 - The placeholder and the format in the field's description ("Format: hh:mm AM/PM", after a Field hint) follow the locale's order, separator and AM/PM words: "hh.mm" in id-ID, "오전/오후 hh:mm" in ko. The words come from the `formatHint` label.
+- With a `locale` of its own the time carries that locale's direction (`dir`), in the field and the list, so "3:45 PM" in a right-to-left page keeps its order (not "PM 3:45").
 - The clock button is out of the tab order, since ↓ in the field does the same.
 - Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in every theme (`TimePicker.test.tsx`).
 

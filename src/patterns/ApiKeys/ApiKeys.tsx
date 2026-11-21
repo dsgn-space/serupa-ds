@@ -19,6 +19,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 
 /* API keys: the keys a workspace's scripts and tools use, making one, and revoking one. For an app to copy. What it
    carries (WCAG 2.2):
@@ -153,12 +154,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
     }, () => setRevokeFailed(true)).finally(() => setRevokeBusy(false));
   };
 
-  const date = (t: number | string) => {
-    const d = new Date(t);
-    let text: string;
-    try { text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d); } catch { text = d.toISOString().slice(0, 10); }
-    return <time dateTime={d.toISOString()}>{text}</time>;
-  };
+  const date = (t: number | string) => <FormattedDate value={t} />;
   const accessLabel = (a: ApiKeyAccess) => ACCESS.find((x) => x.value === a)!.label;
   const head = (
     <TableHead><TableRow>

@@ -19,6 +19,7 @@ import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Expense report: add what you spent, one expense at a time, see them in a table with the total, and send the report
@@ -119,7 +120,6 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
   const total = list.reduce((s, e) => s + e.amount, 0);
   const label = (c: string) => CATEGORIES.find((x) => x.value === c)?.label ?? c;
-  const date = (s: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${s}T00:00`));
   const edit = (patch: Partial<Draft>) => setD((now) => ({ ...now, ...patch }));
 
   const errors: ErrorSummaryItem[] = PARTS.filter((k) => problems[k]).map((k) => ({ field: `expense-${k}`, message: problems[k] }));
@@ -214,7 +214,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                     <TableBody>
                       {list.map((x) => (
                         <TableRow key={x.id}>
-                          <TableCell className="whitespace-nowrap"><time dateTime={x.date}>{date(x.date)}</time></TableCell>
+                          <TableCell className="whitespace-nowrap"><FormattedDate value={x.date} /></TableCell>
                           <TableCell className="wrap-break-word">{x.what}<span className="block text-sm text-text-muted">{label(x.category)}</span></TableCell>
                           <TableCell className="text-end tabular-nums">{money(x.amount)}</TableCell>
                           <TableCell>{x.receipt ? <span className="wrap-anywhere">{x.receipt}</span> : x.amount > receiptOver ? <Badge tone="warning">Receipt needed</Badge> : <span className="text-text-muted">Not needed</span>}</TableCell>

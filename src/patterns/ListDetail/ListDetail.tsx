@@ -13,6 +13,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
    a phone. For an app to copy. What it carries (WCAG 2.2):
@@ -62,7 +63,7 @@ const demo: Message[] = [
 function day(iso: string, locale: string, style: 'medium' | 'long'): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
-  try { return new Intl.DateTimeFormat(locale, { dateStyle: style }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+  return formatDate(iso, locale, { dateStyle: style }) || iso;
 }
 
 const WIDE = '(min-width: 48rem)';

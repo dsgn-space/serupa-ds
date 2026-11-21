@@ -325,21 +325,21 @@ await inParallel(opened, workers, async (p, w) => {
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
 }
 
-// The search finds a component by the other names its guide gives ("**Also called:**"): someone who types "modal"
-// or "snackbar" is looking for Dialog or Toast.
+// The search finds a page by the other names it gives (a guide's "**Also called:**", a page's {/* also: … */}): someone who types "modal"
+// or "snackbar" is looking for Dialog or Toast, and "dark mode" for Themes.
 {
   const w = workers[0];
   await w.page.setViewportSize({ width: 1280, height: 900 });
   await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
   await w.page.locator('.site-search').click();
   const missed = [];
-  for (const [query, page] of [['modal', 'Dialog'], ['snackbar', 'Toast'], ['spinner', 'Loader'], ['collapsible', 'Accordion'], ['facepile', 'AvatarGroup']]) {
+  for (const [query, page] of [['modal', 'Dialog'], ['snackbar', 'Toast'], ['spinner', 'Loader'], ['collapsible', 'Accordion'], ['facepile', 'AvatarGroup'], ['dark mode', 'Themes'], ['validation', 'Forms'], ['i18n', 'Localization']]) {
     await w.page.keyboard.press('ControlOrMeta+A'); await w.page.keyboard.type(query); await w.page.waitForTimeout(150);
     const found = await w.page.evaluate(() => [...document.querySelectorAll('[role="option"]')].map((o) => o.firstChild?.textContent?.trim() || o.textContent.trim()));
     if (!found.some((f) => f.startsWith(page))) missed.push(`"${query}" lists ${found.slice(0, 3).join(', ') || 'nothing'}, not ${page}`);
   }
   await w.page.keyboard.press('Escape');
-  t('the search finds a component by its other names', !missed.length, missed.join('; '));
+  t('the search finds a page by its other names', !missed.length, missed.join('; '));
 }
 
 // Printed, a component's page is its guide: the screen's controls (search, the theme switches, the section list,
@@ -545,6 +545,26 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   const before = failed ? '' : await read();
   await page.waitForTimeout(2200);
   t('/components/countdown has an example that ticks', !failed && before !== await read(), failed || 'nothing on the page changed in two seconds');
+  await context.close();
+}
+
+// The search finds a component by another name it's known by (its README's "**Also called:**" line): "snackbar" is a
+// Toast, "modal" a Dialog, so someone who comes from another system needn't know Serupa's word first.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/getting-started') || await ready(page, true);
+  for (const [word, name] of [['snackbar', 'Toast'], ['modal', 'Dialog']]) {
+    let found = '';
+    if (!failed) {
+      await page.getByRole('button', { name: /^Search/ }).first().click();
+      const box = page.getByRole('combobox');
+      await box.fill(word);
+      found = await page.getByRole('option').first().innerText({ timeout: 2000 }).catch(() => '');
+      await page.keyboard.press('Escape');
+    }
+    t(`the search finds ${name} by "${word}"`, !failed && found.split('\n')[0].trim() === name, failed || `its first result is "${found.split('\n')[0] || 'nothing'}"`);
+  }
   await context.close();
 }
 

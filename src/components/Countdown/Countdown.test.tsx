@@ -5,6 +5,16 @@ import { SerupaProvider } from '../../internal/provider';
 import { Countdown, countdownClock, countdownWords } from './Countdown';
 
 const el = (id: string) => document.getElementById(id) as HTMLTimeElement;
+
+// In a right-to-left page the first character should still sit left of the last: the words keep their own order.
+const readsLeftToRight = (e: HTMLElement) => {
+  const walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) if (n.textContent) nodes.push(n as Text);
+  const at = (t: Text, i: number) => { const r = document.createRange(); r.setStart(t, i); r.setEnd(t, i + 1); return r.getBoundingClientRect().left; };
+  const first = nodes[0]!, last = nodes[nodes.length - 1]!;
+  return at(first, 0) < at(last, last.length - 1);
+};
 const said = () => document.querySelector('[data-dk-announcer]')?.textContent || '';
 afterEach(() => { vi.useRealTimers(); });
 
@@ -117,5 +127,10 @@ describe('Countdown: rules no test covered', () => {
     </SerupaProvider>);
     expect([el('a').getAttribute('aria-label'), el('a').textContent, el('b').getAttribute('aria-label'), el('b').textContent])
       .toEqual(['Offer ends in: 10 seconds', '0:10', 'Offer ends in: 0 seconds', '0:00']);
+  });
+
+  test('in a right-to-left page, English words keep their own order: "4 minutes, 59 seconds", not "minutes, 59 seconds 4"', async () => {
+    await render(<div dir="rtl"><Countdown id="rtl" seconds={299} format="words" label="Time left" locale="en" /></div>);
+    expect([el('rtl').textContent.replace(/\u00a0/g, ' '), readsLeftToRight(el('rtl'))]).toEqual(['4 minutes, 59 seconds', true]);
   });
 });

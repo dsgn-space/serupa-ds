@@ -54,6 +54,7 @@ formatNumber(1234, "id-ID", { format: "compact" })                  // "1,2 rb",
 - It doesn't wrap: "Rp 150.000" stays on one line.
 - With `animate`, the changed characters stay inline text, so a screen reader still reads one number. The change isn't announced: when it matters, say it with `announce()` as well. With reduced motion, the characters change at once.
 - **Keyboard:** none: inline text, not focusable.
+- With a `locale` of its own it carries that locale's direction (`dir`) with its `lang`, so "50 km/h" in English keeps its order in a right-to-left page.
 
 ## Props
 

@@ -8,6 +8,7 @@ import { Image } from '../../components/Image/Image';
 import { Link } from '../../components/Link/Link';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { Duration } from '../../components/Duration/Duration';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -60,8 +61,6 @@ export function scaleAmount(amount: number, from: number, to: number) {
   return v < 10 ? Math.round(v * 4) / 4 : Math.round(v);
 }
 
-/** Minutes in words: "45 min", "1 h 5 min". */
-const minutesWords = (m: number, num: (n: number) => string) => [Math.floor(m / 60) ? `${num(Math.floor(m / 60))} h` : '', m % 60 ? `${num(m % 60)} min` : ''].filter(Boolean).join(' ');
 
 /** The recipe page: a skip link, a header, then main with the h1, the facts, the ingredients and the steps. */
 export function Recipe({ recipe = demo }: RecipeProps) {
@@ -91,9 +90,9 @@ export function Recipe({ recipe = demo }: RecipeProps) {
         <div className="flex flex-col gap-8 pt-6">
           <Image src={recipe.image} alt={recipe.imageAlt} ratio="video" rounded />
           <DescriptionList layout="inline">
-            <DescriptionItem term="Prep">{minutesWords(recipe.prep, num)}</DescriptionItem>
-            <DescriptionItem term="Cook">{minutesWords(recipe.cook, num)}</DescriptionItem>
-            <DescriptionItem term="Ready in">{minutesWords(recipe.prep + recipe.cook, num)}</DescriptionItem>
+            <DescriptionItem term="Prep"><Duration value={recipe.prep} unit="minute" /></DescriptionItem>
+            <DescriptionItem term="Cook"><Duration value={recipe.cook} unit="minute" /></DescriptionItem>
+            <DescriptionItem term="Ready in"><Duration value={recipe.prep + recipe.cook} unit="minute" /></DescriptionItem>
           </DescriptionList>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <section aria-labelledby="recipe-ingredients" className="flex flex-col gap-4">

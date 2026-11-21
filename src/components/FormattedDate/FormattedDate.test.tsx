@@ -57,6 +57,11 @@ describe('FormattedDate', () => {
     expect([el('d').matches(':dir(ltr)'), el('e').matches(':dir(ltr)')]).toEqual([true, true]);
   });
 
+  test('with a right-to-left locale of its own in a left-to-right page it runs right to left; with none it takes the page\'s', async () => {
+    await render(<p><FormattedDate id="ar" value="2026-11-20" locale="ar-EG" /><FormattedDate id="none" value="2026-11-20" /><FormattedDate id="bad" value="2026-11-20" locale="not a locale" /></p>);
+    expect([el('ar').getAttribute('dir'), el('ar').matches(':dir(rtl)'), el('none').hasAttribute('dir'), el('bad').hasAttribute('dir')]).toEqual(['rtl', true, false, false]);
+  });
+
   test('a time and its AM or PM stay on one line, in English and Korean', () => {
     const at = '2026-11-20T15:45:00Z';
     const en = formatDate(at, 'en', { timeStyle: 'short', timeZone: 'UTC' }), ko = formatDate(at, 'ko', { dateStyle: false, timeStyle: 'short', timeZone: 'UTC' });
