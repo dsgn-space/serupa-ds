@@ -1,4 +1,4 @@
-// exports: StatTile, type StatTileProps
+// exports: StatTile, type StatTileChange, type StatTileProps
 interface StatTileLabels {
     statTileUp: (amount: string) => string;
     statTileDown: (amount: string) => string;
