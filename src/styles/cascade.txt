@@ -1,4 +1,4 @@
-# The order the component styles cascade in (all inside @layer dk.components). A component that styles another
+# The order the component styles cascade in (all inside @layer srp.components). A component that styles another
 # one in context (Loader inside Button) comes after it. A new component needs no line here: the ones not listed
 # follow these, in alphabetical order (tools/build/registry.mjs). List one only when it must win over a later one.
 Icon

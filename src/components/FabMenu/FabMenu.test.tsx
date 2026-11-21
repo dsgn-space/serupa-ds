@@ -21,9 +21,9 @@ describe('FabMenu', () => {
     const ref = React.createRef<HTMLButtonElement>();
     await render(<FabMenu ref={ref} icon="add" label="Create" placement="static" className="extra" data-x="y" actions={ACTIONS} />);
     const b = fab();
-    expect([ref.current === b, b.classList.contains('dk-fab'), b.classList.contains('extra'), b.dataset.x, b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')])
+    expect([ref.current === b, b.classList.contains('srp-fab'), b.classList.contains('extra'), b.dataset.x, b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')])
       .toEqual([true, true, true, 'y', 'menu', 'false']);
-    expect([menu().getAttribute('aria-label'), menu().classList.contains('dk-fab-menu'), menu().hidden]).toEqual(['Create', true, true]);
+    expect([menu().getAttribute('aria-label'), menu().classList.contains('srp-fab-menu'), menu().hidden]).toEqual(['Create', true, true]);
   });
 
   test('a press opens the actions, each with its words shown, and focus goes to the first; the arrows move, a pick runs it, closes the menu and puts focus back on the Fab', async () => {

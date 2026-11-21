@@ -14,8 +14,8 @@ describe('SidebarLayout', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Wide><SidebarLayout id="l" ref={r} className="extra" data-x="y" sidebar={side}>{main}</SidebarLayout></Wide>);
     const e = el('l');
-    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'dk-sidebar-layout extra', 'sidebar-layout', true, 'y']);
-    expect([e.children[0]!.className, e.children[1]!.className]).toEqual(['dk-sidebar-layout__side', 'dk-sidebar-layout__content']);
+    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'srp-sidebar-layout extra', 'sidebar-layout', true, 'y']);
+    expect([e.children[0]!.className, e.children[1]!.className]).toEqual(['srp-sidebar-layout__side', 'srp-sidebar-layout__content']);
     expect([box('side').x, box('side').w, box('main-c').x, box('main-c').w]).toEqual([0, 256, 280, 620]);
   });
 
@@ -31,7 +31,7 @@ describe('SidebarLayout', () => {
 
   test('sidebarPlacement="end": the content first in the HTML and on screen, the side after it', async () => {
     await render(<Wide><SidebarLayout id="l" sidebarPlacement="end" sidebar={side}>{main}</SidebarLayout></Wide>);
-    expect([el('l').children[0]!.className, box('main-c').x, box('side').x, el('l').className]).toEqual(['dk-sidebar-layout__content', 0, 644, 'dk-sidebar-layout dk-sidebar-layout--end']);
+    expect([el('l').children[0]!.className, box('main-c').x, box('side').x, el('l').className]).toEqual(['srp-sidebar-layout__content', 0, 644, 'srp-sidebar-layout srp-sidebar-layout--end']);
   });
 
   test('sidebarWidth (a token name or a length), contentMin and gap', async () => {

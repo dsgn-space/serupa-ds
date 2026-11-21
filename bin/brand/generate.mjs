@@ -186,7 +186,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
       primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-pressed': `{${name}-${held(next(primary))}}`,
       'primary-subtle': `{${name}-${light ? '50' : '950'}}`, 'primary-subtle-pressed': `{${name}-${light ? '100' : '900'}}`,
       'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-action': `{${name}-${action}}`,
-      'dk-more-primary': `{${name}-${more}}`, 'dk-more-primary-hover': `{${name}-${next(more)}}`, 'dk-more-primary-pressed': `{${name}-${held(next(more))}}`, 'dk-more-focus-ring': `{${name}-${moreFocus}}`,
+      'srp-more-primary': `{${name}-${more}}`, 'srp-more-primary-hover': `{${name}-${next(more)}}`, 'srp-more-primary-pressed': `{${name}-${held(next(more))}}`, 'srp-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;
   }
@@ -199,7 +199,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
   // Every brand-color pair the shipped themes are held to, checked again on the result.
   const low = [];
   for (const [th, v] of Object.entries(themes)) for (const [fg, bg, need] of PAIRS_FOR_BRAND) {
-    const pick = (n) => v[n.replace(/^more:/, 'dk-more-')] ?? v[n];
+    const pick = (n) => v[n.replace(/^more:/, 'srp-more-')] ?? v[n];
     const r = contrast(pick(fg), pick(bg));
     if (r < need - 1e-9) low.push(`${th}: ${fg} on ${bg} ${r.toFixed(2)}:1 (needs ${need})`);
   }
@@ -208,7 +208,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
   const v = (x) => { const r = ref(x); return r ? `var(--${r})` : x; };
   const block = (sel, own) => `${sel} {\n${Object.entries(own).map(([k, x]) => `  --${k}: ${v(x)};\n`).join('')}}\n`;
   const L = picks.light.values, D = picks.dark.values;
-  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-primary-pressed', 'dk-more-focus-ring']
+  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'srp-more-primary', 'srp-more-primary-hover', 'srp-more-primary-pressed', 'srp-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
   // A corners preset sets the radius roles and a motion preset the durations, the same in light and dark.
   const roles = Object.fromEntries([...Object.entries(CORNERS[corners] ?? {}), ...Object.entries(MOTION[motion] ?? {})].map(([k, x]) => [k, `{${x}}`]));
@@ -216,7 +216,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     `/* ${name}: a Serupa theme from ${hexOf(parseHex(color))} (${name}-${seedStep}), made by serupa-brand. Load it after tokens.css, then\n`,
     `   set data-theme="${name}-light" or "${name}-dark" (or data-brand="${name}" with data-mode). */\n`,
     // In tokens.css's layer, after it: the more-contrast and forced-colors rules there still win, as for a shipped theme.
-    '@layer dk.tokens {\n',
+    '@layer srp.tokens {\n',
     `:root {\n${STEPS.map((s) => `  --${name}-${s}: ${shades[s]};\n`).join('')}}\n`,
     block(`[data-theme="${name}-light"]`, L),
     block(`[data-theme="${name}-dark"]`, D),

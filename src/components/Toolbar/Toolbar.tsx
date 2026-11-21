@@ -42,7 +42,7 @@ const shown = (e: HTMLElement) => e.getClientRects().length > 0;
 // A text field uses the arrows, Home and End itself, so there they edit the text rather than leave the field.
 // overflow: a direct child that may move into the More menu holds only buttons, none opening a popup of its own
 // (a Menu's trigger would open nothing while hidden). A separator goes with the controls around it.
-const OUT = 'data-dk-overflow';
+const OUT = 'data-srp-overflow';
 const isSep = (k: Element) => k.getAttribute('role') === 'separator' || k.tagName === 'HR';
 const movable = (k: HTMLElement) => {
   if (isSep(k)) return false;
@@ -177,11 +177,11 @@ function ToolbarRender({ ref, ...props }: ToolbarProps & React.RefAttributes<HTM
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
     <div {...rest} ref={mergedRef} role="toolbar" aria-orientation={vertical ? 'vertical' : 'horizontal'}
-      className={cn('dk-toolbar', vertical && 'dk-toolbar--vertical', fold && 'dk-toolbar--overflow', props.className)} data-component="toolbar" data-orientation={vertical ? 'vertical' : 'horizontal'}
+      className={cn('srp-toolbar', vertical && 'srp-toolbar--vertical', fold && 'srp-toolbar--overflow', props.className)} data-component="toolbar" data-orientation={vertical ? 'vertical' : 'horizontal'}
       onFocus={onFocus} onKeyDown={onKeyDown}>
       {size ? <ControlSize.Provider value={size}>{props.children}</ControlSize.Provider> : props.children}
       {fold ? (
-        <span ref={more} className="dk-toolbar__more" {...{ [OUT]: '' }}>
+        <span ref={more} className="srp-toolbar__more" {...{ [OUT]: '' }}>
           <Menu placement="bottom-end" onOpenChange={(open) => { if (open) setEntries(collect()); }}
             trigger={<IconButton icon={icons.MoreHoriz} label={props.moreLabel || L.toolbarMore} variant="ghost" size={size} />}>
             {entries.map((e, i) => e.checked != null

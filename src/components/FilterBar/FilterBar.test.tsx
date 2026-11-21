@@ -30,7 +30,7 @@ describe('FilterBar', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><FilterBar ref={ref} id="fb" className="extra" data-x="y" fields={fields} defaultValue={{ status: ['open', 'closed'], owner: 'Ana', due: { start: '2026-11-02', end: '2026-11-08' }, archived: true, q: 'login' }} /></SerupaProvider>);
     const e = document.getElementById('fb')!;
-    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.dataset.component, e.dataset.x, e.className, ref.current === e]).toEqual(['group', 'Filters', 'filter-bar', 'y', 'dk-filter-bar extra', true]);
+    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.dataset.component, e.dataset.x, e.className, ref.current === e]).toEqual(['group', 'Filters', 'filter-bar', 'y', 'srp-filter-bar extra', true]);
     const chips = [...e.querySelectorAll('li')].map((li) => li.querySelector('button')!.textContent);
     expect(chips).toEqual(['Status is Open or Closed', 'Owner is Ana', 'Due is Nov 2 – 8, 2026', 'Archived', 'Title contains “login”', 'Add filter']);
     await expect.element(page.getByRole('button', { name: 'Remove filter: Status' })).toBeVisible();

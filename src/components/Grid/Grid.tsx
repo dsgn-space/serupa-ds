@@ -31,27 +31,27 @@ function GridRender({ ref, ...props }: GridProps & React.RefAttributes<HTMLEleme
   const cols = map ? count(map.base) || 1 : count(props.columns);
   const vars: Record<string, string> = {};
   const widths: string[] = [];
-  // Per width: the value at each width in --dk-grid-<prop>-<width>, which Grid.css's media queries pick from.
+  // Per width: the value at each width in --srp-grid-<prop>-<width>, which Grid.css's media queries pick from.
   if (map) {
-    vars['--dk-grid-cols-base'] = String(cols);
-    for (const w of WIDTHS) vars['--dk-grid-cols-' + w] = String(count(map[w]) || cols);
-    widths.push('dk-grid--cols');
-  } else if (cols) vars['--dk-grid-cols'] = String(cols);
+    vars['--srp-grid-cols-base'] = String(cols);
+    for (const w of WIDTHS) vars['--srp-grid-cols-' + w] = String(count(map[w]) || cols);
+    widths.push('srp-grid--cols');
+  } else if (cols) vars['--srp-grid-cols'] = String(cols);
   const gaps = atWidths(props.gap);
   if (gaps) {
-    vars['--dk-grid-gap-base'] = space(gaps.base) || GAP;
-    for (const w of WIDTHS) vars['--dk-grid-gap-' + w] = space(gaps[w]) || GAP;
-    widths.push('dk-grid--gaps');
+    vars['--srp-grid-gap-base'] = space(gaps.base) || GAP;
+    for (const w of WIDTHS) vars['--srp-grid-gap-' + w] = space(gaps[w]) || GAP;
+    widths.push('srp-grid--gaps');
   } else {
     const gap = space(props.gap);
-    if (gap) vars['--dk-grid-gap'] = gap;
+    if (gap) vars['--srp-grid-gap'] = gap;
   }
   const kind = !cols ? 'auto' : props.minColumnWidth ? 'upto' : 'fixed';
-  if (props.minColumnWidth) vars['--dk-grid-min'] = /^[a-z][a-z0-9-]*$/.test(props.minColumnWidth) ? 'var(--' + props.minColumnWidth + ')' : props.minColumnWidth;
+  if (props.minColumnWidth) vars['--srp-grid-min'] = /^[a-z][a-z0-9-]*$/.test(props.minColumnWidth) ? 'var(--' + props.minColumnWidth + ')' : props.minColumnWidth;
   const tag = oneOf(TAGS, props.as, 'div');
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   return React.createElement(tag, Object.assign(rest, {
-    ref: ref, 'data-component': 'grid', role: rest.role ?? (tag === 'ul' || tag === 'ol' ? 'list' : undefined), className: cn('dk-grid', 'dk-grid--' + kind, props.fill && kind !== 'fixed' && 'dk-grid--fill', widths.join(' '), props.className),
+    ref: ref, 'data-component': 'grid', role: rest.role ?? (tag === 'ul' || tag === 'ol' ? 'list' : undefined), className: cn('srp-grid', 'srp-grid--' + kind, props.fill && kind !== 'fixed' && 'srp-grid--fill', widths.join(' '), props.className),
     style: Object.assign(vars, props.style),
   }));
 }

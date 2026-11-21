@@ -11,7 +11,7 @@ type Item = { id: string; name: string };
 const ITEMS: Item[] = ['Apollo', 'Gemini', 'Mercury', 'Artemis'].map((name) => ({ id: name.toLowerCase(), name }));
 const names = () => [...document.querySelectorAll('#sl li > div')].map((n) => n.textContent);
 const handle = (name: string) => document.querySelector(`#sl button[aria-label$=" ${name}"]`) as HTMLButtonElement;
-const announcer = () => document.querySelector<HTMLElement>('[data-dk-announcer]');
+const announcer = () => document.querySelector<HTMLElement>('[data-srp-announcer]');
 const said = (text: string | RegExp) => expect.poll(() => announcer()?.textContent || '', { timeout: 3000 }).toMatch(text);
 
 function List({ moves, disabled }: { moves?: Array<{ from: number; to: number }>; disabled?: boolean }) {
@@ -28,7 +28,7 @@ describe('SortableList', () => {
       renderItem={(i, s) => `${s.index}:${i.name}`} onReorder={() => undefined} />);
     const ul = document.getElementById('sl')!, h = handle('Apollo');
     expect([ul.tagName, ref.current === ul, ul.className, ul.getAttribute('aria-label'), ul.dataset.component, ul.children.length, names()])
-      .toEqual(['UL', true, 'dk-sortable-list extra', 'Missions', 'sortable-list', 4, ['0:Apollo', '1:Gemini', '2:Mercury', '3:Artemis']]);
+      .toEqual(['UL', true, 'srp-sortable-list extra', 'Missions', 'sortable-list', 4, ['0:Apollo', '1:Gemini', '2:Mercury', '3:Artemis']]);
     expect([h.getAttribute('type'), h.getAttribute('aria-pressed'), document.getElementById(h.getAttribute('aria-describedby')!)!.textContent])
       .toEqual(['button', 'false', 'Press Space to pick it up, the arrow keys to move it, Space again to drop it, or Escape to cancel.']);
   });
@@ -260,7 +260,7 @@ describe('SortableList', () => {
 
   test('disabled: no handles and no instructions; the rows stay', async () => {
     await render(<List disabled />);
-    expect([document.querySelectorAll('#sl button').length, names().length, document.getElementById('sl')!.classList.contains('dk-sortable-list--disabled')]).toEqual([0, 4, true]);
+    expect([document.querySelectorAll('#sl button').length, names().length, document.getElementById('sl')!.classList.contains('srp-sortable-list--disabled')]).toEqual([0, 4, true]);
   });
 
   test('words from SerupaProvider labels (Indonesian)', async () => {

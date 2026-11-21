@@ -38,9 +38,9 @@ import { Menubar, MenubarMenu, MenuItem, MenuSub, MenuSeparator } from "@diki-st
 
 Drawn from the `Open` story.
 
-1. **Bar** (`.dk-menubar`): the row that holds the menus' names, one Tab stop.
-2. **Menu name** (`.dk-menubar__item`): opens its menu; pressed while it's open.
-3. **Menu** (`.dk-menu`): the menu it opens, a [Menu](../Menu/README.md).
+1. **Bar** (`.srp-menubar`): the row that holds the menus' names, one Tab stop.
+2. **Menu name** (`.srp-menubar__item`): opens its menu; pressed while it's open.
+3. **Menu** (`.srp-menu`): the menu it opens, a [Menu](../Menu/README.md).
 
 ## Usage
 

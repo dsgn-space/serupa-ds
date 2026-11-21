@@ -149,7 +149,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
     setProblems(found);
     if (!picked || !time) {
       setPickProblem(picked ? 'Choose a time.' : 'Choose a day, then a time.');
-      const target = picked ? times.current?.querySelector<HTMLElement>('input:not(:disabled)') : calendar.current?.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]');
+      const target = picked ? times.current?.querySelector<HTMLElement>('input:not(:disabled)') : calendar.current?.querySelector<HTMLElement>('.srp-calendar__day[tabindex="0"]');
       target?.focus();
       return;
     }

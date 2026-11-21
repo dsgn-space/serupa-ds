@@ -38,7 +38,7 @@ describe('Grid', () => {
   test('a sizing token name works as minColumnWidth; columns out of 1–12 falls back to auto', async () => {
     await render(<Wide><Grid id="gtok" minColumnWidth="container-3xs" columns={99}>{boxes(3)}</Grid></Wide>);
     expect(kids('gtok')[0]!.w).toBe(292);
-    expect(el('gtok').className).toBe('dk-grid dk-grid--auto');
+    expect(el('gtok').className).toBe('srp-grid srp-grid--auto');
   });
 
   test('a column never gets wider than a narrow grid (120px)', async () => {
@@ -54,7 +54,7 @@ describe('Grid', () => {
     expect([wide[0]!.w, wide[2]!.y === wide[0]!.y, wide[3]!.y > wide[0]!.y]).toEqual([195, true, true]);
     expect([mid[0]!.w, mid[1]!.y === mid[0]!.y, mid[2]!.y > mid[0]!.y]).toEqual([196, true, true]);
     expect([narrow[0]!.w, narrow[1]!.y > narrow[0]!.y]).toEqual([200, true]);
-    expect(el('gup600').className).toBe('dk-grid dk-grid--upto');
+    expect(el('gup600').className).toBe('srp-grid srp-grid--upto');
   });
 
   test('fill: a short row stretches across the empty columns; without it the empty columns stay (FV1)', async () => {
@@ -96,7 +96,7 @@ describe('Grid', () => {
     test('per-width columns with minColumnWidth are "up to" at each width; a nested Grid takes none of them', async () => {
       await page.viewport(1100, 800);
       await render(<div style={{ width: '600px' }}><Grid id="gup" columns={{ base: 2, lg: 3 }} minColumnWidth="250px" gap={0}>{boxes(3)}<Grid id="ginner" columns={2} gap={0}>{boxes(2)}</Grid></Grid></div>);
-      expect(el('gup').className).toBe('dk-grid dk-grid--upto dk-grid--cols');
+      expect(el('gup').className).toBe('srp-grid srp-grid--upto srp-grid--cols');
       const k = kids('gup');
       expect(k.filter((c) => c.y === k[0]!.y).length).toBe(2);   // three wanted, but only two of 250px fit in 600
       const i = kids('ginner');

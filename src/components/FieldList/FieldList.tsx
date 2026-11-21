@@ -70,7 +70,7 @@ const OWN = { label: 1, hint: 1, itemLabel: 1, value: 1, defaultValue: 1, onValu
 const allWords = /* @__PURE__ */ Object.assign({}, words, tagWords, comboWords);
 // The first field of a row, skipping its Remove button and the reorder handle.
 const FIELD = 'input:not([type="hidden"]), select, textarea, button, a[href], [tabindex]:not([tabindex="-1"])';
-const firstField = (row: Element | null | undefined) => (row ? Array.from(row.querySelectorAll<HTMLElement>(FIELD)).find((e) => !e.closest('.dk-field-list__remove, .dk-sortable-list__handle')) || null : null);
+const firstField = (row: Element | null | undefined) => (row ? Array.from(row.querySelectorAll<HTMLElement>(FIELD)).find((e) => !e.closest('.srp-field-list__remove, .srp-sortable-list__handle')) || null : null);
 const shows = (v: React.ReactNode) => v != null && v !== false && v !== '';
 
 /* FieldList: a <fieldset> with a legend, its rows (each a group named by itemLabel, its fields from children and a
@@ -82,7 +82,7 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
   const rest = omit(props, OWN);
   const L = useSettings(allWords).labels;
   const locale = useLocale();
-  const base = domId('dk-fl', React.useId());
+  const base = domId('srp-fl', React.useId());
   const min = Math.max(0, Math.floor(props.min || 0));
   const max = props.max != null && props.max >= Math.max(1, min) ? Math.floor(props.max) : Infinity;
   const { newItem, itemLabel, onValueChange } = props;
@@ -152,27 +152,27 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
       error: rowError,
     };
     return (
-      <div className="dk-field-list__row" role="group" aria-label={label} aria-describedby={rowErrorId} data-row-key={keys.current[at]}>
-        <div className="dk-field-list__fields">{props.children(value, state)}</div>
-        {rows.length > min ? <IconButton className="dk-field-list__remove" icon={icons.Close} label={L.tagRemove(label)} onClick={() => remove(at)} /> : null}
-        {rowErrorId ? <div className="dk-field-list__error dk-field-list__row-error"><Icon icon={icons.Error} className="dk-field-list__error-icon" /><span id={rowErrorId}>{rowError}</span></div> : null}
+      <div className="srp-field-list__row" role="group" aria-label={label} aria-describedby={rowErrorId} data-row-key={keys.current[at]}>
+        <div className="srp-field-list__fields">{props.children(value, state)}</div>
+        {rows.length > min ? <IconButton className="srp-field-list__remove" icon={icons.Close} label={L.tagRemove(label)} onClick={() => remove(at)} /> : null}
+        {rowErrorId ? <div className="srp-field-list__error srp-field-list__row-error"><Icon icon={icons.Error} className="srp-field-list__error-icon" /><span id={rowErrorId}>{rowError}</span></div> : null}
       </div>
     );
   };
   const list = props.reorderable
-    ? <SortableList className="dk-field-list__rows" items={rows.map((value, at) => ({ value, at, key: keys.current[at] as number }))} getKey={(r) => r.key} getLabel={(r) => itemLabel(r.at)} disabled={props.disabled}
+    ? <SortableList className="srp-field-list__rows" items={rows.map((value, at) => ({ value, at, key: keys.current[at] as number }))} getKey={(r) => r.key} getLabel={(r) => itemLabel(r.at)} disabled={props.disabled}
         renderItem={(r) => rowFor(r.value, r.at)}
         onReorder={(moved) => commit(moved.map((r) => r.value), moved.map((r) => r.key))} />
-    : rows.length ? <ul role="list" className="dk-field-list__rows">{rows.map((value, at) => <li key={keys.current[at]}>{rowFor(value, at)}</li>)}</ul> : null;
+    : rows.length ? <ul role="list" className="srp-field-list__rows">{rows.map((value, at) => <li key={keys.current[at]}>{rowFor(value, at)}</li>)}</ul> : null;
   return (
-    <fieldset {...rest} ref={setRef} className={cn('dk-field-list', props.className)} data-component="field-list" aria-describedby={cn(hintId, errorId, rest['aria-describedby']) || undefined}>
-      <legend className="dk-field-list__label">{props.label}</legend>
-      {hintId ? <div className="dk-field-list__hint" id={hintId}>{props.hint}</div> : null}
+    <fieldset {...rest} ref={setRef} className={cn('srp-field-list', props.className)} data-component="field-list" aria-describedby={cn(hintId, errorId, rest['aria-describedby']) || undefined}>
+      <legend className="srp-field-list__label">{props.label}</legend>
+      {hintId ? <div className="srp-field-list__hint" id={hintId}>{props.hint}</div> : null}
       {list}
-      {errorId ? <div className="dk-field-list__error"><Icon icon={icons.Error} className="dk-field-list__error-icon" /><span id={errorId}>{props.error}</span></div> : null}
-      <div className="dk-field-list__add">
+      {errorId ? <div className="srp-field-list__error"><Icon icon={icons.Error} className="srp-field-list__error-icon" /><span id={errorId}>{props.error}</span></div> : null}
+      <div className="srp-field-list__add">
         <Button ref={addRef} variant="secondary" size="sm" leftIcon={icons.Add} disabled={atMax} disabledReason={limit || undefined} onClick={add}>{props.addLabel}</Button>
-        {atMax ? <span className="dk-field-list__limit" aria-hidden>{limit}</span> : null}
+        {atMax ? <span className="srp-field-list__limit" aria-hidden>{limit}</span> : null}
       </div>
     </fieldset>
   );

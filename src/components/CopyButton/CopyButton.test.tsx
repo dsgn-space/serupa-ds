@@ -9,8 +9,8 @@ import { idLabels } from '../../internal/labels';
 import { CopyButton } from './CopyButton';
 
 const el = (id: string) => document.getElementById(id) as HTMLButtonElement;
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
-const shout = () => document.querySelector('[data-dk-announcer-assertive]')?.textContent;
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
+const shout = () => document.querySelector('[data-srp-announcer-assertive]')?.textContent;
 // The two words (the label and the copied one) are the button's only text: spans with words and no elements inside.
 const labels = (e: Element) => [...e.querySelectorAll('span')].filter((s) => !s.children.length && s.textContent);
 const shown = (id: string) => labels(el(id)).filter((s) => !s.hasAttribute('aria-hidden')).map((s) => s.textContent).join();
@@ -240,9 +240,9 @@ describe('CopyButton onMedia', () => {
   test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
     await render(<div><CopyButton id="om-dark" value="k1" onMedia="dark" /><CopyButton id="om-light" value="k2" onMedia="light" /></div>);
     const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
-    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(document.getElementById('om-dark')!.className).toContain('srp-btn--on-dark');
     expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
-    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(document.getElementById('om-light')!.className).toContain('srp-btn--on-light');
     expect(inks('om-light')).toContain('rgb(0, 0, 0)');
   });
 });

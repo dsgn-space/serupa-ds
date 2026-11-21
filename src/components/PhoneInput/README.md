@@ -31,9 +31,9 @@ formatPhone("+6281234567890");   // "+62 812-3456-7890"
 
 Drawn from the `ByArea` story.
 
-1. **Country** (`.dk-phone-input__country`): chooses the country, which sets the dialing code and the format.
-2. **Dialing code** (`.dk-phone-input__dial`): the country's code, before the number.
-3. **Number** (`.dk-input__field`): where the rest of the number is typed.
+1. **Country** (`.srp-phone-input__country`): chooses the country, which sets the dialing code and the format.
+2. **Dialing code** (`.srp-phone-input__dial`): the country's code, before the number.
+3. **Number** (`.srp-input__field`): where the rest of the number is typed.
 
 ## Usage
 

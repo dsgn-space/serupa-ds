@@ -26,10 +26,10 @@ import { ErrorSummary } from "@diki-stwn/serupa-ds";
 
 Drawn from the `WithDescription` story.
 
-1. **Title** (`.dk-error-summary__title`): how many problems there are; focus moves here when the form is sent.
-2. **Description** (`.dk-error-summary__description`): optional words on what to do.
-3. **List** (`.dk-error-summary__list`): one line per problem.
-4. **Link** (`.dk-error-summary__link`): takes you to the field to fix.
+1. **Title** (`.srp-error-summary__title`): how many problems there are; focus moves here when the form is sent.
+2. **Description** (`.srp-error-summary__description`): optional words on what to do.
+3. **List** (`.srp-error-summary__list`): one line per problem.
+4. **Link** (`.srp-error-summary__link`): takes you to the field to fix.
 
 ## Usage
 

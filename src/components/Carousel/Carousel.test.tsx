@@ -200,7 +200,7 @@ describe('Carousel', () => {
     for (const k of ['{End}', '{ArrowRight}', '{Home}', '{ArrowLeft}']) { await userEvent.keyboard(k); seen.push(state('car').index); }
     expect(seen).toEqual([3, 3, 0, 0]);
     await userEvent.tab();
-    expect(document.activeElement!.className).not.toMatch(/dk-carousel__dot/);
+    expect(document.activeElement!.className).not.toMatch(/srp-carousel__dot/);
   });
 
   test('loop: previous from the first goes to the last and next from the last to the first (buttons and keys); labels can be changed', async () => {
@@ -504,7 +504,7 @@ describe('Carousel token names', () => {
       <Carousel id="tk-new" label="New" style={{ '--carousel-dot-width-active': '40px' } as React.CSSProperties}>{slides(2, 'n')}</Carousel>
       <Carousel id="tk-old" label="Old" style={{ '--carousel-dot-active-width': '32px' } as React.CSSProperties}>{slides(2, 'o')}</Carousel>
     </>);
-    const w = (id: string) => getComputedStyle(dot(id, 0), '::before').getPropertyValue('--dk-dot-w').trim();
+    const w = (id: string) => getComputedStyle(dot(id, 0), '::before').getPropertyValue('--srp-dot-w').trim();
     expect(w('tk-new')).toBe('40px');
     expect(w('tk-old')).not.toBe('32px');
   });

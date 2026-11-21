@@ -5,10 +5,10 @@
    what moved while the rest stays still. They stay inline (no transform), so a screen reader reads the number as
    one word. Reduced motion: they change at once.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-formatted-number { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@layer srp.components {
+.srp-formatted-number { white-space: nowrap; font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-formatted-number__changed { animation: dk-formatted-number-change var(--motion-change-sm) var(--ease-enter); }
+  .srp-formatted-number__changed { animation: srp-formatted-number-change var(--motion-change-sm) var(--ease-enter); }
 }
-@keyframes dk-formatted-number-change { from { opacity: var(--opacity-0); filter: blur(var(--blur-xs)); } }
+@keyframes srp-formatted-number-change { from { opacity: var(--opacity-0); filter: blur(var(--blur-xs)); } }
 }

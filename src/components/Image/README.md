@@ -28,9 +28,9 @@ import { Image } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Removable` story.
 
-1. **Picture** (`.dk-image__img`): the image, with its alternative text.
-2. **View** (`.dk-image__view`): opens it full size.
-3. **Remove** (`.dk-image__remove`): takes it away, when it can be removed.
+1. **Picture** (`.srp-image__img`): the image, with its alternative text.
+2. **View** (`.srp-image__view`): opens it full size.
+3. **Remove** (`.srp-image__remove`): takes it away, when it can be removed.
 
 ## Usage
 

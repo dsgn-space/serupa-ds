@@ -20,7 +20,7 @@ describe('Stack', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Wide><Stack id="sdef" ref={r} className="extra" data-x="y">{boxes(3)}</Stack></Wide>);
     const e = el('sdef');
-    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'dk-stack dk-stack--align-stretch extra', 'stack', true, 'y']);
+    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'srp-stack srp-stack--align-stretch extra', 'stack', true, 'y']);
   });
 
   test('a column, 16px apart (spacing-4), children stretched', async () => {
@@ -46,7 +46,7 @@ describe('Stack', () => {
   test('unknown as, gap, align, justify and direction fall back', async () => {
     await render(<Wide><Stack id="sbad" as={'table' as never} gap={7.7 as never} align={'up' as never} justify={'around' as never} direction={'diag' as never}>{boxes(2)}</Stack></Wide>);
     const e = el('sbad');
-    expect([e.tagName, e.className, css(e).rowGap].join(' ')).toBe('DIV dk-stack dk-stack--align-stretch 16px');
+    expect([e.tagName, e.className, css(e).rowGap].join(' ')).toBe('DIV srp-stack srp-stack--align-stretch 16px');
   });
 
   test('as ul: no bullets, padding or margin', async () => {
@@ -81,7 +81,7 @@ describe('Stack', () => {
     test('align per width, and the server markup carries every width: classes for the changes, the gaps as variables', async () => {
       await page.viewport(414, 800);
       await render(<Stack id="salign" direction="row" align={{ base: 'start', sm: 'end' }} gap={{ sm: 3 }}>{boxes(2)}</Stack>);
-      expect(el('salign').className).toBe('dk-stack dk-stack--row dk-stack--align-start dk-stack--sm-align-end dk-stack--gaps');
+      expect(el('salign').className).toBe('srp-stack srp-stack--row srp-stack--align-start srp-stack--sm-align-end srp-stack--gaps');
       expect(flexAlign(css(el('salign')).alignItems)).toBe('flex-start');
       expect(css(el('salign')).columnGap).toBe('16px');   // no base: the default gap
       await page.viewport(700, 800);

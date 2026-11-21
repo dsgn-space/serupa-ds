@@ -10,7 +10,7 @@ const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
-const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-srp-announcer], [data-srp-announcer-assertive]'));
 const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const said = () => latin([...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' '));
@@ -132,7 +132,7 @@ describe('Patterns/Team members', () => {
     // In the dialog: the page's polite live region moves into it and may still be saying the old problem for its
     // hold (announce.ts), so only the form's own text counts.
     await expect.element(screen.getByRole('dialog')).toBeVisible();
-    expect(screen.getByRole('dialog').getByText('Enter at least one email address.').elements().filter((e) => !e.closest('[data-dk-announcer]'))).toHaveLength(0);
+    expect(screen.getByRole('dialog').getByText('Enter at least one email address.').elements().filter((e) => !e.closest('[data-srp-announcer]'))).toHaveLength(0);
   });
 
   test('loading: one busy list named "Loading members", no rows yet; a failed load says so with Try again', async () => {

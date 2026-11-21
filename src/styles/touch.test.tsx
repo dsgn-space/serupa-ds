@@ -11,7 +11,7 @@ function rules(): CSSStyleRule[] {
     }
   };
   for (const s of Array.from(document.styleSheets)) { try { walk(s.cssRules); } catch { /* another origin */ } }
-  return out.filter((r) => /\.dk-/.test(r.selectorText));
+  return out.filter((r) => /\.srp-/.test(r.selectorText));
 }
 
 describe('touch and scroll rules in every component', () => {

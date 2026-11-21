@@ -15,7 +15,7 @@ describe('FormattedDate', () => {
     await render(<FormattedDate id="x" ref={ref} value="2026-11-20" locale="en" className="extra" data-x="y" />);
     const e = el('x');
     expect([e.tagName, e.getAttribute('datetime'), plain(e.textContent), ref.current === e, e.className, e.dataset.x, e.dataset.component])
-      .toEqual(['TIME', '2026-11-20', 'Nov 20, 2026', true, 'dk-formatted-date extra', 'y', 'formatted-date']);
+      .toEqual(['TIME', '2026-11-20', 'Nov 20, 2026', true, 'srp-formatted-date extra', 'y', 'formatted-date']);
   });
 
   test('each dateStyle, a time with timeStyle, and a time on its own', () => {

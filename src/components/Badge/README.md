@@ -49,9 +49,9 @@ import { Badge } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Extras` story.
 
-1. **Dot** (`.dk-badge__dot`): an optional mark of the tone before the label.
-2. **Label** (`.dk-badge__label`): the word or number the badge says.
-3. **Remove** (`.dk-badge__remove`): takes the badge away, when it can be removed (a filter, a tag).
+1. **Dot** (`.srp-badge__dot`): an optional mark of the tone before the label.
+2. **Label** (`.srp-badge__label`): the word or number the badge says.
+3. **Remove** (`.srp-badge__remove`): takes the badge away, when it can be removed (a filter, a tag).
 
 ## Usage
 

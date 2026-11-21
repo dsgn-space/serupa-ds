@@ -12,7 +12,7 @@ describe('VisuallyHidden', () => {
     const r = React.createRef<HTMLElement>();
     await render(<p>Unread <VisuallyHidden id="vh" ref={r} className="extra">messages: </VisuallyHidden>3</p>);
     const e = el('vh'), b = e.getBoundingClientRect(), s = css(e);
-    expect([e.tagName, e.className, r.current === e, s.position, s.overflow, e.textContent, s.visibility]).toEqual(['SPAN', 'dk-visually-hidden extra', true, 'absolute', 'hidden', 'messages: ', 'visible']);
+    expect([e.tagName, e.className, r.current === e, s.position, s.overflow, e.textContent, s.visibility]).toEqual(['SPAN', 'srp-visually-hidden extra', true, 'absolute', 'hidden', 'messages: ', 'visible']);
     expect(b.width).toBeLessThanOrEqual(1);
     expect(b.height).toBeLessThanOrEqual(1);
     expect(s.display).not.toBe('none');

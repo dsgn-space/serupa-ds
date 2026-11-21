@@ -32,8 +32,8 @@ function PageSectionRender({ ref, ...props }: PageSectionProps & React.RefAttrib
   const Tag = oneOf(TAGS, props.as, 'section') as 'section';
   return (
     <Tag {...rest} ref={ref} data-component="page-section"
-      className={cn('dk-page-section', 'dk-page-section--' + spacing, tone === 'muted' && 'dk-page-section--muted', props.divider && 'dk-page-section--divider', props.align === 'center' && 'dk-page-section--center', props.className)}>
-      <Container size={props.size} className="dk-page-section__inner" style={gap ? { '--dk-page-section-gap': gap } as React.CSSProperties : undefined}>{props.children}</Container>
+      className={cn('srp-page-section', 'srp-page-section--' + spacing, tone === 'muted' && 'srp-page-section--muted', props.divider && 'srp-page-section--divider', props.align === 'center' && 'srp-page-section--center', props.className)}>
+      <Container size={props.size} className="srp-page-section__inner" style={gap ? { '--srp-page-section-gap': gap } as React.CSSProperties : undefined}>{props.children}</Container>
     </Tag>
   );
 }

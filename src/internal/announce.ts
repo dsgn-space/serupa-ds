@@ -21,7 +21,7 @@ function region(ch: Channel, live: 'polite' | 'assertive'): HTMLDivElement | nul
   const el = document.createElement('div');
   el.setAttribute('role', live === 'polite' ? 'status' : 'alert');
   el.setAttribute('aria-live', live);
-  el.setAttribute(live === 'polite' ? 'data-dk-announcer' : 'data-dk-announcer-assertive', '');
+  el.setAttribute(live === 'polite' ? 'data-srp-announcer' : 'data-srp-announcer-assertive', '');
   // Hidden the way the sr-only utility hides (kept as the class too), set inline so it holds without utilities.css.
   el.className = 'sr-only';
   el.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0';

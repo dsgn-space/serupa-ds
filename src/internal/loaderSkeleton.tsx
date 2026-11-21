@@ -9,11 +9,11 @@ import { spinnerDelay } from './timing';
     Loader. While `waiting` (the loader's delay), they keep their space and show nothing. */
 export function SkeletonArt({ shape = 'text', lines = 1, waiting, className }: { shape?: 'text' | 'circle' | 'rect'; lines?: number; waiting?: boolean; className?: string }): React.ReactElement {
   const bones: React.ReactNode[] = [];
-  if (shape === 'text') for (let i = 0; i < lines; i++) bones.push(<span className="dk-loader__line" key={i}><span className="dk-loader__bone" /></span>);
-  else bones.push(<span className="dk-loader__bone" key="bone" />);
+  if (shape === 'text') for (let i = 0; i < lines; i++) bones.push(<span className="srp-loader__line" key={i}><span className="srp-loader__bone" /></span>);
+  else bones.push(<span className="srp-loader__bone" key="bone" />);
   return (
     <span data-component="loader" data-variant="skeleton" data-size="md" data-shape={shape} aria-hidden
-      className={cn('dk-loader dk-loader--skeleton', 'dk-loader--shape-' + shape, 'dk-loader--size-md', waiting && 'dk-loader--waiting', className)}>
+      className={cn('srp-loader srp-loader--skeleton', 'srp-loader--shape-' + shape, 'srp-loader--size-md', waiting && 'srp-loader--waiting', className)}>
       {bones}
     </span>
   );

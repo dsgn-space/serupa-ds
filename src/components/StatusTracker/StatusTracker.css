@@ -4,31 +4,31 @@
    base line; no data a 1px outline. The focused bar takes the focus ring; the pointed one is outlined. Under it a
    caption line (the day in words, or nothing), the summary, and a legend with the same four shapes.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-status-tracker { --dk-st-h: var(--status-tracker-height, var(--spacing-8)); display: flex; flex-direction: column; gap: var(--spacing-1); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--status-tracker-text, var(--text)); }
+@layer srp.components {
+.srp-status-tracker { --srp-st-h: var(--status-tracker-height, var(--spacing-8)); display: flex; flex-direction: column; gap: var(--spacing-1); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--status-tracker-text, var(--text)); }
 /* The strip scrolls sideways, so it clips: it keeps room for the focused bar's ring (its width and offset) on every side. */
-.dk-status-tracker__days { --dk-st-ring: calc(var(--focus-ring-width) + var(--focus-ring-offset)); display: flex; align-items: flex-end; gap: var(--status-tracker-gap, var(--spacing-0\.5)); block-size: calc(var(--dk-st-h) + var(--dk-st-ring) + var(--dk-st-ring)); margin: var(--spacing-0); padding: var(--dk-st-ring); list-style: none; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: thin; }
-.dk-status-tracker__day, .dk-status-tracker__swatch { box-sizing: border-box; border-radius: var(--status-tracker-radius, var(--rounded-xs)); background: var(--dk-st-fill); }
-.dk-status-tracker__day { flex: auto; min-inline-size: var(--spacing-0\.5); block-size: var(--sizing-full); cursor: default; outline: none; }
-.dk-status-tracker__day:focus-visible { outline: var(--focus-ring-width) solid var(--status-tracker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-@media (hover: hover) { .dk-status-tracker__day:hover { box-shadow: 0 0 0 var(--border-width-1) var(--status-tracker-text, var(--text)); } }
-.dk-status-tracker [data-state="up"] { --dk-st-fill: var(--status-tracker-up, var(--success)); }
-.dk-status-tracker [data-state="degraded"] { --dk-st-fill: repeating-linear-gradient(135deg, var(--status-tracker-degraded, var(--warning)) 0 var(--spacing-1), transparent var(--spacing-1) var(--spacing-1\.5)); }
-.dk-status-tracker__day[data-state="degraded"], .dk-status-tracker__key[data-state="degraded"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-degraded, var(--warning)); }
-.dk-status-tracker [data-state="down"] { --dk-st-fill: var(--status-tracker-down, var(--danger)); }
+.srp-status-tracker__days { --srp-st-ring: calc(var(--focus-ring-width) + var(--focus-ring-offset)); display: flex; align-items: flex-end; gap: var(--status-tracker-gap, var(--spacing-0\.5)); block-size: calc(var(--srp-st-h) + var(--srp-st-ring) + var(--srp-st-ring)); margin: var(--spacing-0); padding: var(--srp-st-ring); list-style: none; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.srp-status-tracker__day, .srp-status-tracker__swatch { box-sizing: border-box; border-radius: var(--status-tracker-radius, var(--rounded-xs)); background: var(--srp-st-fill); }
+.srp-status-tracker__day { flex: auto; min-inline-size: var(--spacing-0\.5); block-size: var(--sizing-full); cursor: default; outline: none; }
+.srp-status-tracker__day:focus-visible { outline: var(--focus-ring-width) solid var(--status-tracker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+@media (hover: hover) { .srp-status-tracker__day:hover { box-shadow: 0 0 0 var(--border-width-1) var(--status-tracker-text, var(--text)); } }
+.srp-status-tracker [data-state="up"] { --srp-st-fill: var(--status-tracker-up, var(--success)); }
+.srp-status-tracker [data-state="degraded"] { --srp-st-fill: repeating-linear-gradient(135deg, var(--status-tracker-degraded, var(--warning)) 0 var(--spacing-1), transparent var(--spacing-1) var(--spacing-1\.5)); }
+.srp-status-tracker__day[data-state="degraded"], .srp-status-tracker__key[data-state="degraded"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-degraded, var(--warning)); }
+.srp-status-tracker [data-state="down"] { --srp-st-fill: var(--status-tracker-down, var(--danger)); }
 /* Half the strip's height, whatever --status-tracker-height is: the shape that says "down". */
-.dk-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
-.dk-status-tracker [data-state="none"] { --dk-st-fill: transparent; }
-.dk-status-tracker__day[data-state="none"], .dk-status-tracker__key[data-state="none"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--border-control)); }
-.dk-status-tracker__caption { min-block-size: var(--text-sm--line-height); overflow-wrap: anywhere; color: var(--status-tracker-text, var(--text)); }
-.dk-status-tracker__summary { margin: var(--spacing-0); overflow-wrap: anywhere; color: var(--status-tracker-muted, var(--text-muted)); }
-.dk-status-tracker__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--status-tracker-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-status-tracker__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); }
-.dk-status-tracker__swatch { inline-size: var(--spacing-2); block-size: var(--spacing-3); }
-.dk-status-tracker__key[data-state="down"] .dk-status-tracker__swatch { block-size: var(--spacing-1\.5); align-self: flex-end; margin-block-end: var(--spacing-0\.5); }
+.srp-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
+.srp-status-tracker [data-state="none"] { --srp-st-fill: transparent; }
+.srp-status-tracker__day[data-state="none"], .srp-status-tracker__key[data-state="none"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--border-control)); }
+.srp-status-tracker__caption { min-block-size: var(--text-sm--line-height); overflow-wrap: anywhere; color: var(--status-tracker-text, var(--text)); }
+.srp-status-tracker__summary { margin: var(--spacing-0); overflow-wrap: anywhere; color: var(--status-tracker-muted, var(--text-muted)); }
+.srp-status-tracker__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--status-tracker-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-status-tracker__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); }
+.srp-status-tracker__swatch { inline-size: var(--spacing-2); block-size: var(--spacing-3); }
+.srp-status-tracker__key[data-state="down"] .srp-status-tracker__swatch { block-size: var(--spacing-1\.5); align-self: flex-end; margin-block-end: var(--spacing-0\.5); }
 @media (forced-colors: active) {
-  .dk-status-tracker__day, .dk-status-tracker__swatch { forced-color-adjust: none; border: var(--border-width-1) solid CanvasText; }
-  .dk-status-tracker [data-state="up"], .dk-status-tracker [data-state="down"] { --dk-st-fill: CanvasText; }
-  .dk-status-tracker [data-state="degraded"] { --dk-st-fill: repeating-linear-gradient(135deg, CanvasText 0 var(--spacing-1), Canvas var(--spacing-1) var(--spacing-1\.5)); }
+  .srp-status-tracker__day, .srp-status-tracker__swatch { forced-color-adjust: none; border: var(--border-width-1) solid CanvasText; }
+  .srp-status-tracker [data-state="up"], .srp-status-tracker [data-state="down"] { --srp-st-fill: CanvasText; }
+  .srp-status-tracker [data-state="degraded"] { --srp-st-fill: repeating-linear-gradient(135deg, CanvasText 0 var(--spacing-1), Canvas var(--spacing-1) var(--spacing-1\.5)); }
 }
 }

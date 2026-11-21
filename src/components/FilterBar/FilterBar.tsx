@@ -103,7 +103,7 @@ function clean(fields: FilterField[], raw: FilterValues): FilterValues {
 function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { fields: 1, value: 1, defaultValue: 1, onValueChange: 1, resultsCount: 1, actions: 1, className: 1 } as const);
-  const base = domId('dk-fb', React.useId());
+  const base = domId('srp-fb', React.useId());
   const [raw, setOwn, controlled] = useControllable<FilterValues>(props.value, props.defaultValue || {}, 'FilterBar', 'value');
   const value = React.useMemo(() => clean(props.fields, raw), [props.fields, raw]);
   const [editing, setEditing] = React.useState<string | null>(null);
@@ -172,14 +172,14 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
     const v = value[f.id], put = (x: FilterValue) => set({ ...value, [f.id]: x });
     if (f.type === 'select' && f.multiple) {
       return (
-        <CheckboxGroup aria-label={f.label} value={Array.isArray(v) ? v : []} onValueChange={(x: string[]) => put(x)} className="dk-filter-bar__options">
+        <CheckboxGroup aria-label={f.label} value={Array.isArray(v) ? v : []} onValueChange={(x: string[]) => put(x)} className="srp-filter-bar__options">
           {f.options.map((o) => <Checkbox key={valueOf(o)} value={valueOf(o)}>{labelOf(o)}</Checkbox>)}
         </CheckboxGroup>
       );
     }
     if (f.type === 'select') {
       return (
-        <RadioGroup aria-label={f.label} value={typeof v === 'string' ? v : ''} onValueChange={(x: string) => put(x)} className="dk-filter-bar__options">
+        <RadioGroup aria-label={f.label} value={typeof v === 'string' ? v : ''} onValueChange={(x: string) => put(x)} className="srp-filter-bar__options">
           {f.options.map((o) => <Radio key={valueOf(o)} value={valueOf(o)}>{labelOf(o)}</Radio>)}
         </RadioGroup>
       );
@@ -196,32 +196,32 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
     <div {...rest} ref={mergedRef} role="group" aria-label={props['aria-label'] || (props['aria-labelledby'] ? undefined : L.filterBar)}
-      className={cn('dk-filter-bar', props.className)} data-component="filter-bar">
-      <ul className="dk-filter-bar__chips" role="list">
+      className={cn('srp-filter-bar', props.className)} data-component="filter-bar">
+      <ul className="srp-filter-bar__chips" role="list">
         {active.map((f) => (
-          <li key={f.id} className={cn('dk-filter-bar__chip', isEmpty(value[f.id]) && 'dk-filter-bar__chip--empty')}>
+          <li key={f.id} className={cn('srp-filter-bar__chip', isEmpty(value[f.id]) && 'srp-filter-bar__chip--empty')}>
             <Popover title={f.label} placement="bottom-start" sheet="mobile" open={editing === f.id}
               onOpenChange={(open) => { if (open) setEditing(f.id); else closeEditor(f); }}
-              trigger={<button type="button" className="dk-filter-bar__edit" data-filter={f.id} dir="auto"><TruncatedText>{said(f)}</TruncatedText></button>}>
+              trigger={<button type="button" className="srp-filter-bar__edit" data-filter={f.id} dir="auto"><TruncatedText>{said(f)}</TruncatedText></button>}>
               {(close) => (
-                <div className="dk-filter-bar__editor">
+                <div className="srp-filter-bar__editor">
                   {editor(f)}
-                  <Button size="sm" className="dk-filter-bar__done" onClick={() => { close(); }}>{L.filterDone}</Button>
+                  <Button size="sm" className="srp-filter-bar__done" onClick={() => { close(); }}>{L.filterDone}</Button>
                 </div>
               )}
             </Popover>
-            <IconButton className="dk-filter-bar__remove" icon={icons.Close} size="sm" variant="ghost" label={L.filterRemove(f.label)} onClick={() => remove(f)} />
+            <IconButton className="srp-filter-bar__remove" icon={icons.Close} size="sm" variant="ghost" label={L.filterRemove(f.label)} onClick={() => remove(f)} />
           </li>
         ))}
-        <li className="dk-filter-bar__add">
+        <li className="srp-filter-bar__add">
           <Menu trigger={<Button variant="ghost" size="sm" leftIcon={<Icon icon={icons.Add} />} disabled={!unused.length} data-filter-add="">{L.filterAdd}</Button>}>
             {unused.map((f) => <MenuItem key={f.id} onSelect={() => add(f)}>{f.label}</MenuItem>)}
           </Menu>
         </li>
       </ul>
-      {active.length ? <Button variant="link" size="sm" className="dk-filter-bar__clear" onClick={() => { focusNext.current = 'add'; setEditing(null); set({}); }}>{L.filterClear}</Button> : null}
-      {props.actions != null ? <div className="dk-filter-bar__actions">{props.actions}</div> : null}
-      {props.resultsCount != null && !Number.isNaN(props.resultsCount) ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, numberFormat(locale).format(props.resultsCount))}</span> : null}
+      {active.length ? <Button variant="link" size="sm" className="srp-filter-bar__clear" onClick={() => { focusNext.current = 'add'; setEditing(null); set({}); }}>{L.filterClear}</Button> : null}
+      {props.actions != null ? <div className="srp-filter-bar__actions">{props.actions}</div> : null}
+      {props.resultsCount != null && !Number.isNaN(props.resultsCount) ? <span className="srp-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, numberFormat(locale).format(props.resultsCount))}</span> : null}
     </div>
   );
 }

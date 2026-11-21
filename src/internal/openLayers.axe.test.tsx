@@ -77,7 +77,7 @@ describe('open layers pass axe (WCAG 2.2 AA) in every theme', () => {
 
   test('Popover, open', async () => {
     await render(<Popover open onOpenChange={() => {}} title="Share" trigger={<Button>Share</Button>}><p>Anyone with the link can view.</p></Popover>);
-    await shown('.dk-popover');
+    await shown('.srp-popover');
     expect(await violations()).toEqual([]);
   }, 60_000);
 
@@ -98,14 +98,14 @@ describe('open layers pass axe (WCAG 2.2 AA) in every theme', () => {
   test('DatePicker, open with its calendar', async () => {
     await render(<Field label="Due"><DatePicker locale="en-US" defaultValue={new Date(2026, 2, 12)} min={new Date(2026, 2, 3)} /></Field>);
     await userEvent.click(document.querySelector('button[aria-haspopup="dialog"]')!);
-    await shown('.dk-date-picker__popup');
+    await shown('.srp-date-picker__popup');
     expect(await violations()).toEqual([]);
   }, 60_000);
 
   test('DateRangePicker, open with its calendars', async () => {
     await render(<Field label="Stay" group><DateRangePicker locale="en-US" defaultValue={{ start: new Date(2026, 2, 12), end: new Date(2026, 2, 15) }} /></Field>);
     await userEvent.click(document.querySelector('button[aria-haspopup="dialog"]')!);
-    await shown('.dk-date-range-picker__popup');
+    await shown('.srp-date-range-picker__popup');
     expect(await violations()).toEqual([]);
   }, 60_000);
 

@@ -52,15 +52,15 @@ function MaskedValueRender({ ref, ...props }: MaskedValueProps & React.RefAttrib
   const { masked, kept } = mask(props.value, props.start, props.end);
   const said = kept ? sds.labels.maskedEnding(props.label, kept) : sds.labels.maskedHidden(props.label);
   return (
-    <span {...rest} ref={ref} className={cn('dk-masked-value', shown && 'dk-masked-value--revealed', props.className)} data-component="masked-value">
+    <span {...rest} ref={ref} className={cn('srp-masked-value', shown && 'srp-masked-value--revealed', props.className)} data-component="masked-value">
       {/* Show comes first, so it stays where it was as the value appears and a second press hides it again. After the
           value it moved as far as the value grew; the value's width isn't kept free while masked, as that would give
           the secret's length away. */}
-      {props.revealable ? <IconButton className="dk-masked-value__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={sds.labels.showValue(props.label)} hideTitle
+      {props.revealable ? <IconButton className="srp-masked-value__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={sds.labels.showValue(props.label)} hideTitle
         size="sm" variant="ghost" aria-pressed={shown} onClick={() => set.current?.(!shown)} /> : null}
       {shown
-        ? <span className="dk-masked-value__text">{props.value}</span>
-        : <><span className="dk-masked-value__text" aria-hidden>{masked}</span><span className="dk-visually-hidden">{said}</span></>}
+        ? <span className="srp-masked-value__text">{props.value}</span>
+        : <><span className="srp-masked-value__text" aria-hidden>{masked}</span><span className="srp-visually-hidden">{said}</span></>}
     </span>
   );
 }

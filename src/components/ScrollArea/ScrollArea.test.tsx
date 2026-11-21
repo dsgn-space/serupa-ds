@@ -15,7 +15,7 @@ describe('ScrollArea', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<ScrollArea id="x" ref={ref} className="extra" data-x="y">Hello</ScrollArea>);
     const e = el('x');
-    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'Hello', true, 'dk-scroll-area dk-scroll-area--vertical extra', 'y', 'scroll-area']);
+    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'Hello', true, 'srp-scroll-area srp-scroll-area--vertical extra', 'y', 'scroll-area']);
   });
 
   test('while its content overflows it is a Tab stop and a region named by aria-label; when it fits, neither', async () => {
@@ -55,7 +55,7 @@ describe('ScrollArea', () => {
 
   test('fade: masks the edge with more past it, and neither edge once it fits', async () => {
     const { rerender } = await render(<ScrollArea id="s" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea>);
-    const cls = () => [el('s').classList.contains('dk-scroll-area--more-start'), el('s').classList.contains('dk-scroll-area--more-end')];
+    const cls = () => [el('s').classList.contains('srp-scroll-area--more-start'), el('s').classList.contains('srp-scroll-area--more-end')];
     await expect.poll(cls).toEqual([false, true]);
     expect(css(el('s')).maskImage).toContain('linear-gradient');
     el('s').scrollTop = 120;
@@ -71,7 +71,7 @@ describe('ScrollArea', () => {
     await render(<ScrollArea id="sf" fade aria-label="Links" style={{ maxHeight: 120 }}>
       {Array.from({ length: 10 }, (_, i) => <p key={i} style={{ margin: 0, height: 40 }}><a href={'#r' + i} id={'sf' + i}>Row {i + 1}</a></p>)}
     </ScrollArea>);
-    await expect.poll(() => el('sf').classList.contains('dk-scroll-area--more-end')).toBe(true);
+    await expect.poll(() => el('sf').classList.contains('srp-scroll-area--more-end')).toBe(true);
     el('sf3').scrollIntoView({ block: 'nearest' });   // the fourth row starts at 120px, under the box's end
     const box = el('sf').getBoundingClientRect(), row = el('sf3').getBoundingClientRect();
     expect(box.bottom - row.bottom).toBeGreaterThanOrEqual(32 - 1);   // the 32px fade's room left below it
@@ -79,7 +79,7 @@ describe('ScrollArea', () => {
 
   test('fade: content that grows while it already scrolls (rows added, a row that wraps once a font loads) fades the end again', async () => {
     const { rerender } = await render(<ScrollArea id="g" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea>);
-    const cls = () => [el('g').classList.contains('dk-scroll-area--more-start'), el('g').classList.contains('dk-scroll-area--more-end')];
+    const cls = () => [el('g').classList.contains('srp-scroll-area--more-start'), el('g').classList.contains('srp-scroll-area--more-end')];
     el('g').scrollTop = 10000;
     await expect.poll(cls).toEqual([true, false]);
     await rerender(<ScrollArea id="g" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(20)}</ScrollArea>);

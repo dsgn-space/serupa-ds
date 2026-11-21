@@ -42,7 +42,7 @@ describe('PhoneInput', () => {
     await render(<Wrap><PhoneInput id="p" aria-label="Phone" defaultCountry="ID" ref={ref} className="extra" style={{ marginTop: '2px' }} /></Wrap>);
     const i = field('p'), b = box('p');
     expect([i.type, i.inputMode, i.getAttribute('autocomplete'), ref.current === i]).toEqual(['tel', 'tel', 'tel', true]);
-    expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['dk-input dk-phone-input dk-input--size-md extra', 'phone-input', '2px', 32]);
+    expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['srp-input srp-phone-input srp-input--size-md extra', 'phone-input', '2px', 32]);
     expect([menu('p').getAttribute('aria-label'), menu('p').value, dial('p')]).toEqual(['Country', 'ID', '+62']);
     // Each option names the country in the locale's words, with its calling code, sorted by name.
     const names = [...menu('p').options].map((o) => o.textContent);
@@ -247,7 +247,7 @@ describe('PhoneInput', () => {
     const calls: string[] = [];
     await render(<Wrap><PhoneInput id="iv" aria-label="Bad" invalid defaultCountry="ID" /><PhoneInput id="ro" aria-label="Locked" readOnly defaultValue="+6281234567890" />
       <PhoneInput id="same" aria-label="Same" defaultCountry="ID" onValueChange={(v) => { calls.push(v); }} onCountryChange={(c) => { calls.push(c); }} /></Wrap>);
-    expect([field('iv').getAttribute('aria-invalid'), box('iv').className.includes('dk-input--invalid'), menu('ro').disabled, menu('iv').disabled]).toEqual(['true', true, true, false]);
+    expect([field('iv').getAttribute('aria-invalid'), box('iv').className.includes('srp-input--invalid'), menu('ro').disabled, menu('iv').disabled]).toEqual(['true', true, true, false]);
     // Read-only refuses nothing: the country part shows the plain arrow, as Combobox's and Select's do, not not-allowed.
     expect(getComputedStyle(menu('ro')).cursor).toBe('default');
     menu('same').dispatchEvent(new Event('change', { bubbles: true }));
@@ -265,7 +265,7 @@ describe('PhoneInput', () => {
     expect([field('fp').labels![0]!.textContent, [...menu('fp').options].map((o) => o.value).join(), menu('fp').value]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('phone')).toBe('+6591234567');
     expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara', 24]);
-    expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('dk-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
+    expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('srp-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
     // The calling code dims with the number, not left in full text color beside a dimmed field.
     const dial = [...box('dis').querySelectorAll('span')].find((n) => n.children.length === 0 && n.textContent.startsWith('+'))!;
     expect(getComputedStyle(dial).color).toBe(getComputedStyle(field('dis')).color);

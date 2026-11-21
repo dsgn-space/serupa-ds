@@ -3,8 +3,8 @@
    underneath in a smaller, muted line, with an optional picture. 'lg' sets the words larger for a pull quote.
    Every value reads one of its own tokens (quote.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-quote {
+@layer srp.components {
+.srp-quote {
   display: flex; flex-direction: column; gap: var(--quote-gap, var(--spacing-3));
   margin: 0;
   padding-inline-start: var(--quote-indent, var(--spacing-4));
@@ -14,13 +14,13 @@
 }
 /* The words keep a reading measure, about 65 characters a line as Prose and Text measure do, in a wide column too;
    ch follows the size, so a pull quote's larger words keep the same count. */
-.dk-quote__text { max-inline-size: var(--container-prose); margin: 0; font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-quote__text > * { margin: 0; }
-.dk-quote__text > * + * { margin-block-start: var(--quote-gap, var(--spacing-3)); }
-.dk-quote--lg .dk-quote__text { font-size: var(--quote-size-lg, var(--text-xl)); line-height: var(--quote-line-height-lg, var(--text-xl--line-height)); }
-.dk-quote__by { display: flex; align-items: center; gap: var(--quote-gap, var(--spacing-3)); min-inline-size: 0; }
-.dk-quote__who { display: flex; flex-direction: column; min-inline-size: 0; font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-quote__author { font-weight: var(--quote-author-weight, var(--font-semibold)); }
-.dk-quote__source { color: var(--quote-source, var(--text-muted)); }
-@media (forced-colors: active) { .dk-quote { border-inline-start-color: CanvasText; } }
+.srp-quote__text { max-inline-size: var(--container-prose); margin: 0; font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-quote__text > * { margin: 0; }
+.srp-quote__text > * + * { margin-block-start: var(--quote-gap, var(--spacing-3)); }
+.srp-quote--lg .srp-quote__text { font-size: var(--quote-size-lg, var(--text-xl)); line-height: var(--quote-line-height-lg, var(--text-xl--line-height)); }
+.srp-quote__by { display: flex; align-items: center; gap: var(--quote-gap, var(--spacing-3)); min-inline-size: 0; }
+.srp-quote__who { display: flex; flex-direction: column; min-inline-size: 0; font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-quote__author { font-weight: var(--quote-author-weight, var(--font-semibold)); }
+.srp-quote__source { color: var(--quote-source, var(--text-muted)); }
+@media (forced-colors: active) { .srp-quote { border-inline-start-color: CanvasText; } }
 }

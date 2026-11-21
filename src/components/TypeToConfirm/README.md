@@ -23,9 +23,9 @@ import { TypeToConfirm } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Phrase** (`.dk-type-to-confirm__phrase`): the words to type, shown so they can be copied.
-2. **Field** (`.dk-input`): where they're typed.
-3. **Confirm** (`.dk-type-to-confirm__button`): stays unavailable until the words match.
+1. **Phrase** (`.srp-type-to-confirm__phrase`): the words to type, shown so they can be copied.
+2. **Field** (`.srp-input`): where they're typed.
+3. **Confirm** (`.srp-type-to-confirm__button`): stays unavailable until the words match.
 
 ## Usage
 

@@ -21,7 +21,7 @@ describe('Attachment', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><Attachment id="x" ref={ref} className="extra" data-x="y" name="Invoice.pdf" bytes={1_500_000} /></SerupaProvider>);
     const e = root('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.kind]).toEqual(['DIV', true, 'dk-attachment extra', 'y', 'attachment', 'pdf']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.kind]).toEqual(['DIV', true, 'srp-attachment extra', 'y', 'attachment', 'pdf']);
     expect([visible(e), meta(e)]).toEqual(['Invoice.pdf', 'PDF1.5 MB']);
     // The name is read once: the two cut parts are hidden and a full copy is there for screen readers.
     expect(e.querySelector('[dir="auto"] > :not([aria-hidden])')!.textContent).toBe('Invoice.pdf');
@@ -169,7 +169,7 @@ describe('Attachment', () => {
   test('error: a danger outline and "Couldn’t upload" (or its own message), no bar; "Try again" with onRetry, named with the file', async () => {
     let tries = 0;
     await render(<><Attachment id="f" name="Pitch.pptx" progress={50} error onRetry={() => tries++} /><Attachment id="g" name="Demo.mp4" error="Larger than 100 MB" /></>);
-    expect([root('f').classList.contains('dk-attachment--error'), root('f').querySelector('[role=progressbar]'), part(root('f'), 'error').textContent.replace(/^error/, '')])
+    expect([root('f').classList.contains('srp-attachment--error'), root('f').querySelector('[role=progressbar]'), part(root('f'), 'error').textContent.replace(/^error/, '')])
       .toEqual([true, null, 'Couldn’t upload']);
     const retry = page.getByRole('button', { name: 'Try again Pitch.pptx' });
     await expect.element(retry).toHaveAccessibleDescription(/Couldn’t upload/);
@@ -180,7 +180,7 @@ describe('Attachment', () => {
 
   test('error={false} and error="" are not a failure', async () => {
     await render(<><Attachment id="e1" name="a.pdf" error={false} /><Attachment id="e2" name="a.pdf" error="" /></>);
-    expect([root('e1').className, root('e2').className]).toEqual(['dk-attachment', 'dk-attachment']);
+    expect([root('e1').className, root('e2').className]).toEqual(['srp-attachment', 'srp-attachment']);
   });
 
   test('disabled: the name is plain text, and remove and retry are off', async () => {

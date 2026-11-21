@@ -3,89 +3,89 @@
    text-muted and medium; the selected one is text, on a raised surface (outline, shadow-sm) that slides from
    segment to segment. Segments share the width by content; equal segments when fullWidth. Invalid: a danger outline. Read-only: no pointer cursor or hover. Disabled: faded.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-segmented {
-  --dk-seg-h: var(--segmented-control-height-md, var(--control-height-md));
+@layer srp.components {
+.srp-segmented {
+  --srp-seg-h: var(--segmented-control-height-md, var(--control-height-md));
   /* The selection's corners nest in the track's: its radius less the padding and border between them (6 - 2 - 1 = 3px). */
-  --dk-seg-nest: max(var(--spacing-0), calc(var(--segmented-control-radius, var(--radius-control)) - var(--segmented-control-padding, var(--spacing-0\.5)) - var(--border-width-1)));
-  --dk-seg-inner: calc(var(--dk-seg-h) - 2 * var(--segmented-control-padding, var(--spacing-0\.5)) - 2 * var(--border-width-1));
+  --srp-seg-nest: max(var(--spacing-0), calc(var(--segmented-control-radius, var(--radius-control)) - var(--segmented-control-padding, var(--spacing-0\.5)) - var(--border-width-1)));
+  --srp-seg-inner: calc(var(--srp-seg-h) - 2 * var(--segmented-control-padding, var(--spacing-0\.5)) - 2 * var(--border-width-1));
   /* Segments share the width by content: each column grows from nothing to its label's width, the space handed out
      evenly, so when they don't all fit the short labels stay whole and the long ones give way (EU1). */
-  position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--dk-seg-h); max-width: var(--sizing-full);
+  position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--srp-seg-h); max-width: var(--sizing-full);
   padding: var(--segmented-control-padding, var(--spacing-0\.5));
   border: var(--border-width-1) solid var(--segmented-control-border, var(--field-border));
   border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--surface-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
 }
-.dk-segmented--size-sm { --dk-seg-h: var(--segmented-control-height-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-segmented--size-lg { --dk-seg-h: var(--segmented-control-height-lg, var(--control-height-lg)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-segmented--size-lg .dk-segmented__item { padding-inline: var(--segmented-control-padding-x-lg, var(--spacing-4)); }
-.dk-segmented--full { display: grid; grid-auto-columns: minmax(var(--spacing-0), 1fr); width: var(--sizing-full); }
+.srp-segmented--size-sm { --srp-seg-h: var(--segmented-control-height-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-segmented--size-lg { --srp-seg-h: var(--segmented-control-height-lg, var(--control-height-lg)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-segmented--size-lg .srp-segmented__item { padding-inline: var(--segmented-control-padding-x-lg, var(--spacing-4)); }
+.srp-segmented--full { display: grid; grid-auto-columns: minmax(var(--spacing-0), 1fr); width: var(--sizing-full); }
 /* A label too long for its equal share: share by content instead, the columns stretched to fill (GR50). */
-.dk-segmented--full.dk-segmented--fit { grid-auto-columns: minmax(var(--spacing-0), auto); }
-.dk-segmented__indicator {
+.srp-segmented--full.srp-segmented--fit { grid-auto-columns: minmax(var(--spacing-0), auto); }
+.srp-segmented__indicator {
   position: absolute; inset-block: var(--segmented-control-padding, var(--spacing-0\.5)); box-sizing: border-box;
   border: var(--border-width-1) solid var(--segmented-control-indicator-border, var(--field-border));
-  border-radius: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner))); background: var(--segmented-control-indicator, var(--field));
+  border-radius: var(--segmented-control-indicator-radius, var(--srp-seg-nest, var(--radius-inner))); background: var(--segmented-control-indicator, var(--field));
   box-shadow: var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
 /* The indicator sits on the selected segment by left and width, which don't animate. A new choice slides it there by
    clip-path, which the compositor runs (EG1), and which keeps its 1px border and round corners whatever the widths
    (GL1; scale stretched them): for the slide it covers both segments at once (SegmentedControl.tsx), drawn by two layers,
-   the border's color and, 1px inside it, the surface, each cut to the selection's shape at --dk-seg-l and --dk-seg-r
+   the border's color and, 1px inside it, the surface, each cut to the selection's shape at --srp-seg-l and --srp-seg-r
    from its ends, and those insets move from the last segment to the new one. Its shadow follows the cut as a
    drop-shadow meanwhile. */
-.dk-segmented__indicator[data-slide] { border-color: transparent; background: transparent; box-shadow: none; filter: drop-shadow(var(--drop-shadow-xs)); }
-.dk-segmented__indicator[data-slide]::before, .dk-segmented__indicator[data-slide]::after {
-  --dk-seg-r1: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner)));
+.srp-segmented__indicator[data-slide] { border-color: transparent; background: transparent; box-shadow: none; filter: drop-shadow(var(--drop-shadow-xs)); }
+.srp-segmented__indicator[data-slide]::before, .srp-segmented__indicator[data-slide]::after {
+  --srp-seg-r1: var(--segmented-control-indicator-radius, var(--srp-seg-nest, var(--radius-inner)));
   content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1));
   transition: clip-path var(--segmented-control-duration, var(--motion-change-md)) var(--ease-settle);
 }
-.dk-segmented__indicator[data-slide]::before { background: var(--segmented-control-indicator-border, var(--field-border)); clip-path: inset(var(--spacing-0) var(--dk-seg-r) var(--spacing-0) var(--dk-seg-l) round var(--dk-seg-r1)); }
-.dk-segmented__indicator[data-slide]::after { background: var(--segmented-control-indicator, var(--field)); clip-path: inset(var(--border-width-1) calc(var(--dk-seg-r) + var(--border-width-1)) var(--border-width-1) calc(var(--dk-seg-l) + var(--border-width-1)) round max(var(--spacing-0), calc(var(--dk-seg-r1) - var(--border-width-1)))); }
-.dk-segmented__indicator[data-flip]::before, .dk-segmented__indicator[data-flip]::after { transition: none; }
+.srp-segmented__indicator[data-slide]::before { background: var(--segmented-control-indicator-border, var(--field-border)); clip-path: inset(var(--spacing-0) var(--srp-seg-r) var(--spacing-0) var(--srp-seg-l) round var(--srp-seg-r1)); }
+.srp-segmented__indicator[data-slide]::after { background: var(--segmented-control-indicator, var(--field)); clip-path: inset(var(--border-width-1) calc(var(--srp-seg-r) + var(--border-width-1)) var(--border-width-1) calc(var(--srp-seg-l) + var(--border-width-1)) round max(var(--spacing-0), calc(var(--srp-seg-r1) - var(--border-width-1)))); }
+.srp-segmented__indicator[data-flip]::before, .srp-segmented__indicator[data-flip]::after { transition: none; }
 /* Before the script runs, the selected segment carries the indicator's surface itself, so the first paint already
    shows the choice; the indicator takes over in the same place (FC1). */
-.dk-segmented:not(:has(> .dk-segmented__indicator)) .dk-segmented__item--selected {
+.srp-segmented:not(:has(> .srp-segmented__indicator)) .srp-segmented__item--selected {
   background: var(--segmented-control-indicator, var(--field));
   box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--segmented-control-indicator-border, var(--field-border)), var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
-.dk-segmented__item {
+.srp-segmented__item {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--segmented-control-gap, var(--spacing-1\.5));
   min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0) var(--segmented-control-padding-x, var(--spacing-3));
-  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner))); background: transparent;
+  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--srp-seg-nest, var(--radius-inner))); background: transparent;
   color: var(--segmented-control-text, var(--text-muted)); font: inherit; font-weight: var(--segmented-control-weight, var(--font-medium)); white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: color var(--motion-hover) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
 /* At least 24px wide, so in sm (18px inside a 24px box) the segments' centers are 24px apart: WCAG 2.5.8. */
-.dk-segmented__item--icon-only { width: max(var(--dk-seg-inner), var(--spacing-6)); padding: var(--spacing-0); }
-.dk-segmented__label { overflow: hidden; text-overflow: ellipsis; }
-.dk-segmented__icon { display: inline-flex; }
-.dk-segmented__icon .dk-icon { font-size: var(--spacing-4); }
-.dk-segmented--size-sm .dk-segmented__icon .dk-icon { font-size: var(--spacing-3\.5); }
-.dk-segmented--size-lg .dk-segmented__icon .dk-icon { font-size: var(--spacing-5); }
-@media (hover: hover) { .dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); } }
-.dk-segmented__item--selected { color: var(--segmented-control-text-selected, var(--text)); }
-.dk-segmented__item:focus { outline: none; }
-.dk-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-segmented__item:disabled { cursor: var(--cursor-disabled); color: var(--segmented-control-text-disabled, var(--disabled-text)); }
+.srp-segmented__item--icon-only { width: max(var(--srp-seg-inner), var(--spacing-6)); padding: var(--spacing-0); }
+.srp-segmented__label { overflow: hidden; text-overflow: ellipsis; }
+.srp-segmented__icon { display: inline-flex; }
+.srp-segmented__icon .srp-icon { font-size: var(--spacing-4); }
+.srp-segmented--size-sm .srp-segmented__icon .srp-icon { font-size: var(--spacing-3\.5); }
+.srp-segmented--size-lg .srp-segmented__icon .srp-icon { font-size: var(--spacing-5); }
+@media (hover: hover) { .srp-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); } }
+.srp-segmented__item--selected { color: var(--segmented-control-text-selected, var(--text)); }
+.srp-segmented__item:focus { outline: none; }
+.srp-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.srp-segmented__item:disabled { cursor: var(--cursor-disabled); color: var(--segmented-control-text-disabled, var(--disabled-text)); }
 /* Pressed: a held segment takes a wash of the text color over the track or the selection (its held fill) and the
    hover text, like a Button's held fill. Nothing shrinks by default; --segmented-control-press-scale opts in to
    one. Not read-only or disabled. */
-.dk-segmented:not(.dk-segmented--readonly) .dk-segmented__item:active:not(:disabled) { background-color: color-mix(in srgb, var(--segmented-control-wash-pressed, var(--text)) var(--segmented-control-layer-pressed, var(--opacity-10)), transparent); color: var(--segmented-control-text-hover, var(--text)); scale: var(--segmented-control-press-scale, var(--scale-100)); transition: color var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
-.dk-segmented--invalid { border-color: var(--segmented-control-invalid, var(--danger)); }
-.dk-segmented--readonly .dk-segmented__item { cursor: default; }
+.srp-segmented:not(.srp-segmented--readonly) .srp-segmented__item:active:not(:disabled) { background-color: color-mix(in srgb, var(--segmented-control-wash-pressed, var(--text)) var(--segmented-control-layer-pressed, var(--opacity-10)), transparent); color: var(--segmented-control-text-hover, var(--text)); scale: var(--segmented-control-press-scale, var(--scale-100)); transition: color var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+.srp-segmented--invalid { border-color: var(--segmented-control-invalid, var(--danger)); }
+.srp-segmented--readonly .srp-segmented__item { cursor: default; }
 /* Read-only: hovering an unselected segment doesn't brighten it, since a click won't choose it. */
-@media (hover: hover) { .dk-segmented--readonly .dk-segmented__item:not(.dk-segmented__item--selected):hover { color: var(--segmented-control-text, var(--text-muted)); } }
-.dk-segmented--disabled { --segmented-control-indicator-border: var(--segmented-control-border-disabled, var(--disabled-border)); }
-.dk-segmented--disabled .dk-segmented__item { color: var(--segmented-control-text-disabled, var(--disabled-text)); }
-@media (prefers-reduced-motion: reduce) { .dk-segmented__indicator::before, .dk-segmented__indicator::after, .dk-segmented__item { transition: none; } .dk-segmented .dk-segmented__item:active { scale: none; } }
+@media (hover: hover) { .srp-segmented--readonly .srp-segmented__item:not(.srp-segmented__item--selected):hover { color: var(--segmented-control-text, var(--text-muted)); } }
+.srp-segmented--disabled { --segmented-control-indicator-border: var(--segmented-control-border-disabled, var(--disabled-border)); }
+.srp-segmented--disabled .srp-segmented__item { color: var(--segmented-control-text-disabled, var(--disabled-text)); }
+@media (prefers-reduced-motion: reduce) { .srp-segmented__indicator::before, .srp-segmented__indicator::after, .srp-segmented__item { transition: none; } .srp-segmented .srp-segmented__item:active { scale: none; } }
 /* The selected label keeps HighlightText on hover too: the hover color, kept as is, was dark on the dark Highlight. */
-@media (forced-colors: active) { .dk-segmented__indicator[data-slide]::before, .dk-segmented__indicator[data-slide]::after { background: Highlight; } .dk-segmented__indicator, .dk-segmented:not(:has(> .dk-segmented__indicator)) .dk-segmented__item--selected { background: Highlight; border-color: Highlight; } .dk-segmented__item--selected { color: HighlightText; forced-color-adjust: none; } @media (hover: hover) { .dk-segmented__item--selected:hover:not(:disabled) { color: HighlightText; } } }
+@media (forced-colors: active) { .srp-segmented__indicator[data-slide]::before, .srp-segmented__indicator[data-slide]::after { background: Highlight; } .srp-segmented__indicator, .srp-segmented:not(:has(> .srp-segmented__indicator)) .srp-segmented__item--selected { background: Highlight; border-color: Highlight; } .srp-segmented__item--selected { color: HighlightText; forced-color-adjust: none; } @media (hover: hover) { .srp-segmented__item--selected:hover:not(:disabled) { color: HighlightText; } } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when an option is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
-.dk-segmented__item { position: relative; isolation: isolate; }
-.dk-segmented__item::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+.srp-segmented__item { position: relative; isolation: isolate; }
+.srp-segmented__item::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so side-by-side segments never overlap. */
-@media (pointer: coarse) { .dk-segmented__item::after { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
+@media (pointer: coarse) { .srp-segmented__item::after { --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--srp-reach-block); } }
 }

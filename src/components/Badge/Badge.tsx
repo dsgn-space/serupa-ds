@@ -97,7 +97,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   const text = !isCount && (typeof props.children === 'string' || typeof props.children === 'number') ? String(props.children) : '';
   const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-badge__label'));
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.srp-badge__label'));
   const setNode = useMergedRef(ref, (n: HTMLElement | null) => { node.current = n; });
   let label: React.ReactNode = props.children;
   if (isCount) {
@@ -128,7 +128,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
     rest['data-variant'] = 'indicator';
     rest['data-tone'] = tone;
     if (rest['aria-label'] || rest['aria-labelledby']) rest.role = rest.role || 'img'; else rest['aria-hidden'] = true;
-    return <span {...rest} ref={ref} className={cn('dk-badge', 'dk-badge--indicator', 'dk-badge--tone-' + tone, props.ping && 'dk-badge--ping', props.className)} />;
+    return <span {...rest} ref={ref} className={cn('srp-badge', 'srp-badge--indicator', 'srp-badge--tone-' + tone, props.ping && 'srp-badge--ping', props.className)} />;
   }
   if (cut && tipOk) rest.title = text;
   rest['data-component'] = 'badge';
@@ -144,18 +144,18 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
     }
   }
   const icon = !isCount && props.leftIcon != null && props.leftIcon !== false
-    ? <span className="dk-badge__icon" aria-hidden key="icon">{asIcon(props.leftIcon)}</span> : null;
+    ? <span className="srp-badge__icon" aria-hidden key="icon">{asIcon(props.leftIcon)}</span> : null;
   const dot = !isCount && !icon && props.dot   // in an icon-sized box, so a dot badge lines up with icon badges
-    ? <span className="dk-badge__icon dk-badge__icon--dot" aria-hidden key="dot"><span className="dk-badge__dot" /></span> : null;
+    ? <span className="srp-badge__icon srp-badge__icon--dot" aria-hidden key="dot"><span className="srp-badge__dot" /></span> : null;
   const named = typeof label === 'string' || typeof label === 'number' ? ' ' + label : '';
   const remove = removable
-    ? <button type="button" className="dk-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.dk-badge', '.dk-badge__remove')} disabled={loading || undefined}
+    ? <button type="button" className="srp-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.srp-badge', '.srp-badge__remove')} disabled={loading || undefined}
         aria-label={(props.removeLabel || sds.labels.remove) + named}><Icon icon={icons.Close} /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingLabel)
-  const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
-  const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
-  const content = <>{dot}{icon}<span className="dk-badge__label">{label}</span>{remove}{spin}</>;
+  const spin = loading ? <span className="srp-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
+  const classes = cn('srp-badge', 'srp-badge--' + variant, 'srp-badge--tone-' + tone, isCount && 'srp-badge--count', (icon || dot) && 'srp-badge--lead', dot && props.ping && 'srp-badge--ping', removable && 'srp-badge--removable', interactive && 'srp-badge--interactive', loading && 'srp-badge--loading', props.className);
+  const content = <>{dot}{icon}<span className="srp-badge__label">{label}</span>{remove}{spin}</>;
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
     rest.onKeyDown = chain(rest.onKeyDown, pressKey);
