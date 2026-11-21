@@ -83,11 +83,12 @@ export interface CommandPaletteProps extends Omit<DialogProps, 'title' | 'descri
 
 interface Row { c: Command; i: number; s: number }
 
-// How well a command matches the folded query: 0 for no match; a label that starts with it beats one with a word that
-// does, which beats one that has it inside, which beats a keyword.
+// How well a command matches the folded query: 0 for no match; the label itself beats a label that starts with it,
+// which beats one with a word that does, which beats one that has it inside, which beats a keyword.
 function score(c: Command, q: string): number {
   if (!q) return 1;
   const label = fold(c.label);
+  if (label === q) return 5;
   if (label.startsWith(q)) return 4;
   const at = label.indexOf(q);
   if (at > 0 && /[\s\-_/.:]/.test(label.charAt(at - 1))) return 3;
@@ -137,7 +138,9 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
     if (!own) return commands.map((c, i) => ({ c, i, s: 1 }));
     const all = commands.map((c, i) => ({ c, i, s: score(c, q) })).filter((r) => r.s > 0);
     if (!q) return all;
-    return all.sort((a, b) => b.s - a.s || a.i - b.i).slice(0, limit && limit > 0 ? limit : 50);
+    // Among labels that match alike, the shorter is the closer match: "tab" lists Tabs before Table and TableOfContents.
+    const near = (r: Row) => (r.s > 1 ? r.c.label.length : 0);
+    return all.sort((a, b) => b.s - a.s || near(a) - near(b) || a.i - b.i).slice(0, limit && limit > 0 ? limit : 50);
   }, [commands, q, limit, own]);
   // By group, in the order each first appears among the rows; the rows keep their order inside a group.
   const groups = React.useMemo(() => {

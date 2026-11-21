@@ -13,7 +13,7 @@ import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { Rating } from '../../components/Rating/Rating';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
-import { useLocale } from '../../internal/provider';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Write a review: stars, a few words and, if you like, photos, for something you bought; then a thank-you that says
@@ -66,7 +66,6 @@ export function reviewProblems(r: ReviewDraft): Problems {
 
 /** The review page: a skip link, a header, then main with the h1, what's reviewed, and the form or the thank-you. */
 export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend }: WriteReviewProps) {
-  const locale = useLocale();
   const [r, setR] = React.useState<ReviewDraft>({ stars: null, title: '', body: '', recommend: '', name: defaultName, photos: [] });
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
@@ -104,7 +103,7 @@ export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend }: 
             <Image src={product.image} alt="" ratio="square" rounded className="w-16 shrink-0" />
             <div className="min-w-0">
               <p className="m-0 font-semibold wrap-break-word">{product.name}</p>
-              <p className="m-0 text-sm text-text-muted">Bought <time dateTime={product.bought}>{new Date(`${product.bought}T00:00`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}</time></p>
+              <p className="m-0 text-sm text-text-muted">Bought <FormattedDate value={product.bought} dateStyle="long" /></p>
             </div>
           </Card>
           {sent ? (

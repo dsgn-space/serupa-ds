@@ -13,6 +13,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
@@ -133,10 +134,6 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
   if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setOrder(start); } }
   const heading = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
-  const when = (iso: string) => {
-    const d = new Date(iso);
-    try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(d); } catch { return iso; }
-  };
   const words = stageWords(order);
   const name = `Order ${order.number}`;
   const sum = subtotal(order.items);
@@ -191,7 +188,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                 <h2 id="happened" className={h2}>What’s happened</h2>
                 <Timeline aria-labelledby="happened">
                   {order.events.map((e, i) => (
-                    <TimelineItem key={e.id} title={e.title} time={when(e.at)} dateTime={e.at} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
+                    <TimelineItem key={e.id} title={e.title} time={<FormattedDate value={e.at} timeStyle="short" />} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
                   ))}
                 </Timeline>
               </section>

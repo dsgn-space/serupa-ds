@@ -14,3 +14,20 @@ export function canonicalLocale(locale: string): string | undefined {
   checked.set(locale, ok);
   return ok;
 }
+
+// Languages written right to left, for browsers without Intl.Locale's text info (Firefox): Arabic, Hebrew, Persian,
+// Urdu, Pashto, Sindhi, Uyghur, Yiddish, Dhivehi, Central Kurdish, and a locale that names an RTL script.
+const RTL = /^(ar|he|iw|fa|ur|ps|sd|ug|yi|dv|ckb)(-|$)|-(Arab|Hebr|Thaa|Syrc|Nkoo|Adlm|Rohg)(-|$)/i;
+
+/** Which way a locale's text runs, so an element in its own locale carries the direction with its lang: "rtl" for
+ *  ar-EG or he, "ltr" for en or id, undefined when Intl can't use the locale. */
+export function localeDir(locale: string): 'ltr' | 'rtl' | undefined {
+  const l = canonicalLocale(locale);
+  if (!l) return undefined;
+  try {
+    const it = new Intl.Locale(l) as Intl.Locale & { getTextInfo?: () => { direction?: string }; textInfo?: { direction?: string } };
+    const dir = (it.getTextInfo?.() ?? it.textInfo)?.direction;
+    if (dir === 'rtl' || dir === 'ltr') return dir;
+  } catch { /* the pattern below */ }
+  return RTL.test(l) ? 'rtl' : 'ltr';
+}

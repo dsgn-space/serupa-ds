@@ -2,7 +2,9 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { CourseOverview, courseProgress, durationWords } from './CourseOverview';
+import { CourseOverview, courseProgress } from './CourseOverview';
+import { SerupaProvider } from '../../internal/provider';
+import { formatDuration } from '../../components/Duration/Duration';
 
 const active = () => document.activeElement as HTMLElement;
 const bar = () => document.querySelector('[role="progressbar"]')!;
@@ -11,11 +13,18 @@ const mods = [{ id: 'a', title: 'A', lessons: [{ id: '1', title: 'One', minutes:
 // Course overview: modules as headings that open ordered lists of lessons, progress as a named bar with words,
 // Continue naming the next lesson, Done boxes named by their lesson, and a change in progress said.
 describe('Patterns/Course overview', () => {
-  test('progress, the next lesson, and minutes in words', () => {
+  test('progress and the next lesson', () => {
     expect(courseProgress(mods, ['1'])).toMatchObject({ done: 1, total: 3, next: { id: '2' }, nextModule: 'a' });
     expect(courseProgress(mods, ['1', '2'])).toMatchObject({ next: { id: '3' }, nextModule: 'b' });
     expect(courseProgress(mods, ['1', '2', '3'])).toMatchObject({ done: 3, next: null, nextModule: null });
-    expect([durationWords(45), durationWords(90), durationWords(120), durationWords(0)]).toEqual(['45 min', '1 h 30 min', '2 h', '0 min']);
+  });
+
+  test('the lessons\' times and the course\'s total read in the page\'s language: Indonesian "1 j, 30 mnt", not "1 h 30 min"', async () => {
+    await render(<SerupaProvider locale="id"><CourseOverview /></SerupaProvider>);
+    const words = (n: number) => formatDuration(n, 'id', { unit: 'minute' });
+    // Shown, a number and its unit are held together with a no-break space.
+    const text = (t: string | null | undefined) => (t ?? '').replace(/\u00a0/g, ' ');
+    expect([text(document.body.textContent).includes(`${words(237)} in all`), text(document.querySelector('time[datetime="PT1H30M"]')?.textContent)]).toEqual([true, words(90)]);
   });
 
   test('one main and h1, the skip link first, modules as headings, and the next one\'s lessons open', async () => {

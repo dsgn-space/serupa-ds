@@ -11,6 +11,17 @@ import { EventCalendar, type CalendarEvent } from './EventCalendar';
 // The tests read dates and times as English writes them; the second-language runs would write them otherwise.
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
 const render = (ui: React.ReactNode) => draw(ui, { wrapper: EnUS });
+// Whether the words read left to right on screen, as a reader sees them: the box of the first character of the text
+// node that holds them sits left of the last one's.
+const readsLeftToRight = (root: Element, text: string) => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    if (n.textContent !== text) continue;
+    const at = (i: number) => { const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 1); return r.getBoundingClientRect().left; };
+    return at(0) < at(text.length - 1);
+  }
+  throw new Error(`no text "${text}"`);
+};
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const cell = (d: string) => document.querySelector<HTMLElement>(`td[data-date="${d}"]`)!;
 const names = (d: string) => [...cell(d).querySelectorAll('button')].map((b) => b.getAttribute('aria-label') || b.textContent);
@@ -587,5 +598,19 @@ describe('EventCalendar creating and moving', () => {
     b.focus();
     await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
     expect([eventIn('2025-03-04', 'b') === b, document.activeElement === b]).toEqual([true, true]);
+  });
+
+  test('with a locale of its own its times and heading keep that locale\'s order in a page of the other direction, while the grid stays the page\'s', async () => {
+    const week = [{ id: 'a', title: 'Standup', start: '2026-11-17T09:00', end: '2026-11-17T09:30' }, { id: 'b', title: 'Review', start: '2026-11-18T10:00', end: '2026-11-18T11:00' }];
+    const { unmount } = await render(<div dir="rtl"><EventCalendar id="en" events={week} locale="en" defaultView="week" defaultMonth={new Date(2026, 10, 16)} /></div>);
+    const grid = el('en').querySelector('[role="grid"]')!;
+    expect([readsLeftToRight(el('en'), '9:00 AM'), readsLeftToRight(el('en'), '9 AM'), readsLeftToRight(el('en'), 'November 15 – 21, 2026'), getComputedStyle(grid).direction]).toEqual([true, true, true, 'rtl']);
+    // An hour-long event puts its time over its title: both start on the page's side, the right.
+    const right = (text: string) => { const w = document.createTreeWalker(el('en'), NodeFilter.SHOW_TEXT); for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent === text) { const r = document.createRange(); r.selectNodeContents(n); return Math.round(r.getBoundingClientRect().right); } return NaN; };
+    expect(right('10:00 AM')).toBe(right('Review'));
+    await unmount();
+    await render(<EventCalendar id="ar" events={week} locale="ar-EG" defaultView="week" defaultMonth={new Date(2026, 10, 16)} />);
+    const heading = el('ar').querySelector('[role="heading"], h2, h3')!.textContent;
+    expect([readsLeftToRight(el('ar'), heading), getComputedStyle(el('ar').querySelector('[role="grid"]')!).direction]).toEqual([false, 'ltr']);
   });
 });

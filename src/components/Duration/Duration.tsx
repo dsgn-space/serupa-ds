@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, omit, oneOf } from '../../internal/cn';
 import { named } from '../../internal/component';
-import { canonicalLocale } from '../../internal/locale';
+import { canonicalLocale, localeDir } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
 
 /** A unit a duration is given in or written down to. */
@@ -90,9 +90,9 @@ function DurationRender({ ref, ...props }: DurationProps & React.RefAttributes<H
   const digital = props.display === 'digital' && !!text;
   // Shown, each unit's number and word stay together ("1\u00a0hr"), so words wrap only between units.
   const shown = digital ? text : text.replace(/(?<=\d) /g, '\u00a0');
-  // dir="auto": the words take their own language's direction, so "1 hr, 15 min" in a right-to-left page doesn't
-  // read "hr, 15 min 1" (its number is a weak character that would follow the page's direction).
-  return <time lang={lang} dir="auto" {...rest} ref={ref} dateTime={isoDuration(props.value, o) || undefined}
+  // A locale of its own brings its direction with its lang, so "1 hr, 15 min" in a right-to-left page doesn't read
+  // "hr, 15 min 1" (its number is a weak character that would follow the page's direction).
+  return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={isoDuration(props.value, o) || undefined}
     className={cn('dk-duration', digital && 'dk-duration--digital', props.className)} data-component="duration">
     {digital ? <><span aria-hidden="true">{shown}</span><span className="dk-visually-hidden">{formatDuration(props.value, locale, { ...o, display: 'long' })}</span></> : shown}
   </time>;

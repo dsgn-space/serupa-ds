@@ -43,7 +43,7 @@ formatDuration(5400, "id", { display: "long" })   // "1 jam, 30 menit", for a ti
 - **Role and name:** a `<time>` with `datetime`, read as its text. A clock is hidden from screen readers and carries the long words in its place ("1 hour, 30 minutes"), so "1:30:00" is never read as half past one.
 - **Keyboard:** none: inline text, not focusable.
 - Each unit's number and word stay together, so a narrow column wraps only between units.
-- It takes the direction of its own words (`dir="auto"`), so English words in a right-to-left page keep their order ("1 hr, 15 min", not "hr, 15 min 1").
+- With a `locale` of its own it carries that locale's direction (`dir`) with its `lang`, so English words in a right-to-left page keep their order ("1 hr, 15 min", not "hr, 15 min 1").
 - **What's still yours:** saying what the duration is of, in the words around it ("Prep", "Running time").
 
 ## Props

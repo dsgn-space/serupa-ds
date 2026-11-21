@@ -40,7 +40,7 @@ describe('Patterns/Order status', () => {
   test('what happened is a list, newest first, each with a time a machine can read; the items and the total are in words', async () => {
     const screen = await render(<OrderStatus order={order()} />);
     const list = screen.getByRole('list', { name: 'What’s happened' });
-    expect(list.getByRole('listitem').elements().map((li) => li.querySelector('time')?.getAttribute('datetime'))).toEqual(['2025-03-01T11:05:00', '2025-02-28T19:22:00']);
+    expect(list.getByRole('listitem').elements().map((li) => li.querySelector('time')?.getAttribute('datetime'))).toEqual(['2025-03-01T11:05:00', '2025-02-28T19:22:00'].map((at) => new Date(at).toISOString()));
     expect(list.element().textContent).toContain('Paid by card');
     const items = [...document.querySelectorAll('section[aria-labelledby="items"] li')].map((li) => li.textContent);
     expect(items).toHaveLength(2);

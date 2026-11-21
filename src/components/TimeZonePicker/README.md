@@ -32,7 +32,7 @@ import { TimeZonePicker } from "@diki-stwn/serupa-ds";
 - The whole list (about 420 zones, each with its name in the locale) is made when the field is first focused, pointed at or opened, not when the page renders, so a page with several pickers loads as fast as one with none. Until then it knows only its value's zone and the reader's own.
 - Typing finds a city ("jakarta"), a zone's name in the reader's language ("Waktu Indonesia"), the IANA name ("argentina") or an offset ("+7", "07:00", "utc-5", "−3:30").
 - Zones go by their current names ("Europe/Kyiv", "Asia/Kolkata", "Asia/Ho_Chi_Minh"), the ones servers, databases and `Temporal` use, even where the browser still lists an older spelling. A value under an old name ("Europe/Kiev") shows too, and the picker hands back the current one. Typing the old name ("kiev") still finds it, as do common abbreviations and big cities that share a zone ("pst", "wib", "mumbai").
-- The cities are as the IANA names spell them, in English ("New York"); the zone names are the browser's, in the locale (`locale`, the provider's, or the browser's).
+- The cities are as the IANA names spell them, in English ("New York"); the zone names are the browser's, in the locale (`locale`, the provider's, or the browser's). A `locale` of its own brings its direction too: with `locale="ar-EG"` in a left-to-right page, "UTC+07:00 · توقيت غرب إندونيسيا" reads right to left.
 
 ### Do and don't
 

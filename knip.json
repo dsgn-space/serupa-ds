@@ -11,6 +11,7 @@
     "src/testing.js!",
     "src/labels/*.ts!",
     "src/purge.js!",
+    "src/internal/memoCache.ts!",
     "bin/*.mjs!",
     "tools/**/*.mjs",
     "src/**/*.stories.tsx",

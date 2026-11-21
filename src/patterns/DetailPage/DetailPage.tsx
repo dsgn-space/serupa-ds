@@ -17,6 +17,7 @@ import { useLocale } from '../../internal/provider';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Detail page: one thing (a project) with where it sits, its name and details editable in place, its parts in tabs,
    small removals that can be undone, and a delete that can't, behind typing its name. For an app to copy. What it
@@ -72,7 +73,7 @@ const demo: Project = {
 function day(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
-  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+  return formatDate(iso, locale, { dateStyle: 'long' }) || iso;
 }
 
 const english = /* @__PURE__ */ new Intl.PluralRules('en');

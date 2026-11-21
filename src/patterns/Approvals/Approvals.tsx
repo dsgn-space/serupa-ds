@@ -17,6 +17,7 @@ import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { formatDate } from '../../components/FormattedDate/FormattedDate';
 
 /* Approvals: the requests waiting on you (expenses, leave, purchases), each with what you need to decide, approved in
    one press with Undo, or declined with a reason the asker will read. For an app to copy. What it carries (WCAG 2.2):
@@ -67,7 +68,7 @@ export function nextAfter(ids: string[], id: string): string | null {
 export function Approvals({ requests = demo, currency = 'USD', onDecide, loading = false, loadFailed = false, onRetry }: ApprovalsProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
-  const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'long', timeZone: 'UTC' });
+  const day = (iso: string) => formatDate(iso, locale, { options: { day: 'numeric', month: 'long' } });
   const [decided, setDecided] = React.useState<Decision[]>([]);
   const [show, setShow] = React.useState<'waiting' | 'decided'>('waiting');
   const [declining, setDeclining] = React.useState<ApprovalRequest | null>(null);

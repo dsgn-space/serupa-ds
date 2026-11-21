@@ -14,6 +14,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
@@ -101,7 +102,6 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
   const [buying, setBuying] = React.useState<string | null>(null);
   const found = matchOrders(orders, q, state);
   const page = found.slice(0, shown);
-  const date = (iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${iso}T00:00`));
   const n = (x: number) => formatNumber(x, locale);
   const filter = (next: { q?: string; state?: OrderState | '' }) => {
     if (next.q !== undefined) setQ(next.q);
@@ -161,7 +161,7 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
                           <Badge tone={STATES[o.state].tone}>{STATES[o.state].label}</Badge>
                         </div>
                         <p className="m-0 text-sm text-text-muted">
-                          Placed <time dateTime={o.placed}>{date(o.placed)}</time> · <FormattedNumber value={o.total} format="currency" currency={currency} />
+                          Placed <FormattedDate value={o.placed} /> · <FormattedNumber value={o.total} format="currency" currency={currency} />
                         </p>
                         <p className="m-0 wrap-break-word">{itemWords(o.items, (k) => `${n(k)} more`)}</p>
                         <div className="flex flex-wrap items-center gap-3">
