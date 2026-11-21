@@ -325,6 +325,23 @@ await inParallel(opened, workers, async (p, w) => {
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
 }
 
+// The search finds a component by the other names its guide gives ("**Also called:**"): someone who types "modal"
+// or "snackbar" is looking for Dialog or Toast.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 900 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  await w.page.locator('.site-search').click();
+  const missed = [];
+  for (const [query, page] of [['modal', 'Dialog'], ['snackbar', 'Toast'], ['spinner', 'Loader'], ['collapsible', 'Accordion'], ['facepile', 'AvatarGroup']]) {
+    await w.page.keyboard.press('ControlOrMeta+A'); await w.page.keyboard.type(query); await w.page.waitForTimeout(150);
+    const found = await w.page.evaluate(() => [...document.querySelectorAll('[role="option"]')].map((o) => o.firstChild?.textContent?.trim() || o.textContent.trim()));
+    if (!found.some((f) => f.startsWith(page))) missed.push(`"${query}" lists ${found.slice(0, 3).join(', ') || 'nothing'}, not ${page}`);
+  }
+  await w.page.keyboard.press('Escape');
+  t('the search finds a component by its other names', !missed.length, missed.join('; '));
+}
+
 // Printed, a component's page is its guide: the screen's controls (search, the theme switches, the section list,
 // "On this page", each example's Show code and the guide's Copy for AI) are left out, and the bar's links wrap
 // instead of running under each other on the narrower page.
