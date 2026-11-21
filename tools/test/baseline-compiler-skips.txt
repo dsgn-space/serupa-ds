@@ -1,15 +1,10 @@
-src/components/Accordion/Accordion.tsx AccordionItemRender
-src/components/Accordion/Accordion.tsx AccordionRender
 src/components/Button/Button.tsx ButtonBaseRender
 src/components/Calendar/Calendar.tsx CalendarRender
 src/components/Calendar/Calendar.tsx Periods
-src/components/CascadeSelect/CascadeSelect.tsx CascadeSelectRender
 src/components/Chart/Chart.tsx ChartRender
 src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
-src/components/ColorPicker/ColorPicker.tsx ColorPickerRender
 src/components/Combobox/Combobox.tsx ComboboxRender
 src/components/CommandPalette/CommandPalette.tsx CommandPaletteRender
-src/components/CopyButton/CopyButton.tsx CopyButtonRender
 src/components/DatePicker/DatePicker.tsx DatePickerRender
 src/components/DateRangePicker/DateRangePicker.tsx DateRangePickerRender
 src/components/Dialog/Dialog.tsx DialogRender
@@ -21,9 +16,6 @@ src/components/FileUpload/FileUpload.tsx FileUploadRender
 src/components/FormattedNumber/FormattedNumber.tsx FormattedNumberRender
 src/components/HoverCard/HoverCard.tsx HoverCardRender
 src/components/Image/Image.tsx ImageRender
-src/components/Input/Input.tsx InputRender
 src/components/Kanban/Kanban.tsx KanbanRender
-src/components/KeyboardShortcuts/KeyboardShortcuts.tsx KeyboardShortcutsRender
-src/components/List/List.tsx ListRender
 src/components/LoadMore/LoadMore.tsx LoadMoreRender
 src/components/Menu/Menu.tsx ContextMenuRender

@@ -143,7 +143,7 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
   };
 
   const theirs = { key: rest.onKeyDown, click: rest.onClick, focus: rest.onFocus };
-  const ctx = React.useMemo<Pick | null>(() => (mode ? { mode, has: (v) => picked.includes(v) } : null), [mode, picked]);
+  const ctx: Pick | null = mode ? { mode, has: (v) => picked.includes(v) } : null;
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   const Tag = props.as === 'ol' ? 'ol' : 'ul';
   const attrs = {

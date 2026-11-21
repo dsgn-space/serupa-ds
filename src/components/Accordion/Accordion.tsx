@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
-import { cn, domId, oneOf, omit } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useLatest } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
 import { toMs } from '../../internal/cssTime';
 import { Icon } from '../Icon/Icon';
@@ -51,6 +51,14 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
+// The time a closing panel's height takes when another opens as it closes (type="single"): the opening one's, so both
+// move together. 0 when it closes on its own.
+const swapTime = (panel: HTMLElement, swapping: boolean) => {
+  if (!swapping) return 0;
+  const cs = getComputedStyle(panel);
+  return toMs(cs.getPropertyValue('--accordion-duration') || cs.getPropertyValue('--motion-change-md'));
+};
+
 function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
   const labels = useSettings(words).labels;
@@ -58,12 +66,11 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
   const [open, setInner, controlled] = useControllable<string[]>(props.value, (props.defaultValue || []).slice(0, single ? 1 : undefined), 'Accordion', 'value');
   if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
   const collapsible = props.collapsible !== false;
-  const onChange = React.useRef(props.onValueChange);
-  onChange.current = props.onValueChange;
+  const onChange = useLatest(props.onValueChange);
   const change = React.useCallback((next: string[]) => {
     if (!controlled) setInner(next);
     if (onChange.current) onChange.current(next);
-  }, [controlled, setInner]);
+  }, [controlled, setInner, onChange]);
   const toggle = React.useCallback((v: string) => {
     const isOpen = open.indexOf(v) >= 0;
     let next: string[];
@@ -73,8 +80,8 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
   }, [open, single, collapsible, change]);
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? (props.headingLevel as number) : 3;
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
-  let n = 0;
-  const items = flattenChildren(props.children).map((c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ 'data-index'?: string }>, { 'data-index': String(n++) }) : c);
+  const items: React.ReactNode[] = [];
+  for (const c of flattenChildren(props.children)) items.push(React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ 'data-index'?: string }>, { 'data-index': String(items.filter(React.isValidElement).length) }) : c);
   // Each open panel is a region landmark (DP1). Past six that could be open at once, landmarks crowd the list screen
   // readers offer, so the panels are plain groups of content under their headings (the APG's advice).
   const many = !single && items.filter(React.isValidElement).length > 6;
@@ -131,8 +138,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   // changes after that, so React leaves the attribute to the effect.
   const [startsClosed] = React.useState(!open);
   const content = React.useRef<HTMLDivElement>(null);
-  const toggle = React.useRef<(() => void) | null>(null);
-  toggle.current = ctx && !open && !props.disabled ? () => ctx.toggle(value) : null;
+  const toggle = useLatest<(() => void) | null>(ctx && !open && !props.disabled ? () => ctx.toggle(value) : null);
   const findable = !props.disabled;
   // With keepMounted={false} the content renders while the item is open, and goes once the closing animation ends.
   const keep = props.keepMounted !== false;
@@ -141,13 +147,9 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   // One item closing as another opens (type="single"): both heights move over the opening one's time and curve, so
   // their sum goes straight from the old height to the new. On their own curves (the closing one slow to start, the
   // opening one fast) the two were briefly taller together than either, and what's below dipped and came back.
-  const swapping = React.useRef(false);
-  swapping.current = !!ctx && ctx.single && !open && ctx.open.length > 0;
-  const swapTime = (panel: HTMLElement) => {
-    if (!swapping.current) return 0;
-    const cs = getComputedStyle(panel);
-    return toMs(cs.getPropertyValue('--accordion-duration') || cs.getPropertyValue('--motion-change-md'));
-  };
+  const swapping = useLatest(!!ctx && ctx.single && !open && ctx.open.length > 0);
+  // The height animation (below); the fold's cleanup cancels one still running.
+  const growRef = React.useRef<Animation | null>(null);
   React.useLayoutEffect(function () {
     const el = content.current, panel = el && el.closest<HTMLElement>('.dk-accordion__panel');
     if (!el || !panel) return;
@@ -156,42 +158,41 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     const delays = style.transitionDelay.split(',');
     const fold = Math.max(0, ...style.transitionDuration.split(',').map((d, i) => toMs(d) + toMs(delays[i] || '0')));
     // Closing as another item opens, its height takes the opening one's time (below), so the content stays that long.
-    const ms = fold ? Math.max(fold, swapTime(panel)) : 0;
+    const ms = fold ? Math.max(fold, swapTime(panel, swapping.current)) : 0;
     // The panel keeps its content shown until the fold ends. CSS alone (a discrete content-visibility transition)
     // isn't enough: WebKit sometimes drops it, and the panel lost its height at the start of the fold.
     const hold = (on: boolean) => { panel.style.contentVisibility = on ? 'visible' : ''; };
     // The height animation goes with it: one left behind made the next opening start from the open height, a snap.
-    const hide = () => { hold(false); if (grow.current) { grow.current.cancel(); grow.current = null; } if (findable) hideUntilFound(el); if (!keep) setMounted(false); };
+    const hide = () => { hold(false); if (growRef.current) { growRef.current.cancel(); growRef.current = null; } if (findable) hideUntilFound(el); if (!keep) setMounted(false); };
     if (ms) hold(true);
     if (!ms || !el.isConnected || panel.getBoundingClientRect().height === 0) { hide(); return; }
     const t = setTimeout(hide, ms);
     return () => { clearTimeout(t); hold(false); };
-  }, [open, findable, keep]);
+  }, [open, findable, keep, swapping]);
   // The height glides too (EH2, revised): the panel grows from nothing to its content's height, or shrinks to
   // nothing, over the same time as its fade (read from that transition), so what's below slides
   // instead of jumping. It's the one layout a component animates on purpose: one panel, while it moves. A press
   // mid-way turns back from the height it has. Not under reduced motion (the fade alone, and the height at once).
-  const grow = React.useRef<Animation | null>(null);
   const was = React.useRef(open);
   React.useLayoutEffect(function () {
     const panel = content.current && content.current.closest<HTMLElement>('.dk-accordion__panel');
     if (!panel || was.current === open) return;
     was.current = open;
-    const from = grow.current ? panel.getBoundingClientRect().height : open ? 0 : panel.offsetHeight;
-    if (grow.current) { grow.current.cancel(); grow.current = null; }
+    const from = growRef.current ? panel.getBoundingClientRect().height : open ? 0 : panel.offsetHeight;
+    if (growRef.current) { growRef.current.cancel(); growRef.current = null; }
     const fade = typeof panel.getAnimations === 'function' ? panel.getAnimations().find((a) => (a as CSSTransition).transitionProperty === 'opacity') : null;
     const timing = fade && fade.effect ? fade.effect.getTiming() : null;
     if (!timing || !timing.duration || reducedMotion(panel)) return;
     const to = open ? panel.offsetHeight : 0;
     if (from === to) return;
     // Closing, it slows to a stop on ease-move rather than the fade's ease-exit, which would end what's below at full speed.
-    const swap = swapTime(panel);
+    const swap = swapTime(panel, swapping.current);
     const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue(swap ? '--ease-enter' : '--ease-move').trim() || timing.easing;
-    grow.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
-    grow.current.id = 'dk-accordion-height';
-    if (open) grow.current.onfinish = () => { grow.current = null; };
-  }, [open]);
-  React.useEffect(() => () => { if (grow.current) grow.current.cancel(); }, []);
+    growRef.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
+    growRef.current.id = 'dk-accordion-height';
+    if (open) growRef.current.onfinish = () => { growRef.current = null; };
+  }, [open, swapping]);
+  React.useEffect(() => () => { if (growRef.current) growRef.current.cancel(); }, []);
   React.useEffect(function () {
     const el = content.current;
     if (!el) return;
@@ -199,7 +200,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     el.addEventListener('beforematch', onMatch);
     el.addEventListener('invalid', revealInvalid, true);   // a required field in it, on submit, opens it (L8E99)
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
-  }, []);
+  }, [toggle]);
   return (
     <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('dk-accordion__item', open && 'dk-accordion__item--open', props.disabled && 'dk-accordion__item--disabled', props.className)}>
       <H className="dk-accordion__heading">
