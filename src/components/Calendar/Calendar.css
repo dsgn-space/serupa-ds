@@ -69,7 +69,7 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 @media (hover: hover) { .dk-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
 .dk-calendar__period--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .dk-calendar__period--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.dk-calendar__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.dk-calendar__period--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* weekNumbers: a narrow column of week numbers before the days, which take its width off their share of a narrow screen. */
 .dk-calendar--weeks { --dk-cal-weeks: var(--calendar-week-width, var(--spacing-7)); }
 .dk-calendar__grid .dk-calendar__week { width: var(--dk-cal-weeks); color: var(--calendar-week-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; text-align: center; }
