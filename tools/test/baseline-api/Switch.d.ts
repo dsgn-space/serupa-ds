@@ -8,6 +8,8 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     readOnly?: boolean | undefined;
     loading?: boolean | undefined;
     icon?: boolean | undefined;
-    onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+    onCheckedChange?: ((checked: boolean, details: {
+        event: React.ChangeEvent<HTMLInputElement>;
+    }) => void) | undefined;
 }
 declare const Switch: React.FC<SwitchProps & React.RefAttributes<HTMLInputElement>>;

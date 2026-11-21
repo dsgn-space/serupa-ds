@@ -81,7 +81,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
       </div>
       <footer className="border-t border-border p-6 text-sm text-text-muted">© 2026 Acme</footer>
       {adaptive ? (
-        <BottomNav label="Workspace">
+        <BottomNav aria-label="Workspace">
           <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
           <BottomNavLink href="#workspace-projects" icon="folder">Projects</BottomNavLink>
           <BottomNavLink href="#team" icon="group">Team</BottomNavLink>

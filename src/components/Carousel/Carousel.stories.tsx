@@ -16,7 +16,7 @@ const PICS = [
 const meta = {
   title: 'Components/Content/Carousel',
   component: Carousel,
-  args: { label: 'Landscape photos', loop: false, arrows: true, dots: true },
+  args: { 'aria-label': 'Landscape photos', loop: false, arrows: true, dots: true },
   render: (args) => <div style={{ maxWidth: 480 }}><Carousel {...args}>{PICS.map((p) => <Image key={p.alt} {...p} alt={p.alt} ratio="4:3" rounded={false} />)}</Carousel></div>,
 } satisfies Meta<typeof Carousel>;
 export default meta;
@@ -34,14 +34,14 @@ export const Controlled: Story = {
   },
 };
 export const Cards: Story = {
-  args: { label: 'Plans', arrows: false },
+  args: { 'aria-label': 'Plans', arrows: false },
   render: (args) => <div style={{ maxWidth: 360 }}><Carousel {...args}>
     {['Starter', 'Team', 'Business'].map((n) => <Card key={n}><CardBody><strong>{n}</strong><p>Everything in the plan before, and more.</p></CardBody></Card>)}
   </Carousel></div>,
 };
 /** perView: three cards side by side from 1024px up, two from 768px, one on a phone; the dots count pages. */
 export const PerView: Story = {
-  args: { label: 'Products', perView: { base: 1, md: 2, lg: 3 } },
+  args: { 'aria-label': 'Products', perView: { base: 1, md: 2, lg: 3 } },
   render: (args) => <Carousel {...args}>
     {['Desk', 'Chair', 'Lamp', 'Shelf', 'Rug', 'Plant', 'Clock'].map((n) => <Card key={n}><CardBody><strong>{n}</strong><p>Ships in two days.</p></CardBody></Card>)}
   </Carousel>,
@@ -49,7 +49,7 @@ export const PerView: Story = {
 
 /** peek: the edge of the next card shows at the end, so people can tell there's more to swipe to. */
 export const Peek: Story = {
-  args: { label: 'Products', peek: true, arrows: false },
+  args: { 'aria-label': 'Products', peek: true, arrows: false },
   render: (args) => <div style={{ maxWidth: 360 }}><Carousel {...args}>
     {['Desk', 'Chair', 'Lamp', 'Shelf'].map((n) => <Card key={n}><CardBody><strong>{n}</strong><p>Ships in two days.</p></CardBody></Card>)}
   </Carousel></div>,
@@ -58,7 +58,7 @@ export const Peek: Story = {
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>
-      <Carousel {...args} label="Customer stories from every region we work in">
+      <Carousel {...args} aria-label="Customer stories from every region we work in">
         <Card><CardBody>Our team cut its release time in half, and Donaudampfschifffahrtsgesellschaftskapitänskajüte now ships every week.</CardBody></Card>
         <Card><CardBody>A second slide with a much longer quote that wraps over several lines in a narrow column.</CardBody></Card>
       </Carousel>

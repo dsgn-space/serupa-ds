@@ -123,7 +123,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
               </div>
             )}
           </Card>
-          <Accordion type="multiple" value={open} onValueChange={setOpen} headingLevel={2} variant="card">
+          <Accordion selectionMode="multiple" value={open} onValueChange={setOpen} headingLevel={2} variant="card">
             {modules.map((m, mi) => {
               const d = m.lessons.filter((l) => done.includes(l.id)).length;
               return (

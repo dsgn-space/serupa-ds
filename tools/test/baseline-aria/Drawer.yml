@@ -35,9 +35,6 @@
 # Large
 - button "Project details"
 
-# Left
-- button "Menu"
-
 # LongText
 - button "Release notes"
 
@@ -49,6 +46,9 @@
 
 # Small
 - button "Open filters"
+
+# Start
+- button "Menu"
 
 # StaysOpenOnBackdropPress
 - button "Open filters"

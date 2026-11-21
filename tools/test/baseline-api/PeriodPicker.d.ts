@@ -10,9 +10,11 @@ interface PeriodPickerProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEl
     unit?: PeriodUnit | undefined;
     value?: null | string | undefined;
     defaultValue?: null | string | undefined;
-    onValueChange?: ((value: string, range: {
-        start: Date;
-        end: Date;
+    onValueChange?: ((value: string, details: {
+        range: {
+            start: Date;
+            end: Date;
+        };
     }) => void) | undefined;
     min?: string | undefined;
     max?: string | undefined;

@@ -167,11 +167,14 @@ One idea has one name in every component. A new prop takes the name in the first
 | A composite's value | `value`, `defaultValue`, `onValueChange(value, details?)` | `onChange` (only a native wrapper keeps it), `onSelect` for a value |
 | An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
 | Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
-| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
+| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'`; a side panel's edge is `start` or `end`, which follow the reading | `position`, `side`, or a name that ends in them (`labelPosition`); `left`, `right` for an edge |
 | What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color; `default` for neutral |
 | The current page or item | `current` (it sets `aria-current`) | `active`, `selected` for a page |
 | An icon at the start or end of a label | `startIcon`, `endIcon` (they mirror in right-to-left text) | `leftIcon`, `rightIcon` |
 | A callback's second argument | a details object: `{ iso }`, `{ event }`, `{ reason }`, `{ page }` | a bare event, string or number |
+| One item or many | `selectionMode`: `'single' \| 'multiple'` (and `'none'` where nothing is picked), with `selected`, `onSelectedChange` for picked rows or `value` for a composite's value | `type`, `multiple` (Combobox keeps `multiple`, as the native `<select multiple>` does) |
+| A landmark's or a group's name for screen readers | `aria-label` (or `aria-labelledby`) | `label`, which is shown text |
+| Data or children | children for parts people compose (RadioGroup, Tabs, Timeline); an array prop (`options` of `{ value, label }`, `items` of `{ id, label }`) for data the component lays out itself (SegmentedControl, Stepper, TagGroup) | mixing both for one job |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
 | Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |

@@ -132,7 +132,7 @@ export function Faq({ groups, headingLevel = 2, searchable, contact, defaultOpen
       {count === 0 ? <p className="m-0">{w.noMatch(q)}</p> : shown.map((g) => (
         <div key={g.id} className="flex flex-col gap-2">
           {g.title ? <Heading level={level} size="lg" id={`${id}-${g.id}`}>{g.title}</Heading> : null}
-          <Accordion type="multiple" value={open} onValueChange={setOpen} headingLevel={titled ? (level + 1) as 4 | 5 : level}>
+          <Accordion selectionMode="multiple" value={open} onValueChange={setOpen} headingLevel={titled ? (level + 1) as 4 | 5 : level}>
             {g.questions.map((x) => (
               <AccordionItem key={x.id} id={x.id} value={x.id} title={<Highlight query={terms(q)} words>{x.question}</Highlight>}>
                 {typeof x.answer === 'string' ? <p className="m-0">{x.answer}</p> : x.answer}

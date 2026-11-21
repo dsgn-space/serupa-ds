@@ -287,7 +287,7 @@ describe('List loading (GR316)', () => {
     function Lists(props: { loading: boolean }) {
       return <div style={{ width: '400px' }}>{CASES.map((c) => (
         <List key={c.id} id={c.id} loading={props.loading} aria-label={c.id}>
-          {props.loading ? <ListLoadingItems rows={2} description={c.description} leading={c.leading} label={'Loading ' + c.id} />
+          {props.loading ? <ListLoadingItems rows={2} showDescription={c.description} leading={c.leading} label={'Loading ' + c.id} />
             : <ListItem title="Ada Lovelace" description={c.description ? 'Admin' : undefined}
               leading={c.leading === 'icon' ? 'person' : c.leading ? <Avatar name="Ada Lovelace" size={c.leading} /> : undefined} />}
         </List>

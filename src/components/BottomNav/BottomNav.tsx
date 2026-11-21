@@ -9,7 +9,7 @@ import { TruncatedText } from '../TruncatedText/TruncatedText';
 
 export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
   /** The navigation's name for screen readers ("Main"), so it's told apart from the Navbar and other landmarks. */
-  label: string;
+  'aria-label': string;
   /** From which width up it hides, when the Navbar or a Sidebar takes over: 'sm' (640px), 'md' (768px, the
    *  default, where Navbar shows its links), 'lg' (1024px), or false to show it at every width. */
   hideFrom?: 'sm' | 'md' | 'lg' | false | undefined;
@@ -18,12 +18,12 @@ export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes<HTMLElement>) {
-  const { className, label, hideFrom = 'md', children, ...rest } = props;
+  const { className, hideFrom = 'md', children, ...rest } = props;
   const hide = hideFrom ? `srp-bottom-nav--hide-${hideFrom}` : 'srp-bottom-nav--always';
   return (
     <>
       <div className={cn('srp-bottom-nav__spacer', hide)} aria-hidden="true" />
-      <nav {...rest} ref={ref} aria-label={label} className={cn('srp-bottom-nav', hide, className)} data-component="bottom-nav">
+      <nav {...rest} ref={ref} className={cn('srp-bottom-nav', hide, className)} data-component="bottom-nav">
         <ul className="srp-bottom-nav__list">{React.Children.map(children, (c) => (c == null || c === false ? null : <li className="srp-bottom-nav__item">{c}</li>))}</ul>
       </nav>
     </>

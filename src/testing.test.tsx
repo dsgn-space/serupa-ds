@@ -154,7 +154,7 @@ describe('table()', () => {
     return (
       <Table>
         <TableHead><TableRow>
-          <TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : PEOPLE.map((p) => p.name))} />
+          <TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : PEOPLE.map((p) => p.name))} />
           <TableHeaderCell>Name</TableHeaderCell>
           <TableHeaderCell align="end" sort={sort} onSort={() => setSort(sort === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell>
         </TableRow></TableHead>

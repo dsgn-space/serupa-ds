@@ -471,18 +471,18 @@ export const TRANSFORMS = [
     // It changes what code means, not a name, so it edits only when --from says the code was written for an earlier
     // major; without --from, code may be 17.0.0's already, and each Accordion with no type is listed to check instead.
     version: '17.0.0', id: 'accordion-type-single', exts: CODE, withFrom: true,
-    title: 'Accordion: `type` is `"multiple"` by default; one written without a type gets `type="single"`, so it stays one open at a time',
+    title: 'Accordion: `selectionMode` (16.x `type`) is `"multiple"` by default; one written without one gets `selectionMode="single"`, so it stays one open at a time',
     run(src, file, listOnly = false) {
       if (!/\bAccordion\b/.test(src)) return { text: src, count: 0, notes: [] };
       let count = 0;
       const notes = [];
       for (const [s, e] of openTags(src, 'Accordion').reverse()) {
         const mask = topLevel(src.slice(s, e));
-        if (attrAt('type').test(mask)) continue;
+        if (attrAt('type').test(mask) || attrAt('selectionMode').test(mask)) continue;
         // Props spread in may carry a type: leave the tag, and say where to look.
-        if (listOnly) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with no `type`: it is `"multiple"` by default from 17.0.0; add type="single" if it should stay one open at a time (or run with --from)' }); continue; }
-        if (/\{\s*\.\.\./.test(src.slice(s, e))) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with spread props and no `type`: it is `"multiple"` by default now; add type="single" if the spread doesn\'t set one and it should stay one open at a time' }); continue; }
-        src = src.slice(0, s) + ' type="single"' + src.slice(s);
+        if (listOnly) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with no `selectionMode`: it is `"multiple"` by default from 17.0.0; add selectionMode="single" if it should stay one open at a time (or run with --from)' }); continue; }
+        if (/\{\s*\.\.\./.test(src.slice(s, e))) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with spread props and no `selectionMode`: it is `"multiple"` by default now; add selectionMode="single" if the spread doesn\'t set one and it should stay one open at a time' }); continue; }
+        src = src.slice(0, s) + ' selectionMode="single"' + src.slice(s);
         count++;
       }
       return { text: src, count, notes };
@@ -544,6 +544,28 @@ export const TRANSFORMS = [
     version: '17.0.0', id: 'text-tone-neutral', exts: CODE,
     title: 'Text: `tone="default"` is `tone="neutral"`, the name every other tone uses',
     run: (src) => (/\bText\b/.test(src) ? { ...renameValue(src, 'Text', 'tone', 'default', 'neutral'), notes: [] } : { text: src, count: 0, notes: [] }),
+  },
+  propsRename('17.0.0', 'selection-mode', 'Accordion and ToggleGroup say one or many with `selectionMode`, as List, TagGroup and TreeView do: `type` is `selectionMode`',
+    ['Accordion', 'ToggleGroup'], [['type', 'selectionMode']], { leftovers: false }),
+  propsRename('17.0.0', 'group-aria-label', 'BottomNav, Carousel, Toaster and AvatarGroup take their name for screen readers as `aria-label`, as every other landmark and group does: `label` is `aria-label`',
+    ['BottomNav', 'Carousel', 'Toaster', 'AvatarGroup'], [['label', 'aria-label']], { leftovers: false }),
+  propsRename('17.0.0', 'switch-label-placement', 'Switch: `labelPosition` is `labelPlacement`, the word every other side or edge uses',
+    ['Switch'], [['labelPosition', 'labelPlacement']]),
+  propsRename('17.0.0', 'mention-trigger-char', 'MentionInput: `trigger` is `triggerChar`, since `trigger` is the element that opens a Menu, Popover or HoverCard',
+    ['MentionInput'], [['trigger', 'triggerChar']], { leftovers: false }),
+  propsRename('17.0.0', 'table-cell-in-header', 'TableSelectCell and TableExpandCell: `header` is `inHeader`, since `header` is content on Sidebar',
+    ['TableSelectCell', 'TableExpandCell'], [['header', 'inHeader']], { leftovers: false }),
+  propsRename('17.0.0', 'list-loading-show-description', 'ListLoadingItems: `description` is `showDescription`, since `description` is text everywhere else',
+    ['ListLoadingItems'], [['description', 'showDescription']], { leftovers: false }),
+  {
+    version: '17.0.0', id: 'drawer-start-end', exts: CODE,
+    title: 'Drawer: `placement` is `start`, `end`, `top` or `bottom`; `left` is `start` and `right` is `end`, which follow the reading direction',
+    run(src) {
+      if (!/\bDrawer\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const a = renameValue(src, 'Drawer', 'placement', 'left', 'start');
+      const b = renameValue(a.text, 'Drawer', 'placement', 'right', 'end');
+      return { text: b.text, count: a.count + b.count, notes: [] };
+    },
   },
 ];
 

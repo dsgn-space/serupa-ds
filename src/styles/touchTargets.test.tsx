@@ -199,7 +199,7 @@ describe('touch-sized buttons', () => {
 function Rows() {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
     <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
-    <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
+    <Carousel aria-label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
   </div>;
 }
 const rows = () => {

@@ -41,7 +41,7 @@ CONTENT['Unsaved filters'] = CONTENT.Filters!;
 const meta = {
   title: 'Components/Overlays/Drawer',
   component: Drawer,
-  args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', placement: 'right', size: 'md' },
+  args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', placement: 'end', size: 'md' },
   argTypes: { placement: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom', 'start', 'end'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: function Render(args: DrawerProps) {
     const [open, setOpen] = React.useState(false);
@@ -59,7 +59,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
-export const Left: Story = { args: { placement: 'left', size: 'sm', title: 'Menu', description: undefined } };
+export const Start: Story = { args: { placement: 'start', size: 'sm', title: 'Menu', description: undefined } };
 export const Bottom: Story = { args: { placement: 'bottom', title: 'Share', description: 'Anyone with the link can view.' } };
 // A sheet that stops at 40% and 90% of the screen: pull it up by its handle or header, or press the handle.
 export const BottomSheet: Story = { args: { placement: 'bottom', title: 'Nearby', description: 'Cafés within a 10-minute walk.', snapPoints: [0.4, 0.9] } };

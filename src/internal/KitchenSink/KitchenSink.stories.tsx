@@ -41,7 +41,7 @@ function Sink() {
           <Text tone="muted">Website redesign, due 30 November. <Link href="#">Project brief</Link></Text>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <AvatarGroup label="Members" max={3}>
+          <AvatarGroup aria-label="Members" max={3}>
             <Avatar name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Alan Turing" /><Avatar name="Katherine Johnson" />
           </AvatarGroup>
           <ButtonGroup aria-label="Share">
@@ -80,7 +80,7 @@ function Sink() {
           <Table caption="Team members">
             <TableHead>
               <TableRow>
-                <TableSelectCell header label="Select all rows" checked={picked.size === people.length} indeterminate={picked.size > 0 && picked.size < people.length}
+                <TableSelectCell inHeader label="Select all rows" checked={picked.size === people.length} indeterminate={picked.size > 0 && picked.size < people.length}
                   onChange={() => setPicked(picked.size === people.length ? new Set() : new Set(people.map((p) => p.id)))} />
                 <TableHeaderCell>Name</TableHeaderCell>
                 <TableHeaderCell>Role</TableHeaderCell>

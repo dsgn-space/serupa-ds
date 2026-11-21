@@ -11,12 +11,16 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     variant?: "card" | "plain" | undefined;
     readOnly?: boolean | undefined;
     selectAll?: boolean | undefined;
-    onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+    onCheckedChange?: ((checked: boolean, details: {
+        event: React.ChangeEvent<HTMLInputElement>;
+    }) => void) | undefined;
 }
 interface CheckboxGroupProps<V extends number | string = number | string> extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue"> {
     value?: readonly V[] | undefined;
     defaultValue?: readonly V[] | undefined;
-    onValueChange?: ((value: V[], event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+    onValueChange?: ((value: V[], details: {
+        event: React.ChangeEvent<HTMLInputElement>;
+    }) => void) | undefined;
     name?: string | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
     size?: "lg" | "md" | "sm" | undefined;

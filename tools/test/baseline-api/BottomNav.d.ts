@@ -7,7 +7,7 @@ interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
 declare const BottomNav: React.FC<BottomNavProps & React.RefAttributes<HTMLElement>>;
 interface BottomNavLinkOwnProps {
     icon: IconSource;
-    active?: boolean | undefined;
+    current?: boolean | undefined;
     children: React.ReactNode;
     badge?: React.ReactNode | undefined;
 }

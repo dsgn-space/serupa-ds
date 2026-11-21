@@ -12,7 +12,7 @@ import { Switch } from '@diki-stwn/serupa-ds';
 <Switch defaultChecked description="Pause notifications from 10 pm to 7 am.">Quiet hours</Switch>
 
 // a settings list: the label first, the switch at the end of the row
-<Switch labelPosition="start" className="w-full justify-between">Autoplay videos</Switch>
+<Switch labelPlacement="start" className="w-full justify-between">Autoplay videos</Switch>
 
 // no visible label
 <Switch aria-label="Enable rule" />
@@ -92,7 +92,7 @@ The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle ta
 | `children` | node | | The label. Without one, give the switch an `aria-label` |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | A 28×16px track and 12px thumb with `text-xs`; 36×20 and 16 with `text-sm`; 44×24 and 20 with `text-base` |
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
-| `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
+| `labelPlacement` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
 | `invalid` | boolean | `false` | A 2px danger edge on the track (on or off), a danger focus ring, and `aria-invalid` |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't flip it; an on switch is still submitted |
 | `icon` | boolean | `false` | A check on the thumb while on, so on and off differ by shape as well as by color; decorative, the name stays the label |

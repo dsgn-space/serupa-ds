@@ -64,13 +64,13 @@ describe('AvatarGroup', () => {
   });
 
   test('the "+N" avatar is named in the provider\'s words: "2 lainnya" under id-ID', async () => {
-    await render(<SerupaProvider locale="id-ID" labels={idLabels}><AvatarGroup label="Tim" max={3}>{av(5)}</AvatarGroup></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><AvatarGroup aria-label="Tim" max={3}>{av(5)}</AvatarGroup></SerupaProvider>);
     expect(document.querySelector(MORE)!.getAttribute('aria-label')).toBe('2 lainnya');
   });
 
   test('a role="group" <div> named by label, with each avatar keeping its own name; no "+N" when all fit; ref, className and props reach it', async () => {
     const r = React.createRef<HTMLDivElement>();
-    await render(<AvatarGroup id="all" label="Assigned to" ref={r} className="extra" data-x="y">{av(3)}</AvatarGroup>);
+    await render(<AvatarGroup id="all" aria-label="Assigned to" ref={r} className="extra" data-x="y">{av(3)}</AvatarGroup>);
     const g = el('all'), a = kids(g).map((i) => i.querySelector(AV)!);
     expect([g.tagName, g.getAttribute('role'), g.getAttribute('aria-label'), a.length, a.map((e) => e.getAttribute('aria-label')).join('|'), !!more('all'), r.current === g, g.dataset.x, g.dataset.component])
       .toEqual(['DIV', 'group', 'Assigned to', 3, 'Ada Lovelace|Grace Hopper|Alan Turing', false, true, 'y', 'avatar-group']);
@@ -210,7 +210,7 @@ describe('AvatarGroup', () => {
 
   // DS1: "+N" was a span, so keyboard and touch users could never see who's behind it.
   test('showMore: "+2" is a button with the same name that Tab reaches; it opens a popover listing the hidden people by name, then "N more" for the unloaded ones', async () => {
-    await render(<><button>before</button><AvatarGroup id="sm" label="Team" max={3} total={7} showMore>{av(5)}</AvatarGroup></>, { wrapper: EnUS });
+    await render(<><button>before</button><AvatarGroup id="sm" aria-label="Team" max={3} total={7} showMore>{av(5)}</AvatarGroup></>, { wrapper: EnUS });
     const b = more('sm')!;
     expect([b.tagName, b.getAttribute('aria-label'), b.getAttribute('aria-expanded')]).toEqual(['BUTTON', '4 more', 'false']);
     await userEvent.click(document.querySelector('button')!);
@@ -271,7 +271,7 @@ describe('AvatarGroup', () => {
 describe('AvatarGroup at 320px (GR4)', () => {
   test('ten xl avatars wrap onto more lines inside the box, in a block and a grid, LTR and RTL; every line starts at the same edge', async () => {
     const names = ['Ana Lima', 'Budi Santoso', 'Chen Wei', 'Dewi Lestari', 'Eko Prasetyo', 'Fatima Zahra', 'Gita Putri', 'Hana Sato', 'Indra Wijaya', 'Joko Susilo'];
-    const group = (id: string) => <AvatarGroup id={id} size="xl" label="Reviewers">{names.map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>;
+    const group = (id: string) => <AvatarGroup id={id} size="xl" aria-label="Reviewers">{names.map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>;
     await render(<div id="gr4" style={{ width: '320px' }}>
       {group('gr4-b')}
       <div style={{ display: 'grid' }}><p id="gr4-sib">Reviewers</p>{group('gr4-g')}</div>

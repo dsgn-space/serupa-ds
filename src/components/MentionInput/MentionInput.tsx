@@ -45,7 +45,7 @@ export interface MentionInputProps extends Omit<TextareaProps, 'value' | 'defaul
   /** Called when a mention is put in. */
   onMention?: ((option: MentionOption) => void) | undefined;
   /** The character that starts a mention. Default: "@". */
-  trigger?: string | undefined;
+  triggerChar?: string | undefined;
   /** Narrows options to those whose label holds the query, ignoring case and accents. Turn it off when the app
       filters (onSearch). Default: true. */
   filter?: boolean | undefined;
@@ -122,7 +122,7 @@ function useMatching(options: readonly MentionOption[], qText: string | null, fi
 }
 
 function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttributes<HTMLTextAreaElement>) {
-  const { options, value, defaultValue, onValueChange, onSearch, onMention, trigger: triggerIn, filter: filterIn, maxOptions: maxIn, className, style, onKeyDown: onKeyDownProp, onChange: onChangeProp, onSelect: onSelectProp, onBlur: onBlurProp, ...rest } = props;
+  const { options, value, defaultValue, onValueChange, onSearch, onMention, triggerChar: triggerIn, filter: filterIn, maxOptions: maxIn, className, style, onKeyDown: onKeyDownProp, onChange: onChangeProp, onSelect: onSelectProp, onBlur: onBlurProp, ...rest } = props;
   // Defaults set here, not in the destructuring above, which the React Compiler can't take.
   const trigger = triggerIn ?? '@', filter = filterIn ?? true, maxOptions = maxIn ?? 8;
   const L = useSettings(words).labels, locale = useLocale();

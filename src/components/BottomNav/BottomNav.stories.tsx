@@ -35,7 +35,7 @@ const meta = {
   component: BottomNav,
   parameters: { layout: 'fullscreen' },
   // Stories show it at every width, so the screenshots (wider than a phone) have it; on a page it hides from 768px.
-  args: { label: 'Main', hideFrom: false },
+  args: { 'aria-label': 'Main', hideFrom: false },
   render: (args) => <Bar {...args} />,
 } satisfies Meta<typeof BottomNav>;
 export default meta;

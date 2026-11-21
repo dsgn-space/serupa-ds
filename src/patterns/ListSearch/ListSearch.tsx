@@ -192,7 +192,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
           ) : found.length ? (
             <Table caption="Projects" hideCaption>
               <TableHead><TableRow>
-                <TableSelectCell header label="Select all projects on this page" checked={all}
+                <TableSelectCell inHeader label="Select all projects on this page" checked={all}
                   indeterminate={!all && rows.some((p) => picked.includes(p.name))}
                   onChange={() => setPicked(all ? picked.filter((n) => !rows.some((p) => p.name === n)) : [...new Set([...picked, ...rows.map((p) => p.name)])])} />
                 <TableHeaderCell sort={dir('name')} onSort={() => sortBy('name')}>Name</TableHeaderCell>

@@ -86,6 +86,8 @@ const isBoolean = (p) => {
 // One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
 // the name to use instead.
 const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)', loadingText: 'loadingLabel, when the words are only said', leftIcon: 'startIcon', rightIcon: 'endIcon', active: 'current' };
+// A name that ends in one of them is held to it too: labelPosition is labelPlacement.
+const nameFor = (n) => NAME_FOR[n] ?? (/[a-z](?:Position|Side)$/.test(n) ? n.replace(/(?:Position|Side)$/, 'Placement') : undefined);
 // Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
 // the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
 const NAME_GAPS = {};
@@ -141,11 +143,11 @@ for (const name of fs.readdirSync(DIR).sort()) {
       if (key in BOOLEAN_GAPS) { booleanGaps.add(key); R.push({ name: `${name}: ${key} is still a known gap (${BOOLEAN_GAPS[key]})`, ok: wrong, detail: wrong ? '' : 'it reads in the positive now: take it out of BOOLEAN_GAPS' }); }
       else if (wrong) R.push({ name: `${name}: ${key} is named in the positive`, ok: false, detail: `name it for what it turns on or shows (CONTRIBUTING.md, API conventions): hideX to turn a part off, a part shown by default turned off with ={false}; never noX, xHidden, enabled or disableX` });
     }
-    for (const p of props.filter((q) => mine(q) && !kept(q) && q.name in NAME_FOR)) {
+    for (const p of props.filter((q) => mine(q) && !kept(q) && nameFor(q.name))) {
       const key = `${e.name}.${p.name}`;
       if (key in NAME_KEPT) { nameGaps.add(key); continue; }
       if (key in NAME_GAPS) { nameGaps.add(key); R.push({ name: `${name}: ${key} is still a known gap (${NAME_GAPS[key]})`, ok: true }); }
-      else R.push({ name: `${name}: ${key} uses the API naming table's name`, ok: false, detail: `call it ${NAME_FOR[p.name]} (CONTRIBUTING.md, API naming table)` });
+      else R.push({ name: `${name}: ${key} uses the API naming table's name`, ok: false, detail: `call it ${nameFor(p.name)} (CONTRIBUTING.md, API naming table)` });
     }
     for (const p of props.filter((q) => mine(q) && !kept(q) && /^on\w*Change$/.test(q.name))) {
       callbacks++;

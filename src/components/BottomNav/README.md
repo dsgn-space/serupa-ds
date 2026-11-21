@@ -7,7 +7,7 @@ A bar of three to five main destinations fixed along the bottom of a phone scree
 ```tsx
 import { BottomNav, BottomNavLink } from "@diki-stwn/serupa-ds";
 
-<BottomNav label="Main">
+<BottomNav aria-label="Main">
   <BottomNavLink href="/" icon="home">Home</BottomNavLink>
   <BottomNavLink href="/inbox" icon="inbox" current>Inbox</BottomNavLink>
   <BottomNavLink as={RouterLink} to="/account" icon="person">Account</BottomNavLink>
@@ -66,7 +66,7 @@ Drawn from the `WithBadges` story.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `label` | `string` | | The landmark's name ("Main") |
+| `aria-label` | `string` | | The landmark's name ("Main") |
 | `hideFrom` | `'sm'` \| `'md'` \| `'lg'` \| `false` | `'md'` | The width from which it hides |
 | `children` | `ReactNode` | | Three to five BottomNavLink |
 | `id` | string | none | Goes to the `<nav>`. |
