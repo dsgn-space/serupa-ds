@@ -3,9 +3,17 @@ name: Runner ping
 # Run this once after bringing the project's x86 machines up (design-system/ibm-burst-runner-github/up.sh). CI,
 # Nightly, Cross-browser and Update baselines send x86 jobs to the machines only while a self-hosted runner has started
 # a job in the last 100 minutes (tools/runner-watch.mjs --pick), so new machines get no work until one does. This job
-# is that start: a few seconds on one runner.
+# is that start: a few seconds on one runner. It also runs every hour: with the burst VM kept on (IDLE_HOURS=24), a
+# quiet afternoon otherwise let the 100 minutes lapse, and every run after it went to GitHub's runners while the
+# machines sat idle (21 November, 13:00 to 14:30 UTC). When the machines are gone the ping just waits; one waits at a time.
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+
+concurrency:
+  group: runner-ping
+  cancel-in-progress: true
 
 permissions: {}
 
