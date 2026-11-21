@@ -34,10 +34,10 @@ import { Alert, Button } from '@diki-stwn/serupa-ds';
 
 Drawn from the `LongText` story.
 
-1. **Icon** (`.dk-alert__icon`): shows the tone (info, success, warning, danger) beside the words, never instead of them.
-2. **Title** (`.dk-alert__title`): the short summary, read first.
-3. **Message** (`.dk-alert__message`): what happened and what to do next.
-4. **Dismiss** (`.dk-alert__dismiss`): closes the alert, when it can be closed.
+1. **Icon** (`.srp-alert__icon`): shows the tone (info, success, warning, danger) beside the words, never instead of them.
+2. **Title** (`.srp-alert__title`): the short summary, read first.
+3. **Message** (`.srp-alert__message`): what happened and what to do next.
+4. **Dismiss** (`.srp-alert__dismiss`): closes the alert, when it can be closed.
 
 ## Usage
 

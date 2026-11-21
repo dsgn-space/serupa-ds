@@ -94,7 +94,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const showAs = (n: number | null) => setShown((s) => (s.value === n && s.as === locale + '|' + h12 ? s : { value: n, as: locale + '|' + h12 }));
   const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'TimePicker', !!disabled || !!readOnly);
   const [held, setActive] = React.useState(0);
-  const id = domId('dk-tp', React.useId());
+  const id = domId('srp-tp', React.useId());
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const box = React.useRef<HTMLSpanElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
@@ -137,7 +137,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + 'px'; }, [open]);
   // Closing: the times stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
   const exit = useExit(open, list);
-  useAnchoredLayer(open, list, box, { placement: 'bottom-start', offsetVar: '--dk-tp-offset', onOutside: () => setOpen(false, 'outside'), inside: box });
+  useAnchoredLayer(open, list, box, { placement: 'bottom-start', offsetVar: '--srp-tp-offset', onOutside: () => setOpen(false, 'outside'), inside: box });
   // On open, the active time sits near the top; after that, moving keeps it in view.
   const wasOpen = React.useRef(false);
   React.useEffect(() => {
@@ -181,35 +181,35 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-time-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
+    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-time-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       <input {...rest} ref={mergedRef}
-        lang={rest.lang ?? lang} dir={rest.dir ?? dir} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
+        lang={rest.lang ?? lang} dir={rest.dir ?? dir} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
           setText(e.target.value); setRejected('');
           if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
-      <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
+      <button type="button" tabIndex={-1} className="srp-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
         onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false, 'trigger'); else show(); if (field.current) field.current.focus(); }}>
         <Icon icon={CLOCK} />
       </button>
       {/* The format to type, read after the field's name (a placeholder is gone once something is typed). */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(timePattern(locale, h12))}</span>
       {name ? <input type="hidden" name={name} form={rest.form} value={value == null ? '' : toHHmm(value)} disabled={disabled} /> : null}
-      <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-time-picker__list">
+      <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-time-picker__list">
         {open || exit.leaving ? times.map((n, i) => (
           <li key={n} id={`${id}-${i}`} lang={lang} role="option" aria-selected={n === value} data-value={toHHmm(n)}
-            className={cn('dk-time-picker__option', i === active && 'dk-time-picker__option--active', n === value && 'dk-time-picker__option--selected')}
+            className={cn('srp-time-picker__option', i === active && 'srp-time-picker__option--active', n === value && 'srp-time-picker__option--selected')}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
-            <span className="dk-time-picker__time">{dir ? <span dir={dir}>{fmt(n)}</span> : fmt(n)}</span>
-            {n === value ? <Icon icon={icons.Check} className="dk-time-picker__check" /> : null}
+            <span className="srp-time-picker__time">{dir ? <span dir={dir}>{fmt(n)}</span> : fmt(n)}</span>
+            {n === value ? <Icon icon={icons.Check} className="srp-time-picker__check" /> : null}
           </li>
         )) : null}
       </ul>
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
-      {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+      {rejected && <span id={id + '-rejected'} className="srp-input-rejected">{rejected}</span>}
     </>
   );
 }

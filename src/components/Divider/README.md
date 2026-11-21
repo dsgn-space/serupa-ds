@@ -31,8 +31,8 @@ import { Divider, Stack } from '@diki-stwn/serupa-ds';
 
 Drawn from the `LongLabel` story.
 
-1. **Line** (`.dk-divider`): separates two groups of content.
-2. **Label** (`.dk-divider__label`): optional words in the line that name the group after it.
+1. **Line** (`.srp-divider`): separates two groups of content.
+2. **Label** (`.srp-divider__label`): optional words in the line that name the group after it.
 
 ## Usage
 

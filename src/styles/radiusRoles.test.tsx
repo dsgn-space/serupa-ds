@@ -9,7 +9,7 @@ function componentRules(): CSSStyleRule[] {
   const out: CSSStyleRule[] = [];
   const walk = (rules: CSSRuleList, inComponents: boolean) => {
     for (const r of rules) {
-      const here = inComponents || (r instanceof CSSLayerBlockRule && r.name === 'dk.components');
+      const here = inComponents || (r instanceof CSSLayerBlockRule && r.name === 'srp.components');
       if (r instanceof CSSStyleRule && here) out.push(r);
       if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules, here);
     }
@@ -28,7 +28,7 @@ test('no component corner names a step of the rounded scale', () => {
 test('a brand that rounds controls and surfaces more reaches CodeBlock, ErrorSummary and OfflineBanner', () => {
   const host = document.body.appendChild(document.createElement('div'));
   host.style.cssText = '--radius-control: 13px; --radius-surface: 17px;';
-  host.innerHTML = '<div class="dk-code-block" id="rr-code"></div><div class="dk-error-summary" id="rr-err"></div><div class="dk-offline-banner" id="rr-off"></div>';
+  host.innerHTML = '<div class="srp-code-block" id="rr-code"></div><div class="srp-error-summary" id="rr-err"></div><div class="srp-offline-banner" id="rr-off"></div>';
   try {
     const r = (id: string) => getComputedStyle(document.getElementById(id)!).borderStartStartRadius;
     expect([r('rr-code'), r('rr-err'), r('rr-off')]).toEqual(['13px', '13px', '17px']);

@@ -44,9 +44,9 @@ function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLEleme
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, 'outline');
   const padding = oneOf(PADDINGS, props.padding, 'md');
-  const base = domId('dk-card', React.useId());
+  const base = domId('srp-card', React.useId());
   const isLink = props.href != null;
-  const cls = cn('dk-card', variant !== 'outline' && 'dk-card--' + variant, padding !== 'md' && 'dk-card--padding-' + padding, isLink && 'dk-card--link', props.className);
+  const cls = cn('srp-card', variant !== 'outline' && 'srp-card--' + variant, padding !== 'md' && 'srp-card--padding-' + padding, isLink && 'srp-card--link', props.className);
   const Tag = props.as === 'section' || props.as === 'article' || props.as === 'li' ? props.as : 'div';
   // A plain Card inside a link Card's content ends that card's link: its own CardHeader title stays text (L8E65).
   const inLink = React.useContext(CardLinkContext) != null;
@@ -67,7 +67,7 @@ function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLEleme
     if (e.defaultPrevented || !(t instanceof Element) || t.closest(INTERACTIVE)) return null;
     const sel = window.getSelection();
     if (sel && !sel.isCollapsed && e.currentTarget.contains(sel.anchorNode)) return null;
-    return e.currentTarget.querySelector<HTMLAnchorElement>('.dk-card__link');
+    return e.currentTarget.querySelector<HTMLAnchorElement>('.srp-card__link');
   };
   // A browser treats a click it didn't make as a plain one, so a Ctrl, Cmd or Shift click, or a middle click, would
   // navigate this tab away instead of opening another: open the other tab here (ER1). Only for a web, mailto or tel
@@ -86,7 +86,7 @@ function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLEleme
     if (a) away(a);
   };
   return <Tag {...rest} id={id} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} className={cls} data-component="card" data-variant={variant} onClick={onClick} onAuxClick={onAuxClick}>
-    {titled ? null : React.createElement(config.link, { ...link, className: 'dk-card__link dk-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' })}
+    {titled ? null : React.createElement(config.link, { ...link, className: 'srp-card__link srp-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' })}
     <CardLinkContext.Provider value={titled ? link : null} key="content">{props.children}</CardLinkContext.Provider></Tag>;
 }
 
@@ -112,13 +112,13 @@ function CardHeaderRender({ ref, ...props }: CardHeaderProps & React.RefAttribut
   const has = hasContent;
   const link = React.useContext(CardLinkContext);
   return (
-    <div {...rest} ref={ref} className={cn('dk-card__header', props.className)}>
-      <div className="dk-card__heading">
-        {has(props.title) ? React.createElement('h' + level, { className: 'dk-card__title' }, link ? React.createElement(config.link, { ...link, className: 'dk-card__link' }, props.title) : props.title) : null}
-        {has(props.description) ? <p className="dk-card__description">{props.description}</p> : null}
+    <div {...rest} ref={ref} className={cn('srp-card__header', props.className)}>
+      <div className="srp-card__heading">
+        {has(props.title) ? React.createElement('h' + level, { className: 'srp-card__title' }, link ? React.createElement(config.link, { ...link, className: 'srp-card__link' }, props.title) : props.title) : null}
+        {has(props.description) ? <p className="srp-card__description">{props.description}</p> : null}
         {props.children}
       </div>
-      {has(props.action) ? <div className="dk-card__action">{props.action}</div> : null}
+      {has(props.action) ? <div className="srp-card__action">{props.action}</div> : null}
     </div>
   );
 }
@@ -129,7 +129,7 @@ export const CardHeader = /* @__PURE__ */ named('CardHeader', CardHeaderRender);
 export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 function CardBodyRender({ ref, ...props }: CardBodyProps & React.RefAttributes<HTMLDivElement>) {
-  return <div {...props} ref={ref} className={cn('dk-card__body', props.className)} />;
+  return <div {...props} ref={ref} className={cn('srp-card__body', props.className)} />;
 }
 
 /** The card's main content. */
@@ -143,7 +143,7 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 function CardFooterRender({ ref, ...props }: CardFooterProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { justify: 1, className: 1 });
   const j = oneOf(['start', 'end', 'between'] as const, props.justify, 'end');
-  return <div {...rest} ref={ref} className={cn('dk-card__footer', j !== 'end' && 'dk-card__footer--' + j, props.className)} />;
+  return <div {...rest} ref={ref} className={cn('srp-card__footer', j !== 'end' && 'srp-card__footer--' + j, props.className)} />;
 }
 
 /** The card's actions, in a wrapping row at the end. */

@@ -27,11 +27,11 @@ import { TagGroup } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Label** (`.dk-tag-group__label`): names the group, above the tags.
-2. **Tags** (`.dk-tag-group__tags`): the grid, a wrapping row of tags.
-3. **Tag** (`.dk-tag-group__tag`): one tag's row.
-4. **Text** (`.dk-tag-group__text`): the tag's words, after a tick when it's picked.
-5. **Remove** (`.dk-tag-group__remove`): the × that takes the tag off, in its own cell.
+1. **Label** (`.srp-tag-group__label`): names the group, above the tags.
+2. **Tags** (`.srp-tag-group__tags`): the grid, a wrapping row of tags.
+3. **Tag** (`.srp-tag-group__tag`): one tag's row.
+4. **Text** (`.srp-tag-group__text`): the tag's words, after a tick when it's picked.
+5. **Remove** (`.srp-tag-group__remove`): the × that takes the tag off, in its own cell.
 
 Past `max`, a Show more button follows the tags; with none, the `empty` words take their place.
 

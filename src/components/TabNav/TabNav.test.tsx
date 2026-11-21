@@ -27,10 +27,10 @@ describe('TabNav', () => {
       <TabNavLink href="#b">B</TabNavLink>
     </TabNav>);
     const n = el('n');
-    expect([n.tagName, n.getAttribute('aria-label'), ref.current === n, n.className, n.dataset.x, n.dataset.component, n.dataset.variant]).toEqual(['NAV', 'Project', true, 'dk-tabs dk-tabs--line dk-tab-nav extra', 'y', 'tab-nav', 'line']);
+    expect([n.tagName, n.getAttribute('aria-label'), ref.current === n, n.className, n.dataset.x, n.dataset.component, n.dataset.variant]).toEqual(['NAV', 'Project', true, 'srp-tabs srp-tabs--line srp-tab-nav extra', 'y', 'tab-nav', 'line']);
     const links = [...n.querySelectorAll('a')];
     expect(links.map((a) => [a.parentElement!.tagName, a.getAttribute('href'), a.getAttribute('aria-current'), a.dataset.state, a.textContent])).toEqual([['LI', '#a', 'page', 'active', 'A'], ['LI', '#b', null, 'inactive', 'B']]);
-    expect([link.current === el('l1'), el('l1').className, n.querySelector('ul')!.parentElement === n]).toEqual([true, 'dk-tabs__tab mine', true]);
+    expect([link.current === el('l1'), el('l1').className, n.querySelector('ul')!.parentElement === n]).toEqual([true, 'srp-tabs__tab mine', true]);
     // Links, not tabs: no tablist roles, and the list is still read as a list.
     expect([n.querySelector('[role="tab"], [role="tablist"]'), css(n.querySelector('ul')).listStyleType, css(n.querySelector('ul')).margin]).toEqual([null, 'none', '0px']);
   });
@@ -52,7 +52,7 @@ describe('TabNav', () => {
         .toEqual([b.offsetHeight, css(b).fontSize, css(b).color, getComputedStyle(b, '::after').backgroundColor, getComputedStyle(b, '::after').height, css(other('t-' + s)).color, 'none']);
     }
     expect([css(current('np')).color, getComputedStyle(current('np'), '::before').backgroundColor]).toEqual([css(sel('tp')).color, getComputedStyle(sel('tp'), '::before').backgroundColor]);
-    expect([el('n-lg').className.includes('dk-tabs--lg'), current('n-lg').offsetHeight]).toEqual([true, 44]);
+    expect([el('n-lg').className.includes('srp-tabs--lg'), current('n-lg').offsetHeight]).toEqual([true, 44]);
     still.remove();
   });
 
@@ -92,7 +92,7 @@ describe('TabNav', () => {
     const Router = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }>(function Router({ to, ...p }, r) { return <a {...p} ref={r} href={to} data-router="" />; });
     await render(<TabNav id="r" aria-label="R" variant={'boxed' as never} size={'xl' as never}><TabNavLink as={Router} to="/x" current>X</TabNavLink></TabNav>);
     const a = current('r');
-    expect([a.dataset.router, a.getAttribute('href'), a.className, el('r').dataset.variant, el('r').className]).toEqual(['', '/x', 'dk-tabs__tab', 'line', 'dk-tabs dk-tabs--line dk-tab-nav']);
+    expect([a.dataset.router, a.getAttribute('href'), a.className, el('r').dataset.variant, el('r').className]).toEqual(['', '/x', 'srp-tabs__tab', 'line', 'srp-tabs srp-tabs--line srp-tab-nav']);
   });
 
   test('overflow: in 300px the current link is scrolled into view and the edge with more links fades; when the current page changes, the new one is scrolled into view', async () => {

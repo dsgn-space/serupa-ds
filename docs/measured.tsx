@@ -100,7 +100,7 @@ function withoutNot(sel: string): string {
 // the forced-colors ones), and any rule that draws in a ring colour, with what they draw with and whether they read
 // the focus-ring tokens or a literal.
 // The style rules a focus ring can come from, read once for every component on the page (read again only when a
-// style sheet is added): each with its selector, :not() taken out, and the dk- classes it names, so a component
+// style sheet is added): each with its selector, :not() taken out, and the srp- classes it names, so a component
 // looks its own up in a set. Read per component, with a pattern built for each class against each rule, the page
 // was part of the 42 s the page took to open in WebKit (16 Nov).
 type FocusRule = { style: CSSStyleDeclaration; sel: string; classes: string[] };
@@ -113,8 +113,8 @@ function readFocusRules(): FocusRule[] {
       if (r instanceof CSSMediaRule && /forced-colors/.test(r.conditionText)) continue;
       if (r instanceof CSSStyleRule) {
         const sel = withoutNot(r.selectorText);
-        // A class, and the block a modifier belongs to (.dk-btn--primary is the button's too).
-        const classes = [...sel.matchAll(/\.(dk-[\w-]+)/g)].flatMap((m) => [m[1]!, m[1]!.split('--')[0]!]);
+        // A class, and the block a modifier belongs to (.srp-btn--primary is the button's too).
+        const classes = [...sel.matchAll(/\.(srp-[\w-]+)/g)].flatMap((m) => [m[1]!, m[1]!.split('--')[0]!]);
         if (classes.length) list.push({ style: r.style, sel, classes });
       }
       if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules);
@@ -127,7 +127,7 @@ function readFocusRules(): FocusRule[] {
   return list;
 }
 function focusRing(root: Element): string {
-  const classes = new Set([root, ...root.querySelectorAll('*')].flatMap((e) => [...e.classList].filter((c) => c.startsWith('dk-'))));
+  const classes = new Set([root, ...root.querySelectorAll('*')].flatMap((e) => [...e.classList].filter((c) => c.startsWith('srp-'))));
   const found: string[] = [];
   for (const r of readFocusRules()) {
     if (!r.classes.some((c) => classes.has(c))) continue;

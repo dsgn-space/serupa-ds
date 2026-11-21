@@ -26,8 +26,8 @@ import { ShowMore } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Expanded` story.
 
-1. **Text** (`.dk-show-more__text`): the long text, cut after `lines` lines with an ellipsis while closed.
-2. **Toggle** (`.dk-show-more__toggle`): the link-style button under the text, "Show more" or "Show less"; there only when the text is cut, or open.
+1. **Text** (`.srp-show-more__text`): the long text, cut after `lines` lines with an ellipsis while closed.
+2. **Toggle** (`.srp-show-more__toggle`): the link-style button under the text, "Show more" or "Show less"; there only when the text is cut, or open.
 
 ## Usage
 

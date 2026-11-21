@@ -6,50 +6,50 @@
    with reduced motion). With perView, the slides share the width, 16px apart. Every value goes through
    --carousel-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-carousel { display: flex; flex-direction: column; gap: var(--carousel-gap, var(--spacing-3)); min-width: var(--spacing-0); }
-.dk-carousel__frame { position: relative; }
+@layer srp.components {
+.srp-carousel { display: flex; flex-direction: column; gap: var(--carousel-gap, var(--spacing-3)); min-width: var(--spacing-0); }
+.srp-carousel__frame { position: relative; }
 /* One slide per gesture (scroll-snap-stop), however hard the flick; a swipe at an end doesn't scroll the page
    sideways or go back a page (overscroll-behavior). */
-.dk-carousel__viewport {
+.srp-carousel__viewport {
   display: flex; overflow-x: auto; overflow-y: hidden; border-radius: var(--carousel-radius, var(--radius-container));
   scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
 }
-.dk-carousel__viewport::-webkit-scrollbar { display: none; }
-.dk-carousel__viewport:focus { outline: none; }
-.dk-carousel__viewport:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (forced-colors: active) { .dk-carousel__viewport:focus-visible { outline-color: Highlight; } }
-@media (prefers-reduced-motion: no-preference) { .dk-carousel__viewport { scroll-behavior: smooth; } }
+.srp-carousel__viewport::-webkit-scrollbar { display: none; }
+.srp-carousel__viewport:focus { outline: none; }
+.srp-carousel__viewport:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .srp-carousel__viewport:focus-visible { outline-color: Highlight; } }
+@media (prefers-reduced-motion: no-preference) { .srp-carousel__viewport { scroll-behavior: smooth; } }
 /* A mouse drag scrolls it by hand: no snapping until it lets go. */
-.dk-carousel__viewport[data-dragging] { scroll-snap-type: none; scroll-behavior: auto; cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
-.dk-carousel {
-  --dk-carousel-space: var(--spacing-0);
-  --dk-carousel-step: calc((var(--sizing-full) + var(--dk-carousel-space)) / var(--dk-carousel-per, 1));
+.srp-carousel__viewport[data-dragging] { scroll-snap-type: none; scroll-behavior: auto; cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
+.srp-carousel {
+  --srp-carousel-space: var(--spacing-0);
+  --srp-carousel-step: calc((var(--sizing-full) + var(--srp-carousel-space)) / var(--srp-carousel-per, 1));
 }
-.dk-carousel--multi { --dk-carousel-space: var(--carousel-slide-gap, var(--spacing-4)); }
+.srp-carousel--multi { --srp-carousel-space: var(--carousel-slide-gap, var(--spacing-4)); }
 /* peek: the slides leave the peek length at the end, where the next one shows past the gap; at the last slide the
    scroll ends with it flush at the end, so the previous one shows at the start instead of an empty edge. */
-.dk-carousel--peek { --dk-carousel-step: calc((var(--sizing-full) - var(--carousel-peek, var(--spacing-12))) / var(--dk-carousel-per, 1)); }
+.srp-carousel--peek { --srp-carousel-step: calc((var(--sizing-full) - var(--carousel-peek, var(--spacing-12))) / var(--srp-carousel-per, 1)); }
 /* perView with a breakpoint map: the count at each width comes from these media queries (the same widths as Carousel.tsx's
    matchMedia), so the server HTML is laid out for the screen before JavaScript runs. A dot past the last page at a
    width is hidden there until the dots are counted again. */
-.dk-carousel[data-per-map] { --dk-carousel-per: var(--dk-carousel-per-base); }
-@media (min-width: 640px) { .dk-carousel[data-per-map] { --dk-carousel-per: var(--dk-carousel-per-sm); } }
-@media (min-width: 768px) { .dk-carousel[data-per-map] { --dk-carousel-per: var(--dk-carousel-per-md); } }
-@media (min-width: 1024px) { .dk-carousel[data-per-map] { --dk-carousel-per: var(--dk-carousel-per-lg); } }
-@media (min-width: 640px) and (max-width: 767.98px) { .dk-carousel__dot[data-past~="sm"] { display: none; } }
-@media (min-width: 768px) and (max-width: 1023.98px) { .dk-carousel__dot[data-past~="md"] { display: none; } }
-@media (min-width: 1024px) { .dk-carousel__dot[data-past~="lg"] { display: none; } }
-.dk-carousel__track { display: flex; flex: none; inline-size: var(--sizing-full); gap: var(--dk-carousel-space); }
-.dk-carousel__slide { flex: none; inline-size: calc(var(--dk-carousel-step) - var(--dk-carousel-space)); min-width: var(--spacing-0); scroll-snap-align: start; scroll-snap-stop: always; }
-.dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--elevation-part)); }
-.dk-carousel__arrow--prev { inset-inline-start: var(--carousel-arrow-offset, var(--spacing-2)); }
-.dk-carousel__arrow--next { inset-inline-end: var(--carousel-arrow-offset, var(--spacing-2)); }
-.dk-carousel__arrow:disabled { visibility: hidden; }
-.dk-carousel__rtl, .dk-carousel[data-dir="rtl"] .dk-carousel__ltr { display: none; }
-.dk-carousel[data-dir="rtl"] .dk-carousel__rtl { display: inline-block; }
-.dk-carousel__dots { display: flex; justify-content: center; flex-wrap: wrap; }
-.dk-carousel__dot {
+.srp-carousel[data-per-map] { --srp-carousel-per: var(--srp-carousel-per-base); }
+@media (min-width: 640px) { .srp-carousel[data-per-map] { --srp-carousel-per: var(--srp-carousel-per-sm); } }
+@media (min-width: 768px) { .srp-carousel[data-per-map] { --srp-carousel-per: var(--srp-carousel-per-md); } }
+@media (min-width: 1024px) { .srp-carousel[data-per-map] { --srp-carousel-per: var(--srp-carousel-per-lg); } }
+@media (min-width: 640px) and (max-width: 767.98px) { .srp-carousel__dot[data-past~="sm"] { display: none; } }
+@media (min-width: 768px) and (max-width: 1023.98px) { .srp-carousel__dot[data-past~="md"] { display: none; } }
+@media (min-width: 1024px) { .srp-carousel__dot[data-past~="lg"] { display: none; } }
+.srp-carousel__track { display: flex; flex: none; inline-size: var(--sizing-full); gap: var(--srp-carousel-space); }
+.srp-carousel__slide { flex: none; inline-size: calc(var(--srp-carousel-step) - var(--srp-carousel-space)); min-width: var(--spacing-0); scroll-snap-align: start; scroll-snap-stop: always; }
+.srp-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--elevation-part)); }
+.srp-carousel__arrow--prev { inset-inline-start: var(--carousel-arrow-offset, var(--spacing-2)); }
+.srp-carousel__arrow--next { inset-inline-end: var(--carousel-arrow-offset, var(--spacing-2)); }
+.srp-carousel__arrow:disabled { visibility: hidden; }
+.srp-carousel__rtl, .srp-carousel[data-dir="rtl"] .srp-carousel__ltr { display: none; }
+.srp-carousel[data-dir="rtl"] .srp-carousel__rtl { display: inline-block; }
+.srp-carousel__dots { display: flex; justify-content: center; flex-wrap: wrap; }
+.srp-carousel__dot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -61,30 +61,30 @@
   background: transparent;
   cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-carousel__dot { position: relative; isolation: isolate; }
+.srp-carousel__dot { position: relative; isolation: isolate; }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so dots in a row never overlap. */
-@media (pointer: coarse) { .dk-carousel__dot::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); } }
+@media (pointer: coarse) { .srp-carousel__dot::after { --srp-under: calc(var(--z-10) * -1); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset-block: var(--srp-reach-block); inset-inline: var(--spacing-0); } }
 /* Every dot is drawn at the current one's width, centered in its 24px target, and clipped to a circle; the current
    one lets the clip go, so it widens on the compositor without moving its neighbours (FB1). A clip keeps the round
    ends round all the way, which a scaleX would stretch. */
-.dk-carousel__dot::before {
-  --dk-dot-h: var(--carousel-dot-size, var(--spacing-2));
-  --dk-dot-w: var(--carousel-dot-width-active, var(--spacing-6));
-  --dk-dot-clip: calc((var(--dk-dot-w) - var(--dk-dot-h)) / 2);
+.srp-carousel__dot::before {
+  --srp-dot-h: var(--carousel-dot-size, var(--spacing-2));
+  --srp-dot-w: var(--carousel-dot-width-active, var(--spacing-6));
+  --srp-dot-clip: calc((var(--srp-dot-w) - var(--srp-dot-h)) / 2);
   content: "";
   position: absolute; inset: var(--spacing-0); margin: auto;
-  width: var(--dk-dot-w);
-  height: var(--dk-dot-h);
+  width: var(--srp-dot-w);
+  height: var(--srp-dot-h);
   border-radius: var(--rounded-full);
   background: var(--carousel-dot, var(--border-control));
-  clip-path: inset(var(--spacing-0) var(--dk-dot-clip) round var(--rounded-full));
+  clip-path: inset(var(--spacing-0) var(--srp-dot-clip) round var(--rounded-full));
   transition: clip-path var(--motion-change-sm) var(--ease-settle);
 }
-.dk-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); }
-@media (hover: hover) { .dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--border-control-hover)); } }
-.dk-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
-.dk-carousel__dot:focus { outline: none; }
-.dk-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
-@media (prefers-reduced-motion: reduce) { .dk-carousel__dot::before { transition: none; } }
-@media (forced-colors: active) { .dk-carousel__dot::before { background: CanvasText; } .dk-carousel__dot[aria-current="true"]::before { background: Highlight; } }
+.srp-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); }
+@media (hover: hover) { .srp-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--border-control-hover)); } }
+.srp-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
+.srp-carousel__dot:focus { outline: none; }
+.srp-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
+@media (prefers-reduced-motion: reduce) { .srp-carousel__dot::before { transition: none; } }
+@media (forced-colors: active) { .srp-carousel__dot::before { background: CanvasText; } .srp-carousel__dot[aria-current="true"]::before { background: Highlight; } }
 }

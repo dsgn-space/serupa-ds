@@ -30,9 +30,9 @@ function read(host: HTMLElement): Record<string, string> {
 }
 const badge = (host: HTMLElement) => {
   const b = document.createElement('span');
-  b.className = 'dk-badge dk-badge--subtle';
+  b.className = 'srp-badge srp-badge--subtle';
   b.setAttribute('data-tone', 'red');
-  b.style.background = 'var(--dk-bdg-red-sbg)';
+  b.style.background = 'var(--srp-bdg-red-sbg)';
   host.appendChild(b);
   const c = getComputedStyle(b).backgroundColor;
   b.remove();

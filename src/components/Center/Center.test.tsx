@@ -16,7 +16,7 @@ describe('Center', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Wide><Center id="c" ref={r} className="extra" data-x="y"><div id="kid">x</div></Center></Wide>);
     const e = el('c');
-    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'dk-center dk-center--padded extra', 'center', true, 'y']);
+    expect([e.tagName, e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['DIV', 'srp-center srp-center--padded extra', 'center', true, 'y']);
     expect([box('kid').w, box('c').w, box('c').x, css(e).paddingLeft]).toEqual([448, 480, 210, '16px']);
   });
 

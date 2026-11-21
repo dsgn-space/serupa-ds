@@ -24,8 +24,8 @@ describe('long words (R31)', () => {
       <Card><CardHeader title={WORD} description={WORD} /><CardBody>{WORD}</CardBody></Card>
       <Button id="b">{WORD}</Button>
     </div>);
-    expect([...spills(q('.dk-alert'), 200), ...spills(q('.dk-alert__title'), 200)]).toEqual([false, false, false, false]);
-    expect([...spills(q('.dk-card'), 200), ...spills(q('.dk-card__title'), 200)]).toEqual([false, false, false, false]);
+    expect([...spills(q('.srp-alert'), 200), ...spills(q('.srp-alert__title'), 200)]).toEqual([false, false, false, false]);
+    expect([...spills(q('.srp-card'), 200), ...spills(q('.srp-card__title'), 200)]).toEqual([false, false, false, false]);
     const b = q('#b'), label = [...b.querySelectorAll('span')].find((s) => s.textContent === WORD) as HTMLElement;
     expect([Math.round(b.getBoundingClientRect().width) <= 200, getComputedStyle(label).textOverflow, b.textContent]).toEqual([true, 'ellipsis', WORD]);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
@@ -36,8 +36,8 @@ describe('long words (R31)', () => {
     await render(<>
       <Dialog id="d" open onOpenChange={() => {}} title={WORD} description={WORD}>{WORD}</Dialog>
     </>);
-    const panel = q('#d .dk-dialog__panel');
-    expect([panel.scrollWidth <= panel.clientWidth + 1, q('#d .dk-dialog__title').scrollWidth <= q('#d .dk-dialog__title').clientWidth + 1, panel.getBoundingClientRect().right <= 320]).toEqual([true, true, true]);
+    const panel = q('#d .srp-dialog__panel');
+    expect([panel.scrollWidth <= panel.clientWidth + 1, q('#d .srp-dialog__title').scrollWidth <= q('#d .srp-dialog__title').clientWidth + 1, panel.getBoundingClientRect().right <= 320]).toEqual([true, true, true]);
     (q('#d') as HTMLDialogElement).close();
   });
 
@@ -46,7 +46,7 @@ describe('long words (R31)', () => {
     await render(<>
       <Drawer id="w" open onOpenChange={() => {}} title={WORD}>{WORD}</Drawer>
     </>);
-    const panel = q('#w .dk-drawer__panel');
+    const panel = q('#w .srp-drawer__panel');
     expect([panel.scrollWidth <= panel.clientWidth + 1, panel.getBoundingClientRect().right <= 320]).toEqual([true, true]);
     (q('#w') as HTMLDialogElement).close();
   });
@@ -59,7 +59,7 @@ describe('long words (R31)', () => {
     </>);
     React.act(() => { toast({ title: WORD, description: WORD, duration: 0 }); });
     await expect.poll(() => !!document.querySelector('[role="menuitem"]')).toBe(true);
-    const item = q('[role="menuitem"]'), t = q('.dk-toast');
+    const item = q('[role="menuitem"]'), t = q('.srp-toast');
     expect([item.scrollWidth <= item.clientWidth + 1, item.getBoundingClientRect().right <= 320, t.scrollWidth <= t.clientWidth + 1, t.getBoundingClientRect().right <= 320]).toEqual([true, true, true, true]);
     React.act(() => toast.dismiss());
   });

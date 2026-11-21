@@ -377,7 +377,7 @@ await inParallel(opened, workers, async (p, w) => {
       wide: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelector('.site-card__stage')?.children ?? []].some((c) => { const s = c.getBoundingClientRect(); return s.width > 0 && (s.left < r.left - 1 || s.right > r.right + 1); }); }).map(name),
       over: [...document.querySelectorAll('dialog[open], :popover-open')].map((e) => e.className),
       // A bar or button a story pins to the screen's edge is pinned to its picture, and shows whole there.
-      pinned: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelectorAll('.dk-bottom-nav, .dk-fab, .dk-offline-banner')].some((e) => { const s = e.getBoundingClientRect(); return s.top < r.top - 1 || s.bottom > r.bottom + 1 || s.left < r.left - 1 || s.right > r.right + 1; }); }).map(name),
+      pinned: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelectorAll('.srp-bottom-nav, .srp-fab, .srp-offline-banner')].some((e) => { const s = e.getBoundingClientRect(); return s.top < r.top - 1 || s.bottom > r.bottom + 1 || s.left < r.left - 1 || s.right > r.right + 1; }); }).map(name),
     };
   });
   t('/components: every component card shows a preview', cards.count >= 100 && !cards.empty.length, `${cards.count} previews; none drawn in ${cards.empty.join(', ')}`);
@@ -399,11 +399,11 @@ await inParallel(opened, workers, async (p, w) => {
   const w = workers[0];
   await w.page.setViewportSize({ width: 1280, height: 720 });
   await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
-  const rail = w.page.locator('.site-aside .dk-toc--rail');
+  const rail = w.page.locator('.site-aside .srp-toc--rail');
   const hovered = await rail.hover({ timeout: 10000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
   await w.page.waitForTimeout(500);
   const panel = hovered ? null : await w.page.evaluate(() => {
-    const el = document.querySelector('.site-aside .dk-toc__panel');
+    const el = document.querySelector('.site-aside .srp-toc__panel');
     if (!el) return null;
     const r = el.getBoundingClientRect();
     return { shown: getComputedStyle(el).opacity === '1', top: r.top, bottom: r.bottom, left: r.left, right: r.right, links: el.querySelectorAll('a').length };
@@ -437,7 +437,7 @@ await inParallel(opened, workers, async (p, w) => {
   // A link in "On this page" glides to its heading: the sticky bar's own focus scroll doesn't jump there first.
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(base + '/components/button');
-  const link = page.locator('.site-aside .dk-toc__panel a').last();
+  const link = page.locator('.site-aside .srp-toc__panel a').last();
   // Down the page a screen a frame and back first: WebKit's software rendering (CI) paints each part of a long page slowly
   // the first time, which held the main thread for the whole glide, so the first frame it drew was the end (16 Nov).
   // Once painted, it glides as Chromium does. This measures the glide, not the first paint.
@@ -445,7 +445,7 @@ await inParallel(opened, workers, async (p, w) => {
     const step = () => { if (scrollY + innerHeight < document.documentElement.scrollHeight - 1) { scrollBy(0, innerHeight); requestAnimationFrame(step); } else { scrollTo(0, 0); requestAnimationFrame(() => requestAnimationFrame(done)); } };
     requestAnimationFrame(step);
   }));
-  const glide = await page.locator('.site-aside .dk-toc--rail').hover({ timeout: 15000 }).then(() => link.evaluate((a) => new Promise((done) => {
+  const glide = await page.locator('.site-aside .srp-toc--rail').hover({ timeout: 15000 }).then(() => link.evaluate((a) => new Promise((done) => {
     const ys = [], t0 = performance.now();
     const tick = () => { ys.push(Math.round(window.scrollY)); if (performance.now() - t0 < 1500) requestAnimationFrame(tick); else done(ys); };
     a.addEventListener('click', () => requestAnimationFrame(tick), { once: true });

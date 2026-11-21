@@ -2,58 +2,58 @@
    Pagination: a row of 32px (sm 24px, lg 44px with text-base) rounded squares, text-sm. Pages and arrows get a secondary background on
    hover and pressed (one step darker while held); the current page is primary with on-primary text. Arrows with nowhere to go fade to 50%.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-pagination { font-family: var(--font-sans); font-size: var(--pagination-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); --dk-pagination-size: var(--pagination-size, var(--control-height-md)); min-width: var(--spacing-0); }
-.dk-pagination--sm { --dk-pagination-size: var(--pagination-size-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-pagination--lg { --dk-pagination-size: var(--pagination-size-lg, var(--control-height-lg)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+@layer srp.components {
+.srp-pagination { font-family: var(--font-sans); font-size: var(--pagination-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); --srp-pagination-size: var(--pagination-size, var(--control-height-md)); min-width: var(--spacing-0); }
+.srp-pagination--sm { --srp-pagination-size: var(--pagination-size-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-pagination--lg { --srp-pagination-size: var(--pagination-size-lg, var(--control-height-lg)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 /* Before the script measures (server HTML, or no JavaScript) the row wraps rather than run off a narrow page; once
    it can be cut to fit (data-fit), it stays on one line (GR62). */
-.dk-pagination__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pagination-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-pagination__list[data-fit] { flex-wrap: nowrap; }
+.srp-pagination__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pagination-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-pagination__list[data-fit] { flex-wrap: nowrap; }
 /* A number never breaks across lines ("10" as 1 over 0), whatever overflow-wrap the page sets (GR62). */
-.dk-pagination__item {
+.srp-pagination__item {
   white-space: nowrap; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center;
-  min-width: var(--dk-pagination-size); height: var(--dk-pagination-size); padding: var(--spacing-0) var(--pagination-padding-x, var(--spacing-2));
+  min-width: var(--srp-pagination-size); height: var(--srp-pagination-size); padding: var(--spacing-0) var(--pagination-padding-x, var(--spacing-2));
   border: var(--spacing-0); border-radius: var(--pagination-radius, var(--radius-control)); background: transparent;
   color: var(--pagination-text, var(--text)); font: inherit; font-variant-numeric: tabular-nums; text-decoration: none; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-.dk-pagination__arrow { padding: var(--spacing-0); }
+.srp-pagination__arrow { padding: var(--spacing-0); }
 /* The arrows are the icon of an icon-only Button of the same size: 14, 16 or 20px. */
-.dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-md, var(--spacing-4)); }
+.srp-pagination__arrow .srp-icon { font-size: var(--pagination-icon-size-md, var(--spacing-4)); }
 /* 2px a side leaves 20px for the number, so the current page's two semibold digits (16.7px in DejaVu Sans, common
    on Linux where Inter isn't installed) still fit the 24px square; 4px made "88" 24.7px wide. */
-.dk-pagination--sm .dk-pagination__item:not(.dk-pagination__arrow) { padding: var(--spacing-0) var(--pagination-padding-x-sm, var(--spacing-0\.5)); }
-.dk-pagination--sm .dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-sm, var(--spacing-3\.5)); }
-.dk-pagination--lg .dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-lg, var(--spacing-5)); }
-@media (hover: hover) { .dk-pagination__item:hover:not(:disabled, [aria-disabled="true"], .dk-pagination__item--current) { background: var(--pagination-bg-hover, var(--secondary)); } }
+.srp-pagination--sm .srp-pagination__item:not(.srp-pagination__arrow) { padding: var(--spacing-0) var(--pagination-padding-x-sm, var(--spacing-0\.5)); }
+.srp-pagination--sm .srp-pagination__arrow .srp-icon { font-size: var(--pagination-icon-size-sm, var(--spacing-3\.5)); }
+.srp-pagination--lg .srp-pagination__arrow .srp-icon { font-size: var(--pagination-icon-size-lg, var(--spacing-5)); }
+@media (hover: hover) { .srp-pagination__item:hover:not(:disabled, [aria-disabled="true"], .srp-pagination__item--current) { background: var(--pagination-bg-hover, var(--secondary)); } }
 /* Touch: 44px high to press on a touch screen, with nothing moving; across, each page stops halfway into the gap to the next. */
 @media (pointer: coarse) {
-  .dk-pagination__item { position: relative; }
-  .dk-pagination__item::after {
-    --dk-pagination-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2));
-    --dk-pagination-half-gap: calc(var(--spacing-0) - var(--pagination-gap, var(--spacing-1)) / 2);
-    content: ""; position: absolute; inset-block: var(--dk-pagination-reach); inset-inline: max(var(--dk-pagination-reach), var(--dk-pagination-half-gap));
+  .srp-pagination__item { position: relative; }
+  .srp-pagination__item::after {
+    --srp-pagination-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2));
+    --srp-pagination-half-gap: calc(var(--spacing-0) - var(--pagination-gap, var(--spacing-1)) / 2);
+    content: ""; position: absolute; inset-block: var(--srp-pagination-reach); inset-inline: max(var(--srp-pagination-reach), var(--srp-pagination-half-gap));
   }
 }
-.dk-pagination__item:active:not(:disabled, [aria-disabled="true"], .dk-pagination__item--current) { background: var(--pagination-bg-pressed, var(--pressed)); }
-.dk-pagination__item:focus-visible { outline: var(--focus-ring-width) solid var(--pagination-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-pagination__item--current { background: var(--pagination-bg-current, var(--primary)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
-.dk-pagination__item:disabled, .dk-pagination__item[aria-disabled="true"] { color: var(--pagination-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-pagination__ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: var(--dk-pagination-size); height: var(--dk-pagination-size); color: var(--pagination-ellipsis, var(--text-muted)); -webkit-user-select: none; user-select: none; }
+.srp-pagination__item:active:not(:disabled, [aria-disabled="true"], .srp-pagination__item--current) { background: var(--pagination-bg-pressed, var(--pressed)); }
+.srp-pagination__item:focus-visible { outline: var(--focus-ring-width) solid var(--pagination-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-pagination__item--current { background: var(--pagination-bg-current, var(--primary)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
+.srp-pagination__item:disabled, .srp-pagination__item[aria-disabled="true"] { color: var(--pagination-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-pagination__ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: var(--srp-pagination-size); height: var(--srp-pagination-size); color: var(--pagination-ellipsis, var(--text-muted)); -webkit-user-select: none; user-select: none; }
 /* With total and pageSize (O7): the summary, muted, then the pages at the end of the row. When both don't fit on
    one line the pages wrap under the summary, and only then show fewer pages (ET1). */
-.dk-pagination--summary { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--pagination-summary-gap, var(--spacing-4)); row-gap: var(--spacing-2); }
-.dk-pagination__summary { margin: var(--spacing-0); color: var(--pagination-summary, var(--text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.srp-pagination--summary { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--pagination-summary-gap, var(--spacing-4)); row-gap: var(--spacing-2); }
+.srp-pagination__summary { margin: var(--spacing-0); color: var(--pagination-summary, var(--text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
 /* With pageSizeOptions (O7): "Items per page" and a select of the sizes, after the summary, muted like it. */
-.dk-pagination__page-size { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--pagination-summary, var(--text-muted)); white-space: nowrap; }
-.dk-pagination__jump { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--pagination-summary, var(--text-muted)); white-space: nowrap; }
-.dk-pagination__jump-field { width: var(--pagination-jump-width, var(--spacing-16)); }
-.dk-pagination--summary .dk-pagination__list { flex: auto; min-width: var(--spacing-0); }
+.srp-pagination__page-size { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--pagination-summary, var(--text-muted)); white-space: nowrap; }
+.srp-pagination__jump { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--pagination-summary, var(--text-muted)); white-space: nowrap; }
+.srp-pagination__jump-field { width: var(--pagination-jump-width, var(--spacing-16)); }
+.srp-pagination--summary .srp-pagination__list { flex: auto; min-width: var(--spacing-0); }
 /* At the end by the first item's auto margin, not justify-content: flex-end, which spilled pages that don't fit
    past the start edge, where scrollWidth doesn't see them, so they were never cut down (GR56). An auto margin is
    0 when there's no room, so the overflow goes to the end, is measured, and the pages are cut to fit. */
-.dk-pagination--summary .dk-pagination__list > :first-child { margin-inline-start: auto; }
-@media (forced-colors: active) { .dk-pagination__item--current { outline: var(--outline-width-2) solid CanvasText; } }
-@media (prefers-reduced-motion: reduce) { .dk-pagination__item { transition: none; } }
+.srp-pagination--summary .srp-pagination__list > :first-child { margin-inline-start: auto; }
+@media (forced-colors: active) { .srp-pagination__item--current { outline: var(--outline-width-2) solid CanvasText; } }
+@media (prefers-reduced-motion: reduce) { .srp-pagination__item { transition: none; } }
 }

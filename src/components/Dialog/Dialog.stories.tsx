@@ -75,9 +75,9 @@ export const UnsavedChanges: Story = {
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't"). A modal dialog opens
 // over the whole page, so these draw its panel in place, with the Dialog's own classes, to sit side by side.
 function Sketch({ title, description, footer }: { title: string; description?: string; footer: React.ReactNode }) {
-  return <div className="dk-dialog__panel" style={{ width: 360, boxShadow: 'none', border: '1px solid var(--border)' }}>
-    <div className="dk-dialog__header"><div className="dk-dialog__heading"><h2 className="dk-dialog__title">{title}</h2>{description ? <p className="dk-dialog__description">{description}</p> : null}</div></div>
-    <div className="dk-dialog__footer">{footer}</div>
+  return <div className="srp-dialog__panel" style={{ width: 360, boxShadow: 'none', border: '1px solid var(--border)' }}>
+    <div className="srp-dialog__header"><div className="srp-dialog__heading"><h2 className="srp-dialog__title">{title}</h2>{description ? <p className="srp-dialog__description">{description}</p> : null}</div></div>
+    <div className="srp-dialog__footer">{footer}</div>
   </div>;
 }
 /** Do: a title that asks the question, and buttons named for what they do. */

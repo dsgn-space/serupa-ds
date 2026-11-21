@@ -235,7 +235,7 @@ describe('Stepper', () => {
   test('a long single word in a title wraps, in the line under the circles and in a vertical stepper, so 320px never scrolls sideways (RF1, WCAG 1.4.10)', async () => {
     const long = [{ title: 'Account' }, { title: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', optional: true }, { title: 'Review' }];
     await render(<div style={{ width: '320px' }}><Stepper id="lh" steps={long} current={1} /><Stepper id="lv" orientation="vertical" steps={long} current={1} /></div>);
-    expect([el('lh').className.includes('dk-stepper--compact'), el('lh').scrollWidth <= 320, el('lv').scrollWidth <= 320]).toEqual([true, true, true]);
+    expect([el('lh').className.includes('srp-stepper--compact'), el('lh').scrollWidth <= 320, el('lv').scrollWidth <= 320]).toEqual([true, true, true]);
   });
 
   test('too narrow for the titles side by side (320px): circles only, "Step 3 of 4: Billing" under them, no sideways scroll; wide again: titles back', async () => {
@@ -246,7 +246,7 @@ describe('Stepper', () => {
     }
     await render(<SerupaProvider locale="en"><Narrow /></SerupaProvider>);
     const n = el('nar');
-    expect(n.className).toMatch(/dk-stepper--compact/);
+    expect(n.className).toMatch(/srp-stepper--compact/);
     expect(n.scrollWidth).toBeLessThanOrEqual(320);
     const circles = [...n.querySelectorAll(inStep(IND))].map(rect);
     for (let i = 1; i < circles.length; i++) expect(circles[i]!.left).toBeGreaterThanOrEqual(circles[i - 1]!.right);
@@ -267,12 +267,12 @@ describe('Stepper', () => {
     const EIGHT = Array.from({ length: 8 }, (_, i) => ({ title: 'Step title ' + (i + 1) }));
     await render(<div style={{ width: '288px' }}><Stepper id="eight" steps={EIGHT} current={3} /><Stepper id="four" steps={STEPS} current={2} /></div>);
     const n = el('eight'), dots = (id: string) => [...el(id).querySelectorAll('li > * > :first-child')].map(rect);
-    expect(n.className).toMatch(/dk-stepper--compact.*dk-stepper--tight/);
+    expect(n.className).toMatch(/srp-stepper--compact.*srp-stepper--tight/);
     expect(n.scrollWidth).toBeLessThanOrEqual(288);
     const d = dots('eight');
     expect(d.map((r) => r.width)).toEqual(Array(8).fill(24));
     for (let i = 1; i < d.length; i++) expect(d[i]!.left - d[i - 1]!.right).toBeGreaterThanOrEqual(8);
-    expect(el('four').className).toMatch(/dk-stepper--compact/);
+    expect(el('four').className).toMatch(/srp-stepper--compact/);
     expect(el('four').className).not.toMatch(/tight/);
     expect(dots('four').map((r) => r.width)).toEqual(Array(4).fill(32));
   });
@@ -282,7 +282,7 @@ describe('Stepper', () => {
     const page = (id: string, style: React.CSSProperties, dir?: string) => <div id={id + '-page'} dir={dir} style={{ width: '320px', padding: '0 16px', boxSizing: 'border-box', ...style }}><Stepper id={id} steps={EIGHT} current={3} /></div>;
     await render(<div>{page('gg', { display: 'grid' })}{page('gr', { display: 'grid' }, 'rtl')}{page('gf', { display: 'flex', flexDirection: 'column' })}</div>);
     for (const id of ['gg', 'gr', 'gf']) {
-      await expect.poll(() => el(id).className).toMatch(/dk-stepper--tight/);
+      await expect.poll(() => el(id).className).toMatch(/srp-stepper--tight/);
       expect([el(id).clientWidth, el(id).scrollWidth, el(id + '-page').scrollWidth]).toEqual([288, 288, 320]);
     }
   });
@@ -314,7 +314,7 @@ describe('Stepper before the script runs (GR62)', () => {
     } finally { host.remove(); }
     await render(<div style={{ width: '320px' }} id="gr62">{ui}</div>);
     const nav = document.querySelector<HTMLElement>('#gr62 [data-component="stepper"]')!;
-    expect([nav.hasAttribute('data-fit'), nav.classList.contains('dk-stepper--compact')]).toEqual([true, true]);
+    expect([nav.hasAttribute('data-fit'), nav.classList.contains('srp-stepper--compact')]).toEqual([true, true]);
     await page.viewport(900, 700);
   });
 });
@@ -324,10 +324,10 @@ describe('Stepper when web fonts load (GR65)', () => {
     const steps: StepperStep[] = [{ title: 'Account' }, { title: 'Profile' }, { title: 'Review' }, { title: 'Done' }];
     await render(<div style={{ width: '560px' }} id="gr65"><Stepper steps={steps} current={1} /></div>);
     const nav = document.querySelector<HTMLElement>('#gr65 [data-component="stepper"]')!;
-    expect(nav.classList.contains('dk-stepper--compact')).toBe(false);
+    expect(nav.classList.contains('srp-stepper--compact')).toBe(false);
     // Stand in for the swap: the titles get wider (a wider face), the nav stays 560px, then the fonts report loaded.
     nav.style.letterSpacing = '0.6em';
     document.fonts.dispatchEvent(new Event('loadingdone'));
-    await expect.poll(() => nav.classList.contains('dk-stepper--compact')).toBe(true);
+    await expect.poll(() => nav.classList.contains('srp-stepper--compact')).toBe(true);
   });
 });

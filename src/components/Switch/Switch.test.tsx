@@ -18,7 +18,7 @@ const box = (id: string) => {
   };
 };
 const away = () => userEvent.hover(document.body, { position: { x: 800, y: 650 } });
-const still = () => { const s = document.createElement('style'); s.textContent = '.dk-switch * { transition: none !important; }'; document.head.appendChild(s); return s; };
+const still = () => { const s = document.createElement('style'); s.textContent = '.srp-switch * { transition: none !important; }'; document.head.appendChild(s); return s; };
 
 let changes: boolean[] = [];
 function App(props: { iref?: React.Ref<HTMLInputElement> }) {
@@ -57,7 +57,7 @@ describe('Switch', () => {
     expect(calls).toEqual(['change', 'true change', 'change', 'false change']);
   });
 
-  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="dk-switch">; md: a 36 by 20px round track in border-control, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in border-control, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
     await setup();
     const s = still(), md = box('md');
     expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--border-control)'), 16, color('var(--field)'), 2, '14px']);
@@ -117,8 +117,8 @@ describe('Switch', () => {
     await setup();
     const st = box('start'), bare = box('bare');
     expect([st.labelLeft, box('md').labelLeft]).toEqual([true, false]);
-    expect(st.wrap).toMatch(/dk-switch--label-start/);
-    expect(bare.wrap).toMatch(/dk-switch--bare/);
+    expect(st.wrap).toMatch(/srp-switch--label-start/);
+    expect(bare.wrap).toMatch(/srp-switch--bare/);
     expect(el('bare').closest('label')!.getBoundingClientRect().height).toBe(20);
   });
 
@@ -168,7 +168,7 @@ describe('Switch', () => {
     const onChange = vi.fn(), onClick = vi.fn();
     await render(<form id="ro-form"><Switch id="ro" name="wifi" readOnly defaultChecked onChange={onChange} onClick={onClick}>Wi-Fi</Switch><Switch id="ro2" readOnly>Bluetooth</Switch></form>);
     const lab = (id: string) => el(id).closest('label') as HTMLElement;
-    expect([el('ro').getAttribute('aria-readonly'), lab('ro').className.includes('dk-switch--readonly'), css(lab('ro')).cursor]).toEqual(['true', true, 'default']);
+    expect([el('ro').getAttribute('aria-readonly'), lab('ro').className.includes('srp-switch--readonly'), css(lab('ro')).cursor]).toEqual(['true', true, 'default']);
     await userEvent.click(lab('ro'));
     await userEvent.click(el('ro2'));
     el('ro').focus();
@@ -275,8 +275,8 @@ describe('Switch', () => {
       // No media emulation outside Chromium: apply the reduced-motion rules as written, unconditionally.
       const rules = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules]; } catch { return []; } });
       const flat = (rs: CSSRule[]): CSSRule[] => rs.flatMap((r) => ('cssRules' in r ? [r, ...flat([...(r as CSSGroupingRule).cssRules])] : [r]));
-      const rm = flat(rules).filter((r): r is CSSMediaRule => r instanceof CSSMediaRule && /prefers-reduced-motion:\s*reduce/.test(r.conditionText) && /dk-switch/.test(r.cssText));
-      const s = document.createElement('style'); s.textContent = '@layer dk.components {' + rm.map((r) => [...r.cssRules].map((x) => x.cssText).join('')).join('') + '}'; document.head.appendChild(s);
+      const rm = flat(rules).filter((r): r is CSSMediaRule => r instanceof CSSMediaRule && /prefers-reduced-motion:\s*reduce/.test(r.conditionText) && /srp-switch/.test(r.cssText));
+      const s = document.createElement('style'); s.textContent = '@layer srp.components {' + rm.map((r) => [...r.cssRules].map((x) => x.cssText).join('')).join('') + '}'; document.head.appendChild(s);
       try { expect([rm.length, dur()]).toEqual([1, '0s|0s']); } finally { s.remove(); }
     }
   });

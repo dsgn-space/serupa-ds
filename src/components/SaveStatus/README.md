@@ -23,9 +23,9 @@ import { SaveStatus } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Failed` story.
 
-1. **Icon** (`.dk-save-status__icon`): shows saving, saved or failed beside the words.
-2. **Status** (`.dk-save-status__text`): the state in words, announced as it changes.
-3. **Try again** (`.dk-save-status__retry`): after a failure, saves again.
+1. **Icon** (`.srp-save-status__icon`): shows saving, saved or failed beside the words.
+2. **Status** (`.srp-save-status__text`): the state in words, announced as it changes.
+3. **Try again** (`.srp-save-status__retry`): after a failure, saves again.
 
 ## Usage
 

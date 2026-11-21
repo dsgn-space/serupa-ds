@@ -3,26 +3,26 @@
    when there's no picture. Sizes xs 24, sm 32, md 40 (default), lg 48, xl 64px, each with its own type size.
    The status dot sits at the bottom end, in a surface ring. Every value goes through --avatar-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-avatar {
-  --dk-avatar-size: var(--avatar-size-md, var(--spacing-10));
-  --dk-avatar-dot: var(--spacing-2\.5);
-  --dk-avatar-icon: var(--spacing-6);
+@layer srp.components {
+.srp-avatar {
+  --srp-avatar-size: var(--avatar-size-md, var(--spacing-10));
+  --srp-avatar-dot: var(--spacing-2\.5);
+  --srp-avatar-icon: var(--spacing-6);
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
-  width: var(--dk-avatar-size);
-  height: var(--dk-avatar-size);
+  width: var(--srp-avatar-size);
+  height: var(--srp-avatar-size);
   vertical-align: middle;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--leading-none);
 }
-.dk-avatar--xs { --dk-avatar-size: var(--avatar-size-xs, var(--spacing-6)); --dk-avatar-dot: var(--spacing-2); --dk-avatar-icon: var(--spacing-3\.5); font-size: var(--text-xs); }
-.dk-avatar--sm { --dk-avatar-size: var(--avatar-size-sm, var(--spacing-8)); --dk-avatar-dot: var(--spacing-2); --dk-avatar-icon: var(--spacing-5); font-size: var(--text-xs); }
-.dk-avatar--lg { --dk-avatar-size: var(--avatar-size-lg, var(--spacing-12)); --dk-avatar-dot: var(--spacing-3); --dk-avatar-icon: var(--spacing-7); font-size: var(--text-base); }
-.dk-avatar--xl { --dk-avatar-size: var(--avatar-size-xl, var(--spacing-16)); --dk-avatar-dot: var(--spacing-4); --dk-avatar-icon: var(--spacing-10); font-size: var(--text-xl); }
-.dk-avatar__frame {
+.srp-avatar--xs { --srp-avatar-size: var(--avatar-size-xs, var(--spacing-6)); --srp-avatar-dot: var(--spacing-2); --srp-avatar-icon: var(--spacing-3\.5); font-size: var(--text-xs); }
+.srp-avatar--sm { --srp-avatar-size: var(--avatar-size-sm, var(--spacing-8)); --srp-avatar-dot: var(--spacing-2); --srp-avatar-icon: var(--spacing-5); font-size: var(--text-xs); }
+.srp-avatar--lg { --srp-avatar-size: var(--avatar-size-lg, var(--spacing-12)); --srp-avatar-dot: var(--spacing-3); --srp-avatar-icon: var(--spacing-7); font-size: var(--text-base); }
+.srp-avatar--xl { --srp-avatar-size: var(--avatar-size-xl, var(--spacing-16)); --srp-avatar-dot: var(--spacing-4); --srp-avatar-icon: var(--spacing-10); font-size: var(--text-xl); }
+.srp-avatar__frame {
   position: relative;
   display: flex;
   align-items: center;
@@ -37,45 +37,45 @@
   -webkit-user-select: none;
   user-select: none;
 }
-.dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--radius-surface)); }
+.srp-avatar--square .srp-avatar__frame { border-radius: var(--avatar-radius-square, var(--radius-surface)); }
 /* A hairline just inside the photo's edge (picture-edge), so a face on white keeps its circle on a white page. */
-.dk-avatar__img {
+.srp-avatar__img {
   width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; border-radius: inherit;
   outline: var(--outline-width-1) solid var(--avatar-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 /* A late picture (still loading after quickArrival) lies over the initials or the icon, which fade in under it. When
    it arrives it fades in over them, and they go once it has. Reduced motion: they swap at once. */
-.dk-avatar__img--late { position: absolute; inset: var(--spacing-0); }
-.dk-avatar__img--late ~ *, .dk-avatar__img--in { animation: dk-avatar-in var(--motion-enter-md) var(--ease-enter); }
-@keyframes dk-avatar-in { from { opacity: var(--opacity-0); } }
-@media (prefers-reduced-motion: reduce) { .dk-avatar__img--late ~ *, .dk-avatar__img--in { animation: var(--animate-none); } .dk-avatar__img--in ~ * { display: none; } }
-.dk-avatar .dk-avatar__icon { font-size: var(--dk-avatar-icon); }
-.dk-avatar__status {
+.srp-avatar__img--late { position: absolute; inset: var(--spacing-0); }
+.srp-avatar__img--late ~ *, .srp-avatar__img--in { animation: srp-avatar-in var(--motion-enter-md) var(--ease-enter); }
+@keyframes srp-avatar-in { from { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: reduce) { .srp-avatar__img--late ~ *, .srp-avatar__img--in { animation: var(--animate-none); } .srp-avatar__img--in ~ * { display: none; } }
+.srp-avatar .srp-avatar__icon { font-size: var(--srp-avatar-icon); }
+.srp-avatar__status {
   position: absolute;
   inset-block-end: var(--spacing-0);
   inset-inline-end: var(--spacing-0);
-  width: var(--dk-avatar-dot);
-  height: var(--dk-avatar-dot);
+  width: var(--srp-avatar-dot);
+  height: var(--srp-avatar-dot);
   border-radius: var(--rounded-full);
   box-shadow: 0 0 0 var(--avatar-ring-width, var(--border-width-2)) var(--avatar-ring, var(--surface-behind, var(--surface)));
 }
 /* Each status has its own shape, so it isn't told by color alone (and survives forced colors): online is a
    filled dot, busy a dot with a bar across, away a ring with a dot inside, offline an empty ring. */
-.dk-avatar__status { --dk-avatar-bar: calc(var(--dk-avatar-dot) * 0.6); --dk-avatar-bar-h: calc(var(--dk-avatar-dot) / 4); --dk-avatar-inner: calc(var(--dk-avatar-dot) / 3); }
-.dk-avatar__status::after { content: ""; position: absolute; inset: 0; margin: auto; border-radius: inherit; }
-.dk-avatar__status--online { background: var(--avatar-status-online, var(--success)); }
-.dk-avatar__status--busy { background: var(--avatar-status-busy, var(--danger)); }
-.dk-avatar__status--busy::after { width: var(--dk-avatar-bar); height: var(--dk-avatar-bar-h); background: var(--avatar-ring, var(--surface-behind, var(--surface))); }
-.dk-avatar__status--away, .dk-avatar__status--offline { background: var(--avatar-ring, var(--surface-behind, var(--surface))); border: var(--avatar-ring-width, var(--border-width-2)) solid var(--dk-avatar-st); }
-.dk-avatar__status--away { --dk-avatar-st: var(--avatar-status-away, var(--warning)); }
-.dk-avatar__status--away::after { width: var(--dk-avatar-inner); height: var(--dk-avatar-inner); background: var(--dk-avatar-st); }
-.dk-avatar__status--offline { --dk-avatar-st: var(--avatar-status-offline, var(--border-control)); }
+.srp-avatar__status { --srp-avatar-bar: calc(var(--srp-avatar-dot) * 0.6); --srp-avatar-bar-h: calc(var(--srp-avatar-dot) / 4); --srp-avatar-inner: calc(var(--srp-avatar-dot) / 3); }
+.srp-avatar__status::after { content: ""; position: absolute; inset: 0; margin: auto; border-radius: inherit; }
+.srp-avatar__status--online { background: var(--avatar-status-online, var(--success)); }
+.srp-avatar__status--busy { background: var(--avatar-status-busy, var(--danger)); }
+.srp-avatar__status--busy::after { width: var(--srp-avatar-bar); height: var(--srp-avatar-bar-h); background: var(--avatar-ring, var(--surface-behind, var(--surface))); }
+.srp-avatar__status--away, .srp-avatar__status--offline { background: var(--avatar-ring, var(--surface-behind, var(--surface))); border: var(--avatar-ring-width, var(--border-width-2)) solid var(--srp-avatar-st); }
+.srp-avatar__status--away { --srp-avatar-st: var(--avatar-status-away, var(--warning)); }
+.srp-avatar__status--away::after { width: var(--srp-avatar-inner); height: var(--srp-avatar-inner); background: var(--srp-avatar-st); }
+.srp-avatar__status--offline { --srp-avatar-st: var(--avatar-status-offline, var(--border-control)); }
 @media (forced-colors: active) {
-  .dk-avatar__frame { border: var(--border-width-1) solid CanvasText; }
-  .dk-avatar__img { outline: none; }
-  .dk-avatar__status { background: CanvasText; }
-  .dk-avatar__status--away, .dk-avatar__status--offline { background: Canvas; border-color: CanvasText; }
-  .dk-avatar__status--busy::after { background: Canvas; }
-  .dk-avatar__status--away::after { background: CanvasText; }
+  .srp-avatar__frame { border: var(--border-width-1) solid CanvasText; }
+  .srp-avatar__img { outline: none; }
+  .srp-avatar__status { background: CanvasText; }
+  .srp-avatar__status--away, .srp-avatar__status--offline { background: Canvas; border-color: CanvasText; }
+  .srp-avatar__status--busy::after { background: Canvas; }
+  .srp-avatar__status--away::after { background: CanvasText; }
 }
 }

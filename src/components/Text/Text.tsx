@@ -44,7 +44,7 @@ function TextRender({ ref, ...props }: TextProps & React.RefAttributes<HTMLEleme
     ref: ref, 'data-component': 'text',
     // The count goes in an attribute the CSS reads, not a style attribute, so it holds under a strict CSP too.
     'data-lines': clamp || undefined,
-    className: cn('dk-text', s && 'dk-text--' + s, t && 'dk-text--' + t, w && 'dk-text--' + w, truncate && 'dk-text--truncate', clamp && 'dk-text--clamp', measure && 'dk-text--measure', className),
+    className: cn('srp-text', s && 'srp-text--' + s, t && 'srp-text--' + t, w && 'srp-text--' + w, truncate && 'srp-text--truncate', clamp && 'srp-text--clamp', measure && 'srp-text--measure', className),
   }));
 }
 

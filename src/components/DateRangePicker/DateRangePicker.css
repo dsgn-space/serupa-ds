@@ -1,40 +1,40 @@
 /* ---------------------------------------------------------------
-   DateRangePicker: an Input box (dk-input) with two date fields split by a muted dash and DatePicker's calendar
+   DateRangePicker: an Input box (srp-input) with two date fields split by a muted dash and DatePicker's calendar
    button; the popup (DatePicker's) holds two Calendars 24px apart (stacked when the screen is narrow) and a
    muted line saying which end to pick. Days between the ends take the --calendar-range-* fill.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-date-range-picker { --dk-drp-offset: var(--date-picker-offset, var(--spacing-1)); width: auto; max-width: var(--sizing-full); padding-inline-end: var(--spacing-1); }
+@layer srp.components {
+.srp-date-range-picker { --srp-drp-offset: var(--date-picker-offset, var(--spacing-1)); width: auto; max-width: var(--sizing-full); padding-inline-end: var(--spacing-1); }
 /* A box too narrow for both dates wraps the end date onto a second line (GR73) rather than shrinking the fields
    past a full date, which cut the year off. One line, it's the input's height; wrapped, it grows, each line a full control height so a field stays a
    24px target (WCAG 2.5.8). */
-.dk-date-range-picker { flex-wrap: wrap; row-gap: var(--spacing-0); height: auto; min-height: var(--dk-input-h); }
-.dk-date-range-picker__field { flex: none; align-self: stretch; height: auto; min-height: calc(var(--dk-input-h) - var(--input-border-width, var(--border-width-1)) - var(--input-border-width, var(--border-width-1))); width: var(--date-range-picker-field-width, var(--spacing-24)); max-width: var(--sizing-full); }
+.srp-date-range-picker { flex-wrap: wrap; row-gap: var(--spacing-0); height: auto; min-height: var(--srp-input-h); }
+.srp-date-range-picker__field { flex: none; align-self: stretch; height: auto; min-height: calc(var(--srp-input-h) - var(--input-border-width, var(--border-width-1)) - var(--input-border-width, var(--border-width-1))); width: var(--date-range-picker-field-width, var(--spacing-24)); max-width: var(--sizing-full); }
 /* sm: the 24px calendar button is taller than the box inside its border, as it always was; it overlaps the border
    rather than growing the box past the control height. */
-.dk-date-range-picker.dk-input--size-sm .dk-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
-.dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--placeholder)); }
+.srp-date-range-picker.srp-input--size-sm .srp-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
+.srp-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--placeholder)); }
 /* Each field as wide as its date (or its pattern while empty), so the dates and the dash sit together at the start,
    the input gap either side of the dash, and any spare width goes before the calendar button, which stays at the end.
    Digits are tabular, so a date doesn't change width as it's typed. Where field-sizing isn't supported (Firefox), each
    keeps the fixed --date-range-picker-field-width. */
-.dk-date-range-picker__field { font-variant-numeric: tabular-nums; }
-@supports (field-sizing: content) { .dk-date-range-picker__field { field-sizing: content; width: auto; min-width: var(--spacing-4); } }
-.dk-date-range-picker__button { margin-inline-start: auto; }
+.srp-date-range-picker__field { font-variant-numeric: tabular-nums; }
+@supports (field-sizing: content) { .srp-date-range-picker__field { field-sizing: content; width: auto; min-width: var(--spacing-4); } }
+.srp-date-range-picker__button { margin-inline-start: auto; }
 /* With presets, the shortcuts sit after the months, and under them on a narrow screen (RU11). */
-.dk-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
-@media (max-width: 639.98px) { .dk-date-range-picker__body { flex-direction: column; } }
-.dk-date-range-picker__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--date-range-picker-months-gap, var(--spacing-6)); }
-.dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: hidden; }
+.srp-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
+@media (max-width: 639.98px) { .srp-date-range-picker__body { flex-direction: column; } }
+.srp-date-range-picker__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--date-range-picker-months-gap, var(--spacing-6)); }
+.srp-date-range-picker__months > :first-child .srp-calendar__nav--next, .srp-date-range-picker__months > :last-child:not(:first-child) .srp-calendar__nav--prev { visibility: hidden; }
 /* Stacked, the popup is as wide as one month (or the status line, wrapped to it), not as wide as two across, so it
    keeps 8px from both sides of a phone screen as DatePicker's does (GR9). */
-@media (max-width: 639.98px) { .dk-date-range-picker__popup { width: min-content; } }
-@media (max-width: 639.98px) { .dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: visible; } }
-.dk-date-range-picker__status { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--date-range-picker-status-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+@media (max-width: 639.98px) { .srp-date-range-picker__popup { width: min-content; } }
+@media (max-width: 639.98px) { .srp-date-range-picker__months > :first-child .srp-calendar__nav--next, .srp-date-range-picker__months > :last-child:not(:first-child) .srp-calendar__nav--prev { visibility: visible; } }
+.srp-date-range-picker__status { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--date-range-picker-status-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 /* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
    off it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {
-  .dk-date-range-picker__button { position: relative; isolation: isolate; }
-  .dk-date-range-picker__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+  .srp-date-range-picker__button { position: relative; isolation: isolate; }
+  .srp-date-range-picker__button::after { content: ""; position: absolute; --srp-under: calc(var(--z-10) * -1); z-index: var(--srp-under); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--srp-input-h)) / 2)); --srp-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--srp-reach-block); inset-inline: var(--srp-reach-text) var(--spacing-0); }
 }
 }

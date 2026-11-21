@@ -11,8 +11,8 @@ import { PROJECT, browser, cleanup, report, done, tokensCss } from './lib.mjs';
 
 // The class of the outermost element the stylesheet hides, by component, and why it's still CSS alone.
 const KNOWN = {
-  AppShell: { 'dk-app-shell__bottom': "the phone's bottom navigation (BottomNav hideFrom), which a wide window leaves out for the sidebar by a media query, not a closed panel; without CSS its links read after the page, as they should" },
-  CopyButton: { 'dk-copy-btn__label': 'the "Copied" label waits in place, aria-hidden, under visibility: hidden, so the button keeps one width; without CSS both words show' },
+  AppShell: { 'srp-app-shell__bottom': "the phone's bottom navigation (BottomNav hideFrom), which a wide window leaves out for the sidebar by a media query, not a closed panel; without CSS its links read after the page, as they should" },
+  CopyButton: { 'srp-copy-btn__label': 'the "Copied" label waits in place, aria-hidden, under visibility: hidden, so the button keeps one width; without CSS both words show' },
 };
 
 const DIR = path.join(PROJECT, 'tools', 'test', 'baseline-server');

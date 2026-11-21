@@ -42,7 +42,7 @@ describe('PeriodPicker', () => {
     await render(<EnUS><PeriodPicker ref={ref} aria-label="Report month" className="extra" data-x="y" /></EnUS>);
     const b = button(), root = b.parentElement!;
     expect([b.tagName, b.getAttribute('role'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded'), b.getAttribute('aria-label'), b.dataset.x, ref.current === b]).toEqual(['BUTTON', 'combobox', 'dialog', 'false', 'Report month', 'y', true]);
-    expect([root.dataset.component, root.dataset.unit, root.className]).toEqual(['period-picker', 'month', 'dk-period-picker dk-period-picker--size-md extra']);
+    expect([root.dataset.component, root.dataset.unit, root.className]).toEqual(['period-picker', 'month', 'srp-period-picker srp-period-picker--size-md extra']);
     expect(b.textContent).toBe('Choose a month');
     expect([css(b).height, css(b).borderTopWidth, css(b).borderRadius]).toEqual(['32px', '1px', '6px']);
   });
@@ -74,7 +74,7 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'February 2025');
     const feb = periods()[1]!, mar = periods()[2]!;
     expect([feb.parentElement!.getAttribute('aria-selected'), feb.tabIndex, mar.getAttribute('aria-current'), periods().filter((p) => p.tabIndex === 0).length]).toEqual(['true', 0, 'date', 1]);
-    expect(feb.className).toContain('dk-period-picker__period--selected');
+    expect(feb.className).toContain('srp-period-picker__period--selected');
   });
 
   test('a max brought in while the popup is open, before the month in focus: the month that can be reached is the max, not one that is disabled', async () => {
@@ -238,7 +238,7 @@ describe('PeriodPicker', () => {
   test('in a Field: its label names the button, and its error sets aria-invalid and the danger outline', async () => {
     await render(<EnUS><Field label="Billing month" error="Choose a month."><PeriodPicker /></Field></EnUS>);
     await expect.element(page.getByRole('combobox', { name: 'Billing month' })).toHaveAttribute('aria-invalid', 'true');
-    expect(button().parentElement!.className).toContain('dk-period-picker--invalid');
+    expect(button().parentElement!.className).toContain('srp-period-picker--invalid');
   });
 
   test('in the locale: German month names, Indonesian words and quarters, Eastern Arabic digits in ar-EG', async () => {

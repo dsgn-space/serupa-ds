@@ -26,9 +26,9 @@ import { OfflineBanner } from "@diki-stwn/serupa-ds";
 
 Drawn from the `WithMoreWords` story.
 
-1. **Bar** (`.dk-offline-banner`): the raised surface, fixed to an edge of the screen or in the page.
-2. **Icon** (`.dk-offline-banner__icon`): a cloud crossed out while offline, a cloud with a check once it's back.
-3. **Words** (`.dk-offline-banner__text`): the title, "You’re offline" or "Back online" (`.dk-offline-banner__title`), and your own words after it.
+1. **Bar** (`.srp-offline-banner`): the raised surface, fixed to an edge of the screen or in the page.
+2. **Icon** (`.srp-offline-banner__icon`): a cloud crossed out while offline, a cloud with a check once it's back.
+3. **Words** (`.srp-offline-banner__text`): the title, "You’re offline" or "Back online" (`.srp-offline-banner__title`), and your own words after it.
 
 ## Usage
 

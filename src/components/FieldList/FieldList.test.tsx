@@ -10,7 +10,7 @@ import { FieldList, type FieldListProps } from './FieldList';
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const phone = (i: number) => 'Phone ' + (i + 1);
 // The words the polite announcer holds now.
-const said = () => document.querySelector('[data-dk-announcer]')?.textContent || '';
+const said = () => document.querySelector('[data-srp-announcer]')?.textContent || '';
 // A list of phone numbers, one field a row, named for a plain form submit.
 function Phones(props: Partial<FieldListProps<string>> & { ref?: React.Ref<HTMLFieldSetElement> }) {
   return (
@@ -27,7 +27,7 @@ describe('FieldList', () => {
     const ref = React.createRef<HTMLFieldSetElement>();
     await render(<Phones ref={ref} className="extra" data-x="y" />);
     const e = el('fl');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['FIELDSET', true, 'dk-field-list extra', 'y', 'field-list']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['FIELDSET', true, 'srp-field-list extra', 'y', 'field-list']);
     await expect.element(page.getByRole('group', { name: 'Phone numbers' })).toBeInTheDocument();
     expect(groups().map((g) => g.getAttribute('aria-label'))).toEqual(['Phone 1', 'Phone 2']);
     expect(page.getByRole('button', { name: 'Remove Phone 2' }).elements()).toHaveLength(1);
@@ -136,7 +136,7 @@ describe('FieldList', () => {
   test('its legend, hint, limit and errors read 4.5:1 on the surface in every theme', async () => {
     await render(<Phones max={2} hint="Mobile first" errors={['Add the area code']} error="Add a mobile number" />);
     const bg = css(document.body).backgroundColor;
-    const parts = ['legend', '.dk-field-list__hint', '.dk-field-list__limit', '.dk-field-list__error'].map((s) => el('fl').querySelector(s) as HTMLElement);
+    const parts = ['legend', '.srp-field-list__hint', '.srp-field-list__limit', '.srp-field-list__error'].map((s) => el('fl').querySelector(s) as HTMLElement);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const p of parts) expect(contrast(css(p).color, css(document.body).backgroundColor || bg), th + ' ' + p.className).toBeGreaterThanOrEqual(4.5);

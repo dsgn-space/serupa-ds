@@ -27,12 +27,12 @@ describe('SerupaProvider labels', () => {
       <Pagination count={3} defaultPage={2} />
       <Loader delay={0} />
     </SerupaProvider>);
-    expect(name('.dk-alert__dismiss')).toBe('Abaikan');
-    expect(name('.dk-pagination')).toBe('Halaman');
+    expect(name('.srp-alert__dismiss')).toBe('Abaikan');
+    expect(name('.srp-pagination')).toBe('Halaman');
     const arrows = [...document.querySelectorAll('nav button:not([aria-label^="Halaman "])')].map((a) => a.getAttribute('aria-label'));
     expect(arrows).toEqual(['Sebelumnya', 'Berikutnya']);
     expect(document.querySelector('[aria-current="page"]')?.getAttribute('aria-label')).toBe('Halaman 2');
-    expect(name('.dk-loader')).toBe('Memuat');
+    expect(name('.srp-loader')).toBe('Memuat');
   });
 
   test('labels and icons written inline keep the settings when a parent re-renders with the same contents; new contents still change them (U2)', async () => {
@@ -60,10 +60,10 @@ describe('SerupaProvider labels', () => {
         <FileUpload multiple />
       </SerupaProvider>
     </SerupaProvider>);
-    expect(q('#a .dk-alert__dismiss').getAttribute('aria-label')).toBe('Abaikan');
-    expect(q('#b .dk-alert__dismiss').getAttribute('aria-label')).toBe('Hide');
-    expect(q('#c .dk-alert__dismiss').getAttribute('aria-label')).toBe('Abaikan');
-    expect(q('.dk-file-upload__title').textContent).toBe('Taruh di sini');
+    expect(q('#a .srp-alert__dismiss').getAttribute('aria-label')).toBe('Abaikan');
+    expect(q('#b .srp-alert__dismiss').getAttribute('aria-label')).toBe('Hide');
+    expect(q('#c .srp-alert__dismiss').getAttribute('aria-label')).toBe('Abaikan');
+    expect(q('.srp-file-upload__title').textContent).toBe('Taruh di sini');
   });
 
   test('idLabels covers every key, and English is the default without a provider', async () => {

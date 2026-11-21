@@ -142,7 +142,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
             {shown.map((n) => (
               <ListItem key={n.id}
                 // The drawer's unread dot before the title (and room for it on read ones, so the titles line up).
-                title={<span className="flex items-baseline gap-2"><span className={'dk-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
+                title={<span className="flex items-baseline gap-2"><span className={'srp-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
                 description={<>{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</>}
                 trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
             ))}

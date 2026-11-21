@@ -75,7 +75,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
     after.current = false;
     const row = to != null ? rowOf(to) : null;
     // None left: the empty text when there is one, so the reader hears "No labels yet", else the (empty) grid.
-    const none = !row && grid.current && grid.current.parentElement && grid.current.parentElement.querySelector<HTMLElement>('.dk-tag-group__empty');
+    const none = !row && grid.current && grid.current.parentElement && grid.current.parentElement.querySelector<HTMLElement>('.srp-tag-group__empty');
     (row || none || grid.current)?.focus();
   });
 
@@ -116,28 +116,28 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
 
   const named = props.label != null ? labelId : props['aria-labelledby'];
   return (
-    <div {...rest} ref={ref} className={cn('dk-tag-group', props.className)} data-component="tag-group">
-      {props.label != null ? <div className="dk-tag-group__label" id={labelId}>{props.label}</div> : null}
-      {props.items.length === 0 && props.empty != null ? <div className="dk-tag-group__empty" tabIndex={-1}>{props.empty}</div> : null}
-      <div ref={grid} role="grid" className="dk-tag-group__tags" tabIndex={shown.length ? undefined : -1}
+    <div {...rest} ref={ref} className={cn('srp-tag-group', props.className)} data-component="tag-group">
+      {props.label != null ? <div className="srp-tag-group__label" id={labelId}>{props.label}</div> : null}
+      {props.items.length === 0 && props.empty != null ? <div className="srp-tag-group__empty" tabIndex={-1}>{props.empty}</div> : null}
+      <div ref={grid} role="grid" className="srp-tag-group__tags" tabIndex={shown.length ? undefined : -1}
         aria-labelledby={named} aria-label={named ? undefined : props['aria-label']}
         aria-multiselectable={mode === 'multiple' || undefined}>
         {shown.map((t, i) => {
           const on = picked.includes(t.id);
           return (
             <div key={t.id} role="row" data-tag-id={t.id} tabIndex={t.id === current ? 0 : -1}
-              className={cn('dk-tag-group__tag', on && 'dk-tag-group__tag--selected')}
+              className={cn('srp-tag-group__tag', on && 'srp-tag-group__tag--selected')}
               aria-selected={mode !== 'none' ? on : undefined} aria-disabled={t.disabled || undefined}
               onFocus={() => setActive(t.id)} onKeyDown={(e) => onKeyDown(e, t, i)} onClick={() => select(t)}>
-              <span role="gridcell" className="dk-tag-group__text">
-                {mode !== 'none' && on ? <Icon icon={icons.Check} className="dk-tag-group__check" />
-                  : t.icon != null ? <span className="dk-tag-group__icon" aria-hidden="true">{asIcon(t.icon)}</span> : null}
-                {t.avatar != null ? <span className="dk-tag-group__avatar" aria-hidden="true">{t.avatar}</span> : null}
+              <span role="gridcell" className="srp-tag-group__text">
+                {mode !== 'none' && on ? <Icon icon={icons.Check} className="srp-tag-group__check" />
+                  : t.icon != null ? <span className="srp-tag-group__icon" aria-hidden="true">{asIcon(t.icon)}</span> : null}
+                {t.avatar != null ? <span className="srp-tag-group__avatar" aria-hidden="true">{t.avatar}</span> : null}
                 {t.label}
               </span>
               {props.onRemove && !t.disabled ? (
-                <span role="gridcell" className="dk-tag-group__cell">
-                  <button type="button" tabIndex={-1} className="dk-tag-group__remove" aria-label={L.tagRemove(t.label)}
+                <span role="gridcell" className="srp-tag-group__cell">
+                  <button type="button" tabIndex={-1} className="srp-tag-group__remove" aria-label={L.tagRemove(t.label)}
                     onClick={(e) => { e.stopPropagation(); remove(t); }}>
                     <Icon icon={icons.Close} />
                   </button>
@@ -148,7 +148,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
         })}
       </div>
       {hidden > 0 || (all && props.items.length > max) ? (
-        <button type="button" className="dk-tag-group__more" aria-expanded={all}
+        <button type="button" className="srp-tag-group__more" aria-expanded={all}
           onClick={() => setAll(!all)}>
           {all ? L.showLess : L.showMore}
         </button>

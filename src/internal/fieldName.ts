@@ -8,7 +8,7 @@ export function fieldName(el: HTMLInputElement | null): string {
   const read = (n: Element | null) => {
     if (!n) return '';
     const copy = n.cloneNode(true) as Element;
-    copy.querySelectorAll('[aria-hidden=true], .dk-field__optional').forEach((x) => x.remove());
+    copy.querySelectorAll('[aria-hidden=true], .srp-field__optional').forEach((x) => x.remove());
     return copy.textContent || '';
   };
   const by = el.getAttribute('aria-labelledby');

@@ -70,7 +70,7 @@ const WIDTH = 640;   // before the box is measured: the server render and the fi
 function ChartPlaceholder({ height, label }: { height: number; label: string }) {
   const shown = useSkeletonShown(label);
   const ref = useServerStyles<HTMLDivElement>();   // the height holds under a strict CSP too
-  return <div ref={ref} className="dk-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
+  return <div ref={ref} className="srp-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
 }
 
 /** Round ticks from lo to hi, about count of them, in steps of 1, 2, 2.5 or 5 times a power of ten. */
@@ -158,8 +158,8 @@ const Marks = /* @__PURE__ */ React.memo(function Marks(p: {
       open = true;
     }
     return (
-      <g key={s} className={'dk-chart__series dk-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
-        {linear && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
+      <g key={s} className={'srp-chart__series srp-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
+        {linear && d ? <path className="srp-chart__line" d={d} pathLength={1} aria-hidden /> : null}
         {Array.from({ length: n }, (_, i) => {
           const v = val(s, i);
           if (v == null) return null;
@@ -172,9 +172,9 @@ const Marks = /* @__PURE__ */ React.memo(function Marks(p: {
             onFocus: (e: React.FocusEvent<SVGElement>) => api.current.focus(s, i, e.currentTarget.matches(':focus-visible')),
             onBlur: () => api.current.blur(),
           };
-          if (linear) return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, x(i), py(s, i), MARKER)} />;
+          if (linear) return <path key={i} {...common} className="srp-chart__marker srp-chart__point" d={markerPath(s, x(i), py(s, i), MARKER)} />;
           const b = bar(s, i);
-          return <rect key={i} {...common} className={cn('dk-chart__bar dk-chart__point', b.neg && 'dk-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)}
+          return <rect key={i} {...common} className={cn('srp-chart__bar srp-chart__point', b.neg && 'srp-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)}
             fill={s && series.length > 1 ? `url(#${p.base}-p${s})` : undefined} />;
         })}
       </g>
@@ -192,7 +192,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const locale = useLocale();
   const labels = useSettings(words).labels;
   const busy = !!props.loading;
-  const base = domId('dk-chart', React.useId());
+  const base = domId('srp-chart', React.useId());
   const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || NONE;
   const series = React.useMemo(() => (props.series || []).slice(0, COLORS), [props.series]);
@@ -411,22 +411,22 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const lineX = [flip(start), flip(width - PAD_END)].sort((a, b) => a - b);
 
   return (
-    <figure {...rest} ref={nameRef} className={cn('dk-chart', 'dk-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
+    <figure {...rest} ref={nameRef} className={cn('srp-chart', 'srp-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
       aria-busy={rest['aria-busy'] ?? (busy || undefined)}
       aria-labelledby={rest['aria-labelledby'] || (hasTitle && !rest['aria-label'] ? base + '-title' : undefined)}>
-      {hasTitle ? <figcaption className="dk-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
+      {hasTitle ? <figcaption className="srp-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
       {/* While the first numbers load, the toggle and the legend's line are there already (the toggle disabled, the line
           empty), so nothing below moves when the chart arrives. */}
-      <Button className="dk-chart__toggle" variant="ghost" size="sm" disabled={waiting || undefined} onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
+      <Button className="srp-chart__toggle" variant="ghost" size="sm" disabled={waiting || undefined} onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
         {view === 'chart' ? labels.chartShowTable : labels.chartShowChart}
       </Button>
       {waiting ? (
         <>
-          <div className="dk-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
-          {props.hideLegend ? null : <div className="dk-chart__legend dk-chart__legend--waiting" aria-hidden />}
+          <div className="srp-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
+          {props.hideLegend ? null : <div className="srp-chart__legend srp-chart__legend--waiting" aria-hidden />}
         </>
       ) : view === 'table' ? (
-        <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
+        <Table className="srp-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
           <TableHead>
             <TableRow>
               <TableHeaderCell scope="col" sort={sort.col === -1 ? sort.dir : 'none'} onSort={() => onSort(-1)}>{props.categoryLabel || labels.chartCategory}</TableHeaderCell>
@@ -444,19 +444,19 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
         </Table>
       ) : (
         <>
-          <div className="dk-chart__frame" ref={frame}>
-            <svg className="dk-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
+          <div className="srp-chart__frame" ref={frame}>
+            <svg className="srp-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
               aria-describedby={base + '-summary'} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => { setHover(null); setHushed(false); }}>
               <desc id={base + '-summary'}>{summary.join(' ')}</desc>
               {(type === 'bar' && series.length > 1) || (donut && slices.length > 1) ? (
                 <defs>
                   {Array.from({ length: donut ? slices.length : series.length }, (_, s) => (s ? (
-                    <pattern key={s} id={`${base}-p${s}`} className={'dk-chart__pattern dk-chart--s' + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
+                    <pattern key={s} id={`${base}-p${s}`} className={'srp-chart__pattern srp-chart--s' + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
                       patternTransform={s === 1 || s === 4 ? 'rotate(45)' : s === 2 ? 'rotate(-45)' : undefined}>
-                      <rect className="dk-chart__pattern-fill" width="6" height="6" />
-                      {s <= 3 ? <rect className="dk-chart__pattern-mark" width={s === 3 ? 1.5 : 6} height={s === 3 ? 6 : 1.5} x={s === 3 ? 2.25 : 0} y={s === 3 ? 0 : 2.25} />
-                        : s <= 5 ? <circle className="dk-chart__pattern-mark" cx="3" cy="3" r={s === 4 ? 1.1 : 1.7} />
-                        : <path className="dk-chart__pattern-mark" d={s === 6 ? 'M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z' : 'M0 0H3V3H0ZM3 3H6V6H3Z'} />}
+                      <rect className="srp-chart__pattern-fill" width="6" height="6" />
+                      {s <= 3 ? <rect className="srp-chart__pattern-mark" width={s === 3 ? 1.5 : 6} height={s === 3 ? 6 : 1.5} x={s === 3 ? 2.25 : 0} y={s === 3 ? 0 : 2.25} />
+                        : s <= 5 ? <circle className="srp-chart__pattern-mark" cx="3" cy="3" r={s === 4 ? 1.1 : 1.7} />
+                        : <path className="srp-chart__pattern-mark" d={s === 6 ? 'M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z' : 'M0 0H3V3H0ZM3 3H6V6H3Z'} />}
                     </pattern>
                   ) : null))}
                 </defs>
@@ -467,55 +467,55 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
                     {slices.map((sl, k) => (
                       <path key={k} ref={(el) => { if (el) points.current.set('0:' + k, el); else points.current.delete('0:' + k); }}
                         role="img" aria-label={labels.chartPoint(null, sl.name, share(sl.v))} tabIndex={current && current.i === k ? 0 : -1}
-                        className={'dk-chart__slice dk-chart__point dk-chart--s' + (k + 1)} d={ring(angle(k), angle(k + 1), IN, R)} fill={fill(k, slices.length)}
+                        className={'srp-chart__slice srp-chart__point srp-chart--s' + (k + 1)} d={ring(angle(k), angle(k + 1), IN, R)} fill={fill(k, slices.length)}
                         fillRule="evenodd" data-active={shown === k ? '' : undefined}
                         onPointerEnter={() => { if (k !== hover) { setHover(k); setHushed(false); } }}
                         onFocus={(e) => { setLast({ s: 0, i: k }); setHushed(false); setFocus({ s: 0, i: k, ring: e.currentTarget.matches(':focus-visible') }); }}
                         onBlur={() => setFocus(null)} />
                     ))}
-                    {focus && focus.ring && slices[focus.i] ? <path className="dk-chart__focus" aria-hidden fillRule="evenodd" d={ring(angle(focus.i), angle(focus.i + 1), IN - 3, R + 3)} /> : null}
+                    {focus && focus.ring && slices[focus.i] ? <path className="srp-chart__focus" aria-hidden fillRule="evenodd" d={ring(angle(focus.i), angle(focus.i + 1), IN - 3, R + 3)} /> : null}
                   </g>
-                  {slices.length ? <text className="dk-chart__total" aria-hidden x={at(cx)} y={at(cy)} dy="0.32em" textAnchor="middle">{labels.chartTotal(fmt(total))}</text> : null}
+                  {slices.length ? <text className="srp-chart__total" aria-hidden x={at(cx)} y={at(cy)} dy="0.32em" textAnchor="middle">{labels.chartTotal(fmt(total))}</text> : null}
                 </>
               ) : (<>
-              <g className="dk-chart__grid" aria-hidden>
+              <g className="srp-chart__grid" aria-hidden>
                 {ticks.map((t, k) => (
                   <g key={k}>
-                    <line className={t === 0 && t0 < 0 ? 'dk-chart__zero' : 'dk-chart__gridline'} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
-                    <text className="dk-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{tickText[k]}</text>
+                    <line className={t === 0 && t0 < 0 ? 'srp-chart__zero' : 'srp-chart__gridline'} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
+                    <text className="srp-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{tickText[k]}</text>
                   </g>
                 ))}
               </g>
-              <g className="dk-chart__axis" aria-hidden>
-                <line className="dk-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === 'bar' ? zero : PAD_TOP + ph)} y2={at(type === 'bar' ? zero : PAD_TOP + ph)} />
-                {categories.map((c, i) => (i % every ? null : <text key={i} className="dk-chart__label" x={at(xAt(i))} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
+              <g className="srp-chart__axis" aria-hidden>
+                <line className="srp-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === 'bar' ? zero : PAD_TOP + ph)} y2={at(type === 'bar' ? zero : PAD_TOP + ph)} />
+                {categories.map((c, i) => (i % every ? null : <text key={i} className="srp-chart__label" x={at(xAt(i))} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
               </g>
               {type === 'area' ? (
                 <g aria-hidden>
-                  {series.map((_, s) => <path key={s} className={'dk-chart__area dk-chart--s' + (s + 1)} d={areaPath(s)} />)}
+                  {series.map((_, s) => <path key={s} className={'srp-chart__area srp-chart--s' + (s + 1)} d={areaPath(s)} />)}
                 </g>
               ) : null}
-              {shown != null ? <line className="dk-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
+              {shown != null ? <line className="srp-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
               <Marks series={series} categories={categories} type={type} stacked={stacked} start={start} pw={pw} ph={ph} t0={t0} tN={tN} width={width} rtl={rtl}
                 formatValue={props.formatValue} locale={locale} labels={labels} base={base} tabS={current ? current.s : -1} tabI={current ? current.i : -1} api={api} />
               {focus && focus.ring && val(focus.s, focus.i) != null ? (() => {
                 // The focus ring, a gap away from the point so it shows against the series' own color.
-                if (linear) return <circle className="dk-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(py(focus.s, focus.i))} r={MARKER + 5} />;
+                if (linear) return <circle className="srp-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(py(focus.s, focus.i))} r={MARKER + 5} />;
                 const b = bar(focus.s, focus.i);
-                return <rect className="dk-chart__focus" aria-hidden x={at(b.x - 3)} y={at(b.y - 3)} width={at(b.w + 6)} height={at(b.h + 6)} rx="2" />;
+                return <rect className="srp-chart__focus" aria-hidden x={at(b.x - 3)} y={at(b.y - 3)} width={at(b.w + 6)} height={at(b.h + 6)} rx="2" />;
               })() : null}
               </>)}
             </svg>
             {tip ? (
-              <div ref={tipRef} className="dk-chart__tip" aria-hidden>
-                <div className="dk-chart__tip-title">{tip.title}</div>
+              <div ref={tipRef} className="srp-chart__tip" aria-hidden>
+                <div className="srp-chart__tip-title">{tip.title}</div>
                 {tipRows.map((r) => (
-                  <div key={r.s} className={cn('dk-chart__tip-row', 'dk-chart--s' + (r.s + 1), focus && focus.s === r.s && 'dk-chart__tip-row--focus')}>
-                    <svg className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
-                      {linear ? <path className="dk-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} /> : <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s, donut ? slices.length : series.length)} />}
+                  <div key={r.s} className={cn('srp-chart__tip-row', 'srp-chart--s' + (r.s + 1), focus && focus.s === r.s && 'srp-chart__tip-row--focus')}>
+                    <svg className="srp-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                      {linear ? <path className="srp-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} /> : <rect className="srp-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s, donut ? slices.length : series.length)} />}
                     </svg>
-                    {series.length > 1 && !donut ? <span className="dk-chart__tip-name">{r.name}</span> : null}
-                    <span className="dk-chart__tip-value">{r.text}</span>
+                    {series.length > 1 && !donut ? <span className="srp-chart__tip-name">{r.name}</span> : null}
+                    <span className="srp-chart__tip-value">{r.text}</span>
                   </div>
                 ))}
               </div>
@@ -523,24 +523,24 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
           </div>
           {!props.hideLegend && donut && slices.length ? (
             // A donut's legend names each slice with its share, so the slices are told apart in words, not by color alone.
-            <ul role="list" className="dk-chart__legend" aria-hidden>
+            <ul role="list" className="srp-chart__legend" aria-hidden>
               {slices.map((sl, k) => (
-                <li key={k} className={'dk-chart__key dk-chart--s' + (k + 1)}>
-                  <svg className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
-                    <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(k, slices.length)} />
+                <li key={k} className={'srp-chart__key srp-chart--s' + (k + 1)}>
+                  <svg className="srp-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                    <rect className="srp-chart__bar" x="1" y="1" width="10" height="10" fill={fill(k, slices.length)} />
                   </svg>
-                  {sl.name}<span className="dk-chart__key-value">{share(sl.v)}</span>
+                  {sl.name}<span className="srp-chart__key-value">{share(sl.v)}</span>
                 </li>
               ))}
             </ul>
           ) : !props.hideLegend && series.length && !donut ? (
-            <ul role="list" className="dk-chart__legend" aria-hidden>
+            <ul role="list" className="srp-chart__legend" aria-hidden>
               {series.map((sr, s) => (
-                <li key={s} className={'dk-chart__key dk-chart--s' + (s + 1)}>
-                  <svg className="dk-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
+                <li key={s} className={'srp-chart__key srp-chart--s' + (s + 1)}>
+                  <svg className="srp-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
                     {linear
-                      ? <><path className="dk-chart__line" d="M1 6H19" /><path className="dk-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
-                      : <rect className="dk-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
+                      ? <><path className="srp-chart__line" d="M1 6H19" /><path className="srp-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
+                      : <rect className="srp-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
                   </svg>
                   {sr.name}
                 </li>

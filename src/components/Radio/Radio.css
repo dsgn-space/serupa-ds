@@ -1,105 +1,105 @@
 /* ---------------------------------------------------------------
    Radio and RadioGroup: a native radio (appearance: none, drawn from tokens) and its label, laid out like
-   Checkbox, and the group that holds a set. Structure: .dk-radio-group > .dk-radio (a <label>) >
-   .dk-radio__control (.dk-radio__input, .dk-radio__dot), .dk-radio__text (.dk-radio__label,
-   .dk-radio__description). Every value goes through --radio-* tokens.
+   Checkbox, and the group that holds a set. Structure: .srp-radio-group > .srp-radio (a <label>) >
+   .srp-radio__control (.srp-radio__input, .srp-radio__dot), .srp-radio__text (.srp-radio__label,
+   .srp-radio__description). Every value goes through --radio-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-radio-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--radio-group-gap, var(--spacing-2)); }
-.dk-radio-group--horizontal { flex-direction: row; flex-wrap: wrap; column-gap: var(--radio-group-gap-horizontal, var(--spacing-4)); }
-.dk-radio {
-  --dk-radio-box: var(--radio-size-md, var(--spacing-4));
-  --dk-radio-dot: var(--radio-dot-size-md, var(--spacing-1\.5));
-  --dk-radio-lh: var(--text-sm--line-height);
+@layer srp.components {
+.srp-radio-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--radio-group-gap, var(--spacing-2)); }
+.srp-radio-group--horizontal { flex-direction: row; flex-wrap: wrap; column-gap: var(--radio-group-gap-horizontal, var(--spacing-4)); }
+.srp-radio {
+  --srp-radio-box: var(--radio-size-md, var(--spacing-4));
+  --srp-radio-dot: var(--radio-dot-size-md, var(--spacing-1\.5));
+  --srp-radio-lh: var(--text-sm--line-height);
   display: inline-flex; align-items: flex-start; gap: var(--radio-gap, var(--spacing-2));
   vertical-align: top; color: var(--radio-label-color, var(--text));
-  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--dk-radio-lh);
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--srp-radio-lh);
   cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-radio--size-sm { --dk-radio-box: var(--radio-size-sm, var(--spacing-3\.5)); --dk-radio-dot: var(--radio-dot-size-sm, var(--spacing-1\.5)); --dk-radio-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
-.dk-radio--size-lg { --dk-radio-box: var(--radio-size-lg, var(--spacing-5)); --dk-radio-dot: var(--radio-dot-size-lg, var(--spacing-2)); --dk-radio-lh: var(--text-base--line-height); font-size: var(--text-base); }
-.dk-radio__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; height: var(--dk-radio-lh); }
-.dk-radio--bare .dk-radio__control { height: var(--dk-radio-box); }
+.srp-radio--size-sm { --srp-radio-box: var(--radio-size-sm, var(--spacing-3\.5)); --srp-radio-dot: var(--radio-dot-size-sm, var(--spacing-1\.5)); --srp-radio-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
+.srp-radio--size-lg { --srp-radio-box: var(--radio-size-lg, var(--spacing-5)); --srp-radio-dot: var(--radio-dot-size-lg, var(--spacing-2)); --srp-radio-lh: var(--text-base--line-height); font-size: var(--text-base); }
+.srp-radio__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; height: var(--srp-radio-lh); }
+.srp-radio--bare .srp-radio__control { height: var(--srp-radio-box); }
 /* Pressed: while the row is held (pointer, or Space on it) the circle takes its held colors (below), a step past
    hover. Nothing shrinks by default; --radio-press-scale opts in to one. Not when read-only or disabled. */
-.dk-radio__control { transition: scale var(--motion-release) var(--ease-spring); }
-.dk-radio:active:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) .dk-radio__control { scale: var(--radio-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
-@media (prefers-reduced-motion: reduce) { .dk-radio__control { transition: none; } .dk-radio:active .dk-radio__control { scale: none; } }
-.dk-radio__input {
-  --dk-radio-bd: var(--radio-border, var(--field-border));
-  --dk-radio-fill: var(--radio-bg-checked, var(--primary));
-  --dk-radio-ring: var(--radio-focus-ring, var(--focus-ring));
+.srp-radio__control { transition: scale var(--motion-release) var(--ease-spring); }
+.srp-radio:active:not(.srp-radio--readonly, :has(.srp-radio__input:disabled)) .srp-radio__control { scale: var(--radio-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+@media (prefers-reduced-motion: reduce) { .srp-radio__control { transition: none; } .srp-radio:active .srp-radio__control { scale: none; } }
+.srp-radio__input {
+  --srp-radio-bd: var(--radio-border, var(--field-border));
+  --srp-radio-fill: var(--radio-bg-checked, var(--primary));
+  --srp-radio-ring: var(--radio-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
-  box-sizing: border-box; flex-shrink: 0; width: var(--dk-radio-box); height: var(--dk-radio-box); margin: var(--spacing-0);
-  --dk-radio-bg: var(--radio-bg, var(--field));
-  background: var(--dk-radio-bg);
-  border: var(--radio-border-width, var(--border-width-1)) solid var(--dk-radio-bd);
+  box-sizing: border-box; flex-shrink: 0; width: var(--srp-radio-box); height: var(--srp-radio-box); margin: var(--spacing-0);
+  --srp-radio-bg: var(--radio-bg, var(--field));
+  background: var(--srp-radio-bg);
+  border: var(--radio-border-width, var(--border-width-1)) solid var(--srp-radio-bd);
   border-radius: var(--rounded-full);
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
-@media (hover: hover) { .dk-radio:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
-.dk-radio:active .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bg: var(--radio-bg-pressed, var(--secondary)); --dk-radio-fill: var(--radio-bg-checked-pressed, var(--primary-pressed)); }
-.dk-radio:not(.dk-radio--invalid):active .dk-radio__input:not(:disabled, [readonly], :user-invalid) { --dk-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
-.dk-radio__input:checked { background: var(--dk-radio-fill); border-color: var(--dk-radio-fill); }
-.dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
-.dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
+@media (hover: hover) { .srp-radio:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --srp-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
+.srp-radio:active .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bg: var(--radio-bg-pressed, var(--secondary)); --srp-radio-fill: var(--radio-bg-checked-pressed, var(--primary-pressed)); }
+.srp-radio:not(.srp-radio--invalid):active .srp-radio__input:not(:disabled, [readonly], :user-invalid) { --srp-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
+.srp-radio__input:checked { background: var(--srp-radio-fill); border-color: var(--srp-radio-fill); }
+.srp-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--srp-radio-dot); height: var(--srp-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
+.srp-radio__input:checked + .srp-radio__dot { visibility: visible; }
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */
-.dk-radio__input:is(:focus-visible, [data-key-focus]) {
-  outline: var(--focus-ring-width) solid var(--dk-radio-ring); outline-offset: var(--focus-ring-offset);
+.srp-radio__input:is(:focus-visible, [data-key-focus]) {
+  outline: var(--focus-ring-width) solid var(--srp-radio-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
-.dk-radio--invalid .dk-radio__input { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-radio--invalid:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
+.srp-radio--invalid .srp-radio__input { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-radio--invalid:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 /* A required group with nothing picked once people try to send the form: as Input (:user-invalid). */
-.dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-radio:hover .dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
-.dk-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
-.dk-radio__description { color: var(--radio-description-color, var(--text-muted)); }
+.srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-radio:hover .srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
+.srp-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-radio__description { color: var(--radio-description-color, var(--text-muted)); }
 /* Read-only: a default cursor and no hover or press change, since a click does nothing. */
-.dk-radio--readonly { cursor: default; }
+.srp-radio--readonly { cursor: default; }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
-.dk-radio:has(.dk-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.dk-radio:has(.dk-radio__input:disabled) .dk-radio__description { color: var(--radio-text-disabled, var(--disabled-text)); }
+.srp-radio:has(.srp-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-radio:has(.srp-radio__input:disabled) .srp-radio__description { color: var(--radio-text-disabled, var(--disabled-text)); }
 /* Neutral, not faded (foundations.md, States): a chosen radio is a disabled-surface fill in a disabled-border edge, with a disabled-text dot. */
-.dk-radio__input:disabled { --dk-radio-bd: var(--radio-border-disabled, var(--disabled-border)); --dk-radio-fill: var(--radio-fill-disabled, var(--disabled-surface)); }
-.dk-radio__input:disabled:checked { border-color: var(--radio-border-disabled, var(--disabled-border)); }
-.dk-radio__input:disabled + .dk-radio__dot { background: var(--radio-text-disabled, var(--disabled-text)); }
-.dk-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--field-readonly)); }   /* a disabled field's fill: surface-muted is a recess, a black hole in dark */
+.srp-radio__input:disabled { --srp-radio-bd: var(--radio-border-disabled, var(--disabled-border)); --srp-radio-fill: var(--radio-fill-disabled, var(--disabled-surface)); }
+.srp-radio__input:disabled:checked { border-color: var(--radio-border-disabled, var(--disabled-border)); }
+.srp-radio__input:disabled + .srp-radio__dot { background: var(--radio-text-disabled, var(--disabled-text)); }
+.srp-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--field-readonly)); }   /* a disabled field's fill: surface-muted is a recess, a black hole in dark */
 /* Card: the radio, label and description in a bordered card, pressed as a whole, a 2px primary border once checked
    (drawn inside, so nothing moves; the dot says it too, so it isn't colour alone), the focus ring around the card. In a group the cards
    fill the column, or share a wrapping row. */
-.dk-radio-group--card { align-items: stretch; gap: var(--radio-card-group-gap, var(--spacing-3)); }
-.dk-radio-group--card.dk-radio-group--horizontal > .dk-radio { flex: auto; flex-basis: var(--radio-card-min-width, var(--spacing-48)); }
-.dk-radio--card {
+.srp-radio-group--card { align-items: stretch; gap: var(--radio-card-group-gap, var(--spacing-3)); }
+.srp-radio-group--card.srp-radio-group--horizontal > .srp-radio { flex: auto; flex-basis: var(--radio-card-min-width, var(--spacing-48)); }
+.srp-radio--card {
   gap: var(--radio-card-gap, var(--spacing-3)); padding: var(--radio-card-padding, var(--spacing-4));
   border: var(--radio-border-width, var(--border-width-1)) solid var(--radio-card-border, var(--border)); border-radius: var(--radio-card-radius, var(--radius-surface));
   background: var(--radio-card-bg, var(--surface));
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
-.dk-radio--card .dk-radio__label { font-weight: var(--radio-card-label-weight, var(--font-medium)); }
-@media (hover: hover) { .dk-radio--card:hover:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
-.dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--dk-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--dk-radio-card-on); }
-.dk-radio--card:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-radio--card .dk-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.dk-radio--card.dk-radio--invalid:not(:has(.dk-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
-.dk-radio--card.dk-radio--invalid:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
-@media (forced-colors: active) { .dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: Highlight; } }
-@media (forced-colors: active) { .dk-radio__dot { background: CanvasText; } }
+.srp-radio--card .srp-radio__label { font-weight: var(--radio-card-label-weight, var(--font-medium)); }
+@media (hover: hover) { .srp-radio--card:hover:not(.srp-radio--readonly, :has(.srp-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
+.srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--srp-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--srp-radio-card-on); }
+.srp-radio--card:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-radio--card .srp-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
+.srp-radio--card.srp-radio--invalid:not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
+.srp-radio--card.srp-radio--invalid:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
+@media (forced-colors: active) { .srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: Highlight; } }
+@media (forced-colors: active) { .srp-radio__dot { background: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
-.dk-radio { position: relative; isolation: isolate; }
+.srp-radio { position: relative; isolation: isolate; }
 /* Pressed twice, the label highlights none of its words: it is part of the control, as a Button's is. */
-.dk-radio { -webkit-user-select: none; user-select: none; }
-.dk-radio::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+.srp-radio { -webkit-user-select: none; user-select: none; }
+.srp-radio::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 /* Touch (EQ1): 44px to press, as Apple and Material ask. In a group it stops halfway into the gap
    to a neighbour, so two never overlap. */
 @media (pointer: coarse) {
-  .dk-radio::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); --dk-half-gap: calc(var(--spacing-0) - var(--radio-group-gap, var(--spacing-2)) / 2); }
-  .dk-radio-group--horizontal > .dk-radio::after { --dk-half-gap: calc(var(--spacing-0) - var(--radio-group-gap-horizontal, var(--spacing-4)) / 2); }
-  .dk-radio-group--vertical > .dk-radio:not(:first-child)::after { inset-block-start: max(var(--dk-reach), var(--dk-half-gap)); }
-  .dk-radio-group--vertical > .dk-radio:not(:last-child)::after { inset-block-end: max(var(--dk-reach), var(--dk-half-gap)); }
-  .dk-radio-group--horizontal > .dk-radio:not(:first-child)::after { inset-inline-start: max(var(--dk-reach), var(--dk-half-gap)); }
-  .dk-radio-group--horizontal > .dk-radio:not(:last-child)::after { inset-inline-end: max(var(--dk-reach), var(--dk-half-gap)); }
+  .srp-radio::after { --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); --srp-half-gap: calc(var(--spacing-0) - var(--radio-group-gap, var(--spacing-2)) / 2); }
+  .srp-radio-group--horizontal > .srp-radio::after { --srp-half-gap: calc(var(--spacing-0) - var(--radio-group-gap-horizontal, var(--spacing-4)) / 2); }
+  .srp-radio-group--vertical > .srp-radio:not(:first-child)::after { inset-block-start: max(var(--srp-reach), var(--srp-half-gap)); }
+  .srp-radio-group--vertical > .srp-radio:not(:last-child)::after { inset-block-end: max(var(--srp-reach), var(--srp-half-gap)); }
+  .srp-radio-group--horizontal > .srp-radio:not(:first-child)::after { inset-inline-start: max(var(--srp-reach), var(--srp-half-gap)); }
+  .srp-radio-group--horizontal > .srp-radio:not(:last-child)::after { inset-inline-end: max(var(--srp-reach), var(--srp-half-gap)); }
 }
 }

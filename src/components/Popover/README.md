@@ -38,8 +38,8 @@ import { Popover, Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story, opened.
 
-1. **Title** (`.dk-popover__title`): an optional heading that names the popover.
-2. **Body** (`.dk-popover__body`): its content.
+1. **Title** (`.srp-popover__title`): an optional heading that names the popover.
+2. **Body** (`.srp-popover__body`): its content.
 
 ## Usage
 

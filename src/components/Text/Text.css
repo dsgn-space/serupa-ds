@@ -5,32 +5,32 @@
    ellipsis; lines shows at most that many lines, the last cut with an ellipsis; measure caps a line at about 65 characters (container-prose). Margins are left to the layout (none by
    default).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-text { margin: var(--spacing-0); font-family: var(--font-sans); overflow-wrap: anywhere; }
+@layer srp.components {
+.srp-text { margin: var(--spacing-0); font-family: var(--font-sans); overflow-wrap: anywhere; }
 /* In a table cell the column takes its width from the narrowest the text can go, which anywhere would make one
    letter: the words stay whole there, as for a Link. */
-:where(td, th) .dk-text { overflow-wrap: break-word; }
-.dk-text--xs { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-text--sm { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-text--lg { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
-.dk-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
-.dk-text--default { color: var(--text-color, var(--text)); }
-.dk-text--muted { color: var(--text-color-muted, var(--text-muted)); }
-.dk-text--primary { color: var(--text-color-primary, var(--primary)); }
-.dk-text--danger { color: var(--text-color-danger, var(--danger-text)); }
-.dk-text--normal { font-weight: var(--font-normal); }
-.dk-text--medium { font-weight: var(--font-medium); }
-.dk-text--semibold { font-weight: var(--font-semibold); }
-.dk-text--bold { font-weight: var(--font-bold); }
-.dk-text--measure { max-inline-size: var(--container-prose); }
-.dk-text--truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.dk-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-text-lines); line-clamp: var(--dk-text-lines); overflow: hidden; }
-.dk-text--clamp[data-lines="1"] { --dk-text-lines: var(--line-clamp-1); }
-.dk-text--clamp[data-lines="2"] { --dk-text-lines: var(--line-clamp-2); }
-.dk-text--clamp[data-lines="3"] { --dk-text-lines: var(--line-clamp-3); }
-.dk-text--clamp[data-lines="4"] { --dk-text-lines: var(--line-clamp-4); }
-.dk-text--clamp[data-lines="5"] { --dk-text-lines: var(--line-clamp-5); }
-.dk-text--clamp[data-lines="6"] { --dk-text-lines: var(--line-clamp-6); }
-span.dk-text--truncate, strong.dk-text--truncate, em.dk-text--truncate, small.dk-text--truncate, label.dk-text--truncate { display: block; }
+:where(td, th) .srp-text { overflow-wrap: break-word; }
+.srp-text--xs { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-text--sm { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-text--lg { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
+.srp-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
+.srp-text--default { color: var(--text-color, var(--text)); }
+.srp-text--muted { color: var(--text-color-muted, var(--text-muted)); }
+.srp-text--primary { color: var(--text-color-primary, var(--primary)); }
+.srp-text--danger { color: var(--text-color-danger, var(--danger-text)); }
+.srp-text--normal { font-weight: var(--font-normal); }
+.srp-text--medium { font-weight: var(--font-medium); }
+.srp-text--semibold { font-weight: var(--font-semibold); }
+.srp-text--bold { font-weight: var(--font-bold); }
+.srp-text--measure { max-inline-size: var(--container-prose); }
+.srp-text--truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.srp-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--srp-text-lines); line-clamp: var(--srp-text-lines); overflow: hidden; }
+.srp-text--clamp[data-lines="1"] { --srp-text-lines: var(--line-clamp-1); }
+.srp-text--clamp[data-lines="2"] { --srp-text-lines: var(--line-clamp-2); }
+.srp-text--clamp[data-lines="3"] { --srp-text-lines: var(--line-clamp-3); }
+.srp-text--clamp[data-lines="4"] { --srp-text-lines: var(--line-clamp-4); }
+.srp-text--clamp[data-lines="5"] { --srp-text-lines: var(--line-clamp-5); }
+.srp-text--clamp[data-lines="6"] { --srp-text-lines: var(--line-clamp-6); }
+span.srp-text--truncate, strong.srp-text--truncate, em.srp-text--truncate, small.srp-text--truncate, label.srp-text--truncate { display: block; }
 }

@@ -1,7 +1,7 @@
 // Anatomy (128): each component guide's "## Anatomy" section is a numbered list the docs can draw (docs/anatomy.tsx):
 // parts numbered 1, 2, 3… with a name each, and a class selector each that's in the markup of the story the diagram
 // is drawn on (tools/test/baseline-server/<Name>.html, the story it names), so no number points at
-// nothing. Components with parts (any dk-<block>__<part> in their CSS) need the section; ones without (Container,
+// nothing. Components with parts (any srp-<block>__<part> in their CSS) need the section; ones without (Container,
 // Text, Tooltip's single box) don't. The list says which don't have it yet.
 //   node tools/test/anatomy.mjs
 import fs from 'node:fs';
@@ -47,8 +47,8 @@ for (const name of fs.readdirSync(DIR).sort()) {
   const md = fs.readFileSync(readme, 'utf8');
   const s = section(md);
   const css = fs.existsSync(path.join(DIR, name, `${name}.css`)) ? fs.readFileSync(path.join(DIR, name, `${name}.css`), 'utf8') : '';
-  // Parts are any dk-<block>__<part> in its own CSS, whatever the block is called (dk-btn, dk-segmented): GR155.
-  const hasParts = /\.dk-[a-z][a-z0-9-]*__[a-z]/.test(css);
+  // Parts are any srp-<block>__<part> in its own CSS, whatever the block is called (srp-btn, srp-segmented): GR155.
+  const hasParts = /\.srp-[a-z][a-z0-9-]*__[a-z]/.test(css);
   if (!s) {
     if (hasParts && !TODO.has(name) && !EXEMPT[name]) t(`${name}: the guide has an Anatomy section (its CSS has parts)`, false, 'add "## Anatomy" after "When not to use": a numbered list of **Part** (`.class`): what it is');
     continue;

@@ -34,14 +34,14 @@ import { Navbar, NavbarLink, Button, Avatar } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story.
 
-1. **Brand** (`.dk-navbar__brand`): the product's name or logo, linking home.
-2. **Links** (`.dk-navbar__links`): the main sections of the site.
-3. **Current link** (`.dk-navbar__link--active`): the section you're in.
-4. **Actions** (`.dk-navbar__actions`): search, account or other actions at the end.
+1. **Brand** (`.srp-navbar__brand`): the product's name or logo, linking home.
+2. **Links** (`.srp-navbar__links`): the main sections of the site.
+3. **Current link** (`.srp-navbar__link--active`): the section you're in.
+4. **Actions** (`.srp-navbar__actions`): search, account or other actions at the end.
 
 ## Usage
 
-- A NavbarMenu's parts (the `Menus` story): its button (`.dk-navbar__menu-button`), with the section's name and a chevron that turns while it's open; the panel (`.dk-navbar__menu-panel`) across the bar under it; its groups (`.dk-navbar__menu-group`), each a title over a list of links; and each link (`.dk-navbar__menu-link`), its name and a muted line about it.
+- A NavbarMenu's parts (the `Menus` story): its button (`.srp-navbar__menu-button`), with the section's name and a chevron that turns while it's open; the panel (`.srp-navbar__menu-panel`) across the bar under it; its groups (`.srp-navbar__menu-group`), each a title over a list of links; and each link (`.srp-navbar__menu-link`), its name and a muted line about it.
 - Keep the links to the main pages, a few short words each; below 768px, or when they don't fit beside the brand and the actions (seven links, long translated labels), they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
 - Mark the current page with `active` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.

@@ -37,9 +37,9 @@ const [index, setIndex] = React.useState(0);
 
 Drawn from the `Default` story.
 
-1. **Stage** (`.dk-lightbox__stage`): the picture, as large as the screen lets it be, with its own shape.
-2. **Caption** (`.dk-lightbox__caption`): the picture's `caption`, under it.
-3. **Arrows** (`.dk-lightbox__nav`): the previous and next buttons, with "2 of 4" between them.
+1. **Stage** (`.srp-lightbox__stage`): the picture, as large as the screen lets it be, with its own shape.
+2. **Caption** (`.srp-lightbox__caption`): the picture's `caption`, under it.
+3. **Arrows** (`.srp-lightbox__nav`): the previous and next buttons, with "2 of 4" between them.
 
 ## Usage
 

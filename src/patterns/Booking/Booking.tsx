@@ -145,7 +145,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
     setFailed(false);
     if (problem || !stay || !guests) {
       setAsked(true);
-      calendar.current?.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]')?.focus();
+      calendar.current?.querySelector<HTMLElement>('.srp-calendar__day[tabindex="0"]')?.focus();
       return;
     }
     const s: BookingStay = { ...stay, guests };

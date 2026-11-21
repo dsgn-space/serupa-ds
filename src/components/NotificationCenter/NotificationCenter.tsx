@@ -95,7 +95,7 @@ const TONES: readonly ToastTone[] = ['neutral', 'info', 'success', 'warning', 'd
 
 function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & React.RefAttributes<HTMLDialogElement>) {
   const labels = useSettings(words).labels;
-  const base = domId('dk-nc', React.useId());
+  const base = domId('srp-nc', React.useId());
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
   const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, settingsHref: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
     placement: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1 } as const);
@@ -114,11 +114,11 @@ function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & R
   // The list emptied some other way while it asked: the question goes with it, in this render, not an effect after.
   if (asking && !clear) setAsking(false);
   const footer = asking && clear ? <>
-    <p className="dk-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
+    <p className="srp-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
     <Button destructive variant="outline" size="sm" onClick={() => { fromFooter.current = true; setAsking(false); onClear?.(); }}>{labels.clearNotifications}</Button>
     <Button ref={keep} variant="ghost" size="sm" aria-describedby={askId} onClick={() => { setAsking(false); requestAnimationFrame(() => clearButton.current?.focus()); }}>{labels.keepNotifications}</Button>
   </> : markAll || clear || props.settingsHref ? <>
-    {props.settingsHref ? <Button className="dk-notification-center__settings" href={props.settingsHref} variant="link" size="sm">{labels.notificationSettings}</Button> : null}
+    {props.settingsHref ? <Button className="srp-notification-center__settings" href={props.settingsHref} variant="link" size="sm">{labels.notificationSettings}</Button> : null}
     {markAll ? <Button variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onMarkAllRead?.(); }}>{labels.markAllRead}</Button> : null}
     {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => setAsking(true)}>{labels.clearNotifications}</Button> : null}
   </> : null;
@@ -145,27 +145,27 @@ function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & R
     if (to) to.focus();
   }, [items]);
   return (
-    <Drawer {...rest} ref={ref} className={cn('dk-notification-center', props.className)} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
+    <Drawer {...rest} ref={ref} className={cn('srp-notification-center', props.className)} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
       placement={props.placement} size={props.size} modal={props.modal} closeButton={props.closeButton} closeLabel={props.closeLabel} closeOnBackdrop={props.closeOnBackdrop} swipeToClose={props.swipeToClose} initialFocus={props.initialFocus} finalFocus={props.finalFocus}
       title={props.title != null ? props.title : labels.notificationCenter} footer={footer}>
       {items.length ? (
-        <ul role="list" className="dk-notification-center__list" ref={list}
+        <ul role="list" className="srp-notification-center__list" ref={list}
           onFocus={(e) => { at.current = rowOf(e.target); fromFooter.current = false; }} onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) at.current = -1; }}>
           {items.map((n, i) => {
             const tone = oneOf(TONES, n.tone, 'neutral'), icon = ICONS[tone], titleId = base + '-' + i;
             return (
               // Focusable from script only: "Mark as read" goes away once chosen, and focus stays on its row.
-              <li key={n.id} tabIndex={-1} className={cn('dk-notification-center__item', 'dk-notification-center__item--' + tone)} data-tone={tone} data-read={n.read ? '' : undefined}>
-                {icon ? <span className="dk-notification-center__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
-                <div className="dk-notification-center__content">
-                  <p className="dk-notification-center__title">
-                    {n.read ? null : <span className="dk-visually-hidden">{labels.unreadNotification + ': '}</span>}
+              <li key={n.id} tabIndex={-1} className={cn('srp-notification-center__item', 'srp-notification-center__item--' + tone)} data-tone={tone} data-read={n.read ? '' : undefined}>
+                {icon ? <span className="srp-notification-center__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
+                <div className="srp-notification-center__content">
+                  <p className="srp-notification-center__title">
+                    {n.read ? null : <span className="srp-visually-hidden">{labels.unreadNotification + ': '}</span>}
                     <span id={titleId}>{n.title}</span>
                   </p>
-                  {n.description != null ? <p className="dk-notification-center__description">{n.description}</p> : null}
-                  {n.time != null ? <RelativeTime className="dk-notification-center__time" date={n.time} format="short" /> : null}
+                  {n.description != null ? <p className="srp-notification-center__description">{n.description}</p> : null}
+                  {n.time != null ? <RelativeTime className="srp-notification-center__time" date={n.time} format="short" /> : null}
                 </div>
-                {n.read ? null : <span className="dk-notification-center__dot" aria-hidden="true" />}
+                {n.read ? null : <span className="srp-notification-center__dot" aria-hidden="true" />}
                 {/* Every unread row has one, so it's described by its row's title: "Mark as read, button, Invoice paid" (TF4).
                     IconButton leaves its own tooltip out when it's described, so this one shows its name on hover and focus. */}
                 {!n.read && onMarkRead ? <Tooltip content={labels.markRead} role="label"><IconButton icon={icons.Check} label={labels.markRead} hideTitle aria-describedby={titleId} size="sm" onClick={(e) => { e.currentTarget.closest('li')?.focus(); onMarkRead(n.id); }} /></Tooltip> : null}
@@ -173,7 +173,7 @@ function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & R
             );
           })}
         </ul>
-      ) : <p className="dk-notification-center__empty" ref={none} tabIndex={-1}>{props.empty != null ? props.empty : labels.noNotifications}</p>}
+      ) : <p className="srp-notification-center__empty" ref={none} tabIndex={-1}>{props.empty != null ? props.empty : labels.noNotifications}</p>}
     </Drawer>
   );
 }

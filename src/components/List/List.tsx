@@ -124,7 +124,7 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
     else if (e.key === 'End' && onRow) go(all.length - 1);
     else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') across((e.key === 'ArrowRight') !== rtl ? 1 : -1);
     else if (onRow && e.key === ' ') pick(row, e.shiftKey);
-    else if (onRow && e.key === 'Enter') { const main = row.querySelector<HTMLElement>('a.dk-list__main, button.dk-list__main'); if (main) main.click(); else pick(row, false); }
+    else if (onRow && e.key === 'Enter') { const main = row.querySelector<HTMLElement>('a.srp-list__main, button.srp-list__main'); if (main) main.click(); else pick(row, false); }
     else if (onRow && mode === 'multiple' && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') emit(all.filter(usable).map(val));
     else return;
     e.preventDefault();
@@ -134,7 +134,7 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
     const t = e.target as HTMLElement, row = t.closest<HTMLElement>('[data-list-value]');
     if (!row || row.parentElement !== ul.current) return;
     const control = t.closest('a, button, input, select, textarea, label, [role="button"], [role="menuitem"]');
-    if (control && !(control.matches('input') && control.closest('.dk-list__select'))) return;
+    if (control && !(control.matches('input') && control.closest('.srp-list__select'))) return;
     pick(row, e.shiftKey);
   };
   const onFocus = (e: React.FocusEvent<HTMLUListElement>) => {
@@ -153,7 +153,7 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
     onKeyDown: mode ? (e: React.KeyboardEvent<HTMLUListElement>) => { if (theirs.key) theirs.key(e); if (!e.defaultPrevented) onKeyDown(e); } : theirs.key,
     onClick: mode ? (e: React.MouseEvent<HTMLUListElement>) => { if (theirs.click) theirs.click(e); onClick(e); } : theirs.click,
     onFocus: mode ? (e: React.FocusEvent<HTMLUListElement>) => { if (theirs.focus) theirs.focus(e); onFocus(e); } : theirs.focus,
-    className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided === 'inset' ? 'dk-list--inset' : props.divided !== false && 'dk-list--divided', mode && 'dk-list--selectable', props.className),
+    className: cn('srp-list', variant === 'card' && 'srp-list--card', props.divided === 'inset' ? 'srp-list--inset' : props.divided !== false && 'srp-list--divided', mode && 'srp-list--selectable', props.className),
   };
   return <PickContext.Provider value={ctx}><Tag {...attrs} ref={merged} /></PickContext.Provider>;
 }
@@ -173,16 +173,16 @@ function ListItemBaseRender({ ref, ...props }: ListItemProps<React.ElementType> 
   const on = pick ? pick.has(value) : false;
   const lead = asIcon(props.leading as React.ReactNode);
   const body = <>
-    {lead != null && lead !== false ? <span className={cn('dk-list__leading', typeof props.leading === 'string' && 'dk-list__leading--icon')}>{lead}</span> : null}
-    <span className="dk-list__text">
-      <span className="dk-list__title" id={pick ? titleId : undefined}>{props.title}</span>
-      {props.description != null ? <span className="dk-list__description">{props.description}</span> : null}
+    {lead != null && lead !== false ? <span className={cn('srp-list__leading', typeof props.leading === 'string' && 'srp-list__leading--icon')}>{lead}</span> : null}
+    <span className="srp-list__text">
+      <span className="srp-list__title" id={pick ? titleId : undefined}>{props.title}</span>
+      {props.description != null ? <span className="srp-list__description">{props.description}</span> : null}
     </span>
   </>;
   const lp: Record<string, unknown> = Object.assign({}, props.linkProps);
   let main: React.ReactNode;
   if (props.href != null || props.as) {
-    const attrs: Record<string, unknown> = Object.assign(lp, { className: cn('dk-list__main', lp.className), 'aria-current': lp['aria-current'] !== undefined ? lp['aria-current'] : props.selected ? 'true' : undefined });
+    const attrs: Record<string, unknown> = Object.assign(lp, { className: cn('srp-list__main', lp.className), 'aria-current': lp['aria-current'] !== undefined ? lp['aria-current'] : props.selected ? 'true' : undefined });
     // Disabled, it's a plain <a> without an address: a router link would still draw its href from to (or a similar
     // prop), which a middle or Ctrl click opens. Only the names, data and look of linkProps stay (L8E67).
     const keep = (k: string) => /^(aria-|data-)/.test(k) || k === 'id' || k === 'title' || k === 'style' || k === 'className' || k === 'lang' || k === 'dir';
@@ -193,22 +193,22 @@ function ListItemBaseRender({ ref, ...props }: ListItemProps<React.ElementType> 
     else { attrs.href = props.href; if (props.onClick) attrs.onClick = props.onClick; }
     main = React.createElement(props.disabled ? 'a' : props.as || config.link, attrs, body);
   } else if (props.onClick) {
-    main = <button type="button" {...lp} className={cn('dk-list__main', lp.className)} onClick={props.onClick} disabled={props.disabled} aria-pressed={props.selected === undefined ? undefined : !!props.selected}>{body}</button>;
+    main = <button type="button" {...lp} className={cn('srp-list__main', lp.className)} onClick={props.onClick} disabled={props.disabled} aria-pressed={props.selected === undefined ? undefined : !!props.selected}>{body}</button>;
   } else {
-    main = <div className="dk-list__main dk-list__main--static" role={pick ? 'gridcell' : undefined}>{body}</div>;
+    main = <div className="srp-list__main srp-list__main--static" role={pick ? 'gridcell' : undefined}>{body}</div>;
   }
   const interactive = props.href != null || !!props.as || !!props.onClick;
   // In a List with selectionMode: a grid row named by its title, with a cell for the checkbox, the main area and the actions.
   const row = pick ? { role: 'row', 'data-list-value': value, 'aria-selected': on, 'aria-disabled': props.disabled || undefined, 'aria-labelledby': titleId } : null;
   return (
-    <li {...rest} {...row} ref={ref} className={cn('dk-list__item', interactive && 'dk-list__item--interactive', pick && !interactive && 'dk-list__item--pickable', (props.selected || on) && 'dk-list__item--selected', props.disabled && 'dk-list__item--disabled', props.className)}>
+    <li {...rest} {...row} ref={ref} className={cn('srp-list__item', interactive && 'srp-list__item--interactive', pick && !interactive && 'srp-list__item--pickable', (props.selected || on) && 'srp-list__item--selected', props.disabled && 'srp-list__item--disabled', props.className)}>
       {pick && pick.mode === 'multiple' ? (
-        <span role="gridcell" className="dk-list__select">
+        <span role="gridcell" className="srp-list__select">
           <Checkbox tabIndex={-1} aria-labelledby={titleId} checked={on} disabled={props.disabled} onChange={noop} />
         </span>
       ) : null}
-      {pick && interactive ? <span role="gridcell" className="dk-list__cell">{main}</span> : main}
-      {props.trailing != null ? <span className="dk-list__trailing" role={pick ? 'gridcell' : undefined}>{props.trailing}</span> : null}
+      {pick && interactive ? <span role="gridcell" className="srp-list__cell">{main}</span> : main}
+      {props.trailing != null ? <span className="srp-list__trailing" role={pick ? 'gridcell' : undefined}>{props.trailing}</span> : null}
     </li>
   );
 }
@@ -280,10 +280,10 @@ export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactEleme
   const waiting = !useSkeletonShown(label);
   const out: React.ReactNode[] = [];
   for (let r = 0; r < rows; r++) out.push(
-    <li key={r} className="dk-list__item dk-list__loading">
-      <div className="dk-list__main dk-list__main--static">
-        {lead ? <span className={'dk-list__leading dk-list__leading--' + lead}><SkeletonArt shape="circle" waiting={waiting} /></span> : null}
-        <span className="dk-list__text"><SkeletonArt lines={props.description ? 2 : 1} waiting={waiting} /></span>
+    <li key={r} className="srp-list__item srp-list__loading">
+      <div className="srp-list__main srp-list__main--static">
+        {lead ? <span className={'srp-list__leading srp-list__leading--' + lead}><SkeletonArt shape="circle" waiting={waiting} /></span> : null}
+        <span className="srp-list__text"><SkeletonArt lines={props.description ? 2 : 1} waiting={waiting} /></span>
       </div>
     </li>,
   );

@@ -1,7 +1,7 @@
 // The system's own CSS conventions as Stylelint rules, so the editor shows them while a component's CSS is written,
 // not only the checks after a build. stylelint.config.mjs turns them on for src/components/; tools/test/stylelint-rules.mjs
 // checks each one against CSS that should pass and CSS that shouldn't.
-//   serupa/component-layer          every rule in the file is inside one @layer dk.components { … }
+//   serupa/component-layer          every rule in the file is inside one @layer srp.components { … }
 //   serupa/no-raw-value             values come from tokens: no number outside a var() but 0, 1em and fr shares, and
 //                                   no pointer, not-allowed, grab or grabbing cursor that a cursor token names
 //   serupa/color-through-component-token
@@ -29,11 +29,11 @@
 //                                   the accent (primary and its steps): the fill (--highlight) marks a row, a neutral
 //                                   line a tab, and the accent is kept for focus and for a chosen value. Option known:
 //                                   ['calendar-bg-selected', …], the component tokens of filled picks that stay accent
-//   serupa/own-block                a component's CSS styles its own blocks' elements (dk-block__element) only. Another
+//   serupa/own-block                a component's CSS styles its own blocks' elements (srp-block__element) only. Another
 //                                   block it may position or size, or feed through that block's custom properties,
 //                                   but not reach into, so a change inside one component can't break another. A block
 //                                   belongs to the component whose CSS starts the most selectors with it. Option known:
-//                                   { Folder: ['dk-block', …] } for the crossings not fixed yet
+//                                   { Folder: ['srp-block', …] } for the crossings not fixed yet
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,15 +62,15 @@ for (const c of fs.readdirSync(components)) {
   }
 }
 
-// Which component's CSS each block (dk-input, dk-btn …) belongs to: the folder whose CSS starts the most selectors
-// with it, so a block named unlike its folder (Button's dk-btn, Toast's dk-toaster) needs no list.
+// Which component's CSS each block (srp-input, srp-btn …) belongs to: the folder whose CSS starts the most selectors
+// with it, so a block named unlike its folder (Button's srp-btn, Toast's srp-toaster) needs no list.
 const OWNER = new Map();
 {
   const starts = new Map();
   for (const c of fs.readdirSync(components)) {
     for (const f of fs.readdirSync(path.join(components, c)).filter((f) => f.endsWith('.css'))) {
       const css = fs.readFileSync(path.join(components, c, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-      for (const m of css.matchAll(/(?:^|[{},]\s*)\.dk-([a-z0-9]+(?:-[a-z0-9]+)*)(?![\w-])/g)) {
+      for (const m of css.matchAll(/(?:^|[{},]\s*)\.srp-([a-z0-9]+(?:-[a-z0-9]+)*)(?![\w-])/g)) {
         const per = starts.get(m[1]) || new Map();
         per.set(c, (per.get(c) || 0) + 1);
         starts.set(m[1], per);
@@ -91,15 +91,15 @@ const rule = (name, messages, check) => {
 };
 
 const layer = rule('serupa/component-layer', {
-  outside: 'Put every rule in the one @layer dk.components { … } block, so a page\'s own CSS outside a layer wins over it',
-  name: (n) => `A component's CSS goes in @layer dk.components, not @layer ${n}`,
-  second: 'One @layer dk.components block per file: join this one to the first',
+  outside: 'Put every rule in the one @layer srp.components { … } block, so a page\'s own CSS outside a layer wins over it',
+  name: (n) => `A component's CSS goes in @layer srp.components, not @layer ${n}`,
+  second: 'One @layer srp.components block per file: join this one to the first',
 }, (root, flag, m) => {
   let seen = false;
   root.each((node) => {
     if (node.type === 'comment') return;
     if (node.type === 'atrule' && node.name === 'layer' && node.nodes) {
-      if (node.params !== 'dk.components') flag(node, m.name(node.params));
+      if (node.params !== 'srp.components') flag(node, m.name(node.params));
       else if (seen) flag(node, m.second);
       seen = true;
       return;
@@ -119,7 +119,7 @@ const raw = rule('serupa/no-raw-value', {
   cursor: (v) => `cursor: ${v} has a token: use var(--${CURSORS[v]}), so a theme that sets the arrow for buttons, or nothing for disabled, reaches it`,
 }, (root, flag, m) => {
   root.walkDecls((decl) => {
-    if (decl.prop.startsWith('--dk')) return;   // internal variables carry computed values between rules
+    if (decl.prop.startsWith('--srp')) return;   // internal variables carry computed values between rules
     if (decl.prop === 'cursor' && CURSORS[decl.value.trim()]) flag(decl, m.cursor(decl.value.trim()), decl.value.trim());
     valueParser(decl.value).walk((n) => {
       if (n.type === 'function' && n.value === 'var') return false;   // a token, with its default
@@ -222,11 +222,11 @@ const ownBlock = rule('serupa/own-block', {
     if (r.parent?.type === 'atrule' && /keyframes/i.test(r.parent.name)) return;
     for (const sel of r.selectors) {
       const last = subject(sel).replace(/:(?:not|has)\((?:[^()]|\([^()]*\))*\)/g, '');
-      for (const [, block] of last.matchAll(/\.dk-([a-z0-9]+(?:-[a-z0-9]+)*)__/g)) {
+      for (const [, block] of last.matchAll(/\.srp-([a-z0-9]+(?:-[a-z0-9]+)*)__/g)) {
         const owner = OWNER.get(block);
         if (!owner || owner === folder) continue;
-        if (known.has(`dk-${block}`)) used.add(`dk-${block}`);
-        else flag(r, m.foreign(`dk-${block}__…`, owner), sel);
+        if (known.has(`srp-${block}`)) used.add(`srp-${block}`);
+        else flag(r, m.foreign(`srp-${block}__…`, owner), sel);
       }
     }
   });

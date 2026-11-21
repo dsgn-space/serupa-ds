@@ -27,8 +27,8 @@ import { Kbd } from "@diki-stwn/serupa-ds";
 
 Drawn from the `InText` story.
 
-1. **Key** (`.dk-kbd__key`): one key, as it's printed on the keyboard.
-2. **Plus** (`.dk-kbd__plus`): between keys pressed together.
+1. **Key** (`.srp-kbd__key`): one key, as it's printed on the keyboard.
+2. **Plus** (`.srp-kbd__plus`): between keys pressed together.
 
 ## Usage
 

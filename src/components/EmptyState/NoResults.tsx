@@ -11,11 +11,11 @@ import { en as words } from './labels';
 export function Suggestions(props: { items: string[]; pick?: (suggestion: string) => void }) {
   const labels = useSettings(words).labels;
   return (
-    <p className="dk-empty-state__suggestions">
+    <p className="srp-empty-state__suggestions">
       <span>{labels.didYouMean}</span>
       {props.items.map((s) => props.pick
-        ? <button key={s} type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-empty-state__suggestion' })} onClick={() => props.pick!(s)}>{s}</button>
-        : <strong key={s} className="dk-empty-state__suggestion">{s}</strong>)}
+        ? <button key={s} type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'srp-empty-state__suggestion' })} onClick={() => props.pick!(s)}>{s}</button>
+        : <strong key={s} className="srp-empty-state__suggestion">{s}</strong>)}
     </p>
   );
 }

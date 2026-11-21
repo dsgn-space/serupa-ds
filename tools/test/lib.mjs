@@ -53,9 +53,8 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 
 // On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
 // a component that reads the browser's language where it should take the provider's, or a test that expects English
-// without saying so, fails. A full run (main, the merge queue) runs all of them again in that one; a pull request that
-// changes only component folders runs the changed components and the ones using them again in its one, and the
-// changed components' own tests in the other three, so a new test that
+// without saying so, fails. Pull requests and the queue run only the tests a language can break in them
+// (languageTests): the changed components' and any changed shared test in all four, so a new test that
 // expects English fails on its pull request instead of turning main red for everyone (as Sparkline's did, #1462). Right-to-left with Arabic
 // digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
 // To repeat one: node tools/test/run.mjs --group components --locale id-ID; tools/ci.mjs runs them all.
@@ -238,7 +237,7 @@ const NEUTRAL = new RegExp('^(' + [
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
 // own, named by file as storybook.mjs names a page ("Introduction.mdx").
 export const FOLDERS = ['components', 'blocks', 'patterns'];
-// A component's name in kebab case, as its classes (dk-<kebab>), data-component and tokens file use it: DatePicker is
+// A component's name in kebab case, as its classes (srp-<kebab>), data-component and tokens file use it: DatePicker is
 // date-picker, and a run of capitals stays one word, so OTPInput is otp-input and QRCode qr-code (R7: the generator,
 // the contract and the --since scope each had their own, and they disagreed on names like these).
 export const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
@@ -356,11 +355,11 @@ export function withDependents(names) {
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
     .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
-  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
-  // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
+  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .srp-input box, Fab
+  // reads .srp-navbar--sticky. "srp-date-picker__x" is DatePicker's; a class no component is named after counts for none.
   const byKebab = new Map(folders.map((n) => [kebab(n), n]));
   const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bsrp-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
     .filter((c) => c && c !== n));
   const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
@@ -371,6 +370,29 @@ export function withDependents(names) {
   }
   for (const [n, deps] of shown) if ([...deps].some((d) => all.has(d))) all.add(n);
   return all;
+}
+// The tests a second language can break, which pull requests and the queue run in the other languages (run.mjs
+// --since); the nightly Languages jobs run everything in each. A component's folder when its code reads the language
+// (dates, times, numbers, plurals, digits, money, sorting, Intl, useLocale) or uses one that does: Pagination's page
+// numbers in Arabic digits reach DataGrid's tests too. And the shared tests whose subject is the language: right to
+// left, scripts, long words, hydrating in the browser's locale after the server's en-US, Arabic digits in every story.
+// The other story-wide tests (activity, motion, tabWalk, leaks, …) were about 1,800 s of a language's 2,900 and test
+// nothing a language changes; they run in English on every pull request and in all four languages every night.
+const READS_LANGUAGE = /internal\/(dates|times|numbers|plural|digits|currency|collator|datePresets)['"]|\buseLocale\(|\bIntl\.|\.toLocale\w*\(/;
+export const LANGUAGE_TESTS = ['badLocale', 'browserLocale', 'collator', 'currency', 'dates', 'digitsStories', 'dirIslands', 'graphemes',
+  'hydrateLocale', 'hydrateStories', 'ime', 'intl', 'labels', 'longWords', 'numbers', 'overflowWrap', 'ownLang', 'plural', 'provider',
+  'pseudo', 'tabularFigures', 'times', 'typeahead', 'announceContract'].map((f) => `src/internal/${f}.test.tsx`)
+  .concat(['jaHeadings', 'longWords'].map((f) => `src/styles/${f}.test.tsx`));
+/** The test paths (component folders and shared test files) to run in a language other than English. */
+export function languageTests() {
+  const reads = new Set(FOLDERS.flatMap((d) => {
+    const DIR = path.join(PROJECT, 'src', d);
+    return fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((n) => {
+      const dir = path.join(DIR, n);
+      return fs.statSync(dir).isDirectory() && fs.readdirSync(dir).some((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f) && READS_LANGUAGE.test(fs.readFileSync(path.join(dir, f), 'utf8')));
+    }) : [];
+  }));
+  return new Set([...[...withDependents(reads)].map(folderOf).filter(Boolean), ...LANGUAGE_TESTS.filter((f) => fs.existsSync(path.join(PROJECT, f)))]);
 }
 // The shared tests in src/internal/ that render one of the components (announceContract, formContract, nameCheck, …),
 // so a pull request that changes LoadMore runs announceContract's LoadMore case too, not only LoadMore's own folder.

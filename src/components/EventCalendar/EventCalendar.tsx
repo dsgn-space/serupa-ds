@@ -208,10 +208,10 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   const eventButton = (s: Shown, day: Date, tab: 0 | -1, detail: boolean) => (
     <button type="button" tabIndex={tab} aria-label={nameOf(s, day, detail)} data-event-id={s.e.id} onClick={() => on.eventClick(s.e)}
       aria-keyshortcuts={movable && !detail ? 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown' : undefined}
-      className={cn('dk-event-calendar__event', 'dk-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'dk-event-calendar__event--all-day', movable && !detail && 'dk-event-calendar__event--movable', p.dragging === s.e.id && 'dk-event-calendar__event--dragging')}>
-      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{p.dir ? <span dir={p.dir}>{shownTime(s, detail)}</span> : shownTime(s, detail)}</span>{' '}</>}
-      <TruncatedText className="dk-event-calendar__title">{s.e.title}</TruncatedText>
-      {s.e.repeating ? <span className="dk-event-calendar__repeat" aria-hidden>↻</span> : null}
+      className={cn('srp-event-calendar__event', 'srp-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'srp-event-calendar__event--all-day', movable && !detail && 'srp-event-calendar__event--movable', p.dragging === s.e.id && 'srp-event-calendar__event--dragging')}>
+      {s.allDay && !detail ? null : <><span className="srp-event-calendar__time">{p.dir ? <span dir={p.dir}>{shownTime(s, detail)}</span> : shownTime(s, detail)}</span>{' '}</>}
+      <TruncatedText className="srp-event-calendar__title">{s.e.title}</TruncatedText>
+      {s.e.repeating ? <span className="srp-event-calendar__repeat" aria-hidden>↻</span> : null}
     </button>
   );
 
@@ -231,9 +231,9 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
   return (
     view === 'month' ? (
-      <table ref={grid} role="grid" lang={lang} className="dk-event-calendar__grid" aria-labelledby={titleId} onKeyDown={on.keyDown} onPointerDown={on.pointerDown}>
+      <table ref={grid} role="grid" lang={lang} className="srp-event-calendar__grid" aria-labelledby={titleId} onKeyDown={on.keyDown} onPointerDown={on.pointerDown}>
         <thead>
-          <tr>{(weeks[0] ?? []).map((d) => <th key={d.getDay()} scope="col" abbr={fmt.long.format(d)}><span aria-hidden>{fmt.short.format(d)}</span><span className="dk-visually-hidden">{fmt.long.format(d)}</span></th>)}</tr>
+          <tr>{(weeks[0] ?? []).map((d) => <th key={d.getDay()} scope="col" abbr={fmt.long.format(d)}><span aria-hidden>{fmt.short.format(d)}</span><span className="srp-visually-hidden">{fmt.long.format(d)}</span></th>)}</tr>
         </thead>
         <tbody>
           {/* Weeks are keyed by their first day, so a day at the grid's edge keeps its cell, and focus, when its month shows. */}
@@ -245,15 +245,15 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
                 return (
                   <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1}
                     aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
-                    className={cn('dk-event-calendar__day', !sameMonth(d, month) && 'dk-event-calendar__day--outside', isToday && 'dk-event-calendar__day--today')}
+                    className={cn('srp-event-calendar__day', !sameMonth(d, month) && 'srp-event-calendar__day--outside', isToday && 'srp-event-calendar__day--today')}
                     onFocus={(e) => { if (e.target === e.currentTarget && !here) on.setFocus(d); }}>
                     {/* The day's name is its text, not an aria-label, so it never hides what the cell shows (its events). */}
-                    <span className="dk-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
-                    <span className="dk-event-calendar__date" aria-hidden>{d.getDate()}</span>
-                    {fits.length ? <ul className="dk-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
+                    <span className="srp-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
+                    <span className="srp-event-calendar__date" aria-hidden>{d.getDate()}</span>
+                    {fits.length ? <ul className="srp-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
                     {more > 0 ? (
-                      <Popover title={fmt.full.format(d)} placement="bottom-start" trigger={<button type="button" tabIndex={here ? 0 : -1} className="dk-event-calendar__more">{labels.moreEvents(more, displayNumber(more, locale))}</button>}>
-                        <ul className="dk-event-calendar__events dk-event-calendar__events--all" role="list">{mine.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
+                      <Popover title={fmt.full.format(d)} placement="bottom-start" trigger={<button type="button" tabIndex={here ? 0 : -1} className="srp-event-calendar__more">{labels.moreEvents(more, displayNumber(more, locale))}</button>}>
+                        <ul className="srp-event-calendar__events srp-event-calendar__events--all" role="list">{mine.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
                       </Popover>
                     ) : null}
                   </td>
@@ -267,44 +267,44 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
       /* The days' hours: a grid of one row, a cell a day, so the keys, the names and the Tab stop are the month's.
          The weekday names and the all-day events stay pinned at the top while the hours scroll under them. The
          hour scale and the time zone are drawn beside, hidden from screen readers: each event says its time. */
-      <div ref={scroller} className="dk-event-calendar__scroll" style={{ '--dk-evc-all-day': allDayRows } as React.CSSProperties} onPointerDown={on.pointerDown}>
-        <table ref={grid} role="grid" lang={lang} className="dk-event-calendar__grid dk-event-calendar__hours-grid" aria-labelledby={titleId} onKeyDown={on.keyDown} data-days={span.length}>
+      <div ref={scroller} className="srp-event-calendar__scroll" style={{ '--srp-evc-all-day': allDayRows } as React.CSSProperties} onPointerDown={on.pointerDown}>
+        <table ref={grid} role="grid" lang={lang} className="srp-event-calendar__grid srp-event-calendar__hours-grid" aria-labelledby={titleId} onKeyDown={on.keyDown} data-days={span.length}>
           <thead>
             <tr>
-              <td aria-hidden className="dk-event-calendar__zone">{zone}</td>
+              <td aria-hidden className="srp-event-calendar__zone">{zone}</td>
               {span.map((d) => (
-                <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'dk-event-calendar__head--today')}>
-                  <span aria-hidden>{fmt.short.format(d)} <span className="dk-event-calendar__head-date">{d.getDate()}</span></span>
-                  <span className="dk-visually-hidden">{fmt.full.format(d)}</span>
+                <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'srp-event-calendar__head--today')}>
+                  <span aria-hidden>{fmt.short.format(d)} <span className="srp-event-calendar__head-date">{d.getDate()}</span></span>
+                  <span className="srp-visually-hidden">{fmt.full.format(d)}</span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td aria-hidden className="dk-event-calendar__scale">
-                <div className="dk-event-calendar__pinned" />
-                <div className="dk-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--dk-evc-at': h } as React.CSSProperties}>{h ? <span dir={p.dir}>{fmt.hour.format(new Date(2000, 0, 1, h))}</span> : ''}</span>)}</div>
+              <td aria-hidden className="srp-event-calendar__scale">
+                <div className="srp-event-calendar__pinned" />
+                <div className="srp-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--srp-evc-at': h } as React.CSSProperties}>{h ? <span dir={p.dir}>{fmt.hour.format(new Date(2000, 0, 1, h))}</span> : ''}</span>)}</div>
               </td>
               {span.map((d) => {
                 const mine = onDay(list, d), whole = mine.filter((s) => s.allDay), here = sameDay(d, focus), isToday = marked !== null && sameDay(d, marked);
                 return (
                   <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1} aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
-                    className={cn('dk-event-calendar__day dk-event-calendar__column', isToday && 'dk-event-calendar__day--today')}
+                    className={cn('srp-event-calendar__day srp-event-calendar__column', isToday && 'srp-event-calendar__day--today')}
                     onFocus={(e) => { if (e.target === e.currentTarget && !here) on.setFocus(d); }}>
-                    <span className="dk-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
-                    <div className="dk-event-calendar__pinned">
-                      {whole.length ? <ul className="dk-event-calendar__events" role="list">{whole.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
+                    <span className="srp-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
+                    <div className="srp-event-calendar__pinned">
+                      {whole.length ? <ul className="srp-event-calendar__events" role="list">{whole.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
                     </div>
-                    <div className="dk-event-calendar__hours">
-                      {isToday ? <div className="dk-event-calendar__now" aria-hidden style={{ '--dk-evc-at': hourOf(now, d) } as React.CSSProperties} /> : null}
-                      {p.ghost && p.ghost.day === d.getTime() ? <div className="dk-event-calendar__ghost" aria-hidden style={{ '--dk-evc-at': p.ghost.at, '--dk-evc-for': p.ghost.len } as React.CSSProperties} /> : null}
-                      <ul className="dk-event-calendar__timed" role="list">
+                    <div className="srp-event-calendar__hours">
+                      {isToday ? <div className="srp-event-calendar__now" aria-hidden style={{ '--srp-evc-at': hourOf(now, d) } as React.CSSProperties} /> : null}
+                      {p.ghost && p.ghost.day === d.getTime() ? <div className="srp-event-calendar__ghost" aria-hidden style={{ '--srp-evc-at': p.ghost.at, '--srp-evc-for': p.ghost.len } as React.CSSProperties} /> : null}
+                      <ul className="srp-event-calendar__timed" role="list">
                         {place(mine.filter((s) => !s.allDay), d).map((p) => (
-                          <li key={p.s.e.id} data-short={p.len < 0.75 || undefined} style={{ '--dk-evc-at': p.at, '--dk-evc-for': p.len, '--dk-evc-lane': p.lane, '--dk-evc-lanes': p.lanes } as React.CSSProperties}>
+                          <li key={p.s.e.id} data-short={p.len < 0.75 || undefined} style={{ '--srp-evc-at': p.at, '--srp-evc-for': p.len, '--srp-evc-lane': p.lane, '--srp-evc-lanes': p.lanes } as React.CSSProperties}>
                             {eventButton(p.s, d, here ? 0 : -1, false)}
                             {/* Its end, dragged to change how long it is (Shift and the arrow keys move it; the app's form changes its length). */}
-                            {movable ? <span className="dk-event-calendar__resize" data-resize={p.s.e.id} aria-hidden /> : null}
+                            {movable ? <span className="srp-event-calendar__resize" data-resize={p.s.e.id} aria-hidden /> : null}
                           </li>
                         ))}
                       </ul>
@@ -317,15 +317,15 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
         </table>
       </div>
     ) : busy.length ? (
-      <ol className="dk-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
+      <ol className="srp-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
         {busy.map(([d, l]) => (
-          <li key={d.getTime()} className={cn('dk-event-calendar__agenda-day', marked && sameDay(d, marked) && 'dk-event-calendar__agenda-day--today')} aria-current={marked && sameDay(d, marked) ? 'date' : undefined}>
-            <H2 className="dk-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
-            <ul className="dk-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
+          <li key={d.getTime()} className={cn('srp-event-calendar__agenda-day', marked && sameDay(d, marked) && 'srp-event-calendar__agenda-day--today')} aria-current={marked && sameDay(d, marked) ? 'date' : undefined}>
+            <H2 className="srp-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
+            <ul className="srp-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
           </li>
         ))}
       </ol>
-    ) : <p className="dk-event-calendar__empty">{labels.noEvents}</p>
+    ) : <p className="srp-event-calendar__empty">{labels.noEvents}</p>
   );
 });
 
@@ -342,7 +342,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
   const controlledMonth = props.month !== undefined;
-  const titleId = domId('dk-evc', React.useId()) + '-title';
+  const titleId = domId('srp-evc', React.useId()) + '-title';
   // With no month given, the month is today's, and the server's today may be in another month than the visitor's
   // (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws the month the
   // server's HTML shows (its title carries it), so nothing mismatches; then an effect moves to the visitor's (GR396).
@@ -437,8 +437,8 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     // An event drags with a mouse or a pen; on a touch screen a drag scrolls, and a tap opens the event.
     const x = movable && e.pointerType !== 'touch' && id ? list.find((s) => s.e.id === id) : undefined;
     if (!x && (id || t.closest('button') || !props.onSlotSelect)) return;
-    const inHours = hours && !!t.closest('.dk-event-calendar__hours');
-    const hourAt = (td: HTMLElement, y: number) => { const r = td.querySelector('.dk-event-calendar__hours')!.getBoundingClientRect(); return Math.min(24, Math.max(0, ((y - r.top) / r.height) * 24)); };
+    const inHours = hours && !!t.closest('.srp-event-calendar__hours');
+    const hourAt = (td: HTMLElement, y: number) => { const r = td.querySelector('.srp-event-calendar__hours')!.getBoundingClientRect(); return Math.min(24, Math.max(0, ((y - r.top) / r.height) * 24)); };
     const cellAt = (cx: number, cy: number) => { const td = document.elementFromPoint(cx, cy)?.closest<HTMLElement>('td[data-date]'); return td && root.contains(td) ? td : null; };
     const h0 = inHours ? hourAt(startCell, y0) : 0;
     let moved = false, last: { id: string; from: number; to: number } | null = null, chosen: Ghost | null = null;
@@ -560,22 +560,22 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const firstHour = Math.floor(Math.min(OPEN_AT, ...span.flatMap((d) => timedIn(d).map((s) => hourOf(s.from, d)))));
   // Opened on a week or a day, the hours scroll to the first event, or 8 AM, under the pinned days and all-day row.
   useIsoLayoutEffect(() => {
-    const n = scroller.current, mark = n && n.querySelector<HTMLElement>('[data-hour="' + firstHour + '"]'), pinned = n && n.querySelector<HTMLElement>('.dk-event-calendar__pinned');
+    const n = scroller.current, mark = n && n.querySelector<HTMLElement>('[data-hour="' + firstHour + '"]'), pinned = n && n.querySelector<HTMLElement>('.srp-event-calendar__pinned');
     if (!n || !mark || !pinned) return;
     n.scrollTop += mark.getBoundingClientRect().top - pinned.getBoundingClientRect().bottom;
   }, [view, spanStart]);
 
   return (
-    <div {...rest} ref={rootRef} className={cn('dk-event-calendar', props.className)} data-component="event-calendar" data-view={view} data-dragging={drag ? '' : undefined}>
-      <div className="dk-event-calendar__toolbar">
-        <div className="dk-event-calendar__nav">
+    <div {...rest} ref={rootRef} className={cn('srp-event-calendar', props.className)} data-component="event-calendar" data-view={view} data-dragging={drag ? '' : undefined}>
+      <div className="srp-event-calendar__toolbar">
+        <div className="srp-event-calendar__nav">
           <Button variant="outline" size="sm" onClick={() => { showMonth(today); setFocus(today); }}>{sds.labels.goToToday}</Button>
-          <IconButton icon={icons.ChevronLeft} label={view === 'week' ? sds.labels.previousWeek : view === 'day' ? sds.labels.previousDay : sds.labels.previousMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__prev"
+          <IconButton icon={icons.ChevronLeft} label={view === 'week' ? sds.labels.previousWeek : view === 'day' ? sds.labels.previousDay : sds.labels.previousMonth} size="sm" variant="ghost" hideTitle className="srp-event-calendar__prev"
             onClick={() => (hours ? go(addDays(focus, -step)) : showMonth(addMonths(month, -1)))} />
-          <IconButton icon={icons.ChevronRight} label={view === 'week' ? sds.labels.nextWeek : view === 'day' ? sds.labels.nextDay : sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__next"
+          <IconButton icon={icons.ChevronRight} label={view === 'week' ? sds.labels.nextWeek : view === 'day' ? sds.labels.nextDay : sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="srp-event-calendar__next"
             onClick={() => (hours ? go(addDays(focus, step)) : showMonth(addMonths(month, 1)))} />
         </div>
-        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite" data-month={iso(month)}>{dir ? <span dir={dir}>{title}</span> : title}</H>
+        <H className="srp-event-calendar__heading" id={titleId} lang={lang} aria-live="polite" data-month={iso(month)}>{dir ? <span dir={dir}>{title}</span> : title}</H>
         {narrow ? null : <SegmentedControl size="sm" aria-label={sds.labels.calendarView} value={chosen} onValueChange={(v) => setView(isView(v) ? v : 'month')}
           options={[{ value: 'month', label: sds.labels.monthView }, { value: 'week', label: sds.labels.weekView }, { value: 'day', label: sds.labels.dayView }, { value: 'agenda', label: sds.labels.agendaView }]} />}
       </div>

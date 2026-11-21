@@ -31,7 +31,7 @@ const OWN = { lines: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, cl
 function ShowMoreRender({ ref, ...props }: ShowMoreProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
-  const base = domId('dk-sm', React.useId());
+  const base = domId('srp-sm', React.useId());
   const lines = Math.min(6, Math.max(1, Math.floor(Number(props.lines)) || 3));
   const [expanded, setOwn, controlled] = useControllable(props.expanded, !!props.defaultExpanded, 'ShowMore', 'expanded');
   const open = !!expanded;
@@ -53,11 +53,11 @@ function ShowMoreRender({ ref, ...props }: ShowMoreProps & React.RefAttributes<H
   }, [open, lines, props.children]);
   const toggle = () => { if (!controlled) setOwn(!open); if (props.onExpandedChange) props.onExpandedChange(!open); };
   return (
-    <div {...rest} ref={ref} className={cn('dk-show-more', props.className)} data-component="show-more" data-expanded={open ? '' : undefined}>
-      <div id={base + '-text'} ref={content} className={cn('dk-show-more__text', !open && 'dk-show-more__text--cut')}
+    <div {...rest} ref={ref} className={cn('srp-show-more', props.className)} data-component="show-more" data-expanded={open ? '' : undefined}>
+      <div id={base + '-text'} ref={content} className={cn('srp-show-more__text', !open && 'srp-show-more__text--cut')}
         data-lines={open ? undefined : lines}>{props.children}</div>
       {open || cut ? (
-        <Button variant="link" size="sm" className="dk-show-more__toggle" aria-expanded={open} aria-controls={base + '-text'} onClick={toggle}>
+        <Button variant="link" size="sm" className="srp-show-more__toggle" aria-expanded={open} aria-controls={base + '-text'} onClick={toggle}>
           {open ? L.showLess : L.showMore}
         </Button>
       ) : null}

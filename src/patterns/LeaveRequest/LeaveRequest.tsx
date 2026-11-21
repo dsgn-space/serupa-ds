@@ -163,7 +163,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
     setFailed(false);
     if (problem || !range) {
       setAsked(true);
-      calendar.current?.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]')?.focus();
+      calendar.current?.querySelector<HTMLElement>('.srp-calendar__day[tabindex="0"]')?.focus();
       return;
     }
     const draft: LeaveDraft = { kind, ...range, days, note: note.trim() };

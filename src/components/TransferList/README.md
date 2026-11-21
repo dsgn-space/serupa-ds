@@ -28,11 +28,11 @@ import { TransferList } from "@diki-stwn/serupa-ds";
 
 Drawn from the `NothingChosen` story.
 
-1. **List** (`.dk-transfer-list__side`): Available, then Chosen; each scrolls past its height.
-2. **Title** (`.dk-transfer-list__title`): the list's name, with its **count** (`.dk-transfer-list__count`).
-3. **Options** (`.dk-transfer-list__options`): a CheckboxGroup, with All first.
-4. **Moves** (`.dk-transfer-list__moves`): Add and Remove, between the lists.
-5. **Empty** (`.dk-transfer-list__empty`): "None", in a list with nothing in it.
+1. **List** (`.srp-transfer-list__side`): Available, then Chosen; each scrolls past its height.
+2. **Title** (`.srp-transfer-list__title`): the list's name, with its **count** (`.srp-transfer-list__count`).
+3. **Options** (`.srp-transfer-list__options`): a CheckboxGroup, with All first.
+4. **Moves** (`.srp-transfer-list__moves`): Add and Remove, between the lists.
+5. **Empty** (`.srp-transfer-list__empty`): "None", in a list with nothing in it.
 
 ## Usage
 

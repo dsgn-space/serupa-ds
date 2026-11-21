@@ -31,8 +31,8 @@ import { SidebarLayout, Card } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **Sidebar** (`.dk-sidebar-layout__side`): the narrow column, `sidebarWidth` wide while the two share a line.
-2. **Content** (`.dk-sidebar-layout__content`): the wide column, which takes the rest.
+1. **Sidebar** (`.srp-sidebar-layout__side`): the narrow column, `sidebarWidth` wide while the two share a line.
+2. **Content** (`.srp-sidebar-layout__content`): the wide column, which takes the rest.
 
 ## Usage
 
@@ -68,7 +68,7 @@ Drawn from the `Playground` story.
 | `align` | `'stretch'` \| `'start'` | `'stretch'` | Both as tall as the taller, or each its own height |
 | `as` | `'div'` \| `'section'` \| `'main'` \| `'article'` | `'div'` | The element |
 
-A value that isn't on the list falls back to the default. `className`, `style`, `ref` and everything else go to the element, which has `data-component="sidebar-layout"`. Each column is a `<div>`: `.dk-sidebar-layout__side` and `.dk-sidebar-layout__content`.
+A value that isn't on the list falls back to the default. `className`, `style`, `ref` and everything else go to the element, which has `data-component="sidebar-layout"`. Each column is a `<div>`: `.srp-sidebar-layout__side` and `.srp-sidebar-layout__content`.
 
 ## Component tokens
 

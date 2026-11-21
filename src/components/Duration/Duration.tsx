@@ -93,8 +93,8 @@ function DurationRender({ ref, ...props }: DurationProps & React.RefAttributes<H
   // A locale of its own brings its direction with its lang, so "1 hr, 15 min" in a right-to-left page doesn't read
   // "hr, 15 min 1" (its number is a weak character that would follow the page's direction).
   return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={isoDuration(props.value, o) || undefined}
-    className={cn('dk-duration', digital && 'dk-duration--digital', props.className)} data-component="duration">
-    {digital ? <><span aria-hidden="true">{shown}</span><span className="dk-visually-hidden">{formatDuration(props.value, locale, { ...o, display: 'long' })}</span></> : shown}
+    className={cn('srp-duration', digital && 'srp-duration--digital', props.className)} data-component="duration">
+    {digital ? <><span aria-hidden="true">{shown}</span><span className="srp-visually-hidden">{formatDuration(props.value, locale, { ...o, display: 'long' })}</span></> : shown}
   </time>;
 }
 

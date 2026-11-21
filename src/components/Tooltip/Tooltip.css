@@ -3,9 +3,9 @@
    up to 240px wide, 6px from what it describes. Shown in the top layer (popover="manual") at fixed coordinates
    set by the component, with a short fade. Every value goes through --tooltip-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-tooltip {
-  --dk-tooltip-offset: var(--tooltip-offset, var(--spacing-1\.5));
+@layer srp.components {
+.srp-tooltip {
+  --srp-tooltip-offset: var(--tooltip-offset, var(--spacing-1\.5));
   --kbd-separator: currentColor;   /* a shortcut's "+" in the tooltip: muted, it is under 4.5:1 on the inverse fill */
   position: fixed;
   inset: auto;
@@ -34,26 +34,26 @@
      at once. Reduced motion: the fade alone. */
   transition: opacity var(--motion-exit-sm) var(--ease-exit), translate var(--motion-exit-sm) var(--ease-exit);
 }
-.dk-tooltip:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), translate var(--motion-enter-sm) var(--ease-enter); }
+.srp-tooltip:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), translate var(--motion-enter-sm) var(--ease-enter); }
 @supports (overlay: auto) {
-  .dk-tooltip[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), translate var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+  .srp-tooltip[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), translate var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
 /* A cut label of the element, in full, on its own line over the hint. */
-.dk-tooltip > [data-full] { display: block; font-weight: var(--font-medium); }
-.dk-tooltip[hidden] { display: none; opacity: var(--opacity-0); pointer-events: none; }
-@starting-style { .dk-tooltip:not([hidden]) { opacity: var(--opacity-0); } }
+.srp-tooltip > [data-full] { display: block; font-weight: var(--font-medium); }
+.srp-tooltip[hidden] { display: none; opacity: var(--opacity-0); pointer-events: none; }
+@starting-style { .srp-tooltip:not([hidden]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-tooltip[hidden][data-side="bottom"] { translate: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-1)); }
-  .dk-tooltip[hidden][data-side="top"] { translate: var(--spacing-0) var(--spacing-1); }
-  .dk-tooltip[hidden][data-side="right"] { translate: calc(var(--spacing-0) - var(--spacing-1)) var(--spacing-0); }
-  .dk-tooltip[hidden][data-side="left"] { translate: var(--spacing-1) var(--spacing-0); }
+  .srp-tooltip[hidden][data-side="bottom"] { translate: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-1)); }
+  .srp-tooltip[hidden][data-side="top"] { translate: var(--spacing-0) var(--spacing-1); }
+  .srp-tooltip[hidden][data-side="right"] { translate: calc(var(--spacing-0) - var(--spacing-1)) var(--spacing-0); }
+  .srp-tooltip[hidden][data-side="left"] { translate: var(--spacing-1) var(--spacing-0); }
   @starting-style {
-    .dk-tooltip[data-side="bottom"]:not([hidden]) { translate: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-1)); }
-    .dk-tooltip[data-side="top"]:not([hidden]) { translate: var(--spacing-0) var(--spacing-1); }
-    .dk-tooltip[data-side="right"]:not([hidden]) { translate: calc(var(--spacing-0) - var(--spacing-1)) var(--spacing-0); }
-    .dk-tooltip[data-side="left"]:not([hidden]) { translate: var(--spacing-1) var(--spacing-0); }
+    .srp-tooltip[data-side="bottom"]:not([hidden]) { translate: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-1)); }
+    .srp-tooltip[data-side="top"]:not([hidden]) { translate: var(--spacing-0) var(--spacing-1); }
+    .srp-tooltip[data-side="right"]:not([hidden]) { translate: calc(var(--spacing-0) - var(--spacing-1)) var(--spacing-0); }
+    .srp-tooltip[data-side="left"]:not([hidden]) { translate: var(--spacing-1) var(--spacing-0); }
   }
 }
-.dk-tooltip[data-warm] { transition: none; }   /* opened warm, straight after another, or handed over to the next: swapped at once */
-@media (forced-colors: active) { .dk-tooltip { border: var(--border-width-1) solid CanvasText; } }
+.srp-tooltip[data-warm] { transition: none; }   /* opened warm, straight after another, or handed over to the next: swapped at once */
+@media (forced-colors: active) { .srp-tooltip { border: var(--border-width-1) solid CanvasText; } }
 }

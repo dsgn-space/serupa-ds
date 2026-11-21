@@ -5,7 +5,7 @@
 //
 // Scans the sources (HTML, JSX/TSX, JS/TS, Vue, Svelte, templates…) for anything that looks like a class name
 // and writes a copy of bundle.css (by default the one in this package) with only the rules those classes need.
-// Kept always: the component styles (dk-*, which components add at runtime), the few utility classes components
+// Kept always: the component styles (srp-*, which components add at runtime), the few utility classes components
 // add themselves (sr-only on the screen-reader announcer; dist/components.json lists them), @keyframes, @property,
 // @font-face and rules that select no class. Responsive variants are matched by their full name ("md:flex").
 //
@@ -69,7 +69,7 @@ const char = (h) => { const n = parseInt(h, 16); return n === 0 || (n >= 0xd800 
 const unescape = (c) => c.replace(/\\([0-9a-fA-F]{1,6}) ?/g, (_, h) => char(h)).replace(/\\(.)/g, '$1');
 const classesIn = (sel) => [...sel.matchAll(/\.((?:[A-Za-z0-9_-]|\\[0-9a-fA-F]{1,6} ?|\\.)+)/g)].map((m) => unescape(m[1]));
 
-// The dk-* classes to drop: those of the components in the manifest (dist/components.json) that the sources never
+// The srp-* classes to drop: those of the components in the manifest (dist/components.json) that the sources never
 // name, nor any component they name needs.
 export function unusedComponentClasses(manifest, used) {
   const words = new Set([...used].flatMap((w) => w.split(/[./:]/)));
@@ -85,7 +85,7 @@ export function unusedComponentClasses(manifest, used) {
 }
 
 export function purge(css, used, drop = new Set()) {
-  const keepSelector = (sel) => classesIn(sel).every((c) => (c.startsWith('dk-') && !drop.has(c)) || used.has(c));
+  const keepSelector = (sel) => classesIn(sel).every((c) => (c.startsWith('srp-') && !drop.has(c)) || used.has(c));
   const walk = (s) => {
     const out = [];
     for (const { kind, pre, body } of blocks(s)) {
