@@ -6,6 +6,7 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
 import { announce } from '../../internal/announce';
+import { leave } from '../../internal/leave';
 import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -161,7 +162,7 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
     if (to === page) return;
     if (!controlled) setOwn(to);
     if (props.onPageChange) props.onPageChange(to);
-    else if (props.getHref && typeof window !== 'undefined') window.location.assign(props.getHref(to));
+    else if (props.getHref && typeof window !== 'undefined') leave(props.getHref(to));   // a web page only: never a javascript: URL
   };
   const jump = props.jump && count > 1 ? <span className="dk-pagination__jump"><label htmlFor={jumpId}>{sds.labels.goToPage}</label>
     {/* Input's box and field classes, without Input's own code (its masks, count and actions) in Pagination's bundle. */}
