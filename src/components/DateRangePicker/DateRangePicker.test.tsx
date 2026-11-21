@@ -75,6 +75,14 @@ describe('DateRangePicker', () => {
     expect([f.value, calls]).toEqual(['5/1', []]);
   });
 
+  test('in the popup the ends and the days between have names, as RangeCalendar\'s do, so the range isn\'t carried by color alone', async () => {
+    await render(<Trip />);
+    await userEvent.click(btn('trip'));
+    await expect.poll(() => isOpen('trip')).toBe(true);
+    expect(['2025-03-10', '2025-03-12', '2025-03-14', '2025-03-15'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
+      'Monday, March 10, 2025, Start date', 'Wednesday, March 12, 2025, in the range', 'Friday, March 14, 2025, End date', 'Saturday, March 15, 2025']);
+  });
+
   test('both fields are described by the Field hint and the format to type', async () => {
     await render(<Trip />);
     expect(fields('trip').map((f) => (f.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)!.textContent).join(' | '))).toEqual(['mm/dd/yyyy | Format: mm/dd/yyyy', 'mm/dd/yyyy | Format: mm/dd/yyyy']);
@@ -149,13 +157,6 @@ describe('DateRangePicker', () => {
     expect([focused(), d.querySelector(':scope p[aria-live]')!.textContent]).toEqual(['2025-03-10', 'Selected range: Mar 10 – 14, 2025']);
     expect([...d.querySelectorAll<HTMLElement>('[aria-selected=true] button')].map((x) => x.dataset.date).join()).toBe('2025-03-10,2025-03-14');
     expect(inRange('trip')).toBe('03-11,03-12,03-13');
-  });
-
-  test('in the popup, the ends and the days between are named in words, not by color alone, as RangeCalendar names them', async () => {
-    await render(<Trip value={{ start: new Date(2025, 2, 18), end: new Date(2025, 2, 20) }} />);
-    await userEvent.click(btn('trip'));
-    expect(['2025-03-18', '2025-03-19', '2025-03-20'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
-      'Tuesday, March 18, 2025, Start date', 'Wednesday, March 19, 2025, in the range', 'Thursday, March 20, 2025, End date']);
   });
 
   test('picking: the first pick sets the start and clears the end, asking for the end; pointing previews the range across both months; a day before the start moves it; the second pick sets the end, closes and returns focus to the start field', async () => {

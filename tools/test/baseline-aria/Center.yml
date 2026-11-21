@@ -1,0 +1,37 @@
+# Default
+- text: The content keeps to 448px, in the middle of the space it's in.
+
+# DoSingleTask
+- heading "Reset your password" [level=2]
+- text: Email
+- textbox "Email"
+- button "Send the link"
+
+# DontCenterLongText
+- paragraph: Long text with its lines centered starts each line at a different place, so the eye has to search for where the next one begins. Keep paragraphs aligned to the start, and center only a heading or a short line beside a button.
+
+# Intrinsic
+- heading "Page not found" [level=1]
+- paragraph: The page may have moved, or the link has a typo in it.
+- button "Go to the home page"
+
+# LongText
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a line long enough to wrap two or three times inside the 448px column.
+
+# MaxWidths
+- text: maxWidth="container-sm" maxWidth="container-md" maxWidth="container-2xl"
+
+# NotPadded
+- text: The content keeps to 448px, in the middle of the space it's in.
+
+# Playground
+- text: The content keeps to 448px, in the middle of the space it's in.
+
+# Vertical
+- heading "Sign in" [level=1]
+- text: Email
+- textbox "Email"
+- text: Password
+- textbox "Password"
+- button "Sign in"
+

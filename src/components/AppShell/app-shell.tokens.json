@@ -1,0 +1,99 @@
+{
+  "app-shell": {
+    "$description": "AppShell's component tokens. Each one is an optional override: set the CSS variable (--app-shell-<name>) on the page or one AppShell. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The page's background, and main's with background=\"plain\".",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-bg"
+          }
+        }
+      },
+      "bg-muted": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "main's background with background=\"muted\".",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-bg-muted"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The text (4.5:1 on bg and bg-muted).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-text"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line above the footer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-border"
+          }
+        }
+      },
+      "footer-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The footer's text (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-footer-text"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Padding around main's content on small screens (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-padding"
+          }
+        }
+      },
+      "padding-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Padding around main's content from 640px (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-padding-sm"
+          }
+        }
+      },
+      "padding-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "Padding around main's content from 1024px (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-padding-lg"
+          }
+        }
+      },
+      "footer-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Padding inside the footer (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--app-shell-footer-padding"
+          }
+        }
+      }
+    }
+  }
+}
