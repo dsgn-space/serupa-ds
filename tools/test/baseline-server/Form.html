@@ -184,12 +184,29 @@
 
 <!-- LongText -->
 <form noValidate="" aria-label="Create an account" style="max-width:420px" class="dk-form" data-component="form">
-<div class="dk-field" data-component="field">
+<div tabindex="-1" aria-labelledby="_R_2_" class="dk-error-summary dk-form__summary" data-component="error-summary">
+<h2 id="_R_2_" class="dk-error-summary__title">There is a problem</h2>
+<ul class="dk-error-summary__list" role="list">
+<li class="dk-error-summary__item">
+<a class="dk-error-summary__link" href="#name">Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column</a>
+</li>
+</ul>
+</div>
+<div class="dk-field dk-field--invalid" data-component="field">
 <label class="dk-field__label" for="dk-f_R_7_-control" id="dk-f_R_7_-label">Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer</label>
 <div class="dk-field__control">
-<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input id="dk-f_R_7_-control" type="text" class="dk-input__field" name="name"/>
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input id="dk-f_R_7_-control" aria-describedby="dk-f_R_7_-error" aria-errormessage="dk-f_R_7_-error" aria-invalid="true" type="text" class="dk-input__field" name="name"/>
 </span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_7_-error">Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column</span>
 </div>
 </div>
 <div>
@@ -427,100 +444,51 @@
 
 <!-- ServerErrors -->
 <form noValidate="" aria-label="Create an account" style="max-width:420px" class="dk-form" data-component="form">
-<div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_r_-control" id="dk-f_R_r_-label">Full name</label>
-<div class="dk-field__control">
-<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input autoComplete="name" id="dk-f_R_r_-control" type="text" class="dk-input__field" name="name" value="Ani Wijaya"/>
-</span>
-</div>
-</div>
-<div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_1b_-control" id="dk-f_R_1b_-label">Email</label>
-<div class="dk-field__hint" id="dk-f_R_1b_-hint">Like name@example.com</div>
-<div class="dk-field__control">
-<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input type="email" autoComplete="email" id="dk-f_R_1b_-control" aria-describedby="dk-f_R_1b_-hint" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" name="email" value="ani@example.com"/>
-</span>
-</div>
-</div>
-<div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_1r_-control" id="dk-f_R_1r_-label">Password</label>
-<div class="dk-field__hint" id="dk-f_R_1r_-hint">12 characters or more</div>
-<div class="dk-field__control">
-<span class="dk-input dk-password-input dk-input--size-md" data-component="password-input" data-size="md">
-<input autoComplete="new-password" id="dk-f_R_1r_-control" aria-describedby="dk-f_R_1r_-hint" type="password" class="dk-input__field" spellCheck="false" autoCapitalize="off" autoCorrect="off" name="password"/>
-<button type="button" class="dk-password-input__toggle" aria-label="Show password" aria-pressed="false" aria-controls="dk-f_R_1r_-control">
-<span aria-hidden="true" data-icon="visibility" class="dk-icon">
+<div role="alert" class="dk-alert dk-alert--danger dk-form__message" data-component="alert" data-tone="danger">
+<span class="dk-alert__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="error" class="dk-icon">
 <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
-<path d="m480-320q75 0 127.5-52.5t52.5-127.5-52.5-127.5-127.5-52.5-127.5 52.5-52.5 127.5 52.5 127.5 127.5 52.5zm0-72q-45 0-76.5-31.5t-31.5-76.5 31.5-76.5 76.5-31.5 76.5 31.5 31.5 76.5-31.5 76.5-76.5 31.5zm0 192q-134 0-244.5-72t-174.5-190q-5-9-7.5-18.5t-2.5-19.5 2.5-19.5 7.5-18.5q64-118 174.5-190t244.5-72 244.5 72 174.5 190q5 9 7.5 18.5t2.5 19.5-2.5 19.5-7.5 18.5q-64 118-174.5 190t-244.5 72z">
-</path>
-</svg>
-</span>
-</button>
-</span>
-</div>
-</div>
-<div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_2b_-control" id="dk-f_R_2b_-label">Confirm password</label>
-<div class="dk-field__control">
-<span class="dk-input dk-password-input dk-input--size-md" data-component="password-input" data-size="md">
-<input autoComplete="new-password" id="dk-f_R_2b_-control" type="password" class="dk-input__field" spellCheck="false" autoCapitalize="off" autoCorrect="off" name="confirm"/>
-<button type="button" class="dk-password-input__toggle" aria-label="Show password" aria-pressed="false" aria-controls="dk-f_R_2b_-control">
-<span aria-hidden="true" data-icon="visibility" class="dk-icon">
-<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
-<path d="m480-320q75 0 127.5-52.5t52.5-127.5-52.5-127.5-127.5-52.5-127.5 52.5-52.5 127.5 52.5 127.5 127.5 52.5zm0-72q-45 0-76.5-31.5t-31.5-76.5 31.5-76.5 76.5-31.5 76.5 31.5 31.5 76.5-31.5 76.5-76.5 31.5zm0 192q-134 0-244.5-72t-174.5-190q-5-9-7.5-18.5t-2.5-19.5 2.5-19.5 7.5-18.5q64-118 174.5-190t244.5-72 244.5 72 174.5 190q5 9 7.5 18.5t2.5 19.5-2.5 19.5-7.5 18.5q-64 118-174.5 190t-244.5 72z">
-</path>
-</svg>
-</span>
-</button>
-</span>
-</div>
-</div>
-<div class="dk-field" data-component="field">
-<div class="dk-field__control">
-<label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
-<span class="dk-checkbox__control">
-<input id="dk-f_R_2r_-control" type="checkbox" class="dk-checkbox__input" name="terms"/>
-<span class="dk-checkbox__icon" aria-hidden="true">
-<span aria-hidden="true" data-icon="check" class="dk-icon">
-<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
-<path d="m382-354 339-339q12-12 28-12t28 12 12 28.5-12 28.5l-367 368q-12 12-28 12t-28-12l-172-172q-12-12-11.5-28.5t12.5-28.5 28.5-12 28.5 12z">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
 </path>
 </svg>
 </span>
 </span>
-</span>
-<span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ur_-label">I agree to the terms</span>
-</span>
-</label>
+<div class="dk-alert__content">
+<div class="dk-alert__message">Nothing was sent. Check the problems below.</div>
 </div>
 </div>
-<div>
-<button type="submit" data-component="button" data-variant="primary" data-size="md" class="dk-btn dk-btn--primary dk-btn--size-md">
-<span class="dk-btn__label">Create account</span>
-</button>
+<div tabindex="-1" aria-labelledby="_R_2_" class="dk-error-summary dk-form__summary" data-component="error-summary">
+<h2 id="_R_2_" class="dk-error-summary__title">There is a problem</h2>
+<ul class="dk-error-summary__list" role="list">
+<li class="dk-error-summary__item">
+<a class="dk-error-summary__link" href="#email">That email already has an account. Sign in instead</a>
+</li>
+</ul>
 </div>
-</form>
-
-<!-- SubmitFailed -->
-<form noValidate="" aria-label="Create an account" style="max-width:420px" class="dk-form" data-component="form">
 <div class="dk-field" data-component="field">
 <label class="dk-field__label" for="dk-f_R_7_-control" id="dk-f_R_7_-label">Full name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input autoComplete="name" id="dk-f_R_7_-control" type="text" class="dk-input__field" name="name"/>
+<input autoComplete="name" id="dk-f_R_7_-control" type="text" class="dk-input__field" name="name" value="Ani Wijaya"/>
 </span>
 </div>
 </div>
-<div class="dk-field" data-component="field">
+<div class="dk-field dk-field--invalid" data-component="field">
 <label class="dk-field__label" for="dk-f_R_b_-control" id="dk-f_R_b_-label">Email</label>
 <div class="dk-field__hint" id="dk-f_R_b_-hint">Like name@example.com</div>
 <div class="dk-field__control">
-<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input type="email" autoComplete="email" id="dk-f_R_b_-control" aria-describedby="dk-f_R_b_-hint" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" name="email"/>
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input type="email" autoComplete="email" id="dk-f_R_b_-control" aria-describedby="dk-f_R_b_-hint dk-f_R_b_-error" aria-errormessage="dk-f_R_b_-error" aria-invalid="true" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" name="email" value="ani@example.com"/>
 </span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_b_-error">That email already has an account. Sign in instead</span>
 </div>
 </div>
 <div class="dk-field" data-component="field">
@@ -574,6 +542,126 @@
 <span class="dk-checkbox__label" id="dk-cb_R_7n_-label">I agree to the terms</span>
 </span>
 </label>
+</div>
+</div>
+<div>
+<button type="submit" data-component="button" data-variant="primary" data-size="md" class="dk-btn dk-btn--primary dk-btn--size-md">
+<span class="dk-btn__label">Create account</span>
+</button>
+</div>
+</form>
+
+<!-- SubmitFailed -->
+<form noValidate="" aria-label="Create an account" style="max-width:420px" class="dk-form" data-component="form">
+<div tabindex="-1" aria-labelledby="_R_2_" class="dk-error-summary dk-form__summary" data-component="error-summary">
+<h2 id="_R_2_" class="dk-error-summary__title">There are 3 problems</h2>
+<ul class="dk-error-summary__list" role="list">
+<li class="dk-error-summary__item">
+<a class="dk-error-summary__link" href="#name">Enter your full name</a>
+</li>
+<li class="dk-error-summary__item">
+<a class="dk-error-summary__link" href="#email">Enter an email address like name@example.com</a>
+</li>
+<li class="dk-error-summary__item">
+<a class="dk-error-summary__link" href="#terms">Agree to the terms to create an account</a>
+</li>
+</ul>
+</div>
+<div class="dk-field dk-field--invalid" data-component="field">
+<label class="dk-field__label" for="dk-f_R_7_-control" id="dk-f_R_7_-label">Full name</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input autoComplete="name" id="dk-f_R_7_-control" aria-describedby="dk-f_R_7_-error" aria-errormessage="dk-f_R_7_-error" aria-invalid="true" type="text" class="dk-input__field" name="name"/>
+</span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_7_-error">Enter your full name</span>
+</div>
+</div>
+<div class="dk-field dk-field--invalid" data-component="field">
+<label class="dk-field__label" for="dk-f_R_b_-control" id="dk-f_R_b_-label">Email</label>
+<div class="dk-field__hint" id="dk-f_R_b_-hint">Like name@example.com</div>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input type="email" autoComplete="email" id="dk-f_R_b_-control" aria-describedby="dk-f_R_b_-hint dk-f_R_b_-error" aria-errormessage="dk-f_R_b_-error" aria-invalid="true" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" name="email"/>
+</span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_b_-error">Enter an email address like name@example.com</span>
+</div>
+</div>
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_f_-control" id="dk-f_R_f_-label">Password</label>
+<div class="dk-field__hint" id="dk-f_R_f_-hint">12 characters or more</div>
+<div class="dk-field__control">
+<span class="dk-input dk-password-input dk-input--size-md" data-component="password-input" data-size="md">
+<input autoComplete="new-password" id="dk-f_R_f_-control" aria-describedby="dk-f_R_f_-hint" type="password" class="dk-input__field" spellCheck="false" autoCapitalize="off" autoCorrect="off" name="password"/>
+<button type="button" class="dk-password-input__toggle" aria-label="Show password" aria-pressed="false" aria-controls="dk-f_R_f_-control">
+<span aria-hidden="true" data-icon="visibility" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-320q75 0 127.5-52.5t52.5-127.5-52.5-127.5-127.5-52.5-127.5 52.5-52.5 127.5 52.5 127.5 127.5 52.5zm0-72q-45 0-76.5-31.5t-31.5-76.5 31.5-76.5 76.5-31.5 76.5 31.5 31.5 76.5-31.5 76.5-76.5 31.5zm0 192q-134 0-244.5-72t-174.5-190q-5-9-7.5-18.5t-2.5-19.5 2.5-19.5 7.5-18.5q64-118 174.5-190t244.5-72 244.5 72 174.5 190q5 9 7.5 18.5t2.5 19.5-2.5 19.5-7.5 18.5q-64 118-174.5 190t-244.5 72z">
+</path>
+</svg>
+</span>
+</button>
+</span>
+</div>
+</div>
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_j_-control" id="dk-f_R_j_-label">Confirm password</label>
+<div class="dk-field__control">
+<span class="dk-input dk-password-input dk-input--size-md" data-component="password-input" data-size="md">
+<input autoComplete="new-password" id="dk-f_R_j_-control" type="password" class="dk-input__field" spellCheck="false" autoCapitalize="off" autoCorrect="off" name="confirm"/>
+<button type="button" class="dk-password-input__toggle" aria-label="Show password" aria-pressed="false" aria-controls="dk-f_R_j_-control">
+<span aria-hidden="true" data-icon="visibility" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-320q75 0 127.5-52.5t52.5-127.5-52.5-127.5-127.5-52.5-127.5 52.5-52.5 127.5 52.5 127.5 127.5 52.5zm0-72q-45 0-76.5-31.5t-31.5-76.5 31.5-76.5 76.5-31.5 76.5 31.5 31.5 76.5-31.5 76.5-76.5 31.5zm0 192q-134 0-244.5-72t-174.5-190q-5-9-7.5-18.5t-2.5-19.5 2.5-19.5 7.5-18.5q64-118 174.5-190t244.5-72 244.5 72 174.5 190q5 9 7.5 18.5t2.5 19.5-2.5 19.5-7.5 18.5q-64 118-174.5 190t-244.5 72z">
+</path>
+</svg>
+</span>
+</button>
+</span>
+</div>
+</div>
+<div class="dk-field dk-field--invalid" data-component="field">
+<div class="dk-field__control">
+<label class="dk-checkbox dk-checkbox--size-md dk-checkbox--invalid" data-component="checkbox" data-size="md">
+<span class="dk-checkbox__control">
+<input id="dk-f_R_n_-control" aria-describedby="dk-f_R_n_-error" aria-errormessage="dk-f_R_n_-error" aria-invalid="true" type="checkbox" class="dk-checkbox__input" name="terms"/>
+<span class="dk-checkbox__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="check" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m382-354 339-339q12-12 28-12t28 12 12 28.5-12 28.5l-367 368q-12 12-28 12t-28-12l-172-172q-12-12-11.5-28.5t12.5-28.5 28.5-12 28.5 12z">
+</path>
+</svg>
+</span>
+</span>
+</span>
+<span class="dk-checkbox__text">
+<span class="dk-checkbox__label" id="dk-cb_R_7n_-label">I agree to the terms</span>
+</span>
+</label>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_n_-error">Agree to the terms to create an account</span>
 </div>
 </div>
 <div>

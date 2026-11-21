@@ -146,6 +146,13 @@ describe('Form', () => {
     expect(active()).toBe(summary());
   });
 
+  test('errors and a message it starts with show from the first render', async () => {
+    await render(<Form errors={{ name: 'Enter a name' }} message="Nothing was sent"><Field label="Name"><Input id="n" name="name" /></Field></Form>);
+    expect(errorOf('n')).toBe('Enter a name');
+    expect(links()).toEqual([['#n', 'Enter a name']]);
+    expect(document.querySelector('[role="alert"]')!.textContent).toContain('Nothing was sent');
+  });
+
   test('checks: "Checking…" while one runs, its message once it answers, and a newer value cancels the older check', async () => {
     const seen: string[] = [];
     const checks = { username: (value: unknown, { signal }: { signal: AbortSignal }) => new Promise<string | null>((r) => {

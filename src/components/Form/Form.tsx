@@ -71,6 +71,9 @@ export interface FormProps<S extends StandardSchemaV1 | undefined = undefined> e
   checks?: Readonly<Record<string, FormCheck>> | undefined;
   /** Messages by field name from a server, such as a form action's answer: a new object shows them all again. */
   errors?: Readonly<Record<string, React.ReactNode>> | null | undefined;
+  /** A message from a server that isn't one field's ("The payment was declined"), such as a form action's answer: an
+   *  alert at the top of the form. */
+  message?: React.ReactNode;
   /** Saves the answers in the browser under this key as people type, and fills them back in when the form comes back.
    *  Passwords and card numbers are never saved. The draft is forgotten when the form is sent. */
   draft?: string | undefined;
@@ -146,20 +149,24 @@ const FormContext = /* @__PURE__ */ React.createContext<FormHandle | null>(null)
 export const FormInternals = /* @__PURE__ */ React.createContext<{ show: (keys: readonly string[]) => Promise<boolean> } | null>(null);
 
 function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, ...props }: FormProps<S> & React.RefAttributes<HTMLFormElement>) {
-  const { schema, defaultValues, onSubmit, checks, errors, draft, warnUnsaved, summary, onDirtyChange, onValuesChange, className, children, ...rest } = props;
+  const { schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onDirtyChange, onValuesChange, className, children, ...rest } = props;
   const sds = useSettings(words), say = useSettings(inputWords).labels.invalidValue, locale = useLocale();
-  const [st, setSt] = React.useState<State>(START);
+  // The server's answer it starts with (a form action's, rendered on the server) shows from the first render.
+  const [st, setSt] = React.useState<State>(() => {
+    const server = keyed(errors);
+    return { ...START, server, failed: Object.keys(server).length > 0, message: shows(message) ? message : null };
+  });
   const patch = React.useCallback((f: (s: State) => Partial<State> | null) => setSt((s) => { const p = f(s); return p ? { ...s, ...p } : s; }), []);
   const latest = useLatest({ schema, onSubmit, checks, onValuesChange, say, locale, draft, summary });
   const form = React.useRef<HTMLFormElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { form.current = n; });
 
   // A new errors object from the server (a form action's next answer) shows every message again (setState in render).
-  const [given, setGiven] = React.useState(errors);
-  if (given !== errors) {
-    setGiven(errors);
+  const [given, setGiven] = React.useState({ errors, message });
+  if (given.errors !== errors || given.message !== message) {
+    setGiven({ errors, message });
     const server = keyed(errors);
-    setSt((s) => ({ ...s, server, failed: Object.keys(server).length > 0, version: s.version + 1 }));
+    setSt((s) => ({ ...s, server, failed: Object.keys(server).length > 0, version: s.version + 1, message: shows(message) ? message : null }));
   }
 
   // Draft: read from the browser's storage as the form first renders (after hydrating, on a page the server drew), then
@@ -305,7 +312,8 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       const dirty = stamp(flat) !== L.baseline;
       patch((s) => {
         let server = s.server;
-        for (const k of moved) server = without(server, k);
+        // Only an edit takes a server message away: not the first read, nor a field that has just appeared.
+        for (const k of moved) if (prev.has(k) && flat.has(k)) server = without(server, k);
         return server === s.server && dirty === s.dirty ? null : { server, dirty };
       });
       const cb = latest.current.onValuesChange;

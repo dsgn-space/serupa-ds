@@ -56,14 +56,9 @@ export const SubmitFailed: Story = {
   args: { errors: { name: 'Enter your full name', email: 'Enter an email address like name@example.com', terms: 'Agree to the terms to create an account' } },
 };
 
-function ServerAnswer() {
-  const form = useForm();
-  React.useEffect(() => { form.setErrors({ email: 'That email already has an account. Sign in instead' }, 'Nothing was sent. Check the problems below.'); }, []);   // eslint-disable-line react-hooks/exhaustive-deps -- once, as the story opens
-  return null;
-}
 /** The server turned the values down: its message for the whole form in an alert, and its errors on their fields. */
 export const ServerErrors: Story = {
-  args: { defaultValues: { name: 'Ani Wijaya', email: 'ani@example.com' }, children: <><ServerAnswer /><SignUpFields /></> },
+  args: { defaultValues: { name: 'Ani Wijaya', email: 'ani@example.com' }, errors: { email: 'That email already has an account. Sign in instead' }, message: 'Nothing was sent. Check the problems below.' },
 };
 
 /** A check after the schema: "Checking…" under the field, then its answer. Any username with "taken" in it is taken. */

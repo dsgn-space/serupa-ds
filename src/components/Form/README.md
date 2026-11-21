@@ -39,7 +39,7 @@ const SignUp = z.object({
 - **When it checks** (the [Forms](?path=/docs/guides-forms--docs) rules): a field when it's left, never while it's typed in; once it has shown a message, again as it changes, so the message goes the moment the answer is right; everything on submit. A message that depends on another field ("The passwords don't match") updates as either changes.
 - **The messages** are the schema's: say what's wrong and how to fix it, "Enter a date in the future", not "Invalid date". The same words show on the field and in the summary.
 - **A failed submit** shows an [ErrorSummary](../ErrorSummary/README.md) at the top, listing the problems in the fields' order, each a link to its field; it takes focus, and the page's title starts with "Error:" while it shows. `summary={false}` leaves it out (place your own `<ErrorSummary />` inside the form, or focus moves to the first field with a problem).
-- **The server's answer**: return `{ errors: { email: "That email already has an account" }, message }` from `onSubmit`, or pass `errors` (a form action's answer). Each shows on its field, and in the summary; `message` shows in an alert at the top. Editing a field takes its server message away.
+- **The server's answer**: return `{ errors: { email: "That email already has an account" }, message }` from `onSubmit`, or pass `errors` and `message` (a form action's answer). Each shows on its field, and in the summary; `message` shows in an alert at the top. Editing a field takes its server message away.
 - **Checks after the schema**, such as "That username is taken": `checks={{ username: async (value, { signal }) => … }}` runs once the field passes the schema, says "Checking…" under it meanwhile, cancels an older check when the value changes, and waits for a pause in typing. Submit waits for them.
 - **Fields that depend on others**: `useFormValue("country")` inside the form gives a field's value as it changes. Render the dependent field only when it applies, and let the schema require it only then.
 - **Drafts**: `draft="application"` keeps the answers in the browser as people type and fills them back in when they come back; passwords, card numbers and one-time codes are never kept. It's forgotten once the form is sent. `useForm()` gives `draftSavedAt` for a [SaveStatus](../SaveStatus/README.md), `draftRestored`, and `discardDraft()` for a "Start again" button.
@@ -79,6 +79,7 @@ const SignUp = z.object({
 | `onSubmit` | `(values, form) => void \| { errors, message } \| Promise` | | Called with the checked values. Answer `{ errors, message }` when the server turns them down |
 | `checks` | `{ [name]: (value, { values, signal }) => message \| Promise }` | none | Checks once a field passes the schema |
 | `errors` | `{ [name]: ReactNode } \| null` | none | Messages from a server, such as a form action's answer; a new object shows them again |
+| `message` | `ReactNode` | none | A server message that isn't one field's, in an alert at the top |
 | `draft` | `string` | none | Keeps a draft in the browser under this key |
 | `warnUnsaved` | boolean | `false` | Asks before the page goes while there are changes |
 | `summary` | boolean | `true` | The ErrorSummary at the top after a failed submit |
