@@ -3,7 +3,7 @@ import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useLatest } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { named } from '../../internal/component';
 import { colorName, contrastRatio, normalizeHex } from '../../internal/color';
@@ -112,13 +112,26 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     committed.current = v;
     if (props.onValueCommit) props.onValueCommit(v);
   };
-  const commitRef = React.useRef(commit);
-  commitRef.current = commit;
+  const commitRef = useLatest(commit);
   // A form reset puts the first color back (uncontrolled), as a native input does.
   const hidden = React.useRef<HTMLInputElement>(null);
   // The hidden input knows its form even through the form attribute; without a name, the form that form names, else
   // the picker's own form.
   useFormReset(props.name ? hidden : root, () => { if (!controlled) { const d = normalizeHex(props.defaultValue || ''); setOwn(d); committed.current = d; } }, props.form);
+  const choose = (hex: string, focus?: boolean, final = true) => {
+    if (disabled || readOnly) return;
+    const v = normalizeHex(hex);
+    if (!v) return;
+    if (!controlled) setOwn(v);
+    if (v !== value && props.onValueChange) props.onValueChange(v);
+    if (final) commit(v);
+    if (focus && root.current) {
+      const b = root.current.querySelector<HTMLButtonElement>(`.dk-color-picker__swatch[data-value="${v}"]`);
+      if (b) b.focus();
+    }
+  };
+  const chooseRef = useLatest(choose);
+  const valueRef = useLatest(value);
   // React's onChange on <input type="color"> fires on every step of a drag; the native change event fires once the
   // picker closes, which is the commit.
   const native = React.useRef<HTMLInputElement | null>(null);
@@ -135,23 +148,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     el.addEventListener('input', input);
     el.addEventListener('blur', blur);
     return () => { el.removeEventListener('change', on); el.removeEventListener('input', input); el.removeEventListener('blur', blur); };
-  }, [custom]);
-  const choose = (hex: string, focus?: boolean, final = true) => {
-    if (disabled || readOnly) return;
-    const v = normalizeHex(hex);
-    if (!v) return;
-    if (!controlled) setOwn(v);
-    if (v !== value && props.onValueChange) props.onValueChange(v);
-    if (final) commit(v);
-    if (focus && root.current) {
-      const b = root.current.querySelector<HTMLButtonElement>(`.dk-color-picker__swatch[data-value="${v}"]`);
-      if (b) b.focus();
-    }
-  };
-  const chooseRef = React.useRef(choose);
-  chooseRef.current = choose;
-  const valueRef = React.useRef(value);
-  valueRef.current = value;
+  }, [custom, chooseRef, commitRef, valueRef]);
   const picked = swatches.findIndex((s) => s.value === value);
   const tabStop = picked >= 0 ? picked : 0;
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {

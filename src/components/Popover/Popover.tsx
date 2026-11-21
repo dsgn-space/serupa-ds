@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useLatest, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { mediaList } from '../../internal/mediaList';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -71,15 +71,16 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
   const open = !!isOpen;
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
-  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
+  const askRef = useLatest(props.onOpenChange);
   // A close() kept by the content and called once it has closed already (after Escape, say) asks nothing.
-  const shown = React.useRef(open); shown.current = open;
+  const shownRef = useLatest(open);
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
-    if (v === shown.current) return;
-    if (!controlled) { shown.current = v; setInner(v); }
-    if (ask.current) ask.current(v, { reason });
-  }, [controlled, setInner]);
+    if (v === shownRef.current) return;
+    if (!controlled) { shownRef.current = v; setInner(v); }
+    if (askRef.current) askRef.current(v, { reason });
+  }, [controlled, setInner, askRef, shownRef]);
   const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => { set(false, reason); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
+  const closeFromContent = React.useCallback(() => close('close', true), [close]);
   const focusFirst = props.initialFocus !== 'panel';
 
   // Closing: the content stays (inert) while the panel fades out (DZ1); one open on arrival doesn't fade in.
@@ -124,18 +125,18 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
   useTriggerRef(triggerRef, 'Popover');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
-  const triggerRefs = useMergedRef(childRef, (n) => { triggerRef.current = n; });
-  const trigger = React.cloneElement(child, {
-    ref: triggerRefs,
-    'aria-haspopup': 'dialog',
-    'aria-expanded': open,
-    'aria-controls': open ? id : undefined,
-    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; set(!open, 'trigger'); },
-  });
+  const triggerRefs = useMergedRef(childRef, undefined, triggerRef);
+  // The trigger drawn again with JSX, as cloneElement would: the React Compiler skips a component that hands a ref to
+  // cloneElement, and takes this.
+  const Trigger = child.type as React.ElementType;
+  const trigger = <Trigger {...cp} key={child.key} ref={triggerRefs} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
+    onClick={(e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; set(!open, 'trigger'); }} />;
   const titled = props.title != null && props.title !== false && props.title !== '';
   const H = ('h' + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as 'h2';
-  const content = typeof props.children === 'function' ? (props.children as (c: () => void) => React.ReactNode)(() => close('close', true)) : props.children;
-  const mergedRef = useMergedRef(ref, (n) => { panelRef.current = n; if (!titled) nameRef(n); });
+  // Content given as a function of close() is drawn by its own element, so the function runs as it renders, not as
+  // the Popover does: the React Compiler can then tell the close it's handed is called later, from a handler.
+  const content = typeof props.children === 'function' ? <WithClose render={props.children as (c: () => void) => React.ReactNode} close={closeFromContent} /> : props.children;
+  const mergedRef = useMergedRef(ref, titled ? undefined : nameRef, panelRef);
   return (
     <>
       {trigger}
@@ -151,6 +152,8 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
     </>
   );
 }
+
+function WithClose({ render, close }: { render: (close: () => void) => React.ReactNode; close: () => void }) { return render(close); }
 
 /* Popover: a small non-modal dialog next to its trigger, for content people interact with (a form, filters,
    details with links): role="dialog", named by its title. Opening moves focus inside; Escape closes it and
