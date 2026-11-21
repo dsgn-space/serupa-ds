@@ -37,7 +37,6 @@ A short form of one or two fields can skip the summary: move focus to the first 
 
 ## Sending and saving
 
-- Keep the submit button enabled while the form has errors or empty fields, and check when it's pressed. A disabled Submit leaves people stuck with no idea which field it's waiting for; a press shows them, with the summary and the field's error. When a button really must be off, give it `disabledReason`, so it stays reachable and says why.
 - The submit [Button](?path=/docs/components-actions-button--docs) shows `loading` while the form is sent, and blocks a second click, so nothing is sent twice. A promise from `onClick`, or a React form `action`, does this by itself. Keep its label as it was ("Save changes"), so the width doesn't jump.
 - A form that saves as people go, with no Save button, shows a [SaveStatus](?path=/docs/components-feedback-savestatus--docs) near its title: Saving, Saved, or an error with Try again.
 - A form in a [Dialog](?path=/docs/components-overlays-dialog--docs) takes `unsaved` while it has changes, so closing it by accident asks "Discard changes?" first.
@@ -129,4 +128,3 @@ The submit Button shows `loading` by itself while a form `action` runs. Whicheve
 | `inputMode="numeric"` for a card number | `type="number"`, whose arrows and scroll wheel change the number |
 | Keep the answers when the submit fails, and focus the summary | Clear the form, or leave focus on the button with nothing said |
 | `*` on required fields and "(optional)" on the rest | Only "All fields are required unless marked" at the top |
-| An enabled Save that shows what's missing when pressed | A Save that stays grey until every field is right |
