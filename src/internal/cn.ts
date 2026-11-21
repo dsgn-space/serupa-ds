@@ -68,3 +68,12 @@ export const SIZES = ['sm', 'md', 'lg'] as const;
 
 /** useLayoutEffect in the browser; on the server (where it can't run, and React warns) useEffect. */
 export const useIsoLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+
+/** A ref that holds the latest `value`, for handlers and effects that must not re-run when it changes. It is set after
+ *  each render commits rather than during render, which the React Compiler can't memoize around (ADR-0017). */
+export function useLatest<T>(value: T): React.RefObject<T> {
+  const ref = React.useRef(value);
+  // every render: the newest value, read later by a handler or an effect that doesn't re-run for it.
+  useIsoLayoutEffect(() => { ref.current = value; });
+  return ref;
+}

@@ -66,12 +66,13 @@ export type TabNavLinkProps<C extends React.ElementType = 'a'> = TabNavLinkOwnPr
 
 function TabNavLinkBaseRender({ ref, ...props }: TabNavLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { current: 1, icon: 1, as: 1, className: 1, children: 1 });
-  const attrs = Object.assign(rest, {
+  const attrs = {
+    ...rest,
     ref,
     'aria-current': props.current ? 'page' : undefined,
     'data-state': props.current ? 'active' : 'inactive',
     className: cn('dk-tabs__tab', props.className),
-  });
+  };
   return (
     <li className="dk-tab-nav__item">
       {React.createElement(props.as || config.link, attrs,

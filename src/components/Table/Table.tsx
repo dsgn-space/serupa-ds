@@ -5,7 +5,7 @@ import { useScrolls } from '../../internal/useScrolls';
 import { useStickyHead } from '../../internal/stickyHead';
 import { flushSync } from 'react-dom';
 import { announce } from '../../internal/announce';
-import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { Button } from '../Button/Button';
@@ -360,8 +360,7 @@ const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeader
   const setTh = useMergedRef(ref, (n: HTMLTableCellElement | null) => { th.current = n; });
   const handle = React.useRef<HTMLSpanElement | null>(null);
   // The handle's keys, drag and double-click, as native listeners: the newest width and callback through a ref.
-  const live = React.useRef({ min, max, current, controlled, onWidthChange: props.onWidthChange });
-  live.current = { min, max, current, controlled, onWidthChange: props.onWidthChange };
+  const live = useLatest({ min, max, current, controlled, onWidthChange: props.onWidthChange });
   // A click on the handle (not a drag) or Enter opens Narrower, Wider and Fit: the width without dragging (2.5.7).
   // A native popover (popover="auto": Escape and a press outside close it), so a Table without resizing, or a
   // Chart's data table, doesn't carry Popover's code.
@@ -469,7 +468,7 @@ const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeader
       if (p) p.removeEventListener('toggle', onToggle);
       if (follow) follow();
     };
-  }, [resizable]);
+  }, [resizable, live]);
   // The handle's name: the column's text, read once it's drawn. With no width set yet, its value is the drawn width.
   const [name, setName] = React.useState('');
   const [drawn, setDrawn] = React.useState<number | null>(null);

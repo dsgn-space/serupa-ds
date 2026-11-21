@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit } from '../../internal/cn';
+import { cn, omit, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { IconButton } from '../IconButton/IconButton';
@@ -41,15 +41,14 @@ function MaskedValueRender({ ref, ...props }: MaskedValueProps & React.RefAttrib
   const rest = omit(props, { value: 1, label: 1, end: 1, start: 1, revealable: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, className: 1 });
   const [revealed, setOwn, controlled] = useControllable(props.revealed, !!props.defaultRevealed, 'MaskedValue', 'revealed');
   const shown = !!props.revealable && !!revealed;
-  const set = React.useRef<((v: boolean) => void) | null>(null);
-  set.current = (v: boolean) => { if (!controlled) setOwn(v); if (props.onRevealedChange) props.onRevealedChange(v); };
+  const set = useLatest((v: boolean) => { if (!controlled) setOwn(v); if (props.onRevealedChange) props.onRevealedChange(v); });
   // Leaving the page hides it again, so a value shown for a moment isn't left on a screen someone walks away from.
   React.useEffect(() => {
     if (!shown) return;
     const hide = () => { if (document.visibilityState === 'hidden') set.current?.(false); };
     document.addEventListener('visibilitychange', hide);
     return () => document.removeEventListener('visibilitychange', hide);
-  }, [shown]);
+  }, [shown, set]);
   const { masked, kept } = mask(props.value, props.start, props.end);
   const said = kept ? sds.labels.maskedEnding(props.label, kept) : sds.labels.maskedHidden(props.label);
   return (

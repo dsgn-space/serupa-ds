@@ -315,6 +315,9 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     await userEvent.click(cal('.dk-calendar__heading'));
     const off = () => [...cal('[role=grid]:not([hidden])').querySelectorAll('[aria-disabled=true]')].map((b) => b.querySelector('[aria-hidden]')?.textContent ?? b.textContent);
     expect(off()).toEqual(['Jan', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+    // Drawn as a disabled day is: disabled-text, struck through, at full opacity (it was faded by opacity alone).
+    const jan = cal('[role=grid]:not([hidden]) [aria-disabled=true]');
+    expect([disabledLook(jan), css(jan).textDecorationLine]).toEqual(['neutral', 'line-through']);
     expect([q<HTMLButtonElement>('[aria-label="Previous year"]').disabled, q<HTMLButtonElement>('[aria-label="Next year"]').disabled]).toEqual([true, true]);
     // A click the browser lets through (aria-disabled leaves the button pressable) picks nothing.
     page.getByText('Jan', { exact: true }).element().closest('button')!.click();

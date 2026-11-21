@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
+import { cn, useIsoLayoutEffect, useLatest, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { graphemes } from '../../internal/graphemes';
@@ -25,7 +25,6 @@ export interface TruncatedTextProps extends Omit<React.HTMLAttributes<HTMLElemen
   mode?: 'end' | 'middle' | undefined;
 }
 
-const TAGS = ['span', 'p', 'div'] as const;
 // A control around the text that takes focus itself: the text adds no tab stop of its own inside one.
 const CONTROL = 'a[href], button, summary, [role="button"], [role="link"], [role="tab"], [role="option"], [role="menuitem"], [role="treeitem"], [tabindex="0"]';
 
@@ -37,7 +36,7 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
   const [cut, setCut] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inside, setInside] = React.useState(false);
-  const isCut = React.useRef(cut); isCut.current = cut;
+  const isCut = useLatest(cut);
 
   useIsoLayoutEffect(() => {
     const e = el.current;
@@ -91,9 +90,9 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
   const chars = middle && cut ? graphemes(children) : [];
   const at = chars.length ? middleCutAt(children, chars) : 0;
   const content = at > 0 ? <span className="dk-truncated-text__start">{children}</span> : children;
-  const text = React.createElement(oneOf(TAGS, as, 'span'), {
+  const Tag = as === 'p' || as === 'div' ? as : 'span';
+  const attrs = {
     ...rest,
-    ref: refs,
     'data-component': 'truncated-text',
     'data-truncated': cut ? '' : undefined,
     // The count goes in an attribute the CSS reads, not a style attribute, so it holds under a strict CSP too.
@@ -104,7 +103,9 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
     className: cn('dk-truncated-text', clamp && 'dk-truncated-text--clamp', at > 0 && 'dk-truncated-text--middle', className),
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => { press.current = { touch: e.pointerType !== 'mouse', open }; if (onPointerDown) onPointerDown(e); },
     onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && !inside && press.current.touch && !press.current.open) setOpen(true); },
-  }, content);
+  };
+  // JSX rather than createElement: the compiler takes a ref passed to a function as read during render (ADR-0017).
+  const text = <Tag {...attrs} ref={refs}>{content}</Tag>;
   return <Tooltip visual content={children} open={open} onOpenChange={setOpen} disabled={!cut} placement={placement}>{text}</Tooltip>;
 }
 

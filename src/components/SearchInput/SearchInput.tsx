@@ -64,7 +64,7 @@ function SearchInputRender({ ref, ...props }: SearchInputProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
     <span className={cn('dk-input dk-search-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
-      style={props.style} data-component="search-input" data-size={size} onMouseDown={pressFocuses(el)}>
+      style={props.style} data-component="search-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
       <span className="dk-input__icon dk-input__icon--left dk-search-input__icon" aria-hidden={props.loading ? undefined : true}>
         {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? sds.labels.searching} /> : <Icon icon={icons.Search} />}
       </span>
