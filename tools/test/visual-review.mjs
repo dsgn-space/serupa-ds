@@ -36,6 +36,9 @@ const md = sheet(changes, (f) => `https://example.test/${f}`);
 t('the sheet shows main\'s picture beside the branch\'s, and asks for the design-qa label',
   md.includes('https://example.test/Tabs/Default-blue-light-rest.before.png') && md.includes('https://example.test/Tabs/Default-blue-light-rest.png')
   && md.includes('new story') && md.includes('story removed') && md.includes('**design-qa**'));
+const marked = sheet([{ name: 'Badge/New-axes', kind: 'added', detail: '1.20% differ <img src="https://elsewhere.invalid/x"> [here](https://elsewhere.invalid) | a\n| b |' + 'x'.repeat(300) }], null);
+t('a detail is plain text in its cell: no tag, link or row of its own, and 200 characters at most',
+  !/<img|\]\(|\n\| b|a \| /.test(marked) && marked.includes('1.20% differ &#60;img') && !marked.includes('x'.repeat(200)), marked);
 t('the sheet with nothing changed says so', sheet([], null).includes('nothing to review'));
 t('the sheet stops at its limit and says how many more', sheet(changes, null, 1).includes('And 2 more'));
 t('the label added after the last commit counts', approved('2026-11-15T17:00:00Z', '2026-11-15T16:59:00Z'));
