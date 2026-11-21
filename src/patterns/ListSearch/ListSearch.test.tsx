@@ -32,10 +32,10 @@ describe('Patterns/List with search and filters', () => {
     // The page's title is set off from what's under it by the page header's line, as on the other app pages.
     const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
     expect(ruled(document.querySelector('h1'))).toBe(true);
-    // The app pages' frame: the header on the surface, over a page a step darker, as on the other app pages.
+    // A list of rows is read, not a layout of Cards, so the page is the plain surface and the header's line sets it off (Build a page).
     const bg = (e: Element | null) => getComputedStyle(e!).backgroundColor;
     expect(bg(document.querySelector('header'))).not.toBe('rgba(0, 0, 0, 0)');
-    expect(bg(document.querySelector('header'))).not.toBe(bg(document.querySelector('header')!.parentElement));
+    expect(bg(document.querySelector('header'))).toBe(bg(document.querySelector('header')!.parentElement));
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     await expect.element(screen.getByRole('search', { name: 'Search and filter projects' })).toBeVisible();
