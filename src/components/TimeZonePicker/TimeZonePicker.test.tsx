@@ -98,6 +98,22 @@ describe('TimeZonePicker', () => {
     await userEvent.click(input());
     await expect.poll(() => document.querySelector('[role="option"]')?.getAttribute('aria-description') ?? '').toMatch(/· Your time zone$/);
   });
+
+  test("an option's offset and name read in its locale's direction: Egyptian Arabic right to left, even in a left-to-right page", async () => {
+    await render(<TimeZonePicker aria-label="Time zone" at={AT} locale="ar-EG" zones={['Asia/Jakarta']} />);
+    await userEvent.click(input());
+    const words = await expect.poll(() => document.querySelector('[role="option"]')).toBeTruthy().then(() => {
+      const o = document.querySelector('[role="option"]')!, w = document.createTreeWalker(o, NodeFilter.SHOW_TEXT);
+      for (let n = w.nextNode(); n; n = w.nextNode()) if (n.textContent!.includes('UTC')) return n as Text;
+      throw new Error('no offset');
+    });
+    const text = words.textContent, u = text.indexOf('U'), last = text.search(/.\u2069?$/);
+    const left = (i: number) => { const r = document.createRange(); r.setStart(words, i); r.setEnd(words, i + 1); return r.getBoundingClientRect().left; };
+    // "UTC+07:00 · توقيت غرب إندونيسيا": the offset comes first, so in Arabic it starts at the right.
+    expect(left(u) > left(last)).toBe(true);
+    // The description is still read out as one: the isolates are invisible, and a screen reader skips them.
+    expect(document.querySelector('[role="option"]')!.getAttribute('aria-description')).toBe(text);
+  });
 });
 
 describe('TimeZonePicker: current names (GR174)', () => {
