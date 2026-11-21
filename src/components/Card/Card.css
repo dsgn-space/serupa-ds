@@ -80,7 +80,7 @@
 .dk-card__link::after { content: ""; position: absolute; inset: var(--spacing-0); z-index: var(--z-0); border-radius: inherit; }
 .dk-card__link--cover { position: absolute; inset: var(--spacing-0); border-radius: inherit; }
 .dk-card__link--cover::after { content: none; }
-/* Pressed, the card shrinks, and a press held near its edge would end up outside it: Safari then drops :active and
+/* Pressed with --card-press-scale set, the card shrinks, and a press held near its edge would end up outside it: Safari then drops :active and
    the card springs back under the finger. So while pressed, the link (what takes the press) reaches a twelfth past
    each edge, which covers any press scale down to about 86%. */
 .dk-card--link:active .dk-card__link::after, .dk-card--link:active .dk-card__link--cover { inset: calc(var(--spacing-0) - var(--sizing-1-12)); }
@@ -91,9 +91,11 @@
 /* The text sits above the link's area too, so it can be selected and copied; a plain click on it still follows the link (Card.tsx). */
 .dk-card--link :is(.dk-card__description, .dk-card__body) { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .dk-card--link:hover { border-color: var(--card-border-hover, var(--border-strong)); } }
-/* Pressed: the card shrinks a little while held and springs back, like a Button, but not while one of the buttons
-   or links inside it is the thing being pressed. */
-.dk-card--link:active:not(:has(:is(a[href], button, input, select, textarea, label, summary, [tabindex]):not(.dk-card__link):active)) { scale: var(--card-press-scale, var(--scale-97)); transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+/* Pressed: while held, the card takes a wash of the text color over its fill (its held fill, a step darker in light
+   themes and lighter in dark, as a Button's) and keeps its hover border; muted text turns text-muted-shaded to keep
+   4.5:1 on it. Not while one of the buttons or links inside it is the thing being pressed. Nothing shrinks by
+   default; --card-press-scale opts in to one. */
+.dk-card--link:active:not(:has(:is(a[href], button, input, select, textarea, label, summary, [tabindex]):not(.dk-card__link):active)) { --text-muted: var(--card-text-muted-pressed, var(--text-muted-shaded)); background-image: linear-gradient(var(--dk-card-held), var(--dk-card-held)); border-color: var(--card-border-hover, var(--border-strong)); --dk-card-held: color-mix(in srgb, var(--card-pressed-wash, var(--text)) var(--card-pressed-layer, var(--opacity-10)), transparent); scale: var(--card-press-scale, var(--scale-100)); transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
 .dk-card--link:has(.dk-card__link:focus-visible) { outline: var(--focus-ring-width) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (prefers-reduced-motion: reduce) { .dk-card--link { transition: none; } .dk-card--link:active { scale: none; } }
 @media (forced-colors: active) { .dk-card { border-color: CanvasText; } }

@@ -142,8 +142,11 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-bg-disabled` | `field-readonly` | The circle when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
 | `--radio-bg-checked` | `primary` | Fill and border when checked |
 | `--radio-bg-checked-hover` | `primary-hover` | The same, on hover |
+| `--radio-bg-checked-pressed` | `primary-pressed` | The checked circle's fill while held down, one step past bg-checked-hover. |
+| `--radio-bg-pressed` | `secondary` | The unchecked circle's background while held down. |
 | `--radio-border` | `field-border` | Border while unchecked |
 | `--radio-border-hover` | `field-border-hover` | Border on hover |
+| `--radio-border-pressed` | `field-border-pressed` | The unchecked circle's border while held down, one step past border-hover. |
 | `--radio-dot-color` | `on-primary` | The dot |
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
@@ -202,5 +205,5 @@ Each is an optional override: set it on the page, a container or one radio. The 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--radio-press-scale` | `scale-90` | Size of the circle while it's held down (90%). 1 turns it off |
+| `--radio-press-scale` | `scale-100` | Size of the circle while it's held down. 100%: off by default, since a press shows as the held colors (bg-pressed, border-pressed, bg-checked-pressed). Set it, e.g. to `var(--scale-90)`, to add a shrink. |
 <!-- token-table:end -->

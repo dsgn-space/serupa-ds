@@ -22,6 +22,16 @@
           }
         }
       },
+      "track-pressed": {
+        "$type": "color",
+        "$value": "{color.border-control-pressed}",
+        "$description": "The off track while held down, one step past track-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-track-pressed"
+          }
+        }
+      },
       "track-checked": {
         "$type": "color",
         "$value": "{color.primary}",
@@ -39,6 +49,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-checked-hover"
+          }
+        }
+      },
+      "track-checked-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-pressed}",
+        "$description": "The on track while held down, one step past track-checked-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-track-checked-pressed"
           }
         }
       },
@@ -270,8 +290,8 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-90}",
-        "$description": "Size of the thumb while it's held down (90%). 1 turns it off",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size of the thumb while it's held down. 100%: off by default, since a press shows as the held track (track-pressed, track-checked-pressed). Set it, e.g. to `var(--scale-90)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-press-scale"

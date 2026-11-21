@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, css, press, withMotion, flexAlign } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, press, flexAlign } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 import { Checkbox } from '../Checkbox/Checkbox';
@@ -372,14 +372,12 @@ describe('Card', () => {
     error.mockRestore();
   });
 
-  test('pressed: a card with href shrinks to 97% while held and springs back; not while a button inside it is pressed (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<Card id="pc" href="#pc"><CardHeader title="Atlas" /><CardFooter><Button id="pb">Save</Button></CardFooter></Card>);
-      expect(css(el('pc')).transitionProperty).toContain('scale');
-      await press(el('pc'), () => expect.poll(() => css(el('pc')).scale).toBe('0.97'), { x: 8, y: 8 });
-      await expect.poll(() => css(el('pc')).scale).toBe('none');
-      await press(el('pb'), () => expect(css(el('pc')).scale).toBe('none'));
-    });
+  test('pressed: a card with href takes a wash of the text color while held (its held fill) and keeps its hover border, its muted text turns text-muted-shaded, and it stays full size; not while a button inside it is pressed (ED1)', async () => {
+    await render(<Card id="pc" href="#pc"><CardHeader title="Atlas" description="Due Friday" /><CardFooter><Button id="pb">Save</Button></CardFooter></Card>);
+    const desc = () => [...el('pc').querySelectorAll<HTMLElement>('*')].find((n) => !n.children.length && n.textContent === 'Due Friday')!;
+    const look = () => [/gradient/.test(css(el('pc')).backgroundImage), css(el('pc')).borderTopColor, css(desc()).color, css(el('pc')).scale.replace('none', '1')];
+    expect(await press(el('pc'), look, { x: 8, y: 8 })).toEqual([true, color('var(--border-strong)'), color('var(--text-muted-shaded)'), '1']);
+    expect((await press(el('pb'), look))[0]).toBe(false);
     history.replaceState(null, '', location.pathname + location.search);   // the press followed #pc; the next pass starts clean
   });
 });

@@ -111,9 +111,9 @@ Only a clickable badge (`onClick` or `href`) has hover, focus and active states,
 
 The same as Button's, each with a component token to tune it or turn it off. Only scale, opacity and the loading blur move, so nothing around the badge reflows.
 
-- **Press** (clickable badges): shrinks to 97% while held by pointer, Space or Enter, in 100ms, and comes back over 300ms with `ease-enter`, settling at full size with no overshoot. Off: `--badge-press-scale: 100%`.
+- **Press** (clickable badges): the state layer goes from 10% to 15% while held by pointer, Space or Enter, so the badge darkens a step past hover. It doesn't shrink unless you ask (`--badge-press-scale: var(--scale-97)`): a shrink is hard to see under a finger on something this small.
 - **Loading** (any badge): the content fades out while the ring fades and grows in, in 150ms; both blur a little (`blur-xs`) as they cross, so it reads as one change.
-- Under reduced motion, the press is off and loading only fades (no blur). Your `onPointerDown`, `onKeyDown`, `onKeyUp` and `onBlur` still run first.
+- Under reduced motion, a shrink you turned on is off and loading only fades (no blur); the held layer stays. Your `onPointerDown`, `onKeyDown`, `onKeyUp` and `onBlur` still run first.
 
 ## Accessibility
 
@@ -249,7 +249,7 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--badge-press-scale` | `scale-97` | Clickable badges: size while pressed (97%); `100%` turns it off |
+| `--badge-press-scale` | `scale-100` | Clickable badges: size while pressed. 100%: off by default, since a press shows as the stronger state layer (active-layer). Set it, e.g. to `var(--scale-97)`, to add a shrink. |
 | `--badge-press-duration` | `motion-press` | How fast the press scales down (100ms). The release comes back over `motion-release` with `ease-enter`. |
 | `--badge-loading-duration` | `motion-enter-sm` | Cross-fade between the content and the loading ring (150ms) |
 <!-- token-table:end -->

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    ToggleButton: an outline or ghost Button; pressed (aria-pressed="true"), it's primary-subtle with primary
-   text and, for outline, a primary border. Hover keeps the pressed colors. On and disabled, it's drawn in neutrals:
+   text and, for outline, a primary border. Hover keeps the pressed colors; held down, it steps past them. On and disabled, it's drawn in neutrals:
    the highlight fill with muted text and, for outline, the control border. It still reads as on beside the off
    ones, and no longer looks like something to press.
    --------------------------------------------------------------- */
@@ -14,6 +14,10 @@
   }
 }
 .dk-toggle-button.dk-btn--outline.dk-toggle-button--pressed { border-color: var(--toggle-button-border-pressed, var(--primary)); }
+/* Held down, an on toggle takes a step past its fill, as every Button variant does (Button's held fills). */
+.dk-toggle-button.dk-toggle-button--pressed:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) {
+  background: var(--toggle-button-bg-pressed-held, var(--primary-subtle-pressed)); color: var(--toggle-button-text-pressed-held, var(--primary-hover));
+}
 .dk-toggle-button.dk-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) {
   background: var(--toggle-button-bg-pressed-disabled, var(--highlight)); color: var(--toggle-button-text-pressed-disabled, var(--text-muted));
   --dk-btn-depth: var(--shadow-none);

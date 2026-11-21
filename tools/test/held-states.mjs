@@ -10,15 +10,6 @@ import path from 'node:path';
 import { PROJECT, done, report } from './lib.mjs';
 
 const EXEMPT = {
-  'Button .dk-btn--ghost': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--primary': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--outline': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--secondary': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--ghost.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--outline.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--primary.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',
-  'Button .dk-btn--secondary.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',
-  'ToggleButton .dk-toggle-button.dk-toggle-button--pressed': 'a ToggleButton is a Button: it shows a press by its shrink',
   'Calendar .dk-calendar__day--in-range': 'a day in the range keeps its range fill; the plain day has the held fill',
   'Calendar .dk-calendar__day--selected': 'the chosen day keeps its primary fill; the plain day has the held fill',
   'Calendar .dk-calendar__period--selected': 'the chosen month or year keeps its primary fill, as the chosen day does; the plain one has the held fill',

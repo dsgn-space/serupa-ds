@@ -27,7 +27,7 @@ const near = (a: number, b: number) => Math.abs(a - b) <= 1;
 const away = () => userEvent.hover(document.body, { position: { x: 500, y: 20 } });
 
 describe('Tooltip', () => {
-  test('shown on a Button that is pressed and let go, it holds still: it rode the press\'s scale, shrinking with the Button and growing back', async () => {
+  test('shown on a Button that is pressed and let go, it holds still: it rode the press\'s scale (one that opts in to a shrink), shrinking with the Button and growing back', async () => {
     await withMotion(async () => {
     // Where the layer sits, each frame for a while, while it shows.
     // To a tenth of a px: WebKit lays out in 64ths of a px, and a layer that holds still reads 95.97px one frame and 95.99px the next.
@@ -37,7 +37,7 @@ describe('Tooltip', () => {
       for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(px(cs.left) + ' ' + px(cs.top)); } await new Promise(requestAnimationFrame); }
       return [...seen];
     };
-      await render(<div style={{ padding: '80px' }}><Tooltip content="Save the draft" defaultOpen><Button id="tpress">Save</Button></Tooltip></div>);
+      await render(<div style={{ padding: '80px' }}><Tooltip content="Save the draft" defaultOpen><Button id="tpress" style={{ '--button-press-scale': 'var(--scale-97)' } as React.CSSProperties}>Save</Button></Tooltip></div>);
       const b = document.getElementById('tpress')!, tip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
       b.focus();
       await expect.poll(() => tip()?.matches(':popover-open')).toBe(true);

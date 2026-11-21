@@ -968,6 +968,86 @@
         }
       }
     },
+    "primary-pressed": {
+      "$type": "color",
+      "$value": "{color.blue-800}",
+      "$description": "Alias. Pressed state of `primary`: one step past `primary-hover` (darker in light themes, lighter in dark), so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-200}",
+            "red-light": "{red-800}",
+            "red-dark": "{red-200}",
+            "orange-light": "{orange-900}",
+            "orange-dark": "{orange-200}",
+            "amber-light": "{amber-900}",
+            "amber-dark": "{amber-200}",
+            "yellow-light": "{yellow-900}",
+            "yellow-dark": "{yellow-200}",
+            "lime-light": "{lime-900}",
+            "lime-dark": "{lime-200}",
+            "green-light": "{green-900}",
+            "green-dark": "{green-200}",
+            "emerald-light": "{emerald-900}",
+            "emerald-dark": "{emerald-200}",
+            "teal-light": "{teal-900}",
+            "teal-dark": "{teal-200}",
+            "cyan-light": "{cyan-900}",
+            "cyan-dark": "{cyan-200}",
+            "sky-light": "{sky-900}",
+            "sky-dark": "{sky-200}",
+            "indigo-light": "{indigo-800}",
+            "indigo-dark": "{indigo-200}",
+            "violet-light": "{violet-800}",
+            "violet-dark": "{violet-200}",
+            "purple-light": "{purple-800}",
+            "purple-dark": "{purple-200}",
+            "fuchsia-light": "{violet-800}",
+            "fuchsia-dark": "{violet-200}",
+            "pink-light": "{pink-900}",
+            "pink-dark": "{pink-200}",
+            "rose-light": "{rose-800}",
+            "rose-dark": "{rose-200}"
+          },
+          "contrastMore": {
+            "blue-light": "{blue-950}",
+            "blue-dark": "{blue-100}",
+            "red-light": "{red-950}",
+            "red-dark": "{red-100}",
+            "orange-light": "{orange-950}",
+            "orange-dark": "{orange-100}",
+            "amber-light": "{amber-950}",
+            "amber-dark": "{amber-100}",
+            "yellow-light": "{yellow-950}",
+            "yellow-dark": "{yellow-100}",
+            "lime-light": "{lime-950}",
+            "lime-dark": "{lime-100}",
+            "green-light": "{green-950}",
+            "green-dark": "{green-100}",
+            "emerald-light": "{emerald-950}",
+            "emerald-dark": "{emerald-100}",
+            "teal-light": "{teal-950}",
+            "teal-dark": "{teal-100}",
+            "cyan-light": "{cyan-950}",
+            "cyan-dark": "{cyan-100}",
+            "sky-light": "{sky-950}",
+            "sky-dark": "{sky-100}",
+            "indigo-light": "{indigo-900}",
+            "indigo-dark": "{indigo-100}",
+            "violet-light": "{violet-950}",
+            "violet-dark": "{violet-100}",
+            "purple-light": "{purple-950}",
+            "purple-dark": "{purple-100}",
+            "fuchsia-light": "{fuchsia-950}",
+            "fuchsia-dark": "{fuchsia-100}",
+            "pink-light": "{pink-950}",
+            "pink-dark": "{pink-100}",
+            "rose-light": "{rose-950}",
+            "rose-dark": "{rose-100}"
+          }
+        }
+      }
+    },
     "primary-subtle": {
       "$type": "color",
       "$value": "{color.blue-50}",
@@ -1008,6 +1088,50 @@
             "pink-dark": "{pink-950}",
             "rose-light": "{rose-50}",
             "rose-dark": "{rose-950}"
+          }
+        }
+      }
+    },
+    "primary-subtle-pressed": {
+      "$type": "color",
+      "$value": "{color.blue-100}",
+      "$description": "Alias. Pressed state of a fill in `primary-subtle` (a secondary button held down): one step past it (brand 100 light, brand 900 dark). `primary-hover` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-900}",
+            "red-light": "{red-100}",
+            "red-dark": "{red-900}",
+            "orange-light": "{orange-100}",
+            "orange-dark": "{orange-900}",
+            "amber-light": "{amber-100}",
+            "amber-dark": "{amber-900}",
+            "yellow-light": "{yellow-100}",
+            "yellow-dark": "{yellow-900}",
+            "lime-light": "{lime-100}",
+            "lime-dark": "{lime-900}",
+            "green-light": "{green-100}",
+            "green-dark": "{green-900}",
+            "emerald-light": "{emerald-100}",
+            "emerald-dark": "{emerald-900}",
+            "teal-light": "{teal-100}",
+            "teal-dark": "{teal-900}",
+            "cyan-light": "{cyan-100}",
+            "cyan-dark": "{cyan-900}",
+            "sky-light": "{sky-100}",
+            "sky-dark": "{sky-900}",
+            "indigo-light": "{indigo-100}",
+            "indigo-dark": "{indigo-900}",
+            "violet-light": "{violet-100}",
+            "violet-dark": "{violet-900}",
+            "purple-light": "{purple-100}",
+            "purple-dark": "{purple-900}",
+            "fuchsia-light": "{fuchsia-100}",
+            "fuchsia-dark": "{fuchsia-900}",
+            "pink-light": "{pink-100}",
+            "pink-dark": "{pink-900}",
+            "rose-light": "{rose-100}",
+            "rose-dark": "{rose-900}"
           }
         }
       }
@@ -1272,6 +1396,20 @@
         }
       }
     },
+    "field-border-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-500 in light, zinc-500 in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-500}",
+          "contrastMore": {
+            "light": "{zinc-950}",
+            "dark": "{zinc-50}"
+          }
+        }
+      }
+    },
     "border-control": {
       "$type": "color",
       "$value": "{color.zinc-500}",
@@ -1296,6 +1434,20 @@
           "contrastMore": {
             "light": "{zinc-900}",
             "dark": "{zinc-100}"
+          }
+        }
+      }
+    },
+    "border-control-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-700}",
+      "$description": "Alias. `border-control` while held down, one step past `border-control-hover` (Switch's track).",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-200}",
+          "contrastMore": {
+            "light": "{zinc-950}",
+            "dark": "{zinc-50}"
           }
         }
       }
@@ -1833,6 +1985,16 @@
       "$extensions": {
         "com.serupa": {
           "dark": "{red-700}"
+        }
+      }
+    },
+    "danger-pressed": {
+      "$type": "color",
+      "$value": "{color.red-800}",
+      "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{red-800}"
         }
       }
     },

@@ -142,6 +142,26 @@
           }
         }
       },
+      "pressed-wash": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The color washed over a card with `href` while it's held down, at pressed-layer strength: darker in light themes, lighter in dark.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-pressed-wash"
+          }
+        }
+      },
+      "text-muted-pressed": {
+        "$type": "color",
+        "$value": "{color.text-muted-shaded}",
+        "$description": "Muted text on a card with `href` while it's held down (4.5:1 on the washed fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-text-muted-pressed"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",
@@ -274,11 +294,21 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-97}",
-        "$description": "Size of a card with `href` while it's held down (97%). 1 turns it off",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size of a card with `href` while it's held down. 100%: off by default, since a press shows as the held wash (pressed-layer). Set it, e.g. to `var(--scale-97)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--card-press-scale"
+          }
+        }
+      },
+      "pressed-layer": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "How strong the wash of the text color is on a card with `href` while it's held down (10%).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-pressed-layer"
           }
         }
       }

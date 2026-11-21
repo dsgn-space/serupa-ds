@@ -337,16 +337,16 @@ describe('CheckboxGroup', () => {
     await expect.element(page.getByRole('checkbox', { name: 'Mentions' })).toBeInTheDocument();
   });
 
-  test('pressed: the box shrinks to 90% while the row is held, on scale alone, and springs back; not when disabled (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<><Checkbox id="pc">Press me</Checkbox><Checkbox id="pd" disabled>Off</Checkbox></>);
-      const el = (id: string) => document.getElementById(id) as HTMLElement;
-      const box = (id: string) => el(id).parentElement as HTMLElement;   // the control around the input
-      expect(css(box('pc')).transitionProperty).toBe('scale');
-      await press(el('pc').closest('label')!, () => expect.poll(() => css(box('pc')).scale).toBe('0.9'));
-      await expect.poll(() => css(box('pc')).scale).toBe('none');
-      await press(el('pd').closest('label')!, () => expect(css(box('pd')).scale).toBe('none'));
-    });
+  test('pressed: while the row is held the box takes its held colors, a step past hover (unchecked: a secondary fill and a field-border-pressed edge; checked: primary-pressed), and stays full size; an invalid box keeps its danger edge; not when disabled (ED1)', async () => {
+    await render(<><Checkbox id="pc">Press me</Checkbox><Checkbox id="pk" defaultChecked>On</Checkbox><Checkbox id="pi" invalid>Wrong</Checkbox><Checkbox id="pd" disabled>Off</Checkbox></>);
+    const el = (id: string) => document.getElementById(id) as HTMLElement;
+    const box = (id: string) => el(id).parentElement as HTMLElement;   // the control around the input
+    const look = (id: string) => [css(el(id)).backgroundColor, css(el(id)).borderTopColor, css(box(id)).scale.replace('none', '1')];
+    const rest = look('pd');
+    expect(await press(el('pc').closest('label')!, () => look('pc'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-pressed)'), '1']);
+    expect((await press(el('pi').closest('label')!, () => look('pi')))[1]).toBe(color('var(--field-border-invalid)'));
+    expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
   test('the fill eases only under the pointer or focus; a box changed from elsewhere changes at once, so select all on 1,000 rows starts no transitions (GR168)', async () => {
     await withMotion(async () => {

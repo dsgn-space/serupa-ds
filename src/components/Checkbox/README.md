@@ -163,8 +163,11 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-bg-disabled` | `field-readonly` | The box when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
 | `--checkbox-bg-checked` | `primary` | Fill and border when checked or indeterminate |
 | `--checkbox-bg-checked-hover` | `primary-hover` | The same, on hover |
+| `--checkbox-bg-checked-pressed` | `primary-pressed` | The checked box's fill while held down, one step past bg-checked-hover. |
+| `--checkbox-bg-pressed` | `secondary` | The unchecked box's background while held down. |
 | `--checkbox-border` | `field-border` | Border while unchecked |
 | `--checkbox-border-hover` | `field-border-hover` | Border on hover |
+| `--checkbox-border-pressed` | `field-border-pressed` | The unchecked box's border while held down, one step past border-hover. |
 | `--checkbox-icon-color` | `on-primary` | The check and the dash |
 | `--checkbox-label-color` | `text` | The label |
 | `--checkbox-description-color` | `text-muted` | The description |
@@ -224,5 +227,5 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--checkbox-press-scale` | `scale-90` | Size of the box while it's held down (90%). 1 turns it off |
+| `--checkbox-press-scale` | `scale-100` | Size of the box while it's held down. 100%: off by default, since a press shows as the held colors (bg-pressed, border-pressed, bg-checked-pressed). Set it, e.g. to `var(--scale-90)`, to add a shrink. |
 <!-- token-table:end -->

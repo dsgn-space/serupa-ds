@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Radio, RadioGroup } from './Radio';
 
@@ -316,15 +316,15 @@ describe('Radio', () => {
     ])).toEqual([]);
   });
 
-  test('pressed: the circle shrinks to 90% while the row is held, on scale alone, and springs back; not when disabled (ED1)', async () => {
-    await withMotion(async () => {
-      await render(<RadioGroup aria-label="Press"><Radio id="pr" value="a">Press me</Radio><Radio id="pq" value="b" disabled>Off</Radio></RadioGroup>);
-      const dot = (id: string) => (document.getElementById(id) as HTMLElement).parentElement as HTMLElement;   // the control around the input
-      expect(css(dot('pr')).transitionProperty).toBe('scale');
-      await press(dot('pr').closest('label')!, () => expect.poll(() => css(dot('pr')).scale).toBe('0.9'));
-      await expect.poll(() => css(dot('pr')).scale).toBe('none');
-      await press(dot('pq').closest('label')!, () => expect(css(dot('pq')).scale).toBe('none'));
-    });
+  test('pressed: while the row is held the circle takes its held colors, a step past hover (unchecked: a secondary fill and a field-border-pressed edge; checked: primary-pressed), and stays full size; not when disabled (ED1)', async () => {
+    await render(<RadioGroup aria-label="Press" defaultValue="c"><Radio id="pr" value="a">Press me</Radio><Radio id="pq" value="b" disabled>Off</Radio><Radio id="pk" value="c">On</Radio></RadioGroup>);
+    const input = (id: string) => document.getElementById(id) as HTMLElement;
+    const dot = (id: string) => input(id).parentElement as HTMLElement;   // the control around the input
+    const look = (id: string) => [css(input(id)).backgroundColor, css(input(id)).borderTopColor, css(dot(id)).scale.replace('none', '1')];
+    const rest = look('pq');
+    expect(await press(dot('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-pressed)'), '1']);
+    expect(await press(dot('pr').closest('label')!, () => look('pr'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
+    expect(await press(dot('pq').closest('label')!, () => look('pq'))).toEqual(rest);
   });
 
   test('L8E82: wrapping at the ends skips a radio hidden by CSS, rather than checking it out of sight while focus stays put', async () => {

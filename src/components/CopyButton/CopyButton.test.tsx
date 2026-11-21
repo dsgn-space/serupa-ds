@@ -56,7 +56,7 @@ describe('CopyButton', () => {
   test('the width stays the same while it shows "Copied" (both labels share one cell, the hidden one isn\'t read out)', async () => {
     await render(<CopyButton id="w" value="x">OK</CopyButton>);
     await document.fonts.ready; // a font that finishes loading between the two reads changes the width
-    // The layout width, not getBoundingClientRect: the press scales the button (scale 0.97, eased back), and CI
+    // The layout width, not getBoundingClientRect: a press can scale the button (--button-press-scale, eased back), and CI
     // once read it mid-way (81.67 against 84).
     const before = css(el('w')).width;
     await userEvent.click(el('w'));

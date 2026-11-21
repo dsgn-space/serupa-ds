@@ -22,6 +22,16 @@
           }
         }
       },
+      "primary-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-pressed}",
+        "$description": "Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker in light themes, lighter in dark.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-primary-bg-pressed"
+          }
+        }
+      },
       "primary-text": {
         "$type": "color",
         "$value": "{color.on-primary}",
@@ -92,6 +102,36 @@
           }
         }
       },
+      "secondary-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-subtle-pressed}",
+        "$description": "Secondary background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-secondary-bg-pressed"
+          }
+        }
+      },
+      "secondary-text-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "Secondary text while held down (4.5:1 on secondary-bg-pressed).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-secondary-text-pressed"
+          }
+        }
+      },
+      "secondary-border-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "Secondary border while held down.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-secondary-border-pressed"
+          }
+        }
+      },
       "outline-bg": {
         "$type": "color",
         "$value": "{color.surface-raised}",
@@ -109,6 +149,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-outline-bg-hover"
+          }
+        }
+      },
+      "outline-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "Outline background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-outline-bg-pressed"
           }
         }
       },
@@ -161,6 +211,16 @@
           }
         }
       },
+      "ghost-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "Ghost background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-ghost-bg-pressed"
+          }
+        }
+      },
       "ghost-text": {
         "$type": "color",
         "$value": "{color.text}",
@@ -201,6 +261,16 @@
           }
         }
       },
+      "destructive-primary-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.danger-pressed}",
+        "$description": "Destructive primary background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-destructive-primary-bg-pressed"
+          }
+        }
+      },
       "destructive-primary-text": {
         "$type": "color",
         "$value": "{color.on-danger}",
@@ -228,6 +298,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-destructive-secondary-bg-hover"
+          }
+        }
+      },
+      "destructive-secondary-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.danger-subtle-hover}",
+        "$description": "Destructive secondary background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-destructive-secondary-bg-pressed"
           }
         }
       },
@@ -271,6 +351,16 @@
           }
         }
       },
+      "destructive-outline-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.danger-subtle-hover}",
+        "$description": "Destructive outline background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-destructive-outline-bg-pressed"
+          }
+        }
+      },
       "destructive-outline-text": {
         "$type": "color",
         "$value": "{color.danger-text}",
@@ -298,6 +388,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-destructive-ghost-bg-hover"
+          }
+        }
+      },
+      "destructive-ghost-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.danger-subtle-hover}",
+        "$description": "Destructive ghost background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-destructive-ghost-bg-pressed"
           }
         }
       },
@@ -591,8 +691,8 @@
     "motion": {
       "press-scale": {
         "$type": "number",
-        "$value": "{transforms.scale-97}",
-        "$description": "Size while pressed (97%). 1 turns press feedback off.",
+        "$value": "{transforms.scale-100}",
+        "$description": "Size while held down. 100%: off by default, since a press shows as the held fill (the `…-bg-pressed` tokens). Set it, e.g. to `var(--scale-97)`, to add a shrink.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-press-scale"
