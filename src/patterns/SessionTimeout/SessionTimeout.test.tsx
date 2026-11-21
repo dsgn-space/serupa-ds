@@ -121,7 +121,9 @@ describe('Patterns/Session time-out', () => {
 
   test('"Sign out" ends it at once and clears the draft from the computer; a refused extension lets it run out as warned', async () => {
     const onExpire = vi.fn();
-    const first = await render(<SessionTimeout duration={4} warnBefore={3} saveKey={KEY} onExpire={onExpire} />);
+    // The warning opens a second in and the session runs out well after it: on a busy runner a 4-second session ran
+    // out before the fill, which then waited on a field that takes no typing.
+    const first = await render(<SessionTimeout duration={30} warnBefore={29} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(first.getByLabelText('Subject'), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
     await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve signed out'));
@@ -131,9 +133,9 @@ describe('Patterns/Session time-out', () => {
     await expect.element(first.getByLabelText('Subject')).toHaveValue('');
     await first.unmount();
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
-    const second = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
+    const second = await render(<SessionTimeout duration={6} warnBefore={5} onExtend={onExtend} />);
     await second.getByRole('button', { name: 'Stay signed in' }).click(WAIT);
-    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), WAIT);
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), { timeout: 10000 });
   });
 
   test('"Stay signed in" is busy while the server answers; when it can\'t, the warning stays open and says so, and trying again works', async () => {

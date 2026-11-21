@@ -94,6 +94,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
   // fullWidth: equal segments while every label fits its equal share; when one doesn't, they share by content as
   // without it, still filling the width, so a short label leaves its spare room to a long one (GR50).
   const [tight, setTight] = React.useState(false);
+  const fullWidth = !!props.fullWidth;
   const measure = React.useCallback(() => {
     const r = root.current, b = value != null ? buttons.current[value] : null;
     let c = '', total = 0, n = 0, most = 0;
@@ -101,7 +102,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
       const btn = buttons.current[k], l = btn?.querySelector<HTMLElement>('.dk-segmented__label');
       if (!btn) continue;
       total += btn.offsetWidth; n++;
-      if (props.fullWidth) {   // the width its content asks for: padding, then the icon and the whole label, gap apart
+      if (fullWidth) {   // the width its content asks for: padding, then the icon and the whole label, gap apart
         const cs = getComputedStyle(btn), kids = [...btn.children] as HTMLElement[];
         let need = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + (parseFloat(cs.columnGap) || 0) * Math.max(0, kids.length - 1);
         for (const kid of kids) need += kid === l ? l.scrollWidth : kid.offsetWidth;
@@ -110,7 +111,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
       if (l && l.scrollWidth > l.clientWidth) c += k + '\n';
     }
     setCut(c);
-    setTight(!!props.fullWidth && n > 0 && most > total / n + 0.5);
+    setTight(!!fullWidth && n > 0 && most > total / n + 0.5);
     if (!r || !b) { setBox(null); return; }
     // From the boxes, not offsetLeft and offsetWidth: those round to whole pixels, and segments are as wide as their
     // text, so the indicator sat up to half a pixel off its segment. The boxes include any scale on an ancestor (a
@@ -124,7 +125,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
     const own = parseFloat(getComputedStyle(b).scale) || 1;
     const w = bb.width * k / own, x = (bb.left + bb.width / 2 - rb.left) * k - w / 2 - r.clientLeft;
     setBox((p) => (p && p.x === x && p.w === w ? p : { x, w }));   // the same box when nothing moved, so a slide under way runs on
-  }, [value, props.fullWidth]);
+  }, [value, fullWidth]);
   useIsoLayoutEffect(measure, [measure, options.length, size, tight]);
   // A new choice slides the indicator from the last one (CSS above it, EG1, GL1): for the slide it spans both segments,
   // cut to the last one's shape at once (data-flip, no transition), then to the new one's, which the CSS animates.

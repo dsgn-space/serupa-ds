@@ -25,6 +25,11 @@
 
 # Context
 - text: Right-click, or focus and press Shift+F10
+- menu "File actions":
+  - menuitem "Open"
+  - menuitem "Rename"
+  - separator
+  - menuitem "Delete"
 
 # DisabledItems
 - button "Actions" [expanded]
