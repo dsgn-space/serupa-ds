@@ -1131,10 +1131,6 @@ How the words in a product built with the system should read: buttons, labels, h
 **Voice**
 
 - Plain and direct. Short sentences, everyday words, one idea per sentence.
-- Put first the words people scan for, in headings, links, list items and the first sentence of a message: "Billing: update your card", not "You can update your card in the billing section". People read the first two or three words of a line and move on.
-- Most important first, then what supports it, then the details: a message that's cut off after its first sentence should still have said what matters. Details that only some people need go behind a link or a disclosure.
-- Keep a sentence under about 20 words. Write numbers as numerals ("3 files", not "three files"): they stand out when people scan.
-- Capitals only for a short label in small type, never for a sentence or a heading: capitals hide the shape of words and read as shouting.
 - Say "you" to the person and talk about what they can do, not about the system.
 - No "please", no "sorry" for routine things, no exclamation marks, no jokes in errors.
 - Never blame the person. "That date is before the start date", not "You entered an invalid date".
