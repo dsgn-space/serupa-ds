@@ -2,7 +2,7 @@
 # Create the burst runner. Run on your Mac after `ibmcloud login` (see README).
 set -euo pipefail
 : "${RUNNER_TOKEN:?set RUNNER_TOKEN (registration token from GitHub > Settings > Actions > Runners > New self-hosted runner)}"
-: "${WATCHDOG_API_KEY:?set WATCHDOG_API_KEY (IBM API key for the idle watchdog)}"
+: "${WATCHDOG_API_KEY:?set WATCHDOG_API_KEY (the key of the serupa-watchdog service ID, never your own: see RUNBOOK.md)}"
 NAME="${NAME:-serupa-burst-github}"
 REGION="${REGION:-jp-osa}"           # Osaka: BUYOSA gives 70% off here
 ZONE="${ZONE:-${REGION}-1}"

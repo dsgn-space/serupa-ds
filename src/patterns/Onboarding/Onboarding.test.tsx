@@ -85,6 +85,16 @@ describe('Patterns/Onboarding', () => {
     await expect.element(second.getByRole('checkbox', { name: 'Mark “Add your photo” as done' })).toBeChecked();
   });
 
+  test('something else kept under saveKey (not this page\'s shape) is left out, and the page still shows', async () => {
+    window.localStorage.setItem(KEY, JSON.stringify({ done: 'b', hidden: 'yes' }));
+    const first = await render(<Onboarding steps={steps} saveKey={KEY} />);
+    await expect.element(first.getByRole('checkbox', { name: 'Mark “Invite your team” as done' })).not.toBeChecked();
+    await first.unmount();
+    window.localStorage.setItem(KEY, JSON.stringify({ done: ['b', 7, null] }));
+    const second = await render(<Onboarding steps={steps} saveKey={KEY} />);
+    await expect.element(second.getByRole('checkbox', { name: 'Mark “Invite your team” as done' })).toBeChecked();
+  });
+
   test('a storage that throws is ignored', async () => {
     const set = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('full'); });
     const screen = await render(<Onboarding steps={steps} saveKey={KEY} />);

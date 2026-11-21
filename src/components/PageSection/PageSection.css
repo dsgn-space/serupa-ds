@@ -1,0 +1,18 @@
+/* ---------------------------------------------------------------
+   PageSection: a band across the page, on the page's background or --page-section-bg-muted, with an optional line on
+   top, space above and below that grows from 768px, and a Container inside laying its children out in a column.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-page-section { padding-block: var(--dk-page-section-y); }
+.dk-page-section--sm { --dk-page-section-y: var(--page-section-padding-y-sm, var(--spacing-8)); }
+.dk-page-section--md { --dk-page-section-y: var(--page-section-padding-y-md, var(--spacing-12)); }
+.dk-page-section--lg { --dk-page-section-y: var(--page-section-padding-y-lg, var(--spacing-16)); }
+@media (min-width: 768px) {
+  .dk-page-section--md { --dk-page-section-y: var(--page-section-padding-y-md-wide, var(--spacing-16)); }
+  .dk-page-section--lg { --dk-page-section-y: var(--page-section-padding-y-lg-wide, var(--spacing-24)); }
+}
+.dk-page-section--muted { background: var(--page-section-bg-muted, var(--surface-muted)); --surface-behind: var(--page-section-bg-muted, var(--surface-muted)); }
+.dk-page-section--divider { border-block-start: var(--border-width-1) solid var(--page-section-border, var(--border)); }
+.dk-page-section__inner { --dk-page-section-gap: initial; display: flex; flex-direction: column; gap: var(--dk-page-section-gap, var(--page-section-gap, var(--spacing-8))); }
+.dk-page-section--center .dk-page-section__inner { align-items: center; text-align: center; }
+}

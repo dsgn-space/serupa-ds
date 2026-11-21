@@ -203,6 +203,13 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
     return undefined;
   };
   const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);
+  // The ends and the band have names, not only a color, as RangeCalendar gives them: "…, start date", "…, in the range".
+  const dayLabel = (d: Date, name: string) => {
+    const s = value.start, e = to, L = sds.labels;
+    if (sameDay(d, s)) return name + ', ' + (sameDay(d, e) ? L.startDate + ', ' + L.endDate : L.startDate);
+    if (sameDay(d, e)) return name + ', ' + L.endDate;
+    return s && e && compare(d, s) > 0 && compare(d, e) < 0 ? name + ', ' + L.inRange : name;
+  };
   const off = !!disabled || !!readOnly;
   const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels, max)
     : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
@@ -232,7 +239,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => setBase(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
       min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first && focusIn} hideOutside={two}
-      isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
+      isDateSelected={isSel} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
   return (

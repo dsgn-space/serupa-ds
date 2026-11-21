@@ -389,8 +389,11 @@ jobs:
       options: --cpus 4
     # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
     # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
-    # to run again (16 Nov). The other groups take under 15 anywhere.
-    timeout-minutes: ${{ matrix.group == 'visual' && 40 || 30 }}
+    # to run again (16 Nov). The other groups take under 15 anywhere, but for a queue group's locale shards when the
+    # change edits the story-wide tests themselves (a rename that touches every file, #2240): those run in all four
+    # languages, and activity.test.tsx alone takes about 6 minutes a language, so its shard ran 30 minutes and more
+    # however many shards there were (21 Nov, twice). More shards can't split one file.
+    timeout-minutes: ${{ matrix.group == 'visual' && 40 || matrix.part == 'locale' && 50 || 30 }}
     strategy:
       # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
       fail-fast: ${{ github.event_name != 'push' }}

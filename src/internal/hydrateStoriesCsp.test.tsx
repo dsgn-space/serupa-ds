@@ -88,12 +88,12 @@ function setStyle(el: Element, text: string) {
 // - a style a story passes to a component that hands it on as it is (<Card style>, Table's containerProps.style): the
 //   same object all the way up to the element the story wrote, which the getting-started page says needs
 //   'unsafe-inline' (or a class);
-// - Grid's and Stack's: they're Server Components, which don't hydrate, so their columns and gaps need
-//   'unsafe-inline' in server HTML (docs/GettingStarted.mdx).
+// - Grid's, Stack's, Center's, SidebarLayout's and PageSection's: they're Server Components, which don't hydrate, so
+//   their columns, gaps and widths need 'unsafe-inline' in server HTML (docs/GettingStarted.mdx).
 // Where the element was made is tools/test/vitest/storyOwner.ts, shared with the digits check.
 const sources = import.meta.glob<string>(['../components/*/*.stories.tsx', '../blocks/*/*.stories.tsx', '../patterns/*/*.stories.tsx'], { eager: true, query: '?raw', import: 'default' });
 const storySource = (name: string) => Object.entries(sources).find(([f]) => f.split('/').at(-2) === name)?.[1] || '';
-const SERVER_ONLY = '[data-component="grid"], [data-component="stack"]';
+const SERVER_ONLY = '[data-component="grid"], [data-component="stack"], [data-component="center"], [data-component="sidebar-layout"], [data-component="page-section"] > [data-component="container"]';
 function appStyled(el: Element, source: string) {
   if (el.matches(SERVER_ONLY)) return true;
   let f = fiberOf(el);
