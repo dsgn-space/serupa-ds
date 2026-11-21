@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { Card } from '../../components/Card/Card';
-import { Badge } from '../../components/Badge/Badge';
 import { Heading } from '../../components/Heading/Heading';
-import { Sparkline } from '../../components/Sparkline/Sparkline';
-import { Loader } from '../../components/Loader/Loader';
+import { StatTile } from '../../components/StatTile/StatTile';
+import { SerupaProvider } from '../../internal/provider';
+import type { SerupaLabels } from '../../internal/labels';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Stats row (BL2): a row of key numbers for the top of a dashboard, built from the components only, for an app to copy.
+   Each number is a StatTile, which says its change in words and names its trend line.
    What it carries (WCAG 2.2):
    - 1.4.1 Use of color: a change says "Up" or "Down" in words, with an arrow, as well as its color; whether up is good
      is the app's call (`good`), so a rise in costs isn't shown in green.
@@ -82,42 +82,26 @@ const EN: StatsRowLabels = {
 /* The grid fits the count: two or three numbers share one row from sm, so a third doesn't sit alone under two;
    four or more go two then four across. */
 const COLUMNS: Record<number, string> = { 1: '', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' };
-const ARROW = { up: 'arrow_upward', down: 'arrow_downward', flat: 'remove' } as const;
 
 /** A row of key numbers, each with its change said in words and an optional trend line. */
 export function StatsRow({ title, headingLevel = 2, stats, period, loading = false, loadingCount = 4, loadFailed = false, onRetry, labels }: StatsRowProps) {
   const id = React.useId();
   const w = { ...EN, ...labels };
+  // The tiles' words: StatTile's own (the provider's language) unless this row's labels set them.
+  const tileWords: Partial<SerupaLabels> = {};
+  if (labels?.up) tileWords.statTileUp = labels.up;
+  if (labels?.down) tileWords.statTileDown = labels.down;
+  if (labels?.flat) tileWords.statTileFlat = labels.flat;
+  if (labels?.trend) tileWords.statTileTrend = labels.trend;
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
-      {loadFailed ? <EmptyLoadFailed title={w.loadFailed(title)} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : <ul role="list" aria-busy={loading || undefined} className={`m-0 grid list-none grid-cols-1 gap-6 p-0 ${COLUMNS[loading ? loadingCount : stats.length] ?? COLUMNS[4]}`}>
+      {loadFailed ? <EmptyLoadFailed title={w.loadFailed(title)} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : <SerupaProvider labels={tileWords}><ul role="list" aria-busy={loading || undefined} className={`m-0 grid list-none grid-cols-1 gap-6 p-0 ${COLUMNS[loading ? loadingCount : stats.length] ?? COLUMNS[4]}`}>
         {loading
-          ? Array.from({ length: loadingCount }, (_, i) => (
-            <Card as="li" key={i} padding="md">
-              {/* One name for all of them: the first skeleton is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? w.loading(title) : ''} />
-            </Card>
-          ))
-          : stats.map((s) => {
-            const c = s.change;
-            const good = c ? (c.good ?? c.direction === 'up') : false;
-            const tone = !c || c.direction === 'flat' ? 'neutral' : good ? 'success' : 'danger';
-            return (
-              <Card as="li" key={s.label} padding="md" className="flex flex-col gap-2">
-                <p className="m-0 text-sm text-text-muted">{s.label}</p>
-                <p className="m-0 text-2xl font-semibold tabular-nums">{s.value}</p>
-                {c ? (
-                  <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <Badge tone={tone} leftIcon={ARROW[c.direction]}>{c.direction === 'flat' ? w.flat : w[c.direction](c.amount)}</Badge>
-                    {period ? <span>{period}</span> : null}
-                  </p>
-                ) : null}
-                {s.trend && s.trend.length > 1 ? <Sparkline data={s.trend} label={w.trend(s.label, s.trend.length)} className="h-8 w-full" /> : null}
-              </Card>
-            );
-          })}
-      </ul>}
+          // One name for all of them: the first skeleton is named, the others are only pictures.
+          ? Array.from({ length: loadingCount }, (_, i) => <StatTile as="li" key={i} label="" value="" loading loadingLabel={i === 0 ? w.loading(title) : ''} />)
+          : stats.map((s) => <StatTile as="li" key={s.label} label={s.label} value={s.value} change={s.change} period={s.change ? period : undefined} trend={s.trend} />)}
+      </ul></SerupaProvider>}
     </section>
   );
 }
