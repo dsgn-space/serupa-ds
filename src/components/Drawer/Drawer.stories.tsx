@@ -43,8 +43,10 @@ const meta = {
   component: Drawer,
   args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', placement: 'right', size: 'md' },
   argTypes: { placement: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom', 'start', 'end'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
-  render: function Render(args: DrawerProps) {
-    const [open, setOpen] = React.useState(false);
+  // Open in its own canvas, so each size, placement and long story is in a picture; closed on the docs page, so it
+  // doesn't cover the guide.
+  render: function Render(args: DrawerProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
     // Each placement's story opens a drawer that fits its title, from a button that says what it opens: a share
     // sheet with a link, not the filters under "Share".
     const { trigger, body, footer } = (typeof args.title === 'string' && CONTENT[args.title]) || CONTENT.Filters!;
@@ -73,8 +75,8 @@ const NOTES = Array.from({ length: 24 }, (_, i) => <p key={i}>Release {24 - i}. 
 export const LongText: Story = {
   name: 'Long text',
   args: { title: 'Release notes', description: undefined },
-  render: function Render(args: DrawerProps) {
-    const [open, setOpen] = React.useState(false);
+  render: function Render(args: DrawerProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
     return <>
       <Button onClick={() => setOpen(true)}>Release notes</Button>
       <Drawer {...args} open={open} onOpenChange={setOpen}>{NOTES}</Drawer>
@@ -85,8 +87,8 @@ export const LongText: Story = {
 export const UnsavedChanges: Story = {
   name: 'Unsaved changes',
   args: { title: 'Edit project', description: undefined },
-  render: function Render(args: DrawerProps) {
-    const [open, setOpen] = React.useState(false), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
+  render: function Render(args: DrawerProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs'), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
     const show = () => { setName(saved); setOpen(true); };
     return <>
       <Button onClick={show}>Edit {saved}</Button>

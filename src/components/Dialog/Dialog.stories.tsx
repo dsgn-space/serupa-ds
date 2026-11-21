@@ -10,8 +10,10 @@ const meta = {
   component: Dialog,
   args: { open: false, title: 'Invite people', description: 'They’ll get an email with a link.', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false);
+  // Open in its own canvas, so each size, placement and long story is in a picture; closed on the docs page, so it
+  // doesn't cover the guide.
+  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
     return <>
       <Button onClick={() => setOpen(true)}>Invite people</Button>
       <Dialog {...args} open={open} onOpenChange={setOpen}
@@ -36,8 +38,8 @@ const TERMS = Array.from({ length: 24 }, (_, i) => <p key={i}>Section {i + 1}. Y
 export const LongText: Story = {
   name: 'Long text',
   args: { title: 'Terms of use', description: undefined },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false);
+  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs');
     return <>
       <Button onClick={() => setOpen(true)}>Read the terms</Button>
       <Dialog {...args} open={open} onOpenChange={setOpen} footer={<Button onClick={() => setOpen(false)}>Accept</Button>}>{TERMS}</Dialog>
@@ -54,8 +56,8 @@ export const OpenOnArrival: Story = {
 export const UnsavedChanges: Story = {
   name: 'Unsaved changes',
   args: { title: 'Rename project', description: undefined, size: 'sm' },
-  render: function Render(args: DialogProps) {
-    const [open, setOpen] = React.useState(false), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
+  render: function Render(args: DialogProps, ctx: { viewMode?: string }) {
+    const [open, setOpen] = React.useState(ctx.viewMode !== 'docs'), [saved, setSaved] = React.useState('Atlas'), [name, setName] = React.useState('Atlas');
     const show = () => { setName(saved); setOpen(true); };
     return <>
       <Button onClick={show}>Rename {saved}</Button>
