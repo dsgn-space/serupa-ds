@@ -49,10 +49,27 @@ The watchdog deletes the VM when it finds nothing to do, and `down.sh` deletes i
 2. Run this from this folder:
 
    ```sh
-   RUNNER_TOKEN=<token> WATCHDOG_API_KEY=<IBM API key> ./up.sh
+   RUNNER_TOKEN=<token> WATCHDOG_API_KEY=<the service ID's key> ./up.sh
    ```
 
 3. The 28 runners show Idle in about 10 minutes. `up.sh` replaces the old registrations under the same names. Then run Runner ping (above).
+
+## The watchdog's key and who may run jobs here
+
+Every job on this VM can read `WATCHDOG_API_KEY`: the runners' user is in the `docker` group, which is root on the VM, and the key sits in `/usr/local/bin/idle-watchdog.sh`. So the key must be able to do one thing only, and no stranger's job may run here.
+
+- **The key belongs to the service ID `serupa-watchdog`, never to a person.** Its one access policy is platform Editor on VPC Infrastructure Services, resource type Virtual Server for VPC, in `jp-osa`: enough to delete the VM, and nothing else in the account. A person's own key can do everything that person can.
+- **To make a new key:** IBM Cloud > Manage > Access (IAM) > Service IDs > `serupa-watchdog` > API keys > Create. Delete the old one there once the new VM is up.
+- **Check a new key before trusting it:** `ibmcloud login --apikey <key> -r jp-osa`, then `./down.sh`. It deleted the VM on 21 November, which is what the watchdog needs. Log in as yourself again before `./up.sh`: the service ID can't create a VM.
+- **Type the secrets without showing them** (zsh), so they stay out of the shell history and off the screen:
+
+  ```sh
+  read -s "RUNNER_TOKEN?Runner token: "; export RUNNER_TOKEN; echo
+  read -s "WATCHDOG_API_KEY?Watchdog key: "; export WATCHDOG_API_KEY; echo
+  ./up.sh
+  ```
+
+- **A fork's pull request needs a maintainer's approval before any workflow runs:** GitHub > Settings > Actions > General > "Approval for running fork pull request workflows from contributors" is "Require approval for all external contributors". The workflows send a fork's jobs to GitHub's runners, but a fork can edit the workflow file in its own pull request, so this setting is what keeps its code off this VM. Read a fork's changes to `.github/` before approving its run.
 
 ## Every job failed at once with "The runner has received a shutdown signal"
 
@@ -97,7 +114,7 @@ The next VM made with `up.sh` gets all of this from `cloud-init.sh`, with a 2-ho
 
 ```sh
 ibmcloud is instance-delete serupa-burst-github -f
-RUNNER_TOKEN=<token> WATCHDOG_API_KEY=<IBM API key> ./up.sh
+RUNNER_TOKEN=<token> WATCHDOG_API_KEY=<the service ID's key> ./up.sh
 ```
 
 Then run Runner ping. `up.sh` makes no floating IP; release `serupa-burst-ip` (`ibmcloud is floating-ip-release serupa-burst-ip -f`) unless you want SSH. Keep the public gateway: the new VM reaches GitHub through it. If a new VM is ever found stopped instead of gone, its `WATCHDOG_API_KEY` can't delete: check `/var/log/idle-watchdog.log`.
