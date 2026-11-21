@@ -95,6 +95,12 @@ export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()
   return { zone, city, offset, offsetText, name: /^(GMT|UTC)([+\-−]|$)/.test(name) ? '' : name };
 }
 
+const never = () => () => {}, noZone = () => null;
+/** The reader's own zone under its current name, or null where the browser can't say. */
+function ownZone(): string | null {
+  try { const z = new Intl.DateTimeFormat().resolvedOptions().timeZone; return z ? currentTimeZone(z) : null; } catch { return null; }
+}
+
 function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.RefAttributes<HTMLInputElement>) {
   // Everything else is Combobox's, which keeps its own props off the DOM.
   const { zones, at, locale: ownLocale, className, value, defaultValue, ...rest } = props;
@@ -104,9 +110,8 @@ function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.Ref
   const dir = ownLocale ? localeDir(ownLocale) : undefined;
   const labels = useSettings(words).labels;
   // The reader's own zone, known only in the browser: read after hydrating, so the server's list matches.
-  const [mine, setMine] = React.useState<string | null>(null);
-  React.useEffect(() => { try { const z = new Intl.DateTimeFormat().resolvedOptions().timeZone; setMine(z ? currentTimeZone(z) : null); } catch { /* none */ } }, []);
-  const atTime = at == null ? null : new Date(at).getTime();
+  const mine = React.useSyncExternalStore(never, ownZone, noZone);
+  const atTime = at == null ? null : Number(new Date(at));   // a number the React Compiler knows can't change, for the memo
   const zonesKey = zones ? [...new Set(zones.map(currentTimeZone))].join(',') : '';
   // Every zone the browser knows is about 420 names, each formatted twice: a page with a few pickers spent most of
   // its first render on lists nobody had opened. Until the field is focused, pointed at or opened, the list is only

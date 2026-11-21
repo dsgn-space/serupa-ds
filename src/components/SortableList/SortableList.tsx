@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useMergedRef, cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { useMergedRef, cn, domId, omit, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useAutoFocus } from '../../internal/focus';
 import { announce } from '../../internal/announce';
@@ -42,8 +42,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const [held, setDrag] = React.useState<Drag | null>(null);
   // Rows taken away while one is held (another user deleted them) bring its place back inside the list.
   const drag = held && held.to > items.length - 1 ? { ...held, to: Math.max(0, items.length - 1) } : held;
-  const current = React.useRef(drag);
-  current.current = drag;
+  const current = useLatest(drag);
   const hintId = domId('dk-sl', React.useId()) + '-hint';
   const list = React.useRef<HTMLUListElement | null>(null);
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
@@ -125,8 +124,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
 
   // Pointer: press a handle and move more than a few pixels to drag; the row follows the pointer. The moves are
   // followed on the window: the handle's row moves in the DOM as the order changes, which would drop a pointer capture.
-  const latest = React.useRef({ items, getKey, finish });
-  latest.current = { items, getKey, finish };
+  const latest = useLatest({ items, getKey, finish });
   const stop = React.useRef<(() => void) | null>(null);
   React.useEffect(() => () => { if (stop.current) stop.current(); }, []);
   const onPointerDown = (key: string | number) => (e: React.PointerEvent<HTMLButtonElement>) => {
@@ -258,11 +256,10 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const name = props.reorderLabel || sds.labels.reorder;
   // Stable handlers for the memoised rows, reading the latest through a ref: moving an item redraws the rows whose
   // place changes, not every row.
-  const api = React.useRef<RowApi>(null!);
-  api.current = {
+  const api = useLatest<RowApi>({
     click: (key, index) => onClick(key, index)(), keyDown: onKeyDown, blur: onBlur, pointerDown: (key, e) => onPointerDown(key)(e),
     handle: (key, n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); },
-  };
+  });
   const mergedRef = useMergedRef(ref, (n) => { list.current = n; });
   return (<>
     <ul role="list" {...rest} ref={mergedRef}
