@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
@@ -61,6 +61,21 @@ interface Row { item: TreeViewItem; level: number; parent: string | null }
 /* What the rows read: open and picked ids as Sets, the Tab stop and the mode. Each row subscribes to its own part
    (open, picked, Tab stop), so a focus move or a pick redraws the rows it changes, not every row in view. */
 interface Store { open: Set<string>; value: Set<string>; mixed: Set<string>; tab: string | null; mode: string; listeners: Map<string, () => void> }
+
+// Puts the tree's new state in the store, then tells only the rows it changes (opened or closed, picked or not, the
+// Tab stop before and after); a new mode tells them all.
+function publish(st: Store, next: Omit<Store, 'listeners'>) {
+  const before = { open: st.open, value: st.value, mixed: st.mixed, tab: st.tab, mode: st.mode };
+  st.open = next.open; st.value = next.value; st.mixed = next.mixed; st.tab = next.tab; st.mode = next.mode;
+  const tell = (id: string | null) => { const l = id == null ? undefined : st.listeners.get(id); if (l) l(); };
+  if (before.mode !== next.mode) { st.listeners.forEach((l) => l()); return; }
+  const diff = (a: Set<string>, b: Set<string>) => { if (a !== b) { a.forEach((id) => { if (!b.has(id)) tell(id); }); b.forEach((id) => { if (!a.has(id)) tell(id); }); } };
+  diff(before.open, next.open);
+  diff(before.value, next.value);
+  diff(before.mixed, next.mixed);
+  if (before.tab !== next.tab) { tell(before.tab); tell(next.tab); }
+}
+
 interface Api { focus: (id: string) => void; press: (item: TreeViewItem, e: React.MouseEvent) => void; toggle: (item: TreeViewItem) => void }
 const TreeContext = /* @__PURE__ */ React.createContext<{ store: Store; api: React.RefObject<Api> } | null>(null);
 
@@ -271,30 +286,18 @@ function TreeViewRender({ ref, ...props }: TreeViewProps & React.RefAttributes<H
   // The rows read this through context, so none of them redraws because the tree did; see TreeRow. A change
   // tells only the rows it touches (opened or closed, picked or not, the Tab stop before and after), so a key
   // press in a tree of thousands wakes two rows rather than all of them.
-  const store = React.useRef<Store | null>(null);
   const shown = cascade ? 'cascade' : mode;
-  if (!store.current) store.current = { open: openSet, value: valueSet, mixed: mixedSet, tab: tabStop, mode: shown, listeners: new Map() };
-  const st = store.current;
-  st.open = openSet; st.value = valueSet; st.mixed = mixedSet; st.tab = tabStop; st.mode = shown;
-  const told = React.useRef({ open: openSet, value: valueSet, mixed: mixedSet, tab: tabStop, mode: shown });   // what the rows last heard
+  const [st] = React.useState<Store>(() => ({ open: openSet, value: valueSet, mixed: mixedSet, tab: tabStop, mode: shown, listeners: new Map() }));
+  // The store takes the new state as the tree commits, before the browser paints; the rows it touches redraw then.
   useIsoLayoutEffect(function () {
-    const before = told.current;
-    told.current = { open: openSet, value: valueSet, mixed: mixedSet, tab: tabStop, mode: shown };
-    const tell = (id: string | null) => { const l = id == null ? undefined : st.listeners.get(id); if (l) l(); };
-    if (before.mode !== shown) { st.listeners.forEach((l) => l()); return; }
-    const diff = (a: Set<string>, b: Set<string>) => { if (a !== b) { a.forEach((id) => { if (!b.has(id)) tell(id); }); b.forEach((id) => { if (!a.has(id)) tell(id); }); } };
-    diff(before.open, openSet);
-    diff(before.value, valueSet);
-    diff(before.mixed, mixedSet);
-    if (before.tab !== tabStop) { tell(before.tab); tell(tabStop); }
-  }, [openSet, valueSet, mixedSet, tabStop, shown]);
-  const api = React.useRef<Api>(null!);   // set just below, every render, before any row can call it
-  api.current = {
+    publish(st, { open: openSet, value: valueSet, mixed: mixedSet, tab: tabStop, mode: shown });
+  }, [st, openSet, valueSet, mixedSet, tabStop, shown]);
+  const api = useLatest<Api>({
     focus: (id) => { if (focusId !== id) setFocusId(id); },
     press: (item, e) => { setFocusId(item.id); if (mode === 'none') toggleOpen(item); else choose(item, multi && e.shiftKey); },
     toggle: (item) => { setFocusId(item.id); toggleOpen(item); },
-  };
-  const ctx = React.useMemo(() => ({ store: st, api: api }), [st]);
+  });
+  const ctx = React.useMemo(() => ({ store: st, api: api }), [st, api]);
 
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; nameRef(n); styled(n); });
   return (
