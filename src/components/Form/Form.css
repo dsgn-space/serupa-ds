@@ -1,0 +1,19 @@
+/* ---------------------------------------------------------------
+   Form: a column of its parts (the alert and the summary when a submit fails, each field, the buttons), --form-gap
+   apart. It draws nothing of its own: the fields, the summary and the buttons bring their looks. FormSteps: the
+   progress bar, the current step under its heading, then Next (or the submit button) and Back in a row that wraps.
+   Every value reads one of its own tokens (form.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-form { display: flex; flex-direction: column; gap: var(--form-gap, var(--spacing-6)); min-width: 0; }
+.dk-form-steps { display: flex; flex-direction: column; gap: var(--form-steps-gap, var(--spacing-8)); min-width: 0; }
+.dk-form-steps__panel { display: flex; flex-direction: column; gap: var(--form-gap, var(--spacing-6)); min-width: 0; }
+.dk-form-steps__panel[hidden]:not([hidden="until-found"]) { display: none; }
+/* A step not showing is hidden="until-found" (the browser hides its content, and find-in-page can still open it): out
+   of the column's flow too, so it adds no gap. */
+.dk-form-steps__panel[hidden="until-found"] { position: absolute; }
+.dk-form-steps__title { margin: var(--spacing-0); font-size: var(--text-xl); line-height: var(--text-xl--line-height); font-weight: var(--form-step-title-weight, var(--font-semibold)); text-wrap: balance; overflow-wrap: anywhere; scroll-margin-top: var(--spacing-4); }
+.dk-form-steps__title:focus { outline: none; }
+.dk-form-steps__title:focus-visible { outline: var(--focus-ring-width) solid var(--form-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-xs); }
+.dk-form-steps__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--form-actions-gap, var(--spacing-3)); }
+}
