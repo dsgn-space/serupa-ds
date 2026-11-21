@@ -19,6 +19,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: sm for dense settings, md by default, lg for a touch-first form. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <RadioGroup key={s} {...args} aria-label={'Plan, ' + s} size={s}>
+      <Radio value="free">Free</Radio>
+      <Radio value="pro" description="Unlimited projects">Pro</Radio>
+    </RadioGroup>)}
+  </div>,
+};
+
 /** Cards: each radio a bordered card, for a few choices that each need a sentence or a price. */
 export const Cards: Story = {
   args: { 'aria-label': 'Delivery', variant: 'card', orientation: 'horizontal', defaultValue: 'standard' },
