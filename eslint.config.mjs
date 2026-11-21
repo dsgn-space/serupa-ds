@@ -101,6 +101,19 @@ export default tseslint.config(
     },
   },
   {
+    // A forced layout written as a bare `void el.offsetWidth;` is code with no effect to the React Compiler
+    // (ADR-0017), which drops it: a slide or a FLIP then starts from its end. reflow(el) from
+    // src/internal/reflow.ts keeps it.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        selector: 'ExpressionStatement > UnaryExpression[operator="void"] > MemberExpression[property.name=/^(offset|client|scroll)[A-Z]/]',
+        message: 'The React Compiler drops a bare `void el.offsetWidth;`: call reflow(el) from src/internal/reflow.ts.',
+      }],
+    },
+  },
+  {
     // Card is a flex column: one laid out as a row says flex-row, or its children stack and centre.
     files: ['src/**/*.tsx'],
     plugins: { serupa },
