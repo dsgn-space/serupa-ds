@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
-import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { AppShell } from '../../components/AppShell/AppShell';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
@@ -111,23 +113,23 @@ export function SettingsForm({ loading = false, loadFailed = false, onRetry, onl
 // they failed to load: the page says so in the sections' place, with Try again.
 function Loading({ failed, onRetry, online }: { failed: boolean; onRetry: SettingsFormProps['onRetry']; online: boolean | undefined }) {
   return (
-    <div className="min-h-screen bg-surface text-text">
-      <SkipLink />
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
-        <p className="m-0 text-base font-semibold">Acme</p>
-        <Link underline="hover" href="#dashboard">Back to the dashboard</Link>
-      </header>
-      <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Saving needs a connection.</OfflineBanner>
+    <AppShell header={<header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+      <p className="m-0 text-base font-semibold">Acme</p>
+      <Link underline="hover" href="#dashboard">Back to the dashboard</Link>
+    </header>}>
+      <Center maxWidth="container-4xl" padded={false} aria-busy={failed ? undefined : true}>
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Saving needs a connection.</OfflineBanner>
         <PageHeader title="Settings" />
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
-          <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-4">
+          <Stack as="section" key={t} aria-labelledby={'settings-loading-' + i} gap={4}>
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
             <Loader variant="skeleton" shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
-          </section>
+          </Stack>
         ))}
-      </main>
-    </div>
+        </Stack>
+      </Center>
+    </AppShell>
   );
 }
 
@@ -145,13 +147,11 @@ function Loaded({ initial = demo, onSave, onLeave, online }: Omit<SettingsFormPr
   };
 
   return (
-    <div className="min-h-screen bg-surface text-text">
-      <SkipLink />
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
-        <p className="m-0 text-base font-semibold">Acme</p>
-        <Link underline="hover" href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
-      </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+    <AppShell header={<header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+      <p className="m-0 text-base font-semibold">Acme</p>
+      <Link underline="hover" href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
+    </header>}>
+      <Center maxWidth="container-4xl" padded={false}>
         <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
         <PageHeader title="Settings" />
         <SettingsSection title="Profile" description="How you appear to your team." onSave={profile.save}
@@ -177,7 +177,7 @@ function Loaded({ initial = demo, onSave, onLeave, online }: Omit<SettingsFormPr
           <Switch checked={n.news} onCheckedChange={(on) => notes.set({ news: on })} description="New features, at most once a month.">Product news</Switch>
         </SettingsSection>
         {dialog}
-      </main>
-    </div>
+      </Center>
+    </AppShell>
   );
 }

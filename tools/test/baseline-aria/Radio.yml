@@ -134,3 +134,20 @@
   - radio "Team"
   - text: Team
 
+# Sizes
+- radiogroup "Plan, sm":
+  - radio "Free"
+  - text: Free
+  - radio "Pro" [checked]
+  - text: Pro Unlimited projects
+- radiogroup "Plan, md":
+  - radio "Free"
+  - text: Free
+  - radio "Pro" [checked]
+  - text: Pro Unlimited projects
+- radiogroup "Plan, lg":
+  - radio "Free"
+  - text: Free
+  - radio "Pro" [checked]
+  - text: Pro Unlimited projects
+

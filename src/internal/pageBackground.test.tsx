@@ -21,7 +21,10 @@ const pages = (files: Record<string, string>) => {
   for (const [file, src] of Object.entries(files)) {
     if (/\.(test|stories)\.tsx$/.test(file)) continue;
     const m = /className="min-h-screen (bg-surface(?:-muted)?)\b/.exec(src);
+    // A page on AppShell takes its background prop: muted with background="muted", plain without.
+    const shell = /<AppShell\b([^>]*?)>/.exec(src);
     if (m) out[file.split('/')[2]!] = m[1]!;
+    else if (shell) out[file.split('/')[2]!] = /background="muted"/.test(shell[1]!) ? 'bg-surface-muted' : 'bg-surface';
   }
   return out;
 };
@@ -35,8 +38,9 @@ describe('Page background', () => {
 
   test('the check reads the list and finds a page on the wrong side', () => {
     expect(listed('{/* muted-pages: Billing, Dashboard */}')).toEqual(['Billing', 'Dashboard']);
-    const bg = pages({ '../patterns/SignIn/SignIn.tsx': '<div className="min-h-screen bg-surface-muted text-text">', '../patterns/SignIn/SignIn.test.tsx': 'min-h-screen bg-surface' });
-    expect(bg).toEqual({ SignIn: 'bg-surface-muted' });
+    const bg = pages({ '../patterns/SignIn/SignIn.tsx': '<div className="min-h-screen bg-surface-muted text-text">', '../patterns/SignIn/SignIn.test.tsx': 'min-h-screen bg-surface',
+      '../patterns/Inbox/Inbox.tsx': '<AppShell background="muted" header={x}>', '../patterns/Form/Form.tsx': '<AppShell>' });
+    expect(bg).toEqual({ SignIn: 'bg-surface-muted', Inbox: 'bg-surface-muted', Form: 'bg-surface' });
   });
   test('the pages built from Cards draw it: the muted page under a surface header, so each Card stands off the page', async () => {
     const pages: [string, React.ReactElement][] = [['AddressBook', <AddressBook />], ['Agenda', <Agenda />], ['Approvals', <Approvals />],

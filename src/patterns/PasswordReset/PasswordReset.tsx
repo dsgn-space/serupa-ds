@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
@@ -115,8 +117,9 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
-        <OfflineBanner online={online} placement="inline">Sending the link and choosing a new password need a connection.</OfflineBanner>
+      <Center as="main" id="main" vertical className="outline-none">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Sending the link and choosing a new password need a connection.</OfflineBanner>
         <p className="m-0 text-base font-semibold">Acme</p>
         <Card className="flex flex-col gap-4">
           {step === 'request' ? (
@@ -189,7 +192,8 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
             </>
           )}
         </Card>
-      </main>
+        </Stack>
+      </Center>
     </div>
   );
 }

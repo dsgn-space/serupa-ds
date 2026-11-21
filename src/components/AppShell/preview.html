@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>AppShell — preview</title>
+<style>
+  body { margin: 0; font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(D.AppShell, {
+    header: h(D.Navbar, { sticky: true, brand: 'Acme' }, h(D.NavbarLink, { href: '#dashboard', active: true }, 'Dashboard')),
+    sidebar: h(D.Sidebar, { 'aria-label': 'Workspace' }, h(D.SidebarItem, { href: '#home', icon: 'home', label: 'Home', active: true }), h(D.SidebarItem, { href: '#team', icon: 'group', label: 'Team' })),
+    footer: '© 2026 Acme', background: 'muted'
+  }, h('h1', { style: { margin: 0 } }, 'Dashboard')));
+</script>
+</body>
+</html>

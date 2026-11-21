@@ -1,0 +1,63 @@
+# Default
+- region "Everything in one place":
+  - heading "Everything in one place" [level=2]
+  - paragraph: "One band of a long page: the background spans the page, and the content keeps to the Container's width."
+
+# DoAlternate
+- region "Band 1":
+  - paragraph: A plain band
+- region "Band 2":
+  - paragraph: A muted band
+- region "Band 3":
+  - paragraph: A plain band
+
+# DontSameTone
+- region "Band 1":
+  - paragraph: A muted band
+- region "Band 2":
+  - paragraph: A muted band
+
+# Features
+- region "Built for the way you work":
+  - heading "Built for the way you work" [level=2]
+  - list:
+    - listitem:
+      - heading "Boards" [level=3]
+      - paragraph: Everything about boards stays in step with the rest of the plan.
+    - listitem:
+      - heading "Timelines" [level=3]
+      - paragraph: Everything about timelines stays in step with the rest of the plan.
+    - listitem:
+      - heading "Docs" [level=3]
+      - paragraph: Everything about docs stays in step with the rest of the plan.
+    - listitem:
+      - heading "Reports" [level=3]
+      - paragraph: Everything about reports stays in step with the rest of the plan.
+
+# Hero
+- region "Plan the work. Ship it together.":
+  - heading "Plan the work. Ship it together." [level=1]
+  - paragraph: Projects, tasks and docs in one place, for teams of every size.
+  - button "Start free"
+  - button "See a demo"
+
+# LongText
+- region "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":
+  - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung" [level=2]
+  - paragraph: Rechtsschutzversicherungsgesellschaften and a sentence long enough to wrap two or three times in a narrow window.
+
+# Muted
+- region "Everything in one place":
+  - heading "Everything in one place" [level=2]
+  - paragraph: "One band of a long page: the background spans the page, and the content keeps to the Container's width."
+
+# Playground
+- region "Everything in one place":
+  - heading "Everything in one place" [level=2]
+  - paragraph: "One band of a long page: the background spans the page, and the content keeps to the Container's width."
+
+# Small
+- region "Everything in one place":
+  - heading "Everything in one place" [level=2]
+  - paragraph: "One band of a long page: the background spans the page, and the content keeps to the Container's width."
+
