@@ -102,8 +102,29 @@ function caretAt(el: HTMLTextAreaElement, index: number): { left: number; top: n
   return out;
 }
 
+// The options a mention's text finds: each name is matched once, and the ones starting with the text come first, in
+// their order. Up to max of them; all of them, up to max, when filter is off or nothing is typed after the trigger yet.
+function matching(options: readonly MentionOption[], qText: string | null, filter: boolean, max: number): MentionOption[] {
+  if (qText == null) return [];
+  if (!filter || !qText) return options.slice(0, max);
+  const starts: MentionOption[] = [], inside: MentionOption[] = [];
+  for (const o of options) {
+    const at = highlightRanges(o.label, qText)[0];
+    if (at) (at[0] === 0 ? starts : inside).push(o);
+  }
+  return starts.concat(inside).slice(0, max);
+}
+
+// matching, kept until one of its inputs changes. A hook of its own: in the component, the compiler counts an option
+// handed to onMention as maybe changed, and won't keep a memo that depends on the options.
+function useMatching(options: readonly MentionOption[], qText: string | null, filter: boolean, max: number) {
+  return React.useMemo(() => matching(options, qText, filter, max), [options, qText, filter, max]);
+}
+
 function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttributes<HTMLTextAreaElement>) {
-  const { options, value, defaultValue, onValueChange, onSearch, onMention, trigger = '@', filter = true, maxOptions = 8, className, style, ...rest } = props;
+  const { options, value, defaultValue, onValueChange, onSearch, onMention, trigger: triggerIn, filter: filterIn, maxOptions: maxIn, className, style, onKeyDown: onKeyDownProp, onChange: onChangeProp, onSelect: onSelectProp, onBlur: onBlurProp, ...rest } = props;
+  // Defaults set here, not in the destructuring above, which the React Compiler can't take.
+  const trigger = triggerIn ?? '@', filter = filterIn ?? true, maxOptions = maxIn ?? 8;
   const L = useSettings(words).labels, locale = useLocale();
   const field = React.useRef<HTMLTextAreaElement | null>(null);
   const [own, setOwn] = React.useState(defaultValue || '');
@@ -120,18 +141,8 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const q = query && query.start !== dismissed ? query : null;
   const max = Math.max(1, Math.floor(maxOptions) || 8);
   const qText = q ? q.text : null;
-  // Searched once per mention typed, not on every render (a key that moves the highlight, a caret move): each name
-  // is matched once, and the ones starting with the text come first, in their order.
-  const shown = React.useMemo(() => {
-    if (qText == null) return [];
-    if (!filter || !qText) return options.slice(0, max);
-    const starts: MentionOption[] = [], inside: MentionOption[] = [];
-    for (const o of options) {
-      const at = highlightRanges(o.label, qText)[0];
-      if (at) (at[0] === 0 ? starts : inside).push(o);
-    }
-    return starts.concat(inside).slice(0, max);
-  }, [options, qText, filter, max]);
+  // Searched once per mention typed, not on every render (a key that moves the highlight, a caret move).
+  const shown = useMatching(options, qText, filter, max);
   const open = !!q && !rest.disabled && !rest.readOnly;
   const pickable = shown.map((o, i) => (o.disabled ? -1 : i)).filter((i) => i >= 0);
   const current = pickable.indexOf(active) >= 0 ? active : (pickable[0] ?? -1);
@@ -198,7 +209,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     onOutside: () => setQuery(null), onFocusOutside: () => setQuery(null) });
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (rest.onKeyDown) rest.onKeyDown(e);
+    if (onKeyDownProp) onKeyDownProp(e);
     if (e.defaultPrevented || !open || isComposing(e)) return;
     const at = pickable.indexOf(current);
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -223,10 +234,10 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
       <Textarea {...rest} ref={setRefs} value={text}
         aria-autocomplete="list" aria-controls={open ? listId : undefined}
         aria-activedescendant={open && current >= 0 ? base + '-opt-' + current : undefined}
-        onChange={(e) => { if (rest.onChange) rest.onChange(e); change(e.target.value); read(e.target); }}
-        onSelect={(e) => { if (rest.onSelect) rest.onSelect(e); read(e.currentTarget); }}
+        onChange={(e) => { if (onChangeProp) onChangeProp(e); change(e.target.value); read(e.target); }}
+        onSelect={(e) => { if (onSelectProp) onSelectProp(e); read(e.currentTarget); }}
         onKeyDown={onKeyDown}
-        onBlur={(e) => { if (rest.onBlur) rest.onBlur(e); setQuery(null); }} />
+        onBlur={(e) => { if (onBlurProp) onBlurProp(e); setQuery(null); }} />
       <span ref={anchor} className="dk-mention-input__anchor" aria-hidden />
       <div ref={pop} className="dk-mention-input__popup" {...{ popover: 'manual' }} hidden={!open || undefined} onMouseDown={keep}>
         <div id={listId} role="listbox" className="dk-mention-input__listbox"
