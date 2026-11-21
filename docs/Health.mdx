@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { HealthAttention, HealthComponents, HealthIssues, HealthReleases, HealthSummary } from './health';
+
+<Meta title="Health" />
+
+{/* description: How the design system is doing: each component's tests, stories, coverage, accessibility results, size and React Compiler status, with the open issues and the latest releases. */}
+
+# Health
+
+How the design system is doing, made by `tools/health.mjs` from the same files and runs the checks use, so nothing here is typed in. The Nightly run makes the full set every night and shows it on its summary page too.
+
+<HealthSummary />
+
+## Needs a look
+
+Components whose stories fail axe, whose tests cover less than 80% of their lines, that are over their size budget or that have no tests.
+
+<HealthAttention />
+
+## Components
+
+Sizes are gzipped, as a project's bundler ships them: imported alone is what a project that imports only this component ships, and CSS is its own stylesheet. Without the nightly's measurements, the column shows the budget instead. A component the React Compiler skips in part still works; it re-renders as it did before the compiler, and its skipped functions are named.
+
+<HealthComponents />
+
+## Latest releases
+
+How many entries each release's changelog has, by kind. The [changelog](?path=/docs/changelog--docs) has every entry.
+
+<HealthReleases />
+
+## Open issues
+
+<HealthIssues />

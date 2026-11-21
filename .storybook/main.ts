@@ -5,12 +5,15 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import remarkGfm from 'remark-gfm';
 import { buildUtilities } from '../tools/utilities/build.mjs';
 import { buildRegistry } from '../tools/build/registry.mjs';
+import { writeLocalHealth } from '../tools/health.mjs';
 import { docgenOptions } from '../tools/site/props.mjs';
 
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
 buildUtilities(fileURLToPath(new URL('..', import.meta.url)));
 // …and the export, style and label lists from the component folders (src/generated/).
 buildRegistry(fileURLToPath(new URL('..', import.meta.url)));
+// …and the Health page's numbers from the repository, unless a run's are there (node tools/health.mjs --from-nightly).
+writeLocalHealth(fileURLToPath(new URL('..', import.meta.url)));
 
 // Storybook is the system's documentation: npm run storybook (on your computer), npm run build-storybook (CI).
 const config: StorybookConfig = {
