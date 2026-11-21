@@ -161,7 +161,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | --- | --- | --- |
 | `--sidebar-padding` | `spacing-3` | Space inside the sidebar (12px). |
 | `--sidebar-item-padding-x` | `spacing-3` | An item's side padding (12px). |
-| `--sidebar-item-padding-y` | `spacing-2` | An item's top and bottom padding (8px). |
+| `--sidebar-item-padding-y` | `space-item` | An item's top and bottom padding: 8px, 4px in the compact density. |
 | `--sidebar-item-gap` | `spacing-3` | Space between an item's icon and label (12px). |
 | `--sidebar-section-gap` | `spacing-6` | Space between sections (24px). |
 | `--sidebar-nested-indent` | `spacing-11` | Where nested items' labels start, lined up with their parent's label (44px). |

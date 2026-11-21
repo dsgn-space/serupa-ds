@@ -12,7 +12,7 @@
   flex-direction: column;
   gap: var(--card-gap, var(--spacing-4));
   min-width: var(--spacing-0);
-  padding: var(--card-padding-md, var(--spacing-5));
+  padding: var(--card-padding-md, var(--space-card));
   background: var(--card-bg, var(--surface)); --surface-behind: var(--card-bg, var(--surface));
   border: var(--card-border-width, var(--border-width-1)) solid var(--card-border, var(--border));
   border-radius: var(--card-radius, var(--radius-container));

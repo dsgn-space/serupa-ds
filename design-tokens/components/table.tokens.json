@@ -220,8 +220,8 @@
       },
       "padding-y": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-3}",
-        "$description": "A cell's top and bottom padding at size md (12px).",
+        "$value": "{spacing.space-row}",
+        "$description": "A cell's top and bottom padding at size md: 12px, 6px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-padding-y"
@@ -230,8 +230,8 @@
       },
       "padding-y-sm": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "At size sm (8px).",
+        "$value": "{spacing.space-item}",
+        "$description": "At size sm: 8px, 4px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-padding-y-sm"
