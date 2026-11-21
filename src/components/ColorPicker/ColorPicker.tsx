@@ -126,7 +126,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     if (v !== value && props.onValueChange) props.onValueChange(v);
     if (final) commit(v);
     if (focus && root.current) {
-      const b = root.current.querySelector<HTMLButtonElement>(`.dk-color-picker__swatch[data-value="${v}"]`);
+      const b = root.current.querySelector<HTMLButtonElement>(`.srp-color-picker__swatch[data-value="${v}"]`);
       if (b) b.focus();
     }
   };

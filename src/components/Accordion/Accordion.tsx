@@ -189,7 +189,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     const swap = swapTime(panel, swapping.current);
     const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue(swap ? '--ease-enter' : '--ease-move').trim() || timing.easing;
     growRef.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
-    growRef.current.id = 'dk-accordion-height';
+    growRef.current.id = 'srp-accordion-height';
     if (open) growRef.current.onfinish = () => { growRef.current = null; };
   }, [open, swapping]);
   React.useEffect(() => () => { if (growRef.current) growRef.current.cancel(); }, []);

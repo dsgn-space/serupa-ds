@@ -126,7 +126,7 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
     return node == null || node === false ? null : <span className={'srp-input__icon srp-input__icon--' + side} aria-hidden key={side}>{node}</span>;
   };
   return (
-    <span className={cn('dk-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
+    <span className={cn('srp-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
       {icon(props.leftIcon, 'left')}
       {affix.prefix}
       <input {...rest} ref={setRefs} className="srp-input__field" key="field" />
