@@ -96,7 +96,7 @@ export function SignUpPage() {
 
 ## Checkout
 
-A longer form goes in steps with [FormSteps](?path=/docs/components-forms-form--docs#steps): Next checks only the step's own fields, and the last step sends everything. The province shows only for Indonesia ([useFormValue](?path=/docs/components-forms-form--docs)), and the schema asks for it only then. The draft keeps the address if people leave; card details are never kept.
+A longer form goes in steps with [FormSteps](?path=/docs/components-forms-form--docs): Next checks only the step's own fields, and the last step sends everything. The province shows only for Indonesia ([useFormValue](?path=/docs/components-forms-form--docs)), and the schema asks for it only then. The draft keeps the address if people leave; card details are never kept.
 
 ```tsx
 import * as z from "zod";
@@ -217,6 +217,6 @@ Passwords, card numbers and one-time codes are never kept, and the draft is forg
 ## What stays yours
 
 - A label on every field, and messages that say how to fix the answer.
-- `autoComplete` on every field about the person, and the right keyboard ([Forms](?path=/docs/guides-forms--docs#the-right-keyboard-and-autofill)).
+- `autoComplete` on every field about the person, and the right keyboard (see "The right keyboard and autofill" in [Forms](?path=/docs/guides-forms--docs)).
 - Checking again on the server: the browser's checks help people, the server's protect the data.
 - Where people go after a submit that worked, and saying it worked ([Messages and feedback](?path=/docs/guides-messages-and-feedback--docs)).
