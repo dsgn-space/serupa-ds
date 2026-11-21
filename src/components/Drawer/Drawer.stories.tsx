@@ -33,7 +33,7 @@ const CONTENT: Record<string, { trigger: string; body: React.ReactNode; footer?:
   'Project details': {
     trigger: 'Project details',
     body: <div style={stack}><p style={{ margin: 0 }}>Atlas is the new customer portal, due on 28 November.</p><p style={{ margin: 0 }}>Owner: Dewi Lestari. 12 people, 48 tasks, 9 open.</p></div>,
-    footer: (close) => <Button onClick={close}>Close</Button>,
+    footer: (close) => <Button onClick={close}>Open project</Button>,
   },
 };
 CONTENT['Unsaved filters'] = CONTENT.Filters!;
