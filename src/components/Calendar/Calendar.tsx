@@ -14,6 +14,7 @@ import { dayPresets, PresetList, type PresetItem } from '../../internal/datePres
 import { en as calendarWords } from './labels';
 import { en as periodWords } from '../PeriodPicker/labels';
 import { isComposing } from '../../internal/ime';
+import { isRtl } from '../../internal/position';
 // module state: Calendar's words and PeriodPicker's ("Previous year", "Choose a month"), for the month and year grids.
 const words = /* @__PURE__ */ Object.assign({}, calendarWords, periodWords);
 
@@ -298,7 +299,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
     if (view === 'days' || isComposing(e)) return;
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); back(); return; }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl', rowStart = pFocus - ((pFocus - pPage) % 3);
+    const rtl = isRtl(e.currentTarget), rowStart = pFocus - ((pFocus - pPage) % 3);
     let n: number;
     switch (e.key) {
       case 'ArrowLeft': n = pFocus + (rtl ? 1 : -1); break;
@@ -327,7 +328,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const onKeyDown = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     let n: Date | null = null;
     switch (e.key) {
       case 'ArrowLeft': n = addDays(focus, rtl ? 1 : -1); break;

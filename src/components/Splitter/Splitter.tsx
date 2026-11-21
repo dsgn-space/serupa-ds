@@ -10,6 +10,7 @@ import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
 import { clickAfterDrag } from '../../internal/timing';
 import { activeIn } from '../../internal/root';
+import { isRtl } from '../../internal/position';
 
 export interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue'> {
   /** The two panes, first and second. The handle between them resizes the first; the second takes the rest. */
@@ -82,7 +83,7 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
     if (onSizeChange) onSizeChange(next);
   };
   const collapsed = size === 0;
-  const rtl = (e: HTMLElement) => getComputedStyle(e).direction === 'rtl';
+  const rtl = (e: HTMLElement) => isRtl(e);
   // Enter or a double-click slides the first pane out and back (GN3b). The layout changes at once; the handle and the
   // second pane start where they were and slide to where they are on translate, while the first pane's clip opens or
   // closes with them (a closing one stays over its old place, inert, until then), so every frame is the compositor's.

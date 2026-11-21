@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '../../internal/cn';
+import { isRtl } from '../../internal/position';
 
 /* The row of tabs that Tabs' TabList and TabNav share: when the tabs don't fit, it scrolls with no scrollbar; the edge
    with more tabs past it fades out, so it's plain there's more; the selected tab is scrolled into view whenever it
@@ -95,7 +96,7 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     if (!el) return;
     const max = vertical ? el.scrollHeight - el.clientHeight : el.scrollWidth - el.clientWidth;
     let at = vertical ? el.scrollTop : el.scrollLeft;
-    if (!vertical && getComputedStyle(el).direction === 'rtl') at = max + at;
+    if (!vertical && isRtl(el)) at = max + at;
     const next = { before: max > 1 && at > 1, after: max > 1 && at < max - 1 };
     setFade((f) => (f.before === next.before && f.after === next.after ? f : next));
   }, [vertical]);
