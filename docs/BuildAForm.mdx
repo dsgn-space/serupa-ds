@@ -44,7 +44,8 @@ The control's `name` is the schema's path: `email`, `address.city`, or a [FieldL
 `onSubmit` gets the schema's output, typed. While its promise runs, the submit button shows loading and a second submit does nothing. When the server turns the answers down, answer with its messages by field name, and one for the whole form if it has one: they show on their fields, in the summary, and in an alert at the top.
 
 ```tsx
-async function signUp(values: z.output<typeof SignUp>) {
+import * as z from "zod";
+async function signUp(values: ReturnType<typeof SignUp.parse>) {
   const res = await fetch("/api/sign-up", { method: "POST", body: JSON.stringify(values) });
   if (res.status === 422) return { errors: await res.json() };   // { email: "That email already has an account" }
   if (!res.ok) return { message: "Nothing was sent. Try again in a minute." };
@@ -98,6 +99,7 @@ export function SignUpPage() {
 A longer form goes in steps with [FormSteps](?path=/docs/components-forms-form--docs#steps): Next checks only the step's own fields, and the last step sends everything. The province shows only for Indonesia ([useFormValue](?path=/docs/components-forms-form--docs)), and the schema asks for it only then. The draft keeps the address if people leave; card details are never kept.
 
 ```tsx
+import * as z from "zod";
 const Checkout = z.object({
   email: z.email("Enter an email address like name@example.com"),
   address: z.object({
@@ -147,7 +149,7 @@ export function CheckoutPage() {
   );
 }
 
-async function pay(values: z.output<typeof Checkout>) {
+async function pay(values: ReturnType<typeof Checkout.parse>) {
   const res = await api.pay(values);
   if (res.declined) return { errors: { card: "The bank declined this card. Try another, or call the bank" } };
 }
@@ -160,6 +162,7 @@ A problem on an earlier step (the server's, or one the last step's submit finds)
 A settings page starts from what's saved (`defaultValues`), sends only on Save, and asks before people leave with changes that weren't sent. The people to notify are a [FieldList](?path=/docs/components-forms-fieldlist--docs): its rows come back as an array.
 
 ```tsx
+import * as z from "zod";
 const Settings = z.object({
   displayName: z.string().trim().min(1, "Enter a display name"),
   timezone: z.string().min(1, "Choose a time zone"),
@@ -167,7 +170,7 @@ const Settings = z.object({
   notify: z.array(z.object({ email: z.email("Enter an email address like name@example.com") })).max(5),
 });
 
-export function SettingsPage({ saved }: { saved: z.input<typeof Settings> }) {
+export function SettingsPage({ saved }: { saved: ReturnType<typeof Settings.parse> }) {
   return (
     <Form aria-label="Settings" schema={Settings} defaultValues={saved} warnUnsaved onSubmit={save}>
       <Field label="Display name"><Input name="displayName" autoComplete="nickname" /></Field>
