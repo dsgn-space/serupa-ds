@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, useMergedRef } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef, useLatest } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -53,14 +53,14 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   const cardRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const timer = React.useRef<number | undefined>(undefined);
-  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
-  const openRef = React.useRef(open); openRef.current = open;
+  const ask = useLatest(props.onOpenChange);
+  const openRef = useLatest(open);
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
     window.clearTimeout(timer.current);
     if (v === openRef.current) return;
     if (!controlled) setInner(v);
     if (ask.current) ask.current(v, { reason });
-  }, [controlled, setInner]);
+  }, [controlled, setInner, ask, openRef]);
   // Escape during the open delay cancels the open, and the card stays shut until the pointer or focus leaves the
   // trigger and comes back (GR88): it was dismissed before it showed. Nothing is on screen yet, so that Escape
   // goes on to whatever else handles it.
@@ -112,7 +112,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   // (with its delay and Escape cancelling a waiting open), so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
   const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, 'hover'); };
-  const interest = React.useRef(fromInterest); interest.current = fromInterest;
+  const interest = useLatest(fromInterest);
   React.useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
@@ -121,7 +121,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
     card.addEventListener('interest', on);
     card.addEventListener('loseinterest', lose);
     return () => { card.removeEventListener('interest', on); card.removeEventListener('loseinterest', lose); };
-  }, []);
+  }, [interest]);
 
   const child = oneElement<TriggerProps>(props.trigger, 'HoverCard', 'trigger');
   useTriggerRef(triggerRef, 'HoverCard');

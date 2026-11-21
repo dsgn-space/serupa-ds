@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
-import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Discard } from '../Dialog/Dialog';
@@ -95,18 +95,18 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const toSnap = (i: number) => { if (i === snapAt) return; if (props.snap === undefined) setOwnSnap(i); if (props.onSnapChange) props.onSnapChange(i); };
   const modal = props.modal !== false;
   const backdrop = modal && props.closeOnBackdrop !== false;
-  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
-  const initial = React.useRef(props.initialFocus); initial.current = props.initialFocus;
-  const final = React.useRef(props.finalFocus); final.current = props.finalFocus;
-  const isModal = React.useRef(modal); isModal.current = modal;
+  const ask = useLatest(props.onOpenChange);
+  const initial = useLatest(props.initialFocus);
+  const final = useLatest(props.finalFocus);
+  const isModal = useLatest(modal);
   const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Drawer', 'open');
   const open = !!openIn;
   // Uncontrolled, each opening starts at defaultSnap.
   const [wasOpen, setWasOpen] = React.useState(open);
   if (open !== wasOpen) { setWasOpen(open); if (open) setOwnSnap(props.defaultSnap ?? 0); }
-  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner]);
+  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner, ask]);
   // unsaved: a request to close asks "Discard changes?" first (Dialog's question), and remembers why it came.
-  const unsaved = React.useRef(props.unsaved); unsaved.current = props.unsaved;
+  const unsaved = useLatest(props.unsaved);
   const [asking, setAsking] = React.useState<OpenChangeReason | null>(null);
   // The app closing it while the question shows takes the question away too, so it can't come back stale (GR96).
   if (!open && asking) setAsking(null);
@@ -166,6 +166,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   }, [open, reopened]);
   // Closed while unmounting: give focus back too, unless it's non-modal and focus had moved on to the page (focus
   // that was inside it has fallen to <body> by now, the drawer gone from the page).
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- on unmount only: giveBack reads nothing but refs
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const a = deepActive(); giveBack(isModal.current || !a || a === document.body || !!d && d.contains(a), true); }; }, []);
 
   // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only
@@ -185,7 +186,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel, such as Chromium's second Escape with no click in between): if open is still true, ask to close. A
   // parent that keeps open true gets it shown again, so open stays the truth.
-  const openNow = React.useRef(open); openNow.current = open;
+  const openNow = useLatest(open);
   const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
     if (rest.onClose) rest.onClose(e);
     if (e.target !== e.currentTarget) return;
