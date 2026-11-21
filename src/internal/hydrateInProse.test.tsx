@@ -5,7 +5,7 @@ import { flushSync } from 'react-dom';
 import { expect, test } from 'vitest';
 import { Button } from '../components/Button/Button';
 import { HoverCard } from '../components/HoverCard/HoverCard';
-import { Menu, MenuItem } from '../components/Menu/Menu';
+import { Menu, MenuGroup, MenuItem, MenuSeparator, MenuSub } from '../components/Menu/Menu';
 import { Popover } from '../components/Popover/Popover';
 import { Tooltip } from '../components/Tooltip/Tooltip';
 
@@ -36,4 +36,21 @@ test('a Tooltip, HoverCard, Popover or Menu inside a paragraph keeps the paragra
   } finally { console.error = logError; }
   expect(errors).toEqual([]);
   root?.unmount(); host.remove();
+});
+
+// Open from the start, the panel's own parts are spans too: a <div> for a menu item or the popover's body ended the
+// paragraph just the same.
+const opened = (
+  <div>
+    <p id="pop">Totals are rounded <Popover defaultOpen aria-label="Rounding" trigger={<Button size="sm" variant="ghost">How?</Button>}>To the nearest rupiah.</Popover> per line.</p>
+    <p id="menu">Export as <Menu defaultOpen trigger={<Button size="sm" variant="ghost">format</Button>}>
+      <MenuGroup label="Files"><MenuItem>CSV</MenuItem></MenuGroup><MenuSeparator /><MenuSub label="More"><MenuItem>XML</MenuItem></MenuSub>
+    </Menu> any time.</p>
+  </div>
+);
+
+test('a Popover or Menu open from the start inside a paragraph keeps the paragraph whole', () => {
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(opened);
+  expect(['pop', 'menu'].map((id) => host.querySelector('#' + id)!.textContent.trim().split(' ').pop())).toEqual(['line.', 'time.']);
 });
