@@ -68,7 +68,7 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   const restore = React.useRef(size || fit(50));   // what Enter brings a collapsed pane back to
   if (size > 0) restore.current = size;
   const root = React.useRef<HTMLDivElement | null>(null);
-  const base = domId('dk-splitter', React.useId());
+  const base = domId('srp-splitter', React.useId());
   const panes = React.Children.toArray(children);
   if (process.env.NODE_ENV !== 'production' && panes.length !== 2) warnOnce('splitter-two', 'Splitter: give it exactly two children, the two panes (it got ' + panes.length + ').');
 
@@ -207,21 +207,21 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   // How far the handle is from where it's going, and how much of the first pane is hidden there: the whole pane from
   // rest, less when it turns back mid-way.
   const left = sliding ? Math.max(0, Math.min(2 * sliding.px, sliding.to === 'open' ? sliding.px - sliding.at : sliding.px + sliding.at)) : 0;
-  const slideStyle = sliding ? { '--dk-splitter-from': along((sliding.to === 'open' ? -left : left) * back), '--dk-splitter-px': sliding.px + 'px', '--dk-splitter-shut': clip('100%'),
-    '--dk-splitter-clip-from': clip(Math.max(0, sliding.to === 'open' ? left : sliding.px - left) + 'px') } as React.CSSProperties : null;
+  const slideStyle = sliding ? { '--srp-splitter-from': along((sliding.to === 'open' ? -left : left) * back), '--srp-splitter-px': sliding.px + 'px', '--srp-splitter-shut': clip('100%'),
+    '--srp-splitter-clip-from': clip(Math.max(0, sliding.to === 'open' ? left : sliding.px - left) + 'px') } as React.CSSProperties : null;
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; styled(n); });
   return (
     <div {...rest} style={slideStyle ? { ...rest.style, ...slideStyle } : rest.style} ref={mergedRef}
-      className={cn('dk-splitter', 'dk-splitter--' + direction, className)} data-component="splitter" data-direction={direction}
+      className={cn('srp-splitter', 'srp-splitter--' + direction, className)} data-component="splitter" data-direction={direction}
       data-placing={placing || undefined} data-slide={sliding ? (sliding.run ? 'run' : 'start') : undefined} data-slide-to={sliding ? sliding.to : undefined} onPointerDownCapture={onPlace}>
-      <div ref={setPaneA} id={first} tabIndex={scrollsA ? 0 : undefined} className="dk-splitter__pane dk-splitter__pane--first" style={{ flexBasis: size + '%' }} hidden={(collapsed && !(sliding && sliding.to === 'closed')) || undefined} inert={(collapsed && !!sliding) || undefined}
+      <div ref={setPaneA} id={first} tabIndex={scrollsA ? 0 : undefined} className="srp-splitter__pane srp-splitter__pane--first" style={{ flexBasis: size + '%' }} hidden={(collapsed && !(sliding && sliding.to === 'closed')) || undefined} inert={(collapsed && !!sliding) || undefined}
         onFocus={() => { focusedIn.current = true; }} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget) && e.relatedTarget) focusedIn.current = false; }}>{panes[0]}</div>
-      <div ref={handle} role="separator" tabIndex={0} className="dk-splitter__handle" aria-orientation={direction === 'horizontal' ? 'vertical' : 'horizontal'}
+      <div ref={handle} role="separator" tabIndex={0} className="srp-splitter__handle" aria-orientation={direction === 'horizontal' ? 'vertical' : 'horizontal'}
         aria-valuenow={Math.round(size)} aria-valuemin={collapsible ? 0 : Math.round(min)} aria-valuemax={Math.round(max)} aria-controls={first}
         aria-label={separatorLabel || sds.labels.resizePanes} data-state={collapsed ? 'collapsed' : undefined}
         onKeyDown={onKeyDown} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
         onDoubleClick={toggle} onBlur={() => setPlacing(false)} />
-      <div ref={setPaneB} tabIndex={scrollsB ? 0 : undefined} className="dk-splitter__pane dk-splitter__pane--second"
+      <div ref={setPaneB} tabIndex={scrollsB ? 0 : undefined} className="srp-splitter__pane srp-splitter__pane--second"
         onTransitionEnd={(e) => { if (e.target === e.currentTarget && e.propertyName === 'translate' && slide && slide.run) setSlide(null); }}>{panes[1]}</div>
     </div>
   );

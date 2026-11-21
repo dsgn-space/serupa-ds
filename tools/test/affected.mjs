@@ -72,7 +72,7 @@ for (const row of ['2\t1\tsrc/labels/en.ts', '0\t3\tsrc/index.ts', '-\t-\tsrc/ma
 
 // GR192: a component that draws with another's classes counts as using it.
 const input = withDependents(new Set(['Input'])), navbar = withDependents(new Set(['Navbar']));
-t('Input brings DatePicker and DateRangePicker (they use .dk-input), and Navbar brings Fab (.dk-navbar--sticky)', input.has('DatePicker') && input.has('DateRangePicker') && navbar.has('Fab'), `${list(input)}; ${list(navbar)}`);
+t('Input brings DatePicker and DateRangePicker (they use .srp-input), and Navbar brings Fab (.srp-navbar--sticky)', input.has('DatePicker') && input.has('DateRangePicker') && navbar.has('Fab'), `${list(input)}; ${list(navbar)}`);
 
 // A story that fails once is tried again on its own, and one that fails twice stays failed.
 {

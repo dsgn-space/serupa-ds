@@ -105,7 +105,7 @@ function show(options: ToastOptions | string): string {
     }, repeatQuiet));
     return rid;
   }
-  const id = o.id || 'dk-toast-' + ++page.next;
+  const id = o.id || 'srp-toast-' + ++page.next;
   const item: Item = Object.assign({}, o, { id: id, tone: tone, count: 1 });
   const at = page.items.findIndex((x) => x.id === id);
   page.items = at >= 0 ? page.items.map((x, i) => (i === at ? item : x)) : page.items.concat(item);
@@ -140,7 +140,7 @@ const asOptions = (m: ToastOptions | string): ToastOptions => (typeof m === 'str
 function promise<T>(work: Promise<T> | (() => Promise<T>), messages: ToastPromiseMessages<T>): Promise<T> {
   const p = typeof work === 'function' ? work() : work;
   // Its own id, so a second promise with the same words gets its own toast rather than a count on this one.
-  const id = 'dk-toast-' + ++page.next;
+  const id = 'srp-toast-' + ++page.next;
   show(Object.assign({ autoDismiss: false }, asOptions(messages.loading), { id: id }));
   // A message function that throws (GR234) mustn't leave "Saving…" up for good or reject where no one catches it: a
   // throwing success message shows the error message for what it threw; a throwing error message closes the toast.
@@ -312,7 +312,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   const held = React.useRef<{ toast: HTMLElement; at: number; keys: boolean } | null>(null);
   const onFocus = (e: React.FocusEvent<HTMLElement>) => {
     if (rest.onFocus) rest.onFocus(e);
-    const t = (e.target).closest<HTMLElement>('.dk-toast');
+    const t = (e.target).closest<HTMLElement>('.srp-toast');
     if (t && self.current) held.current = { toast: t, at: [...self.current.querySelectorAll('[data-toast]:not([data-leaving])')].indexOf(t), keys: e.target.matches(':focus-visible') };
   };
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
@@ -357,7 +357,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   useIsoLayoutEffect(() => {
     const e = moreRef.current;
     if (!moreLeaving || !e) return;
-    const runs = typeof e.getAnimations === 'function' ? e.getAnimations().filter((a) => a.id !== 'dk-toast-move') : [];
+    const runs = typeof e.getAnimations === 'function' ? e.getAnimations().filter((a) => a.id !== 'srp-toast-move') : [];
     const end = () => { snap(); setMoreWas((m) => (m.waiting ? m : { waiting: 0, words: '' })); };
     if (!runs.length) { end(); return; }
     let on = true;
@@ -366,7 +366,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   }, [moreLeaving]);
   // Only toasts there as the Toaster arrived waiting: there from the first frame, like them.
   const moreInstant = list.slice(0, waiting).every((x) => early.current.has(x.id));
-  const more = words ? <li key="more" ref={moreRef} className="dk-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
+  const more = words ? <li key="more" ref={moreRef} className="srp-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
   const ordered = pos.startsWith('top') ? shown.slice().reverse() : shown;   // newest nearest the edge, the waiting line farthest
   // Closed toasts stay where they were, fading out (DZ1), until their transitions end; one shown again comes back.
   // Each goes back after the toast it followed (FO1), not at its old index, which with toasts arriving above it
@@ -400,7 +400,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     return () => { for (const r of run) { window.clearTimeout(r.timer); r.c.left = timeLeft(r.c); r.c.since = null; } };
   }, [list, waiting]);
   const done = React.useCallback((id: string) => { snap(); setGone((l) => l.filter((g) => g.item.id !== id)); }, []);
-  // The toasts left glide to their new place over --dk-toast-move (FLIP), from wherever they are (a glide that's
+  // The toasts left glide to their new place over --srp-toast-move (FLIP), from wherever they are (a glide that's
   // still running included); with reduced motion they move at once.
   // every render: a count or a replaced message can change a toast's height too, and it only acts after a snap.
   useIsoLayoutEffect(() => {
@@ -408,17 +408,17 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     before.current = null;
     if (!was || !region || reducedMotion(region)) return;
     // toMs: a custom property keeps the text it was given, and a minified stylesheet says .2s where the tokens say 200ms.
-    const cs = getComputedStyle(region), ms = toMs(cs.getPropertyValue('--dk-toast-move'));
+    const cs = getComputedStyle(region), ms = toMs(cs.getPropertyValue('--srp-toast-move'));
     if (!ms) return;
     for (const e of region.querySelectorAll<HTMLElement>(MOVES)) {
       const from = was.get(e.dataset.toast || 'more');
       if (from == null || typeof e.animate !== 'function') continue;
-      for (const a of e.getAnimations()) if (a.id === 'dk-toast-move') a.cancel();
+      for (const a of e.getAnimations()) if (a.id === 'srp-toast-move') a.cancel();
       const dy = from - e.getBoundingClientRect().top;
       if (Math.abs(dy) < 0.5) continue;
       // One flicked away is on its way out sideways (its own translate, set by the swipe): the glide adds to that.
       // Replacing it put the toast back at its place for the length of the glide before it carried on.
-      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--dk-toast-move-ease').trim() || 'ease', id: 'dk-toast-move', composite: e.style.translate ? 'add' : 'replace' });
+      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--srp-toast-move-ease').trim() || 'ease', id: 'srp-toast-move', composite: e.style.translate ? 'add' : 'replace' });
     }
   });
   // The stack can't run past the far edge of the screen out of reach (GQ1b): when the toasts shown and the waiting
@@ -427,7 +427,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   useIsoLayoutEffect(() => {
     const region = self.current;
     if (!region) return;
-    const live = [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), .dk-toaster__more:not([data-leaving])')];
+    const live = [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), .srp-toaster__more:not([data-leaving])')];
     const toastsLive = live.filter((e) => e.hasAttribute('data-toast')).length;
     if (toastsLive < 2) return;
     const cs = getComputedStyle(region), gap = parseFloat(getComputedStyle(region.firstElementChild as Element).rowGap) || 0;
@@ -435,15 +435,15 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     const tall = live.reduce((h, e) => h + e.getBoundingClientRect().height, 0) + gap * (live.length - 1);
     if (tall > window.innerHeight - 2 * edge + 0.5) setRoom(toastsLive - 1);
   });
-  const spaceVar = '--dk-toaster-space-' + pos, edgeVar = '--dk-toaster-space-' + pos.split('-')[0];
+  const spaceVar = '--srp-toaster-space-' + pos, edgeVar = '--srp-toaster-space-' + pos.split('-')[0];
   // The room the toasts take at their edge, so a Fab there rises above them rather than under them (GR157): the
   // Toaster's offset from the edge, the toasts' heights and gaps (laid out, so a toast still sliding in counts in
-  // full) and 8px, in --dk-toaster-space-<position> (and -top or -bottom) on the root while one shows. Fab.css reads
+  // full) and 8px, in --srp-toaster-space-<position> (and -top or -bottom) on the root while one shows. Fab.css reads
   // the first, Toast.css's scroll padding the second.
   // every render: a toast's height changes with its text and count.
   useIsoLayoutEffect(() => {
     const region = self.current, root = document.documentElement;
-    const live = region ? [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), .dk-toaster__more:not([data-leaving])')] : [];
+    const live = region ? [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), .srp-toaster__more:not([data-leaving])')] : [];
     if (!region || !live.some((e) => e.hasAttribute('data-toast'))) { root.style.removeProperty(spaceVar); root.style.removeProperty(edgeVar); return; }
     const cs = getComputedStyle(region), gap = parseFloat(getComputedStyle(region.firstElementChild as Element).rowGap) || 0;
     const edge = parseFloat(pos.startsWith('top') ? cs.top : cs.bottom) || 0;
@@ -456,8 +456,8 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
   const region = (
-    <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('dk-toaster', 'dk-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
-      <ol className="dk-toaster__list" role="list">
+    <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('srp-toaster', 'srp-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
+      <ol className="srp-toaster__list" role="list">
         {pos.startsWith('top') ? null : more}
         {rows.map((r) => <ToastView key={r.item.id} item={r.item} leaving={r.leaving} clocks={clocks.current} instant={early.current.has(r.item.id)} onGone={done} dismissLabel={dismissLabel || sds.labels.dismiss} time={(r.item.autoDismiss ?? autoDismiss ?? true) ? Math.max(0, r.item.duration ?? duration ?? 5000) : 0} />)}
         {pos.startsWith('top') ? more : null}
@@ -478,7 +478,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', ToasterRender);
 // A seen toast's time: what was left when it last stopped, and since when it has run in the waiting line.
 interface Clock { item: Item; left: number; since: number | null }
 const timeLeft = (c: Clock) => c.left - (c.since == null ? 0 : Date.now() - c.since);
-const MOVES = '[data-toast], .dk-toaster__more';
+const MOVES = '[data-toast], .srp-toaster__more';
 
 function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; instant: boolean; clocks: Map<string, Clock>; onGone: (id: string) => void; dismissLabel: string; time: number }): React.ReactElement {
   const t = props.item;
@@ -491,7 +491,7 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
     // It leaves the flow where it is (data-gone, at its own top), so the toasts and the waiting line close up at once,
     // in the same glide as everything else, rather than in a second one once its fade ends.
     if (!e.hasAttribute('data-gone')) { e.style.top = e.offsetTop + 'px'; e.setAttribute('data-gone', ''); }
-    const runs = typeof e.getAnimations === 'function' ? e.getAnimations().filter((a) => a.id !== 'dk-toast-move') : [];
+    const runs = typeof e.getAnimations === 'function' ? e.getAnimations().filter((a) => a.id !== 'srp-toast-move') : [];
     if (!runs.length) { onGone(t.id); return; }
     let on = true;
     void Promise.all(runs.map((a) => a.finished.catch(() => {}))).then(() => { if (on) onGone(t.id); });
@@ -576,18 +576,18 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
   // An action of more than a word or two goes under the text (Toast.css): beside it, the text was left a narrow column.
   const actionBelow = !!t.action && t.action.label.length > 12;
   return (
-    <li ref={self} tabIndex={-1} className={cn('dk-toast', 'dk-toast--' + t.tone)} data-tone={t.tone} data-toast={t.id} data-action={actionBelow ? 'below' : undefined}
+    <li ref={self} tabIndex={-1} className={cn('srp-toast', 'srp-toast--' + t.tone)} data-tone={t.tone} data-toast={t.id} data-action={actionBelow ? 'below' : undefined}
       data-leaving={leaving ? (leaving === 'queued' ? 'queued' : '') : undefined} data-instant={props.instant ? '' : undefined} inert={leaving ? true : undefined} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
       onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
-      {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
-      <div className="dk-toast__content">
-        <p className="dk-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="dk-toast__count"><span aria-hidden="true">{'×' + displayNumber(t.count, locale, { useGrouping: false })}</span><span className="dk-visually-hidden">{', ' + sds.labels.toastRepeated(t.count, displayNumber(t.count, locale))}</span></span> : null}</p>
-        {t.description != null ? <p className="dk-toast__description" id={descId}>{t.description}</p> : null}
+      {icon ? <span className="srp-toast__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
+      <div className="srp-toast__content">
+        <p className="srp-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="srp-toast__count"><span aria-hidden="true">{'×' + displayNumber(t.count, locale, { useGrouping: false })}</span><span className="srp-visually-hidden">{', ' + sds.labels.toastRepeated(t.count, displayNumber(t.count, locale))}</span></span> : null}</p>
+        {t.description != null ? <p className="srp-toast__description" id={descId}>{t.description}</p> : null}
       </div>
-      {t.action ? <Button className="dk-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
-      <IconButton className="dk-toast__close" icon={icons.Close} label={props.dismissLabel} aria-describedby={titleId} size="sm" hideTitle onClick={() => toast.dismiss(t.id)} />
+      {t.action ? <Button className="srp-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
+      <IconButton className="srp-toast__close" icon={icons.Close} label={props.dismissLabel} aria-describedby={titleId} size="sm" hideTitle onClick={() => toast.dismiss(t.id)} />
     </li>
   );
 }

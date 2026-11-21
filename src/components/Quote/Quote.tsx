@@ -28,16 +28,16 @@ function QuoteRender({ ref, ...props }: QuoteProps & React.RefAttributes<HTMLEle
   const by = author != null && author !== false && author !== '';
   const from = source != null && source !== false && source !== '';
   return (
-    <figure {...omit(props, OWN)} ref={ref} className={cn('dk-quote', size === 'lg' && 'dk-quote--lg', className)} data-component="quote">
-      <blockquote className="dk-quote__text" cite={cite}>
+    <figure {...omit(props, OWN)} ref={ref} className={cn('srp-quote', size === 'lg' && 'srp-quote--lg', className)} data-component="quote">
+      <blockquote className="srp-quote__text" cite={cite}>
         {typeof children === 'string' ? <p>{children}</p> : children}
       </blockquote>
       {by || from ? (
-        <figcaption className="dk-quote__by">
+        <figcaption className="srp-quote__by">
           {avatar}
-          <span className="dk-quote__who">
-            {by ? <span className="dk-quote__author">{author}</span> : null}
-            {from ? <span className="dk-quote__source">{source}</span> : null}
+          <span className="srp-quote__who">
+            {by ? <span className="srp-quote__author">{author}</span> : null}
+            {from ? <span className="srp-quote__source">{source}</span> : null}
           </span>
         </figcaption>
       ) : null}

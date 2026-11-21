@@ -34,7 +34,7 @@ describe('Accordion', () => {
     const r = React.createRef<HTMLDivElement>(), ir = React.createRef<HTMLDivElement>();
     await render(<Faq r={r} ir={ir} />);
     const a = el('adef'), i = a.firstElementChild as HTMLElement, hd = i.firstElementChild!, b = hd.firstElementChild as HTMLButtonElement, pn = i.lastElementChild!;
-    expect([a.className, a.dataset.component, r.current === a, ir.current === i, a.dataset.x]).toEqual(['dk-accordion extra', 'accordion', true, true, 'y']);
+    expect([a.className, a.dataset.component, r.current === a, ir.current === i, a.dataset.x]).toEqual(['srp-accordion extra', 'accordion', true, true, 'y']);
     expect([hd.tagName, b.tagName, b.type, b.getAttribute('aria-expanded'), b.getAttribute('aria-controls') === pn.id, pn.getAttribute('role'), pn.getAttribute('aria-labelledby') === b.id])
       .toEqual(['H3', 'BUTTON', 'button', 'false', true, null, true]);
   });
@@ -99,7 +99,7 @@ describe('Accordion', () => {
     const runs = () => pn.getAnimations().map((a) => [(a as CSSTransition).transitionProperty ?? a.id, a.effect?.getComputedTiming().duration, (a.effect?.getComputedTiming() as { easing?: string }).easing]).sort((x, y) => String(x[0]).localeCompare(String(y[0])));
     const half = (ms: number) => { const all = pn.getAnimations(); all.forEach((a) => { a.pause(); a.currentTime = ms; }); const h = pn.getBoundingClientRect().height; all.forEach((a) => a.play()); return h; };
     await userEvent.click(trigger('adef', 1));
-    expect(runs()).toEqual([['clip-path', 200, root('--ease-enter')], ['dk-accordion-height', 200, root('--ease-enter')], ['opacity', 200, root('--ease-enter')]]);
+    expect(runs()).toEqual([['clip-path', 200, root('--ease-enter')], ['srp-accordion-height', 200, root('--ease-enter')], ['opacity', 200, root('--ease-enter')]]);
     const mid = half(100);
     await settled(el('adef'), { subtree: true });
     const full = pn.getBoundingClientRect().height;
@@ -107,7 +107,7 @@ describe('Accordion', () => {
     expect([css(pn).opacity, css(pn).clipPath, css(pn).visibility, trigger('adef', 1).getAttribute('aria-expanded'), css(el('adef').querySelector('[data-icon="expand_more"]')).rotate])
       .toEqual(['1', 'inset(0px)', 'visible', 'true', '180deg']);
     await userEvent.click(trigger('adef', 1));
-    expect(runs().map(([p, d, e]) => `${String(p)} ${String(d)}${p === 'dk-accordion-height' ? ' ' + String(e) : ''}`).filter((x) => /opacity|clip-path|height/.test(x))).toEqual(['clip-path 150', 'dk-accordion-height 150 ' + root('--ease-move'), 'opacity 150']);
+    expect(runs().map(([p, d, e]) => `${String(p)} ${String(d)}${p === 'srp-accordion-height' ? ' ' + String(e) : ''}`).filter((x) => /opacity|clip-path|height/.test(x))).toEqual(['clip-path 150', 'srp-accordion-height 150 ' + root('--ease-move'), 'opacity 150']);
     const back = half(75);
     expect(back > 0 && back < full).toBe(true);
     await settled(el('adef'), { subtree: true });
@@ -122,13 +122,13 @@ describe('Accordion', () => {
     // read the motion as the click lands, not when userEvent hands back: on a slow machine that can be after both have finished
     const seen = new Promise<string[][]>((resolve) => { window.addEventListener('click', () => setTimeout(() => resolve([props(2), props(1)])), { once: true }); });
     await userEvent.click(trigger('adef', 2));
-    expect([state('adef'), ...await seen]).toEqual(['0100', ['clip-path', 'dk-accordion-height', 'opacity'], ['clip-path', 'dk-accordion-height', 'opacity']]);
+    expect([state('adef'), ...await seen]).toEqual(['0100', ['clip-path', 'srp-accordion-height', 'opacity'], ['clip-path', 'srp-accordion-height', 'opacity']]);
   }));
 
   test('an item opened a second time grows to its height again, as it did the first time, instead of snapping open', () => withMotion(async () => {
     await render(<Faq />);
     const pn = panel('adef');
-    const grows = () => pn.getAnimations().some((x) => x.id === 'dk-accordion-height');
+    const grows = () => pn.getAnimations().some((x) => x.id === 'srp-accordion-height');
     await userEvent.click(trigger('adef', 1));
     expect(grows()).toBe(true);
     await settled(el('adef'), { subtree: true });
@@ -138,7 +138,7 @@ describe('Accordion', () => {
     await userEvent.click(trigger('adef', 1));
     expect(grows()).toBe(true);
     // Paused at the start, it has no height yet: what's below starts from where it was.
-    const g = pn.getAnimations().find((x) => x.id === 'dk-accordion-height')!;
+    const g = pn.getAnimations().find((x) => x.id === 'srp-accordion-height')!;
     g.pause(); g.currentTime = 0;
     expect(pn.getBoundingClientRect().height).toBe(0);
     g.play();
@@ -150,7 +150,7 @@ describe('Accordion', () => {
     await settled(el('adef'), { subtree: true });
     const top0 = el('below').getBoundingClientRect().top;
     await userEvent.click(trigger('adef', 2));
-    const h = (n: number) => panel('adef', n).getAnimations().find((x) => x.id === 'dk-accordion-height')!;
+    const h = (n: number) => panel('adef', n).getAnimations().find((x) => x.id === 'srp-accordion-height')!;
     const time = (x: Animation) => { const t = x.effect!.getComputedTiming() as { duration?: number; easing?: string }; return [t.duration, t.easing]; };
     expect(time(h(1))).toEqual(time(h(2)));
     // Every moment of the swap: what's below is never further down than where it starts or ends.
@@ -218,7 +218,7 @@ describe('Accordion', () => {
     const a = el('amulti'), s = css(a);
     expect(state('amulti')).toBe('110');
     expect([a.querySelector('h1, h2, h3, h4, h5, h6')!.tagName, a.className, s.borderTopWidth, s.borderTopLeftRadius, css(a.querySelector('button[aria-expanded]')).paddingLeft, css(a.lastElementChild).borderBottomWidth])
-      .toEqual(['H2', 'dk-accordion dk-accordion--card', '1px', '8px', '16px', '0px']);
+      .toEqual(['H2', 'srp-accordion srp-accordion--card', '1px', '8px', '16px', '0px']);
     await userEvent.click(trigger('amulti', 3));
     await userEvent.click(trigger('amulti', 1));
     expect(state('amulti')).toBe('011');
@@ -252,7 +252,7 @@ describe('Accordion', () => {
       <Accordion id="abad" variant="boxed" headingLevel={9}><AccordionItem title="Bad">b</AccordionItem></Accordion>
       <Accordion id="atok" style={{ '--accordion-title-color': 'rgb(1, 2, 3)', '--accordion-padding-y': '7px' } as React.CSSProperties}><AccordionItem title="T">t</AccordionItem></Accordion>
     </>);
-    expect([el('abad').className, el('abad').querySelector('h1, h2, h3, h4, h5, h6')!.tagName]).toEqual(['dk-accordion', 'H3']);
+    expect([el('abad').className, el('abad').querySelector('h1, h2, h3, h4, h5, h6')!.tagName]).toEqual(['srp-accordion', 'H3']);
     expect([css(trigger('atok', 1)).color, css(trigger('atok', 1)).paddingTop]).toEqual(['rgb(1, 2, 3)', '7px']);
   });
 
@@ -262,7 +262,7 @@ describe('Accordion', () => {
     let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      for (const [sel, min] of [['.dk-accordion__trigger', 4.5], ['.dk-accordion__content', 4.5], ['.dk-accordion__icon', 3]] as const) {
+      for (const [sel, min] of [['.srp-accordion__trigger', 4.5], ['.srp-accordion__content', 4.5], ['.srp-accordion__icon', 3]] as const) {
         const r = contrast(css(el('adef').querySelector(sel)).color, 'var(--surface)'); n++;
         if (r < min) low.push(`${th} ${sel}: ${r.toFixed(2)}`);
       }

@@ -91,8 +91,8 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
     // aria-expanded as well as the words: VoiceOver doesn't reliably say a label that changes on its own. Expanded
     // only once every item is open (modern web guidance, accordion).
     all = (
-      <div className="dk-accordion__toolbar">
-        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-accordion__all' })} onClick={onAll} disabled={!values.length} aria-expanded={allOpen}>
+      <div className="srp-accordion__toolbar">
+        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'srp-accordion__all' })} onClick={onAll} disabled={!values.length} aria-expanded={allOpen}>
           {allOpen ? labels.collapseAll : labels.expandAll}
         </button>
       </div>
@@ -100,7 +100,7 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
   }
   return (
     <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, many }}>
-      <div {...rest} ref={ref} data-component="accordion" className={cn('dk-accordion', variant === 'card' && 'dk-accordion--card', props.className)}>{all}{items}</div>
+      <div {...rest} ref={ref} data-component="accordion" className={cn('srp-accordion', variant === 'card' && 'srp-accordion--card', props.className)}>{all}{items}</div>
     </AccordionContext.Provider>
   );
 }
@@ -119,7 +119,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   delete rest['data-index'];
   const value = props.value != null ? props.value : index;
   const open = !!ctx && ctx.open.indexOf(value) >= 0;
-  const id = domId('dk-acc', React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
+  const id = domId('srp-acc', React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
   // an open item in a single, non-collapsible accordion can't close: say so with aria-disabled
   const locked = !!ctx && open && ctx.single && !ctx.collapsible;
   const H = ('h' + (ctx ? ctx.level : 3)) as 'h3';
@@ -149,7 +149,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     return toMs(cs.getPropertyValue('--accordion-duration') || cs.getPropertyValue('--motion-change-md'));
   };
   React.useLayoutEffect(function () {
-    const el = content.current, panel = el && el.closest<HTMLElement>('.dk-accordion__panel');
+    const el = content.current, panel = el && el.closest<HTMLElement>('.srp-accordion__panel');
     if (!el || !panel) return;
     if (open || (!findable && keep)) { el.removeAttribute('hidden'); return; }
     const style = getComputedStyle(panel);
@@ -174,7 +174,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   const grow = React.useRef<Animation | null>(null);
   const was = React.useRef(open);
   React.useLayoutEffect(function () {
-    const panel = content.current && content.current.closest<HTMLElement>('.dk-accordion__panel');
+    const panel = content.current && content.current.closest<HTMLElement>('.srp-accordion__panel');
     if (!panel || was.current === open) return;
     was.current = open;
     const from = grow.current ? panel.getBoundingClientRect().height : open ? 0 : panel.offsetHeight;
@@ -188,7 +188,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     const swap = swapTime(panel);
     const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue(swap ? '--ease-enter' : '--ease-move').trim() || timing.easing;
     grow.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
-    grow.current.id = 'dk-accordion-height';
+    grow.current.id = 'srp-accordion-height';
     if (open) grow.current.onfinish = () => { grow.current = null; };
   }, [open]);
   React.useEffect(() => () => { if (grow.current) grow.current.cancel(); }, []);
@@ -201,16 +201,16 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
   }, []);
   return (
-    <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('dk-accordion__item', open && 'dk-accordion__item--open', props.disabled && 'dk-accordion__item--disabled', props.className)}>
-      <H className="dk-accordion__heading">
-        <button type="button" id={id + '-t'} className="dk-accordion__trigger" aria-expanded={open} aria-controls={id + '-p'} disabled={props.disabled}
+    <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('srp-accordion__item', open && 'srp-accordion__item--open', props.disabled && 'srp-accordion__item--disabled', props.className)}>
+      <H className="srp-accordion__heading">
+        <button type="button" id={id + '-t'} className="srp-accordion__trigger" aria-expanded={open} aria-controls={id + '-p'} disabled={props.disabled}
           aria-disabled={locked ? true : undefined} onClick={() => { if (ctx && !locked) ctx.toggle(value); }}>
-          <span className="dk-accordion__title">{props.title}</span>
-          <Icon icon={icons.ExpandMore} className="dk-accordion__icon" />
+          <span className="srp-accordion__title">{props.title}</span>
+          <Icon icon={icons.ExpandMore} className="srp-accordion__icon" />
         </button>
       </H>
-      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="dk-accordion__panel">
-        <div className="dk-accordion__clip"><div ref={content} className="dk-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
+      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="srp-accordion__panel">
+        <div className="srp-accordion__clip"><div ref={content} className="srp-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
       </div>
     </div>
   );

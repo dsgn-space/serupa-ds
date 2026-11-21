@@ -98,7 +98,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
     const r = root.current, b = value != null ? buttons.current[value] : null;
     let c = '', total = 0, n = 0, most = 0;
     for (const k in buttons.current) {
-      const btn = buttons.current[k], l = btn?.querySelector<HTMLElement>('.dk-segmented__label');
+      const btn = buttons.current[k], l = btn?.querySelector<HTMLElement>('.srp-segmented__label');
       if (!btn) continue;
       total += btn.offsetWidth; n++;
       if (props.fullWidth) {   // the width its content asks for: padding, then the icon and the whole label, gap apart
@@ -154,7 +154,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
     }
     if (!el || !box || !was || was.v === value || !box.w || (was.x === box.x && was.w === box.w) || lastInputKeyboard()) return;
     const l = Math.min(was.x, box.x), r = Math.max(was.x + was.w, box.x + box.w);
-    const cut = (at: { x: number; w: number }) => { el.style.setProperty('--dk-seg-l', at.x - l + 'px'); el.style.setProperty('--dk-seg-r', r - at.x - at.w + 'px'); };
+    const cut = (at: { x: number; w: number }) => { el.style.setProperty('--srp-seg-l', at.x - l + 'px'); el.style.setProperty('--srp-seg-r', r - at.x - at.w + 'px'); };
     el.setAttribute('data-flip', '');
     el.setAttribute('data-slide', '');
     span.current = { l, w: r - l };
@@ -214,9 +214,9 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
       role="radiogroup" aria-disabled={disabled || undefined}
       aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
       aria-labelledby={props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel)}
-      className={cn('dk-segmented', 'dk-segmented--size-' + size, props.fullWidth && 'dk-segmented--full', props.fullWidth && tight && 'dk-segmented--fit', disabled && 'dk-segmented--disabled', invalid && 'dk-segmented--invalid', readOnly && 'dk-segmented--readonly', props.className)}
+      className={cn('srp-segmented', 'srp-segmented--size-' + size, props.fullWidth && 'srp-segmented--full', props.fullWidth && tight && 'srp-segmented--fit', disabled && 'srp-segmented--disabled', invalid && 'srp-segmented--invalid', readOnly && 'srp-segmented--readonly', props.className)}
       data-component="segmented-control" data-size={size} onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
-      {box ? <span ref={indicator} className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
+      {box ? <span ref={indicator} className="srp-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
       {options.map((o) => {
         const on = o.value === value, off = disabled || !!o.disabled;
         const icon = asIcon(o.icon);
@@ -225,10 +225,10 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
         return (
           <button key={o.value} ref={(n) => { buttons.current[o.value] = n; }} type="button" role="radio" aria-checked={on}
             aria-label={o['aria-label']} title={typeof o.label === 'string' && !o['aria-label'] && cut.split('\n').includes(o.value) ? o.label : undefined} disabled={off} tabIndex={tab} data-value={o.value}
-            className={cn('dk-segmented__item', on && 'dk-segmented__item--selected', !hasLabel && 'dk-segmented__item--icon-only')}
+            className={cn('srp-segmented__item', on && 'srp-segmented__item--selected', !hasLabel && 'srp-segmented__item--icon-only')}
             onClick={() => choose(o.value)} onKeyDown={onKeyDown}>
-            {icon != null && icon !== false ? <span className="dk-segmented__icon" aria-hidden>{icon}</span> : null}
-            {hasLabel ? <span className="dk-segmented__label">{o.label}</span> : null}
+            {icon != null && icon !== false ? <span className="srp-segmented__icon" aria-hidden>{icon}</span> : null}
+            {hasLabel ? <span className="srp-segmented__label">{o.label}</span> : null}
           </button>
         );
       })}

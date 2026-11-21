@@ -80,7 +80,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     const c = colorName(value);
     return { value, label: c ? sds.labels.colorName(c.hue, c.tone) : value, named: false };
   });
-  const base = domId('dk-cp', React.useId());
+  const base = domId('srp-cp', React.useId());
   const root = React.useRef<HTMLDivElement | null>(null);
   const [held, setOwn, controlled] = useControllable<string | null>(props.value, normalizeHex(props.defaultValue || ''), 'ColorPicker', 'value');
   const value = controlled ? normalizeHex(held || '') : held;
@@ -144,7 +144,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     if (v !== value && props.onValueChange) props.onValueChange(v);
     if (final) commit(v);
     if (focus && root.current) {
-      const b = root.current.querySelector<HTMLButtonElement>(`.dk-color-picker__swatch[data-value="${v}"]`);
+      const b = root.current.querySelector<HTMLButtonElement>(`.srp-color-picker__swatch[data-value="${v}"]`);
       if (b) b.focus();
     }
   };
@@ -179,7 +179,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
     // Only the form's first invalid field takes focus, as the browser would do.
     const form = e.currentTarget.form;
     const first = form ? Array.from(form.elements).find((x) => (x as HTMLInputElement).willValidate && !(x as HTMLInputElement).validity.valid) : e.currentTarget;
-    const b = root.current?.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop];
+    const b = root.current?.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop];
     if (first === e.currentTarget && b) b.focus();
   };
   const ratio = props.contrastWith && value ? contrastRatio(value, props.contrastWith) : null;
@@ -187,13 +187,13 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
   // Rounded down, so 4.49 never shows as 4.5 and passes by eye.
   const fmt = (n: number) => numberFormat(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(Math.floor(n * 10) / 10);
   const low = ratio != null && ratio < min;
-  useAutoFocus(props.autoFocus, () => root.current && root.current.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]);
+  useAutoFocus(props.autoFocus, () => root.current && root.current.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop]);
   return (
-    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('dk-color-picker', 'dk-color-picker--size-' + size, disabled && 'dk-color-picker--disabled', readOnly && 'dk-color-picker--readonly', props.className)}
+    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('srp-color-picker', 'srp-color-picker--size-' + size, disabled && 'srp-color-picker--disabled', readOnly && 'srp-color-picker--readonly', props.className)}
       data-component="color-picker" data-size={size}>
       {/* The description and states a Field hands the picker go on the radiogroup, the control screen readers reach.
           The id stays on the outer div, so a label click focuses the picked swatch through it. */}
-      <div ref={nameRef} role="radiogroup" className="dk-color-picker__swatches" aria-label={props['aria-label']} aria-labelledby={labelledBy} aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined}
+      <div ref={nameRef} role="radiogroup" className="srp-color-picker__swatches" aria-label={props['aria-label']} aria-labelledby={labelledBy} aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined}
         aria-describedby={props['aria-describedby']} aria-required={required || undefined} aria-invalid={invalid || undefined} aria-errormessage={invalid ? props['aria-errormessage'] : undefined}>
         {swatches.map((s, i) => {
           const on = s.value === value;
@@ -204,9 +204,9 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
           return (
             <button key={s.value + i} type="button" role="radio" aria-checked={on} aria-label={s.label} title={s.named ? s.label : s.value} data-value={s.value}
               aria-describedby={why ? base + '-' + i : undefined} data-low-contrast={weak ? '' : undefined}
-              className={cn('dk-color-picker__swatch', on && 'dk-color-picker__swatch--checked', weak && 'dk-color-picker__swatch--low')} style={{ '--dk-swatch': s.value, '--dk-swatch-ink': ink(s.value) } as React.CSSProperties}
+              className={cn('srp-color-picker__swatch', on && 'srp-color-picker__swatch--checked', weak && 'srp-color-picker__swatch--low')} style={{ '--srp-swatch': s.value, '--srp-swatch-ink': ink(s.value) } as React.CSSProperties}
               tabIndex={i === tabStop ? 0 : -1} disabled={disabled} onClick={() => choose(s.value)} onKeyDown={onKeyDown}>
-              {on ? <Icon icon={icons.Check} className="dk-color-picker__check" /> : null}
+              {on ? <Icon icon={icons.Check} className="srp-color-picker__check" /> : null}
               {why ? <span hidden id={base + '-' + i}>{why}</span> : null}
             </button>
           );
@@ -214,13 +214,13 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
       </div>
       {custom ? (
         // The hex field is a second field of the picker, named "Hex code": not the control a Field labels.
-        <FieldContext.Provider value={null}><div className="dk-color-picker__custom">
-          <input ref={native} type="color" className="dk-color-picker__native" aria-label={sds.labels.customColor} value={value || '#000000'} disabled={disabled} data-empty={value ? undefined : ''}
+        <FieldContext.Provider value={null}><div className="srp-color-picker__custom">
+          <input ref={native} type="color" className="srp-color-picker__native" aria-label={sds.labels.customColor} value={value || '#000000'} disabled={disabled} data-empty={value ? undefined : ''}
             // Read-only: a native color input has no readonly, so the click (or the key) that opens its picker is cancelled.
             onClick={readOnly ? (e) => e.preventDefault() : undefined} onKeyDown={readOnly ? (e) => { if (e.key === 'Enter' || e.key === ' ') e.preventDefault(); } : undefined}
             onChange={(e) => choose(e.target.value, false, false)} />
-          <Input size={size === 'lg' ? 'lg' : 'sm'} className="dk-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
-            leftIcon={<span className="dk-color-picker__hash">#</span>} aria-invalid={bad || undefined}
+          <Input size={size === 'lg' ? 'lg' : 'sm'} className="srp-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
+            leftIcon={<span className="srp-color-picker__hash">#</span>} aria-invalid={bad || undefined}
             onFocus={() => { typing.current = true; }}
             onChange={(e) => { const t = e.target.value.replace(/^#/, ''); setText(t); setTried(false); const v = normalizeHex(t); if (v && t.length === 6) choose(v, false, false); }}
             // A copied code often comes with a space or a newline, which maxLength would cut before it's trimmed.
@@ -230,12 +230,12 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
         </div></FieldContext.Provider>
       ) : null}
       {props.contrastWith ? (
-        <div className={cn('dk-color-picker__contrast', low && 'dk-color-picker__contrast--low')} aria-live="polite">
-          {ratio != null ? <>{low ? <Icon icon={icons.Warning} className="dk-color-picker__warning" /> : null}<span>{sds.labels.contrast(fmt(ratio))}{low ? ', ' + sds.labels.lowContrast(fmt(min)) : ''}</span></> : null}
+        <div className={cn('srp-color-picker__contrast', low && 'srp-color-picker__contrast--low')} aria-live="polite">
+          {ratio != null ? <>{low ? <Icon icon={icons.Warning} className="srp-color-picker__warning" /> : null}<span>{sds.labels.contrast(fmt(ratio))}{low ? ', ' + sds.labels.lowContrast(fmt(min)) : ''}</span></> : null}
         </div>
       ) : null}
       {/* required: a hidden-from-view field the form checks; no browser bubble on it, the swatches take focus instead. */}
-      {required ? <input className="dk-color-picker__validity" tabIndex={-1} aria-hidden required value={value || ''} onChange={() => {}} disabled={disabled} form={props.form}
+      {required ? <input className="srp-color-picker__validity" tabIndex={-1} aria-hidden required value={value || ''} onChange={() => {}} disabled={disabled} form={props.form}
         onInvalid={onInvalid} /> : null}
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value || ''} disabled={disabled} /> : null}
     </div>

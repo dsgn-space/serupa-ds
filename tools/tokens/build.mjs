@@ -19,7 +19,7 @@
 //   :lang() per script (143)              taller lines for Arabic, Devanagari, Thai and CJK; CJK's font by language
 //   .type-*                               one class per complete text style
 //   @font-face                            the fonts in fonts/
-// Everything but the @font-face rules sits in the dk.tokens cascade layer, the first of the system's layers.
+// Everything but the @font-face rules sits in the srp.tokens cascade layer, the first of the system's layers.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -46,15 +46,15 @@ export function buildTokensCss(t) {
   const groups = Object.values(t).filter((g) => g && Array.isArray(g.tokens));
   const tokens = groups.flatMap((g) => g.tokens);
   // A contrastMore with a value per theme (a brand color: violet's is violet) can't be one light-dark() pair, so it
-  // becomes an internal themed token, --dk-more-<name>, that every theme and brand rule below sets like any alias;
+  // becomes an internal themed token, --srp-more-<name>, that every theme and brand rule below sets like any alias;
   // the contrast rule then points the token at it (contrastAndDensity).
   const all = [
     ...tokens,
-    ...tokens.filter(perTheme).map((x) => ({ name: `dk-more-${x.name}`, value: x.contrastMore })),
+    ...tokens.filter(perTheme).map((x) => ({ name: `srp-more-${x.name}`, value: x.contrastMore })),
   ];
 
   let css = '/* Serupa — generated from tokens.json */\n';
-  css += '@layer dk.tokens, dk.base, dk.components, dk.utilities;\n@layer dk.tokens {\n';
+  css += '@layer srp.tokens, srp.base, srp.components, srp.utilities;\n@layer srp.tokens {\n';
   css += `:root, [data-theme="${themes[0]}"] {\n`;
   for (const x of all.filter(themed)) css += line(x.name, x.value[themes[0]]);
   css += '}\n';
@@ -176,20 +176,20 @@ function axes(t, varying, line) {
 function contrastAndDensity(all, line) {
   const more = all.filter((x) => x.contrastMore && !perTheme(x));
   const pairs = more.map((x) => line(x.name, typeof x.contrastMore === 'string' ? x.contrastMore : `light-dark(${x.contrastMore.light}, ${x.contrastMore.dark})`)).join('');
-  // A per-theme one reads its --dk-more-* token, set by whichever theme or brand rule applies to the element. The
+  // A per-theme one reads its --srp-more-* token, set by whichever theme or brand rule applies to the element. The
   // brand rules that set the normal value weigh up to three attributes (:root[data-brand]:not([data-theme])), so
-  // these carry :not(#dk-more), which matches every element and outweighs them: asking for more contrast beats the
+  // these carry :not(#srp-more), which matches every element and outweighs them: asking for more contrast beats the
   // brand. They also go on nested data-brand and data-theme sections, which redeclare the brand's colors.
-  const brand = all.filter(perTheme).map((x) => `  --${x.name}: var(--dk-more-${x.name});\n`).join('');
+  const brand = all.filter(perTheme).map((x) => `  --${x.name}: var(--srp-more-${x.name});\n`).join('');
   const nested = ':is([data-mode], [data-brand], [data-theme])';
   let css = `[data-theme$="-light"] { color-scheme: light; }\n[data-theme$="-dark"] { color-scheme: dark; }\n`;
   // Also on nested data-mode elements, which redeclare the normal colors.
-  // :not(#dk-more) here too: a brand's rules weigh up to three attributes, and asking for more contrast must still
+  // :not(#srp-more) here too: a brand's rules weigh up to three attributes, and asking for more contrast must still
   // beat them.
-  css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] [data-mode]:not(#dk-more) {\n${pairs}}\n`;
-  if (brand) css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] ${nested}:not(#dk-more) {\n${brand}}\n`;
-  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *, #dk-more) {\n${pairs}}\n`;
-  if (brand) css += `:root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) ${nested}:not([data-contrast="normal"], [data-contrast="normal"] *, #dk-more) {\n${brand}}\n`;
+  css += `[data-contrast="more"]:not(#srp-more), [data-contrast="more"] [data-mode]:not(#srp-more) {\n${pairs}}\n`;
+  if (brand) css += `[data-contrast="more"]:not(#srp-more), [data-contrast="more"] ${nested}:not(#srp-more) {\n${brand}}\n`;
+  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]):not(#srp-more), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *, #srp-more) {\n${pairs}}\n`;
+  if (brand) css += `:root:not([data-contrast="normal"]):not(#srp-more), :root:not([data-contrast="normal"]) ${nested}:not([data-contrast="normal"], [data-contrast="normal"] *, #srp-more) {\n${brand}}\n`;
   css += '}\n';
   const compact = all.filter((x) => x.compact != null);
   css += `[data-density="compact"] {\n${compact.map((x) => line(x.name, x.compact)).join('')}}\n`;
@@ -199,13 +199,13 @@ function contrastAndDensity(all, line) {
 
 // Roundness: data-radius="sharp" or "round" points each radius role at its roundness value (2 to 4px corners, or
 // 6 to 24px), on any brand; data-radius="default" puts the default back in a section. It beats a brand's own rules (a
-// serupa-brand theme made with --corners sets the roles), so it carries :not(#dk-radius), and it's set again on a nested
+// serupa-brand theme made with --corners sets the roles), so it carries :not(#srp-radius), and it's set again on a nested
 // data-brand or data-theme section without a data-radius of its own. The pill stays round. A focus ring is an outline,
 // which follows the corner it's drawn around.
 function roundness(all, line) {
   const roles = all.filter((x) => x.roundness);
   if (!roles.length) return '';
-  const at = (v) => `[data-radius="${v}"]:not(#dk-radius), [data-radius="${v}"] :is([data-brand], [data-theme]):not([data-radius], #dk-radius)`;
+  const at = (v) => `[data-radius="${v}"]:not(#srp-radius), [data-radius="${v}"] :is([data-brand], [data-theme]):not([data-radius], #srp-radius)`;
   let css = '';
   for (const v of ['sharp', 'round']) css += `${at(v)} {\n${roles.map((x) => line(x.name, x.roundness[v])).join('')}}\n`;
   css += `${at('default')} {\n${roles.map((x) => line(x.name, x.value)).join('')}}\n`;

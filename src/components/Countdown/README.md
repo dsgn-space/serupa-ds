@@ -66,7 +66,7 @@ import { Countdown } from "@diki-stwn/serupa-ds";
 | `onEnd` | `() => void` | | Called once when it reaches zero. |
 | `locale` | `string` | the provider's, else the browser's | When it differs from the provider's, the element carries `lang`. |
 
-Every other prop, `className` and `ref` go to the `<time>`, which has `data-component="countdown"`, and `dk-countdown--ended` once it ends.
+Every other prop, `className` and `ref` go to the `<time>`, which has `data-component="countdown"`, and `srp-countdown--ended` once it ends.
 
 ## Component tokens
 

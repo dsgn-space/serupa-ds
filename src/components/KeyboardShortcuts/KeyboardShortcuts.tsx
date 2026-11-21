@@ -194,16 +194,16 @@ function KeyboardShortcutsRender({ ref, ...props }: KeyboardShortcutsProps & Rea
     groups.set(name, (groups.get(name) || []).concat({ keys: s.keys, description: s.description || '' }));
   }
   return (
-    <Dialog {...rest} ref={ref} className={cn('dk-keyboard-shortcuts', props.className)}
+    <Dialog {...rest} ref={ref} className={cn('srp-keyboard-shortcuts', props.className)}
       title={props.title != null ? props.title : labels.keyboardShortcuts} open={open} onOpenChange={change}
-      footer={hasSingle ? <Switch className="dk-keyboard-shortcuts__single" checked={singleKeys} onCheckedChange={setSingleKeys}
+      footer={hasSingle ? <Switch className="srp-keyboard-shortcuts__single" checked={singleKeys} onCheckedChange={setSingleKeys}
         description={labels.singleKeyHint}>{labels.singleKeyShortcuts}</Switch> : undefined}>
       {[...groups].map(([name, items]) => (
-        <section key={name} className="dk-keyboard-shortcuts__group">
-          {groups.size > 1 ? <h3 className="dk-keyboard-shortcuts__heading">{name}</h3> : null}
-          <DescriptionList layout="split" className="dk-keyboard-shortcuts__list">
+        <section key={name} className="srp-keyboard-shortcuts__group">
+          {groups.size > 1 ? <h3 className="srp-keyboard-shortcuts__heading">{name}</h3> : null}
+          <DescriptionList layout="split" className="srp-keyboard-shortcuts__list">
             {items.map((s, i) => (
-              <DescriptionItem key={i} className="dk-keyboard-shortcuts__row" term={s.description}><Kbd keys={s.keys} size="sm" /></DescriptionItem>
+              <DescriptionItem key={i} className="srp-keyboard-shortcuts__row" term={s.description}><Kbd keys={s.keys} size="sm" /></DescriptionItem>
             ))}
           </DescriptionList>
         </section>

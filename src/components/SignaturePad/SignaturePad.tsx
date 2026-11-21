@@ -100,7 +100,7 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   const fieldLabel = useFieldLabel(props.id);
   const rest = omit(props, OWN);
   const sds = useSettings(words), L = sds.labels;
-  const base = domId('dk-sig', React.useId());
+  const base = domId('srp-sig', React.useId());
   const root = React.useRef<HTMLDivElement | null>(null);
   const area = React.useRef<SVGSVGElement | null>(null);
   const inDisabledFieldset = useFieldsetDisabled(root);
@@ -126,7 +126,7 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   const [, redraw] = React.useReducer((n: number) => n + 1, 0);
   const handover = useFocusHandover();
 
-  const methodStop = () => root.current && root.current.querySelector<HTMLElement>('.dk-signature-pad__method [role=radio][tabindex="0"]');
+  const methodStop = () => root.current && root.current.querySelector<HTMLElement>('.srp-signature-pad__method [role=radio][tabindex="0"]');
   useAutoFocus(props.autoFocus, methodStop);
 
   const measure = () => { const b = area.current && area.current.getBoundingClientRect(); return b ? [Math.round(b.width), Math.round(b.height)] as [number, number] : size; };
@@ -213,43 +213,43 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   return (
     <div {...rest} ref={mergedRef} role="group"
       aria-labelledby={labelledBy} aria-describedby={describedBy}
-      className={cn('dk-signature-pad', disabled && 'dk-signature-pad--disabled', readOnly && 'dk-signature-pad--readonly', invalid && 'dk-signature-pad--invalid', props.className)} data-component="signature-pad">
+      className={cn('srp-signature-pad', disabled && 'srp-signature-pad--disabled', readOnly && 'srp-signature-pad--readonly', invalid && 'srp-signature-pad--invalid', props.className)} data-component="signature-pad">
       <FieldContext.Provider value={null}>
-        <SegmentedControl className="dk-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined} value={method} onValueChange={pick}
+        <SegmentedControl className="srp-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined} value={method} onValueChange={pick}
           options={[{ value: 'draw', label: L.signatureDraw }, { value: 'type', label: L.signatureType }]} />
-        {readOnly ? null : <p className="dk-signature-pad__how" id={base + '-how'}>{method === 'draw' ? L.signatureDrawHint : L.signatureTypeHint}</p>}
+        {readOnly ? null : <p className="srp-signature-pad__how" id={base + '-how'}>{method === 'draw' ? L.signatureDrawHint : L.signatureTypeHint}</p>}
         {method === 'draw' ? (
           <>
-            <div className="dk-signature-pad__box">
-              <svg ref={area} className="dk-signature-pad__area" role="img" aria-label={empty ? L.signatureEmpty : L.signatureDrawn}
+            <div className="srp-signature-pad__box">
+              <svg ref={area} className="srp-signature-pad__area" role="img" aria-label={empty ? L.signatureEmpty : L.signatureDrawn}
                 onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onLostPointerCapture={onUp}>
-                <g className="dk-signature-pad__strokes">{shown.map((s, i) => <path key={i} d={pathOf(s)} />)}</g>
+                <g className="srp-signature-pad__strokes">{shown.map((s, i) => <path key={i} d={pathOf(s)} />)}</g>
               </svg>
-              <span className="dk-signature-pad__line" aria-hidden />
+              <span className="srp-signature-pad__line" aria-hidden />
             </div>
-            {readOnly ? null : <div className="dk-signature-pad__actions">
+            {readOnly ? null : <div className="srp-signature-pad__actions">
               <Button variant="ghost" size="sm" disabled={disabled || !strokes.length} onClick={undo}>{L.signatureUndo}</Button>
               <Button variant="ghost" size="sm" disabled={disabled || !strokes.length} onClick={clear}>{L.signatureClear}</Button>
             </div>}
           </>
         ) : (
           <>
-            <label className="dk-signature-pad__label" htmlFor={base + '-name'}>{L.signatureName}</label>
-            <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
+            <label className="srp-signature-pad__label" htmlFor={base + '-name'}>{L.signatureName}</label>
+            <Input id={base + '-name'} className="srp-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
               aria-required={props['aria-required'] ?? (required || undefined)}
               value={typed} onChange={(e) => { setTyped(e.target.value); tell('type', strokes, e.target.value, 'type'); }} />
-            <div className="dk-signature-pad__box" aria-hidden>
-              <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed" role="presentation">
-                {typed.trim() ? <text className="dk-signature-pad__typed" x="16" y="68%">{typed.trim()}</text> : null}
+            <div className="srp-signature-pad__box" aria-hidden>
+              <svg ref={area} className="srp-signature-pad__area srp-signature-pad__area--typed" role="presentation">
+                {typed.trim() ? <text className="srp-signature-pad__typed" x="16" y="68%">{typed.trim()}</text> : null}
               </svg>
-              <span className="dk-signature-pad__line" />
+              <span className="srp-signature-pad__line" />
             </div>
           </>
         )}
       </FieldContext.Provider>
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ? value.svg : ''} disabled={disabled} /> : null}
       {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the pad is marked and takes focus instead of a bubble. */}
-      {required ? <input key={value ? 'filled' : 'empty'} className="dk-signature-pad__validity" tabIndex={-1} aria-hidden required defaultValue={value ? 'filled' : ''}
+      {required ? <input key={value ? 'filled' : 'empty'} className="srp-signature-pad__validity" tabIndex={-1} aria-hidden required defaultValue={value ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
     </div>
   );

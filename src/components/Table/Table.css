@@ -3,158 +3,158 @@
    (sm: 8px top and bottom) and a line between rows; a surface-muted header in muted, font-medium text. Body rows
    shade on hover (or every other one, striped); a selected row is shaded (with a 2px bar at its start with more contrast).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-table {
+@layer srp.components {
+.srp-table {
   box-sizing: border-box; max-width: var(--sizing-full); overflow: auto; overscroll-behavior-x: contain; position: relative;
   border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--radius-surface));
   background: var(--table-bg, var(--surface)); --surface-behind: var(--table-bg, var(--surface));
 }
 /* Set straight in a Card with no padding, the card is the frame: a second border and a tighter curve inside the card's
    showed as a doubled edge, worst at the corners. */
-.dk-card--padding-none > .dk-table { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
-.dk-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
-.dk-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
-.dk-table__cell { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; font-variant-numeric: tabular-nums; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
-.dk-table--sm .dk-table__cell { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
-.dk-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .dk-table__cell, .dk-table__body .dk-table__row:last-child .dk-table__cell, .dk-table__foot .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
-.dk-table__foot .dk-table__row:first-child .dk-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
-.dk-table__body:has(+ .dk-table__foot) .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
-.dk-table__header { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
+.srp-card--padding-none > .srp-table { border: var(--spacing-0); border-radius: var(--srp-card-inner-radius); }
+.srp-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.srp-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
+.srp-table__cell { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; font-variant-numeric: tabular-nums; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
+.srp-table--sm .srp-table__cell { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
+.srp-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .srp-table__cell, .srp-table__body .srp-table__row:last-child .srp-table__cell, .srp-table__foot .srp-table__row:last-child .srp-table__cell { border-bottom: var(--spacing-0); }
+.srp-table__foot .srp-table__row:first-child .srp-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
+.srp-table__body:has(+ .srp-table__foot) .srp-table__row:last-child .srp-table__cell { border-bottom: var(--spacing-0); }
+.srp-table__header { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
 /* A row header (scope="row", in the body or the foot) names its row: it reads as the row's first cell, in the row's
    text and on the row's fill (so it shades with the row on hover and selection), not as a column heading in the
    header's muted band. */
-.dk-table__body .dk-table__header, .dk-table__foot .dk-table__header { background: none; --surface-behind: inherit; color: inherit; white-space: normal; }
-.dk-table__cell--center { text-align: center; }
-.dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+.srp-table__body .srp-table__header, .srp-table__foot .srp-table__header { background: none; --surface-behind: inherit; color: inherit; white-space: normal; }
+.srp-table__cell--center { text-align: center; }
+.srp-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
 /* The row background eases only while the pointer is over the body, so a row's hover and a click on its own box still
    ease, while "select all" in the header (or from script) repaints every row at once instead of starting a transition
    per row (GR168). Reduced motion keeps it off. */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) { .dk-table__body:hover .dk-table__row { transition: background-color var(--motion-hover) var(--ease-move); } }
-/* Every other row of data, not counting the detail rows under them. --dk-table-row carries a row's shading to its
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .srp-table__body:hover .srp-table__row { transition: background-color var(--motion-hover) var(--ease-move); } }
+/* Every other row of data, not counting the detail rows under them. --srp-table-row carries a row's shading to its
    pinned cells, which paint their own background over the cells scrolling under them. */
-.dk-table--striped .dk-table__body .dk-table__row:nth-child(even of :is(.dk-table__row, .dk-table__spacer)) { --dk-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--dk-table-row); }
+.srp-table--striped .srp-table__body .srp-table__row:nth-child(even of :is(.srp-table__row, .srp-table__spacer)) { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
 @media (hover: hover) {
-  .dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover { --dk-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--dk-table-row); }
+  .srp-table:not(.srp-table--striped) .srp-table__body .srp-table__row:hover { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
 }
-.dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row:has(> .dk-table__select :checked) { --dk-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--dk-table-row); }
-.dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
-.dk-table__row--selected:dir(rtl) > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
-.dk-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
+.srp-table__row--selected, .srp-table .srp-table__body .srp-table__row--selected, .srp-table .srp-table__body .srp-table__row:has(> .srp-table__select :checked) { --srp-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
+.srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.srp-table__row--selected:dir(rtl) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.srp-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
 /* Next to a sortable header, whose button fills its cell, the select-all checkbox keeps a gap, so each has a 24px
    target that doesn't touch the other (WCAG 2.5.8). */
-.dk-table__select:has(+ .dk-table__header--sortable) { padding-inline-end: var(--spacing-2); }
-.dk-table__select .dk-checkbox { vertical-align: middle; }
+.srp-table__select:has(+ .srp-table__header--sortable) { padding-inline-end: var(--spacing-2); }
+.srp-table__select .srp-checkbox { vertical-align: middle; }
 /* Above the controls a link row lifts over its link (z 10, below) too: WebKit makes no layer of the body (next rule),
    so there a row's checkbox scrolled under the header painted over the header's own (GR76). */
-.dk-table--sticky .dk-table__head .dk-table__cell { position: sticky; top: 0; z-index: var(--z-20); }
+.srp-table--sticky .srp-table__head .srp-table__cell { position: sticky; top: 0; z-index: var(--z-20); }
 /* The body is a layer of its own under the header, so the controls a link row lifts over its link (z 10, below)
    stay under the header as rows scroll beneath it, and don't take its clicks (GR76). */
-.dk-table--sticky .dk-table__body { position: relative; z-index: var(--z-0); }
+.srp-table--sticky .srp-table__body { position: relative; z-index: var(--z-0); }
 /* Sticky, the header lifts once rows scroll under it (KW16): the frame is a scroll-state container, and the header
    cells take a shadow while it can scroll back up, so nothing shows at the top. A state, not an animation: nothing
    runs on its own and reduced motion has nothing to stop. Where scroll-state queries aren't supported, the header
    stays flat, as before. */
 @supports (container-type: scroll-state) {
-  .dk-table--sticky { container-type: scroll-state; }
-  @container scroll-state(scrollable: top) { .dk-table__head .dk-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--elevation-part)); } }
+  .srp-table--sticky { container-type: scroll-state; }
+  @container scroll-state(scrollable: top) { .srp-table__head .srp-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--elevation-part)); } }
 }
 /* layout="fixed": the columns take the header cells' widths and keep them whatever the rows hold; long text wraps
    in its cell instead of widening the column. The select column keeps the checkbox's width. */
-.dk-table--fixed .dk-table__table { table-layout: fixed; }
-.dk-table--fixed .dk-table__cell { overflow-wrap: anywhere; }
-.dk-table--fixed .dk-table__select { width: var(--checkbox-size-md, var(--spacing-4)); }
+.srp-table--fixed .srp-table__table { table-layout: fixed; }
+.srp-table--fixed .srp-table__cell { overflow-wrap: anywhere; }
+.srp-table--fixed .srp-table__select { width: var(--checkbox-size-md, var(--spacing-4)); }
 /* What the keyboard focuses in the frame scrolls into view below the sticky header, not under it (WCAG 2.4.11).
-   Table measures the header into --dk-table-head; until then, one md header row (40px). */
-.dk-table--sticky { scroll-padding-top: var(--dk-table-head, var(--spacing-10)); }
+   Table measures the header into --srp-table-head; until then, one md header row (40px). */
+.srp-table--sticky { scroll-padding-top: var(--srp-table-head, var(--spacing-10)); }
 /* sortable headers: the whole label is a button */
-.dk-table__header--sortable { padding: var(--spacing-0); }
-.dk-table__sort {
+.srp-table__header--sortable { padding: var(--spacing-0); }
+.srp-table__sort {
   box-sizing: border-box; display: inline-flex; align-items: center; gap: var(--spacing-1); width: var(--sizing-full);
   padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3));
   border: var(--spacing-0); background: transparent; color: inherit; font: inherit; text-align: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-table--sm .dk-table__sort { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
-.dk-table__cell--center .dk-table__sort { justify-content: center; }
-.dk-table__cell--end .dk-table__sort { justify-content: flex-end; }
-@media (hover: hover) { .dk-table__sort:hover { color: var(--table-text, var(--text)); } }
+.srp-table--sm .srp-table__sort { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
+.srp-table__cell--center .srp-table__sort { justify-content: center; }
+.srp-table__cell--end .srp-table__sort { justify-content: flex-end; }
+@media (hover: hover) { .srp-table__sort:hover { color: var(--table-text, var(--text)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
-.dk-table__sort { transition: color var(--motion-hover) var(--ease-move); }
-@media (prefers-reduced-motion: reduce) { .dk-table__sort { transition: none; } }
-.dk-table__sort:active { background: var(--table-sort-bg-pressed, var(--pressed)); }   /* held: the pressed fill, at once */
-.dk-table__sort:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-table__sort-icon.dk-icon { font-size: var(--spacing-4); }
-.dk-table__sort-icon--idle { opacity: var(--opacity-50); }
-@media (hover: hover) { .dk-table__sort:hover .dk-table__sort-icon--idle { opacity: var(--opacity-100); } }
+.srp-table__sort { transition: color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .srp-table__sort { transition: none; } }
+.srp-table__sort:active { background: var(--table-sort-bg-pressed, var(--pressed)); }   /* held: the pressed fill, at once */
+.srp-table__sort:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-table__sort-icon.srp-icon { font-size: var(--spacing-4); }
+.srp-table__sort-icon--idle { opacity: var(--opacity-50); }
+@media (hover: hover) { .srp-table__sort:hover .srp-table__sort-icon--idle { opacity: var(--opacity-100); } }
 /* A row with href is one link: the <a> in its link cell stretches its ::after over the row, which shades on hover as
    any row does. Buttons, checkboxes and links in other cells sit above it, so they work on their own; the row shows
    the link's focus ring. */
-.dk-table__row--link { position: relative; cursor: var(--cursor-interactive); touch-action: manipulation; }
-.dk-table__row-link { color: inherit; text-decoration: none; outline: none; }
-.dk-table__row-link::after { content: ""; position: absolute; inset: var(--spacing-0); z-index: var(--z-0); }
-.dk-table__row--link :is(a[href], button, input:not(label input), select, textarea, label, summary, [tabindex]):not(.dk-table__row-link) { position: relative; z-index: var(--z-10); }
-@media (hover: hover) { .dk-table__row--link:hover .dk-table__row-link { text-decoration: underline; } }
+.srp-table__row--link { position: relative; cursor: var(--cursor-interactive); touch-action: manipulation; }
+.srp-table__row-link { color: inherit; text-decoration: none; outline: none; }
+.srp-table__row-link::after { content: ""; position: absolute; inset: var(--spacing-0); z-index: var(--z-0); }
+.srp-table__row--link :is(a[href], button, input:not(label input), select, textarea, label, summary, [tabindex]):not(.srp-table__row-link) { position: relative; z-index: var(--z-10); }
+@media (hover: hover) { .srp-table__row--link:hover .srp-table__row-link { text-decoration: underline; } }
 /* Held down, a linked row shades a step past its hover, as a List row does; its own buttons and checkboxes press on their own. */
-.dk-table .dk-table__body .dk-table__row--link:has(.dk-table__row-link:active) { --dk-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); }
-.dk-table__row--link:has(.dk-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
+.srp-table .srp-table__body .srp-table__row--link:has(.srp-table__row-link:active) { --srp-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); }
+.srp-table__row--link:has(.srp-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
-.dk-table__header--resizable { position: relative; }
-.dk-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
-.dk-table__resize::after { content: ""; position: absolute; inset-block: var(--spacing-2); inset-inline-end: var(--spacing-0); width: var(--border-width-2); background: var(--table-border, var(--border)); }
-@media (hover: hover) { .dk-table__resize:hover::after { background: var(--table-resize-active, var(--primary)); } }
-.dk-table__resize:active::after, .dk-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary)); }
-.dk-table__resize:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (forced-colors: active) { .dk-table__resize::after { background: CanvasText; } }
+.srp-table__header--resizable { position: relative; }
+.srp-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
+.srp-table__resize::after { content: ""; position: absolute; inset-block: var(--spacing-2); inset-inline-end: var(--spacing-0); width: var(--border-width-2); background: var(--table-border, var(--border)); }
+@media (hover: hover) { .srp-table__resize:hover::after { background: var(--table-resize-active, var(--primary)); } }
+.srp-table__resize:active::after, .srp-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary)); }
+.srp-table__resize:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .srp-table__resize::after { background: CanvasText; } }
 /* pinStart and pinEnd: the first or last cell of each row stays put while the rest scroll under it, on the row's own
    shading. Header cells keep the header's. */
-.dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child { position: sticky; inset-inline-start: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
-.dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child { position: sticky; inset-inline-end: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
-.dk-table--pin-start .dk-table__head tr > .dk-table__cell:first-child, .dk-table--pin-end .dk-table__head tr > .dk-table__cell:last-child { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); }
-.dk-table--sticky.dk-table--pin-start .dk-table__head .dk-table__cell:first-child, .dk-table--sticky.dk-table--pin-end .dk-table__head .dk-table__cell:last-child { z-index: var(--z-30); }
+.srp-table--pin-start :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:first-child { position: sticky; inset-inline-start: var(--spacing-0); z-index: var(--z-20); background: var(--srp-table-row, var(--table-bg, var(--surface))); }
+.srp-table--pin-end :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:last-child { position: sticky; inset-inline-end: var(--spacing-0); z-index: var(--z-20); background: var(--srp-table-row, var(--table-bg, var(--surface))); }
+.srp-table--pin-start .srp-table__head tr > .srp-table__cell:first-child, .srp-table--pin-end .srp-table__head tr > .srp-table__cell:last-child { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); }
+.srp-table--sticky.srp-table--pin-start .srp-table__head .srp-table__cell:first-child, .srp-table--sticky.srp-table--pin-end .srp-table__head .srp-table__cell:last-child { z-index: var(--z-30); }
 /* While there's more to scroll to under a pinned column, it lifts with a shadow on its inner edge (as the sticky header
    does): a state of the scroll, where scroll-state queries are supported; elsewhere it stays flat. */
 @supports (container-type: scroll-state) {
-  .dk-table--pin-start, .dk-table--pin-end { container-type: scroll-state; }
+  .srp-table--pin-start, .srp-table--pin-end { container-type: scroll-state; }
   /* On a hairline at the cell's inner edge, clipped to the side away from the cell: the cell's own box-shadow is the
      selected row's bar. */
-  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after, .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { content: ""; position: absolute; inset-block: var(--spacing-0); width: var(--spacing-px); pointer-events: none; }
-  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after { inset-inline-end: var(--spacing-0); clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
-  .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { inset-inline-start: var(--spacing-0); clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
-  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
-  .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
-  @container scroll-state(scrollable: inline-start) { .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
-  @container scroll-state(scrollable: inline-end) { .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
+  .srp-table--pin-start :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:first-child::after, .srp-table--pin-end :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:last-child::after { content: ""; position: absolute; inset-block: var(--spacing-0); width: var(--spacing-px); pointer-events: none; }
+  .srp-table--pin-start :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:first-child::after { inset-inline-end: var(--spacing-0); clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
+  .srp-table--pin-end :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:last-child::after { inset-inline-start: var(--spacing-0); clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
+  .srp-table--pin-start :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:first-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
+  .srp-table--pin-end :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:last-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
+  @container scroll-state(scrollable: inline-start) { .srp-table--pin-start :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:first-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
+  @container scroll-state(scrollable: inline-end) { .srp-table--pin-end :is(.srp-table__row, .srp-table__head > tr) > .srp-table__cell:last-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
 }
 /* Expandable rows: a narrow cell with a chevron that turns down while the row's details, the full-width row under it,
    are shown. */
-.dk-table__expand { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
-.dk-table__expand-button .dk-icon { --dk-table-turn: 90deg; transition: rotate var(--motion-change-sm) var(--ease-move); }
-.dk-table__expand-button:dir(rtl) .dk-icon { --dk-table-turn: -90deg; }
-.dk-table__expand-button--open .dk-icon { rotate: var(--dk-table-turn); }
-.dk-table__detail-cell { padding-block: var(--table-padding-x, var(--spacing-3)); }
+.srp-table__expand { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
+.srp-table__expand-button .srp-icon { --srp-table-turn: 90deg; transition: rotate var(--motion-change-sm) var(--ease-move); }
+.srp-table__expand-button:dir(rtl) .srp-icon { --srp-table-turn: -90deg; }
+.srp-table__expand-button--open .srp-icon { rotate: var(--srp-table-turn); }
+.srp-table__detail-cell { padding-block: var(--table-padding-x, var(--spacing-3)); }
 /* TableColumnsMenu: one checkbox per column, in a column. */
-.dk-table-columns { display: flex; flex-direction: column; gap: var(--spacing-2); }
-.dk-table-width { display: flex; flex-wrap: wrap; gap: var(--spacing-2); width: auto; }
-.dk-table-width:not(:popover-open) { display: none; }
+.srp-table-columns { display: flex; flex-direction: column; gap: var(--spacing-2); }
+.srp-table-width { display: flex; flex-wrap: wrap; gap: var(--spacing-2); width: auto; }
+.srp-table-width:not(:popover-open) { display: none; }
 /* Print: the whole table, not its scrolled window; the header row repeats on every page, and a row isn't split
    across two pages. */
 @media print {
-  .dk-table { overflow: visible; max-height: none; }
-  .dk-table__head { display: table-header-group; }
-  .dk-table__row { break-inside: avoid; }
-  .dk-table--sticky .dk-table__head .dk-table__cell { position: static; box-shadow: none; }
+  .srp-table { overflow: visible; max-height: none; }
+  .srp-table__head { display: table-header-group; }
+  .srp-table__row { break-inside: avoid; }
+  .srp-table--sticky .srp-table__head .srp-table__cell { position: static; box-shadow: none; }
 }
 /* TableVirtualBody: the drawn rows sit between two empty rows as tall as the rows not drawn; a row kept drawn for its
    focus while scrolled away is placed in this body, out of the flow. */
-.dk-table__body--virtual { position: relative; }
-.dk-table__spacer { border: var(--spacing-0); }
+.srp-table__body--virtual { position: relative; }
+.srp-table__spacer { border: var(--spacing-0); }
 /* TableActionBar: a tinted bar above the table while rows are selected: the count, the actions, then Clear at the end. */
-.dk-table-action-bar:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-3); margin-bottom: var(--spacing-2); padding: var(--table-action-bar-padding, var(--spacing-2)) var(--spacing-3); border-radius: var(--table-radius, var(--radius-surface)); background: var(--table-action-bar-bg, var(--primary-subtle)); color: var(--table-action-bar-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-table-action-bar__count { font-weight: var(--table-action-bar-weight, var(--font-semibold)); font-variant-numeric: tabular-nums; }
-.dk-table-action-bar__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin-inline-end: auto; }
+.srp-table-action-bar:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-3); margin-bottom: var(--spacing-2); padding: var(--table-action-bar-padding, var(--spacing-2)) var(--spacing-3); border-radius: var(--table-radius, var(--radius-surface)); background: var(--table-action-bar-bg, var(--primary-subtle)); color: var(--table-action-bar-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-table-action-bar__count { font-weight: var(--table-action-bar-weight, var(--font-semibold)); font-variant-numeric: tabular-nums; }
+.srp-table-action-bar__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin-inline-end: auto; }
 /* sticky: stays at the top of the page's scroll while the table scrolls under it: one step above the table's pinned
    header corner (z-30), which comes after it, and still under a sticky Navbar (z-40). */
 /* stylelint-disable-next-line serupa/no-raw-value -- one above a token, between two layers that have no token between them */
-.dk-table-action-bar--sticky { position: sticky; top: var(--table-action-bar-top, var(--spacing-0)); z-index: calc(var(--z-30) + 1); }
+.srp-table-action-bar--sticky { position: sticky; top: var(--table-action-bar-top, var(--spacing-0)); z-index: calc(var(--z-30) + 1); }
 }

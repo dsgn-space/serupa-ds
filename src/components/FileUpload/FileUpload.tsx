@@ -114,7 +114,7 @@ const iconFor = (f: File) => KIND_ICONS[attachmentKind(f.name, f.type)];
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 // A file's name, cut in the middle when it doesn't fit (internal/middleCutName.tsx).
-const NAME = { root: 'dk-file-upload__name', start: 'dk-file-upload__name-start', end: 'dk-file-upload__name-end', hidden: 'dk-visually-hidden' };
+const NAME = { root: 'srp-file-upload__name', start: 'srp-file-upload__name-start', end: 'srp-file-upload__name-end', hidden: 'srp-visually-hidden' };
 
 /* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
    pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps
@@ -136,14 +136,14 @@ function Thumbnail({ file, children }: { file: File; children: React.ReactNode }
     }, () => { if (live) setBroken(file); });
     return () => { live = false; };
   }, [file]);
-  return broken === file ? <>{children}</> : <canvas ref={canvas} className="dk-file-upload__thumbnail" aria-hidden />;
+  return broken === file ? <>{children}</> : <canvas ref={canvas} className="srp-file-upload__thumbnail" aria-hidden />;
 }
 
 function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale();
   props = useFieldControl(props);   // invalid, aria-required and disabled from a surrounding Field, at any depth
   const rest = omit(props, OWN);
-  const base = domId('dk-fu', React.useId());
+  const base = domId('srp-fu', React.useId());
   const inputId = props.id || base + '-input';
   const input = React.useRef<HTMLInputElement | null>(null);
   const chooser = React.useRef<HTMLButtonElement | null>(null);
@@ -315,53 +315,53 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   useClipboardHandOn(root);
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, choose); });
   return (
-    <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('dk-file-upload', disabled && 'dk-file-upload--disabled', readOnly && 'dk-file-upload--readonly', (invalid || missing) && 'dk-file-upload--invalid', props.className)} data-component="file-upload">
+    <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('srp-file-upload', disabled && 'srp-file-upload--disabled', readOnly && 'srp-file-upload--readonly', (invalid || missing) && 'srp-file-upload--invalid', props.className)} data-component="file-upload">
       {/* A click anywhere on the area (its padding, icon, title and hint) opens the picker too, as its hover and press say, for the pointer only (the button opens it itself): the choose button is how the
           keyboard and screen readers reach it, so the area is presentational and carries no state (TF1b); a disabled upload says so on the whole of it. */}
-      <div className={cn('dk-file-upload__zone', over && 'dk-file-upload__zone--over')} data-dragging={over ? '' : undefined} role="presentation" {...drag}
+      <div className={cn('srp-file-upload__zone', over && 'srp-file-upload__zone--over')} data-dragging={over ? '' : undefined} role="presentation" {...drag}
         onClick={(e) => { if (!still && input.current && !(e.target instanceof Element && e.target.closest('button, input'))) input.current.click(); }}>
-        <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
-        <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
+        <Icon icon={icons.UploadFile} className="srp-file-upload__icon" />
+        <p className="srp-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
         <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => { if (!readOnly && input.current) input.current.click(); }}
           aria-disabled={readOnly || undefined}
           aria-labelledby={fieldLabel ? fieldLabel + ' ' + base + '-choose' : undefined} aria-describedby={described}>
           <span id={base + '-choose'}>{props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}</span>
         </Button>
-        {required ? <span className="dk-file-upload__required" id={base + '-req'}>{sds.labels.required}</span> : null}
-        {hasHint ? <p className="dk-file-upload__hint" id={base + '-hint'}>{props.hint}</p> : null}
-        <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} form={props.form} accept={props.accept} multiple={multiple} disabled={disabled} required={props.required}
+        {required ? <span className="srp-file-upload__required" id={base + '-req'}>{sds.labels.required}</span> : null}
+        {hasHint ? <p className="srp-file-upload__hint" id={base + '-hint'}>{props.hint}</p> : null}
+        <input ref={input} id={inputId} type="file" className="srp-file-upload__input" tabIndex={-1} aria-hidden name={props.name} form={props.form} accept={props.accept} multiple={multiple} disabled={disabled} required={props.required}
           aria-invalid={invalid || missing || undefined} onChange={(e) => { add(e.target.files); }} onInvalid={onInvalid}
           // A <label for> click opens the picker and focuses this hidden input (no ring, a screen reader on an
           // aria-hidden element): focus goes on to the button, so the picker returns there.
           onFocus={() => { const b = chooser.current; if (b && !b.disabled) b.focus(); }} />
       </div>
       {rejected.length || missing ? (
-        <div key={tries} className="dk-file-upload__errors" role="alert">
-          {missing ? <p className="dk-file-upload__error" id={base + '-missing'}><Icon icon={icons.Error} />{L.fileMissing(multiple)}</p> : null}
-          {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon icon={icons.Error} />{r.message}</p>)}
+        <div key={tries} className="srp-file-upload__errors" role="alert">
+          {missing ? <p className="srp-file-upload__error" id={base + '-missing'}><Icon icon={icons.Error} />{L.fileMissing(multiple)}</p> : null}
+          {rejected.map((r, i) => <p key={i} className="srp-file-upload__error"><Icon icon={icons.Error} />{r.message}</p>)}
         </div>
       ) : null}
       {files.length ? (
-        <ul ref={list} role="list" className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
+        <ul ref={list} role="list" className="srp-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
           {files.map((f, i) => {
-            const st = statuses[i], id = base + '-file-' + i, icon = <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />;
+            const st = statuses[i], id = base + '-file-' + i, icon = <Icon icon={iconFor(f)} className="srp-file-upload__file-icon" />;
             const failed = st && st.state === 'error';
             return (
-              <li key={f.name + f.size + f.lastModified + i} className={cn('dk-file-upload__item', failed && 'dk-file-upload__item--error')}>
+              <li key={f.name + f.size + f.lastModified + i} className={cn('srp-file-upload__item', failed && 'srp-file-upload__item--error')}>
                 {props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}>{icon}</Thumbnail> : icon}
-                <span className="dk-file-upload__file">
+                <span className="srp-file-upload__file">
                   <MiddleCutName name={f.name} id={id + '-name'} cls={NAME} />
-                  <span className="dk-file-upload__size" dir="auto">
+                  <span className="srp-file-upload__size" dir="auto">
                     {formatFileSize(f.size, locale)}
-                    {st && st.state === 'done' ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete('')}</span> : null}
+                    {st && st.state === 'done' ? <span className="srp-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete('')}</span> : null}
                   </span>
                   {st && st.state === 'uploading' ? (
-                    <Progress className="dk-file-upload__progress" size="sm" value={typeof st.progress === 'number' && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + '-name'} />
+                    <Progress className="srp-file-upload__progress" size="sm" value={typeof st.progress === 'number' && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + '-name'} />
                   ) : null}
-                  {failed ? <span className="dk-file-upload__failed" id={id + '-error'}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
+                  {failed ? <span className="srp-file-upload__failed" id={id + '-error'}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
                 </span>
                 {failed && props.onRetry && !still ? (
-                  <Button className="dk-file-upload__retry" variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + '-retry ' + id + '-name'} aria-describedby={id + '-error'}>
+                  <Button className="srp-file-upload__retry" variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + '-retry ' + id + '-name'} aria-describedby={id + '-error'}>
                     <span id={id + '-retry'}>{L.tryAgain}</span>
                   </Button>
                 ) : null}

@@ -42,7 +42,7 @@ const wordOf = (L: typeof words, s: StatusState) => (s === 'up' ? L.statusUp : s
 // aren't drawn again on every move of the pointer, nor when a parent renders with the same days.
 const Bars = /* @__PURE__ */ React.memo(function Bars(p: { days: StatusDay[]; current: number; say: (d: StatusDay) => string; on: (i: number, focus: boolean) => void }) {
   return p.days.map((d, i) => (
-    <li key={i} className="dk-status-tracker__day" data-state={d.state} aria-label={p.say(d)} {...{ tabIndex: i === p.current ? 0 : -1 }}
+    <li key={i} className="srp-status-tracker__day" data-state={d.state} aria-label={p.say(d)} {...{ tabIndex: i === p.current ? 0 : -1 }}
       onFocus={() => p.on(i, true)} onMouseEnter={() => p.on(i, false)} />
   ));
 });
@@ -99,17 +99,17 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
   const on = React.useCallback((i: number, focus: boolean) => { if (focus) live.current(i); setShown(i); }, [live]);
   const caption = shown != null && days[shown] ? say(days[shown]) : null;
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-status-tracker', props.className)} data-component="status-tracker">
+    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('srp-status-tracker', props.className)} data-component="status-tracker">
       {/* One tab stop for the days (roving tabindex, as Table's and CodeBlock's scroll areas spread theirs): the keys
           move focus between the list's own items, so the list takes them. */}
-      <ol className="dk-status-tracker__days" role="list" ref={list} aria-label={props.label} {...listEvents}>
+      <ol className="srp-status-tracker__days" role="list" ref={list} aria-label={props.label} {...listEvents}>
         <Bars days={days} current={current} say={say} on={on} />
       </ol>
-      <div className="dk-status-tracker__caption" aria-hidden>{caption || ' '}</div>
-      {summary != null ? <p className="dk-status-tracker__summary">{summary}</p> : null}
+      <div className="srp-status-tracker__caption" aria-hidden>{caption || ' '}</div>
+      {summary != null ? <p className="srp-status-tracker__summary">{summary}</p> : null}
       {props.legend !== false ? (
-        <ul className="dk-status-tracker__legend" role="list">
-          {STATES.map((s) => <li key={s} className="dk-status-tracker__key" data-state={s}><span className="dk-status-tracker__swatch" aria-hidden />{wordOf(L, s)}</li>)}
+        <ul className="srp-status-tracker__legend" role="list">
+          {STATES.map((s) => <li key={s} className="srp-status-tracker__key" data-state={s}><span className="srp-status-tracker__swatch" aria-hidden />{wordOf(L, s)}</li>)}
         </ul>
       ) : null}
     </div>

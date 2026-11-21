@@ -4,7 +4,7 @@
 //                          component keeps its "use client" and works from React Server Components
 //   icons.js, icons-outlined.js  serupa-ds/icons and serupa-ds/icons/outlined: every Material Symbol, filled and outlined
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
-//   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
+//   components.css         the srp-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
 //   utilities-extra.css    the masks and gradients, which utilities.css and bundle.css leave out (tools/utilities/extra.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
@@ -66,9 +66,9 @@ if (!process.argv.includes('--css')) {
 
 const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
 const utilities = buildUtilities(P);
-// Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
+// Each file declares the system's cascade layers in one order (srp.tokens, srp.base, srp.components, srp.utilities),
 // so page styles outside the layers win over them whatever loads first.
-const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
+const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer srp.tokens, srp.base, srp.components, srp.utilities;\n`;
 // Shipped without the source comments (the explained copy is src/), which are about 40% of components.css
 // gzipped, and compacted: no spaces or line breaks around { } ; : , > (compact-css.mjs, about 5 KiB gzipped across
 // components.css and utilities.css, 9 Nov 2026). Only whitespace goes, and each rule still ends its line, so devtools
@@ -87,11 +87,11 @@ fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') 
 const stamp = (s) => s.replaceAll('__VERSION__', version);
 fs.writeFileSync(path.join(D, 'base.css'), stamp(bare(read('src/styles/base.css'))));
 
-// components.json: for each component, the names it exports, the dk-* classes its CSS uses and the components it
+// components.json: for each component, the names it exports, the srp-* classes its CSS uses and the components it
 // needs (the ones it imports, and the ones whose classes it writes out). serupa-purge --components reads it to
 // drop the styles of components a project never uses.
 const cssOf = Object.fromEntries(IMPORTS.map((n) => [n, read(`src/components/${n}/${n}.css`)]));
-const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(dk-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
+const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(srp-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
 // A component's code, with the shared drawings it renders from src/internal/*.tsx (Loader's ring in Button, GR311):
 // the classes those write out are the component's too.
 const ownTsx = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
@@ -102,9 +102,9 @@ for (const n of IMPORTS) {
   const code = tsxOf(n);
   const exports = [...new Set([...code.matchAll(/^export (?:const|function|class) (\w+)/gm)].map((m) => m[1]))].sort();
   const imported = [...code.matchAll(/from ["']\.\.\/(\w+)\//g)].map((m) => m[1]);
-  // A class written out in the code ("dk-btn", or a "dk-btn--" prefix) belongs to the first component in the cascade
+  // A class written out in the code ("srp-btn", or a "srp-btn--" prefix) belongs to the first component in the cascade
   // whose CSS has it: a component's own styles come before the ones that style it in context (index.css).
-  const written = [...new Set([...code.matchAll(/dk-[a-z0-9_-]+/g)].map((m) => m[0]))];
+  const written = [...new Set([...code.matchAll(/srp-[a-z0-9_-]+/g)].map((m) => m[0]))];
   const owners = written.flatMap((w) => IMPORTS.filter((o) => classesOf[o].some((c) => c === w || (w.endsWith('-') && c.startsWith(w)))).slice(0, 1));
   manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && IMPORTS.includes(u)).sort(), classes: classesOf[n] };
 }
@@ -116,7 +116,7 @@ const code = [];
 const scan = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) { if (!(dir === path.join(P, 'src') && /^(blocks|patterns)$/.test(e.name))) scan(f); } else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\.tsx?$/.test(e.name)) code.push(fs.readFileSync(f, 'utf8')); } };
 scan(path.join(P, 'src'));
 // Component classes a utility rule names (the focus ring on a Card inside a fill, GR80) are not utilities.
-const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('dk-')));
+const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('srp-')));
 const runtimeUtilities = [...new Set(code.join('\n').match(/["'`][^"'`\n]*["'`]/g)?.flatMap((q) => q.slice(1, -1).split(/\s+/)) || [])].filter((w) => /^[a-z]/.test(w) && utilityNames.has(w)).sort();
 fs.writeFileSync(path.join(D, 'components.json'), JSON.stringify({ version, runtimeUtilities, components: manifest }, null, 1) + '\n');
 // The versions serupa-create pins in a new app: the ones this release was tested with, from devDependencies, which a

@@ -65,7 +65,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
 
 function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Popover', NAME_HOW.title);   // warns when it has no accessible name
-  const own = domId('dk-pop', React.useId());
+  const own = domId('srp-pop', React.useId());
   const id = props.id || own;
   const [isOpen, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Popover', 'open');
   const open = !!isOpen;
@@ -88,7 +88,7 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
   const mobile = props.sheet === 'mobile';
   const narrow = React.useSyncExternalStore(mobile ? subscribeNarrow : noSubscribe, mobile ? isNarrow : notNarrow, notNarrow);
   const sheet = props.sheet === true || narrow;
-  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: '--dk-popover-offset', onOutside: () => close('outside', false), inside: triggerRef, docked: sheet });
+  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: '--srp-popover-offset', onOutside: () => close('outside', false), inside: triggerRef, docked: sheet });
   // On open, focus moves inside (a press outside the panel and its trigger closes it; focus stays where the press put it).
   useIsoLayoutEffect(() => {
     const panel = panelRef.current;
@@ -141,11 +141,11 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
       {trigger}
       <Panel {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-labelledby={titled ? id + '-title' : props['aria-labelledby']} aria-label={titled ? undefined : props['aria-label']}
-        className={cn('dk-popover', sheet && 'dk-popover--sheet', props.className)} style={props.style} data-component="popover" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
+        className={cn('srp-popover', sheet && 'srp-popover--sheet', props.className)} style={props.style} data-component="popover" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onKeyDown} onBlur={onBlur}>
         {open || exit.leaving ? <>
-          {titled ? <H id={id + '-title'} className="dk-popover__title">{props.title}</H> : null}
-          <span className="dk-popover__body">{content}</span>
+          {titled ? <H id={id + '-title'} className="srp-popover__title">{props.title}</H> : null}
+          <span className="srp-popover__body">{content}</span>
         </> : null}
       </Panel>
     </>

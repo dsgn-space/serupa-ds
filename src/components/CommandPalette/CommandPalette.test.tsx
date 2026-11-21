@@ -30,7 +30,7 @@ describe('CommandPalette', () => {
     const ref = React.createRef<HTMLDialogElement>();
     await render(<CommandPalette id="p" ref={ref} className="extra" data-x="y" defaultOpen commands={COMMANDS} />);
     const d = el('p') as HTMLDialogElement;
-    expect([d.tagName, d.open, ref.current === d, d.classList.contains('dk-command-palette'), d.classList.contains('extra'), d.dataset.x, d.getAttribute('aria-label')])
+    expect([d.tagName, d.open, ref.current === d, d.classList.contains('srp-command-palette'), d.classList.contains('extra'), d.dataset.x, d.getAttribute('aria-label')])
       .toEqual(['DIALOG', true, true, true, true, 'y', 'Command palette']);
     await expect.poll(() => document.activeElement).toBe(field());
     const f = field();
@@ -226,7 +226,7 @@ describe('CommandPalette', () => {
 
   test('how many match is said once typing stops, and "No matching commands" when none do', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
       await render(<SerupaProvider locale="en"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
@@ -251,7 +251,7 @@ describe('CommandPalette', () => {
 
   test('in Indonesian: its name, the field and the count it says come from the id labels', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
       await render(<SerupaProvider locale="id-ID" labels={idLabels}><CommandPalette id="cp" defaultOpen commands={COMMANDS} /></SerupaProvider>);
@@ -263,7 +263,7 @@ describe('CommandPalette', () => {
 
   test('the count it says is in the locale\'s digits and grouping: "١ command" in ar-EG, "1,200 commands" in en-US', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
       const { unmount } = await render(<SerupaProvider locale="ar-EG"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);

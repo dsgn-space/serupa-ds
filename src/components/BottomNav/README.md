@@ -28,13 +28,13 @@ import { BottomNav, BottomNavLink } from "@diki-stwn/serupa-ds";
 
 Drawn from the `WithBadges` story.
 
-1. **Bar** (`.dk-bottom-nav`): the navigation landmark, fixed along the bottom of a narrow screen, clear of a phone's home bar.
-2. **List** (`.dk-bottom-nav__list`): the destinations, side by side in equal widths.
-3. **Link** (`.dk-bottom-nav__link`): one destination; the current page is shaded and has `aria-current="page"`.
-4. **Icon** (`.dk-bottom-nav__icon`): the destination's icon, in a pill that is shaded on the current page.
-5. **Badge** (`.dk-bottom-nav__badge`): an optional count or dot on the icon's top-end corner, such as unread items.
-6. **Label** (`.dk-bottom-nav__label`): the destination's name, always shown under its icon.
-7. **Spacer** (`.dk-bottom-nav__spacer`): holds the bar's height at the end of the page, so the bar never covers the last content.
+1. **Bar** (`.srp-bottom-nav`): the navigation landmark, fixed along the bottom of a narrow screen, clear of a phone's home bar.
+2. **List** (`.srp-bottom-nav__list`): the destinations, side by side in equal widths.
+3. **Link** (`.srp-bottom-nav__link`): one destination; the current page is shaded and has `aria-current="page"`.
+4. **Icon** (`.srp-bottom-nav__icon`): the destination's icon, in a pill that is shaded on the current page.
+5. **Badge** (`.srp-bottom-nav__badge`): an optional count or dot on the icon's top-end corner, such as unread items.
+6. **Label** (`.srp-bottom-nav__label`): the destination's name, always shown under its icon.
+7. **Spacer** (`.srp-bottom-nav__spacer`): holds the bar's height at the end of the page, so the bar never covers the last content.
 
 ## Usage
 

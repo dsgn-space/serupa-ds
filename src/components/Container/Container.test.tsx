@@ -15,7 +15,7 @@ describe('Container', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Wide><Container id="cdef" ref={r} className="extra">x</Container></Wide>);
     const e = el('cdef'), s = css(e);
-    expect([e.tagName, e.className, r.current === e, s.maxWidth, e.dataset.size, e.getBoundingClientRect().width]).toEqual(['DIV', 'dk-container dk-container--xl dk-container--padded extra', true, '1328px', 'xl', 600]);
+    expect([e.tagName, e.className, r.current === e, s.maxWidth, e.dataset.size, e.getBoundingClientRect().width]).toEqual(['DIV', 'srp-container srp-container--xl srp-container--padded extra', true, '1328px', 'xl', 600]);
   });
 
   test('prose: 672px of content (container-2xl), the padding outside it, as main (FF1)', async () => {

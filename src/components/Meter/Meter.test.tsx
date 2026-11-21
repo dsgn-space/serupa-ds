@@ -37,7 +37,7 @@ describe('Meter', () => {
     await render(<Wrap><Meter id="m1" value={72} label="Storage" showValue ref={ref} className="extra" data-x="y" /></Wrap>);
     expect(aria('m1')).toEqual(['72', '0', '100', '72%']);
     expect(document.getElementById(mt('m1').getAttribute('aria-labelledby')!)!.textContent).toBe('Storage');
-    expect([el('m1').getAttribute('role'), ref.current === el('m1'), el('m1').dataset.component, el('m1').dataset.x, el('m1').dataset.state, el('m1').className]).toEqual([null, true, 'meter', 'y', 'none', 'dk-meter dk-meter--size-md extra']);
+    expect([el('m1').getAttribute('role'), ref.current === el('m1'), el('m1').dataset.component, el('m1').dataset.x, el('m1').dataset.state, el('m1').className]).toEqual([null, true, 'meter', 'y', 'none', 'srp-meter srp-meter--size-md extra']);
   });
 
   test('the fill covers 72% of the track; showValue shows "72%"; md is 8px thick and primary without zones; aria-label names it without a label', async () => {
@@ -130,7 +130,7 @@ describe('Meter', () => {
         const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
         for (const [what, r] of [['fill', contrast(fill(id), 'var(--surface)')], ['fill on its track', contrast(fill(id), bg)], ['track edge', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${id} ${what} ${r.toFixed(2)}`); }
       }
-      for (const sel of ['#p .dk-meter__label', '#p .dk-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
+      for (const sel of ['#p .srp-meter__label', '#p .srp-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect([low, n]).toEqual([[], 84]);

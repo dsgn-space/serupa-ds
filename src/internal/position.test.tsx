@@ -82,12 +82,12 @@ describe('place', () => {
     expect(place(at(100, 126), { width: 200, height: 40 }, 'right', 4)).toEqual({ x: 124, y: 93, side: 'right' });
   });
 
-  test('placeLayer: --dk-layer-origin is the point on the edge facing the anchor, level with its centre (EO1)', () => {
+  test('placeLayer: --srp-layer-origin is the point on the edge facing the anchor, level with its centre (EO1)', () => {
     const anchor = document.createElement('button'), layer = document.createElement('div');
     anchor.style.cssText = 'position: fixed; left: 120px; top: 100px; height: 26px; width: 60px';
     layer.style.cssText = 'position: fixed; width: 100px; height: 80px';
     document.body.append(anchor, layer);
-    const origin = (p: string) => { placeLayer(layer, anchor, p, 4); return [layer.dataset.side, layer.style.getPropertyValue('--dk-layer-origin')]; };
+    const origin = (p: string) => { placeLayer(layer, anchor, p, 4); return [layer.dataset.side, layer.style.getPropertyValue('--srp-layer-origin')]; };
     // bottom-start: the layer's left edge is the anchor's, so the anchor's centre is 30px in, on its top edge.
     expect(origin('bottom-start')).toEqual(['bottom', '30px 0px']);
     expect(origin('bottom-end')).toEqual(['bottom', '70px 0px']);

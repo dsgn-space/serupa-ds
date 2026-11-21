@@ -7,7 +7,7 @@ import { EmptyState } from '../EmptyState/EmptyState';
 
 const el = (id: string) => document.getElementById(id) as unknown as SVGSVGElement;
 // The parts, by the class each <path> carries (the picture has no roles inside to find them by).
-const part = (svg: Element, kind: string) => [...svg.querySelectorAll('path')].find((p) => p.getAttribute('class') === 'dk-illustration__' + kind);
+const part = (svg: Element, kind: string) => [...svg.querySelectorAll('path')].find((p) => p.getAttribute('class') === 'srp-illustration__' + kind);
 const NAMES = ['empty', 'search', 'error', 'offline', 'no-access', 'success'] as const;
 
 describe('Illustration', () => {
@@ -15,7 +15,7 @@ describe('Illustration', () => {
     const ref = React.createRef<SVGSVGElement>();
     await render(<Illustration id="x" ref={ref} className="extra" data-x="y" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.getAttribute('class'), e.dataset.x, e.dataset.component, e.dataset.name]).toEqual(['svg', true, 'dk-illustration extra', 'y', 'illustration', 'empty']);
+    expect([e.tagName, ref.current === e, e.getAttribute('class'), e.dataset.x, e.dataset.component, e.dataset.name]).toEqual(['svg', true, 'srp-illustration extra', 'y', 'illustration', 'empty']);
   });
 
   test('is hidden from screen readers by default, and an image with its name given a label', async () => {
@@ -51,6 +51,6 @@ describe('Illustration', () => {
   test('sits in an EmptyState icon slot at its own size, without the circle', async () => {
     await render(<EmptyState id="e" icon={<Illustration id="i" name="search" />} title="No results" />);
     const slot = el('i').parentElement as HTMLElement;
-    expect([slot.classList.contains('dk-empty-state__icon--custom'), slot.getBoundingClientRect().width, css(slot).backgroundColor]).toEqual([true, 160, 'rgba(0, 0, 0, 0)']);
+    expect([slot.classList.contains('srp-empty-state__icon--custom'), slot.getBoundingClientRect().width, css(slot).backgroundColor]).toEqual([true, 160, 'rgba(0, 0, 0, 0)']);
   });
 });

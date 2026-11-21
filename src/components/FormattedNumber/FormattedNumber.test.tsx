@@ -25,7 +25,7 @@ describe('FormattedNumber', () => {
     await render(<SerupaProvider locale="id-ID"><FormattedNumber id="n1" value={1234.5} ref={ref} className="extra" data-x="y" /></SerupaProvider>);
     const n = el('n1');
     expect([n.tagName, n.textContent, n.value, ref.current === n, n.className, n.dataset.x, n.dataset.component, n.dataset.format, n.hasAttribute('title')])
-      .toEqual(['DATA', '1.234,5', '1234.5', true, 'dk-formatted-number extra', 'y', 'formatted-number', 'decimal', false]);
+      .toEqual(['DATA', '1.234,5', '1234.5', true, 'srp-formatted-number extra', 'y', 'formatted-number', 'decimal', false]);
   });
 
   // IDR shows no decimals in every engine (currency.ts pins it); WebKit's own default for IDR is two.
@@ -150,7 +150,7 @@ describe('FormattedNumber: animate', () => {
     await rerender(<FormattedNumber id="a2" value={13} locale="en-US" animate className="x" />);
     const span = el('a2').querySelector('[data-changed]');
     await rerender(<FormattedNumber id="a2" value={13} locale="en-US" animate className="y" />);
-    expect([span?.isConnected, el('a2').querySelector('[data-changed]') === span, el('a2').className]).toEqual([true, true, 'dk-formatted-number y']);
+    expect([span?.isConnected, el('a2').querySelector('[data-changed]') === span, el('a2').className]).toEqual([true, true, 'srp-formatted-number y']);
 
     const plain = await render(<FormattedNumber id="a3" value={1} locale="en-US" />);
     await plain.rerender(<FormattedNumber id="a3" value={2} locale="en-US" />);
@@ -164,7 +164,7 @@ describe('FormattedNumber: animate', () => {
     const span = el('a4').querySelector('[data-changed]') as HTMLElement;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const [display, name] = withMotion(() => { const s = getComputedStyle(span); return [s.display, s.animationName]; });
-    expect([display, name]).toEqual(['inline', reduced ? 'none' : 'dk-formatted-number-change']);
+    expect([display, name]).toEqual(['inline', reduced ? 'none' : 'srp-formatted-number-change']);
   });
 
   test('in a right-to-left page, English units keep their own order: "50 km/h", not "km/h 50"', async () => {

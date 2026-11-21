@@ -26,7 +26,7 @@ describe('ButtonGroup', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<ButtonGroup id="gatt" aria-label="View" ref={ref} className="extra"><Button variant="outline">Day</Button></ButtonGroup>);
     const e = el('gatt');
-    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.className, e.dataset.component]).toEqual(['group', 'View', 'dk-button-group dk-button-group--attached extra', 'button-group']);
+    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.className, e.dataset.component]).toEqual(['group', 'View', 'srp-button-group srp-button-group--attached extra', 'button-group']);
     expect(ref.current).toBe(e);
   });
 
@@ -93,11 +93,11 @@ describe('ButtonGroup', () => {
     const kids = [...g.children] as HTMLElement[];
     expect([document.documentElement.scrollWidth <= 320, g.getBoundingClientRect().width <= 288, kids.every((k) => k.scrollWidth <= k.clientWidth + 1)]).toEqual([true, true, true]);
     expect(new Set(kids.map((k) => Math.round(k.getBoundingClientRect().top))).size).toBeGreaterThan(1);   // more than one line
-    expect([g.classList.contains('dk-button-group--attached'), corners(kids[1]!) === corners(kids[0]!)]).toEqual([false, true]);   // separate buttons, every corner rounded
+    expect([g.classList.contains('srp-button-group--attached'), corners(kids[1]!) === corners(kids[0]!)]).toEqual([false, true]);   // separate buttons, every corner rounded
     await rerender(<div style={{ width: '600px' }}><ButtonGroup id="gw" aria-label="Format">{labels.map((t) => <Button key={t} variant="outline">{t}</Button>)}</ButtonGroup></div>);
     await page.viewport(800, 640);
     await expect.poll(() => g.hasAttribute('data-wrapped')).toBe(false);
-    expect([g.classList.contains('dk-button-group--attached'), new Set(kids.map((k) => Math.round(k.getBoundingClientRect().top))).size]).toEqual([true, 1]);
+    expect([g.classList.contains('srp-button-group--attached'), new Set(kids.map((k) => Math.round(k.getBoundingClientRect().top))).size]).toEqual([true, 1]);
   });
 
   test('two attached primary buttons have an edge between them, in their text color, in every theme; outline buttons keep their shared border (EL1)', async () => {

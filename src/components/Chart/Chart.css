@@ -5,55 +5,55 @@
    paint, and both stand still with reduced motion. The focused point gets the focus ring's color around it. Every
    other value reads one of its own tokens (chart.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-chart {
+@layer srp.components {
+.srp-chart {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
   gap: var(--chart-gap-size, var(--spacing-2)) var(--spacing-3);
   margin: 0; min-inline-size: 0; color: var(--chart-text, var(--text));
   /* Numbers the parts share, in one place: the grid's columns, the line's drawn length (its pathLength is 1), the
      dash of the hover cursor, the ring around a marker (half a focus width) and when the markers come in. */
-  --dk-chart-start: 1; --dk-chart-end: 2; --dk-chart-all: 1 / -1; --dk-chart-span: span 2;
-  --dk-chart-path: 1; --dk-chart-dash: 2 3; --dk-chart-ring: calc(var(--stroke-width-3) / 2);
-  --dk-chart-marker-delay: calc(var(--motion-enter-lg) * 0.6);
+  --srp-chart-start: 1; --srp-chart-end: 2; --srp-chart-all: 1 / -1; --srp-chart-span: span 2;
+  --srp-chart-path: 1; --srp-chart-dash: 2 3; --srp-chart-ring: calc(var(--stroke-width-3) / 2);
+  --srp-chart-marker-delay: calc(var(--motion-enter-lg) * 0.6);
 }
-.dk-chart__title { text-wrap: balance; grid-column: var(--dk-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
-.dk-chart__toggle { grid-column: var(--dk-chart-end); justify-self: end; }
-.dk-chart__frame, .dk-chart__table, .dk-chart__legend, .dk-chart > .dk-table-wrap { grid-column: var(--dk-chart-all); }
-.dk-chart__frame { position: relative; min-inline-size: 0; }
+.srp-chart__title { text-wrap: balance; grid-column: var(--srp-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
+.srp-chart__toggle { grid-column: var(--srp-chart-end); justify-self: end; }
+.srp-chart__frame, .srp-chart__table, .srp-chart__legend, .srp-chart > .srp-table-wrap { grid-column: var(--srp-chart-all); }
+.srp-chart__frame { position: relative; min-inline-size: 0; }
 /* Before the first numbers: one placeholder block as tall as the plot (Chart sets its height). */
-.dk-chart__placeholder > .dk-loader { block-size: var(--sizing-full); }
+.srp-chart__placeholder > .srp-loader { block-size: var(--sizing-full); }
 /* The plot lays itself out in page order, so its own direction stays left to right (labels keep their own). */
-.dk-chart__plot { display: block; inline-size: var(--sizing-full); overflow: visible; direction: ltr; touch-action: pan-y; }
-.dk-chart__plot:focus { outline: none; }
-.dk-chart__label { fill: var(--chart-label-text, var(--chart-label)); font-size: var(--text-xs); font-variant-numeric: tabular-nums; unicode-bidi: plaintext; }
-.dk-chart__gridline { stroke: var(--chart-grid-line, var(--chart-grid)); stroke-width: var(--stroke-width-1); shape-rendering: crispEdges; }
-.dk-chart__zero, .dk-chart__baseline { stroke: var(--chart-axis-line, var(--chart-axis)); stroke-width: var(--stroke-width-1); shape-rendering: crispEdges; }
-.dk-chart__cursor { stroke: var(--chart-axis-line, var(--chart-axis)); stroke-width: var(--stroke-width-1); stroke-dasharray: var(--dk-chart-dash); pointer-events: none; }
+.srp-chart__plot { display: block; inline-size: var(--sizing-full); overflow: visible; direction: ltr; touch-action: pan-y; }
+.srp-chart__plot:focus { outline: none; }
+.srp-chart__label { fill: var(--chart-label-text, var(--chart-label)); font-size: var(--text-xs); font-variant-numeric: tabular-nums; unicode-bidi: plaintext; }
+.srp-chart__gridline { stroke: var(--chart-grid-line, var(--chart-grid)); stroke-width: var(--stroke-width-1); shape-rendering: crispEdges; }
+.srp-chart__zero, .srp-chart__baseline { stroke: var(--chart-axis-line, var(--chart-axis)); stroke-width: var(--stroke-width-1); shape-rendering: crispEdges; }
+.srp-chart__cursor { stroke: var(--chart-axis-line, var(--chart-axis)); stroke-width: var(--stroke-width-1); stroke-dasharray: var(--srp-chart-dash); pointer-events: none; }
 
-.dk-chart--s1 { --dk-chart-color: var(--chart-series-1, var(--chart-1)); } .dk-chart--s2 { --dk-chart-color: var(--chart-series-2, var(--chart-2)); }
-.dk-chart--s3 { --dk-chart-color: var(--chart-series-3, var(--chart-3)); } .dk-chart--s4 { --dk-chart-color: var(--chart-series-4, var(--chart-4)); }
-.dk-chart--s5 { --dk-chart-color: var(--chart-series-5, var(--chart-5)); } .dk-chart--s6 { --dk-chart-color: var(--chart-series-6, var(--chart-6)); }
-.dk-chart--s7 { --dk-chart-color: var(--chart-series-7, var(--chart-7)); } .dk-chart--s8 { --dk-chart-color: var(--chart-series-8, var(--chart-8)); }
-.dk-chart__line { fill: none; stroke: var(--dk-chart-color); stroke-width: var(--chart-line-width, var(--stroke-width-2)); stroke-linejoin: round; stroke-linecap: round; }
+.srp-chart--s1 { --srp-chart-color: var(--chart-series-1, var(--chart-1)); } .srp-chart--s2 { --srp-chart-color: var(--chart-series-2, var(--chart-2)); }
+.srp-chart--s3 { --srp-chart-color: var(--chart-series-3, var(--chart-3)); } .srp-chart--s4 { --srp-chart-color: var(--chart-series-4, var(--chart-4)); }
+.srp-chart--s5 { --srp-chart-color: var(--chart-series-5, var(--chart-5)); } .srp-chart--s6 { --srp-chart-color: var(--chart-series-6, var(--chart-6)); }
+.srp-chart--s7 { --srp-chart-color: var(--chart-series-7, var(--chart-7)); } .srp-chart--s8 { --srp-chart-color: var(--chart-series-8, var(--chart-8)); }
+.srp-chart__line { fill: none; stroke: var(--srp-chart-color); stroke-width: var(--chart-line-width, var(--stroke-width-2)); stroke-linejoin: round; stroke-linecap: round; }
 /* Markers and bars sit on a ring of the gap color, so neighbours never touch (CH1: they're 1.7:1 apart, the gap 3:1). */
-.dk-chart__marker, .dk-chart__bar:not([fill]) { fill: var(--dk-chart-color); }
-.dk-chart__marker, .dk-chart__bar { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--dk-chart-ring); paint-order: stroke; }
-.dk-chart__bar { stroke-width: var(--stroke-width-1); }
-.dk-chart__pattern-fill { fill: var(--dk-chart-color); }
+.srp-chart__marker, .srp-chart__bar:not([fill]) { fill: var(--srp-chart-color); }
+.srp-chart__marker, .srp-chart__bar { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--srp-chart-ring); paint-order: stroke; }
+.srp-chart__bar { stroke-width: var(--stroke-width-1); }
+.srp-chart__pattern-fill { fill: var(--srp-chart-color); }
 /* An area is its series' color, faint, under the line; stacked ones meet without overlapping. */
-.dk-chart__area { fill: var(--dk-chart-color); fill-opacity: var(--opacity-20); stroke: none; pointer-events: none; }
+.srp-chart__area { fill: var(--srp-chart-color); fill-opacity: var(--opacity-20); stroke: none; pointer-events: none; }
 /* A donut's slices, a gap of the gap color between neighbours, and the total in the middle. */
-.dk-chart__slice:not([fill]) { fill: var(--dk-chart-color); }
-.dk-chart__slice { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
-.dk-chart__total { fill: var(--chart-text, var(--text)); font-size: var(--text-sm); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
-.dk-chart__key-value { font-variant-numeric: tabular-nums; }
-.dk-chart__pattern-mark { fill: var(--chart-separator, var(--surface-behind, var(--chart-gap))); }
-.dk-chart__point { cursor: default; }
-.dk-chart__marker[data-active] { stroke-width: var(--stroke-width-3); }
-.dk-chart__point:focus { outline: none; }
-.dk-chart__focus { fill: none; stroke: var(--chart-focus-ring, var(--focus-ring)); stroke-width: var(--chart-focus-width, var(--stroke-width-3)); pointer-events: none; }
+.srp-chart__slice:not([fill]) { fill: var(--srp-chart-color); }
+.srp-chart__slice { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
+.srp-chart__total { fill: var(--chart-text, var(--text)); font-size: var(--text-sm); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+.srp-chart__key-value { font-variant-numeric: tabular-nums; }
+.srp-chart__pattern-mark { fill: var(--chart-separator, var(--surface-behind, var(--chart-gap))); }
+.srp-chart__point { cursor: default; }
+.srp-chart__marker[data-active] { stroke-width: var(--stroke-width-3); }
+.srp-chart__point:focus { outline: none; }
+.srp-chart__focus { fill: none; stroke: var(--chart-focus-ring, var(--focus-ring)); stroke-width: var(--chart-focus-width, var(--stroke-width-3)); pointer-events: none; }
 
-.dk-chart__tip {
+.srp-chart__tip {
   position: absolute; inset-block-start: 0; z-index: var(--z-10); pointer-events: none;
   display: grid; grid-template-columns: auto auto auto; gap: var(--spacing-0\.5) var(--spacing-2); align-items: center;
   padding: var(--spacing-2) var(--spacing-3); max-inline-size: min(var(--container-3xs), var(--sizing-full));
@@ -62,41 +62,41 @@
   box-shadow: var(--chart-tip-shadow, var(--elevation-raised));
   font-size: var(--text-xs); line-height: var(--leading-4); overflow-wrap: anywhere;
 }
-.dk-chart__tip-title { grid-column: var(--dk-chart-all); font-weight: var(--font-semibold); }
-.dk-chart__tip-row { display: contents; }
-.dk-chart__tip-name { color: var(--chart-tip-muted, var(--text-muted)); }
-.dk-chart__tip-row:not(:has(.dk-chart__tip-name)) .dk-chart__tip-value { grid-column: var(--dk-chart-span); }
-.dk-chart__tip-value { font-variant-numeric: tabular-nums; text-align: end; white-space: nowrap; }
-.dk-chart__tip-row--focus > * { font-weight: var(--font-semibold); color: var(--chart-tip-text, var(--text)); }
-.dk-chart__swatch { display: inline-block; flex: none; overflow: visible; }
+.srp-chart__tip-title { grid-column: var(--srp-chart-all); font-weight: var(--font-semibold); }
+.srp-chart__tip-row { display: contents; }
+.srp-chart__tip-name { color: var(--chart-tip-muted, var(--text-muted)); }
+.srp-chart__tip-row:not(:has(.srp-chart__tip-name)) .srp-chart__tip-value { grid-column: var(--srp-chart-span); }
+.srp-chart__tip-value { font-variant-numeric: tabular-nums; text-align: end; white-space: nowrap; }
+.srp-chart__tip-row--focus > * { font-weight: var(--font-semibold); color: var(--chart-tip-text, var(--text)); }
+.srp-chart__swatch { display: inline-block; flex: none; overflow: visible; }
 
-.dk-chart__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: 0; padding: 0; list-style: none; font-size: var(--text-xs); line-height: var(--leading-4); color: var(--chart-label-text, var(--chart-label)); }
+.srp-chart__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: 0; padding: 0; list-style: none; font-size: var(--text-xs); line-height: var(--leading-4); color: var(--chart-label-text, var(--chart-label)); }
 /* The legend's line while the first numbers load, so the chart's height doesn't change when they arrive. */
-.dk-chart__legend--waiting { min-block-size: var(--leading-4); }
-.dk-chart__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.srp-chart__legend--waiting { min-block-size: var(--leading-4); }
+.srp-chart__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Once, on the first paint: the line draws from its start, its markers and the bars come in after. These are
      inside an SVG, whose parts the browser paints whatever moves them (only the outer svg can get its own layer), so a
      clip or a scale would cost the same as the dash; they run once, on a small box, and never under reduced motion. */
-  .dk-chart__plot .dk-chart__line { stroke-dasharray: var(--dk-chart-path) var(--dk-chart-path); animation: dk-chart-draw var(--motion-enter-lg) var(--ease-enter) both; }
-  .dk-chart__plot .dk-chart__marker { animation: dk-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--dk-chart-marker-delay); }
-  .dk-chart__plot .dk-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: dk-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
-  .dk-chart__plot .dk-chart__bar--neg { transform-origin: var(--sizing-1-2) 0; }
-  .dk-chart__plot .dk-chart__area, .dk-chart__plot .dk-chart__slice { animation: dk-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
-  .dk-chart__tip { animation: dk-chart-fade var(--motion-enter-sm) var(--ease-enter); }
-  .dk-chart__marker { transition: stroke-width var(--motion-hover) var(--ease-move); }
+  .srp-chart__plot .srp-chart__line { stroke-dasharray: var(--srp-chart-path) var(--srp-chart-path); animation: srp-chart-draw var(--motion-enter-lg) var(--ease-enter) both; }
+  .srp-chart__plot .srp-chart__marker { animation: srp-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--srp-chart-marker-delay); }
+  .srp-chart__plot .srp-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: srp-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
+  .srp-chart__plot .srp-chart__bar--neg { transform-origin: var(--sizing-1-2) 0; }
+  .srp-chart__plot .srp-chart__area, .srp-chart__plot .srp-chart__slice { animation: srp-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
+  .srp-chart__tip { animation: srp-chart-fade var(--motion-enter-sm) var(--ease-enter); }
+  .srp-chart__marker { transition: stroke-width var(--motion-hover) var(--ease-move); }
 }
-@keyframes dk-chart-draw { from { stroke-dashoffset: var(--dk-chart-path); } to { stroke-dashoffset: 0; } }
-@keyframes dk-chart-fade { from { opacity: 0; } }
-@keyframes dk-chart-grow { from { scale: var(--scale-100) var(--scale-0); } }
+@keyframes srp-chart-draw { from { stroke-dashoffset: var(--srp-chart-path); } to { stroke-dashoffset: 0; } }
+@keyframes srp-chart-fade { from { opacity: 0; } }
+@keyframes srp-chart-grow { from { scale: var(--scale-100) var(--scale-0); } }
 
 @media (forced-colors: active) {
-  .dk-chart__focus { stroke: Highlight; }
-  .dk-chart__tip { border-color: CanvasText; }
+  .srp-chart__focus { stroke: Highlight; }
+  .srp-chart__tip { border-color: CanvasText; }
 }
 @media print {
-  .dk-chart { print-color-adjust: exact; break-inside: avoid; }
-  .dk-chart__toggle, .dk-chart__tip, .dk-chart__cursor { display: none; }
+  .srp-chart { print-color-adjust: exact; break-inside: avoid; }
+  .srp-chart__toggle, .srp-chart__tip, .srp-chart__cursor { display: none; }
 }
 }

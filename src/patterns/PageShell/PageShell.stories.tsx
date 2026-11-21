@@ -43,7 +43,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
     <div className="min-h-screen bg-surface text-text">
       {/* The Sidebar stays beside main and below the bar while the page scrolls, and gives its room to main on a phone,
           where the Navbar's menu has the same links under "Workspace". */}
-      <style>{`.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: ${phone}) { .page-shell__side { display: none; } } @media (min-width: calc(${phone} + 0.01rem)) { .page-shell__phone { display: none; } }`}</style>
+      <style>{`.page-shell__side { position: sticky; top: var(--srp-navbar-offset, 0px); height: calc(100vh - var(--srp-navbar-offset, 0px)); } @media (max-width: ${phone}) { .page-shell__side { display: none; } } @media (min-width: calc(${phone} + 0.01rem)) { .page-shell__phone { display: none; } }`}</style>
       <SkipLink />
       <Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}

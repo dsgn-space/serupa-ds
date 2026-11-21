@@ -27,11 +27,11 @@ import { CopyButton } from "@diki-stwn/serupa-ds";
 
 Drawn from the `VariantsAndSizes` story.
 
-1. **Icons** (`.dk-copy-btn__icons`): the copy icon and, in the same place, the check that replaces it once copied.
-2. **Copy icon** (`.dk-copy-btn__icon--copy`): shown until a copy.
-3. **Copied icon** (`.dk-copy-btn__icon--done`): shown for a moment after a copy.
-4. **Failed icon** (`.dk-copy-btn__icon--failed`): shown instead when the browser refused.
-5. **Labels** (`.dk-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one. "Couldn’t copy" joins them only while it shows.
+1. **Icons** (`.srp-copy-btn__icons`): the copy icon and, in the same place, the check that replaces it once copied.
+2. **Copy icon** (`.srp-copy-btn__icon--copy`): shown until a copy.
+3. **Copied icon** (`.srp-copy-btn__icon--done`): shown for a moment after a copy.
+4. **Failed icon** (`.srp-copy-btn__icon--failed`): shown instead when the browser refused.
+5. **Labels** (`.srp-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one. "Couldn’t copy" joins them only while it shows.
 
 ## Usage
 
@@ -78,7 +78,7 @@ Drawn from the `VariantsAndSizes` story.
 | `onCopyError` | `(error) => void` | | When copying fails (it also shows and says so). |
 | `variant`, `size` | as Button | `'outline'`, `'sm'` | |
 
-Every other [Button](../Button/README.md) prop and `ref` go to the `<button>`, which has `data-component="button"`, the `dk-copy-btn` class, `data-copied` while it shows "Copied", and `data-failed` while it shows "Couldn’t copy".
+Every other [Button](../Button/README.md) prop and `ref` go to the `<button>`, which has `data-component="button"`, the `srp-copy-btn` class, `data-copied` while it shows "Copied", and `data-failed` while it shows "Couldn’t copy".
 
 ## Component tokens
 

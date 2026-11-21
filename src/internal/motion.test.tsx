@@ -39,11 +39,11 @@ const KNOWN: Record<Rule, Record<string, [string, string[]]>> = {
 };
 // Keyframes that may run once: what appears and can't be taken back mid-way, so there is nothing to reverse.
 // Chart's data draws in once, on its first paint: the line, its markers and the bars (a hover tip fades in the same way).
-const ONCE = new Set(['dk-loader-in', 'dk-btn-loader-in', 'dk-badge-loader-in', 'dk-chart-draw', 'dk-chart-fade', 'dk-chart-grow']);
+const ONCE = new Set(['srp-loader-in', 'srp-btn-loader-in', 'srp-badge-loader-in', 'srp-chart-draw', 'srp-chart-fade', 'srp-chart-grow']);
 // Layout a component animates on purpose, by the animation's id, and why: where the jump it saves reads as a glitch,
 // and it's one small element while it moves. Only Web Animations a component starts itself, never a stylesheet's.
 const LAYOUT_OK: Record<string, string> = {
-  'dk-accordion-height': "Accordion's panel height (EH2, revised): without it, everything below jumps in one frame",
+  'srp-accordion-height': "Accordion's panel height (EH2, revised): without it, everything below jumps in one frame",
 };
 const COMPOSITOR = /^(opacity|transform|translate|scale|rotate|filter|backdrop-filter|clip-path)$/;
 const DISCRETE = /^(visibility|display|overlay|content-visibility|pointer-events)$/;
@@ -119,7 +119,7 @@ function transitions(css: string): Array<[string, string, string[]]> {
 }
 
 const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-const inside = (host: Element) => document.getAnimations().filter((a) => { const t = target(a); return !!t && (host.contains(t) || !document.body.contains(t) || !host.isConnected || t.closest('[data-dk-portal], [popover], dialog') !== null); });
+const inside = (host: Element) => document.getAnimations().filter((a) => { const t = target(a); return !!t && (host.contains(t) || !document.body.contains(t) || !host.isConnected || t.closest('[data-srp-portal], [popover], dialog') !== null); });
 const $ = (host: Element, sel: string) => host.querySelector<HTMLElement>(sel);
 // What a person does to each part that moves when they use it.
 const INTERACT: Record<string, (host: HTMLElement) => Promise<void>> = {

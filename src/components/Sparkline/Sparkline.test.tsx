@@ -8,7 +8,7 @@ import { SerupaProvider } from '../../internal/provider';
 
 const el = (id: string) => document.getElementById(id) as unknown as SVGSVGElement;
 // The parts, by the class each <path> carries (the drawing has no roles inside to find them by).
-const part = (svg: Element, kind: string) => [...svg.querySelectorAll('path')].find((p) => p.getAttribute('class') === 'dk-sparkline__' + kind);
+const part = (svg: Element, kind: string) => [...svg.querySelectorAll('path')].find((p) => p.getAttribute('class') === 'srp-sparkline__' + kind);
 const points = (d: string) => [...d.matchAll(/[ML]([\d.]+) ([\d.]+)/g)].map((m) => [Number(m[1]), Number(m[2])]);
 
 describe('Sparkline', () => {
@@ -16,7 +16,7 @@ describe('Sparkline', () => {
     const ref = React.createRef<SVGSVGElement>();
     await render(<Sparkline id="x" ref={ref} className="extra" data-x="y" data={[1, 2]} label="Visits" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.getAttribute('class'), e.dataset.x, e.dataset.component]).toEqual(['svg', true, 'dk-sparkline extra', 'y', 'sparkline']);
+    expect([e.tagName, ref.current === e, e.getAttribute('class'), e.dataset.x, e.dataset.component]).toEqual(['svg', true, 'srp-sparkline extra', 'y', 'sparkline']);
   });
 
   test('is an image named by its label and its first, last, low and high values', async () => {

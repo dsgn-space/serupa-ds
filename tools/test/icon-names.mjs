@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
 await p.goto(writePage('icon-names.html', APP, { react: true }));
 await p.evaluate(() => document.fonts.load('24px "Source"'));
 await p.waitForTimeout(300);
-const drawn = await p.evaluate(() => [...document.querySelectorAll('.dk-icon[data-icon]')].filter((e) => e.querySelector('svg path')).map((e) => e.dataset.icon));
+const drawn = await p.evaluate(() => [...document.querySelectorAll('.srp-icon[data-icon]')].filter((e) => e.querySelector('svg path')).map((e) => e.dataset.icon));
 const missing = names.filter((n) => !drawn.includes(n));
 const iife = read('dist/serupa.iife.js'), table = read('dist/serupa-icons.iife.js');
 t('serupa.iife.js leaves the full table to serupa-icons.iife.js (it has "sports_cricket", serupa.iife.js does not)', !iife.includes('"sports_cricket"') && table.includes('"sports_cricket"'));
@@ -69,7 +69,7 @@ if (ENGINE === 'chromium') t('each icon draws exactly as the 5.x icon font did',
 
 const one = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);
-  return { data: [q('#data').dataset.icon, !!q('#data svg path')], btn: !!q('#btn .dk-btn__icon svg path'), reg: !!q('#reg svg path'), unknown: [q('#unknown').dataset.icon, !!q('#unknown svg'), q('#unknown').getBoundingClientRect().width] };
+  return { data: [q('#data').dataset.icon, !!q('#data svg path')], btn: !!q('#btn .srp-btn__icon svg path'), reg: !!q('#reg svg path'), unknown: [q('#unknown').dataset.icon, !!q('#unknown svg'), q('#unknown').getBoundingClientRect().width] };
 });
 t('icon={…} (an import from serupa-ds/icons) draws it, and Button leftIcon takes one too', one.data[0] === 'test_imported' && one.data[1] && one.btn, JSON.stringify(one));
 t('registerIcons() makes a name work', one.reg);

@@ -18,7 +18,7 @@ function DividerRender({ ref, ...props }: DividerProps & React.RefAttributes<HTM
   const rest = omit(props, { orientation: 1, label: 1, decorative: 1, onMedia: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
   const label = props.label != null && props.label !== false && props.label !== '' && !vertical ? props.label : null;
-  const cls = cn('dk-divider', vertical && 'dk-divider--vertical', label != null && 'dk-divider--label', (props.onMedia === 'dark' || props.onMedia === 'light') && 'dk-divider--on-' + props.onMedia, props.className);
+  const cls = cn('srp-divider', vertical && 'srp-divider--vertical', label != null && 'srp-divider--label', (props.onMedia === 'dark' || props.onMedia === 'light') && 'srp-divider--on-' + props.onMedia, props.className);
   const a11y: React.AriaAttributes & { role?: React.AriaRole; 'aria-label'?: string } = props.decorative ? { role: 'none', 'aria-hidden': true } : { role: 'separator', 'aria-orientation': vertical ? 'vertical' : undefined };
   // A separator's children are presentational, so screen readers skip a label inside one. A text label names the
   // separator instead; any other label stays plain text between two lines that are only drawn.
@@ -27,7 +27,7 @@ function DividerRender({ ref, ...props }: DividerProps & React.RefAttributes<HTM
     else { delete a11y.role; }
   }
   if (label == null && !vertical) return <hr {...rest} {...a11y} ref={ref as React.Ref<HTMLHRElement>} className={cls} data-component="divider" role={props.decorative ? 'none' : undefined} />;
-  return <div {...rest} {...a11y} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="divider">{label != null ? <span className="dk-divider__label">{label}</span> : null}</div>;
+  return <div {...rest} {...a11y} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="divider">{label != null ? <span className="srp-divider__label">{label}</span> : null}</div>;
 }
 
 /* Divider: a 1px line between content, horizontal (an <hr>) or vertical, with an optional label in the middle.

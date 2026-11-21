@@ -29,8 +29,8 @@ maskValue("4111111111111208")   // "•••• 1208", the same text outside Re
 
 Drawn from the `Revealable` story.
 
-1. **Show button** (`.dk-masked-value__toggle`): with `revealable`, an IconButton before the value that shows and hides it. It comes first so it stays put as the value appears.
-2. **Value** (`.dk-masked-value__text`): the kept characters after four bullets, or the whole value once shown. Hidden from screen readers while masked.
+1. **Show button** (`.srp-masked-value__toggle`): with `revealable`, an IconButton before the value that shows and hides it. It comes first so it stays put as the value appears.
+2. **Value** (`.srp-masked-value__text`): the kept characters after four bullets, or the whole value once shown. Hidden from screen readers while masked.
 
 ## Usage
 

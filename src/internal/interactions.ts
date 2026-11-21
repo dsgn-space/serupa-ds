@@ -18,7 +18,7 @@ export function both<E extends React.SyntheticEvent>(a: Handler<E> | undefined, 
 }
 
 function inactive(el: HTMLElement): boolean {
-  return (el as HTMLButtonElement).disabled || el.getAttribute('aria-disabled') === 'true' || el.classList.contains('dk-btn--link');
+  return (el as HTMLButtonElement).disabled || el.getAttribute('aria-disabled') === 'true' || el.classList.contains('srp-btn--link');
 }
 
 // Enter presses like Space does (Space already sets :active): data-pressed while the key is down.

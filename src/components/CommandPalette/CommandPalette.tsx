@@ -151,7 +151,7 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   const usable = groups.flatMap(([, rs]) => rs).filter((r) => !r.c.disabled);   // in the order listed, which is the arrows' order
   const current = usable[Math.min(active, usable.length - 1)] ?? null;
 
-  const base = domId('dk-cmdk', React.useId());
+  const base = domId('srp-cmdk', React.useId());
   const optId = (r: Row) => base + '-opt-' + r.i;
   const list = React.useRef<HTMLDivElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
@@ -207,22 +207,22 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   };
 
   return (
-    <Dialog {...rest} ref={ref} className={cn('dk-command-palette', props.className)} aria-label={rest['aria-label'] || labels.commandPalette}
+    <Dialog {...rest} ref={ref} className={cn('srp-command-palette', props.className)} aria-label={rest['aria-label'] || labels.commandPalette}
       open={open} onOpenChange={change} closeButton={false} initialFocus={field} closeOnBackdrop={props.closeOnBackdrop} finalFocus={props.finalFocus}>
-      <input ref={field} className="dk-command-palette__field" type="text" role="combobox" aria-expanded="true" aria-controls={base + '-list'}
+      <input ref={field} className="srp-command-palette__field" type="text" role="combobox" aria-expanded="true" aria-controls={base + '-list'}
         aria-autocomplete="list" aria-activedescendant={currentId || undefined} aria-label={props.placeholder || labels.searchCommands}
         placeholder={props.placeholder || labels.searchCommands} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
         value={query} onChange={(e) => { setQuery(e.currentTarget.value); setActive(0); }} onKeyDown={onKeyDown} />
-      <div ref={list} id={base + '-list'} role="listbox" aria-label={labels.commandPalette} aria-busy={loading || undefined} className="dk-command-palette__list">
+      <div ref={list} id={base + '-list'} role="listbox" aria-label={labels.commandPalette} aria-busy={loading || undefined} className="srp-command-palette__list">
         {groups.map(([name, rs], g) => (
-          <div key={name} role="group" aria-labelledby={base + '-g' + g} className="dk-command-palette__group">
-            <div id={base + '-g' + g} role="presentation" className="dk-command-palette__heading">{name}</div>
+          <div key={name} role="group" aria-labelledby={base + '-g' + g} className="srp-command-palette__group">
+            <div id={base + '-g' + g} role="presentation" className="srp-command-palette__heading">{name}</div>
             {rs.map((r) => <Option key={r.c.id} r={r} id={optId(r)} on={current === r} query={query} act={act} />)}
           </div>
         ))}
       </div>
-      {loading ? <p className="dk-command-palette__empty dk-command-palette__loading" role="status"><LoaderRing size="sm" />{props.loadingText || labels.loading}</p> : null}
-      {!usable.length && query.trim() && !loading ? <p className="dk-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
+      {loading ? <p className="srp-command-palette__empty srp-command-palette__loading" role="status"><LoaderRing size="sm" />{props.loadingText || labels.loading}</p> : null}
+      {!usable.length && query.trim() && !loading ? <p className="srp-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
     </Dialog>
   );
 }
@@ -246,17 +246,17 @@ const Option = /* @__PURE__ */ React.memo(function Option({ r, id, on, query, ac
     // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen reader can, is
     // chosen with Enter or Space.
     <div id={id} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined} aria-describedby={r.c.description ? `${id}-d` : undefined}
-      className={cn('dk-command-palette__option', on && 'dk-command-palette__option--active', r.c.disabled && 'dk-command-palette__option--disabled')}
+      className={cn('srp-command-palette__option', on && 'srp-command-palette__option--active', r.c.disabled && 'srp-command-palette__option--disabled')}
       onMouseDown={(e) => e.preventDefault()} onMouseMove={() => act.hover(r)} onClick={() => act.choose(r)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act.choose(r); } }}>
-      {r.c.icon != null ? <span className="dk-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
+      {r.c.icon != null ? <span className="srp-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
       {r.c.description ? (
-        <span className="dk-command-palette__text">
-          <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
-          <span id={`${id}-d`} className="dk-command-palette__description">{r.c.description}</span>
+        <span className="srp-command-palette__text">
+          <Highlight className="srp-command-palette__label" query={query}>{r.c.label}</Highlight>
+          <span id={`${id}-d`} className="srp-command-palette__description">{r.c.description}</span>
         </span>
-      ) : <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>}
-      {r.c.shortcut && r.c.shortcut.length ? <Kbd className="dk-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
+      ) : <Highlight className="srp-command-palette__label" query={query}>{r.c.label}</Highlight>}
+      {r.c.shortcut && r.c.shortcut.length ? <Kbd className="srp-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
     </div>
   );
 });

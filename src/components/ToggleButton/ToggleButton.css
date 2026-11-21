@@ -4,24 +4,24 @@
    the highlight fill with muted text and, for outline, the control border. It still reads as on beside the off
    ones, and no longer looks like something to press.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-toggle-button.dk-toggle-button--pressed {
+@layer srp.components {
+.srp-toggle-button.srp-toggle-button--pressed {
   background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary));
 }
 @media (hover: hover) {
-  .dk-toggle-button.dk-toggle-button--pressed:hover:not(:disabled, [aria-disabled="true"]) {
+  .srp-toggle-button.srp-toggle-button--pressed:hover:not(:disabled, [aria-disabled="true"]) {
     background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary));
   }
 }
-.dk-toggle-button.dk-btn--outline.dk-toggle-button--pressed { border-color: var(--toggle-button-border-pressed, var(--primary)); }
+.srp-toggle-button.srp-btn--outline.srp-toggle-button--pressed { border-color: var(--toggle-button-border-pressed, var(--primary)); }
 /* Held down, an on toggle takes a step past its fill, as every Button variant does (Button's held fills). */
-.dk-toggle-button.dk-toggle-button--pressed:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) {
+.srp-toggle-button.srp-toggle-button--pressed:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) {
   background: var(--toggle-button-bg-pressed-held, var(--primary-subtle-pressed)); color: var(--toggle-button-text-pressed-held, var(--primary-hover));
 }
-.dk-toggle-button.dk-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) {
+.srp-toggle-button.srp-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) {
   background: var(--toggle-button-bg-pressed-disabled, var(--highlight)); color: var(--toggle-button-text-pressed-disabled, var(--text-muted));
-  --dk-btn-depth: var(--shadow-none);
+  --srp-btn-depth: var(--shadow-none);
 }
-.dk-toggle-button.dk-btn--outline.dk-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) { border-color: var(--toggle-button-border-pressed-disabled, var(--border-control)); }
-@media (forced-colors: active) { .dk-toggle-button.dk-toggle-button--pressed { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-toggle-button.dk-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) { background: GrayText; color: Canvas; border-color: GrayText; } }
+.srp-toggle-button.srp-btn--outline.srp-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) { border-color: var(--toggle-button-border-pressed-disabled, var(--border-control)); }
+@media (forced-colors: active) { .srp-toggle-button.srp-toggle-button--pressed { background: Highlight; color: HighlightText; forced-color-adjust: none; } .srp-toggle-button.srp-toggle-button--pressed:is(:disabled, [aria-disabled="true"]) { background: GrayText; color: Canvas; border-color: GrayText; } }
 }

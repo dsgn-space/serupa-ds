@@ -57,7 +57,7 @@ const OWN = { content: 1, children: 1, placement: 1, openDelay: 1, delay: 1, rol
    It describes the element (aria-describedby) or, with role="label", names it. */
 /** A short hint about one element, shown on hover and keyboard focus. */
 export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: TooltipProps): React.ReactElement {
-  const id = domId('dk-tip', React.useId());
+  const id = domId('srp-tip', React.useId());
   const [held, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Tooltip', 'open');
   const open = !props.disabled && !!held;
   const tipRef = React.useRef<HTMLDivElement | null>(null);
@@ -138,7 +138,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   }, [open, props.role, props.visual]);
 
   // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
-  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--dk-tooltip-offset', closeRequest: false, watch: full || props.content, onOutside: () => set(false, 'outside') });
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--srp-tooltip-offset', closeRequest: false, watch: full || props.content, onOutside: () => set(false, 'outside') });
 
   /* Its content is plain text: the keyboard can't reach a link or button in it (focus leaving the element hides it),
      and on its inverse fill a link's color measures under 4.5:1 in every theme. Warn when one is there, rendered or not. */
@@ -200,7 +200,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     <>
       {trigger}
       <Tip ref={tipRef} id={id} role={props.visual ? undefined : 'tooltip'} aria-hidden={props.visual || undefined} {...{ popover: 'manual' }} hidden={!open || undefined}
-        className={cn('dk-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
+        className={cn('srp-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
         {full && props.role !== 'label' ? <span data-full="" aria-hidden="true">{full}</span> : null}
         {props.content}

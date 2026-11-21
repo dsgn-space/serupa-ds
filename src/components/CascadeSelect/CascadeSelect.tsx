@@ -76,7 +76,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, required: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1, readOnly: 1 } as const);
-  const base = domId('dk-cs', React.useId());
+  const base = domId('srp-cs', React.useId());
   const sized = useControlSize(props.size);
   const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
@@ -178,7 +178,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   }, [open]);
   useFormReset(hidden, () => { if (!controlled) setOwn(props.defaultValue || []); setOpen(false, 'reset'); }, props.form);
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--dk-cs-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'outside'), inside: button });
+  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--srp-cs-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'outside'), inside: button });
 
   // Focus follows the focused column's highlighted option (or its first).
   // every render: a key or a load that moves focus sets focusCol, and the column it names is in this render's panel.
@@ -240,44 +240,44 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const empty = !value.length;
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('dk-cascade-select', 'dk-cascade-select--size-' + size, (invalid || missing) && 'dk-cascade-select--invalid', disabled && 'dk-cascade-select--disabled', readOnly && 'dk-cascade-select--readonly', open && 'dk-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
-      <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-cascade-select__button"
+    <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
+      <button {...rest} ref={mergedRef} type="button" role="combobox" className="srp-cascade-select__button"
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
-        <TruncatedText className={cn('dk-cascade-select__value', empty && 'dk-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
-        <Icon icon={icons.ExpandMore} className="dk-cascade-select__chevron" />
+        <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
+        <Icon icon={icons.ExpandMore} className="srp-cascade-select__chevron" />
       </button>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}
       {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
-      {required ? <input key={value.length ? 'filled' : 'empty'} className="dk-cascade-select__validity" tabIndex={-1} aria-hidden required defaultValue={value.length ? 'filled' : ''}
+      {required ? <input key={value.length ? 'filled' : 'empty'} className="srp-cascade-select__validity" tabIndex={-1} aria-hidden required defaultValue={value.length ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
       <span id={base + '-more'} hidden>{L.cascadeHasMore(open && rtl())}</span>
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={dialogName}
-        {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-cascade-select__panel">
+        {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-cascade-select__panel">
         {open || exit.leaving ? columns.map((column, c) => (
-          <div key={c} className="dk-cascade-select__column" data-active={c === Math.min(col, columns.length - 1) ? '' : undefined}>
-            <div className="dk-cascade-select__level" id={base + '-level-' + c}>
-              {c > 0 ? <button type="button" className="dk-cascade-select__back" tabIndex={-1} aria-label={L.cascadeBack} onClick={() => { setPath(path.slice(0, c)); setCol(c - 1); focusCol.current = c - 1; }}><Icon icon={icons.ChevronLeft} /></button> : null}
+          <div key={c} className="srp-cascade-select__column" data-active={c === Math.min(col, columns.length - 1) ? '' : undefined}>
+            <div className="srp-cascade-select__level" id={base + '-level-' + c}>
+              {c > 0 ? <button type="button" className="srp-cascade-select__back" tabIndex={-1} aria-label={L.cascadeBack} onClick={() => { setPath(path.slice(0, c)); setCol(c - 1); focusCol.current = c - 1; }}><Icon icon={icons.ChevronLeft} /></button> : null}
               {labelFor(c)}
             </div>
             {Array.isArray(column.options) ? (
-              <div role="listbox" className="dk-cascade-select__list" aria-labelledby={base + '-level-' + c} tabIndex={column.options.length && column.options.some((o) => o.value === path[c]) ? -1 : 0}
+              <div role="listbox" className="srp-cascade-select__list" aria-labelledby={base + '-level-' + c} tabIndex={column.options.length && column.options.some((o) => o.value === path[c]) ? -1 : 0}
                 onKeyDown={onKeyDown(c, column.options)} onFocus={() => setCol(c)}
                 onClick={(e) => { const el = e.target instanceof Element ? e.target.closest<HTMLElement>('[role=option]') : null, o = el && Array.isArray(column.options) ? column.options[Number(el.dataset.index)] : null; if (o) { setCol(c); pick(c, o, false); } }}>
                 {column.options.length ? column.options.map((o, i) => {
                   const on = path[c] === o.value, more = hasMore(o, path.slice(0, c).concat(o.value));
                   return (
-                    <div key={o.value} role="option" id={base + '-' + c + '-' + o.value} className={cn('dk-cascade-select__option', on && 'dk-cascade-select__option--on')} aria-selected={on} aria-disabled={o.disabled || undefined}
+                    <div key={o.value} role="option" id={base + '-' + c + '-' + o.value} className={cn('srp-cascade-select__option', on && 'srp-cascade-select__option--on')} aria-selected={on} aria-disabled={o.disabled || undefined}
                       aria-describedby={more ? base + '-more' : undefined} tabIndex={on ? 0 : -1} dir="auto" data-index={i}>
-                      <span className="dk-cascade-select__label">{o.label}</span>
-                      {more ? <Icon icon={icons.ChevronRight} className="dk-cascade-select__more" /> : (value[c] === o.value && value.length === c + 1 ? <Icon icon={icons.Check} className="dk-cascade-select__check" /> : null)}
+                      <span className="srp-cascade-select__label">{o.label}</span>
+                      {more ? <Icon icon={icons.ChevronRight} className="srp-cascade-select__more" /> : (value[c] === o.value && value.length === c + 1 ? <Icon icon={icons.Check} className="srp-cascade-select__check" /> : null)}
                     </div>
                   );
-                }) : <div className="dk-cascade-select__note">{L.cascadeEmpty}</div>}
+                }) : <div className="srp-cascade-select__note">{L.cascadeEmpty}</div>}
               </div>
             ) : (
-              <div className="dk-cascade-select__note" role="status" aria-live="polite" aria-busy={column.options === 'loading' || undefined}>{column.options === 'loading' ? L.cascadeLoading : L.cascadeFailed}</div>
+              <div className="srp-cascade-select__note" role="status" aria-live="polite" aria-busy={column.options === 'loading' || undefined}>{column.options === 'loading' ? L.cascadeLoading : L.cascadeFailed}</div>
             )}
           </div>
         )) : null}

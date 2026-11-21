@@ -30,7 +30,7 @@ describe('IconButton', () => {
     await render(<Icons ibRef={ref} />);
     const e = el('ib') as HTMLButtonElement;
     expect([e.tagName, e.type, e.getAttribute('aria-label'), e.hasAttribute('title'), e.dataset.variant, e.dataset.shape, e.hasAttribute('data-icon-only'), (e.querySelector('[data-icon]') as HTMLElement).dataset.icon]).toEqual(['BUTTON', 'button', 'More actions', false, 'ghost', 'square', true, 'more_vert']);
-    expect(e.className).toMatch(/dk-icon-btn/);
+    expect(e.className).toMatch(/srp-icon-btn/);
     expect(e.className).toMatch(/extra/);
     expect(ref.current).toBe(e);
     expect(box('ib').slice(2)).toEqual([32, 32]);
@@ -102,7 +102,7 @@ describe('IconButton', () => {
     const e = el('ib');
     await settled(e);   // the ring fades in
     const probe = document.createElement('span');
-    probe.style.color = 'var(--dk-btn-ring)';
+    probe.style.color = 'var(--srp-btn-ring)';
     e.appendChild(probe);
     const ring = getComputedStyle(probe).color;
     probe.remove();
@@ -129,9 +129,9 @@ describe('IconButton onMedia', () => {
   test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
     await render(<div><IconButton id="om-dark" icon="share" label="Share" onMedia="dark" /><IconButton id="om-light" icon="share" label="Share" onMedia="light" /></div>);
     const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
-    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(document.getElementById('om-dark')!.className).toContain('srp-btn--on-dark');
     expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
-    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(document.getElementById('om-light')!.className).toContain('srp-btn--on-light');
     expect(inks('om-light')).toContain('rgb(0, 0, 0)');
   });
 });

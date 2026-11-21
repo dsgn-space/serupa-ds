@@ -65,8 +65,8 @@ function IllustrationRender({ ref, ...props }: IllustrationProps & React.RefAttr
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
-    <svg viewBox="0 0 160 120" width="1em" height="0.75em" focusable="false" {...a11y} {...rest} ref={ref} className={cn('dk-illustration', size !== 'md' && 'dk-illustration--' + size, props.className)} data-component="illustration" data-name={name}>
-      {PICTURES[name].map(([kind, d], i) => <path key={i} className={'dk-illustration__' + kind} d={d} strokeWidth={kind === 'accent' ? 4 : kind === 'line' ? 3 : undefined} />)}
+    <svg viewBox="0 0 160 120" width="1em" height="0.75em" focusable="false" {...a11y} {...rest} ref={ref} className={cn('srp-illustration', size !== 'md' && 'srp-illustration--' + size, props.className)} data-component="illustration" data-name={name}>
+      {PICTURES[name].map(([kind, d], i) => <path key={i} className={'srp-illustration__' + kind} d={d} strokeWidth={kind === 'accent' ? 4 : kind === 'line' ? 3 : undefined} />)}
     </svg>
   );
 }

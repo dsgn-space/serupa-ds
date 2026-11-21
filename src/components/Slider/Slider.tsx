@@ -90,24 +90,24 @@ function markList(marks: SliderProps['marks'], min: number, max: number, step: n
    onValueChange fires as it moves, onValueCommit once when a drag or key press that changed it ends. */
 /** Picks a number, or a range with two thumbs, on a track. */
 // The text a slider nudges inward to keep inside its box (GM2).
-const FIT = '.dk-slider__mark-label > span, .dk-slider__value > span';
+const FIT = '.srp-slider__mark-label > span, .srp-slider__value > span';
 
 /** Mark labels too long for the room between their points wrap, between words. Each first gets the track up to halfway
  *  to its neighbours, less the gap between labels (one at an end also the room its nudge inward gives it), but never
  *  less than its longest word; where two still meet, the one with more to give wraps further. The slider then grows
  *  to hold the tallest one's lines. Labels with room keep their one line. */
 function share(el: HTMLElement) {
-  const labels = Array.from(el.querySelectorAll<HTMLElement>('.dk-slider__mark-label > span'));
-  for (const p of labels) { p.removeAttribute('data-wrap'); p.style.removeProperty('--dk-slider-share'); }
-  el.style.removeProperty('--dk-slider-labels-h');
+  const labels = Array.from(el.querySelectorAll<HTMLElement>('.srp-slider__mark-label > span'));
+  for (const p of labels) { p.removeAttribute('data-wrap'); p.style.removeProperty('--srp-slider-share'); }
+  el.style.removeProperty('--srp-slider-labels-h');
   if (labels.length < 2) return;
   const box = el.getBoundingClientRect(), gap = parseFloat(getComputedStyle(labels[0]!.parentElement!).columnGap) || 0;
   const at = labels.map((p) => {
     const w = p.getBoundingClientRect().width;
     p.setAttribute('data-wrap', '');
-    p.style.setProperty('--dk-slider-share', '0px');   // as narrow as it goes: its longest word
+    p.style.setProperty('--srp-slider-share', '0px');   // as narrow as it goes: its longest word
     const least = p.getBoundingClientRect().width;
-    p.removeAttribute('data-wrap'); p.style.removeProperty('--dk-slider-share');
+    p.removeAttribute('data-wrap'); p.style.removeProperty('--srp-slider-share');
     return { p, c: p.parentElement!.getBoundingClientRect().left, w, least, cap: w };
   }).sort((a, b) => a.c - b.c);
   const n = at.length;
@@ -127,8 +127,8 @@ function share(el: HTMLElement) {
     x.cap = Math.max(x.least, x.cap - 1);
   }
   let wrapped = false;
-  for (const x of at) if (x.cap < x.w - 0.5) { x.p.setAttribute('data-wrap', ''); x.p.style.setProperty('--dk-slider-share', Math.ceil(x.cap) + 'px'); wrapped = true; }
-  if (wrapped) el.style.setProperty('--dk-slider-labels-h', Math.max(...labels.map((p) => p.getBoundingClientRect().height)) + 'px');
+  for (const x of at) if (x.cap < x.w - 0.5) { x.p.setAttribute('data-wrap', ''); x.p.style.setProperty('--srp-slider-share', Math.ceil(x.cap) + 'px'); wrapped = true; }
+  if (wrapped) el.style.setProperty('--srp-slider-labels-h', Math.max(...labels.map((p) => p.getBoundingClientRect().height)) + 'px');
 }
 
 function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLDivElement>) {
@@ -199,7 +199,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // nothing and calls no onValueCommit, as a key at the end doesn't (L8E109).
   const from = React.useRef<number[]>([]);
   const fromPoint = (x: number, y: number) => {
-    const r = root.current!.querySelector('.dk-slider__track')!.getBoundingClientRect();
+    const r = root.current!.querySelector('.srp-slider__track')!.getBoundingClientRect();
     let share = r.width ? (x - r.left) / r.width : 0;
     if (vertical) share = r.height ? (r.bottom - y) / r.height : 0;
     else if (getComputedStyle(root.current!).direction === 'rtl') share = 1 - share;
@@ -220,7 +220,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     const t = thumbs.current[i]; if (t) t.focus({ preventScroll: true });
   };
   // A press in a number field (inputs) is the field's: it places the caret, it doesn't move a thumb.
-  const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.dk-slider__input');
+  const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.srp-slider__input');
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX, e.clientY)); };
   const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latest.current.some((v, k) => v !== from.current[k])) commit(); };
   // The browser took the press for a scroll of the page (touch-action: pan-y): the thumb goes back, and nothing commits.
@@ -273,14 +273,14 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // widen the page (a hidden chip too): each is nudged inward to stay inside the slider's box (GM2).
   const fit = React.useCallback((wrap = true) => {
     const el = root.current;
-    if (!el || el.classList.contains('dk-slider--vertical')) return;   // vertical: the text sits beside the track, not past its ends
+    if (!el || el.classList.contains('srp-slider--vertical')) return;   // vertical: the text sits beside the track, not past its ends
     const parts = Array.from(el.querySelectorAll<HTMLElement>(FIT));
     if (!parts.length) return;
-    for (const p of parts) p.style.removeProperty('--dk-slider-nudge');
+    for (const p of parts) p.style.removeProperty('--srp-slider-nudge');
     if (wrap) share(el);
     const box = el.getBoundingClientRect();
     const by = parts.map((p) => { const r = p.getBoundingClientRect(); return r.width >= box.width ? 0 : Math.max(0, box.left - r.left) - Math.max(0, r.right - box.right); });
-    parts.forEach((p, i) => { if (by[i]) p.style.setProperty('--dk-slider-nudge', by[i] + 'px'); });
+    parts.forEach((p, i) => { if (by[i]) p.style.setProperty('--srp-slider-nudge', by[i] + 'px'); });
   }, []);
   // Fitted again when the slider resizes, and when a label or the chip does on its own: a web font that loads after
   // the first fit makes the text wider or narrower while the slider keeps its size, and the old nudge would be wrong.
@@ -309,7 +309,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // Out of a Field's reach (FieldContext null): the Field's id is the slider's, so a field taking it would repeat it,
   // and a range's two fields would share it. What the Field gives a thumb is passed as the thumb gets it.
   const field = (i: number) => (
-    <FieldContext.Provider key={'field' + i} value={null}><NumberInput className="dk-slider__input" size={size} steppers={false}
+    <FieldContext.Provider key={'field' + i} value={null}><NumberInput className="srp-slider__input" size={size} steppers={false}
       value={vals[i]} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step} largeStep={large}
       disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
       aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
@@ -323,25 +323,25 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}
       role={isRange ? 'group' : rest.role} aria-label={isRange ? props['aria-label'] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
       aria-describedby={isRange ? props['aria-describedby'] : undefined}
-      className={cn('dk-slider', 'dk-slider--size-' + size, disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', vertical && 'dk-slider--vertical', props.className)}
+      className={cn('srp-slider', 'srp-slider--size-' + size, disabled && 'srp-slider--disabled', readOnly && 'srp-slider--readonly', invalid && 'srp-slider--invalid', labelled && 'srp-slider--mark-labels', props.inputs && 'srp-slider--inputs', vertical && 'srp-slider--vertical', props.className)}
       data-component="slider" data-size={size} data-orientation={vertical ? 'vertical' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={cancel}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {props.inputs && isRange ? field(0) : null}
-      <div className="dk-slider__track">
-        <div className="dk-slider__fill" style={{ insetInlineStart: (vertical ? 100 - hi : lo) + '%', inlineSize: hi - lo + '%' }} />
+      <div className="srp-slider__track">
+        <div className="srp-slider__fill" style={{ insetInlineStart: (vertical ? 100 - hi : lo) + '%', inlineSize: hi - lo + '%' }} />
         {marks.map((m, i) => (
-          <span key={i} className="dk-slider__mark" style={{ insetInlineStart: place(pct(m.value)) + '%' }} aria-hidden="true">
-            {m.value > min && m.value < max ? <span className="dk-slider__tick" /> : null}
-            {m.label != null && m.label !== false ? <span className="dk-slider__mark-label"><span>{m.label}</span></span> : null}
+          <span key={i} className="srp-slider__mark" style={{ insetInlineStart: place(pct(m.value)) + '%' }} aria-hidden="true">
+            {m.value > min && m.value < max ? <span className="srp-slider__tick" /> : null}
+            {m.label != null && m.label !== false ? <span className="srp-slider__mark-label"><span>{m.label}</span></span> : null}
           </span>
         ))}
         {vals.map((v, i) => (
           // The thumb is drawn by the span; a native <input type="range"> over it, unseen, takes focus, carries the
           // value and the name, and is what screen readers adjust: their swipe and volume-key gestures work reliably
           // only on a native range. Presses go through it to the track, which places the thumb under the pointer.
-          <span key={i} className="dk-slider__thumb" style={{ insetInlineStart: place(pct(v)) + '%' }}>
-            <input ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__range" type="range"
+          <span key={i} className="srp-slider__thumb" style={{ insetInlineStart: place(pct(v)) + '%' }}>
+            <input ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="srp-slider__range" type="range"
               value={v} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step}
               name={props.name} form={props.form} disabled={disabled}
               aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation={vertical ? 'vertical' : 'horizontal'} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
@@ -350,7 +350,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
               aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
               aria-describedby={isRange ? undefined : props['aria-describedby']}
               onKeyDown={onKeyDown(i)} onChange={onChange(i)} />
-            {props.showValue ? <span className="dk-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}
+            {props.showValue ? <span className="srp-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}
           </span>
         ))}
       </div>

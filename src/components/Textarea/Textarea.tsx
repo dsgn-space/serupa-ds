@@ -40,7 +40,7 @@ export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
    side padding); rows (default 3); autoResize (grows with the text from rows up to maxRows, then scrolls);
    resize "vertical" (default) or "none"; invalid; showCount (a character count under the text, "12 / 200" with
    maxLength); maxLength (in characters as people see them, like the count, applied by Textarea rather than the
-   browser). Renders <span class="dk-textarea"> around a native <textarea>: className and style go to the box,
+   browser). Renders <span class="srp-textarea"> around a native <textarea>: className and style go to the box,
    every other prop (value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <textarea>. */
 const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1, showCount: 1, actions: 1, className: 1, style: 1 } as const;
 
@@ -68,7 +68,7 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   // The count and maxLength in characters as people see them; near the limit the count is read out (useTextLimit).
   const limited = useTextLimit(rest, own, { announce: !!props.showCount }), { length, max } = limited;
   rest = useValidityMessages(limited.props, own);   // the browser's message for a failed constraint, in the provider's words
-  const countId = domId('dk-ta', React.useId());
+  const countId = domId('srp-ta', React.useId());
   const locale = useLocale();
   const num = (n: number) => displayNumber(n, locale, PLAIN);   // the locale's digits, as Calendar's
 
@@ -107,19 +107,19 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
     own.current = node;
     nameRef(node);
   });
-  // The field's rows (--dk-ta-rows, for the CSS auto-resize) are a style attribute, which a strict CSP drops from
+  // The field's rows (--srp-ta-rows, for the CSS auto-resize) are a style attribute, which a strict CSP drops from
   // server HTML: applied again right after hydration.
   const restyle = useServerStyles<HTMLSpanElement>();
   if (props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], countId);
   const acts = props.actions != null && props.actions !== false;
-  const count = <span className={cn('dk-textarea__count', max != null && length >= max && 'dk-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
+  const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
   return (
-    <span className={cn('dk-textarea', 'dk-textarea--size-' + size, invalid && 'dk-textarea--invalid', rest.disabled && 'dk-textarea--disabled', rest.readOnly && 'dk-textarea--readonly', resize === 'none' && 'dk-textarea--resize-none', auto && 'dk-textarea--auto', acts && 'dk-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
-      <textarea {...rest} ref={setRefs} rows={rows} className="dk-textarea__field" key="field"
-        style={{ '--dk-ta-rows': rows, '--dk-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
+    <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
+      <textarea {...rest} ref={setRefs} rows={rows} className="srp-textarea__field" key="field"
+        style={{ '--srp-ta-rows': rows, '--srp-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
       {props.showCount && !acts ? count : null}
       {/* A fieldset, so a disabled Textarea disables every button in the row as well; role none, since it groups nothing for a screen reader. */}
-      {acts ? <fieldset className="dk-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
+      {acts ? <fieldset className="srp-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
     </span>
   );
 }

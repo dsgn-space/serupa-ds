@@ -18,7 +18,7 @@
 @media (min-width: 40rem) { .site-main { padding-inline: var(--spacing-8); } }
 @media (min-width: 64rem) {
   .site-body[data-side] { grid-template-columns: 17rem minmax(0, 1fr); }
-  .site-side { display: block; position: sticky; inset-block-start: var(--dk-navbar-offset, 0px); block-size: calc(100dvh - var(--dk-navbar-offset, 0px)); overflow-y: auto; border-inline-end: var(--border-width-1) solid var(--border); }
+  .site-side { display: block; position: sticky; inset-block-start: var(--srp-navbar-offset, 0px); block-size: calc(100dvh - var(--srp-navbar-offset, 0px)); overflow-y: auto; border-inline-end: var(--border-width-1) solid var(--border); }
   .site-browse { display: none; }
   .site-main { padding: var(--spacing-12) var(--spacing-12) var(--spacing-24); }
 }
@@ -28,11 +28,11 @@
 @media (min-width: 64rem) {
   .site-body[data-aside] { grid-template-columns: minmax(0, 1fr) var(--spacing-12); }
   .site-body[data-side][data-aside] { grid-template-columns: 17rem minmax(0, 1fr) var(--spacing-12); }
-  .site-aside { display: block; position: sticky; z-index: var(--z-10); inset-block-start: var(--dk-navbar-offset, 0px); align-self: start; padding: var(--spacing-12) var(--spacing-6) var(--spacing-8) 0; }
+  .site-aside { display: block; position: sticky; z-index: var(--z-10); inset-block-start: var(--srp-navbar-offset, 0px); align-self: start; padding: var(--spacing-12) var(--spacing-6) var(--spacing-8) 0; }
   .site-body[data-aside] .site-main { padding-inline-end: var(--spacing-6); }
   /* A long page's list stays inside the window and scrolls there: the rail keeps this much of the window clear, here
      the bar above the strip, the strip's own padding and a margin below. */
-  .site-aside { --table-of-contents-panel-gap: calc(var(--dk-navbar-offset, 0px) + var(--spacing-16)); }
+  .site-aside { --table-of-contents-panel-gap: calc(var(--srp-navbar-offset, 0px) + var(--spacing-16)); }
 }
 .site-sidebar { inline-size: 100%; border: 0; background: transparent; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-3) var(--spacing-6); padding: var(--spacing-6) var(--spacing-4); border-block-start: var(--border-width-1) solid var(--border); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
@@ -92,7 +92,7 @@ ol.site-list { list-style: decimal; }
 :is(.sb-tested, .sb-changes) details { margin-block-start: var(--spacing-4); }
 :is(.sb-tested, .sb-changes) summary { cursor: var(--cursor-interactive); font-weight: var(--font-semibold); }
 .sb-tested li { margin-block: var(--spacing-1); }
-.site-doc [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+.site-doc [role="region"][tabindex="0"]:not([class*="srp-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 /* On a phone a written table's cells (and the labels' and conformance tables') may break anywhere, so it fits the column. Not the docs'
    own wide tables (the contrast matrix, the token explorer): they scroll in their frame, and broken there a pair's name
    stood one letter a line. */
@@ -155,9 +155,9 @@ ol.site-list { list-style: decimal; }
 .site-card:hover { border-color: var(--border-strong); }
 /* The status badge sits beside the name only: the summary runs the card's full width under both, so a Beta card's
    text wraps like its neighbours'. */
-.site-card .dk-card__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--spacing-3); row-gap: var(--spacing-1); }
-.site-card .dk-card__heading { display: contents; }
-.site-card .dk-card__description { grid-column: 1 / -1; }
+.site-card .srp-card__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--spacing-3); row-gap: var(--spacing-1); }
+.site-card .srp-card__heading { display: contents; }
+.site-card .srp-card__description { grid-column: 1 / -1; }
 .site-card__preview { position: relative; block-size: var(--spacing-36); margin: calc(var(--card-padding-md, var(--spacing-5)) * -1) calc(var(--card-padding-md, var(--spacing-5)) * -1) 0; overflow: hidden; border-block-end: 1px solid var(--border); border-start-start-radius: inherit; border-start-end-radius: inherit; background: var(--surface-muted); pointer-events: none; user-select: none; }
 .site-card__stage { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; display: flex; flex-direction: column; align-items: safe center; inline-size: 22rem; translate: -50% -50%; scale: var(--site-preview-scale, 1); }
 [dir="rtl"] .site-card__stage { translate: 50% -50%; }
@@ -175,8 +175,8 @@ ol.site-list { list-style: decimal; }
 .site-card__stage > div:not([class])[style*="display: flex"]:not([style*="width"], [style*="height"]) { display: inline-flex !important; }
 /* A floating action button pinned to the screen's corner, or an OfflineBanner to its edge, sits in its card's picture
    instead; over a story taller than the picture it keeps to the picture's corner, as a BottomNav does (Index.tsx). */
-.site-card__stage:not([data-tall]) :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start),
-.site-card__stage :is(.dk-offline-banner--bottom, .dk-offline-banner--top) { position: static; }
+.site-card__stage:not([data-tall]) :is(.srp-fab--bottom-end, .srp-fab--bottom-start, .srp-fab--top-end, .srp-fab--top-start),
+.site-card__stage :is(.srp-offline-banner--bottom, .srp-offline-banner--top) { position: static; }
 .site-card__count { margin-block-start: var(--spacing-3); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 
 .site-hero { padding-block: var(--spacing-12) var(--spacing-16); }

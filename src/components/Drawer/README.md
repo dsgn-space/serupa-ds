@@ -31,12 +31,12 @@ const [open, setOpen] = React.useState(false);
 
 Drawn from the `Bottom` story.
 
-1. **Panel** (`.dk-drawer__panel`): slides in from an edge over the dimmed page; focus stays inside while it's open.
-2. **Title** (`.dk-drawer__title`): what the drawer is for; it names it for screen readers.
-3. **Description** (`.dk-drawer__description`): an optional line under the title.
-4. **Close** (`.dk-drawer__close`): closes it, as Escape does.
-5. **Body** (`.dk-drawer__body`): the content; it scrolls on its own.
-6. **Footer** (`.dk-drawer__footer`): the actions, kept in view.
+1. **Panel** (`.srp-drawer__panel`): slides in from an edge over the dimmed page; focus stays inside while it's open.
+2. **Title** (`.srp-drawer__title`): what the drawer is for; it names it for screen readers.
+3. **Description** (`.srp-drawer__description`): an optional line under the title.
+4. **Close** (`.srp-drawer__close`): closes it, as Escape does.
+5. **Body** (`.srp-drawer__body`): the content; it scrolls on its own.
+6. **Footer** (`.srp-drawer__footer`): the actions, kept in view.
 
 ## Usage
 

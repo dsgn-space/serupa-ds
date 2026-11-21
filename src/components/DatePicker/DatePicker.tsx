@@ -84,7 +84,7 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   // (defaultOpen) or because the app set open.
   const [focusIn, setFocusIn] = React.useState(false);
   const openByHand = () => { setFocusIn(true); setOpen(true, 'trigger'); };
-  const id = domId('dk-dp', React.useId());
+  const id = domId('srp-dp', React.useId());
   const field = React.useRef<HTMLInputElement | null>(null);
   const button = React.useRef<HTMLButtonElement | null>(null);
   const box = React.useRef<HTMLSpanElement | null>(null);
@@ -123,15 +123,15 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   // A press outside the calendar and its button, or focus moving past them (Tab), closes it.
   // The calendar stays (inert) while the popup fades out (DZ1).
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-dp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
+  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--srp-dp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   const typed = parseDate(text, locale);
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-date-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
+    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={mergedRef}
-        lang={rest.lang ?? lang} type="text" inputMode="numeric" autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
+        lang={rest.lang ?? lang} type="text" inputMode="numeric" autoComplete={rest.autoComplete || 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : datePattern(locale)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
         onChange={(e) => { setText(e.target.value); setRejected(''); }}
         onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }}
@@ -141,21 +141,21 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
           if (e.key === 'Enter') read();
           else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(); openByHand(); }
         }} />
-      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
+      <button ref={button} type="button" className="srp-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
         disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read(); openByHand(); } }}>
         <Icon icon={icons.CalendarToday} />
       </button>
       {/* The format to type, read after the field's name: a placeholder is gone once something is typed, and not every screen reader reads it. */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
-      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup"
+      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-date-picker__popup"
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
         {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
           onValueChange={(d) => { commit(d); close(true, 'select'); }} /> : null}
       </div>
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
-      {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+      {rejected && <span id={id + '-rejected'} className="srp-input-rejected">{rejected}</span>}
     </>
   );
 }

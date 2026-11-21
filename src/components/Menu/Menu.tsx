@@ -83,14 +83,14 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
     else if (e.key.length === 1 && (/\S/.test(e.key) || typing(typed.current)) && !e.ctrlKey && !e.metaKey && !e.altKey) {
       // Taken, so a page shortcut on the same letter (useShortcut("g")) doesn't also run: a menu is no text field (L8E42).
       e.preventDefault();
-      const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector('.dk-menu__label') || it).textContent || ''), i);
+      const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector('.srp-menu__label') || it).textContent || ''), i);
       list[n]?.focus();
     }
   };
 }
 
 function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivElement>) {
-  const own = domId('dk-menu', React.useId());
+  const own = domId('srp-menu', React.useId());
   const id = props.id || own;
   const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Menu', 'open');
   const open = !!openIn;
@@ -109,7 +109,7 @@ function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivEl
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
   const swap = React.useContext(MenuSwap);
-  useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: 'bottom-start', offsetVar: '--dk-menu-offset', onOutside: () => close('outside', false), inside: triggerRef });
+  useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: 'bottom-start', offsetVar: '--srp-menu-offset', onOutside: () => close('outside', false), inside: triggerRef });
   // On open, focus goes to the first item (or the last, opened with ↑).
   useIsoLayoutEffect(() => {
     const menu = menuRef.current;
@@ -169,7 +169,7 @@ function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivEl
       {trigger}
       <Panel {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-label={props['aria-label']} aria-labelledby={props['aria-label'] || props['aria-labelledby'] ? props['aria-labelledby'] : cp.id || (triggerRef.current && triggerRef.current.id) || own + '-button'}
-        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
+        className={cn('srp-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </Panel>
@@ -207,7 +207,7 @@ export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 const OWN_CONTEXT = { target: 1, children: 1, 'aria-label': 1, open: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
 function ContextMenuRender({ ref, ...props }: ContextMenuProps & React.RefAttributes<HTMLDivElement>) {
-  const own = domId('dk-ctxmenu', React.useId());
+  const own = domId('srp-ctxmenu', React.useId());
   const id = props.id || own;
   const [openIn, setInner, controlled] = useControllable(props.open, false, 'ContextMenu', 'open');
   const open = !!openIn;
@@ -230,7 +230,7 @@ function ContextMenuRender({ ref, ...props }: ContextMenuProps & React.RefAttrib
 
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
-  useAnchoredLayer(open && !!spot, menuRef, point, { placement: 'bottom-start', offsetVar: '--dk-menu-offset', onOutside: () => close('outside', false), watch: spot && spot.x + ',' + spot.y });
+  useAnchoredLayer(open && !!spot, menuRef, point, { placement: 'bottom-start', offsetVar: '--srp-menu-offset', onOutside: () => close('outside', false), watch: spot && spot.x + ',' + spot.y });
   useIsoLayoutEffect(() => {
     const menu = menuRef.current;
     if (!open || !menu) return;
@@ -274,9 +274,9 @@ function ContextMenuRender({ ref, ...props }: ContextMenuProps & React.RefAttrib
   return (
     <MenuContext.Provider value={ctx}>
       {target}
-      <span ref={point} className="dk-menu__point" aria-hidden style={spot ? { left: spot.x + 'px', top: spot.y + 'px' } : undefined} />
+      <span ref={point} className="srp-menu__point" aria-hidden style={spot ? { left: spot.x + 'px', top: spot.y + 'px' } : undefined} />
       <div {...omit(props, OWN_CONTEXT)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} aria-label={props['aria-label']}
-        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
+        className={cn('srp-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </div>
@@ -383,14 +383,14 @@ function MenuItemBaseRender({ ref, ...props }: MenuItemBaseProps & React.RefAttr
   const checkable = !isLink && (rest.role === 'menuitemcheckbox' || rest.role === 'menuitemradio');
   return React.createElement(isLink ? props.as || config.link : 'span', Object.assign(rest, {
     ref: ref, role: checkable ? rest.role : 'menuitem', tabIndex: -1, 'aria-disabled': props.disabled || undefined,
-    className: cn('dk-menu__item', props.destructive && 'dk-menu__item--destructive', props.className),
+    className: cn('srp-menu__item', props.destructive && 'srp-menu__item--destructive', props.className),
     onClick: onClick, onKeyDown: onKeyDown, onPointerMove: (e: React.PointerEvent<HTMLElement>) => { if (own.onPointerMove) own.onPointerMove(e); if (activeIn(e.currentTarget) !== e.currentTarget) e.currentTarget.focus(); },
   }),
-    checkable ? <span className="dk-menu__check" aria-hidden="true"><Icon icon={icons.Check} /></span> : null,
-    props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
-    <span className="dk-menu__label">{props.children}</span>,
+    checkable ? <span className="srp-menu__check" aria-hidden="true"><Icon icon={icons.Check} /></span> : null,
+    props.icon != null ? <span className="srp-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
+    <span className="srp-menu__label">{props.children}</span>,
     // Shown, but not part of the item's name ("Copy", not "Copy command K"): aria-keyshortcuts says it.
-    shown ? <kbd className="dk-menu__shortcut" aria-hidden="true">{shown}</kbd> : null);
+    shown ? <kbd className="srp-menu__shortcut" aria-hidden="true">{shown}</kbd> : null);
 }
 
 /** One action in a Menu. */
@@ -496,7 +496,7 @@ const inTriangle = (p: Point, a: Point, b: Point, c: Point) => {
 };
 
 function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTMLElement>) {
-  const id = domId('dk-menu-sub', React.useId());
+  const id = domId('srp-menu-sub', React.useId());
   const rest = omit(props, { label: 1, icon: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1, onPointerLeave: 1 });
   const [own, setOpen] = React.useState(false);
   // Closed with its menu: a submenu open when its menu closes fades out with it rather than stay open inside it.
@@ -522,7 +522,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
 
   // Its items stay, inert, while it fades out (DZ1).
   const exit = useExit(open, panelRef);
-  useAnchoredLayer(open, panelRef, itemRef, { placement: open && rtl() ? 'left-start' : 'right-start', fallback: 'right-start', offsetVar: '--dk-menu-sub-offset' });
+  useAnchoredLayer(open, panelRef, itemRef, { placement: open && rtl() ? 'left-start' : 'right-start', fallback: 'right-start', offsetVar: '--srp-menu-sub-offset' });
   useIsoLayoutEffect(() => {
     if (!open || !focusFirst.current) return;
     focusFirst.current = false;
@@ -567,7 +567,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
         ref: mergedRef3,
         role: 'menuitem', tabIndex: -1, 'aria-haspopup': 'menu', 'aria-expanded': open, 'aria-controls': open ? id : undefined,
         'aria-disabled': props.disabled || undefined, 'data-state': open ? 'open' : 'closed',
-        className: cn('dk-menu__item', 'dk-menu__item--sub', props.className),
+        className: cn('srp-menu__item', 'srp-menu__item--sub', props.className),
         onClick: (e: React.MouseEvent<HTMLElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) show(true); },
         onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
           if (props.onKeyDown) props.onKeyDown(e);
@@ -581,11 +581,11 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
         },
         onPointerLeave: (e: React.PointerEvent<HTMLElement>) => { if (props.onPointerLeave) props.onPointerLeave(e); if (hover.current) stop(); },
       }),
-        props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
-        <span className="dk-menu__label" id={id + '-label'}>{props.label}</span>,
-        <span className="dk-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>)}
+        props.icon != null ? <span className="srp-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
+        <span className="srp-menu__label" id={id + '-label'}>{props.label}</span>,
+        <span className="srp-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>)}
       <Box ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} data-instant={exit.instant ? '' : undefined} aria-labelledby={id + '-label'}
-        className="dk-menu dk-menu--sub" data-component="menu" data-state={open ? 'open' : 'closed'} inert={!open || undefined} onKeyDown={onPanelKey}>
+        className="srp-menu srp-menu--sub" data-component="menu" data-state={open ? 'open' : 'closed'} inert={!open || undefined} onKeyDown={onPanelKey}>
         {open || exit.leaving ? props.children : null}
       </Box>
     </>
@@ -602,10 +602,10 @@ export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 
 function MenuGroupRender({ ref, ...props }: MenuGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { label: 1, className: 1, children: 1 });
-  const id = domId('dk-mg', React.useId());
+  const id = domId('srp-mg', React.useId());
   return (
-    <Box {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn('dk-menu__group', props.className)}>
-      {props.label != null ? <span className="dk-menu__group-label" id={id} role="presentation">{props.label}</span> : null}
+    <Box {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn('srp-menu__group', props.className)}>
+      {props.label != null ? <span className="srp-menu__group-label" id={id} role="presentation">{props.label}</span> : null}
       {props.children}
     </Box>
   );
@@ -617,7 +617,7 @@ export const MenuGroup = /* @__PURE__ */ named('MenuGroup', MenuGroupRender);
 export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 
 function MenuSeparatorRender({ ref, ...props }: MenuSeparatorProps & React.RefAttributes<HTMLDivElement>) {
-  return <Box {...props} ref={ref} role="separator" className={cn('dk-menu__separator', props.className)} />;
+  return <Box {...props} ref={ref} role="separator" className={cn('srp-menu__separator', props.className)} />;
 }
 
 /** A line between groups of items. */

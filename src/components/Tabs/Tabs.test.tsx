@@ -488,9 +488,9 @@ describe('Tabs on the server', () => {
       list.scrollTo({ left: 60, behavior: 'instant' });
       await on;
       const moving = list.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty);
-      const mid = parseFloat(css(list).getPropertyValue('--dk-tabs-fade-a'));
+      const mid = parseFloat(css(list).getPropertyValue('--srp-tabs-fade-a'));
       await settled(list);
-      expect([moving, mid >= 0 && mid < 32, css(list).getPropertyValue('--dk-tabs-fade-a')]).toEqual([['--dk-tabs-fade-a'], true, '32px']);
+      expect([moving, mid >= 0 && mid < 32, css(list).getPropertyValue('--srp-tabs-fade-a')]).toEqual([['--srp-tabs-fade-a'], true, '32px']);
     });
   });
 
@@ -521,7 +521,7 @@ describe('Tabs on the server', () => {
       const start = moves.find((a) => propsOf(a).includes('translate')), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0]!.translate)) : NaN;
       // When no slide is found, the message says why: what the page runs on the tab, where the line starts from, and
       // whether the click was taken for a key.
-      const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2]!.style.getPropertyValue('--dk-tabs-from-shift') || getComputedStyle(tabs[2]!).getPropertyValue('--dk-tabs-from-shift'), now: getComputedStyle(tabs[2]!, '::after').translate, instant: tabs[2]!.hasAttribute('data-instant') });
+      const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2]!.style.getPropertyValue('--srp-tabs-from-shift') || getComputedStyle(tabs[2]!).getPropertyValue('--srp-tabs-from-shift'), now: getComputedStyle(tabs[2]!, '::after').translate, instant: tabs[2]!.hasAttribute('data-instant') });
       expect([moves.flatMap(propsOf).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0]!.offsetLeft - tabs[2]!.offsetLeft)]);
       await Promise.all(moves.map((a) => a.finished.catch(() => {})));
       expect([getComputedStyle(tabs[2]!, '::after').translate, getComputedStyle(tabs[2]!, '::after').scale]).toEqual(['none', 'none']);
@@ -545,7 +545,7 @@ describe('Tabs on the server', () => {
       await setup();
       // The CSS slide turned off, as Safari leaves it: the transition time is there, but nothing starts.
       const off = document.createElement('style');
-      off.textContent = '.dk-tabs__tab::after, .dk-tabs__tab::before { transition-property: none !important; }';
+      off.textContent = '.srp-tabs__tab::after, .srp-tabs__tab::before { transition-property: none !important; }';
       document.head.append(off);
       try {
         const scripted = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => !(a instanceof CSSTransition) && (a.effect as KeyframeEffect | null)?.target === t && (a.effect as KeyframeEffect).pseudoElement === pseudo);
@@ -633,7 +633,7 @@ describe('Tabs indicator when picking a tab moves the tabs', () => {
       expect(two.offsetLeft - twoWas).toBeGreaterThan(20);   // the tabs moved
       const slide = slidesOn(two, '::before')[0]!;
       const inset = insetL(String((slide.effect as KeyframeEffect).getKeyframes()[0]!.clipPath));
-      const span = parseFloat(two.style.getPropertyValue('--dk-tabs-span-l')) || 0;
+      const span = parseFloat(two.style.getPropertyValue('--srp-tabs-span-l')) || 0;
       expect(Math.abs(two.offsetLeft - span + inset - was)).toBeLessThan(1);
     });
   });
@@ -661,7 +661,7 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       await userEvent.click(pills[0]!);
       const held = slides(pills[0]!, '::before');
       halfway(held);
-      const span = (t: HTMLElement) => parseFloat(t.style.getPropertyValue('--dk-tabs-span-l')) || 0;
+      const span = (t: HTMLElement) => parseFloat(t.style.getPropertyValue('--srp-tabs-span-l')) || 0;
       const edge = pills[0]!.offsetLeft - span(pills[0]!) + insetL(getComputedStyle(pills[0]!, '::before').clipPath);
       expect(Math.abs(edge - pills[0]!.offsetLeft)).toBeGreaterThan(8);
       await userEvent.click(pills[1]!);
@@ -669,7 +669,7 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       const cut = all[0]!;
       const first = insetL(String((cut.effect as KeyframeEffect).getKeyframes()[0]!.clipPath));
       // The message says which slide it read and from what.
-      const why = JSON.stringify({ edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--dk-tabs-from-' + k)) });
+      const why = JSON.stringify({ edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--srp-tabs-from-' + k)) });
       expect(Math.abs(pills[1]!.offsetLeft - span(pills[1]!) + first - edge), why).toBeLessThan(1);
     });
   });

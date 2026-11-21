@@ -144,7 +144,7 @@ function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.Ref
     if (m) return i.offset === (m[1] === '+' ? 1 : -1) * (Number(m[2]) * 60 + Number(m[3] || 0));
     return [i.city, i.name, i.zone.replace(/_/g, ' '), oldName(i.zone).replace(/_/g, ' '), ALSO[i.zone] || '', i.offsetText].some((s) => s && fold(s).includes(t));
   }, [byZone]);
-  return <Combobox placeholder={labels.timeZonePlaceholder} {...rest} ref={ref} className={cn('dk-time-zone-picker', className)} options={options} filter={filter}
+  return <Combobox placeholder={labels.timeZonePlaceholder} {...rest} ref={ref} className={cn('srp-time-zone-picker', className)} options={options} filter={filter}
     onFocus={(e) => { wake(); if (rest.onFocus) rest.onFocus(e); }} onPointerEnter={(e) => { wake(); if (rest.onPointerEnter) rest.onPointerEnter(e); }}
     onOpenChange={(open, details) => { if (open) wake(); if (rest.onOpenChange) rest.onOpenChange(open, details); }}
     {...(value !== undefined ? { value: canon(value) } : null)} {...(defaultValue !== undefined ? { defaultValue: canon(defaultValue) } : null)} />;
