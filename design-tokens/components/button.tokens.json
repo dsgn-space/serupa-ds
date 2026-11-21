@@ -112,26 +112,6 @@
           }
         }
       },
-      "secondary-text-pressed": {
-        "$type": "color",
-        "$value": "{color.primary-hover}",
-        "$description": "Secondary text while held down (4.5:1 on secondary-bg-pressed).",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--button-secondary-text-pressed"
-          }
-        }
-      },
-      "secondary-border-pressed": {
-        "$type": "color",
-        "$value": "{color.primary-hover}",
-        "$description": "Secondary border while held down.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--button-secondary-border-pressed"
-          }
-        }
-      },
       "outline-bg": {
         "$type": "color",
         "$value": "{color.surface-raised}",

@@ -144,7 +144,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | `--stepper-indicator-bg` | `surface` | An upcoming step's circle. |
 | `--stepper-indicator-border` | `border-control` | An upcoming step's ring (3:1 on the surface). |
 | `--stepper-indicator-text` | `text-muted` | An upcoming step's number. |
-| `--stepper-indicator-text-pressed` | `text-muted-shaded` | An upcoming step's number while its head is held down (4.5:1 on the washed fill). |
+| `--stepper-indicator-text-shaded` | `text-muted-shaded` | An upcoming step's number while its head is held down (4.5:1 on the washed fill). |
 | `--stepper-pressed-wash` | `text` | The color washed over a step's indicator while its head is held down, at pressed-layer strength. |
 | `--stepper-bg-active` | `primary` | The current and completed steps' circle. |
 | `--stepper-text-active` | `on-primary` | The number or check on them. |

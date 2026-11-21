@@ -32,13 +32,13 @@
           }
         }
       },
-      "indicator-text-pressed": {
+      "indicator-text-shaded": {
         "$type": "color",
         "$value": "{color.text-muted-shaded}",
         "$description": "An upcoming step's number while its head is held down (4.5:1 on the washed fill).",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--stepper-indicator-text-pressed"
+            "cssVar": "--stepper-indicator-text-shaded"
           }
         }
       },

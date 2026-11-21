@@ -281,8 +281,6 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-secondary-border` | `primary` | Secondary border. |
 | `--button-secondary-border-hover` | `primary-hover` | Secondary border on hover. |
 | `--button-secondary-bg-pressed` | `primary-subtle-pressed` | Secondary background while held down, one step past hover. |
-| `--button-secondary-text-pressed` | `primary-hover` | Secondary text while held down (4.5:1 on secondary-bg-pressed). |
-| `--button-secondary-border-pressed` | `primary-hover` | Secondary border while held down. |
 | `--button-outline-bg` | `surface-raised` | Outline background. |
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
 | `--button-outline-bg-pressed` | `secondary-hover` | Outline background while held down, one step past hover. |
