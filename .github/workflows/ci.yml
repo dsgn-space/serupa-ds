@@ -167,14 +167,14 @@ jobs:
           # failures a pull request meets most, so they are found before the queue, where one failure drops every
           # group behind it.
           # Shards: a pull request's run takes 3 base and 5 Visual jobs (8, its max-parallel on GitHub's runners). A queue group has the 28
-          # burst slots behind it and gates every merge, so it splits wider: 5 base, 10 locale and 7 Visual,
-          # about a third off its longest job (each shard still pays about a minute of setup).
-          # Locale in ten: a queue group that tests every component (#2240, 21 Nov) ran every component's tests in all three
-          # other languages, and its five locale shards took 13 to 20+ minutes of tests against 6 to 8 for the base ones,
-          # the longest jobs of a 40-minute run. Ten bring them level with base; with base, Storybook, checks and the
-          # rest that is 27 of the 28 burst slots at once, and a narrowed group still takes one shard per ten components.
+          # burst slots behind it and gates every merge, so it splits wider: 5 base and 7 Visual, about a third off its
+          # longest job (each shard still pays about a minute of setup).
+          # Locale in three: the other languages run only the tests a language can break (languageTests in
+          # tools/test/lib.mjs), about 900 s of a whole language's 2,900; the nightly Languages jobs run the rest. A queue
+          # group that ran every test in three other languages (#2240, 21 Nov) took 13 to 20+ minutes in each of five locale
+          # shards and ran past the job's 30 minutes in ten.
           shards() { local g=$1 p=$2 n=$3 out="" k; for k in $(seq 1 "$n"); do out="$out,{\"group\":\"$g\"${p:+,\"part\":\"$p\"},\"shard\":\"$k/$n\"}"; done; echo "$out"; }
-          if [ "$EVENT" = merge_group ]; then nb=5; nl=10; nv=7; else nb=3; nl=3; nv=5; fi
+          if [ "$EVENT" = merge_group ]; then nb=5; nl=3; nv=7; else nb=3; nl=3; nv=5; fi
           # On the burst runners a pull request runs four x86 jobs at once (max-parallel), so Visual takes four shards:
           # with five, the fifth started after the first wave and a whole run took 47 minutes (#2044, 16 Nov), against
           # about 31 with four (three base and one Visual shard, then the other three).
