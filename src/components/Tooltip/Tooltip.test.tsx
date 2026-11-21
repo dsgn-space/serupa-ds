@@ -39,6 +39,9 @@ describe('Tooltip', () => {
     };
       await render(<div style={{ padding: '80px' }}><Tooltip content="Save the draft" defaultOpen><Button id="tpress">Save</Button></Tooltip></div>);
       const b = document.getElementById('tpress')!, tip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
+      // The web font swapping in narrows the Button's label by a px: anchor() follows at once and the next placement a frame
+      // later, so the layer would step half a px and back for a reason that isn't the press. Measure once the font is in.
+      await document.fonts.ready;
       b.focus();
       await expect.poll(() => tip()?.matches(':popover-open')).toBe(true);
       const before = await spots(tip, 200);

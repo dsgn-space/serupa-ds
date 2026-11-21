@@ -87,7 +87,7 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
   }[kind];
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="mx-auto max-w-xl px-4 pt-6">
         <Link href={home} className="text-base font-semibold">{SITE}</Link>
