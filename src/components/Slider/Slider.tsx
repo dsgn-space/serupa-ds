@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
-import { cn, isInvalid, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, isInvalid, omit, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { named } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
@@ -148,7 +148,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   const [raw, setOwn, controlled] = useControllable<SliderValue>(props.value, props.defaultValue ?? min, 'Slider', 'value');
   const isRange = Array.isArray(raw);
   const vals: number[] = isRange ? [snap(raw[0]), snap(raw[1])].sort((a, b) => a - b) : [snap(raw)];
-  const latest = React.useRef(vals); latest.current = vals;
+  const latestRef = useLatest(vals);
   const root = React.useRef<HTMLDivElement | null>(null);
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? min); }, props.form);
   const thumbs = React.useRef<(HTMLInputElement | null)[]>([]);
@@ -172,27 +172,27 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // Without formatValue, showValue writes the number in the locale's digits and marks, as Badge and Pagination do: "٤٠" in ar-EG (GR24).
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : displayNumber(v, locale));
   // ref.current.focus() and autoFocus land on the first thumb, as they would on an <input type="range">.
-  const live = React.useRef(disabled); live.current = disabled;
-  const first = () => (live.current ? null : thumbs.current[0]);
+  const liveRef = useLatest(disabled);
+  const first = () => (liveRef.current ? null : thumbs.current[0]);
   useAutoFocus(props.autoFocus, first);
 
   const set = (i: number, v: number) => {
-    const vs = latest.current.slice();
+    const vs = latestRef.current.slice();
     let n = snap(v);
     if (isRange) n = i === 0 ? Math.min(n, at(vs, 1)) : Math.max(n, at(vs, 0));
     if (n === vs[i]) return vs;
     vs[i] = n;
-    latest.current = vs;
+    latestRef.current = vs;
     if (!controlled) setOwn(out(vs));
     if (props.onValueChange) props.onValueChange(out(vs));
     return vs;
   };
-  const commit = () => { if (props.onValueCommit) props.onValueCommit(out(latest.current)); };
+  const commit = () => { if (props.onValueCommit) props.onValueCommit(out(latestRef.current)); };
   // A change the range input makes itself: a screen reader's adjust gesture (VoiceOver's swipe up or down, TalkBack's
   // volume keys), which reach only a native range. It moves and commits as a key does; read-only, React puts it back.
   const onChange = (i: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     if (still) return;
-    const before = latest.current[i];
+    const before = latestRef.current[i];
     if (set(i, Number(e.currentTarget.value))[i] !== before) commit();
   };
   // The values a drag started from: a press on a thumb let go where it was, or a drag back to the start, changed
@@ -209,7 +209,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     if (rest.onPointerDown) rest.onPointerDown(e);
     if (disabled || e.button !== 0 || e.defaultPrevented || inField(e.target)) return;
     e.preventDefault();
-    const v = fromPoint(e.clientX, e.clientY), vs = latest.current;
+    const v = fromPoint(e.clientX, e.clientY), vs = latestRef.current;
     let i = 0;
     if (isRange) { const d0 = Math.abs(v - at(vs, 0)), d1 = Math.abs(v - at(vs, 1)); i = d1 < d0 || (d1 === d0 && v > at(vs, 1)) ? 1 : 0; }
     // Read-only: a press focuses the nearest thumb, as it would a read-only input, and moves nothing.
@@ -222,7 +222,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // A press in a number field (inputs) is the field's: it places the caret, it doesn't move a thumb.
   const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.dk-slider__input');
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX, e.clientY)); };
-  const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latest.current.some((v, k) => v !== from.current[k])) commit(); };
+  const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latestRef.current.some((v, k) => v !== from.current[k])) commit(); };
   // The browser took the press for a scroll of the page (touch-action: pan-y): the thumb goes back, and nothing commits.
   const cancel = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerCancel) rest.onPointerCancel(e); const i = drag.current; if (i == null) return; drag.current = null; set(i, at(from.current, i)); };
   // Your onKeyDown runs first, on the root as the key goes down to the focused part (the capture phase), so its
@@ -233,7 +233,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (disabled || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     const rtl = !vertical && getComputedStyle(e.currentTarget).direction === 'rtl';
-    const by = (e.shiftKey ? large : 1) * step, v = at(latest.current, i);
+    const by = (e.shiftKey ? large : 1) * step, v = at(latestRef.current, i);
     let n: number;
     switch (e.key) {
       case 'ArrowUp': n = v + by; break;
@@ -242,15 +242,15 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
       case 'ArrowLeft': n = rtl ? v + by : v - by; break;
       case 'PageUp': n = v + large * step; break;
       case 'PageDown': n = v - large * step; break;
-      case 'Home': n = isRange && i === 1 ? at(latest.current, 0) : min; break;
-      case 'End': n = isRange && i === 0 ? at(latest.current, 1) : max; break;
+      case 'Home': n = isRange && i === 1 ? at(latestRef.current, 0) : min; break;
+      case 'End': n = isRange && i === 0 ? at(latestRef.current, 1) : max; break;
       default: return;
     }
     // The range input's own step is turned off: the keys move by step and largeStep as written here, in either
     // direction of text. Read-only, they move nothing.
     e.preventDefault();
     if (readOnly) return;
-    const before = latest.current[i];
+    const before = latestRef.current[i];
     if (set(i, n)[i] !== before) commit();
   };
 
@@ -305,7 +305,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // number typed inside them moves the thumb at once; onValueCommit runs when the field is left or Enter is pressed
   // after a change, as it does at the end of a drag.
   const typedFrom = React.useRef<number[] | null>(null);
-  const fieldDone = () => { const f = typedFrom.current; if (f && latest.current.some((v, k) => v !== f[k])) { commit(); typedFrom.current = latest.current.slice(); } };
+  const fieldDone = () => { const f = typedFrom.current; if (f && latestRef.current.some((v, k) => v !== f[k])) { commit(); typedFrom.current = latestRef.current.slice(); } };
   // Out of a Field's reach (FieldContext null): the Field's id is the slider's, so a field taking it would repeat it,
   // and a range's two fields would share it. What the Field gives a thumb is passed as the thumb gets it.
   const field = (i: number) => (
@@ -314,7 +314,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
       disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
       aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
       aria-describedby={isRange ? undefined : props['aria-describedby']} aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
-      onFocus={() => { typedFrom.current = latest.current.slice(); }}
+      onFocus={() => { typedFrom.current = latestRef.current.slice(); }}
       onValueChange={(v) => { if (v != null) set(i, v); }}
       onKeyUp={(e) => { if (e.key === 'Enter') fieldDone(); }}
       onBlur={() => { fieldDone(); typedFrom.current = null; }} /></FieldContext.Provider>

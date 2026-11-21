@@ -12,6 +12,7 @@ import { useFieldLabel } from '../../internal/fieldLabel';
 import { useFieldControl } from '../../internal/field';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { reflow } from '../../internal/reflow';
 
 export interface SegmentedControlOption<V extends string = string> {
   value: V;
@@ -160,7 +161,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
     el.style.left = l + 'px';
     el.style.width = r - l + 'px';
     cut(was);
-    void el.offsetWidth;
+    reflow(el);
     el.removeAttribute('data-flip');
     const t = getComputedStyle(el, '::after'), ms = (parseFloat(t.transitionDuration) + parseFloat(t.transitionDelay)) * 1000 || 0;
     cut(box);

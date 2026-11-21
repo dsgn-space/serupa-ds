@@ -113,17 +113,18 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   const [method, setMethod] = React.useState<SignatureMethod>(start ? (start.method === 'type' ? 'type' : 'draw') : first);
   const [strokes, setStrokes] = React.useState<Stroke[]>(() => (start && start.method !== 'type' ? strokesOf(start.svg) : []));
   const [typed, setTyped] = React.useState(start && start.method === 'type' ? start.name : '');
+  // The stroke being drawn: the handlers add to it in place, and each move hands a copy to the render.
+  const liveRef = React.useRef<Stroke | null>(null);
+  const [drawing, setDrawing] = React.useState<Stroke | null>(null);
   // Shows a given value: its method, and its strokes or name; null empties what's shown and keeps the method.
   const show = (v: SignatureValue | null | undefined, empty: SignatureMethod) => {
-    live.current = null;
+    liveRef.current = null; setDrawing(null);
     if (!v) { setStrokes([]); setTyped(''); setMethod(empty); return; }
     const m: SignatureMethod = v.method === 'type' ? 'type' : 'draw';
     setMethod(m);
     if (m === 'type') setTyped(v.name); else setStrokes(strokesOf(v.svg));
   };
   const [size, setSize] = React.useState<[number, number]>([0, 0]);
-  const live = React.useRef<Stroke | null>(null);
-  const [, redraw] = React.useReducer((n: number) => n + 1, 0);
   const handover = useFocusHandover();
 
   const methodStop = () => root.current && root.current.querySelector<HTMLElement>('.dk-signature-pad__method [role=radio][tabindex="0"]');
@@ -149,7 +150,7 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   const haveKey = !value ? '-' : value.method === 'type' ? 't:' + value.name : 'd:' + JSON.stringify(strokes);
   // every render: a value the app didn't take back has to undo, before paint, what the render that showed it drew or typed.
   React.useLayoutEffect(() => {
-    if (want !== undefined && !live.current && wantKey !== haveKey) show(want, method);
+    if (want !== undefined && !liveRef.current && wantKey !== haveKey) show(want, method);
   });
 
   useFormReset(root, () => {
@@ -166,21 +167,21 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
     if (disabled || readOnly || (e.pointerType === 'mouse' && e.button !== 0)) return;
     e.preventDefault();
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a synthetic pointer has no capture */ }
-    live.current = [at(e)];
-    redraw();
+    liveRef.current = [at(e)];
+    setDrawing(liveRef.current.slice());
   };
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
-    const s = live.current;
+    const s = liveRef.current;
     if (!s) return;
     const p = at(e), q = s[s.length - 1];
     if (q && Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) < 1) return;
     s.push(p);
-    redraw();
+    setDrawing(s.slice());
   };
   const onUp = () => {
-    const s = live.current;
+    const s = liveRef.current;
     if (!s) return;
-    live.current = null;
+    liveRef.current = null; setDrawing(null);
     const next = [...strokes, s];
     setSize(measure());
     setStrokes(next);
@@ -203,7 +204,7 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
     tell(next, strokes, typed, 'method');
   };
 
-  const shown = live.current ? [...strokes, live.current] : strokes;
+  const shown = drawing ? [...strokes, drawing] : strokes;
   const empty = method === 'draw' ? !shown.length : !typed.trim();
   const { missing, onInvalid } = useRequired(!!value, () => methodStop()?.focus());
   const invalid = own || missing;

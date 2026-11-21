@@ -18,7 +18,6 @@ src/components/HoverCard/HoverCard.tsx HoverCardRender
 src/components/Image/Image.tsx ImageRender
 src/components/Kanban/Kanban.tsx KanbanRender
 src/components/LoadMore/LoadMore.tsx LoadMoreRender
-src/components/MentionInput/MentionInput.tsx MentionInputRender
 src/components/Menu/Menu.tsx ContextMenuRender
 src/components/Menu/Menu.tsx MenuItemBaseRender
 src/components/Menu/Menu.tsx MenuRadioGroupRender
@@ -34,18 +33,3 @@ src/components/Popover/Popover.tsx PopoverRender
 src/components/RangeCalendar/RangeCalendar.tsx RangeCalendarRender
 src/components/SegmentedControl/SegmentedControl.tsx SegmentedControlRender
 src/components/Select/Select.tsx SelectRender
-src/components/SignaturePad/SignaturePad.tsx SignaturePadRender
-src/components/SkipLink/SkipLink.tsx SkipLinkRender
-src/components/Slider/Slider.tsx SliderRender
-src/components/SortableList/SortableList.tsx SortableListRender
-src/components/Splitter/Splitter.tsx SplitterRender
-src/components/Tabs/Tabs.tsx TabListRender
-src/components/Tabs/Tabs.tsx TabPanelRender
-src/components/Tabs/Tabs.tsx TabRender
-src/components/Tabs/Tabs.tsx TabsRender
-src/components/Textarea/Textarea.tsx TextareaRender
-src/components/TimePicker/TimePicker.tsx TimePickerRender
-src/components/TimeZonePicker/TimeZonePicker.tsx TimeZonePickerRender
-src/components/Toast/Toast.tsx ToasterRender
-src/components/TransferList/TransferList.tsx TransferListRender
-src/components/TreeView/TreeView.tsx TreeViewRender

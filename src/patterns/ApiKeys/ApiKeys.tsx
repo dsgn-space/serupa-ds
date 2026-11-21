@@ -182,7 +182,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
             {loading ? (
               <Table caption="API keys" hideCaption loading>{head}<TableLoadingRows columns={7} rows={3} label="Loading API keys" /></Table>
             ) : !shown.length ? (
-              <EmptyState icon="key" title="No API keys yet" headingLevel={3}
+              <EmptyState icon="key" size="sm" title="No API keys yet" headingLevel={3}
                 description="Create a key when a script or tool needs to use this workspace." />
             ) : (
               <Table caption="API keys" hideCaption pinEnd>

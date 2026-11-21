@@ -166,7 +166,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
             </Splitter>
           ) : <div style={pane}>{showing && open ? detail : list}</div>}
         </div> : (
-          <EmptyState icon="inbox" title="No messages yet" headingLevel={2} variant="dashed"
+          <EmptyState icon="inbox" title="No messages yet" headingLevel={2}
             description="When someone writes to you, their message shows up here." />
         )}
       </main>
