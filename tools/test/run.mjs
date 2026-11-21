@@ -57,7 +57,7 @@ let sharedTests = [];
 let changedTests = [];
 if (arg('--since')) {
   // Lines only added to shared files (a new component's labels, icons and export) don't widen it (ADDITIVE in lib.mjs).
-  const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
+  const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
   // A story-wide test (STORY_WIDE) goes through the covered components' stories, so a change to one tests everything.
   const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
   // It changes no picture and no Storybook page, though: Visual and Storybook stay narrowed to the changed components.
