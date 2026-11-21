@@ -1195,7 +1195,7 @@ One word for one act, so a form reads in one voice and someone using voice contr
 
 - A field label is a noun phrase: "Email", "Start date", "Project name". Don't use the placeholder as the label; it disappears as soon as someone types.
 - A hint says what's expected before someone gets it wrong: "At least 12 characters", "As shown on your ID".
-- Mark the exception, not the rule: if most fields are required, mark the optional ones (Field's `optional`).
+- Mark both kinds of field: a `*` on each required one (Field's `required`) and "(optional)" on each optional one (Field's `optional`), and say once before the form what the `*` means. People skim past a note at the top, so each field says what it is.
 
 **Errors**
 
