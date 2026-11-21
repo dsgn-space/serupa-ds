@@ -87,6 +87,17 @@ describe('Blocks/FAQ', () => {
     await expect.element(question('Where are my invoices?')).toHaveFocus();
   });
 
+  test('a link whose #fragment isn\'t valid percent-encoding ("#%") still shows the questions, on load and on a later hash change', async () => {
+    history.replaceState(null, '', '#%');
+    await render(<Faq groups={groups} contact={contact} />);
+    await expect.element(question('Can I get a refund?')).toBeVisible();
+    location.hash = '%E0%A4%A';
+    await new Promise((r) => setTimeout(r, 50));
+    await expect.element(question('Can I get a refund?')).toBeVisible();
+    location.hash = 'refund';
+    await expect.element(question('Can I get a refund?')).toHaveAttribute('aria-expanded', 'true');
+  });
+
   test('one group without a title, six questions or fewer: no group heading, no search, questions one level down', async () => {
     await render(<Faq groups={[{ id: 'all', questions: groups[0]!.questions }]} headingLevel={3} defaultOpen={['delete-account']} />);
     await expect.element(page.getByRole('heading', { level: 3, name: 'Frequently asked questions' })).toBeVisible();

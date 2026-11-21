@@ -30,6 +30,11 @@ Knowing this helps tell a real issue from expected behavior:
 - The components work under a strict Content Security Policy and with Trusted Types enforced (checked on every story
   by `src/internal/strictCsp.test.tsx` and `trustedTypes.test.tsx`). `theme.js` can run inline with a nonce.
 - Text you pass to a component is rendered as text, never as HTML.
+- A link's `href` is yours to check when it comes from someone else: React refuses `javascript:` in an `href`, and the
+  components that follow a link from code (Card, CommandPalette, Pagination's "Go to page") only follow a web page,
+  `mailto:` or `tel:`. Prose shows the HTML you give it, so sanitize HTML from users or a CMS first.
+- Whether another site may show your pages in a frame is the app's to set (the `frame-ancestors` directive of its
+  Content Security Policy): a component library can't. Nothing here needs framing or loosens it.
 - Scripts store only what's listed under [What's kept in the browser](#whats-kept-in-the-browser), and nothing at all
   unless you pass a key, load `theme.js` or `debug.js`, or someone turns off single-key shortcuts in the KeyboardShortcuts
   help dialog.

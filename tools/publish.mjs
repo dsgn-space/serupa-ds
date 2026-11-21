@@ -1,5 +1,6 @@
 // npm run release: after a Release pull request is merged, tags the version and makes a GitHub release
-// with its CHANGELOG.md notes and the package (npm pack) attached. Does nothing once the tag and its release
+// with its CHANGELOG.md notes and the package (npm pack) attached, and the native and email kits as archives of their
+// own (tools/release-kits.mjs). Does nothing once the tag and its release
 // both exist; when the tag was pushed but making the release failed, a re-run makes the release from the tag.
 // The Release workflow runs it on main and on a maintenance branch (14.x); GH_TOKEN (or GITHUB_TOKEN) must allow writing to the repository.
 //
@@ -16,6 +17,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { isLatest, previousTag, screenshotNotes } from './release-screenshots.mjs';
 import { diffRefs, releaseNotes } from './api-diff.mjs';
+import { releaseKits } from './release-kits.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const run = (cmd, args, opts = {}) => (execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }) ?? '').trim();   // null when stdio is inherited
@@ -74,6 +76,9 @@ if (tagged) {
   run('git', [...who, 'commit', '--quiet', '-m', `Release ${tag} (prebuilt)`]);
 }
 const tarball = path.join(P, run('npm', ['pack', '--silent']).split('\n').pop());
+// The native and email kits, from the same build. Never in the way of a release.
+let kits = [];
+try { kits = releaseKits(P, pkg.version); } catch (e) { console.log(`No native and email kits on the release: ${e.message.split('\n')[0]}`); }
 const notes = path.join(P, '.release-notes.md');
 // The file's SHA-256 under the notes, so a download can be checked against the release page. The Release workflow's
 // attest job signs the same file (build provenance); the README's install section has the gh attestation verify line.
@@ -102,7 +107,8 @@ if (!tagged) {
 home();
 // A patch on the previous major's branch (14.x after 15.0.0) leaves "Latest" on the new major.
 const latest = isLatest(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
-run('gh', ['release', 'create', tag, tarball, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag', `--latest=${latest}`], { stdio: 'inherit' });
+run('gh', ['release', 'create', tag, tarball, ...kits, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag', `--latest=${latest}`], { stdio: 'inherit' });
 fs.rmSync(notes);
+fs.rmSync(path.join(P, '.release-kits'), { recursive: true, force: true });
 // The Release workflow's publish job sends the same tarball to the private registry once the name is scoped (15.0.0).
 console.log(`Released ${tag}.`);

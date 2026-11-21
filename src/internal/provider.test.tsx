@@ -10,7 +10,9 @@ import { Icon } from '../components/Icon/Icon';
 import { Loader } from '../components/Loader/Loader';
 import { Pagination } from '../components/Pagination/Pagination';
 import { TimePicker } from '../components/TimePicker/TimePicker';
-import { idLabels } from './labels';
+import { DEFAULT_LABELS, idLabels } from './labels';
+import { localeDir } from './locale';
+import * as de from '../labels/de';
 import { SerupaProvider, useSerupa } from './provider';
 
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
@@ -95,6 +97,37 @@ describe('SerupaProvider locale', () => {
     const [de, us] = await Promise.all([Promise.resolve().then(() => page('de-DE')), Promise.resolve().then(() => page('en-US'))]);
     expect(de).toContain('value="05.03.2026"');
     expect(us).toContain('value="03/05/2026"');
+  });
+});
+
+describe('SerupaProvider languages', () => {
+  const en = { locale: 'en', labels: DEFAULT_LABELS }, id = { locale: 'id', labels: idLabels };
+  const next = () => [...document.querySelectorAll('nav button')].at(-1)?.getAttribute('aria-label');
+
+  test('one locale picks the words from the packs, by the whole tag or its language, and labels still win', async () => {
+    const App = ({ locale, own }: { locale: string; own?: string }) => (
+      <SerupaProvider locale={locale} languages={[en, id, de]} labels={own ? { nextPage: own } : undefined}><Pagination count={3} defaultPage={2} /></SerupaProvider>);
+    const r = await render(<App locale="id-ID" />);
+    expect(next()).toBe('Halaman berikutnya');
+    await r.rerender(<App locale="de-AT" />);
+    expect(next()).toBe(de.labels.nextPage);
+    await r.rerender(<App locale="en-GB" />);
+    expect(next()).toBe('Next page');
+    await r.rerender(<App locale="id-ID" own="Lanjut" />);
+    expect(next()).toBe('Lanjut');
+  });
+
+  test('an inner provider that sets only a locale picks from the outer packs; one with no matching pack keeps the outer words', async () => {
+    await render(<SerupaProvider locale="en-US" languages={[en, id]}>
+      <SerupaProvider locale="id"><Pagination count={3} defaultPage={2} /></SerupaProvider>
+      <SerupaProvider locale="fr-FR"><Pagination count={3} defaultPage={2} /></SerupaProvider>
+    </SerupaProvider>);
+    const names = [...document.querySelectorAll('nav')].map((n) => [...n.querySelectorAll('button')].at(-1)?.getAttribute('aria-label'));
+    expect(names).toEqual(['Halaman berikutnya', 'Next page']);
+  });
+
+  test('localeDir gives the direction to set beside lang', () => {
+    expect([localeDir('ar-EG'), localeDir('he'), localeDir('id-ID'), localeDir('en_US'), localeDir('not a locale')]).toEqual(['rtl', 'rtl', 'ltr', 'ltr', undefined]);
   });
 });
 

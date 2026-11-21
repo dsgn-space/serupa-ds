@@ -1,0 +1,64 @@
+name: Schedule kick
+
+# GitHub drops scheduled runs when it is busy, and on this repository it drops most of them: on 21 November Runner
+# watch ('*/10') started 4 times in 24 hours, Runner ping ('23 *') not once after it was merged at 15:45 UTC, and
+# Nightly ('23 17') and Cross-browser ('41 19') not at all, so Nightly last ran on 20 November and the Health page
+# went stale. Pushes to main and finished CI runs do arrive, many times an hour, so each one checks the scheduled
+# workflows below and starts any whose last scheduled time has passed with no run since: on main, by
+# workflow_dispatch, which a workflow's own token may start. A late start is kept to the evening (UTC): a run missed
+# by more than the hours given stays missed, so nothing heavy starts in Jakarta's working day.
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: schedule-kick
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  kick:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          now=$(date -u +%s)
+          # workflow file, minute, hour (UTC; "*" for every hour), how many hours late it may still start
+          while read -r file minute hour late; do
+            if [ "$hour" = "*" ]; then
+              last=$(date -u -d "$(date -u +%Y-%m-%dT%H):$minute:00Z" +%s)
+              [ "$last" -gt "$now" ] && last=$(( last - 3600 ))
+            else
+              last=$(date -u -d "$(date -u +%Y-%m-%d)T$hour:$minute:00Z" +%s)
+              [ "$last" -gt "$now" ] && last=$(( last - 86400 ))
+            fi
+            # Give GitHub's own schedule 20 minutes first.
+            if [ $(( now - last )) -lt 1200 ] || [ $(( now - last )) -gt $(( late * 3600 )) ]; then continue; fi
+            since=$(date -u -d "@$last" +%Y-%m-%dT%H:%M:%SZ)
+            runs=$(gh api "repos/$GH_REPO/actions/workflows/$file/runs?branch=main&created=%3E%3D$since&per_page=20" \
+              --jq '[.workflow_runs[] | select(.event == "schedule" or .event == "workflow_dispatch")] | length')
+            if [ "$runs" = 0 ]; then
+              echo "$file: no run since $since, starting one."
+              gh api -X POST "repos/$GH_REPO/actions/workflows/$file/dispatches" -f ref=main
+            else
+              echo "$file: ran since $since."
+            fi
+          done <<'LIST'
+          runner-ping.yml 23 * 1
+          nightly.yml 23 17 7
+          cross-browser.yml 41 19 5
+          canary.yml 47 20 4
+          screen-readers.yml 53 20 4
+          LIST
