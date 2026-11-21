@@ -155,7 +155,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingLabel)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
   const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
-  const content: React.ReactNode[] = [dot, icon, <span className="dk-badge__label" key="label">{label}</span>, remove, spin];
+  const content = <>{dot}{icon}<span className="dk-badge__label">{label}</span>{remove}{spin}</>;
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
     rest.onKeyDown = chain(rest.onKeyDown, pressKey);
@@ -172,12 +172,12 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
       rest.role = 'link';
       rest['aria-disabled'] = true;
       rest.onClick = block;
-      return React.createElement('a', Object.assign(rest, { ref: setNode, className: classes }), ...content);
+      return React.createElement('a', Object.assign(rest, { ref: setNode, className: classes }), content);
     }
-    return React.createElement(config.link, Object.assign(rest, { ref: setNode, className: classes }), ...content);
+    return React.createElement(config.link, Object.assign(rest, { ref: setNode, className: classes }), content);
   }
   if (interactive && rest.type === undefined) rest.type = 'button';   // never submits a form by accident
-  return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), ...content);
+  return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), content);
 }
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */

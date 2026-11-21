@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -320,12 +320,11 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const shown = hushed ? null : focus ? focus.i : hover;
   // The points call back through a ref, so the memoised marks redraw when the data or the layout change, not on every
   // pointer move; the shown category's markers are marked here instead.
-  const api = React.useRef<MarksApi>(null!);
-  api.current = {
+  const api = useLatest<MarksApi>({
     focus: (s, i, ring) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring }); },
     blur: () => setFocus(null),
     point: (key, el) => { if (el) points.current.set(key, el); else points.current.delete(key); },
-  };
+  });
   // every render: any change of data or layout can draw the markers again, and the shown ones are found afresh.
   useIsoLayoutEffect(() => {
     if (shown == null || donut) return;

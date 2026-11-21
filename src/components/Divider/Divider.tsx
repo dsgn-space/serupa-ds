@@ -26,9 +26,8 @@ function DividerRender({ ref, ...props }: DividerProps & React.RefAttributes<HTM
     if (typeof label === 'string' || typeof label === 'number') { if (rest['aria-label'] == null) a11y['aria-label'] = String(label); }
     else { delete a11y.role; }
   }
-  if (label == null && !vertical) return React.createElement('hr', Object.assign(rest, a11y, { ref: ref, className: cls, 'data-component': 'divider', role: props.decorative ? 'none' : undefined }));
-  return React.createElement('div', Object.assign(rest, a11y, { ref: ref, className: cls, 'data-component': 'divider' }),
-    label != null ? <span className="dk-divider__label">{label}</span> : null);
+  if (label == null && !vertical) return <hr {...rest} {...a11y} ref={ref as React.Ref<HTMLHRElement>} className={cls} data-component="divider" role={props.decorative ? 'none' : undefined} />;
+  return <div {...rest} {...a11y} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="divider">{label != null ? <span className="dk-divider__label">{label}</span> : null}</div>;
 }
 
 /* Divider: a 1px line between content, horizontal (an <hr>) or vertical, with an optional label in the middle.

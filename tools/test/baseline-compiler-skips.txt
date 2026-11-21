@@ -1,10 +1,8 @@
 src/components/Accordion/Accordion.tsx AccordionItemRender
 src/components/Accordion/Accordion.tsx AccordionRender
-src/components/Badge/Badge.tsx BadgeRender
 src/components/Button/Button.tsx ButtonBaseRender
 src/components/Calendar/Calendar.tsx CalendarRender
 src/components/Calendar/Calendar.tsx Periods
-src/components/Card/Card.tsx CardRender
 src/components/CascadeSelect/CascadeSelect.tsx CascadeSelectRender
 src/components/Chart/Chart.tsx ChartRender
 src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
@@ -18,7 +16,6 @@ src/components/Dialog/Dialog.tsx DialogRender
 src/components/Drawer/Drawer.tsx DrawerRender
 src/components/EventCalendar/EventCalendar.tsx Body
 src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
-src/components/Field/Field.tsx FieldRender
 src/components/FieldList/FieldList.tsx FieldListRender
 src/components/FileUpload/FileUpload.tsx FileUploadRender
 src/components/FormattedNumber/FormattedNumber.tsx FormattedNumberRender
