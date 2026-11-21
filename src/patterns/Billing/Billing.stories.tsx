@@ -42,3 +42,9 @@ export const Loading: Story = { args: { loading: true } };
 
 /** Billing didn't load: the page says so, and Try again loads it again. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new Promise((r) => setTimeout(r, 1000)) } };
+
+/** Partly loaded: the plan, usage and card came in, the invoices didn't; their section says so, with Try again. */
+export const Partial: Story = { args: { invoicesFailed: true, onRetry: () => {} } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

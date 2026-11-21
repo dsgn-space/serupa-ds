@@ -18,6 +18,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Timesheet: a week's hours by project and day, the totals as you type, and sending it for approval. For an app to
    copy. What it carries (WCAG 2.2):
@@ -56,6 +57,9 @@ export interface TimesheetProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoProjects: Project[] = [
@@ -85,7 +89,7 @@ export function weekProblems(week: Week, dayNames: string[]): Record<string, str
 
 /** The timesheet page: a skip link, a header, then main with the h1, the week's table and Send, or the answer. */
 export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, defaultHours = demoHours, lastWeek = demoLast,
-  expected = 40, approver = 'Maya Chen', onSend, loading = false, loadFailed = false, onRetry }: TimesheetProps) {
+  expected = 40, approver = 'Maya Chen', onSend, loading = false, loadFailed = false, onRetry, online }: TimesheetProps) {
   const locale = useLocale();
   const [hours, setHours] = React.useState<Week>(defaultHours);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -161,6 +165,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
         <Link underline="hover" href="#timesheets">Timesheets</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your hours stay here. Sending the timesheet needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Timesheets', href: '#timesheets' }, { label: range }]} title={`Week of ${range}`}
           description={`${hoursWords(expected)} a week are expected. A day holds at most 24.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your timesheet" onRetry={() => onRetry?.()} headingLevel={2} /></div>

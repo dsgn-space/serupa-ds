@@ -27,3 +27,6 @@ export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new 
 
 /** A delete asked for with 14 days to change one's mind, on a paid plan: the banner says the day, with Keep my account. */
 export const DeletionScheduled: Story = { args: { deleteAfter: 14, deletionDate: '2026-11-28', plan: 'Pro' } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

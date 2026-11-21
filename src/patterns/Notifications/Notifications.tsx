@@ -14,6 +14,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
@@ -45,6 +46,9 @@ export interface NotificationsProps {
   loading?: boolean | undefined;
   /** Where "Notification settings" leads: the page where people choose which notifications they get. Default: "#settings-notifications". */
   settingsHref?: string | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 // Times are minutes before the page loaded, so they read the same whenever the page is drawn.
@@ -61,7 +65,7 @@ const demo: NotificationItem[] = [
 type Filter = 'all' | 'unread';
 
 /** The notifications page: a skip link, a Navbar with the bell, then main with the inbox. */
-export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false, loadFailed = false, onRetry }: NotificationsProps) {
+export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false, loadFailed = false, onRetry, online }: NotificationsProps) {
   const locale = useLocale();
   // Marked read here, on top of what the items say, so items that arrive later (after loading) keep their own.
   const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set());
@@ -113,6 +117,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
       <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the notifications loaded before you went offline. New ones show when you’re back.</OfflineBanner>
         <PageHeader title="Notifications" headingRef={heading}
           primary={{ label: 'Mark all as read', disabled: loading || loadFailed || !unread, onSelect: () => markAll(true) }}
           secondary={[{ label: 'Notification settings', icon: 'settings', href: settingsHref }]} />

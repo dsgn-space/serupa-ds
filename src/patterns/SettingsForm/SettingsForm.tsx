@@ -15,6 +15,7 @@ import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Settings form: a settings page of sections, each with its own Save, errors and status, and a question before
    unsaved changes are lost. For an app to copy. What it carries (WCAG 2.2):
@@ -48,6 +49,9 @@ export interface SettingsFormProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: SettingsValues = {
@@ -98,14 +102,14 @@ function useSection<K extends keyof SettingsValues>(key: K, saved0: SettingsValu
 }
 
 /** The settings page: a skip link, a header with the way back, then main with the h1 and a section per group. */
-export function SettingsForm({ loading = false, loadFailed = false, onRetry, ...props }: SettingsFormProps) {
+export function SettingsForm({ loading = false, loadFailed = false, onRetry, online, ...props }: SettingsFormProps) {
   // The form takes `initial` when it mounts, so it mounts once the settings are in, not before.
-  return loading || loadFailed ? <Loading failed={loadFailed} onRetry={onRetry} /> : <Loaded {...props} />;
+  return loading || loadFailed ? <Loading failed={loadFailed} onRetry={onRetry} online={online} /> : <Loaded {...props} online={online} />;
 }
 
 // While the settings load: the same page, with a busy placeholder per section, named once ("Loading settings"). When
 // they failed to load: the page says so in the sections' place, with Try again.
-function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormProps['onRetry'] }) {
+function Loading({ failed, onRetry, online }: { failed: boolean; onRetry: SettingsFormProps['onRetry']; online: boolean | undefined }) {
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
@@ -114,6 +118,7 @@ function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormPr
         <Link underline="hover" href="#dashboard">Back to the dashboard</Link>
       </header>
       <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Saving needs a connection.</OfflineBanner>
         <PageHeader title="Settings" />
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-4">
@@ -126,7 +131,7 @@ function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormPr
   );
 }
 
-function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'loading' | 'loadFailed' | 'onRetry'>) {
+function Loaded({ initial = demo, onSave, onLeave, online }: Omit<SettingsFormProps, 'loading' | 'loadFailed' | 'onRetry'>) {
   const profile = useSection('profile', initial.profile, profileProblems, onSave);
   const notes = useSection('notifications', initial.notifications, () => [], onSave);
   const { confirm, dialog } = useUnsavedChanges(profile.dirty || notes.dirty);
@@ -147,6 +152,7 @@ function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'lo
         <Link underline="hover" href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
         <PageHeader title="Settings" />
         <SettingsSection title="Profile" description="How you appear to your team." onSave={profile.save}
           errors={profile.errors} status={profile.status} savedAt={profile.savedAt} onRetry={profile.save} saveLabel="Save profile">

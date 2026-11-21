@@ -18,6 +18,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Detail page: one thing (a project) with where it sits, its name and details editable in place, its parts in tabs,
    small removals that can be undone, and a delete that can't, behind typing its name. For an app to copy. What it
@@ -58,6 +59,9 @@ export interface DetailPageProps {
   /** A supporting pane beside the tabs from 1024px, and below them on a narrower screen: the project's activity, its
       people. Its title names the landmark. */
   aside?: { title: string; content: React.ReactNode } | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Project = {
@@ -79,7 +83,7 @@ function day(iso: string, locale: string): string {
 const english = /* @__PURE__ */ new Intl.PluralRules('en');
 
 /** The detail page: a skip link, a header, then main with the breadcrumb, the h1, the tabs and the danger zone. */
-export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed, loading = false, loadFailed = false, onRetry, aside }: DetailPageProps) {
+export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed, loading = false, loadFailed = false, onRetry, aside, online }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
   const [description, setDescription] = React.useState(project.description);
   // A new name or description from the app (another project opened, or the saved one coming back) replaces the one
@@ -145,6 +149,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className={`mx-auto flex ${aside ? 'max-w-6xl' : 'max-w-4xl'} flex-col gap-6 px-4 py-8 outline-none`}>
+        <OfflineBanner online={online} placement="inline">This is the project as it was when the page loaded. Changes need a connection.</OfflineBanner>
         {loadFailed || loading ? (
           // The name isn't known yet, so the h1 says only what the page is; the way back stays.
           <>

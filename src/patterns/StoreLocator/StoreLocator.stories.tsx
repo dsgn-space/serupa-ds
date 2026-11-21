@@ -23,3 +23,6 @@ export const Loading: Story = { args: { loading: true } };
 
 /** Couldn't load: it says so, with Try again. */
 export const LoadFailed: Story = { args: { loadFailed: true } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

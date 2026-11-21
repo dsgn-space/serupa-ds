@@ -15,6 +15,7 @@ import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptySt
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
    the team did, with skeletons while it loads and a first-run state before there's anything to show. For an app to
@@ -66,6 +67,11 @@ export interface DashboardProps {
   onLoadMoreActivity?: (() => PromiseLike<unknown>) | undefined;
   /** With `onLoadMoreActivity`: false after the last page. */
   hasMoreActivity?: boolean | undefined;
+  /** The rest loaded but the activity didn't: its card says so, with Try again, which calls onRetry. Default: false. */
+  activityFailed?: boolean | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const day = (n: number) => new Date(Date.UTC(2026, 10, 6, 9) - n * 3600_000 * 5).toISOString();
@@ -108,7 +114,7 @@ const PAGE = 4;
 const gb = (n: number, locale: string) => `${n.toLocaleString(locale, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
-export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false }: DashboardProps) {
+export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false, activityFailed = false, online }: DashboardProps) {
   const locale = useLocale();
   const [shown, setShown] = React.useState(PAGE);
   const firstRun = !loading && !loadFailed && data.projects.length === 0;
@@ -123,6 +129,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These numbers are from when the page loaded. They update when you’re back.</OfflineBanner>
         <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
 
         {loadFailed ? (
@@ -183,10 +190,17 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
 
             {/* One shape loading and loaded, so the heading doesn't jump when the events arrive: the feed's own
                 skeleton rows (an avatar and two lines) stand in for the events. */}
-            <Card>
+            {activityFailed && !loading ? (
+              <Card>
+                <section aria-labelledby="dash-activity" className="flex flex-col gap-4">
+                  <Heading level={2} size="lg" id="dash-activity">Activity</Heading>
+                  <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the activity" description="The rest of the dashboard is up to date." onRetry={() => onRetry?.()} />
+                </section>
+              </Card>
+            ) : <Card>
               <ActivityFeed events={events} loading={loading} headingSize="lg" onLoadMore={more} total={onLoadMoreActivity ? undefined : data.activity.length}
                 hasMore={onLoadMoreActivity ? hasMoreActivity : shown < data.activity.length} />
-            </Card>
+            </Card>}
           </>
         )}
       </main>

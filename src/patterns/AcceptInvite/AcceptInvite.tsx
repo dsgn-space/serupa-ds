@@ -11,6 +11,7 @@ import { Link } from '../../components/Link/Link';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Accept invite: the page a workspace invite links to. Who invited you, to what, as what, and Join or Decline; or
    why it can't be used any more and what to do. For an app to copy. What it carries (WCAG 2.2):
@@ -53,6 +54,9 @@ export interface AcceptInviteProps {
   onJoin?: (() => unknown) | undefined;
   /** Declines. */
   onDecline?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: WorkspaceInvite = {
@@ -68,7 +72,7 @@ export function inviteState(invite: WorkspaceInvite, now: Date): InviteState {
 }
 
 /** The invite page: a skip link, a header, then main with the invite, or why it can't be used, or the answer. */
-export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, onJoin, onDecline }: AcceptInviteProps) {
+export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, onJoin, onDecline, online }: AcceptInviteProps) {
   const locale = useLocale();
   const state = inviteState(invite, now ?? new Date());
   const [busy, setBusy] = React.useState(false);
@@ -95,6 +99,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
         <Link underline="hover" href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-lg flex-col px-4 py-12 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">You can read the invitation; joining needs a connection.</OfflineBanner>
         <Card padding="lg" className="flex flex-col gap-4">
           {done ? (
             <section aria-labelledby="invite-answer" className="flex flex-col items-start gap-3">

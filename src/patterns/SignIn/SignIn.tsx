@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { AuthCard, type AuthStep } from '../../blocks/AuthCard/AuthCard';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Sign-in: email and password, then a one-time code, as a page of its own, for an app to copy. The card is the
    Auth card block (src/blocks/AuthCard), which says what it carries for WCAG 2.2: 3.3.8 accessible authentication,
@@ -18,17 +19,21 @@ export interface SignInProps {
   check?: (email: string, password: string) => boolean;
   /** The app's check of the one-time code. Default: "123456". */
   verify?: (code: string) => boolean;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoCheck = (email: string, password: string) => email === 'ada@example.com' && password === 'correct horse';
 const demoVerify = (code: string) => code === '123456';
 
 /** The sign-in page: a skip link, then main with the step's form. */
-export function SignIn({ start = 'password', failed, check = demoCheck, verify = demoVerify }: SignInProps) {
+export function SignIn({ start = 'password', failed, check = demoCheck, verify = demoVerify, online }: SignInProps) {
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
+        <OfflineBanner online={online} placement="inline">Signing in needs a connection.</OfflineBanner>
         <p className="m-0 text-base font-semibold">Acme</p>
         <AuthCard idPrefix="sign-in" start={start} failed={failed} check={check} verify={verify} forgotHref="#forgot" doneHref="#dashboard"
           defaultEmail={failed === 'wrong' ? 'ada@example.com' : ''} defaultPassword={failed === 'wrong' ? 'correct hose' : ''}

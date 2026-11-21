@@ -20,6 +20,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* API keys: the keys a workspace's scripts and tools use, making one, and revoking one. For an app to copy. What it
    carries (WCAG 2.2):
@@ -72,6 +73,9 @@ export interface ApiKeysProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 // Times are days before 9:00 UTC on 12 November 2026, so the demo reads the same whenever it's drawn.
@@ -98,7 +102,7 @@ export function keyNameProblem(name: string, taken: readonly string[]): string |
 }
 
 /** The API keys page: a skip link, a header, then main with the h1 and Create key, and the keys. */
-export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, loadFailed = false, onRetry }: ApiKeysProps) {
+export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, loadFailed = false, onRetry, online }: ApiKeysProps) {
   const locale = useLocale();
   const [made, setMade] = React.useState<ApiKey[]>([]);
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
@@ -171,6 +175,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the keys loaded before you went offline. Creating or revoking one needs a connection.</OfflineBanner>
         <PageHeader title="API keys" description="Keys let your scripts and tools use this workspace. Keep each one secret, like a password."
           primary={loadFailed ? undefined : { label: 'Create key', onSelect: () => openCreate(true) }} />
 

@@ -23,3 +23,9 @@ export const Loading: Story = { args: { loading: true } };
 
 /** The times didn't load: the page says so, and Try again loads them again. */
 export const LoadFailed: Story = { args: { loadFailed: true } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** No times free: it says so, and when to look again. */
+export const Empty: Story = { args: { slots: {} } };

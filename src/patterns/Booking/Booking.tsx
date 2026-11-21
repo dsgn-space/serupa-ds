@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Booking: a stay at one place, picked on two months side by side, with the nights counted, the nights already
    booked named, the price worked out and a way to reserve. For an app to copy. What it carries (WCAG 2.2):
@@ -67,6 +68,9 @@ export interface BookingProps {
   loadFailed?: boolean | undefined;
   /** Loads the place again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: BookingPlace = {
@@ -116,7 +120,7 @@ export function stayProblem(stay: { start: string; end: string } | null, place: 
 }
 
 /** The booking page: a skip link, a header, then main with the place's h1, its dates, guests and price. */
-export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', onReserve, loading = false, loadFailed = false, onRetry }: BookingProps) {
+export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', onReserve, loading = false, loadFailed = false, onRetry, online }: BookingProps) {
   const locale = useLocale(undefined);
   const [stay, setStay] = React.useState<{ start: string; end: string } | null>(null);
   const [guests, setGuests] = React.useState<number | null>(2);
@@ -158,6 +162,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
         <p className="m-0 text-base font-semibold">Acme Stays</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These dates are from when the page loaded and may have gone. Reserving needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Stays', href: '#stays' }, { label: place.name }]} title={place.name}
           description={loading || loadFailed ? undefined : <>{place.where} · {money(place.price)} a night · Sleeps {formatNumber(place.maxGuests, locale)}</>} />
 

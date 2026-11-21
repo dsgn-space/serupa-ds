@@ -76,6 +76,13 @@ describe('Patterns/Transactions', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('an account with no transactions says so once, without an empty month, totals or filters', async () => {
+    const screen = await render(<Transactions transactions={[]} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No transactions yet' })).toBeVisible();
+    expect(document.querySelector('main select, main input')).toBeNull();
+    expect(document.querySelector('main')!.textContent).not.toMatch(/match|\$0\.00/);
+  });
 });
 
 describe('Transactions printed', () => {

@@ -19,6 +19,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* File browser: one folder's files as a list people pick from, to move or delete several at once, with rename, move
    and delete on each row too. For an app to copy. What it carries (WCAG 2.2):
@@ -83,6 +84,9 @@ export interface FileBrowserProps {
   loadFailed?: boolean | undefined;
   /** Loads the files again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const now = Date.now();
@@ -111,7 +115,7 @@ export function nameProblem(name: string, id: string, files: readonly BrowserFil
 
 /** The file browser: a skip link, a header, then main with the folder's h1, the selection bar and the list. */
 export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files', href: '#files' }], files: all = demoFiles, folders = demoFolders,
-  defaultSelected, onDelete, onMove, onRename, onUpload, loading = false, loadFailed = false, onRetry }: FileBrowserProps) {
+  defaultSelected, onDelete, onMove, onRename, onUpload, loading = false, loadFailed = false, onRetry, online }: FileBrowserProps) {
   const locale = useLocale();
   // What's shown: the files, less those deleted or moved away, with any new names.
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
@@ -204,6 +208,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the files loaded before you went offline. Opening, moving or uploading needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[...path, { label: folder }]} title={folder} headingRef={title} primary={upload}
           description={loading || loadFailed ? undefined : countFiles(files.length, locale)} />
 

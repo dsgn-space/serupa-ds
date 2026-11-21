@@ -17,3 +17,6 @@ export const Default: Story = {};
 
 /** Sending fails: it says so next to the button, and every field and the CV stay. */
 export const SendFails: Story = { args: { onApply: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

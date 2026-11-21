@@ -13,6 +13,7 @@ import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyS
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Activity log: what people did in a workspace, newest first, with a search, a type filter, more on request, and an
    export. For an app to copy, as the record admins check after something changes. What it carries (WCAG 2.2):
@@ -50,6 +51,9 @@ export interface ActivityLogProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const KINDS: { value: ActivityKind; label: string }[] = [
@@ -82,7 +86,7 @@ export function matchEvents(events: readonly ActivityEvent[], query: string, kin
 }
 
 /** The activity page: a skip link, a header, then main with the h1, the search and filter, and the events. */
-export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = false, loadFailed = false, onRetry }: ActivityLogProps) {
+export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = false, loadFailed = false, onRetry, online }: ActivityLogProps) {
   const locale = useLocale();
   const [query, setQuery] = React.useState('');
   const [kind, setKind] = React.useState<ActivityKind | 'all'>('all');
@@ -101,6 +105,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the events loaded before you went offline. New ones show when you’re back.</OfflineBanner>
         <PageHeader title="Activity log" description="What people did in this workspace, newest first. Kept for a year."
           primary={onExport && !loadFailed ? { label: 'Export', onSelect: () => onExport(found) } : undefined} />
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load the activity log" onRetry={() => onRetry?.()} headingLevel={2} /> : <>

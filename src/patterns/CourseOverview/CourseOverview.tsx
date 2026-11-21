@@ -15,6 +15,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { Duration } from '../../components/Duration/Duration';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Course overview: a course's modules and lessons, how far you are, where to carry on, and marking lessons done.
    For an app to copy. What it carries (WCAG 2.2):
@@ -45,6 +46,9 @@ export interface CourseOverviewProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoModules: CourseModule[] = [
@@ -75,7 +79,7 @@ export function courseProgress(modules: CourseModule[], done: string[]) {
 
 /** The course page: a skip link, a header, then main with the h1, progress, Continue, and the modules. */
 export function CourseOverview({ title = 'Typography for the screen', description = 'Choose, set and pair type so that it reads well on any screen.',
-  teacher = 'Lena Vogel', modules = demoModules, defaultDone = ['l1', 'l2', 'l3', 'l4'], onDoneChange, loading = false, loadFailed = false, onRetry }: CourseOverviewProps) {
+  teacher = 'Lena Vogel', modules = demoModules, defaultDone = ['l1', 'l2', 'l3', 'l4'], onDoneChange, loading = false, loadFailed = false, onRetry, online }: CourseOverviewProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [done, setDone] = React.useState(defaultDone);
@@ -100,6 +104,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
         <Link underline="hover" href="#courses">Your courses</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is your progress as it was when the page loaded. Lessons need a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the course" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the course" /></Card> : (<>

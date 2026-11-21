@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Quiz: a few questions to check what was learned, all on one page, then the score and, for each question, whether
    it was right and why. For an app to copy. What it carries (WCAG 2.2):
@@ -54,6 +55,9 @@ export interface QuizProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: QuizQuestion[] = [
@@ -78,7 +82,7 @@ export function scoreQuiz(questions: readonly QuizQuestion[], answers: QuizAnswe
 }
 
 /** The quiz page: a skip link, a header, then main with the h1, the questions, and the score once checked. */
-export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck, loading = false, loadFailed = false, onRetry }: QuizProps) {
+export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck, loading = false, loadFailed = false, onRetry, online }: QuizProps) {
   const locale = useLocale();
   const [answers, setAnswers] = React.useState<QuizAnswers>({});
   const [missing, setMissing] = React.useState<string[]>([]);
@@ -113,6 +117,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
         <Link underline="hover" href="#course">Back to the course</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Checking them needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
           description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>

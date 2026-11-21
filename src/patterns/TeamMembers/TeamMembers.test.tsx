@@ -150,6 +150,17 @@ describe('Patterns/Team members', () => {
     await expect.element(screen.getByRole('heading', { level: 2, name: digits('Members (4)') })).toBeVisible();
   });
 
+  test('partly loaded: the members show, and the Invites card alone says it failed, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<TeamMembers invitesFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: digits('Members (4)') })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Invites' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 3, name: 'Couldn’t load the invites' })).toBeVisible();
+    expect(screen.getByText('No invites waiting.').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
   test('counts follow the locale’s digits', async () => {
     const bodyText = () => document.body.textContent ?? '';
     const screen = await render(<SerupaProvider locale="ar-EG"><TeamMembers /></SerupaProvider>);

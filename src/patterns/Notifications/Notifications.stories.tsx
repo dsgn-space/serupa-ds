@@ -28,3 +28,6 @@ export const Loading: Story = { args: { items: [], loading: true } };
 
 /** The notifications failed to load: what happened and Try again in the list's place, and Mark all as read waits. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

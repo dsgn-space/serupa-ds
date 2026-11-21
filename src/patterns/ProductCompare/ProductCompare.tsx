@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Product compare: two to four products side by side, a row for each thing they differ on, and a way to see only the
    differences. For an app to copy. What it carries (WCAG 2.2):
@@ -62,6 +63,9 @@ export interface ProductCompareProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const pic = (band: string, cup: string, bg: string) => 'data:image/svg+xml,' + encodeURIComponent(
@@ -95,7 +99,7 @@ export function valueWords(v: CompareValue | undefined, feature: CompareFeature,
 }
 
 /** The compare page: a skip link, a header, then main with the h1, the switch, and the table, or an empty state. */
-export function ProductCompare({ products = demo, features = demoFeatures, currency = 'USD', onAddToCart, onRemove, loading = false, loadFailed = false, onRetry }: ProductCompareProps) {
+export function ProductCompare({ products = demo, features = demoFeatures, currency = 'USD', onAddToCart, onRemove, loading = false, loadFailed = false, onRetry, online }: ProductCompareProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(products);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -126,6 +130,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
         <Link underline="hover" href="#cart">Cart</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Headphones', href: '#shop' }, { label: 'Compare' }]} title="Compare headphones"
           description="Up to four side by side. Add more from any product page." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the products" onRetry={() => onRetry?.()} headingLevel={2} /></div>

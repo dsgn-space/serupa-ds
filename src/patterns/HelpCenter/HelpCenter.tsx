@@ -13,6 +13,7 @@ import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Help center: the topics people come for, the common questions with a search, and a way to write to a person that
    says when they'll answer. For an app to copy. What it carries (WCAG 2.2):
@@ -51,6 +52,9 @@ export interface HelpCenterProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoTopics: HelpTopic[] = [
@@ -81,7 +85,7 @@ export function messageProblems(m: HelpMessage): { field: 'topic' | 'message'; t
 
 /** The help page: a skip link, a header, then main with the h1, the topics, the questions and the message form. */
 export function HelpCenter({ topics = demoTopics, questions = demoQuestions, email = 'ana@example.com', replyTime = 'within one working day', onSend,
-  initial, start = 'form', failed, loading = false, loadFailed = false, onRetry }: HelpCenterProps) {
+  initial, start = 'form', failed, loading = false, loadFailed = false, onRetry, online }: HelpCenterProps) {
   const [value, setValue] = React.useState<HelpMessage>({ topic: '', message: '', ...initial });
   const [problems, setProblems] = React.useState(() => (failed === 'empty' ? messageProblems(value) : []));
   const [state, setState] = React.useState<'editing' | 'sending' | 'sent' | 'failed'>(start === 'sent' ? 'sent' : failed === 'send' ? 'failed' : 'editing');
@@ -112,6 +116,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">You can read the answers already loaded. Searching for more and sending a question need a connection.</OfflineBanner>
         <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
         {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>
