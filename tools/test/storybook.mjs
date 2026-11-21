@@ -9,6 +9,7 @@
 // browser's text size setting does, and every rem with it). And at 320 CSS pixels wide (1280 at 400% zoom, WCAG 1.4.10 reflow) the story
 // may not make the page scroll sideways; a table, grid or code block that scrolls inside its own box is fine.
 //   node tools/test/storybook.mjs
+// SERUPA_A11Y_JSON=a11y.json also writes each story's and docs page's result, for the health page (tools/health.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -321,10 +322,20 @@ async function checkStory(e, w) {
       if (cut.length) problems.push(`text spacing (WCAG 1.4.12) cuts off ${cut.slice(0, 3).join(', ')}`);
     }
   }
-  out.push(t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in every theme and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')));
+  out.push({ ...t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in every theme and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')), story: e });
   return out;
 }
-R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallelRetry(stories, workers, recycled(checkStory), (e) => e.id)).flat());
+const docsResults = (await inParallel(docs, workers, recycled(checkDocs))).flat();
+const storyResults = (await inParallelRetry(stories, workers, recycled(checkStory), (e) => e.id)).flat();
+R.push(...docsResults, ...storyResults);
+if (process.env.SERUPA_A11Y_JSON) {
+  const one = (r) => ({ name: r.name.split(':')[0], ok: r.ok, detail: r.ok ? '' : String(r.detail || '').slice(0, 300) });
+  fs.writeFileSync(process.env.SERUPA_A11Y_JSON, JSON.stringify({
+    runs: RUNS,
+    stories: storyResults.map((r) => ({ ...one(r), id: r.story.id, file: r.story.importPath.replace(/^\.\//, '') })),
+    docs: docsResults.filter((r) => /axe/.test(r.name)).map(one),
+  }, null, 1));
+}
 await b.close();
 close();
 console.log(`(${docs.length} docs pages, ${stories.length} stories × ${RUNS.length} runs: six themes and more contrast; 200% text, text spacing and 320px in the first)`);

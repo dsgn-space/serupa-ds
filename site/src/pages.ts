@@ -71,7 +71,7 @@ export interface NavSection {
   groups: NavGroup[];
 }
 
-const START = ['Introduction', 'Getting started', 'Versioning and tools', 'Upgrading', 'Changelog', 'Accessibility statement'];
+const START = ['Introduction', 'Getting started', 'Versioning and tools', 'Upgrading', 'Changelog', 'Accessibility statement', 'Health'];
 const components = inSection('Components');
 // The sections' names, addresses and leads are in sections.json, which the build reads too for each index page's
 // description (tools/site/head.mjs).

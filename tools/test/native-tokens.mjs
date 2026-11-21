@@ -124,4 +124,62 @@ for (const th of themes) {
   }
 }
 t(`SerupaColors has each theme's ${aliases} alias colors in Swift and Kotlin`, !perTheme.length, perTheme.slice(0, 8).join('; '));
+
+// The easings, drop shadows and type styles, by their own tokens in tokens.json
+const named = (g) => (tokens[g]?.tokens || []);
+const easeOf = (v) => (v === 'linear' ? [0, 0, 1, 1] : (/cubic-bezier\(([^)]+)\)/.exec(v)?.[1].split(',').map(Number) || null));
+const eases = named('transitions').filter((x) => /^ease-/.test(x.name) && easeOf(at(x.name, themes[0])));
+const easeWrong = [];
+for (const x of eases) {
+  const [a, b, c, d] = easeOf(at(x.name, themes[0])), id = camel(x.name);
+  const sm = new RegExp(`static let ${id} = SerupaEasing\\(x1: ([-\\d.]+), y1: ([-\\d.]+), x2: ([-\\d.]+), y2: ([-\\d.]+)\\)`).exec(swift);
+  const km = new RegExp(`val ${id} = CubicBezierEasing\\(([-\\d.]+)f, ([-\\d.]+)f, ([-\\d.]+)f, ([-\\d.]+)f\\)`).exec(kt);
+  for (const [lang, m] of [['Swift', sm], ['Kotlin', km]]) if (!m || ![a, b, c, d].every((v, i) => near(parseFloat(m[i + 1]), v))) easeWrong.push(`${lang} ${id}`);
+}
+t(`the ${eases.length} easings are SerupaEasing in Swift and Kotlin, each with tokens.json's curve`, eases.length >= 5 && !easeWrong.length, easeWrong.slice(0, 8).join('; '));
+// "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)" → [{ x, y, blur, spread, a }]
+const layersOf = (v) => String(v).split(/,(?![^(]*\))/).map((l) => {
+  const hex = /#([0-9a-f]{4}|[0-9a-f]{8})\b/i.exec(l)?.[1];
+  const n = [...l.replace(/rgb\([^)]*\)|#[0-9a-f]+/gi, '').matchAll(/-?[\d.]+(?:px)?/g)].map((m) => parseFloat(m[0]));
+  const a = /\/\s*([\d.]+)\)/.exec(l);
+  return { x: n[0] || 0, y: n[1] || 0, blur: n[2] || 0, spread: n[3] || 0, a: a ? parseFloat(a[1]) : hex ? parseInt(hex.length === 4 ? hex[3].repeat(2) : hex.slice(6), 16) / 255 : 1 };
+});
+const drops = named('shadow').filter((x) => /^(shadow|elevation)-/.test(x.name));
+const shadowWrong = [];
+for (const x of drops) {
+  const want = layersOf(at(x.name, themes[0])), id = camel(x.name);
+  const sl = /static let \w+ = SerupaShadow\(layers: \[(.*)\]\)/.exec(swift.split('\n').find((l) => l.includes(`static let ${id} = SerupaShadow(`)) || '');
+  const kl = kt.split('\n').find((l) => l.includes(`val ${id} = listOf(SerupaShadowLayer`)) || '';
+  const got = [...(sl?.[1] || '').matchAll(/opacity: ([\d.]+)\), x: ([-\d.]+), y: ([-\d.]+), blur: ([-\d.]+), spread: ([-\d.]+)/g)].map((m) => ({ a: +m[1], x: +m[2], y: +m[3], blur: +m[4], spread: +m[5] }));
+  const kGot = [...kl.matchAll(/Color\(0x([0-9A-F]{2})\w+\), ([-\d.]+)\.dp, ([-\d.]+)\.dp, ([-\d.]+)\.dp, ([-\d.]+)\.dp/g)].map((m) => ({ a: parseInt(m[1], 16) / 255, x: +m[2], y: +m[3], blur: +m[4], spread: +m[5] }));
+  for (const [lang, g] of /** @type {[string, typeof got][]} */ ([['Swift', got], ['Kotlin', kGot]])) {
+    const ok = g.length === want.length && want.every((w, i) => ['x', 'y', 'blur', 'spread'].every((k) => near(g[i][k], w[k])) && Math.abs(g[i].a - w.a) < 0.01);
+    if (!ok) shadowWrong.push(`${lang} ${id}: ${JSON.stringify(g)}, tokens.json says ${at(x.name, themes[0])}`);
+  }
+}
+t(`the ${drops.length} drop shadows are SerupaShadow (Swift) and SerupaShadows (Kotlin), layer by layer as tokens.json has them`, drops.length >= 10 && !shadowWrong.length, shadowWrong.slice(0, 4).join('; '));
+const typeSwift = [...swift.matchAll(/static let (type\w+) = SerupaTypeStyle\(family: "[^"]+", size: ([\d.]+), lineHeight: ([\d.]+)/g)];
+const typeKt = [...kt.matchAll(/val (type\w+) = TextStyle\(fontSize = ([\d.]+)\.sp, lineHeight = ([\d.]+)\.sp/g)];
+t(`the type styles are SerupaTypeStyle (Swift) and SerupaType (Kotlin), the same ones with the same sizes and line heights (${typeSwift.length})`,
+  typeSwift.length >= 20 && typeSwift.length === typeKt.length && typeSwift.every((m, i) => m[1] === typeKt[i][1] && m[2] === typeKt[i][2] && m[3] === typeKt[i][3]),
+  `${typeSwift.length} in Swift, ${typeKt.length} in Kotlin`);
+
+// The asset catalog the release attaches (tools/release-kits.mjs): each brand's alias colors, light and dark, equal to tokens.json
+const { assetCatalog } = await import('../build/native-tokens.mjs');
+const catalog = assetCatalog(path.join(PROJECT, 'design-tokens'));
+const catWrong = [];
+const hexOf = (c) => [c.red, c.green, c.blue].map((v) => Math.round(parseFloat(v) * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
+for (const b of brands) {
+  if (!JSON.parse(catalog[`SerupaColors.xcassets/${b}/Contents.json`] || '{}').properties?.['provides-namespace']) catWrong.push(`${b}: not a namespace`);
+  for (const x of tokens.color.tokens.filter((y) => y.value && typeof y.value === 'object' && Object.keys(y.value).length > 1)) {
+    const f = catalog[`SerupaColors.xcassets/${b}/${x.name}.colorset/Contents.json`];
+    if (!f) { catWrong.push(`${b}/${x.name}: missing`); continue; }
+    const [light, dark] = JSON.parse(f).colors;
+    if (hexOf(light.color.components) !== argb(at(x.name, `${b}-light`)).slice(2)) catWrong.push(`${b}/${x.name} light`);
+    if (dark?.appearances?.[0]?.value !== 'dark' || hexOf(dark.color.components) !== argb(at(x.name, `${b}-dark`)).slice(2)) catWrong.push(`${b}/${x.name} dark`);
+  }
+}
+const assetNames = [...swift.matchAll(/public var (\w+): Color \{ Color\("\\\(brand\)\/([\w-]+)"/g)];
+t(`SerupaColors.xcassets has each brand's ${aliases} alias colors, light and dark (${brands.length} brands), and SerupaAssetColors names each`,
+  !catWrong.length && assetNames.length === aliases && assetNames.every((m) => m[1] === camel(m[2])), catWrong.slice(0, 8).join('; ') || `${assetNames.length} in SerupaAssetColors`);
 done(report('Native tokens', R));

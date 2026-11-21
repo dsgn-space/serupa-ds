@@ -18,6 +18,7 @@ import { sitePages } from './pages.mjs';
 import { describe, DEFAULT_DESCRIPTION } from './head.mjs';
 import { componentProps } from './props.mjs';
 import { siteFacts } from './facts.mjs';
+import { writeLocalHealth } from '../health.mjs';
 import { writeHostFiles } from './host.mjs';
 import { drawPages } from './prerender.mjs';
 
@@ -29,6 +30,7 @@ const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 
 // docs/generated/: make them first, as Storybook does.
 buildUtilities(ROOT);
 buildRegistry(ROOT);
+writeLocalHealth(ROOT);
 
 // A value as JavaScript source for a module this file writes: JSON, with the characters that could end a script or a
 // line written as escapes, so text from a page or a doc comment stays text whatever it holds.
