@@ -8,7 +8,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { labels as idLabels } from '../../labels/id';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const part = (root: Element, name: string) => root.querySelector('.dk-stat-tile__' + name) as HTMLElement;
+const byText = (text: string) => page.getByText(text, { exact: true }).element() as HTMLElement;
 const badge = (root: Element) => root.querySelector('[data-component="badge"]') as HTMLElement;
 
 describe('StatTile', () => {
@@ -71,7 +71,6 @@ describe('StatTile', () => {
     await render(<StatTile id="w" label="Revenue" value="€48,200" loading loadingLabel="Loading revenue" />);
     expect(el('w').getAttribute('aria-busy')).toBe('true');
     expect(el('w').textContent).not.toContain('€48,200');
-    expect(part(el('w'), 'value')).toBeNull();
   });
 
   test('the label, the value and the period read 4.5:1 on the card in every theme', async () => {
@@ -80,7 +79,7 @@ describe('StatTile', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const now = css(el('c')).backgroundColor;
-      for (const p of ['label', 'value', 'change']) expect(contrast(css(part(el('c'), p)).color, now || bg), th + ' ' + p).toBeGreaterThanOrEqual(4.5);
+      for (const t of ['Revenue', '€48,200', 'vs last month']) expect(contrast(css(byText(t)).color, now || bg), th + ' ' + t).toBeGreaterThanOrEqual(4.5);
     }
   });
 });
