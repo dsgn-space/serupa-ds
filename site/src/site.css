@@ -5,9 +5,9 @@
 .site { display: flex; flex-direction: column; min-block-size: 100dvh; background: var(--surface-page); color: var(--text); }
 .site-brand { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--text); font-size: var(--text-lg); font-weight: var(--font-semibold); letter-spacing: var(--tracking-tight); text-decoration: none; border-radius: var(--radius-inner); }
 .site-brand:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
-/* The mark: a tile in the brand color with a lighter quarter, so it reads as a shape in forced colors too. */
-.site-brand__mark { inline-size: var(--spacing-6); block-size: var(--spacing-6); border-radius: var(--radius-control); background: linear-gradient(135deg, var(--primary) 50%, color-mix(in oklab, var(--primary) 55%, var(--surface)) 50%); }
-@media (forced-colors: active) { .site-brand__mark { background: CanvasText; forced-color-adjust: none; } }
+/* The mark, Nitik: kawung drawn in square dots, snapped to whole pixels at 24px (brand/README.md). It takes the theme's brand color. */
+.site-brand__mark { flex: none; inline-size: var(--spacing-6); block-size: var(--spacing-6); fill: var(--primary); shape-rendering: crispEdges; }
+@media (forced-colors: active) { .site-brand__mark { fill: CanvasText; } }
 .site-search-compact { display: none; }
 @media (max-width: 47.99rem) { .site-search { display: none; } .site-search-compact { display: inline-flex; } }
 
