@@ -4,37 +4,37 @@
    and set in a 2px surface ring so the edges stay clear. The "+N" avatar at the end is secondary with text,
    like initials ("99+" past 99, "9+" at xs). Earlier avatars sit on top, so each status dot shows. Every value goes through --avatar-group-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-avatar-group {
+@layer srp.components {
+.srp-avatar-group {
   /* Each size's overlap stops short of the next avatar's initials. md and lg share a token, as xs and sm do; lg and
      xs set their own step in front of its default. */
-  --dk-avatar-group-step: initial;
-  --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--dk-avatar-group-step, var(--spacing-1)));
+  --srp-avatar-group-step: initial;
+  --srp-avatar-group-overlap: var(--avatar-group-overlap-md, var(--srp-avatar-group-step, var(--spacing-1)));
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   row-gap: var(--spacing-1);
   /* Every item overlaps the one before it, the first one included, and the group gives that first overlap back as
      padding, so a row that wraps (too many for a phone, GR4) starts each line at the same edge. */
-  padding-inline-start: var(--dk-avatar-group-overlap);
+  padding-inline-start: var(--srp-avatar-group-overlap);
   vertical-align: middle;
 }
-.dk-avatar-group--xs, .dk-avatar-group--sm { --dk-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--dk-avatar-group-step, var(--spacing-0\.5))); }
-.dk-avatar-group--xs { --dk-avatar-group-step: var(--spacing-0); }
-.dk-avatar-group--lg { --dk-avatar-group-step: var(--spacing-2); }
-.dk-avatar-group--xl { --dk-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-3)); }
-.dk-avatar-group__item { position: relative; display: inline-flex; margin-inline-start: calc(var(--spacing-0) - var(--dk-avatar-group-overlap)); }
-.dk-avatar-group .dk-avatar__frame { box-shadow: 0 0 0 var(--avatar-group-ring-width, var(--border-width-2)) var(--avatar-group-ring, var(--surface-behind, var(--surface))); }
-.dk-avatar-group__more > .dk-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; }
+.srp-avatar-group--xs, .srp-avatar-group--sm { --srp-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--srp-avatar-group-step, var(--spacing-0\.5))); }
+.srp-avatar-group--xs { --srp-avatar-group-step: var(--spacing-0); }
+.srp-avatar-group--lg { --srp-avatar-group-step: var(--spacing-2); }
+.srp-avatar-group--xl { --srp-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-3)); }
+.srp-avatar-group__item { position: relative; display: inline-flex; margin-inline-start: calc(var(--spacing-0) - var(--srp-avatar-group-overlap)); }
+.srp-avatar-group .srp-avatar__frame { box-shadow: 0 0 0 var(--avatar-group-ring-width, var(--border-width-2)) var(--avatar-group-ring, var(--surface-behind, var(--surface))); }
+.srp-avatar-group__more > .srp-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; }
 /* With showMore or onMore, "+N" is a button: no button chrome, a pointer, and the focus ring round the circle. */
-button.dk-avatar-group__more { padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--rounded-full); background: none; font: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-@media (hover: hover) { button.dk-avatar-group__more:hover > .dk-avatar__frame { background: var(--avatar-group-more-bg-hover, var(--secondary-hover)); } }
+button.srp-avatar-group__more { padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--rounded-full); background: none; font: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { button.srp-avatar-group__more:hover > .srp-avatar__frame { background: var(--avatar-group-more-bg-hover, var(--secondary-hover)); } }
 /* The "+N" fades to its hover fill as the controls beside it do, and fills at once while held. */
-button.dk-avatar-group__more > .dk-avatar__frame { transition: background-color var(--motion-hover) var(--ease-move); }
-button.dk-avatar-group__more:active > .dk-avatar__frame { background: var(--avatar-group-more-bg-pressed, var(--secondary-pressed)); transition-duration: var(--duration-0); }
-@media (prefers-reduced-motion: reduce) { button.dk-avatar-group__more > .dk-avatar__frame { transition: none; } }
-button.dk-avatar-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--avatar-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-avatar-group__list { display: flex; flex-direction: column; gap: var(--spacing-2); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; font-size: var(--text-sm); }
-.dk-avatar-group__list > li { display: flex; align-items: center; gap: var(--spacing-2); }
-@media (forced-colors: active) { .dk-avatar-group .dk-avatar__frame { box-shadow: none; } }
+button.srp-avatar-group__more > .srp-avatar__frame { transition: background-color var(--motion-hover) var(--ease-move); }
+button.srp-avatar-group__more:active > .srp-avatar__frame { background: var(--avatar-group-more-bg-pressed, var(--secondary-pressed)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { button.srp-avatar-group__more > .srp-avatar__frame { transition: none; } }
+button.srp-avatar-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--avatar-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-avatar-group__list { display: flex; flex-direction: column; gap: var(--spacing-2); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; font-size: var(--text-sm); }
+.srp-avatar-group__list > li { display: flex; align-items: center; gap: var(--spacing-2); }
+@media (forced-colors: active) { .srp-avatar-group .srp-avatar__frame { box-shadow: none; } }
 }

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { announcePage } from './announcePage';
 import { announcerIdle, ensureAnnouncer } from './announce';
 
-const region = () => document.querySelector('[data-dk-announcer]') as HTMLElement;
+const region = () => document.querySelector('[data-srp-announcer]') as HTMLElement;
 const page = (html: string) => { const box = document.createElement('div'); box.innerHTML = html; document.body.appendChild(box); return box; };
 
 describe('announcePage (15)', () => {

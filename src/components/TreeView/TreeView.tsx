@@ -303,7 +303,7 @@ function TreeViewRender({ ref, ...props }: TreeViewProps & React.RefAttributes<H
   return (
     <ul {...rest} ref={mergedRef} role="tree"
       aria-multiselectable={(multi && !cascade) || undefined}
-      className={cn('dk-tree-view', props.className)} data-component="tree-view" data-instant={keyed ? '' : undefined} onKeyDown={onKeyDown}
+      className={cn('srp-tree-view', props.className)} data-component="tree-view" data-instant={keyed ? '' : undefined} onKeyDown={onKeyDown}
       onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
       onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}>
       <TreeContext.Provider value={ctx}><Rows list={props.items} level={1} /></TreeContext.Provider>
@@ -349,19 +349,19 @@ const TreeRow = /* @__PURE__ */ React.memo(function TreeRow(props: { item: TreeV
       aria-selected={mode === 'none' || checks ? undefined : mode === 'multiple' ? picked : picked || undefined}
       aria-checked={checks ? checked : undefined}
       aria-disabled={item.disabled || undefined}
-      className={cn('dk-tree-view__item', picked && !checks && 'dk-tree-view__item--selected', item.disabled && 'dk-tree-view__item--disabled')}
+      className={cn('srp-tree-view__item', picked && !checks && 'srp-tree-view__item--selected', item.disabled && 'srp-tree-view__item--disabled')}
       onFocus={(e) => { if (e.target === e.currentTarget) api.current.focus(id); }}>
-      <div className="dk-tree-view__row" style={{ '--dk-tree-level': level - 1 } as React.CSSProperties}
+      <div className="srp-tree-view__row" style={{ '--srp-tree-level': level - 1 } as React.CSSProperties}
         onClick={(e) => api.current.press(item, e)}>
-        <span className="dk-tree-view__toggle" aria-hidden="true"
+        <span className="srp-tree-view__toggle" aria-hidden="true"
           onClick={canOpen ? (e) => { e.stopPropagation(); api.current.toggle(item); } : undefined}>
           {canOpen ? <Icon icon={icons.ChevronRight} mirror={false} /> : null}
         </span>
-        {checks ? <span className="dk-tree-view__check" aria-hidden="true" data-state={checked === true ? 'checked' : checked === 'mixed' ? 'mixed' : 'unchecked'}>{checked === true ? <Icon icon={icons.Check} /> : checked === 'mixed' ? <Icon icon={icons.Remove} /> : null}</span> : null}
-        {icon != null ? <span className="dk-tree-view__icon" aria-hidden="true">{icon}</span> : null}
-        <span className="dk-tree-view__label">{item.label}</span>
+        {checks ? <span className="srp-tree-view__check" aria-hidden="true" data-state={checked === true ? 'checked' : checked === 'mixed' ? 'mixed' : 'unchecked'}>{checked === true ? <Icon icon={icons.Check} /> : checked === 'mixed' ? <Icon icon={icons.Remove} /> : null}</span> : null}
+        {icon != null ? <span className="srp-tree-view__icon" aria-hidden="true">{icon}</span> : null}
+        <span className="srp-tree-view__label">{item.label}</span>
       </div>
-      {isOpen && item.children && item.children.length ? <ul role="group" className="dk-tree-view__group"><Rows list={item.children} level={level + 1} /></ul> : null}
+      {isOpen && item.children && item.children.length ? <ul role="group" className="srp-tree-view__group"><Rows list={item.children} level={level + 1} /></ul> : null}
     </li>
   );
 });

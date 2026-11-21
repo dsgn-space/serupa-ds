@@ -4,23 +4,23 @@
    danger color and "Couldn't copy", for as long. Both labels share one grid cell, so the
    button keeps one width.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-copy-btn__labels { display: inline-grid; grid-template-areas: "label"; }
-.dk-copy-btn__label { grid-area: label; }
-.dk-copy-btn__label--off { visibility: hidden; }
-.dk-copy-btn__icon--done { color: var(--copy-button-done-color, var(--success-text)); }
+@layer srp.components {
+.srp-copy-btn__labels { display: inline-grid; grid-template-areas: "label"; }
+.srp-copy-btn__label { grid-area: label; }
+.srp-copy-btn__label--off { visibility: hidden; }
+.srp-copy-btn__icon--done { color: var(--copy-button-done-color, var(--success-text)); }
 /* The copy icon and the check share one cell. The one going fades, shrinks a little and blurs; the one coming fades in,
    growing from 90% out of the same blur, over motion-change-sm, so it reads as one icon changing (KW18). Reduced
    motion: the fade alone. */
-.dk-copy-btn__icons { display: inline-grid; grid-template-areas: "icon"; }
-.dk-copy-btn__icons > * { grid-area: icon; transition: opacity var(--motion-change-sm) var(--ease-enter); }
-.dk-copy-btn__icon--failed { color: var(--copy-button-failed-color, var(--danger-text)); }
-.dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy,
-.dk-copy-btn:not([data-failed]) .dk-copy-btn__icon--failed, .dk-copy-btn[data-failed] .dk-copy-btn__icon--copy { opacity: var(--opacity-0); }
+.srp-copy-btn__icons { display: inline-grid; grid-template-areas: "icon"; }
+.srp-copy-btn__icons > * { grid-area: icon; transition: opacity var(--motion-change-sm) var(--ease-enter); }
+.srp-copy-btn__icon--failed { color: var(--copy-button-failed-color, var(--danger-text)); }
+.srp-copy-btn:not([data-copied]) .srp-copy-btn__icon--done, .srp-copy-btn[data-copied] .srp-copy-btn__icon--copy,
+.srp-copy-btn:not([data-failed]) .srp-copy-btn__icon--failed, .srp-copy-btn[data-failed] .srp-copy-btn__icon--copy { opacity: var(--opacity-0); }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-copy-btn__icons > * { transition: opacity var(--motion-change-sm) var(--ease-enter), scale var(--motion-change-sm) var(--ease-enter), filter var(--motion-change-sm) var(--ease-enter); }
-  .dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy,
-  .dk-copy-btn:not([data-failed]) .dk-copy-btn__icon--failed, .dk-copy-btn[data-failed] .dk-copy-btn__icon--copy { scale: var(--scale-90); filter: blur(var(--blur-xs)); }
+  .srp-copy-btn__icons > * { transition: opacity var(--motion-change-sm) var(--ease-enter), scale var(--motion-change-sm) var(--ease-enter), filter var(--motion-change-sm) var(--ease-enter); }
+  .srp-copy-btn:not([data-copied]) .srp-copy-btn__icon--done, .srp-copy-btn[data-copied] .srp-copy-btn__icon--copy,
+  .srp-copy-btn:not([data-failed]) .srp-copy-btn__icon--failed, .srp-copy-btn[data-failed] .srp-copy-btn__icon--copy { scale: var(--scale-90); filter: blur(var(--blur-xs)); }
 }
-@media (forced-colors: active) { .dk-copy-btn__icon--done, .dk-copy-btn__icon--failed { color: inherit; } }
+@media (forced-colors: active) { .srp-copy-btn__icon--done, .srp-copy-btn__icon--failed { color: inherit; } }
 }

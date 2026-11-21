@@ -38,7 +38,7 @@ describe('Tour', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Page defaultOpen ref={ref} className="extra" data-x="y" />);
     const e = el('t');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-tour extra', 'y', 'tour']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-tour extra', 'y', 'tour']);
   });
 
   test('a dialog named by its title and described by its text; nothing shows when closed or with no steps', async () => {
@@ -64,7 +64,7 @@ describe('Tour', () => {
     expect(css(el('a')).outlineStyle).toBe('solid');
     const a = el('a').getBoundingClientRect(), p = el('t').getBoundingClientRect();
     expect(p.top).toBeGreaterThanOrEqual(a.bottom);
-    expect(el('t').classList.contains('dk-tour--center')).toBe(false);
+    expect(el('t').classList.contains('srp-tour--center')).toBe(false);
   });
 
   test('Next, Back and Done walk the steps; the ring moves, onStepChange and onFinish are called', async () => {
@@ -202,11 +202,11 @@ describe('Tour', () => {
   test('a step with no target (or one not on the page) sits in the middle of the screen', async () => {
     await render(<Page open steps={[{ title: 'Welcome' }, { target: '#missing', title: 'Gone' }]} />);
     const p = el('t').getBoundingClientRect();
-    expect(el('t').classList.contains('dk-tour--center')).toBe(true);
+    expect(el('t').classList.contains('srp-tour--center')).toBe(true);
     expect(Math.abs(p.left + p.width / 2 - innerWidth / 2)).toBeLessThan(2);
     expect(el('t').getAttribute('aria-describedby')).toBe(null);
     await userEvent.click(button('Next'));
-    expect(el('t').classList.contains('dk-tour--center')).toBe(true);
+    expect(el('t').classList.contains('srp-tour--center')).toBe(true);
   });
 
   test('a target can be a ref or an element', async () => {

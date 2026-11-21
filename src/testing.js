@@ -61,7 +61,7 @@ export async function forEachTheme(page, fn, options = {}) {
 // ---------------------------------------------------------------------------------------------------------------
 // Testers: drive Serupa's complex widgets in your app's own tests the way people do, so each test doesn't have to
 // re-learn a widget's keyboard model and markup. Each finds its parts by role, ARIA state and accessible name (never
-// by a dk- class, which may change), acts through the user object you pass, and waits for the widget to settle.
+// by a srp- class, which may change), acts through the user object you pass, and waits for the widget to settle.
 //   import { userEvent } from '@testing-library/user-event';   // or: import { userEvent } from 'vitest/browser'
 //   import { combobox, table } from '@diki-stwn/serupa-ds/testing';
 //   const user = userEvent.setup();

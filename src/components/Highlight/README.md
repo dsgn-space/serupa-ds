@@ -28,8 +28,8 @@ highlightRanges("Łódź, Poland", "lodz")                        // [[0, 4]]
 
 Drawn from the `InOptions` story.
 
-1. **Text** (`.dk-highlight`): the whole text, read as one string.
-2. **Match** (`.dk-highlight__mark`): the part that matches what was typed.
+1. **Text** (`.srp-highlight`): the whole text, read as one string.
+2. **Match** (`.srp-highlight__mark`): the part that matches what was typed.
 
 ## Usage
 
@@ -60,7 +60,7 @@ Drawn from the `InOptions` story.
 | `query` | `string \| string[]` | | What to mark. Empty marks nothing. |
 | `words` | `boolean` | `false` | Mark each word of the query on its own. |
 
-Every other prop, `className` and `ref` go to the `<span>`, which has `data-component="highlight"`; each match is `<mark class="dk-highlight__mark">`.
+Every other prop, `className` and `ref` go to the `<span>`, which has `data-component="highlight"`; each match is `<mark class="srp-highlight__mark">`.
 
 ## Component tokens
 

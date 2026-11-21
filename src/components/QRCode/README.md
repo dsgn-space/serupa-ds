@@ -27,12 +27,12 @@ import { QRCode } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Statuses` story.
 
-1. **Code** (`.dk-qr-code__code`): the SVG image, named by `label`.
-2. **Light** (`.dk-qr-code__light`): the white square under the modules, quiet zone included, and the square behind a logo.
-3. **Dark modules** (`.dk-qr-code__dark`): one path of every dark module.
-4. **Status** (`.dk-qr-code__status`): over the faded code, with a status other than `active`.
-5. **Message** (`.dk-qr-code__message`): "Code expired" or "Scanned".
-6. **Check** (`.dk-qr-code__icon`): beside "Scanned".
+1. **Code** (`.srp-qr-code__code`): the SVG image, named by `label`.
+2. **Light** (`.srp-qr-code__light`): the white square under the modules, quiet zone included, and the square behind a logo.
+3. **Dark modules** (`.srp-qr-code__dark`): one path of every dark module.
+4. **Status** (`.srp-qr-code__status`): over the faded code, with a status other than `active`.
+5. **Message** (`.srp-qr-code__message`): "Code expired" or "Scanned".
+6. **Check** (`.srp-qr-code__icon`): beside "Scanned".
 
 ## Usage
 

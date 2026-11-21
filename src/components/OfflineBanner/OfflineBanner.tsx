@@ -52,8 +52,8 @@ const claimRoom = (el: HTMLElement, prop: 'paddingBlockEnd' | 'paddingBlockStart
 };
 const setRootSpace = (root: HTMLElement, who: object, space: number | null) => {
   if (space === null) rootSpaces.delete(who); else rootSpaces.set(who, space);
-  if (rootSpaces.size) root.style.setProperty('--dk-offline-banner-space', Math.max(...rootSpaces.values()) + 'px');
-  else root.style.removeProperty('--dk-offline-banner-space');
+  if (rootSpaces.size) root.style.setProperty('--srp-offline-banner-space', Math.max(...rootSpaces.values()) + 'px');
+  else root.style.removeProperty('--srp-offline-banner-space');
 };
 const browserOnline = () => navigator.onLine;
 const serverOnline = () => true;
@@ -92,7 +92,7 @@ function OfflineBannerRender({ ref, ...props }: OfflineBannerProps & React.RefAt
   if (open && shown !== (online ? 'back' : 'offline')) setShown(online ? 'back' : 'offline');
   const placement = props.placement === 'top' || props.placement === 'inline' ? props.placement : 'bottom';
   // While the fixed bar shows, the page keeps what it covers clear of it (GR122, WCAG 2.4.11): its height and its gap
-  // from the edge, plus a little room, go to --dk-offline-banner-space on the root, which OfflineBanner.css makes the
+  // from the edge, plus a little room, go to --srp-offline-banner-space on the root, which OfflineBanner.css makes the
   // root's scroll-padding on that edge, so a field Tab moves to scrolls into view clear of the bar, not under it.
   // At the foot of the page there's nothing left to scroll, so a bottom bar also adds its space to the end of the
   // body: the last field (a form's Submit) can scroll up clear of it too. A top bar adds it to the start, so the first
@@ -103,7 +103,7 @@ function OfflineBannerRender({ ref, ...props }: OfflineBannerProps & React.RefAt
     if (!open || !n || placement === 'inline') return;
     const side = placement === 'bottom' ? 'paddingBlockEnd' : 'paddingBlockStart';
     // A top bar sits below a sticky Navbar, not over its links and Menu button (GR134), so its room counts from there.
-    const nav = placement === 'top' ? document.querySelector<HTMLElement>('.dk-navbar--sticky') : null;
+    const nav = placement === 'top' ? document.querySelector<HTMLElement>('.srp-navbar--sticky') : null;
     // The room goes on the page's edge, or after the Navbar, which is in the page's flow: padding the body would move
     // the Navbar down with the page.
     const room = nav || body, prop = nav ? 'marginBlockEnd' : side, me = {};
@@ -112,8 +112,8 @@ function OfflineBannerRender({ ref, ...props }: OfflineBannerProps & React.RefAt
       // Its settled place, not where it is now: as it slides in, translate moves it a few pixels toward its edge, and
       // nothing measures again when that ends (a ResizeObserver doesn't see translate), so the room came out short
       // (GR124). Its height and its inset from the edge are where it comes to rest.
-      // The room past it, --dk-offline-gap, reads as the token wrote it ("0.5rem"), not in pixels.
-      const cs = getComputedStyle(n), g = cs.getPropertyValue('--dk-offline-gap').trim();
+      // The room past it, --srp-offline-gap, reads as the token wrote it ("0.5rem"), not in pixels.
+      const cs = getComputedStyle(n), g = cs.getPropertyValue('--srp-offline-gap').trim();
       const gap = /rem$/.test(g) ? parseFloat(g) * parseFloat(getComputedStyle(root).fontSize) : parseFloat(g) || 8;
       const inset = parseFloat(placement === 'bottom' ? cs.bottom : cs.top) || 0;
       const space = Math.ceil(n.offsetHeight + inset + gap);
@@ -152,11 +152,11 @@ function OfflineBannerRender({ ref, ...props }: OfflineBannerProps & React.RefAt
   const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   if (!open && !leaving) return null;
   return (
-    <div {...rest} ref={mergedRef} className={cn('dk-offline-banner', `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? '' : undefined}
+    <div {...rest} ref={mergedRef} className={cn('srp-offline-banner', `srp-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? '' : undefined}
       data-state={shown} data-leaving={open ? undefined : ''} inert={open ? undefined : true}>
-      <Icon className="dk-offline-banner__icon" icon={shown === 'back' ? icons.CloudDone : icons.CloudOff} />
-      <span className="dk-offline-banner__text">
-        <strong className="dk-offline-banner__title">{shown === 'back' ? labels.backOnline : labels.offline}</strong>
+      <Icon className="srp-offline-banner__icon" icon={shown === 'back' ? icons.CloudDone : icons.CloudOff} />
+      <span className="srp-offline-banner__text">
+        <strong className="srp-offline-banner__title">{shown === 'back' ? labels.backOnline : labels.offline}</strong>
         {shown === 'offline' && props.children ? <> {props.children}</> : null}
       </span>
     </div>

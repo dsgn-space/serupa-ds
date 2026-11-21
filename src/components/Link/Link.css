@@ -2,8 +2,8 @@
    Link: inline, underlined (or on hover only), primary or the text's color; the underline thickens on hover.
    Focus: a 2px ring that follows the text across lines. external adds a 1em new-tab icon.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-link {
+@layer srp.components {
+.srp-link {
   color: var(--link-text, var(--primary)); cursor: var(--cursor-interactive); touch-action: manipulation; border-radius: var(--link-focus-radius, var(--radius-inner));
   text-decoration-line: underline; text-decoration-thickness: var(--link-thickness, var(--decoration-1)); text-underline-offset: var(--link-offset, var(--underline-offset-2));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
@@ -12,19 +12,19 @@
 }
 /* In a table cell the column takes its width from the narrowest the text can go, which anywhere would make one
    letter: the words stay whole there, and a URL longer than the column widens the table, which scrolls. */
-:where(td, th) .dk-link { overflow-wrap: break-word; }
-@media (hover: hover) { .dk-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
-.dk-link--neutral { color: inherit; }
+:where(td, th) .srp-link { overflow-wrap: break-word; }
+@media (hover: hover) { .srp-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
+.srp-link--neutral { color: inherit; }
 /* onMedia: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
-.dk-link--on-dark { --dk-link-ink: var(--link-on-dark, var(--white)); }
-.dk-link--on-light { --dk-link-ink: var(--link-on-light, var(--black)); }
-.dk-link--on-dark, .dk-link--on-light { --link-text: var(--dk-link-ink); --link-text-hover: var(--dk-link-ink); --link-focus-ring: var(--dk-link-ink); }
-@media (hover: hover) { .dk-link--neutral:hover { color: inherit; } }
+.srp-link--on-dark { --srp-link-ink: var(--link-on-dark, var(--white)); }
+.srp-link--on-light { --srp-link-ink: var(--link-on-light, var(--black)); }
+.srp-link--on-dark, .srp-link--on-light { --link-text: var(--srp-link-ink); --link-text-hover: var(--srp-link-ink); --link-focus-ring: var(--srp-link-ink); }
+@media (hover: hover) { .srp-link--neutral:hover { color: inherit; } }
 /* Hover-only underlines are for links whose place says they are links (a nav bar, a footer). In a paragraph the underline
    stays: there color alone can't tell a link from the text around it (WCAG 1.4.1). */
-@media (hover: hover) { .dk-link--hover-underline:not(:hover, :focus-visible, p *) { text-decoration-line: none; } }
-.dk-link:focus-visible { outline: var(--focus-ring-width) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-link__last { white-space: nowrap; }
-.dk-link__icon.dk-icon { margin-inline-start: var(--link-icon-gap, var(--spacing-0\.5)); font-size: 1em; vertical-align: var(--icon-cap-align); text-decoration: none; }
-@media (prefers-reduced-motion: reduce) { .dk-link { transition: none; } }
+@media (hover: hover) { .srp-link--hover-underline:not(:hover, :focus-visible, p *) { text-decoration-line: none; } }
+.srp-link:focus-visible { outline: var(--focus-ring-width) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-link__last { white-space: nowrap; }
+.srp-link__icon.srp-icon { margin-inline-start: var(--link-icon-gap, var(--spacing-0\.5)); font-size: 1em; vertical-align: var(--icon-cap-align); text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .srp-link { transition: none; } }
 }

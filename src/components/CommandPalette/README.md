@@ -37,12 +37,12 @@ const [open, setOpen] = React.useState(false);
 
 Drawn from the `Default` story.
 
-1. **Search field** (`.dk-command-palette__field`): what you type to filter commands and pages.
-2. **List** (`.dk-command-palette__list`): the matching commands, in groups.
-3. **Group heading** (`.dk-command-palette__heading`): names a group of commands.
-4. **Command** (`.dk-command-palette__option`): one command; Enter runs the active one.
-5. **Icon** (`.dk-command-palette__icon`): an optional picture of the command.
-6. **Shortcut** (`.dk-command-palette__keys`): the keys that run it from anywhere, when it has them.
+1. **Search field** (`.srp-command-palette__field`): what you type to filter commands and pages.
+2. **List** (`.srp-command-palette__list`): the matching commands, in groups.
+3. **Group heading** (`.srp-command-palette__heading`): names a group of commands.
+4. **Command** (`.srp-command-palette__option`): one command; Enter runs the active one.
+5. **Icon** (`.srp-command-palette__icon`): an optional picture of the command.
+6. **Shortcut** (`.srp-command-palette__keys`): the keys that run it from anywhere, when it has them.
 
 ## Usage
 

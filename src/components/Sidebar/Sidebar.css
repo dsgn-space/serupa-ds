@@ -4,95 +4,95 @@
    icon, shaded on hover (surface-hover, zinc-100 in light like the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-sidebar:dir(rtl) { --dk-bar: calc(var(--highlight-indicator-width) * -1); }
-.dk-sidebar {
-  --dk-bar: var(--highlight-indicator-width);
+@layer srp.components {
+.srp-sidebar:dir(rtl) { --srp-bar: calc(var(--highlight-indicator-width) * -1); }
+.srp-sidebar {
+  --srp-bar: var(--highlight-indicator-width);
   box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0; max-inline-size: var(--sizing-full);
   background: var(--sidebar-bg, var(--surface)); --surface-behind: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
   transition: clip-path var(--motion-change-md) var(--ease-move);
 }
 /* Collapsing and expanding (EA1): the width changes once and the clip-path slides between the rail and the full
    column, with a line for the moving edge, so every frame is paint-free. Sidebar.tsx sets data-slide. */
-.dk-sidebar[data-slide] { --dk-sidebar-rail: var(--sidebar-width-collapsed, var(--spacing-16)); --dk-sidebar-travel: calc(var(--sidebar-width, var(--container-3xs)) - var(--dk-sidebar-rail)); position: relative; }
-.dk-sidebar[data-slide="full"] { clip-path: inset(var(--spacing-0)); }
-.dk-sidebar[data-slide="rail"] { clip-path: inset(var(--spacing-0) calc(var(--sizing-full) - var(--dk-sidebar-rail)) var(--spacing-0) var(--spacing-0)); }
-.dk-sidebar[data-slide="rail"]:dir(rtl) { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--spacing-0) calc(var(--sizing-full) - var(--dk-sidebar-rail))); }
-.dk-sidebar[data-slide]::after {
-  content: ""; position: absolute; inset-block: var(--spacing-0); inset-inline-start: calc(var(--dk-sidebar-rail) - var(--sidebar-border-width, var(--border-width-1)));
+.srp-sidebar[data-slide] { --srp-sidebar-rail: var(--sidebar-width-collapsed, var(--spacing-16)); --srp-sidebar-travel: calc(var(--sidebar-width, var(--container-3xs)) - var(--srp-sidebar-rail)); position: relative; }
+.srp-sidebar[data-slide="full"] { clip-path: inset(var(--spacing-0)); }
+.srp-sidebar[data-slide="rail"] { clip-path: inset(var(--spacing-0) calc(var(--sizing-full) - var(--srp-sidebar-rail)) var(--spacing-0) var(--spacing-0)); }
+.srp-sidebar[data-slide="rail"]:dir(rtl) { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--spacing-0) calc(var(--sizing-full) - var(--srp-sidebar-rail))); }
+.srp-sidebar[data-slide]::after {
+  content: ""; position: absolute; inset-block: var(--spacing-0); inset-inline-start: calc(var(--srp-sidebar-rail) - var(--sidebar-border-width, var(--border-width-1)));
   width: var(--sidebar-border-width, var(--border-width-1)); background: var(--sidebar-border, var(--border)); transition: translate var(--motion-change-md) var(--ease-move);
 }
-.dk-sidebar[data-slide="full"]::after { translate: var(--dk-sidebar-travel); }
-.dk-sidebar[data-slide="full"]:dir(rtl)::after { translate: calc(var(--spacing-0) - var(--dk-sidebar-travel)); }
-@media (forced-colors: active) { .dk-sidebar[data-slide]::after { background: CanvasText; } }
-.dk-sidebar--collapsed { width: var(--sidebar-width-collapsed, var(--spacing-16)); }
-.dk-sidebar__header, .dk-sidebar__footer { flex-shrink: 0; padding: var(--sidebar-padding, var(--spacing-3)); }
+.srp-sidebar[data-slide="full"]::after { translate: var(--srp-sidebar-travel); }
+.srp-sidebar[data-slide="full"]:dir(rtl)::after { translate: calc(var(--spacing-0) - var(--srp-sidebar-travel)); }
+@media (forced-colors: active) { .srp-sidebar[data-slide]::after { background: CanvasText; } }
+.srp-sidebar--collapsed { width: var(--sidebar-width-collapsed, var(--spacing-16)); }
+.srp-sidebar__header, .srp-sidebar__footer { flex-shrink: 0; padding: var(--sidebar-padding, var(--spacing-3)); }
 /* Collapsed (GR51): the header and footer stay in the rail, a long name ends in an ellipsis rather than spilling
    over the page. Pass a logo mark when collapsed (README). */
-.dk-sidebar--collapsed :is(.dk-sidebar__header, .dk-sidebar__footer) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.dk-sidebar__footer { border-top: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); }
-.dk-sidebar__body { display: flex; flex-direction: column; gap: var(--sidebar-section-gap, var(--spacing-6)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior-y: contain; padding: var(--sidebar-padding, var(--spacing-3)); }
-.dk-sidebar__section-title { padding: var(--spacing-0) var(--sidebar-item-padding-x, var(--spacing-3)) var(--spacing-2); color: var(--sidebar-section-title-color, var(--text-muted)); font-size: var(--sidebar-section-title-size, var(--text-xs)); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
-.dk-sidebar__list { display: flex; flex-direction: column; gap: var(--spacing-0\.5); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-sidebar__list--nested { margin-top: var(--spacing-0\.5); }
-.dk-sidebar__list[hidden] { display: none; }
+.srp-sidebar--collapsed :is(.srp-sidebar__header, .srp-sidebar__footer) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.srp-sidebar__footer { border-top: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); }
+.srp-sidebar__body { display: flex; flex-direction: column; gap: var(--sidebar-section-gap, var(--spacing-6)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior-y: contain; padding: var(--sidebar-padding, var(--spacing-3)); }
+.srp-sidebar__section-title { padding: var(--spacing-0) var(--sidebar-item-padding-x, var(--spacing-3)) var(--spacing-2); color: var(--sidebar-section-title-color, var(--text-muted)); font-size: var(--sidebar-section-title-size, var(--text-xs)); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+.srp-sidebar__list { display: flex; flex-direction: column; gap: var(--spacing-0\.5); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-sidebar__list--nested { margin-top: var(--spacing-0\.5); }
+.srp-sidebar__list[hidden] { display: none; }
 /* A group's nested list (GM4), as Accordion's panel: its height comes and goes at once, in one layout, and the
    items unfold over it on the compositor. Open: shown at once, then it fades in and its clip opens from the top
    over motion-change-md with ease-move, with the chevron. Closed: it keeps its height, inert, while it fades and
    folds back over motion-exit-md with ease-exit, then goes (hidden, Sidebar.tsx). One open on arrival is there from the first frame, and one opened from the keyboard at once, as one closed from it is gone at once (data-instant, KW1). Transitions, so a quick second
    press turns back from where it is. Reduced motion: the fade alone. */
-.dk-sidebar__list--nested { transition: opacity var(--motion-exit-md) var(--ease-exit); }
-.dk-sidebar__li[data-state="closed"] > .dk-sidebar__list--nested { opacity: var(--opacity-0); }
-.dk-sidebar__li[data-state="open"] > .dk-sidebar__list--nested { opacity: var(--opacity-100); transition: opacity var(--motion-change-md) var(--ease-move); }
-@starting-style { .dk-sidebar__li[data-state="open"] > .dk-sidebar__list--nested:not([data-instant]) { opacity: var(--opacity-0); } }
+.srp-sidebar__list--nested { transition: opacity var(--motion-exit-md) var(--ease-exit); }
+.srp-sidebar__li[data-state="closed"] > .srp-sidebar__list--nested { opacity: var(--opacity-0); }
+.srp-sidebar__li[data-state="open"] > .srp-sidebar__list--nested { opacity: var(--opacity-100); transition: opacity var(--motion-change-md) var(--ease-move); }
+@starting-style { .srp-sidebar__li[data-state="open"] > .srp-sidebar__list--nested:not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-sidebar__list--nested { transition: opacity var(--motion-exit-md) var(--ease-exit), clip-path var(--motion-exit-md) var(--ease-exit); }
-  .dk-sidebar__li[data-state="closed"] > .dk-sidebar__list--nested { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full)); }
-  .dk-sidebar__li[data-state="open"] > .dk-sidebar__list--nested { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-change-md) var(--ease-move), clip-path var(--motion-change-md) var(--ease-move); }
-  @starting-style { .dk-sidebar__li[data-state="open"] > .dk-sidebar__list--nested:not([data-instant]) { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full)); } }
+  .srp-sidebar__list--nested { transition: opacity var(--motion-exit-md) var(--ease-exit), clip-path var(--motion-exit-md) var(--ease-exit); }
+  .srp-sidebar__li[data-state="closed"] > .srp-sidebar__list--nested { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full)); }
+  .srp-sidebar__li[data-state="open"] > .srp-sidebar__list--nested { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-change-md) var(--ease-move), clip-path var(--motion-change-md) var(--ease-move); }
+  @starting-style { .srp-sidebar__li[data-state="open"] > .srp-sidebar__list--nested:not([data-instant]) { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full)); } }
 }
-.dk-sidebar__item {
+.srp-sidebar__item {
   box-sizing: border-box; display: flex; align-items: center; gap: var(--sidebar-item-gap, var(--spacing-3)); width: var(--sizing-full);
   padding: var(--sidebar-item-padding-y, var(--spacing-2)) var(--sidebar-item-padding-x, var(--spacing-3)); border: var(--spacing-0); border-radius: var(--sidebar-item-radius, var(--radius-control));
   background: transparent; color: var(--sidebar-item-text, var(--text-muted)); font-family: inherit; font-size: var(--sidebar-item-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--sidebar-item-weight, var(--font-medium));
   text-align: start; text-decoration: none; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); --surface-behind: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
-.dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
-.dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
+@media (hover: hover) { .srp-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); --surface-behind: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
+.srp-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
+.srp-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 /* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and
    one step darker under the pointer, so hovering it answers too. */
-.dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--sidebar-item-indicator, var(--highlight-indicator)); }
-@media (hover: hover) { .dk-sidebar__item[aria-current="page"]:hover { background: var(--sidebar-item-bg-active-hover, var(--pressed)); } }
+.srp-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--sidebar-item-indicator, var(--highlight-indicator)); }
+@media (hover: hover) { .srp-sidebar__item[aria-current="page"]:hover { background: var(--sidebar-item-bg-active-hover, var(--pressed)); } }
 /* The ring is inset, since the scrolling body and the nested list's clip would cut one outside the item. A gap in the surface
    color sits inside it, because the ring is under 3:1 on the highlight fill (the current page, hover, pressed); it hides the
    current page's bar, which the ring covers anyway. */
-.dk-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); box-shadow: inset 0 0 0 calc(var(--focus-ring-width) + var(--spacing-0\.5)) var(--sidebar-focus-gap-color, var(--surface)); }
-.dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
-.dk-sidebar__icon { position: relative; display: inline-flex; flex-shrink: 0; }
+.srp-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); box-shadow: inset 0 0 0 calc(var(--focus-ring-width) + var(--spacing-0\.5)) var(--sidebar-focus-gap-color, var(--surface)); }
+.srp-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
+.srp-sidebar__icon { position: relative; display: inline-flex; flex-shrink: 0; }
 /* collapsed: a dot on the icon's top end corner for an item with a badge, ringed in the sidebar's background */
-.dk-sidebar__dot {
+.srp-sidebar__dot {
   position: absolute; inset-block-start: calc(var(--spacing-0) - var(--spacing-0\.5)); inset-inline-end: calc(var(--spacing-0) - var(--spacing-0\.5));
   width: var(--spacing-2); height: var(--spacing-2); border-radius: var(--rounded-full);
   background: var(--sidebar-dot, var(--primary)); box-shadow: 0 0 0 var(--border-width-2) var(--sidebar-bg, var(--surface));
 }
-@media (forced-colors: active) { .dk-sidebar__dot { background: CanvasText; } }
-.dk-sidebar__icon .dk-icon { font-size: var(--sidebar-icon-size, var(--spacing-5)); }
-.dk-sidebar__label { flex: auto; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dk-sidebar__badge { display: inline-flex; flex-shrink: 0; }
-.dk-sidebar__chevron.dk-icon { --dk-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
-.dk-sidebar__li[data-state="open"] > .dk-sidebar__item .dk-sidebar__chevron { rotate: var(--dk-sidebar-turn); }
+@media (forced-colors: active) { .srp-sidebar__dot { background: CanvasText; } }
+.srp-sidebar__icon .srp-icon { font-size: var(--sidebar-icon-size, var(--spacing-5)); }
+.srp-sidebar__label { flex: auto; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.srp-sidebar__badge { display: inline-flex; flex-shrink: 0; }
+.srp-sidebar__chevron.srp-icon { --srp-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
+.srp-sidebar__li[data-state="open"] > .srp-sidebar__item .srp-sidebar__chevron { rotate: var(--srp-sidebar-turn); }
 /* collapsed: icons only, centered; labels stay for screen readers */
 /* Touch (EQ1): items at least 44px high on a touch screen, as Apple and Material ask; stacked, so the row grows. */
-@media (pointer: coarse) { .dk-sidebar__item { min-height: var(--spacing-11); } }
-.dk-sidebar--collapsed .dk-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
-.dk-sidebar--collapsed .dk-sidebar__label, .dk-sidebar--collapsed .dk-sidebar__section-title, .dk-sidebar--collapsed .dk-sidebar__badge {
+@media (pointer: coarse) { .srp-sidebar__item { min-height: var(--spacing-11); } }
+.srp-sidebar--collapsed .srp-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
+.srp-sidebar--collapsed .srp-sidebar__label, .srp-sidebar--collapsed .srp-sidebar__section-title, .srp-sidebar--collapsed .srp-sidebar__badge {
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
 }
 /* The collapsed rail's menu: the current page is in medium weight and the active text color (the highlight is focus's). */
-.dk-sidebar__menu-item[aria-current="page"] { color: var(--sidebar-item-text-active, var(--text)); font-weight: var(--font-medium); }
-@media (forced-colors: active) { .dk-sidebar__menu-item[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
-@media (forced-colors: active) { .dk-sidebar__item[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
-@media (prefers-reduced-motion: reduce) { .dk-sidebar, .dk-sidebar[data-slide]::after, .dk-sidebar__item, .dk-sidebar__chevron.dk-icon { transition: none; } }
+.srp-sidebar__menu-item[aria-current="page"] { color: var(--sidebar-item-text-active, var(--text)); font-weight: var(--font-medium); }
+@media (forced-colors: active) { .srp-sidebar__menu-item[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+@media (forced-colors: active) { .srp-sidebar__item[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
+@media (prefers-reduced-motion: reduce) { .srp-sidebar, .srp-sidebar[data-slide]::after, .srp-sidebar__item, .srp-sidebar__chevron.srp-icon { transition: none; } }
 }

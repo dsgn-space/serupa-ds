@@ -73,7 +73,7 @@ const TABBABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type
 
 function TourRender({ ref, ...props }: TourProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale();
-  const own = domId('dk-tour', React.useId());
+  const own = domId('srp-tour', React.useId());
   const id = props.id || own;
   const steps = props.steps || [];
   const [isOpen, setOwnOpen] = useControllable(props.open, !!props.defaultOpen, 'Tour', 'open');
@@ -118,7 +118,7 @@ function TourRender({ ref, ...props }: TourProps & React.RefAttributes<HTMLDivEl
     return () => el.removeAttribute('data-tour-target');
   }, [open, step]);
   const exit = useExit(open, panel);
-  useAnchoredLayer(open && !!target, panel, anchor, { placement: step && step.placement, offsetVar: '--dk-tour-offset', watch: target });
+  useAnchoredLayer(open && !!target, panel, anchor, { placement: step && step.placement, offsetVar: '--srp-tour-offset', watch: target });
   // A step with nothing to point at: the panel in the middle of the screen (the class), shown here.
   useIsoLayoutEffect(() => {
     const p = panel.current;
@@ -170,16 +170,16 @@ function TourRender({ ref, ...props }: TourProps & React.RefAttributes<HTMLDivEl
   return (
     <div {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }}
       hidden={!open || undefined} inert={!open || undefined} aria-labelledby={id + '-title'} aria-describedby={step.content != null ? id + '-text' : undefined}
-      className={cn('dk-tour', !target && 'dk-tour--center', props.className)} data-component="tour" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}>
+      className={cn('srp-tour', !target && 'srp-tour--center', props.className)} data-component="tour" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}>
       {open || exit.leaving ? <>
-        <div className="dk-tour__head">
-          <H id={id + '-title'} className="dk-tour__title">{step.title}</H>
-          <IconButton className="dk-tour__close" icon={icons.Close} label={sds.labels.close} size="sm" hideTitle onClick={() => close('close')} />
+        <div className="srp-tour__head">
+          <H id={id + '-title'} className="srp-tour__title">{step.title}</H>
+          <IconButton className="srp-tour__close" icon={icons.Close} label={sds.labels.close} size="sm" hideTitle onClick={() => close('close')} />
         </div>
-        {step.content != null ? <div id={id + '-text'} className="dk-tour__text">{step.content}</div> : null}
-        <div className="dk-tour__foot">
-          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length, numberFormat(locale).format(at + 1), numberFormat(locale).format(steps.length))}</span> : null}
-          <span className="dk-tour__actions">
+        {step.content != null ? <div id={id + '-text'} className="srp-tour__text">{step.content}</div> : null}
+        <div className="srp-tour__foot">
+          {steps.length > 1 ? <span className="srp-tour__count">{sds.labels.stepOf(at + 1, steps.length, numberFormat(locale).format(at + 1), numberFormat(locale).format(steps.length))}</span> : null}
+          <span className="srp-tour__actions">
             {at > 0 ? <Button size="sm" variant="secondary" onClick={() => go(at - 1)}>{sds.labels.tourBack}</Button> : null}
             <Button size="sm" onClick={next}>{last ? sds.labels.tourDone : sds.labels.tourNext}</Button>
           </span>

@@ -24,8 +24,8 @@ import { LoadMore } from "@diki-stwn/serupa-ds";
 
 Drawn from the `LongText` story.
 
-1. **Summary** (`.dk-load-more__summary`): how many are shown of how many there are.
-2. **Load more** (`.dk-load-more__button`): adds the next page of items below the ones shown.
+1. **Summary** (`.srp-load-more__summary`): how many are shown of how many there are.
+2. **Load more** (`.srp-load-more__button`): adds the next page of items below the ones shown.
 
 ## Usage
 

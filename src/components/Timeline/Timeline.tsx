@@ -52,7 +52,7 @@ function TimelineRender({ ref, ...props }: TimelineProps & React.RefAttributes<H
   const [box, setBox] = React.useState<HTMLDivElement | null>(null);
   const scrolls = useScrolls(horizontal ? box : null);
   if (!horizontal) {
-    return <ol role="list" {...rest} style={style} ref={ref} className={cn('dk-timeline', a === 'alternate' && 'dk-timeline--alternate', className)} data-component="timeline" />;
+    return <ol role="list" {...rest} style={style} ref={ref} className={cn('srp-timeline', a === 'alternate' && 'srp-timeline--alternate', className)} data-component="timeline" />;
   }
   /* Horizontal: the list in a box that scrolls sideways (and is a container, for stackWhenNarrow). While it scrolls,
      the box takes focus, so a keyboard can scroll it (WCAG 2.1.1), as a region named as the list was, or "Timeline"
@@ -61,9 +61,9 @@ function TimelineRender({ ref, ...props }: TimelineProps & React.RefAttributes<H
   const { 'aria-label': label, 'aria-labelledby': labelledBy, ...list } = rest;
   const region = scrolls ? { tabIndex: 0, role: 'region', 'aria-labelledby': labelledBy, 'aria-label': labelledBy ? undefined : label || L.timeline } : {};
   return (
-    <div ref={setBox} className={cn('dk-timeline-scroll', stackWhenNarrow && 'dk-timeline-scroll--stack', className)} style={style}
+    <div ref={setBox} className={cn('srp-timeline-scroll', stackWhenNarrow && 'srp-timeline-scroll--stack', className)} style={style}
       {...region} data-component="timeline" data-orientation="horizontal">
-      <ol role="list" {...list} aria-label={scrolls ? undefined : label} aria-labelledby={scrolls ? undefined : labelledBy} ref={ref} className="dk-timeline dk-timeline--horizontal" />
+      <ol role="list" {...list} aria-label={scrolls ? undefined : label} aria-labelledby={scrolls ? undefined : labelledBy} ref={ref} className="srp-timeline srp-timeline--horizontal" />
     </div>
   );
 }
@@ -77,16 +77,16 @@ function TimelineItemRender({ ref, ...props }: TimelineItemProps & React.RefAttr
   const { className, title, time, dateTime, icon, tone, children, ...rest } = props;
   const s = oneOf(TONES, tone, 'neutral');
   return (
-    <li {...rest} ref={ref} className={cn('dk-timeline__item', 'dk-timeline__item--' + s, className)}>
-      <span className="dk-timeline__rail" aria-hidden="true">
-        <span className={cn('dk-timeline__marker', icon != null && 'dk-timeline__marker--icon')}>{icon != null ? asIcon(icon) : null}</span>
+    <li {...rest} ref={ref} className={cn('srp-timeline__item', 'srp-timeline__item--' + s, className)}>
+      <span className="srp-timeline__rail" aria-hidden="true">
+        <span className={cn('srp-timeline__marker', icon != null && 'srp-timeline__marker--icon')}>{icon != null ? asIcon(icon) : null}</span>
       </span>
-      <div className="dk-timeline__body">
-        {title != null ? <div className="dk-timeline__title">{title}</div> : null}
+      <div className="srp-timeline__body">
+        {title != null ? <div className="srp-timeline__title">{title}</div> : null}
         {/* A <time> only with dateTime: "13 Mar" or "2 hours ago" alone isn't a date a machine can read, and a
             <RelativeTime> passed as time is a <time> already (L8E59). */}
-        {time != null ? dateTime ? <time className="dk-timeline__time" dateTime={dateTime}>{time}</time> : <span className="dk-timeline__time">{time}</span> : null}
-        {children != null ? <div className="dk-timeline__content">{children}</div> : null}
+        {time != null ? dateTime ? <time className="srp-timeline__time" dateTime={dateTime}>{time}</time> : <span className="srp-timeline__time">{time}</span> : null}
+        {children != null ? <div className="srp-timeline__content">{children}</div> : null}
       </div>
     </li>
   );

@@ -31,9 +31,9 @@ const around = (sel: string, target: string) => {
   return [hit(-18), hit(18)];
 };
 const all = () => ({
-  star: around('.dk-rating__star', '.dk-rating__choice'),
-  list: around('.dk-sortable-list__handle', '.dk-sortable-list__handle'),
-  kanban: around('.dk-kanban__handle', '.dk-kanban__handle'),
+  star: around('.srp-rating__star', '.srp-rating__choice'),
+  list: around('.srp-sortable-list__handle', '.srp-sortable-list__handle'),
+  kanban: around('.srp-kanban__handle', '.srp-kanban__handle'),
 });
 
 describe('touch-sized stars and drag handles', () => {
@@ -63,7 +63,7 @@ function Rows() {
   </div>;
 }
 const h = (sel: string) => Math.round($(sel).getBoundingClientRect().height);
-const rows = () => ({ tab: h('[role="tab"]'), sidebar: h('.dk-sidebar__item'), swatch: h('.dk-color-picker__swatch'), menu: h('[role="menuitem"]') });
+const rows = () => ({ tab: h('[role="tab"]'), sidebar: h('.srp-sidebar__item'), swatch: h('.srp-color-picker__swatch'), menu: h('[role="menuitem"]') });
 
 describe('touch-sized packed rows', () => {
   test('with a mouse: compact rows', async () => {

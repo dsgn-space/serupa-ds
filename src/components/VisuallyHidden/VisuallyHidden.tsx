@@ -15,7 +15,7 @@ function VisuallyHiddenRender({ ref, ...props }: VisuallyHiddenProps & React.Ref
   const rest = omit(props, { focusable: 1, as: 1, className: 1 });
   return React.createElement(oneOf(TAGS, props.as, 'span'), Object.assign(rest, {
     ref: ref, 'data-component': 'visually-hidden',
-    className: cn('dk-visually-hidden', props.focusable && 'dk-visually-hidden--focusable', props.className),
+    className: cn('srp-visually-hidden', props.focusable && 'srp-visually-hidden--focusable', props.className),
   }));
 }
 

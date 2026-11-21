@@ -19,12 +19,12 @@ export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
 
 function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes<HTMLElement>) {
   const { className, label, hideFrom = 'md', children, ...rest } = props;
-  const hide = hideFrom ? `dk-bottom-nav--hide-${hideFrom}` : 'dk-bottom-nav--always';
+  const hide = hideFrom ? `srp-bottom-nav--hide-${hideFrom}` : 'srp-bottom-nav--always';
   return (
     <>
-      <div className={cn('dk-bottom-nav__spacer', hide)} aria-hidden="true" />
-      <nav {...rest} ref={ref} aria-label={label} className={cn('dk-bottom-nav', hide, className)} data-component="bottom-nav">
-        <ul className="dk-bottom-nav__list">{React.Children.map(children, (c) => (c == null || c === false ? null : <li className="dk-bottom-nav__item">{c}</li>))}</ul>
+      <div className={cn('srp-bottom-nav__spacer', hide)} aria-hidden="true" />
+      <nav {...rest} ref={ref} aria-label={label} className={cn('srp-bottom-nav', hide, className)} data-component="bottom-nav">
+        <ul className="srp-bottom-nav__list">{React.Children.map(children, (c) => (c == null || c === false ? null : <li className="srp-bottom-nav__item">{c}</li>))}</ul>
       </nav>
     </>
   );
@@ -32,7 +32,7 @@ function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes
 
 /* BottomNav: a <nav> fixed along the bottom edge on phones, its links side by side in equal columns, an icon over a
    short label in each. The bar adds env(safe-area-inset-bottom) under its links, leaves the same room at the end of
-   the page with a spacer, and while it shows, puts its height in --dk-bottom-nav-space so a bottom Toaster,
+   the page with a spacer, and while it shows, puts its height in --srp-bottom-nav-space so a bottom Toaster,
    OfflineBanner and Fab sit above it and scrolling into view clears it. className and other props go to the <nav>. */
 /** A bar of three to five main destinations along the bottom of a phone screen.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
@@ -66,7 +66,7 @@ function BottomNavLinkBaseRender({ ref, ...props }: BottomNavLinkProps & React.R
   if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   const Tag = props.as || config.link;
   return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
-    className={cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className)}><span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="dk-bottom-nav__label">{props.children}</TruncatedText> : <span className="dk-bottom-nav__label">{props.children}</span>}</Tag>;
+    className={cn('srp-bottom-nav__link', props.active && 'srp-bottom-nav__link--active', props.className)}><span className="srp-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="srp-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="srp-bottom-nav__label">{props.children}</TruncatedText> : <span className="srp-bottom-nav__label">{props.children}</span>}</Tag>;
 }
 
 const BottomNavLinkBase = /* @__PURE__ */ named('BottomNavLink', BottomNavLinkBaseRender);

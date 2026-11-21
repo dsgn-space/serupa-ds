@@ -28,8 +28,8 @@ import { PasswordInput, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `CapsLockOn` story.
 
-1. **Field** (`.dk-input__field`): where the password is typed, hidden as dots.
-2. **Show password** (`.dk-password-input__toggle`): shows and hides what was typed.
+1. **Field** (`.srp-input__field`): where the password is typed, hidden as dots.
+2. **Show password** (`.srp-password-input__toggle`): shows and hides what was typed.
 
 ## Usage
 

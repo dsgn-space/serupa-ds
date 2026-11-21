@@ -72,7 +72,7 @@ describe('Patterns/Task board', () => {
     const dialog = screen.getByRole('dialog', { name: 'New task' });
     await dialog.getByRole('button', { name: 'Add task' }).click();
     // The field's own message, not the live region that says it too (while it still holds the words, getByText finds two).
-    await expect.poll(() => dialog.getByText('Enter a title for the task.').elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]') && e.checkVisibility()).length).toBe(1);
+    await expect.poll(() => dialog.getByText('Enter a title for the task.').elements().filter((e) => !e.closest('[data-srp-announcer], [data-srp-announcer-assertive]') && e.checkVisibility()).length).toBe(1);
     await expect.poll(() => active().id).toBe('task-title');
     expect(onAdd).not.toHaveBeenCalled();
     await dialog.getByRole('textbox', { name: /^Title/ }).fill(' Delta ');

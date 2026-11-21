@@ -49,10 +49,10 @@ const [tags, setTags] = React.useState(["news"]);
 
 Drawn from the `LongLabel` story.
 
-1. **Box** (`.dk-checkbox__control`): the square that shows checked, unchecked or mixed, over the native checkbox.
-2. **Check mark** (`.dk-checkbox__icon`): the mark inside the box when it's checked.
-3. **Label** (`.dk-checkbox__text`): what checking it means; clicking it checks the box too.
-4. **Description** (`.dk-checkbox__description`): optional detail under the label.
+1. **Box** (`.srp-checkbox__control`): the square that shows checked, unchecked or mixed, over the native checkbox.
+2. **Check mark** (`.srp-checkbox__icon`): the mark inside the box when it's checked.
+3. **Label** (`.srp-checkbox__text`): what checking it means; clicking it checks the box too.
+4. **Description** (`.srp-checkbox__description`): optional detail under the label.
 
 ## Usage
 

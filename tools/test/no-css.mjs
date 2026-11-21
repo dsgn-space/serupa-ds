@@ -11,7 +11,7 @@ import { PROJECT, browser, cleanup, report, done, tokensCss } from './lib.mjs';
 
 // The class of the outermost element the stylesheet hides, by component, and why it's still CSS alone.
 const KNOWN = {
-  CopyButton: { 'dk-copy-btn__label': 'the "Copied" label waits in place, aria-hidden, under visibility: hidden, so the button keeps one width; without CSS both words show' },
+  CopyButton: { 'srp-copy-btn__label': 'the "Copied" label waits in place, aria-hidden, under visibility: hidden, so the button keeps one width; without CSS both words show' },
 };
 
 const DIR = path.join(PROJECT, 'tools', 'test', 'baseline-server');

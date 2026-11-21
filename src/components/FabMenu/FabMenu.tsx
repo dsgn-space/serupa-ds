@@ -42,7 +42,7 @@ function FabMenuRender({ ref, ...props }: FabMenuProps & React.RefAttributes<HTM
   const placement = (pos.startsWith('top') ? 'bottom' : 'top') + (pos.endsWith('start') ? '-start' : '-end') as 'top-end';
   return (
     <Menu trigger={<Fab {...fab} ref={ref} />} placement={placement} open={open} onOpenChange={onOpenChange && ((o) => onOpenChange(o))}
-      aria-label={fab.label} className="dk-fab-menu">
+      aria-label={fab.label} className="srp-fab-menu">
       {actions.map((a, i) => <MenuItem key={i} icon={a.icon} disabled={a.disabled} destructive={a.destructive} onSelect={a.onSelect}>{a.label}</MenuItem>)}
     </Menu>
   );

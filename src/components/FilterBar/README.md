@@ -34,12 +34,12 @@ const fields: FilterField[] = [
 
 Drawn from the `Playground` story.
 
-1. **Chip** (`.dk-filter-bar__chip`): one filter, outlined; dashed while nothing is chosen.
-2. **Chip button** (`.dk-filter-bar__edit`): the filter in words; it opens the filter's editor.
-3. **Remove** (`.dk-filter-bar__remove`): takes the filter away.
-4. **Add filter** (`.dk-filter-bar__add`): a menu of the fields not in use.
-5. **Clear all** (`.dk-filter-bar__clear`): takes every filter away.
-6. **Count** (`.dk-filter-bar__count`): how many results are left, at the end.
+1. **Chip** (`.srp-filter-bar__chip`): one filter, outlined; dashed while nothing is chosen.
+2. **Chip button** (`.srp-filter-bar__edit`): the filter in words; it opens the filter's editor.
+3. **Remove** (`.srp-filter-bar__remove`): takes the filter away.
+4. **Add filter** (`.srp-filter-bar__add`): a menu of the fields not in use.
+5. **Clear all** (`.srp-filter-bar__clear`): takes every filter away.
+6. **Count** (`.srp-filter-bar__count`): how many results are left, at the end.
 
 ## Usage
 

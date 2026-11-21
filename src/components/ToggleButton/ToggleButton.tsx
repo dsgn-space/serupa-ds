@@ -26,7 +26,7 @@ function ToggleButtonRender({ ref, ...props }: ToggleButtonProps & React.RefAttr
   const v = oneOf(['outline', 'ghost'] as const, variant, 'outline');
   return (
     <ButtonBase {...rest} ref={ref} variant={v} aria-pressed={on}
-      className={cn('dk-toggle-button', on && 'dk-toggle-button--pressed', className)}
+      className={cn('srp-toggle-button', on && 'srp-toggle-button--pressed', className)}
       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         if (onClick) onClick(e);
         if (e.defaultPrevented) return;

@@ -9,7 +9,7 @@
    While on:
      - every Serupa component (each element with data-component) has a dashed outline, except while it shows its own
        focus ring;
-     - pointing at one draws its box and a panel with its name, its variant and size (the modifiers of its block class, such as dk-btn--primary), its state
+     - pointing at one draws its box and a panel with its name, its variant and size (the modifiers of its block class, such as srp-btn--primary), its state
        (data-state, aria-checked, aria-expanded, aria-selected, aria-invalid, disabled), its size in px, and the
        component tokens (--button-…, --input-…) that have a value on it, so a token your app overrides shows here;
      - the color pairs Serupa draws (text on each surface, button text, field borders, the focus ring …) are checked
@@ -123,8 +123,8 @@
     if (!host) return null;
     var name = host.getAttribute('data-component'), prefix = kebab(name);
     var classes = (host.getAttribute('class') || '').split(/\s+/);
-    // Its block class (dk-btn for Button), then that block's modifiers: dk-btn--primary, dk-btn--size-md.
-    var block = classes.filter(function (c) { return /^dk-[a-z0-9-]+$/.test(c) && c.indexOf('--') < 0; })[0];
+    // Its block class (srp-btn for Button), then that block's modifiers: srp-btn--primary, srp-btn--size-md.
+    var block = classes.filter(function (c) { return /^srp-[a-z0-9-]+$/.test(c) && c.indexOf('--') < 0; })[0];
     var modifiers = block ? classes.filter(function (c) { return c.indexOf(block + '--') === 0; }).map(function (c) { return c.slice(block.length + 2); }) : [];
     var state = {};
     ['data-state', 'data-side', 'aria-checked', 'aria-expanded', 'aria-selected', 'aria-pressed', 'aria-invalid', 'aria-busy'].forEach(function (a) {

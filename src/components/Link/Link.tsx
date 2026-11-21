@@ -40,19 +40,19 @@ function LinkBaseRender({ ref, ...props }: LinkProps & React.RefAttributes<HTMLA
   }
   const attrs = Object.assign(rest, {
     'data-component': 'link',
-    className: cn('dk-link', tone === 'neutral' && 'dk-link--neutral', underline === 'hover' && 'dk-link--hover-underline', (props.onMedia === 'dark' || props.onMedia === 'light') && 'dk-link--on-' + props.onMedia, props.className),
+    className: cn('srp-link', tone === 'neutral' && 'srp-link--neutral', underline === 'hover' && 'srp-link--hover-underline', (props.onMedia === 'dark' || props.onMedia === 'light') && 'srp-link--on-' + props.onMedia, props.className),
   });
   // The new-tab icon goes in a nowrap span with the last letter of a text label, so it never starts a line alone (GF1).
   // Only the last letter: a whole nowrap word longer than the line couldn't break inside, and ran past a narrow
   // screen (GR71).
-  const icon = <Icon icon={icons.OpenInNew} className="dk-link__icon" />;
+  const icon = <Icon icon={icons.OpenInNew} className="srp-link__icon" />;
   const text = typeof props.children === 'string' ? props.children : null;
   const cut = text != null ? text.search(/\S\p{M}*\s*$/u) : -1;
   // Your target _self, _parent or _top keeps it in this tab: no new-tab icon or "(opens in a new tab)" then (L8E63).
   const newTab = props.external && !/^_(self|parent|top)$/i.test(String(rest.target));
   const children = newTab ? <>
     {cut > 0 ? text!.slice(0, cut) : cut < 0 ? props.children : null}
-    {cut >= 0 ? <span className="dk-link__last">{text!.slice(cut)}{icon}</span> : icon}
+    {cut >= 0 ? <span className="srp-link__last">{text!.slice(cut)}{icon}</span> : icon}
     <NewTabNote />
   </> : props.children;
   // React only autofocuses form controls: with autoFocus, a small client component focuses the link once it's mounted.

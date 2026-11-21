@@ -57,12 +57,12 @@ const WORD = {
   archive: 'attachmentArchive', code: 'attachmentCode', audio: 'attachmentAudio', video: 'attachmentVideo', other: 'attachmentOther',
 } as const;
 
-const NAME = { root: 'dk-attachment__name-text', start: 'dk-attachment__name-start', end: 'dk-attachment__name-end', hidden: 'dk-visually-hidden' };
+const NAME = { root: 'srp-attachment__name-text', start: 'srp-attachment__name-start', end: 'srp-attachment__name-end', hidden: 'srp-visually-hidden' };
 
 function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale(), L = sds.labels;
   const rest = omit(props, OWN);
-  const base = domId('dk-at', React.useId());
+  const base = domId('srp-at', React.useId());
   const kind = props.kind || attachmentKind(props.name, props.type);
   const disabled = !!props.disabled;
   const failed = props.error != null && props.error !== false && props.error !== '';
@@ -72,25 +72,25 @@ function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttribut
   const name = <MiddleCutName name={props.name} id={base + '-name'} cls={NAME} />;
   const removeLabel = props.removeLabel || ((n: string) => L.remove + ' ' + n);
   return (
-    <div {...rest} ref={ref} className={cn('dk-attachment', failed && 'dk-attachment--error', uploading && 'dk-attachment--uploading', disabled && 'dk-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
-      <Icon icon={ICONS[kind]} className="dk-attachment__icon" />
-      <span className="dk-attachment__body">
+    <div {...rest} ref={ref} className={cn('srp-attachment', failed && 'srp-attachment--error', uploading && 'srp-attachment--uploading', disabled && 'srp-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
+      <Icon icon={ICONS[kind]} className="srp-attachment__icon" />
+      <span className="srp-attachment__body">
         {props.href && !disabled ? (
-          <a className="dk-attachment__name" href={props.href} download={props.download === true ? '' : props.download || undefined} aria-describedby={cn(base + '-meta', failed && base + '-error')}>{name}</a>
-        ) : <span className="dk-attachment__name">{name}</span>}
-        <span className="dk-attachment__meta" id={base + '-meta'} dir="auto">
-          <span className="dk-attachment__kind">{L[WORD[kind]]}</span>
-          {size ? <span className="dk-attachment__size">{size}</span> : null}
+          <a className="srp-attachment__name" href={props.href} download={props.download === true ? '' : props.download || undefined} aria-describedby={cn(base + '-meta', failed && base + '-error')}>{name}</a>
+        ) : <span className="srp-attachment__name">{name}</span>}
+        <span className="srp-attachment__meta" id={base + '-meta'} dir="auto">
+          <span className="srp-attachment__kind">{L[WORD[kind]]}</span>
+          {size ? <span className="srp-attachment__size">{size}</span> : null}
         </span>
-        {uploading ? <Progress className="dk-attachment__progress" size="sm" value={value} aria-labelledby={base + '-name'} /> : null}
-        {failed ? <span className="dk-attachment__error" id={base + '-error'}><Icon icon={icons.Error} />{props.error === true ? L.fileError : props.error}</span> : null}
+        {uploading ? <Progress className="srp-attachment__progress" size="sm" value={value} aria-labelledby={base + '-name'} /> : null}
+        {failed ? <span className="srp-attachment__error" id={base + '-error'}><Icon icon={icons.Error} />{props.error === true ? L.fileError : props.error}</span> : null}
       </span>
       {failed && props.onRetry ? (
-        <Button className="dk-attachment__retry" variant="ghost" size="sm" disabled={disabled} onClick={props.onRetry} aria-labelledby={base + '-retry ' + base + '-name'} aria-describedby={base + '-error'}>
+        <Button className="srp-attachment__retry" variant="ghost" size="sm" disabled={disabled} onClick={props.onRetry} aria-labelledby={base + '-retry ' + base + '-name'} aria-describedby={base + '-error'}>
           <span id={base + '-retry'}>{L.tryAgain}</span>
         </Button>
       ) : null}
-      {props.onRemove ? <IconButton className="dk-attachment__remove" icon={icons.Close} label={removeLabel(props.name)} size="sm" variant="ghost" disabled={disabled} onClick={props.onRemove} /> : null}
+      {props.onRemove ? <IconButton className="srp-attachment__remove" icon={icons.Close} label={removeLabel(props.name)} size="sm" variant="ghost" disabled={disabled} onClick={props.onRemove} /> : null}
     </div>
   );
 }

@@ -13,7 +13,7 @@ export function AnnounceText() {
     // Each part's words. The suggestions' "Did you mean:" and each search are elements side by
     // side, whose textContent would run them into one word ("Did you mean:marsmaze") (L8E62).
     const words = (c: Element): string => {
-      if (!c.classList.contains('dk-empty-state__suggestions')) return (c.textContent || '').trim();
+      if (!c.classList.contains('srp-empty-state__suggestions')) return (c.textContent || '').trim();
       const kids = [...c.children].map((k) => (k.textContent || '').trim()).filter(Boolean);
       return kids.length ? kids[0] + ' ' + kids.slice(1).join(', ') : '';
     };

@@ -132,7 +132,7 @@ function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes
   const wraps = valid && ((ended && !!endText) || props.format === 'words');
   // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
   return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} role="timer" aria-label={valid ? `${label}: ${ended && endText ? endText : words}` : label}
-    dateTime={valid ? `PT${left}S` : undefined} className={cn('dk-countdown', wraps && 'dk-countdown--wraps', ended && 'dk-countdown--ended', props.className)}
+    dateTime={valid ? `PT${left}S` : undefined} className={cn('srp-countdown', wraps && 'srp-countdown--wraps', ended && 'srp-countdown--ended', props.className)}
     data-component="countdown" suppressHydrationWarning>{text}</time>;
 }
 

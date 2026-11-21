@@ -15,7 +15,7 @@ const view = (id: string) => root(id).querySelector(':scope > :is(button, span):
 // The words shown: the view's own span (the hidden words are VisuallyHidden, the pencil an Icon).
 const TEXT = ':scope > span:not([data-component]):not([data-icon])';
 const input = (id: string) => root(id).querySelector<HTMLInputElement>('input');
-const said = () => document.querySelector<HTMLElement>('[data-dk-announcer]')!.textContent;
+const said = () => document.querySelector<HTMLElement>('[data-srp-announcer]')!.textContent;
 const Box = ({ children }: { children: React.ReactNode }) => <div style={{ width: '320px', display: 'grid', gap: '12px', background: 'var(--surface)' }}>{children}</div>;
 
 function Controlled({ calls }: { calls: string[] }) {
@@ -79,7 +79,7 @@ describe('InlineEdit', () => {
     await render(<Box><InlineEdit id="a" ref={ref} className="extra" data-x="y" label="Project name" defaultValue="Apollo" /></Box>);
     const b = view('a');
     expect([b.tagName, b.getAttribute('type'), b.textContent, root('a').dataset.state, root('a').dataset.component, ref.current === root('a'), root('a').className, root('a').dataset.x])
-      .toEqual(['BUTTON', 'button', 'Project name: Apollo, Edit', 'viewing', 'inline-edit', true, 'dk-inline-edit dk-inline-edit--size-md extra', 'y']);
+      .toEqual(['BUTTON', 'button', 'Project name: Apollo, Edit', 'viewing', 'inline-edit', true, 'srp-inline-edit srp-inline-edit--size-md extra', 'y']);
     expect(css(b.querySelector(TEXT)).position).not.toBe('absolute');
     await userEvent.click(b);
     const i = input('a')!;
@@ -149,7 +149,7 @@ describe('InlineEdit', () => {
     await userEvent.fill(input('va')!, 'apollo plan');
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => announcerIdle() && said()).toBe('Use dashes instead of spaces.');
-    document.querySelector<HTMLElement>('[data-dk-announcer]')!.textContent = '';
+    document.querySelector<HTMLElement>('[data-srp-announcer]')!.textContent = '';
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => announcerIdle() && said()).toBe('Use dashes instead of spaces.');
   });
