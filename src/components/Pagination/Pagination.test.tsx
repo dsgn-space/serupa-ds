@@ -49,6 +49,29 @@ describe('Pagination', () => {
     expect(seen).toEqual([120, 400]);
   });
 
+  test('jump: reads the page in the digits the pages show, and in full width, and waits for an IME to finish', async () => {
+    // The pages are in the locale's digits ("١٢" in ar-EG), so that's what people type back; a Japanese IME in
+    // full-width mode types "１２". Enter that ends a composition picks the text, it doesn't go anywhere yet.
+    const seen: number[] = [];
+    await render(<><SerupaProvider locale="ar-EG"><Pagination id="pja" count={40} jump onPageChange={(n) => seen.push(n)} /></SerupaProvider>
+      <SerupaProvider locale="ja"><Pagination id="pjj" count={40} jump onPageChange={(n) => seen.push(n)} /></SerupaProvider></>);
+    const ar = el('pja').querySelector('input')!, ja = el('pjj').querySelector('input')!;
+    ar.focus();
+    await userEvent.keyboard('١٢{Enter}');
+    ja.focus();
+    await userEvent.keyboard('３');
+    const ime = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true, cancelable: true });
+    ja.dispatchEvent(ime);
+    expect([seen, ime.defaultPrevented, ja.value]).toEqual([[12], false, '３']);
+    await userEvent.keyboard('{Enter}');
+    expect(seen).toEqual([12, 3]);
+    await userEvent.keyboard('2.5{Enter}');
+    expect(seen).toEqual([12, 3]);
+    await userEvent.clear(ja);
+    await userEvent.keyboard('1,000{Enter}');
+    expect(seen).toEqual([12, 3, 40]);
+  });
+
   test('jump: no field for a single page; Indonesian words under an id provider', async () => {
     await render(<><Pagination id="pj1" count={1} jump /><SerupaProvider labels={idLabels}><Pagination id="pj2" count={30} jump /></SerupaProvider></>);
     expect(el('pj1').querySelector('input')).toBeNull();
