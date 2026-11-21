@@ -3,7 +3,7 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     size?: "lg" | "md" | "sm" | undefined;
     children?: React.ReactNode | undefined;
     description?: React.ReactNode | undefined;
-    labelPosition?: "end" | "start" | undefined;
+    labelPlacement?: "end" | "start" | undefined;
     invalid?: boolean | undefined;
     readOnly?: boolean | undefined;
     loading?: boolean | undefined;

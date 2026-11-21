@@ -1,6 +1,6 @@
 // exports: ToggleGroup, type ToggleGroupProps
 interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" | "onChange"> {
-    type?: "multiple" | "single" | undefined;
+    selectionMode?: "multiple" | "single" | undefined;
     value?: string[] | undefined;
     defaultValue?: string[] | undefined;
     onValueChange?: ((value: string[]) => void) | undefined;

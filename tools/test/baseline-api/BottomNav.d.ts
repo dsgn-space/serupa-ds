@@ -1,6 +1,6 @@
 // exports: BottomNav, BottomNavLink, type BottomNavLinkOwnProps, type BottomNavLinkProps, type BottomNavProps
 interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
-    label: string;
+    "aria-label": string;
     hideFrom?: "lg" | "md" | "sm" | false | undefined;
     children?: React.ReactNode;
 }
