@@ -1,7 +1,7 @@
 'use client';
 import { numberFormat, dateFormat } from '../../internal/intl';
 import * as React from 'react';
-import { cn, omit, setRef } from '../../internal/cn';
+import { cn, omit, setRef, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { en as words } from './labels';
@@ -95,8 +95,8 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
     if (el && el.scrollWidth > el.clientWidth) el.scrollLeft = getComputedStyle(el).direction === 'rtl' ? -el.scrollWidth : el.scrollWidth;
   }, [days.length]);
   // The bars read the latest setAt through this, so Bars' props stay the same while only the pointed day changes.
-  const live = React.useRef(setAt); live.current = setAt;
-  const on = React.useCallback((i: number, focus: boolean) => { if (focus) live.current(i); setShown(i); }, []);
+  const live = useLatest(setAt);
+  const on = React.useCallback((i: number, focus: boolean) => { if (focus) live.current(i); setShown(i); }, [live]);
   const caption = shown != null && days[shown] ? say(days[shown]) : null;
   return (
     <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-status-tracker', props.className)} data-component="status-tracker">

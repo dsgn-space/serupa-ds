@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, domId, oneOf, omit, setRef, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
@@ -211,15 +211,14 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
   // Stable handlers for the memoised rows, reading the latest state through a ref: an arrow key then redraws the two
   // rows it moves between, not every cell of the grid (GR397).
-  const latest = React.useRef({ pick, save, editable, lastRow, edit });
-  latest.current = { pick, save, editable, lastRow, edit };
+  const latest = useLatest({ pick, save, editable, lastRow, edit });
   const api = React.useMemo<RowApi>(() => ({
     pick: (p, e) => latest.current.pick(p, e),
     begin: (p, text) => { if (latest.current.editable(p)) setEdit({ text }); },
     save: (text, then) => latest.current.save(text, then && { r: Math.min(then.r, latest.current.lastRow), c: Math.max(0, then.c) }),
     blur: (text) => { if (latest.current.edit) latest.current.save(text, null); },
     cancel: () => { setEdit(null); focusCell.current = true; },
-  }), []);
+  }), [latest]);
   const cp = props.containerProps || {};
   return (
     <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid">

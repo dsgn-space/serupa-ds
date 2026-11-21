@@ -1,7 +1,7 @@
 'use client';
 import { listFormat, numberFormat } from '../../internal/intl';
 import * as React from 'react';
-import { cn, omit } from '../../internal/cn';
+import { cn, omit, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { canonicalLocale, localeDir } from '../../internal/locale';
@@ -99,8 +99,7 @@ function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes
   const ended = valid && left === 0;
   const words = countdownWords(left, locale);
   const was = React.useRef<number | null>(null);
-  const onEnd = React.useRef(props.onEnd);
-  onEnd.current = props.onEnd;
+  const onEnd = useLatest(props.onEnd);
   const { label, endText } = props;
   const steps = props.announceAt || DEFAULT_STEPS;
 
@@ -126,7 +125,7 @@ function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes
     // The smallest step crossed since the last tick: a tab that slept through several says only where it is now.
     const crossed = steps.filter((t) => t < before && t >= left);
     if (crossed.length) announce(`${label}: ${countdownWords(Math.min(...crossed), locale)}`);
-  }, [left, valid, label, endText, locale, steps]);
+  }, [left, valid, label, endText, locale, steps, onEnd]);
 
   const text = !valid ? '' : ended && endText ? endText : props.format === 'words' ? wordsOf(left, locale, true) : countdownClock(left, locale);
   // A clock stays on one line; words and an end text wrap like the sentence around them, so a narrow column keeps them.

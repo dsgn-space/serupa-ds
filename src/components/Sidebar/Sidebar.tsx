@@ -264,7 +264,8 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
       </li>
     );
   }
-  const link = React.createElement(props.as || config.link, Object.assign(rest, { ref: ref, className: cls, 'aria-current': props.active ? 'page' : undefined }), inner(false));
+  const Tag = props.as || config.link;
+  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.active ? 'page' : undefined}>{inner(false)}</Tag>;
   return (
     <li className="dk-sidebar__li">
       {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
