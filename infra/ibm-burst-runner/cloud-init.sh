@@ -1,7 +1,8 @@
 #!/bin/bash
 # Runs once on first boot (passed as user data by up.sh). Installs Docker and __CONCURRENT__ GitHub Actions
 # runners for github.com/dsgn-space/serupa-ds (labels self-hosted, linux, x86), and an idle watchdog that deletes
-# this server after IDLE_HOURS with no job running here and none queued for the repository. The idle clock starts again at every boot, so a restarted server isn't deleted at once.
+# this server after IDLE_HOURS with no job running here and none queued for the repository (0: no watchdog). The idle
+# clock starts again at every boot, so a restarted server isn't deleted at once.
 set -euo pipefail
 REPO_URL="https://github.com/dsgn-space/serupa-ds"
 REG_TOKEN="__RUNNER_TOKEN__"           # registration token from Settings > Actions > Runners (lasts an hour)
@@ -24,8 +25,7 @@ apt-get install -y ca-certificates curl jq mdadm
 # needrestart, which on Ubuntu 24.04 restarts every service using an upgraded library, the 28 runner services too.
 # On 21 November at 06:54:13 UTC, inside that window, all of them received a shutdown signal at once while the VM
 # stayed up: every running job failed, and the jobs assigned that second lost their runner. Security updates still
-# install; needrestart only lists what would need a restart, and the next boot takes them in (the VM deletes itself
-# after two idle hours, so it doesn't run old code for long).
+# install; needrestart only lists what would need a restart, and the next boot takes them in.
 mkdir -p /etc/needrestart/conf.d
 echo "\$nrconf{restart} = 'l';" > /etc/needrestart/conf.d/90-burst-no-restart.conf
 
@@ -108,9 +108,13 @@ IDLE=\$(( \$(date +%s) - \$(cat \$STAMP) ))
 if [ \$BUSY -eq 0 ] && [ \$IDLE -ge $(( IDLE_HOURS * 3600 )) ]; then
   date
   ibmcloud login --apikey "$IBM_API_KEY" -r "$REGION" -q && ibmcloud is instance-delete "$SERVER_NAME" -f && exit 0
-  echo "delete failed; powering off"
-  shutdown -h now
+  # Keep running: a server powered off here still holds its name and its disk, and its runners only show Offline
+  # (21 November: the key was rotated, the delete failed, and the stopped VM blocked up.sh). It tries again in 10
+  # minutes; the log says why it can't.
+  echo "delete failed; still running"
 fi
 WD
 chmod 700 /usr/local/bin/idle-watchdog.sh
-printf '%s\n' "@reboot root date +\\%s > /var/lib/idle-watchdog.last-busy" "*/10 * * * * root /usr/local/bin/idle-watchdog.sh" > /etc/cron.d/idle-watchdog
+if [ "$IDLE_HOURS" -gt 0 ]; then
+  printf '%s\n' "@reboot root date +\\%s > /var/lib/idle-watchdog.last-busy" "*/10 * * * * root /usr/local/bin/idle-watchdog.sh" > /etc/cron.d/idle-watchdog
+fi

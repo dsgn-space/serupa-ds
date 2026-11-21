@@ -49,11 +49,7 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
     if (props.onClick) props.onClick(e);
     if (e.defaultPrevented) return;
     try {
-      // Nothing awaited before the write starts, so it's still inside the press.
-      const got = typeof value === 'function' ? value() : value;
-      let text: string;
-      const at = e.currentTarget;
-      if (typeof got === 'string') { text = got; await write(text, at); } else text = await writeLater(Promise.resolve(got), at);
+      const text = await copy(value, e.currentTarget);
       show('copied');
       announce(done);
       if (onCopy) onCopy(text);
@@ -93,6 +89,14 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
       {failed ? <span className="dk-copy-btn__label">{failedShort}</span> : null}
     </span>
   </ButtonBase>;
+}
+
+// Writes value to the clipboard and returns the text written. Nothing is awaited before the write starts, so it's still
+// inside the press. Its own function: the React Compiler can't take a conditional inside a try block.
+async function copy(value: CopyButtonProps['value'], at: HTMLElement): Promise<string> {
+  const got = typeof value === 'function' ? value() : value;
+  if (typeof got === 'string') { await write(got, at); return got; }
+  return writeLater(Promise.resolve(got), at);
 }
 
 /* CopyButton: a Button that copies value to the clipboard, then shows a check and "Copied" for timeout ms and

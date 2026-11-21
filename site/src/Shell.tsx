@@ -53,7 +53,7 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
   return <div className="site">
     <SkipLink />
     <Navbar sticky size="full" aria-label="Main"
-      brand={<a href="/" className="site-brand" aria-label="Serupa, home"><span className="site-brand__mark" aria-hidden="true" />Serupa</a>}
+      brand={<a href="/" className="site-brand" aria-label="Serupa, home"><svg className="site-brand__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 2h2v2h-2zM5 2h2v2h-2zM17 2h2v2h-2zM20 2h2v2h-2zM2 5h2v2h-2zM5 5h2v2h-2zM8 5h2v2h-2zM14 5h2v2h-2zM17 5h2v2h-2zM20 5h2v2h-2zM5 8h2v2h-2zM8 8h2v2h-2zM14 8h2v2h-2zM17 8h2v2h-2zM11 11h2v2h-2zM5 14h2v2h-2zM8 14h2v2h-2zM14 14h2v2h-2zM17 14h2v2h-2zM2 17h2v2h-2zM5 17h2v2h-2zM8 17h2v2h-2zM14 17h2v2h-2zM17 17h2v2h-2zM20 17h2v2h-2zM2 20h2v2h-2zM5 20h2v2h-2zM17 20h2v2h-2zM20 20h2v2h-2z" /></svg>Serupa</a>}
       // Search and the theme switches are for the screen: a printed page leaves them out.
       actions={<div className="contents" data-print="hide">
         <Button className="site-search" variant="outline" size="sm" leftIcon="search" onClick={() => setSearch(true)}>Search <Kbd keys={['mod', 'K']} size="sm" /></Button>

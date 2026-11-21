@@ -34,6 +34,9 @@ const SIZES = ['sm', 'md', 'lg'] as const;
 // What the person does in the field that a late caret restore must not undo.
 const STOP = ['keydown', 'pointerdown', 'input'] as const;
 
+// The time since a press, for a click handler; out here, as the compiler can't tell toggle runs only on a click.
+const msSince = (t: number) => performance.now() - t;
+
 function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('PasswordInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
@@ -111,13 +114,13 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
     caret.current = [s[0], s[1], s[2], f.scrollLeft, f.scrollWidth];
   };
   const toggle = () => {
-    if (!caret.current || performance.now() - pressed.current > 1000) capture();
+    if (!caret.current || msSince(pressed.current) > 1000) capture();
     if (!controlled) setOwn(!shown);
     if (props.onRevealedChange) props.onRevealedChange(!shown);
   };
   return (
     <span className={cn('dk-input dk-password-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
-      style={props.style} data-component="password-input" data-size={size} onMouseDown={pressFocuses(field)}>
+      style={props.style} data-component="password-input" data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       <input {...rest} ref={fieldRef} type={shown ? 'text' : 'password'} className="dk-input__field" spellCheck={false} autoCapitalize="off" autoCorrect="off" />
       {caps ? <span className="dk-password-input__caps" id={capsId}>{sds.labels.capsLockOn}</span> : null}

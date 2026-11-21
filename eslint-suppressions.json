@@ -1,12 +1,4 @@
 {
-  "src/components/Accordion/Accordion.tsx": {
-    "react-hooks/immutability": {
-      "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 3
-    }
-  },
   "src/components/Calendar/Calendar.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -22,7 +14,7 @@
   },
   "src/components/CascadeSelect/CascadeSelect.tsx": {
     "react-hooks/refs": {
-      "count": 2
+      "count": 1
     },
     "react-hooks/set-state-in-effect": {
       "count": 1
@@ -36,14 +28,6 @@
   "src/components/Checkbox/Checkbox.tsx": {
     "react-hooks/refs": {
       "count": 11
-    }
-  },
-  "src/components/ColorPicker/ColorPicker.tsx": {
-    "react-hooks/immutability": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 3
     }
   },
   "src/components/Combobox/Combobox.tsx": {
@@ -176,22 +160,11 @@
   "src/components/Input/Input.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/immutability": {
-      "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/Kanban/Kanban.tsx": {
     "react-hooks/refs": {
       "count": 8
-    }
-  },
-  "src/components/KeyboardShortcuts/KeyboardShortcuts.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 2
     }
   },
   "src/components/Link/Link.stories.tsx": {
@@ -200,11 +173,6 @@
     },
     "jsx-a11y-x/anchor-is-valid": {
       "count": 3
-    }
-  },
-  "src/components/List/List.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 1
     }
   },
   "src/components/MentionInput/MentionInput.tsx": {
@@ -223,14 +191,6 @@
       "count": 1
     }
   },
-  "src/components/Menu/Menu.tsx": {
-    "react-hooks/refs": {
-      "count": 17
-    },
-    "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
   "src/components/Navbar/Navbar.stories.tsx": {
     "jsx-a11y-x/anchor-is-valid": {
       "count": 9
@@ -239,64 +199,24 @@
   "src/components/Navbar/Navbar.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 3
-    },
-    "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/components/NotificationCenter/NotificationCenter.tsx": {
-    "react-hooks/set-state-in-effect": {
-      "count": 1
     }
   },
   "src/components/NumberInput/NumberInput.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 4
-    },
-    "react-hooks/refs": {
-      "count": 10
     }
   },
   "src/components/PasswordInput/PasswordInput.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
-      "count": 1
-    },
-    "react-hooks/purity": {
-      "count": 1
-    },
-    "react-hooks/refs": {
       "count": 1
     }
   },
   "src/components/PhoneInput/PhoneInput.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 4
-    }
-  },
-  "src/components/Popover/Popover.tsx": {
-    "react-hooks/refs": {
-      "count": 3
     }
   },
   "src/components/RangeCalendar/RangeCalendar.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    },
     "react-hooks/set-state-in-effect": {
       "count": 1
     }
@@ -314,14 +234,6 @@
   "src/components/SegmentedControl/SegmentedControl.tsx": {
     "jsx-a11y-x/interactive-supports-focus": {
       "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 2
-    }
-  },
-  "src/components/Select/Select.tsx": {
-    "react-hooks/refs": {
-      "count": 2
     }
   },
   "src/components/Slider/Slider.tsx": {

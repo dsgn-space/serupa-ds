@@ -120,13 +120,13 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
     nameRef(node);
   });
   const affix = useAffixes(props.prefix, props.suffix, countId, own);
-  if (affix.ids || props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], affix.ids, props.showCount && countId);
+  if (affix.ids || props.showCount) rest = { ...rest, 'aria-describedby': cn(rest['aria-describedby'], affix.ids, props.showCount && countId) };
   const icon = function (source: IconSource, side: string) {
     const node = asIcon(source);
     return node == null || node === false ? null : <span className={'dk-input__icon dk-input__icon--' + side} aria-hidden key={side}>{node}</span>;
   };
   return (
-    <span className={cn('dk-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={pressFocuses(own)}>
+    <span className={cn('dk-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
       {icon(props.leftIcon, 'left')}
       {affix.prefix}
       <input {...rest} ref={setRefs} className="dk-input__field" key="field" />
