@@ -53,9 +53,8 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 
 // On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
 // a component that reads the browser's language where it should take the provider's, or a test that expects English
-// without saying so, fails. A full run (main, the merge queue) runs all of them again in that one; a pull request that
-// changes only component folders runs the changed components and the ones using them again in its one, and the
-// changed components' own tests in the other three, so a new test that
+// without saying so, fails. Pull requests and the queue run only the tests a language can break in them
+// (languageTests): the changed components' and any changed shared test in all four, so a new test that
 // expects English fails on its pull request instead of turning main red for everyone (as Sparkline's did, #1462). Right-to-left with Arabic
 // digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
 // To repeat one: node tools/test/run.mjs --group components --locale id-ID; tools/ci.mjs runs them all.
@@ -371,6 +370,29 @@ export function withDependents(names) {
   }
   for (const [n, deps] of shown) if ([...deps].some((d) => all.has(d))) all.add(n);
   return all;
+}
+// The tests a second language can break, which pull requests and the queue run in the other languages (run.mjs
+// --since); the nightly Languages jobs run everything in each. A component's folder when its code reads the language
+// (dates, times, numbers, plurals, digits, money, sorting, Intl, useLocale) or uses one that does: Pagination's page
+// numbers in Arabic digits reach DataGrid's tests too. And the shared tests whose subject is the language: right to
+// left, scripts, long words, hydrating in the browser's locale after the server's en-US, Arabic digits in every story.
+// The other story-wide tests (activity, motion, tabWalk, leaks, …) were about 1,800 s of a language's 2,900 and test
+// nothing a language changes; they run in English on every pull request and in all four languages every night.
+const READS_LANGUAGE = /internal\/(dates|times|numbers|plural|digits|currency|collator|datePresets)['"]|\buseLocale\(|\bIntl\.|\.toLocale\w*\(/;
+export const LANGUAGE_TESTS = ['badLocale', 'browserLocale', 'collator', 'currency', 'dates', 'digitsStories', 'dirIslands', 'graphemes',
+  'hydrateLocale', 'hydrateStories', 'ime', 'intl', 'labels', 'longWords', 'numbers', 'overflowWrap', 'ownLang', 'plural', 'provider',
+  'pseudo', 'tabularFigures', 'times', 'typeahead', 'announceContract'].map((f) => `src/internal/${f}.test.tsx`)
+  .concat(['jaHeadings', 'longWords'].map((f) => `src/styles/${f}.test.tsx`));
+/** The test paths (component folders and shared test files) to run in a language other than English. */
+export function languageTests() {
+  const reads = new Set(FOLDERS.flatMap((d) => {
+    const DIR = path.join(PROJECT, 'src', d);
+    return fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((n) => {
+      const dir = path.join(DIR, n);
+      return fs.statSync(dir).isDirectory() && fs.readdirSync(dir).some((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f) && READS_LANGUAGE.test(fs.readFileSync(path.join(dir, f), 'utf8')));
+    }) : [];
+  }));
+  return new Set([...[...withDependents(reads)].map(folderOf).filter(Boolean), ...LANGUAGE_TESTS.filter((f) => fs.existsSync(path.join(PROJECT, f)))]);
 }
 // The shared tests in src/internal/ that render one of the components (announceContract, formContract, nameCheck, …),
 // so a pull request that changes LoadMore runs announceContract's LoadMore case too, not only LoadMore's own folder.
