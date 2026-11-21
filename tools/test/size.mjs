@@ -286,7 +286,9 @@ const own = folders.flatMap((n) => (budgets[n]
 // them with the last night's and fails when a total, the starter page or a folder imported alone grew 3% (and 0.2 KiB)
 // in one night without its budget moving.
 const flag = (f) => (process.argv.includes(f) ? process.argv[process.argv.indexOf(f) + 1] : null);
-const tonight = { totals: Object.fromEntries(rows.map((r) => [r.name, r.now])), starter, alone: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].alone])) };
+// css: each folder's own CSS gzipped, for the health page (tools/health.mjs); the trend reads the others.
+const tonight = { totals: Object.fromEntries(rows.map((r) => [r.name, r.now])), starter, alone: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].alone])),
+  css: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].css])) };
 if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify(tonight, null, 1));
 const trend = [];
 if (flag('--previous') && fs.existsSync(flag('--previous'))) {

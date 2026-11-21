@@ -507,7 +507,13 @@ The Figma variables workflow keeps a Figma file's variables in step with the tok
 | `android/res/values/serupa_tokens.xml` | Android resources: the palette, `@dimen/serupa_spacing_4`, durations as integers and opacities as float dimens |
 | `android/res-<brand>/values/` and `values-night/` | One brand's alias colors (`@color/serupa_primary`), light and dark. Add the brand's folder as a resource directory and night mode picks the dark ones |
 
-Shadows, easings and the type styles aren't in them yet.
+Swift and Kotlin also carry the motion, depth and type:
+
+- **Easings**: `SerupaEasing.easeEnter`, a cubic Bézier curve. In SwiftUI, `.animation(SerupaEasing.easeEnter.animation(duration: SerupaTokens.duration150))`; in Compose, `tween(150, easing = SerupaEasing.easeEnter)`.
+- **Drop shadows**: `SerupaShadow.elevationRaised` in Swift, layer by layer as the web draws it (`view.serupaShadow(SerupaShadow.elevationRaised)`), and `SerupaShadows.elevationRaised`, a list of `SerupaShadowLayer`, in Kotlin. SwiftUI has no spread, so each layer keeps it for drawing it yourself. Inset shadows stay web-only.
+- **Type styles**: `SerupaTypeStyle.typeHeading1` in Swift (its `font`, `lineHeight` in points and `tracking`) and `SerupaType.typeHeading1`, a `TextStyle`, in Kotlin. Add Inter to the app for the web's look; without it the system font stands in.
+
+Each GitHub release also attaches the kits as archives, for a project that doesn't install the package: `serupa-native-<version>.tar.gz` holds `dist/native/` and an Xcode asset catalog, `ios/SerupaColors.xcassets`, with a folder per brand whose colors hold the light and the dark value, so iOS picks by the appearance: `Color("blue/primary")`, or `SerupaAssetColors(brand: "blue").primary`. `serupa-email-<version>.tar.gz` holds `dist/email/`.
 
 ## Tokens for email
 

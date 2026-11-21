@@ -31,4 +31,7 @@ t('either side of a condition, and a logical fallback', `<b alt={open ? 'Hide' :
 t('aria-placeholder is spoken', '<div role="textbox" aria-placeholder="Search" />', ['Search']);
 t('the allow option passes a word', `<b title="OK">{'OK'}</b>`, [], ['OK']);
 
+t('outside JSX: text given to announce, setAttribute, an element property and a spoken prop key', `announce('Copied'); announcePage(\`Page \${n}\`); el.setAttribute('aria-label', 'Close'); el.title = 'Hide'; el.textContent = busy ? 'Saving' : l.saved; const p = { 'aria-label': 'Menu', placeholder: 'Search' };`, ['Copied', 'Page', 'Close', 'Hide', 'Saving', 'Menu', 'Search']);
+t('outside JSX, words from labels and data keys pass', `announce(l.copied); el.setAttribute('aria-label', l.close); el.setAttribute('data-x', 'Words'); el.title = l.hide; const row = { title: 'Report', name: 'Ada' };`, []);
+
 done(report('no-literal-words', R));
