@@ -19,6 +19,7 @@ import { isRtl } from '../../internal/position';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { project, rubber, settleTime, speed, track, type Samples } from '../../internal/fling';
 import { useServerStyles } from '../../internal/serverStyles';
+import { reflow } from '../../internal/reflow';
 import { en as words } from './labels';
 
 /** Where a Drawer sits: a physical edge, or the edge the reading starts or ends at. */
@@ -244,7 +245,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
     p.style.height = tall + 'px';
     p.style.translate = shift(tall - from + at, 1);
     p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
-    void p.offsetHeight;   // the start, laid out before the transition's end is set
+    reflow(p);   // the start, laid out before the transition's end is set
     p.style.transition = '';
     p.dataset.settling = '';
     const finish = () => { delete p.dataset.settling; p.style.height = ''; p.style.translate = ''; done(); };

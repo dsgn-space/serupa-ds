@@ -5,6 +5,7 @@ import { named } from '../../internal/component';
 import { useAutoFocus } from '../../internal/focus';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
+import { reflow } from '../../internal/reflow';
 import { useSettings } from '../../internal/provider';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
@@ -238,7 +239,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
     tops.current = next;
     if (!moved.length || !list.current) return;
     for (const [r, dy] of moved) { r.dataset.flip = ''; r.style.translate = row ? dy + 'px 0' : '0 ' + dy + 'px'; }
-    void list.current.offsetWidth;   // one reflow: they start from where they were
+    reflow(list.current);   // one reflow: they start from where they were
     for (const [r] of moved) { delete r.dataset.flip; r.style.translate = ''; }
   });
 
