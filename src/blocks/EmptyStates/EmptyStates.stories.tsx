@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
-import { Card } from '../../components/Card/Card';
 import { EmptyFirstRun, EmptyLoadFailed, EmptyNoAccess, EmptyNoResults } from './EmptyStates';
 
 /* Empty states (BL5): the four empties most apps need, each with its next step, as blocks an app copies.
@@ -10,7 +9,7 @@ import { EmptyFirstRun, EmptyLoadFailed, EmptyNoAccess, EmptyNoResults } from '.
 const wait = () => new Promise((resolve) => { window.setTimeout(resolve, 600); });
 
 function Page({ children, title }: { children: React.ReactNode; title: string }) {
-  return <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6 outline-none"><Heading level={1}>{title}</Heading><Card padding="lg">{children}</Card></main></div>;
+  return <div className="min-h-screen bg-surface text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6 outline-none"><Heading level={1}>{title}</Heading>{children}</main></div>;
 }
 
 const meta = {

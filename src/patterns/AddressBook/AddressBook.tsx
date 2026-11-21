@@ -157,7 +157,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
           <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
-            : !shown.length ? <EmptyState title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} variant="dashed" />
+            : !shown.length ? <EmptyState icon="location_on" title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} />
             : (
               <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-2">
                 {shown.map((a) => {

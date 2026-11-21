@@ -133,7 +133,7 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
         <div className="flex flex-col gap-5 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your orders" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading orders" /></Card>
-            : !orders.length ? <EmptyState title="No orders yet" description="What you buy shows here, with where it’s got to." headingLevel={2}
+            : !orders.length ? <EmptyState icon="receipt_long" title="No orders yet" description="What you buy shows here, with where it’s got to." headingLevel={2}
                 actions={<Link href="#shop">Start shopping</Link>} />
             : <>
               <div role="search" aria-label="Orders" className="flex flex-wrap items-end gap-3">

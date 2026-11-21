@@ -268,27 +268,9 @@
       "count": 1
     }
   },
-  "src/components/SignaturePad/SignaturePad.tsx": {
-    "react-hooks/immutability": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 5
-    }
-  },
-  "src/components/SkipLink/SkipLink.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 3
-    }
-  },
   "src/components/Slider/Slider.tsx": {
     "react-hooks/refs": {
-      "count": 6
-    }
-  },
-  "src/components/SortableList/SortableList.tsx": {
-    "react-hooks/refs": {
-      "count": 3
+      "count": 2
     }
   },
   "src/components/Splitter/Splitter.tsx": {
@@ -297,9 +279,6 @@
     },
     "jsx-a11y-x/no-noninteractive-tabindex": {
       "count": 3
-    },
-    "react-hooks/refs": {
-      "count": 6
     }
   },
   "src/components/TableOfContents/TableOfContents.tsx": {
@@ -310,23 +289,11 @@
   "src/components/Tabs/Tabs.tsx": {
     "jsx-a11y-x/interactive-supports-focus": {
       "count": 1
-    },
-    "react-hooks/immutability": {
-      "count": 5
-    },
-    "react-hooks/refs": {
-      "count": 4
     }
   },
   "src/components/Textarea/Textarea.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/immutability": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 6
     }
   },
   "src/components/TimePicker/TimePicker.tsx": {
@@ -335,27 +302,6 @@
     },
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 3
-    },
-    "react-hooks/refs": {
-      "count": 6
-    }
-  },
-  "src/components/TimeZonePicker/TimeZonePicker.tsx": {
-    "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/components/Toast/Toast.tsx": {
-    "react-hooks/refs": {
-      "count": 2
-    }
-  },
-  "src/components/TransferList/TransferList.tsx": {
-    "react-hooks/refs": {
-      "count": 2
     }
   },
   "src/components/TreeView/TreeView.tsx": {
@@ -364,9 +310,6 @@
     },
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 9
     }
   },
   "src/components/VisuallyHidden/VisuallyHidden.stories.tsx": {

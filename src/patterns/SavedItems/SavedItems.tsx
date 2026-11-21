@@ -184,7 +184,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
               })}
             </ul>
           ) : (
-            <EmptyState variant="dashed" headingLevel={3} title="Nothing saved yet"
+            <EmptyState icon="favorite" headingLevel={3} title="Nothing saved yet"
               description="Choose Save on any product to keep it here, with its price as it was."
               actions={<Link href="#shop">Browse the shop</Link>} />
           )}
