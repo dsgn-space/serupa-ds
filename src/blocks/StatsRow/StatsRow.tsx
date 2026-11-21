@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Heading } from '../../components/Heading/Heading';
 import { StatTile } from '../../components/StatTile/StatTile';
 import { SerupaProvider } from '../../internal/provider';
-import type { SerupaLabels } from '../../internal/labels';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Stats row (BL2): a row of key numbers for the top of a dashboard, built from the components only, for an app to copy.
@@ -88,7 +87,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
   const id = React.useId();
   const w = { ...EN, ...labels };
   // The tiles' words: StatTile's own (the provider's language) unless this row's labels set them.
-  const tileWords: Partial<SerupaLabels> = {};
+  const tileWords: NonNullable<React.ComponentProps<typeof SerupaProvider>['labels']> = {};
   if (labels?.up) tileWords.statTileUp = labels.up;
   if (labels?.down) tileWords.statTileDown = labels.down;
   if (labels?.flat) tileWords.statTileFlat = labels.flat;

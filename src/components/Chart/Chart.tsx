@@ -585,9 +585,13 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
             // A heatmap's legend is its scale: its lowest value, a swatch per step from low to high, and its highest.
             <div className="dk-chart__legend dk-chart__legend--scale" aria-hidden>
               <span className="dk-chart__key-value">{fmt(edges[0] ?? 0)}</span>
-              <svg className="dk-chart__swatch" width={steps * 14} height="12" viewBox={`0 0 ${steps * 14} 12`} aria-hidden focusable="false">
-                {Array.from({ length: steps }, (_, k) => <rect key={k} className={'dk-chart__cell dk-chart__cell--' + (diverging ? 'd' : 's') + (rtl ? steps - k : k + 1)} x={k * 14} y="0" width="14" height="12" />)}
-              </svg>
+              <span className="dk-chart__scale">
+                {Array.from({ length: steps }, (_, k) => (
+                  <svg key={k} className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                    <rect className={'dk-chart__cell dk-chart__cell--' + (diverging ? 'd' : 's') + (k + 1)} width="12" height="12" />
+                  </svg>
+                ))}
+              </span>
               <span className="dk-chart__key-value">{fmt(edges[steps] ?? 0)}</span>
             </div>
           ) : !props.hideLegend && donut && slices.length ? (
