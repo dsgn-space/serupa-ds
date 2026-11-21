@@ -90,7 +90,8 @@ Drawn from the `Playground` story, opened.
 | `defaultOpen` | boolean | `false` | Open at first (uncontrolled) |
 | `aria-label` | string | none | Its name when there's no title |
 | `sheet` | `true` \| `'mobile'` | none | Show it as a sheet along the foot of the screen, the screen's width: `true` always, `'mobile'` under 640px. On the server, a `'mobile'` one is next to its trigger until the screen is known |
-| `initialFocus` | `'first'` \| `'panel'` | `'first'` | Focus the first control inside that can take it (not a hidden one, or one in a disabled fieldset), or the panel itself (for text only) |
+| `initialFocus` | `'first'` \| `'panel'` \| ref | `'first'` | Focus the first control inside that can take it (not a hidden one, or one in a disabled fieldset), the panel itself (for text only), or the element a ref points at inside, as on Dialog |
+| `finalFocus` | ref | none | Where focus goes when Escape or `close()` closes it: that element while it's on the page, else the trigger, as on Dialog |
 | `className`, `style`, other HTML attributes and a ref | | | Go to the panel, which has `data-component="popover"` and `data-side`: `data-testid`, an `id`, other `aria-*` and a ref reach it, as on Radix's and React Aria's popover content. Its `onKeyDown` runs first and can call `preventDefault()` to keep Escape from closing it |
 
 The panel's id is made for you unless you pass one, and the trigger's `aria-controls` points at it while it's open. An id on the trigger stays on the trigger.
