@@ -14,7 +14,7 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v16.1.0
+npm install github:dsgn-space/serupa-ds#v17.0.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
@@ -32,14 +32,14 @@ npm install @diki-stwn/serupa-ds
 
 Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
 
-Always pin a tag (`#v16.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v17.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v16.1.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v17.0.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -299,6 +299,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [DataGrid](src/components/DataGrid/README.md) (beta) | A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. |
 | [DescriptionList](src/components/DescriptionList/README.md) (beta) | A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. |
 | [Duration](src/components/Duration/README.md) | How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". |
+| [FormattedDate](src/components/FormattedDate/README.md) | Writes a date, a time or a range of dates the way the reader's language does: "November 20, 2026" in English, "20 November 2026" in Indonesian, "٢٠ نوفمبر ٢٠٢٦" in Egyptian Arabic. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
 | [Icon](src/components/Icon/README.md) | Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. |
