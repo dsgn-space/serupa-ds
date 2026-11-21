@@ -64,25 +64,25 @@
   - list:
     - listitem:
       - link "Introduction":
-        - /url: "#toc-intro"
+        - /url: "#_id1_-toc-intro"
     - listitem:
       - link "Installation":
-        - /url: "#toc-install"
+        - /url: "#_id1_-toc-install"
     - listitem:
       - link "With npm":
-        - /url: "#toc-npm"
+        - /url: "#_id1_-toc-npm"
     - listitem:
       - link "From a CDN":
-        - /url: "#toc-cdn"
+        - /url: "#_id1_-toc-cdn"
     - listitem:
       - link "Usage":
-        - /url: "#toc-usage"
+        - /url: "#_id1_-toc-usage"
     - listitem:
       - link "Theming":
-        - /url: "#toc-theming"
+        - /url: "#_id1_-toc-theming"
     - listitem:
       - link "Questions people ask":
-        - /url: "#toc-faq"
+        - /url: "#_id1_-toc-faq"
 
 # LongText
 - navigation "On this page":

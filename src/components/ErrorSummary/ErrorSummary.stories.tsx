@@ -24,15 +24,20 @@ export const Default: Story = {};
 export const OneError: Story = { args: { errors: [ERRORS[1]!] } };
 export const WithDescription: Story = { args: { title: 'Check your booking', description: 'Fix these before you send the form again.' } };
 // In a form: each link moves focus to its field and shows the field's label.
+// The fields' ids are the form's own (useId), so the links lead to this form's fields wherever else the summary is shown.
 export const InAForm: Story = {
-  render: (args) => (
-    <form noValidate style={{ display: 'grid', gap: 16, maxWidth: 480 }}>
-      <ErrorSummary {...args} />
-      <Field label="Full name" error="Enter your full name"><Input id="es-name" /></Field>
-      <Field label="Email" error="Enter an email address in the right format, like name@example.com"><Input id="es-email" type="email" defaultValue="name@" /></Field>
-      <Field label="Start date" error="Start date must be today or in the future"><Input id="es-date" type="date" /></Field>
-    </form>
-  ),
+  render: function Render(args) {
+    const form = React.useId();
+    const id = (field: string) => `${form}-${field}`;
+    return (
+      <form noValidate style={{ display: 'grid', gap: 16, maxWidth: 480 }}>
+        <ErrorSummary {...args} errors={args.errors?.map((e) => ({ ...e, field: id(e.field) }))} />
+        <Field label="Full name" error="Enter your full name"><Input id={id('es-name')} /></Field>
+        <Field label="Email" error="Enter an email address in the right format, like name@example.com"><Input id={id('es-email')} type="email" defaultValue="name@" /></Field>
+        <Field label="Start date" error="Start date must be today or in the future"><Input id={id('es-date')} type="date" /></Field>
+      </form>
+    );
+  },
 };
 // Errors from the server by field name: the summary and each Field read them from FormErrors. Typing in a field takes its
 // message away; sending again brings back the ones still wrong.

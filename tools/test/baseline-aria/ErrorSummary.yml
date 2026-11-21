@@ -58,13 +58,13 @@
 - list:
   - listitem:
     - link "Enter your full name":
-      - /url: "#es-name"
+      - /url: "#_id1_-es-name"
   - listitem:
     - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#es-email"
+      - /url: "#_id1_-es-email"
   - listitem:
     - link "Start date must be today or in the future":
-      - /url: "#es-date"
+      - /url: "#_id1_-es-date"
 - text: Full name
 - textbox "Full name" [invalid]
 - text: Enter your full name Email

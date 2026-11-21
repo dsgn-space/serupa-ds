@@ -241,6 +241,8 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
   const [shown, setShown] = React.useState<Record<string, boolean>>({ city: true, items: true, total: true, status: true });
   const [open, setOpen] = React.useState<Record<string, boolean>>({ '1003': true });
   const cols = COLS.filter((c) => shown[c.id]);
+  // Each detail row's id is this table's own (useId), so its expand button opens the row in this table.
+  const table = React.useId();
   return (
     <div className="flex flex-col items-end gap-2" style={{ maxWidth: 560 }}>
       <TableColumnsMenu columns={[{ id: 'customer', label: 'Customer', visible: true, required: true }, ...COLS.map((c) => ({ ...c, visible: !!shown[c.id] }))]}
@@ -258,7 +260,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
           {ORDERS.map((o) => (
             <React.Fragment key={o.id}>
               <TableRow>
-                <TableExpandCell label={'Order ' + o.id} expanded={!!open[o.id]} controls={'order-' + o.id} onExpandedChange={(v) => setOpen({ ...open, [o.id]: v })} />
+                <TableExpandCell label={'Order ' + o.id} expanded={!!open[o.id]} controls={`${table}-order-${o.id}`} onExpandedChange={(v) => setOpen({ ...open, [o.id]: v })} />
                 <TableCell>{o.customer}</TableCell>
                 {cols.map((c) => c.id === 'city' ? <TableCell key={c.id}>{o.city}</TableCell>
                   : c.id === 'items' ? <TableCell key={c.id} align="end">{o.items}</TableCell>
@@ -266,7 +268,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
                   : <TableCell key={c.id}><Badge tone={o.status === 'Paid' ? 'success' : 'neutral'}>{o.status}</Badge></TableCell>)}
                 <TableCell><Button variant="ghost" size="sm" aria-label={'Edit order ' + o.id}>Edit</Button></TableCell>
               </TableRow>
-              <TableDetailRow id={'order-' + o.id} open={!!open[o.id]} colSpan={cols.length + 3}><Text as="span" tone="muted">{o.note}</Text></TableDetailRow>
+              <TableDetailRow id={`${table}-order-${o.id}`} open={!!open[o.id]} colSpan={cols.length + 3}><Text as="span" tone="muted">{o.note}</Text></TableDetailRow>
             </React.Fragment>
           ))}
         </TableBody>
