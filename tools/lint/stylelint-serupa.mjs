@@ -2,7 +2,8 @@
 // not only the checks after a build. stylelint.config.mjs turns them on for src/components/; tools/test/stylelint-rules.mjs
 // checks each one against CSS that should pass and CSS that shouldn't.
 //   serupa/component-layer          every rule in the file is inside one @layer dk.components { … }
-//   serupa/no-raw-value             values come from tokens: no number outside a var() but 0, 1em and fr shares
+//   serupa/no-raw-value             values come from tokens: no number outside a var() but 0, 1em and fr shares, and
+//                                   no pointer, not-allowed, grab or grabbing cursor that a cursor token names
 //   serupa/color-through-component-token
 //                                   a shared color (an alias like --text, or a palette step like --blue-600) is read only
 //                                   as a component token's default, var(--card-text, var(--text)), so every color can be
@@ -111,11 +112,15 @@ const layer = rule('serupa/component-layer', {
 const NUMBER = /^-?\d*\.?\d+(?:[a-z]+|%)?$/i;
 // 0 = none or off; 1em = an icon box that follows its own font size; and any share of a grid's free space (1fr).
 const ALLOWED = new Set(['0', '1em']);
+// The cursors with a token (cursor-interactive, -disabled, -grab, -grabbing): a raw one doesn't follow a theme's choice.
+const CURSORS = { pointer: 'cursor-interactive', 'not-allowed': 'cursor-disabled', grab: 'cursor-grab', grabbing: 'cursor-grabbing' };
 const raw = rule('serupa/no-raw-value', {
   rejected: (v, d) => `${v} in "${d}" isn't a token: use a var() (a spacing, sizing, border-width, radius, motion … token), or say why in a stylelint-disable comment`,
+  cursor: (v) => `cursor: ${v} has a token: use var(--${CURSORS[v]}), so a theme that sets the arrow for buttons, or nothing for disabled, reaches it`,
 }, (root, flag, m) => {
   root.walkDecls((decl) => {
     if (decl.prop.startsWith('--dk')) return;   // internal variables carry computed values between rules
+    if (decl.prop === 'cursor' && CURSORS[decl.value.trim()]) flag(decl, m.cursor(decl.value.trim()), decl.value.trim());
     valueParser(decl.value).walk((n) => {
       if (n.type === 'function' && n.value === 'var') return false;   // a token, with its default
       if (n.type === 'word' && NUMBER.test(n.value) && !ALLOWED.has(n.value) && !n.value.endsWith('fr')) flag(decl, m.rejected(n.value, `${decl.prop}: ${decl.value.slice(0, 60)}`), n.value);

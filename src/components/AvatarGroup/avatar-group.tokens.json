@@ -44,7 +44,7 @@
       },
       "more-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.secondary-pressed}",
         "$description": "The \"+N\" button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {

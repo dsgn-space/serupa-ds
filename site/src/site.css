@@ -90,7 +90,7 @@ ol.site-list { list-style: decimal; }
 :is(.sb-tested, .sb-changes) > h2 { font-size: var(--text-2xl); line-height: var(--text-2xl--line-height); font-weight: var(--font-semibold); letter-spacing: var(--tracking-tight); }
 :is(.sb-tested, .sb-changes) > p { max-inline-size: var(--container-prose); margin-block-start: var(--spacing-4); line-height: var(--leading-relaxed); }
 :is(.sb-tested, .sb-changes) details { margin-block-start: var(--spacing-4); }
-:is(.sb-tested, .sb-changes) summary { cursor: pointer; font-weight: var(--font-semibold); }
+:is(.sb-tested, .sb-changes) summary { cursor: var(--cursor-interactive); font-weight: var(--font-semibold); }
 .sb-tested li { margin-block: var(--spacing-1); }
 .site-doc [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 /* On a phone a written table's cells (and the labels' and conformance tables') may break anywhere, so it fits the column. Not the docs'

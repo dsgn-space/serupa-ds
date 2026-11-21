@@ -313,6 +313,21 @@ describe('Carousel', () => {
     expect([Math.round(r.width), Math.round(r.height), Math.round(cr.width), a.width, a.height, a.clipPath, cur.width, cur.clipPath]).toEqual([24, 24, 24, '24px', '8px', 'inset(0px 8px round 9999px)', '24px', 'inset(0px round 9999px)']);
   });
 
+  test('a dot under the pointer turns a step darker (border-control-hover) in every theme: text-muted was the dot\'s own gray', async () => {
+    await render(<App />);
+    const d = dot('car', 2);
+    const rest = getComputedStyle(d, '::before').backgroundColor;
+    await userEvent.hover(d);
+    await expect.poll(() => getComputedStyle(d, '::before').backgroundColor).toBe(color('var(--border-control-hover)'));
+    const same: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      if (color('var(--border-control-hover)') === color('var(--border-control)')) same.push(th);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect([rest === getComputedStyle(d, '::before').backgroundColor, same]).toEqual([false, []]);
+  });
+
   test('a dot held down fills a step past hover (text), on touch too, so a press shows where hover can\'t', async () => {
     await render(<App />);
     const d = dot('car', 2);

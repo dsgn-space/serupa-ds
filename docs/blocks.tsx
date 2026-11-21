@@ -390,7 +390,7 @@ export function IconGallery() {
   };
   const custom = customIcons.filter((n) => !term || n.includes(term));
   const material = (all ?? []).filter((d) => !term || d.name.includes(term));
-  const tile = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' } as const;
+  const tile = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'var(--cursor-interactive)', font: 'inherit' } as const;
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 } as const;
   const label = { fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' } as const;
   const heading = { margin: '0 0 8px', fontSize: 16, fontWeight: 600 } as const;
