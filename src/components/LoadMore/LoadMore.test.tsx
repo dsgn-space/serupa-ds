@@ -10,7 +10,7 @@ import { LoadMore } from './LoadMore';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const button = (id: string) => el(id).querySelector('button') as HTMLButtonElement;
-const region = () => document.querySelector('[data-dk-announcer]') as HTMLElement;
+const region = () => document.querySelector('[data-srp-announcer]') as HTMLElement;
 // The end text and the summary, found by what they say.
 const para = (id: string, text: string) => [...el(id).querySelectorAll('p')].find((p) => p.textContent === text) ?? null;
 const wait = (ms: number) => new Promise((ok) => setTimeout(ok, ms));
@@ -33,8 +33,8 @@ describe('LoadMore', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><LoadMore id="x" ref={ref} className="extra" data-x="y" onLoadMore={() => {}} count={20} total={1340} /></SerupaProvider>);   // pinned: 1,340 follows the browser's locale
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-load-more extra', 'y', 'load-more']);
-    expect([para('x', 'Showing 20 of 1,340')?.textContent, button('x').textContent, button('x').className.includes('dk-btn--outline')]).toEqual(['Showing 20 of 1,340', 'Load more', true]);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'srp-load-more extra', 'y', 'load-more']);
+    expect([para('x', 'Showing 20 of 1,340')?.textContent, button('x').textContent, button('x').className.includes('srp-btn--outline')]).toEqual(['Showing 20 of 1,340', 'Load more', true]);
     // Its digits are tabular, so the count doesn't shift sideways as it grows.
     expect(getComputedStyle(para('x', 'Showing 20 of 1,340')!).fontVariantNumeric).toBe('tabular-nums');
   });

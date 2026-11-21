@@ -4,28 +4,28 @@
    puts its message over it. Every value reads one of its own tokens (qr-code.tokens.json), which fall back to the
    shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-qr-code { position: relative; display: inline-flex; flex: none; width: var(--dk-qr-size); height: var(--dk-qr-size); border-radius: var(--qr-code-radius, var(--radius-inner)); overflow: hidden; vertical-align: middle; }
-.dk-qr-code--sm { --dk-qr-size: var(--qr-code-size-sm, var(--spacing-24)); }
-.dk-qr-code--md { --dk-qr-size: var(--qr-code-size-md, var(--spacing-40)); }
-.dk-qr-code--lg { --dk-qr-size: var(--qr-code-size-lg, var(--spacing-60)); }
-.dk-qr-code__code { display: block; width: var(--sizing-full); height: var(--sizing-full); }
-.dk-qr-code__light { fill: var(--qr-code-light, var(--white)); }
-.dk-qr-code__dark { fill: var(--qr-code-dark, var(--black)); }
+@layer srp.components {
+.srp-qr-code { position: relative; display: inline-flex; flex: none; width: var(--srp-qr-size); height: var(--srp-qr-size); border-radius: var(--qr-code-radius, var(--radius-inner)); overflow: hidden; vertical-align: middle; }
+.srp-qr-code--sm { --srp-qr-size: var(--qr-code-size-sm, var(--spacing-24)); }
+.srp-qr-code--md { --srp-qr-size: var(--qr-code-size-md, var(--spacing-40)); }
+.srp-qr-code--lg { --srp-qr-size: var(--qr-code-size-lg, var(--spacing-60)); }
+.srp-qr-code__code { display: block; width: var(--sizing-full); height: var(--sizing-full); }
+.srp-qr-code__light { fill: var(--qr-code-light, var(--white)); }
+.srp-qr-code__dark { fill: var(--qr-code-dark, var(--black)); }
 /* A status: the code fades to a trace on the surface, and the message sits over it in the text color. */
-.dk-qr-code[data-status]:not([data-status="active"]) { background: var(--qr-code-status-bg, var(--surface)); }
-.dk-qr-code[data-status]:not([data-status="active"]) .dk-qr-code__code { opacity: var(--qr-code-faded, var(--opacity-10)); }
-.dk-qr-code__status {
+.srp-qr-code[data-status]:not([data-status="active"]) { background: var(--qr-code-status-bg, var(--surface)); }
+.srp-qr-code[data-status]:not([data-status="active"]) .srp-qr-code__code { opacity: var(--qr-code-faded, var(--opacity-10)); }
+.srp-qr-code__status {
   position: absolute; inset: var(--spacing-0); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2);
   padding: var(--spacing-2); color: var(--qr-code-status-text, var(--text)); text-align: center;
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium);
 }
-.dk-qr-code--sm .dk-qr-code__status { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-qr-code__message { display: inline-flex; align-items: center; gap: var(--spacing-1); margin: var(--spacing-0); }
-.dk-qr-code__icon { flex: none; font-size: var(--spacing-5); color: var(--qr-code-scanned-icon, var(--success-text)); }
+.srp-qr-code--sm .srp-qr-code__status { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-qr-code__message { display: inline-flex; align-items: center; gap: var(--spacing-1); margin: var(--spacing-0); }
+.srp-qr-code__icon { flex: none; font-size: var(--spacing-5); color: var(--qr-code-scanned-icon, var(--success-text)); }
 @media (forced-colors: active) {
-  .dk-qr-code { forced-color-adjust: none; }
-  .dk-qr-code[data-status]:not([data-status="active"]) { background: Canvas; }
-  .dk-qr-code__status { color: CanvasText; forced-color-adjust: auto; }
+  .srp-qr-code { forced-color-adjust: none; }
+  .srp-qr-code[data-status]:not([data-status="active"]) { background: Canvas; }
+  .srp-qr-code__status { color: CanvasText; forced-color-adjust: auto; }
 }
 }

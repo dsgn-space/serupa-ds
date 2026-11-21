@@ -4,68 +4,68 @@
    cursor shows the direction it moves. Every value reads one of its own tokens (splitter.tokens.json), which fall
    back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-splitter { display: flex; min-width: var(--spacing-0); min-height: var(--spacing-0); }
-.dk-splitter--vertical { flex-direction: column; }
-.dk-splitter__pane { box-sizing: border-box; min-width: var(--spacing-0); min-height: var(--spacing-0); overflow: auto; overscroll-behavior: contain; }
-.dk-splitter__pane--first { flex: none; }
-.dk-splitter__pane--second { flex: auto; flex-basis: var(--spacing-0); }
-.dk-splitter__pane[hidden] { display: none; }
-.dk-splitter__handle {
-  --dk-splitter-line: var(--splitter-line, var(--border-control));
-  --dk-splitter-weight: var(--border-width-1);
+@layer srp.components {
+.srp-splitter { display: flex; min-width: var(--spacing-0); min-height: var(--spacing-0); }
+.srp-splitter--vertical { flex-direction: column; }
+.srp-splitter__pane { box-sizing: border-box; min-width: var(--spacing-0); min-height: var(--spacing-0); overflow: auto; overscroll-behavior: contain; }
+.srp-splitter__pane--first { flex: none; }
+.srp-splitter__pane--second { flex: auto; flex-basis: var(--spacing-0); }
+.srp-splitter__pane[hidden] { display: none; }
+.srp-splitter__handle {
+  --srp-splitter-line: var(--splitter-line, var(--border-control));
+  --srp-splitter-weight: var(--border-width-1);
   display: flex; justify-content: center; flex: none; box-sizing: border-box; touch-action: none; -webkit-user-select: none; user-select: none;
   width: var(--splitter-handle-size, var(--spacing-2)); cursor: col-resize;
 }
-.dk-splitter--vertical > .dk-splitter__handle { flex-direction: column; width: auto; height: var(--splitter-handle-size, var(--spacing-2)); cursor: row-resize; }
+.srp-splitter--vertical > .srp-splitter__handle { flex-direction: column; width: auto; height: var(--splitter-handle-size, var(--spacing-2)); cursor: row-resize; }
 /* The line: centred in the handle by its flex box, the full length of the handle. */
-.dk-splitter__handle::before {
-  content: ""; flex: none; align-self: stretch; width: var(--dk-splitter-weight); background: var(--dk-splitter-line);
+.srp-splitter__handle::before {
+  content: ""; flex: none; align-self: stretch; width: var(--srp-splitter-weight); background: var(--srp-splitter-line);
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-.dk-splitter--vertical > .dk-splitter__handle::before { width: auto; height: var(--dk-splitter-weight); }
-@media (hover: hover) { .dk-splitter__handle:hover { --dk-splitter-line: var(--splitter-line-active, var(--primary)); --dk-splitter-weight: var(--border-width-2); } }
+.srp-splitter--vertical > .srp-splitter__handle::before { width: auto; height: var(--srp-splitter-weight); }
+@media (hover: hover) { .srp-splitter__handle:hover { --srp-splitter-line: var(--splitter-line-active, var(--primary)); --srp-splitter-weight: var(--border-width-2); } }
 /* Placing (a press on the handle that didn't drag it): the line stays active, and the Splitter shows where it can go. */
-.dk-splitter[data-placing] { cursor: col-resize; }
-.dk-splitter--vertical[data-placing] { cursor: row-resize; }
-.dk-splitter__handle:focus-visible, .dk-splitter__handle:active, .dk-splitter[data-placing] > .dk-splitter__handle { --dk-splitter-line: var(--splitter-line-active, var(--primary)); --dk-splitter-weight: var(--border-width-2); }
-.dk-splitter__pane:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-splitter__handle:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (prefers-reduced-motion: reduce) { .dk-splitter__handle::before { transition: none; } }
+.srp-splitter[data-placing] { cursor: col-resize; }
+.srp-splitter--vertical[data-placing] { cursor: row-resize; }
+.srp-splitter__handle:focus-visible, .srp-splitter__handle:active, .srp-splitter[data-placing] > .srp-splitter__handle { --srp-splitter-line: var(--splitter-line-active, var(--primary)); --srp-splitter-weight: var(--border-width-2); }
+.srp-splitter__pane:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-splitter__handle:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (prefers-reduced-motion: reduce) { .srp-splitter__handle::before { transition: none; } }
 /* Collapsing and expanding with Enter or a double-click (GN3b): the layout changes at once; the handle and the second
-   pane start where they were (data-slide="start", --dk-splitter-from) and slide to where they are on translate, while
-   the first pane's clip opens with them, or closes over its old place (out of the flow, --dk-splitter-px wide), over
+   pane start where they were (data-slide="start", --srp-splitter-from) and slide to where they are on translate, while
+   the first pane's clip opens with them, or closes over its old place (out of the flow, --srp-splitter-px wide), over
    motion-change-md with ease-move. Splitter.tsx sets the data attributes and variables, and skips it all when these
    transitions aren't there: reduced motion snaps. */
 @media (prefers-reduced-motion: no-preference) {
-  .dk-splitter__handle, .dk-splitter__pane--second { transition: translate var(--motion-change-md) var(--ease-move); }
-  .dk-splitter__pane--first { transition: clip-path var(--motion-change-md) var(--ease-move); }
+  .srp-splitter__handle, .srp-splitter__pane--second { transition: translate var(--motion-change-md) var(--ease-move); }
+  .srp-splitter__pane--first { transition: clip-path var(--motion-change-md) var(--ease-move); }
 }
-.dk-splitter[data-slide] { position: relative; overflow: clip; }
-.dk-splitter[data-slide] > .dk-splitter__pane--first { clip-path: inset(var(--spacing-0)); }   /* from or to the shut clip: none would not interpolate */
-.dk-splitter[data-slide="start"] > .dk-splitter__handle, .dk-splitter[data-slide="start"] > .dk-splitter__pane--second { translate: var(--dk-splitter-from); transition: none; }
-.dk-splitter[data-slide="start"] > .dk-splitter__pane--first { clip-path: var(--dk-splitter-clip-from); transition: none; }   /* shut, open, or part way when it turns back */
-.dk-splitter[data-slide="run"][data-slide-to="closed"] > .dk-splitter__pane--first { clip-path: var(--dk-splitter-shut); }
-.dk-splitter[data-slide-to="closed"] > .dk-splitter__pane--first { position: absolute; inset-block-start: var(--spacing-0); inset-inline-start: var(--spacing-0); width: var(--dk-splitter-px); height: var(--sizing-full); }
-.dk-splitter--vertical[data-slide-to="closed"] > .dk-splitter__pane--first { width: var(--sizing-full); height: var(--dk-splitter-px); }
+.srp-splitter[data-slide] { position: relative; overflow: clip; }
+.srp-splitter[data-slide] > .srp-splitter__pane--first { clip-path: inset(var(--spacing-0)); }   /* from or to the shut clip: none would not interpolate */
+.srp-splitter[data-slide="start"] > .srp-splitter__handle, .srp-splitter[data-slide="start"] > .srp-splitter__pane--second { translate: var(--srp-splitter-from); transition: none; }
+.srp-splitter[data-slide="start"] > .srp-splitter__pane--first { clip-path: var(--srp-splitter-clip-from); transition: none; }   /* shut, open, or part way when it turns back */
+.srp-splitter[data-slide="run"][data-slide-to="closed"] > .srp-splitter__pane--first { clip-path: var(--srp-splitter-shut); }
+.srp-splitter[data-slide-to="closed"] > .srp-splitter__pane--first { position: absolute; inset-block-start: var(--spacing-0); inset-inline-start: var(--spacing-0); width: var(--srp-splitter-px); height: var(--sizing-full); }
+.srp-splitter--vertical[data-slide-to="closed"] > .srp-splitter__pane--first { width: var(--sizing-full); height: var(--srp-splitter-px); }
 @media (forced-colors: active) {
-  .dk-splitter__handle::before { background: CanvasText; }
-  .dk-splitter__handle:focus-visible::before { background: Highlight; }
+  .srp-splitter__handle::before { background: CanvasText; }
+  .srp-splitter__handle:focus-visible::before { background: Highlight; }
 }
 /* Grab zone (EQ1, GR270): an invisible zone wider than the 8px handle, reaching into each pane without moving anything,
    raised over the panes so their edges don't take the press. 16px for a mouse or pen, reaching 4px into each pane, which
    leaves most of the first pane's scrollbar beside it; 24px on a touch screen, reaching 8px, since 8px is too thin for a
    finger. The handle shows hover anywhere in it. */
-.dk-splitter__handle { position: relative; z-index: var(--z-10); }
-.dk-splitter__handle::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-4)) / 2)); content: ""; position: absolute; inset: var(--spacing-0) var(--dk-reach); }
-.dk-splitter--vertical > .dk-splitter__handle::after { inset: var(--dk-reach) var(--spacing-0); }
-@media (pointer: coarse) { .dk-splitter__handle::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); } }
+.srp-splitter__handle { position: relative; z-index: var(--z-10); }
+.srp-splitter__handle::after { --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-4)) / 2)); content: ""; position: absolute; inset: var(--spacing-0) var(--srp-reach); }
+.srp-splitter--vertical > .srp-splitter__handle::after { inset: var(--srp-reach) var(--spacing-0); }
+@media (pointer: coarse) { .srp-splitter__handle::after { --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); } }
 /* Print (GR59): the panes' whole content, not their scrolled windows. The Splitter drops the height it was given
    (style or class, hence !important), the panes stop scrolling and grow to fit, and the separator isn't printed:
    a 60-row Table in a 300px pane printed 4 rows. */
 @media print {
-  .dk-splitter { height: auto !important; max-height: none !important; }
-  .dk-splitter__pane { overflow: visible; }
-  .dk-splitter > .dk-splitter__handle { display: none; }
+  .srp-splitter { height: auto !important; max-height: none !important; }
+  .srp-splitter__pane { overflow: visible; }
+  .srp-splitter > .srp-splitter__handle { display: none; }
 }
 }

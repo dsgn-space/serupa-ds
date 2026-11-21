@@ -4,28 +4,28 @@
    Each separator is the first thing in the item after it, the list's gap on both sides. A long unbroken label
    (a file name, a slug) breaks anywhere, so the trail never runs past a 320px screen (WCAG 1.4.10).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-breadcrumb { font-family: var(--font-sans); font-size: var(--breadcrumb-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
-.dk-breadcrumb__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--breadcrumb-gap, var(--spacing-1\.5)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-breadcrumb__li { display: inline-flex; align-items: center; gap: var(--breadcrumb-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
-.dk-breadcrumb__item {
+@layer srp.components {
+.srp-breadcrumb { font-family: var(--font-sans); font-size: var(--breadcrumb-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.srp-breadcrumb__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--breadcrumb-gap, var(--spacing-1\.5)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-breadcrumb__li { display: inline-flex; align-items: center; gap: var(--breadcrumb-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
+.srp-breadcrumb__item {
   display: inline-flex; align-items: center; gap: var(--spacing-1); min-width: var(--spacing-0); overflow-wrap: anywhere;
   color: var(--breadcrumb-text, var(--text-muted)); text-decoration: none; border-radius: var(--breadcrumb-focus-radius, var(--radius-inner));
   transition: color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-breadcrumb__link:hover, .dk-breadcrumb__more:hover { color: var(--breadcrumb-text-hover, var(--text)); text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
-.dk-breadcrumb__item:focus-visible { outline: var(--focus-ring-width) solid var(--breadcrumb-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-breadcrumb__item--current { color: var(--breadcrumb-text-current, var(--text)); font-weight: var(--breadcrumb-weight-current, var(--font-medium)); }
-.dk-breadcrumb__more { padding: var(--spacing-0) var(--spacing-0\.5); border: var(--spacing-0); background: transparent; font: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; }
-.dk-breadcrumb__icon { display: inline-flex; }
-.dk-breadcrumb__icon .dk-icon { font-size: var(--breadcrumb-icon-size, var(--spacing-4)); }
-.dk-breadcrumb__separator { display: inline-flex; color: var(--breadcrumb-separator, var(--text-muted)); -webkit-user-select: none; user-select: none; }
-.dk-breadcrumb__separator .dk-icon { font-size: var(--breadcrumb-separator-size, var(--spacing-4)); }
-@media (prefers-reduced-motion: reduce) { .dk-breadcrumb__item { transition: none; } }
+@media (hover: hover) { .srp-breadcrumb__link:hover, .srp-breadcrumb__more:hover { color: var(--breadcrumb-text-hover, var(--text)); text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
+.srp-breadcrumb__item:focus-visible { outline: var(--focus-ring-width) solid var(--breadcrumb-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-breadcrumb__item--current { color: var(--breadcrumb-text-current, var(--text)); font-weight: var(--breadcrumb-weight-current, var(--font-medium)); }
+.srp-breadcrumb__more { padding: var(--spacing-0) var(--spacing-0\.5); border: var(--spacing-0); background: transparent; font: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; }
+.srp-breadcrumb__icon { display: inline-flex; }
+.srp-breadcrumb__icon .srp-icon { font-size: var(--breadcrumb-icon-size, var(--spacing-4)); }
+.srp-breadcrumb__separator { display: inline-flex; color: var(--breadcrumb-separator, var(--text-muted)); -webkit-user-select: none; user-select: none; }
+.srp-breadcrumb__separator .srp-icon { font-size: var(--breadcrumb-separator-size, var(--spacing-4)); }
+@media (prefers-reduced-motion: reduce) { .srp-breadcrumb__item { transition: none; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when a link is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
-.dk-breadcrumb__link, .dk-breadcrumb__more { position: relative; isolation: isolate; }
-.dk-breadcrumb__link::after, .dk-breadcrumb__more::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+.srp-breadcrumb__link, .srp-breadcrumb__more { position: relative; isolation: isolate; }
+.srp-breadcrumb__link::after, .srp-breadcrumb__more::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so links in a row never overlap. */
-@media (pointer: coarse) { .dk-breadcrumb__link::after, .dk-breadcrumb__more::after { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
+@media (pointer: coarse) { .srp-breadcrumb__link::after, .srp-breadcrumb__more::after { --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--srp-reach-block); } }
 }

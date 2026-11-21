@@ -5,7 +5,7 @@ export function cn(...names: unknown[]): string {
   return names.filter(Boolean).join(' ');
 }
 
-/** A React id made safe for HTML ids and CSS selectors, with a prefix: "dk-ta" + useId(). */
+/** A React id made safe for HTML ids and CSS selectors, with a prefix: "srp-ta" + useId(). */
 export function domId(prefix: string, reactId: string): string {
   return prefix + reactId.replace(/[^A-Za-z0-9_-]/g, '');
 }

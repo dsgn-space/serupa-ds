@@ -22,7 +22,7 @@ describe('SkipLink', () => {
     const ref = React.createRef<HTMLAnchorElement>();
     await render(<SkipLink id="x" ref={ref} className="extra" data-x="y" />);
     const e = el('x');
-    expect([e.tagName, e.textContent, e.getAttribute('href'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['A', 'Skip to content', '#main', true, 'dk-skip-link extra', 'y', 'skip-link']);
+    expect([e.tagName, e.textContent, e.getAttribute('href'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['A', 'Skip to content', '#main', true, 'srp-skip-link extra', 'y', 'skip-link']);
   });
 
   test('target and children change where it goes and what it says; Indonesian words from the provider', async () => {

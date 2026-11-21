@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Status when written:** Accepted, with changes proposed for 5.0
-**Checked against main (31 October 2026, 11.0.0):** The cascade layers shipped (`@layer dk.tokens, dk.base, dk.components, dk.utilities` in `tokens.css`), and the utility classes are generated (tools/utilities/build.mjs).
+**Checked against main (31 October 2026, 11.0.0):** The cascade layers shipped (`@layer srp.tokens, srp.base, srp.components, srp.utilities` in `tokens.css`), and the utility classes are generated (tools/utilities/build.mjs).
 **Date:** 2026-10-17
 **Deciders:** Diki
 
@@ -58,6 +58,6 @@ The masks and gradients moved out of `utilities.css` and `bundle.css` into `util
 
 ## Action items
 
-1. [x] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins". Done: the stylesheets are in the `dk.*` layers, and `tools/test/foundation.mjs` fails on a fallback after a shared token.
+1. [x] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins". Done: the stylesheets are in the `srp.*` layers, and `tools/test/foundation.mjs` fails on a fallback after a shared token.
 2. [x] 5.0: decide the fate of `diki.iife.js` and `dist/lib/`. Both stay: the browser script is now `serupa.iife.js`.
 3. [x] Now: add a React 19 job to CI (non-breaking). React 19 is now the only supported React.

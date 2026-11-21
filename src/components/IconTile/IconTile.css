@@ -2,27 +2,27 @@
    IconTile: an icon centered in a tinted, rounded square (or a circle). Sizes sm 32px, md 40px, lg 48px, xl 64px,
    with 16, 20, 24 and 32px icons; tones neutral, primary and the four statuses, each a subtle fill with the icon in
    the tone's text color (3:1 or more, IconTile.test.tsx). In forced colors, an outline keeps the tile's shape.
-   Structure: .dk-icon-tile (a <span>) > .dk-icon-tile__icon (a <span> around the Icon or your element).
+   Structure: .srp-icon-tile (a <span>) > .srp-icon-tile__icon (a <span> around the Icon or your element).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-icon-tile {
-  --dk-icon-tile-size: var(--spacing-10); --dk-icon-tile-icon: var(--spacing-5);
-  --dk-icon-tile-bg: var(--icon-tile-neutral-bg, var(--secondary)); --dk-icon-tile-fg: var(--icon-tile-neutral-icon, var(--text-muted));
+@layer srp.components {
+.srp-icon-tile {
+  --srp-icon-tile-size: var(--spacing-10); --srp-icon-tile-icon: var(--spacing-5);
+  --srp-icon-tile-bg: var(--icon-tile-neutral-bg, var(--secondary)); --srp-icon-tile-fg: var(--icon-tile-neutral-icon, var(--text-muted));
   box-sizing: border-box; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
-  width: var(--dk-icon-tile-size); height: var(--dk-icon-tile-size);
-  border-radius: var(--icon-tile-radius, var(--radius-surface)); background: var(--dk-icon-tile-bg); color: var(--dk-icon-tile-fg);
+  width: var(--srp-icon-tile-size); height: var(--srp-icon-tile-size);
+  border-radius: var(--icon-tile-radius, var(--radius-surface)); background: var(--srp-icon-tile-bg); color: var(--srp-icon-tile-fg);
 }
-.dk-icon-tile__icon { display: inline-flex; font-size: var(--dk-icon-tile-icon); }
-.dk-icon-tile__icon > .dk-icon { font-size: var(--dk-icon-tile-icon); }
-.dk-icon-tile__icon > svg:not(.dk-icon svg) { width: var(--dk-icon-tile-icon); height: var(--dk-icon-tile-icon); }
-.dk-icon-tile--sm { --dk-icon-tile-size: var(--spacing-8); --dk-icon-tile-icon: var(--spacing-4); border-radius: var(--icon-tile-radius-sm, var(--radius-control)); }
-.dk-icon-tile--lg { --dk-icon-tile-size: var(--spacing-12); --dk-icon-tile-icon: var(--spacing-6); }
-.dk-icon-tile--xl { --dk-icon-tile-size: var(--spacing-16); --dk-icon-tile-icon: var(--spacing-8); border-radius: var(--icon-tile-radius-xl, var(--radius-container)); }
-.dk-icon-tile.dk-icon-tile--circle { border-radius: var(--radius-pill); }
-.dk-icon-tile--primary { --dk-icon-tile-bg: var(--icon-tile-primary-bg, var(--primary-subtle)); --dk-icon-tile-fg: var(--icon-tile-primary-icon, var(--primary)); }
-.dk-icon-tile--success { --dk-icon-tile-bg: var(--icon-tile-success-bg, var(--success-subtle)); --dk-icon-tile-fg: var(--icon-tile-success-icon, var(--success-text)); }
-.dk-icon-tile--warning { --dk-icon-tile-bg: var(--icon-tile-warning-bg, var(--warning-subtle)); --dk-icon-tile-fg: var(--icon-tile-warning-icon, var(--warning-text)); }
-.dk-icon-tile--danger { --dk-icon-tile-bg: var(--icon-tile-danger-bg, var(--danger-subtle)); --dk-icon-tile-fg: var(--icon-tile-danger-icon, var(--danger-text)); }
-.dk-icon-tile--info { --dk-icon-tile-bg: var(--icon-tile-info-bg, var(--info-subtle)); --dk-icon-tile-fg: var(--icon-tile-info-icon, var(--info-text)); }
-@media (forced-colors: active) { .dk-icon-tile { outline: var(--outline-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-1)); } }
+.srp-icon-tile__icon { display: inline-flex; font-size: var(--srp-icon-tile-icon); }
+.srp-icon-tile__icon > .srp-icon { font-size: var(--srp-icon-tile-icon); }
+.srp-icon-tile__icon > svg:not(.srp-icon svg) { width: var(--srp-icon-tile-icon); height: var(--srp-icon-tile-icon); }
+.srp-icon-tile--sm { --srp-icon-tile-size: var(--spacing-8); --srp-icon-tile-icon: var(--spacing-4); border-radius: var(--icon-tile-radius-sm, var(--radius-control)); }
+.srp-icon-tile--lg { --srp-icon-tile-size: var(--spacing-12); --srp-icon-tile-icon: var(--spacing-6); }
+.srp-icon-tile--xl { --srp-icon-tile-size: var(--spacing-16); --srp-icon-tile-icon: var(--spacing-8); border-radius: var(--icon-tile-radius-xl, var(--radius-container)); }
+.srp-icon-tile.srp-icon-tile--circle { border-radius: var(--radius-pill); }
+.srp-icon-tile--primary { --srp-icon-tile-bg: var(--icon-tile-primary-bg, var(--primary-subtle)); --srp-icon-tile-fg: var(--icon-tile-primary-icon, var(--primary)); }
+.srp-icon-tile--success { --srp-icon-tile-bg: var(--icon-tile-success-bg, var(--success-subtle)); --srp-icon-tile-fg: var(--icon-tile-success-icon, var(--success-text)); }
+.srp-icon-tile--warning { --srp-icon-tile-bg: var(--icon-tile-warning-bg, var(--warning-subtle)); --srp-icon-tile-fg: var(--icon-tile-warning-icon, var(--warning-text)); }
+.srp-icon-tile--danger { --srp-icon-tile-bg: var(--icon-tile-danger-bg, var(--danger-subtle)); --srp-icon-tile-fg: var(--icon-tile-danger-icon, var(--danger-text)); }
+.srp-icon-tile--info { --srp-icon-tile-bg: var(--icon-tile-info-bg, var(--info-subtle)); --srp-icon-tile-fg: var(--icon-tile-info-icon, var(--info-text)); }
+@media (forced-colors: active) { .srp-icon-tile { outline: var(--outline-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-1)); } }
 }

@@ -33,10 +33,10 @@ import { Carousel, Image } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Controlled` story.
 
-1. **Viewport** (`.dk-carousel__viewport`): the window the slides scroll through.
-2. **Slide** (`.dk-carousel__slide`): one item; the ones out of view are hidden from screen readers.
-3. **Previous and next** (`.dk-carousel__arrow`): move one slide (or one page of slides) at a time.
-4. **Dots** (`.dk-carousel__dots`): one per slide: where you are, and a way to jump to any slide.
+1. **Viewport** (`.srp-carousel__viewport`): the window the slides scroll through.
+2. **Slide** (`.srp-carousel__slide`): one item; the ones out of view are hidden from screen readers.
+3. **Previous and next** (`.srp-carousel__arrow`): move one slide (or one page of slides) at a time.
+4. **Dots** (`.srp-carousel__dots`): one per slide: where you are, and a way to jump to any slide.
 
 ## Usage
 

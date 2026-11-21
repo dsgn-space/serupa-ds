@@ -16,7 +16,7 @@ import { Checkbox } from '../Checkbox/Checkbox';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
-const announcer = () => document.querySelector('[data-dk-announcer]') as HTMLElement;
+const announcer = () => document.querySelector('[data-srp-announcer]') as HTMLElement;
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const described = (id: string) => (el(id).getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
@@ -28,7 +28,7 @@ describe('Field', () => {
     const f = el('plain').closest('[data-component="field"]') as HTMLElement;
     expect(ref.current).toBe(el('plain'));
     expect(el('plain').labels?.[0]!.textContent).toBe('Name');
-    expect(f.className).toMatch(/dk-field extra/);
+    expect(f.className).toMatch(/srp-field extra/);
     expect([f.dataset.x, f.dataset.component]).toEqual(['y', 'field']);
     expect(css(f.querySelector('label')).fontWeight).toBe('500');
     expect(el('plain').getAttribute('aria-describedby')).toBeNull();
@@ -63,10 +63,10 @@ describe('Field', () => {
     expect(document.getElementById(ids[1]!)?.textContent).toBe('For receipts.');
     expect(document.getElementById(ids[2]!)?.textContent).toBe('Enter an email address.');
     expect(el('mail').getAttribute('aria-invalid')).toBe('true');
-    expect(el('mail').parentElement?.className).toMatch(/dk-input--invalid/);
+    expect(el('mail').parentElement?.className).toMatch(/srp-input--invalid/);
     expect(el('mail').getAttribute('aria-required')).toBe('true');
     expect(f.querySelector('label > span[aria-hidden]')?.getAttribute('aria-hidden')).toBe('true');
-    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['dk-field__label', 'dk-field__hint', 'dk-field__control', 'dk-field__error']);
+    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__hint', 'srp-field__control', 'srp-field__error']);
     expect((f.querySelector<HTMLElement>('[data-icon] + span[id]')?.previousElementSibling as HTMLElement | null)?.dataset.icon).toBe('error');
 
     await screen.getByRole('button', { name: 'Clear' }).click();
@@ -154,7 +154,7 @@ describe('Field', () => {
       <Field group label="Off" disabled><input type="checkbox" id="c1" /></Field>
     </>);
     const fs = el('r1').closest('fieldset') as HTMLFieldSetElement, legend = fs.querySelector('legend')!;
-    expect(fs.className).toMatch(/dk-field--group/);
+    expect(fs.className).toMatch(/srp-field--group/);
     expect(legend.textContent).toBe('Plan');
     expect((fs.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)?.textContent)).toEqual(['Pick one.', 'Choose a plan.']);
     expect(el('r1').id).toBe('r1');
@@ -208,7 +208,7 @@ describe('Field', () => {
     const f = el('warn').closest('[data-component="field"]') as HTMLElement;
     const note = document.getElementById(described('warn')[1]!)!.parentElement!;
     expect(described('warn').map((i) => document.getElementById(i)?.textContent)).toEqual(['Shown to the team', 'A project with this name was archived last year']);
-    expect([el('warn').getAttribute('aria-invalid'), el('warn').getAttribute('aria-errormessage'), f.classList.contains('dk-field--warning'), f.classList.contains('dk-field--invalid')]).toEqual([null, null, true, false]);
+    expect([el('warn').getAttribute('aria-invalid'), el('warn').getAttribute('aria-errormessage'), f.classList.contains('srp-field--warning'), f.classList.contains('srp-field--invalid')]).toEqual([null, null, true, false]);
     const probe = document.createElement('span'); probe.style.color = 'var(--warning-text)'; document.body.append(probe);
     expect(css(note).color).toBe(css(probe).color);
     probe.remove();
@@ -221,11 +221,11 @@ describe('Field', () => {
     function Form(p: { error?: string; checking?: string }) { return <Field label="Address" error={p.error} checking={p.checking} warning="This address is outside our usual area"><input id="one" /></Field>; }
     const r = await render(<Form />);
     const msgs = () => described('one').map((i) => document.getElementById(i)!.parentElement!).map((m) => m.className + ': ' + m.textContent);
-    expect(msgs()).toEqual(['dk-field__warning: This address is outside our usual area']);
+    expect(msgs()).toEqual(['srp-field__warning: This address is outside our usual area']);
     await r.rerender(<Form checking="Checking the address…" />);
-    expect(msgs()).toEqual(['dk-field__checking: Checking the address…']);
+    expect(msgs()).toEqual(['srp-field__checking: Checking the address…']);
     await r.rerender(<Form checking="Checking the address…" error="We can't deliver to this address" />);
-    expect(msgs()).toEqual(['dk-field__error: We can\'t deliver to this address']);
+    expect(msgs()).toEqual(['srp-field__error: We can\'t deliver to this address']);
     expect(el('one').getAttribute('aria-invalid')).toBe('true');
   });
 
@@ -236,7 +236,7 @@ describe('Field', () => {
     expect(f.getAttribute('aria-busy')).toBeNull();
     await r.rerender(<Form checking="Checking the name…" />);
     expect(f.getAttribute('aria-busy')).toBe('true');
-    expect(f.classList.contains('dk-field--checking')).toBe(true);
+    expect(f.classList.contains('srp-field--checking')).toBe(true);
     expect(described('chk').map((i) => document.getElementById(i)?.textContent)).toEqual(['Checking the name…']);
     expect(document.getElementById(described('chk')[0]!)!.parentElement!.querySelector('[data-component="loader"]')).not.toBeNull();
     expect(el('chk').getAttribute('aria-invalid')).toBeNull();
@@ -337,7 +337,7 @@ describe('Field', () => {
     const label = el('h-narrow').labels![0]!.getBoundingClientRect(), box = el('h-narrow').parentElement!.getBoundingClientRect();
     expect([box.top >= label.bottom, Math.round(box.left), Math.round(box.width)]).toEqual([true, Math.round(label.left), 300]);
     const g = document.querySelector('[data-testid="h-group"]') as HTMLElement;
-    expect([g.tagName, g.classList.contains('dk-field--horizontal'), g.dataset.layout]).toEqual(['FIELDSET', false, undefined]);
+    expect([g.tagName, g.classList.contains('srp-field--horizontal'), g.dataset.layout]).toEqual(['FIELDSET', false, undefined]);
   });
 });
 

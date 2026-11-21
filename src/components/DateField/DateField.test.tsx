@@ -100,7 +100,7 @@ describe('DateField', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<DateField id="x" ref={ref} className="extra" data-x="y" aria-label="Date of birth" />);
     const e = el('x');
-    expect([e.tagName, e.getAttribute('role'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'group', true, 'dk-date-field extra', 'y', 'date-field']);
+    expect([e.tagName, e.getAttribute('role'), ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'group', true, 'srp-date-field extra', 'y', 'date-field']);
     await expect.element(page.getByRole('group', { name: 'Date of birth' })).toBeInTheDocument();
   });
 

@@ -8,63 +8,63 @@
    than the bar (a file name, a URL) breaks inside while the value keeps its width, so a 320px page doesn't scroll
    sideways (WCAG 1.4.10).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-progress {
-  --dk-progress-fill: var(--progress-fill, var(--primary));
-  --dk-progress-h: var(--progress-height-md, var(--spacing-2));
-  --dk-progress-ring: var(--progress-circle-md, var(--spacing-10));
+@layer srp.components {
+.srp-progress {
+  --srp-progress-fill: var(--progress-fill, var(--primary));
+  --srp-progress-h: var(--progress-height-md, var(--spacing-2));
+  --srp-progress-ring: var(--progress-circle-md, var(--spacing-10));
   color: var(--progress-label-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-progress--size-sm { --dk-progress-h: var(--progress-height-sm, var(--spacing-1)); --dk-progress-ring: var(--progress-circle-sm, var(--spacing-6)); }
-.dk-progress--size-lg { --dk-progress-h: var(--progress-height-lg, var(--spacing-3)); --dk-progress-ring: var(--progress-circle-lg, var(--spacing-16)); }
-.dk-progress--success { --dk-progress-fill: var(--progress-fill-success, var(--success)); }
-.dk-progress--warning { --dk-progress-fill: var(--progress-fill-warning, var(--warning)); }
-.dk-progress--danger { --dk-progress-fill: var(--progress-fill-danger, var(--danger)); }
-.dk-progress--bar { display: flex; flex-direction: column; gap: var(--progress-gap, var(--spacing-1\.5)); width: var(--sizing-full); }
-.dk-progress__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
-.dk-progress__label { font-weight: var(--progress-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
-.dk-progress__value { color: var(--progress-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
-.dk-progress__header .dk-progress__value { flex-shrink: 0; margin-inline-start: auto; }
-.dk-progress--bar .dk-progress__track {
-  position: relative; overflow: hidden; height: var(--dk-progress-h);
+.srp-progress--size-sm { --srp-progress-h: var(--progress-height-sm, var(--spacing-1)); --srp-progress-ring: var(--progress-circle-sm, var(--spacing-6)); }
+.srp-progress--size-lg { --srp-progress-h: var(--progress-height-lg, var(--spacing-3)); --srp-progress-ring: var(--progress-circle-lg, var(--spacing-16)); }
+.srp-progress--success { --srp-progress-fill: var(--progress-fill-success, var(--success)); }
+.srp-progress--warning { --srp-progress-fill: var(--progress-fill-warning, var(--warning)); }
+.srp-progress--danger { --srp-progress-fill: var(--progress-fill-danger, var(--danger)); }
+.srp-progress--bar { display: flex; flex-direction: column; gap: var(--progress-gap, var(--spacing-1\.5)); width: var(--sizing-full); }
+.srp-progress__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
+.srp-progress__label { font-weight: var(--progress-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-progress__value { color: var(--progress-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
+.srp-progress__header .srp-progress__value { flex-shrink: 0; margin-inline-start: auto; }
+.srp-progress--bar .srp-progress__track {
+  position: relative; overflow: hidden; height: var(--srp-progress-h);
   border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
   box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border-control));
 }
-.dk-progress__fill {
-  height: var(--sizing-full); border-radius: inherit; background: var(--dk-progress-fill);
+.srp-progress__fill {
+  height: var(--sizing-full); border-radius: inherit; background: var(--srp-progress-fill);
   transition: translate var(--progress-duration, var(--motion-change-lg)) var(--ease-settle);
 }
 /* The fill is the track's full length, slid back by the part not done (the track clips it): a new value moves it on
    the compositor, and its rounded end keeps its shape at any value (FB1). Right to left, it slides the other way. */
-.dk-progress__fill[style] { inline-size: var(--sizing-full); translate: calc(var(--spacing-0) - var(--dk-progress-rest)) var(--spacing-0); }
-.dk-progress__fill[style]:dir(rtl) { translate: var(--dk-progress-rest) var(--spacing-0); }
-.dk-progress--indeterminate .dk-progress__fill {
-  --dk-progress-segment: 40%; --dk-progress-still: 30%; --dk-progress-from: -100%; --dk-progress-to: 250%;
-  inline-size: var(--dk-progress-segment); animation: dk-progress-slide var(--motion-loop-progress) var(--ease-move) infinite;
+.srp-progress__fill[style] { inline-size: var(--sizing-full); translate: calc(var(--spacing-0) - var(--srp-progress-rest)) var(--spacing-0); }
+.srp-progress__fill[style]:dir(rtl) { translate: var(--srp-progress-rest) var(--spacing-0); }
+.srp-progress--indeterminate .srp-progress__fill {
+  --srp-progress-segment: 40%; --srp-progress-still: 30%; --srp-progress-from: -100%; --srp-progress-to: 250%;
+  inline-size: var(--srp-progress-segment); animation: srp-progress-slide var(--motion-loop-progress) var(--ease-move) infinite;
 }
-.dk-progress--indeterminate .dk-progress__fill:dir(rtl) { --dk-progress-from: 100%; --dk-progress-to: -250%; }
-@keyframes dk-progress-slide { from { translate: var(--dk-progress-from) 0; } to { translate: var(--dk-progress-to) 0; } }
-.dk-progress--circle { --dk-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--dk-progress-ring); height: var(--dk-progress-ring); flex-shrink: 0; vertical-align: middle; }
-.dk-progress__ring { display: block; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--dk-progress-start); }
-.dk-progress__ring .dk-progress__track, .dk-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
-.dk-progress__ring .dk-progress__track { stroke: var(--progress-ring-track, var(--secondary)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
-.dk-progress__arc { stroke: var(--dk-progress-fill); stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
-.dk-progress--circle .dk-progress__value { position: absolute; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--progress-label-color, var(--text)); font-weight: var(--progress-label-weight, var(--font-medium)); }
-.dk-progress--circle.dk-progress--size-lg .dk-progress__value { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-progress--circle.dk-progress--indeterminate .dk-progress__ring { --dk-progress-turn: 270deg; animation: dk-progress-turn var(--motion-loop-spinner) var(--ease-linear) infinite; }
-@keyframes dk-progress-turn { to { rotate: var(--dk-progress-turn); } }
-@keyframes dk-progress-breathe { 50% { opacity: var(--opacity-50); } }
+.srp-progress--indeterminate .srp-progress__fill:dir(rtl) { --srp-progress-from: 100%; --srp-progress-to: -250%; }
+@keyframes srp-progress-slide { from { translate: var(--srp-progress-from) 0; } to { translate: var(--srp-progress-to) 0; } }
+.srp-progress--circle { --srp-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--srp-progress-ring); height: var(--srp-progress-ring); flex-shrink: 0; vertical-align: middle; }
+.srp-progress__ring { display: block; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }
+.srp-progress__ring .srp-progress__track, .srp-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
+.srp-progress__ring .srp-progress__track { stroke: var(--progress-ring-track, var(--secondary)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
+.srp-progress__arc { stroke: var(--srp-progress-fill); stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
+.srp-progress--circle .srp-progress__value { position: absolute; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--progress-label-color, var(--text)); font-weight: var(--progress-label-weight, var(--font-medium)); }
+.srp-progress--circle.srp-progress--size-lg .srp-progress__value { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-progress--circle.srp-progress--indeterminate .srp-progress__ring { --srp-progress-turn: 270deg; animation: srp-progress-turn var(--motion-loop-spinner) var(--ease-linear) infinite; }
+@keyframes srp-progress-turn { to { rotate: var(--srp-progress-turn); } }
+@keyframes srp-progress-breathe { 50% { opacity: var(--opacity-50); } }
 @media (prefers-reduced-motion: reduce) {
-  .dk-progress__fill, .dk-progress__arc, .dk-progress__ring .dk-progress__track { transition: none; }
-  .dk-progress--indeterminate .dk-progress__fill { animation: none; }
+  .srp-progress__fill, .srp-progress__arc, .srp-progress__ring .srp-progress__track { transition: none; }
+  .srp-progress--indeterminate .srp-progress__fill { animation: none; }
   /* The circle stands still and breathes, as Loader's ring does (EE1). */
-  .dk-progress--circle.dk-progress--indeterminate .dk-progress__ring { animation: dk-progress-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
-  .dk-progress--indeterminate .dk-progress__fill { margin-inline-start: var(--dk-progress-still); }
+  .srp-progress--circle.srp-progress--indeterminate .srp-progress__ring { animation: srp-progress-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
+  .srp-progress--indeterminate .srp-progress__fill { margin-inline-start: var(--srp-progress-still); }
 }
 @media (forced-colors: active) {
-  .dk-progress--bar .dk-progress__track { border: var(--border-width-1) solid CanvasText; }
-  .dk-progress__fill { background: Highlight; }
-  .dk-progress__arc { stroke: Highlight; }
-  .dk-progress__ring .dk-progress__track { stroke: GrayText; }
+  .srp-progress--bar .srp-progress__track { border: var(--border-width-1) solid CanvasText; }
+  .srp-progress__fill { background: Highlight; }
+  .srp-progress__arc { stroke: Highlight; }
+  .srp-progress__ring .srp-progress__track { stroke: GrayText; }
 }
 }

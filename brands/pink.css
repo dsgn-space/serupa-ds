@@ -1,0 +1,68 @@
+/* Serupa — the pink brand, generated from tokens.json. Load it after tokens.css. */
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.tokens {
+[data-theme="pink-light"] {
+  --primary: var(--pink-700);
+  --primary-hover: var(--pink-800);
+  --primary-pressed: var(--pink-900);
+  --primary-subtle: var(--pink-50);
+  --primary-subtle-pressed: var(--pink-100);
+  --on-primary: var(--white);
+  --field-action: var(--pink-700);
+  --focus-ring: var(--pink-500);
+  --link-visited: var(--violet-700);
+  --srp-more-primary: var(--pink-800);
+  --srp-more-primary-hover: var(--pink-900);
+  --srp-more-primary-pressed: var(--pink-950);
+  --srp-more-field-action: var(--pink-800);
+  --srp-more-focus-ring: var(--pink-700);
+}
+[data-theme="pink-dark"] {
+  --primary: var(--pink-400);
+  --primary-hover: var(--pink-300);
+  --primary-pressed: var(--pink-200);
+  --primary-subtle: var(--pink-950);
+  --primary-subtle-pressed: var(--pink-900);
+  --on-primary: var(--pink-950);
+  --field-action: var(--pink-400);
+  --focus-ring: var(--pink-400);
+  --link-visited: var(--violet-300);
+  --srp-more-primary: var(--pink-300);
+  --srp-more-primary-hover: var(--pink-200);
+  --srp-more-primary-pressed: var(--pink-100);
+  --srp-more-field-action: var(--pink-300);
+  --srp-more-focus-ring: var(--pink-300);
+}
+:root[data-brand="pink"]:not([data-theme]), [data-brand="pink"]:not([data-theme]) {
+  --primary: light-dark(var(--pink-700), var(--pink-400));
+  --primary-hover: light-dark(var(--pink-800), var(--pink-300));
+  --primary-pressed: light-dark(var(--pink-900), var(--pink-200));
+  --primary-subtle: light-dark(var(--pink-50), var(--pink-950));
+  --primary-subtle-pressed: light-dark(var(--pink-100), var(--pink-900));
+  --on-primary: light-dark(var(--white), var(--pink-950));
+  --field-action: light-dark(var(--pink-700), var(--pink-400));
+  --focus-ring: light-dark(var(--pink-500), var(--pink-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--pink-800), var(--pink-300));
+  --srp-more-primary-hover: light-dark(var(--pink-900), var(--pink-200));
+  --srp-more-primary-pressed: light-dark(var(--pink-950), var(--pink-100));
+  --srp-more-field-action: light-dark(var(--pink-800), var(--pink-300));
+  --srp-more-focus-ring: light-dark(var(--pink-700), var(--pink-300));
+}
+:is([data-theme^="pink-"], [data-brand="pink"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--pink-700), var(--pink-400));
+  --primary-hover: light-dark(var(--pink-800), var(--pink-300));
+  --primary-pressed: light-dark(var(--pink-900), var(--pink-200));
+  --primary-subtle: light-dark(var(--pink-50), var(--pink-950));
+  --primary-subtle-pressed: light-dark(var(--pink-100), var(--pink-900));
+  --on-primary: light-dark(var(--white), var(--pink-950));
+  --field-action: light-dark(var(--pink-700), var(--pink-400));
+  --focus-ring: light-dark(var(--pink-500), var(--pink-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--pink-800), var(--pink-300));
+  --srp-more-primary-hover: light-dark(var(--pink-900), var(--pink-200));
+  --srp-more-primary-pressed: light-dark(var(--pink-950), var(--pink-100));
+  --srp-more-field-action: light-dark(var(--pink-800), var(--pink-300));
+  --srp-more-focus-ring: light-dark(var(--pink-700), var(--pink-300));
+}
+}

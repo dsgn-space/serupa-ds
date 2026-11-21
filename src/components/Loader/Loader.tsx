@@ -92,50 +92,50 @@ function LoaderRender({ ref, ...props }: LoaderProps & React.RefAttributes<HTMLS
     rest.role = 'progressbar';
     rest['aria-label'] = label;
   } else rest['aria-hidden'] = true;
-  const maskId = domId('dk-px', React.useId());   // one per loader, for the pixel grid's dividers
+  const maskId = domId('srp-px', React.useId());   // one per loader, for the pixel grid's dividers
   const cells: React.ReactNode[] = [];
   if (variant === 'pixel') for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++)   // square, edge to edge; the wave runs along the diagonals (row + column)
-    cells.push(<rect key={r * 3 + c} className={'dk-loader__px ' + (pattern === 'wave' ? 'dk-loader__px--d' + (r + c) : pattern === 'random' ? 'dk-loader__px--r' + (r * 3 + c) : 'dk-loader__px--s' + PIXEL_STEPS[pattern]?.[r * 3 + c])} x={c * 8} y={r * 8} width={8} height={8} />);
+    cells.push(<rect key={r * 3 + c} className={'srp-loader__px ' + (pattern === 'wave' ? 'srp-loader__px--d' + (r + c) : pattern === 'random' ? 'srp-loader__px--r' + (r * 3 + c) : 'srp-loader__px--s' + PIXEL_STEPS[pattern]?.[r * 3 + c])} x={c * 8} y={r * 8} width={8} height={8} />);
   const drawing = !shown || isText ? null : variant === 'pixel'
     ? <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
         {/* cut the lines out of the squares… */}
         <mask id={maskId} maskUnits="userSpaceOnUse" x={0} y={0} width={24} height={24}>
           <rect width={24} height={24} fill="white" />
-          <path className="dk-loader__px-cut" d="M16 0V48M32 0V48M0 16H48M0 32H48" transform="scale(0.5)" />
+          <path className="srp-loader__px-cut" d="M16 0V48M32 0V48M0 16H48M0 32H48" transform="scale(0.5)" />
         </mask>
         <g mask={'url(#' + maskId + ')'}>{cells}</g>
         {/* …and draw them at one fixed strength (drawn at half scale: 1 unit = half a grid unit), so a divider looks the same whether its squares are lit or dim */}
-        <path className="dk-loader__px-divider" d="M16 0V48M32 0V48M0 16H48M0 32H48" transform="scale(0.5)" />
+        <path className="srp-loader__px-divider" d="M16 0V48M32 0V48M0 16H48M0 32H48" transform="scale(0.5)" />
       </svg>
     : variant === 'spokes'
     ? <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
         {/* the lead spoke points up; each one behind it (anticlockwise) is fainter: Loader.css.
             Drawn at 5/8 scale (a 38.4-unit grid) so the spoke width lands on a token: stroke-width-4 = 2.5 of the 24 units */}
         <g transform="scale(0.625)">
-          {[0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return <line key={k} className="dk-loader__spoke" x1={19.2} y1={4} x2={19.2} y2={9.6} transform={'rotate(' + (-45 * k) + ' 19.2 19.2)'} />; })}
+          {[0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return <line key={k} className="srp-loader__spoke" x1={19.2} y1={4} x2={19.2} y2={9.6} transform={'rotate(' + (-45 * k) + ' 19.2 19.2)'} />; })}
         </g>
       </svg>
     : variant === 'dots'
     ? <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
-        <circle className="dk-loader__dot" cx={4} cy={12} r={2.5} />
-        <circle className="dk-loader__dot" cx={12} cy={12} r={2.5} />
-        <circle className="dk-loader__dot" cx={20} cy={12} r={2.5} />
+        <circle className="srp-loader__dot" cx={4} cy={12} r={2.5} />
+        <circle className="srp-loader__dot" cx={12} cy={12} r={2.5} />
+        <circle className="srp-loader__dot" cx={20} cy={12} r={2.5} />
       </svg>
     : <RingArt />;
   // The visible label repeats the accessible name, so it's hidden from assistive tech (no double reading).
   // The glint holds a full-color copy of the words in its ::after (from data-words, so the text isn't read twice).
-  const text = isText ? <span className="dk-loader__label" aria-hidden key="label">{words}<span className="dk-loader__glint" data-words={words} /></span> : null;
-  const cls = cn('dk-loader', 'dk-loader--' + variant, isSkeleton && 'dk-loader--shape-' + shape, variant === 'pixel' && pattern !== 'wave' && 'dk-loader--pattern-' + pattern, variant === 'pixel' && props.glow && 'dk-loader--glow', 'dk-loader--size-' + size, tone !== 'neutral' && 'dk-loader--' + tone, !shown && 'dk-loader--waiting', props.className);
+  const text = isText ? <span className="srp-loader__label" aria-hidden key="label">{words}<span className="srp-loader__glint" data-words={words} /></span> : null;
+  const cls = cn('srp-loader', 'srp-loader--' + variant, isSkeleton && 'srp-loader--shape-' + shape, variant === 'pixel' && pattern !== 'wave' && 'srp-loader--pattern-' + pattern, variant === 'pixel' && props.glow && 'srp-loader--glow', 'srp-loader--size-' + size, tone !== 'neutral' && 'srp-loader--' + tone, !shown && 'srp-loader--waiting', props.className);
   if (!loading && !shown) return null;   // done, and shown long enough (or never shown)
   if (isSkeleton) {   // the shapes are drawn even while waiting, so the space they keep is the content's
     const bones: React.ReactNode[] = [];
-    if (shape === 'text') for (let i = 0; i < lines; i++) bones.push(<span className="dk-loader__line" key={i}><span className="dk-loader__bone" /></span>);
-    else bones.push(<span className="dk-loader__bone" key="bone" />);
+    if (shape === 'text') for (let i = 0; i < lines; i++) bones.push(<span className="srp-loader__line" key={i}><span className="srp-loader__bone" /></span>);
+    else bones.push(<span className="srp-loader__bone" key="bone" />);
     return <span {...rest} ref={ref} className={cls}>{bones}</span>;
   }
   return (
     <span {...rest} ref={ref} className={cls}>
-      {isText ? null : <span className="dk-loader__art" key="art">{drawing}</span>}
+      {isText ? null : <span className="srp-loader__art" key="art">{drawing}</span>}
       {text}
     </span>
   );

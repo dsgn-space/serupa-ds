@@ -3,17 +3,17 @@
    current page shaded and text-colored), then actions. Sticky keeps it at the top. Below 768px the links hide
    behind a menu button and open as a full-width panel under the bar (after the button in the DOM, so Tab goes into them).
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-navbar:dir(rtl) { --dk-bar: calc(var(--highlight-indicator-width) * -1); }
-.dk-navbar { --dk-bar: var(--highlight-indicator-width); position: relative; background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
+@layer srp.components {
+.srp-navbar:dir(rtl) { --srp-bar: calc(var(--highlight-indicator-width) * -1); }
+.srp-navbar { --srp-bar: var(--highlight-indicator-width); position: relative; background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
 /* Stuck to the top, the bar's fill runs up under a phone's status bar and notch, its content below them. */
-.dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-top: env(safe-area-inset-top); }
+.srp-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-top: env(safe-area-inset-top); }
 /* Sticky, the bar lifts once the page scrolls under it (149): a shadow fades in over the first bar height of
    scroll, tied to the scroll rather than a clock, so it never runs on its own. Where scroll-driven animations
    aren't supported (Firefox), the line under the bar alone, as before. The test asks for animation-range too: a
    browser with the timeline but not the range would run the lift over the whole page (shrinking-header-on-scroll). */
 @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
-  .dk-navbar--sticky { animation: dk-navbar-lift var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)); }
+  .srp-navbar--sticky { animation: srp-navbar-lift var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)); }
 }
 /* The lift: a shadow, and the raised surface. On the dark themes' near-black page a shadow barely shows, so there the
    bar turns the lighter raised surface (as Card elevated does); in the light themes that's the same white (GR64). */
@@ -24,144 +24,144 @@
    bar left goes to the page. The bar's box keeps its height, so the page's scroll-padding-top stays a little more
    than it needs. */
 @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
-  .dk-navbar--condense {
-    --dk-navbar-cut: calc(var(--navbar-height, var(--spacing-16)) - var(--navbar-height-condensed, var(--spacing-12))); --dk-navbar-half: calc(var(--dk-navbar-cut) / 2);
-    animation: dk-navbar-lift var(--ease-linear) both, dk-navbar-condense var(--ease-linear) both; animation-timeline: scroll(), scroll();
-    animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)), var(--spacing-0) var(--dk-navbar-cut);
+  .srp-navbar--condense {
+    --srp-navbar-cut: calc(var(--navbar-height, var(--spacing-16)) - var(--navbar-height-condensed, var(--spacing-12))); --srp-navbar-half: calc(var(--srp-navbar-cut) / 2);
+    animation: srp-navbar-lift var(--ease-linear) both, srp-navbar-condense var(--ease-linear) both; animation-timeline: scroll(), scroll();
+    animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)), var(--spacing-0) var(--srp-navbar-cut);
   }
-  .dk-navbar--condense > .dk-navbar__inner { animation: dk-navbar-recenter var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--dk-navbar-cut); }
+  .srp-navbar--condense > .srp-navbar__inner { animation: srp-navbar-recenter var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--srp-navbar-cut); }
   /* Moved down, the content's box reaches half the cut past the bar, over the page: that empty part lets presses
      through to the page, and what's in it takes them as before. */
-  .dk-navbar--condense > .dk-navbar__inner { pointer-events: none; }
-  .dk-navbar--condense > .dk-navbar__inner > * { pointer-events: auto; }
+  .srp-navbar--condense > .srp-navbar__inner { pointer-events: none; }
+  .srp-navbar--condense > .srp-navbar__inner > * { pointer-events: auto; }
 }
-@keyframes dk-navbar-condense { to { translate: var(--spacing-0) calc(var(--spacing-0) - var(--dk-navbar-cut)); } }
-@keyframes dk-navbar-recenter { to { translate: var(--spacing-0) var(--dk-navbar-half); } }
-@keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); --surface-behind: var(--navbar-bg-scrolled, var(--surface-raised)); } }
+@keyframes srp-navbar-condense { to { translate: var(--spacing-0) calc(var(--spacing-0) - var(--srp-navbar-cut)); } }
+@keyframes srp-navbar-recenter { to { translate: var(--spacing-0) var(--srp-navbar-half); } }
+@keyframes srp-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); --surface-behind: var(--navbar-bg-scrolled, var(--surface-raised)); } }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view below a sticky bar, not under it (WCAG 2.4.11).
-   Navbar measures the bar into --dk-navbar-offset; until then, the default bar height. */
-:root:has(.dk-navbar--sticky) { scroll-padding-top: var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))); }
-.dk-navbar__inner { display: flex; align-items: center; gap: var(--navbar-gap, var(--spacing-6)); height: var(--navbar-height, var(--spacing-16)); }
-.dk-navbar__brand { display: flex; align-items: center; flex-shrink: 0; color: var(--navbar-brand-text, var(--text)); font-weight: var(--font-semibold); }
-.dk-navbar__nav { flex: auto; min-width: var(--spacing-0); }
-.dk-navbar__links { display: flex; align-items: center; gap: var(--navbar-link-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-navbar__link {
+   Navbar measures the bar into --srp-navbar-offset; until then, the default bar height. */
+:root:has(.srp-navbar--sticky) { scroll-padding-top: var(--srp-navbar-offset, var(--navbar-height, var(--spacing-16))); }
+.srp-navbar__inner { display: flex; align-items: center; gap: var(--navbar-gap, var(--spacing-6)); height: var(--navbar-height, var(--spacing-16)); }
+.srp-navbar__brand { display: flex; align-items: center; flex-shrink: 0; color: var(--navbar-brand-text, var(--text)); font-weight: var(--font-semibold); }
+.srp-navbar__nav { flex: auto; min-width: var(--spacing-0); }
+.srp-navbar__links { display: flex; align-items: center; gap: var(--navbar-link-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-navbar__link {
   display: flex; align-items: center; padding: var(--navbar-link-padding-y, var(--spacing-2)) var(--navbar-link-padding-x, var(--spacing-3));
   border-radius: var(--navbar-link-radius, var(--radius-control)); color: var(--navbar-link-text, var(--text-muted));
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--surface-hover)); --surface-behind: var(--navbar-link-bg-hover, var(--surface-hover)); color: var(--navbar-link-text-hover, var(--text)); } }
+@media (hover: hover) { .srp-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--surface-hover)); --surface-behind: var(--navbar-link-bg-hover, var(--surface-hover)); color: var(--navbar-link-text-hover, var(--text)); } }
 /* Pressed: one step past hover while held, at once (no fade in); letting go fades back. */
-.dk-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
+.srp-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
 /* The current page: shaded, and one step darker under the pointer. With more contrast, a bar along the bottom that hover never draws. */
-.dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--highlight-indicator-width)) 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
-@media (hover: hover) { .dk-navbar__link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
+.srp-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--highlight-indicator-width)) 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
+@media (hover: hover) { .srp-navbar__link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
 /* Forced colors drop the background and color, so the current page gets an outline. */
-@media (forced-colors: active) { .dk-navbar__link--active, .dk-navbar__link[aria-current="page"], .dk-navbar__menu-link--active, .dk-navbar__menu-link[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
-.dk-navbar__link:focus-visible, .dk-navbar__menu-link:focus-visible { outline: var(--focus-ring-width) solid var(--navbar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+@media (forced-colors: active) { .srp-navbar__link--active, .srp-navbar__link[aria-current="page"], .srp-navbar__menu-link--active, .srp-navbar__menu-link[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
+.srp-navbar__link:focus-visible, .srp-navbar__menu-link:focus-visible { outline: var(--focus-ring-width) solid var(--navbar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 /* NavbarMenu: a button like a link, with a chevron that turns when its panel is open. Wide, the panel spans the bar
    under it (the header is its containing block), its groups side by side; each link has its name and a muted line. */
-.dk-navbar__menu-button { gap: var(--spacing-1); border: none; background: transparent; font-family: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; }
-.dk-navbar__chevron.dk-icon { --dk-navbar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
-.dk-navbar__menu[data-state="open"] .dk-navbar__chevron { rotate: var(--dk-navbar-turn); }
-.dk-navbar__menu-panel {
+.srp-navbar__menu-button { gap: var(--spacing-1); border: none; background: transparent; font-family: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; }
+.srp-navbar__chevron.srp-icon { --srp-navbar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
+.srp-navbar__menu[data-state="open"] .srp-navbar__chevron { rotate: var(--srp-navbar-turn); }
+.srp-navbar__menu-panel {
   position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-block: var(--spacing-6);
   background: var(--navbar-menu-bg, var(--surface-overlay)); --surface-behind: var(--navbar-menu-bg, var(--surface-overlay)); --border: var(--navbar-menu-divider, var(--border-overlay)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-menu-border, var(--border));
   box-shadow: var(--navbar-menu-shadow, var(--elevation-overlay));
   opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter);
 }
-@starting-style { .dk-navbar__menu-panel:not([hidden]) { opacity: var(--opacity-0); } }
-.dk-navbar__menu-panel[hidden] { display: none; }
-.dk-navbar__menu-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--spacing-56), 1fr)); gap: var(--spacing-6); }
-.dk-navbar__menu-title { margin-block-end: var(--spacing-2); padding-inline: var(--spacing-3); color: var(--navbar-menu-title-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-semibold); }
-.dk-navbar__menu-list { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-navbar__menu-link {
+@starting-style { .srp-navbar__menu-panel:not([hidden]) { opacity: var(--opacity-0); } }
+.srp-navbar__menu-panel[hidden] { display: none; }
+.srp-navbar__menu-inner { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--spacing-56), 1fr)); gap: var(--spacing-6); }
+.srp-navbar__menu-title { margin-block-end: var(--spacing-2); padding-inline: var(--spacing-3); color: var(--navbar-menu-title-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-semibold); }
+.srp-navbar__menu-list { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-navbar__menu-link {
   display: flex; flex-direction: column; gap: var(--spacing-0\.5); padding: var(--spacing-2) var(--spacing-3); border-radius: var(--navbar-link-radius, var(--radius-control));
   color: var(--navbar-menu-link-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-decoration: none; overflow-wrap: anywhere;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 /* The panel floats, so a link under the pointer takes the raised hover step: still a step under the current link's fill. */
-@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); --surface-behind: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); } }
-.dk-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
-.dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
-@media (hover: hover) { .dk-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
-.dk-navbar__menu-name { font-weight: var(--font-medium); }
-.dk-navbar__menu-desc { color: var(--navbar-menu-desc-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-navbar__actions { display: flex; align-items: center; gap: var(--spacing-2); flex-shrink: 0; margin-inline-start: auto; }
-.dk-navbar__toggle { display: none; }
+@media (hover: hover) { .srp-navbar__menu-link:hover { background: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); --surface-behind: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); } }
+.srp-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
+.srp-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--srp-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
+@media (hover: hover) { .srp-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
+.srp-navbar__menu-name { font-weight: var(--font-medium); }
+.srp-navbar__menu-desc { color: var(--navbar-menu-desc-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-navbar__actions { display: flex; align-items: center; gap: var(--spacing-2); flex-shrink: 0; margin-inline-start: auto; }
+.srp-navbar__toggle { display: none; }
 /* Print: the page is narrower than the screen the links were laid out for, and nothing measures it again, so the
    links wrap beside the brand, and the actions go under them when there's no room, instead of the links running
    under the actions. */
 @media print {
-  .dk-navbar__inner { flex-wrap: wrap; height: auto; min-height: var(--navbar-height, var(--spacing-16)); }
-  .dk-navbar__nav { flex-basis: var(--spacing-0); }
-  .dk-navbar__links { flex-wrap: wrap; }
+  .srp-navbar__inner { flex-wrap: wrap; height: auto; min-height: var(--navbar-height, var(--spacing-16)); }
+  .srp-navbar__nav { flex-basis: var(--spacing-0); }
+  .srp-navbar__links { flex-wrap: wrap; }
 }
 @media (max-width: 767.98px) {
-  .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
+  .srp-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
     /* More links than fit below the bar scroll inside the panel, not behind a sticky bar out of reach. */
-    max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
+    max-height: calc(var(--sizing-dvh) - var(--srp-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
     /* Its last link clears a phone's home bar when the panel reaches the bottom of the screen. */
     padding-bottom: max(var(--spacing-2), env(safe-area-inset-bottom)); }
-  .dk-navbar[data-state="open"] .dk-navbar__nav { display: block; }
+  .srp-navbar[data-state="open"] .srp-navbar__nav { display: block; }
   /* Motion (GH2): the panel fades in (with @starting-style) and fades out, as Popover and Menu do; with motion
      allowed it also unrolls from the bar (a clip-path, as Accordion). Navbar keeps it shown, after the menu button,
      with --leaving until the fade has ended: not with display's allow-discrete, which Firefox doesn't transition. */
-  .dk-navbar__nav--leaving { display: block; }
-  .dk-navbar__nav { opacity: var(--opacity-0); transition: opacity var(--motion-exit-sm) var(--ease-exit); }
-  .dk-navbar[data-state="open"] .dk-navbar__nav { opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
-  @starting-style { .dk-navbar[data-state="open"] .dk-navbar__nav { opacity: var(--opacity-0); } }
+  .srp-navbar__nav--leaving { display: block; }
+  .srp-navbar__nav { opacity: var(--opacity-0); transition: opacity var(--motion-exit-sm) var(--ease-exit); }
+  .srp-navbar[data-state="open"] .srp-navbar__nav { opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
+  @starting-style { .srp-navbar[data-state="open"] .srp-navbar__nav { opacity: var(--opacity-0); } }
   @media (prefers-reduced-motion: no-preference) {
-    .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); transition: opacity var(--motion-exit-sm) var(--ease-exit), clip-path var(--motion-exit-sm) var(--ease-exit); }
-    .dk-navbar[data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-enter-sm) var(--ease-enter), clip-path var(--motion-enter-sm) var(--ease-enter); }
-    @starting-style { .dk-navbar[data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); } }
+    .srp-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); transition: opacity var(--motion-exit-sm) var(--ease-exit), clip-path var(--motion-exit-sm) var(--ease-exit); }
+    .srp-navbar[data-state="open"] .srp-navbar__nav { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-enter-sm) var(--ease-enter), clip-path var(--motion-enter-sm) var(--ease-enter); }
+    @starting-style { .srp-navbar[data-state="open"] .srp-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); } }
   }
-  .dk-navbar__links { flex-direction: column; align-items: stretch; }
+  .srp-navbar__links { flex-direction: column; align-items: stretch; }
   /* One link per line in the panel: a long label wraps, and an unbroken word breaks, rather than running out of it (WCAG 1.4.10). */
-  .dk-navbar__link { white-space: normal; overflow-wrap: anywhere; }
-  .dk-navbar__toggle.dk-btn { display: inline-flex; flex-shrink: 0; }
+  .srp-navbar__link { white-space: normal; overflow-wrap: anywhere; }
+  .srp-navbar__toggle.srp-btn { display: inline-flex; flex-shrink: 0; }
   /* The brand gives way first, so wide actions never push the menu button off the screen (WCAG 1.4.10): a brand
      that doesn't fit ends in an ellipsis. Its link keeps its own box, so its focus ring isn't clipped. */
-  .dk-navbar__brand, .dk-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); }
-  .dk-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .srp-navbar__brand, .srp-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); }
+  .srp-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* Then the actions: wider than what's left, they scroll sideways within the bar, and Tab scrolls each into view. Each
      keeps its own width, so a label is never squeezed past reading. The padding keeps a focused action's ring inside
      the scrolling box. */
-  .dk-navbar__actions > * { flex-shrink: 0; }
-  .dk-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; padding: var(--spacing-1); }
+  .srp-navbar__actions > * { flex-shrink: 0; }
+  .srp-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; padding: var(--spacing-1); }
   /* In the small-screen menu a NavbarMenu opens in place, under its button, its groups one after another. */
-  .dk-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
-  .dk-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
-  .dk-navbar__menu-inner.dk-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
-  .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__toggle, .dk-navbar__toggle:first-child { margin-inline-start: auto; }
+  .srp-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
+  .srp-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
+  .srp-navbar__menu-inner.srp-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
+  .srp-navbar__nav + .srp-navbar__toggle, .srp-navbar__brand + .srp-navbar__nav + .srp-navbar__toggle, .srp-navbar__brand + .srp-navbar__toggle, .srp-navbar__toggle:first-child { margin-inline-start: auto; }
 }
 /* Wider than 768px, the same when the links don't fit between the brand and the actions (seven links, long German
    labels): Navbar measures and sets data-fold. The rules are the ones above, with their reasons there. */
-.dk-navbar[data-fold] .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
-  max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
+.srp-navbar[data-fold] .srp-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
+  max-height: calc(var(--sizing-dvh) - var(--srp-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
   padding-bottom: max(var(--spacing-2), env(safe-area-inset-bottom)); }
-.dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { display: block; }
-.dk-navbar[data-fold] .dk-navbar__nav--leaving { display: block; }
-.dk-navbar[data-fold] .dk-navbar__nav { opacity: var(--opacity-0); transition: opacity var(--motion-exit-sm) var(--ease-exit); }
-.dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
-@starting-style { .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { opacity: var(--opacity-0); } }
+.srp-navbar[data-fold][data-state="open"] .srp-navbar__nav { display: block; }
+.srp-navbar[data-fold] .srp-navbar__nav--leaving { display: block; }
+.srp-navbar[data-fold] .srp-navbar__nav { opacity: var(--opacity-0); transition: opacity var(--motion-exit-sm) var(--ease-exit); }
+.srp-navbar[data-fold][data-state="open"] .srp-navbar__nav { opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
+@starting-style { .srp-navbar[data-fold][data-state="open"] .srp-navbar__nav { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-navbar[data-fold] .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); transition: opacity var(--motion-exit-sm) var(--ease-exit), clip-path var(--motion-exit-sm) var(--ease-exit); }
-  .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-enter-sm) var(--ease-enter), clip-path var(--motion-enter-sm) var(--ease-enter); }
-  @starting-style { .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); } }
+  .srp-navbar[data-fold] .srp-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); transition: opacity var(--motion-exit-sm) var(--ease-exit), clip-path var(--motion-exit-sm) var(--ease-exit); }
+  .srp-navbar[data-fold][data-state="open"] .srp-navbar__nav { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-enter-sm) var(--ease-enter), clip-path var(--motion-enter-sm) var(--ease-enter); }
+  @starting-style { .srp-navbar[data-fold][data-state="open"] .srp-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); } }
 }
-.dk-navbar[data-fold] .dk-navbar__links { flex-direction: column; align-items: stretch; }
-.dk-navbar[data-fold] .dk-navbar__link { white-space: normal; overflow-wrap: anywhere; }
-.dk-navbar[data-fold] .dk-navbar__toggle.dk-btn { display: inline-flex; flex-shrink: 0; }
-.dk-navbar[data-fold] .dk-navbar__brand, .dk-navbar[data-fold] .dk-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); }
-.dk-navbar[data-fold] .dk-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dk-navbar[data-fold] .dk-navbar__actions > * { flex-shrink: 0; }
-.dk-navbar[data-fold] .dk-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; padding: var(--spacing-1); }
-.dk-navbar[data-fold] .dk-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
-.dk-navbar[data-fold] .dk-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
-.dk-navbar[data-fold] .dk-navbar__menu-inner.dk-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
-.dk-navbar[data-fold] .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__brand + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__toggle:first-child { margin-inline-start: auto; }
+.srp-navbar[data-fold] .srp-navbar__links { flex-direction: column; align-items: stretch; }
+.srp-navbar[data-fold] .srp-navbar__link { white-space: normal; overflow-wrap: anywhere; }
+.srp-navbar[data-fold] .srp-navbar__toggle.srp-btn { display: inline-flex; flex-shrink: 0; }
+.srp-navbar[data-fold] .srp-navbar__brand, .srp-navbar[data-fold] .srp-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); }
+.srp-navbar[data-fold] .srp-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.srp-navbar[data-fold] .srp-navbar__actions > * { flex-shrink: 0; }
+.srp-navbar[data-fold] .srp-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; padding: var(--spacing-1); }
+.srp-navbar[data-fold] .srp-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
+.srp-navbar[data-fold] .srp-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
+.srp-navbar[data-fold] .srp-navbar__menu-inner.srp-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
+.srp-navbar[data-fold] .srp-navbar__nav + .srp-navbar__toggle, .srp-navbar[data-fold] .srp-navbar__brand + .srp-navbar__nav + .srp-navbar__toggle, .srp-navbar[data-fold] .srp-navbar__brand + .srp-navbar__toggle, .srp-navbar[data-fold] .srp-navbar__toggle:first-child { margin-inline-start: auto; }
 
-@media (prefers-reduced-motion: reduce) { .dk-navbar__link, .dk-navbar__menu-link, .dk-navbar__chevron.dk-icon, .dk-navbar__menu-panel { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .srp-navbar__link, .srp-navbar__menu-link, .srp-navbar__chevron.srp-icon, .srp-navbar__menu-panel { transition: none; } }
 }

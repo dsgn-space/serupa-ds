@@ -28,7 +28,7 @@ describe('HoverCard', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Card ref={ref} className="extra" data-x="y" />);
     const c = el('hc');
-    expect([ref.current === c, c.className, c.dataset.x, c.dataset.component, c.dataset.state, c.hidden, c.inert, c.textContent]).toEqual([true, 'dk-hover-card extra', 'y', 'hover-card', 'closed', true, true, '']);
+    expect([ref.current === c, c.className, c.dataset.x, c.dataset.component, c.dataset.state, c.hidden, c.inert, c.textContent]).toEqual([true, 'srp-hover-card extra', 'y', 'hover-card', 'closed', true, true, '']);
     expect(el('t').getAttribute('href')).toBe('#dewi');
   });
 

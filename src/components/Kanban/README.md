@@ -34,12 +34,12 @@ const [columns, setColumns] = useState<KanbanColumn<Task>[]>([
 
 Drawn from the `Default` story.
 
-1. **Column** (`.dk-kanban__column`): one stage, a `section` named by its heading.
-2. **Title** (`.dk-kanban__title`): the stage's name.
-3. **Count** (`.dk-kanban__count`): how many cards, with the limit when there is one, and "Over limit" past it.
-4. **Card** (`.dk-kanban__card`): one item: its handle, your content and its menu.
-5. **Handle** (`.dk-kanban__handle`): picks the card up, by pointer or keyboard.
-6. **Move to…** (`.dk-kanban__menu`): moves the card to another column without dragging.
+1. **Column** (`.srp-kanban__column`): one stage, a `section` named by its heading.
+2. **Title** (`.srp-kanban__title`): the stage's name.
+3. **Count** (`.srp-kanban__count`): how many cards, with the limit when there is one, and "Over limit" past it.
+4. **Card** (`.srp-kanban__card`): one item: its handle, your content and its menu.
+5. **Handle** (`.srp-kanban__handle`): picks the card up, by pointer or keyboard.
+6. **Move to…** (`.srp-kanban__menu`): moves the card to another column without dragging.
 
 ## Usage
 

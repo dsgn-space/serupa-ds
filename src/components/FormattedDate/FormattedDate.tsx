@@ -125,7 +125,7 @@ function FormattedDateRender({ ref, ...props }: FormattedDateProps & React.RefAt
   React.useEffect(() => {   // in the browser only, once per page
     if (process.env.NODE_ENV !== 'production' && invalid) warnOnce('date-value', `FormattedDate: ${JSON.stringify(String(props.value))} isn't a date, so it shows nothing. Pass a Date, a timestamp in ms, an ISO date and time, or a "yyyy-mm-dd" day.`);
   }, [invalid, props.value]);
-  const cls = cn('dk-formatted-date', props.className);
+  const cls = cn('srp-formatted-date', props.className);
   // A locale of its own brings its direction with its lang, so "Nov 20, 2026" in a right-to-left page keeps its order.
   const dir = props.locale ? localeDir(props.locale) : undefined;
   // The server's ICU and the browser's can space or join the same date a little differently ("Nov 20 – 22" with a

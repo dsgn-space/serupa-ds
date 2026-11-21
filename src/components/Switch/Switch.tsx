@@ -31,7 +31,7 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
 
 /* Switch: an on/off setting that applies at once. A native checkbox with role="switch" (announced as on or off),
    drawn as a track and thumb. size "sm", "md" (default) or "lg"; children (the label); description;
-   labelPosition "end" (default) or "start"; invalid. Renders <label class="dk-switch">: className and style go
+   labelPosition "end" (default) or "start"; invalid. Renders <label class="srp-switch">: className and style go
    to the label, every other prop (checked, defaultChecked, onChange, name, disabled, aria-*…) and ref to the
    <input>. */
 const OWN = { size: 1, icon: 1, invalid: 1, loading: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
@@ -66,20 +66,20 @@ function SwitchRender({ ref, ...props }: SwitchProps & React.RefAttributes<HTMLI
     const onClick = rest.onClick;
     rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
   }
-  const base = domId('dk-sw', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const base = domId('srp-sw', React.useId()), labelId = base + '-label', descId = base + '-desc';
   const hasLabel = props.children != null && props.children !== false && props.children !== '';
   const hasDesc = props.description != null && props.description !== false && props.description !== '';
   if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;   // the description stays out of the name
   return (
-    <label className={cn('dk-switch', 'dk-switch--size-' + size, props.labelPosition === 'start' && 'dk-switch--label-start', invalid && 'dk-switch--invalid', rest.disabled && 'dk-switch--disabled', readOnly && 'dk-switch--readonly', pending && 'dk-switch--pending', !hasLabel && !hasDesc && 'dk-switch--bare', props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? '' : undefined}>
-      <span className="dk-switch__control" key="control">
-        <input {...rest} {...NATIVE_SWITCH} ref={nameRef} type="checkbox" role="switch" className="dk-switch__input" key="input" />
-        <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : props.icon ? <svg className="dk-switch__check" key="check" width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" focusable="false"><path d={Check.d} /></svg> : null}</span>
+    <label className={cn('srp-switch', 'srp-switch--size-' + size, props.labelPosition === 'start' && 'srp-switch--label-start', invalid && 'srp-switch--invalid', rest.disabled && 'srp-switch--disabled', readOnly && 'srp-switch--readonly', pending && 'srp-switch--pending', !hasLabel && !hasDesc && 'srp-switch--bare', props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? '' : undefined}>
+      <span className="srp-switch__control" key="control">
+        <input {...rest} {...NATIVE_SWITCH} ref={nameRef} type="checkbox" role="switch" className="srp-switch__input" key="input" />
+        <span className="srp-switch__thumb" aria-hidden key="thumb">{pending ? <span className="srp-switch__spinner" key="spin" /> : props.icon ? <svg className="srp-switch__check" key="check" width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" focusable="false"><path d={Check.d} /></svg> : null}</span>
       </span>
-      {hasLabel || hasDesc ? <span className="dk-switch__text" key="text">
-        {hasLabel ? <span className="dk-switch__label" id={labelId} key="label">{props.children}</span> : null}
-        {hasDesc ? <span className="dk-switch__description" id={descId} key="desc">{props.description}</span> : null}
+      {hasLabel || hasDesc ? <span className="srp-switch__text" key="text">
+        {hasLabel ? <span className="srp-switch__label" id={labelId} key="label">{props.children}</span> : null}
+        {hasDesc ? <span className="srp-switch__description" id={descId} key="desc">{props.description}</span> : null}
       </span> : null}
     </label>
   );

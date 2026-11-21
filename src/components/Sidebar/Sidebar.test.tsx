@@ -84,7 +84,7 @@ describe('Sidebar', () => {
     const sref = React.createRef<HTMLElement>(), iref = React.createRef<HTMLAnchorElement>();
     await render(<App sref={sref} iref={iref} />);
     const n = el('sb'), r = rect(n);
-    expect([n.tagName, n.getAttribute('aria-label'), n.className, n.dataset.component, n.dataset.x]).toEqual(['NAV', 'Main', 'dk-sidebar extra', 'sidebar', 'y']);
+    expect([n.tagName, n.getAttribute('aria-label'), n.className, n.dataset.component, n.dataset.x]).toEqual(['NAV', 'Main', 'srp-sidebar extra', 'sidebar', 'y']);
     expect([sref.current === n, iref.current?.id]).toEqual([true, 'ihome']);
     expect([Math.round(r.width), Math.round(r.height), css(n).borderRightWidth]).toEqual([256, 600, '1px']);
   });
@@ -201,7 +201,7 @@ describe('Sidebar', () => {
 
   test('defaultOpen={false} keeps a group with the active page closed; the group is still text-colored', async () => {
     await render(<App />);
-    expect([el('gteam').getAttribute('aria-expanded'), el('gteam').classList.contains('dk-sidebar__item--active')]).toEqual(['false', true]);
+    expect([el('gteam').getAttribute('aria-expanded'), el('gteam').classList.contains('srp-sidebar__item--active')]).toEqual(['false', true]);
   });
 
   test('L8E108: the page moving to an item in a closed group opens the group, unless defaultOpen or open is set', async () => {
@@ -314,7 +314,7 @@ describe('Sidebar', () => {
       await new Promise((r) => setTimeout(r, 60));
       React.act(() => setCollapsed(false));
       await expect.poll(() => n.dataset.slide).toBeUndefined();
-      expect([Math.round(rect(n).width), n.classList.contains('dk-sidebar--collapsed')]).toEqual([256, false]);
+      expect([Math.round(rect(n).width), n.classList.contains('srp-sidebar--collapsed')]).toEqual([256, false]);
     } finally { if (still) still.disabled = false; await session?.send('Performance.disable'); }
   });
 
@@ -442,7 +442,7 @@ describe('Sidebar', () => {
       </I>
     </Sidebar>);
     // Expanded: Docs and Guides open, and both show as active, though only a grandchild is the current page.
-    expect([el('gdocs').getAttribute('aria-expanded'), el('gguides').getAttribute('aria-expanded'), el('gdocs').classList.contains('dk-sidebar__item--active'), el('ig1').getAttribute('aria-current')]).toEqual(['true', 'true', true, 'page']);
+    expect([el('gdocs').getAttribute('aria-expanded'), el('gguides').getAttribute('aria-expanded'), el('gdocs').classList.contains('srp-sidebar__item--active'), el('ig1').getAttribute('aria-current')]).toEqual(['true', 'true', true, 'page']);
   });
 
   test('collapsed rail menu: router links stay router links, and the current page is marked', async () => {

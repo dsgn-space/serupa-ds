@@ -39,12 +39,12 @@ const files: TreeViewItem[] = [
 
 Drawn from the `Multiple` story.
 
-1. **Item** (`.dk-tree-view__item`): one node, with the nodes under it.
-2. **Toggle** (`.dk-tree-view__toggle`): opens and closes the nodes under it; the arrow keys do too.
-3. **Icon** (`.dk-tree-view__icon`): an optional picture, such as a folder or a file.
-4. **Label** (`.dk-tree-view__label`): the node's name.
-5. **Selected item** (`.dk-tree-view__item--selected`): a node chosen now.
-6. **Group** (`.dk-tree-view__group`): the nodes under an open one, set in.
+1. **Item** (`.srp-tree-view__item`): one node, with the nodes under it.
+2. **Toggle** (`.srp-tree-view__toggle`): opens and closes the nodes under it; the arrow keys do too.
+3. **Icon** (`.srp-tree-view__icon`): an optional picture, such as a folder or a file.
+4. **Label** (`.srp-tree-view__label`): the node's name.
+5. **Selected item** (`.srp-tree-view__item--selected`): a node chosen now.
+6. **Group** (`.srp-tree-view__group`): the nodes under an open one, set in.
 
 ## Usage
 

@@ -29,7 +29,7 @@ describe('DataGrid', () => {
     const ref = React.createRef<HTMLTableElement>();
     await render(<DataGrid ref={ref} className="extra" aria-label="Stock" columns={COLS} rows={ROWS} />);
     const grid = page.getByRole('grid', { name: 'Stock' }).element();
-    expect([grid.tagName, ref.current === grid, grid.parentElement!.className, grid.parentElement!.dataset.component]).toEqual(['TABLE', true, 'dk-data-grid extra', 'data-grid']);
+    expect([grid.tagName, ref.current === grid, grid.parentElement!.className, grid.parentElement!.dataset.component]).toEqual(['TABLE', true, 'srp-data-grid extra', 'data-grid']);
     expect(page.getByRole('columnheader').elements().map((e) => e.textContent)).toEqual(['Name', 'Qty', 'SKU']);
     expect(page.getByRole('gridcell').elements()).toHaveLength(9);
     expect(grid.getAttribute('aria-rowcount')).toBe('4');
@@ -233,7 +233,7 @@ describe('DataGrid', () => {
     const row = (id: string) => document.querySelector(`#${id} tbody tr`)!.getBoundingClientRect().height;
     expect(row('sm')).toBeLessThan(row('md'));
     expect(row('lg')).toBeGreaterThanOrEqual(44);
-    expect([css(document.querySelector('#lg td')).fontSize, document.getElementById('lg')!.closest('[data-component="data-grid"]')!.className]).toEqual(['16px', 'dk-data-grid dk-data-grid--lg']);
+    expect([css(document.querySelector('#lg td')).fontSize, document.getElementById('lg')!.closest('[data-component="data-grid"]')!.className]).toEqual(['16px', 'srp-data-grid srp-data-grid--lg']);
     expect(Math.abs(row('lgl') - row('lg'))).toBeLessThan(2);
     const lgCell = document.querySelector('#lg td') as HTMLElement;
     const before = lgCell.getBoundingClientRect().height;
@@ -252,7 +252,7 @@ describe('DataGrid', () => {
     // Every placeholder is decorative; the label is said once, after the loader's delay.
     expect([...grid.querySelectorAll('[data-variant="skeleton"]')].every((n) => n.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(grid.querySelectorAll('[data-variant="skeleton"]')).toHaveLength(12);
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading stock');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading stock');
     const tall = rows[0]!.getBoundingClientRect().height;
     await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} loading={false} />);
     expect(grid.hasAttribute('aria-busy')).toBe(false);
@@ -294,7 +294,7 @@ describe('DataGrid stickyHeader', () => {
   test('in a frame with a height, the header stays in view as the keyboard moves down 60 rows, and the active cell is never under it', async () => {
     await render(<DataGrid aria-label="Stock" stickyHeader containerProps={{ style: { maxHeight: 240 }, id: 'frame' }} columns={COLS} rows={MANY} />);
     const frame = document.getElementById('frame') as HTMLElement, head = frame.querySelector('th') as HTMLElement;
-    expect(frame.className).toContain('dk-data-grid');
+    expect(frame.className).toContain('srp-data-grid');
     await userEvent.click(cell('Item 1'));
     const hidden: string[] = [];
     for (let i = 1; i < 60; i++) {

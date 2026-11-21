@@ -39,7 +39,7 @@ if (made.status === 0) {
   const code = read('DateBadge.tsx');
   t('the component goes through named() and is marked pure, so it tree-shakes', /\/\* @__PURE__ \*\/ named\('DateBadge', DateBadgeRender\)/.test(code) && !/forwardRef|displayName/.test(code));
   t('it starts as beta: @beta in the doc comment on its export (tools/build/registry.mjs reads it)', /@beta[^*]*\*\/\nexport const DateBadge\b/.test(code));
-  t('its class and data-component are the kebab-case name', code.includes("'dk-date-badge'") && code.includes('data-component="date-badge"'));
+  t('its class and data-component are the kebab-case name', code.includes("'srp-date-badge'") && code.includes('data-component="date-badge"'));
   t('the stories sit in the group asked for', read('DateBadge.stories.tsx').includes("title: 'Components/Forms/DateBadge'"));
 
   // The tokens file, the CSS and the guide's table agree: every token's CSS variable is read in the CSS, with the
@@ -52,7 +52,7 @@ if (made.status === 0) {
     return !css.includes(`var(${v}, var(--${shared}))`) || !guide.includes(`| \`${v}\` | \`${shared}\` |`);
   });
   t('each token is read in the CSS with its default, and listed in the guide', tokens.length && !off.length, off.map((x) => x.$extensions['com.serupa'].cssVar).join(', '));
-  t('the CSS is in the components layer', /^@layer dk\.components \{/m.test(css));
+  t('the CSS is in the components layer', /^@layer srp\.components \{/m.test(css));
 
   const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'Props', 'Component tokens'];
   const headings = [...guide.matchAll(/^## (.+)$/gm)].map((m) => m[1]);

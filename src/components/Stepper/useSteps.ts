@@ -71,7 +71,7 @@ export function useSteps(options: UseStepsOptions): UseSteps {
     else update();
   };
   // With transition, the open step alone carries the name, so the browser pairs the step leaving with the one coming.
-  const vtName = 'dk-steps-' + id.replace(/[^\w-]/g, '');
+  const vtName = 'srp-steps-' + id.replace(/[^\w-]/g, '');
   const mark = (index: number, ok: boolean) => setFailed((f) => {
     if (ok !== f.has(index)) return f;
     const n = new Set(f);

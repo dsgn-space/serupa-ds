@@ -258,7 +258,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
-      - name: tokens.css is generated from tokens.json
+      - name: tokens.css and brands/ are generated from tokens.json
         run: node tools/tokens/build.mjs --check
       - name: Build the package
         run: npm run build

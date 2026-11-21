@@ -125,10 +125,10 @@ function Full({ src, alt, fallback, shape }: { src: string; alt: string; fallbac
   const [own, setOwn] = React.useState<[number, number] | null>(null);
   const [w, h] = own || shape || [4, 3];
   return (
-    <span className={cn('dk-image__stage', 'dk-image--' + state)} data-state={state} style={{ '--dk-image-ratio': w + ' / ' + h, '--dk-image-w': own || shape ? w + 'px' : '100%' } as React.CSSProperties}>
+    <span className={cn('srp-image__stage', 'srp-image--' + state)} data-state={state} style={{ '--srp-image-ratio': w + ' / ' + h, '--srp-image-w': own || shape ? w + 'px' : '100%' } as React.CSSProperties}>
       {state === 'error'
-        ? <span className="dk-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
-        : <img src={src} alt="" className="dk-image__full" decoding="async"
+        ? <span className="srp-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
+        : <img src={src} alt="" className="srp-image__full" decoding="async"
             onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setState('loaded'); }} onError={() => setState('error')} />}
     </span>
   );
@@ -194,19 +194,19 @@ function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLIma
   // A fixed ratio with nothing sizing the picture (its className or style; the frame's own width wins anyway) takes the
   // container's width, so the frame has its shape before the picture arrives and keeps it if it fails (GR21).
   const fill = ratio !== 'auto' && !className && !rest.style;
-  const shape = typeof ratio === 'number' ? { '--dk-image-ratio': String(ratio) } : sized ? { '--dk-image-ratio': w + ' / ' + h, width: w } : null;
+  const shape = typeof ratio === 'number' ? { '--srp-image-ratio': String(ratio) } : sized ? { '--srp-image-ratio': w + ' / ' + h, width: w } : null;
   const frameStyle = shape ? { ...shape, ...(frameProps && frameProps.style) } as React.CSSProperties : frameProps && frameProps.style;
   // A picture that fails stays in the frame, hidden, under the fallback: what was passed to it (className, style, id,
   // data-*, a ref) keeps working, and the frame keeps the size they give it (GJ1).
   const failed = state === 'error'
-    ? <span className="dk-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
+    ? <span className="srp-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
     : null;
   const picture = <img {...rest} ref={mergedRef} src={src} alt={alt} loading={load} srcSet={least(rest.srcSet)}
         sizes={sizing(rest.srcSet, sizes)} decoding={decoding || 'async'} fetchPriority={fetchPriority || (priority ? 'high' : undefined)}
-        className={cn('dk-image__img', className)} onLoad={(e) => { arrived(); setState('loaded'); if (onLoad) onLoad(e); }} onError={(e) => { setLive(false); setState('error'); if (onError) onError(e); }} />;
+        className={cn('srp-image__img', className)} onLoad={(e) => { arrived(); setState('loaded'); if (onLoad) onLoad(e); }} onError={(e) => { setLive(false); setState('error'); if (onError) onError(e); }} />;
   // With sources, a <picture> (display: contents, so the <img> lays out as before) offers them ahead of src.
   const shown = (sources && sources.length) || darkSrc
-    ? <picture className="dk-image__picture">
+    ? <picture className="srp-image__picture">
         {darkSrc ? <source srcSet={darkSrc} media={scheme === 'dark' ? 'all' : scheme === 'light' ? 'not all' : '(prefers-color-scheme: dark)'} /> : null}
         {(sources || []).map((o, k) => <source key={k} srcSet={least(o.srcSet)} media={o.media} type={o.type} sizes={sizing(o.srcSet, o.sizes)} width={o.width} height={o.height} />)}
         {picture}
@@ -214,15 +214,15 @@ function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLIma
     : picture;
   return (
     <span {...frameProps} ref={restyle} style={frameStyle}
-      className={cn('dk-image', 'dk-image--ratio-' + (typeof ratio === 'number' ? 'custom' : ratio.replace(':', '-')), sized && 'dk-image--sized', fill && 'dk-image--fill', 'dk-image--' + fit, dim && 'dk-image--dim', rounded !== false && 'dk-image--rounded', 'dk-image--' + state, live && !priority && 'dk-image--fades', frameProps && frameProps.className)}
+      className={cn('srp-image', 'srp-image--ratio-' + (typeof ratio === 'number' ? 'custom' : ratio.replace(':', '-')), sized && 'srp-image--sized', fill && 'srp-image--fill', 'srp-image--' + fit, dim && 'srp-image--dim', rounded !== false && 'srp-image--rounded', 'srp-image--' + state, live && !priority && 'srp-image--fades', frameProps && frameProps.className)}
       data-component="image" data-state={state}>
       {viewable && state !== 'error'
-        ? <button type="button" className="dk-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => setOpen(true)}>{shown}</button>
+        ? <button type="button" className="srp-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => setOpen(true)}>{shown}</button>
         : shown}
       {failed}
-      {onRemove ? <IconButton className="dk-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.dk-image', '.dk-image__remove')} /> : null}
+      {onRemove ? <IconButton className="srp-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.srp-image', '.srp-image__remove')} /> : null}
       {viewable ? (
-        <Dialog open={open} onOpenChange={setOpen} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="dk-image__viewer">
+        <Dialog open={open} onOpenChange={setOpen} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="srp-image__viewer">
           {open ? <Full src={fullSrc || shownDark(img.current, darkSrc) || largest(rest.srcSet) || src} alt={alt} fallback={fallback} shape={w > 0 && h > 0 ? [w, h] : img.current && img.current.naturalWidth > 0 ? [img.current.naturalWidth, img.current.naturalHeight] : null} /> : null}
         </Dialog>
       ) : null}

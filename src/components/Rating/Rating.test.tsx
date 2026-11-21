@@ -26,7 +26,7 @@ describe('Rating', () => {
     const calls: (number | null)[] = [];
     await render(<SerupaProvider locale="en-US"><Rating id="r" aria-label="Your rating" ref={ref} className="extra" data-x="y" onValueChange={(v) => calls.push(v)} /></SerupaProvider>);
     const group = page.getByRole('radiogroup', { name: 'Your rating' }).element();
-    expect([group === el('r'), ref.current === group, el('r').className, el('r').dataset.x, el('r').dataset.component]).toEqual([true, true, 'dk-rating dk-rating--size-md extra', 'y', 'rating']);
+    expect([group === el('r'), ref.current === group, el('r').className, el('r').dataset.x, el('r').dataset.component]).toEqual([true, true, 'srp-rating srp-rating--size-md extra', 'y', 'rating']);
     expect(radios('r').map((r) => r.getAttribute('aria-label'))).toEqual(['1 star', '2 stars', '3 stars', '4 stars', '5 stars']);
     expect([stars('r')[0]!.offsetWidth, filled('r')]).toEqual([24, [0, 0, 0, 0, 0]]);
     await userEvent.click(page.getByRole('radio', { name: '3 stars' }));

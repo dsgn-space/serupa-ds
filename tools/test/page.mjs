@@ -265,7 +265,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.hover('#b');
   const panel = await p.evaluate(() => document.getElementById('serupa-debug-panel')?.textContent || '');
   t('debug.js: pointing at a Button names it, its variant and size, and the token set on it', /button/.test(panel) && /primary/.test(panel) && /size-md/.test(panel) && /--button-radius\s*0px/.test(panel), panel);
-  const info = await p.evaluate(() => { const i = Serupa.debug.inspect(document.querySelector('#b .dk-btn__label')); return i && { c: i.component, m: i.modifiers, r: i.tokens['--button-radius'], h: i.height }; });
+  const info = await p.evaluate(() => { const i = Serupa.debug.inspect(document.querySelector('#b .srp-btn__label')); return i && { c: i.component, m: i.modifiers, r: i.tokens['--button-radius'], h: i.height }; });
   t('debug.js: inspect() finds the component from an element inside it', info?.c === 'button' && info.m.includes('primary') && info.r === '0px' && info.h === 32, JSON.stringify(info));
   await p.goto(url);
   await p.waitForSelector('#b');
@@ -321,7 +321,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
   const out = path.join(dir, 'min.css');
   execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
-  // Component styles (dk-*) are always kept and grow with every component, so the size check trims utilities.css,
+  // Component styles (srp-*) are always kept and grow with every component, so the size check trims utilities.css,
   // the part purge decides on.
   const full = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size, small = fs.statSync(out).size;
   const outU = path.join(dir, 'min-utilities.css');

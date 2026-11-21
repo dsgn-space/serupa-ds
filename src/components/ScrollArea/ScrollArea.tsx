@@ -44,8 +44,8 @@ function ScrollAreaRender({ ref, ...props }: ScrollAreaProps & React.RefAttribut
     <div {...rest} {...(scrolls ? { tabIndex: 0, role: 'region', ...name } : {})}
       ref={(n) => { box.current = n; setRef(ref, n); }}
       onScroll={(e) => { if (props.fade) read(); props.onScroll?.(e); }}
-      className={cn('dk-scroll-area', 'dk-scroll-area--' + orientation, props.fade && scrolls && !edges.start && 'dk-scroll-area--more-start',
-        props.fade && scrolls && !edges.end && 'dk-scroll-area--more-end', props.className)}
+      className={cn('srp-scroll-area', 'srp-scroll-area--' + orientation, props.fade && scrolls && !edges.start && 'srp-scroll-area--more-start',
+        props.fade && scrolls && !edges.end && 'srp-scroll-area--more-end', props.className)}
       data-component="scroll-area">
       {props.children}
     </div>

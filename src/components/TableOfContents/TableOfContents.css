@@ -4,23 +4,23 @@
    its line in primary and twice as wide (an inset bar, so the text doesn't move), at the weight of the others so a
    long title wraps the same as it becomes current; the others are muted, darkening under the pointer.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-toc { font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--table-of-contents-muted, var(--text-muted)); }
-.dk-toc__title { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); color: var(--table-of-contents-title, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-semibold); }
-.dk-toc__list { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
-.dk-toc__link {
-  display: flex; align-items: center; min-block-size: var(--spacing-7); padding-block: var(--spacing-1); padding-inline: calc(var(--spacing-3) + var(--spacing-3) * var(--dk-toc-depth, 0)) var(--spacing-2);
+@layer srp.components {
+.srp-toc { font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--table-of-contents-muted, var(--text-muted)); }
+.srp-toc__title { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); color: var(--table-of-contents-title, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-semibold); }
+.srp-toc__list { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.srp-toc__link {
+  display: flex; align-items: center; min-block-size: var(--spacing-7); padding-block: var(--spacing-1); padding-inline: calc(var(--spacing-3) + var(--spacing-3) * var(--srp-toc-depth, 0)) var(--spacing-2);
   border-inline-start: var(--border-width-2) solid var(--table-of-contents-line, var(--border)); color: inherit; text-decoration: none; overflow-wrap: anywhere;
 }
-@media (hover: hover) { .dk-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
+@media (hover: hover) { .srp-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
 /* A link fades as a Link does, but only while the pointer is over the list: the current link that scrolling (or the
    first paint) moves changes at once, as Table's rows do (GR168). Reduced motion keeps it off. */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) { .dk-toc__list:hover .dk-toc__link { transition: color var(--motion-hover) var(--ease-move); } }
-.dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
-.dk-toc__link { --dk-bar: var(--border-width-2); }
-.dk-toc__link:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--dk-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
-@media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: CanvasText; outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .srp-toc__list:hover .srp-toc__link { transition: color var(--motion-hover) var(--ease-move); } }
+.srp-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
+.srp-toc__link { --srp-bar: var(--border-width-2); }
+.srp-toc__link:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
+.srp-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--srp-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
+@media (forced-colors: active) { .srp-toc__link[aria-current="location"] { border-inline-start-color: CanvasText; outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 /* The rail (variant="rail"): a 24px-wide column of 2px dashes, 12px long and 6px apart, one per heading, each level
    4px shorter (two levels at most) and pushed to the end edge; the current section's in line-current, the others in dash. Pointing at it,
    focus in it or a tap (data-open) shows the panel: the title and the links, over the page from the rail's top end
@@ -28,11 +28,11 @@
    motion-enter-sm and out over motion-exit-sm; with focus from the keyboard it's there at once (KW1); reduced motion:
    the fade alone. Escape hides it (data-dismissed) until the pointer and focus leave. While hidden its links keep
    their place for screen readers and the Tab key, and take no presses. */
-.dk-toc--rail { position: relative; inline-size: var(--spacing-6); }
-.dk-toc__rail { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-1\.5); padding-block: var(--spacing-2); cursor: default; }
-.dk-toc__dash { display: block; block-size: var(--border-width-2); inline-size: calc(var(--spacing-3) - var(--spacing-1) * var(--dk-toc-depth, 0)); border-radius: var(--radius-pill); background: var(--table-of-contents-dash, var(--border-strong)); }
-.dk-toc__dash[data-current] { background: var(--table-of-contents-line-current, var(--primary)); }
-.dk-toc--rail .dk-toc__panel {
+.srp-toc--rail { position: relative; inline-size: var(--spacing-6); }
+.srp-toc__rail { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-1\.5); padding-block: var(--spacing-2); cursor: default; }
+.srp-toc__dash { display: block; block-size: var(--border-width-2); inline-size: calc(var(--spacing-3) - var(--spacing-1) * var(--srp-toc-depth, 0)); border-radius: var(--radius-pill); background: var(--table-of-contents-dash, var(--border-strong)); }
+.srp-toc__dash[data-current] { background: var(--table-of-contents-line-current, var(--primary)); }
+.srp-toc--rail .srp-toc__panel {
   box-sizing: border-box; position: absolute; inset-block-start: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-popover);
   inline-size: max-content; max-inline-size: var(--container-3xs); padding: var(--spacing-3);
   /* As tall as the window less panel-gap at most (room for a sticky column's offset above and a margin below); a
@@ -43,9 +43,9 @@
   transform-origin: top right; opacity: var(--opacity-0); scale: var(--scale-95); pointer-events: none;
   transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit);
 }
-.dk-toc--rail .dk-toc__panel:dir(rtl) { transform-origin: top left; }
-.dk-toc--rail:is([data-open], :focus-within):not([data-dismissed]) .dk-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
-@media (hover: hover) { .dk-toc--rail:hover:not([data-dismissed]) .dk-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); } }
-.dk-toc--rail:is([data-open], :focus-within):not([data-dismissed]):has(:focus-visible) .dk-toc__panel, .dk-toc--rail[data-dismissed] .dk-toc__panel { transition: none; }
-@media (forced-colors: active) { .dk-toc__dash { background: CanvasText; } .dk-toc__dash[data-current] { background: Highlight; } .dk-toc--rail .dk-toc__panel { border-color: CanvasText; } }
+.srp-toc--rail .srp-toc__panel:dir(rtl) { transform-origin: top left; }
+.srp-toc--rail:is([data-open], :focus-within):not([data-dismissed]) .srp-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+@media (hover: hover) { .srp-toc--rail:hover:not([data-dismissed]) .srp-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); } }
+.srp-toc--rail:is([data-open], :focus-within):not([data-dismissed]):has(:focus-visible) .srp-toc__panel, .srp-toc--rail[data-dismissed] .srp-toc__panel { transition: none; }
+@media (forced-colors: active) { .srp-toc__dash { background: CanvasText; } .srp-toc__dash[data-current] { background: Highlight; } .srp-toc--rail .srp-toc__panel { border-color: CanvasText; } }
 }

@@ -34,8 +34,8 @@ const notify = mentionsIn(text, people).map((p) => p.id);
 
 Drawn from the `Default` story.
 
-1. **Field** (`.dk-textarea`): a [Textarea](../Textarea/README.md), with every prop it takes.
-2. **List** (`.dk-mention-input__popup`): the people who match, under the line the caret is on. Each option shows an [Avatar](../Avatar/README.md), the name and its `description` line.
+1. **Field** (`.srp-textarea`): a [Textarea](../Textarea/README.md), with every prop it takes.
+2. **List** (`.srp-mention-input__popup`): the people who match, under the line the caret is on. Each option shows an [Avatar](../Avatar/README.md), the name and its `description` line.
 
 ## Usage
 

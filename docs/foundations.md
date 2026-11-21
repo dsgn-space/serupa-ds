@@ -14,7 +14,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 ## Naming
 
-A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `text-blue-500` as classes, and `var(--blue-500)` in CSS.
+A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `text-blue-500` as classes, and `var(--blue-500)` in CSS. The classes on a palette step ship in `utilities-palette.css`, not in `bundle.css`: import `@diki-stwn/serupa-ds/utilities-palette.css` after it to use them. Prefer the roles (`bg-primary`, `text-text-muted`), which follow the theme.
 
 ## Using the shades
 
@@ -68,7 +68,10 @@ The neutral colors, the status colors and the chart colors don't follow the bran
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
+Blue is in `tokens.css`. Each other brand is its own file, `brands/<brand>.css`, loaded after `tokens.css`: a page loads only the brands it uses, about 0.6 KB gzipped each, and `brands/all.css` holds every one for a page where people switch brands.
+
 ```html
+<link rel="stylesheet" href="node_modules/@diki-stwn/serupa-ds/brands/violet.css">   <!-- after tokens.css -->
 <html data-brand="violet" data-mode="auto">           <!-- follows the operating system from the first paint -->
 <section data-mode="dark">…</section>                 <!-- a dark section inside a light page -->
 <div data-brand="emerald">…</div>                     <!-- another brand for one part of the page -->
@@ -317,7 +320,7 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 | line-height | `leading-none`, `-tight`, `-snug`, `-normal`, `-relaxed`, `-loose`, and `leading-<spacing>` |
 | list-style-image / position / type | `list-image-none`; `list-inside`, `list-outside`; `list-disc`, `list-decimal`, `list-none` |
 | text-align | `text-left`, `-center`, `-right`, `-justify`, `-start`, `-end` |
-| color | `text-<color>` for every palette color and alias (`text-blue-600`, `text-primary`, `text-text-muted`), `text-inherit`, `text-current`, `text-transparent` |
+| color | `text-<color>` for every alias (`text-primary`, `text-text-muted`) and palette color (`text-blue-600`, in `utilities-palette.css`), `text-inherit`, `text-current`, `text-transparent` |
 | text-decoration-line | `underline`, `overline`, `line-through`, `no-underline` |
 | placeholder color | `placeholder-<color>` for every palette color and alias, `placeholder-inherit`, `placeholder-current`, `placeholder-transparent` (use `placeholder-text-muted`) |
 | text-decoration-color | `decoration-<color>`, `decoration-current`, `decoration-inherit`, `decoration-transparent` |
@@ -366,7 +369,7 @@ Background utilities, as classes in `bundle.css`. Backgrounds have no scale of t
 | --- | --- |
 | background-attachment | `bg-fixed`, `bg-local`, `bg-scroll` |
 | background-clip | `bg-clip-border`, `bg-clip-padding`, `bg-clip-content`, `bg-clip-text` |
-| background-color | `bg-<color>` for every palette color and alias (`bg-gray-100`, `bg-surface`, `bg-primary`), `bg-inherit`, `bg-current`, `bg-transparent` |
+| background-color | `bg-<color>` for every alias (`bg-surface`, `bg-primary`) and palette color (`bg-gray-100`, in `utilities-palette.css`), `bg-inherit`, `bg-current`, `bg-transparent` |
 | background-image | `bg-none`; linear gradients `bg-linear-to-t`, `-tr`, `-r`, `-br`, `-b`, `-bl`, `-l`, `-tl` and `bg-linear-45` (any of 0–315° in 45° steps, negatives too); `bg-radial`; `bg-conic`, `bg-conic-90`… |
 | gradient stops | `from-<color>`, `via-<color>`, `to-<color>`; positions `from-0%` … `to-100%` in 5% steps |
 
@@ -509,7 +512,7 @@ Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are to
 
 **Stacking.** A shadow, an inner shadow, a ring and an inset ring all draw on one element at once: `shadow-md ring-1 ring-border` is a card with a hairline edge. Mask gradients stack too and intersect: `mask-b-from-60% mask-r-from-80%` fades the bottom and the right.
 
-**Colors.** A color class swaps the black for that color at full strength (rings default to the text color). For a soft tint, set the variable directly, e.g. `--dk-shadow-color: color-mix(in oklab, var(--primary) 30%, transparent)`.
+**Colors.** A color class swaps the black for that color at full strength (rings default to the text color). For a soft tint, set the variable directly, e.g. `--srp-shadow-color: color-mix(in oklab, var(--primary) 30%, transparent)`.
 
 **Masks.** `-from-` is where the element is still fully visible and `-to-` where it is fully hidden, measured from the named edge or the gradient's start: `mask-b-from-50%` keeps the top half and fades the bottom half out.
 
@@ -576,7 +579,7 @@ Filter and backdrop-filter utilities, as classes in `bundle.css`. Scales are tok
 | filter | `filter-none` turns every filter off | — |
 | backdrop-filter | `backdrop-blur-*`, `backdrop-brightness-*`, `backdrop-contrast-*`, `backdrop-grayscale(-*)`, `backdrop-hue-rotate-*` (and negatives), `backdrop-invert(-*)`, `backdrop-opacity-0` … `-100` (5% steps), `backdrop-saturate-*`, `backdrop-sepia(-*)`, `backdrop-filter-none` | same as above, plus the `opacity` group |
 
-Drop shadows follow an element's shape (transparent PNGs, SVG icons, clipped shapes), where `shadow-*` draws a box. A color class such as `drop-shadow-primary` keeps the shadow's size and swaps the black for that color, at full strength; for a softer tint, set `--dk-drop-shadow-color` to a transparent color, e.g. `color-mix(in oklab, var(--primary) 40%, transparent)`.
+Drop shadows follow an element's shape (transparent PNGs, SVG icons, clipped shapes), where `shadow-*` draws a box. A color class such as `drop-shadow-primary` keeps the shadow's size and swaps the black for that color, at full strength; for a softer tint, set `--srp-drop-shadow-color` to a transparent color, e.g. `color-mix(in oklab, var(--primary) 40%, transparent)`.
 
 Backdrop filters change what's behind an element, so they only show through a see-through background, such as `background: color-mix(in oklab, var(--surface) 70%, transparent)`.
 
@@ -1000,7 +1003,7 @@ Transition and animation tokens are in one `transitions` group (`var(--duration-
 - **Fling.** What the hand lets go of mid-motion (a drawer swiped, a carousel flicked) carries on at the hand's speed and slows to rest, instead of jumping to a speed of its own. The speed is the pointer's over its last 100ms, and the settle runs on `ease-fling` for 3 × distance ÷ speed, since that curve starts at three times its average speed (between 150 and 400ms).
 - **Interruptible.** Animate opening and closing with transitions, not keyframes. A transition turns around from where it is when the state flips half way (a menu closed while it opens), where a keyframe animation jumps to its start. The overlays enter from `@starting-style` for this reason.
 
-**Sequencing.** Animate one thing at a time where you can. When a group must arrive together, as with a page's first list of results or a loader's dots, stagger them by `motion-stagger` (50ms) and cap the wait at `motion-stagger-limit` (300ms), so items past the sixth arrive together. Stagger only a group seen now and then: never a menu's items or a stack of toasts, which people open over and over and would wait for every time. The `stagger` utility does this: put it on the parent, and each child gets `animation-delay` and `--dk-stagger-delay` (for a transition of your own) from its place, with `sibling-index()` where the browser has it. A surface's content appears with it, never after it. Hover and focus changes start at once (no delay). Tooltips wait 400ms before showing (their `delay` prop), so passing the pointer over a toolbar doesn't flash them.
+**Sequencing.** Animate one thing at a time where you can. When a group must arrive together, as with a page's first list of results or a loader's dots, stagger them by `motion-stagger` (50ms) and cap the wait at `motion-stagger-limit` (300ms), so items past the sixth arrive together. Stagger only a group seen now and then: never a menu's items or a stack of toasts, which people open over and over and would wait for every time. The `stagger` utility does this: put it on the parent, and each child gets `animation-delay` and `--srp-stagger-delay` (for a transition of your own) from its place, with `sibling-index()` where the browser has it. A surface's content appears with it, never after it. Hover and focus changes start at once (no delay). Tooltips wait 400ms before showing (their `delay` prop), so passing the pointer over a toolbar doesn't flash them.
 
 **Layout changes.** When things move to a new place (a list reordered or filtered, a card expanded, a grid switched to a list), let them glide there instead of jumping: run the change inside `withViewTransition(() => …)` and mark what should travel with `view-transition-name`, or the `view-transition-match` class, which names each element after itself. The browser does the measuring (FLIP), off the main thread, over `motion-change-md` with `ease-move` (set for every View Transition in `base.css`). Under reduced motion nothing travels; the old and new states crossfade. Where View Transitions are missing the change just happens. `view-transition-none` keeps an element out of it.
 

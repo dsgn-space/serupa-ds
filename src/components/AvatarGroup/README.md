@@ -34,8 +34,8 @@ import { Avatar, AvatarGroup } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Overflow` story.
 
-1. **Avatar** (`.dk-avatar-group__item`): one person, overlapping the next.
-2. **More** (`.dk-avatar-group__more`): how many more there are, after the ones that fit.
+1. **Avatar** (`.srp-avatar-group__item`): one person, overlapping the next.
+2. **More** (`.srp-avatar-group__more`): how many more there are, after the ones that fit.
 
 ## Usage
 

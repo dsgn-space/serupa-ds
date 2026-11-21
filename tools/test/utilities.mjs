@@ -1,4 +1,4 @@
-// Utility classes: renders every class in dist/bundle.css and dist/utilities-extra.css on its own and compares what it
+// Utility classes: renders every class in dist/bundle.css, dist/utilities-extra.css and dist/utilities-palette.css on its own and compares what it
 // does (computed styles on the element and its children) with the saved baseline.
 //   node tools/test/utilities.mjs            check against baseline-utilities.json
 //   node tools/test/utilities.mjs --update   accept the current output as the new baseline
@@ -16,14 +16,14 @@ import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done, 
 const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
 const update = process.argv.includes('--update');
 
-const css = (read('dist/bundle.css') + read('dist/utilities-extra.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+const css = (read('dist/bundle.css') + read('dist/utilities-extra.css') + read('dist/utilities-palette.css')).replace(/\/\*[\s\S]*?\*\//g, '');
 // CSS escapes: "\32 xl\:flex" is the class "2xl:flex" (a class can't start with a digit unescaped).
 const unescape = (n) => n.replace(/\\([0-9a-f]{1,6}) ?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
 const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))]
-  .filter((c) => !c.startsWith('dk-')).sort();
-// The system's own internal variables (--dk-*): browsers don't list unregistered custom properties
+  .filter((c) => !c.startsWith('srp-')).sort();
+// The system's own internal variables (--srp-*): browsers don't list unregistered custom properties
 // in computed styles, so they're read by name.
-const internal = [...new Set([...css.matchAll(/--dk-[a-z0-9-]+/g)].map((m) => m[0]))];
+const internal = [...new Set([...css.matchAll(/--srp-[a-z0-9-]+/g)].map((m) => m[0]))];
 
 const b = await browser();
 // Four tabs measure a share of the classes each (they're independent: every chunk starts from an empty host).
@@ -42,8 +42,8 @@ const measure = ([list, internal]) => {
   const els = list.map((c) => { const w = document.createElement('section'); w.style.position = 'relative'; w.style.transform = 'translateZ(0)';   /* contains fixed elements too, so their position doesn't depend on the class's place in the list */ const d = document.createElement('div'); d.className = c; d.innerHTML = '<i>a</i><i>b</i>'; w.appendChild(d); host.appendChild(w); return d; });
   const B = getComputedStyle(base), B1 = getComputedStyle(/** @type {Element} */ (base.firstChild));
   const props = []; for (let j = 0; j < B.length; j++) props.push(B[j]); for (const v of internal) if (!props.includes(v)) props.push(v);
-  // Chromium lists custom properties in an order that changes from run to run (--dk-mask-b-to-p came before or after
-  // --dk-mask-bottom on different CI runners), so they go last, by name, and an effect reads the same on every run.
+  // Chromium lists custom properties in an order that changes from run to run (--srp-mask-b-to-p came before or after
+  // --srp-mask-bottom on different CI runners), so they go last, by name, and an effect reads the same on every run.
   props.sort((x, y) => (x.startsWith('--') ? 1 : 0) - (y.startsWith('--') ? 1 : 0) || (x.startsWith('--') && y.startsWith('--') ? (x < y ? -1 : x > y ? 1 : 0) : 0));
   const bv = {}, b1 = {}; props.forEach((p) => { bv[p] = B.getPropertyValue(p); b1[p] = B1.getPropertyValue(p); });
   return els.map((d) => {

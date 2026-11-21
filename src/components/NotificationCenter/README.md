@@ -37,13 +37,13 @@ function Layout() {
 
 Drawn from the `Open` story.
 
-1. **List** (`.dk-notification-center__list`): the notifications, newest first.
-2. **Notification** (`.dk-notification-center__item`): one notification.
-3. **Icon** (`.dk-notification-center__icon`): its tone: info, success, warning or danger.
-4. **Title** (`.dk-notification-center__title`): what happened.
-5. **Description** (`.dk-notification-center__description`): more about it.
-6. **Time** (`.dk-notification-center__time`): when it happened.
-7. **Unread** (`.dk-notification-center__dot`): marks one not read yet, also in words for screen readers.
+1. **List** (`.srp-notification-center__list`): the notifications, newest first.
+2. **Notification** (`.srp-notification-center__item`): one notification.
+3. **Icon** (`.srp-notification-center__icon`): its tone: info, success, warning or danger.
+4. **Title** (`.srp-notification-center__title`): what happened.
+5. **Description** (`.srp-notification-center__description`): more about it.
+6. **Time** (`.srp-notification-center__time`): when it happened.
+7. **Unread** (`.srp-notification-center__dot`): marks one not read yet, also in words for screen readers.
 
 ## Usage
 

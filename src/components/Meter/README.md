@@ -30,10 +30,10 @@ import { Meter } from "@diki-stwn/serupa-ds";
 
 Drawn from the `CustomValue` story.
 
-1. **Label** (`.dk-meter__label`): what is measured.
-2. **Value** (`.dk-meter__value`): the amount, in words or numbers.
-3. **Track** (`.dk-meter__track`): the whole range.
-4. **Fill** (`.dk-meter__fill`): how much of it is used, in the color of its zone (low, medium, high).
+1. **Label** (`.srp-meter__label`): what is measured.
+2. **Value** (`.srp-meter__value`): the amount, in words or numbers.
+3. **Track** (`.srp-meter__track`): the whole range.
+4. **Fill** (`.srp-meter__fill`): how much of it is used, in the color of its zone (low, medium, high).
 
 ## Usage
 

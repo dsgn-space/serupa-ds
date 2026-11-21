@@ -3,8 +3,8 @@
    screen, clear of a phone's home bar and notch, or in the page where you put it (inline). Offline its icon is
    muted; back online it turns success.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-offline-banner {
+@layer srp.components {
+.srp-offline-banner {
   display: flex;
   align-items: flex-start;
   gap: var(--offline-banner-gap, var(--spacing-2));
@@ -22,11 +22,11 @@
   overflow-wrap: anywhere;
   /* Motion (DZ1): in from @starting-style over motion-enter-md, out (data-leaving, kept by OfflineBanner.tsx until
      it ends) over motion-exit-md, toward its edge. Reduced motion: the fade alone. */
-  --dk-offline-from: var(--spacing-0) var(--spacing-2);
+  --srp-offline-from: var(--spacing-0) var(--spacing-2);
   transition: opacity var(--motion-enter-md) var(--ease-enter), translate var(--motion-enter-md) var(--ease-enter);
 }
-.dk-offline-banner--top { --dk-offline-from: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); }
-.dk-offline-banner--bottom, .dk-offline-banner--top {
+.srp-offline-banner--top { --srp-offline-from: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); }
+.srp-offline-banner--bottom, .srp-offline-banner--top {
   position: fixed;
   z-index: var(--offline-banner-z-index, var(--z-toast));
   inset-inline: var(--spacing-0);
@@ -35,35 +35,35 @@
   max-inline-size: calc(var(--sizing-full) - var(--offline-banner-offset, var(--spacing-4)) - var(--offline-banner-offset, var(--spacing-4)));
 }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view clear of the bar, not under it (GR122, WCAG
-   2.4.11): OfflineBanner measures the bar, its gap from the edge and --dk-offline-gap of room into
-   --dk-offline-banner-space while it shows. A top bar sits below a sticky Navbar (GR134), so its space holds both. */
-.dk-offline-banner { --dk-offline-gap: var(--spacing-2); }
-:root:has(.dk-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: var(--dk-offline-banner-space, var(--spacing-16)); }
-:root:has(.dk-offline-banner--top:not([data-leaving])) { scroll-padding-top: var(--dk-offline-banner-space, calc(var(--dk-navbar-offset, var(--spacing-0)) + var(--spacing-16))); }
-.dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--offline-banner-offset, var(--spacing-4)))); }   /* above a BottomNav */
-.dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
+   2.4.11): OfflineBanner measures the bar, its gap from the edge and --srp-offline-gap of room into
+   --srp-offline-banner-space while it shows. A top bar sits below a sticky Navbar (GR134), so its space holds both. */
+.srp-offline-banner { --srp-offline-gap: var(--spacing-2); }
+:root:has(.srp-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: var(--srp-offline-banner-space, var(--spacing-16)); }
+:root:has(.srp-offline-banner--top:not([data-leaving])) { scroll-padding-top: var(--srp-offline-banner-space, calc(var(--srp-navbar-offset, var(--spacing-0)) + var(--spacing-16))); }
+.srp-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom), calc(var(--srp-bottom-nav-space, var(--spacing-0)) + var(--offline-banner-offset, var(--spacing-4)))); }   /* above a BottomNav */
+.srp-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
 /* Below a sticky Navbar, which already keeps clear of the notch: over it, the bar hid its brand, its actions and the
    Menu button, so the phone's navigation couldn't be opened while offline (GR134). */
-:root:has(.dk-navbar--sticky) .dk-offline-banner--top { inset-block-start: calc(var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))) + var(--offline-banner-offset, var(--spacing-4))); }
-.dk-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
+:root:has(.srp-navbar--sticky) .srp-offline-banner--top { inset-block-start: calc(var(--srp-navbar-offset, var(--navbar-height, var(--spacing-16))) + var(--offline-banner-offset, var(--spacing-4))); }
+.srp-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
 /* Not when it's there from the first render (offline as the page loads, data-instant): it only moves when it comes. */
-@starting-style { .dk-offline-banner:not([data-instant]) { opacity: var(--opacity-0); } }
+@starting-style { .srp-offline-banner:not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-offline-banner[data-leaving] { translate: var(--dk-offline-from); }
-  @starting-style { .dk-offline-banner:not([data-instant]) { translate: var(--dk-offline-from); } }
+  .srp-offline-banner[data-leaving] { translate: var(--srp-offline-from); }
+  @starting-style { .srp-offline-banner:not([data-instant]) { translate: var(--srp-offline-from); } }
 }
-.dk-offline-banner__icon {
+.srp-offline-banner__icon {
   flex: none;
   /* One line's height (20px), so the icon sits on the first line when the words wrap. */
   font-size: var(--spacing-5);
   color: var(--offline-banner-icon, var(--text-muted));
   transition: color var(--motion-change-md) var(--ease-move);
 }
-.dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: var(--offline-banner-icon-online, var(--success)); }
-.dk-offline-banner__title { text-wrap: balance; font-weight: var(--font-semibold); }
+.srp-offline-banner[data-state="back"] .srp-offline-banner__icon { color: var(--offline-banner-icon-online, var(--success)); }
+.srp-offline-banner__title { text-wrap: balance; font-weight: var(--font-semibold); }
 @media (forced-colors: active) {
-  .dk-offline-banner { border-color: CanvasText; }
-  .dk-offline-banner__icon, .dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: CanvasText; }
+  .srp-offline-banner { border-color: CanvasText; }
+  .srp-offline-banner__icon, .srp-offline-banner[data-state="back"] .srp-offline-banner__icon { color: CanvasText; }
 }
-@media print { .dk-offline-banner { display: none; } }
+@media print { .srp-offline-banner { display: none; } }
 }

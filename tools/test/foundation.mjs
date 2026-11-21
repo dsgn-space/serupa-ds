@@ -5,7 +5,7 @@
 // Checks
 //   1. tokens.json: token names are unique and valid, and plain values hold no var().
 //   2. bundle.css stays under 2 MB.
-//   3. Every var(--x) in bundle.css names a real token (or a --dk-* internal variable), with no fallback value:
+//   3. Every var(--x) in bundle.css names a real token (or a --srp-* internal variable), with no fallback value:
 //      tokens.css always loads first, so a fallback would only be a second copy of the token to keep in step.
 //      (That component styles read every color through a component token is the Stylelint rule
 //      serupa/color-through-component-token.)
@@ -18,12 +18,12 @@
 //   9. Responsive variants switch at the screen-* breakpoints.
 //  10. base.css reads tokens only.
 //  11. One version everywhere (tools/release.mjs --check).
-//  12. Every stylesheet puts its rules in the dk.* cascade layers, declared in one order.
+//  12. Every stylesheet puts its rules in the srp.* cascade layers, declared in one order.
 //  13. Every width in a media query in src/ (CSS and matchMedia) is a screen-* value (max-width may be value - 0.02px or - 1px).
 //  14. One brand list: theme.js, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
 //  15. Hover styles only inside @media (hover: hover).
 //  16. Floating layers don't print; background-only states have a forced-colors fallback.
-//  17. Every dk-* class a component stylesheet styles is one the code can produce.
+//  17. Every srp-* class a component stylesheet styles is one the code can produce.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -139,7 +139,7 @@ const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\
 const missing = new Set(), withFallback = new Set();
 for (const m of css.matchAll(/var\(--([A-Za-z0-9\\._-]+)(?:,\s*((?:[^()]|\((?:[^()]|\([^()]*\))*\))*))?\)/g)) {
   const n = m[1].replace(/\\/g, '');
-  if (n.startsWith('dk-') || COMP.has(n) || HOOKS.has(n)) continue;
+  if (n.startsWith('srp-') || COMP.has(n) || HOOKS.has(n)) continue;
   if (!isToken(n)) { missing.add(n); continue; }
   if (m[2] != null) withFallback.add(`${n}, ${m[2].trim().slice(0, 30)}`);
 }
@@ -154,10 +154,10 @@ for (const [n, [, tok]] of COMP) {
   // Read with no default only as the origin of a relative color (oklch(from var(--x) …)): there, unset is the point.
   const uses = [...css.matchAll(new RegExp(String.raw`var\(--${esc(n)}(?:,\s*((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*))?\)`, 'g'))].filter((m) => !(m[1] == null && /\bfrom\s+$/.test(css.slice(Math.max(0, m.index - 8), m.index)))).map((m) => m[1]);
   if (!uses.length && !tok.$deprecated) unused.push(n);   // a deprecated token may have no effect until it's removed
-  // An internal --dk- variable may stand in front of the default (var(--dk-x, default)): one the component works out
+  // An internal --srp- variable may stand in front of the default (var(--srp-x, default)): one the component works out
   // from another token, such as a hover color from a background that was set (Button, 176).
   // A renamed token's old name, deprecated, stands there too until it's removed (var(--new, var(--old, default))).
-  const unwrap = (v) => { const m = /^var\(--([\w-]+),\s*([\s\S]*)\)$/.exec(v.trim()); return m && (m[1].startsWith('dk-') || HOOKS.has(m[1]) || COMP.get(m[1])?.[1].$deprecated) ? m[2] : v; };
+  const unwrap = (v) => { const m = /^var\(--([\w-]+),\s*([\s\S]*)\)$/.exec(v.trim()); return m && (m[1].startsWith('srp-') || HOOKS.has(m[1]) || COMP.get(m[1])?.[1].$deprecated) ? m[2] : v; };
   for (const fb of uses) if (fb == null || norm(unwrap(fb)) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
 if (COMP.size) {
@@ -173,7 +173,7 @@ const EXCEPT = /^-?(shadow|inset-shadow|text-shadow|drop-shadow|rounded(-[a-z]+)
 const lit = [];
 for (const m of css.matchAll(/(?:(?<=\} )|(?<=\*\/ )|^)\.(-?[a-z0-9-]+(?:\\[./][0-9a-z]+)?) \{([^{}]*)\}/gm)) {
   const cls = m[1].replace(/\\/g, ''), body = m[2];
-  if (cls.startsWith('dk-') || EXCEPT.test(cls)) continue;
+  if (cls.startsWith('srp-') || EXCEPT.test(cls)) continue;
   const outside = body.replace(new RegExp(VAR, 'g'), '');
   const parts = cls.replace(/^-/, '').split('-');
   const cands = new Set();
@@ -189,10 +189,10 @@ check('utilities: no class writes out a value its token holds', !lit.length, lit
 
 // 5. components
 const ALLOWED_COMPONENT_LITERALS = new Set(['0', '1em']);   // 0 = none/off, 1em = an icon box that follows its own font size
-const comp = [...css.matchAll(/[^{}]*\.dk-[^{}]*\{[^{}]*\}/g)].map((m) => m[0]).join('\n');
+const comp = [...css.matchAll(/[^{}]*\.srp-[^{}]*\{[^{}]*\}/g)].map((m) => m[0]).join('\n');
 const bad = new Set();
 for (const [, prop, val] of comp.matchAll(/([a-z-]+)\s*:\s*([^;{}]+);/g)) {
-  if (prop.startsWith('--dk')) continue;
+  if (prop.startsWith('--srp')) continue;
   const outside = val.replace(new RegExp(String.raw`var\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)`, 'g'), '');
   for (const [num] of outside.matchAll(/(?<![\w#-])-?\d*\.?\d+(?:px|rem|em|ms|s|%|deg)?(?![\w-])/g))
     if (!ALLOWED_COMPONENT_LITERALS.has(num)) bad.add(`${prop}: ${val.trim().slice(0, 60)}`);
@@ -267,8 +267,8 @@ check('tokens.json is exactly what tokens/serupa.tokens.json gives (npm run toke
 }
 
 // 12. cascade layers: every shipped stylesheet declares the same layer order and keeps its rules inside its layer
-const ORDER = '@layer dk.tokens, dk.base, dk.components, dk.utilities;';
-const layered = { 'tokens.css': 'dk.tokens', 'dist/base.css': 'dk.base', 'dist/components.css': 'dk.components', 'dist/utilities.css': 'dk.utilities', 'dist/utilities-extra.css': 'dk.utilities' };
+const ORDER = '@layer srp.tokens, srp.base, srp.components, srp.utilities;';
+const layered = { 'tokens.css': 'srp.tokens', 'brands/all.css': 'srp.tokens', 'brands/violet.css': 'srp.tokens', 'dist/base.css': 'srp.base', 'dist/components.css': 'srp.components', 'dist/utilities.css': 'srp.utilities', 'dist/utilities-extra.css': 'srp.utilities', 'dist/utilities-palette.css': 'srp.utilities' };
 const unlayered = [];
 for (const [f, layer] of Object.entries(layered)) {
   // Read with the whitespace a minifier may drop put back: "@layer a,b{" is "@layer a, b {".
@@ -284,7 +284,7 @@ for (const [f, layer] of Object.entries(layered)) {
   outside = outside.replace(/@(font-face|property [\w-]+)\s*\{[^}]*\}/g, '').trim();
   if (outside) unlayered.push(`${f}: rules outside @layer ${layer}: ${outside.slice(0, 60)}`);
 }
-check('cascade layers: tokens, base, components and utilities each sit in their dk.* layer, in one order', !unlayered.length, unlayered.join('; '));
+check('cascade layers: tokens, base, components and utilities each sit in their srp.* layer, in one order', !unlayered.length, unlayered.join('; '));
 
 // 13. component breakpoints: every width in a media query is a screen-* value. CSS variables don't work inside
 // @media, so the values are written out; this keeps them in step with the tokens. min-width (and width >= / >)
@@ -384,7 +384,7 @@ check('hover styles apply only with a pointer that hovers: every :hover rule is 
 const PRINTS = new Set(['Dialog', 'Drawer']);
 const baseCss = stripComments(read('src/styles/base.css'));
 const printBlock = (baseCss.match(/@media print\s*\{([\s\S]*?)\n\}/) || ['', ''])[1];
-const printHidden = new Set([...printBlock.matchAll(/:where\(([^)]*)\)\s*\{\s*display:\s*none/g)].flatMap((w) => [...w[1].matchAll(/\.(dk-[\w-]+)/g)].map((m) => m[1])));
+const printHidden = new Set([...printBlock.matchAll(/:where\(([^)]*)\)\s*\{\s*display:\s*none/g)].flatMap((w) => [...w[1].matchAll(/\.(srp-[\w-]+)/g)].map((m) => m[1])));
 const floating = [], fadesInForcedColors = [];
 for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const f = path.join('src', 'components', n, `${n}.css`);
@@ -394,13 +394,13 @@ for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const fixed = rules.filter(([, b]) => /(?:^|;)\s*position:\s*fixed/.test(b)).map(([sel]) => sel);
   const pops = /\[popover\]|:popover-open|popover/.test(rules.map(([sel]) => sel).join(' ')) ? ['popover'] : [];
   if ((fixed.length || pops.length) && !PRINTS.has(n) && !/@media print/.test(css)) {
-    const own = [...new Set(rules.map(([sel]) => (sel.match(/^\.(dk-[\w-]+)/) || [])[1]).filter(Boolean))];
-    // .dk-fab--bottom-end is hidden by .dk-fab in the list (a modifier's element carries the base class too).
+    const own = [...new Set(rules.map(([sel]) => (sel.match(/^\.(srp-[\w-]+)/) || [])[1]).filter(Boolean))];
+    // .srp-fab--bottom-end is hidden by .srp-fab in the list (a modifier's element carries the base class too).
     if (!own.some((c) => printHidden.has(c) || printHidden.has(c.replace(/(--|__).*$/, '')))) floating.push(`${n} (${[...fixed, ...pops][0].slice(0, 40)})`);
   }
   const forced = (css.match(/@media[^{]*forced-colors[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g) || []).join(' ');
   for (const [sel, body] of rules) {
-    for (const c of new Set([...sel.matchAll(/\.(dk-[\w-]+--(?:active|selected|checked|over|current|pressed))\b/g)].map((m) => m[1]))) {
+    for (const c of new Set([...sel.matchAll(/\.(srp-[\w-]+--(?:active|selected|checked|over|current|pressed))\b/g)].map((m) => m[1]))) {
       if (/(?:^|;)\s*background(?:-color)?\s*:/.test(body) && !/(?:^|;)\s*(?:border[\w-]*|outline[\w-]*|color|text-decoration[\w-]*|box-shadow|font-weight)\s*:/.test(body) && !forced.includes(c)) fadesInForcedColors.push(`${n}: .${c}`);
     }
   }
@@ -408,22 +408,22 @@ for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
 check('print: every component that floats over the page (position: fixed, popover) is hidden when printing (base.css print list or its own @media print), apart from Dialog and Drawer', !floating.length, floating.join('; '));
 check('forced colors: every state that only changes the background also changes a border, outline or color, or has a forced-colors rule', !fadesInForcedColors.length, [...new Set(fadesInForcedColors)].join('; '));
 
-// 17. no dead component CSS (idea 80): every dk-* class a component stylesheet styles is one the code can produce:
-// written out ("dk-btn__label"), built from a prefix the code joins ("dk-loader__px--d" + n, `dk-tag--${tone}`), or
-// ending in a piece the code joins on ("dk-" + name + "__ripple"). A class nothing produces is a rule that never applies.
+// 17. no dead component CSS (idea 80): every srp-* class a component stylesheet styles is one the code can produce:
+// written out ("srp-btn__label"), built from a prefix the code joins ("srp-loader__px--d" + n, `srp-tag--${tone}`), or
+// ending in a piece the code joins on ("srp-" + name + "__ripple"). A class nothing produces is a rule that never applies.
 const sources = srcFiles('src').filter((f) => /\.tsx?$/.test(f)).map((f) => read(f)).join('\n')
   + fs.readdirSync(path.join(P, 'src', 'components')).flatMap((n) => fs.existsSync(path.join(P, 'src', 'components', n, 'preview.html')) ? [read(path.join('src', 'components', n, 'preview.html'))] : []).join('\n');
-const written = new Set(sources.match(/dk-[a-z0-9_-]+/g) || []);
-const joined = [...sources.matchAll(/(?<![a-z0-9_-])(dk-[a-z0-9_-]*)(?:["']\s*\+|\$\{)/g)].map((m) => m[1]).filter((pre) => pre.length > 3);   // not "dk-" alone
+const written = new Set(sources.match(/srp-[a-z0-9_-]+/g) || []);
+const joined = [...sources.matchAll(/(?<![a-z0-9_-])(srp-[a-z0-9_-]*)(?:["']\s*\+|\$\{)/g)].map((m) => m[1]).filter((pre) => pre.length > 3);   // not "srp-" alone
 const tails = [...sources.matchAll(/(?:\+\s*["']|\}`?)((?:__|--)[a-z0-9_-]+)/g)].map((m) => m[1]);
 const dead = [];
 for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const f = path.join('src', 'components', n, `${n}.css`);
   if (!fs.existsSync(path.join(P, f))) continue;
-  for (const c of new Set([...stripComments(read(f)).matchAll(/\.(dk-[a-z0-9_-]+)/g)].map((m) => m[1]))) {
+  for (const c of new Set([...stripComments(read(f)).matchAll(/\.(srp-[a-z0-9_-]+)/g)].map((m) => m[1]))) {
     if (!written.has(c) && !joined.some((pre) => c.startsWith(pre)) && !tails.some((t) => c.endsWith(t))) dead.push(`${n}: .${c}`);
   }
 }
-check('no dead component CSS: every dk-* class in a component stylesheet is one its code can produce', !dead.length, dead.slice(0, 12).join('; '));
+check('no dead component CSS: every srp-* class in a component stylesheet is one its code can produce', !dead.length, dead.slice(0, 12).join('; '));
 
 done(report('Foundation', results));

@@ -203,6 +203,21 @@ export function renamePackage(src, to) {
   return { text, count };
 }
 
+/** 17.0.0: the `dk` prefix is `srp`: classes (`dk-btn` → `srp-btn`), the internal custom properties (`--dk-*` →
+ * `--srp-*`), data attributes (`data-dk-*`), ids, events and the cascade layers (`dk.components` → `srp.components`,
+ * and `dk` in an `@layer` list). A `dk` that isn't followed by `-` or one of the layers (a word, a country code) stays. */
+export function renamePrefix(src) {
+  let count = 0;
+  const to = () => { count++; return 'srp'; };
+  let text = src.replace(/(?<![A-Za-z0-9_$]|[A-Za-z0-9_$]-)dk(?=-)/g, to)
+    .replace(/(?<=(?<![A-Za-z0-9_$-])data-)dk(?=-)/g, to)
+    .replace(/(?<=(?<![A-Za-z0-9_$-])--)dk(?![A-Za-z0-9_$-])/g, to)
+    .replace(/(?<=\\b)dk(?=-)/g, to)   // in a regular expression: /\bdk-…/
+    .replace(/(?<![A-Za-z0-9_$-])dk(?=\.(?:tokens|base|components|utilities)\b|\.\*)/g, to);
+  text = text.replace(/@layer\s+[^{;]+/g, (m) => m.replace(/(?<![A-Za-z0-9_$.-])dk(?![A-Za-z0-9_$.-])/g, to));
+  return { text, count };
+}
+
 /** Every change, oldest major first. `version` is the major that made the change. */
 export const TRANSFORMS = [
   {
@@ -441,7 +456,48 @@ export const TRANSFORMS = [
       return { text: src, count, notes };
     },
   },
+  {
+    version: '17.0.0', id: 'prefix-srp', exts: ALL,
+    title: 'The `dk` prefix is `srp`: `dk-*` classes, `--dk-*` properties, `data-dk-*` attributes and the `dk.*` cascade layers',
+    run: (src) => ({ ...renamePrefix(src), notes: [] }),
+  },
+  {
+    version: '17.0.0', id: 'brands-opt-in', exts: ALL,
+    title: 'Every brand but blue is its own file, `brands/<brand>.css`, loaded after `tokens.css`',
+    run(src) {
+      const notes = [], seen = new Set();
+      for (const m of src.matchAll(BRAND_USE)) {
+        const brand = m[1] || m[2] || m[3];
+        // A file that already loads the brand (or every brand) has it.
+        if (seen.has(brand) || new RegExp(`brands/(?:${brand}|all)\\.css`).test(src)) continue;
+        seen.add(brand);
+        notes.push({ line: lineOf(src, m.index), message: `the ${brand} brand is no longer in tokens.css: import '@diki-stwn/serupa-ds/brands/${brand}.css' after tokens.css (once, where the app imports it), or brands/all.css where people can switch between brands; without it the page draws blue` });
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
+  {
+    version: '17.0.0', id: 'utilities-palette', exts: [...CODE, ...MARKUP],
+    title: 'The classes on a palette step (`bg-red-500`, `text-slate-700`) move to `utilities-palette.css`',
+    run(src) {
+      if (/utilities-palette\.css/.test(src)) return { text: src, count: 0, notes: [] };
+      const found = [...src.matchAll(PALETTE_CLASS)];
+      if (!found.length) return { text: src, count: 0, notes: [] };
+      const names = [...new Set(found.map((m) => m[0]))];
+      return { text: src, count: 0, notes: [{ line: lineOf(src, found[0].index),
+        message: `${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} ${names.length === 1 ? 'is' : 'are'} no longer in bundle.css: use a role class (bg-primary, text-text-muted, border-border), which follows the theme, or import '@diki-stwn/serupa-ds/utilities-palette.css' after the bundle` }] };
+    },
+  },
 ];
+
+// The brands 17.0.0 moved out of tokens.css, as a page names them: data-brand="violet", data-theme="violet-dark", or
+// brand: 'violet' (Serupa.theme.set, useTheme().set).
+const OPT_IN_BRANDS = 'red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose';
+const BRAND_USE = new RegExp(`data-brand\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS})["'\`]|data-theme\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS})-(?:light|dark)["'\`]|\\bbrand\\s*:\\s*["'\`](${OPT_IN_BRANDS})["'\`]`, 'g');
+// A utility class on a palette step, as written in a class list: with its variants (md:, hover:) and an opacity
+// (/50), not a custom property (--red-500), and not a gradient stop (from-red-500: 14.0.0's utilities-extra.css).
+const RAMPS = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
+const PALETTE_CLASS = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?!(?:from|via|to)-)[a-z][a-z-]*-(?:${RAMPS})-(?:50|[1-9]00|950)(?:\\/[\\d.]+)?(?![\\w-])`, 'g');
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);
 

@@ -17,7 +17,7 @@ describe('Highlight', () => {
     const ref = React.createRef<HTMLSpanElement>();
     await render(<Highlight id="h" ref={ref} className="extra" data-x="y" query="pau">São Paulo</Highlight>);
     expect([el('h').tagName, el('h').className, el('h').dataset.component, el('h').dataset.x, ref.current === el('h'), el('h').innerHTML])
-      .toEqual(['SPAN', 'dk-highlight extra', 'highlight', 'y', true, 'São <mark class="dk-highlight__mark">Pau</mark>lo']);
+      .toEqual(['SPAN', 'srp-highlight extra', 'highlight', 'y', true, 'São <mark class="srp-highlight__mark">Pau</mark>lo']);
   });
 
   test('ignores case, accents and width, and marks the text as written: lodz → Łódź, strasse → Straße, sao → São, a decomposed é whole, full-width tokyo', async () => {
