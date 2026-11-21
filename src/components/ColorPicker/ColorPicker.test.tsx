@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -241,6 +241,16 @@ describe('ColorPicker', () => {
     f.reset();
     await expect.poll(() => swatch('Blue').getAttribute('aria-checked')).toBe('true');
     expect(new FormData(f).get('color')).toBe('#1d4ed8');
+  });
+
+  test('required: the field the form checks takes no text of its own; what reaches it (autofill, a script) leaves the picked color as it was', async () => {
+    const onValueChange = vi.fn();
+    await render(<form id="cpv"><ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" required onValueChange={onValueChange} /></form>);
+    const field = document.querySelector<HTMLInputElement>('input[required][aria-hidden]')!;
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(field, '#ffffff');
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    await expect.poll(() => field.value).toBe('#1d4ed8');
+    expect([swatch('Blue').getAttribute('aria-checked'), onValueChange.mock.calls.length]).toEqual(['true', 0]);
   });
 
   test('form without name: outside its form, that form\'s reset still puts the first color back', async () => {
