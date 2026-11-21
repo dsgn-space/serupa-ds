@@ -64,10 +64,10 @@ function BottomNavLinkBaseRender({ ref, ...props }: BottomNavLinkProps & React.R
   // after the name, as Sidebar's rail does.
   const badgeId = React.useId(), badge = props.badge != null && props.badge !== false;
   if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
-  return React.createElement(props.as || config.link, Object.assign(rest, {
-    ref: ref, 'aria-current': props.active ? 'page' : undefined,
+  return React.createElement(props.as || config.link, {
+    ...rest, ref, 'aria-current': props.active ? 'page' : undefined,
     className: cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className),
-  }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, typeof props.children === 'string' ? <TruncatedText className="dk-bottom-nav__label">{props.children}</TruncatedText> : <span className="dk-bottom-nav__label">{props.children}</span>);
+  }, <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, typeof props.children === 'string' ? <TruncatedText className="dk-bottom-nav__label">{props.children}</TruncatedText> : <span className="dk-bottom-nav__label">{props.children}</span>);
 }
 
 const BottomNavLinkBase = /* @__PURE__ */ named('BottomNavLink', BottomNavLinkBaseRender);

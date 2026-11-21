@@ -7,16 +7,6 @@
       "count": 3
     }
   },
-  "src/components/BottomNav/BottomNav.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/components/Breadcrumb/Breadcrumb.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "src/components/Calendar/Calendar.tsx": {
     "react-hooks/purity": {
       "count": 1
@@ -92,16 +82,6 @@
       "count": 3
     },
     "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/components/Countdown/Countdown.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/components/DataGrid/DataGrid.tsx": {
-    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -227,20 +207,10 @@
       "count": 3
     }
   },
-  "src/components/Link/Link.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "src/components/List/List.tsx": {
     "react-hooks/preserve-manual-memoization": {
       "count": 1
     },
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/components/MaskedValue/MaskedValue.tsx": {
     "react-hooks/refs": {
       "count": 1
     }
@@ -331,11 +301,6 @@
       "count": 3
     }
   },
-  "src/components/Progress/Progress.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "src/components/RangeCalendar/RangeCalendar.tsx": {
     "react-hooks/refs": {
       "count": 1
@@ -352,9 +317,6 @@
   "src/components/SearchInput/SearchInput.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/SegmentedControl/SegmentedControl.tsx": {
@@ -368,11 +330,6 @@
   "src/components/Select/Select.tsx": {
     "react-hooks/refs": {
       "count": 2
-    }
-  },
-  "src/components/Sidebar/Sidebar.tsx": {
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/SignaturePad/SignaturePad.tsx": {
@@ -407,21 +364,6 @@
     },
     "react-hooks/refs": {
       "count": 6
-    }
-  },
-  "src/components/StatusTracker/StatusTracker.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/components/TabNav/TabNav.tsx": {
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/components/Table/Table.tsx": {
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/TableOfContents/TableOfContents.tsx": {
@@ -489,11 +431,6 @@
     },
     "react-hooks/refs": {
       "count": 9
-    }
-  },
-  "src/components/TruncatedText/TruncatedText.tsx": {
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/VisuallyHidden/VisuallyHidden.stories.tsx": {

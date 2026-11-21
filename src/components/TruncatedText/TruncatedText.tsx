@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
+import { cn, oneOf, useIsoLayoutEffect, useLatest, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { graphemes } from '../../internal/graphemes';
@@ -37,7 +37,7 @@ function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAt
   const [cut, setCut] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inside, setInside] = React.useState(false);
-  const isCut = React.useRef(cut); isCut.current = cut;
+  const isCut = useLatest(cut);
 
   useIsoLayoutEffect(() => {
     const e = el.current;

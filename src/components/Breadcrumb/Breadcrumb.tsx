@@ -57,7 +57,7 @@ function BreadcrumbItemBaseRender({ ref, ...props }: BreadcrumbItemProps & React
     delete rest.href;
     return <span {...rest} ref={ref} aria-current="page" className={cn('dk-breadcrumb__item dk-breadcrumb__item--current', props.className)}>{content}</span>;
   }
-  return React.createElement(props.as || config.link, Object.assign(rest, { ref: ref, className: cn('dk-breadcrumb__item dk-breadcrumb__link', props.className) }), content);
+  return React.createElement(props.as || config.link, { ...rest, ref, className: cn('dk-breadcrumb__item dk-breadcrumb__link', props.className) }, content);
 }
 
 /* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */

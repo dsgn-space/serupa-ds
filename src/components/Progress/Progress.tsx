@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, SIZES } from '../../internal/cn';
+import { cn, domId, oneOf, omit, SIZES, useLatest } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
@@ -65,7 +65,7 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
   const was = React.useRef(done);
   const name = typeof props.label === 'string' ? props.label : typeof rest['aria-label'] === 'string' ? rest['aria-label'] : '';
   const words = props.announceComplete ? (typeof props.announceComplete === 'string' ? props.announceComplete : sds.labels.progressComplete(name)) : '';
-  const finish = React.useRef({ words, onComplete: props.onComplete }); finish.current = { words, onComplete: props.onComplete };
+  const finish = useLatest({ words, onComplete: props.onComplete });
   const speaks = !!props.announceComplete;
   React.useEffect(() => { if (speaks) ensureAnnouncer(); }, [speaks]);
   React.useEffect(() => {
@@ -74,7 +74,7 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
       if (finish.current.onComplete) finish.current.onComplete();
     }
     was.current = done;
-  }, [done]);
+  }, [done, finish]);
   const aria: React.AriaAttributes & { role?: React.AriaRole } = { role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': max };
   if (known) { aria['aria-valuenow'] = value; aria['aria-valuetext'] = text; }
   // A ring has no room to show its label, so the label names it: as its aria-label when it's text, else through a
