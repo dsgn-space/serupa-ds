@@ -27,17 +27,3 @@ src/components/KeyboardShortcuts/KeyboardShortcuts.tsx KeyboardShortcutsRender
 src/components/List/List.tsx ListRender
 src/components/LoadMore/LoadMore.tsx LoadMoreRender
 src/components/Menu/Menu.tsx ContextMenuRender
-src/components/Menu/Menu.tsx MenuItemBaseRender
-src/components/Menu/Menu.tsx MenuRadioGroupRender
-src/components/Menu/Menu.tsx MenuRender
-src/components/Menu/Menu.tsx MenuSubRender
-src/components/Navbar/Navbar.tsx NavbarLinkBaseRender
-src/components/Navbar/Navbar.tsx NavbarMenuLinkBaseRender
-src/components/Navbar/Navbar.tsx NavbarRender
-src/components/NumberInput/NumberInput.tsx NumberInputRender
-src/components/PasswordInput/PasswordInput.tsx PasswordInputRender
-src/components/PhoneInput/PhoneInput.tsx PhoneInputRender
-src/components/Popover/Popover.tsx PopoverRender
-src/components/RangeCalendar/RangeCalendar.tsx RangeCalendarRender
-src/components/SegmentedControl/SegmentedControl.tsx SegmentedControlRender
-src/components/Select/Select.tsx SelectRender
