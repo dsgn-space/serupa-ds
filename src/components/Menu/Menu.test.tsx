@@ -811,6 +811,17 @@ describe('ContextMenu', () => {
     await expect.poll(() => openMenu()).toBeUndefined();
   });
 
+  test('open from the start, before any right-click: the menu shows at the target\'s top corner, its first item focused', async () => {
+    await render(<ContextMenu aria-label="File actions" open target={<div id="area" style={{ width: '300px', height: '200px', margin: '40px' }}>Report.pdf</div>}>
+      <MenuItem>Open</MenuItem>
+      <MenuItem>Rename</MenuItem>
+    </ContextMenu>);
+    const menu = () => document.querySelector<HTMLElement>('[role="menu"]')!;
+    await expect.poll(() => menu().matches(':popover-open')).toBe(true);
+    const area = document.getElementById('area')!.getBoundingClientRect(), m = menu().getBoundingClientRect();
+    expect([Math.abs(m.top - area.top) < 12, Math.abs(m.left - area.left) < 12, document.activeElement?.textContent]).toEqual([true, true, 'Open']);
+  });
+
   test('ContextMenu onOpenChange says why: trigger (right-click or keys), select, escape, outside', async () => {
     const why: string[] = [];
     await render(<Area chosen={[]} onOpenChange={(v, d) => why.push((v ? 'open ' : 'shut ') + d.reason)} />);

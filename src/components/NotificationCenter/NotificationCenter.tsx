@@ -111,8 +111,8 @@ function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & R
   const keep = React.useRef<HTMLButtonElement | null>(null);
   const askId = base + '-ask';
   useIsoLayoutEffect(() => { if (asking) keep.current?.focus(); }, [asking]);
-  // The list emptied some other way while it asked: the question goes with it.
-  React.useEffect(() => { if (!clear) setAsking(false); }, [clear]);
+  // The list emptied some other way while it asked: the question goes with it, in this render, not an effect after.
+  if (asking && !clear) setAsking(false);
   const footer = asking && clear ? <>
     <p className="dk-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
     <Button destructive variant="outline" size="sm" onClick={() => { fromFooter.current = true; setAsking(false); onClear?.(); }}>{labels.clearNotifications}</Button>

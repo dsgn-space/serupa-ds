@@ -3,7 +3,7 @@ name: Queue enqueue
 # A pull request whose auto-merge was turned on while its checks still ran sometimes stays out of the merge queue when
 # they pass: green, auto-merge on, no queue entry, until someone turns auto-merge off and on again (#1679 and #1680 on
 # 12 Nov). This puts such a pull request in the queue: each time CI finishes on a pull request, and every fifteen minutes.
-# Only one whose auto-merge is on (or that the queue dropped), that is ready to merge (mergeable_state "clean": every required check green, no
+# Only one whose auto-merge is on (or that the queue dropped), that isn't the Release pull request, that is ready to merge (mergeable_state "clean": every required check green, no
 # conflict), and that isn't a draft, already queued or labelled "hold-visual". It checks out nothing and runs no code
 # from any branch.
 # Auto-merge off means a person decides, unless the queue turned it off by dropping the pull request
@@ -65,7 +65,7 @@ jobs:
               }
             }' --jq '.data.repository.pullRequests.nodes[]
               | "\(.number) \(.id) \(if .mergeQueueEntry != null then "queued" elif .isDraft then "draft" elif .autoMergeRequest != null then "on" else "off" end) \(if ([.labels.nodes[].name] | index("hold-visual")) then "hold" else "-" end) \(.headRefName)"') || exit 1
-          while read -r number id state hold _; do
+          while read -r number id state hold branch; do
             [ -n "$number" ] || continue
             if [ "$hold" = hold ]; then
               [ "$state" = queued ] || continue
@@ -74,6 +74,10 @@ jobs:
                 echo "::warning::#$number couldn't be taken out of the queue"
               continue
             fi
+            # The Release pull request merges when a person merges it, never on its own: the Release workflow
+            # force-pushes its branch after every merge to main, so each queue entry was dropped minutes later, and
+            # every group behind it was rebuilt (21 Nov: 4 drops in 3 hours, most of the merge queue's cancelled runs).
+            case "$branch" in changeset-release/*) continue ;; esac
             # Only auto-merge on, or dropped by the queue, and not queued: a draft, or auto-merge a person turned off,
             # waits for a person. A dropped one goes back once its branch changed since, or once if it didn't.
             why="auto-merge on"

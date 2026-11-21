@@ -94,7 +94,7 @@ jobs:
           fi
       # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines) while a self-hosted runner has started a job
       # in the last 100 minutes, GitHub's runners otherwise, and for a fork's pull request or when the variable is unset.
-      # The burst VM deletes itself after two idle hours, and a job sent to it then waits a day (tools/runner-watch.mjs
+      # The burst VM deletes itself after a day with nothing to do, and a job sent to it then waits a day (tools/runner-watch.mjs
       # --pick; after bringing the machines up, run the Runner ping workflow once so they count).
       - id: runner
         shell: bash

@@ -81,12 +81,15 @@ export type NavbarMenuLinkProps<C extends React.ElementType = 'a'> = NavbarMenuL
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof NavbarMenuLinkOwnProps | 'as'>;
 
 type MenuUpdate = (was: string | null) => string | null;
+const WIDTHS = ['prose', 'md', 'lg', 'xl', '2xl', 'full'] as const;
 const NavbarContext = /* @__PURE__ */ React.createContext<{ close: () => void; menu: string | null; setMenu: (u: MenuUpdate) => void; size: ContainerSize } | null>(null);
 
 function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
   const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, condense: 1, size: 1, menuLabel: 1, className: 1, 'aria-label': 1, onKeyDown: 1, onBlur: 1 });
   const [open, setOpen] = React.useState(false);
+  // Read once: called through props, they could change props (and size) for the React Compiler.
+  const { onKeyDown: onKeyDownProp, onBlur: onBlurProp } = props;
   // The NavbarMenu whose panel is open: one at a time.
   const [menu, setMenu] = React.useState<string | null>(null);
   // Closing, the panel stays after the menu button until it has faded out, then goes back between brand and actions.
@@ -97,10 +100,10 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
   const toggle = React.useRef<HTMLButtonElement>(null);
   const bar = React.useRef<HTMLElement | null>(null);
   const id = domId('dk-nav', React.useId());
-  const size = oneOf(['prose', 'md', 'lg', 'xl', '2xl', 'full'] as const, props.size, 'xl');
+  const size = oneOf(WIDTHS, String(props.size), 'xl');   // String(): a plain string for the compiler, so ctx's memo holds
   const links = flattenChildren(props.children);
   const hasLinks = links.length > 0;
-  const close = React.useCallback(() => { setOpen(false); setMenu(null); }, []);
+  const close = React.useCallback(() => { setOpen(false); setMenu(null); }, [setOpen, setMenu]);
   const ctx = React.useMemo(() => ({ close, menu, setMenu, size }), [close, menu, size]);
   /* Sticky: the page's scroll-padding-top follows the bar's height (Navbar.css), so a field Tab reaches, or the
      target of a #link, scrolls into view below the bar instead of under it (WCAG 2.4.11 Focus Not Obscured). */
@@ -143,31 +146,33 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
      the room it has. Folded, it remembers how wide the bar had to be, and unfolds once it is that wide again. A font
      that loads late measures again from unfolded, before paint. */
   const [fold, setFold] = React.useState(false);
-  const foldRef = React.useRef(fold); foldRef.current = fold;
   const need = React.useRef(0);
   const linkCount = links.length;
   useIsoLayoutEffect(() => {
     const h = bar.current, inner = h && h.firstElementChild as HTMLElement | null;
     if (!wide || !linkCount || !inner) { setFold(false); return; }
     const nav = inner.querySelector<HTMLElement>(':scope > .dk-navbar__nav');
-    const set = (to: boolean) => { foldRef.current = to; setFold(to); };
+    // The effect runs again after each fold and unfold, so a local copy is as new as the state.
+    let now = fold;
+    const set = (to: boolean) => { now = to; setFold(to); };
     const check = () => {
       const row = nav && nav.firstElementChild as HTMLElement | null, over = nav && row ? row.scrollWidth - nav.clientWidth : 0;
-      if (!foldRef.current) { if (over > 0.5) { need.current = inner.clientWidth + over; set(true); } }
+      if (!now) { if (over > 0.5) { need.current = inner.clientWidth + over; set(true); } }
       else if (inner.clientWidth >= need.current) set(false);
     };
     check();
     // The bar's width, and the room the actions leave the links (an avatar that loads, a wider label).
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(check) : null;
     if (ro) { ro.observe(inner); if (nav) ro.observe(nav); }
-    const stop = onFontsLoaded(() => { if (foldRef.current) set(false); else check(); });
+    const stop = onFontsLoaded(() => { if (now) set(false); else check(); });
     return () => { if (ro) ro.disconnect(); stop(); };
     // Again after each fold and unfold (unfolded, the row is measured on the new layout, before paint), and when the
     // links move into the open panel and back: that's another element.
   }, [wide, linkCount, fold, open || leaving]);
   const folded = !wide || fold;
-  // closes when the links unfold (the screen grows past the breakpoint, or they fit again), so it isn't open the next time they fold
-  React.useEffect(() => { if (!folded) setOpen(false); }, [folded]);
+  // closes when the links unfold (the screen grows past the breakpoint, or they fit again), so it isn't open the next time
+  // they fold; in this render, not an effect after
+  if (!folded && open) setOpen(false);
   // Back on a phone closes the open menu, as Escape in it does, with focus back on the menu button unless it had gone
   // somewhere else on the page.
   useCloseWatcher(open, () => {
@@ -183,12 +188,12 @@ function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLE
     return () => document.removeEventListener('pointerdown', on, true);
   }, [open]);
   function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
-    if (props.onKeyDown) props.onKeyDown(e);
+    if (onKeyDownProp) onKeyDownProp(e);
     if (!e.defaultPrevented && e.key === 'Escape' && open && !isComposing(e)) { e.preventDefault(); setOpen(false); if (toggle.current) toggle.current.focus(); }
   }
   // Focus leaving the header (Tab past the last link, or into the page) closes the menu, as a Popover does.
   function onBlur(e: React.FocusEvent<HTMLElement>) {
-    if (props.onBlur) props.onBlur(e);
+    if (onBlurProp) onBlurProp(e);
     if (open && e.relatedTarget instanceof Node && !e.currentTarget.contains(e.relatedTarget)) setOpen(false);
   }
   // The fade out ends on transitionend; with nothing to fade (a wide screen, reduced motion) it goes back before paint,
@@ -238,11 +243,10 @@ export const Navbar = /* @__PURE__ */ named('Navbar', NavbarRender);
 function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
-  return React.createElement(props.as || config.link, Object.assign(rest, {
-    ref: ref, 'aria-current': props.active ? 'page' : undefined,
-    className: cn('dk-navbar__link', props.active && 'dk-navbar__link--active', props.className),
-    onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); },
-  }));
+  const Tag = (props.as || config.link);   // JSX, not createElement, which the React Compiler skips with a ref
+  return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
+    className={cn('dk-navbar__link', props.active && 'dk-navbar__link--active', props.className)}
+    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }} />;
 }
 
 /** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. */
@@ -336,12 +340,14 @@ function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1, description: 1, children: 1 });
   const id = domId('dk-navbar-link', React.useId());
   const has = props.description != null && props.description !== false && props.description !== '';
-  return React.createElement(props.as || config.link, Object.assign(rest, {
-    ref: ref, 'aria-current': props.active ? 'page' : undefined,
-    'aria-labelledby': has ? id + '-name' : undefined, 'aria-describedby': has ? id + '-desc' : undefined,
-    className: cn('dk-navbar__menu-link', props.active && 'dk-navbar__menu-link--active', props.className),
-    onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); },
-  }), <span id={id + '-name'} className="dk-navbar__menu-name">{props.children}</span>, has ? <span id={id + '-desc'} className="dk-navbar__menu-desc">{props.description}</span> : null);
+  const Tag = (props.as || config.link);   // JSX, as NavbarLink
+  return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
+    aria-labelledby={has ? id + '-name' : undefined} aria-describedby={has ? id + '-desc' : undefined}
+    className={cn('dk-navbar__menu-link', props.active && 'dk-navbar__menu-link--active', props.className)}
+    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }}>
+    <span id={id + '-name'} className="dk-navbar__menu-name">{props.children}</span>
+    {has ? <span id={id + '-desc'} className="dk-navbar__menu-desc">{props.description}</span> : null}
+  </Tag>;
 }
 
 /* NavbarMenuLink: its text is its name and its description is read after it (aria-describedby), so a screen reader
