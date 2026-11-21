@@ -142,11 +142,13 @@ describe('TableOfContents', () => {
 // What a mutation run on TableOfContents.tsx found no test for (44 of 80 mutants were caught, run 273): each test
 // names the rule a changed operator would have broken without anything failing.
 describe('TableOfContents hover', () => {
-  test('a link fades to its hover color over motion-hover, as a Link does', async () => {
+  test('a link fades to its hover color over motion-hover, as a Link does, only while the pointer is over the list; scrolling moves the current one at once', async () => {
     await render(<TableOfContents id="tf" items={[{ id: 'x', label: 'One' }, { id: 'y', label: 'Two' }]} />);
     const l = page.getByRole('link', { name: 'One' }).element();
-    const s = withMotion(() => [css(l).transitionProperty, css(l).transitionDuration]);
-    expect(s).toEqual(['color', '0.15s']);
+    const t = () => withMotion(() => [css(l).transitionProperty, css(l).transitionDuration]);
+    expect(t()).toEqual(['all', '0s']);
+    await userEvent.hover(l);
+    expect(t()).toEqual(['color', '0.15s']);
   });
 });
 
