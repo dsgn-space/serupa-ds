@@ -59,7 +59,7 @@ Drawn from the `Default` story.
 ## Behavior
 
 - Each opening starts with an empty field (unless you hold it with `query`) and the first command active.
-- Matching ignores case and accents. A label that starts with what's typed comes first, then one with a word that does, then one that has it inside, then a keyword match; ties keep the order given. What matched is marked in each label.
+- Matching ignores case and accents. A label that is exactly what's typed comes first, then one that starts with it, then one with a word that does, then one that has it inside, then a keyword match. Among labels that match alike the shorter comes first ("tab" lists Tabs before Table); other ties keep the order given. What matched is marked in each label.
 - The list grows to 320px, then scrolls, keeping the active row in view.
 - Escape or a click on the backdrop closes it with nothing chosen.
 - While `loading`, a row with a ring and "Loading…" (`loadingText`, `labels.loading`) sits under what's listed, the list says `aria-busy`, and the number of matches is said once the answer is in.
