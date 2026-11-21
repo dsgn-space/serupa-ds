@@ -366,7 +366,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   }, [moreLeaving]);
   // Only toasts there as the Toaster arrived waiting: there from the first frame, like them.
   const moreInstant = list.slice(0, waiting).every((x) => early.has(x.id));
-  const more = words ? <li key="more" ref={moreRef} className="dk-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
+  const more = words ? <li key="more" ref={moreRef} className="srp-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
   const ordered = pos.startsWith('top') ? shown.slice().reverse() : shown;   // newest nearest the edge, the waiting line farthest
   // Closed toasts stay where they were, fading out (DZ1), until their transitions end; one shown again comes back.
   // Each goes back after the toast it followed (FO1), not at its old index, which with toasts arriving above it

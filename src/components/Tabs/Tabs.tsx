@@ -260,8 +260,8 @@ function TabRender({ ref, ...props }: TabProps & React.RefAttributes<HTMLButtonE
     const el = own.current;
     if (!el || !closes) return;
     const onClose = () => { put(closed, value); if (close.current) close.current(); };
-    el.addEventListener('dk-tab-close', onClose);
-    return () => el.removeEventListener('dk-tab-close', onClose);
+    el.addEventListener('srp-tab-close', onClose);
+    return () => el.removeEventListener('srp-tab-close', onClose);
   }, [closes, closed, value, close]);
   const hintId = closes ? ctx.base + '-close-' + safe(props.value) : undefined;
   const refs = useMergedRef(ref, (n) => { own.current = n; });

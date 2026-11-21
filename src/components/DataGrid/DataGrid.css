@@ -28,16 +28,16 @@
 .srp-data-grid__header { background: var(--data-grid-header-bg, var(--surface-muted)); --surface-behind: var(--data-grid-header-bg, var(--surface-muted)); color: var(--data-grid-header-text, var(--text-muted)); font-weight: var(--data-grid-header-weight, var(--font-medium)); }
 /* stickyHeader: the header row stays at the top of a frame with a height while the rows scroll under it, over the
    rows (the selected range and the editing input sit above plain cells), and what the keyboard reaches scrolls in
-   below it (DataGrid measures the header into --dk-data-grid-head; until then, one md row). */
-.dk-data-grid--sticky .dk-data-grid__header { position: sticky; top: 0; z-index: var(--z-20); }
-.dk-data-grid--sticky { scroll-padding-top: var(--dk-data-grid-head, var(--spacing-10)); }
-.dk-data-grid__cell--center { text-align: center; }
-.dk-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
-.dk-data-grid__cell--selected { background: var(--data-grid-bg-selected, var(--primary-subtle)); }
+   below it (DataGrid measures the header into --srp-data-grid-head; until then, one md row). */
+.srp-data-grid--sticky .srp-data-grid__header { position: sticky; top: 0; z-index: var(--z-20); }
+.srp-data-grid--sticky { scroll-padding-top: var(--srp-data-grid-head, var(--spacing-10)); }
+.srp-data-grid__cell--center { text-align: center; }
+.srp-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+.srp-data-grid__cell--selected { background: var(--data-grid-bg-selected, var(--primary-subtle)); }
 /* A range of one cell is only the active cell: it's washed while focus is in the grid, as a spreadsheet shows where
    you are, and not on a grid nobody has reached yet or has left. A range of more cells stays washed. */
-.dk-data-grid[data-range="cell"]:not(:focus-within) .dk-data-grid__cell--selected { background: none; }
-.dk-data-grid__header:focus-visible, .dk-data-grid__cell:focus-visible, .dk-data-grid__cell--editing {
+.srp-data-grid[data-range="cell"]:not(:focus-within) .srp-data-grid__cell--selected { background: none; }
+.srp-data-grid__header:focus-visible, .srp-data-grid__cell:focus-visible, .srp-data-grid__cell--editing {
   outline: var(--focus-ring-width) solid var(--data-grid-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); z-index: var(--z-10);
 }
 .srp-data-grid__cell--editing { padding: var(--spacing-0); }
