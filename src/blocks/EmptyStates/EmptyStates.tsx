@@ -27,12 +27,14 @@ export interface EmptyFirstRunProps {
   /** The guide link's words. Default: "How it works". */
   learnLabel?: string | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** 'md' (default) on a page, or 'sm' inside a card, a table or a panel, as EmptyState's own size. */
+  size?: 'sm' | 'md' | undefined;
 }
 
 /** The first visit: nothing made yet, and the one button that makes the first. */
-export function EmptyFirstRun({ title = 'Nothing here yet', description, createLabel, onCreate, learnHref, learnLabel = 'How it works', headingLevel }: EmptyFirstRunProps) {
+export function EmptyFirstRun({ title = 'Nothing here yet', description, createLabel, onCreate, learnHref, learnLabel = 'How it works', headingLevel, size }: EmptyFirstRunProps) {
   return (
-    <EmptyState icon="add_circle" title={title} description={description} headingLevel={headingLevel}
+    <EmptyState icon="add_circle" title={title} description={description} headingLevel={headingLevel} size={size}
       actions={<><Button onClick={onCreate}>{createLabel}</Button>{learnHref ? <Link href={learnHref}>{learnLabel}</Link> : null}</>} />
   );
 }
@@ -50,12 +52,14 @@ export interface EmptyNoResultsProps {
   /** Adds Clear filters, the usual way out. */
   onClearFilters?: (() => void) | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** 'md' (default) on a page, or 'sm' inside a card, a table or a panel, as EmptyState's own size. */
+  size?: 'sm' | 'md' | undefined;
 }
 
 /** A search or filter that found nothing: the query in the title, searches to try, and Clear filters. Said once. */
-export function EmptyNoResults({ query, title = (q) => `No results for “${q}”`, description = 'Check the spelling, or try fewer words.', suggestions, onSuggestion, onClearFilters, headingLevel }: EmptyNoResultsProps) {
+export function EmptyNoResults({ query, title = (q) => `No results for “${q}”`, description = 'Check the spelling, or try fewer words.', suggestions, onSuggestion, onClearFilters, headingLevel, size }: EmptyNoResultsProps) {
   return (
-    <EmptyState icon="search_off" announce title={title(query)} description={description} headingLevel={headingLevel}
+    <EmptyState icon="search_off" announce title={title(query)} description={description} headingLevel={headingLevel} size={size}
       suggestions={suggestions} onSuggestion={onSuggestion} onClearFilters={onClearFilters} />
   );
 }
@@ -79,10 +83,12 @@ export interface EmptyNoAccessProps {
   /** Default: "Go back". */
   backLabel?: string | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** 'md' (default) on a page, or 'sm' inside a card, a table or a panel, as EmptyState's own size. */
+  size?: 'sm' | 'md' | undefined;
 }
 
 /** A page the person can't see: who can let them in, Request access, and a way back. */
-export function EmptyNoAccess({ title = 'You don’t have access', description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', requestFailedLabel = 'Couldn’t send the request. Try again.', backHref, backLabel = 'Go back', headingLevel }: EmptyNoAccessProps) {
+export function EmptyNoAccess({ title = 'You don’t have access', description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', requestFailedLabel = 'Couldn’t send the request. Try again.', backHref, backLabel = 'Go back', headingLevel, size }: EmptyNoAccessProps) {
   // Once sent, the button keeps saying so and does nothing more, so one person can't send the same request twice.
   // It stays focusable (aria-disabled, not disabled), so focus isn't lost from under the keyboard.
   // A request that fails says so, in words under the description and once to a screen reader, and the button stays
@@ -97,7 +103,7 @@ export function EmptyNoAccess({ title = 'You don’t have access', description, 
     announce(requestedLabel);
   } : undefined;
   return (
-    <EmptyState icon="lock" title={title} headingLevel={headingLevel}
+    <EmptyState icon="lock" title={title} headingLevel={headingLevel} size={size}
       description={failed ? <>{description}<br /><span className="text-danger-text">{requestFailedLabel}</span></> : description}
       actions={<>{request ? <Button onClick={request} aria-disabled={sent || undefined}>{sent ? requestedLabel : requestLabel}</Button> : null}{backHref ? <Link href={backHref}>{backLabel}</Link> : null}</>} />
   );
@@ -117,10 +123,12 @@ export interface EmptyLoadFailedProps {
   /** The words before the code. Default: "Reference". */
   referenceLabel?: string | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** 'md' (default) on a page, or 'sm' inside a card, a table or a panel, as EmptyState's own size. */
+  size?: 'sm' | 'md' | undefined;
 }
 
 /** Loading failed: what to do, Try again, and a reference for support. Said once. */
-export function EmptyLoadFailed({ title = 'Couldn’t load this', description = 'Check your connection, then try again.', onRetry, retryLabel = 'Try again', reference, referenceLabel = 'Reference', headingLevel }: EmptyLoadFailedProps) {
+export function EmptyLoadFailed({ title = 'Couldn’t load this', description = 'Check your connection, then try again.', onRetry, retryLabel = 'Try again', reference, referenceLabel = 'Reference', headingLevel, size }: EmptyLoadFailedProps) {
   // Once the retry works, this message and its Try again go: focus would fall to the page. The page's h1 takes it
   // instead, as it does after any action that takes away the button that had focus (2.4.3).
   const retry = React.useRef<HTMLButtonElement>(null);
@@ -133,7 +141,7 @@ export function EmptyLoadFailed({ title = 'Couldn’t load this', description = 
     h.focus();
   }, []);
   return (
-    <EmptyState icon="cloud_off" announce title={title} headingLevel={headingLevel}
+    <EmptyState icon="cloud_off" announce title={title} headingLevel={headingLevel} size={size}
       description={reference ? <>{description}<br />{referenceLabel}: <span className="font-mono">{reference}</span></> : description}
       actions={<Button ref={retry} onClick={onRetry}>{retryLabel}</Button>} />
   );

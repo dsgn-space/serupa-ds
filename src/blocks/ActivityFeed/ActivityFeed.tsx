@@ -85,7 +85,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} size={headingSize} id={id}>{title}</Heading>
-      {loadFailed ? <EmptyLoadFailed title={loadFailedText} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : loading ? (
+      {loadFailed ? <EmptyLoadFailed title={loadFailedText} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} size="sm" /> : loading ? (
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-2">

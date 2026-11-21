@@ -147,7 +147,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
                 formatValue={(v) => count(v)} />
               {finished ? (
                 <Card>
-                  <EmptyState icon="check_circle" headingLevel={3} title="You’re all set"
+                  <EmptyState icon="check_circle" size="sm" headingLevel={3} title="You’re all set"
                     description="Your workspace is ready. Everything here stays where you left it."
                     actions={<Button href={dashboardHref}>Go to your dashboard</Button>} />
                 </Card>
@@ -181,7 +181,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         <section aria-labelledby="projects-title" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="projects-title">Your projects</Heading>
           <Card variant="filled">
-            <EmptyState icon="folder_open" headingLevel={3} title="No projects yet"
+            <EmptyState icon="folder_open" size="sm" headingLevel={3} title="No projects yet"
               description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you’re doing now."
               actions={<Button href="#new-project">Create a project</Button>} />
           </Card>
