@@ -29,6 +29,10 @@
 # Playground
 - button "Create"
 
+# Sizes
+- button "Create, md"
+- button "Create, sm"
+
 # States
 - button "Create" [expanded]
 - menu "Create":
