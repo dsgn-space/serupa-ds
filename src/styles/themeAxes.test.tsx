@@ -253,7 +253,7 @@ describe('Density axis', () => {
       <div data-density={density}>
         <Table caption="T"><TableBody><TableRow><TableCell>Cell</TableCell></TableRow></TableBody></Table>
         <Table caption="S" size="sm"><TableBody><TableRow><TableCell>Small</TableCell></TableRow></TableBody></Table>
-        <List aria-label="L"><ListItem>Item</ListItem></List>
+        <List aria-label="L"><ListItem title="Item" /></List>
         <Card>Card</Card>
         <Card padding="lg">Large card</Card>
       </div>
