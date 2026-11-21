@@ -40,7 +40,8 @@ if (arg('--locale')) process.env.SERUPA_LOCALE = arg('--locale');
 // The visual and Storybook steps, by group. They drive a browser through every preview and story, sharded across
 // CI jobs, so they stay scripts of their own.
 const GROUPS = {
-  visual: [['Visual snapshots', 'visual.mjs', ...update]],
+  // No picture is committed (ADR-0016): Visual draws the commit this tree starts from, then this tree (below).
+  visual: [['Visual snapshots', 'visual.mjs']],
   storybook: [['Storybook', 'storybook.mjs']],
 };
 // The tests that check every story against a baseline or a rule: a change to one component can break its line in them.
@@ -151,17 +152,29 @@ const steps = [
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];
-// SERUPA_VISUAL_BASE=<main's storybook-static> (CI on a pull request, ADR-0016): Visual draws main's pictures first, from
-// that build, then compares this tree with them and reports what differs, for review, instead of comparing with the
-// committed pictures, which another pull request's merge could have made stale.
-if (process.env.SERUPA_VISUAL_BASE && !update.length) {
-  const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
-  fs.rmSync(main, { recursive: true, force: true });
-  fs.rmSync(report, { recursive: true, force: true });
+// Visual (ADR-0016): no picture is committed. It draws the pictures of the commit this tree starts from, then this tree's,
+// and reports what differs for review (the design-qa label signs it off): a picture is never a failure, a story that
+// can't be drawn is. The commit is SERUPA_VISUAL_REF, else where this branch left main (visual-base.mjs builds its
+// Storybook in a worktree beside this one). On main itself it draws this tree twice, and there a difference fails:
+// a story that doesn't draw the same twice (the nightly flake hunt, Cross-browser in Firefox and WebKit).
+// SERUPA_VISUAL_BASE=<a Storybook already built> skips the build and compares with it.
+{
   const at = steps.findIndex((step) => step[3] === 'visual');
-  if (at >= 0) steps.splice(at, 1,
-    ["Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: process.env.SERUPA_VISUAL_BASE, SERUPA_VISUAL_DIR: main }],
-    ['Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, SERUPA_VISUAL_REPORT: report }]);
+  if (at >= 0) {
+    const { baseCommit, commitOf, STORYBOOK } = await import('./visual-base.mjs');
+    const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
+    const sha = process.env.SERUPA_VISUAL_BASE ? '' : baseCommit();
+    const self = !process.env.SERUPA_VISUAL_BASE && sha === commitOf('HEAD');
+    const sb = process.env.SERUPA_VISUAL_BASE || (self ? path.join(PROJECT, 'storybook-static') : STORYBOOK);
+    if (!arg('--list')) {
+      fs.rmSync(main, { recursive: true, force: true });
+      fs.rmSync(report, { recursive: true, force: true });
+    }
+    steps.splice(at, 1,
+      ...(sha && !self ? [[`Visual snapshots: build ${sha.slice(0, 9)}'s Storybook`, 'node', [path.join(HERE, 'visual-base.mjs'), sha], 'visual', {}]] : []),
+      [self ? 'Visual snapshots: this tree, first pass' : "Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: sb, SERUPA_VISUAL_DIR: main }],
+      [self ? 'Visual snapshots: this tree again, against the first pass' : 'Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, ...(self ? {} : { SERUPA_VISUAL_REPORT: report }) }]);
+  }
 }
 if (arg('--group')) {
   const g = arg('--group');

@@ -22,7 +22,7 @@ t('a shared size raise file covers no component', affectedComponents(['tools/tes
 const raiseFile = affectedComponents(['tools/test/baseline-size/Meter.claude-fix-x.json']);
 t('a raise file covers its component', list(raiseFile) === 'Meter', list(raiseFile));
 
-const one = affectedComponents(['src/components/Meter/Meter.tsx', 'src/components/Meter/Meter.css', 'tools/test/baseline-visual/Meter/Default-blue-light-rest.png', '.changeset/meter.md']);
+const one = affectedComponents(['src/components/Meter/Meter.tsx', 'src/components/Meter/Meter.css', 'tools/test/baseline-aria/Meter.yml', '.changeset/meter.md']);
 t('a change inside one component folder (with its baselines and changeset) covers that component', list(one) === 'Meter', list(one));
 const two = affectedComponents(['src/components/Tabs/Tabs.tsx', 'tools/test/baseline-api/Kbd.d.ts', 'tools/test/ssr/Kbd.mjs', 'tools/test/baseline-size/Meter.json']);
 t('its API baseline, size budgets and server-render case count as the component\'s', list(two) === 'Kbd, Meter, Tabs', list(two));
@@ -48,7 +48,7 @@ t('a component brings the ones that use it (Button: ToggleButton, and Dialog thr
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
 t('a component nothing uses brings only itself', list(withDependents(new Set(['SignaturePad']))) === 'SignaturePad', list(withDependents(new Set(['SignaturePad']))));
 t('a pattern that shows a component comes with it (Meter: Billing and Dashboard, and Chat whose stories show one)', ['Billing', 'Chat', 'Dashboard', 'Meter'].every((n) => withDependents(new Set(['Meter'])).has(n)), list(withDependents(new Set(['Meter']))));
-const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-visual/Checkout/Default-blue-light-rest.png', 'src/blocks/StatsRow/StatsRow.tsx']);
+const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-aria/Checkout.yml', 'src/blocks/StatsRow/StatsRow.tsx']);
 t('a block or pattern folder covers that block or pattern, and its Introduction page that page', list(pattern) === 'Checkout, Introduction.mdx, StatsRow', list(pattern));
 t('a pattern brings no component', list(withDependents(new Set(['Checkout']))) === 'Checkout', list(withDependents(new Set(['Checkout']))));
 t('a block brings the patterns that show it (AuthCard: SignIn)', withDependents(new Set(['AuthCard'])).has('SignIn'), list(withDependents(new Set(['AuthCard']))));

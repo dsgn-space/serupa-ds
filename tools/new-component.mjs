@@ -253,4 +253,4 @@ console.log(`Made src/components/${name}/ (${Object.keys(files).length} files) a
   3. The motion review and the worst-case review, and before its first release the bug bash (CONTRIBUTING.md,
      "Reviews by eye"). A component that takes a name goes in src/internal/formContract.test.tsx.
   4. npx changeset (minor: "Added: ${name} …").
-  5. Open the pull request and add the "update-visual-baselines" label for its pictures.`);
+  5. Open the pull request. Its visual review shows the new pictures; look at them, then add the design-qa label.`);
