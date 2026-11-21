@@ -191,8 +191,8 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
   const ctx = useTabs('TabList');
   const { onAdd, addLabel, ...own } = props;
   const [list, fade, place] = useTabRow<HTMLDivElement>('[role="tab"]', '[role="tab"][aria-selected="true"]', ctx.vertical, ctx.value);
-  // every render: place reads ctx and the list as they are now; it only swaps a function, so it costs nothing.
   const before = ctx.before;
+  // every render: place reads ctx and the list as they are now; it only swaps a function, so it costs nothing.
   useIsoLayoutEffect(() => { put(before, () => place(true)); return () => put(before, null); });
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.onKeyDown) props.onKeyDown(e);
