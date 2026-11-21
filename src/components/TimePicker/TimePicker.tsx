@@ -89,6 +89,9 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
     setShown({ value, as: locale + '|' + h12 });
     if (fmt(value) !== text) setText(fmt(value));
   }
+  // Notes the value the text now shows; the same one again changes nothing, so no render puts back text the field
+  // holds without an input event (a composition in progress).
+  const showAs = (n: number | null) => setShown((s) => (s.value === n && s.as === locale + '|' + h12 ? s : { value: n, as: locale + '|' + h12 }));
   const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'TimePicker', !!disabled || !!readOnly);
   const [held, setActive] = React.useState(0);
   const id = domId('dk-tp', React.useId());
@@ -98,7 +101,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   useFormReset(field, () => {
     if (controlled) return;
     const n = toMinutes(props.defaultValue);
-    setShown({ value: n, as: locale + '|' + h12 }); setOwn(n); setText(fmt(n)); setOpen(false, 'api');
+    showAs(n); setOwn(n); setText(fmt(n)); setOpen(false, 'api');
   });
   const list = React.useRef<HTMLUListElement | null>(null);
   const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
@@ -113,7 +116,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
     return best;
   };
   const commit = (n: number | null) => {
-    setShown({ value: n, as: locale + '|' + h12 });
+    showAs(n);
     setText(fmt(n));
     if (n === value) return;
     if (!controlled) setOwn(n);
