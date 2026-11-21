@@ -103,6 +103,9 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const hidden = React.useRef<HTMLInputElement | null>(null);
   const typed = React.useRef<Typed>({ text: '', at: 0 });
   const rtl = () => !!button.current && getComputedStyle(button.current).direction === 'rtl';
+  // The hint names the arrow that opens a column, which flips right to left: read from the page once it opens.
+  const [openRtl, setOpenRtl] = React.useState(false);
+  useIsoLayoutEffect(() => { if (open) setOpenRtl(rtl()); }, [open]);
 
   const childrenOf = (o: CascadeOption | null, at: string[]): CascadeOption[] | 'loading' | 'failed' | null => {
     if (!o) return props.options || [];
@@ -116,7 +119,8 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
     const cols: { options: CascadeOption[] | 'loading' | 'failed'; chosen: CascadeOption | null }[] = [];
     let list: ReturnType<typeof childrenOf> = childrenOf(null, []);
     for (let i = 0; list; i++) {
-      const chosen = Array.isArray(list) ? list.find((o) => o.value === p[i]) || null : null;
+      const at = p[i];
+      const chosen = Array.isArray(list) ? list.find((o) => o.value === at) || null : null;
       cols.push({ options: list, chosen });
       if (!chosen) break;
       list = childrenOf(chosen, p.slice(0, i + 1));
@@ -252,7 +256,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
       {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
       {required ? <input key={value.length ? 'filled' : 'empty'} className="srp-cascade-select__validity" tabIndex={-1} aria-hidden required defaultValue={value.length ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
-      <span id={base + '-more'} hidden>{L.cascadeHasMore(open && rtl())}</span>
+      <span id={base + '-more'} hidden>{L.cascadeHasMore(open && openRtl)}</span>
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={dialogName}
         {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-cascade-select__panel">
         {open || exit.leaving ? columns.map((column, c) => (
