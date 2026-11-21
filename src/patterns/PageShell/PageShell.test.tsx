@@ -74,4 +74,15 @@ describe('Patterns/Page shell', () => {
       await page.viewport(900, 700);
     }
   });
+
+  test('offline: the OfflineBanner says so, with what happens to changes', async () => {
+    const Offline = () => <>{stories.Offline.render!({} as never, {} as never)}</>;
+    await render(<Offline />);
+    await expect.poll(() => document.querySelector('[data-component="offline-banner"]')?.textContent ?? '').toContain('Your changes are kept on this device');
+  });
+
+  test('online: the OfflineBanner shows nothing', async () => {
+    await render(<Default />);
+    expect(document.querySelector('[data-component="offline-banner"]')?.textContent ?? '').toBe('');
+  });
 });

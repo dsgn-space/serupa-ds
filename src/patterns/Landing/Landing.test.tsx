@@ -58,4 +58,15 @@ describe('Patterns/Landing page', () => {
     expect(new Set(items.map(Math.round)).size).toBe(1);
     await page.viewport(1280, 800);
   });
+
+  test('the header brand is the Logo inside a link named for the product', async () => {
+    const screen = await render(<Landing />);
+    const home = screen.getByRole('link', { name: 'Acme' });
+    expect([home.element().getAttribute('href'), home.element().querySelector('img')?.getAttribute('alt')]).toEqual(['#top', '']);
+  });
+
+  test('logo={null}: the header brand is the product’s name as text', async () => {
+    const screen = await render(<Landing product="Orbit" logo={null} />);
+    expect(screen.getByRole('link', { name: 'Orbit' }).element().querySelector('img')).toBeNull();
+  });
 });
