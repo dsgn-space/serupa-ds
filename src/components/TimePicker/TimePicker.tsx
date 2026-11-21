@@ -63,6 +63,9 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
+// The times the list offers: every step from lo to hi, in minutes since midnight.
+function timesFrom(lo: number, hi: number, step: number) { const out: number[] = []; for (let n = lo; n <= hi; n += step) out.push(n); return out; }
+
 function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('TimePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
@@ -81,12 +84,14 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const value = controlled ? toMinutes(chosen as string | null) : (chosen as number | null);
   const fmt = (n: number | null) => (n == null ? '' : formatTime(n, locale, h12));
   const [text, setText] = React.useState(fmt(value));
-  const shown = React.useRef(value);
-  const shownFmt = React.useRef(locale + '|' + h12);
-  if (value !== shown.current || shownFmt.current !== locale + '|' + h12) {   // a new value, or a new locale or hour12
-    shown.current = value; shownFmt.current = locale + '|' + h12;
+  const [shown, setShown] = React.useState({ value, as: locale + '|' + h12 });
+  if (value !== shown.value || shown.as !== locale + '|' + h12) {   // a new value, or a new locale or hour12
+    setShown({ value, as: locale + '|' + h12 });
     if (fmt(value) !== text) setText(fmt(value));
   }
+  // Notes the value the text now shows; the same one again changes nothing, so no render puts back text the field
+  // holds without an input event (a composition in progress).
+  const showAs = (n: number | null) => setShown((s) => (s.value === n && s.as === locale + '|' + h12 ? s : { value: n, as: locale + '|' + h12 }));
   const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'TimePicker', !!disabled || !!readOnly);
   const [held, setActive] = React.useState(0);
   const id = domId('srp-tp', React.useId());
@@ -96,12 +101,12 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   useFormReset(field, () => {
     if (controlled) return;
     const n = toMinutes(props.defaultValue);
-    shown.current = n; setOwn(n); setText(fmt(n)); setOpen(false, 'api');
+    showAs(n); setOwn(n); setText(fmt(n)); setOpen(false, 'api');
   });
   const list = React.useRef<HTMLUListElement | null>(null);
   const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
 
-  const times = React.useMemo(() => { const out: number[] = []; for (let n = lo; n <= hi; n += step) out.push(n); return out; }, [lo, hi, step]);
+  const times = timesFrom(lo, hi, step);   // at most 1,440 numbers, cheap enough to make in each render
   // The highlighted time, kept on the list when a new min, max or step shortens it while it's open.
   const active = Math.max(0, Math.min(held, times.length - 1));
   const nearest = (n: number | null) => {
@@ -111,7 +116,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
     return best;
   };
   const commit = (n: number | null) => {
-    shown.current = n;
+    showAs(n);
     setText(fmt(n));
     if (n === value) return;
     if (!controlled) setOwn(n);
@@ -176,7 +181,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-time-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
+    <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-time-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} dir={rest.dir ?? dir} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}

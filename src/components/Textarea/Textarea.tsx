@@ -59,7 +59,6 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   let rest = omit(props, OWN);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
-  if (invalid) rest['aria-invalid'] = true;
   const rows = (props.rows as number) > 0 && Number.isFinite(props.rows) ? Math.floor(props.rows as number) : 3;
   const auto = !!props.autoResize;
   const maxRows = (props.maxRows as number) > 0 && Number.isFinite(props.maxRows) ? Math.max(rows, Math.floor(props.maxRows as number)) : 0;
@@ -87,10 +86,9 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   // A new value (controlled, or a form reset), size or row count; typing refits from the change event, so a
   // replacement of the same length that wraps differently is caught too.
   useIsoLayoutEffect(fit, [fit, rest.value, length, size, rows]);
-  if (js) {
-    const changed = rest.onChange;
-    rest.onChange = function (e: React.ChangeEvent<HTMLTextAreaElement>) { if (changed) changed(e); fit(); };
-  }
+  // Set on the <textarea> beside rest, not written into rest, which the layout effect above has read.
+  const changed = rest.onChange;
+  const onChange = js ? function (e: React.ChangeEvent<HTMLTextAreaElement>) { if (changed) changed(e); fit(); } : changed;
   React.useEffect(function () {
     if (!js || typeof ResizeObserver === 'undefined' || !own.current) return;
     let w = own.current.offsetWidth, raf = 0;
@@ -103,20 +101,17 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
     return function () { cancelAnimationFrame(raf); ro.disconnect(); stop(); };
   }, [js, fit]);
 
-  const setRefs = useMergedRef(ref, function (node: HTMLTextAreaElement | null) {
-    own.current = node;
-    nameRef(node);
-  });
-  // The field's rows (--srp-ta-rows, for the CSS auto-resize) are a style attribute, which a strict CSP drops from
+  const setRefs = useMergedRef(ref, nameRef, own);
+  // The field's rows (--dk-ta-rows, for the CSS auto-resize) are a style attribute, which a strict CSP drops from
   // server HTML: applied again right after hydration.
   const restyle = useServerStyles<HTMLSpanElement>();
-  if (props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], countId);
+  const describedBy = props.showCount ? cn(rest['aria-describedby'], countId) : rest['aria-describedby'];
   const acts = props.actions != null && props.actions !== false;
   const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
   return (
-    <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
-      <textarea {...rest} ref={setRefs} rows={rows} className="srp-textarea__field" key="field"
-        style={{ '--srp-ta-rows': rows, '--srp-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
+    <span className={cn('dk-textarea', 'dk-textarea--size-' + size, invalid && 'dk-textarea--invalid', rest.disabled && 'dk-textarea--disabled', rest.readOnly && 'dk-textarea--readonly', resize === 'none' && 'dk-textarea--resize-none', auto && 'dk-textarea--auto', acts && 'dk-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
+      <textarea {...rest} aria-invalid={invalid || rest['aria-invalid']} aria-describedby={describedBy} onChange={onChange} ref={setRefs} rows={rows} className="dk-textarea__field" key="field"
+        style={{ '--dk-ta-rows': rows, '--dk-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
       {props.showCount && !acts ? count : null}
       {/* A fieldset, so a disabled Textarea disables every button in the row as well; role none, since it groups nothing for a screen reader. */}
       {acts ? <fieldset className="srp-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}

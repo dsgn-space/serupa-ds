@@ -41,6 +41,10 @@ const read = (key: string | undefined) => {
   if (!key) return null;
   try { const n = parseFloat(window.localStorage.getItem(key) || ''); return isFinite(n) ? n : null; } catch { return null; }
 };
+// For useSyncExternalStore: the saved size never changes under the component (another tab's isn't followed), and
+// the server has none.
+const never = () => () => {};
+const noSaved = () => null;
 const save = (key: string | undefined, n: number) => {
   if (!key) return;
   try { window.localStorage.setItem(key, String(n)); } catch { /* private mode or full: the size just isn't kept */ }
@@ -57,16 +61,14 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   const fit = (n: number) => clamp(n, min, max);
   const controlled = sizeIn !== undefined;
   const [own, setOwn] = React.useState(() => (defaultSize === 0 && collapsible ? 0 : fit(typeof defaultSize === 'number' && isFinite(defaultSize) ? defaultSize : 50)));
-  // The saved size is read after mount (and when the key changes), so the server's HTML and the first render agree.
-  const now = React.useRef({ controlled, collapsible, fit });
-  now.current = { controlled, collapsible, fit };
-  React.useEffect(() => {
-    const n = read(storageKey), c = now.current;
-    if (!c.controlled && n != null) setOwn(n === 0 && c.collapsible ? 0 : c.fit(n));
-  }, [storageKey]);
-  const size = controlled ? (sizeIn === 0 && collapsible ? 0 : fit(sizeIn)) : own;
-  const restore = React.useRef(size || fit(50));   // what Enter brings a collapsed pane back to
-  if (size > 0) restore.current = size;
+  // The saved size is read once hydrated (the server's HTML and the first render agree), and for each new key. It
+  // stands until the size is moved under that key; from then on the size moved to is the one shown (and saved).
+  const saved = React.useSyncExternalStore(never, () => read(storageKey), noSaved);
+  const [movedUnder, setMovedUnder] = React.useState<string | undefined | null>(null);
+  const kept = saved != null && movedUnder !== storageKey ? (saved === 0 && collapsible ? 0 : fit(saved)) : own;
+  const size = controlled ? (sizeIn === 0 && collapsible ? 0 : fit(sizeIn)) : kept;
+  const [restore, setRestore] = React.useState(() => size || fit(50));   // what Enter brings a collapsed pane back to
+  if (size > 0 && size !== restore) setRestore(size);
   const root = React.useRef<HTMLDivElement | null>(null);
   const base = domId('srp-splitter', React.useId());
   const panes = React.Children.toArray(children);
@@ -76,7 +78,7 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
     setSlide(null);
     const next = Math.round(n * 100) / 100;
     if (next === size) return;
-    if (!controlled) { setOwn(next); save(storageKey, next); }
+    if (!controlled) { setOwn(next); setMovedUnder(storageKey); save(storageKey, next); }
     if (onSizeChange) onSizeChange(next);
   };
   const collapsed = size === 0;
@@ -87,7 +89,7 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   // Not on mount, a drag or the keys' steps, and not when there's no transition to run (reduced motion).
   // Toggled again mid-way, it turns back from where the handle is (at: its offset along the axis then), not from the
   // end it was heading for (GR46).
-  const [slide, setSlide] = React.useState<{ to: 'open' | 'closed'; px: number; at: number; run: boolean } | null>(null);
+  const [slide, setSlide] = React.useState<{ to: 'open' | 'closed'; px: number; at: number; run: boolean; back: number } | null>(null);
   const extent = (n: HTMLElement) => (direction === 'horizontal' ? n.offsetWidth : n.offsetHeight);
   const offset = () => {
     const h = handle.current, t = h ? getComputedStyle(h).translate : 'none';
@@ -98,9 +100,10 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   const toggle = () => {
     if (!collapsible) return;
     const closing = size > 0, at = slide ? offset() : 0;
-    change(closing ? 0 : restore.current);
+    change(closing ? 0 : restore);
     const moves = paneB && parseFloat(getComputedStyle(paneB).transitionDuration) > 0;
-    setSlide(moves ? { to: closing ? 'closed' : 'open', px: closing && paneA ? extent(paneA) : 0, at, run: false } : null);
+    setSlide(moves ? { to: closing ? 'closed' : 'open', px: closing && paneA ? extent(paneA) : 0, at, run: false,
+      back: direction === 'horizontal' && root.current && rtl(root.current) ? -1 : 1 } : null);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -202,7 +205,7 @@ function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<H
   }, [slide, paneB]);
   const sliding = slide && slide.px ? slide : null;
   const along = (v: number) => (direction === 'horizontal' ? v + 'px 0' : '0 ' + v + 'px');
-  const back = sliding && root.current && direction === 'horizontal' && rtl(root.current) ? -1 : 1;
+  const back = sliding ? sliding.back : 1;   // -1 when the first pane is on the right (right to left), read as the toggle started
   const clip = (x: string) => (direction === 'vertical' ? 'inset(0 0 ' + x + ' 0)' : back < 0 ? 'inset(0 0 0 ' + x + ')' : 'inset(0 ' + x + ' 0 0)');
   // How far the handle is from where it's going, and how much of the first pane is hidden there: the whole pane from
   // rest, less when it turns back mid-way.

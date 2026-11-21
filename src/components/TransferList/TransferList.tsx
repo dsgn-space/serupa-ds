@@ -56,6 +56,14 @@ export interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElem
   chosenLabel?: string | undefined;
 }
 
+// An option's box, made once per option and kept in boxes. CheckboxGroup reads its Checkbox children's values, so a
+// memoized wrapper component in their place wouldn't do.
+function boxFor(boxes: WeakMap<TransferListOption, React.ReactElement>, o: TransferListOption) {
+  let box = boxes.get(o);
+  if (!box) { box = <Checkbox key={o.value} value={o.value} disabled={o.disabled} description={o.description}>{o.label}</Checkbox>; boxes.set(o, box); }
+  return box;
+}
+
 function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);   // a surrounding Field's id, hint, required, invalid and disabled
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // a Field's <label for> can't name a group, so it's aria-labelledby
@@ -104,14 +112,10 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   const ref2 = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>('input:enabled')); nameRef(n); });
   useAutoFocus(autoFocus, () => root.current);
 
-  // Each option's box is made once per option and kept, so a check or a move draws again only the boxes whose state
-  // changed (each reads it from its CheckboxGroup), not all of them: the same element is skipped.
-  const boxes = React.useRef(new WeakMap<TransferListOption, React.ReactElement>()).current;
-  const boxOf = (o: TransferListOption) => {
-    let box = boxes.get(o);
-    if (!box) { box = <Checkbox key={o.value} value={o.value} disabled={o.disabled} description={o.description}>{o.label}</Checkbox>; boxes.set(o, box); }
-    return box;
-  };
+  // Each option's box is kept, so a check or a move draws again only the boxes whose state changed (each reads it
+  // from its CheckboxGroup), not all of them: the same element is skipped.
+  const [boxes] = React.useState(() => new WeakMap<TransferListOption, React.ReactElement>());
+  const boxOf = (o: TransferListOption) => boxFor(boxes, o);
   const side = (which: 'left' | 'right', list: TransferListOption[], checked: string[], setChecked: (v: string[]) => void) => {
     const titleId = id + '-' + which;
     return (

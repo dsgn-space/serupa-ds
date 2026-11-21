@@ -197,6 +197,21 @@ describe('DataGrid', () => {
     await expect.element(page.getByRole('grid', { name: 'Stok' })).toHaveAccessibleDescription(idLabels.dataGridHint);
   });
 
+  test('a grid nobody is in shows no washed cell: the lone active cell is washed only while focus is in the grid, and a range stays washed after focus leaves', async () => {
+    await render(<><Live /><button>After</button></>);
+    const bg = (name: string) => css(cell(name)).backgroundColor;
+    const plain = bg('G1');
+    expect([cell('Kopi').getAttribute('aria-selected'), bg('Kopi')]).toEqual(['true', plain]);
+    await userEvent.click(cell('Kopi'));
+    expect(bg('Kopi')).not.toBe(plain);
+    await userEvent.click(page.getByRole('button', { name: 'After' }));
+    expect(bg('Kopi')).toBe(plain);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    await userEvent.click(page.getByRole('button', { name: 'After' }));
+    expect([bg('Kopi'), bg('Teh')].every((c) => c !== plain)).toBe(true);
+  });
+
   test('text reads 4.5:1 on the cells, the header and the selection, and the focus ring 3:1, in every theme', async () => {
     await render(<Live />);
     await userEvent.click(cell('Kopi'));

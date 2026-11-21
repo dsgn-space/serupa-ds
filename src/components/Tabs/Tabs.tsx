@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { named } from '../../internal/component';
@@ -56,12 +56,16 @@ function firstTab(children: React.ReactNode): string | null {
   return found;
 }
 
+// Sets a ref from the context, in a tab's handler or effect: the React Compiler won't let a component write a
+// context value's field itself.
+function put<T>(r: React.RefObject<T>, v: T) { r.current = v; }
+
 function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, orientation: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
   const base = domId('srp-tabs', React.useId());
   const [value, setInner, controlled] = useControllable<string | null>(props.value, props.defaultValue != null ? props.defaultValue : firstTab(props.children), 'Tabs', 'value');
-  const onChange = React.useRef(props.onValueChange); onChange.current = props.onValueChange;
+  const onChange = useLatest(props.onValueChange);
   // TabList's hook to note where the line or fill is just before the selection changes, so a slide that is still
   // running turns back from where it has got to (EH1).
   const before = React.useRef<(() => void) | null>(null);
@@ -74,13 +78,13 @@ function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivEl
   useIsoLayoutEffect(listenForInput, []);
   // The selected tab pressed again (a click, Enter or Space) changes nothing, so it doesn't call onValueChange: an app
   // that puts the tab in the URL pushed the same page into the history each time (L8E107).
-  const current = React.useRef(value); current.current = value;
+  const currentRef = useLatest(value);
   const select = React.useCallback((v: string) => {
-    if (v === current.current) return;
+    if (v === currentRef.current) return;
     if (before.current) before.current();
-    if (!controlled) { current.current = v; setInner(v); }
+    if (!controlled) { currentRef.current = v; setInner(v); }
     if (onChange.current) onChange.current(v);
-  }, [controlled, setInner]);
+  }, [controlled, setInner, currentRef, onChange]);
   const variant = oneOf(['line', 'pill'] as const, props.variant, 'line');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists: a tab row can
@@ -187,8 +191,9 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
   const ctx = useTabs('TabList');
   const { onAdd, addLabel, ...own } = props;
   const [list, fade, place] = useTabRow<HTMLDivElement>('[role="tab"]', '[role="tab"][aria-selected="true"]', ctx.vertical, ctx.value);
+  const before = ctx.before;
   // every render: place reads ctx and the list as they are now; it only swaps a function, so it costs nothing.
-  useIsoLayoutEffect(() => { ctx.before.current = () => place(true); return () => { ctx.before.current = null; }; });
+  useIsoLayoutEffect(() => { put(before, () => place(true)); return () => put(before, null); });
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.onKeyDown) props.onKeyDown(e);
     // Delete closes the focused tab, when it can be closed (its × is for the pointer, and hidden from screen readers).
@@ -220,7 +225,7 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
     tab.focus();
     if (!ctx.manual && tab.dataset.value != null) ctx.select(tab.dataset.value);
   };
-  const mergedRef2 = useMergedRef(ref, (n) => { list.current = n; });
+  const mergedRef2 = useMergedRef(ref, undefined, list);
   const tablist = <div {...own} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
     className={cn('srp-tabs__list', props.className)} data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined} onKeyDown={onKeyDown} />;
   // The + sits beside the tab list, not in it: a tablist holds only tabs. It's drawn as a tab, with its words shown, so
@@ -246,17 +251,18 @@ function TabRender({ ref, ...props }: TabProps & React.RefAttributes<HTMLButtonE
   const rest = omit(props, { value: 1, icon: 1, className: 1, children: 1, onClose: 1 });
   const L = useSettings(words).labels;
   const own = React.useRef<HTMLButtonElement | null>(null);
-  const close = React.useRef(props.onClose); close.current = props.onClose;
+  const close = useLatest(props.onClose);
   const closes = !!props.onClose;
   const closed = ctx.closed, value = props.value;
-  const shut = React.useCallback(() => { closed.current = value; if (close.current) close.current(); }, [closed, value]);
+  const shut = () => { put(closed, value); if (close.current) close.current(); };
   // TabList's Delete key reaches the focused tab through this event, so the tab's own onClose runs.
   React.useEffect(() => {
     const el = own.current;
     if (!el || !closes) return;
-    el.addEventListener('srp-tab-close', shut);
-    return () => el.removeEventListener('srp-tab-close', shut);
-  }, [closes, shut]);
+    const onClose = () => { put(closed, value); if (close.current) close.current(); };
+    el.addEventListener('dk-tab-close', onClose);
+    return () => el.removeEventListener('dk-tab-close', onClose);
+  }, [closes, closed, value, close]);
   const hintId = closes ? ctx.base + '-close-' + safe(props.value) : undefined;
   const refs = useMergedRef(ref, (n) => { own.current = n; });
   const selected = ctx.value === props.value;
@@ -312,9 +318,8 @@ function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<H
   // the browser's find-in-page still searches it and, on a match, fires beforematch, which selects its tab. React
   // renders any hidden value as hidden="", so it's set here. A disabled tab's panel stays plainly hidden.
   const own = React.useRef<HTMLDivElement | null>(null);
-  const pick = React.useRef<(() => void) | null>(null);
   const tabOf = () => own.current && (own.current.getRootNode() as Document | ShadowRoot).getElementById(ctx.base + '-tab-' + safe(props.value));
-  pick.current = selected ? null : () => { const t = tabOf(); if (t && !t.hasAttribute('disabled')) ctx.select(props.value); };
+  const pick = useLatest<(() => void) | null>(selected ? null : () => { const t = tabOf(); if (t && !t.hasAttribute('disabled')) ctx.select(props.value); });
   // every render: the panel's tab can be enabled or disabled in any render of the tab list; nothing is measured.
   useIsoLayoutEffect(() => {
     const el = own.current, t = tabOf();
@@ -330,7 +335,7 @@ function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<H
     el.addEventListener('beforematch', onMatch);
     el.addEventListener('invalid', revealInvalid, true);   // a required field in it, on submit, selects its tab (L8E100)
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
-  }, []);
+  }, [pick]);
   // The shown panel is a Tab stop only while its content starts with text, as the APG asks: when it starts with a
   // link or a field, Tab from the tab goes straight there rather than to the panel first. Content can change after
   // the panel shows (a loaded list, a Retry button), so a change inside looks again. A tabIndex prop keeps its value.

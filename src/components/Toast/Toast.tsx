@@ -251,11 +251,11 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     before.current = new Map([...region.querySelectorAll<HTMLElement>(MOVES)].map((e) => [e.dataset.toast || 'more', e.getBoundingClientRect().top]));
   };
   // Toasts already there as the Toaster arrives (in its first effects) are shown from the first frame, not slid in.
-  const early = React.useRef(new Set<string>()), arriving = React.useRef(true);
+  const [early, setEarly] = React.useState<ReadonlySet<string>>(() => new Set()), arriving = React.useRef(true);
   React.useEffect(() => {
     ensureAnnouncer(); page.hinted = false;
     if (process.env.NODE_ENV !== 'production' && page.listeners.size) warnOnce('toaster-twice', 'Toaster: another Toaster is already mounted, so only this newer one shows toasts. Render one Toaster, once, near the root.');
-    const take: Listener = (l) => { snap(); if (arriving.current) l.forEach((x) => early.current.add(x.id)); setList(l); };
+    const take: Listener = (l) => { snap(); if (arriving.current) setEarly((e) => new Set([...e, ...l.map((x) => x.id)])); setList(l); };
     arriving.current = true;
     page.listeners.add(take); emit();
     void Promise.resolve().then(() => { arriving.current = false; });
@@ -365,8 +365,8 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     return () => { on = false; };
   }, [moreLeaving]);
   // Only toasts there as the Toaster arrived waiting: there from the first frame, like them.
-  const moreInstant = list.slice(0, waiting).every((x) => early.current.has(x.id));
-  const more = words ? <li key="more" ref={moreRef} className="srp-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
+  const moreInstant = list.slice(0, waiting).every((x) => early.has(x.id));
+  const more = words ? <li key="more" ref={moreRef} className="dk-toaster__more" data-leaving={moreLeaving ? '' : undefined} data-instant={moreInstant ? '' : undefined} aria-hidden={moreLeaving || undefined}>{words}</li> : null;
   const ordered = pos.startsWith('top') ? shown.slice().reverse() : shown;   // newest nearest the edge, the waiting line farthest
   // Closed toasts stay where they were, fading out (DZ1), until their transitions end; one shown again comes back.
   // Each goes back after the toast it followed (FO1), not at its old index, which with toasts arriving above it
@@ -387,18 +387,18 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   }
   // How long each toast that has been seen has left (FO1). One pushed into the waiting line keeps its time running
   // there and comes back with what's left, so they still go in the order they came; one never shown waits paused.
-  const clocks = React.useRef(new Map<string, Clock>());
+  const [clocks] = React.useState(() => new Map<string, Clock>());
   React.useEffect(() => {
     const ids = new Set(list.map((t) => t.id));
-    for (const id of clocks.current.keys()) if (!ids.has(id)) clocks.current.delete(id);
+    for (const id of clocks.keys()) if (!ids.has(id)) clocks.delete(id);
     const run = list.slice(0, waiting).flatMap((t) => {
-      const c = clocks.current.get(t.id);
+      const c = clocks.get(t.id);
       if (!c || c.item !== t || !(c.left > 0)) return [];
       c.since = Date.now();
       return [{ c, timer: window.setTimeout(() => toast.dismiss(t.id), c.left) }];
     });
     return () => { for (const r of run) { window.clearTimeout(r.timer); r.c.left = timeLeft(r.c); r.c.since = null; } };
-  }, [list, waiting]);
+  }, [list, waiting, clocks]);
   const done = React.useCallback((id: string) => { snap(); setGone((l) => l.filter((g) => g.item.id !== id)); }, []);
   // The toasts left glide to their new place over --srp-toast-move (FLIP), from wherever they are (a glide that's
   // still running included); with reduced motion they move at once.
@@ -459,7 +459,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('srp-toaster', 'srp-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="srp-toaster__list" role="list">
         {pos.startsWith('top') ? null : more}
-        {rows.map((r) => <ToastView key={r.item.id} item={r.item} leaving={r.leaving} clocks={clocks.current} instant={early.current.has(r.item.id)} onGone={done} dismissLabel={dismissLabel || sds.labels.dismiss} time={(r.item.autoDismiss ?? autoDismiss ?? true) ? Math.max(0, r.item.duration ?? duration ?? 5000) : 0} />)}
+        {rows.map((r) => <ToastView key={r.item.id} item={r.item} leaving={r.leaving} clocks={clocks} instant={early.has(r.item.id)} onGone={done} dismissLabel={dismissLabel || sds.labels.dismiss} time={(r.item.autoDismiss ?? autoDismiss ?? true) ? Math.max(0, r.item.duration ?? duration ?? 5000) : 0} />)}
         {pos.startsWith('top') ? more : null}
       </ol>
     </section>

@@ -20,7 +20,8 @@ function SkipLinkRender({ ref, ...props }: SkipLinkProps & React.RefAttributes<H
   const labels = useSettings(words).labels;
   const target = props.target || 'main';
   const onClick = props.onClick;
-  const follow = React.useCallback(function (e: React.MouseEvent<HTMLAnchorElement>) {
+  // A plain handler: it goes on an <a>, so a new one each render costs nothing, and the React Compiler memoizes it.
+  const follow = function (e: React.MouseEvent<HTMLAnchorElement>) {
     if (onClick) onClick(e);
     if (e.defaultPrevented) return;
     const root = e.currentTarget.getRootNode() as Document | ShadowRoot;   // in a shadow root, its own ids
@@ -36,8 +37,8 @@ function SkipLinkRender({ ref, ...props }: SkipLinkProps & React.RefAttributes<H
     }
     to.focus();
     if (typeof history !== 'undefined' && history.replaceState && location.hash !== '#' + target) history.replaceState(history.state, '', '#' + target);
-  }, [onClick, target]);
-  return <a {...rest} ref={ref} href={'#' + target} onClick={follow} className={cn('srp-skip-link', props.className)} data-component="skip-link">
+  };
+  return <a {...rest} ref={ref} href={'#' + target} onClick={follow} className={cn('dk-skip-link', props.className)} data-component="skip-link">
     {props.children != null ? props.children : labels.skipToContent}
   </a>;
 }

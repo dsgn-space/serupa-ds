@@ -33,9 +33,9 @@ import { DataGrid } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **Frame** (`.srp-data-grid`): the bordered, rounded box; it scrolls sideways when the columns are wider.
-2. **Header** (`.srp-data-grid__header`): a column's name, in the header row.
-3. **Cell** (`.srp-data-grid__cell`): one value; the active cell has a focus ring inside it.
+1. **Frame** (`.dk-data-grid`): the bordered, rounded box; it scrolls sideways when the columns are wider.
+2. **Header** (`.dk-data-grid__header`): a column's name, in the header row.
+3. **Cell** (`.dk-data-grid__cell`): one value; the active cell has a focus ring inside it, and a wash while focus is in the grid (a range of more cells keeps its wash after focus leaves).
 
 ## Usage
 

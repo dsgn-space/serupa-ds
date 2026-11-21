@@ -124,6 +124,9 @@ t('Input brings DatePicker and DateRangePicker (they use .srp-input), and Navbar
     t('x86 jobs go to the machines while one started a job in the window', pickRunner({ x86, lastStart: now - 30 * 60_000, now }) === x86);
     t('x86 jobs go to GitHub\'s runners once the machines have started nothing for 100 minutes (the VM deleted itself)', pickRunner({ x86, lastStart: now - 101 * 60_000, now }) === '"ubuntu-24.04"');
     t('x86 jobs go to GitHub\'s runners when no self-hosted start is seen', pickRunner({ x86, lastStart: null, now }) === '"ubuntu-24.04"');
+    const at = (hm) => Date.parse('2026-11-21T' + hm + ':00Z');
+    t('x86 jobs go to GitHub\'s runners during the VM\'s upgrade window (05:30 to 07:05 UTC), when it may restart its runners', pickRunner({ x86, lastStart: at('05:29'), now: at('05:30') }) === '"ubuntu-24.04"' && pickRunner({ x86, lastStart: at('05:29'), now: at('07:04') }) === '"ubuntu-24.04"');
+    t('after the upgrade window, the quiet time doesn\'t count against the machines', pickRunner({ x86, lastStart: at('05:20'), now: at('07:05') }) === x86 && pickRunner({ x86, lastStart: at('05:20'), now: at('08:40') }) === '"ubuntu-24.04"');
     t('a fork\'s jobs and an unset variable go to GitHub\'s runners', pickRunner({ x86, fork: true, lastStart: now, now }) === '"ubuntu-24.04"' && pickRunner({ x86: '', lastStart: now, now }) === '"ubuntu-24.04"');
     let said, err;
     try { said = await keepIssue('Jobs waiting for a runner', 'runner-watch', ['ci (CI, main) has waited 400 minutes'], 'One job waits.'); } catch (e) { err = e.message; }
