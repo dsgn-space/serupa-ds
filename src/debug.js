@@ -16,7 +16,7 @@
        against WCAG 2.2 where they are, so a color token your app overrides can't quietly fail contrast: the ones
        that fail on the page are listed in the console when it turns on, and the panel lists any more that fail on
        the component you point at (from a token set on it, or on a section or card around it);
-     - a Theme panel in the corner sets each theme setting on <html> (brand, mode, contrast, density, radius, depth,
+     - a Theme panel in the corner sets each theme setting on <html> (brand, mode, contrast, density, radius,
        shadow, type scale), so the page can be tried in every theme; each change checks the color pairs again and
        says how many fail (brand and mode go through theme.js when the page loads it, which remembers them);
      - Escape, or Serupa.debug.off(), turns it off.
@@ -208,12 +208,11 @@
 
   // The theme settings tokens.css reads on <html>, each with its values; '' leaves the page's own.
   var AXES = {
-    brand: ['blue', 'violet', 'emerald'],
+    brand: ['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'],
     mode: ['auto', 'light', 'dark'],
     contrast: ['normal', 'more'],
     density: ['compact', 'comfortable'],
     radius: ['sharp', 'round'],
-    depth: ['flat', 'tactile'],
     shadow: ['neutral', 'brand'],
     'type-scale': ['fixed', 'fluid']
   };

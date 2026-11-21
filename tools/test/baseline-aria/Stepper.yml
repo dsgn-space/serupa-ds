@@ -59,6 +59,20 @@
     - listitem: Billing Card or invoice
     - listitem: Review
 
+# Sizes
+- navigation "Progress":
+  - list:
+    - listitem: Account , completed Email and password
+    - listitem: Profile Optional
+    - listitem: Billing Card or invoice
+    - listitem: Review
+- navigation "Progress":
+  - list:
+    - listitem: Account , completed Email and password
+    - listitem: Profile Optional
+    - listitem: Billing Card or invoice
+    - listitem: Review
+
 # Vertical
 - navigation "Progress":
   - list:
