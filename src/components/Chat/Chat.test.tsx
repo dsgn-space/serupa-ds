@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, commands, page, server, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatReplyActions, ChatSteps } from './Chat';
@@ -216,6 +216,13 @@ describe('ChatMessage: an agent at work', () => {
     await expect.element(page.getByRole('progressbar', { name: 'Thinking…' })).toBeInTheDocument();
     await r.rerender(<ChatMessage id="t" author="Assistant" thinking>Here it is</ChatMessage>);
     expect([page.getByRole('progressbar', { name: 'Thinking…' }).query(), find(document.getElementById('t')!, 'Here it is') != null]).toEqual([null, true]);
+  });
+
+  test('"Thought for …" fades to its hover color over motion-hover, as a Link does', async () => {
+    await render(<ChatMessage id="rf" author="Assistant" reasoning="First I checked the order." reasoningTime={12}>Done</ChatMessage>);
+    const t = document.querySelector('#rf .dk-chat-message__reasoning-toggle')!;
+    const s = withMotion(() => [css(t).transitionProperty, css(t).transitionDuration]);
+    expect(s).toEqual(['color', '0.15s']);
   });
 
   test('reasoning sits closed under "Thought for 12 seconds", and opens from the keyboard', async () => {

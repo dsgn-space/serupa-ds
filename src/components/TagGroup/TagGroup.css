@@ -57,6 +57,8 @@
 }
 /* Show more is underlined as a link is (1px, 2px below the words), and answers a pointer as one does: primary-hover, and the underline thickens to 2px. */
 @media (hover: hover) { .dk-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+.dk-tag-group__more { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
+@media (prefers-reduced-motion: reduce) { .dk-tag-group__more { transition: none; } }
 .dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (forced-colors: active) { .dk-tag-group__tag { border-color: CanvasText; } .dk-tag-group__tag--selected { border-width: var(--border-width-2); } }
 }

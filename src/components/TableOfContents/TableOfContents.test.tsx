@@ -141,6 +141,15 @@ describe('TableOfContents', () => {
 
 // What a mutation run on TableOfContents.tsx found no test for (44 of 80 mutants were caught, run 273): each test
 // names the rule a changed operator would have broken without anything failing.
+describe('TableOfContents hover', () => {
+  test('a link fades to its hover color over motion-hover, as a Link does', async () => {
+    await render(<TableOfContents id="tf" items={[{ id: 'x', label: 'One' }, { id: 'y', label: 'Two' }]} />);
+    const l = document.querySelector('#tf .dk-toc__link')!;
+    const s = withMotion(() => [css(l).transitionProperty, css(l).transitionDuration]);
+    expect(s).toEqual(['color', '0.15s']);
+  });
+});
+
 describe('TableOfContents: rules no test covered', () => {
   test('with no container it reads the page\'s <main>, and headings outside it are left out', async () => {
     await render(<div><h2>Outside</h2><main><h2>Inside</h2><h3>Under it</h3></main><TableOfContents id="toc" /></div>);

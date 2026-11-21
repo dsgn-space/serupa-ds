@@ -13,6 +13,8 @@
   border-inline-start: var(--border-width-2) solid var(--table-of-contents-line, var(--border)); color: inherit; text-decoration: none; overflow-wrap: anywhere;
 }
 @media (hover: hover) { .dk-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
+.dk-toc__link { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
+@media (prefers-reduced-motion: reduce) { .dk-toc__link { transition: none; } }
 .dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
 .dk-toc__link { --dk-bar: var(--border-width-2); }
 .dk-toc__link:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }

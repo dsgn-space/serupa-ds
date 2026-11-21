@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, splitWords } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, splitWords, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { labels as deLabels } from '../../labels/de';
@@ -98,6 +98,13 @@ describe('Attachment', () => {
   test('the size follows the locale\'s digits and units, and the kind word the labels', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Attachment id="i" name="Foto.jpg" bytes={1_500_000} /></SerupaProvider>);
     expect(meta(root('i'))).toBe('Gambar1,5 MB');
+  });
+
+  test('a linked name fades to its hover color over motion-hover, as a Link does', async () => {
+    await render(<Attachment id="fade" name="Q3.xlsx" href="/files/q3" />);
+    const a = document.querySelector('#fade a.dk-attachment__name')!;
+    const s = withMotion(() => [css(a).transitionProperty, css(a).transitionDuration]);
+    expect(s).toEqual(['color', '0.15s']);
   });
 
   test('href makes the name a link named by the file and described by its kind and size; download passes through', async () => {

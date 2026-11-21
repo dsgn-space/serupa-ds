@@ -61,6 +61,8 @@
 }
 .dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
 @media (hover: hover) { .dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); } }
+.dk-chat-message__reasoning-toggle { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
+@media (prefers-reduced-motion: reduce) { .dk-chat-message__reasoning-toggle { transition: none; } }
 .dk-chat-message__reasoning-toggle:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-chat-message__reasoning-icon { font-size: var(--spacing-4); }
 .dk-chat-message__reasoning[open] .dk-chat-message__reasoning-icon { rotate: var(--dk-chat-turn); }
