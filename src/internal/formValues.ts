@@ -7,9 +7,9 @@
 export type FlatValues = Map<string, unknown>;
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-// Controls that hold no value of their own.
+// Controls that hold no value of their own. module state: a fixed list nothing writes to.
 const SKIP = new Set(['submit', 'button', 'reset', 'image', 'fieldset', 'output', 'object']);
-// Never a key: an object's own machinery.
+// Never a key: an object's own machinery. module state: a fixed list nothing writes to.
 const UNSAFE = new Set(['__proto__', 'prototype', 'constructor']);
 
 /** A control's name as a path: "addresses[1].city" and "addresses.1.city" are both "addresses.1.city"; "tags[]" is "tags". */

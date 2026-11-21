@@ -31,6 +31,15 @@ const SignUp = z.object({
 - Editing one value where it's shown: use [InlineEdit](../InlineEdit/README.md).
 - A search box: use [SearchInput](../SearchInput/README.md) in a plain `<form role="search">`.
 
+## Anatomy
+
+Drawn from the `MultiStep` story. The parts are FormSteps'.
+
+1. **Progress** (`.dk-form-steps__progress`): the Stepper above the steps, showing which one people are on.
+2. **Step** (`.dk-form-steps__panel`): one step's fields; the steps not showing stay in the form, hidden.
+3. **Step heading** (`.dk-form-steps__title`): the step's title; focus moves here when people move to the step.
+4. **Buttons** (`.dk-form-steps__actions`): Next (or the last step's submit button), then Back.
+
 ## Usage
 
 - **Any schema library.** Pass a Zod 4 (or 3.24 and later), Valibot 1, ArkType or other [Standard Schema](https://standardschema.dev). Serupa depends on none of them: use the one the project has. Without a schema, the controls' own constraints (`required`, `type="email"`, `maxLength`) are checked, in the provider's words.
@@ -43,7 +52,7 @@ const SignUp = z.object({
 - **Checks after the schema**, such as "That username is taken": `checks={{ username: async (value, { signal }) => … }}` runs once the field passes the schema, says "Checking…" under it meanwhile, cancels an older check when the value changes, and waits for a pause in typing. Submit waits for them.
 - **Fields that depend on others**: `useFormValue("country")` inside the form gives a field's value as it changes. Render the dependent field only when it applies, and let the schema require it only then.
 - **Drafts**: `draft="application"` keeps the answers in the browser as people type and fills them back in when they come back; passwords, card numbers and one-time codes are never kept. It's forgotten once the form is sent. `useForm()` gives `draftSavedAt` for a [SaveStatus](../SaveStatus/README.md), `draftRestored`, and `discardDraft()` for a "Start again" button.
-- **Unsaved changes**: `warnUnsaved` asks before the page is closed or reloaded while there are changes that weren't sent. In a [Dialog](../Dialog/README.md), pass `onDirtyChange` to its `unsaved`, so closing it asks "Discard changes?" first.
+- **Unsaved changes**: `warnUnsaved` asks before the page is closed or reloaded while there are changes that weren't sent. In a [Dialog](../Dialog/README.md), pass `onUnsavedChanges` to its `unsaved`, so closing it asks "Discard changes?" first.
 - **Sending**: a submit [Button](../Button/README.md) inside shows loading while `onSubmit`'s promise runs, and a second submit does nothing until it settles. Keep what people typed when it fails.
 - **`defaultValues`** fill the fields by name; a control's own `value` or `defaultValue` wins. Put the named control straight inside its Field for this; one wrapped deeper takes `defaultValue` itself.
 
@@ -83,10 +92,10 @@ const SignUp = z.object({
 | `draft` | `string` | none | Keeps a draft in the browser under this key |
 | `warnUnsaved` | boolean | `false` | Asks before the page goes while there are changes |
 | `summary` | boolean | `true` | The ErrorSummary at the top after a failed submit |
-| `onDirtyChange` | `(dirty) => void` | | When the form gets changes that weren't sent, and when it has none again |
-| `onValuesChange` | `(values) => void` | | The unchecked values whenever a field changes |
+| `onUnsavedChanges` | `(unsaved) => void` | | When the form gets changes that weren't sent, and when it has none again |
+| `onEdit` | `(values) => void` | | The unchecked values whenever a field changes |
 
-`className`, `ref` and other props go to the `<form>`, which has `data-component="form"` and `noValidate`.
+`id`, `className`, `ref` and other props go to the `<form>`, which has `data-component="form"` and `noValidate`.
 
 `useForm()` inside the form gives `values()`, `defaults`, `validate(names?)`, `setErrors(errors, message?)`, `submit()`, `reset()`, `discardDraft()`, `dirty`, `submitting`, `submitCount`, `draftSavedAt` and `draftRestored`. `useFormValue(name)` gives one field's value as it changes.
 

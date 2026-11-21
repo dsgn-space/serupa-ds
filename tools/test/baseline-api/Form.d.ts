@@ -27,8 +27,8 @@ interface FormHandle {
     draftSavedAt: null | number;
     draftRestored: boolean;
 }
-type In<S> = S extends StandardSchemaV1 ? StandardSchemaV1.InferInput<S> : Record<string, unknown>;
-type Out<S> = S extends StandardSchemaV1 ? StandardSchemaV1.InferOutput<S> : Record<string, unknown>;
+type In<S> = S extends StandardSchemaV1 ? InferInput<S> : Record<string, unknown>;
+type Out<S> = S extends StandardSchemaV1 ? InferOutput<S> : Record<string, unknown>;
 type DeepPartial<T> = T extends readonly (infer U)[] ? readonly DeepPartial<U>[] : T extends object ? {
     [K in keyof T]?: DeepPartial<T[K]>;
 } : T;
@@ -42,8 +42,8 @@ interface FormProps<S extends StandardSchemaV1 | undefined = undefined> extends 
     draft?: string | undefined;
     warnUnsaved?: boolean | undefined;
     summary?: boolean | undefined;
-    onDirtyChange?: ((dirty: boolean) => void) | undefined;
-    onValuesChange?: ((values: Record<string, unknown>) => void) | undefined;
+    onUnsavedChanges?: ((unsaved: boolean) => void) | undefined;
+    onEdit?: ((values: Record<string, unknown>) => void) | undefined;
     children?: React.ReactNode | undefined;
 }
 declare const Form: <S extends StandardSchemaV1 | undefined = undefined>(props: FormProps<S> & {

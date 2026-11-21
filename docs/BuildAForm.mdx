@@ -183,12 +183,12 @@ export function SettingsPage({ saved }: { saved: z.input<typeof Settings> }) {
 }
 ```
 
-The same form in a [Dialog](?path=/docs/components-overlays-dialog--docs): pass the form's `onDirtyChange` to the dialog's `unsaved`, so closing it with changes asks "Discard changes?" first.
+The same form in a [Dialog](?path=/docs/components-overlays-dialog--docs): pass the form's `onUnsavedChanges` to the dialog's `unsaved`, so closing it with changes asks "Discard changes?" first.
 
 ```tsx
 const [unsaved, setUnsaved] = React.useState(false);
 <Dialog open={open} onOpenChange={setOpen} title="Edit profile" unsaved={unsaved}>
-  <Form aria-label="Profile" schema={Profile} defaultValues={profile} onDirtyChange={setUnsaved} onSubmit={saveAndClose}>…</Form>
+  <Form aria-label="Profile" schema={Profile} defaultValues={profile} onUnsavedChanges={setUnsaved} onSubmit={saveAndClose}>…</Form>
 </Dialog>
 ```
 

@@ -160,7 +160,7 @@ function EditInDialog() {
   return <>
     <Button onClick={() => { setOpen(true); }}>Edit profile</Button>
     <Dialog open={open} onOpenChange={setOpen} title="Edit profile" unsaved={unsaved}>
-      <Form aria-label="Profile" defaultValues={{ name: 'Ani Wijaya' }} onSubmit={() => { setOpen(false); }} onDirtyChange={setUnsaved} warnUnsaved>
+      <Form aria-label="Profile" defaultValues={{ name: 'Ani Wijaya' }} onSubmit={() => { setOpen(false); }} onUnsavedChanges={setUnsaved} warnUnsaved>
         <Field label="Display name"><Input name="name" autoComplete="nickname" /></Field>
         <div><Button type="submit">Save</Button></div>
       </Form>
@@ -168,7 +168,7 @@ function EditInDialog() {
   </>;
 }
 /** Unsaved changes: warnUnsaved asks before the page is closed or reloaded while there are changes, and the Dialog
- *  takes onDirtyChange as its unsaved prop, so closing it asks "Discard changes?" first. */
+ *  takes onUnsavedChanges as its unsaved prop, so closing it asks "Discard changes?" first. */
 export const UnsavedChanges: Story = { render: () => <EditInDialog /> };
 
 // The stress story (G14): long words in the labels, the messages and the summary.

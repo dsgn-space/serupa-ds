@@ -4,7 +4,7 @@ import { cn, useLatest, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { FormErrorsContext, FormSubmittingContext, type FormErrorsValue } from '../../internal/formErrors';
 import { getPath, issueKey, merge, pathKey, readFlat, same, stamp, toNested, type FlatValues } from '../../internal/formValues';
-import type { StandardSchemaV1 } from '../../internal/standardSchema';
+import type { InferInput, InferOutput, StandardSchemaV1 } from '../../internal/standardSchema';
 import { useLocale, useSettings } from '../../internal/provider';
 import { problemText } from '../../internal/validity';
 import { byId } from '../../internal/root';
@@ -52,8 +52,8 @@ export interface FormHandle {
   draftRestored: boolean;
 }
 
-type In<S> = S extends StandardSchemaV1 ? StandardSchemaV1.InferInput<S> : Record<string, unknown>;
-type Out<S> = S extends StandardSchemaV1 ? StandardSchemaV1.InferOutput<S> : Record<string, unknown>;
+type In<S> = S extends StandardSchemaV1 ? InferInput<S> : Record<string, unknown>;
+type Out<S> = S extends StandardSchemaV1 ? InferOutput<S> : Record<string, unknown>;
 type DeepPartial<T> = T extends readonly (infer U)[] ? readonly DeepPartial<U>[] : T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
 
 export interface FormProps<S extends StandardSchemaV1 | undefined = undefined> extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'action' | 'children' | 'defaultValue'> {
@@ -84,9 +84,9 @@ export interface FormProps<S extends StandardSchemaV1 | undefined = undefined> e
   summary?: boolean | undefined;
   /** Called when the form gets changes that weren't sent, and when it has none again: a Dialog around it takes this as
    *  its unsaved prop, so closing it asks first. */
-  onDirtyChange?: ((dirty: boolean) => void) | undefined;
+  onUnsavedChanges?: ((unsaved: boolean) => void) | undefined;
   /** Called with the values (unchecked) whenever a field changes. */
-  onValuesChange?: ((values: Record<string, unknown>) => void) | undefined;
+  onEdit?: ((values: Record<string, unknown>) => void) | undefined;
   /** The fields and the submit button. */
   children?: React.ReactNode | undefined;
 }
@@ -149,7 +149,7 @@ const FormContext = /* @__PURE__ */ React.createContext<FormHandle | null>(null)
 export const FormInternals = /* @__PURE__ */ React.createContext<{ show: (keys: readonly string[]) => Promise<boolean> } | null>(null);
 
 function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, ...props }: FormProps<S> & React.RefAttributes<HTMLFormElement>) {
-  const { schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onDirtyChange, onValuesChange, className, children, ...rest } = props;
+  const { schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onUnsavedChanges, onEdit, className, children, ...rest } = props;
   const sds = useSettings(words), say = useSettings(inputWords).labels.invalidValue, locale = useLocale();
   // The server's answer it starts with (a form action's, rendered on the server) shows from the first render.
   const [st, setSt] = React.useState<State>(() => {
@@ -157,7 +157,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     return { ...START, server, failed: Object.keys(server).length > 0, message: shows(message) ? message : null };
   });
   const patch = React.useCallback((f: (s: State) => Partial<State> | null) => setSt((s) => { const p = f(s); return p ? { ...s, ...p } : s; }), []);
-  const latest = useLatest({ schema, onSubmit, checks, onValuesChange, say, locale, draft, summary });
+  const latest = useLatest({ schema, onSubmit, checks, onEdit, say, locale, draft, summary });
   const form = React.useRef<HTMLFormElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { form.current = n; });
 
@@ -316,7 +316,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
         for (const k of moved) if (prev.has(k) && flat.has(k)) server = without(server, k);
         return server === s.server && dirty === s.dirty ? null : { server, dirty };
       });
-      const cb = latest.current.onValuesChange;
+      const cb = latest.current.onEdit;
       if (cb) cb(L.nested);
       // A field showing a message is checked again as it changes, and so is every other one showing one: "Confirm
       // password" stops saying they don't match once the password is changed to match it.
@@ -448,7 +448,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     return () => { if (document.title === sds.labels.formErrorTitle(before)) document.title = before; };
   }, [st.failed, prefix, sds.labels]);
 
-  const tellDirty = useLatest(onDirtyChange);
+  const tellDirty = useLatest(onUnsavedChanges);
   const toldDirty = React.useRef(false);
   React.useEffect(() => {
     if (toldDirty.current === st.dirty) return;

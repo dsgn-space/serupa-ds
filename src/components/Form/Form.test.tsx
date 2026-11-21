@@ -268,13 +268,20 @@ describe('Form', () => {
     await expect.poll(leave).toBe(false);
   });
 
-  test('onDirtyChange: told when the form gets changes and when it has none again', async () => {
-    const onDirtyChange = vi.fn();
-    await render(<Form onDirtyChange={onDirtyChange} defaultValues={{ name: 'Ani' }}><Field label="Name"><Input id="n" name="name" /></Field></Form>);
+  test('onUnsavedChanges: told when the form gets changes and when it has none again', async () => {
+    const onUnsavedChanges = vi.fn();
+    await render(<Form onUnsavedChanges={onUnsavedChanges} defaultValues={{ name: 'Ani' }}><Field label="Name"><Input id="n" name="name" /></Field></Form>);
     await userEvent.type(el('n'), 'ta');
-    await expect.poll(() => onDirtyChange.mock.calls).toEqual([[true]]);
+    await expect.poll(() => onUnsavedChanges.mock.calls).toEqual([[true]]);
     await userEvent.keyboard('{Backspace}{Backspace}');
-    await expect.poll(() => onDirtyChange.mock.calls).toEqual([[true], [false]]);
+    await expect.poll(() => onUnsavedChanges.mock.calls).toEqual([[true], [false]]);
+  });
+
+  test('onEdit: given the values, nested by name, as a field changes', async () => {
+    const onEdit = vi.fn();
+    await render(<Form onEdit={onEdit}><Field label="City"><Input id="c" name="address.city" /></Field></Form>);
+    await userEvent.type(el('c'), 'Ubud');
+    await expect.poll(() => onEdit.mock.lastCall).toEqual([{ address: { city: 'Ubud' } }]);
   });
 
   test('useForm: dirty, validate and setErrors from inside the form', async () => {
