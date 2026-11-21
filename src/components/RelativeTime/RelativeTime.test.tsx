@@ -7,6 +7,16 @@ import { SerupaProvider } from '../../internal/provider';
 import { RelativeTime, relativeTime } from './RelativeTime';
 
 const el = (id: string) => document.getElementById(id) as HTMLTimeElement;
+
+// In a right-to-left page the first character should still sit left of the last: the words keep their own order.
+const readsLeftToRight = (e: HTMLElement) => {
+  const walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) if (n.textContent) nodes.push(n as Text);
+  const at = (t: Text, i: number) => { const r = document.createRange(); r.setStart(t, i); r.setEnd(t, i + 1); return r.getBoundingClientRect().left; };
+  const first = nodes[0]!, last = nodes[nodes.length - 1]!;
+  return at(first, 0) < at(last, last.length - 1);
+};
 const ago = (s: number) => Date.now() - s * 1000;
 afterEach(() => { vi.useRealTimers(); });
 
@@ -134,5 +144,10 @@ describe('RelativeTime', () => {
       {[-8, -7, 7, 8].map((n) => <RelativeTime key={n} id={'l8e97' + n} date={day(n)} />)}
     </SerupaProvider>);
     expect([-8, -7, 7, 8].map((n) => document.getElementById('l8e97' + n)!.textContent)).toEqual([med(-8), '7 days ago', 'in 7 days', med(8)]);
+  });
+
+  test('in a right-to-left page, English words keep their own order: "3 minutes ago", not "minutes ago 3"', async () => {
+    await render(<div dir="rtl"><RelativeTime id="rtl" date={new Date(Date.now() - 3 * 60_000)} locale="en" /></div>);
+    expect([el('rtl').textContent, readsLeftToRight(el('rtl'))]).toEqual(['3 minutes ago', true]);
   });
 });

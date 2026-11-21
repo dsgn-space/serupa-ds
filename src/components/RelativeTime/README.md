@@ -49,6 +49,7 @@ import { RelativeTime } from "@diki-stwn/serupa-ds";
 - The exact date is in `title`, which shows on hover but isn't reliably read out or reachable by keyboard. Where the exact time matters, show it as text too or wrap it in a [Tooltip](../Tooltip/README.md) on a focusable element.
 - It doesn't announce its updates: a live region that changes every minute would be noise.
 - **Keyboard:** none: inline text, not focusable.
+- With a `locale` of its own it carries that locale's direction (`dir`) with its `lang`, so "3 minutes ago" in English keeps its order in a right-to-left page.
 
 ## Props
 
