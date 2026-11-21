@@ -128,6 +128,14 @@ export default tseslint.config(
     rules: { 'serupa/no-literal-words': 'error', 'serupa/no-literal-delay': 'error' },
   },
   {
+    // The same words rule for the blocks and the shared code, in .ts files too, where words reach people through
+    // announce(), setAttribute or an element property rather than JSX.
+    files: ['src/{components,blocks,internal}/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.{test,stories}.{ts,tsx}', 'src/**/labels.ts', 'src/internal/KitchenSink/**'],
+    plugins: { serupa },
+    rules: { 'serupa/no-literal-words': 'error' },
+  },
+  {
     // A test body is async whether it awaits or not, and expect(obj.method) reads a spy without calling it.
     files: ['src/**/*.test.{ts,tsx}'],
     plugins: { vitest },

@@ -1126,7 +1126,7 @@ Rules of thumb:
 
 ## Content and voice
 
-How the words in a product built with the system should read: labels, hints, errors, empty states and the words the components say on their own. Write plainly, for someone who is busy and may be using a screen reader, a translation tool or a small screen.
+How the words in a product built with the system should read: buttons, labels, hints, errors, empty states, confirmations and the words the components say on their own. Write plainly, for someone who is busy and may be using a screen reader, a translation tool or a small screen. Each example has its Indonesian beside the English: the same rules hold in both, and In Indonesian, at the end, adds the ones only Indonesian needs.
 
 **Voice**
 
@@ -1139,18 +1139,31 @@ How the words in a product built with the system should read: labels, hints, err
 - Leave out "your" and "my" where the page already says whose it is: "Favorites", "Settings", not "My favorites", "Your settings". Keep them only where two people's things meet, such as "Your files" beside "Shared with you".
 - Use plain, neutral terms: "allow list" and "block list", not "whitelist" and "blacklist"; "main" and "replica" (or "primary" and "secondary"), not "master" and "slave".
 
+**Tone for the moment**
+
+The voice stays the same; the tone moves with what just happened to the person.
+
+| Moment | Tone | English | Indonesian |
+| --- | --- | --- | --- |
+| A routine thing worked | Brief, done | Changes saved | Perubahan disimpan |
+| Something is under way | What's happening, with … | Saving… | Menyimpan… |
+| A mistake the person can fix | Calm, says how | Enter a password with at least 12 characters | Masukkan kata sandi minimal 12 karakter |
+| A failure they can't fix | Honest, says what happens next | We couldn't reach the server. Your changes are kept and will be sent when you're back online. | Server tidak dapat dihubungi. Perubahan Anda tetap tersimpan dan akan dikirim saat Anda kembali online. |
+| Something that can't be undone | Plain, names what's lost | Delete 3 files? This can't be undone. | Hapus 3 file? Tindakan ini tidak dapat dibatalkan. |
+| A first visit, nothing here yet | Inviting, one next step | Add your first customer | Tambahkan pelanggan pertama Anda |
+
 **Words to use**
 
-One word for one act, so a form reads in one voice and someone using voice control can say what they see. The components' own words follow this list.
+One word for one act, so a form reads in one voice and someone using voice control can say what they see. The components' own words follow this list, in both languages.
 
-| Use | Not | For |
-| --- | --- | --- |
-| choose | pick, select | taking one or more options from a set: "Choose a date", "Choose at least one option." |
-| select | click, tap, press | acting on a control whatever the input: "Select Save". Also for selecting items or text to act on them: "Select all rows" |
-| enter | type, input, fill in | putting a value in a field: "Enter your email" |
-| sign in, sign out | log in, login, log out | starting and ending a session: "Sign in", "We signed you out" |
-| remove | delete | taking something out of a list or a field, when the thing itself stays: a Badge's remove button |
-| delete | remove | destroying the thing itself, usually after a confirmation: "Delete project" |
+| Use | Not | Indonesian | For |
+| --- | --- | --- | --- |
+| choose | pick, select | pilih | taking one or more options from a set: "Choose a date", "Pilih tanggal" |
+| select | click, tap, press | pilih (not "klik", "ketuk") | acting on a control whatever the input: "Select Save". Also for selecting items or text to act on them: "Select all rows", "Pilih semua baris" |
+| enter | type, input, fill in | masukkan (not "ketik", "isi") | putting a value in a field: "Enter your email", "Masukkan email Anda" |
+| sign in, sign out | log in, login, log out | masuk, keluar | starting and ending a session: "Sign in", "Masuk" |
+| remove | delete | hapus, keluarkan | taking something out of a list or a field, when the thing itself stays: a Badge's remove button, "Hapus Desain" |
+| delete | remove | hapus | destroying the thing itself, usually after a confirmation: "Delete project", "Hapus proyek" |
 
 **Capitalization and punctuation**
 
@@ -1167,6 +1180,17 @@ One word for one act, so a form reads in one voice and someone using voice contr
 - A link says where it goes: "Billing settings", not "Learn more" on its own. If several links on a page would read the same, give each a distinct name.
 - Icon-only buttons need a name (`aria-label`) that is the same verb you'd write on a text button.
 
+| What it does | Write | Indonesian | Not |
+| --- | --- | --- | --- |
+| Keeps a form's changes | Save changes | Simpan perubahan | OK, Submit, Kirim formulir |
+| Sends something to someone | Send invite | Kirim undangan | Submit, Lanjutkan |
+| Destroys the thing | Delete project | Hapus proyek | Yes, Ya, Confirm, Konfirmasi |
+| Leaves without changing anything | Cancel | Batal | No, Tidak, Close |
+| Asks for more before it acts | Rename… | Ganti nama… | Rename (when a dialog follows) |
+| Tries a failed thing again | Try again | Coba lagi | Retry?, Ulangi? |
+| Brings a file in or out | Upload file, Download report | Unggah file, Unduh laporan | Upload, Download (alone, when it isn't clear what) |
+| Opens another page | Billing settings | Pengaturan tagihan | Learn more, Selengkapnya, Click here, Klik di sini |
+
 **Labels and hints**
 
 - A field label is a noun phrase: "Email", "Start date", "Project name". Don't use the placeholder as the label; it disappears as soon as someone types.
@@ -1177,13 +1201,17 @@ One word for one act, so a form reads in one voice and someone using voice contr
 
 Say what happened and how to fix it, in that order, next to the thing that needs fixing.
 
-| Instead of | Write |
-| --- | --- |
-| Invalid input | Enter a date after 1 Jan 2026 |
-| Error 413 | report.pdf is larger than 10 MB |
-| This field is required | Enter your email |
-| Something went wrong | We couldn't save your changes. Try again. |
-| photo.heic: this type of file isn’t accepted. | photo.heic isn’t a PNG or JPG. |
+| Instead of | Write | Indonesian |
+| --- | --- | --- |
+| Invalid input | Enter a date after 1 Jan 2026 | Masukkan tanggal setelah 1 Jan 2026 |
+| Error 413 | report.pdf is larger than 10 MB | report.pdf lebih dari 10 MB |
+| This field is required | Enter your email | Masukkan email Anda |
+| Something went wrong | We couldn't save your changes. Try again. | Perubahan Anda tidak dapat disimpan. Coba lagi. |
+| photo.heic: this type of file isn’t accepted. | photo.heic isn’t a PNG or JPG. | photo.heic bukan PNG atau JPG. |
+| Passwords do not match | Enter the same password in both fields | Masukkan kata sandi yang sama di kedua kolom |
+| Username already exists | That username is taken. Try another. | Nama pengguna itu sudah dipakai. Coba yang lain. |
+
+In Indonesian, "Kolom ini wajib diisi" and "Terjadi kesalahan" are the same mistakes as "This field is required" and "Something went wrong": say what to enter or what failed.
 
 - Put a field's error in Field's `error`, so it's tied to the control and read with it.
 - If nothing the person does will fix it, say so and say what happens next: "We couldn't reach the server. Your changes are kept and will be sent when you're back online."
@@ -1193,6 +1221,19 @@ Say what happened and how to fix it, in that order, next to the thing that needs
 
 - An empty state says what will be here and how to add the first one: "No projects yet" and a "Create project" button.
 - A confirmation names the thing and the consequence: "Delete Website redesign? Its 12 tasks are deleted too." Keep destructive confirmations for actions that can't be undone; for the rest, act and offer Undo in a Toast.
+
+| Where | English | Indonesian |
+| --- | --- | --- |
+| Empty list, first visit | No projects yet. Create project | Belum ada proyek. Buat proyek |
+| Empty search or filter | No results for "laporan". Clear filters | Tidak ada hasil untuk "laporan". Hapus filter |
+| Nothing left to do | No new notifications | Tidak ada notifikasi baru |
+| Confirm, title | Delete Website redesign? | Hapus Website redesign? |
+| Confirm, body | Its 12 tasks are deleted too. This can't be undone. | 12 tugas di dalamnya juga akan terhapus. Tindakan ini tidak dapat dibatalkan. |
+| Confirm, buttons | Delete, Cancel | Hapus, Batal |
+| Unsaved changes | Discard changes? Your edits to this page haven't been saved. Discard, Keep editing | Buang perubahan? Perubahan di halaman ini belum disimpan. Buang, Lanjut mengedit |
+| Undo instead of confirming | Project archived. Undo | Proyek diarsipkan. Urungkan |
+
+A confirmation's title asks with the verb on its button, in both languages: "Hapus Website redesign?" has a "Hapus" button, not "Ya" or "OK".
 
 **Numbers, dates and units**
 

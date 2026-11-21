@@ -92,13 +92,21 @@ for (const [l, mod] of Object.entries(packs)) {
     for (const args of SAMPLES[k] || []) {
       let out;
       try { out = L[k](...args); } catch (e) { empty.push(`${k}(${JSON.stringify(args)}) throws ${e.message}`); continue; }
-      if (typeof out !== 'string' || (!out.trim() && !(l === 'en' && SILENT_IN_ENGLISH.has(k)))) empty.push(`${k}(${JSON.stringify(args)})`);
-      else if (l !== 'en' && out === en[k](...args) && !sameOk(l, k)) same.push(`${k}(${JSON.stringify(args)})`);
+      if (typeof out !== 'string' || (!out.trim() && !((l === 'en' || l === 'pseudo') && SILENT_IN_ENGLISH.has(k)))) empty.push(`${k}(${JSON.stringify(args)})`);
+      else if (l !== 'en' && out === en[k](...args) && !sameOk(l, k) && !(l === 'pseudo' && SILENT_IN_ENGLISH.has(k))) same.push(`${k}(${JSON.stringify(args)})`);
     }
   }
-  t(`${l}: all ${Object.keys(en).length} words, each a text or a function as in English, under locale "${mod.locale}"`, !missing.length && !extra.length && !kind.length && typeof mod.locale === 'string' && new Intl.Locale(mod.locale).language === l.split('-')[0],
+  t(`${l}: all ${Object.keys(en).length} words, each a text or a function as in English, under locale "${mod.locale}"`, !missing.length && !extra.length && !kind.length && typeof mod.locale === 'string' && (l === 'pseudo' ? mod.locale === 'en-XA' : new Intl.Locale(mod.locale).language === l.split('-')[0]),
     `missing: ${missing.slice(0, 8).join(', ')}; not in English: ${extra.slice(0, 8).join(', ')}; another kind: ${kind.join(', ')}`);
   t(`${l}: every word and every sample says something`, !empty.length, empty.slice(0, 8).join('; '));
   if (l !== 'en') t(`${l}: nothing is left in English`, !same.length, same.slice(0, 10).join('; '));
+}
+// The pseudo-locale: each word between ⟦ ⟧ and at least 40% longer than English, and a name a label is given stays.
+if (packs.pseudo) {
+  const P = packs.pseudo.labels;
+  const short = Object.keys(en).filter((k) => typeof en[k] === 'string' && en[k].trim() && !(P[k].startsWith('⟦') && P[k].endsWith('⟧') && P[k].length - 2 >= en[k].length * 1.4));
+  t('pseudo: every text word is between ⟦ ⟧ and at least 40% longer than English', !short.length, short.slice(0, 8).join(', '));
+  t('pseudo: a name or count a label is given stays as it was', P.fileRemoved('Report.pdf').includes('Report.pdf') && P.itemsOf('21', '30', '1,245').includes('1,245') && packs.pseudo.pseudo('Save') === '⟦Šááṽéé⟧',
+    `${P.fileRemoved('Report.pdf')} · ${P.itemsOf('21', '30', '1,245')} · ${packs.pseudo.pseudo('Save')}`);
 }
 done(report('Label packs', R));

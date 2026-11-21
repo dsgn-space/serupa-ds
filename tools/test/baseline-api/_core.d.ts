@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type LanguagePack, localeDir, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "amber" | "blue" | "cyan" | "emerald" | "fuchsia" | "green" | "indigo" | "lime" | "orange" | "pink" | "purple" | "red" | "rose" | "sky" | "teal" | "violet" | "yellow" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -58,10 +58,15 @@ interface IconData {
 interface SerupaProviderProps {
     locale?: string;
     labels?: Partial<SerupaLabels>;
+    languages?: readonly LanguagePack[];
     icons?: Array<IconData | Readonly<Record<string, IconData>>> | IconData | Readonly<Record<string, IconData>>;
     platform?: "apple" | "other";
     size?: "lg" | "md" | "sm";
     children?: React.ReactNode;
+}
+interface LanguagePack {
+    locale: string;
+    labels: Partial<SerupaLabels>;
 }
 interface SerupaSettings {
     locale: string | undefined;
@@ -128,6 +133,7 @@ interface CopyToClipboard {
 declare function useCopyToClipboard(options?: CopyToClipboardOptions): CopyToClipboard;
 declare function tokenValue(name: string, element?: Element | null): string;
 declare function useTokenValue(name: string, ref?: React.RefObject<Element | null>): string;
+declare function localeDir(locale: string): "ltr" | "rtl" | undefined;
 type CustomIconName = never;
 declare const customIcons: readonly CustomIconName[];
 declare function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void;
@@ -148,6 +154,7 @@ declare global {
             enLabels: typeof DEFAULT_LABELS;
             getIcon: typeof getIcon;
             idLabels: typeof idLabels;
+            localeDir: typeof localeDir;
             plural: typeof plural;
             prefersReducedMotion: typeof prefersReducedMotion;
             registerIcons: typeof registerIcons;
