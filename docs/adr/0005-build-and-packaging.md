@@ -58,7 +58,7 @@ The masks and gradients moved out of `utilities.css` and `bundle.css` into `util
 
 ## Update, 21 November 2026 (17.0)
 
-The extra file is gone, and so are the classes on a palette step and the filter, 3D-transform, blend, column-break and text-shadow families: about 60% of the utility rules, none used by the system. `tools/utilities/trimmed.mjs` names what was removed, and the build fails if a template edit brings one back. A page that wants one writes the CSS property itself, from the tokens. `bundle.css` is 1.23 MB (148 KB gzipped), from 1.70 MB in 16.1.0.
+The extra file is gone, and so are the classes on a palette step and the filter, 3D-transform, blend, column-break and text-shadow families: about two thirds of the utility rules, none used by the system. `tools/utilities/trimmed.mjs` names what was removed, and the build fails if a template edit brings one back. A page that wants one writes the CSS property itself, from the tokens. `bundle.css` is 1.10 MB (135 KB gzipped), from 1.70 MB in 16.1.0. The scales inside the families that stay lost what nothing used too: a color on one side of a border, most scroll-margin and scroll-padding sides, and translate on both axes or z.
 
 ## Action items
 

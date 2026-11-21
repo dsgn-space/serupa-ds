@@ -468,7 +468,7 @@ Border and outline utilities, as classes in `bundle.css`. Widths and offsets are
 | --- | --- |
 | border-radius | `rounded-<size>` on all corners; sides `rounded-t-`, `-r-`, `-b-`, `-l-`, `-s-`, `-e-`; corners `rounded-tl-`, `-tr-`, `-br-`, `-bl-`, `-ss-`, `-se-`, `-ee-`, `-es-` |
 | border-width | `border` (1px), `border-0`, `-2`, `-4`, `-8`; sides `border-x`, `-y`, `-s`, `-e`, `-bs`, `-be`, `-t`, `-r`, `-b`, `-l` (each with the same widths); between children `divide-x`, `divide-y` (and `-0`, `-2`, `-4`, `-8`, `-reverse`) |
-| border-color | `border-<color>` for every role, white and black, on every side (`border-t-danger`, `border-x-border`); `divide-<color>`; `inherit`, `current`, `transparent` |
+| border-color | `border-<color>` for every role, white and black, on all four sides (a top-only colored edge is `border-t border-danger`: only the top has a width); `divide-<color>`; `inherit`, `current`, `transparent` |
 | border-style | `border-solid`, `-dashed`, `-dotted`, `-double`, `-hidden`, `-none`; `divide-dashed`… |
 | outline-width | `outline` (1px), `outline-0`, `-1`, `-2`, `-4`, `-8` |
 | outline-color | `outline-<color>` for every role, white and black |
@@ -580,7 +580,7 @@ The translate classes, as classes in `bundle.css`, use the spacing scale. They s
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
-| translate | `translate-<step>`, `translate-x-<step>`, `translate-y-<step>`, `translate-z-<step>` for every spacing step; fractions `-1/2` … `-11/12` and `-full` (of the element's own size); negatives; `translate-3d`, `translate-none` | `spacing-*` |
+| translate | `translate-x-<step>` and `translate-y-<step>` for every spacing step; fractions `-1/2` … `-11/12` and `-full` (of the element's own size); negatives; `translate-none` | `spacing-*` |
 
 Transforms move how an element is drawn, not where it sits in the layout, so neighbors don't shift.
 
@@ -1032,7 +1032,7 @@ Focus shows on top of every other state, and disabled turns hover and pressed of
 
 ## Interactivity
 
-Interactivity utilities, as classes in `bundle.css`. Colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, `state-layer` uses the `opacity-state-*` tokens, and the rest are keywords.
+Interactivity utilities, as classes in `bundle.css`. Colors are the role colors, `scroll-m-*` and `scroll-p-*` use the spacing scale, `state-layer` uses the `opacity-state-*` tokens, and the rest are keywords.
 
 | Property | Classes |
 | --- | --- |
@@ -1048,8 +1048,8 @@ Interactivity utilities, as classes in `bundle.css`. Colors come from the palett
 | scrollbar-color | `scrollbar-thumb-<color>` and `scrollbar-track-<color>` (set both; the other defaults to transparent) |
 | scrollbar-width | `scrollbar-auto` `scrollbar-thin` `scrollbar-none` |
 | scrollbar-gutter | `scrollbar-gutter-auto` `scrollbar-gutter-stable` `scrollbar-gutter-both` |
-| scroll-margin | `scroll-m-<step>` and sides `scroll-mx-` `-my-` `-ms-` `-me-` `-mbs-` `-mbe-` `-mt-` `-mr-` `-mb-` `-ml-` for every spacing step; negatives |
-| scroll-padding | `scroll-p-<step>` and sides `scroll-px-` `-py-` `-ps-` `-pe-` `-pbs-` `-pbe-` `-pt-` `-pr-` `-pb-` `-pl-` |
+| scroll-margin | `scroll-m-<step>` and sides `scroll-mx-` `-ms-` `-me-` `-mt-` for every spacing step |
+| scroll-padding | `scroll-p-<step>` and sides `scroll-px-` `-ps-` `-pe-` `-pt-` |
 | scroll-snap-align | `snap-start` `snap-end` `snap-center` `snap-align-none` |
 | scroll-snap-stop | `snap-normal` `snap-always` |
 | scroll-snap-type | `snap-x` `snap-y` `snap-both` `snap-none`, with `snap-mandatory` or `snap-proximity` (default) |

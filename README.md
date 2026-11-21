@@ -112,7 +112,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 
 ### 4. Ship it
 
-`bundle.css` holds the utility classes (about 1.2 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
+`bundle.css` holds the utility classes (about 1.1 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
 
 ```js
 // vite.config.js

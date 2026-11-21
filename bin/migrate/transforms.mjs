@@ -556,7 +556,7 @@ const BRAND_USE = new RegExp(`data-brand\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS}
 const RAMPS = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
 // The other families 17.0.0 removed (tools/utilities/trimmed.mjs), as written in a class list: words like blur, scale
 // and transform are common elsewhere, so these count only inside class="…" (inClassList).
-const TRIMMED_17 = /(?<![\w$./-])(?:[a-z0-9@[\]-]+:)*-?(?:(?:from|via|to)(?=-[a-z0-9[(])|blur|brightness|contrast|grayscale|invert|sepia|hue-rotate|saturate|drop-shadow|backdrop-[a-z]+|mix-blend|bg-blend|rotate|skew|scale|perspective|backface|transform|zoom|origin|columns|break-(?:after|before|inside)|text-shadow|inset-shadow|inset-ring|tab)(?:-[\w./%]+)*(?![\w-])/g;
+const TRIMMED_17 = /(?<![\w$./-])(?:[a-z0-9@[\]-]+:)*-?(?:(?:from|via|to)(?=-[a-z0-9[(])|blur|brightness|contrast|grayscale|invert|sepia|hue-rotate|saturate|drop-shadow|backdrop-[a-z]+|mix-blend|bg-blend|rotate|skew|scale|perspective|backface|transform|zoom|origin|columns|break-(?:after|before|inside)|text-shadow|inset-shadow|inset-ring|tab|scroll-[mp](?:r|b|l|y|bs|be)(?=-)|(?<=-)scroll-m[a-z]*(?=-)|translate(?=-(?:z-|\d|full|px|3d))|border-(?:[trblxy]|s|e|bs|be)(?=-[a-z]))(?:-[\w./%]+)*(?![\w-])/g;
 const PALETTE_CLASS = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?!(?:from|via|to)-)[a-z][a-z-]*-(?:${RAMPS})-(?:50|[1-9]00|950)(?:\\/[\\d.]+)?(?![\\w-])`, 'g');
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);

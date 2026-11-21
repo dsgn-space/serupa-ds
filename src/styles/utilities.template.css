@@ -14,7 +14,6 @@
 @property --srp-border-spacing-y { syntax: '<length>'; inherits: false; initial-value: 0; }
 @property --srp-translate-x { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-translate-y { syntax: '*'; inherits: false; initial-value: 0; }
-@property --srp-translate-z { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
 @property --srp-shadow-color { syntax: '*'; inherits: false; }
 @property --srp-inset-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
@@ -1386,66 +1385,6 @@
 @each color {
   .border-{k} { border-color: var(--{t}); }
 }
-.border-x-inherit { border-inline-color: inherit; }
-.border-x-current { border-inline-color: currentColor; }
-.border-x-transparent { border-inline-color: transparent; }
-@each color {
-  .border-x-{k} { border-inline-color: var(--{t}); }
-}
-.border-y-inherit { border-block-color: inherit; }
-.border-y-current { border-block-color: currentColor; }
-.border-y-transparent { border-block-color: transparent; }
-@each color {
-  .border-y-{k} { border-block-color: var(--{t}); }
-}
-.border-s-inherit { border-inline-start-color: inherit; }
-.border-s-current { border-inline-start-color: currentColor; }
-.border-s-transparent { border-inline-start-color: transparent; }
-@each color {
-  .border-s-{k} { border-inline-start-color: var(--{t}); }
-}
-.border-e-inherit { border-inline-end-color: inherit; }
-.border-e-current { border-inline-end-color: currentColor; }
-.border-e-transparent { border-inline-end-color: transparent; }
-@each color {
-  .border-e-{k} { border-inline-end-color: var(--{t}); }
-}
-.border-bs-inherit { border-block-start-color: inherit; }
-.border-bs-current { border-block-start-color: currentColor; }
-.border-bs-transparent { border-block-start-color: transparent; }
-@each color {
-  .border-bs-{k} { border-block-start-color: var(--{t}); }
-}
-.border-be-inherit { border-block-end-color: inherit; }
-.border-be-current { border-block-end-color: currentColor; }
-.border-be-transparent { border-block-end-color: transparent; }
-@each color {
-  .border-be-{k} { border-block-end-color: var(--{t}); }
-}
-.border-t-inherit { border-top-color: inherit; }
-.border-t-current { border-top-color: currentColor; }
-.border-t-transparent { border-top-color: transparent; }
-@each color {
-  .border-t-{k} { border-top-color: var(--{t}); }
-}
-.border-r-inherit { border-right-color: inherit; }
-.border-r-current { border-right-color: currentColor; }
-.border-r-transparent { border-right-color: transparent; }
-@each color {
-  .border-r-{k} { border-right-color: var(--{t}); }
-}
-.border-b-inherit { border-bottom-color: inherit; }
-.border-b-current { border-bottom-color: currentColor; }
-.border-b-transparent { border-bottom-color: transparent; }
-@each color {
-  .border-b-{k} { border-bottom-color: var(--{t}); }
-}
-.border-l-inherit { border-left-color: inherit; }
-.border-l-current { border-left-color: currentColor; }
-.border-l-transparent { border-left-color: transparent; }
-@each color {
-  .border-l-{k} { border-left-color: var(--{t}); }
-}
 .divide-inherit > :not(:last-child) { border-color: inherit; }
 .divide-current > :not(:last-child) { border-color: currentColor; }
 .divide-transparent > :not(:last-child) { border-color: transparent; }
@@ -1524,323 +1463,170 @@
    --------------------------------------------------------------- */
 /* translate (spacing scale, fractions of the element, full) */
 .translate-none { translate: none; }
-.translate-3d { translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-0 { --srp-translate-x: var(--spacing-0); --srp-translate-y: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-0 { --srp-translate-x: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-0 { --srp-translate-y: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-0 { --srp-translate-z: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-px { --srp-translate-x: var(--spacing-px); --srp-translate-y: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-px { --srp-translate-x: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-px { --srp-translate-y: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-px { --srp-translate-z: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-px { --srp-translate-x: calc(var(--spacing-px) * -1); --srp-translate-y: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-px { --srp-translate-x: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-px { --srp-translate-y: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-px { --srp-translate-z: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-0\.5 { --srp-translate-x: var(--spacing-0\.5); --srp-translate-y: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-0\.5 { --srp-translate-x: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-0\.5 { --srp-translate-y: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-0\.5 { --srp-translate-z: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-0\.5 { --srp-translate-x: calc(var(--spacing-0\.5) * -1); --srp-translate-y: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-0\.5 { --srp-translate-x: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-0\.5 { --srp-translate-y: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-0\.5 { --srp-translate-z: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1 { --srp-translate-x: var(--spacing-1); --srp-translate-y: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1 { --srp-translate-x: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1 { --srp-translate-y: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-1 { --srp-translate-z: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-1 { --srp-translate-x: calc(var(--spacing-1) * -1); --srp-translate-y: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1 { --srp-translate-x: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1 { --srp-translate-y: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-1 { --srp-translate-z: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1\.5 { --srp-translate-x: var(--spacing-1\.5); --srp-translate-y: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\.5 { --srp-translate-x: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\.5 { --srp-translate-y: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-1\.5 { --srp-translate-z: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-1\.5 { --srp-translate-x: calc(var(--spacing-1\.5) * -1); --srp-translate-y: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\.5 { --srp-translate-x: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\.5 { --srp-translate-y: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-1\.5 { --srp-translate-z: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-2 { --srp-translate-x: var(--spacing-2); --srp-translate-y: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2 { --srp-translate-x: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2 { --srp-translate-y: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-2 { --srp-translate-z: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-2 { --srp-translate-x: calc(var(--spacing-2) * -1); --srp-translate-y: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2 { --srp-translate-x: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2 { --srp-translate-y: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-2 { --srp-translate-z: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-2\.5 { --srp-translate-x: var(--spacing-2\.5); --srp-translate-y: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\.5 { --srp-translate-x: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\.5 { --srp-translate-y: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-2\.5 { --srp-translate-z: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-2\.5 { --srp-translate-x: calc(var(--spacing-2\.5) * -1); --srp-translate-y: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\.5 { --srp-translate-x: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\.5 { --srp-translate-y: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-2\.5 { --srp-translate-z: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-3 { --srp-translate-x: var(--spacing-3); --srp-translate-y: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3 { --srp-translate-x: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3 { --srp-translate-y: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-3 { --srp-translate-z: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-3 { --srp-translate-x: calc(var(--spacing-3) * -1); --srp-translate-y: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3 { --srp-translate-x: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3 { --srp-translate-y: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-3 { --srp-translate-z: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-3\.5 { --srp-translate-x: var(--spacing-3\.5); --srp-translate-y: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3\.5 { --srp-translate-x: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3\.5 { --srp-translate-y: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-3\.5 { --srp-translate-z: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-3\.5 { --srp-translate-x: calc(var(--spacing-3\.5) * -1); --srp-translate-y: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3\.5 { --srp-translate-x: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3\.5 { --srp-translate-y: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-3\.5 { --srp-translate-z: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-4 { --srp-translate-x: var(--spacing-4); --srp-translate-y: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-4 { --srp-translate-x: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-4 { --srp-translate-y: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-4 { --srp-translate-z: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-4 { --srp-translate-x: calc(var(--spacing-4) * -1); --srp-translate-y: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-4 { --srp-translate-x: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-4 { --srp-translate-y: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-4 { --srp-translate-z: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-5 { --srp-translate-x: var(--spacing-5); --srp-translate-y: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-5 { --srp-translate-x: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-5 { --srp-translate-y: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-5 { --srp-translate-z: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-5 { --srp-translate-x: calc(var(--spacing-5) * -1); --srp-translate-y: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-5 { --srp-translate-x: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-5 { --srp-translate-y: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-5 { --srp-translate-z: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-6 { --srp-translate-x: var(--spacing-6); --srp-translate-y: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-6 { --srp-translate-x: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-6 { --srp-translate-y: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-6 { --srp-translate-z: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-6 { --srp-translate-x: calc(var(--spacing-6) * -1); --srp-translate-y: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-6 { --srp-translate-x: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-6 { --srp-translate-y: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-6 { --srp-translate-z: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-7 { --srp-translate-x: var(--spacing-7); --srp-translate-y: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-7 { --srp-translate-x: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-7 { --srp-translate-y: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-7 { --srp-translate-z: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-7 { --srp-translate-x: calc(var(--spacing-7) * -1); --srp-translate-y: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-7 { --srp-translate-x: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-7 { --srp-translate-y: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-7 { --srp-translate-z: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-8 { --srp-translate-x: var(--spacing-8); --srp-translate-y: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-8 { --srp-translate-x: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-8 { --srp-translate-y: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-8 { --srp-translate-z: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-8 { --srp-translate-x: calc(var(--spacing-8) * -1); --srp-translate-y: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-8 { --srp-translate-x: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-8 { --srp-translate-y: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-8 { --srp-translate-z: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-9 { --srp-translate-x: var(--spacing-9); --srp-translate-y: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-9 { --srp-translate-x: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-9 { --srp-translate-y: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-9 { --srp-translate-z: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-9 { --srp-translate-x: calc(var(--spacing-9) * -1); --srp-translate-y: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-9 { --srp-translate-x: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-9 { --srp-translate-y: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-9 { --srp-translate-z: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-10 { --srp-translate-x: var(--spacing-10); --srp-translate-y: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-10 { --srp-translate-x: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-10 { --srp-translate-y: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-10 { --srp-translate-z: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-10 { --srp-translate-x: calc(var(--spacing-10) * -1); --srp-translate-y: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-10 { --srp-translate-x: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-10 { --srp-translate-y: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-10 { --srp-translate-z: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-11 { --srp-translate-x: var(--spacing-11); --srp-translate-y: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-11 { --srp-translate-x: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-11 { --srp-translate-y: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-11 { --srp-translate-z: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-11 { --srp-translate-x: calc(var(--spacing-11) * -1); --srp-translate-y: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-11 { --srp-translate-x: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-11 { --srp-translate-y: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-11 { --srp-translate-z: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-12 { --srp-translate-x: var(--spacing-12); --srp-translate-y: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-12 { --srp-translate-x: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-12 { --srp-translate-y: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-12 { --srp-translate-z: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-12 { --srp-translate-x: calc(var(--spacing-12) * -1); --srp-translate-y: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-12 { --srp-translate-x: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-12 { --srp-translate-y: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-12 { --srp-translate-z: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-14 { --srp-translate-x: var(--spacing-14); --srp-translate-y: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-14 { --srp-translate-x: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-14 { --srp-translate-y: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-14 { --srp-translate-z: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-14 { --srp-translate-x: calc(var(--spacing-14) * -1); --srp-translate-y: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-14 { --srp-translate-x: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-14 { --srp-translate-y: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-14 { --srp-translate-z: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-16 { --srp-translate-x: var(--spacing-16); --srp-translate-y: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-16 { --srp-translate-x: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-16 { --srp-translate-y: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-16 { --srp-translate-z: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-16 { --srp-translate-x: calc(var(--spacing-16) * -1); --srp-translate-y: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-16 { --srp-translate-x: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-16 { --srp-translate-y: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-16 { --srp-translate-z: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-20 { --srp-translate-x: var(--spacing-20); --srp-translate-y: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-20 { --srp-translate-x: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-20 { --srp-translate-y: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-20 { --srp-translate-z: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-20 { --srp-translate-x: calc(var(--spacing-20) * -1); --srp-translate-y: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-20 { --srp-translate-x: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-20 { --srp-translate-y: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-20 { --srp-translate-z: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-24 { --srp-translate-x: var(--spacing-24); --srp-translate-y: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-24 { --srp-translate-x: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-24 { --srp-translate-y: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-24 { --srp-translate-z: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-24 { --srp-translate-x: calc(var(--spacing-24) * -1); --srp-translate-y: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-24 { --srp-translate-x: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-24 { --srp-translate-y: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-24 { --srp-translate-z: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-28 { --srp-translate-x: var(--spacing-28); --srp-translate-y: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-28 { --srp-translate-x: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-28 { --srp-translate-y: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-28 { --srp-translate-z: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-28 { --srp-translate-x: calc(var(--spacing-28) * -1); --srp-translate-y: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-28 { --srp-translate-x: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-28 { --srp-translate-y: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-28 { --srp-translate-z: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-32 { --srp-translate-x: var(--spacing-32); --srp-translate-y: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-32 { --srp-translate-x: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-32 { --srp-translate-y: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-32 { --srp-translate-z: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-32 { --srp-translate-x: calc(var(--spacing-32) * -1); --srp-translate-y: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-32 { --srp-translate-x: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-32 { --srp-translate-y: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-32 { --srp-translate-z: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-36 { --srp-translate-x: var(--spacing-36); --srp-translate-y: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-36 { --srp-translate-x: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-36 { --srp-translate-y: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-36 { --srp-translate-z: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-36 { --srp-translate-x: calc(var(--spacing-36) * -1); --srp-translate-y: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-36 { --srp-translate-x: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-36 { --srp-translate-y: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-36 { --srp-translate-z: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-40 { --srp-translate-x: var(--spacing-40); --srp-translate-y: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-40 { --srp-translate-x: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-40 { --srp-translate-y: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-40 { --srp-translate-z: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-40 { --srp-translate-x: calc(var(--spacing-40) * -1); --srp-translate-y: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-40 { --srp-translate-x: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-40 { --srp-translate-y: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-40 { --srp-translate-z: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-44 { --srp-translate-x: var(--spacing-44); --srp-translate-y: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-44 { --srp-translate-x: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-44 { --srp-translate-y: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-44 { --srp-translate-z: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-44 { --srp-translate-x: calc(var(--spacing-44) * -1); --srp-translate-y: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-44 { --srp-translate-x: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-44 { --srp-translate-y: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-44 { --srp-translate-z: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-48 { --srp-translate-x: var(--spacing-48); --srp-translate-y: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-48 { --srp-translate-x: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-48 { --srp-translate-y: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-48 { --srp-translate-z: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-48 { --srp-translate-x: calc(var(--spacing-48) * -1); --srp-translate-y: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-48 { --srp-translate-x: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-48 { --srp-translate-y: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-48 { --srp-translate-z: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-52 { --srp-translate-x: var(--spacing-52); --srp-translate-y: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-52 { --srp-translate-x: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-52 { --srp-translate-y: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-52 { --srp-translate-z: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-52 { --srp-translate-x: calc(var(--spacing-52) * -1); --srp-translate-y: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-52 { --srp-translate-x: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-52 { --srp-translate-y: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-52 { --srp-translate-z: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-56 { --srp-translate-x: var(--spacing-56); --srp-translate-y: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-56 { --srp-translate-x: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-56 { --srp-translate-y: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-56 { --srp-translate-z: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-56 { --srp-translate-x: calc(var(--spacing-56) * -1); --srp-translate-y: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-56 { --srp-translate-x: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-56 { --srp-translate-y: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-56 { --srp-translate-z: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-60 { --srp-translate-x: var(--spacing-60); --srp-translate-y: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-60 { --srp-translate-x: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-60 { --srp-translate-y: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-60 { --srp-translate-z: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-60 { --srp-translate-x: calc(var(--spacing-60) * -1); --srp-translate-y: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-60 { --srp-translate-x: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-60 { --srp-translate-y: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-60 { --srp-translate-z: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-64 { --srp-translate-x: var(--spacing-64); --srp-translate-y: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-64 { --srp-translate-x: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-64 { --srp-translate-y: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-64 { --srp-translate-z: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-64 { --srp-translate-x: calc(var(--spacing-64) * -1); --srp-translate-y: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-64 { --srp-translate-x: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-64 { --srp-translate-y: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-64 { --srp-translate-z: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-72 { --srp-translate-x: var(--spacing-72); --srp-translate-y: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-72 { --srp-translate-x: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-72 { --srp-translate-y: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-72 { --srp-translate-z: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-72 { --srp-translate-x: calc(var(--spacing-72) * -1); --srp-translate-y: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-72 { --srp-translate-x: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-72 { --srp-translate-y: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-72 { --srp-translate-z: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-80 { --srp-translate-x: var(--spacing-80); --srp-translate-y: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-80 { --srp-translate-x: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-80 { --srp-translate-y: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-80 { --srp-translate-z: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-80 { --srp-translate-x: calc(var(--spacing-80) * -1); --srp-translate-y: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-80 { --srp-translate-x: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-80 { --srp-translate-y: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-80 { --srp-translate-z: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-96 { --srp-translate-x: var(--spacing-96); --srp-translate-y: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-96 { --srp-translate-x: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-96 { --srp-translate-y: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-96 { --srp-translate-z: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-96 { --srp-translate-x: calc(var(--spacing-96) * -1); --srp-translate-y: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-96 { --srp-translate-x: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-96 { --srp-translate-y: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-96 { --srp-translate-z: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1\/2 { --srp-translate-x: var(--sizing-1-2); --srp-translate-y: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/2 { --srp-translate-x: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/2 { --srp-translate-y: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/2 { --srp-translate-x: calc(var(--sizing-1-2) * -1); --srp-translate-y: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/2 { --srp-translate-x: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/2 { --srp-translate-y: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/3 { --srp-translate-x: var(--sizing-1-3); --srp-translate-y: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/3 { --srp-translate-x: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/3 { --srp-translate-y: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/3 { --srp-translate-x: calc(var(--sizing-1-3) * -1); --srp-translate-y: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/3 { --srp-translate-x: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/3 { --srp-translate-y: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/3 { --srp-translate-x: var(--sizing-2-3); --srp-translate-y: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\/3 { --srp-translate-x: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\/3 { --srp-translate-y: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/3 { --srp-translate-x: calc(var(--sizing-2-3) * -1); --srp-translate-y: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\/3 { --srp-translate-x: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\/3 { --srp-translate-y: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/4 { --srp-translate-x: var(--sizing-1-4); --srp-translate-y: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/4 { --srp-translate-x: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/4 { --srp-translate-y: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/4 { --srp-translate-x: calc(var(--sizing-1-4) * -1); --srp-translate-y: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/4 { --srp-translate-x: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/4 { --srp-translate-y: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/4 { --srp-translate-x: var(--sizing-2-4); --srp-translate-y: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\/4 { --srp-translate-x: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\/4 { --srp-translate-y: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/4 { --srp-translate-x: calc(var(--sizing-2-4) * -1); --srp-translate-y: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\/4 { --srp-translate-x: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\/4 { --srp-translate-y: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/4 { --srp-translate-x: var(--sizing-3-4); --srp-translate-y: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3\/4 { --srp-translate-x: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3\/4 { --srp-translate-y: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/4 { --srp-translate-x: calc(var(--sizing-3-4) * -1); --srp-translate-y: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3\/4 { --srp-translate-x: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3\/4 { --srp-translate-y: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-full { --srp-translate-x: var(--sizing-full); --srp-translate-y: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-full { --srp-translate-x: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-full { --srp-translate-y: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-full { --srp-translate-x: calc(var(--sizing-full) * -1); --srp-translate-y: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-full { --srp-translate-x: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-full { --srp-translate-y: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 /* ---------------------------------------------------------------
@@ -2032,57 +1818,22 @@
 .scroll-m-0 { scroll-margin: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-m-{k} { scroll-margin: var(--{t}); }
-  .-scroll-m-{k} { scroll-margin: calc(var(--{t}) * -1); }
 }
 .scroll-mx-0 { scroll-margin-inline: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-mx-{k} { scroll-margin-inline: var(--{t}); }
-  .-scroll-mx-{k} { scroll-margin-inline: calc(var(--{t}) * -1); }
-}
-.scroll-my-0 { scroll-margin-block: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-my-{k} { scroll-margin-block: var(--{t}); }
-  .-scroll-my-{k} { scroll-margin-block: calc(var(--{t}) * -1); }
 }
 .scroll-ms-0 { scroll-margin-inline-start: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-ms-{k} { scroll-margin-inline-start: var(--{t}); }
-  .-scroll-ms-{k} { scroll-margin-inline-start: calc(var(--{t}) * -1); }
 }
 .scroll-me-0 { scroll-margin-inline-end: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-me-{k} { scroll-margin-inline-end: var(--{t}); }
-  .-scroll-me-{k} { scroll-margin-inline-end: calc(var(--{t}) * -1); }
-}
-.scroll-mbs-0 { scroll-margin-block-start: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mbs-{k} { scroll-margin-block-start: var(--{t}); }
-  .-scroll-mbs-{k} { scroll-margin-block-start: calc(var(--{t}) * -1); }
-}
-.scroll-mbe-0 { scroll-margin-block-end: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mbe-{k} { scroll-margin-block-end: var(--{t}); }
-  .-scroll-mbe-{k} { scroll-margin-block-end: calc(var(--{t}) * -1); }
 }
 .scroll-mt-0 { scroll-margin-top: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-mt-{k} { scroll-margin-top: var(--{t}); }
-  .-scroll-mt-{k} { scroll-margin-top: calc(var(--{t}) * -1); }
-}
-.scroll-mr-0 { scroll-margin-right: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mr-{k} { scroll-margin-right: var(--{t}); }
-  .-scroll-mr-{k} { scroll-margin-right: calc(var(--{t}) * -1); }
-}
-.scroll-mb-0 { scroll-margin-bottom: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mb-{k} { scroll-margin-bottom: var(--{t}); }
-  .-scroll-mb-{k} { scroll-margin-bottom: calc(var(--{t}) * -1); }
-}
-.scroll-ml-0 { scroll-margin-left: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-ml-{k} { scroll-margin-left: var(--{t}); }
-  .-scroll-ml-{k} { scroll-margin-left: calc(var(--{t}) * -1); }
 }
 /* scroll-padding (spacing scale) */
 @each spacing- {
@@ -2092,31 +1843,13 @@
   .scroll-px-{k} { scroll-padding-inline: var(--{t}); }
 }
 @each spacing- {
-  .scroll-py-{k} { scroll-padding-block: var(--{t}); }
-}
-@each spacing- {
   .scroll-ps-{k} { scroll-padding-inline-start: var(--{t}); }
 }
 @each spacing- {
   .scroll-pe-{k} { scroll-padding-inline-end: var(--{t}); }
 }
 @each spacing- {
-  .scroll-pbs-{k} { scroll-padding-block-start: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pbe-{k} { scroll-padding-block-end: var(--{t}); }
-}
-@each spacing- {
   .scroll-pt-{k} { scroll-padding-top: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pr-{k} { scroll-padding-right: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pb-{k} { scroll-padding-bottom: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pl-{k} { scroll-padding-left: var(--{t}); }
 }
 /* scroll-snap-align */
 .snap-start { scroll-snap-align: start; }
@@ -3774,47 +3507,6 @@
 .shadow-initial { --srp-shadow-color: initial; }
 .-outline-offset-0 { outline-offset: calc(var(--outline-offset-0) * -1); }
 /* Transforms */
-.-translate-0 { --srp-translate-x: calc(var(--spacing-0) * -1); --srp-translate-y: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/5 { --srp-translate-x: calc(calc(1 / 5 * 100%) * -1); --srp-translate-y: calc(calc(1 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/6 { --srp-translate-x: calc(calc(1 / 6 * 100%) * -1); --srp-translate-y: calc(calc(1 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/12 { --srp-translate-x: calc(calc(1 / 12 * 100%) * -1); --srp-translate-y: calc(calc(1 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/5 { --srp-translate-x: calc(calc(2 / 5 * 100%) * -1); --srp-translate-y: calc(calc(2 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/6 { --srp-translate-x: calc(calc(2 / 6 * 100%) * -1); --srp-translate-y: calc(calc(2 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/12 { --srp-translate-x: calc(calc(2 / 12 * 100%) * -1); --srp-translate-y: calc(calc(2 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/5 { --srp-translate-x: calc(calc(3 / 5 * 100%) * -1); --srp-translate-y: calc(calc(3 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/6 { --srp-translate-x: calc(calc(3 / 6 * 100%) * -1); --srp-translate-y: calc(calc(3 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/12 { --srp-translate-x: calc(calc(3 / 12 * 100%) * -1); --srp-translate-y: calc(calc(3 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/5 { --srp-translate-x: calc(calc(4 / 5 * 100%) * -1); --srp-translate-y: calc(calc(4 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/6 { --srp-translate-x: calc(calc(4 / 6 * 100%) * -1); --srp-translate-y: calc(calc(4 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/12 { --srp-translate-x: calc(calc(4 / 12 * 100%) * -1); --srp-translate-y: calc(calc(4 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-5\/6 { --srp-translate-x: calc(calc(5 / 6 * 100%) * -1); --srp-translate-y: calc(calc(5 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-5\/12 { --srp-translate-x: calc(calc(5 / 12 * 100%) * -1); --srp-translate-y: calc(calc(5 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-6\/12 { --srp-translate-x: calc(calc(6 / 12 * 100%) * -1); --srp-translate-y: calc(calc(6 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-7\/12 { --srp-translate-x: calc(calc(7 / 12 * 100%) * -1); --srp-translate-y: calc(calc(7 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-8\/12 { --srp-translate-x: calc(calc(8 / 12 * 100%) * -1); --srp-translate-y: calc(calc(8 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-9\/12 { --srp-translate-x: calc(calc(9 / 12 * 100%) * -1); --srp-translate-y: calc(calc(9 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-10\/12 { --srp-translate-x: calc(calc(10 / 12 * 100%) * -1); --srp-translate-y: calc(calc(10 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-11\/12 { --srp-translate-x: calc(calc(11 / 12 * 100%) * -1); --srp-translate-y: calc(calc(11 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/5 { --srp-translate-x: calc(1 / 5 * 100%); --srp-translate-y: calc(1 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/6 { --srp-translate-x: calc(1 / 6 * 100%); --srp-translate-y: calc(1 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/12 { --srp-translate-x: calc(1 / 12 * 100%); --srp-translate-y: calc(1 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/5 { --srp-translate-x: calc(2 / 5 * 100%); --srp-translate-y: calc(2 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/6 { --srp-translate-x: calc(2 / 6 * 100%); --srp-translate-y: calc(2 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/12 { --srp-translate-x: calc(2 / 12 * 100%); --srp-translate-y: calc(2 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/5 { --srp-translate-x: calc(3 / 5 * 100%); --srp-translate-y: calc(3 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/6 { --srp-translate-x: calc(3 / 6 * 100%); --srp-translate-y: calc(3 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/12 { --srp-translate-x: calc(3 / 12 * 100%); --srp-translate-y: calc(3 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/5 { --srp-translate-x: calc(4 / 5 * 100%); --srp-translate-y: calc(4 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/6 { --srp-translate-x: calc(4 / 6 * 100%); --srp-translate-y: calc(4 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/12 { --srp-translate-x: calc(4 / 12 * 100%); --srp-translate-y: calc(4 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-5\/6 { --srp-translate-x: calc(5 / 6 * 100%); --srp-translate-y: calc(5 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-5\/12 { --srp-translate-x: calc(5 / 12 * 100%); --srp-translate-y: calc(5 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-6\/12 { --srp-translate-x: calc(6 / 12 * 100%); --srp-translate-y: calc(6 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-7\/12 { --srp-translate-x: calc(7 / 12 * 100%); --srp-translate-y: calc(7 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-8\/12 { --srp-translate-x: calc(8 / 12 * 100%); --srp-translate-y: calc(8 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-9\/12 { --srp-translate-x: calc(9 / 12 * 100%); --srp-translate-y: calc(9 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-10\/12 { --srp-translate-x: calc(10 / 12 * 100%); --srp-translate-y: calc(10 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-11\/12 { --srp-translate-x: calc(11 / 12 * 100%); --srp-translate-y: calc(11 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-0 { --srp-translate-x: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/5 { --srp-translate-x: calc(calc(1 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/6 { --srp-translate-x: calc(calc(1 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
@@ -3897,19 +3589,6 @@
 .translate-y-9\/12 { --srp-translate-y: calc(9 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-10\/12 { --srp-translate-y: calc(10 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-11\/12 { --srp-translate-y: calc(11 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-0 { --srp-translate-z: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-/* Interactivity */
-.-scroll-m-0 { scroll-margin: var(--spacing-0); }
-.-scroll-mx-0 { scroll-margin-inline: var(--spacing-0); }
-.-scroll-my-0 { scroll-margin-block: var(--spacing-0); }
-.-scroll-ms-0 { scroll-margin-inline-start: var(--spacing-0); }
-.-scroll-me-0 { scroll-margin-inline-end: var(--spacing-0); }
-.-scroll-mbs-0 { scroll-margin-block-start: var(--spacing-0); }
-.-scroll-mbe-0 { scroll-margin-block-end: var(--spacing-0); }
-.-scroll-mt-0 { scroll-margin-top: var(--spacing-0); }
-.-scroll-mr-0 { scroll-margin-right: var(--spacing-0); }
-.-scroll-mb-0 { scroll-margin-bottom: var(--spacing-0); }
-.-scroll-ml-0 { scroll-margin-left: var(--spacing-0); }
 /* More opacity steps */
 .opacity-35 { opacity: var(--opacity-35); }
 .opacity-45 { opacity: var(--opacity-45); }
