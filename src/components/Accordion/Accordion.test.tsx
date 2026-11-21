@@ -99,7 +99,7 @@ describe('Accordion', () => {
     const runs = () => pn.getAnimations().map((a) => [(a as CSSTransition).transitionProperty ?? a.id, a.effect?.getComputedTiming().duration, (a.effect?.getComputedTiming() as { easing?: string }).easing]).sort((x, y) => String(x[0]).localeCompare(String(y[0])));
     const half = (ms: number) => { const all = pn.getAnimations(); all.forEach((a) => { a.pause(); a.currentTime = ms; }); const h = pn.getBoundingClientRect().height; all.forEach((a) => a.play()); return h; };
     await userEvent.click(trigger('adef', 1));
-    expect(runs()).toEqual([['clip-path', 200, root('--ease-enter')], ['srp-accordion-height', 200, root('--ease-enter')], ['opacity', 200, root('--ease-enter')]]);
+    expect(runs()).toEqual([['clip-path', 200, root('--ease-enter')], ['opacity', 200, root('--ease-enter')], ['srp-accordion-height', 200, root('--ease-enter')]]);
     const mid = half(100);
     await settled(el('adef'), { subtree: true });
     const full = pn.getBoundingClientRect().height;
@@ -107,7 +107,7 @@ describe('Accordion', () => {
     expect([css(pn).opacity, css(pn).clipPath, css(pn).visibility, trigger('adef', 1).getAttribute('aria-expanded'), css(el('adef').querySelector('[data-icon="expand_more"]')).rotate])
       .toEqual(['1', 'inset(0px)', 'visible', 'true', '180deg']);
     await userEvent.click(trigger('adef', 1));
-    expect(runs().map(([p, d, e]) => `${String(p)} ${String(d)}${p === 'srp-accordion-height' ? ' ' + String(e) : ''}`).filter((x) => /opacity|clip-path|height/.test(x))).toEqual(['clip-path 150', 'srp-accordion-height 150 ' + root('--ease-move'), 'opacity 150']);
+    expect(runs().map(([p, d, e]) => `${String(p)} ${String(d)}${p === 'srp-accordion-height' ? ' ' + String(e) : ''}`).filter((x) => /opacity|clip-path|height/.test(x))).toEqual(['clip-path 150', 'opacity 150', 'srp-accordion-height 150 ' + root('--ease-move')]);
     const back = half(75);
     expect(back > 0 && back < full).toBe(true);
     await settled(el('adef'), { subtree: true });
@@ -122,7 +122,7 @@ describe('Accordion', () => {
     // read the motion as the click lands, not when userEvent hands back: on a slow machine that can be after both have finished
     const seen = new Promise<string[][]>((resolve) => { window.addEventListener('click', () => setTimeout(() => resolve([props(2), props(1)])), { once: true }); });
     await userEvent.click(trigger('adef', 2));
-    expect([state('adef'), ...await seen]).toEqual(['0100', ['clip-path', 'srp-accordion-height', 'opacity'], ['clip-path', 'srp-accordion-height', 'opacity']]);
+    expect([state('adef'), ...await seen]).toEqual(['0100', ['clip-path', 'opacity', 'srp-accordion-height'], ['clip-path', 'opacity', 'srp-accordion-height']]);
   }));
 
   test('an item opened a second time grows to its height again, as it did the first time, instead of snapping open', () => withMotion(async () => {
