@@ -55,39 +55,38 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
   const controlled = rest.value !== undefined;
   if (hasPh && !controlled && rest.defaultValue === undefined) rest.defaultValue = '';   // start on the placeholder
   const [picked, setPicked] = React.useState(controlled ? rest.value : rest.defaultValue), cur = controlled ? rest.value : picked;
-  const onChange = rest.onChange;
-  rest.onChange = function (e: React.ChangeEvent<HTMLSelectElement>) { if (!controlled) setPicked(e.target.value); if (onChange) onChange(e); };
+  const { onChange, onKeyDown, onMouseDown } = rest;
   // A form reset puts the native <select> back on its default; the placeholder look follows it.
-  const own = React.useRef<HTMLSelectElement | null>(null);
-  const setRefs = useMergedRef(ref, (node: HTMLSelectElement | null) => { own.current = node; nameRef(node); });
+  const ownRef = React.useRef<HTMLSelectElement | null>(null);
+  const setRefs = useMergedRef(ref, nameRef, ownRef);
   const start = rest.defaultValue;
-  useFormReset(own, () => { if (!controlled) setPicked(start); });
+  useFormReset(ownRef, () => { if (!controlled) setPicked(start); });
   // A value that matches no option shows the first one instead, and a form sends that, while the app holds its own
   // value (GR161). Read from the <select> itself, so options passed as children count too.
   React.useEffect(() => {
-    const s = own.current;
+    const s = ownRef.current;
     if (process.env.NODE_ENV !== 'production' && controlled && cur != null && s && ![...s.options].some((o) => o.value === String(cur))) warnOnce('select-value', `Select: value "${String(cur)}" matches no option, so it shows "${s.value}" and a form sends that. Set value to one of the options' values, or add an option for it.`);
   }, [controlled, cur]);
-  const shown = React.useRef('');
+  const shownRef = React.useRef('');
   // every render: the value it shows, which a read-only change goes back to.
-  React.useEffect(() => { if (own.current) shown.current = own.current.value; });
+  React.useEffect(() => { if (ownRef.current) shownRef.current = ownRef.current.value; });
   // Read-only: a native <select> has no readonly, so the keys and the press that open or change it are cancelled,
   // and a change that still gets through (a phone's picker) is put back, without onChange.
   const readOnly = !!props.readOnly;
-  if (readOnly) {
-    rest['aria-readonly'] = true;
-    const { onKeyDown, onMouseDown } = rest;
-    rest.onKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => { if (onKeyDown) onKeyDown(e); if (e.key !== 'Tab' && e.key !== 'Escape' && !e.ctrlKey && !e.metaKey) e.preventDefault(); };
-    rest.onMouseDown = (e: React.MouseEvent<HTMLSelectElement>) => { if (onMouseDown) onMouseDown(e); e.preventDefault(); e.currentTarget.focus(); };
-    rest.onChange = (e: React.ChangeEvent<HTMLSelectElement>) => { e.target.value = shown.current; };
-  }
+  if (readOnly) rest['aria-readonly'] = true;
+  // The handlers go on the <select> beside rest, not into it, so rest stays plain props.
+  const handlers = readOnly ? {
+    onKeyDown: (e: React.KeyboardEvent<HTMLSelectElement>) => { if (onKeyDown) onKeyDown(e); if (e.key !== 'Tab' && e.key !== 'Escape' && !e.ctrlKey && !e.metaKey) e.preventDefault(); },
+    onMouseDown: (e: React.MouseEvent<HTMLSelectElement>) => { if (onMouseDown) onMouseDown(e); e.preventDefault(); e.currentTarget.focus(); },
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => { e.target.value = shownRef.current; },
+  } : { onChange: (e: React.ChangeEvent<HTMLSelectElement>) => { if (!controlled) setPicked(e.target.value); if (onChange) onChange(e); } };
   const empty = hasPh && (cur == null || cur === '');
   const left = asIcon(props.leftIcon);
   return (
-    <span className={cn('srp-select', 'srp-select--size-' + size, invalid && 'srp-select--invalid', rest.disabled && 'srp-select--disabled', readOnly && 'srp-select--readonly', empty && 'srp-select--empty', left != null && left !== false && 'srp-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
-      {left == null || left === false ? null : <span className="srp-select__icon srp-select__icon--left" aria-hidden key="left">{left}</span>}
-      <select {...rest} ref={setRefs} className="srp-select__field" key="field">
-        {hasPh ? <option value="" disabled key="__placeholder" className="srp-select__placeholder">{props.placeholder}</option> : null}
+    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', props.disabled && 'dk-select--disabled', readOnly && 'dk-select--readonly', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
+      {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
+      <select {...rest} {...handlers} ref={setRefs} className="dk-select__field" key="field">
+        {hasPh ? <option value="" disabled key="__placeholder" className="dk-select__placeholder">{props.placeholder}</option> : null}
         {optionNodes(props.options)}
         {props.children}
       </select>

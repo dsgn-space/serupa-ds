@@ -65,6 +65,8 @@ const caretAfter = (text: string, n: number): number => {
   return text.length;
 };
 
+const keyedCountries = (key: string) => (key ? (JSON.parse(key) as Array<string | PhoneCountry>) : undefined);
+
 function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttributes<HTMLInputElement>) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const nameRef = useNameCheck('PhoneInput', NAME_HOW.field);   // warns when it has no accessible name
@@ -73,15 +75,18 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   const rest = omit(props, own);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
-  if (invalid) rest['aria-invalid'] = true;
 
+  const { onCountryChange, onValueChange, onKeyDown: onKeyDownProp } = props;
+  // countries by value, as NumberInput's formatOptions: the memos read them back from their key, so an inline list
+  // doesn't redo them, and the React Compiler, which can't tell props won't change, keeps the memos.
+  const countriesKey = String(props.countries ? JSON.stringify(props.countries) : '');
   // The rows this field knows: the built-in ones, with any rows passed in countries in place of the same code.
   const table = React.useMemo(function () {
-    const mine = (props.countries || []).filter((c): c is PhoneCountry => typeof c === 'object' && !!c && !!c.code);
+    const mine = (keyedCountries(countriesKey) || []).filter((c): c is PhoneCountry => typeof c === 'object' && !!c && !!c.code);
     if (!mine.length) return PHONE_COUNTRIES;
     const codes = new Set(mine.map((c) => c.code.toUpperCase()));
     return mine.map((c) => ({ ...c, code: c.code.toUpperCase() })).concat(PHONE_COUNTRIES.filter((c) => !codes.has(c.code)));
-  }, [props.countries]);
+  }, [countriesKey]);
   const find = (code: string | undefined) => (code ? table.find((c) => c.code === code.toUpperCase()) : undefined);
   // Country names come from the runtime's Intl data, and a server's (Node's ICU) words some of them differently from
   // the browser's ("Falkland Islands (Islas Malvinas)"), so the names and their order may not match the server HTML.
@@ -89,12 +94,13 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   const hydrated = React.useSyncExternalStore(never, yes, no);
   const list = React.useMemo(function () {
     const pick = (code: string | undefined) => (code ? table.find((c) => c.code === code.toUpperCase()) : undefined);
-    const picked = props.countries ? props.countries.map((c) => pick(typeof c === 'string' ? c : c && c.code)).filter((c): c is PhoneCountry => !!c) : table.slice();
+    const countries = keyedCountries(countriesKey);
+    const picked = countries ? countries.map((c) => pick(typeof c === 'string' ? c : c && c.code)).filter((c): c is PhoneCountry => !!c) : table.slice();
     const order = collatorFor(locale);
     let names: Intl.DisplayNames | undefined;
     try { names = new Intl.DisplayNames([locale], { type: 'region' }); } catch { names = undefined; }
     return picked.map((c) => ({ c, name: (names && names.of(c.code)) || c.code })).sort((a, b) => order.compare(a.name, b.name));
-  }, [props.countries, table, locale]);
+  }, [countriesKey, table, locale]);
   const fallback = find(props.defaultCountry) || find(regionOf(locale)) || find('US') || phoneCountry('US')!;
   const start = parsePhone(props.value ?? props.defaultValue ?? '', props.country ?? props.defaultCountry, table);
 
@@ -106,23 +112,21 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   const [lead, setLead] = React.useState<string | null>(null);
   // The digits as last typed, pasted or set: a new country cuts the number to its length from these, so arrowing
   // through the menu (a change per arrow) doesn't leave it cut to the shortest country passed on the way.
-  const typed = React.useRef(national);
+  // State, not refs, as a value from outside sets them while rendering.
+  const [typed, setTyped] = React.useState(national);
   // A controlled value that changed from outside (not the one this field just reported) is read again.
-  const reported = React.useRef(start ? toE164(start.national, start.country) : '');
+  const [reported, setReported] = React.useState(() => (start ? toE164(start.national, start.country) : ''));
   let shown = national;
-  if (props.value !== undefined && props.value !== reported.current) {
+  if (props.value !== undefined && props.value !== reported) {
     const p = parsePhone(props.value, country.code, table);
     shown = p ? p.national : '';
-    reported.current = props.value;
-    if (shown !== national) { setNational(shown); typed.current = shown; }
+    setReported(props.value);
+    if (shown !== national) { setNational(shown); setTyped(shown); }
     if (p && p.country.code !== country.code && props.country === undefined) setOwnCountry(p.country.code);
   }
 
   const input = React.useRef<HTMLInputElement | null>(null);
-  const setRef = useMergedRef(ref, function (node: HTMLInputElement | null) {
-    input.current = node;
-    nameRef(node);
-  });
+  const setRef = useMergedRef(ref, nameRef, input);
   // A form reset puts the default number and country back (uncontrolled), in the field and in what the form sends; a
   // controlled field shows its value again (the browser reset the text to its first value).
   const [, rerender] = React.useState(0);
@@ -131,9 +135,9 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
     if (props.value === undefined) {
       const d = parsePhone(props.defaultValue ?? '', props.defaultCountry, table);
       setNational(d ? d.national : '');
-      typed.current = d ? d.national : '';
+      setTyped(d ? d.national : '');
       if (props.country === undefined) setOwnCountry(d ? d.country.code : fallback.code);
-      reported.current = d ? toE164(d.national, d.country) : '';
+      setReported(d ? toE164(d.national, d.country) : '');
     }
     rerender((n) => n + 1);
     // React can render that before the browser resets the fields (it runs right after this event), and the reset
@@ -157,16 +161,16 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   const commit = function (digits: string, c: PhoneCountry, picked?: boolean) {
     digits = digits.slice(0, c.max);
     setLead(null);
-    if (!picked) typed.current = digits;
+    if (!picked) setTyped(digits);
     setNational(digits);
     if (c.code !== country.code) {
       if (props.country === undefined) setOwnCountry(c.code);
-      props.onCountryChange?.(c.code);
+      onCountryChange?.(c.code);
     }
     const e164 = toE164(digits, c);
-    if (e164 !== reported.current || c.code !== country.code) {
-      reported.current = e164;
-      props.onValueChange?.(e164, { country: c.code, national: digits, complete: isPhoneComplete(digits, c) });
+    if (e164 !== reported || c.code !== country.code) {
+      setReported(e164);
+      onValueChange?.(e164, { country: c.code, national: digits, complete: isPhoneComplete(digits, c) });
     }
     return digits;
   };
@@ -201,7 +205,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
 
   // Backspace or Delete next to a separator ("812-|3456") removes the digit beyond it, not only the separator.
   const onKeyDown = function (e: React.KeyboardEvent<HTMLInputElement>) {
-    props.onKeyDown?.(e);
+    onKeyDownProp?.(e);
     const el = e.currentTarget, s = el.selectionStart, end = el.selectionEnd;
     // With Alt, Ctrl or ⌘ held, Backspace and Delete take a word or the line: the browser's, not one digit (L8E30).
     // A readOnly field takes no edit from them either (L8E69), and while an input method is composing they edit the
@@ -220,7 +224,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
 
   const onCountry = function (e: React.ChangeEvent<HTMLSelectElement>) {
     const c = find(e.target.value);
-    if (c) commit(typed.current, c, true);
+    if (c) commit(typed, c, true);
   };
 
   // The 244 options as elements made once per list, so typing (a render per key) doesn't rebuild and compare them all.
@@ -228,17 +232,17 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   // page writes "مصر (+20)", not "(20+)" (GR49).
   const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? '' : 'server-') + c.code} value={c.code} suppressHydrationWarning>{name + ' (\u2066+' + c.dial + '\u2069)'}</option>), [list, hydrated]);
   return (
-    <span className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
-      style={props.style} data-component="phone-input" data-size={size} onMouseDown={pressFocuses(input)}>
-      <span className="srp-phone-input__country">
-        <span className="srp-phone-input__dial" aria-hidden>+{country.dial}</span>
-        <Icon icon={icons.ExpandMore} className="srp-phone-input__chevron" />
-        <select ref={select} className="srp-phone-input__select" value={country.code} onChange={onCountry} disabled={rest.disabled || rest.readOnly}
+    <span className={cn('dk-input dk-phone-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
+      style={props.style} data-component="phone-input" data-size={size} onMouseDown={(e) => pressFocuses(input)(e)}>
+      <span className="dk-phone-input__country">
+        <span className="dk-phone-input__dial" aria-hidden>+{country.dial}</span>
+        <Icon icon={icons.ExpandMore} className="dk-phone-input__chevron" />
+        <select ref={select} className="dk-phone-input__select" value={country.code} onChange={onCountry} disabled={rest.disabled || rest.readOnly}
           aria-label={props.countryLabel || sds.labels.country}>
           {options}
         </select>
       </span>
-      <input autoComplete="tel" {...rest} ref={setRef} type="tel" inputMode="tel" className="srp-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
+      <input autoComplete="tel" {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={setRef} type="tel" inputMode="tel" className="dk-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={toE164(shown, country)} disabled={rest.disabled} /> : null}
     </span>
   );

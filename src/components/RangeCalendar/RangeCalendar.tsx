@@ -77,20 +77,20 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   // the visitor's (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws
   // the month the server's HTML shows (data-month carries it), so nothing mismatches; then an effect moves to the
   // visitor's (GR396).
-  const fromServer = React.useRef(false);
-  const [ownMonth, setOwnMonth] = React.useState(() => {
-    if (props.defaultMonth || value.start) return system.start(props.defaultMonth || value.start!);
+  const [first] = React.useState(() => {
+    if (props.defaultMonth || value.start) return { month: system.start(props.defaultMonth || value.start!), fromServer: false };
     const shown = typeof document === 'undefined' ? null : toDay(document.getElementById(monthsId)?.dataset.month, 'RangeCalendar');
-    fromServer.current = !!shown;
-    return system.start(shown || home());
+    return { month: system.start(shown || home()), fromServer: !!shown };
   });
+  const [ownMonth, setOwnMonth] = React.useState(first.month);
+  const movedRef = React.useRef(false);
   const base = props.month ? system.start(props.month) : ownMonth;
   const showMonth = (m: Date) => { const s = system.start(m); if (!props.month) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
   // It acts once, on the first render after hydrating from a server whose month isn't the visitor's.
   // every render: no list, as it reads the month and onMonthChange of that render.
   React.useEffect(() => {
-    if (!fromServer.current) return;
-    fromServer.current = false;
+    if (!first.fromServer || movedRef.current) return;
+    movedRef.current = true;
     const h = home();
     if (!props.month && !system.same(ownMonth, h)) showMonth(h);
   });

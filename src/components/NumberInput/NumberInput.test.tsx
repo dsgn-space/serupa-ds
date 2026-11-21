@@ -399,6 +399,16 @@ describe('NumberInput', () => {
     expect(field('half').value).toBe('1.5');
   });
 
+  test('a click with no press before it (a screen reader\'s, or a switch\'s) steps once on either button', async () => {
+    await render(<NumberInput id="sr" aria-label="Count" defaultValue={5} />);
+    const click = (b: HTMLElement) => b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    click(minus('sr'));
+    await expect.poll(() => field('sr').value).toBe('4');
+    click(plus('sr'));
+    await expect.poll(() => field('sr').value).toBe('5');
+    click(plus('sr'));
+    await expect.poll(() => field('sr').value).toBe('6');
+  });
   test('holding + repeats after 400ms, every 50ms, and stops on pointerup, on leaving the button, on Escape and at max (P7)', async () => {
     await render(<NumberInput id="hold" aria-label="Hold" defaultValue={0} min={0} max={30} />);
     const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));

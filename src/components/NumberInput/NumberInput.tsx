@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
-import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useLatest, useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { pressFocuses, useAffixes } from '../../internal/affix';
 import { Icon } from '../Icon/Icon';
@@ -74,10 +74,11 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const nameRef = useNameCheck('NumberInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
+  // The callbacks read once: called through props, they could change props (and the options) for the compiler.
+  const { onValueChange, onInvalidInput } = props;
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
-  if (invalid) rest['aria-invalid'] = true;
   // Without a locale from the prop or a provider: en-US on the server and while hydrating, then the browser's.
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   // A currency's decimals are pinned (pinCurrencyDigits), so the server and every browser write the same amount.
@@ -100,7 +101,8 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value. A percent keeps
   // the ones it's shown with too, two more as a fraction: 12.5% with one decimal is 0.125 (GR175).
   // formatOptions by value: the memos read the options back from their key (keyed), so an inline object doesn't redo them.
-  const optionsKey = formatOptions ? JSON.stringify(formatOptions) : '';
+  // String() marks the key as a plain string for the React Compiler, which can't tell what JSON.stringify returns.
+  const optionsKey = String(formatOptions ? JSON.stringify(formatOptions) : '');
   const shownPlaces = React.useMemo(() => { const o = keyed(optionsKey); const shown = o?.style === 'currency' || o?.style === 'percent' ? new Intl.NumberFormat(locale, o).resolvedOptions().maximumFractionDigits ?? 0 : 0;
     return o?.style === 'percent' ? shown + 2 : shown; },
     [locale, optionsKey]);
@@ -110,7 +112,8 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
     [locale, optionsKey]);
   // GR48: the value in the locale's own digits, as Meter, Pagination and Calendar write numbers (١٬٢٥٠٬٠٠٠ ج.م.‏ in
   // ar-EG), unless numberingSystem (or formatOptions') says otherwise. parseNumber reads it back in any script.
-  const digits = props.numberingSystem || formatOptions?.numberingSystem;
+  // Strings made with String(), which the compiler knows can't change later, so the memos below keep their deps.
+  const digits = String(props.numberingSystem || formatOptions?.numberingSystem || '');
   const shownOptions = React.useMemo((): Intl.NumberFormatOptions => ({ ...(keyed(optionsKey) || { useGrouping: false, maximumFractionDigits: 20 }),
     numberingSystem: digits || new Intl.NumberFormat(locale).resolvedOptions().numberingSystem }), [locale, optionsKey, digits]);
   const show = (v: number | null) => (v == null ? '' : formatNumber(v, locale, shownOptions));
@@ -166,7 +169,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   };
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
-    if (v !== value && props.onValueChange) props.onValueChange(v == null ? v : out(v));
+    if (v !== value && onValueChange) onValueChange(v == null ? v : out(v));
   };
   const put = (v: number | null) => {   // a finished change: the field shows the value
     typing.current = false;
@@ -202,8 +205,8 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
     const v = n == null ? null : fit(n === undefined ? (value ?? 0) : n);
     const out = n === undefined ? value : v;
     put(out);
-    if (n === undefined) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted, setRejected);
-    else if (n != null && outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range');
+    if (n === undefined) reject(text, 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected);
+    else if (n != null && outside(n) && onInvalidInput) onInvalidInput(text.trim(), 'range');
     if (rest.onBlur) rest.onBlur(e);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -220,7 +223,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
     else if (k === 'End' && max !== undefined && !locked) put(max);
     else if (k === 'Enter') {
       const n = finished(text);
-      if (n != null) { put(fit(n)); if (outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range'); }
+      if (n != null) { put(fit(n)); if (outside(n) && onInvalidInput) onInvalidInput(text.trim(), 'range'); }
       return;
     }
     else return;
@@ -235,7 +238,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   // Holding − or + repeats: one step on the press, then after 400ms one every 50ms, until the pointer goes up or
   // leaves the button, Escape, or the end of the range. The press already stepped, so its click doesn't; a click with
   // no press behind it (a screen reader's) is one step.
-  const latest = React.useRef(nudge); latest.current = nudge;
+  const nudgeRef = useLatest(nudge);
   const hold = React.useRef<{ by: number; timer: number } | null>(null);
   const stop = React.useCallback(() => { const h = hold.current; if (h) { window.clearTimeout(h.timer); window.clearInterval(h.timer); h.timer = 0; } }, []);
   React.useEffect(() => {
@@ -248,27 +251,25 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const atEnd = (by: number) => locked || (by < 0 ? min !== undefined && now != null && now <= min : max !== undefined && now != null && now >= max);
   // every render: the end of the range disables the button, and a disabled button gets no pointerup, so a hold stops there.
   React.useEffect(() => { const h = hold.current; if (h && h.timer && atEnd(h.by)) stop(); });
-  const stepper = (by: number) => ({
-    onPointerDown: (e: React.PointerEvent<HTMLButtonElement>) => {
-      e.preventDefault();   // focus stays in the field, for any button
-      if (e.button !== 0) return;
-      stop(); press(by);
-      const h = { by: by, timer: 0 };
-      h.timer = window.setTimeout(() => { if (hold.current === h) h.timer = window.setInterval(() => latest.current(by), holdRepeat); }, holdDelay);
-      hold.current = h;
-    },
-    onPointerLeave: stop,
-    onContextMenu: (e: React.MouseEvent) => { if (hold.current && hold.current.timer) e.preventDefault(); },   // a long touch
-    onClick: () => { if (hold.current) hold.current = null; else press(by); },
-  });
-  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
+  // The steppers' handlers, each told its direction in the JSX (not made by a function called while rendering).
+  const holdDown = (e: React.PointerEvent<HTMLButtonElement>, by: number) => {
+    e.preventDefault();   // focus stays in the field, for any button
+    if (e.button !== 0) return;
+    stop(); press(by);
+    const h = { by: by, timer: 0 };
+    h.timer = window.setTimeout(() => { if (hold.current === h) h.timer = window.setInterval(() => nudgeRef.current(by), holdRepeat); }, holdDelay);
+    hold.current = h;
+  };
+  const longTouch = (e: React.MouseEvent) => { if (hold.current && hold.current.timer) e.preventDefault(); };   // a long touch
+  const clickStep = (by: number) => { if (hold.current) hold.current = null; else press(by); };
+  const mergedRef = useMergedRef(ref, nameRef, el);
   return (
     <>
-    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
-      style={props.style} data-component="number-input" data-size={size} onMouseDown={pressFocuses(el)}>
-      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--left" aria-hidden>{left}</span> : null}
+    <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
+      style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
+      {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       {affix.prefix}
-      <input {...rest} ref={mergedRef}
+      <input {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
         role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? show(now) : undefined} aria-valuemin={min} aria-valuemax={max}
         autoComplete={rest.autoComplete || 'off'} className="srp-input__field" value={text}
@@ -277,13 +278,13 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
       {affix.suffix}
       {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? '' : String(out(value))} /> : null}
       {props.steppers !== false ? (
-        <span className="srp-number-input__steppers">
-          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
-            disabled={atEnd(-1)} {...stepper(-1)}>
+        <span className="dk-number-input__steppers">
+          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
+            disabled={atEnd(-1)} onPointerDown={(e) => holdDown(e, -1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(-1)}>
             <Icon icon={icons.Remove} />
           </button>
-          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
-            disabled={atEnd(1)} {...stepper(1)}>
+          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
+            disabled={atEnd(1)} onPointerDown={(e) => holdDown(e, 1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(1)}>
             <Icon icon={icons.Add} />
           </button>
         </span>
