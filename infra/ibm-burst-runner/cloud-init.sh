@@ -20,6 +20,15 @@ sysctl --system
 apt-get update -y
 apt-get install -y ca-certificates curl jq mdadm
 
+# Ubuntu's daily unattended upgrade (apt-daily-upgrade.timer, 06:00 plus up to an hour) hands its packages to
+# needrestart, which on Ubuntu 24.04 restarts every service using an upgraded library, the 28 runner services too.
+# On 21 November at 06:54:13 UTC, inside that window, all of them received a shutdown signal at once while the VM
+# stayed up: every running job failed, and the jobs assigned that second lost their runner. Security updates still
+# install; needrestart only lists what would need a restart, and the next boot takes them in (the VM deletes itself
+# after two idle hours, so it doesn't run old code for long).
+mkdir -p /etc/needrestart/conf.d
+echo "\$nrconf{restart} = 'l';" > /etc/needrestart/conf.d/90-burst-no-restart.conf
+
 # Docker and every job's workspace go on the local NVMe disks (the boot volume is far too slow for many jobs). Those
 # disks are instance storage: IBM wipes them on every stop, so /data is built again at each boot by burst-data, a
 # systemd unit that runs before Docker. The runners themselves (binaries and registration) live on the boot volume

@@ -54,6 +54,16 @@ The watchdog deletes the VM when it finds nothing to do, and `down.sh` deletes i
 
 3. The 28 runners show Idle in about 10 minutes. `up.sh` replaces the old registrations under the same names. Then run Runner ping (above).
 
+## Every job failed at once with "The runner has received a shutdown signal"
+
+All 28 runner services were restarted while the VM stayed up, and the jobs assigned that second fail later with "The self-hosted runner lost communication with the server". On Ubuntu 24.04 the daily unattended upgrade (06:00 to 07:00 UTC) runs needrestart, which restarts every service that uses an upgraded library, the runners included. A server built with the current `cloud-init.sh` only lists those services (`/etc/needrestart/conf.d/90-burst-no-restart.conf`) and takes the updates in at its next boot. On an older server, run this once as root:
+
+```sh
+mkdir -p /etc/needrestart/conf.d && echo "\$nrconf{restart} = 'l';" > /etc/needrestart/conf.d/90-burst-no-restart.conf
+```
+
+Then re-run the failed jobs.
+
 ## The watchdog (since 14 November)
 
 `cloud-init.sh` installs `/usr/local/bin/idle-watchdog.sh`, which cron runs every 10 minutes. It deletes the VM only when all of these are true:
