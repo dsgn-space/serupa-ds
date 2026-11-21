@@ -1131,6 +1131,10 @@ How the words in a product built with the system should read: buttons, labels, h
 **Voice**
 
 - Plain and direct. Short sentences, everyday words, one idea per sentence.
+- Put first the words people scan for, in headings, links, list items and the first sentence of a message: "Billing: update your card", not "You can update your card in the billing section". People read the first two or three words of a line and move on.
+- Most important first, then what supports it, then the details: a message that's cut off after its first sentence should still have said what matters. Details that only some people need go behind a link or a disclosure.
+- Keep a sentence under about 20 words. Write numbers as numerals ("3 files", not "three files"): they stand out when people scan.
+- Capitals only for a short label in small type, never for a sentence or a heading: capitals hide the shape of words and read as shouting.
 - Say "you" to the person and talk about what they can do, not about the system.
 - No "please", no "sorry" for routine things, no exclamation marks, no jokes in errors.
 - Never blame the person. "That date is before the start date", not "You entered an invalid date".
@@ -1176,6 +1180,7 @@ One word for one act, so a form reads in one voice and someone using voice contr
 **Buttons and links**
 
 - Start with a verb that says what happens: "Save", "Send invite", "Delete project". Avoid "OK", "Yes", "Submit" and "Click here".
+- A button that moves to the next step says where it goes: "Continue to payment", not "Next" or "Continue" alone.
 - Use the same verb in the title and the button: a dialog titled "Delete project?" has a "Delete" button, not "Confirm".
 - A link says where it goes: "Billing settings", not "Learn more" on its own. If several links on a page would read the same, give each a distinct name.
 - Icon-only buttons need a name (`aria-label`) that is the same verb you'd write on a text button.
@@ -1195,7 +1200,7 @@ One word for one act, so a form reads in one voice and someone using voice contr
 
 - A field label is a noun phrase: "Email", "Start date", "Project name". Don't use the placeholder as the label; it disappears as soon as someone types.
 - A hint says what's expected before someone gets it wrong: "At least 12 characters", "As shown on your ID".
-- Mark the exception, not the rule: if most fields are required, mark the optional ones (Field's `optional`).
+- Mark both kinds of field: a `*` on each required one (Field's `required`) and "(optional)" on each optional one (Field's `optional`), and say once before the form what the `*` means. People skim past a note at the top, so each field says what it is.
 
 **Errors**
 
