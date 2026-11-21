@@ -1,6 +1,18 @@
 {
   "form": {
     "$description": "Form's component tokens, for Form and FormSteps. Each one is an optional override: set the CSS variable (--form-<name>) on the page, a container or one Form, and every Form inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a step's heading when it has focus from the keyboard.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-focus-ring"
+          }
+        }
+      }
+    },
     "spacing": {
       "gap": {
         "$type": "dimension",

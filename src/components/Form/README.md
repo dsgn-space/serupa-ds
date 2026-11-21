@@ -99,6 +99,7 @@ Each is an optional override: set it on the page, a container or one Form. The l
 <!-- token-table:start (made from form.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
+| `--form-focus-ring` | `focus-ring` | The ring around a step's heading when it has focus from the keyboard. |
 | `--form-gap` | `spacing-6` | Space between the form's parts: the summary, each field, the buttons (24px). |
 | `--form-actions-gap` | `spacing-3` | Space between FormSteps' Next (or submit) and Back buttons (12px). |
 | `--form-steps-gap` | `spacing-8` | Space between FormSteps' progress bar, the step and its buttons (32px). |
