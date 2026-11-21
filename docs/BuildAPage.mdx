@@ -58,12 +58,3 @@ The patterns follow this. The list above is the one `src/internal/pageBackground
 ## What stays the app's
 
 The components can't know these, so they're the app's to check on every page: the words in labels, links and errors; `alt` text for meaningful images; color carrying meaning only together with a second cue in your own content; captions for media; and a way to pause anything that moves for more than five seconds. Test each flow with the keyboard alone, a screen reader and 400% zoom.
-
-## Check the screen before it ships
-
-The components pass their own checks; how they're put together is the page's. Look at the finished screen with these:
-
-- **Take the color away** (the grayscale filter in the browser's rendering tools). Nothing should depend on color alone: links keep their underline, errors their icon and words, a selected tab its line.
-- **One main action.** One `primary` Button per view, or none; the rest are `secondary`, `outline`, `ghost` or `link`.
-- **Long and empty content.** Try the longest real name, a big number, a translation and no data at all: nothing should be cut where it matters, and an empty list should say what goes there and how to add it.
-- **Where am I?** Open the page cold and check that it says which product and which page this is, where it sits in the app (the current item in the Navbar, Sidebar or Breadcrumb), and what people can do next.
