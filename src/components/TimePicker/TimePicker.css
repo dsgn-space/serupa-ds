@@ -4,20 +4,10 @@
    160px). Options are 32px; the highlighted one gets highlight with a 2px primary bar at its start, the chosen one a primary check.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); padding-inline-end: var(--spacing-1); }
-.dk-time-picker__button {
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
-  margin: var(--spacing-0); padding: var(--spacing-1);   /* the icon plus 4px all round: 22, 24 or 28px by size, as Combobox's button */
-  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: var(--cursor-interactive); touch-action: manipulation;
-}
-.dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
-@media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--field-hover)); color: var(--time-picker-button-hover, var(--text)); } }
-.dk-time-picker__button:active:not(:disabled) { background: var(--time-picker-button-bg-pressed, var(--field-pressed)); color: var(--time-picker-button-hover, var(--text)); }
-/* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
-.dk-time-picker__button { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
-@media (prefers-reduced-motion: reduce) { .dk-time-picker__button { transition: none; } }
-.dk-time-picker__button:disabled { cursor: var(--cursor-disabled); }
-.dk-input--readonly .dk-time-picker__button:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
+.dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); }
+/* The clock button is an InputAction (Input's button inside the box), 4px from its edge; this picker's tokens still set
+   its colors. */
+.dk-time-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--time-picker-button, var(--text-muted)); --input-action-hover: var(--time-picker-button-hover, var(--text)); --input-action-bg-hover: var(--time-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--time-picker-button-bg-pressed, var(--field-pressed)); }
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));
   min-width: var(--time-picker-list-min-width, var(--spacing-40)); max-height: var(--time-picker-list-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
@@ -61,11 +51,8 @@
 .dk-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
 .dk-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4); }
 @media (forced-colors: active) { .dk-time-picker__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .dk-time-picker__list { border-color: CanvasText; } }
-/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
-   off it doesn't land in the text and open the keyboard. */
+/* Touch: 44px options. */
 @media (pointer: coarse) {
   .dk-time-picker__option { min-height: max(var(--time-picker-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
-  .dk-time-picker__button { position: relative; isolation: isolate; }
-  .dk-time-picker__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
 }
 }

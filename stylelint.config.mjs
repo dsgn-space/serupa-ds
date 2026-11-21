@@ -34,9 +34,9 @@ export default {
         'color-named': ['never', { ignoreProperties: ['/^mask/', '/^--dk-/'], message: (c) => `${c} is a raw color: read a token, var(--<component>-<part>, var(--<color>))` }],
         'function-disallowed-list': [['rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color'], { message: (f) => `${f}() makes a raw color: read a token, or mix tokens with color-mix()` }],
         // Selectors that reach into another block's elements today: the Input-based fields style .dk-input__field,
-        // AvatarGroup .dk-avatar__frame, DateRangePicker the calendar's arrows, Image the dialog's body. Each goes
-        // when Input, Avatar, Calendar and Dialog get the component token or modifier it needs (SG2 follow-ups).
-        'serupa/own-block': [true, { known: { Combobox: ['dk-input'], NumberInput: ['dk-input'], PasswordInput: ['dk-input'], SearchInput: ['dk-input'], AvatarGroup: ['dk-avatar'], DateRangePicker: ['dk-calendar'], Image: ['dk-dialog'] } }],
+        // AvatarGroup .dk-avatar__frame, Image the dialog's body. Each goes
+        // when Input, Avatar and Dialog get the component token or modifier it needs (SG2 follow-ups).
+        'serupa/own-block': [true, { known: { Combobox: ['dk-input'], NumberInput: ['dk-input'], PasswordInput: ['dk-input'], SearchInput: ['dk-input'], AvatarGroup: ['dk-avatar'], Image: ['dk-dialog'] } }],
         // A specificity budget (79): no component selector above 0,5,0 (classes, attributes and pseudo-classes; no
         // IDs). An app's own CSS outside a layer beats dk.components at any specificity, but an app that puts its
         // styles in a layer after dk still has to match these, and a component that styles another (Field's Input)

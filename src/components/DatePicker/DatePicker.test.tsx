@@ -12,7 +12,7 @@ const described = (e: Element) => (e.getAttribute('aria-describedby') || '').spl
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const announcerA = () => document.querySelector<HTMLElement>('[data-dk-announcer-assertive]');
 const popup = (id: string) => document.querySelector(`#${id} ~ [role=dialog]`) as HTMLElement;
-const button = (id: string) => document.querySelector(`#${id} ~ button[aria-haspopup=dialog]`) as HTMLButtonElement;
+const button = (id: string) => document.querySelector(`#${id} ~ span button[aria-haspopup=dialog]`) as HTMLButtonElement;
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.id || a.tagName; };
 const type = async (id: string, text: string, key = '{Tab}') => { await userEvent.fill(el(id), text); await userEvent.keyboard(key); };
 
@@ -281,7 +281,7 @@ describe('DatePicker', () => {
       const tb = document.querySelector('[data-testid=today] td:not([aria-selected="true"]) > [aria-current="date"]');
       if (tb) pairs.push(['today', getComputedStyle(tb).color, getComputedStyle(document.body).backgroundColor, 4.5]);
       const btn = button('ctl');
-      pairs.push(['calendar button', getComputedStyle(btn).color, getComputedStyle(btn.parentElement!).backgroundColor, 3]);
+      pairs.push(['calendar button', getComputedStyle(btn).color, getComputedStyle(btn.closest('[data-component=date-picker]')!).backgroundColor, 3]);
       for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     still.remove();

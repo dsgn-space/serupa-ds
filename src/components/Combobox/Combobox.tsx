@@ -9,7 +9,7 @@ import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { LoaderRing } from '../../internal/loaderRing';
-import type { InputProps } from '../Input/Input';
+import { InputAction, type InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
 import { FieldContext, useFieldControl } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -633,15 +633,11 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
         </span> : null}
         {field}
       </span> : field}
-      {showClear ? (
-        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || sds.labels.clearValue(name || '')} onMouseDown={keep} onClick={clear}>
-          <Icon icon={icons.Close} />
-        </button>
-      ) : null}
-      <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || sds.labels.showOptions} aria-expanded={open} aria-controls={open ? listId : undefined}
-        disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide('trigger'); else show('selected'); if (input.current) input.current.focus(); }}>
-        <Icon icon={icons.ExpandMore} />
-      </button>
+      <span className="dk-input__actions">
+        {showClear ? <InputAction tabIndex={-1} className="dk-combobox__button dk-combobox__clear" icon={icons.Close} label={props.clearLabel || sds.labels.clearValue(name || '')} onMouseDown={keep} onClick={clear} /> : null}
+        <InputAction tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" icon={icons.ExpandMore} label={props.toggleLabel || sds.labels.showOptions} aria-expanded={open} aria-controls={open ? listId : undefined}
+          disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide('trigger'); else show('selected'); if (input.current) input.current.focus(); }} />
+      </span>
       <div ref={pop} className="dk-combobox__popup" {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} onMouseDown={keep}>
         {loading ? <div className="dk-combobox__message" role="status"><LoaderRing size="sm" />{props.loadingText || sds.labels.loadingResults}</div> : null}
         <div ref={setListbox} id={listId} role="listbox" className="dk-combobox__listbox" style={win.before || win.after ? { '--dk-cbx-before': win.before + 'px', '--dk-cbx-after': win.after + 'px' } as React.CSSProperties : undefined} aria-multiselectable={multi || undefined} aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>

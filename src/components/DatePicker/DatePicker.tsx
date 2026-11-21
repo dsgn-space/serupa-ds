@@ -9,7 +9,7 @@ import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Calendar, type DatePreset } from '../Calendar/Calendar';
 import type { CalendarSystem } from '../../internal/calendars';
-import { Icon } from '../Icon/Icon';
+import { InputAction } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
@@ -141,10 +141,10 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
           if (e.key === 'Enter') read();
           else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(); openByHand(); }
         }} />
-      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
-        disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read(); openByHand(); } }}>
-        <Icon icon={icons.CalendarToday} />
-      </button>
+      <span className="dk-input__actions">
+        <InputAction ref={button} className="dk-date-picker__button" icon={icons.CalendarToday} label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
+          disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read(); openByHand(); } }} />
+      </span>
       {/* The format to type, read after the field's name: a placeholder is gone once something is typed, and not every screen reader reads it. */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}

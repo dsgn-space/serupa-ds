@@ -8,7 +8,7 @@ import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { RangeCalendar, RangePickContext } from '../RangeCalendar/RangeCalendar';
-import { Icon } from '../Icon/Icon';
+import { InputAction } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -219,10 +219,10 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
       <span className="dk-date-range-picker__dash" aria-hidden>–</span>
       <span id={popId + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {field('end')}
-      <button ref={button} type="button" className="dk-date-picker__button dk-date-range-picker__button" aria-label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
-        disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }}>
-        <Icon icon={icons.DateRange} />
-      </button>
+      <span className="dk-input__actions dk-date-range-picker__actions">
+        <InputAction ref={button} className="dk-date-picker__button dk-date-range-picker__button" icon={icons.DateRange} label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
+          disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }} />
+      </span>
       {startName ? <input type="hidden" name={startName} form={form} value={value.start ? isoDate(value.start) : ''} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} form={form} value={value.end ? isoDate(value.end) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup dk-date-range-picker__popup"
