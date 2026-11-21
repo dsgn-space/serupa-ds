@@ -5,6 +5,7 @@ import { useBreakpoint } from '../../internal/media';
 import { named } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { localeDir } from '../../internal/locale';
 import { displayNumber } from '../../internal/numbers';
 import { minuteTick } from '../../internal/timing';
 import { announce } from '../../internal/announce';
@@ -181,7 +182,7 @@ interface BodyHandlers { keyDown: (e: React.KeyboardEvent<HTMLTableElement>) => 
 // A slot being chosen by a drag down a day's hours: its day, and where it starts and how long it is, in hours.
 interface Ghost { day: number; at: number; len: number }
 interface BodyProps {
-  view: EventCalendarView; month: number; focus: number; marked: number | null; ws: number; list: Shown[]; max: number; fmt: Formats; locale: string; lang: string | undefined;
+  view: EventCalendarView; month: number; focus: number; marked: number | null; ws: number; list: Shown[]; max: number; fmt: Formats; locale: string; lang: string | undefined; dir: 'ltr' | 'rtl' | undefined;
   titleId: string; labels: typeof words; level: number; zone: string; now: number; movable: boolean; dragging: string | null; ghost: Ghost | null;
   grid: React.RefObject<HTMLTableElement | null>; scroller: React.RefObject<HTMLDivElement | null>; on: BodyHandlers;
 }
@@ -208,7 +209,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
     <button type="button" tabIndex={tab} aria-label={nameOf(s, day, detail)} data-event-id={s.e.id} onClick={() => on.eventClick(s.e)}
       aria-keyshortcuts={movable && !detail ? 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown' : undefined}
       className={cn('dk-event-calendar__event', 'dk-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'dk-event-calendar__event--all-day', movable && !detail && 'dk-event-calendar__event--movable', p.dragging === s.e.id && 'dk-event-calendar__event--dragging')}>
-      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{shownTime(s, detail)}</span>{' '}</>}
+      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{p.dir ? <span dir={p.dir}>{shownTime(s, detail)}</span> : shownTime(s, detail)}</span>{' '}</>}
       <TruncatedText className="dk-event-calendar__title">{s.e.title}</TruncatedText>
       {s.e.repeating ? <span className="dk-event-calendar__repeat" aria-hidden>↻</span> : null}
     </button>
@@ -283,7 +284,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
             <tr>
               <td aria-hidden className="dk-event-calendar__scale">
                 <div className="dk-event-calendar__pinned" />
-                <div className="dk-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--dk-evc-at': h } as React.CSSProperties}>{h ? fmt.hour.format(new Date(2000, 0, 1, h)) : ''}</span>)}</div>
+                <div className="dk-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--dk-evc-at': h } as React.CSSProperties}>{h ? <span dir={p.dir}>{fmt.hour.format(new Date(2000, 0, 1, h))}</span> : ''}</span>)}</div>
               </td>
               {span.map((d) => {
                 const mine = onDay(list, d), whole = mine.filter((s) => s.allDay), here = sameDay(d, focus), isToday = marked !== null && sameDay(d, marked);
@@ -334,6 +335,10 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const rootRef = useServerStyles(ref);
   const rest = omit(props, { events: 1, onEventClick: 1, onSlotSelect: 1, onEventMove: 1, month: 1, defaultMonth: 1, onMonthChange: 1, view: 1, defaultView: 1, onViewChange: 1, maxPerDay: 1, locale: 1, weekStartsOn: 1, headingLevel: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
+  // A locale of its own brings its direction to its words (the times, the heading), so "9:00 AM" in a right-to-left page
+  // keeps its order; the grid itself stays in the page's direction, with the buttons around it. The dir goes on an inline
+  // span around the words, so their box still lines up on the page's side, with the title.
+  const dir = props.locale ? localeDir(props.locale) : undefined;
   const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
   const controlledMonth = props.month !== undefined;
@@ -570,11 +575,11 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
           <IconButton icon={icons.ChevronRight} label={view === 'week' ? sds.labels.nextWeek : view === 'day' ? sds.labels.nextDay : sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__next"
             onClick={() => (hours ? go(addDays(focus, step)) : showMonth(addMonths(month, 1)))} />
         </div>
-        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite" data-month={iso(month)}>{title}</H>
+        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite" data-month={iso(month)}>{dir ? <span dir={dir}>{title}</span> : title}</H>
         {narrow ? null : <SegmentedControl size="sm" aria-label={sds.labels.calendarView} value={chosen} onValueChange={(v) => setView(isView(v) ? v : 'month')}
           options={[{ value: 'month', label: sds.labels.monthView }, { value: 'week', label: sds.labels.weekView }, { value: 'day', label: sds.labels.dayView }, { value: 'agenda', label: sds.labels.agendaView }]} />}
       </div>
-      <Body view={view} month={monthTime} focus={focus.getTime()} marked={marked ? marked.getTime() : null} ws={ws} list={drawn} max={max} fmt={fmt} locale={locale} lang={lang}
+      <Body view={view} month={monthTime} focus={focus.getTime()} marked={marked ? marked.getTime() : null} ws={ws} list={drawn} max={max} fmt={fmt} locale={locale} lang={lang} dir={dir}
         titleId={titleId} labels={sds.labels} level={level} zone={zone} now={now.getTime()} movable={movable} dragging={drag ? drag.id : null} ghost={ghost} grid={grid} scroller={scroller} on={on} />
     </div>
   );

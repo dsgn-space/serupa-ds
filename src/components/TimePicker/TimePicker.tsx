@@ -12,6 +12,7 @@ import { Icon } from '../Icon/Icon';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { localeDir } from '../../internal/locale';
 import { useFormReset } from '../../internal/useFormReset';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
@@ -68,6 +69,9 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const sds = useSettings(words);
   const { value: _v, defaultValue: _d, onValueChange, open: _o, defaultOpen: _do, onOpenChange, onInvalidInput, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
+  // A locale of its own brings its direction to the time, in the field and the list, so "3:45 PM" in a right-to-left
+  // page keeps its order.
+  const dir = localeProp ? localeDir(localeProp) : undefined;
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const h12 = props.hour12 ?? uses12h(locale);
@@ -174,7 +178,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
     <>
     <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-time-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={mergedRef}
-        lang={rest.lang ?? lang} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
+        lang={rest.lang ?? lang} dir={rest.dir ?? dir} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
@@ -193,7 +197,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
           <li key={n} id={`${id}-${i}`} lang={lang} role="option" aria-selected={n === value} data-value={toHHmm(n)}
             className={cn('dk-time-picker__option', i === active && 'dk-time-picker__option--active', n === value && 'dk-time-picker__option--selected')}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
-            <span className="dk-time-picker__time">{fmt(n)}</span>
+            <span className="dk-time-picker__time">{dir ? <span dir={dir}>{fmt(n)}</span> : fmt(n)}</span>
             {n === value ? <Icon icon={icons.Check} className="dk-time-picker__check" /> : null}
           </li>
         )) : null}
