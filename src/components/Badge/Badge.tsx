@@ -155,7 +155,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingLabel)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
   const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
-  const content: React.ReactNode[] = [dot, icon, <span className="dk-badge__label" key="label">{label}</span>, remove, spin];
+  const content = <>{dot}{icon}<span className="dk-badge__label">{label}</span>{remove}{spin}</>;
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
     rest.onKeyDown = chain(rest.onKeyDown, pressKey);

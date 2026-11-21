@@ -118,12 +118,14 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
     const el = byId(e.currentTarget, controlId);
     if (el) el.focus();
   };
-  const labelKids = [props.label,
-    props.required ? <span className="dk-field__required" aria-hidden key="req">*</span> : null,
-    // A fieldset can't carry aria-required, and the * is hidden: with group, the legend says it in words (FR1), so the
-    // group is read as "Contact by, Required" whatever it holds.
-    props.required && group ? <span className="dk-visually-hidden" key="req-said">{' ' + sds.labels.required}</span> : null,
-    !props.required && props.optional ? <span className="dk-field__optional" key="opt">{typeof props.optional === 'string' ? props.optional : sds.labels.fieldOptional}</span> : null];
+  // A fieldset can't carry aria-required, and the * is hidden: with group, the legend says it in words (FR1), so the
+  // group is read as "Contact by, Required" whatever it holds.
+  const labelKids = <>
+    {props.label}
+    {props.required ? <span className="dk-field__required" aria-hidden>*</span> : null}
+    {props.required && group ? <span className="dk-visually-hidden">{' ' + sds.labels.required}</span> : null}
+    {!props.required && props.optional ? <span className="dk-field__optional">{typeof props.optional === 'string' ? props.optional : sds.labels.fieldOptional}</span> : null}
+  </>;
   const label = props.label == null ? null : group
     ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, labelKids)
     : <label className="dk-field__label" htmlFor={controlId} id={base + '-label'} key="label" onClick={focusControl} ref={labelRef}>{labelKids}</label>;
