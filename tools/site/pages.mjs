@@ -33,6 +33,11 @@ export function summaryOf(guide) {
 export function alsoOf(guide) {
   return ((/^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(guide) || [])[1] ?? '').split(/,\s*/).filter(Boolean);
 }
+/** The words a page without a guide gives the search in an MDX comment, `{/* also: dark mode, color scheme *\/}`:
+ *  what people type looking for it that its title and description don't say ("validation" for Forms). */
+export function alsoComment(mdx) {
+  return (/\{\/\*\s*also:\s*([\s\S]*?)\s*\*\/\}/.exec(mdx)?.[1] ?? '').split(/,\s*/).map((w) => w.trim()).filter(Boolean);
+}
 
 /** A component's status from the doc comment on its export (as tools/build/registry.mjs reads it). */
 function statusOf(file, name) {
@@ -73,7 +78,7 @@ export function sitePages(root = ROOT) {
     const folder = /^src\/(components|blocks|patterns)\/(\w+)\/\2\.mdx$/.exec(file);
     const readme = folder && path.join(path.dirname(abs), 'README.md');
     const guide = readme && fs.existsSync(readme) ? fs.readFileSync(readme, 'utf8') : '';
-    const summary = guide ? summaryOf(guide) : '', also = guide ? alsoOf(guide) : [];
+    const summary = guide ? summaryOf(guide) : '', also = guide ? alsoOf(guide) : alsoComment(mdx);
     const component = folder?.[1] === 'components' ? folder[2] : null;
     pages.push({
       file, title, id: storybookId(title), section, group, name, summary, also, stories, component,
