@@ -57,7 +57,8 @@ function LinkBaseRender({ ref, ...props }: LinkProps & React.RefAttributes<HTMLA
   </> : props.children;
   // React only autofocuses form controls: with autoFocus, a small client component focuses the link once it's mounted.
   if (props.autoFocus) return <AutoFocusLink as={props.as || config.link} linkRef={ref} attrs={attrs}>{children}</AutoFocusLink>;
-  return React.createElement(props.as || config.link, { ...attrs, ref }, children);
+  const Tag = props.as || config.link;
+  return <Tag {...attrs} ref={ref}>{children}</Tag>;
 }
 
 /* Link: an inline text link, underlined, in the primary color or the surrounding text's. external opens a new
