@@ -6,8 +6,6 @@
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
 //   components.css         the srp-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
-//   utilities-extra.css    the masks and gradients, which utilities.css and bundle.css leave out (tools/utilities/extra.mjs)
-//   utilities-palette.css  the classes on a palette step (bg-red-500), which utilities.css and bundle.css leave out (17.0.0)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   debug.js               the opt-in debug overlay (?serupa-debug), from src/
@@ -29,7 +27,7 @@ import { compileReact, compiles } from './react-compiler.mjs';
 import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
 import { withMotionAttribute } from './motion-attribute.mjs';
-import { split } from '../utilities/extra.mjs';
+import { assertTrimmed } from '../utilities/trimmed.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
 import { nativeFiles } from './native-tokens.mjs';
@@ -77,15 +75,11 @@ const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG
 // Each reduced-motion rule also answers an app's own setting, data-motion="reduce" (motion-attribute.mjs).
 const bare = (css) => compactCss(withMotionAttribute(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '')));
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
-// The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
-// the few pages that use them.
-// The classes on a palette step (bg-red-500) ship apart too, in utilities-palette.css (17.0.0): the roles
-// (bg-primary) follow the theme, and nothing in the system uses a palette step.
-const { core, extra, palette } = split(utilities);
-fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(core));
-fs.writeFileSync(path.join(D, 'utilities-extra.css'), banner('masks and gradients, after utilities.css or bundle.css') + bare(extra));
-fs.writeFileSync(path.join(D, 'utilities-palette.css'), banner('the palette steps (bg-red-500), after utilities.css or bundle.css') + bare(palette));
-fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(core));
+// 17.0.0 removed the palette-step, mask, gradient, filter and 3D families (tools/utilities/trimmed.mjs); this fails
+// when a template edit brings one back.
+assertTrimmed(utilities);
+fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(utilities));
+fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(utilities));
 // base.css and theme.js say __VERSION__ in src/; the build writes package.json's version there, so a release changes
 // the number in one place.
 const stamp = (s) => s.replaceAll('__VERSION__', version);

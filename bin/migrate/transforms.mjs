@@ -509,15 +509,16 @@ export const TRANSFORMS = [
     },
   },
   {
-    version: '17.0.0', id: 'utilities-palette', exts: [...CODE, ...MARKUP],
-    title: 'The classes on a palette step (`bg-red-500`, `text-slate-700`) move to `utilities-palette.css`',
+    version: '17.0.0', id: 'utilities-trimmed', exts: [...CODE, ...MARKUP],
+    title: 'The palette-step, mask, gradient, filter and 3D utility classes are removed (`bg-red-500`, `mask-*`, `bg-linear-*`, `blur-*`, `rotate-*`, `scale-*`)',
     run(src) {
-      if (/utilities-palette\.css/.test(src)) return { text: src, count: 0, notes: [] };
-      const found = [...src.matchAll(PALETTE_CLASS)];
-      if (!found.length) return { text: src, count: 0, notes: [] };
-      const names = [...new Set(found.map((m) => m[0]))];
-      return { text: src, count: 0, notes: [{ line: lineOf(src, found[0].index),
-        message: `${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} ${names.length === 1 ? 'is' : 'are'} no longer in bundle.css: use a role class (bg-primary, text-text-muted, border-border), which follows the theme, or import '@diki-stwn/serupa-ds/utilities-palette.css' after the bundle` }] };
+      const names = new Set([...src.matchAll(PALETTE_CLASS), ...src.matchAll(MOVED)].map((m) => m[0]));
+      for (const m of src.matchAll(TRIMMED_17)) if (inClassList(src, m.index)) names.add(m[0]);
+      if (!names.size) return { text: src, count: 0, notes: [] };
+      const list = [...names];
+      const first = Math.min(...list.map((n) => src.indexOf(n)));
+      return { text: src, count: 0, notes: [{ line: lineOf(src, first),
+        message: `${list.slice(0, 3).join(', ')}${list.length > 3 ? ` and ${list.length - 3} more` : ''} ${list.length === 1 ? 'is' : 'are'} no longer a class: for a color use a role class (bg-primary, text-text-muted, border-border), which follows the theme, or var(--red-500) in the app's own CSS; for a mask, gradient, filter or rotate, write that CSS property in the app's own CSS` }] };
     },
   },
   propsRename('17.0.0', 'icon-start-end', 'The icon props say start and end, not left and right: `leftIcon` is `startIcon`, `rightIcon` is `endIcon`',
@@ -553,6 +554,9 @@ const BRAND_USE = new RegExp(`data-brand\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS}
 // A utility class on a palette step, as written in a class list: with its variants (md:, hover:) and an opacity
 // (/50), not a custom property (--red-500), and not a gradient stop (from-red-500: 14.0.0's utilities-extra.css).
 const RAMPS = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
+// The other families 17.0.0 removed (tools/utilities/trimmed.mjs), as written in a class list: words like blur, scale
+// and transform are common elsewhere, so these count only inside class="…" (inClassList).
+const TRIMMED_17 = /(?<![\w$./-])(?:[a-z0-9@[\]-]+:)*-?(?:(?:from|via|to)(?=-[a-z0-9[(])|blur|brightness|contrast|grayscale|invert|sepia|hue-rotate|saturate|drop-shadow|backdrop-[a-z]+|mix-blend|bg-blend|rotate|skew|scale|perspective|backface|transform|zoom|origin|columns|break-(?:after|before|inside)|text-shadow|inset-shadow|inset-ring|tab)(?:-[\w./%]+)*(?![\w-])/g;
 const PALETTE_CLASS = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?!(?:from|via|to)-)[a-z][a-z-]*-(?:${RAMPS})-(?:50|[1-9]00|950)(?:\\/[\\d.]+)?(?![\\w-])`, 'g');
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);

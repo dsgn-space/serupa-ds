@@ -2,7 +2,7 @@
 // and nothing else says so. md:grid-cols-[1fr_2fr] and sm:min-w-64 read like utilities, but utilities.css has no
 // arbitrary values and no min-w-64, so the Settings section and the Table toolbar lost their layout without a test
 // noticing (#1493). This reads every class written in a className there and fails on one that neither the utilities
-// (utilities.template.css expanded over tokens.json, extras included) nor any stylesheet under src/ defines.
+// (utilities.template.css expanded over tokens.json) nor any stylesheet under src/ defines.
 //   node tools/test/class-names.mjs
 // Only what's written out is read: className="a b", and the quoted parts of className={…} (a `${…}` piece is
 // skipped, and so is a word glued to one). A story's own <style>{'…'}</style> counts for that story. A class that's only a hook for a script or a test, with no rule, goes in

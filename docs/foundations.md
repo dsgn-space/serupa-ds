@@ -14,7 +14,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 ## Naming
 
-A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `text-blue-500` as classes, and `var(--blue-500)` in CSS. The classes on a palette step ship in `utilities-palette.css`, not in `bundle.css`: import `@diki-stwn/serupa-ds/utilities-palette.css` after it to use them. Prefer the roles (`bg-primary`, `text-text-muted`), which follow the theme.
+A palette step is a token, not a class: `var(--blue-500)` in your own CSS. The color classes are the roles (`bg-primary`, `text-text-muted`, `border-border`), white and black, because a role follows the theme and a palette step doesn't (17.0.0 removed `bg-blue-500` and the rest).
 
 ## Using the shades
 
@@ -320,9 +320,9 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 | line-height | `leading-none`, `-tight`, `-snug`, `-normal`, `-relaxed`, `-loose`, and `leading-<spacing>` |
 | list-style-image / position / type | `list-image-none`; `list-inside`, `list-outside`; `list-disc`, `list-decimal`, `list-none` |
 | text-align | `text-left`, `-center`, `-right`, `-justify`, `-start`, `-end` |
-| color | `text-<color>` for every alias (`text-primary`, `text-text-muted`) and palette color (`text-blue-600`, in `utilities-palette.css`), `text-inherit`, `text-current`, `text-transparent` |
+| color | `text-<color>` for every role (`text-primary`, `text-text-muted`), `text-white`, `text-black`, `text-inherit`, `text-current`, `text-transparent` |
 | text-decoration-line | `underline`, `overline`, `line-through`, `no-underline` |
-| placeholder color | `placeholder-<color>` for every palette color and alias, `placeholder-inherit`, `placeholder-current`, `placeholder-transparent` (use `placeholder-text-muted`) |
+| placeholder color | `placeholder-<color>` for every role, white and black, `placeholder-inherit`, `placeholder-current`, `placeholder-transparent` (use `placeholder-text-muted`) |
 | text-decoration-color | `decoration-<color>`, `decoration-current`, `decoration-inherit`, `decoration-transparent` |
 | text-decoration-style | `decoration-solid`, `-double`, `-dotted`, `-dashed`, `-wavy` |
 | text-decoration-thickness | `decoration-0`, `1`, `2`, `4`, `8`, `decoration-auto`, `decoration-from-font` |
@@ -331,7 +331,6 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 | text-overflow | `truncate`, `text-ellipsis`, `text-clip` |
 | text-wrap | `text-wrap`, `text-nowrap`, `text-balance`, `text-pretty` |
 | text-indent | `indent-<spacing>`, `-indent-<spacing>` |
-| tab-size | `tab-0`, `tab-2`, `tab-4`, `tab-8` |
 | vertical-align | `align-baseline`, `-top`, `-middle`, `-bottom`, `-text-top`, `-text-bottom`, `-sub`, `-super` |
 | white-space | `whitespace-normal`, `-nowrap`, `-pre`, `-pre-line`, `-pre-wrap`, `-break-spaces` |
 | word-break | `break-normal`, `break-all`, `break-keep` |
@@ -363,27 +362,24 @@ Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`s
 
 ## Backgrounds
 
-Background utilities, as classes in `bundle.css`. Backgrounds have no scale of their own: colors come from the palette and alias tokens, so there are no new tokens.
+Background utilities, as classes in `bundle.css`. Backgrounds have no scale of their own: the colors are the role tokens, so there are no new tokens.
 
 | Property | Classes |
 | --- | --- |
 | background-attachment | `bg-fixed`, `bg-local`, `bg-scroll` |
 | background-clip | `bg-clip-border`, `bg-clip-padding`, `bg-clip-content`, `bg-clip-text` |
-| background-color | `bg-<color>` for every alias (`bg-surface`, `bg-primary`) and palette color (`bg-gray-100`, in `utilities-palette.css`), `bg-inherit`, `bg-current`, `bg-transparent` |
-| background-image | `bg-none`; linear gradients `bg-linear-to-t`, `-tr`, `-r`, `-br`, `-b`, `-bl`, `-l`, `-tl` and `bg-linear-45` (any of 0–315° in 45° steps, negatives too); `bg-radial`; `bg-conic`, `bg-conic-90`… |
-| gradient stops | `from-<color>`, `via-<color>`, `to-<color>`; positions `from-0%` … `to-100%` in 5% steps |
-
-The gradients (`bg-linear-*`, `bg-radial*`, `bg-conic*` and the stops) ship in `utilities-extra.css`, not in `bundle.css`: import `@diki-stwn/serupa-ds/utilities-extra.css` after it to use them.
+| background-color | `bg-<color>` for every role (`bg-surface`, `bg-primary`), `bg-white`, `bg-black`, `bg-inherit`, `bg-current`, `bg-transparent` |
+| background-image | `bg-none` |
 | background-origin | `bg-origin-border`, `bg-origin-padding`, `bg-origin-content` |
 | background-position | `bg-top-left`, `bg-top`, `bg-top-right`, `bg-left`, `bg-center`, `bg-right`, `bg-bottom-left`, `bg-bottom`, `bg-bottom-right` |
 | background-repeat | `bg-repeat`, `bg-repeat-x`, `bg-repeat-y`, `bg-repeat-space`, `bg-repeat-round`, `bg-no-repeat` |
 | background-size | `bg-auto`, `bg-cover`, `bg-contain` |
 
-Gradients mix in the OKLab color space, so blends between hues stay bright instead of turning grey: `bg-linear-to-r from-primary to-info`.
+There are no gradient classes (17.0.0): write a gradient in your own CSS from the role tokens, `background: linear-gradient(in oklab to right, var(--primary), var(--info))`. OKLab keeps blends between hues bright instead of grey.
 
 Rules of thumb:
 
-- Use alias backgrounds (`bg-surface`, `bg-surface-muted`, `bg-primary-subtle`) so surfaces follow the theme; palette backgrounds look the same in every theme.
+- Use role backgrounds (`bg-surface`, `bg-surface-muted`, `bg-primary-subtle`) so surfaces follow the theme.
 - Keep text on a solid background: if text sits on a gradient or image, check contrast at its lightest point, or add a `bg-surface` panel behind it.
 - Use gradients sparingly, for heroes and illustrations, not for UI controls.
 - Images: `bg-cover bg-center bg-no-repeat` fills a box without distortion.
@@ -472,10 +468,10 @@ Border and outline utilities, as classes in `bundle.css`. Widths and offsets are
 | --- | --- |
 | border-radius | `rounded-<size>` on all corners; sides `rounded-t-`, `-r-`, `-b-`, `-l-`, `-s-`, `-e-`; corners `rounded-tl-`, `-tr-`, `-br-`, `-bl-`, `-ss-`, `-se-`, `-ee-`, `-es-` |
 | border-width | `border` (1px), `border-0`, `-2`, `-4`, `-8`; sides `border-x`, `-y`, `-s`, `-e`, `-bs`, `-be`, `-t`, `-r`, `-b`, `-l` (each with the same widths); between children `divide-x`, `divide-y` (and `-0`, `-2`, `-4`, `-8`, `-reverse`) |
-| border-color | `border-<color>` for every palette color and alias, on every side (`border-t-danger`, `border-x-border`); `divide-<color>`; `inherit`, `current`, `transparent` |
+| border-color | `border-<color>` for every role, white and black, on every side (`border-t-danger`, `border-x-border`); `divide-<color>`; `inherit`, `current`, `transparent` |
 | border-style | `border-solid`, `-dashed`, `-dotted`, `-double`, `-hidden`, `-none`; `divide-dashed`… |
 | outline-width | `outline` (1px), `outline-0`, `-1`, `-2`, `-4`, `-8` |
-| outline-color | `outline-<color>` for every palette color and alias |
+| outline-color | `outline-<color>` for every role, white and black |
 | outline-style | `outline-solid`, `-dashed`, `-dotted`, `-double`, `outline-none`, `outline-hidden` (transparent, still visible in forced-colors mode) |
 | outline-offset | `outline-offset-0`, `-1`, `-2`, `-4`, `-8` and negatives |
 
@@ -489,42 +485,25 @@ Rules of thumb:
 
 ## Effects
 
-Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are tokens in the `shadow` group; opacity uses the `opacity` group; blend modes and masks are keywords. The masks (`mask-*`) ship in `utilities-extra.css`: import `@diki-stwn/serupa-ds/utilities-extra.css` after `bundle.css` to use them.
+Effect utilities, as classes in `bundle.css`. Box shadows are tokens in the `shadow` group; opacity uses the `opacity` group. There are no mask, blend-mode, text-shadow or inner-shadow classes (17.0.0): write those properties in your own CSS.
 
-**Shadow names.** `shadow-2xs` → `shadow-xs` → `shadow-sm` → `shadow-md` → `shadow-lg` → `shadow-xl` → `shadow-2xl`, all black at 5–25% opacity. Earlier versions of this system used other names: the old `shadow-sm` is now `shadow-xs` (Button uses it, so buttons look the same), the old bare `shadow` is now `shadow-sm`, and `shadow-inner` is now `inset-shadow-sm`. `shadow` and `shadow-inner` still work.
+**Shadow names.** `shadow-2xs` → `shadow-xs` → `shadow-sm` → `shadow-md` → `shadow-lg` → `shadow-xl` → `shadow-2xl`, all black at 5–25% opacity. Earlier versions of this system used other names: the old `shadow-sm` is now `shadow-xs` (Button uses it, so buttons look the same), and the old bare `shadow` is now `shadow-sm`. `shadow` still works, and `shadow-inner` draws an inner shadow.
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
-| box-shadow | `shadow-2xs` `-xs` `-sm` `-md` `-lg` `-xl` `-2xl` `-none`; inner `inset-shadow-2xs` `-xs` `-sm` `-none`; rings `ring` (1px) `ring-0` `-1` `-2` `-4` `-8`, `ring-inset`, `inset-ring` (and widths), `ring-offset-0` `-1` `-2` `-4` `-8`; colors `shadow-<color>`, `inset-shadow-<color>`, `ring-<color>`, `inset-ring-<color>`, `ring-offset-<color>` for every palette color and alias; `shadow-initial`, `inset-shadow-initial` and `text-shadow-initial` undo a color class | `shadow-*`, `inset-shadow-*` |
-| text-shadow | `text-shadow-2xs` `-xs` `-sm` `-md` `-lg` `-none`; `text-shadow-<color>`, `text-shadow-inherit` | `text-shadow-*` |
+| box-shadow | `shadow-2xs` `-xs` `-sm` `-md` `-lg` `-xl` `-2xl` `-none`; rings `ring` (1px) `ring-0` `-1` `-2` `-4` `-8`, `ring-inset`, `ring-offset-0` `-1` `-2` `-4` `-8`; colors `shadow-<color>`, `ring-<color>`, `ring-offset-<color>` for every role, white and black; `shadow-initial` undoes a color class | `shadow-*` |
 | opacity | `opacity-0` … `opacity-100` in 5% steps | `opacity-*` |
-| mix-blend-mode | `mix-blend-normal` `-multiply` `-screen` `-overlay` `-darken` `-lighten` `-color-dodge` `-color-burn` `-hard-light` `-soft-light` `-difference` `-exclusion` `-hue` `-saturation` `-color` `-luminosity` `-plus-darker` `-plus-lighter` | — |
-| background-blend-mode | `bg-blend-normal` … `bg-blend-luminosity` (same list, without the plus modes) | — |
-| mask-clip | `mask-clip-border` `-padding` `-content` `-fill` `-stroke` `-view`, `mask-no-clip` | — |
-| mask-composite | `mask-add` `mask-subtract` `mask-intersect` `mask-exclude` | — |
-| mask-image | `mask-none`; edges `mask-t-from-<%>` `mask-t-to-<%>` (also `-r-` `-b-` `-l-` `-x-` `-y-`); `mask-linear-<angle>` (45° steps, negatives) with `mask-linear-from-<%>` `-to-<%>`; `mask-radial-from-<%>` `-to-<%>` with `mask-circle` `mask-ellipse`, `mask-radial-closest-side` `-closest-corner` `-farthest-side` `-farthest-corner`, `mask-radial-at-<position>`; `mask-conic-<angle>` with `mask-conic-from-<%>` `-to-<%>`. Percentages run 0–100% in 5% steps | — |
-| mask-mode | `mask-alpha` `mask-luminance` `mask-match` | — |
-| mask-origin | `mask-origin-border` `-padding` `-content` `-fill` `-stroke` `-view` | — |
-| mask-position | `mask-top-left` `mask-top` `mask-top-right` `mask-left` `mask-center` `mask-right` `mask-bottom-left` `mask-bottom` `mask-bottom-right` | — |
-| mask-repeat | `mask-repeat` `mask-no-repeat` `mask-repeat-x` `mask-repeat-y` `mask-repeat-space` `mask-repeat-round` | — |
-| mask-size | `mask-auto` `mask-cover` `mask-contain` | — |
-| mask-type | `mask-type-alpha` `mask-type-luminance` (on SVG `<mask>` elements) | — |
 
-**Stacking.** A shadow, an inner shadow, a ring and an inset ring all draw on one element at once: `shadow-md ring-1 ring-border` is a card with a hairline edge. Mask gradients stack too and intersect: `mask-b-from-60% mask-r-from-80%` fades the bottom and the right.
+**Stacking.** A shadow and a ring draw on one element at once: `shadow-md ring-1 ring-border` is a card with a hairline edge.
 
 **Colors.** A color class swaps the black for that color at full strength (rings default to the text color). For a soft tint, set the variable directly, e.g. `--srp-shadow-color: color-mix(in oklab, var(--primary) 30%, transparent)`.
-
-**Masks.** `-from-` is where the element is still fully visible and `-to-` where it is fully hidden, measured from the named edge or the gradient's start: `mask-b-from-50%` keeps the top half and fades the bottom half out.
 
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
 - Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
-- `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
 - `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`disabled-text`, `disabled-surface`, `disabled-border`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
-- Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
-- Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
 ## Elevation and layers
 
@@ -535,7 +514,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
 | 0 · Page | The page itself; Navbar, Sidebar and tables on it | `surface-page` behind; `surface` for the bars and tables | `border` between regions | none |
-| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or an inner shadow (`shadow-inner`) for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border` | `shadow-md` |
 | 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
@@ -563,33 +542,19 @@ In forced-colors mode, backgrounds and shadows are replaced, so only the edge su
 
 ## Filters
 
-Filter and backdrop-filter utilities, as classes in `bundle.css`. Scales are tokens in the `filters` group (backdrop opacity uses the `opacity` group); grayscale, invert and sepia need none. Filter classes combine on one element (`blur-sm grayscale`), and so do backdrop classes.
+There are no filter classes (17.0.0 removed `blur-*`, `brightness-*`, `grayscale`, `drop-shadow-*`, `backdrop-*` and the rest: nothing in the system used them). The scales are still tokens in the `filters` group, for your own CSS:
 
-| Property | Classes | Tokens |
-| --- | --- | --- |
-| blur | `blur-xs` (4px) `-sm` (8px) `-md` (12px) `-lg` (16px) `-xl` (24px) `-2xl` (40px) `-3xl` (64px), `blur-none` | `blur-*` |
-| brightness | `brightness-0` `-50` `-75` `-90` `-95` `-100` `-105` `-110` `-125` `-150` `-200` | `brightness-*` |
-| contrast | `contrast-0` `-50` `-75` `-100` `-125` `-150` `-200` | `contrast-*` |
-| drop-shadow | `drop-shadow-xs` `-sm` `-md` `-lg` `-xl` `-2xl` `-none`; color `drop-shadow-<color>` for every palette color and alias | `drop-shadow-*` |
-| grayscale | `grayscale` (100%), `grayscale-0` `-25` `-50` `-75` `-100` | — |
-| hue-rotate | `hue-rotate-0` `-15` `-30` `-60` `-90` `-180`, negatives `-hue-rotate-15`… | `hue-rotate-*` |
-| invert | `invert` (100%), `invert-0` `-25` `-50` `-75` `-100` | — |
-| saturate | `saturate-0` `-50` `-100` `-150` `-200` | `saturate-*` |
-| sepia | `sepia` (100%), `sepia-0` `-25` `-50` `-75` `-100` | — |
-| filter | `filter-none` turns every filter off | — |
-| backdrop-filter | `backdrop-blur-*`, `backdrop-brightness-*`, `backdrop-contrast-*`, `backdrop-grayscale(-*)`, `backdrop-hue-rotate-*` (and negatives), `backdrop-invert(-*)`, `backdrop-opacity-0` … `-100` (5% steps), `backdrop-saturate-*`, `backdrop-sepia(-*)`, `backdrop-filter-none` | same as above, plus the `opacity` group |
-
-Drop shadows follow an element's shape (transparent PNGs, SVG icons, clipped shapes), where `shadow-*` draws a box. A color class such as `drop-shadow-primary` keeps the shadow's size and swaps the black for that color, at full strength; for a softer tint, set `--srp-drop-shadow-color` to a transparent color, e.g. `color-mix(in oklab, var(--primary) 40%, transparent)`.
-
-Backdrop filters change what's behind an element, so they only show through a see-through background, such as `background: color-mix(in oklab, var(--surface) 70%, transparent)`.
+```css
+.frosted { background: color-mix(in oklab, var(--surface) 70%, transparent); backdrop-filter: blur(var(--blur-md)) saturate(150%); }
+.logo-wall img { filter: grayscale(100%); }
+```
 
 Rules of thumb:
 
-- Frosted glass: that translucent `surface` with `backdrop-blur-md backdrop-saturate-150` for sticky headers, `backdrop-blur-sm` for menus and `backdrop-blur-lg` behind dialogs.
-- Text over a photo: `brightness-50` or a gradient on the image, then check contrast at the lightest point.
-- `grayscale` for disabled or inactive images and logo walls (and `filter: none` on hover, in your own CSS).
-- Blur is expensive on large areas and on scroll. Keep `blur-*` and `backdrop-blur-*` on small or fixed elements, and give text a solid fallback for browsers that skip backdrop filters.
-- Use `shadow-*` for cards and panels; save `drop-shadow-*` for icons, illustrations and cut-out images.
+- Backdrop filters only show through a see-through background, as above. Give the text a solid fallback for browsers that skip them.
+- Blur is expensive on large areas and on scroll: keep it on small or fixed elements.
+- Text over a photo: darken the image (`filter: brightness(50%)`) or lay a gradient over it, then check contrast at the lightest point.
+- Use `shadow-*` for cards and panels; save `filter: drop-shadow()` for icons, illustrations and cut-out images.
 
 ## Tables
 
@@ -611,26 +576,13 @@ Rules of thumb:
 
 ## Transforms
 
-Transform utilities, as classes in `bundle.css`. Perspective, rotation, scale, skew and zoom are tokens in the `transforms` group; translate uses the spacing scale. `rotate`, `scale` and `translate` set the CSS properties of the same name, so `rotate-45 scale-110 translate-x-2` all apply together.
+The translate classes, as classes in `bundle.css`, use the spacing scale. They set the CSS `translate` property, so they don't clash with a `rotate` or `scale` of your own. 17.0.0 removed the rotate, scale, skew, perspective, origin and zoom classes (nothing in the system used them); the scales are still tokens in the `transforms` group, for your own CSS (`rotate: var(--rotate-45)`).
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
-| backface-visibility | `backface-visible`, `backface-hidden` | — |
-| perspective | `perspective-dramatic` (100px) `-near` (300px) `-normal` (500px) `-midrange` (800px) `-distant` (1200px), `perspective-none` | `perspective-*` |
-| perspective-origin | `perspective-origin-center` `-top` `-top-right` `-right` `-bottom-right` `-bottom` `-bottom-left` `-left` `-top-left` | — |
-| rotate | `rotate-0` `-1` `-2` `-3` `-6` `-12` `-45` `-90` `-180` and negatives (`-rotate-90`), `rotate-none`; 3D `rotate-x-*` `rotate-y-*` `rotate-z-*` | `rotate-*` |
-| scale | `scale-0` `-50` `-75` `-90` `-95` `-100` `-105` `-110` `-125` `-150` `-200`; `scale-x-*` `scale-y-*` `scale-z-*`; negatives mirror (`-scale-x-100`); `scale-3d`, `scale-none` | `scale-*` |
-| skew | `skew-0` `-1` `-2` `-3` `-6` `-12`, `skew-x-*` `skew-y-*` and negatives | `skew-*` |
-| transform | `transform` (applies rotate-x/y/z and skew), `transform-none`, `transform-gpu`, `transform-cpu` | — |
-| transform-box | `transform-border` `transform-content` `transform-fill` `transform-stroke` `transform-view` (what `origin-*` measures from; `transform-fill` for SVG shapes) | — |
-| transform-origin | `origin-center` `-top` `-top-right` `-right` `-bottom-right` `-bottom` `-bottom-left` `-left` `-top-left` | — |
-| transform-style | `transform-3d` (preserve-3d), `transform-flat` | — |
 | translate | `translate-<step>`, `translate-x-<step>`, `translate-y-<step>`, `translate-z-<step>` for every spacing step; fractions `-1/2` … `-11/12` and `-full` (of the element's own size); negatives; `translate-3d`, `translate-none` | `spacing-*` |
-| zoom | `zoom-50` `-75` `-90` `-95` `-100` `-105` `-110` `-125` `-150` `-200` | `zoom-*` |
 
-Transforms move how an element is drawn, not where it sits in the layout, so neighbors don't shift. `zoom` is the exception: it changes the element's layout size too.
-
-3D needs three things: a `perspective-*` on the parent, `transform-3d` where children should keep their depth, and `rotate-x-*` or `rotate-y-*` on the element. Add `backface-hidden` to the faces of a flipping card.
+Transforms move how an element is drawn, not where it sits in the layout, so neighbors don't shift.
 
 Rules of thumb:
 
@@ -640,10 +592,9 @@ Rules of thumb:
   @media (hover: hover) { .pressable:hover { background: var(--secondary); } }
   .pressable:active { background: var(--secondary-hover); }
   ```
-- Menus and dialogs enter from `scale-95 opacity-0` to `scale-100 opacity-100`, with `origin-top` for menus that drop down.
 - Center an absolutely positioned element with `left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`.
-- Rotate disclosure chevrons with `rotate-180` (or `-rotate-90`) instead of swapping icons.
-- Animate `translate` and `scale`, not `top` or `width`: they don't trigger layout. Don't use `zoom` for animation.
+- Rotate a disclosure chevron in your own CSS (`rotate: 180deg`) instead of swapping icons.
+- Animate `translate`, `scale` and `rotate`, not `top` or `width`: they don't trigger layout.
 - Respect reduced motion: drop large movements and 3D flips when the viewer prefers reduced motion.
 
 ## Page layout
@@ -775,16 +726,11 @@ The numbered steps `z-0` … `z-50` and `z-auto` are for local stacking inside o
 
 **Aspect ratio**: `aspect-auto`, `aspect-square` (1 / 1) for avatars and thumbnails, `aspect-video` (16 / 9) for media.
 
-**Columns**: `columns-1` to `columns-12` set a column count; `columns-3xs` (256px) to `columns-7xl` (1280px) fit as many columns as possible of at least that width. Use them for masonry-style lists; use grid for app layouts.
-
 **Every layout utility** in `bundle.css`:
 
 | Property | Classes |
 | --- | --- |
 | aspect-ratio | `aspect-auto`, `aspect-square`, `aspect-video` (tokens) |
-| columns | `columns-1`…`12`, `columns-3xs`…`7xl` (tokens), `columns-auto` |
-| break-after / break-before | `break-after-auto` `-avoid` `-all` `-avoid-page` `-page` `-left` `-right` `-column` (and `break-before-*`) |
-| break-inside | `break-inside-auto` `-avoid` `-avoid-page` `-avoid-column` |
 | box-decoration-break | `box-decoration-clone`, `box-decoration-slice` |
 | box-sizing | `box-border`, `box-content` |
 | display | `block` `inline-block` `inline` `flex` `inline-flex` `grid` `inline-grid` `contents` `flow-root` `list-item` `hidden`, `table` `inline-table` `table-caption` `table-cell` `table-column` `table-column-group` `table-footer-group` `table-header-group` `table-row-group` `table-row`, `sr-only` `not-sr-only` |
@@ -1056,14 +1002,14 @@ SVG utilities, as classes in `bundle.css`. Colors come from the palette and alia
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
-| fill | `fill-<color>` for every palette color and alias, `fill-none` `fill-current` `fill-inherit` `fill-transparent` | color tokens |
+| fill | `fill-<color>` for every role, white and black, `fill-none` `fill-current` `fill-inherit` `fill-transparent` | color tokens |
 | stroke | `stroke-<color>`, `stroke-none` `stroke-current` `stroke-inherit` `stroke-transparent` | color tokens |
 | stroke-width | `stroke-0` `stroke-1` `stroke-2` `stroke-3` `stroke-4` (in the SVG's own units, so they scale with the drawing) | `stroke-width-*` |
 
 Rules of thumb:
 
 - Inline icons and logos: `fill-current` (or `stroke-current` for outline art) so they take the text color, then color the parent with `text-*` aliases. That keeps them in step with the theme.
-- Use alias colors (`fill-primary`, `stroke-border`, `fill-success`) for meaning; palette colors are for illustrations and charts.
+- Use role colors (`fill-primary`, `stroke-border`, `fill-success`) for meaning; for a palette color in an illustration, use its token in the SVG (`fill="var(--blue-500)"`).
 - Outline drawings: `fill-none stroke-current stroke-2`. Because the width is in the SVG's units, a 24-unit icon drawn at 48px gets a 4px line; add `vector-effect="non-scaling-stroke"` on the shapes for a fixed width.
 - The system's icons (Material Symbols and custom icons) already fill with `currentColor`: color them with `text-*` on the icon or its parent.
 
@@ -1090,7 +1036,7 @@ Interactivity utilities, as classes in `bundle.css`. Colors come from the palett
 
 | Property | Classes |
 | --- | --- |
-| accent-color | `accent-<color>` for every palette color and alias, `accent-auto` `accent-inherit` `accent-current` `accent-transparent` |
+| accent-color | `accent-<color>` for every role, white and black, `accent-auto` `accent-inherit` `accent-current` `accent-transparent` |
 | appearance | `appearance-none` `appearance-auto` |
 | caret-color | `caret-<color>`, `caret-inherit` `caret-current` `caret-transparent` |
 | color-scheme | `scheme-normal` `scheme-light` `scheme-dark` `scheme-light-dark` `scheme-only-light` `scheme-only-dark` |

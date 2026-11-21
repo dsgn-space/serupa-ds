@@ -19,7 +19,6 @@ Pin a release tag, never `#main`. Then load the CSS once, in this order, before 
 import '@diki-stwn/serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
 import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding Serupa to an existing app
 import '@diki-stwn/serupa-ds/bundle.css';   // components and utility classes (or components.css, plus utilities.css)
-// import '@diki-stwn/serupa-ds/utilities-extra.css';   // only for masks and gradients: mask-*, bg-linear-*, from-*, via-*, to-*
 import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 ```
 

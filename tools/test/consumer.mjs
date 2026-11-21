@@ -56,7 +56,7 @@ run(['install', '--no-audit', '--no-fund', '--ignore-scripts', ...(reactVersion 
 // Runs inside the project, so serupa-ds resolves from its node_modules as in any app.
 const SSR = path.join(HERE, 'ssr');
 const fixtures = fs.readdirSync(SSR).filter((f) => f.endsWith('.mjs')).sort().map((f) => pathToFileURL(path.join(SSR, f)).href);
-const FILES = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css', '@diki-stwn/serupa-ds/components.css', '@diki-stwn/serupa-ds/utilities.css', '@diki-stwn/serupa-ds/utilities-extra.css', '@diki-stwn/serupa-ds/utilities-palette.css', '@diki-stwn/serupa-ds/brands/violet.css', '@diki-stwn/serupa-ds/theme.js', '@diki-stwn/serupa-ds/serupa.iife.js', '@diki-stwn/serupa-ds/package.json'];
+const FILES = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css', '@diki-stwn/serupa-ds/components.css', '@diki-stwn/serupa-ds/utilities.css', '@diki-stwn/serupa-ds/brands/violet.css', '@diki-stwn/serupa-ds/theme.js', '@diki-stwn/serupa-ds/serupa.iife.js', '@diki-stwn/serupa-ds/package.json'];
 fs.writeFileSync(path.join(app, 'check.mjs'), `
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';

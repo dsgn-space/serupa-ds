@@ -83,7 +83,6 @@ updates:
 // built-in Safari 26.4 lacks, and a README that names no baseline.
 expect('browser-baseline.mjs', run('browser-baseline.mjs', fixture({
   'dist/bundle.css': '.a { colr: red; }\n.b { text-box-trim: trim-both; }\n@supports (display: grid) { .c { display: grid; } }\n',
-  'dist/utilities-extra.css': '',   // read with bundle.css (the masks and gradients)
   'dist/serupa.iife.js': 'Error.isError(1);\n',
   'README.md': '# Fixture\n\n## Browser support\n\nAny.\n',
   // The floor the check reads (tools/browser-floor.mjs), as the package's own.
@@ -93,7 +92,7 @@ expect('browser-baseline.mjs', run('browser-baseline.mjs', fixture({
   ['bundle.css works in Chrome and Edge', 'text-box-trim'],
   ['No @supports tests for what the baseline already has', 'display: grid'],
   ['serupa.iife.js: every static built-in works at the baseline', 'Error.isError'],
-  ['KNOWN lists only what the baseline lacks', 'break-after: avoid'],
+  ['KNOWN lists only what the baseline lacks', 'text-wrap: pretty'],
   ['The README states the same baseline', 'Safari'],
 ]);
 
