@@ -77,8 +77,27 @@ export async function stuckJobs(limit, now = Date.now(), goneOnly = false) {
  * GitHub's runners otherwise.
  */
 export function pickRunner({ x86, fork = false, lastStart, now = Date.now(), window = 100 }) {
-  if (!x86 || fork) return GITHUB_RUNNER;
-  return lastStart != null && now - lastStart <= window * 60_000 ? x86 : GITHUB_RUNNER;
+  if (!x86 || fork || inUpgradeWindow(now)) return GITHUB_RUNNER;
+  // The quiet hour and a half sends the machines nothing, so it doesn't count against them afterwards.
+  return lastStart != null && now - lastStart <= window * 60_000 + quietBetween(lastStart, now) ? x86 : GITHUB_RUNNER;
+}
+
+// Ubuntu's daily unattended upgrade on the burst VM runs between 06:00 and 07:00 UTC (apt-daily-upgrade.timer, with
+// its random delay), and on a server built before #2230 it restarts the runner services: on 21 November at 06:54 UTC
+// every job running there failed at once. Jobs planned from 05:30 (a long one would still run at 06:00) to 07:05 go to
+// GitHub's runners. A server built with the current cloud-init.sh doesn't restart them; this can go once it is.
+const QUIET_FROM = 5 * 60 + 30, QUIET_TO = 7 * 60 + 5;   // minutes after midnight, UTC
+const minuteOfDay = (t) => { const d = new Date(t); return d.getUTCHours() * 60 + d.getUTCMinutes(); };
+export const inUpgradeWindow = (now) => { const m = minuteOfDay(now); return m >= QUIET_FROM && m < QUIET_TO; };
+/** How many ms of the quiet windows that began after `from` fall before `to`. */
+function quietBetween(from, to) {
+  let ms = 0;
+  const day = 86_400_000;
+  for (let d = Math.floor(from / day) * day; d <= to; d += day) {
+    const a = d + QUIET_FROM * 60_000, b = Math.min(to, d + QUIET_TO * 60_000);
+    if (from <= a && b > a) ms += b - a;
+  }
+  return ms;
 }
 
 /** When a self-hosted runner last started a job of this repository within `limit` minutes (ms), or null. */
