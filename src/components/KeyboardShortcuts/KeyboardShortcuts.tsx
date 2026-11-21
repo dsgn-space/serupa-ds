@@ -173,10 +173,10 @@ function KeyboardShortcutsRender({ ref, ...props }: KeyboardShortcutsProps & Rea
   const [own, setOwn] = React.useState(!!props.defaultOpen);
   const open = props.open != null ? props.open : own;
   const { onOpenChange } = props;
-  const change = React.useCallback((next: boolean, details: OpenChangeDetails) => {
+  const change = (next: boolean, details: OpenChangeDetails) => {
     setOwn(next);
     if (onOpenChange) onOpenChange(next, details);
-  }, [onOpenChange]);
+  };
   const help = props.helpKeys === false ? null : props.helpKeys && props.helpKeys.length ? props.helpKeys : ['?'];
   useShortcut(help || [], () => change(true, { reason: 'trigger' }), { description: labels.showShortcuts, enabled: !!help && !open });
   const live = React.useSyncExternalStore(watch, current, none);
