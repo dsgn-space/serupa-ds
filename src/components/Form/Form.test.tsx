@@ -19,9 +19,10 @@ import { FormStep, FormSteps } from './FormSteps';
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const active = () => document.activeElement as HTMLElement;
-const errorOf = (id: string) => el(id).closest('[data-component="field"]')!.querySelector('.dk-field__error')?.textContent || null;
-const summary = () => document.querySelector<HTMLElement>('.dk-error-summary');
-const links = () => Array.from(document.querySelectorAll('.dk-error-summary a'), (a) => [a.getAttribute('href'), a.textContent]);
+// The message the control is described by as its error (aria-errormessage), as a screen reader finds it.
+const errorOf = (id: string) => { const m = el(id).getAttribute('aria-errormessage'); return (m && document.getElementById(m)?.textContent) || null; };
+const summary = () => document.querySelector<HTMLElement>('[data-component="error-summary"]');
+const links = () => Array.from(document.querySelectorAll('[data-component="error-summary"] a'), (a) => [a.getAttribute('href'), a.textContent]);
 const tick = () => new Promise((r) => { setTimeout(r, 0); });
 
 const SignUp = z.object({
@@ -189,7 +190,7 @@ describe('Form', () => {
       <Button id="send" type="submit">Save</Button>
     </Form></SerupaProvider>);
     expect([el('n').value, el('news').checked, el('plan').value, el('city0').value]).toEqual(['Ani', true, 'pro', 'Bandung']);
-    await userEvent.click(document.querySelector<HTMLElement>('.dk-field-list__add button')!);
+    await userEvent.click(Array.from(document.querySelectorAll('button')).find((b) => b.textContent === 'Add another address')!);
     expect(el('city1').value).toBe('');
     await userEvent.type(el('city1'), 'Jakarta');
     await userEvent.click(el('send'));
@@ -333,7 +334,7 @@ describe('FormSteps', () => {
     </Form></SerupaProvider>;
   }
   const button = (name: string) => Array.from(document.querySelectorAll('button')).find((b) => b.textContent === name) as HTMLButtonElement;
-  const panels = () => Array.from(document.querySelectorAll('.dk-form-steps__panel'), (p) => p.getAttribute('hidden'));
+  const panels = () => Array.from(document.querySelectorAll('[data-component="form-steps"] > section'), (p) => p.getAttribute('hidden'));
 
   test('a progress bar and the current step’s section; Next checks only that step, then moves on and focuses its heading; Back goes back', async () => {
     await render(<Wizard />);
