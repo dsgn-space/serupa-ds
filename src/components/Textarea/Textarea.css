@@ -28,6 +28,7 @@
   display: block; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0);
   margin: var(--spacing-0); padding: var(--srp-ta-pad) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
+  position: relative;   /* its text paints over a positioned layer placed before it, such as MentionInput's mention tints */
 }
 .srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
 /* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */

@@ -81,6 +81,16 @@
             "cssVar": "--mention-input-listbox-divider"
           }
         }
+      },
+      "mention-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The tint behind each mention in the text, the brand's lightest; the text keeps 4.5:1 on it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-mention-bg"
+          }
+        }
       }
     },
     "shadow": {
@@ -113,6 +123,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--mention-input-option-radius"
+          }
+        }
+      },
+      "mention-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "The corners of the tint behind a mention.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-mention-radius"
           }
         }
       }
