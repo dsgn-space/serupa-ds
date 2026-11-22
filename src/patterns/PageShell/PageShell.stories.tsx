@@ -10,7 +10,6 @@ import { AppShell } from '../../components/AppShell/AppShell';
 import { Card } from '../../components/Card/Card';
 import { Stack } from '../../components/Stack/Stack';
 import { Text } from '../../components/Text/Text';
-import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { useName } from '../../../.storybook/content';
 
 /* Patterns are whole screens built from the components, for apps to copy (FEC1). Unlike a component's stories they
@@ -38,7 +37,7 @@ function useWide(query: string) {
   return React.useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => true);
 }
 
-function Shell({ collapsed = false, adaptive = false, offline }: { collapsed?: boolean; adaptive?: boolean; offline?: boolean }) {
+function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; adaptive?: boolean }) {
   // Adaptive: the full Sidebar from 1024px, its icon rail from 768px, and a BottomNav below that.
   const wide = useWide('(min-width: 1024px)');
   const rail = adaptive ? !wide : collapsed;
@@ -75,8 +74,6 @@ function Shell({ collapsed = false, adaptive = false, offline }: { collapsed?: b
           <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
         </BottomNav>
       ) : null}>
-      {/* Once, near the root: it shows only while the connection is down, at the top when a BottomNav holds the bottom. */}
-      <OfflineBanner online={offline ? false : undefined} placement={adaptive ? 'top' : 'bottom'}>Your changes are kept on this device and sent once you’re back.</OfflineBanner>
       <Stack gap={6}>
         <Stack gap={2}>
           <Heading level={1}>Projects</Heading>
@@ -97,10 +94,6 @@ export const Default: Story = { render: () => <Shell /> };
 
 /** The Sidebar collapsed to an icon rail, for more room in main: each item keeps its name, read out and shown as a
     tooltip, so the rail is as usable as the full Sidebar. */
-/** Offline: the OfflineBanner says so at the bottom of the screen, with what happens to the person's changes, until the
-    connection comes back. It shows by itself when the browser goes offline; here it's set with online={false}. */
-export const Offline: Story = { render: () => <Shell offline /> };
-
 export const CollapsedSidebar: Story = { render: () => <Shell collapsed /> };
 
 /** The navigation follows the window: a BottomNav on a phone (below 768px), the Sidebar's icon rail on a tablet or a
