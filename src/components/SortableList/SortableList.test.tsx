@@ -189,6 +189,42 @@ describe('SortableList', () => {
     expect([names(), moves.length]).toEqual([['Gemini', 'Mercury', 'Apollo', 'Artemis'], 1]);
   });
 
+  test('a picked-up row carries the one focus ring, around the whole row; its handle\'s own ring hides, so there are never two', async () => {
+    await render(<List />);
+    handle('Apollo').focus({ focusVisible: true });
+    await userEvent.keyboard(' ');
+    await said('Picked up Apollo, position 1 of 4.');
+    const li = handle('Apollo').closest('li')!, s = css(li);
+    expect([s.outlineStyle, s.outlineWidth, s.outlineColor === color('var(--focus-ring)'), css(handle('Apollo')).outlineStyle])
+      .toEqual(['solid', '2px', true, 'none']);
+    await userEvent.keyboard('{Escape}');
+  });
+
+  test('the row starts 8px before its handle', async () => {
+    await render(<List />);
+    const li = handle('Apollo').closest('li')!;
+    expect(Math.round(handle('Apollo').getBoundingClientRect().left - li.getBoundingClientRect().left)).toBe(9);   // 1px border + 8px
+  });
+
+  test('picked up with Space, the row can still be dragged with the pointer; dragging another row\'s handle drops the pick-up and drags that one', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[];
+    const step = rows[1]!.getBoundingClientRect().top - rows[0]!.getBoundingClientRect().top;
+    handle('Apollo').focus({ focusVisible: true });
+    await userEvent.keyboard(' ');
+    await said('Picked up Apollo, position 1 of 4.');
+    let h = handle('Apollo'), c = { x: h.offsetWidth / 2, y: h.offsetHeight / 2 };
+    await drag(h, c, { x: c.x, y: c.y + step * 2 + 4 }, 8);
+    expect([names(), moves]).toEqual([['Gemini', 'Mercury', 'Apollo', 'Artemis'], [{ from: 0, to: 2 }]]);
+    handle('Artemis').focus({ focusVisible: true });
+    await userEvent.keyboard(' ');
+    await said('Picked up Artemis, position 4 of 4.');
+    h = handle('Gemini'); c = { x: h.offsetWidth / 2, y: h.offsetHeight / 2 };
+    await drag(h, c, { x: c.x, y: c.y + step + 4 }, 8);
+    expect([names(), moves.at(-1), handle('Artemis').getAttribute('aria-pressed')]).toEqual([['Mercury', 'Gemini', 'Apollo', 'Artemis'], { from: 0, to: 1 }, 'false']);
+  });
+
   test('a slow press on another row\'s handle still drops there: focus moving to it on the press doesn\'t cancel first', async () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<List moves={moves} />);
