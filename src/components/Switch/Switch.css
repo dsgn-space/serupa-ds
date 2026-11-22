@@ -78,7 +78,7 @@
 /* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
 .srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--primary)); }
 .srp-switch__input:checked + .srp-switch__thumb > .srp-switch__check { display: block; }
-.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending, var(--primary)); }
+.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending-checked, var(--primary)); }
 @keyframes srp-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-switch:has(.srp-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }

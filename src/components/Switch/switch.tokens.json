@@ -134,11 +134,21 @@
       },
       "pending": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "pending's ring on the thumb (3:1 on the thumb, on or off)",
+        "$value": "{color.primary-text}",
+        "$description": "pending's ring on the off thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-pending"
+          }
+        }
+      },
+      "pending-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "pending's ring on the on thumb (3:1 on it)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-pending-checked"
           }
         }
       },
