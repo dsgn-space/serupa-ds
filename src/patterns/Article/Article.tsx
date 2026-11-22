@@ -10,6 +10,7 @@ import { TableOfContents } from '../../components/TableOfContents/TableOfContent
 import { Card, CardHeader } from '../../components/Card/Card';
 import { Divider } from '../../components/Divider/Divider';
 import { Link } from '../../components/Link/Link';
+import { HoverCard } from '../../components/HoverCard/HoverCard';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
 import { useLocale } from '../../internal/provider';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
@@ -38,7 +39,9 @@ export interface ArticleProps {
   title?: string | undefined;
   /** The line under the title: what the reader gets from it. */
   summary?: string | undefined;
-  author?: { name: string; role?: string | undefined; avatar?: string | undefined } | undefined;
+  /** Who wrote it. With href, the name links to their page, and hovering or focusing it previews them (HoverCard): the
+      bio, and a link to all their posts. */
+  author?: { name: string; role?: string | undefined; avatar?: string | undefined; href?: string | undefined; bio?: string | undefined } | undefined;
   /** When it was published, as an ISO date: "2026-11-12". */
   published?: string | undefined;
   /** How long it takes to read, in minutes. */
@@ -78,7 +81,7 @@ const demoFooter: FooterLinkGroup[] = [
 
 /** A post: breadcrumb, title and byline, "On this page", the sections, then what to read next and the footer. */
 export function Article({ title = 'Projects now open on what’s due this week', summary = 'A project shows you what to do next, not everything at once. Here’s what changed, and how to keep the old view.',
-  author = { name: 'Ana Putri', role: 'Product designer' }, published = '2026-11-12', minutes = 3, lang, sections = demoSections, related = demoRelated,
+  author = { name: 'Ana Putri', role: 'Product designer', href: '#authors/ana-putri', bio: 'Designs the forms and tables in Serupa, and writes about making them work for everyone.' }, published = '2026-11-12', minutes = 3, lang, sections = demoSections, related = demoRelated,
   footer = demoFooter }: ArticleProps) {
   const locale = useLocale();
   // The date in the page's language, and in UTC so a date-only ISO string is the same day everywhere.
@@ -104,7 +107,18 @@ export function Article({ title = 'Projects now open on what’s due this week',
                 <div className="flex items-center gap-3">
                   <Avatar name={author.name} src={author.avatar} />
                   <div className="flex flex-col text-sm">
-                    <span className="font-medium">{author.name}{author.role ? <span className="font-normal text-text-muted">, {author.role}</span> : null}</span>
+                    <span className="font-medium">{author.href ? (
+                      <HoverCard trigger={<Link href={author.href}>{author.name}</Link>}>
+                        <div className="flex max-w-xs flex-col gap-2 text-sm">
+                          <div className="flex items-center gap-3">
+                            <Avatar name={author.name} src={author.avatar} alt="" />
+                            <span className="flex flex-col"><strong>{author.name}</strong>{author.role ? <span className="text-text-muted">{author.role}</span> : null}</span>
+                          </div>
+                          {author.bio ? <p className="m-0">{author.bio}</p> : null}
+                          <Link href={author.href}>All posts by {author.name}</Link>
+                        </div>
+                      </HoverCard>
+                    ) : author.name}{author.role ? <span className="font-normal text-text-muted">, {author.role}</span> : null}</span>
                     <span className="text-text-muted"><time dateTime={published}>{date}</time>{minutes ? ` · ${minutes} min read` : null}</span>
                   </div>
                 </div>
