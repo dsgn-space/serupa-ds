@@ -47,7 +47,7 @@ Drawn from the `ByArea` story.
 - A pasted `tel:` link reads as its number (`tel:+4930123456`, parameters such as `;phone-context=` too). An extension at the end ("ext. 12", "x12", "#12", "Durchwahl 12", `;ext=12`) is left off, not joined onto the number. Ask for it in a field of its own.
 - A trunk prefix typed at the start (the `0` of `0812…`) is dropped, since the calling code replaces it. So is a calling code typed without `+` ("62 812…" with Indonesia picked), once the number is too long to be a national one.
 - A `+` code PhoneInput doesn't know warns once in the console; its digits are read as a number in the picked country.
-- A press on the box past the number field focuses the field with the caret at the end, as the text cursor over the box promises; the country menu keeps its own press.
+- A press on the box past the number field focuses the field with the caret at the end, as the text cursor over the box promises; a press on the country menu opens its list.
 
 ### Do and don't
 
@@ -60,16 +60,17 @@ Drawn from the `ByArea` story.
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the country and its calling code at the start |
 | Hover | `field-border-hover`; the country picker under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
-| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode. The box draws the one ring whether the country menu or the number has focus; the menu also takes its `field-hover` fill while it has focus |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the country can't be changed, and its picker keeps a plain cursor |
 | Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calling code is in `disabled-text` too, and the country can't be changed |
 
 ## Accessibility
 
-- The country menu is a native `<select>` named "Country", under the visible calling code. Phones open their own picker, and screen readers announce it as a menu with its value. Each option says the country's name in the locale's words and its calling code ("Indonesia (+62)").
-- In a right-to-left page the calling code still reads left to right, "+20" and "مصر (+20)", in the prefix and in each option.
-- The menu draws its own focus ring inside the box, so it's clear whether the menu or the number has focus.
+- The country menu is a button showing the calling code, named "Country" with the country ("Country: Indonesia (+62)"). It opens a list of the countries, as Combobox's list looks, with a search field at its top: the field is a combobox for the listbox under it, and how many match is said after a pause. Each option has the country's name in the locale's words and its calling code; the picked one is selected and has a check.
+- The search finds a country by its name, ignoring case and accents ("cote" finds Côte d'Ivoire), by its ISO code ("id") or by its calling code ("62" or "+62"). Names that start with what's typed come first.
+- In a right-to-left page the calling code still reads left to right, "+20", in the prefix and in each option.
+- One focus ring, on the box, for the menu and the number alike. The menu takes its hover fill while it has focus, so it's clear which part does.
 - The number is `type="tel"` with `inputmode="tel"` and `autocomplete="tel"`, so phones show the dial pad and browsers fill in the saved number with its country code. The field reads a "+44 …" and moves the country to match. `tel-national` would fill the digits alone under the default country, a wrong number that looks right.
 - Backspace next to a space or dash removes the digit before it, so deleting never gets stuck on the grouping.
 - The calling code keeps 4.5:1 and the chevron 3:1 on the field in every theme (`PhoneInput.test.tsx`).
@@ -78,8 +79,12 @@ Drawn from the `ByArea` story.
 
 | Key | Does |
 | --- | --- |
-| Tab | The country select, then the number field |
-| Up / Down | In the country select, the browser's own keys pick a country |
+| Tab | The country menu, then the number field. In the open list, closes it and goes on to the number |
+| Enter / Space / Down / Up | On the country menu, opens the list on the picked country, focus in its search field |
+| A letter or digit | On the country menu, opens the list searching for it |
+| Down / Up | In the list, move through the countries, wrapping at the ends |
+| Enter | In the list, picks the highlighted country and puts focus in the number |
+| Escape | Closes the list, nothing picked, focus back on the menu |
 | Backspace / Delete | Next to a space, dash or bracket in the number, removes the digit beyond it rather than the punctuation |
 
 ## Countries
@@ -127,6 +132,17 @@ The box and the number use Input's tokens. These style the country part; each is
 | `--phone-input-divider` | `field-border` | The line between the country part and the number: the field's own edge color. |
 | `--phone-input-bg-hover` | `field-hover` | The country part's background on hover, as the other buttons inside fields. |
 | `--phone-input-bg-pressed` | `field-pressed` | The country picker's background while it's held down, one step past hover. |
-| `--phone-input-focus-ring` | `focus-ring` | The menu's keyboard focus ring. |
+| `--phone-input-listbox-bg` | `surface-overlay` | The country list's background. |
+| `--phone-input-listbox-border` | `border-overlay` | The country list's outline, and the line under its search field. |
+| `--phone-input-option-color` | `text` | A country's name, the search text, and the calling code of the highlighted country. |
+| `--phone-input-option-bg-active` | `highlight` | The highlighted country (hover or arrow keys). |
+| `--phone-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted country's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
+| `--phone-input-muted` | `text-muted` | A country's calling code in the list, the search icon and the no-match message. |
+| `--phone-input-focus-ring` | `focus-ring` | The box's focus ring while the country button has keyboard focus (the field's own is Input's). |
 | `--phone-input-gap` | `spacing-1` | Space around the chevron (4px). |
+| `--phone-input-offset` | `spacing-1` | The gap between the box and the country list (4px). |
+| `--phone-input-listbox-shadow` | `elevation-overlay` | The country list's shadow. |
+| `--phone-input-listbox-radius` | `radius-surface` | The country list's corners (8px). |
+| `--phone-input-listbox-max-height` | `spacing-80` | The country list's height, search field included, before it scrolls (320px). |
+| `--phone-input-z-index` | `z-popover` | The country list's stacking order, where the top layer isn't available. |
 <!-- token-table:end -->

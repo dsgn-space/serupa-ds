@@ -234,7 +234,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     const place = () => {
       const cs = getComputedStyle(el);
       for (const k of COPIED) if (k !== 'width' && !k.startsWith('border')) m.style[k] = cs[k];
-      Object.assign(m.style, { left: el.offsetLeft + el.clientLeft + 'px', top: el.offsetTop + el.clientTop + 'px', width: el.clientWidth + 'px', height: el.clientHeight + 'px' });
+      Object.assign(m.style, { left: el.offsetLeft + el.clientLeft + 'px', top: el.offsetTop + el.clientTop + 'px', width: el.clientWidth + 'px', height: el.clientHeight + 'px', visibility: 'visible' });
       m.scrollTop = el.scrollTop;
       m.scrollLeft = el.scrollLeft;
     };

@@ -11,11 +11,24 @@ import { PHONE_COUNTRIES, formatNational, formatPhone, parsePhone, phoneCountry 
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
-const menu = (id: string) => box(id).querySelector('select') as HTMLSelectElement;
+const menu = (id: string) => box(id).querySelector('.srp-phone-input__country') as HTMLButtonElement;
+const code = (id: string) => menu(id).dataset.value;
+const list = () => document.querySelector<HTMLElement>('[role="listbox"]');
+const search = () => document.querySelector('.srp-phone-input__search') as HTMLInputElement;
+// Opens the country list (a press on the menu) and gives its options.
+const options = async (id: string) => {
+  if (menu(id).getAttribute('aria-expanded') !== 'true') await userEvent.click(menu(id));
+  await expect.poll(() => !!list()).toBe(true);
+  return [...list()!.querySelectorAll<HTMLElement>('[role="option"]')];
+};
 const part = (id: string) => box(id).firstElementChild as HTMLElement;
 const dial = (id: string) => box(id).firstElementChild!.firstElementChild!.textContent;
 const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
-const pick = (sel: HTMLSelectElement, code: string) => userEvent.selectOptions(sel, code);
+const pick = async (button: HTMLButtonElement, value: string) => {
+  const id = (button.closest('[data-component="phone-input"]')!.querySelector('input[type="tel"]') as HTMLInputElement).id;
+  const o = (await options(id)).find((x) => x.dataset.value === value)!;
+  await userEvent.click(o);
+};
 
 let errors: MockInstance<typeof console.error>;
 beforeEach(() => { errors = vi.spyOn(console, 'error'); });
@@ -43,21 +56,23 @@ describe('PhoneInput', () => {
     const i = field('p'), b = box('p');
     expect([i.type, i.inputMode, i.getAttribute('autocomplete'), ref.current === i]).toEqual(['tel', 'tel', 'tel', true]);
     expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['srp-input srp-phone-input srp-input--size-md extra', 'phone-input', '2px', 32]);
-    expect([menu('p').getAttribute('aria-label'), menu('p').value, dial('p')]).toEqual(['Country', 'ID', '+62']);
-    // Each option names the country in the locale's words, with its calling code, sorted by name.
-    const names = [...menu('p').options].map((o) => o.textContent);
-    expect(names).toContain('Indonesia (\u2066+62\u2069)');   // the code isolated left to right (GR49)
+    // The menu is a button named by its label and the country, with the calling code showing.
+    expect([menu('p').getAttribute('aria-label'), menu('p').getAttribute('aria-haspopup'), menu('p').getAttribute('aria-expanded'), code('p'), dial('p')]).toEqual(['Country: Indonesia (+62)', 'listbox', 'false', 'ID', '+62']);
+    // Each option names the country in the locale's words, with its calling code, sorted by name; the picked one is selected.
+    const opts = await options('p');
+    const names = opts.map((o) => o.firstElementChild!.textContent);
+    expect(opts.find((o) => o.dataset.value === 'ID')!.textContent).toBe('Indonesia+62');
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b, 'en-US')));
-    expect(names.length).toBe(PHONE_COUNTRIES.length);
+    expect([names.length, opts.filter((o) => o.getAttribute('aria-selected') === 'true').map((o) => o.dataset.value)]).toEqual([PHONE_COUNTRIES.length, ['ID']]);
   });
 
   test('right to left (GR49): the calling code still reads "+20", the plus before the digits, and each option keeps its code in a left-to-right isolate', async () => {
     await render(<div dir="rtl"><SerupaProvider locale="ar-EG"><PhoneInput id="prtl" aria-label="Phone" defaultCountry="EG" /></SerupaProvider></div>);
-    const prefix = menu('prtl').parentElement!.firstElementChild!;   // first in the country part: "+" and the code
+    const prefix = menu('prtl').firstElementChild!;   // first in the country part: "+" and the code
     const left = (n: Node) => { const r = document.createRange(); r.selectNodeContents(n); return r.getBoundingClientRect().left; };
     expect([prefix.textContent, left(prefix.firstChild!) < left(prefix.lastChild!)]).toEqual(['+20', true]);
-    const eg = [...menu('prtl').options].find((o) => o.value === 'EG')!.textContent;
-    expect(eg.endsWith('(\u2066+20\u2069)')).toBe(true);
+    const eg = (await options('prtl')).find((o) => o.dataset.value === 'EG')!.querySelector('.srp-phone-input__code')!;
+    expect([eg.textContent, css(eg).direction, css(eg).unicodeBidi]).toEqual(['+20', 'ltr', 'isolate']);
   });
 
   test('digits from an Arabic or Persian keyboard, or full width from a Japanese IME, are the same number (GR43)', async () => {
@@ -86,17 +101,31 @@ describe('PhoneInput', () => {
     expect(field('p').value.replace(/\D/g, '').length).toBe(12);
   });
 
-  test('keyboard table: Tab goes to the country select, then the number; ArrowDown and ArrowUp there pick a country; Delete before a separator removes the digit beyond it (FH1)', async () => {
+  test('keyboard table: Tab goes to the country menu, then the number; ArrowDown opens the list on the picked country, typing searches it, Enter picks and goes to the number, Escape closes it; Delete before a separator removes the digit beyond it (FH1)', async () => {
     await render(<Wrap><button id="kb-before">before</button><PhoneInput id="kp" aria-label="Phone" defaultCountry="US" defaultValue="+12015550123" /></Wrap>);
     document.getElementById('kb-before')!.focus();
     await userEvent.tab();
     const order = [document.activeElement === menu('kp')];
-    const start = menu('kp').value;
     await userEvent.keyboard('{ArrowDown}');
-    const down = menu('kp').value;
-    await userEvent.keyboard('{ArrowUp}');
-    // Passing through a country with shorter numbers keeps every digit typed.
-    expect([down !== start, menu('kp').value, field('kp').value]).toEqual([true, start, '(201) 555-0123']);
+    await expect.poll(() => document.activeElement).toBe(search());
+    const at = () => document.getElementById(search().getAttribute('aria-activedescendant')!)!.dataset.value;
+    expect([menu('kp').getAttribute('aria-expanded'), at()]).toEqual(['true', 'US']);
+    // Escape closes the list and puts focus back on the menu, nothing picked.
+    await userEvent.keyboard('{Escape}');
+    expect([list(), document.activeElement === menu('kp'), code('kp')]).toEqual([null, true, 'US']);
+    // A letter on the menu opens the list searching for it; the arrows move through the matches; Enter picks.
+    await userEvent.keyboard('c');
+    await expect.poll(() => search()?.value).toBe('c');
+    await userEvent.keyboard('anada');
+    expect(at()).toBe('CA');
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
+    expect([list(), code('kp'), document.activeElement === field('kp'), field('kp').value]).toEqual([null, 'CA', true, '(201) 555-0123']);
+    // A calling code finds its countries too.
+    menu('kp').focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.fill(search(), '+62');
+    expect(at()).toBe('ID');
+    await userEvent.keyboard('{Escape}');
     await userEvent.tab();
     order.push(document.activeElement === field('kp'));
     const i = field('kp');
@@ -168,49 +197,91 @@ describe('PhoneInput', () => {
       <PhoneInput id="ca" aria-label="Canada" defaultCountry="CA" />
     </Wrap>);
     await userEvent.fill(field('p'), '+44 7400 123456');   // as a paste into the empty field
-    expect([menu('p').value, dial('p'), field('p').value, countries.join()]).toEqual(['GB', '+44', '7400 123456', 'GB']);
+    expect([code('p'), dial('p'), field('p').value, countries.join()]).toEqual(['GB', '+44', '7400 123456', 'GB']);
     await pick(menu('p'), 'AU');
     expect([dial('p'), field('p').value, countries.join()]).toEqual(['+61', '740 012 345', 'GB,AU']);
     await userEvent.fill(field('ca'), '001 416 555 0199');
-    expect([menu('ca').value, field('ca').value]).toEqual(['CA', '(416) 555-0199']);
+    expect([code('ca'), field('ca').value]).toEqual(['CA', '(416) 555-0199']);
+  });
+
+  test('the country list: a press opens and picks, the pointer highlights; a press outside or Tab closes it; no match says so and is announced; names, codes and the highlight read in every theme', async () => {
+    await render(<Wrap><button id="cl-out">out</button><PhoneInput id="cl" aria-label="Phone" defaultCountry="ID" /></Wrap>);
+    let opts = await options('cl');
+    await userEvent.hover(opts.find((o) => o.dataset.value === 'MY')!);
+    expect(document.getElementById(search().getAttribute('aria-activedescendant')!)!.dataset.value).toBe('MY');
+    // The highlight, names and calling codes keep 4.5:1 on the list in every theme.
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const act = list()!.querySelector<HTMLElement>('.srp-phone-input__option--active')!, other = list()!.querySelector<HTMLElement>('[role="option"]:not(.srp-phone-input__option--active)')!;
+      const bg = css(document.querySelector('.srp-phone-input__popup')).backgroundColor;
+      for (const [n, fg, b] of [['name', css(other).color, bg], ['code', css(other.querySelector('.srp-phone-input__code')).color, bg], ['active code', css(act.querySelector('.srp-phone-input__code')).color, css(act).backgroundColor]] as const) {
+        const r = contrast(fg, b);
+        if (r < 4.5) low.push(`${th} ${n} ${r.toFixed(2)}`);
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+    await userEvent.click(opts.find((o) => o.dataset.value === 'MY')!);
+    expect([code('cl'), list(), document.activeElement === field('cl')]).toEqual(['MY', null, true]);
+    // A press outside closes it; so does Tab, on to the number.
+    await options('cl');
+    await userEvent.click(document.getElementById('cl-out')!);
+    await expect.poll(() => list()).toBe(null);
+    opts = await options('cl');
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => list()).toBe(null);
+    // Nothing matches: the list says so, and so does the announcer after a pause; Enter then picks nothing.
+    await options('cl');
+    await userEvent.fill(search(), 'zzz');
+    expect([list()!.children.length, document.querySelector('.srp-phone-input__message')!.textContent]).toEqual([0, 'No results. Try other words.']);
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(/No results/);
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect([code('cl'), !!list()]).toEqual(['MY', true]);
+    await userEvent.fill(search(), 'mal');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(/\d+ results?/);
+    // A second press on the menu closes it.
+    await userEvent.click(menu('cl'));
+    await expect.poll(() => list()).toBe(null);
   });
 
   test('form reset: the default number and country come back, in the field and in what the form sends', async () => {
     await render(<form id="pf"><PhoneInput id="pr" aria-label="Phone" name="phone" defaultValue="+6281234567890" /></form>);
     const f = document.getElementById('pf') as HTMLFormElement, start = field('pr').value;
     await userEvent.fill(field('pr'), '5551234');
-    const sel = f.querySelector('select')!;
-    sel.value = 'US'; sel.dispatchEvent(new Event('change', { bubbles: true }));
+    await pick(menu('pr'), 'US');
     await expect.poll(() => new FormData(f).get('phone')).not.toBe('+6281234567890');
     f.reset();
     await expect.poll(() => new FormData(f).get('phone')).toBe('+6281234567890');
-    expect([field('pr').value, sel.value]).toEqual([start, 'ID']);
+    expect([field('pr').value, code('pr')]).toEqual([start, 'ID']);
   });
 
-  test('one focus ring at a time: the country menu from the keyboard rings only the menu, the box keeps its resting border; the number field rings the box', async () => {
+  test('one focus ring, on the box: the country menu from the keyboard rings the box as the number field does, with no ring of its own; it shades instead, so it shows which part has focus', async () => {
     await render(<Wrap><button id="one-before">Before</button><PhoneInput id="one" aria-label="Phone" defaultCountry="ID" /></Wrap>);
-    const rest = css(box('one')).boxShadow;
+    const rest = css(box('one')).boxShadow, plain = css(part('one')).backgroundColor;
     document.getElementById('one-before')!.focus();
     await userEvent.tab();
     expect(document.activeElement).toBe(menu('one'));
     await settled();
-    expect(css(part('one')).outlineStyle).toBe('solid');
-    expect(css(box('one')).boxShadow).toBe(rest);
+    const ringed = css(box('one')).boxShadow;
+    expect([ringed !== rest, css(part('one')).outlineStyle, css(part('one')).backgroundColor]).toEqual([true, 'none', color('var(--field-hover)')]);
     await userEvent.tab();
     expect(document.activeElement).toBe(field('one'));
     await settled();
-    expect(css(box('one')).boxShadow).not.toBe(rest);
+    expect([css(box('one')).boxShadow, css(part('one')).backgroundColor]).toEqual([ringed, plain]);
   });
 
-  test('form reset with the country unchanged: the menu shows it, not the first option, and ArrowDown on it goes on from there (GR86)', async () => {
+  test('form reset with the country unchanged: the menu shows it, and the list opens on it, not on the first country (GR86)', async () => {
     await render(<form id="pg"><PhoneInput id="pgb" aria-label="Phone" name="phone" defaultValue="+442079460958" /><button type="reset" id="pgr">Reset</button></form>);
     const f = document.getElementById('pg') as HTMLFormElement;
     await userEvent.click(document.getElementById('pgr')!);
     await new Promise((r) => setTimeout(r, 100));
-    expect([menu('pgb').value, new FormData(f).get('phone')]).toEqual(['GB', '+442079460958']);
+    expect([code('pgb'), new FormData(f).get('phone')]).toEqual(['GB', '+442079460958']);
     menu('pgb').focus();
     await userEvent.keyboard('{ArrowDown}');
-    expect(new FormData(f).get('phone')).not.toMatch(/^\+358/);
+    await expect.poll(() => document.getElementById(search()?.getAttribute('aria-activedescendant') || '')?.dataset.value).toBe('GB');
+    await userEvent.keyboard('{Escape}');
+    expect(new FormData(f).get('phone')).toBe('+442079460958');
   });
 
   test('controlled: value in E.164 is shown grouped and follows the parent; the default country comes from the locale\'s region', async () => {
@@ -223,11 +294,11 @@ describe('PhoneInput', () => {
       </>;
     }
     await render(<Wrap><SerupaProvider locale="ja-JP"><Ctl /><PhoneInput id="d" aria-label="Default" /></SerupaProvider></Wrap>);
-    expect([menu('c').value, field('c').value, menu('d').value]).toEqual(['JP', '90-1234-5678', 'JP']);
+    expect([code('c'), field('c').value, code('d')]).toEqual(['JP', '90-1234-5678', 'JP']);
     await userEvent.type(field('c'), '{Backspace}');
     expect([field('c').value, document.querySelector('output')!.textContent]).toEqual(['90-1234-567', '+81901234567']);
-    await userEvent.click(document.querySelector('button')!);
-    await expect.poll(() => [menu('c').value, field('c').value]).toEqual(['FR', '6 12 34 56 78']);
+    await userEvent.click(page.getByRole('button', { name: 'France' }));
+    await expect.poll(() => [code('c'), field('c').value]).toEqual(['FR', '6 12 34 56 78']);
   });
 
   test('controlled from outside: cleared, or a number of another country with country fixed; form reset: no default gives an empty field and the locale\'s country, a controlled field shows its value again', async () => {
@@ -244,17 +315,17 @@ describe('PhoneInput', () => {
     expect(node.got).toBe(field('u'));
     await to(0);
     await expect.poll(() => field('o').value).toBe('');
-    expect(menu('o').value).toBe('ID');
+    expect(code('o')).toBe('ID');
     await screen.rerender(<Wrap><SerupaProvider locale="en-US"><form id="rf"><Ctl country="ID" /><PhoneInput id="u" aria-label="Plain" name="u" ref={node} /></form></SerupaProvider></Wrap>);
     await to(12);
-    await expect.poll(() => menu('o').value).toBe('ID');
+    await expect.poll(() => code('o')).toBe('ID');
     await to(14);
     await expect.poll(() => field('o').value).not.toBe('');
     const shown = field('o').value;
     await userEvent.fill(field('u'), '2025550123');
     await pick(menu('u'), 'GB');
     (document.getElementById('rf') as HTMLFormElement).reset();
-    await expect.poll(() => [field('u').value, menu('u').value]).toEqual(['', 'US']);
+    await expect.poll(() => [field('u').value, code('u')]).toEqual(['', 'US']);
     expect(field('o').value).toBe(shown);
   });
 
@@ -265,7 +336,7 @@ describe('PhoneInput', () => {
     expect([field('iv').getAttribute('aria-invalid'), box('iv').className.includes('srp-input--invalid'), menu('ro').disabled, menu('iv').disabled]).toEqual(['true', true, true, false]);
     // Read-only refuses nothing: the country part shows the plain arrow, as Combobox's and Select's do, not not-allowed.
     expect(getComputedStyle(menu('ro')).cursor).toBe('default');
-    menu('same').dispatchEvent(new Event('change', { bubbles: true }));
+    await pick(menu('same'), 'ID');
     expect(calls).toEqual([]);
   });
 
@@ -277,24 +348,26 @@ describe('PhoneInput', () => {
       <SerupaProvider labels={idLabels}><PhoneInput id="id" aria-label="HP" defaultCountry="ID" size="sm" /></SerupaProvider>
       <PhoneInput id="dis" aria-label="Off" disabled size="lg" />
     </Wrap>);
-    expect([field('fp').labels![0]!.textContent, [...menu('fp').options].map((o) => o.value).join(), menu('fp').value]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
+    expect([field('fp').labels![0]!.textContent, (await options('fp')).map((o) => o.dataset.value).join(), code('fp')]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
+    await userEvent.keyboard('{Escape}');
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('phone')).toBe('+6591234567');
-    expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara', 24]);
+    expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara: Indonesia (+62)', 24]);
     expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('srp-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
     // The calling code dims with the number, not left in full text color beside a dimmed field.
     const dial = [...box('dis').querySelectorAll('span')].find((n) => n.children.length === 0 && n.textContent.startsWith('+'))!;
     expect(getComputedStyle(dial).color).toBe(getComputedStyle(field('dis')).color);
   });
 
-  test('the menu has its own 2px focus ring inside the box; the tokens override it; contrast of the code and chevron in every theme', async () => {
+  test('the menu rings the box (--phone-input-focus-ring overrides that ring); the tokens override it; contrast of the code and chevron in every theme', async () => {
     await render(<Wrap>
       <PhoneInput id="p" aria-label="Phone" defaultCountry="ID" />
-      <PhoneInput id="t" aria-label="Tok" style={{ '--phone-input-dial': 'rgb(1, 2, 3)' } as React.CSSProperties} />
+      <PhoneInput id="t" aria-label="Tok" style={{ '--phone-input-dial': 'rgb(1, 2, 3)', '--phone-input-focus-ring': 'rgb(4, 5, 6)' } as React.CSSProperties} />
     </Wrap>);
-    field('p').focus();
+    field('t').focus();
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
-    expect(document.activeElement).toBe(menu('p'));
-    expect([css(part('p')).outlineStyle, css(part('p')).outlineWidth]).toEqual(['solid', '2px']);
+    expect(document.activeElement).toBe(menu('t'));
+    await settled();
+    expect([css(part('t')).outlineStyle, css(box('t')).boxShadow]).toEqual(['none', 'rgb(4, 5, 6) 0px 0px 0px 1px']);
     expect(css(part('t')).color).toBe('rgb(1, 2, 3)');
     const low: string[] = [];
     for (const th of THEMES) {
@@ -329,11 +402,11 @@ describe('PhoneInput', () => {
     await userEvent.type(field('p'), '+');
     expect(field('p').value).toBe('+');
     await userEvent.type(field('p'), '4');
-    expect([field('p').value, menu('p').value]).toEqual(['+4', 'US']);
+    expect([field('p').value, code('p')]).toEqual(['+4', 'US']);
     await userEvent.type(field('p'), '4 20 7946 0958');
-    expect([menu('p').value, calls.at(-1), new FormData(document.getElementById('f83') as HTMLFormElement).get('tel')]).toEqual(['GB', '+442079460958', '+442079460958']);
+    expect([code('p'), calls.at(-1), new FormData(document.getElementById('f83') as HTMLFormElement).get('tel')]).toEqual(['GB', '+442079460958', '+442079460958']);
     await userEvent.type(field('q'), '0044 20 7946 0958');
-    expect([menu('q').value, calls.at(-1)]).toEqual(['GB', '+442079460958']);
+    expect([code('q'), calls.at(-1)]).toEqual(['GB', '+442079460958']);
   });
 
   test('GR85: "0044 …" typed key by key in a +1 field picks the country too, and a lone 0 still starts an Italian number', async () => {
@@ -343,11 +416,11 @@ describe('PhoneInput', () => {
       <PhoneInput id="q" aria-label="Phone" defaultCountry="IT" onValueChange={(v) => calls.push(v)} />
     </Wrap>);
     await userEvent.type(field('p'), '0');
-    expect([field('p').value, menu('p').value]).toEqual(['0', 'US']);
+    expect([field('p').value, code('p')]).toEqual(['0', 'US']);
     await userEvent.type(field('p'), '044 20 7946 0958');
-    expect([menu('p').value, calls.at(-1)]).toEqual(['GB', '+442079460958']);
+    expect([code('p'), calls.at(-1)]).toEqual(['GB', '+442079460958']);
     await userEvent.type(field('q'), '06 1234 5678');
-    expect([menu('q').value, calls.at(-1)]).toEqual(['IT', '+390612345678']);
+    expect([code('q'), calls.at(-1)]).toEqual(['IT', '+390612345678']);
   });
 
   test('Germany groups by the area code: "030 123456" is "30 123456"', async () => {
@@ -360,11 +433,12 @@ describe('PhoneInput', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const mine = { code: 'SG', dial: '65', trunk: '', pattern: '## ## ## ##', min: 8, max: 8 };
     await render(<Wrap><PhoneInput id="p" aria-label="Phone" countries={['ID', mine]} defaultCountry="SG" /></Wrap>);
-    expect([...menu('p').options].map((o) => o.value).join()).toBe('ID,SG');
+    expect((await options('p')).map((o) => o.dataset.value).join()).toBe('ID,SG');
+    await userEvent.keyboard('{Escape}');
     await userEvent.type(field('p'), '91234567');
     expect(field('p').value).toBe('91 23 45 67');
     await userEvent.fill(field('p'), '+65 8123 4567');
-    expect([menu('p').value, field('p').value]).toEqual(['SG', '81 23 45 67']);
+    expect([code('p'), field('p').value]).toEqual(['SG', '81 23 45 67']);
     await userEvent.fill(field('p'), '+999 123');
     expect(warn.mock.calls.filter((c) => String(c[0]).includes("calling code PhoneInput doesn't know")).length).toBe(1);
     warn.mockRestore();
@@ -401,7 +475,7 @@ describe('PhoneInput', () => {
 describe('PhoneInput held state', () => {
   test('held down: the country picker fills one step past its hover (--phone-input-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<PhoneInput aria-label="Phone" countryLabel="Dialling code" />);
-    const b = (page.getByRole('combobox', { name: 'Dialling code' }).element() as HTMLElement).parentElement as HTMLElement;
+    const b = page.getByRole('button', { name: /^Dialling code: / }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));

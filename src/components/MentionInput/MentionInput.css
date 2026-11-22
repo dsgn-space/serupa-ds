@@ -8,7 +8,7 @@
 /* The tints behind the mentions: a copy of the text, placed and sized over the field's text by MentionInput.tsx. It
    comes before the Textarea, so the field's text (positioned too) paints over it, and its box's background under it. */
 .srp-mention-input__marks {
-  position: absolute; box-sizing: border-box; overflow: hidden; pointer-events: none;
+  position: absolute; box-sizing: border-box; overflow: hidden; pointer-events: none; visibility: hidden;   /* until MentionInput.tsx places it: the server's HTML has it unplaced */
   white-space: pre-wrap; overflow-wrap: break-word; color: transparent; -webkit-user-select: none; user-select: none;
 }
 .srp-mention-input__mention {

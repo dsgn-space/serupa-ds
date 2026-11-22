@@ -1,10 +1,9 @@
 /* ---------------------------------------------------------------
-   PhoneInput: Input's box with a country part at the start: the calling code ("+62") and a chevron, with a
-   native <select> laid over them (see-through, so a click or tap opens the real menu and it reads as a menu),
-   and a divider before the tel field. The part shades on hover and draws its own focus ring inside the box,
-   so it's clear whether the menu or the field has focus. Structure: .srp-phone-input (.srp-input) >
-   .srp-phone-input__country > .srp-phone-input__dial, .srp-phone-input__chevron, .srp-phone-input__select; then
-   .srp-input__field.
+   PhoneInput: Input's box with a country button at the start: the calling code ("+62") and a chevron, and a divider
+   before the tel field. The button opens a list of the countries, with a search field at its top, as Combobox's
+   list looks. The box draws the one focus ring, for the button and the field alike; the button shades while it has
+   focus, so it's clear which part does. Structure: .srp-phone-input (.srp-input) > .srp-phone-input__country
+   (.srp-phone-input__dial, .srp-phone-input__chevron), .srp-input__field, .srp-phone-input__popup.
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-phone-input { padding-inline-start: var(--spacing-0); }
@@ -20,22 +19,58 @@
 /* The calling code reads left to right in any page: "+62", not "62+" in a right-to-left one (GR49). */
 .srp-phone-input__dial { direction: ltr; unicode-bidi: isolate; }
 .srp-phone-input__chevron { font-size: var(--srp-input-icon); color: var(--phone-input-chevron, var(--text-muted)); }
-.srp-phone-input__select {
-  position: absolute; inset: var(--spacing-0); width: var(--sizing-full); height: var(--sizing-full);
-  margin: var(--spacing-0); padding: var(--spacing-0); border: 0; opacity: var(--opacity-0);
-  font: inherit; cursor: inherit; appearance: none; -webkit-appearance: none;
+.srp-phone-input__country {
+  margin: var(--spacing-0); border-block: 0; border-inline-start: 0; background: transparent; font: inherit; line-height: inherit;
+  -webkit-appearance: none; appearance: none;
 }
-.srp-phone-input__select option { background-color: var(--input-bg, var(--field)); color: var(--input-text, var(--text)); }
-@media (hover: hover) { .srp-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
-.srp-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
-/* One ring at a time: with the menu ringed from the keyboard, the box keeps its resting border instead of its focus ring. */
-.srp-phone-input:has(.srp-phone-input__select:focus-visible) { --srp-input-bd: var(--input-border, var(--field-border)); box-shadow: none; }
-.srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.srp-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
+.srp-phone-input__country:focus { outline: none; }
+@media (hover: hover) { .srp-phone-input__country:hover:not(:disabled) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
+.srp-phone-input__country:focus-visible:not(:disabled), .srp-phone-input[data-state="open"] .srp-phone-input__country { background: var(--phone-input-bg-hover, var(--field-hover)); }
+.srp-phone-input:not(.srp-input--invalid):has(.srp-phone-input__country:focus-visible) { --srp-input-ring: var(--phone-input-focus-ring, var(--focus-ring)); }
+.srp-phone-input__country:active:not(:disabled) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
+.srp-phone-input__country:disabled { cursor: var(--cursor-disabled); }
+/* The list: an overlay surface under the box, with a search field at its top and the countries under it. */
+.srp-phone-input__popup {
+  --srp-phone-input-offset: var(--phone-input-offset, var(--spacing-1));
+  --srp-phone-input-nest: max(var(--spacing-0), calc(var(--phone-input-listbox-radius, var(--radius-surface)) - var(--spacing-1) - var(--border-width-1)));
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--phone-input-z-index, var(--z-popover));
+  width: var(--spacing-72); max-width: calc(var(--sizing-full) - var(--spacing-4));
+  display: flex; flex-direction: column; max-height: var(--phone-input-listbox-max-height, var(--spacing-80)); overflow: hidden;
+  margin: var(--spacing-0); padding: var(--spacing-1);
+  border: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-overlay)); border-radius: var(--phone-input-listbox-radius, var(--radius-surface));
+  background: var(--phone-input-listbox-bg, var(--surface-overlay)); --surface-behind: var(--phone-input-listbox-bg, var(--surface-overlay)); box-shadow: var(--phone-input-listbox-shadow, var(--elevation-overlay));
+  color: var(--phone-input-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-normal); text-align: start; cursor: default;
+}
+.srp-phone-input__popup[hidden] { display: none; }
+.srp-phone-input__search-box {
+  display: flex; align-items: center; gap: var(--spacing-2); flex: none; min-height: var(--control-height-md);
+  margin-block-end: var(--spacing-1); padding-inline: var(--spacing-2); border-block-end: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-overlay));
+}
+.srp-phone-input__search-icon { flex: none; font-size: var(--spacing-4); color: var(--phone-input-muted, var(--text-muted)); }
+.srp-phone-input__search { flex: auto; min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); border: 0; background: transparent; color: inherit; font: inherit; outline: none; }
+.srp-phone-input__listbox { flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
+.srp-phone-input__option {
+  --srp-bar: var(--border-width-2);
+  display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-height: var(--control-height-md);
+  padding: var(--spacing-1\.5) var(--spacing-2); border-radius: var(--srp-phone-input-nest, var(--radius-control));
+  cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
+}
+@media (pointer: coarse) { .srp-phone-input__option { min-height: var(--spacing-11); } }   /* 44px to pick on a touch screen */
+.srp-phone-input__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
+.srp-phone-input__option--active { background: var(--phone-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--phone-input-option-indicator, var(--highlight-indicator)); }
+.srp-phone-input__name { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-phone-input__code { flex: none; color: var(--phone-input-muted, var(--text-muted)); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.srp-phone-input__option--active .srp-phone-input__code { color: var(--phone-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
+.srp-phone-input__check { flex: none; width: var(--spacing-4); font-size: var(--spacing-4); color: var(--phone-input-option-color, var(--text)); }
+.srp-phone-input__message { padding: var(--spacing-1\.5) var(--spacing-2); color: var(--phone-input-muted, var(--text-muted)); }
+@media print { .srp-phone-input__popup { display: none !important; } }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
    arrow, as on every read-only control (Combobox, Select). */
 .srp-input--disabled .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
-.srp-input--readonly .srp-phone-input__country:has(:disabled) { cursor: default; }
-@media (forced-colors: active) { .srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline-color: Highlight; } }
+.srp-input--readonly .srp-phone-input__country:disabled { cursor: default; }
+@media (forced-colors: active) {
+  .srp-phone-input__popup { border-color: CanvasText; }
+  .srp-phone-input__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+}
 @media (prefers-reduced-motion: reduce) { .srp-phone-input__country { transition: none; } }
 }

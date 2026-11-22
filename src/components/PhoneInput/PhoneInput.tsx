@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
-import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import type { InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
@@ -18,6 +18,12 @@ import { latinDigits } from '../../internal/digits';
 import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, phoneOnly, stripTrunk, toE164, type PhoneCountry } from './phone';
 import { en as words } from './labels';
 import { isComposing } from '../../internal/ime';
+import { fold } from '../../internal/fold';
+import { announce } from '../../internal/announce';
+import { announcePause } from '../../internal/timing';
+import { displayNumber } from '../../internal/numbers';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { en as listWords } from '../Combobox/labels';
 
 /** What onValueChange reports with the E.164 number. */
 export interface PhoneValueDetails {
@@ -53,7 +59,6 @@ export interface PhoneInputProps extends Omit<InputProps, 'type' | 'actions' | '
 const own = { size: 1, invalid: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, country: 1, defaultCountry: 1,
   onCountryChange: 1, countries: 1, countryLabel: 1, name: 1, onKeyDown: 1 } as const;
 
-const never = () => () => {}, yes = () => true, no = () => false;
 const regionOf = (locale: string): string | undefined => {
   try { return new Intl.Locale(locale).maximize().region; } catch { return undefined; }
 };
@@ -89,9 +94,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   }, [countriesKey]);
   const find = (code: string | undefined) => (code ? table.find((c) => c.code === code.toUpperCase()) : undefined);
   // Country names come from the runtime's Intl data, and a server's (Node's ICU) words some of them differently from
-  // the browser's ("Falkland Islands (Islas Malvinas)"), so the names and their order may not match the server HTML.
-  // The hydration render keeps the server's options as sent; right after it they are drawn again, in the browser's words.
-  const hydrated = React.useSyncExternalStore(never, yes, no);
+  // the browser's ("Falkland Islands (Islas Malvinas)"): the list is drawn only when it opens, in the browser.
   const list = React.useMemo(function () {
     const pick = (code: string | undefined) => (code ? table.find((c) => c.code === code.toUpperCase()) : undefined);
     const countries = keyedCountries(countriesKey);
@@ -140,15 +143,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
       setReported(d ? toE164(d.national, d.country) : '');
     }
     rerender((n) => n + 1);
-    // React can render that before the browser resets the fields (it runs right after this event), and the reset
-    // then puts the native country menu on its first option, which React, whose country didn't change, leaves
-    // there: it read Afghanistan beside a British number, and ArrowDown on it picked Åland (GR86). Once the
-    // browser is done, render again, and the effect below puts the menu back on the country.
-    setTimeout(() => rerender((n) => n + 1), 0);
   });
-  const select = React.useRef<HTMLSelectElement | null>(null);
-  // every render: the menu shows the country, whatever a form reset did to it (GR86).
-  React.useLayoutEffect(function () { if (select.current && select.current.value !== country.code) select.current.value = country.code; });
   const caret = React.useRef<number | null>(null);
   const text = lead != null && !shown ? lead : formatNational(shown, country);
   // every render: an edit that reformats the number asks for the caret back, and the new text is there only after the render.
@@ -222,33 +217,136 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
     caret.current = caretAfter(formatNational(shown.slice(0, n) + shown.slice(n + 1), country), n);
   };
 
-  const onCountry = function (e: React.ChangeEvent<HTMLSelectElement>) {
-    const c = find(e.target.value);
-    if (c) commit(typed, c, true);
+  // The country menu: a button showing the calling code, that opens a list of the countries with a search field at
+  // its top (the search is a combobox for the listbox under it). Picking one puts focus back in the number.
+  const L = useSettings(listWords).labels;
+  const label = props.countryLabel || sds.labels.country;
+  const base = domId('srp-phone', React.useId()), listId = base + '-list';
+  const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState('');
+  const [active, setActive] = React.useState(0);
+  const locked = !!(rest.disabled || rest.readOnly);
+  const shownList = useFiltered(list, open ? query : '');
+  const here = list.find((x) => x.c.code === country.code);
+  const trigger = React.useRef<HTMLButtonElement | null>(null), pop = React.useRef<HTMLDivElement | null>(null), search = React.useRef<HTMLInputElement | null>(null);
+  const boxRef = React.useRef<HTMLSpanElement | null>(null);
+  const show = (text: string) => {
+    if (locked) return;
+    setQuery(text);
+    const at = text ? 0 : list.findIndex((x) => x.c.code === country.code);
+    setActive(Math.max(0, at));
+    setOpen(true);
+  };
+  const close = (back: 'trigger' | 'field' | null) => {
+    setOpen(false);
+    if (back === 'trigger' && trigger.current) trigger.current.focus();
+    if (back === 'field' && input.current) input.current.focus();
+  };
+  const choose = (c: PhoneCountry) => { commit(typed, c, true); close('field'); };
+  useAnchoredLayer(open, pop, boxRef, { placement: 'bottom-start', offsetVar: '--srp-phone-input-offset', watch: shownList.length, inside: trigger,
+    onOutside: () => setOpen(false), onFocusOutside: () => setOpen(false) });
+  // Once the list is shown and placed: focus goes to its search field.
+  useFocusOnOpen(open, search);
+  // The highlighted country stays in view as the arrows move it.
+  React.useLayoutEffect(function () {
+    if (!open) return;
+    const o = document.getElementById(base + '-opt-' + active);
+    if (o && typeof o.scrollIntoView === 'function') o.scrollIntoView({ block: 'nearest' });
+  }, [open, active, base]);
+  // How many match, said after a pause in typing, as Combobox says it.
+  const said = !open || !query ? '' : shownList.length ? L.resultsCount(shownList.length, displayNumber(shownList.length, locale)) : L.noResults;
+  React.useEffect(function () {
+    if (!said) return;
+    const t = setTimeout(() => announce(said), announcePause);
+    return () => clearTimeout(t);
+  }, [said]);
+
+  const onTriggerKey = function (e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (locked || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); show(''); }
+    else if (e.key.length === 1 && e.key !== ' ' && !isComposing(e)) { e.preventDefault(); show(e.key); }   // typing on it starts the search
+  };
+  const onSearchKey = function (e: React.KeyboardEvent<HTMLInputElement>) {
+    if (isComposing(e)) return;
+    const n = shownList.length;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (n) setActive((active + (e.key === 'ArrowDown' ? 1 : -1) + n) % n);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const x = shownList[active];
+      if (x) choose(x.c);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();   // a dialog the field is in stays open
+      close('trigger');
+    } else if (e.key === 'Tab') setOpen(false);
   };
 
-  // The 244 options as elements made once per list, so typing (a render per key) doesn't rebuild and compare them all.
-  // The calling code sits in a left-to-right isolate (U+2066 … U+2069; an option can't be styled), so a right-to-left
-  // page writes "مصر (+20)", not "(20+)" (GR49).
-  const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? '' : 'server-') + c.code} value={c.code} suppressHydrationWarning>{name + ' (\u2066+' + c.dial + '\u2069)'}</option>), [list, hydrated]);
   return (
-    <span className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
-      style={props.style} data-component="phone-input" data-size={size} onMouseDown={(e) => pressFocuses(input)(e)}>
-      <span className="srp-phone-input__country">
+    <span ref={boxRef} className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
+      style={props.style} data-component="phone-input" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={(e) => pressFocuses(input)(e)}>
+      <button ref={trigger} type="button" className="srp-phone-input__country" disabled={locked} data-value={country.code}
+        aria-label={label + ': ' + (here ? here.name : country.code) + ' (+' + country.dial + ')'} suppressHydrationWarning
+        aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listId : undefined}
+        onClick={() => (open ? close(null) : show(''))} onKeyDown={onTriggerKey}>
         <span className="srp-phone-input__dial" aria-hidden>+{country.dial}</span>
         <Icon icon={icons.ExpandMore} className="srp-phone-input__chevron" />
-        <select ref={select} className="srp-phone-input__select" value={country.code} onChange={onCountry} disabled={rest.disabled || rest.readOnly}
-          aria-label={props.countryLabel || sds.labels.country}>
-          {options}
-        </select>
-      </span>
+      </button>
       <input autoComplete="tel" {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={setRef} type="tel" inputMode="tel" className="srp-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={toE164(shown, country)} disabled={rest.disabled} /> : null}
+      <div ref={pop} className="srp-phone-input__popup" {...{ popover: 'manual' }} hidden={!open || undefined} onMouseDown={(e) => e.stopPropagation()}>
+        {open ? (
+          <>
+            <span className="srp-phone-input__search-box">
+              <Icon icon={icons.Search} className="srp-phone-input__search-icon" />
+              <input ref={search} className="srp-phone-input__search" type="text" role="combobox" aria-label={label} aria-expanded aria-controls={listId}
+                aria-autocomplete="list" aria-activedescendant={shownList[active] ? base + '-opt-' + active : undefined} autoComplete="off" spellCheck={false}
+                value={query} onChange={(e) => { setQuery(e.target.value); setActive(0); }} onKeyDown={onSearchKey} />
+            </span>
+            <div id={listId} role="listbox" aria-label={label} className="srp-phone-input__listbox">
+              {shownList.map((x, i) => (
+                <div key={x.c.code} id={base + '-opt-' + i} role="option" aria-selected={x.c.code === country.code} data-value={x.c.code}
+                  className={cn('srp-phone-input__option', i === active && 'srp-phone-input__option--active')}
+                  onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) setActive(i); }} onClick={() => choose(x.c)}>
+                  <span className="srp-phone-input__name">{x.name}</span>
+                  <span className="srp-phone-input__code">+{x.c.dial}</span>
+                  {x.c.code === country.code ? <Icon icon={icons.Check} className="srp-phone-input__check" /> : <span className="srp-phone-input__check" />}
+                </div>
+              ))}
+            </div>
+            {!shownList.length ? <div className="srp-phone-input__message">{L.noResults}</div> : null}
+          </>
+        ) : null}
+      </div>
     </span>
   );
 }
 
-/* PhoneInput: Input's box with a country menu at the start (a native <select> under a "+62" label) and a tel field
+// The countries whose name, ISO code or calling code holds what's typed: names ignoring case and accents ("cote"
+// finds Côte d'Ivoire), codes from the start ("+62", "62" and "id" find Indonesia); those starting with it first. Kept
+// until the list or text change.
+function useFiltered(list: readonly { c: PhoneCountry; name: string }[], query: string) {
+  return React.useMemo(function () {
+    const q = fold(query.trim());
+    if (!q) return list;
+    const digits = q.replace(/^\+/, '');
+    const starts: typeof list[number][] = [], inside: typeof list[number][] = [];
+    for (const x of list) {
+      const name = fold(x.name);
+      if (name.startsWith(q) || x.c.code.toLowerCase() === q || (/^\d+$/.test(digits) && x.c.dial.startsWith(digits))) starts.push(x);
+      else if (name.includes(q)) inside.push(x);
+    }
+    return starts.concat(inside);   // names that start with it first: "ind" is India and Indonesia before British Indian Ocean Territory
+  }, [list, query]);
+}
+
+// Focus to the list's search field once it is shown (after useAnchoredLayer's effect, which shows and places it).
+function useFocusOnOpen(open: boolean, search: React.RefObject<HTMLInputElement | null>) {
+  React.useLayoutEffect(function () { if (open && search.current) search.current.focus(); }, [open, search]);
+}
+
+/* PhoneInput: Input's box with a country menu at the start (a "+62" button that opens a searchable list) and a tel field
    that groups the national number as people type ("812-3456-7890"). onValueChange reports E.164 ("+6281234567890").
    Pasting or typing "+…" picks the country from the calling code; a typed trunk "0" is dropped. className and
    style go to the box; ref and the other input props to the tel <input>. */
