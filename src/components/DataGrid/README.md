@@ -67,8 +67,8 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 
 ### Do and don't
 
-- **Do:** A DataGrid where people change values cell by cell, such as stock counts. (`DoEditable`)
-- **Don't:** A DataGrid for data nobody edits: every cell becomes a keyboard stop, and a Table reads row by row with less work. (`DontReadOnly`)
+- **Do:** A DataGrid where people change values cell by cell, such as stock counts. (`Edit`)
+- **Don't:** A DataGrid for data nobody edits: every cell becomes a keyboard stop, and a Table reads row by row with less work. (`ReadOnly`)
 
 ## Accessibility
 

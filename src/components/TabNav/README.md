@@ -48,7 +48,7 @@ Drawn from the `Default` story.
 
 ### Do and don't
 
-- **Do:** Mark the page people are on with the tab line, so they can see where they are at a glance. (`DoTabLine`)
+- **Do:** Mark the page people are on with the tab line, so they can see where they are at a glance. (`Default`)
 - **Don't:** Show sub-pages as a row of plain links, where only a bolder weight marks the current one. (`DontPlainLinks`)
 
 ## Accessibility

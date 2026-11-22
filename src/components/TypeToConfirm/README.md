@@ -44,7 +44,7 @@ Drawn from the `Default` story.
 
 ### Do and don't
 
-- **Do:** Make the phrase the thing's own name (`acme/web`), and name the action on the button. (`DoNameTheThing`)
+- **Do:** Make the phrase the thing's own name (`acme/web`), and name the action on the button. (`Default`)
 - **Don't:** Ask for a word like "DELETE" with a "Confirm" button: typing it checks nothing about which thing is going. (`DontGenericWord`)
 
 ## Accessibility

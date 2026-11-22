@@ -32,7 +32,7 @@ import { HoverCard, Link, Avatar } from "@diki-stwn/serupa-ds";
 
 ### Do and don't
 
-- **Do:** Keep the card short: a name, a picture, a line or two and a link or two. (`DoShortCard`)
+- **Do:** Keep the card short: a name, a picture, a line or two and a link or two. (`Open`)
 - **Don't:** Fill it with a page of content: it covers what people were reading. Link to the full page instead. (`DontLongCard`)
 
 ## Accessibility
