@@ -238,7 +238,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => setBase(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first && focusIn} hideOutside={two}
+      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first && focusIn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
       isDateSelected={isSel} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
