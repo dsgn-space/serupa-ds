@@ -8,7 +8,7 @@ export type Since = { added: string | null; changed: string | null; props: Recor
 export function sinceText(entry: Since | undefined, releases = 3): string {
   if (!entry) return '';
   const parts: string[] = [];
-  parts.push(`Added in ${entry.added ?? '5.0.0 or earlier'}.`);
+  parts.push(`Added in ${entry.added ?? '10.0.0 or earlier'}.`);
   if (entry.changed && entry.changed !== entry.added) parts.push(`API last changed in ${entry.changed}.`);
   const by = new Map<string, string[]>();
   for (const [prop, v] of Object.entries(entry.props)) by.set(v, [...(by.get(v) || []), prop]);

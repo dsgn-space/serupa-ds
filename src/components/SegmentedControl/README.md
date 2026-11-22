@@ -27,7 +27,7 @@ import { SegmentedControl } from "@diki-stwn/serupa-ds";
 ## When not to use
 
 - Switching panels of content: use [Tabs](../Tabs/README.md).
-- Independent on/off buttons: use [ButtonGroup](../ButtonGroup/README.md) with [ToggleButton](../ToggleButton/README.md).
+- Tools that share one value, such as alignment (one on) or text styles (any number on): use a [ToggleGroup](../ToggleGroup/README.md). On/off buttons that each keep their own state: [ToggleButton](../ToggleButton/README.md)s in a [ButtonGroup](../ButtonGroup/README.md). A SegmentedControl picks a view or a value, and is one Tab stop with arrows, as [Choose a component](../../../docs/ChooseAComponent.mdx) explains.
 - More than about five options: use [RadioGroup](../Radio/README.md) or [Select](../Select/README.md).
 
 ## Anatomy

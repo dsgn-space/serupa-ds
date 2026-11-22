@@ -5,7 +5,7 @@
 //
 //   - **Do:** One primary button for the main action. (`DoOnePrimary`)
 //   - **Don't:** Several primary buttons side by side. (`DontManyPrimaries`)
-// On GitLab the list reads as two rules; on the Storybook page each pair is drawn with its stories.
+// On GitHub the list reads as two rules; on the Storybook page each pair is drawn with its stories.
 // tools/test/guides.mjs checks that the bullets pair up and that every story they name exists.
 import * as React from 'react';
 import { DocsContext, Markdown, Story } from '@storybook/addon-docs/blocks';

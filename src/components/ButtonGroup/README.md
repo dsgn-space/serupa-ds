@@ -31,7 +31,7 @@ import { ButtonGroup, Button, IconButton, ToggleButton } from '@diki-stwn/serupa
 ## When not to use
 
 - One choice out of a few options: use [SegmentedControl](../SegmentedControl/README.md), which lets only one be on.
-- A set of [ToggleButton](../ToggleButton/README.md)s or tools, such as text formatting: use [Toolbar](../Toolbar/README.md), which is one Tab stop with arrow keys between its buttons.
+- [ToggleButton](../ToggleButton/README.md)s that share one value, such as alignment or text styles: use a [ToggleGroup](../ToggleGroup/README.md). Several groups of tools in a row, such as an editor's: put them in a [Toolbar](../Toolbar/README.md), which is one Tab stop with arrow keys between its buttons.
 - Many actions, or ones people rarely use: put them in a [Menu](../Menu/README.md).
 
 ## Usage
