@@ -7,7 +7,9 @@ import { TokenExplorer } from '../blocks';
 
 # Token explorer
 
-Every design token Serupa publishes: the shared tokens in `tokens.json` and each component's own tokens (its `<name>.tokens.json`). Search by a token's name, its value, what it's for, or a component's name. A color that changes with the theme shows its value in every theme, as the palette color it reads and the color that comes out. "Used by" lists the components whose CSS reads the token, and the copy button copies it as `var(--name)`, ready for CSS.
+Every design token Serupa publishes: the shared tokens in `tokens.json` and each component's own tokens (its `<name>.tokens.json`). Search by a token's name, its value, what it's for, or a component's name, and narrow the list by category or by the component that reads it.
+
+A color that changes with the theme shows its value in every theme, as the palette color it reads and the color that comes out. Pick a brand, a mode, or both to see only those themes: with both, the Value column shows that one theme's value. The more-contrast modes show the values a theme takes when people ask their system for more contrast. "Used by" lists the components whose CSS reads the token, and the copy button copies it as `var(--name)`, ready for CSS.
 
 The page is made from the token files on each build, so it can't drift from the package.
 
