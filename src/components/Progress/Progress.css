@@ -27,8 +27,8 @@
 .srp-progress__header .srp-progress__value { flex-shrink: 0; margin-inline-start: auto; }
 .srp-progress--bar .srp-progress__track {
   position: relative; overflow: hidden; height: var(--srp-progress-h);
-  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border-control));
+  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface-muted));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border));
 }
 .srp-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--srp-progress-fill);

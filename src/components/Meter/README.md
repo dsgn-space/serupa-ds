@@ -96,8 +96,8 @@ Each is an optional override: set it on the page, a container or one meter. The 
 <!-- token-table:start (made from meter.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--meter-track` | `surface` | The empty part of the bar, inside its edge. |
-| `--meter-track-border` | `border-control` | The track's 1px edge, which marks the whole scale at 3:1 on the page (WCAG 1.4.11). |
+| `--meter-track` | `surface-muted` | The empty part of the bar: a light gray fill inside its edge (every fill keeps 3:1 on it). |
+| `--meter-track-border` | `border` | The track's 1px edge, the basic border: with the gray fill it shows the whole scale; the fill and the value are what must read, at 3:1 and 4.5:1. |
 | `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the surface). |
 | `--meter-fill-optimum` | `success` | The filled part in the best zone. |
 | `--meter-fill-suboptimal` | `warning` | The filled part in the next zone. |

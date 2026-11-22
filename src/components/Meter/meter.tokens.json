@@ -4,8 +4,8 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.surface}",
-        "$description": "The empty part of the bar, inside its edge.",
+        "$value": "{color.surface-muted}",
+        "$description": "The empty part of the bar: a light gray fill inside its edge (every fill keeps 3:1 on it).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--meter-track"
@@ -14,8 +14,8 @@
       },
       "track-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The track's 1px edge, which marks the whole scale at 3:1 on the page (WCAG 1.4.11).",
+        "$value": "{color.border}",
+        "$description": "The track's 1px edge, the basic border: with the gray fill it shows the whole scale; the fill and the value are what must read, at 3:1 and 4.5:1.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--meter-track-border"

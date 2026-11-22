@@ -41,11 +41,18 @@ export const AnnounceComplete: Story = {
   name: 'Announce complete',
   render: function Render() {
     const [v, setV] = React.useState(0);
-    React.useEffect(() => { if (v <= 0 || v >= 100) return; const t = setTimeout(() => setV(Math.min(100, v + 20)), 400); return () => clearTimeout(t); }, [v]);
+    const [on, setOn] = React.useState(false);
+    // As a real upload goes: small, uneven steps at an uneven pace (the bar glides between them), from 0 to 100.
+    React.useEffect(() => {
+      if (!on) return;
+      if (v >= 100) { setOn(false); return; }
+      const t = setTimeout(() => setV((x) => Math.min(100, x + 2 + Math.round(Math.random() * 6))), 120 + Math.random() * 260);
+      return () => clearTimeout(t);
+    }, [on, v]);
     return <div style={{ display: 'grid', gap: 'var(--spacing-3)', maxWidth: 320 }}>
       <Progress label="Upload" value={v} showValue announceComplete />
       {/* The system's Button, not a bare <button>: WebKit draws a bare one in the dark themes with text that fails contrast. */}
-      <Button variant="secondary" onClick={() => setV(20)}>Start</Button>
+      <Button variant="secondary" onClick={() => { setV(0); setOn(true); }}>Start</Button>
     </div>;
   },
 };
