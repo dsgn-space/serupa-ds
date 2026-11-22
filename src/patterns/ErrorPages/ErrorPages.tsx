@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
-import { Heading } from '../../components/Heading/Heading';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
@@ -10,7 +9,7 @@ import { Link } from '../../components/Link/Link';
    What they carry (WCAG 2.2):
    - 2.4.2 Page titled: the page's <title> says what happened ("Page not found – Acme"), so it's the first thing a
      screen reader reads and what a tab or the history shows. The old title comes back when the page goes.
-   - 1.3.1 and 2.4.6: the h1 says what happened; the EmptyState under it (h2) says what to do about it.
+   - 1.3.1 and 2.4.6: one heading, the EmptyState's title as the h1, says what happened; its description says why and what to do.
    - 3.3.1 and 3.3.3: the words say what went wrong without blame, and how to get on.
    - 2.4.1 and 2.4.5: a skip link into main, a header link to the home page, and in main each page's way back
      (home, back, try again or sign in), so no one is left at a dead end.
@@ -62,26 +61,22 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
   const body = {
     'not-found': {
       icon: 'search_off',
-      what: 'Check the address, or start again from the home page',
-      why: 'The page may have moved, or the link you followed may have a typo in it.',
+      why: 'The page may have moved, or the link you followed may have a typo in it. Check the address, or start again from the home page.',
       actions: <>{toHome}<Button variant="secondary" onClick={() => window.history.back()}>Go back</Button></>,
     },
     offline: {
       icon: 'wifi_off',
-      what: 'Check your connection, then try again',
-      why: 'This page needs the internet to load. Once you are back online, try again.',
+      why: 'This page needs the internet to load. Check your connection, then try again.',
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     server: {
       icon: 'error',
-      what: 'Try again in a moment',
-      why: <>It isn’t something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
+      why: <>It isn’t something you did. Try again in a moment, and if it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     'no-access': {
       icon: 'lock',
-      what: 'Ask for access, or sign in with another account',
-      why: 'This page belongs to a team or a person you aren’t signed in as. Whoever shared the link can give you access.',
+      why: 'This page belongs to a team or a person you aren’t signed in as. Ask whoever shared the link for access, or sign in with another account.',
       actions: <>{toHome}<Button href="#sign-in" variant="secondary">Sign in as someone else</Button></>,
     },
   }[kind];
@@ -93,8 +88,7 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
         <Link href={home} className="text-base font-semibold">{SITE}</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-12 outline-none">
-        <Heading level={1} className="text-center">{title}</Heading>
-        <EmptyState icon={body.icon} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
+        <EmptyState icon={body.icon} headingLevel={1} title={title} description={body.why} actions={body.actions} />
         {kind === 'offline' ? (
           // Always there, so a screen reader is listening before the connection comes back.
           <div role="status" className="text-center text-sm">{online ? 'You’re back online. Try again to load the page.' : null}</div>
