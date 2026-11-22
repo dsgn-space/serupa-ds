@@ -47,6 +47,7 @@ const SAME_AS: Record<string, Partial<Record<State, string>>> = {
   Reviews: { Empty: 'NoReviews' },
   SessionTimeout: { SendFails: 'ExtendFails' },
   ShareDialog: { SendFails: 'ShareFails' },
+  SignAgreement: { SendFails: 'SignFails' },
   SignIn: { SendFails: 'WrongPassword' },
   SignUp: { SendFails: 'SubmitFails' },
   StoreLocator: { Empty: 'NoLocation' },

@@ -16,7 +16,7 @@ import { asIcon } from '../Icon/asIcon';
 import { Dialog, type DialogProps } from '../Dialog/Dialog';
 import { Highlight } from '../Highlight/Highlight';
 import { Kbd } from '../Kbd/Kbd';
-import { useShortcut } from '../KeyboardShortcuts/KeyboardShortcuts';
+import { useShortcut } from '../../internal/shortcuts';
 import { en as words } from './labels';
 import { warnOnce } from '../../internal/warn';
 import { leave } from '../../internal/leave';

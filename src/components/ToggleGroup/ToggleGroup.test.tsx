@@ -25,7 +25,7 @@ describe('ToggleGroup', () => {
     await render(<Align ref={ref} className="extra" data-x="y" />);
     const e = el('g');
     expect([e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.dataset.x, e.dataset.component, e.dataset.type, e.dataset.orientation]).toEqual(['group', 'Text alignment', true, 'y', 'toggle-group', 'single', 'horizontal']);
-    expect(e.className).toBe('srp-button-group srp-toggle-group srp-button-group--attached extra');
+    expect(e.className).toBe('srp-button-group srp-button-group--attached srp-toggle-group extra');
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
     expect(Math.round(b!.left - a!.right)).toBe(-1);   // attached: the borders overlap into one line
   });
@@ -117,7 +117,7 @@ describe('ToggleGroup', () => {
   test('vertical and not attached: a column, and buttons apart', async () => {
     await render(<Align orientation="vertical" attached={false} />);
     const e = el('g');
-    expect([e.dataset.orientation, e.className]).toEqual(['vertical', 'srp-button-group srp-toggle-group srp-button-group--vertical']);
+    expect([e.dataset.orientation, e.className]).toEqual(['vertical', 'srp-button-group srp-button-group--vertical srp-toggle-group']);
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
     expect(b!.top - a!.bottom).toBeGreaterThan(0);
   });
