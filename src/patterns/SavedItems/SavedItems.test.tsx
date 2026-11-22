@@ -40,7 +40,7 @@ describe('Patterns/Saved items', () => {
   test('the sort reorders the list and says so', async () => {
     const screen = await render(<SavedItems items={items} />);
     expect(document.getElementById('saved-count')?.textContent).toMatch(/items, newest saved first$/);
-    await screen.getByRole('combobox', { name: 'Sort' }).selectOptions('price-high');
+    await screen.getByRole('combobox', { name: 'Sort by' }).selectOptions('price-high');
     await expect.poll(names).toEqual(['Pour-over set', 'Linen shirt', 'Tote bag']);
     expect(document.getElementById('saved-count')?.textContent).toMatch(/price, high to low$/);
   });
