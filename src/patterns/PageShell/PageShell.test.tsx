@@ -19,6 +19,23 @@ describe('Patterns/Page shell', () => {
     expect(document.activeElement!.closest('main')).not.toBe(null);
   });
 
+  test('Search, or Ctrl+K anywhere, opens a palette of pages and projects; choosing one goes there', async () => {
+    const screen = await render(<Default />);
+    await screen.getByRole('button', { name: 'Search' }).click();
+    const box = screen.getByRole('combobox', { name: /search/i });
+    await expect.element(box).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await expect.element(box).not.toBeInTheDocument();
+    (document.querySelector('main') as HTMLElement).focus();
+    await userEvent.keyboard('{Control>}k{/Control}');
+    await expect.element(screen.getByRole('combobox', { name: /search/i })).toHaveFocus();
+    await userEvent.keyboard('billing');
+    await expect.element(screen.getByRole('option', { name: /^Billing migration/ })).toBeVisible();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => location.hash).toBe('#projects/billing-migration');
+    history.replaceState(null, '', location.pathname + location.search);
+  });
+
   test('one main and one h1, and the two navigation landmarks have different names', async () => {
     await render(<Default />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
