@@ -89,6 +89,16 @@ describe('Patterns/StockCount', () => {
     await screen.getByRole('menuitem', { name: 'File' }).click();
     await screen.getByRole('menuitem', { name: 'Download as CSV' }).click();
     expect((onDownload.mock.calls[0]![0] as StockItem[]).filter((i) => i.counted != null)).toHaveLength(3);
+    const print = vi.spyOn(window, 'print').mockImplementation(() => {});
+    await screen.getByRole('menuitem', { name: 'File' }).click();
+    await screen.getByRole('menuitem', { name: 'Print' }).click();
+    expect(print).toHaveBeenCalledOnce();
+    print.mockRestore();
+    await screen.getByRole('menuitem', { name: 'Edit' }).click();
+    await screen.getByRole('menuitem', { name: 'Clear all counts…' }).click();
+    await expect.poll(() => active().textContent).toBe('Keep them');
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(status).toMatch(/^Counted 3 of 6/);
     await screen.getByRole('menuitem', { name: 'Edit' }).click();
     await screen.getByRole('menuitem', { name: 'Clear all counts…' }).click();
     await expect.poll(() => active().textContent).toBe('Keep them');
