@@ -384,4 +384,49 @@ describe('Chart', () => {
     await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} loading />);
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
   });
+
+  const DAYS = ['Mon', 'Tue', 'Wed'];
+  const HOURS = [{ name: 'Morning', values: [0, 10, 20] }, { name: 'Evening', values: [30, null, 50] }];
+  const step = (name: string) => /srp-chart__cell--([sd]\d)/.exec(page.getByRole('img', { name }).element().getAttribute('class') ?? '')?.[1];
+
+  test('heatmap: a cell per value named with its row, column and value, shaded low to high on the sequential scale', async () => {
+    await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);
+    await expect.element(page.getByRole('group', { name: 'Heatmap' })).toBeInTheDocument();
+    expect(['Morning, Mon: 0', 'Morning, Tue: 10', 'Evening, Mon: 30', 'Evening, Wed: 50'].map(step)).toEqual(['s1', 's2', 's4', 's5']);
+    // The missing value has no cell to reach, and says nothing.
+    expect(page.getByRole('img', { name: /^Evening, Tue/ }).elements()).toHaveLength(0);
+  });
+
+  test('heatmap, diverging: the midpoint is the neutral middle step, red below and blue above, as far as the furthest value', async () => {
+    await render(<Chart type="heatmap" scale="diverging" midpoint={100} title="Index" categories={['A', 'B', 'C']} series={[{ name: 'Sales', values: [60, 100, 140] }]} />);
+    expect(['Sales, A: 60', 'Sales, B: 100', 'Sales, C: 140'].map(step)).toEqual(['d1', 'd4', 'd7']);
+  });
+
+  test('heatmap: one tab stop; arrows move along a row and between rows, skipping a missing cell', async () => {
+    await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);
+    await tabIn();
+    expect(focused()).toBe('Morning, Mon: 0');
+    await userEvent.keyboard('{ArrowRight}{ArrowDown}');
+    expect(focused()).toBe('Morning, Tue: 10');   // no evening value on Tuesday
+    await userEvent.keyboard('{ArrowRight}{ArrowDown}');
+    expect(focused()).toBe('Evening, Wed: 50');
+    await userEvent.keyboard('{Home}');
+    expect(focused()).toBe('Evening, Mon: 30');
+  });
+
+  test('heatmap: a focused cell shows its row and value beside it, and the legend gives the scale\'s ends', async () => {
+    await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);
+    await tabIn();
+    await userEvent.keyboard('{ArrowRight}');
+    const tip = page.getByText('Tue', { exact: true }).elements().find((e) => e.closest('[aria-hidden]') && e.tagName === 'DIV')!;
+    expect(tip.parentElement!.textContent).toBe('TueMorning10');
+    expect(tip.closest('figure')!.lastElementChild!.textContent).toBe('050');   // the scale: lowest, the steps, highest
+  });
+
+  test('heatmap: rows past eight are kept, and the default height gives each row its room', async () => {
+    const rows = Array.from({ length: 12 }, (_, k) => ({ name: 'Row ' + (k + 1), values: [k, k + 1] }));
+    await render(<Chart type="heatmap" title="Grid" categories={['A', 'B']} series={rows} />);
+    expect(page.getByRole('img', { name: 'Row 12, B: 12' }).elements()).toHaveLength(1);
+    expect(Number(page.getByRole('group', { name: 'Heatmap' }).element().getAttribute('height'))).toBe(12 * 32 + 8 + 24);
+  });
 });

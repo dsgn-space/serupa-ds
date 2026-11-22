@@ -18,7 +18,7 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: '全部展开',
-  chartKind: (type) => ({ line: '折线图', bar: '柱状图', area: '面积图', donut: '环形图' })[type],
+  chartKind: (type) => ({ line: '折线图', bar: '柱状图', area: '面积图', donut: '环形图', heatmap: '热力图' })[type],
   chartSummary: (kind, series, points, first, last) => kind + '，' + n(series) + ' 个系列，' + n(points) + ' 个数据点' + (points > 1 ? '，从 ' + first + ' 到 ' + last : '') + '。',
   chartRange: (series, low, lowAt, high, highAt) => series + '：最低 ' + low + '（' + lowAt + '），最高 ' + high + '（' + highAt + '）。',
   chartPoint: (series, category, value) => (series ? series + '，' + category + '：' + value : category + '：' + value),
@@ -298,6 +298,10 @@ export const labels: SerupaLabels = {
   tourNext: '下一步',
   tourDone: '完成',
   sparklineSummary: (label, first, last, min, max) => label + '：从' + first + '到' + last + '，最低' + min + '，最高' + max,
+  statTileUp: (amount) => '上升 ' + amount,
+  statTileDown: (amount) => '下降 ' + amount,
+  statTileFlat: '无变化',
+  statTileTrend: (label, count) => label + '，最近 ' + count + ' 期',
   table: '表格',
   timeline: '时间线',
   signatureMethod: '签名方式',
