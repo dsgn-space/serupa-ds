@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Tabs/labels.ts"],
+  "sourcesContent": ["// Tabs' own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TabsLabels {\n  /** Tabs: the description of a tab that can be closed, since its \u00D7 is for the pointer only. */\n  tabCloseHint: string;\n}\nexport const en: TabsLabels = {\n  tabCloseHint: 'Press Delete to close.',\n};\nexport const id: TabsLabels = {\n  tabCloseHint: 'Tekan Delete untuk menutup.',\n};\n"],
+  "mappings": ";AAMO,IAAM,KAAiB;AAAA,EAC5B,cAAc;AAChB;AACO,IAAM,KAAiB;AAAA,EAC5B,cAAc;AAChB;",
+  "names": []
+}

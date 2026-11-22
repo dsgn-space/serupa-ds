@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/reflow.ts"],
+  "sourcesContent": ["/** Lays the page out now, so the styles set before this call are where a CSS transition starts from (a FLIP, a\n *  slide from where something was). Its own function on purpose: the React Compiler drops a bare\n *  `void el.offsetWidth;` inside a component or hook as code with no effect, and the transition then starts from\n *  the end. ESLint flags that statement in src/ and points here. */\nexport function reflow(el: HTMLElement): number {\n  return el.offsetWidth;\n}\n"],
+  "mappings": ";AAIO,SAAS,OAAO,IAAyB;AAC9C,SAAO,GAAG;AACZ;",
+  "names": []
+}
