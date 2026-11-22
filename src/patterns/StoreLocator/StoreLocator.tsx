@@ -17,6 +17,7 @@ import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Store locator: find a shop by town or postcode, or by where you are, with each one's distance, whether it's open
    now, its hours and directions. A list, not a map alone, so it works with any screen reader and at any zoom. For an
@@ -55,6 +56,9 @@ export interface StoreLocatorProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const week = (open: string, close: string, sunday: [string, string] | null = ['11:00', '18:00']) =>
@@ -99,7 +103,7 @@ const fromBrowser = () => new Promise<{ lat: number; lng: number }>((ok, no) => 
 });
 
 /** The store locator: a skip link, a header, then main with the h1, the search, and the shops. */
-export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading = false, loadFailed = false, onRetry }: StoreLocatorProps) {
+export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading = false, loadFailed = false, onRetry, online }: StoreLocatorProps) {
   const locale = useLocale();
   const at = now ?? new Date();
   const [q, setQ] = React.useState('');
@@ -124,6 +128,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
         <Link underline="hover" href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These stores and hours are from when the page loaded. Finding stores near you needs a connection.</OfflineBanner>
         <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>

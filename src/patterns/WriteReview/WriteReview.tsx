@@ -15,6 +15,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Write a review: stars, a few words and, if you like, photos, for something you bought; then a thank-you that says
    when it will show. For an app to copy. What it carries (WCAG 2.2):
@@ -45,6 +46,9 @@ export interface WriteReviewProps {
   defaultName?: string | undefined;
   /** Sends the review. Reject when it can't be sent. */
   onSend?: ((review: ReviewDraft) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const shirt = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="#d6cfc0"/><path d="M150 90 L110 110 L70 170 L115 195 L130 175 V320 H270 V175 L285 195 L330 170 L290 110 L250 90 Q200 130 150 90Z" fill="#f5f0e6"/></svg>');
@@ -65,7 +69,7 @@ export function reviewProblems(r: ReviewDraft): Problems {
 }
 
 /** The review page: a skip link, a header, then main with the h1, what's reviewed, and the form or the thank-you. */
-export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend }: WriteReviewProps) {
+export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend, online }: WriteReviewProps) {
   const [r, setR] = React.useState<ReviewDraft>({ stars: null, title: '', body: '', recommend: '', name: defaultName, photos: [] });
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
@@ -97,6 +101,7 @@ export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend }: 
         <Link underline="hover" href="#orders">Your orders</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your review stays here. Sending it needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Your orders', href: '#orders' }, { label: 'Write a review' }]} title="Write a review" />
         <div className="flex flex-col gap-6 pt-6">
           <Card padding="sm" className="flex flex-row items-center gap-4">

@@ -23,6 +23,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
    with Sign out. For an app to copy. What it carries (WCAG 2.2):
@@ -98,6 +99,9 @@ export interface AccountSecurityProps {
   loadFailed?: boolean | undefined;
   /** Loads the devices again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const MIN = 12;
@@ -135,7 +139,7 @@ export function passwordProblems(current: string, next: string): ErrorSummaryIte
 /** The security page: a skip link, a header with the way back, then main with the h1 and a section per part. */
 export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EHPK 3PXP', recoveryCodes = demoCodes, devices = demoDevices,
   onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount,
-  deleteAfter, deletionDate, onKeepAccount, plan, loading = false, loadFailed = false, onRetry }: AccountSecurityProps) {
+  deleteAfter, deletionDate, onKeepAccount, plan, loading = false, loadFailed = false, onRetry, online }: AccountSecurityProps) {
   // Password
   const [current, setCurrent] = React.useState('');
   const [next, setNext] = React.useState('');
@@ -248,6 +252,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
         <Link underline="hover" href="#settings">Back to settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is how your account was set up when the page loaded. Changes need a connection.</OfflineBanner>
         {deleted ? (
           <div className="flex flex-col gap-3">
             <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">Your account is deleted</Heading>

@@ -17,3 +17,9 @@ export const Default: Story = {};
 
 /** A three-minute session that warns at once, so the warning can be tried. Its countdown moves, so it has no screenshot. */
 export const Warning: Story = { args: { duration: 180, warnBefore: 179 }, tags: ['!visual'] };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Staying signed in fails: the session runs out as planned, and the draft is kept. At rest it looks like Default, so it has no screenshot. */
+export const ExtendFails: Story = { tags: ['!visual'], args: { onExtend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

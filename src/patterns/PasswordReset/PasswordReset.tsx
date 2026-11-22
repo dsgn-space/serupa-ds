@@ -12,6 +12,7 @@ import { Input } from '../../components/Input/Input';
 import { PasswordInput } from '../../components/PasswordInput/PasswordInput';
 import { Icon } from '../../components/Icon/Icon';
 import { Alert } from '../../components/Alert/Alert';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Password reset: asking for a link by email, then choosing a new password from it. For an app to copy. What it
    carries (WCAG 2.2):
@@ -43,6 +44,9 @@ export interface PasswordResetProps {
   linkLife?: string | undefined;
   /** Where "Back to sign in" and "Sign in" go. Default: "#sign-in". */
   signInHref?: string | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const MIN = 12;
@@ -66,7 +70,7 @@ export function resetPasswordRules(password: string, email: string) {
 }
 
 /** The password reset page: a skip link, then main with the step's card. */
-export function PasswordReset({ start = 'request', email: email0 = '', onRequest, onReset, linkLife = '1 hour', signInHref = '#sign-in' }: PasswordResetProps) {
+export function PasswordReset({ start = 'request', email: email0 = '', onRequest, onReset, linkLife = '1 hour', signInHref = '#sign-in', online }: PasswordResetProps) {
   const [step, setStep] = React.useState<PasswordResetStep>(start);
   const [email, setEmail] = React.useState(email0);
   const [emailProblem, setEmailProblem] = React.useState<string | null>(null);
@@ -115,6 +119,7 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
       <SkipLink />
       <Center as="main" id="main" vertical className="outline-none">
         <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Sending the link and choosing a new password need a connection.</OfflineBanner>
         <p className="m-0 text-base font-semibold">Acme</p>
         <Card className="flex flex-col gap-4">
           {step === 'request' ? (

@@ -14,6 +14,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Send money: choose who, say how much, see what they'll get, check it all on a review step, then send. For an app to
    copy. What it carries (WCAG 2.2):
@@ -38,6 +39,9 @@ export interface SendMoneyProps {
   fee?: { rate: number; min: number } | undefined;
   /** Sends the money. Reject when it can't be sent. */
   onSend?: ((transfer: Transfer) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoRecipients: Recipient[] = [
@@ -64,7 +68,7 @@ export function transferProblems(to: string, amount: number | null, total: numbe
 }
 
 /** The send money page: a skip link, a header, then main with the h1, and the form, the review or the answer. */
-export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, recipients = demoRecipients, fee = { rate: 0.005, min: 1 }, onSend }: SendMoneyProps) {
+export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, recipients = demoRecipients, fee = { rate: 0.005, min: 1 }, onSend, online }: SendMoneyProps) {
   const locale = useLocale();
   const money = (n: number, currency = account.currency) => formatNumber(n, locale, { style: 'currency', currency });
   const [to, setTo] = React.useState('');
@@ -106,6 +110,7 @@ export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, reci
         <Link underline="hover" href="#accounts">Accounts</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your transfer stays here. Sending it needs a connection, and the fee is checked again first.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: 'Send money' }]} title="Send money"
           description={`You have ${money(account.balance)} in your account.`} />
         <div className="flex flex-col gap-5 pt-6">

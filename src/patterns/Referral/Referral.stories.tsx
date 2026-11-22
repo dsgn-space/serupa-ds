@@ -20,3 +20,6 @@ export const NoInvites: Story = { args: { referrals: [] } };
 
 /** Sending fails: it says so next to the button, and the addresses stay. */
 export const SendFails: Story = { args: { onInvite: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

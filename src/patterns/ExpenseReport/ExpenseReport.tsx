@@ -21,6 +21,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Expense report: add what you spent, one expense at a time, see them in a table with the total, and send the report
    to be paid back. For an app to copy. What it carries (WCAG 2.2):
@@ -67,6 +68,9 @@ export interface ExpenseReportProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const CATEGORIES = [
@@ -102,7 +106,7 @@ export const missingReceipts = (expenses: readonly Expense[], receiptOver: numbe
 /** The add form's parts, in the order they show. */
 const PARTS = ['date', 'category', 'what', 'amount', 'receipt'] as const;
 
-export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, loading = false, loadFailed = false, onRetry }: ExpenseReportProps) {
+export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, loading = false, loadFailed = false, onRetry, online }: ExpenseReportProps) {
   const locale = useLocale();
   const blank: Draft = { date: today, category: '', what: '', amount: null, receipt: null };
   const [list, setList] = React.useState(expenses);
@@ -161,6 +165,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
         <Link underline="hover" href="#reports">Your reports</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your expenses stay here. Sending the report needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
           description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>

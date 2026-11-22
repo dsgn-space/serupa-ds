@@ -18,6 +18,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Team members: who is on the team, what each may do, inviting more people, and removing someone. For an app to copy.
    What it carries (WCAG 2.2):
@@ -59,6 +60,11 @@ export interface TeamMembersProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** The members loaded but the invites didn't: the Invites card says so, with Try again, which calls onRetry. Default: false. */
+  invitesFailed?: boolean | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoMembers: TeamMember[] = [
@@ -94,7 +100,7 @@ export function inviteProblem(emails: readonly string[], taken: readonly string[
 }
 
 /** The team page: a skip link, a header, then main with the h1 and Invite people, the members, and the open invites. */
-export function TeamMembers({ members = demoMembers, invites = demoInvites, onInvite, onRoleChange, onRemove, onResend, onRevoke, loading = false, loadFailed = false, onRetry }: TeamMembersProps) {
+export function TeamMembers({ members = demoMembers, invites = demoInvites, onInvite, onRoleChange, onRemove, onResend, onRevoke, loading = false, loadFailed = false, onRetry, invitesFailed = false, online }: TeamMembersProps) {
   const locale = useLocale();
   const [roles, setRoles] = React.useState<Record<string, TeamRole>>({});
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
@@ -157,6 +163,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the members loaded before you went offline. Inviting and changing roles need a connection.</OfflineBanner>
         <PageHeader title="Team" description="Who can see and change this workspace."
           primary={{ label: 'Invite people', onSelect: () => ask(true) }} />
 
@@ -197,8 +204,9 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
         </Card>
 
         <Card className="flex flex-col gap-4">
-          <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">Invites ({formatNumber(open.length, locale)})</Heading>
-          {open.length ? (
+          <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">{invitesFailed ? 'Invites' : `Invites (${formatNumber(open.length, locale)})`}</Heading>
+          {invitesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the invites" description="The members above are up to date." onRetry={() => onRetry?.()} />
+          : open.length ? (
             <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
               {open.map((i) => (
                 <li key={i.email} className="flex flex-wrap items-center gap-3 py-3">

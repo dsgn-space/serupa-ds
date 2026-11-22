@@ -27,3 +27,9 @@ export const Solved: Story = {
     },
   },
 };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Sending a reply fails: the words and files stay, and it says to try again. At rest it looks like Default, so it has no screenshot. */
+export const ReplyFails: Story = { tags: ['!visual'], args: { onReply: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

@@ -15,6 +15,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Status page: is it working now, each service's last 90 days, what's being done about a problem, and email updates.
    For an app to copy. What it carries (WCAG 2.2):
@@ -41,6 +42,9 @@ export interface StatusPageProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 /** `count` days ending on `end` (YYYY-MM-DD), oldest first: up, except the days given by how many days before the end. */
@@ -88,7 +92,7 @@ const TITLE: Record<ServiceState, string> = {
 };
 
 /** The status page: a skip link, a header, then main with the h1, the overall state, incidents, services and updates. */
-export function StatusPage({ services = demoServices, incidents = demoIncidents, onSubscribe, loading = false, loadFailed = false, onRetry }: StatusPageProps) {
+export function StatusPage({ services = demoServices, incidents = demoIncidents, onSubscribe, loading = false, loadFailed = false, onRetry, online }: StatusPageProps) {
   const locale = useLocale();
   const [email, setEmail] = React.useState('');
   const [problem, setProblem] = React.useState('');
@@ -134,6 +138,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
         <Link underline="hover" href="#support">Contact support</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is the status from when the page loaded. It may have changed.</OfflineBanner>
         <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the status" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the status" /></Card> : (<>

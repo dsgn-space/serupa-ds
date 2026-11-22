@@ -10,6 +10,7 @@ import { Rating } from '../../components/Rating/Rating';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { Checkbox, CheckboxGroup } from '../../components/Checkbox/Checkbox';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Feedback survey: a few questions after something happened (a visit, an order, a call): a rating, what you came to
    do, what could be better, your words, and whether we may write back. For an app to copy. What it carries (WCAG 2.2):
@@ -44,6 +45,9 @@ export interface FeedbackSurveyProps {
   about?: string | undefined;
   /** Sends the answers. Return its promise: a rejection keeps them and says so. */
   onSend?: ((answers: SurveyAnswers) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const REASONS = [
@@ -72,7 +76,7 @@ export function surveyProblems(a: SurveyAnswers): Partial<Record<'rating' | 'ema
 }
 
 /** The survey page: a skip link, a header, then main with the h1 and the questions, or the thanks. */
-export function FeedbackSurvey({ about = 'your visit', onSend }: FeedbackSurveyProps) {
+export function FeedbackSurvey({ about = 'your visit', onSend, online }: FeedbackSurveyProps) {
   const [answers, setAnswers] = React.useState<SurveyAnswers>(empty);
   const [problems, setProblems] = React.useState<ReturnType<typeof surveyProblems>>({});
   const [busy, setBusy] = React.useState(false);
@@ -102,6 +106,7 @@ export function FeedbackSurvey({ about = 'your visit', onSend }: FeedbackSurveyP
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending them needs a connection.</OfflineBanner>
         <PageHeader title={`How was ${about}?`} description="Four questions. Only the first is needed, and it takes a few seconds." />
         <div className="pt-6">
           {sent ? (

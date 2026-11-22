@@ -16,6 +16,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 
 /* Conference agenda: the sessions of each day by time, filtered by track, saved to your own agenda, with clashes said.
    For an app to copy. What it carries (WCAG 2.2):
@@ -39,6 +41,9 @@ export interface AgendaProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const S = (id: string, day: string, start: string, end: string, title: string, speakers: string, room: string, track: string): Session => ({ id, day, start, end, title, speakers, room, track });
@@ -66,7 +71,7 @@ export function byStart(sessions: Session[]) {
 }
 
 /** The agenda page: a skip link, a header, then main with the h1, the track filter and a tab for each day and yours. */
-export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, loading = false, loadFailed = false, onRetry }: AgendaProps) {
+export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, loading = false, loadFailed = false, onRetry, online }: AgendaProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [saved, setSaved] = React.useState(defaultSaved);
@@ -121,9 +126,12 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
         <Link underline="hover" href="#tickets">Tickets</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is the agenda as it was when the page loaded. Saving a session needs a connection.</OfflineBanner>
         <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card>
+          : !sessions.length ? <div className="pt-6"><EmptyState icon="event" title="The agenda isn’t out yet" headingLevel={2}
+              description="The sessions show here once the speakers are confirmed. Your ticket is all you need until then." /></div> : (<>
         <div className="flex flex-wrap items-end justify-between gap-3 pt-6">
           <Field label="Track">
             <Select value={track} onChange={(e) => setTrack(e.target.value)} options={[{ value: '', label: 'Every track' }, ...tracks.map((t) => ({ value: t, label: t }))]} />

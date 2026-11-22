@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Task board: a team's tasks in columns, moved between stages and saved as they move, with a way to add one. For an
    app to copy. What it carries (WCAG 2.2):
@@ -61,6 +62,9 @@ export interface TaskBoardProps {
   loadFailed?: boolean | undefined;
   /** Loads the tasks again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: BoardColumn[] = [
@@ -95,7 +99,7 @@ export function overLimit(columns: readonly BoardColumn[], locale = 'en-US'): st
 }
 
 /** The task board: a skip link, a header, then main with the board's h1, New task and the columns. */
-export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, onAdd, loading = false, loadFailed = false, onRetry }: TaskBoardProps) {
+export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, onAdd, loading = false, loadFailed = false, onRetry, online }: TaskBoardProps) {
   const locale = useLocale();
   const [columns, setColumns] = React.useState<readonly BoardColumn[]>(start);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -158,6 +162,7 @@ export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, 
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is the board as it was when the page loaded. Moving or adding cards needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Boards', href: '#boards' }, { label: title }]} title={title}
           description={loading || loadFailed ? undefined : countTasks(total, locale)}
           primary={{ label: 'New task', icon: 'add', onSelect: () => ask(true), disabled: loading || loadFailed }} />

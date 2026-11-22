@@ -19,6 +19,7 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Address book: the addresses you've saved for delivery, one of them the default, each edited, removed or made the
    default in place. For an app to copy. What it carries (WCAG 2.2):
@@ -65,6 +66,9 @@ export interface AddressBookProps {
   /** They failed to load: a message with Try again, which calls onRetry. Default: false. */
   loadFailed?: boolean | undefined;
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: SavedAddress[] = [
@@ -88,7 +92,7 @@ export function addressProblems(a: Draft): Partial<Record<(typeof REQUIRED)[numb
 }
 
 /** The address book page: a skip link, a header, then main with the h1, the addresses and Add address. */
-export function AddressBook({ addresses: start = demo, defaultId, countries = COUNTRIES, onSave, onRemove, onDefaultChange, loading = false, loadFailed = false, onRetry }: AddressBookProps) {
+export function AddressBook({ addresses: start = demo, defaultId, countries = COUNTRIES, onSave, onRemove, onDefaultChange, loading = false, loadFailed = false, onRetry, online }: AddressBookProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(start);
   const [def, setDef] = React.useState(defaultId ?? start[0]?.id);
@@ -150,6 +154,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are your saved addresses. Saving a change needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Addresses' }]} title="Addresses"
           description="Where we deliver. The default one is chosen for you at checkout."
           primary={loading || loadFailed ? undefined : { label: 'Add address', onSelect: () => open(blank) }} />
