@@ -28,7 +28,7 @@ export type ToasterPlacement = 'top-start' | 'top' | 'top-end' | 'bottom-start' 
   /** @deprecated 'top-center' and 'bottom-center' are 'top' and 'bottom'; removed in 18.0.0. */
   | 'top-center' | 'bottom-center';
 /** @deprecated Use ToasterPlacement, the name of the prop it types; removed in 18.0.0. */
-export type ToasterPosition = ToasterPlacement;
+export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
 
 export interface ToastOptions {
   /** The main line. */

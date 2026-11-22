@@ -8,7 +8,7 @@ interface ToastLabels {
 }
 type ToastTone = "danger" | "info" | "neutral" | "success" | "warning";
 type ToasterPlacement = "bottom-center" | "bottom-end" | "bottom-start" | "bottom" | "top-center" | "top-end" | "top-start" | "top";
-type ToasterPosition = ToasterPlacement;
+type ToasterPosition = "bottom-center" | "bottom-end" | "bottom-start" | "top-center" | "top-end" | "top-start";
 interface ToastOptions {
     title: React.ReactNode;
     description?: React.ReactNode | undefined;
