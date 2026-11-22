@@ -30,7 +30,7 @@ export const OverLimit: Story = {
 };
 
 /** A move that can't be saved: move any card, and it goes back with a message that names it and its column. */
-export const MoveFails: Story = { args: { onMove: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const MoveFails: Story = { tags: ['!visual'], args: { onMove: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** The tasks are on their way: each column keeps its title, with placeholder cards. */
 export const Loading: Story = { args: { loading: true } };

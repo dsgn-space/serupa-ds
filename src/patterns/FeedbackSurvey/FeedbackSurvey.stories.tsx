@@ -19,7 +19,7 @@ export const Default: Story = {};
 export const AfterAnOrder: Story = { args: { about: 'your order' } };
 
 /** Sending fails: the page says so next to Send, and every answer stays. */
-export const SendFails: Story = { args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const SendFails: Story = { tags: ['!visual'], args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };

@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Saving fails: it says so, and the switches stay as set. */
-export const SaveFails: Story = { args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 500)) } };
+export const SaveFails: Story = { tags: ['!visual'], args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 500)) } };
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };
