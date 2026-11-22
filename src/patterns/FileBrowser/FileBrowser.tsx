@@ -14,7 +14,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { List, ListItem, ListSelectAll, ListLoadingItems } from '../../components/List/List';
 import { TableActionBar } from '../../components/Table/Table';
-import { formatFileSize } from '../../components/FileUpload/formatFileSize';
+import { formatFileSize } from '../../internal/formatFileSize';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
