@@ -11,7 +11,7 @@
 .srp-date-field__part--day, .srp-date-field__part--month { width: var(--date-field-short-width, var(--spacing-16)); }
 .srp-date-field__part--year { width: var(--date-field-year-width, var(--spacing-24)); }
 .srp-date-field__input { width: var(--sizing-full); font-variant-numeric: tabular-nums; }
-.srp-date-field[data-disabled] .srp-date-field__label { color: var(--date-field-text-disabled, var(--disabled-text)); }
+.srp-date-field:where([data-disabled]) .srp-date-field__label { color: var(--date-field-text-disabled, var(--disabled-text)); }
 /* What's wrong, on a line of its own under the boxes, as a Field's error is drawn. */
 .srp-date-field__error { display: flex; flex-basis: var(--sizing-full); align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); margin-block-start: calc(var(--spacing-0) - var(--date-field-gap, var(--spacing-4)) + var(--spacing-1\.5)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
 .srp-date-field__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); }

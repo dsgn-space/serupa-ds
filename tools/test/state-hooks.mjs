@@ -1,8 +1,11 @@
-// State is an attribute, not a class (ADR-0022): the components' stylesheets select a state on the attribute the element
+// State is an attribute, not a class (ADR-0025): the components' stylesheets select a state on the attribute the element
 // carries (data-disabled, data-selected, data-current, aria-expanded, data-state…), and the --state modifier classes
 // they still write are deprecated, removed in 18.0.0, so app CSS moves off them first. This fails when a stylesheet
 // under src/ selects one of them again, and when a component writes one of the classes without the attribute that
-// replaces it, so an app selecting on the attribute never misses an element.
+// replaces it, so an app selecting on the attribute never misses an element, and when a stylesheet puts a replacing
+// attribute straight on its part (.srp-calendar__day[data-outside]) rather than in :where(): the attribute would weigh
+// one class more than the modifier class did, and beat rules it used to lose to (an outside day's muted text over the
+// range fill).
 //   node tools/test/state-hooks.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -128,7 +131,10 @@ for (const f of walk(SRC, (n) => n.endsWith('.css'))) {
   const css = strip(fs.readFileSync(f, 'utf8'));
   const used = Object.keys(STATE_CLASSES).filter((c) => new RegExp('\\.' + esc(c) + '(?![\\w-])').test(css));
   t(`${rel(f)} selects state on attributes, not on a deprecated --state class`, !used.length,
-    used.map((c) => `.${c}: use ${c.split('--')[0]}${STATE_CLASSES[c]}`).join('; '));
+    used.map((c) => `.${c}: use ${c.split('--')[0]}:where(${STATE_CLASSES[c]})`).join('; '));
+  const heavy = Object.entries(STATE_CLASSES).filter(([c, sel]) => css.includes('.' + c.split('--')[0] + sel)).map(([c, sel]) => `.${c.split('--')[0]}${sel}`);
+  t(`${rel(f)} gives a state attribute the weight of the class it replaces, in :where()`, !heavy.length,
+    heavy.map((s) => `${s}: write ${s.replace('[', ':where([').replace(/\]$/, '])')}`).join('; '));
 }
 for (const f of walk(SRC, (n) => /\.tsx$/.test(n) && !/\.(test|stories)\.tsx$/.test(n))) {
   const code = fs.readFileSync(f, 'utf8');

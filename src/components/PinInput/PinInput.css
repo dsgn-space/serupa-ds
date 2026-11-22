@@ -45,16 +45,16 @@
 @media (hover: hover) { .srp-pin-input:hover:not([data-disabled], [data-readonly], :focus-within) { --srp-pin-bd: var(--pin-input-border-hover, var(--field-border-hover)); } }
 /* The box the caret is in: the focus color on its border and a ring hugging it (2px in all), and a transparent
    outline that forced-colors mode draws, since box-shadow rings disappear there. */
-.srp-pin-input__box[data-active] { transition-duration: var(--duration-0); --srp-pin-bd: var(--srp-pin-ring); box-shadow: 0 0 0 var(--pin-input-border-width, var(--border-width-1)) var(--srp-pin-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.srp-pin-input__box:where([data-active]) { transition-duration: var(--duration-0); --srp-pin-bd: var(--srp-pin-ring); box-shadow: 0 0 0 var(--pin-input-border-width, var(--border-width-1)) var(--srp-pin-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
 .srp-pin-input__box--caret::after {
   content: ""; width: var(--border-width-1); height: var(--spacing-4); background: var(--pin-input-text, var(--text));
   animation: srp-pin-caret var(--motion-loop-blink) var(--ease-move) infinite alternate;
 }
 @keyframes srp-pin-caret { to { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: reduce) { .srp-pin-input__box--caret::after { animation: none; } }
-.srp-pin-input[data-invalid] { --srp-pin-bd: var(--pin-input-invalid, var(--field-border-invalid)); --srp-pin-ring: var(--pin-input-invalid, var(--field-border-invalid)); }
-.srp-pin-input[data-readonly] .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
-.srp-pin-input[data-disabled] { --pin-input-text: var(--pin-input-text-disabled, var(--disabled-text)); --pin-input-border: var(--pin-input-border-disabled, var(--disabled-border)); }
-.srp-pin-input[data-disabled] .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
-.srp-pin-input[data-disabled] .srp-pin-input__field { cursor: var(--cursor-disabled); }
+.srp-pin-input:where([data-invalid]) { --srp-pin-bd: var(--pin-input-invalid, var(--field-border-invalid)); --srp-pin-ring: var(--pin-input-invalid, var(--field-border-invalid)); }
+.srp-pin-input:where([data-readonly]) .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
+.srp-pin-input:where([data-disabled]) { --pin-input-text: var(--pin-input-text-disabled, var(--disabled-text)); --pin-input-border: var(--pin-input-border-disabled, var(--disabled-border)); }
+.srp-pin-input:where([data-disabled]) .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
+.srp-pin-input:where([data-disabled]) .srp-pin-input__field { cursor: var(--cursor-disabled); }
 }

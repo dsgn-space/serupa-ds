@@ -55,15 +55,15 @@
   outline: var(--focus-ring-width) solid var(--srp-checkbox-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */
-.srp-checkbox[data-invalid] .srp-checkbox__input { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-checkbox[data-invalid]:hover .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
+.srp-checkbox:where([data-invalid]) .srp-checkbox__input { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-checkbox:where([data-invalid]):hover .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 /* A required box left unticked after people untick it or try to send the form: as Input (:user-invalid). */
 .srp-checkbox__input:user-invalid { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-checkbox:hover .srp-checkbox__input:user-invalid { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 .srp-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
 /* Read-only: no pointer cursor or hover, since a click won't change it. */
-.srp-checkbox[data-readonly] { cursor: default; }
+.srp-checkbox:where([data-readonly]) { cursor: default; }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-checkbox:has(.srp-checkbox__input:disabled) { color: var(--checkbox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-checkbox:has(.srp-checkbox__input:disabled) .srp-checkbox__description { color: var(--checkbox-text-disabled, var(--disabled-text)); }
@@ -88,8 +88,8 @@
 .srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary)); border-color: var(--srp-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--srp-checkbox-card-on); }
 .srp-checkbox--card:has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--checkbox-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-checkbox--card .srp-checkbox__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.srp-checkbox--card.srp-checkbox[data-invalid]:not(:has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }
-.srp-checkbox--card.srp-checkbox[data-invalid]:has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--field-border-invalid)); }
+.srp-checkbox--card.srp-checkbox:where([data-invalid]):not(:has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }
+.srp-checkbox--card.srp-checkbox:where([data-invalid]):has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: Highlight; } }
 @media (forced-colors: active) { .srp-checkbox__icon { color: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

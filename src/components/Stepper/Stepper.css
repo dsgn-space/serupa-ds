@@ -43,11 +43,11 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
 }
 .srp-stepper__indicator .srp-icon { font-size: var(--spacing-4); }
 .srp-stepper--size-sm .srp-stepper__indicator .srp-icon { font-size: var(--spacing-3\.5); }
-.srp-stepper__step[data-state="current"] .srp-stepper__indicator, .srp-stepper__step[data-state="complete"] .srp-stepper__indicator {
+.srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator, .srp-stepper__step:where([data-state="complete"]) .srp-stepper__indicator {
   border-color: var(--stepper-bg-active, var(--primary)); background: var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));
 }
-.srp-stepper__step[data-state="current"] .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
-.srp-stepper__step[data-state="error"] .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
+.srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
+.srp-stepper__step:where([data-state="error"]) .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
 .srp-stepper__step--warning .srp-stepper__indicator { border-color: var(--stepper-warning-border, var(--warning-text)); background: var(--stepper-warning-bg, var(--warning-subtle)); color: var(--stepper-warning-text, var(--warning-text)); }
 .srp-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--srp-step-text-pad); overflow-wrap: anywhere; }
 .srp-stepper { --srp-step-text-pad: calc((var(--srp-step-size) - var(--text-sm--line-height)) / 2); }
@@ -55,7 +55,7 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
 .srp-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
 .srp-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
-.srp-stepper__step[data-done] .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
+.srp-stepper__step:where([data-done]) .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
 .srp-stepper--horizontal .srp-stepper__connector {
   align-self: flex-start; min-width: var(--spacing-4); height: var(--srp-step-line);
   margin: var(--srp-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);
@@ -96,7 +96,7 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
 .srp-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); font-variant-numeric: tabular-nums; color: var(--stepper-description-color, var(--text-muted)); overflow-wrap: anywhere; }
 .srp-stepper__summary .srp-stepper__title { color: var(--stepper-title-color, var(--text)); }
 @media (forced-colors: active) {
-  .srp-stepper__step[data-state="current"] .srp-stepper__indicator, .srp-stepper__step[data-state="complete"] .srp-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
+  .srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator, .srp-stepper__step:where([data-state="complete"]) .srp-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
   .srp-stepper__connector { background: CanvasText; }
 }
 }

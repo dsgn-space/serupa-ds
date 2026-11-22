@@ -49,15 +49,15 @@
   outline: var(--focus-ring-width) solid var(--srp-radio-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
-.srp-radio[data-invalid] .srp-radio__input { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-radio[data-invalid]:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
+.srp-radio:where([data-invalid]) .srp-radio__input { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-radio:where([data-invalid]):hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 /* A required group with nothing picked once people try to send the form: as Input (:user-invalid). */
 .srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-radio:hover .srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 .srp-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-radio__description { color: var(--radio-description-color, var(--text-muted)); }
 /* Read-only: a default cursor and no hover or press change, since a click does nothing. */
-.srp-radio[data-readonly] { cursor: default; }
+.srp-radio:where([data-readonly]) { cursor: default; }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
 .srp-radio:has(.srp-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-radio:has(.srp-radio__input:disabled) .srp-radio__description { color: var(--radio-text-disabled, var(--disabled-text)); }
@@ -82,8 +82,8 @@
 .srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--srp-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--srp-radio-card-on); }
 .srp-radio--card:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-radio--card .srp-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.srp-radio--card.srp-radio[data-invalid]:not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
-.srp-radio--card.srp-radio[data-invalid]:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
+.srp-radio--card.srp-radio:where([data-invalid]):not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
+.srp-radio--card.srp-radio:where([data-invalid]):has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: Highlight; } }
 @media (forced-colors: active) { .srp-radio__dot { background: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

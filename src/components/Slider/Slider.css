@@ -83,11 +83,11 @@
    track and the chip to its left. */
 .srp-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
 .srp-slider--vertical .srp-slider__mark-label > span, .srp-slider--vertical .srp-slider__value > span, .srp-slider--vertical .srp-slider__input { writing-mode: horizontal-tb; }
-.srp-slider[data-invalid] .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
-.srp-slider[data-invalid] .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
-.srp-slider[data-readonly], .srp-slider[data-readonly] .srp-slider__thumb { cursor: default; }
-.srp-slider[data-disabled] { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
-.srp-slider[data-disabled] .srp-slider__thumb { cursor: var(--cursor-disabled); }
+.srp-slider:where([data-invalid]) .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
+.srp-slider:where([data-invalid]) .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
+.srp-slider:where([data-readonly]), .srp-slider:where([data-readonly]) .srp-slider__thumb { cursor: default; }
+.srp-slider:where([data-disabled]) { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
+.srp-slider:where([data-disabled]) .srp-slider__thumb { cursor: var(--cursor-disabled); }
 @media (prefers-reduced-motion: reduce) { .srp-slider__thumb, .srp-slider__value { transition: none; } }
 @media (forced-colors: active) {
   .srp-slider__track { background: CanvasText; }

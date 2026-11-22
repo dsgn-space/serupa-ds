@@ -31,7 +31,7 @@
 /* A word longer than the line (a German compound, a URL) breaks instead of pushing the page sideways (WCAG 1.4.10). */
 .srp-accordion__title { text-wrap: balance; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-accordion__icon.srp-icon { flex-shrink: 0; color: var(--accordion-icon-color, var(--text-muted)); font-size: var(--accordion-icon-size, var(--spacing-5)); transition: rotate var(--accordion-duration, var(--motion-change-md)) var(--ease-move); }
-.srp-accordion__item[data-state="open"] > .srp-accordion__heading .srp-accordion__icon { rotate: var(--srp-accordion-turn); }
+.srp-accordion__item:where([data-state="open"]) > .srp-accordion__heading .srp-accordion__icon { rotate: var(--srp-accordion-turn); }
 /* Motion (EH2): the content unfolds on the compositor while Accordion.tsx grows or shrinks the panel's height over
    the same time (the one layout animated on purpose, so what's below slides instead of jumping). Open: shown at once, then it fades in and (unless reduced motion asks
    otherwise) its clip opens from the top over --accordion-duration with ease-enter. Closed: it keeps its height while
@@ -42,13 +42,13 @@
   visibility: hidden; opacity: var(--opacity-0); content-visibility: hidden;
   transition: opacity var(--srp-accordion-motion), visibility var(--motion-exit-md), content-visibility var(--motion-exit-md) allow-discrete;
 }
-.srp-accordion__item[data-state="open"] > .srp-accordion__panel {
+.srp-accordion__item:where([data-state="open"]) > .srp-accordion__panel {
   --srp-accordion-motion: var(--accordion-duration, var(--motion-change-md)) var(--ease-enter);
   visibility: visible; opacity: var(--opacity-100); content-visibility: visible; transition: opacity var(--srp-accordion-motion);
 }
 @media (prefers-reduced-motion: no-preference) {
   .srp-accordion__panel { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full)); transition: opacity var(--srp-accordion-motion), clip-path var(--srp-accordion-motion), visibility var(--motion-exit-md), content-visibility var(--motion-exit-md) allow-discrete; }
-  .srp-accordion__item[data-state="open"] > .srp-accordion__panel { clip-path: inset(var(--spacing-0)); transition: opacity var(--srp-accordion-motion), clip-path var(--srp-accordion-motion); }
+  .srp-accordion__item:where([data-state="open"]) > .srp-accordion__panel { clip-path: inset(var(--spacing-0)); transition: opacity var(--srp-accordion-motion), clip-path var(--srp-accordion-motion); }
 }
 /* Closed and settled: hidden="until-found" hides the content (content-visibility) and lets find-in-page reach it,
    which needs the panel shown; the content's padding goes too, so it takes no height. Only while the item is closed:
