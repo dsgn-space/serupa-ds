@@ -165,16 +165,6 @@
             "cssVar": "--attachment-max-width"
           }
         }
-      },
-      "width": {
-        "$type": "dimension",
-        "$value": "{sizing.sizing-max}",
-        "$description": "How wide it is up to max-width: as wide as its name. FileUpload sets it to the full width of its list.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--attachment-width"
-          }
-        }
       }
     }
   }

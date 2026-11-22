@@ -34,7 +34,7 @@
 /* Each file is an Attachment, as wide as the list; this component's own tokens still set its row's colors, corners
    and padding. */
 .srp-file-upload__item {
-  display: flex; --attachment-width: var(--sizing-full); --attachment-max-width: var(--sizing-full);
+  display: flex; --srp-attachment-width: var(--sizing-full); --attachment-max-width: var(--sizing-full);
   --attachment-bg: var(--file-upload-item-bg, var(--surface)); --attachment-border: var(--file-upload-item-border, var(--border)); --attachment-radius: var(--file-upload-item-radius, var(--radius-control));
   --attachment-padding: var(--file-upload-item-padding, var(--spacing-2)); --attachment-gap: var(--spacing-3); --attachment-icon: var(--file-upload-icon-color, var(--text-muted));
   --attachment-muted: var(--file-upload-hint-color, var(--text-muted)); --attachment-error: var(--file-upload-error-color, var(--danger-text)); --attachment-border-error: var(--file-upload-zone-border-invalid, var(--danger));

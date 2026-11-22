@@ -124,5 +124,4 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-padding-start` | `spacing-3` | Space before the icon (12px). |
 | `--attachment-gap` | `spacing-2` | Space between the icon, the name and the buttons (8px). |
 | `--attachment-max-width` | `spacing-80` | The widest it grows (320px); a narrower container makes it narrower. |
-| `--attachment-width` | `sizing-max` | How wide it is up to max-width: as wide as its name. FileUpload sets it to the full width of its list. |
 <!-- token-table:end -->

@@ -19,7 +19,7 @@ import { MiddleCutName } from '../../internal/middleCutName';
 
 // Its own words, FileUpload's "Couldn’t upload" for a failed one, ErrorBoundary's "Try again" for its retry button and
 // Progress's "Complete" for one that's done.
-const words = /* @__PURE__ */ Object.assign(Object.assign({}, boundary, progressWords), fileWords, ownWords);
+const words = /* @__PURE__ */ Object.assign(/* @__PURE__ */ Object.assign({}, boundary, progressWords), fileWords, ownWords);
 
 export { attachmentKind };
 export type { AttachmentKind };
