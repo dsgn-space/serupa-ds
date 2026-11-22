@@ -70,11 +70,13 @@
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .srp-input:not(.srp-input--size-lg) .srp-input__field { font-size: var(--text-base); } }
-/* actions: InputAction buttons at the end of the box, a 2px inset from its edge, each the field's height less the
-   border and that inset (26px at md). An icon action is a muted icon shaded on hover, a text action ("Apply") is in
-   the primary color. Each has its own focus ring inside the box's. At size sm an action is 18px, so a box behind it
-   reaches out to 24px to press (WCAG 2.5.8), as SearchInput's clear button does. */
+/* actions: InputAction buttons at the end of the box. A text action ("Apply"), in the primary color, is the field's
+   height less the border and a 2px inset (26px at md). An icon action is the button every field puts at its end
+   (SearchInput's clear, PasswordInput's eye, DatePicker's calendar): a muted icon with 4px around it (24px at md, 22px
+   at sm), 4px from the edge, shaded on hover. Each has its own focus ring inside the box's. Where a button is under
+   24px, a box behind it reaches out to 24px to press (WCAG 2.5.8). */
 .srp-input:has(> .srp-input__actions) { padding-inline-end: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input:has(> .srp-input__actions):not(:has(> .srp-input__actions > .srp-input-action--text)) { padding-inline-end: var(--input-actions-inset, var(--spacing-1)); }
 .srp-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); box-sizing: border-box; padding-block: var(--input-actions-inset, var(--spacing-0\.5)); }
 .srp-input-action {
   position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -85,7 +87,7 @@
   cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-.srp-input-action--icon { block-size: var(--sizing-full); aspect-ratio: var(--aspect-square); padding: var(--spacing-0); color: var(--input-action, var(--text-muted)); }
+.srp-input-action--icon { align-self: center; padding: var(--spacing-1); color: var(--input-action, var(--text-muted)); }
 .srp-input-action__icon { display: inline-flex; }
 .srp-input-action__icon .srp-icon { font-size: var(--srp-input-icon); }
 @media (hover: hover) {

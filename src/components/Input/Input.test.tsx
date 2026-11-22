@@ -557,15 +557,15 @@ describe('Input actions (RU15)', () => {
     expect([disabledLook(actions('on')[0]!), disabledLook(actions('on')[1]!) === 'neutral', disabledLook(actions('ds')[0]!) === 'neutral', disabledLook(box('ds'))]).toEqual(['neutral', false, true, 'neutral']);
   });
 
-  test('each action is the field\'s height less its border and a 2px inset at every size, and at least 24px to press', async () => {
+  test('an icon action is the size and place of every field\'s end button (SearchInput\'s clear), and at least 24px to press', async () => {
     await render(<>
-      {(['sm', 'md', 'lg'] as const).map((s) => <Input key={s} id={'h-' + s} size={s} aria-label={s} actions={<InputAction icon={<b>x</b>} label="Clear" />} />)}
+      {(['sm', 'md', 'lg'] as const).map((s) => <Input key={s} id={'h-' + s} size={s} aria-label={s} actions={<InputAction icon="close" label="Clear" />} />)}
     </>);
     const h = (s: string) => Math.round(actions('h-' + s)[0]!.getBoundingClientRect().height);
-    expect([h('sm'), h('md'), h('lg')]).toEqual([18, 26, 38]);
+    expect([h('sm'), h('md'), h('lg')]).toEqual([22, 24, 28]);
     const sm = actions('h-sm')[0]!, hit = getComputedStyle(sm, '::after');
-    expect([sm.getBoundingClientRect().width, parseFloat(hit.top)]).toEqual([18, -3]);
-    expect(Math.round(box('h-md').getBoundingClientRect().right - actions('h-md')[0]!.getBoundingClientRect().right)).toBe(3);
+    expect([sm.getBoundingClientRect().width, parseFloat(hit.top)]).toEqual([22, -1]);
+    expect(Math.round(box('h-md').getBoundingClientRect().right - actions('h-md')[0]!.getBoundingClientRect().right)).toBe(5);
   });
 
   test('contrast in every theme: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {

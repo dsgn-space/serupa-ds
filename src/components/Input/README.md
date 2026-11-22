@@ -46,7 +46,7 @@ Drawn from the `Icons` story.
 1. **Field** (`.srp-input__field`): where the text is typed.
 2. **Leading icon** (`.srp-input__icon--start`): an optional picture of what goes in, such as a search glass.
 3. **Trailing icon** (`.srp-input__icon--end`): an optional picture or status at the end.
-4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box, each the field's height less 6px (26px at md).
+4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box. A text action is the field's height less 6px (26px at md). An icon action is the same button every field puts at its end, like SearchInput's clear: the icon with 4px around it (24px at md), 4px from the edge.
 
 ## Usage
 
@@ -84,7 +84,7 @@ Drawn from the `Icons` story.
 - Every input needs a name: a visible `<label htmlFor>` (best) or `aria-label`. A placeholder isn't a label: it disappears as soon as someone types.
 - `invalid` sets `aria-invalid`, but color alone doesn't explain the problem: put the message in text and link it with `aria-describedby`.
 - Native constraints (`required`, `type="email"`, `pattern`, `min`, `maxLength`…) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. Inside a Field, the Field then says which constraint fails, in its error slot (in the provider's words), with `aria-invalid` and the description, so the border is never the only sign; an `error` you pass wins. On its own, the border is only a color: set `invalid` and say the problem in text when you check it yourself. To keep the browser out of it, leave out the attribute and check the value in your own code.
-- Each action is a `<button type="button">`, so it never sends a form, after the field in the Tab order. An icon action is named by its `label` (its icon is `aria-hidden`), a text action by its words. A disabled Input disables its actions too. A press on an action presses it, and doesn't move focus into the field. At size `sm` an action is 18px, so the area that takes a press reaches 24px (WCAG 2.5.8). A text action's `primary` words keep 4.5:1 on the field and on its hover, an icon action's icon 3:1, in every theme (`Input.test.tsx`).
+- Each action is a `<button type="button">`, so it never sends a form, after the field in the Tab order. An icon action is named by its `label` (its icon is `aria-hidden`), a text action by its words. A disabled Input disables its actions too. A press on an action presses it, and doesn't move focus into the field. At size `sm` an action is under 24px, so the area that takes a press reaches 24px (WCAG 2.5.8). A text action's `primary` words keep 4.5:1 on the field and on its hover, an icon action's icon 3:1, in every theme (`Input.test.tsx`).
 - Icons are decorative (`aria-hidden`). A press anywhere on the box, on an icon, the side padding or the count, focuses the field with the caret at the end, as the text cursor over the box promises; keep meaning in the label.
 - Text keeps 4.5:1 on `field`, and the placeholder, prefix, suffix and count 4.5:1, in every theme (`Input.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Use the right `type` (`email`, `tel`, `url`, `search`) and `autoComplete` so phones show the right keyboard and browsers can fill it in. Email and URL fields, and ones with `autoComplete` `username`, `email`, `url` or `one-time-code`, get `autoCapitalize="off"`, `autoCorrect="off"` and `spellCheck={false}`, so a phone doesn't capitalize or "correct" an address. Any of the three you pass wins.
@@ -181,7 +181,7 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--input-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
 | `--input-gap` | `spacing-2` | Gap between an icon and the text (8px) |
-| `--input-actions-inset` | `spacing-0.5` | Space between the actions and the box's edge (2px), so an action is the field's height less 6px. |
+| `--input-actions-inset` | `spacing-0.5` | Space between the actions and the box's edge: 2px beside a text action, so it is the field's height less 6px, and 4px when every action is an icon. |
 | `--input-action-padding-x` | `spacing-2` | Space at a text action's sides (8px). |
 
 **Border**
