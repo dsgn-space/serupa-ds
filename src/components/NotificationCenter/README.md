@@ -60,11 +60,11 @@ Drawn from the `Open` story.
 - "Mark as read" goes away once chosen, and focus moves to its notification, so it isn't lost.
 - When you take the focused notification out of `items` (an inbox that hides read ones), focus goes to the one now in its place, else the last, else the "No notifications yet" line, not to the page.
 - `useToastHistory` records a toast when it's shown, unread. A toast replaced by its id (`toast.promise`'s "Saving…" then "Saved") stays one entry with the newer words. A repeat ("×3" in the Toaster) moves it back to the top, unread again.
-- With no notifications, it says "No notifications yet" (`empty`).
+- With no notifications, it says "No notifications yet" (`emptyText`).
 
 ### Do and don't
 
-- **Do:** Write titles that say what happened ("Payment failed", "Invoice sent"). (`DoSayWhatHappened`)
+- **Do:** Write titles that say what happened ("Payment failed", "Invoice sent"). (`Open`)
 - **Don't:** Write titles like "Update": people have to open each one to learn what it's about. (`DontVagueTitles`)
 
 ## Accessibility
@@ -102,7 +102,7 @@ Drawn from the `Open` story.
 | `onMarkRead` | `(id) => void` | | Shows "Mark as read" on unread ones. |
 | `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer while one is unread. |
 | `onClear` | `() => void` | | Shows "Clear all" in the footer while the list has any. It can't be undone, so it asks first in the footer ("Clear every notification? This can’t be undone."), with focus on "Keep them"; the destructive "Clear all" beside it calls `onClear`. When the button chosen goes away, focus moves to the other one or to the empty line. |
-| `empty` | ReactNode | `"No notifications yet"` | What shows with none. |
+| `emptyText` | ReactNode | `"No notifications yet"` | What shows with none (`empty` is its deprecated old name, removed in 18.0.0). |
 | `settingsHref` | string | | Where people choose which notifications they get. The footer then starts with a "Notification settings" link to it, so someone who gets too many can turn some off from the drawer. |
 | `description`, `footer`, `unsaved` | never | | Not taken: the list is the content, the footer holds its buttons, and there is nothing to edit. |
 | `open` | boolean | | Controlled: whether it's open. |

@@ -33,7 +33,7 @@ export const Variants: Story = {
   </Row>,
 };
 
-// Over a photo: onMedia="dark" draws every variant in white, onMedia="light" in black, the same in all six themes.
+// Over a photo: surface="dark" draws every variant in white, surface="light" in black, the same in all six themes.
 // Each photo has a scrim (a dark or light wash) under the controls, so they keep 4.5:1 at its lightest or darkest point.
 const DUSK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><defs><linearGradient id="a" x2="0" y2="1"><stop offset="0" stop-color="#2b3a67"/><stop offset="1" stop-color="#e0805a"/></linearGradient></defs><rect width="600" height="200" fill="url(#a)"/><path d="M0 160 Q150 110 300 150 T600 130 V200 H0Z" fill="#1b1f3a"/></svg>');
 const NOON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><defs><linearGradient id="b" x2="0" y2="1"><stop offset="0" stop-color="#bfe3f7"/><stop offset="1" stop-color="#f6f1dc"/></linearGradient></defs><rect width="600" height="200" fill="url(#b)"/><path d="M0 170 Q200 130 380 165 T600 150 V200 H0Z" fill="#a9cf8e"/></svg>');
@@ -43,16 +43,16 @@ const Photo = ({ src, scrim, children }: { src: string; scrim: string; children:
 export const OnMedia: Story = {
   render: () => <div style={{ display: 'grid', gap: '16px' }}>
     <Photo src={DUSK} scrim="rgb(0 0 0 / 0.45)"><Row>
-      <Button onMedia="dark">Book the tour</Button>
-      <Button variant="outline" onMedia="dark">Tour details</Button>
-      <Button variant="ghost" onMedia="dark">Save the tour</Button>
-      <IconButton icon="share" label="Share the tour" onMedia="dark" />
+      <Button surface="dark">Book the tour</Button>
+      <Button variant="outline" surface="dark">Tour details</Button>
+      <Button variant="ghost" surface="dark">Save the tour</Button>
+      <IconButton icon="share" label="Share the tour" surface="dark" />
     </Row></Photo>
     <Photo src={NOON} scrim="rgb(255 255 255 / 0.55)"><Row>
-      <Button onMedia="light">Book a table</Button>
-      <Button variant="outline" onMedia="light">See the menu</Button>
-      <Button variant="ghost" onMedia="light">Save the place</Button>
-      <IconButton icon="share" label="Share the place" onMedia="light" />
+      <Button surface="light">Book a table</Button>
+      <Button variant="outline" surface="light">See the menu</Button>
+      <Button variant="ghost" surface="light">Save the place</Button>
+      <IconButton icon="share" label="Share the place" surface="light" />
     </Row></Photo>
   </div>,
 };
@@ -141,7 +141,7 @@ export const DoOnePrimary: Story = {
   render: () => <Row><Button variant="outline">Cancel</Button><Button variant="secondary">Preview</Button><Button>Publish</Button></Row>,
 };
 /** Don't: three primary buttons, so none reads as the main action. */
-export const DontManyPrimaries: Story = {
+export const DontManyPrimaries: Story = { tags: ['!visual'],
   name: "Don't: many primaries",
   render: () => <Row><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></Row>,
 };
@@ -151,7 +151,7 @@ export const DoVerbLabels: Story = {
   render: () => <Row><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></Row>,
 };
 /** Don't: Yes and No, which make people read the question again. */
-export const DontVagueLabels: Story = {
+export const DontVagueLabels: Story = { tags: ['!visual'],
   name: "Don't: vague labels",
   render: () => <Row><Button variant="outline">No</Button><Button destructive>Yes</Button></Row>,
 };

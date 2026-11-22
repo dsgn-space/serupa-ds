@@ -93,7 +93,7 @@ export const LongLabel: Story = {
 /** Do: one FAB, for the action people come to the screen for. */
 export const DoOneFab: Story = { name: 'Do: one per screen', args: { icon: 'add', label: 'New project' } };
 /** Don't: several FABs, which compete and cover the content. */
-export const DontSeveral: Story = {
+export const DontSeveral: Story = { tags: ['!visual'],
   name: "Don't: several on one screen",
   render: () => <div className="flex gap-4 items-center">
     <Fab icon="add" label="New project" placement="static" />

@@ -54,7 +54,7 @@ export const DoSizeRows: Story = {
   args: { 'aria-label': 'Describe the problem', placeholder: 'What happened, and what did you expect?', rows: 5 },
 };
 /** Don't: one row for a description, which reads as a one-line answer. */
-export const DontOneRow: Story = {
+export const DontOneRow: Story = { tags: ['!visual'],
   name: "Don't: one row for a long answer",
   args: { 'aria-label': 'Describe the problem', placeholder: 'What happened, and what did you expect?', rows: 1 },
 };

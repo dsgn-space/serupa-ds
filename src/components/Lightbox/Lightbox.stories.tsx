@@ -66,4 +66,4 @@ export const LongText: Story = {
 /** Do: open it from the picture people pressed, and name each picture in its alt text: it's the dialog's title. */
 export const DoName: Story = { name: 'Do: name each picture', args: { defaultIndex: 0 } };
 /** Don't: title pictures with their file names. The alt text is the dialog's title and what a screen reader says on each move. */
-export const DontFileNames: Story = { name: "Don't: name pictures by file", args: { items: photos.map((p, i) => ({ ...p, alt: ['IMG_final.jpg', 'IMG_final_copy.jpg', 'IMG_edit.jpg', 'IMG_edit_copy.jpg'][i] ?? 'IMG.jpg' })) } };
+export const DontFileNames: Story = { tags: ['!visual'], name: "Don't: name pictures by file", args: { items: photos.map((p, i) => ({ ...p, alt: ['IMG_final.jpg', 'IMG_final_copy.jpg', 'IMG_edit.jpg', 'IMG_edit_copy.jpg'][i] ?? 'IMG.jpg' })) } };

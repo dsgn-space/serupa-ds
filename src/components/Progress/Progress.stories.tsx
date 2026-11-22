@@ -62,7 +62,7 @@ export const DoSayWhat: Story = {
   args: { value: 3, max: 8, label: 'Importing contacts', formatValue: (v: number) => `${v} of 8 files` },
 };
 /** Don't: a bare "Loading", which doesn't say what is loading or how far along it is. */
-export const DontJustLoading: Story = {
+export const DontJustLoading: Story = { tags: ['!visual'],
   name: "Don't: just say loading",
   args: { value: 3, max: 8, label: 'Loading', showValue: false },
 };

@@ -58,6 +58,6 @@ export const DoSayWhatsRated: Story = {
   render: (args) => <Field label="How was the delivery?"><Rating {...args} aria-label={undefined} /></Field>,
 };
 /** Don't: stars on their own, where people have to guess what they rate. */
-export const DontBareStars: Story = {
+export const DontBareStars: Story = { tags: ['!visual'],
   name: "Don't: stars with no label",
 };

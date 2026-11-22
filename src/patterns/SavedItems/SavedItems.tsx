@@ -159,7 +159,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
             <div className="flex flex-wrap items-end justify-between gap-3">
               <h2 id="saved-list" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Your list</h2>
               {shown.length > 1 ? (
-                <Field label="Sort" id="saved-sort" orientation="horizontal">
+                <Field label="Sort by" id="saved-sort">
                   <Select options={SORTS} value={sort} onChange={(e) => setSort(e.target.value as SavedSort)} />
                 </Field>
               ) : null}

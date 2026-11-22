@@ -79,7 +79,7 @@ export const DoSingleTask: Story = {
   render: () => <Center maxWidth="container-sm" className="py-6"><Card><Stack gap={3}><Heading level={2} size="lg">Reset your password</Heading><Field label="Email"><Input type="email" /></Field><Button>Send the link</Button></Stack></Card></Center>,
 };
 /** Don't: center long text: ragged starts on both sides make every line harder to find. */
-export const DontCenterLongText: Story = {
+export const DontCenterLongText: Story = { tags: ['!visual'],
   name: "Don't: center paragraphs",
   render: () => <Center centerText maxWidth="container-2xl" className="py-6"><p className="m-0">Long text with its lines centered starts each line at a different place, so the eye has to search for where the next one begins. Keep paragraphs aligned to the start, and center only a heading or a short line beside a button.</p></Center>,
 };

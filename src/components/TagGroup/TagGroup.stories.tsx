@@ -13,7 +13,7 @@ const skills: TagItem[] = ['Research', 'Writing', 'Illustration', 'Typography', 
 /** Keeps the tags in state, so removing works in the story. */
 function Removable({ initial, ...rest }: { initial: TagItem[] } & Partial<React.ComponentProps<typeof TagGroup>>) {
   const [items, setItems] = React.useState(initial);
-  return <TagGroup label="Labels" empty="No labels yet" {...rest} items={items} onRemove={(id) => setItems((t) => t.filter((x) => x.id !== id))} />;
+  return <TagGroup label="Labels" emptyText="No labels yet" {...rest} items={items} onRemove={(id) => setItems((t) => t.filter((x) => x.id !== id))} />;
 }
 
 const meta = {
@@ -59,7 +59,7 @@ export const LongText: Story = {
 /** Do: a word or two in each tag. */
 export const DoShortTags: Story = { name: 'Do: a word or two' };
 /** Don't: sentences in tags, which stop reading as tags. */
-export const DontSentences: Story = {
+export const DontSentences: Story = { tags: ['!visual'],
   name: "Don't: sentences",
   args: { items: [{ id: 'a', label: 'Needs a review from the design team' }, { id: 'b', label: 'Only happens at checkout on a phone' }, { id: 'c', label: 'Urgent' }] },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],

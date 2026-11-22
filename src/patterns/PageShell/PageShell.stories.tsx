@@ -4,6 +4,7 @@ import { Navbar, NavbarLink, NavbarMenu, NavbarMenuLink } from '../../components
 import { Sidebar, SidebarItem, SidebarSection } from '../../components/Sidebar/Sidebar';
 import { BottomNav, BottomNavLink } from '../../components/BottomNav/BottomNav';
 import { Button } from '../../components/Button/Button';
+import { CommandPalette, type Command } from '../../components/CommandPalette/CommandPalette';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
 import { AppShell } from '../../components/AppShell/AppShell';
@@ -24,6 +25,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** What Search finds: the workspace's pages, then its projects. */
+const commands: Command[] = [
+  { id: 'home', label: 'Home', group: 'Pages', icon: 'home', href: '#home' },
+  { id: 'projects', label: 'Projects', group: 'Pages', icon: 'folder', href: '#workspace-projects' },
+  { id: 'team', label: 'Team', group: 'Pages', icon: 'group', href: '#team' },
+  { id: 'redesign', label: 'Website redesign', group: 'Projects', href: '#projects/website-redesign' },
+  { id: 'billing', label: 'Billing migration', group: 'Projects', href: '#projects/billing-migration' },
+];
+
 const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tokens v2', 'Onboarding emails', 'Status page', 'Help centre', 'Pricing page', 'Search', 'Invoices', 'Team settings', 'Audit log'];
 
 /* The page shell: a skip link first, a sticky Navbar (the banner), a Sidebar beside main, and a footer. The Navbar
@@ -41,6 +51,8 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
   // Adaptive: the full Sidebar from 1024px, its icon rail from 768px, and a BottomNav below that.
   const wide = useWide('(min-width: 1024px)');
   const rail = adaptive ? !wide : collapsed;
+  // Search: ⌘K or Ctrl+K anywhere, or the Search button, opens a CommandPalette of the workspace's pages and projects.
+  const [searching, setSearching] = React.useState(false);
   // AppShell lays it out: the skip link, the sticky Navbar, the Sidebar beside main and the footer (sticking below the
   // bar, gone on a phone, where the Navbar's menu has the same links under "Workspace"), main and the footer.
   return (
@@ -48,7 +60,8 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
       sidebarFrom={adaptive ? 'md' : 'sm'}
       header={<Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
-        actions={<><Button variant="ghost" size="sm">Docs</Button><Me /></>}>
+        actions={<><Button variant="ghost" size="sm" startIcon="search" aria-keyshortcuts="Control+K Meta+K" onClick={() => setSearching(true)}>Search</Button>
+          <Button variant="ghost" size="sm">Docs</Button><Me /></>}>
         <NavbarLink href="#dashboard" current>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
@@ -86,6 +99,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
           </Stack>
         </Stack>
       </Stack>
+      <CommandPalette open={searching} onOpenChange={setSearching} commands={commands} placeholder="Search pages and projects" />
     </AppShell>
   );
 }
@@ -99,4 +113,4 @@ export const CollapsedSidebar: Story = { render: () => <Shell collapsed /> };
 /** The navigation follows the window: a BottomNav on a phone (below 768px), the Sidebar's icon rail on a tablet or a
     narrow window (768 to 1023px), and the full Sidebar from 1024px. The same three places at every width, in the same
     order. Resize the window to see it switch. */
-export const AdaptiveNavigation: Story = { render: () => <Shell adaptive /> };
+export const AdaptiveNavigation: Story = { tags: ['!visual'], render: () => <Shell adaptive /> };

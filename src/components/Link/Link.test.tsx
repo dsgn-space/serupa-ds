@@ -214,12 +214,12 @@ describe('Link', () => {
 
 });
 
-describe('Link onMedia', () => {
+describe('Link surface', () => {
   test('white on dark media and black on light in every theme, hover and focus ring too; anything else is left out', async () => {
     await render(<div id="lm">
-      <Link id="lm-dark" href="#a" onMedia="dark">Read the story</Link>
-      <Link id="lm-light" href="#b" onMedia="light">Read the story</Link>
-      <Link id="lm-bad" href="#c" onMedia={'pink' as 'dark'}>Read the story</Link>
+      <Link id="lm-dark" href="#a" surface="dark">Read the story</Link>
+      <Link id="lm-light" href="#b" surface="light">Read the story</Link>
+      <Link id="lm-bad" href="#c" surface={'pink' as 'dark'}>Read the story</Link>
     </div>);
     const style = document.head.appendChild(document.createElement('style'));
     style.textContent = '#lm * { transition: none !important; }';

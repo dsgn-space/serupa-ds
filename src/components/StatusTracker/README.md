@@ -45,7 +45,7 @@ Drawn from the `Playground` story.
 
 ### Do and don't
 
-- **Do:** Give the days without data `state: "none"`, so they show as unknown. (`DoMarkUnknownDays`)
+- **Do:** Give the days without data `state: "none"`, so they show as unknown. (`ThirtyDays`)
 - **Don't:** Count them as up: the strip and the share then claim uptime nobody measured. (`DontGuessUp`)
 
 ## Accessibility

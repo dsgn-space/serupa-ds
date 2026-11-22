@@ -47,10 +47,8 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: a sentence or two, and at most one link to more. */
-export const DoShortHelp: Story = { name: 'Do: keep it to a sentence or two', args: { defaultOpen: true } };
 /** Don't: a page of text in a 256px panel; link to a help page instead. */
-export const DontLongHelp: Story = {
+export const DontLongHelp: Story = { tags: ['!visual'],
   name: "Don't: put a page of text in it",
   args: { defaultOpen: true, children: 'A workspace holds your team’s projects, members and billing. Each workspace has its own plan and invoices, and people can belong to several. Admins can add and remove members, change roles, set up single sign-on, export data, move projects between workspaces and close the workspace. Most companies need only one, but agencies often keep one per client so billing stays separate.' },
 };

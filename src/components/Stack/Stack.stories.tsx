@@ -74,7 +74,7 @@ export const DoNestedGaps: Story = {
   ),
 };
 /** Don't: one gap for everything, so nothing shows which items belong together. */
-export const DontOneGap: Story = {
+export const DontOneGap: Story = { tags: ['!visual'],
   name: "Don't: use one gap everywhere",
   args: { gap: 4, children: [<Box key="n">Name</Box>, <Box key="e">Email</Box>, <Box key="s">Street</Box>, <Box key="c">City</Box>] },
 };

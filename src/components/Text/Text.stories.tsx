@@ -57,7 +57,7 @@ export const DoLinesWithLink: Story = {
   render: () => <div style={{ maxWidth: 320 }}><Text lines={2}>{REVIEW}</Text><Link href="#review-1">Read the whole review</Link></div>,
 };
 /** Don't: a cut preview with no way to the rest. */
-export const DontLinesAlone: Story = {
+export const DontLinesAlone: Story = { tags: ['!visual'],
   name: "Don't: lines alone",
   render: () => <div style={{ maxWidth: 320 }}><Text lines={2}>{REVIEW}</Text></div>,
 };

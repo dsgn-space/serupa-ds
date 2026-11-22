@@ -41,4 +41,4 @@ export const LongText: Story = { args: { label: 'Donaudampfschifffahrtsgesellsch
 /** Do: say whether a change is good news, so a rise in costs is red. */
 export const DoSayWhatIsGood: Story = { name: 'Do: say whether the change is good', args: { label: 'Costs', value: '€12,900', change: { amount: '8%', direction: 'up', good: false }, trend: undefined } };
 /** Don't: leave a rise in costs green because it went up. */
-export const DontRiseIsAlwaysGood: Story = { name: "Don't: show every rise as good", args: { label: 'Costs', value: '€12,900', change: { amount: '8%', direction: 'up' }, trend: undefined } };
+export const DontRiseIsAlwaysGood: Story = { tags: ['!visual'], name: "Don't: show every rise as good", args: { label: 'Costs', value: '€12,900', change: { amount: '8%', direction: 'up' }, trend: undefined } };

@@ -88,7 +88,7 @@
 .srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
 @media (hover: hover) { .srp-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
-/* onMedia: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the
+/* surface: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the
    variants' own tokens set to the one ink, a translucent wash of it on hover, and a ring in it. No shadow, which
    would read as a smudge on a photo. Destructive keeps its danger colors. */
 .srp-btn--on-dark {

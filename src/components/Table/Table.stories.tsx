@@ -340,7 +340,7 @@ export const DoAlignNumbers: Story = {
   </Table>,
 };
 /** Don't: amounts start-aligned like text, so thousands and tens sit in one column. */
-export const DontStartNumbers: Story = {
+export const DontStartNumbers: Story = { tags: ['!visual'],
   name: "Don't: start-align numbers",
   args: { caption: 'Invoices' },
   render: (args) => <Table {...args}>

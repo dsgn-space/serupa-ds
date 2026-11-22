@@ -40,7 +40,7 @@ Drawn from the `CapsLockOn` story.
 
 ### Do and don't
 
-- **Do:** Put the password rules in the hint, so people see them before they type. (`DoRulesUpFront`)
+- **Do:** Put the password rules in the hint, so people see them before they type. (`InAField`)
 - **Don't:** Show the rules only in an error: people learn them by failing. (`DontRulesOnlyInError`)
 
 ## States

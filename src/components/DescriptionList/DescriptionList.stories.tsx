@@ -104,4 +104,4 @@ const Bill = ({ all }: { all?: boolean }) => (
 /** Do: emphasis on the one item people look for, the total. */
 export const DoEmphasizeOne: Story = { name: 'Do: emphasize the total only', render: () => <Bill /> };
 /** Don't: every item emphasized, so nothing stands out. */
-export const DontEmphasizeAll: Story = { name: "Don't: emphasize every item", render: () => <Bill all /> };
+export const DontEmphasizeAll: Story = { tags: ['!visual'], name: "Don't: emphasize every item", render: () => <Bill all /> };

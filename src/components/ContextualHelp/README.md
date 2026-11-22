@@ -41,7 +41,7 @@ Drawn from the `Default` story.
 
 ### Do and don't
 
-- **Do:** Write a sentence or two, with at most one link to more. (`DoShortHelp`)
+- **Do:** Write a sentence or two, with at most one link to more. (`Default`)
 - **Don't:** Put a page of text in the 256px panel: link to a help page for the rest. (`DontLongHelp`)
 
 ## Accessibility

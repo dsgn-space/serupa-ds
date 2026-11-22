@@ -187,6 +187,13 @@ describe('DateRangePicker', () => {
     expect([shown(), focused()]).toEqual(['April 2025,May 2025', '2025-05-01']);
   });
 
+  test('two months side by side have one pair of arrows, at the outer edges, as RangeCalendar has', async () => {
+    await render(<Trip value={{ start: new Date(2025, 2, 31), end: new Date(2025, 3, 2) }} />);
+    await userEvent.click(btn('trip'));
+    const seen = (name: string) => [...pop('trip').querySelectorAll<HTMLElement>(`button[aria-label="${name} month"]`)].map((b) => getComputedStyle(b).visibility);
+    expect([seen('Previous'), seen('Next')]).toEqual([['visible', 'hidden'], ['hidden', 'visible']]);
+  });
+
   test('keyboard table: Space on the calendar button opens the calendar, and Space in it picks the start, then the end (FH1)', async () => {
     await render(<Trip value={{ start: new Date(2025, 2, 18), end: new Date(2025, 3, 2) }} />);
     btn('trip').focus();

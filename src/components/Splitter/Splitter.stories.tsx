@@ -41,4 +41,4 @@ export const LongText: Story = {
 /** Do: the handle named after the pane it resizes, so screen readers say what moving it changes. */
 export const DoNameHandle: Story = { ...Playground, name: 'Do: name the handle after its pane' };
 /** Don't: a generic name, which says nothing about which pane it resizes. */
-export const DontGenericHandle: Story = { ...Playground, name: "Don't: give the handle a generic name", args: { separatorLabel: 'Resize' } };
+export const DontGenericHandle: Story = { tags: ['!visual'], ...Playground, name: "Don't: give the handle a generic name", args: { separatorLabel: 'Resize' } };

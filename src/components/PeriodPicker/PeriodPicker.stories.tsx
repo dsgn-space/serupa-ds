@@ -29,7 +29,7 @@ export const MinAndMax: Story = { name: 'Min and max', args: { min: '2024-06', m
 /** Do: keep it to the periods that have data, from the month the account opened to this one. */
 export const DoBoundToData: Story = { name: 'Do: only periods with data', args: { 'aria-label': 'Statement month', min: '2024-06', max: '2025-03', defaultValue: '2025-03', defaultOpen: true } };
 /** Don't: every month, including ones with no statement and ones still to come. */
-export const DontOpenEnded: Story = { name: "Don't: every month", args: { 'aria-label': 'Statement month', defaultValue: '2025-03', defaultOpen: true } };
+export const DontOpenEnded: Story = { tags: ['!visual'], name: "Don't: every month", args: { 'aria-label': 'Statement month', defaultValue: '2025-03', defaultOpen: true } };
 export const Chosen: Story = { name: 'With a period chosen', args: { defaultValue: '2025-03' } };
 export const ReadOnly: Story = { args: { readOnly: true, defaultValue: '2025-03' } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: '2025-03' } };

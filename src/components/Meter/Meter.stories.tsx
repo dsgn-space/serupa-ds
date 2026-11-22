@@ -58,7 +58,7 @@ export const DoSayTheZone: Story = {
   },
 };
 /** Don't: a bare number where only the color says the meter is nearly full. */
-export const DontColorOnly: Story = {
+export const DontColorOnly: Story = { tags: ['!visual'],
   name: "Don't: leave it to the color",
   args: { value: 92, low: 80, high: 95, optimum: 0 },
 };

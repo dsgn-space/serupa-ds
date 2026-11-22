@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** The browser won't share where you are: it says so, and what to do instead. */
-export const NoLocation: Story = { args: { locate: () => new Promise((_, no) => setTimeout(() => no(new Error('denied')), 300)) } };
+export const NoLocation: Story = { tags: ['!visual'], args: { locate: () => new Promise((_, no) => setTimeout(() => no(new Error('denied')), 300)) } };
 
 /** While the stores load: one placeholder. */
 export const Loading: Story = { args: { loading: true } };

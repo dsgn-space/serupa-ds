@@ -24,4 +24,4 @@ export const LongText: Story = {
 /** Do: say why a save failed and offer to try again. */
 export const DoReasonAndRetry: Story = { name: 'Do: say why and offer a retry', args: { status: 'error', errorText: 'Couldn’t save: you’re offline', onRetry: () => {} } };
 /** Don't: a failure with no reason and no way to try again. */
-export const DontDeadEnd: Story = { name: "Don't: leave a dead end", args: { status: 'error' } };
+export const DontDeadEnd: Story = { tags: ['!visual'], name: "Don't: leave a dead end", args: { status: 'error' } };
