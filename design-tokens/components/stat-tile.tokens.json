@@ -1,0 +1,157 @@
+{
+  "statTile": {
+    "$description": "StatTile's component tokens. Each one is an optional override: set the CSS variable (--stat-tile-<name>) on the page, a container or one StatTile, and every StatTile inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. It draws the same card as an outline Card, from the same shared tokens.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The tile's background, as an outline Card's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The tile's edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-border"
+          }
+        }
+      },
+      "label-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The label and the period (4.5:1 on the card).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-label-text"
+          }
+        }
+      },
+      "value-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The number (4.5:1 on the card).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-value-text"
+          }
+        }
+      }
+    },
+    "typography": {
+      "value-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The number's weight (600).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-value-weight"
+          }
+        }
+      }
+    },
+    "fontSize": {
+      "label-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The label's and the period's size (text-sm).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-label-size"
+          }
+        }
+      },
+      "value-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-2xl}",
+        "$description": "The number's size (text-2xl).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-value-size"
+          }
+        }
+      },
+      "value-line-height": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-2xl--line-height}",
+        "$description": "The number's line height.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-value-line-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Space inside the tile, on every side (20px), as a Card's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the label, the number, the change and the trend (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-gap"
+          }
+        }
+      },
+      "trend-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "The trend line's height (32px); it takes the tile's width.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-trend-height"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-rest}",
+        "$description": "The tile's shadow, as a Card at rest.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-container}",
+        "$description": "The tile's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The edge's width (1px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stat-tile-border-width"
+          }
+        }
+      }
+    }
+  }
+}

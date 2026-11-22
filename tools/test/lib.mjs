@@ -77,7 +77,7 @@ export async function browser(args) {
   try { return await pw[ENGINE].launch(opts); } catch (e) { fail(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); }
 }
 
-// The browser build this Playwright installs and the baselines are drawn with (in CI, npx playwright install). A
+// The browser build this Playwright installs and the pictures are drawn with (in CI, npx playwright install). A
 // browser from another build draws text differently: a container whose Chromium 153 stood in for Playwright's 156
 // drew Inter's medium weight as regular, and every picture failed. '' when Playwright doesn't say.
 export function expectedVersion() {
@@ -220,7 +220,7 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
-  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
+  String.raw`tools/test/(?!(lib|run|visual|visual-base|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
   // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
   // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
@@ -231,7 +231,7 @@ const NEUTRAL = new RegExp('^(' + [
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
-// tokens, tooling, Storybook's setup) could change any of them. Their tests, visual baselines, API baseline,
+// tokens, tooling, Storybook's setup) could change any of them. Their tests, API baseline,
 // server-render case and size budgets count as theirs; the NEUTRAL files touch none. A block or pattern
 // (src/blocks/<Name>/, src/patterns/<Name>/) counts as one too: nothing in the package imports it, so only its own
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
@@ -294,7 +294,6 @@ export const sharedRaise = (raises, line) => +raises.reduce((t, r) => t + (Numbe
 export const raiseTag = (branch) => String(branch === 'HEAD' ? '' : branch || '').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'local';
 // The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
 const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-  || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
   || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
   || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
 // The components, blocks and patterns a change edits itself, whatever else it changes: unlike affectedComponents,
@@ -308,7 +307,6 @@ export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-      || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
       || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
     // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).
@@ -327,9 +325,31 @@ export function affectedComponents(files) {
 // that base (run.mjs --since: a pull request's, a queue group's) leaves them out; the nightly run checks main whole. They took
 // about 240 s of the checks group's 650 (13 Nov), and 24 of 80 pull requests on 15 and 16 Nov changed nothing they read.
 export const BUILT_CHECKS = ['tree-shake', 'purge-components', 'no-css', 'reproducible'];
-export const builtUnchanged = (files) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
-  && !/^(\.github\/actions|tools\/build)\//.test(f) && !/^tools\/test\/baseline-server\//.test(f)
-  && !new RegExp(`^tools/test/(lib|${BUILT_CHECKS.join('|')})\\.mjs$`).test(f));
+// The tools a script reads: the ones it imports, and the ones it runs as path.join(P, 'tools', …), followed through.
+// What the build reads this way (tools/utilities/, tools/tokens/, tools/lint/a11y-components.mjs, …) builds the package
+// too: a list of folders by hand left those out, so a change to the utility template skipped the built checks.
+export function toolsRead(entries) {
+  const seen = new Set();
+  const todo = [...entries];
+  while (todo.length) {
+    const f = todo.pop();
+    const abs = path.join(PROJECT, f);
+    if (seen.has(f) || !fs.existsSync(abs) || !fs.statSync(abs).isFile()) continue;
+    seen.add(f);
+    const code = fs.readFileSync(abs, 'utf8');
+    for (const m of code.matchAll(/(?:from|import\()\s*['"](\.\.?\/[^'"]+)['"]/g)) todo.push(path.posix.normalize(path.posix.join(path.posix.dirname(f), m[1])));
+    for (const m of code.matchAll(/path\.join\(\s*\w+\s*,\s*'tools'((?:\s*,\s*'[^']+')+)\s*\)/g)) todo.push(['tools', ...[...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])].join('/'));
+  }
+  return seen;
+}
+// A change to nothing but workflows and tools, none of which the given scripts read (the setup action and the server
+// baselines count as read: they set the Node and the packages, and the markup).
+const onlyToolsBesides = (files, read) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
+  && !/^\.github\/actions\//.test(f) && !/^tools\/test\/baseline-server\//.test(f) && !read.has(f));
+export const builtUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/build/build.mjs', ...BUILT_CHECKS.map((c) => `tools/test/${c}.mjs`)]));
+// The docs site check (site.mjs, 380 s of a checks shard, 13 Nov) builds the site from src/, docs/ and site/ with
+// tools/site/: a change to tools it doesn't read builds the very site its base did, which passed it (SERUPA_SITE_AS_BASE).
+export const siteUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/test/site.mjs', 'tools/site/vite.config.mjs']));
 // The SERUPA_ONLY name a docs site page answers to: its component, block or pattern folder, or the page's own file.
 export const sitePageKey = (file) => /^src\/(?:components|blocks|patterns)\/(\w+)\//.exec(file)?.[1] ?? file;
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));

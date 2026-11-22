@@ -80,6 +80,20 @@ export const EightBars: Story = {
   name: 'Eight series of bars',
   args: { ...EightSeries.args, type: 'bar', title: 'Every chart color, with its pattern', categories: ['Mon', 'Tue', 'Wed'] },
 };
+export const Heatmap: Story = {
+  args: {
+    type: 'heatmap', title: 'Orders by weekday and hour', categories: ['8', '10', '12', '14', '16', '18', '20'],
+    series: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((name, d) => ({ name, values: [12, 30, 44, 38, 33, 52, 41].map((v, h) => Math.round(v * (d > 4 ? 0.6 + h * 0.12 : 1.1 - h * 0.05) + ((d * 7 + h * 3) % 9))) })),
+  },
+};
+export const HeatmapDiverging: Story = {
+  name: 'Heatmap, diverging',
+  args: {
+    type: 'heatmap', scale: 'diverging', title: 'Sales against last year', categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    series: [{ name: 'North', values: [12, 8, -4, -10, 2, 16] }, { name: 'South', values: [-18, -6, 0, 6, 14, 20] }, { name: 'East', values: [4, null, -2, -14, -8, 3] }, { name: 'West', values: [9, 11, 5, 0, -5, -12] }],
+    formatValue: (v: number) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v)}%`,
+  },
+};
 export const AsTable: Story = { name: 'As a table', args: { defaultView: 'table' } };
 export const Formatted: Story = {
   name: 'Formatted values',

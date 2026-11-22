@@ -29,7 +29,7 @@ import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
 import { withMotionAttribute } from './motion-attribute.mjs';
 import { split } from '../utilities/extra.mjs';
-import { buildRegistry, cascade } from './registry.mjs';
+import { buildRegistry, cascade, components as componentFolders } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
 import { nativeFiles } from './native-tokens.mjs';
 import { emailFiles } from './email-kit.mjs';
@@ -97,8 +97,11 @@ const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssO
 const ownTsx = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
 const drawn = (code) => [...new Set([...code.matchAll(/from ["']\.\.\/\.\.\/internal\/(\w+)["']/g)].map((m) => m[1]))].filter((m) => fs.existsSync(path.join(P, 'src', 'internal', m + '.tsx'))).map((m) => read(`src/internal/${m}.tsx`));
 const tsxOf = (n) => { const own = ownTsx(n); return [own, ...drawn(own)].join('\n'); };
+// Every component is in it, the ones with no CSS of their own too (FormattedDate): they have no classes, and the
+// skill's index (tools/test/skill.mjs) and serupa-purge still find them.
+const ALL = [...IMPORTS, ...componentFolders(P).filter((n) => !IMPORTS.includes(n))];
 const manifest = {};
-for (const n of IMPORTS) {
+for (const n of ALL) {
   const code = tsxOf(n);
   const exports = [...new Set([...code.matchAll(/^export (?:const|function|class) (\w+)/gm)].map((m) => m[1]))].sort();
   const imported = [...code.matchAll(/from ["']\.\.\/(\w+)\//g)].map((m) => m[1]);
@@ -106,7 +109,7 @@ for (const n of IMPORTS) {
   // whose CSS has it: a component's own styles come before the ones that style it in context (index.css).
   const written = [...new Set([...code.matchAll(/srp-[a-z0-9_-]+/g)].map((m) => m[0]))];
   const owners = written.flatMap((w) => IMPORTS.filter((o) => classesOf[o].some((c) => c === w || (w.endsWith('-') && c.startsWith(w)))).slice(0, 1));
-  manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && IMPORTS.includes(u)).sort(), classes: classesOf[n] };
+  manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && ALL.includes(u)).sort(), classes: classesOf[n] ?? [] };
 }
 // Utility classes the components put on elements themselves (the announcer's sr-only): serupa-purge keeps them
 // whatever the sources use. Any word in a string in src/ that names a utility class counts, which keeps a few extra

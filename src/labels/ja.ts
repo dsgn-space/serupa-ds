@@ -18,7 +18,7 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: 'すべて展開',
-  chartKind: (type) => ({ line: '折れ線グラフ', bar: '棒グラフ', area: '面グラフ', donut: 'ドーナツグラフ' })[type],
+  chartKind: (type) => ({ line: '折れ線グラフ', bar: '棒グラフ', area: '面グラフ', donut: 'ドーナツグラフ', heatmap: 'ヒートマップ' })[type],
   chartSummary: (kind, series, points, first, last) => kind + '、' + n(series) + '系列、' + n(points) + '点' + (points > 1 ? '（' + first + '〜' + last + '）' : '') + '。',
   chartRange: (series, low, lowAt, high, highAt) => series + '：最小 ' + low + '（' + lowAt + '）、最大 ' + high + '（' + highAt + '）。',
   chartPoint: (series, category, value) => (series ? series + '、' + category + '：' + value : category + '：' + value),
@@ -298,6 +298,10 @@ export const labels: SerupaLabels = {
   tourNext: '次へ',
   tourDone: '完了',
   sparklineSummary: (label, first, last, min, max) => label + '：' + first + 'から' + last + '、最小' + min + '、最大' + max,
+  statTileUp: (amount) => amount + ' 増加',
+  statTileDown: (amount) => amount + ' 減少',
+  statTileFlat: '変化なし',
+  statTileTrend: (label, count) => label + '、直近 ' + count + ' 期間',
   table: '表',
   timeline: 'タイムライン',
   signatureMethod: '署名の方法',

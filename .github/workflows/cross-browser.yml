@@ -62,7 +62,7 @@ jobs:
       # (with a manual run's ten) held 21 of the pool's slots while 40 pull request and queue jobs waited (20 Nov).
       max-parallel: 4
       matrix:
-        # Visual against tools/test/baseline-visual-<browser>/ (visual.mjs), drawn in this same image.
+        # Visual draws every story twice in the engine and fails on one that doesn't come out the same (run.mjs on main).
         group: [checks, storybook, visual]
         browser: [firefox, webkit]
         # The component tests run twice, in English and in a second language, which in Firefox took 50 minutes and then
@@ -121,6 +121,7 @@ jobs:
         with:
           name: test-output-${{ matrix.group }}${{ matrix.part && format('-{0}', matrix.part) || '' }}-${{ matrix.browser }}
           path: test-output.txt
+          retention-days: 7
           if-no-files-found: ignore
   # The component tests in the oldest Chrome the package supports (package.json's browserslist, through
   # tools/browser-floor.mjs). Nightly on main; on next (whose floor is higher) run this workflow from the Actions tab
@@ -172,6 +173,7 @@ jobs:
         with:
           name: test-output-floor-chromium
           path: test-output.txt
+          retention-days: 7
           if-no-files-found: ignore
   # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
   report:

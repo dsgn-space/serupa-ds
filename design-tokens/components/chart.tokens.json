@@ -181,6 +181,126 @@
             "cssVar": "--chart-tip-muted"
           }
         }
+      },
+      "cell-seq-1": {
+        "$type": "color",
+        "$value": "{color.chart-seq-1}",
+        "$description": "A heatmap cell in step 1 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-1.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-seq-1"
+          }
+        }
+      },
+      "cell-seq-2": {
+        "$type": "color",
+        "$value": "{color.chart-seq-2}",
+        "$description": "A heatmap cell in step 2 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-2.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-seq-2"
+          }
+        }
+      },
+      "cell-seq-3": {
+        "$type": "color",
+        "$value": "{color.chart-seq-3}",
+        "$description": "A heatmap cell in step 3 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-3.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-seq-3"
+          }
+        }
+      },
+      "cell-seq-4": {
+        "$type": "color",
+        "$value": "{color.chart-seq-4}",
+        "$description": "A heatmap cell in step 4 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-4.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-seq-4"
+          }
+        }
+      },
+      "cell-seq-5": {
+        "$type": "color",
+        "$value": "{color.chart-seq-5}",
+        "$description": "A heatmap cell in step 5 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-5.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-seq-5"
+          }
+        }
+      },
+      "cell-div-1": {
+        "$type": "color",
+        "$value": "{color.chart-div-1}",
+        "$description": "A heatmap cell in step 1 of 7 of the diverging scale (below the midpoint). Unset, the page's chart-div-1.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-1"
+          }
+        }
+      },
+      "cell-div-2": {
+        "$type": "color",
+        "$value": "{color.chart-div-2}",
+        "$description": "A heatmap cell in step 2 of 7 of the diverging scale (below the midpoint). Unset, the page's chart-div-2.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-2"
+          }
+        }
+      },
+      "cell-div-3": {
+        "$type": "color",
+        "$value": "{color.chart-div-3}",
+        "$description": "A heatmap cell in step 3 of 7 of the diverging scale (below the midpoint). Unset, the page's chart-div-3.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-3"
+          }
+        }
+      },
+      "cell-div-4": {
+        "$type": "color",
+        "$value": "{color.chart-div-4}",
+        "$description": "A heatmap cell in step 4 of 7 of the diverging scale (the middle, around the midpoint). Unset, the page's chart-div-4.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-4"
+          }
+        }
+      },
+      "cell-div-5": {
+        "$type": "color",
+        "$value": "{color.chart-div-5}",
+        "$description": "A heatmap cell in step 5 of 7 of the diverging scale (above the midpoint). Unset, the page's chart-div-5.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-5"
+          }
+        }
+      },
+      "cell-div-6": {
+        "$type": "color",
+        "$value": "{color.chart-div-6}",
+        "$description": "A heatmap cell in step 6 of 7 of the diverging scale (above the midpoint). Unset, the page's chart-div-6.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-6"
+          }
+        }
+      },
+      "cell-div-7": {
+        "$type": "color",
+        "$value": "{color.chart-div-7}",
+        "$description": "A heatmap cell in step 7 of 7 of the diverging scale (above the midpoint). Unset, the page's chart-div-7.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-cell-div-7"
+          }
+        }
       }
     },
     "radius": {

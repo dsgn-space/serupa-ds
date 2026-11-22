@@ -47,6 +47,25 @@
 .srp-chart__slice { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
 .srp-chart__total { fill: var(--chart-text, var(--text)); font-size: var(--text-sm); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
 .srp-chart__key-value { font-variant-numeric: tabular-nums; }
+/* A heatmap's cells: each in its step of the sequential or the diverging ramp, with the gap color between them, so
+   neighbours never touch. A missing value is an empty cell with a dashed edge. */
+.srp-chart__cell { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--stroke-width-2); }
+.srp-chart__cell--s1 { fill: var(--chart-cell-seq-1, var(--chart-seq-1)); }
+.srp-chart__cell--s2 { fill: var(--chart-cell-seq-2, var(--chart-seq-2)); }
+.srp-chart__cell--s3 { fill: var(--chart-cell-seq-3, var(--chart-seq-3)); }
+.srp-chart__cell--s4 { fill: var(--chart-cell-seq-4, var(--chart-seq-4)); }
+.srp-chart__cell--s5 { fill: var(--chart-cell-seq-5, var(--chart-seq-5)); }
+.srp-chart__cell--d1 { fill: var(--chart-cell-div-1, var(--chart-div-1)); }
+.srp-chart__cell--d2 { fill: var(--chart-cell-div-2, var(--chart-div-2)); }
+.srp-chart__cell--d3 { fill: var(--chart-cell-div-3, var(--chart-div-3)); }
+.srp-chart__cell--d4 { fill: var(--chart-cell-div-4, var(--chart-div-4)); }
+.srp-chart__cell--d5 { fill: var(--chart-cell-div-5, var(--chart-div-5)); }
+.srp-chart__cell--d6 { fill: var(--chart-cell-div-6, var(--chart-div-6)); }
+.srp-chart__cell--d7 { fill: var(--chart-cell-div-7, var(--chart-div-7)); }
+.srp-chart__cell--empty { fill: none; stroke: var(--chart-grid-line, var(--chart-grid)); stroke-dasharray: var(--srp-chart-dash); stroke-width: var(--stroke-width-1); }
+.srp-chart__legend--scale { align-items: center; gap: var(--spacing-2); }
+.srp-chart__legend--scale .srp-chart__cell { stroke-width: var(--stroke-width-1); }
+.srp-chart__scale { display: inline-flex; }
 .srp-chart__pattern-mark { fill: var(--chart-separator, var(--surface-behind, var(--chart-gap))); }
 .srp-chart__point { cursor: default; }
 .srp-chart__marker[data-active] { stroke-width: var(--stroke-width-3); }
@@ -83,7 +102,7 @@
   .srp-chart__plot .srp-chart__marker { animation: srp-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--srp-chart-marker-delay); }
   .srp-chart__plot .srp-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: srp-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
   .srp-chart__plot .srp-chart__bar--neg { transform-origin: var(--sizing-1-2) 0; }
-  .srp-chart__plot .srp-chart__area, .srp-chart__plot .srp-chart__slice { animation: srp-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
+  .srp-chart__plot .srp-chart__area, .srp-chart__plot .srp-chart__slice, .srp-chart__plot .srp-chart__cell { animation: srp-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
   .srp-chart__tip { animation: srp-chart-fade var(--motion-enter-sm) var(--ease-enter); }
   .srp-chart__marker { transition: stroke-width var(--motion-hover) var(--ease-move); }
 }
@@ -94,6 +113,19 @@
 @media (forced-colors: active) {
   .srp-chart__focus { stroke: Highlight; }
   .srp-chart__tip { border-color: CanvasText; }
+  /* The ramps are all CanvasText here, so a heatmap's steps show as how much of it they take (the table has the numbers). */
+  .srp-chart__cell--s1 { fill-opacity: var(--opacity-20); }
+  .srp-chart__cell--s2 { fill-opacity: var(--opacity-40); }
+  .srp-chart__cell--s3 { fill-opacity: var(--opacity-60); }
+  .srp-chart__cell--s4 { fill-opacity: var(--opacity-80); }
+  .srp-chart__cell--s5 { fill-opacity: var(--opacity-100); }
+  .srp-chart__cell--d1 { fill-opacity: var(--opacity-100); }
+  .srp-chart__cell--d2 { fill-opacity: var(--opacity-60); }
+  .srp-chart__cell--d3 { fill-opacity: var(--opacity-30); }
+  .srp-chart__cell--d4 { fill-opacity: var(--opacity-0); }
+  .srp-chart__cell--d5 { fill-opacity: var(--opacity-30); }
+  .srp-chart__cell--d6 { fill-opacity: var(--opacity-60); }
+  .srp-chart__cell--d7 { fill-opacity: var(--opacity-100); }
 }
 @media print {
   .srp-chart { print-color-adjust: exact; break-inside: avoid; }
