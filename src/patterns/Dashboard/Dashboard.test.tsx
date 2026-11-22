@@ -175,4 +175,20 @@ describe('Dashboard on a phone', () => {
       for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
     } finally { await page.viewport(900, 700); }
   });
+
+  test('on a phone, Create opens what to start, each in words, and a pick runs it; from md up it hides', async () => {
+    const onInvite = vi.fn();
+    await page.viewport(360, 720);
+    try {
+      await render(<Dashboard onInvite={onInvite} />);
+      const create = [...document.querySelectorAll('button')].find((b) => b.textContent === 'Create')!;
+      expect(create.checkVisibility()).toBe(true);
+      await userEvent.click(create);
+      await expect.poll(() => [...document.querySelectorAll('[role="menuitem"]')].map((i) => i.textContent)).toEqual(['New project', 'Invite someone', 'Upload a file']);
+      await page.getByRole('menuitem', { name: 'Invite someone' }).click();
+      expect(onInvite).toHaveBeenCalledOnce();
+      await page.viewport(900, 700);
+      await expect.poll(() => create.checkVisibility()).toBe(false);
+    } finally { await page.viewport(900, 700); }
+  });
 });

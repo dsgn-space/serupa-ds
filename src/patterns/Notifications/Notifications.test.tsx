@@ -155,4 +155,16 @@ describe('Patterns/Notifications', () => {
     expect(bodyText()).toContain('٣ unread');
     expect(document.querySelector('[aria-label^="Notifications, "]')?.getAttribute('aria-label')).toBe('Notifications, ٣ unread');
   });
+  test('a year of notifications draws only the rows in view, each saying where it is, in a list that scrolls by keyboard', async () => {
+    const items = Array.from({ length: 1200 }, (_, i) => ({ id: `y${i}`, title: `Invoice ${i + 1} was paid`, time: Date.now() - 60_000 * (i + 1), read: true }));
+    const screen = await render(<Notifications items={items} />);
+    const list = screen.getByRole('list', { name: 'All notifications' }).element();
+    await expect.poll(() => list.querySelectorAll('li').length).toBeGreaterThan(0);
+    expect(list.querySelectorAll('li').length).toBeLessThan(40);
+    expect(list.querySelector('li')!.getAttribute('aria-setsize')).toBe('1200');
+    expect(list.getAttribute('tabindex')).toBe('0');
+    list.focus();
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => [...list.querySelectorAll('li')].some((li) => li.getAttribute('aria-posinset') === '1200')).toBe(true);
+  });
 });

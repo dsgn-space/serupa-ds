@@ -21,6 +21,7 @@ A shop's stock counted shelf by shelf, typed into a grid like a spreadsheet, wit
 - **How many are counted, and how many differ from the record**, is a status line that updates as counts go in, and the grid points to it (4.1.3).
 - **A difference is a signed number in its own column**, "+2" or "−2", never a color alone (1.4.1).
 - **The view's controls are one Toolbar**: one tab stop, arrows between them. A ToggleGroup sets the row size (Touch is 44px rows, for a tablet on the shop floor), and Columns opens a Dialog with a TransferList that moves columns between hidden and shown with buttons as well as a list (2.1.1, 2.5.8).
+- **What the whole count can do is a Menubar**, as in a spreadsheet: File (Download as CSV, Print), Edit (Clear all counts, which asks first with Keep them focused) and View (Columns). Arrows move between its menus and through each (2.1.1, 4.1.2, 3.3.4).
 - **A save that fails says so where Save is**, and every count stays to save again (3.3.1).
 - **While the stock loads**, the grid shows placeholder rows the height of real ones; **a load that fails says so**, with Try again. Offline, counting goes on, and the banner says saving needs a connection.
 - **A skip link** first, into main, as on every page.
@@ -29,6 +30,7 @@ A shop's stock counted shelf by shelf, typed into a grid like a spreadsheet, wit
 
 ## What stays your app's job
 
+- **The CSV.** `onDownload` gets the counts so far; turn them into the file.
 - **Fetching the products and saving the counts.** Pass the items, with `counted` null for one not counted yet, and `onSave`. Save what's counted as people go, if a count can take all day.
 - **Recounts.** When a count differs a lot, ask for it again before changing the record.
 - **Remembering the view.** Keep the row size and the columns someone chose for next time.
