@@ -13,6 +13,7 @@ type ButtonSize = "lg" | "md" | "sm";
 interface ButtonOwnProps {
     variant?: ButtonVariant | undefined;
     destructive?: boolean | undefined;
+    surface?: "dark" | "light" | undefined;
     onMedia?: "dark" | "light" | undefined;
     size?: ButtonSize | undefined;
     startIcon?: IconSource | undefined;

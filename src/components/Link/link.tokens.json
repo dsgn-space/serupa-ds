@@ -35,7 +35,7 @@
       "on-dark": {
         "$type": "color",
         "$value": "{color.white}",
-        "$description": "onMedia=\"dark\": the link, its hover and its focus ring over dark media.",
+        "$description": "surface=\"dark\": the link, its hover and its focus ring over dark media.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--link-on-dark"
@@ -45,7 +45,7 @@
       "on-light": {
         "$type": "color",
         "$value": "{color.black}",
-        "$description": "onMedia=\"light\": the link, its hover and its focus ring over light media.",
+        "$description": "surface=\"light\": the link, its hover and its focus ring over light media.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--link-on-light"

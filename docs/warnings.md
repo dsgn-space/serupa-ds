@@ -58,6 +58,10 @@ FormattedDate or `formatDate` got options Intl rejects, most often a `timeZone` 
 
 A date component (Calendar, DatePicker, DateRangePicker) got a string it can't read as a day, such as "tomorrow", "2026-13-01" or "2026-02-31", so it shows no date and the app holds a value nobody sees. Pass the day as "yyyy-mm-dd" or as a Date. An empty string is read as no date and doesn't warn. What people type is reported through `onInvalidInput` instead.
 
+## deprecated-prop
+
+A prop, or a prop's value, with an older name, kept for now so nothing breaks: it still works, and the warning names the one to use instead and the major that removes the old one. Renaming it is all there is to do. The names each idea takes are in CONTRIBUTING.md's API naming table.
+
 ## date-value
 
 A FormattedDate whose `value` isn't a date (a typo, an empty string, a format `Date` can't read, a day not on the calendar such as "2026-02-31") shows nothing, with no other sign. Pass a `Date`, a timestamp in milliseconds, an ISO date and time such as `"2026-11-20T09:30:00Z"`, or a `"yyyy-mm-dd"` day.

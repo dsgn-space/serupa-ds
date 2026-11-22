@@ -13,7 +13,7 @@ const Page = () => (
 
 function WithToastDemo(args: React.ComponentProps<typeof BottomNav>) {
   React.useEffect(() => { toast({ title: 'Message archived', duration: 0 }); return () => toast.dismiss(); }, []);
-  return <><Bar {...args} /><Toaster placement="bottom-center" /></>;
+  return <><Bar {...args} /><Toaster placement="bottom" /></>;
 }
 
 function Bar(args: React.ComponentProps<typeof BottomNav>) {

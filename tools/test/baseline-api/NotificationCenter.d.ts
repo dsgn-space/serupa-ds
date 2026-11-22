@@ -29,6 +29,7 @@ interface NotificationCenterProps extends DrawerProps {
     onMarkRead?: ((id: string) => void) | undefined;
     onMarkAllRead?: (() => void) | undefined;
     onClear?: (() => void) | undefined;
+    emptyText?: React.ReactNode | undefined;
     empty?: React.ReactNode | undefined;
     settingsHref?: string | undefined;
 }

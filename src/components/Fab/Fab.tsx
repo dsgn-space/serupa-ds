@@ -6,7 +6,9 @@ import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { named } from '../../internal/component';
 
-export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
+export type FabPlacement = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
+/** @deprecated Use FabPlacement, the name of the prop it types; removed in 18.0.0. */
+export type FabPosition = FabPlacement;
 
 export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'startIcon' | 'endIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
   /** The icon: a custom or Material Symbols name ("add") or any element. */
@@ -20,13 +22,13 @@ export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'startIcon'
   /** 'md' (default, 56px) or 'sm' (40px). */
   size?: 'sm' | 'md' | undefined;
   /** Where it's fixed on the screen: 'bottom-end' (default), 'bottom-start', 'top-end' or 'top-start', 24px from the corner; 'static' leaves the placing to you. */
-  placement?: FabPosition | undefined;
+  placement?: FabPlacement | undefined;
 }
 
 /* Fab: a floating action button for a screen's main action. A round, raised primary Button fixed to a corner of
    the screen (placement), 56px (or 40px with size="sm"); extended shows the label next to the icon. Every other
    Button prop (onClick, loading, disabled, destructive, ref…) works the same. */
-const POSITIONS: readonly FabPosition[] = ['bottom-end', 'bottom-start', 'top-end', 'top-start', 'static'];
+const POSITIONS: readonly FabPlacement[] = ['bottom-end', 'bottom-start', 'top-end', 'top-start', 'static'];
 
 /** Whether the page is scrolling down (and is past its first 64px): an extended="auto" FAB shrinks to its icon then.
  *  Moves under 8px are ignored, so a finger's jitter doesn't flicker it. */
