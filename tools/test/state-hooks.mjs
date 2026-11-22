@@ -132,9 +132,9 @@ for (const f of walk(SRC, (n) => n.endsWith('.css'))) {
   const used = Object.keys(STATE_CLASSES).filter((c) => new RegExp('\\.' + esc(c) + '(?![\\w-])').test(css));
   t(`${rel(f)} selects state on attributes, not on a deprecated --state class`, !used.length,
     used.map((c) => `.${c}: use ${c.split('--')[0]}:where(${STATE_CLASSES[c]})`).join('; '));
-  const heavy = Object.entries(STATE_CLASSES).filter(([c, sel]) => css.includes('.' + c.split('--')[0] + sel)).map(([c, sel]) => `.${c.split('--')[0]}${sel}`);
+  const heavy = Object.entries(STATE_CLASSES).map(([c, sel]) => [c.split('--')[0], sel]).filter(([base, sel]) => css.includes(`.${base}${sel}`));
   t(`${rel(f)} gives a state attribute the weight of the class it replaces, in :where()`, !heavy.length,
-    heavy.map((s) => `${s}: write ${s.replace('[', ':where([').replace(/\]$/, '])')}`).join('; '));
+    heavy.map(([base, sel]) => `.${base}${sel}: write .${base}:where(${sel})`).join('; '));
 }
 for (const f of walk(SRC, (n) => /\.tsx$/.test(n) && !/\.(test|stories)\.tsx$/.test(n))) {
   const code = fs.readFileSync(f, 'utf8');
