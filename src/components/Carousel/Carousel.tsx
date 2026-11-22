@@ -14,6 +14,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
 import { project, speed, track as sample, type Samples } from '../../internal/fling';
 import { useControllable } from '../../internal/controllable';
+import { isRtl } from '../../internal/position';
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** The slides, one per child (pictures, cards, anything). */
@@ -129,7 +130,7 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
     if (!controlled) setOwn(next);
     if (props.onIndexChange) props.onIndexChange(next);
   };
-  const rtl = () => !!viewport.current && getComputedStyle(viewport.current).direction === 'rtl';
+  const rtl = () => !!viewport.current && isRtl(viewport.current);
   // The direction as laid out (a dir attribute or CSS direction), so the chevrons can follow it.
   const [dir, setDir] = React.useState<'ltr' | 'rtl'>('ltr');
   // every render: an ancestor's dir or direction can change without a render of ours; reading it is a style lookup, not a layout.

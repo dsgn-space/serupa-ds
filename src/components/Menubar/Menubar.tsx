@@ -5,6 +5,7 @@ import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { typeahead, type Typed } from '../../internal/typeahead';
 import { Menu, MenuSwap } from '../Menu/Menu';
+import { isRtl } from '../../internal/position';
 
 export interface MenubarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> {
   /** The bar's name for screen readers ("Editor"): every menu bar needs one, by aria-label or aria-labelledby. */
@@ -59,7 +60,7 @@ function MenubarRender({ ref, ...props }: MenubarProps & React.RefAttributes<HTM
     if (!tops.length) return;
     const top = tops.indexOf(e.target as HTMLElement);
     const i = top >= 0 ? top : open ?? at;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     const step = e.key === 'ArrowRight' ? (rtl ? -1 : 1) : e.key === 'ArrowLeft' ? (rtl ? 1 : -1) : 0;
     const go = (j: number) => {
       e.preventDefault();

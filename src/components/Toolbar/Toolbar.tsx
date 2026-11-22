@@ -8,6 +8,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuCheckboxItem, MenuItem } from '../Menu/Menu';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** 'horizontal' (a wrapping row, default; Left and Right move focus) or 'vertical' (a column; Up and Down). */
@@ -156,7 +157,7 @@ function ToolbarRender({ ref, ...props }: ToolbarProps & React.RefAttributes<HTM
     if (e.defaultPrevented || !r || !(t instanceof HTMLElement) || e.altKey || e.ctrlKey || e.metaKey) return;
     const items = itemsOf(r).filter(shown), i = items.indexOf(t);
     if (i < 0 || typing(t)) return;
-    const rtl = getComputedStyle(r).direction === 'rtl';
+    const rtl = isRtl(r);
     let n: number;
     switch (e.key) {
       case 'ArrowRight': if (vertical) return; n = i + (rtl ? -1 : 1); break;

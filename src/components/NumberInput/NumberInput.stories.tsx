@@ -14,6 +14,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm for a table cell or a dense form, md by default, lg for a touch-first form. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16 }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <NumberInput key={s} {...args} aria-label={'Quantity, ' + s} size={s} />)}
+  </div>,
+};
 export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, startIcon: 'attach_money' } };
 export const Locales: Story = {
   render: () => <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>

@@ -22,6 +22,7 @@ import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -375,7 +376,7 @@ const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeader
       if (!l.controlled) setOwn(w);
       if (l.onWidthChange) l.onWidthChange(w);
     };
-    const rtl = () => getComputedStyle(cell).direction === 'rtl';
+    const rtl = () => isRtl(cell);
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;   // left to the system and the browser (L8E35)
       const grow = rtl() ? 'ArrowLeft' : 'ArrowRight', shrink = rtl() ? 'ArrowRight' : 'ArrowLeft';

@@ -118,8 +118,8 @@
     "spacing": {
       "padding-y": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
-        "$description": "Space above and below a title, and below the content (16px).",
+        "$value": "{spacing.space-content}",
+        "$description": "Space above and below a title, and below the content: 16px, 12px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--accordion-padding-y"

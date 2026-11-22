@@ -138,8 +138,8 @@
       },
       "padding-y": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "Space above and below a cell's text (8px).",
+        "$value": "{spacing.space-item}",
+        "$description": "Space above and below a cell's text: 8px, 4px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--data-grid-padding-y"

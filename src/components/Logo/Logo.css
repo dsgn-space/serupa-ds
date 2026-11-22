@@ -5,6 +5,8 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-logo__picture { display: contents; }
+/* A <source> only picks the file: as a box of its own it would take a gap in a flex or grid parent. */
+.srp-logo__picture > source { display: none; }
 .srp-logo {
   display: inline-block; vertical-align: middle; flex-shrink: 0;
   height: var(--logo-height-md, var(--spacing-8)); width: auto; max-width: var(--sizing-full);

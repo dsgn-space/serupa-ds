@@ -240,8 +240,8 @@
       },
       "padding-md": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-5}",
-        "$description": "Padding, `md`",
+        "$value": "{spacing.space-card}",
+        "$description": "Padding, `md`: 20px, 12px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--card-padding-md"

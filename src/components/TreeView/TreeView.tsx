@@ -11,6 +11,7 @@ import { useServerStyles } from '../../internal/serverStyles';
 import { asIcon } from '../Icon/asIcon';
 import * as icons from '../../material/builtin';
 import { useControllable } from '../../internal/controllable';
+import { isRtl } from '../../internal/position';
 
 export interface TreeViewItem {
   /** Identifies the item in value and expanded. Unique in the whole tree. */
@@ -249,7 +250,7 @@ function TreeViewRender({ ref, ...props }: TreeViewProps & React.RefAttributes<H
     const i = index(t.dataset.id || null), r = rows[i];
     if (!r) return;
     const item = r.item;
-    const rtl = (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && getComputedStyle(root.current).direction === 'rtl';
+    const rtl = (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && isRtl(root.current);
     const isOpen = openSet.has(item.id);
     let to = -1;
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {

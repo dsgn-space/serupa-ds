@@ -15,6 +15,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm for a short note in a dense form, md by default, lg for a touch-first form. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16 }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <Textarea key={s} {...args} aria-label={'Message, ' + s} size={s} />)}
+  </div>,
+};
 export const AutoResize: Story = { name: 'Auto-resize', args: { autoResize: true, maxRows: 6, placeholder: 'Grows as you type, up to 6 lines' } };
 /** A comment box: Attach and Send in a row under the text, inside the box, with the count at its start. */
 export const Actions: Story = {

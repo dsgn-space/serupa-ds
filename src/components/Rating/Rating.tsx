@@ -12,6 +12,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { FieldContext, useFieldControl } from '../../internal/field';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export interface RatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The rating (controlled), or null for none. Use with onValueChange. */
@@ -105,7 +106,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   // a press in the star's start half picks the half. A click from a key (Space, an arrow) has no pointer (detail 0).
   const startHalf = (e: React.MouseEvent<HTMLInputElement>) => {
     const t = e.currentTarget, r = (t.parentElement || t).getBoundingClientRect(), x = e.clientX - r.left;
-    return getComputedStyle(t).direction === 'rtl' ? x > r.width / 2 : x < r.width / 2;
+    return isRtl(t) ? x > r.width / 2 : x < r.width / 2;
   };
   const radios = (i: number) => {
     const choices = allowHalf ? [i + 0.5, i + 1] : [i + 1];

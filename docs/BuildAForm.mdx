@@ -1,0 +1,222 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Build a form" />
+
+{/* description: One schema, one Form, a Field per answer: sign-up, checkout and settings, start to finish. Also: validation, server errors, multi-step forms, drafts. */}
+
+# Build a form
+
+A form is three things: a schema that says what each answer must be, a [Form](?path=/docs/components-forms-form--docs) that checks the answers against it, and a [Field](?path=/docs/components-forms-field--docs) around each control. The Form does the rest the [Forms](?path=/docs/guides-forms--docs) guide asks for: it checks a field when it's left, again as it changes once it has a message, everything on submit with a summary at the top that takes focus, and it keeps what people typed.
+
+## 1. Write the schema
+
+Use the schema library the project already has: Zod, Valibot and ArkType all work, because Form reads the [Standard Schema](https://standardschema.dev) they share. Serupa depends on none of them. Each rule carries the words people see, so write them as the fix: "Enter your email address", not "Invalid".
+
+```tsx
+import * as z from "zod";
+
+const SignUp = z.object({
+  name: z.string().trim().min(1, "Enter your full name"),
+  email: z.email("Enter an email address like name@example.com"),
+  password: z.string().min(12, "Use 12 characters or more"),
+  terms: z.literal(true, "Agree to the terms to create an account"),
+});
+```
+
+The values arrive as the controls hold them: text as strings, a lone checkbox as `true` or `false`. Turn text into numbers or dates in the schema (`.transform(Number)`), so `onSubmit` gets the types it needs.
+
+## 2. Put a Field around each control, named as in the schema
+
+The control's `name` is the schema's path: `email`, `address.city`, or a [FieldList](?path=/docs/components-forms-fieldlist--docs) row's `people[1].email`. That's all the wiring: each Field finds its message by that name.
+
+```tsx
+<Form aria-label="Create an account" schema={SignUp} onSubmit={signUp}>
+  <Field label="Full name"><Input name="name" autoComplete="name" /></Field>
+  <Field label="Email" hint="Like name@example.com"><Input name="email" type="email" autoComplete="email" /></Field>
+  <Field label="Password" hint="12 characters or more"><PasswordInput name="password" autoComplete="new-password" /></Field>
+  <Field><Checkbox name="terms">I agree to the <Link href="/terms">terms</Link></Checkbox></Field>
+  <Button type="submit">Create account</Button>
+</Form>
+```
+
+## 3. Send it, and show what the server says
+
+`onSubmit` gets the schema's output, typed. While its promise runs, the submit button shows loading and a second submit does nothing. When the server turns the answers down, answer with its messages by field name, and one for the whole form if it has one: they show on their fields, in the summary, and in an alert at the top.
+
+```tsx
+import * as z from "zod";
+async function signUp(values: ReturnType<typeof SignUp.parse>) {
+  const res = await fetch("/api/sign-up", { method: "POST", body: JSON.stringify(values) });
+  if (res.status === 422) return { errors: await res.json() };   // { email: "That email already has an account" }
+  if (!res.ok) return { message: "Nothing was sent. Try again in a minute." };
+  navigate("/welcome");
+}
+```
+
+With a React form `action` instead, pass its answer as `errors`: `<Form errors={state.errors}>`.
+
+## Sign-up
+
+The whole sign-up, with a second password that must match the first, and a username checked on the server once it passes the schema. The check says "Checking…" under the field, waits for a pause in typing, and the submit waits for it.
+
+```tsx
+const SignUp = z.object({
+  name: z.string().trim().min(1, "Enter your full name"),
+  username: z.string().min(3, "Use 3 characters or more").regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers and _ only"),
+  email: z.email("Enter an email address like name@example.com"),
+  password: z.string().min(12, "Use 12 characters or more"),
+  confirm: z.string().min(1, "Type the password again"),
+  terms: z.literal(true, "Agree to the terms to create an account"),
+}).refine((v) => v.password === v.confirm, { path: ["confirm"], message: "The passwords don’t match" });
+
+const checks = {
+  username: async (value: unknown, { signal }: { signal: AbortSignal }) => {
+    const res = await fetch("/api/usernames/" + encodeURIComponent(String(value)), { signal });
+    return res.status === 200 ? "That username is taken. Try another" : null;
+  },
+};
+
+export function SignUpPage() {
+  return (
+    <Form aria-labelledby="sign-up-title" schema={SignUp} checks={checks} onSubmit={signUp}>
+      <h1 id="sign-up-title">Create an account</h1>
+      <Field label="Full name"><Input name="name" autoComplete="name" /></Field>
+      <Field label="Username" hint="Lowercase letters, numbers and _"><Input name="username" autoComplete="username" spellCheck={false} /></Field>
+      <Field label="Email"><Input name="email" type="email" autoComplete="email" /></Field>
+      <Field label="Password" hint="12 characters or more"><PasswordInput name="password" autoComplete="new-password" /></Field>
+      <Field label="Confirm password"><PasswordInput name="confirm" autoComplete="new-password" toggleLabel="Show confirmed password" /></Field>
+      <Field><Checkbox name="terms">I agree to the terms</Checkbox></Field>
+      <Button type="submit">Create account</Button>
+    </Form>
+  );
+}
+```
+
+"The passwords don't match" updates as either password changes, once it has shown.
+
+## Checkout
+
+A longer form goes in steps with [FormSteps](?path=/docs/components-forms-form--docs): Next checks only the step's own fields, and the last step sends everything. The province shows only for Indonesia ([useFormValue](?path=/docs/components-forms-form--docs)), and the schema asks for it only then. The draft keeps the address if people leave; card details are never kept.
+
+```tsx
+import * as z from "zod";
+const Checkout = z.object({
+  email: z.email("Enter an email address like name@example.com"),
+  address: z.object({
+    line1: z.string().min(1, "Enter the street and number"),
+    city: z.string().min(1, "Enter the city"),
+    country: z.string().min(1, "Choose a country"),
+    province: z.string().optional(),
+    postcode: z.string().regex(/^\d{5}$/, "Enter a 5-digit postal code"),
+  }).refine((a) => a.country !== "ID" || !!a.province, { path: ["province"], message: "Choose a province" }),
+  delivery: z.enum(["standard", "express"], "Choose how to send it"),
+  card: z.string().regex(/^[\d ]{12,23}$/, "Enter the card number as it is on the card"),
+});
+
+function Province() {
+  const country = useFormValue<string>("address.country");
+  if (country !== "ID") return null;
+  return <Field label="Province"><Select name="address.province" placeholder="Choose a province" options={PROVINCES} /></Field>;
+}
+
+export function CheckoutPage() {
+  return (
+    <Form aria-label="Checkout" schema={Checkout} draft="checkout" onSubmit={pay}>
+      <FormSteps submitLabel="Pay Rp 450.000">
+        <FormStep title="Contact">
+          <Field label="Email" hint="For the receipt"><Input name="email" type="email" autoComplete="email" /></Field>
+        </FormStep>
+        <FormStep title="Address">
+          <Field label="Street and number"><Input name="address.line1" autoComplete="address-line1" /></Field>
+          <Field label="City"><Input name="address.city" autoComplete="address-level2" /></Field>
+          <Field label="Country"><Select name="address.country" autoComplete="country" options={COUNTRIES} /></Field>
+          <Province />
+          <Field label="Postal code"><Input name="address.postcode" inputMode="numeric" autoComplete="postal-code" /></Field>
+        </FormStep>
+        <FormStep title="Delivery">
+          <Field label="Delivery" group>
+            <RadioGroup name="delivery">
+              <Radio value="standard" description="3 to 5 days">Standard, free</Radio>
+              <Radio value="express" description="Tomorrow">Express, Rp 40.000</Radio>
+            </RadioGroup>
+          </Field>
+        </FormStep>
+        <FormStep title="Payment">
+          <Field label="Card number"><Input name="card" inputMode="numeric" autoComplete="cc-number" /></Field>
+        </FormStep>
+      </FormSteps>
+    </Form>
+  );
+}
+
+async function pay(values: ReturnType<typeof Checkout.parse>) {
+  const res = await api.pay(values);
+  if (res.declined) return { errors: { card: "The bank declined this card. Try another, or call the bank" } };
+}
+```
+
+A problem on an earlier step (the server's, or one the last step's submit finds) is in the summary, and its link opens that step at the field.
+
+## Settings
+
+A settings page starts from what's saved (`defaultValues`), sends only on Save, and asks before people leave with changes that weren't sent. The people to notify are a [FieldList](?path=/docs/components-forms-fieldlist--docs): its rows come back as an array.
+
+```tsx
+import * as z from "zod";
+const Settings = z.object({
+  displayName: z.string().trim().min(1, "Enter a display name"),
+  timezone: z.string().min(1, "Choose a time zone"),
+  weekly: z.boolean(),
+  notify: z.array(z.object({ email: z.email("Enter an email address like name@example.com") })).max(5),
+});
+
+export function SettingsPage({ saved }: { saved: ReturnType<typeof Settings.parse> }) {
+  return (
+    <Form aria-label="Settings" schema={Settings} defaultValues={saved} warnUnsaved onSubmit={save}>
+      <Field label="Display name"><Input name="displayName" autoComplete="nickname" /></Field>
+      <Field label="Time zone"><TimeZonePicker name="timezone" /></Field>
+      <Field><Switch name="weekly">Weekly summary by email</Switch></Field>
+      <FieldList label="Also notify" hint="Up to 5" name="notify" itemLabel={(i) => "Person " + (i + 1)} addLabel="Add a person"
+        newItem={() => ({ email: "" })} defaultValue={saved.notify} max={5}>
+        {(_row, { name }) => <Field label="Email"><Input name={name("email")} type="email" /></Field>}
+      </FieldList>
+      <Button type="submit">Save changes</Button>
+    </Form>
+  );
+}
+```
+
+The same form in a [Dialog](?path=/docs/components-overlays-dialog--docs): pass the form's `onUnsavedChanges` to the dialog's `unsaved`, so closing it with changes asks "Discard changes?" first.
+
+```tsx
+const [unsaved, setUnsaved] = React.useState(false);
+<Dialog open={open} onOpenChange={setOpen} title="Edit profile" unsaved={unsaved}>
+  <Form aria-label="Profile" schema={Profile} defaultValues={profile} onUnsavedChanges={setUnsaved} onSubmit={saveAndClose}>…</Form>
+</Dialog>
+```
+
+## Drafts
+
+`draft="application"` keeps the answers in the browser as people type, and fills them back in when they open the form again. Say so near the submit button with a [SaveStatus](?path=/docs/components-feedback-savestatus--docs), and offer a way to start again:
+
+```tsx
+function DraftBar() {
+  const form = useForm();
+  return (
+    <Stack direction="row" gap={3} align="center">
+      <Button type="submit">Send application</Button>
+      <SaveStatus status={form.draftSavedAt ? "saved" : "idle"} savedAt={form.draftSavedAt ?? undefined} />
+      {form.draftRestored ? <Button variant="ghost" onClick={form.discardDraft}>Start again</Button> : null}
+    </Stack>
+  );
+}
+```
+
+Passwords, card numbers and one-time codes are never kept, and the draft is forgotten once the form is sent. It lives in that browser only: a draft people need on another device is the app's, saved on the server.
+
+## What stays yours
+
+- A label on every field, and messages that say how to fix the answer.
+- `autoComplete` on every field about the person, and the right keyboard (see "The right keyboard and autofill" in [Forms](?path=/docs/guides-forms--docs)).
+- Checking again on the server: the browser's checks help people, the server's protect the data.
+- Where people go after a submit that worked, and saying it worked ([Messages and feedback](?path=/docs/guides-messages-and-feedback--docs)).
