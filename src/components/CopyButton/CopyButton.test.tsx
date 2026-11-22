@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -63,6 +63,26 @@ describe('CopyButton', () => {
     await expect.poll(() => el('w').hasAttribute('data-copied')).toBe(true);
     expect(css(el('w')).width).toBe(before);
     expect(labels(el('w')).filter((s) => s.hasAttribute('aria-hidden')).map((s) => s.textContent)).toEqual(['OK']);
+  });
+
+  test('a long label that doesn\'t fit ends with an ellipsis and shows in full on hover; "Copied" sits beside the check, at the start', async () => {
+    await render(<div style={{ width: 200 }}><CopyButton id="long" value="k">Copy the secret API key to the clipboard</CopyButton></div>);
+    const b = el('long'), [copy, done] = labels(b) as HTMLElement[];
+    expect([css(copy!).textOverflow, copy!.scrollWidth > copy!.clientWidth, b.title]).toEqual(['ellipsis', true, 'Copy the secret API key to the clipboard']);
+    await userEvent.click(b);
+    await expect.poll(() => b.hasAttribute('data-copied')).toBe(true);
+    const text = document.createRange();
+    text.selectNodeContents(done!.firstChild!);
+    expect(Math.abs(text.getBoundingClientRect().left - done!.parentElement!.getBoundingClientRect().left)).toBeLessThanOrEqual(1);
+  });
+
+  test('the label changes with the icon: both cross-fade over the same time, so the check never shows beside "Copy"', async () => {
+    await withMotion(async () => {
+      await render(<CopyButton id="sync" value="k" />);
+      const b = el('sync'), [copy] = labels(b) as HTMLElement[], glyph = b.querySelector<HTMLElement>('.srp-copy-btn__icon--copy')!;
+      const fade = (e: HTMLElement) => { const st = css(e), i = st.transitionProperty.split(', ').indexOf('opacity'); return i < 0 ? 'none' : st.transitionDuration.split(', ')[i]; };
+      expect(fade(copy!)).toBe(fade(glyph));
+    });
   });
 
   test('value as a function (sync or async) is called on press; children, copiedLabel and timeout change the words and the time', async () => {
