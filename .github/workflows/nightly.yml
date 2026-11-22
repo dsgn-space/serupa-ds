@@ -88,8 +88,9 @@ jobs:
           if [ "$GROUP" = components ]; then SERUPA_COVERAGE=1 node tools/test/run.mjs --group "$GROUP" --locale en-US 2>&1 | tee -a test-output.txt
           elif [ "$GROUP" = storybook ]; then SERUPA_A11Y_JSON="$PWD/a11y.json" node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt
           else node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
+          # Visual draws main twice in its one pass and fails on a story that comes out different (run.mjs).
           if [ "$GROUP" = components ]; then node tools/test/run.mjs --group "$GROUP" --locale en-US 2>&1 | tee -a test-output.txt
-          else node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
+          elif [ "$GROUP" != visual ]; then node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
       # The coverage and axe results for the health job, whether or not the pass was green.
       - if: ${{ !cancelled() && matrix.group == 'components' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

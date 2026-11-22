@@ -15,7 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { isLatest, previousTag, screenshotNotes } from './release-screenshots.mjs';
+import { isLatest, previousTag } from './release-screenshots.mjs';
 import { diffRefs, releaseNotes } from './api-diff.mjs';
 import { releaseKits } from './release-kits.mjs';
 
@@ -83,13 +83,8 @@ const notes = path.join(P, '.release-notes.md');
 // The file's SHA-256 under the notes, so a download can be checked against the release page. The Release workflow's
 // attest job signs the same file (build provenance); the README's install section has the gh attestation verify line.
 const sha = createHash('sha256').update(fs.readFileSync(tarball)).digest('hex');
-// The stories that look different since the last release, before and after (94). Never in the way of a release.
-let shots = '';
-try {
-  const prev = previousTag(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
-  const repo = process.env.GITHUB_REPOSITORY || /github\.com[:/](.+?)(?:\.git)?$/.exec(run('git', ['remote', 'get-url', 'origin']))?.[1];
-  if (prev && repo) shots = screenshotNotes({ status: run('git', ['diff', '--name-status', '--no-renames', prev, own || back, '--', 'tools/test/baseline-visual']), prev, tag, repo });
-} catch (e) { console.log(`No screenshots in the notes: ${e.message.split('\n')[0]}`); }
+// The stories that look different since the last release (94) are drawn after this, by the Release workflow's
+// screenshots job (tools/release-screenshots.mjs), which adds them to these notes.
 // What changed in the exported types since the last release, folded under one line (tools/api-diff.mjs). Never in the
 // way of a release either.
 let api = '';
@@ -97,9 +92,12 @@ try {
   const prev = previousTag(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
   if (prev) api = releaseNotes(diffRefs(prev, own || back, P), prev);
 } catch (e) { console.log(`No API report in the notes: ${e.message.split('\n')[0]}`); }
-fs.writeFileSync(notes, `${m[1].trim()}\n\n${api ? api + '\n' : ''}${shots ? shots + '\n' : ''}**${path.basename(tarball)}** SHA-256: \`${sha}\`\n`);
+fs.writeFileSync(notes, `${m[1].trim()}\n\n${api ? api + '\n' : ''}**${path.basename(tarball)}** SHA-256: \`${sha}\`\n`);
 // Tell the workflow which file was released, for its attest job (nothing to attest when this run released nothing).
-if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `tarball=${path.basename(tarball)}\n`);
+// And, for the screenshots job, this tag and the previous release's: it draws each from its prebuilt commit's parent,
+// which still has the scripts that build Storybook.
+const prev = previousTag(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
+if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `tarball=${path.basename(tarball)}\ntag=${tag}\nprev=${prev ?? ''}\n`);
 if (!tagged) {
   run('git', ['tag', tag]);
   run('git', ['push', 'origin', tag], { stdio: 'inherit', ...remote });

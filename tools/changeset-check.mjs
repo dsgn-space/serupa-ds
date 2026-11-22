@@ -26,7 +26,7 @@ const SHIPS = [/^src\//, /^bin\//, /^fonts\//, /^design-tokens\//, /^tokens\.(js
 // Inside those, what doesn't reach a project: tests, stories, docs pages and usage guides.
 const ASIDE = [/\.test\.tsx?$/, /\.stories\.tsx$/, /\.mdx$/, /\.md$/, /^src\/components\/[^/]+\/preview\.html$/];
 
-const changed = execFileSync('git', ['diff', '--name-status', '--no-renames', `${base}...HEAD`], { cwd: P, encoding: 'utf8' })
+const changed = execFileSync('git', ['diff', '--name-status', '--no-renames', `${base}...HEAD`], { cwd: P, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 })
   .trim().split('\n').filter(Boolean).map((l) => l.split('\t'));
 const shipping = changed.map(([, f]) => f).filter((f) => SHIPS.some((r) => r.test(f)) && !ASIDE.some((r) => r.test(f)));
 // package.json ships too, but only some of it reaches a project: what it installs and what it can import. A change to

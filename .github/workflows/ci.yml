@@ -74,9 +74,9 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      # Held: the pull request carries the update-visual-baselines label, so Update baselines is drawing its pictures
-      # now and will push them (a new run) or, with nothing to change, start this run again once the label is off.
-      # Testing this commit meanwhile would only be done twice. The bot's own picture commit is never held.
+      # Held: the pull request carries the update-visual-baselines label, so Update baselines is measuring its utilities
+      # baseline now and will push it (a new run) or, with nothing to change, start this run again once the label is
+      # off. Testing this commit meanwhile would only be done twice. The bot's own baseline commit is never held.
       - id: hold
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
@@ -90,7 +90,7 @@ jobs:
           # Heal's merge isn't held: it adds no Chromium redraw label any more (ADR-0016), so its run tests it.
           if [ "$subject" != "Update test baselines on the CI runner" ] && grep -qx update-visual-baselines <<< "$labels"; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
-            echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "Held: Update baselines is measuring this pull request's utilities baseline; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
       # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines) while a self-hosted runner has started a job
       # in the last 100 minutes, GitHub's runners otherwise, and for a fork's pull request or when the variable is unset.
@@ -162,7 +162,7 @@ jobs:
           # each of four shards, 23 minutes (21 Nov). The nightly flake hunt draws main whole.
           visual=1
           if [ -n "$since" ] && [ "$EVENT" = pull_request ]; then
-            if ! git diff --name-only "$since" HEAD | grep -qE '^(src/|docs/|\.storybook/|design-tokens/|tokens/|tokens\.(css|json)$|fonts/|package(-lock)?\.json$|tsconfig\.json$|tsup\.config\.mjs$|README\.md$|CHANGELOG\.md$|\.changeset/[^/]+\.md$|bin/migrate/|tools/(build|tokens|utilities|typescript|icons|fonts)/|tools/test/(visual|storybook)\.mjs$|tools/test/baseline-visual/)'; then visual=""; fi
+            if ! git diff --name-only "$since" HEAD | grep -qE '^(src/|docs/|\.storybook/|design-tokens/|tokens/|tokens\.(css|json)$|fonts/|package(-lock)?\.json$|tsconfig\.json$|tsup\.config\.mjs$|README\.md$|CHANGELOG\.md$|\.changeset/[^/]+\.md$|bin/migrate/|tools/(build|tokens|utilities|typescript|icons|fonts)/|tools/test/(visual|visual-base|storybook)\.mjs$)'; then visual=""; fi
           fi
           # All the component tests in the other languages run in the merge queue only, on the commit that becomes main: a
           # pull request's own run tests its components in English, with the changed components' own tests in the other
@@ -457,21 +457,9 @@ jobs:
         shell: bash
         env:
           GROUP: ${{ matrix.group }}
-          EVENT: ${{ github.event_name }}
-          SINCE: ${{ needs.plan.outputs.since }}
         run: |
           npm run build
           if [ "$GROUP" != components ]; then npm run build-storybook; fi
-          # Visual on a pull request draws main's pictures too (ADR-0016): main's Storybook, built from the commit this
-          # run merges into, in a worktree beside this one. Its own dependencies only when its lockfile differs.
-          if [ "$GROUP" = visual ] && [ "$EVENT" = pull_request ] && [ -n "$SINCE" ]; then
-            rm -rf ../main-tree && git worktree prune
-            git worktree add --detach ../main-tree "$SINCE"
-            if cmp -s package-lock.json ../main-tree/package-lock.json; then ln -s "$PWD/node_modules" ../main-tree/node_modules
-            else (cd ../main-tree && npm ci --ignore-scripts --no-audit --no-fund); fi
-            (cd ../main-tree && npm run build && npm run build-storybook)
-            echo "SERUPA_VISUAL_BASE=$(cd ../main-tree && pwd)/storybook-static" >> "$GITHUB_ENV"
-          fi
       - name: Test suite
         if: steps.done.outputs.cache-hit != 'true'
         shell: bash
@@ -482,6 +470,8 @@ jobs:
           # The component tests' base shards write the coverage blobs the coverage job merges.
           SERUPA_COVERAGE: ${{ matrix.part == 'base' && '1' || '' }}
           SINCE: ${{ needs.plan.outputs.since }}
+          # Visual draws the pictures of the commit this run merges into first (run.mjs, visual-base.mjs; ADR-0016).
+          SERUPA_VISUAL_REF: ${{ needs.plan.outputs.since }}
         run: |
           set -o pipefail
           node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
@@ -544,7 +534,7 @@ jobs:
           path: |
             test-output.txt
             .test-tmp/
-            tools/test/baseline-visual/**/*.actual.png
+            .visual-main/**/*.actual.png
           if-no-files-found: ignore
       # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
       # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on
