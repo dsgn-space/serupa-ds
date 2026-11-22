@@ -9,6 +9,9 @@
   --srp-ta-px: var(--textarea-padding-x-md, var(--spacing-3));
   --srp-ta-py: var(--textarea-padding-y-md, var(--spacing-1\.5));
   --srp-ta-bd: var(--textarea-border, var(--field-border));
+  /* The space above and below the text counts the border, so one row is as tall as an Input or a Button of the same
+     size (24, 32, 44px): padding-y less the border width. */
+  --srp-ta-pad: calc(var(--srp-ta-py) - var(--textarea-border-width, var(--border-width-1)));
   --srp-ta-ring: var(--textarea-focus-ring, var(--focus-ring));
   display: inline-flex; flex-direction: column;
   box-sizing: border-box; width: var(--sizing-full);
@@ -23,7 +26,7 @@
 .srp-textarea--size-lg { --srp-ta-px: var(--textarea-padding-x-lg, var(--spacing-4)); --srp-ta-py: var(--textarea-padding-y-lg, var(--spacing-2\.5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .srp-textarea__field {
   display: block; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0);
-  margin: var(--spacing-0); padding: var(--srp-ta-py) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
+  margin: var(--spacing-0); padding: var(--srp-ta-pad) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
 }
 .srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
@@ -38,8 +41,8 @@
    since the max-height is then invalid and falls back to none), scrolling past that. Textarea.tsx measures elsewhere. */
 @supports (field-sizing: content) {
   .srp-textarea--auto .srp-textarea__field {
-    --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
-    --srp-ta-max: calc(var(--srp-ta-max-rows) * 1lh + 2 * var(--srp-ta-py));
+    --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-pad));
+    --srp-ta-max: calc(var(--srp-ta-max-rows) * 1lh + 2 * var(--srp-ta-pad));
     field-sizing: content; min-height: var(--srp-ta-min); max-height: var(--srp-ta-max); overflow-y: auto; overscroll-behavior: contain;
   }
 }
@@ -48,7 +51,7 @@
 @media print {
   @supports (field-sizing: content) {
     .srp-textarea__field {
-      --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
+      --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-pad));
       field-sizing: content; min-block-size: var(--srp-ta-min);
       block-size: auto !important; max-block-size: none !important; overflow: visible; resize: none;
     }

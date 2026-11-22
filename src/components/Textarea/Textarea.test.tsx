@@ -52,18 +52,23 @@ describe('Textarea', () => {
     expect([notes!.getAttribute('rows'), grows!.getAttribute('style')?.includes('Infinity') ?? false]).toEqual(['3', false]);
   });
 
-  test('a native <textarea> in a .srp-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
+  test('a native <textarea> in a .srp-textarea box (data-component="textarea"); md text-sm, 12px side and 5px top padding (6px counting the border), 1px border, 6px corners, 3 rows by default', async () => {
     await setup();
     const md = box('md');
-    expect([el('md').tagName, md.comp, md.rows, md.fs, md.pl, md.pt, md.bw, md.r, md.fh]).toEqual(['TEXTAREA', 'textarea', 3, '14px', '12px', '6px', '1px', '6px', 3 * 20 + 12]);
+    expect([el('md').tagName, md.comp, md.rows, md.fs, md.pl, md.pt, md.bw, md.r, md.fh]).toEqual(['TEXTAREA', 'textarea', 3, '14px', '12px', '5px', '1px', '6px', 3 * 20 + 10]);
     expect(md.wrap).toMatch(/srp-textarea srp-textarea--size-md/);
   });
 
-  test('sizes: sm text-xs 8px/4px padding, lg text-base 16px/10px padding; rows sets the height; unknown size falls back to md and a bad rows to 3', async () => {
+  test('one row is as tall as an Input and a Button of its size, border included: 24, 32 and 44px', async () => {
+    await render(<div>{(['sm', 'md', 'lg'] as const).map((z) => <Textarea key={z} id={'one-' + z} aria-label={z} size={z} rows={1} />)}</div>);
+    expect((['sm', 'md', 'lg'] as const).map((z) => el('one-' + z).parentElement!.getBoundingClientRect().height)).toEqual([24, 32, 44]);
+  });
+
+  test('sizes: sm text-xs 8px/3px padding, lg text-base 16px/9px padding (4 and 10 counting the border); rows sets the height; unknown size falls back to md and a bad rows to 3', async () => {
     await setup();
     const sm = box('sm'), lg = box('lg'), bad = box('bad');
-    expect([sm.fs, sm.pl, sm.pt, sm.fh]).toEqual(['12px', '8px', '4px', 2 * 16 + 8]);
-    expect([lg.fs, lg.pl, lg.pt, lg.fh]).toEqual(['16px', '16px', '10px', 24 + 20]);
+    expect([sm.fs, sm.pl, sm.pt, sm.fh]).toEqual(['12px', '8px', '3px', 2 * 16 + 6]);
+    expect([lg.fs, lg.pl, lg.pt, lg.fh]).toEqual(['16px', '16px', '9px', 24 + 18]);
     expect([bad.size, bad.rows]).toEqual(['md', 3]);
   });
 
@@ -135,14 +140,14 @@ describe('Textarea', () => {
   test('autoResize: starts at rows (2 lines), grows a line at a time, stops at maxRows (4) and scrolls, shrinks back when emptied; no resize handle', async () => {
     await setup();
     const a0 = box('auto');
-    expect([a0.fh, a0.resize]).toEqual([2 * 20 + 12, 'none']);
+    expect([a0.fh, a0.resize]).toEqual([2 * 20 + 10, 'none']);
     await userEvent.click(el('auto'));
     await userEvent.keyboard('1{Enter}2{Enter}3');
-    await expect.poll(() => [box('auto').fh, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([3 * 20 + 12, false]);
+    await expect.poll(() => [box('auto').fh, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([3 * 20 + 10, false]);
     await userEvent.keyboard('{Enter}4{Enter}5{Enter}6');
-    await expect.poll(() => [box('auto').fh, box('auto').oy, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([4 * 20 + 12, 'auto', true]);
+    await expect.poll(() => [box('auto').fh, box('auto').oy, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([4 * 20 + 10, 'auto', true]);
     await userEvent.keyboard('{Control>}a{/Control}{Backspace}');
-    await expect.poll(() => box('auto').fh).toBe(2 * 20 + 12);
+    await expect.poll(() => box('auto').fh).toBe(2 * 20 + 10);
   });
 
   test('autoResize: in CSS (field-sizing: content, no height set inline) where the browser has it, measured in script elsewhere; the page doesn\'t scroll as it grows', async () => {
@@ -151,7 +156,7 @@ describe('Textarea', () => {
     await userEvent.click(f);
     const y = scrollY;
     await userEvent.keyboard('1{Enter}2{Enter}3');
-    await expect.poll(() => box('auto').fh).toBe(3 * 20 + 12);
+    await expect.poll(() => box('auto').fh).toBe(3 * 20 + 10);
     expect([getComputedStyle(f).getPropertyValue('field-sizing') === 'content', f.style.height !== '', scrollY]).toEqual([css, !css, y]);
   });
 

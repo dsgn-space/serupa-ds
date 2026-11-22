@@ -133,9 +133,9 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-x-sm` | `spacing-2` | Side padding, sm (8px), like Input sm. |
 | `--textarea-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--textarea-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
-| `--textarea-padding-y-sm` | `spacing-1` | Top and bottom padding, sm (4px). |
-| `--textarea-padding-y-md` | `spacing-1.5` | Top and bottom padding, md (6px). |
-| `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
+| `--textarea-padding-y-sm` | `spacing-1` | Top and bottom padding, sm (4px), counting the border: one row is as tall as an Input of the same size. |
+| `--textarea-padding-y-md` | `spacing-1.5` | Top and bottom padding, md (6px), counting the border: one row is as tall as an Input of the same size. |
+| `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px), counting the border: one row is as tall as an Input of the same size. |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
 
