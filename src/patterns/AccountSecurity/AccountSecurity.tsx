@@ -9,6 +9,7 @@ import { Field } from '../../components/Field/Field';
 import { PasswordInput } from '../../components/PasswordInput/PasswordInput';
 import { PinInput } from '../../components/PinInput/PinInput';
 import { CopyButton } from '../../components/CopyButton/CopyButton';
+import { QRCode } from '../../components/QRCode/QRCode';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Toaster, toast } from '../../components/Toast/Toast';
@@ -342,7 +343,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
             title={setup === 'codes' ? 'Save your recovery codes' : 'Turn on two-step verification'}
             description={setup === 'codes'
               ? 'If you lose your phone, each of these signs you in once. Keep them somewhere safe: they’re shown only now.'
-              : 'Add this key to your authenticator app, by typing or pasting it, then enter the 6-digit code the app shows.'}>
+              : 'Scan the code with your authenticator app, or type or paste the key, then enter the 6-digit code the app shows.'}>
             {setup === 'codes' ? (
               <div className="flex flex-col gap-4">
                 <ul aria-label="Recovery codes" className="m-0 grid list-none grid-cols-2 gap-2 p-0 font-mono">
@@ -355,6 +356,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
               </div>
             ) : (
               <form onSubmit={verify} noValidate className="flex flex-col gap-4">
+                <QRCode value={`otpauth://totp/Acme?secret=${setupKey.replace(/\s/g, '')}&issuer=Acme`} label="Code to scan with your authenticator app" size="sm" />
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-mono" id="setup-key">{setupKey}</span>
                   <CopyButton value={setupKey.replace(/\s/g, '')} copiedLabel="Copied" aria-describedby="setup-key">Copy the key</CopyButton>
