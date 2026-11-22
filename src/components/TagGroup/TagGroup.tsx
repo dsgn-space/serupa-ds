@@ -98,6 +98,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
     announce(L.valueRemoved(t.label));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, t: TagItem, i: number) => {
+    if ((e.altKey || e.ctrlKey || e.metaKey) && e.key.startsWith('Arrow')) return;   // Alt+arrow is the browser's Back and Forward
     const rtl = grid.current ? getComputedStyle(grid.current).direction === 'rtl' : false;
     const step = (d: number) => { const n = shown[Math.min(Math.max(i + d, 0), shown.length - 1)]; if (n) { setActive(n.id); const r = rowOf(n.id); if (r) r.focus(); } };
     switch (e.key) {

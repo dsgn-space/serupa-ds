@@ -84,7 +84,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
     else { setDrag({ key, from: index, to: index, pointer: false }); announce(sds.labels.reorderGrabbed(label(items[index]), index + 1, total)); }
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!drag || drag.pointer || isComposing(e)) return;
+    if (!drag || drag.pointer || isComposing(e) || e.altKey || e.ctrlKey || e.metaKey) return;
     const k = e.key;
     let to = drag.to;
     const back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';

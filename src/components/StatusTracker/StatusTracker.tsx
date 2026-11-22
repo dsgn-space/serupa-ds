@@ -73,6 +73,7 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
     if (el instanceof HTMLElement) el.focus();
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLOListElement>) => {
+    if ((e.altKey || e.ctrlKey || e.metaKey) && e.key.startsWith('Arrow')) return;   // Alt+arrow is the browser's Back and Forward
     const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
     const k = e.key, next = rtl ? 'ArrowLeft' : 'ArrowRight', prev = rtl ? 'ArrowRight' : 'ArrowLeft';
     if (k === next) move(current + 1);

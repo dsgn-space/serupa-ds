@@ -106,6 +106,7 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
     emit(picked.includes(v) ? picked.filter((x) => x !== v) : [...picked, v]);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    if ((e.altKey || e.ctrlKey || e.metaKey) && e.key.startsWith('Arrow')) return;   // Alt+arrow is the browser's Back and Forward
     const t = e.target as HTMLElement, row = t.closest<HTMLElement>('[data-list-value]');
     if (!row || row.parentElement !== ul.current) return;
     const all = rows(), i = all.indexOf(row), onRow = t === row;

@@ -177,7 +177,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
     announce(L.kanbanGrabbed(getLabel(item), col.title, at.index + 1, col.items.length));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!drag || drag.pointer || !from || isComposing(e)) return;
+    if (!drag || drag.pointer || !from || isComposing(e) || e.altKey || e.ctrlKey || e.metaKey) return;
     const k = e.key, back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';
     let to = drag.to;
     const last = (c: number) => sizeAt({ column: c, index: 0 }, true) - 1;
