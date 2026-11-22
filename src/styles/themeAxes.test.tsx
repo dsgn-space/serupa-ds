@@ -209,7 +209,7 @@ describe('Contrast axis', () => {
       axes(brand, 'dark');
       const dark = { fill: color('primary'), on: color('on-primary'), text: color('primary-text') };
       // In light one shade does both jobs. In dark the fill stays within a few points of it, channel by channel
-      // (blue-600 rgb(37, 99, 235) is rgb(41, 104, 240)); brand 400 was 60 or more away.
+      // (blue-600 rgb(37, 99, 235) is rgb(43, 106, 242)); brand 400 was 60 or more away.
       expect(light.text, brand).toBe(light.fill);
       expect(Math.max(...rgb(dark.fill).map((v, i) => Math.abs(v - rgb(light.fill)[i]!))), `${brand}: ${light.fill} and ${dark.fill}`).toBeLessThanOrEqual(16);
       expect([light.on, dark.on], brand).toEqual(['rgb(255, 255, 255)', 'rgb(255, 255, 255)']);
@@ -217,7 +217,7 @@ describe('Contrast axis', () => {
       expect(dark.text, brand).not.toBe(dark.fill);
     }
     axes('blue', 'dark');
-    expect(color('primary')).toBe('rgb(41, 104, 240)');
+    expect(color('primary')).toBe('rgb(43, 106, 242)');   // #2b6af2: blue-600, lifted as far as 3:1 on a raised card asks and by 0.02 at least
     // Yellow Dark is the exception: the bright yellow 400 under yellow-950 text, since a yellow that takes white reads as brown.
     axes('yellow', 'dark');
     expect([color('primary'), color('on-primary')]).toEqual([color('yellow-400'), color('yellow-950')]);
