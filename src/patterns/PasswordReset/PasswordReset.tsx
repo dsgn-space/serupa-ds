@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Logo } from '../../components/Logo/Logo';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Center } from '../../components/Center/Center';
 import { Stack } from '../../components/Stack/Stack';
@@ -28,6 +29,11 @@ import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
    - The sent step says the same whether or not an account uses the email, so the page doesn't tell a stranger who
      has an account.
    Sending the link, checking it and storing the password are the app's job: onRequest and onReset stand in. */
+
+// The made-up brand's logo, drawn for light and dark backgrounds: swap in your own files.
+const drawn = (w: number, body: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="32" viewBox="0 0 ${w} 32">${body}</svg>`);
+const mark = (bg: string, fg: string) => `<rect width="32" height="32" rx="8" fill="${bg}"/><path d="M9 23 16 8l7 15h-4l-3-7-3 7z" fill="${fg}"/>`;
+const word = (fill: string) => `<text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="${fill}">Acme</text>`;
 
 export type PasswordResetStep = 'request' | 'sent' | 'choose' | 'expired' | 'done';
 
@@ -120,7 +126,7 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
       <Center as="main" id="main" vertical className="outline-none">
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">Sending the link and choosing a new password need a connection.</OfflineBanner>
-        <p className="m-0 text-base font-semibold">Acme</p>
+        <Logo src={drawn(104, mark('#1d4ed8', '#fff') + word('#0f172a'))} darkSrc={drawn(104, mark('#60a5fa', '#0f172a') + word('#f8fafc'))} alt="Acme" />
         <Card className="flex flex-col gap-4">
           {step === 'request' ? (
             <>

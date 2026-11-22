@@ -15,7 +15,7 @@
 .srp-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .srp-table__caption { padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
-.srp-table__cell { padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; font-variant-numeric: tabular-nums; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
+.srp-table__cell { padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
 .srp-table--sm .srp-table__cell { padding-block: var(--table-padding-y-sm, var(--space-item)); }
 .srp-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .srp-table__cell, .srp-table__body .srp-table__row:last-child .srp-table__cell, .srp-table__foot .srp-table__row:last-child .srp-table__cell { border-bottom: var(--spacing-0); }
 .srp-table__foot .srp-table__row:first-child .srp-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
@@ -27,6 +27,8 @@
 .srp-table__body .srp-table__header, .srp-table__foot .srp-table__header { background: none; --surface-behind: inherit; color: inherit; white-space: normal; }
 .srp-table__cell--center { text-align: center; }
 .srp-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+/* Only an end cell (numbers) is tabular, as in DataGrid: Inter's tabular hyphen is 9px to its 6.5px, so in a start cell
+   it spread a word like "hotel-invoice.pdf" apart. */
 /* The row background eases only while the pointer is over the body, so a row's hover and a click on its own box still
    ease, while "select all" in the header (or from script) repaints every row at once instead of starting a transition
    per row (GR168). Reduced motion keeps it off. */
