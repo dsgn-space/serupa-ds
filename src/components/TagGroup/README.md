@@ -55,7 +55,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - **Role and name:** a grid (`role="grid"`) named by its label, with a row per tag; the tag's words are its first cell and its × the second, a button named "Remove Design". Picked tags have `aria-selected`, and a multiple-choice group `aria-multiselectable`.
 - **Keyboard:** one Tab stop, on the last tag focused (the table below).
 - **Focus:** removing a tag moves focus to the next one, so it's never dropped to the page.
-- **Contrast:** a tag's words read 4.5:1 and its border 3:1 in every theme, picked or not (`TagGroup.test.tsx`).
+- **Contrast:** a tag's words read 4.5:1 in every theme, picked or not. A plain tag's border is the light `border-strong` a field has, since its words mark it; a picked tag's border keeps 3:1 (`TagGroup.test.tsx`).
 - **What's still yours:** the label, and what removing or picking a tag does in your app (saving it, undoing it).
 
 ### Keyboard
@@ -74,7 +74,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the outer `<div>` |
-| `items` | `TagItem[]` | | `{ id, label, disabled?, icon?, avatar? }`, in order. `icon` (an icon name or element) and `avatar` (a picture such as `<Avatar size="xs" />`, drawn at 24px, as tall as the tag) sit before the words and are decorative: the words name the tag. A selected tag shows its check where its icon was |
+| `items` | `TagItem[]` | | `{ id, label, disabled?, icon?, avatar? }`, in order. `icon` (an icon name or element) and `avatar` (a picture such as `<Avatar size="xs" />`, drawn at 20px inside the tag's border) sit before the words and are decorative: the words name the tag. A selected tag shows its check where its icon was |
 | `label` | `ReactNode` | | The group's visible label |
 | `onRemove` | `(id) => void` | | Shows a × on each tag; Delete and Backspace remove too |
 | `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Picking tags |
@@ -96,7 +96,7 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | --- | --- | --- |
 | `--tag-group-bg` | `surface` | A tag's background. |
 | `--tag-group-text` | `text` | A tag's words (4.5:1 on bg). |
-| `--tag-group-border` | `border-control` | A tag's border (3:1 on the page, so the tag's edge is seen). |
+| `--tag-group-border` | `border-strong` | A tag's border: the light one a field and an outline Badge have. Its words mark the tag, so the edge needn't be 3:1; a picked tag's border is. |
 | `--tag-group-bg-hover` | `surface-hover` | A tag that can be picked, under the pointer. A picked tag keeps its own colors, as a pressed ToggleButton does. |
 | `--tag-group-bg-pressed` | `pressed` | A tag that can be picked, while it's held down, one step past bg-hover. |
 | `--tag-group-bg-selected` | `primary-subtle` | A picked tag's background. |
@@ -125,6 +125,6 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | --- | --- | --- |
 | `--tag-group-gap` | `spacing-2` | The space between tags (8px). |
 | `--tag-group-label-gap` | `spacing-1.5` | The space between the label and the tags, as between a Field's label and its control (6px). |
-| `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |
-| `--tag-group-icon-size` | `spacing-4` | A tag's icon, the check of a selected tag and the × (16px), beside the 14px label. |
+| `--tag-group-avatar-size` | `spacing-5` | The picture before a tag's words (20px), inside the tag's border with 1px clear of it, so the circle never breaks the line. |
+| `--tag-group-icon-size` | `spacing-3.5` | A tag's icon, the check of a selected tag and the × (14px), beside the 12px label, as in a small Button. |
 <!-- token-table:end -->

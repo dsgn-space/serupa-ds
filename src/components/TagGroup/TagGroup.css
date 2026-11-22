@@ -11,9 +11,9 @@
 .srp-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
 .srp-tag-group__tag {
   display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
-  min-block-size: var(--control-height-sm); padding-block: var(--border-width-1); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
+  min-block-size: var(--control-height-sm); padding-block: var(--srp-tag-py); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-strong));
   border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
-  font-size: var(--text-sm); line-height: var(--text-sm--line-height); cursor: default; touch-action: manipulation;
+  font-size: var(--text-xs); line-height: var(--text-xs--line-height); cursor: default; touch-action: manipulation;
 }
 .srp-tag-group__tag:has(.srp-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
 .srp-tag-group__tag[aria-selected] { cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none; }   /* picked and dropped, no word highlights */
@@ -29,25 +29,25 @@
 .srp-tag-group__tag[aria-disabled="true"], .srp-tag-group__tag[aria-disabled="true"] * { border-color: var(--tag-group-border-disabled, var(--disabled-border)); color: var(--tag-group-text-disabled, var(--disabled-text)); }
 .srp-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
 /* An avatar sits at the tag's start edge, as a recipient's picture does in a To field; an icon takes the check's place. */
-.srp-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); margin-block: calc(var(--spacing-0) - var(--border-width-1) - var(--border-width-1)); border-radius: var(--radius-pill); overflow: hidden; }   /* 24px over the tag's 1px padding and 1px border, as tall as the tag */
+.srp-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-5)); block-size: var(--tag-group-avatar-size, var(--spacing-5)); margin-inline-start: calc(var(--border-width-1) - var(--spacing-2)); margin-block: calc((var(--text-xs--line-height) - var(--tag-group-avatar-size, var(--spacing-5))) / 2); border-radius: var(--radius-pill); overflow: hidden; }   /* 20px, inside the tag's border with 1px clear of it above, below and at the start, so the circle never breaks the line */
 /* Whatever picture is passed (an Avatar of any size, an <img>) is drawn at that size, so the tag keeps its height. */
 .srp-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
 .srp-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
 .srp-tag-group__check { flex: none; }
 .srp-tag-group__cell { display: inline-flex; }
 .srp-tag-group__remove {
-  position: relative; display: inline-grid; place-items: center; inline-size: var(--srp-tag-inner); block-size: var(--srp-tag-inner); margin: calc(var(--spacing-0) - var(--border-width-1)) var(--spacing-0); padding: var(--spacing-0);
+  position: relative; display: inline-grid; place-items: center; inline-size: var(--srp-tag-inner); block-size: var(--srp-tag-inner); margin: calc(var(--spacing-0) - var(--srp-tag-py)) var(--spacing-0); padding: var(--spacing-0);
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-/* Every tag is 24px, as small controls are: 1px border, 1px over and under the 20px line (so a wrapped tag keeps a
-   one-line tag's inset). The × is 22px, inside the border, reaching over the 1px padding, and still takes a 24px
+/* Every tag is 24px with 12px words, as small controls are: 1px border, 3px over and under the 16px line (so a wrapped
+   tag keeps a one-line tag's inset). The × is 22px, inside the border, reaching over the 3px padding, and still takes a 24px
    press (WCAG 2.5.8) through a box 1px past each edge, as SearchInput's small × does. */
-.srp-tag-group__tag { --srp-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); }
+.srp-tag-group__tag { --srp-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); --srp-tag-py: calc((var(--control-height-sm) - var(--text-xs--line-height)) / 2 - var(--border-width-1)); }
 .srp-tag-group__remove::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1)); }
-/* A tag's icons (its own, the check of a selected tag, the ×) are 16px beside the 14px label, as a field's icon:
+/* A tag's icons (its own, the check of a selected tag, the ×) are 14px beside the 12px label, as a small Button's:
    an Icon's own default is 24px, which filled the whole 24px tag. */
-.srp-tag-group__tag .srp-icon { font-size: var(--tag-group-icon-size, var(--spacing-4)); }
+.srp-tag-group__tag .srp-icon { font-size: var(--tag-group-icon-size, var(--spacing-3\.5)); }
 @media (hover: hover) { .srp-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
 .srp-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .srp-tag-group__remove { transition: none; } }
