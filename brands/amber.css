@@ -22,9 +22,9 @@
   --srp-more-focus-ring: var(--amber-700);
 }
 [data-theme="amber-dark"] {
-  --primary: #b7550e;
-  --primary-hover: #944211;
-  --primary-pressed: #7a3712;
+  --primary: #bb5915;
+  --primary-hover: #984616;
+  --primary-pressed: #7e3b16;
   --primary-edge: #00000000;
   --primary-subtle: var(--amber-950);
   --primary-subtle-pressed: var(--amber-900);
@@ -42,9 +42,9 @@
   --srp-more-focus-ring: var(--amber-300);
 }
 :root[data-brand="amber"]:not([data-theme]), [data-brand="amber"]:not([data-theme]) {
-  --primary: light-dark(var(--amber-700), #b7550e);
-  --primary-hover: light-dark(var(--amber-800), #944211);
-  --primary-pressed: light-dark(var(--amber-900), #7a3712);
+  --primary: light-dark(var(--amber-700), #bb5915);
+  --primary-hover: light-dark(var(--amber-800), #984616);
+  --primary-pressed: light-dark(var(--amber-900), #7e3b16);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));
@@ -62,9 +62,9 @@
   --srp-more-focus-ring: light-dark(var(--amber-700), var(--amber-300));
 }
 :is([data-theme^="amber-"], [data-brand="amber"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--amber-700), #b7550e);
-  --primary-hover: light-dark(var(--amber-800), #944211);
-  --primary-pressed: light-dark(var(--amber-900), #7a3712);
+  --primary: light-dark(var(--amber-700), #bb5915);
+  --primary-hover: light-dark(var(--amber-800), #984616);
+  --primary-pressed: light-dark(var(--amber-900), #7e3b16);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));

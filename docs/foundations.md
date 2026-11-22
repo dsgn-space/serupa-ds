@@ -40,13 +40,13 @@ Every theme shares **one set of foundations**: the same palette, type, spacing s
 
 | Brand | `primary` in light | `primary` in dark | `primary-text` in dark |
 | --- | --- | --- | --- |
-| `blue` *(default)* | `blue-600` | `#2968f0` | `blue-400` |
+| `blue` *(default)* | `blue-600` | `#2b6af2` | `blue-400` |
 | `red` | `red-700` | `#d13832` | `red-400` |
-| `orange` | `orange-700` | `#c74614` | `orange-400` |
-| `amber` | `amber-700` | `#b7550e` | `amber-400` |
+| `orange` | `orange-700` | `#c94817` | `orange-400` |
+| `amber` | `amber-700` | `#bb5915` | `amber-400` |
 | `yellow` | `yellow-500`, under `yellow-950` text, in a `yellow-700` edge | `yellow-400`, under `yellow-950` text | `yellow-400` |
-| `lime` | `lime-700` | `#4e7e12` | `lime-400` |
-| `green` | `green-700` | `#18823e` | `green-400` |
+| `lime` | `lime-700` | `#538219` | `lime-400` |
+| `green` | `green-700` | `#1f8643` | `green-400` |
 | `emerald` | `emerald-700` | `#18815f` | `emerald-400` |
 | `teal` | `teal-700` | `#1e7e76` | `teal-400` |
 | `cyan` | `cyan-700` | `#1b7b97` | `cyan-400` |
@@ -64,7 +64,7 @@ A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-
 
 `primary` is a fill with white text on it: a primary button, a checked box, the selected day. `primary-text` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
 
-**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened only as far as 3:1 on a raised dark card asks: `blue-600` (#2563eb) becomes #2968f0, and no brand moves more than a few points of lightness. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `primary-edge` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `primary-edge` is transparent and nothing is drawn. A custom mark filled with `primary` takes the same edge: `box-shadow: inset 0 0 0 1px var(--primary-edge)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
+**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened as far as 3:1 on a raised dark card asks, and always a touch (0.02 of OKLCH lightness) while white text on it keeps 4.5:1, as Apple's system colors are a touch brighter in dark: `blue-600` (#2563eb) becomes #2b6af2, and no brand moves more than a few points of lightness. The status fills (`success`, `warning`, `info`, `danger`) follow the same rule. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `primary-edge` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `primary-edge` is transparent and nothing is drawn. A custom mark filled with `primary` takes the same edge: `box-shadow: inset 0 0 0 1px var(--primary-edge)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
@@ -148,22 +148,22 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `border-raised` | `zinc-200` | `zinc-800` | Deprecated: the same as `border`, which a raised card uses now. Removed in 15.0.0; `serupa-migrate` renames it. |
 | `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
-| `success` | `green-600` | `green-600` | Success icons and fills (3:1), the same shade in both modes. Not for text: use `success-text`. |
+| `success` | `green-600` | `#23a950` | Success icons and fills (3:1): in dark, `green-600` a touch lighter. Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
 | `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
-| `success-hover` | `green-500` | `green-500` | Hover / pressed state of `success` fills. |
+| `success-hover` | `green-500` | `#2ecc64` | Hover / pressed state of `success` fills. |
 | `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
 | `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
 | `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
-| `warning` | `amber-600` | `amber-600` | Warning icons and fills, the same shade in both modes; put dark text on it. Not for text: use `warning-text`. |
+| `warning` | `amber-600` | `#e07d17` | Warning icons and fills (in dark, `amber-600` a touch lighter); put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
 | `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
-| `warning-hover` | `amber-500` | `amber-500` | Hover / pressed state of `warning` fills. |
+| `warning-hover` | `amber-500` | `#fca41d` | Hover / pressed state of `warning` fills. |
 | `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
 | `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
 | `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
-| `danger` | `red-600` | `red-600` | Errors, destructive buttons; white text on it. |
-| `danger-hover` | `red-700` | `red-700` | Hover / pressed state of `danger`. |
+| `danger` | `red-600` | `#e22e2c` | Errors, destructive buttons; white text on it. In dark, `red-600` a touch lighter. |
+| `danger-hover` | `red-700` | `#bf2422` | Hover / pressed state of `danger`. |
 | `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
 | `danger-subtle` | `red-50` | `red-950` | Error alert / badge background. |
 | `danger-text` | `red-700` | `red-300` | Destructive text and icons on `surface` and danger tints. |

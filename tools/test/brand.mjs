@@ -18,7 +18,7 @@ const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'ut
 const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
 
 // The shipped dark themes fill with their light theme's own shade: primary, its hover and its held-down color are the
-// light theme's, each lightened only as far as 3:1 on a raised dark card asks of the first (darkFillShift), under white
+// light theme's, each lightened as far as 3:1 on a raised dark card asks of the first and always a touch (darkFillShift), under white
 // text at 4.5:1. So a primary button is the same color in light and dark, and a new brand in the token source that
 // picks a lighter dark fill by hand fails here.
 {
@@ -44,7 +44,7 @@ const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
     }
     near.push(d);
   }
-  t("every other shipped dark theme's primary, hover and held-down fills are its light theme's, lightened only as far as 3:1 on a raised card asks, under white text", !off.length && near.length > 0, off.join('; '));
+  t("every other shipped dark theme's primary, hover and held-down fills are its light theme's, lightened as far as 3:1 on a raised card asks and always a touch, under white text", !off.length && near.length > 0, off.join('; '));
   t('no shipped dark fill is more than 0.07 lighter (OKLCH L) than its light theme\'s: the two read as one color', near.every((d) => d <= 0.07), near.join(' '));
 }
 

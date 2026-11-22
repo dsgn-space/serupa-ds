@@ -811,23 +811,23 @@
     "primary": {
       "$type": "color",
       "$value": "{color.blue-600}",
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "#2968f0",
+            "blue-dark": "#2b6af2",
             "red-light": "{red-700}",
             "red-dark": "#d13832",
             "orange-light": "{orange-700}",
-            "orange-dark": "#c74614",
+            "orange-dark": "#c94817",
             "amber-light": "{amber-700}",
-            "amber-dark": "#b7550e",
+            "amber-dark": "#bb5915",
             "yellow-light": "{yellow-500}",
             "yellow-dark": "{yellow-400}",
             "lime-light": "{lime-700}",
-            "lime-dark": "#4e7e12",
+            "lime-dark": "#538219",
             "green-light": "{green-700}",
-            "green-dark": "#18823e",
+            "green-dark": "#1f8643",
             "emerald-light": "{emerald-700}",
             "emerald-dark": "#18815f",
             "teal-light": "{teal-700}",
@@ -884,6 +884,72 @@
             "pink-dark": "{pink-300}",
             "rose-light": "{rose-900}",
             "rose-dark": "{rose-300}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-600}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-700}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-700}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-700}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-700}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-700}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-700}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-700}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-700}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-700}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-600}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-600}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-600}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-700}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-700}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-700}",
+              "by": 0.06
+            }
           }
         }
       }
@@ -895,19 +961,19 @@
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "#2153dd",
+            "blue-dark": "#2255df",
             "red-light": "{red-800}",
             "red-dark": "#b0342f",
             "orange-light": "{orange-800}",
-            "orange-dark": "#9f3817",
+            "orange-dark": "#a13a1a",
             "amber-light": "{amber-800}",
-            "amber-dark": "#944211",
+            "amber-dark": "#984616",
             "yellow-light": "#d9a500",
             "yellow-dark": "{yellow-300}",
             "lime-light": "{lime-800}",
-            "lime-dark": "#406314",
+            "lime-dark": "#44681a",
             "green-light": "{green-800}",
-            "green-dark": "#186635",
+            "green-dark": "#1e6b39",
             "emerald-light": "{emerald-800}",
             "emerald-dark": "#16674e",
             "teal-light": "{teal-800}",
@@ -964,6 +1030,72 @@
             "pink-dark": "{pink-200}",
             "rose-light": "{rose-950}",
             "rose-dark": "{rose-200}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-700}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-800}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-800}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-800}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-800}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-800}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-800}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-800}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-800}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-800}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-700}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-700}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-700}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-800}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-800}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-800}",
+              "by": 0.06
+            }
           }
         }
       }
@@ -975,19 +1107,19 @@
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "#2144b4",
+            "blue-dark": "#2346b6",
             "red-light": "{red-900}",
             "red-dark": "#95322f",
             "orange-light": "{orange-900}",
-            "orange-dark": "#803117",
+            "orange-dark": "#823318",
             "amber-light": "{amber-900}",
-            "amber-dark": "#7a3712",
+            "amber-dark": "#7e3b16",
             "yellow-light": "{yellow-600}",
             "yellow-dark": "{yellow-200}",
             "lime-light": "{lime-900}",
-            "lime-dark": "#375416",
+            "lime-dark": "#3b591a",
             "green-light": "{green-900}",
-            "green-dark": "#16542e",
+            "green-dark": "#1b5932",
             "emerald-light": "{emerald-900}",
             "emerald-dark": "#135642",
             "teal-light": "{teal-900}",
@@ -1044,6 +1176,72 @@
             "pink-dark": "{pink-100}",
             "rose-light": "{rose-950}",
             "rose-dark": "{rose-100}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-800}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-900}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-900}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-900}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-900}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-900}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-900}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-900}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-900}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-900}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-800}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-800}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-800}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-900}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-900}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-900}",
+              "by": 0.06
+            }
           }
         }
       }
@@ -2022,13 +2220,19 @@
     "success": {
       "$type": "color",
       "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1), green-600 in light and dark themes alike, as `primary` is the light theme's shade in dark (ADR-0026). For success text use `success-text`.",
+      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-600}",
+          "dark": "#23a950",
           "contrastMore": {
             "light": "{green-700}",
             "dark": "{green-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.green-600}",
+              "by": 0.02
+            }
           }
         }
       }
@@ -2063,7 +2267,13 @@
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-500}"
+          "dark": "#2ecc64",
+          "lift": {
+            "dark": {
+              "from": "{color.green-500}",
+              "by": 0.02
+            }
+          }
         }
       }
     },
@@ -2104,13 +2314,19 @@
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills, amber-600 in light and dark themes alike; put dark text on it. For warning text use `warning-text`.",
+      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-600}",
+          "dark": "#e07d17",
           "contrastMore": {
             "light": "{amber-700}",
             "dark": "{amber-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.amber-600}",
+              "by": 0.02
+            }
           }
         }
       }
@@ -2145,7 +2361,13 @@
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-500}"
+          "dark": "#fca41d",
+          "lift": {
+            "dark": {
+              "from": "{color.amber-500}",
+              "by": 0.02
+            }
+          }
         }
       }
     },
@@ -2186,10 +2408,16 @@
     "danger": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `danger-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-600}"
+          "dark": "#e22e2c",
+          "lift": {
+            "dark": {
+              "from": "{color.red-600}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -2199,7 +2427,13 @@
       "$description": "Alias. Hover / pressed state of `danger`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-700}"
+          "dark": "#bf2422",
+          "lift": {
+            "dark": {
+              "from": "{color.red-700}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -2209,7 +2443,13 @@
       "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-800}"
+          "dark": "#9f2220",
+          "lift": {
+            "dark": {
+              "from": "{color.red-800}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -2277,6 +2517,12 @@
           "contrastMore": {
             "light": "{sky-800}",
             "dark": "{sky-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.sky-700}",
+              "by": 0.0455
+            }
           }
         }
       }
@@ -2311,7 +2557,13 @@
       "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "#1d6693"
+          "dark": "#1d6693",
+          "lift": {
+            "dark": {
+              "from": "{color.sky-800}",
+              "by": 0.0455
+            }
+          }
         }
       }
     },

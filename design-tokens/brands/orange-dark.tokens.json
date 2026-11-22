@@ -5,13 +5,13 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.7804,
-          0.2745,
-          0.0784
+          0.7882,
+          0.2824,
+          0.0902
         ],
-        "hex": "#c74614"
+        "hex": "#c94817"
       },
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -23,11 +23,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.6235,
-          0.2196,
-          0.0902
+          0.6314,
+          0.2275,
+          0.102
         ],
-        "hex": "#9f3817"
+        "hex": "#a13a1a"
       },
       "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
@@ -41,11 +41,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.502,
-          0.1922,
-          0.0902
+          0.5098,
+          0.2,
+          0.0941
         ],
-        "hex": "#803117"
+        "hex": "#823318"
       },
       "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {

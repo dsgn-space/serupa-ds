@@ -22,9 +22,9 @@
   --srp-more-focus-ring: var(--green-700);
 }
 [data-theme="green-dark"] {
-  --primary: #18823e;
-  --primary-hover: #186635;
-  --primary-pressed: #16542e;
+  --primary: #1f8643;
+  --primary-hover: #1e6b39;
+  --primary-pressed: #1b5932;
   --primary-edge: #00000000;
   --primary-subtle: var(--green-950);
   --primary-subtle-pressed: var(--green-900);
@@ -42,9 +42,9 @@
   --srp-more-focus-ring: var(--green-300);
 }
 :root[data-brand="green"]:not([data-theme]), [data-brand="green"]:not([data-theme]) {
-  --primary: light-dark(var(--green-700), #18823e);
-  --primary-hover: light-dark(var(--green-800), #186635);
-  --primary-pressed: light-dark(var(--green-900), #16542e);
+  --primary: light-dark(var(--green-700), #1f8643);
+  --primary-hover: light-dark(var(--green-800), #1e6b39);
+  --primary-pressed: light-dark(var(--green-900), #1b5932);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--green-50), var(--green-950));
   --primary-subtle-pressed: light-dark(var(--green-100), var(--green-900));
@@ -62,9 +62,9 @@
   --srp-more-focus-ring: light-dark(var(--green-700), var(--green-300));
 }
 :is([data-theme^="green-"], [data-brand="green"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--green-700), #18823e);
-  --primary-hover: light-dark(var(--green-800), #186635);
-  --primary-pressed: light-dark(var(--green-900), #16542e);
+  --primary: light-dark(var(--green-700), #1f8643);
+  --primary-hover: light-dark(var(--green-800), #1e6b39);
+  --primary-pressed: light-dark(var(--green-900), #1b5932);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--green-50), var(--green-950));
   --primary-subtle-pressed: light-dark(var(--green-100), var(--green-900));

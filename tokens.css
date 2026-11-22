@@ -484,23 +484,23 @@
   --border: var(--zinc-800);
   --border-strong: var(--zinc-600);
   --border-overlay: var(--zinc-600);
-  --success: var(--green-600);
+  --success: #23a950;
   --success-subtle: var(--green-950);
   --success-text: var(--green-300);
-  --success-hover: var(--green-500);
+  --success-hover: #2ecc64;
   --on-success: var(--green-950);
   --success-subtle-hover: var(--green-900);
   --success-border: var(--green-800);
-  --warning: var(--amber-600);
+  --warning: #e07d17;
   --warning-subtle: var(--amber-950);
   --warning-text: var(--amber-300);
-  --warning-hover: var(--amber-500);
+  --warning-hover: #fca41d;
   --on-warning: var(--amber-950);
   --warning-subtle-hover: var(--amber-900);
   --warning-border: var(--amber-800);
-  --danger: var(--red-600);
-  --danger-hover: var(--red-700);
-  --danger-pressed: var(--red-800);
+  --danger: #e22e2c;
+  --danger-hover: #bf2422;
+  --danger-pressed: #9f2220;
   --on-danger: var(--white);
   --danger-subtle: var(--red-950);
   --danger-text: var(--red-300);
@@ -540,9 +540,9 @@
   --srp-more-primary-edge: #00000000;
 }
 [data-theme="blue-dark"] {
-  --primary: #2968f0;
-  --primary-hover: #2153dd;
-  --primary-pressed: #2144b4;
+  --primary: #2b6af2;
+  --primary-hover: #2255df;
+  --primary-pressed: #2346b6;
   --primary-edge: #00000000;
   --primary-subtle: var(--blue-950);
   --primary-subtle-pressed: var(--blue-900);
@@ -561,9 +561,9 @@
 }
 :where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
-  --primary: light-dark(var(--blue-600), #2968f0);
-  --primary-hover: light-dark(var(--blue-700), #2153dd);
-  --primary-pressed: light-dark(var(--blue-800), #2144b4);
+  --primary: light-dark(var(--blue-600), #2b6af2);
+  --primary-hover: light-dark(var(--blue-700), #2255df);
+  --primary-pressed: light-dark(var(--blue-800), #2346b6);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
@@ -609,14 +609,21 @@
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
+  --success: light-dark(var(--green-600), #23a950);
   --success-subtle: light-dark(var(--green-50), var(--green-950));
   --success-text: light-dark(var(--green-700), var(--green-300));
+  --success-hover: light-dark(var(--green-500), #2ecc64);
   --success-subtle-hover: light-dark(var(--green-100), var(--green-900));
   --success-border: light-dark(var(--green-300), var(--green-800));
+  --warning: light-dark(var(--amber-600), #e07d17);
   --warning-subtle: light-dark(var(--amber-50), var(--amber-950));
   --warning-text: light-dark(var(--amber-700), var(--amber-300));
+  --warning-hover: light-dark(var(--amber-500), #fca41d);
   --warning-subtle-hover: light-dark(var(--amber-100), var(--amber-900));
   --warning-border: light-dark(var(--amber-300), var(--amber-800));
+  --danger: light-dark(var(--red-600), #e22e2c);
+  --danger-hover: light-dark(var(--red-700), #bf2422);
+  --danger-pressed: light-dark(var(--red-800), #9f2220);
   --danger-subtle: light-dark(var(--red-50), var(--red-950));
   --danger-text: light-dark(var(--red-700), var(--red-300));
   --danger-subtle-hover: light-dark(var(--red-100), var(--red-900));
@@ -657,9 +664,9 @@
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :root[data-brand="blue"]:not([data-theme]), [data-brand="blue"]:not([data-theme]) {
-  --primary: light-dark(var(--blue-600), #2968f0);
-  --primary-hover: light-dark(var(--blue-700), #2153dd);
-  --primary-pressed: light-dark(var(--blue-800), #2144b4);
+  --primary: light-dark(var(--blue-600), #2b6af2);
+  --primary-hover: light-dark(var(--blue-700), #2255df);
+  --primary-pressed: light-dark(var(--blue-800), #2346b6);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
@@ -677,9 +684,9 @@
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--blue-600), #2968f0);
-  --primary-hover: light-dark(var(--blue-700), #2153dd);
-  --primary-pressed: light-dark(var(--blue-800), #2144b4);
+  --primary: light-dark(var(--blue-600), #2b6af2);
+  --primary-hover: light-dark(var(--blue-700), #2255df);
+  --primary-pressed: light-dark(var(--blue-800), #2346b6);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));

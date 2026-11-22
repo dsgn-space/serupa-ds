@@ -22,9 +22,9 @@
   --srp-more-focus-ring: var(--orange-700);
 }
 [data-theme="orange-dark"] {
-  --primary: #c74614;
-  --primary-hover: #9f3817;
-  --primary-pressed: #803117;
+  --primary: #c94817;
+  --primary-hover: #a13a1a;
+  --primary-pressed: #823318;
   --primary-edge: #00000000;
   --primary-subtle: var(--orange-950);
   --primary-subtle-pressed: var(--orange-900);
@@ -42,9 +42,9 @@
   --srp-more-focus-ring: var(--orange-300);
 }
 :root[data-brand="orange"]:not([data-theme]), [data-brand="orange"]:not([data-theme]) {
-  --primary: light-dark(var(--orange-700), #c74614);
-  --primary-hover: light-dark(var(--orange-800), #9f3817);
-  --primary-pressed: light-dark(var(--orange-900), #803117);
+  --primary: light-dark(var(--orange-700), #c94817);
+  --primary-hover: light-dark(var(--orange-800), #a13a1a);
+  --primary-pressed: light-dark(var(--orange-900), #823318);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--orange-50), var(--orange-950));
   --primary-subtle-pressed: light-dark(var(--orange-100), var(--orange-900));
@@ -62,9 +62,9 @@
   --srp-more-focus-ring: light-dark(var(--orange-700), var(--orange-300));
 }
 :is([data-theme^="orange-"], [data-brand="orange"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--orange-700), #c74614);
-  --primary-hover: light-dark(var(--orange-800), #9f3817);
-  --primary-pressed: light-dark(var(--orange-900), #803117);
+  --primary: light-dark(var(--orange-700), #c94817);
+  --primary-hover: light-dark(var(--orange-800), #a13a1a);
+  --primary-pressed: light-dark(var(--orange-900), #823318);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--orange-50), var(--orange-950));
   --primary-subtle-pressed: light-dark(var(--orange-100), var(--orange-900));

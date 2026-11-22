@@ -272,6 +272,12 @@ check('tokens.json is exactly what tokens/serupa.tokens.json gives (npm run toke
 {
   const src = JSON.parse(read('tokens/serupa.tokens.json'));
   check('tokens/serupa.tokens.json turns into tokens.json and back without a change', isDeepStrictEqual(toSource(fromSource(src).tokens), src));
+  // A lifted dark fill names its palette step (ADR-0026): a hex changed without its lift, or the other way, is caught.
+  const lifted = Object.entries(src.color).filter(([, x]) => x.$extensions?.['com.serupa']?.lift);
+  const off = structuredClone(src);
+  off.color.success.$extensions['com.serupa'].dark = '#00ff00';
+  const caught = fromSource(off).problems.some((m) => m.startsWith('color.success: dark is #00ff00'));
+  check(`every dark fill says the palette step it is lifted from (${lifted.length} tokens), and a hex that isn't that step lifted is caught`, lifted.length >= 10 && !fromSource(src).problems.length && caught, caught ? '' : 'a wrong hex beside its lift went through');
 }
 
 // 12. cascade layers: every shipped stylesheet declares the same layer order and keeps its rules inside its layer

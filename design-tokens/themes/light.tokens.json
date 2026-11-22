@@ -3,7 +3,7 @@
     "primary": {
       "$type": "color",
       "$value": "{color.blue-600}",
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -530,7 +530,7 @@
     "success": {
       "$type": "color",
       "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1), green-600 in light and dark themes alike, as `primary` is the light theme's shade in dark (ADR-0026). For success text use `success-text`.",
+      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--success"
@@ -600,7 +600,7 @@
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills, amber-600 in light and dark themes alike; put dark text on it. For warning text use `warning-text`.",
+      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning"
@@ -670,7 +670,7 @@
     "danger": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `danger-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--danger"

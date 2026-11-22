@@ -14,7 +14,7 @@
 //          more contrast    primary the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
 //                           darker; focus ring the lightest at 4.5:1
 //          primary-text     primary itself: the shade is picked to pass as text too
-//   dark   primary          the light theme's primary, lightened only as far as 3:1 on a raised card (zinc-800) asks,
+//   dark   primary          the light theme's primary, lightened as far as 3:1 on a raised card (zinc-800) asks, and a touch more,
 //                           with white text, so a button is the same color in both modes; hover and held down are the
 //                           light theme's, lightened as much
 //          primary-text     the darkest of 500 to 200 at 4.5:1 on zinc-900, zinc-950, zinc-800 and the tints, with a
@@ -91,15 +91,23 @@ export const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.m
 
 // --- a dark theme's fills ---
 // A dark theme fills with the light theme's own shade, so a primary button is the same color in both: lightened in
-// OKLCH (hue and chroma kept) only as far as 3:1 on a raised dark card asks, with a little room, and white text keeps
+// OKLCH (hue and chroma kept) as far as 3:1 on a raised dark card asks, and at least DARK_LIFT, and white text keeps
 // 4.5:1. Hover and held down are the light theme's too, lightened by the same amount.
 export const FILL_ON_RAISED = 3.05;
-/** How much lighter (OKLCH L) a light theme's fill must be to stand 3:1 on a dark theme's raised surface. 0 when it already does. */
-export function darkFillShift(hex, raised) {
+// Every dark fill is at least this much lighter (OKLCH L) than its light theme's, as Apple's system colors are a touch
+// brighter in dark (0.01 to 0.04), unless the text on it would fall under 4.5:1: then it goes as far as that allows.
+export const DARK_LIFT = 0.02;
+/** How much lighter (OKLCH L) a light theme's fill is in a dark theme: as far as 3:1 on the raised surface asks, and
+ *  at least DARK_LIFT while the text on it (white unless given) keeps 4.5:1. */
+export function darkFillShift(hex, raised, on = '#ffffff') {
   const [L, C, h] = oklchOf(hex);
+  const at = (d) => (d ? clip([L + d, C, h]) : hex);
+  const step = (d, by) => Math.round((d + by) * 1e4) / 1e4;
   let d = 0;
-  while (d < 0.5 && contrast(d ? clip([L + d, C, h]) : hex, raised) < FILL_ON_RAISED) d = Math.round((d + 0.0005) * 1e4) / 1e4;
-  return d;
+  while (d < 0.5 && contrast(at(d), raised) < FILL_ON_RAISED) d = step(d, 0.0005);
+  let lift = Math.max(d, DARK_LIFT);
+  while (lift > d && contrast(on, at(lift)) < 4.5) lift = step(lift, -0.0005);
+  return Math.max(lift, d);
 }
 /** The color, this much lighter. */
 export function lighter(hex, d) {

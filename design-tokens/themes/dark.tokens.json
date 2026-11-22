@@ -5,13 +5,13 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.1608,
-          0.4078,
-          0.9412
+          0.1686,
+          0.4157,
+          0.949
         ],
-        "hex": "#2968f0"
+        "hex": "#2b6af2"
       },
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -23,11 +23,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.1294,
-          0.3255,
-          0.8667
+          0.1333,
+          0.3333,
+          0.8745
         ],
-        "hex": "#2153dd"
+        "hex": "#2255df"
       },
       "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
@@ -41,11 +41,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.1294,
-          0.2667,
-          0.7059
+          0.1373,
+          0.2745,
+          0.7137
         ],
-        "hex": "#2144b4"
+        "hex": "#2346b6"
       },
       "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {
@@ -569,8 +569,16 @@
     },
     "success": {
       "$type": "color",
-      "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1), green-600 in light and dark themes alike, as `primary` is the light theme's shade in dark (ADR-0026). For success text use `success-text`.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1373,
+          0.6627,
+          0.3137
+        ],
+        "hex": "#23a950"
+      },
+      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--success"
@@ -599,7 +607,15 @@
     },
     "success-hover": {
       "$type": "color",
-      "$value": "{color.green-500}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1804,
+          0.8,
+          0.3922
+        ],
+        "hex": "#2ecc64"
+      },
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -639,8 +655,16 @@
     },
     "warning": {
       "$type": "color",
-      "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills, amber-600 in light and dark themes alike; put dark text on it. For warning text use `warning-text`.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8784,
+          0.4902,
+          0.0902
+        ],
+        "hex": "#e07d17"
+      },
+      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning"
@@ -669,7 +693,15 @@
     },
     "warning-hover": {
       "$type": "color",
-      "$value": "{color.amber-500}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9882,
+          0.6431,
+          0.1137
+        ],
+        "hex": "#fca41d"
+      },
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -709,8 +741,16 @@
     },
     "danger": {
       "$type": "color",
-      "$value": "{color.red-600}",
-      "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8863,
+          0.1804,
+          0.1725
+        ],
+        "hex": "#e22e2c"
+      },
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `danger-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--danger"
@@ -719,7 +759,15 @@
     },
     "danger-hover": {
       "$type": "color",
-      "$value": "{color.red-700}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.749,
+          0.1412,
+          0.1333
+        ],
+        "hex": "#bf2422"
+      },
       "$description": "Alias. Hover / pressed state of `danger`.",
       "$extensions": {
         "com.serupa": {
@@ -729,7 +777,15 @@
     },
     "danger-pressed": {
       "$type": "color",
-      "$value": "{color.red-800}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6235,
+          0.1333,
+          0.1255
+        ],
+        "hex": "#9f2220"
+      },
       "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
       "$extensions": {
         "com.serupa": {
