@@ -41,6 +41,20 @@ describe('Fab', () => {
     expect(ref.current).toBe(e);
   });
 
+  test('loading: the spinner takes the icon\'s place, as big as the 24px icon in both sizes, centered within 0.5px, in the icon\'s color', async () => {
+    await render(<div style={{ padding: 16, display: 'flex', gap: 12 }}>
+      <Fab id="fl" icon="add" label="Saving" placement="static" loading />
+      <Fab id="fls" icon="add" label="Saving" size="sm" placement="static" loading />
+    </div>);
+    const out: unknown[] = [];
+    for (const [id, size] of [['fl', 24], ['fls', 24]] as const) {
+      const b = el(id), ring = b.querySelector<HTMLElement>('.srp-loader__art')!, r = ring.querySelector('svg')!.getBoundingClientRect(), o = b.getBoundingClientRect();
+      const off = Math.max(Math.abs(r.left + r.width / 2 - (o.left + o.width / 2)), Math.abs(r.top + r.height / 2 - (o.top + o.height / 2)));
+      out.push([id, Math.round(r.width), Math.round(r.height), off <= 0.5, css(ring).color === css(b).color]);
+      expect(out.at(-1)).toEqual([id, size, size, true, true]);
+    }
+  });
+
   test('56×56, 24px from the bottom-end corner; size sm at top-start: 40×40, 24px from the top-left corner', async () => {
     await render(<Fabs />);
     const [w, h] = [window.innerWidth, window.innerHeight], f = box('fab');
