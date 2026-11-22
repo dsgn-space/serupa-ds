@@ -198,7 +198,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
                     <section aria-labelledby="day" className="flex flex-col gap-4">
                       <h2 id="day" className={h2}>Day</h2>
                       <p className="m-0 text-sm text-text-muted">Days with no free times are struck through.</p>
-                      <Calendar ref={calendar} aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
+                      <Calendar ref={calendar} className="self-start" aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
                         defaultMonth={day(first ?? today)} isDateDisabled={closed} />
                       {picked ? <p id="free-times" className="m-0" role="status">{freeCount === 1 ? '1 time free' : `${formatNumber(freeCount, locale)} times free`} on {dayName(picked)}.</p> : null}
                     </section>
