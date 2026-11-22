@@ -13,7 +13,7 @@ const skills: TagItem[] = ['Research', 'Writing', 'Illustration', 'Typography', 
 /** Keeps the tags in state, so removing works in the story. */
 function Removable({ initial, ...rest }: { initial: TagItem[] } & Partial<React.ComponentProps<typeof TagGroup>>) {
   const [items, setItems] = React.useState(initial);
-  return <TagGroup label="Labels" empty="No labels yet" {...rest} items={items} onRemove={(id) => setItems((t) => t.filter((x) => x.id !== id))} />;
+  return <TagGroup label="Labels" emptyText="No labels yet" {...rest} items={items} onRemove={(id) => setItems((t) => t.filter((x) => x.id !== id))} />;
 }
 
 const meta = {

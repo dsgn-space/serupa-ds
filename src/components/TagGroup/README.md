@@ -33,7 +33,7 @@ Drawn from the `Default` story.
 4. **Text** (`.srp-tag-group__text`): the tag's words, after a tick when it's picked.
 5. **Remove** (`.srp-tag-group__remove`): the × that takes the tag off, in its own cell.
 
-Past `max`, a Show more button follows the tags; with none, the `empty` words take their place.
+Past `max`, a Show more button follows the tags; with none, the `emptyText` words take their place.
 
 ## Usage
 
@@ -42,7 +42,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - With `selectionMode`, a press, Space or Enter picks a tag. A picked tag has a tick as well as its color.
 - Give a recipient tag its `avatar`, or a label tag an `icon` for its kind, when the picture helps people find one at a glance. Both are decorative, so the words still have to say it all.
 - Use `max` for a list that can grow long: the rest wait behind "Show more", which becomes "Show less".
-- Pass `empty` ("No labels yet") so a list with nothing in it still says so.
+- Pass `emptyText` ("No labels yet") so a list with nothing in it still says so.
 - Keep each tag to a word or two; long ones wrap inside the tag.
 
 ### Do and don't
@@ -81,7 +81,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 | `selected` / `defaultSelected` | `string[]` | | The picked ids |
 | `onSelectedChange` | `(ids) => void` | | Called with the picked ids |
 | `max` | `number` | all | Show this many, and "Show more" for the rest |
-| `empty` | `ReactNode` | | Shown when there are no tags |
+| `emptyText` | `ReactNode` | | Shown when there are no tags (`empty` is its deprecated old name, removed in 18.0.0) |
 
 `className`, `ref` and other props go to the outer `<div>`.
 

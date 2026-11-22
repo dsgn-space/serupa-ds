@@ -546,11 +546,11 @@ describe('Button micro-interactions', () => {
     expect(bad.slice(0, 12)).toEqual([]);
   });
 
-  test('press: a primary button given its own background works out a held fill a step past its worked-out hover, darker in light themes, lighter in dark; onMedia takes a stronger wash of its ink', async () => {
+  test('press: a primary button given its own background works out a held fill a step past its worked-out hover, darker in light themes, lighter in dark; surface takes a stronger wash of its ink', async () => {
     await render(<div>
       <div data-theme="blue-light"><Button id="own-l" style={vars({ '--button-primary-bg': '#0f766e' })}>Own</Button></div>
       <div data-theme="blue-dark"><Button id="own-d" style={vars({ '--button-primary-bg': '#2dd4bf' })}>Own</Button></div>
-      <div style={{ background: '#000' }}><Button id="od" onMedia="dark" variant="outline">On photo</Button><Button id="odp" onMedia="dark">On photo</Button></div>
+      <div style={{ background: '#000' }}><Button id="od" surface="dark" variant="outline">On photo</Button><Button id="odp" surface="dark">On photo</Button></div>
     </div>);
     const cv = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d', { willReadFrequently: true })!;
     const lum = (c: string) => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const [r, g, b] = cv.getImageData(0, 0, 1, 1).data; return contrast(`rgb(${r}, ${g}, ${b})`, 'rgb(0, 0, 0)'); };
@@ -821,15 +821,15 @@ describe('Button token names', () => {
   });
 });
 
-describe('Button onMedia', () => {
+describe('Button surface', () => {
   test('over a scrim, every variant (and IconButton) is white on dark media and black on light, the same in all six themes, text and ring at 4.5:1', async () => {
     const variants = ['primary', 'secondary', 'outline', 'ghost', 'link'] as const;
     // The scrims a photo gets under its controls: the darkest and lightest the docs ask for.
     const scrim = { dark: 'rgb(0, 0, 0)', light: 'rgb(255, 255, 255)' } as const;
     await render(<div id="media" style={{ transition: 'none' }}>{(['dark', 'light'] as const).map((m) => (
       <div key={m} style={{ background: scrim[m], padding: '8px' }}>
-        {variants.map((v) => <Button key={v} id={`m-${m}-${v}`} variant={v} onMedia={m}>Book now</Button>)}
-        <IconButton id={`m-${m}-icon`} icon="close" label="Close" onMedia={m} />
+        {variants.map((v) => <Button key={v} id={`m-${m}-${v}`} variant={v} surface={m}>Book now</Button>)}
+        <IconButton id={`m-${m}-icon`} icon="close" label="Close" surface={m} />
       </div>
     ))}</div>);
     const style = document.head.appendChild(document.createElement('style'));
@@ -857,10 +857,10 @@ describe('Button onMedia', () => {
     expect(el('m-light-primary').className).toContain('srp-btn--on-light');
   });
 
-  test('an onMedia that isn\'t dark or light is left out, and the --button-on-dark token changes the ink', async () => {
+  test('an surface that isn\'t dark or light is left out, and the --button-on-dark token changes the ink', async () => {
     await render(<div style={{ '--button-on-dark': 'rgb(250, 240, 200)' } as React.CSSProperties}>
-      <Button id="m-bad" onMedia={'pink' as 'dark'}>Go</Button>
-      <Button id="m-tok" variant="outline" onMedia="dark">Go</Button>
+      <Button id="m-bad" surface={'pink' as 'dark'}>Go</Button>
+      <Button id="m-tok" variant="outline" surface="dark">Go</Button>
     </div>);
     expect(el('m-bad').className).not.toContain('on-');
     expect(getComputedStyle(el('m-tok')).color).toBe('rgb(250, 240, 200)');
