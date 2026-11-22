@@ -33,6 +33,14 @@
 - textbox "Message":
   - /placeholder: Tell us more
 
+# Sizes
+- textbox "Message, sm":
+  - /placeholder: Tell us more
+- textbox "Message, md":
+  - /placeholder: Tell us more
+- textbox "Message, lg":
+  - /placeholder: Tell us more
+
 # States
 - textbox "Invalid" [invalid]: Too short
 - textbox "Read-only"

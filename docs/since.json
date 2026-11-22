@@ -1,9 +1,11 @@
 {
  "Accordion": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "8015cef28e4c",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "bfebb5cfc9e5",
+  "props": {
+   "selectionMode": "17.0.0"
+  },
   "known": [
    "children",
    "collapseAll",
@@ -16,15 +18,14 @@
    "onValueChange",
    "showExpandAll",
    "title",
-   "type",
    "value",
    "variant"
   ]
  },
  "Alert": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "4c4e32a0c03f",
+  "changed": "17.0.0",
+  "api": "ba8f9c461c29",
   "props": {},
   "known": [
    "actions",
@@ -35,10 +36,16 @@
    "tone"
   ]
  },
+ "AppShell": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "d092417c7199",
+  "props": {}
+ },
  "Attachment": {
   "added": "14.2.0",
-  "changed": null,
-  "api": "5d1d1ff255b3",
+  "changed": "17.0.0",
+  "api": "0eba9adfc114",
   "props": {},
   "known": [
    "attachmentArchive",
@@ -67,8 +74,8 @@
  },
  "Avatar": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "e099ef748c99",
+  "changed": "17.0.0",
+  "api": "6552255453ed",
   "props": {},
   "known": [
    "alt",
@@ -84,13 +91,12 @@
  },
  "AvatarGroup": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "c203d01db2b7",
+  "changed": "17.0.0",
+  "api": "75763dfed1b0",
   "props": {},
   "known": [
    "avatarMore",
    "children",
-   "label",
    "max",
    "moreLabel",
    "onMore",
@@ -101,17 +107,17 @@
  },
  "Badge": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "26e5708501a2",
+  "changed": "17.0.0",
+  "api": "a97d5e21e7bb",
   "props": {
-   "loadingLabel": "14.7.0"
+   "loadingLabel": "14.7.0",
+   "startIcon": "17.0.0"
   },
   "known": [
    "count",
    "disabled",
    "dot",
    "href",
-   "leftIcon",
    "loading",
    "max",
    "onClick",
@@ -128,24 +134,23 @@
  },
  "BottomNav": {
   "added": "14.3.0",
-  "changed": "16.0.0",
-  "api": "3d47a8b50a38",
+  "changed": "17.0.0",
+  "api": "d8018668dec2",
   "props": {
-   "badge": "16.0.0"
+   "badge": "16.0.0",
+   "current": "17.0.0"
   },
   "known": [
-   "active",
    "as",
    "children",
    "hideFrom",
-   "icon",
-   "label"
+   "icon"
   ]
  },
  "Breadcrumb": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "737c0e6d877d",
+  "changed": "17.0.0",
+  "api": "b5c53c1f9494",
   "props": {},
   "known": [
    "as",
@@ -164,11 +169,13 @@
  },
  "Button": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "386798001c6f",
+  "changed": "17.0.0",
+  "api": "bca82761dc94",
   "props": {
    "loadingLabel": "14.7.0",
-   "onMedia": "16.0.0"
+   "onMedia": "16.0.0",
+   "endIcon": "17.0.0",
+   "startIcon": "17.0.0"
   },
   "known": [
    "className",
@@ -180,12 +187,10 @@
    "href",
    "iconOnly",
    "iconPosition",
-   "leftIcon",
    "loading",
    "onClick",
    "popoverTarget",
    "popoverTargetAction",
-   "rightIcon",
    "size",
    "successText",
    "type",
@@ -195,8 +200,8 @@
  },
  "ButtonGroup": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "0624d476d3e8",
+  "changed": "17.0.0",
+  "api": "c415f7023eb3",
   "props": {
    "size": "14.3.0"
   },
@@ -208,8 +213,8 @@
  },
  "Calendar": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "9a4ffafc3a8f",
+  "changed": "17.0.0",
+  "api": "20a8de54e614",
   "props": {
    "inAWeek": "14.3.0",
    "label": "14.3.0",
@@ -219,7 +224,9 @@
    "calendar": "16.0.0",
    "week": "16.1.0",
    "weekNumbers": "16.1.0",
-   "weekShort": "16.1.0"
+   "weekShort": "16.1.0",
+   "headingLevel": "17.0.0",
+   "iso": "17.0.0"
   },
   "known": [
    "autoFocus",
@@ -244,8 +251,8 @@
  },
  "Card": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "93bdb2829bbe",
+  "changed": "17.0.0",
+  "api": "33f4d31dcfad",
   "props": {},
   "known": [
    "action",
@@ -263,8 +270,8 @@
  },
  "Carousel": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "81556a1ce2e5",
+  "changed": "17.0.0",
+  "api": "6084fb44a604",
   "props": {
    "peek": "16.0.0"
   },
@@ -276,7 +283,6 @@
    "defaultIndex",
    "dots",
    "index",
-   "label",
    "lg",
    "loop",
    "md",
@@ -295,8 +301,8 @@
  },
  "CascadeSelect": {
   "added": "14.3.0",
-  "changed": "16.1.0",
-  "api": "7e675b3f67d8",
+  "changed": "17.0.0",
+  "api": "9d7a6c3689cb",
   "props": {
    "required": "16.1.0"
   },
@@ -331,10 +337,16 @@
    "value"
   ]
  },
+ "Center": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "c60385ccbcf9",
+  "props": {}
+ },
  "Chart": {
   "added": "14.1.0",
-  "changed": "14.7.0",
-  "api": "465c715461b8",
+  "changed": "17.0.0",
+  "api": "c4c653738b4e",
   "props": {
    "busy": "14.3.0",
    "chartOther": "14.3.0",
@@ -342,7 +354,9 @@
    "chartTotal": "14.3.0",
    "loadingLabel": "14.3.0",
    "stacked": "14.3.0",
-   "loading": "14.7.0"
+   "loading": "14.7.0",
+   "midpoint": "17.0.0",
+   "scale": "17.0.0"
   },
   "known": [
    "categories",
@@ -370,8 +384,8 @@
  },
  "Chat": {
   "added": "14.2.0",
-  "changed": "16.0.0",
-  "api": "fc479280168e",
+  "changed": "17.0.0",
+  "api": "a596bd3d0f29",
   "props": {
    "branch": "14.6.0",
    "branches": "14.6.0",
@@ -449,10 +463,11 @@
  },
  "Checkbox": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "623321493693",
+  "changed": "17.0.0",
+  "api": "07884bb80b38",
   "props": {
-   "variant": "14.3.0"
+   "variant": "14.3.0",
+   "event": "17.0.0"
   },
   "known": [
    "children",
@@ -475,8 +490,8 @@
  },
  "CodeBlock": {
   "added": "14.0.0",
-  "changed": null,
-  "api": "e0e734e937b9",
+  "changed": "17.0.0",
+  "api": "cd7533e9656c",
   "props": {},
   "known": [
    "code",
@@ -493,8 +508,8 @@
  },
  "ColorPicker": {
   "added": "9.1.0",
-  "changed": "14.3.0",
-  "api": "e98ca02a30b4",
+  "changed": "17.0.0",
+  "api": "149ba6065c19",
   "props": {
    "readOnly": "14.3.0"
   },
@@ -523,8 +538,8 @@
  },
  "Combobox": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "5dd5d8786c3b",
+  "changed": "17.0.0",
+  "api": "4e3d8734a712",
   "props": {
    "defaultInputValue": "13.0.0",
    "inputValue": "13.0.0",
@@ -557,7 +572,6 @@
    "loadingText",
    "multiple",
    "noResults",
-   "onInputChange",
    "onValueChange",
    "options",
    "resultsCount",
@@ -571,9 +585,16 @@
  },
  "CommandPalette": {
   "added": "13.0.0",
-  "changed": "14.3.0",
-  "api": "f9ac601005cf",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "ccf352d8bc98",
+  "props": {
+   "description": "17.0.0",
+   "filter": "17.0.0",
+   "loading": "17.0.0",
+   "loadingText": "17.0.0",
+   "onQueryChange": "17.0.0",
+   "query": "17.0.0"
+  },
   "known": [
    "commandPalette",
    "commands",
@@ -598,8 +619,8 @@
  },
  "Container": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "11ddcc59b6d1",
+  "changed": "17.0.0",
+  "api": "9561c140c200",
   "props": {},
   "known": [
    "as",
@@ -609,8 +630,8 @@
  },
  "ContextualHelp": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "e6673bc06dfd",
+  "changed": "17.0.0",
+  "api": "068cf63967c2",
   "props": {},
   "known": [
    "children",
@@ -628,8 +649,8 @@
  },
  "CopyButton": {
   "added": "9.1.0",
-  "changed": "16.1.0",
-  "api": "e90f170c94f5",
+  "changed": "17.0.0",
+  "api": "6283f8659d96",
   "props": {
    "copyFailedShort": "16.1.0"
   },
@@ -647,8 +668,8 @@
  },
  "Countdown": {
   "added": "14.7.0",
-  "changed": null,
-  "api": "e71a1fb9cda3",
+  "changed": "17.0.0",
+  "api": "0b5df8837660",
   "props": {},
   "known": [
    "announceAt",
@@ -697,8 +718,8 @@
  },
  "DateField": {
   "added": "14.3.0",
-  "changed": "16.1.0",
-  "api": "ae3143af61b2",
+  "changed": "17.0.0",
+  "api": "46de3dd7d017",
   "props": {
    "dateFieldError": "16.0.0",
    "monthInput": "16.0.0",
@@ -731,15 +752,16 @@
  },
  "DatePicker": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "ebbc5dc59a9d",
+  "changed": "17.0.0",
+  "api": "27da2c3f4607",
   "props": {
    "presets": "14.3.0",
    "calendar": "16.0.0",
    "defaultOpen": "16.1.0",
    "onOpenChange": "16.1.0",
    "open": "16.1.0",
-   "weekNumbers": "16.1.0"
+   "weekNumbers": "16.1.0",
+   "iso": "17.0.0"
   },
   "known": [
    "buttonLabel",
@@ -761,8 +783,8 @@
  },
  "DateRangePicker": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "e4fa1858560b",
+  "changed": "17.0.0",
+  "api": "f43b175a944f",
   "props": {
    "label": "14.3.0",
    "last30Days": "14.3.0",
@@ -775,7 +797,8 @@
    "defaultOpen": "16.1.0",
    "onOpenChange": "16.1.0",
    "open": "16.1.0",
-   "weekNumbers": "16.1.0"
+   "weekNumbers": "16.1.0",
+   "iso": "17.0.0"
   },
   "known": [
    "buttonLabel",
@@ -811,8 +834,8 @@
  },
  "DescriptionList": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "6d8fb40653d7",
+  "changed": "17.0.0",
+  "api": "d01e1121f616",
   "props": {},
   "known": [
    "children",
@@ -824,8 +847,8 @@
  },
  "Dialog": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "c4897c078fa4",
+  "changed": "17.0.0",
+  "api": "a8edc886c2bf",
   "props": {
    "finalFocus": "12.0.0",
    "discard": "13.0.0",
@@ -854,8 +877,8 @@
  },
  "Divider": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "1925c1a283f2",
+  "changed": "17.0.0",
+  "api": "d628eefe1d8d",
   "props": {
    "onMedia": "16.0.0"
   },
@@ -867,8 +890,8 @@
  },
  "Drawer": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "2daf52114848",
+  "changed": "17.0.0",
+  "api": "543809f2f00d",
   "props": {
    "finalFocus": "12.0.0",
    "initialFocus": "12.0.0",
@@ -896,10 +919,16 @@
    "title"
   ]
  },
+ "Duration": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "b9dcd8552b9f",
+  "props": {}
+ },
  "EmptyState": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "18dd73c505d4",
+  "changed": "17.0.0",
+  "api": "a14d3fd185aa",
   "props": {},
   "known": [
    "actions",
@@ -919,8 +948,8 @@
  },
  "ErrorBoundary": {
   "added": "9.2.0",
-  "changed": "14.0.0",
-  "api": "1b2ebc8e90ca",
+  "changed": "17.0.0",
+  "api": "f7b86f158089",
   "props": {},
   "known": [
    "children",
@@ -940,8 +969,8 @@
  },
  "ErrorSummary": {
   "added": "10.0.0",
-  "changed": "14.3.0",
-  "api": "4c2f1e6966d1",
+  "changed": "17.0.0",
+  "api": "037eb27fc33e",
   "props": {},
   "known": [
    "autoFocus",
@@ -956,8 +985,8 @@
  },
  "EventCalendar": {
   "added": "14.3.0",
-  "changed": "15.0.0",
-  "api": "e655bc707653",
+  "changed": "17.0.0",
+  "api": "096984304eca",
   "props": {
    "dayView": "14.7.0",
    "nextDay": "14.7.0",
@@ -1002,8 +1031,8 @@
  },
  "Fab": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "f4bbff4cb9e4",
+  "changed": "17.0.0",
+  "api": "75d9942d2c5f",
   "props": {
    "placement": "14.3.0"
   },
@@ -1014,10 +1043,16 @@
    "size"
   ]
  },
+ "FabMenu": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "cfbde48750b6",
+  "props": {}
+ },
  "Field": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "5f86cfceeee0",
+  "changed": "17.0.0",
+  "api": "317afc0dce62",
   "props": {
    "errors": "14.3.0",
    "name": "14.3.0",
@@ -1038,10 +1073,16 @@
    "required"
   ]
  },
+ "FieldList": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "a28b82ec37f1",
+  "props": {}
+ },
  "FileUpload": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "3bdceff3594f",
+  "changed": "17.0.0",
+  "api": "201d39da811d",
   "props": {
    "fileError": "14.0.0",
    "fileStatus": "14.0.0",
@@ -1090,8 +1131,8 @@
  },
  "FilterBar": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "f48c01d35303",
+  "changed": "17.0.0",
+  "api": "238b9dbc574b",
   "props": {},
   "known": [
    "actions",
@@ -1121,10 +1162,16 @@
    "value"
   ]
  },
+ "FormattedDate": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "71af916a06e2",
+  "props": {}
+ },
  "FormattedNumber": {
   "added": "9.1.0",
-  "changed": "14.3.0",
-  "api": "c499a1befda3",
+  "changed": "17.0.0",
+  "api": "a2c4572dc977",
   "props": {
    "animate": "14.3.0"
   },
@@ -1139,8 +1186,8 @@
  },
  "Grid": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "1637050f7918",
+  "changed": "17.0.0",
+  "api": "fb914fc53840",
   "props": {
    "base": "16.0.0",
    "lg": "16.0.0",
@@ -1157,8 +1204,8 @@
  },
  "Heading": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "a735240a0251",
+  "changed": "17.0.0",
+  "api": "8f29e4048cd3",
   "props": {},
   "known": [
    "level",
@@ -1167,8 +1214,8 @@
  },
  "Highlight": {
   "added": "9.2.0",
-  "changed": "14.0.0",
-  "api": "294eab656953",
+  "changed": "17.0.0",
+  "api": "b35138456572",
   "props": {},
   "known": [
    "children",
@@ -1178,8 +1225,8 @@
  },
  "HoverCard": {
   "added": "13.0.0",
-  "changed": "14.0.0",
-  "api": "8f01d3b7541c",
+  "changed": "17.0.0",
+  "api": "899305d38d88",
   "props": {},
   "known": [
    "children",
@@ -1197,8 +1244,8 @@
  },
  "Icon": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "08e26e725a5e",
+  "changed": "17.0.0",
+  "api": "f991518df29b",
   "props": {
    "weight": "14.0.0"
   },
@@ -1211,8 +1258,8 @@
  },
  "IconButton": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "58b22da5729c",
+  "changed": "17.0.0",
+  "api": "56730f3699b4",
   "props": {
    "hideTitle": "12.0.0"
   },
@@ -1224,8 +1271,8 @@
  },
  "IconTile": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "df78063911a9",
+  "changed": "17.0.0",
+  "api": "ec2eaaa49e94",
   "props": {},
   "known": [
    "icon",
@@ -1237,8 +1284,8 @@
  },
  "Illustration": {
   "added": "14.0.0",
-  "changed": null,
-  "api": "10e85030af8d",
+  "changed": "17.0.0",
+  "api": "33ba7ea9fc14",
   "props": {},
   "known": [
    "label",
@@ -1248,8 +1295,8 @@
  },
  "Image": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "dcce8c25a77d",
+  "changed": "17.0.0",
+  "api": "3c91dfd7cd69",
   "props": {},
   "known": [
    "alt",
@@ -1278,10 +1325,16 @@
    "width"
   ]
  },
+ "ImageCropper": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "2f2a85f968f8",
+  "props": {}
+ },
  "InlineEdit": {
   "added": "9.1.0",
-  "changed": "14.0.0",
-  "api": "9d334659a511",
+  "changed": "17.0.0",
+  "api": "1a44a5ba2b04",
   "props": {},
   "known": [
    "defaultEditing",
@@ -1304,18 +1357,19 @@
  },
  "Input": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "8783a7b32a06",
+  "changed": "17.0.0",
+  "api": "6b406502ae0d",
   "props": {
    "actions": "14.3.0",
    "icon": "14.3.0",
-   "label": "14.3.0"
+   "label": "14.3.0",
+   "endIcon": "17.0.0",
+   "startIcon": "17.0.0"
   },
   "known": [
    "charactersLeft",
    "invalid",
    "invalidValue",
-   "leftIcon",
    "length",
    "mask",
    "max",
@@ -1324,7 +1378,6 @@
    "minLength",
    "prefix",
    "reason",
-   "rightIcon",
    "showCount",
    "size",
    "step",
@@ -1374,8 +1427,8 @@
  },
  "Kbd": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "97b8013d40b1",
+  "changed": "17.0.0",
+  "api": "89dcfcee7c2b",
   "props": {},
   "known": [
    "keyName",
@@ -1385,8 +1438,8 @@
  },
  "KeyboardShortcuts": {
   "added": "10.0.0",
-  "changed": "14.3.0",
-  "api": "e2dc3859b3be",
+  "changed": "17.0.0",
+  "api": "bfa826bf8678",
   "props": {
    "singleKeyHint": "14.3.0",
    "singleKeyShortcuts": "14.3.0"
@@ -1407,8 +1460,8 @@
  },
  "Lightbox": {
   "added": "14.6.0",
-  "changed": null,
-  "api": "3cf3c6528e74",
+  "changed": "17.0.0",
+  "api": "556ff0e50080",
   "props": {},
   "known": [
    "alt",
@@ -1431,8 +1484,8 @@
  },
  "Link": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "65445385c594",
+  "changed": "17.0.0",
+  "api": "e933db8ec985",
   "props": {
    "onMedia": "16.0.0"
   },
@@ -1446,8 +1499,8 @@
  },
  "List": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "ea9121c6e54c",
+  "changed": "17.0.0",
+  "api": "240ecb4e0f81",
   "props": {
    "busy": "14.3.0",
    "label": "14.3.0",
@@ -1458,7 +1511,8 @@
    "onSelectedChange": "14.7.0",
    "selectionMode": "14.7.0",
    "value": "14.7.0",
-   "values": "14.7.0"
+   "values": "14.7.0",
+   "showDescription": "17.0.0"
   },
   "known": [
    "as",
@@ -1478,8 +1532,8 @@
  },
  "LoadMore": {
   "added": "10.0.0",
-  "changed": "14.0.0",
-  "api": "a312eb05832c",
+  "changed": "17.0.0",
+  "api": "2d75d74f1def",
   "props": {},
   "known": [
    "allLoaded",
@@ -1499,8 +1553,8 @@
  },
  "Loader": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "6e185782cb5b",
+  "changed": "17.0.0",
+  "api": "7b10aa91a39d",
   "props": {},
   "known": [
    "delay",
@@ -1517,8 +1571,8 @@
  },
  "Logo": {
   "added": "14.0.0",
-  "changed": null,
-  "api": "855f6f0527ee",
+  "changed": "17.0.0",
+  "api": "91ea18e3f9a7",
   "props": {},
   "known": [
    "alt",
@@ -1533,8 +1587,8 @@
  },
  "MaskedValue": {
   "added": "16.0.0",
-  "changed": "16.1.0",
-  "api": "104238e7a5be",
+  "changed": "17.0.0",
+  "api": "bbd4b60969c2",
   "props": {
    "defaultRevealed": "16.1.0",
    "end": "16.1.0",
@@ -1552,9 +1606,11 @@
  },
  "MentionInput": {
   "added": "14.6.0",
-  "changed": null,
-  "api": "f9afa4e6b440",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "3df97b83cde9",
+  "props": {
+   "triggerChar": "17.0.0"
+  },
   "known": [
    "avatar",
    "defaultValue",
@@ -1570,14 +1626,13 @@
    "options",
    "start",
    "text",
-   "trigger",
    "value"
   ]
  },
  "Menu": {
   "added": null,
-  "changed": "14.5.0",
-  "api": "321d23f6f132",
+  "changed": "17.0.0",
+  "api": "66f7350e8dcc",
   "props": {},
   "known": [
    "as",
@@ -1606,8 +1661,8 @@
  },
  "Menubar": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "a761eccc40cb",
+  "changed": "17.0.0",
+  "api": "6e374a9f377b",
   "props": {},
   "known": [
    "children",
@@ -1618,8 +1673,8 @@
  },
  "Meter": {
   "added": "9.0.0",
-  "changed": "14.0.0",
-  "api": "01b2cbc75eea",
+  "changed": "17.0.0",
+  "api": "ef13bdaeb16d",
   "props": {},
   "known": [
    "formatValue",
@@ -1637,17 +1692,17 @@
  },
  "Navbar": {
   "added": null,
-  "changed": "14.7.0",
-  "api": "9663dc24060a",
+  "changed": "17.0.0",
+  "api": "e6891692b3e0",
   "props": {
    "description": "14.3.0",
    "label": "14.3.0",
    "title": "14.3.0",
-   "condense": "14.7.0"
+   "condense": "14.7.0",
+   "current": "17.0.0"
   },
   "known": [
    "actions",
-   "active",
    "as",
    "brand",
    "children",
@@ -1658,8 +1713,8 @@
  },
  "NotificationCenter": {
   "added": "10.0.0",
-  "changed": "14.5.0",
-  "api": "dee286390117",
+  "changed": "17.0.0",
+  "api": "d016307baed2",
   "props": {
    "unsaved": "13.0.0",
    "notificationsUnread": "14.2.0",
@@ -1695,8 +1750,8 @@
  },
  "NumberInput": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "c15fc648cbd7",
+  "changed": "17.0.0",
+  "api": "de69d798d35f",
   "props": {
    "numberingSystem": "12.0.0"
   },
@@ -1722,8 +1777,8 @@
  },
  "OfflineBanner": {
   "added": "14.0.0",
-  "changed": "15.0.0",
-  "api": "ff0e69e74df3",
+  "changed": "17.0.0",
+  "api": "ea7476816172",
   "props": {
    "onOnlineChange": "14.2.0"
   },
@@ -1735,10 +1790,16 @@
    "placement"
   ]
  },
+ "PageSection": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "dbd6bfbb0ac4",
+  "props": {}
+ },
  "Pagination": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "058eeabbdfcd",
+  "changed": "17.0.0",
+  "api": "a56d8960dd63",
   "props": {
    "itemsOf": "12.0.0",
    "onPageSizeChange": "12.0.0",
@@ -1770,8 +1831,8 @@
  },
  "PasswordInput": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "f03f3883fab4",
+  "changed": "17.0.0",
+  "api": "37eeaf6ad64e",
   "props": {
    "defaultRevealed": "16.1.0",
    "onRevealedChange": "16.1.0",
@@ -1780,21 +1841,19 @@
   "known": [
    "capsLockHint",
    "capsLockOn",
-   "defaultVisible",
-   "onVisibleChange",
    "showPassword",
-   "toggleLabel",
-   "visible"
+   "toggleLabel"
   ]
  },
  "PeriodPicker": {
   "added": "14.6.0",
-  "changed": "16.1.0",
-  "api": "40c1e451c2d9",
+  "changed": "17.0.0",
+  "api": "ae7b0e899370",
   "props": {
    "onOpenChange": "16.1.0",
    "open": "16.1.0",
-   "required": "16.1.0"
+   "required": "16.1.0",
+   "range": "17.0.0"
   },
   "known": [
    "defaultOpen",
@@ -1820,8 +1879,8 @@
  },
  "PhoneInput": {
   "added": "9.1.0",
-  "changed": "14.3.0",
-  "api": "334da99368bb",
+  "changed": "17.0.0",
+  "api": "95a56e1c04d8",
   "props": {},
   "known": [
    "areas",
@@ -1847,8 +1906,8 @@
  },
  "PinInput": {
   "added": "9.2.0",
-  "changed": "14.0.0",
-  "api": "16c67a30fc36",
+  "changed": "17.0.0",
+  "api": "c4dc08ef1096",
   "props": {},
   "known": [
    "defaultValue",
@@ -1864,8 +1923,8 @@
  },
  "Popover": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "f04c2079779f",
+  "changed": "17.0.0",
+  "api": "fd205a1c0ac8",
   "props": {
    "sheet": "14.0.0"
   },
@@ -1885,8 +1944,8 @@
  },
  "Progress": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "00d970e8cf36",
+  "changed": "17.0.0",
+  "api": "6a5adeee6b27",
   "props": {},
   "known": [
    "announceComplete",
@@ -1904,8 +1963,8 @@
  },
  "Prose": {
   "added": "13.0.0",
-  "changed": "14.0.0",
-  "api": "31b65dfb2868",
+  "changed": "17.0.0",
+  "api": "ec1bd95adcfb",
   "props": {},
   "known": [
    "as",
@@ -1914,14 +1973,26 @@
  },
  "QRCode": {
   "added": "16.0.0",
-  "changed": null,
-  "api": "352fb6f554b7",
-  "props": {}
+  "changed": "17.0.0",
+  "api": "c0549ce4f87d",
+  "props": {
+   "label": "17.0.0",
+   "level": "17.0.0",
+   "logo": "17.0.0",
+   "onRefresh": "17.0.0",
+   "qrExpired": "17.0.0",
+   "qrRefresh": "17.0.0",
+   "qrScanned": "17.0.0",
+   "size": "17.0.0",
+   "status": "17.0.0",
+   "value": "17.0.0"
+  },
+  "known": []
  },
  "Quote": {
   "added": "14.5.0",
-  "changed": null,
-  "api": "0c32f05b5873",
+  "changed": "17.0.0",
+  "api": "96841336d0b7",
   "props": {},
   "known": [
    "author",
@@ -1934,11 +2005,12 @@
  },
  "Radio": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "1a70743fa19f",
+  "changed": "17.0.0",
+  "api": "45c48d14a1be",
   "props": {
    "readOnly": "14.3.0",
-   "variant": "14.3.0"
+   "variant": "14.3.0",
+   "event": "17.0.0"
   },
   "known": [
    "children",
@@ -1956,11 +2028,13 @@
  },
  "RangeCalendar": {
   "added": "14.7.0",
-  "changed": "16.1.0",
-  "api": "c697da9d68f0",
+  "changed": "17.0.0",
+  "api": "d4df48d8e811",
   "props": {
    "calendar": "16.0.0",
-   "weekNumbers": "16.1.0"
+   "weekNumbers": "16.1.0",
+   "headingLevel": "17.0.0",
+   "iso": "17.0.0"
   },
   "known": [
    "autoFocus",
@@ -1984,8 +2058,8 @@
  },
  "Rating": {
   "added": "9.7.0",
-  "changed": "14.6.0",
-  "api": "ac2d53dfa295",
+  "changed": "17.0.0",
+  "api": "7b079524e6be",
   "props": {},
   "known": [
    "allowHalf",
@@ -2007,8 +2081,8 @@
  },
  "RelativeTime": {
   "added": "9.1.0",
-  "changed": "14.0.0",
-  "api": "aa5aaaf64d9a",
+  "changed": "17.0.0",
+  "api": "a0617d577621",
   "props": {
    "absoluteAfter": "12.0.0",
    "absoluteFormat": "12.0.0"
@@ -2023,8 +2097,8 @@
  },
  "SaveStatus": {
   "added": "10.0.0",
-  "changed": "14.0.0",
-  "api": "a022ddc65464",
+  "changed": "17.0.0",
+  "api": "0233e5d96c6c",
   "props": {},
   "known": [
    "errorText",
@@ -2039,8 +2113,8 @@
  },
  "ScrollArea": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "793e383f8690",
+  "changed": "17.0.0",
+  "api": "1dbfb8ea3c46",
   "props": {},
   "known": [
    "fade",
@@ -2050,8 +2124,8 @@
  },
  "SearchInput": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "56b7a1a736ad",
+  "changed": "17.0.0",
+  "api": "bd5d3cd28f07",
   "props": {},
   "known": [
    "clearLabel",
@@ -2087,16 +2161,16 @@
  },
  "Select": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "6ffeeada4991",
+  "changed": "17.0.0",
+  "api": "829459a182af",
   "props": {
-   "readOnly": "14.3.0"
+   "readOnly": "14.3.0",
+   "startIcon": "17.0.0"
   },
   "known": [
    "disabled",
    "invalid",
    "label",
-   "leftIcon",
    "options",
    "placeholder",
    "size",
@@ -2105,8 +2179,8 @@
  },
  "ShowMore": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "e0755605df4a",
+  "changed": "17.0.0",
+  "api": "cc0995ac4e6d",
   "props": {},
   "known": [
    "children",
@@ -2120,11 +2194,12 @@
  },
  "Sidebar": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "fa97633ef1ba",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "69b0fe497713",
+  "props": {
+   "current": "17.0.0"
+  },
   "known": [
-   "active",
    "as",
    "badge",
    "children",
@@ -2139,10 +2214,16 @@
    "title"
   ]
  },
+ "SidebarLayout": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "968e8003755a",
+  "props": {}
+ },
  "SignaturePad": {
   "added": "14.3.0",
-  "changed": "16.1.0",
-  "api": "3267150bcee1",
+  "changed": "17.0.0",
+  "api": "d8a65a32708c",
   "props": {
    "required": "16.1.0"
   },
@@ -2173,8 +2254,8 @@
  },
  "SkipLink": {
   "added": "13.0.0",
-  "changed": "14.0.0",
-  "api": "56a341d2d712",
+  "changed": "17.0.0",
+  "api": "aac906fe9f87",
   "props": {},
   "known": [
    "children",
@@ -2245,8 +2326,8 @@
  },
  "Sparkline": {
   "added": "14.0.0",
-  "changed": null,
-  "api": "2af4256aa89a",
+  "changed": "17.0.0",
+  "api": "ee1f41ac196c",
   "props": {},
   "known": [
    "area",
@@ -2260,14 +2341,30 @@
  },
  "SplitButton": {
   "added": "16.0.0",
-  "changed": null,
-  "api": "a5d9a06e5406",
-  "props": {}
+  "changed": "17.0.0",
+  "api": "2e1a8da05c80",
+  "props": {
+   "children": "17.0.0",
+   "defaultOpen": "17.0.0",
+   "destructive": "17.0.0",
+   "disabled": "17.0.0",
+   "loading": "17.0.0",
+   "menu": "17.0.0",
+   "menuLabel": "17.0.0",
+   "onClick": "17.0.0",
+   "onOpenChange": "17.0.0",
+   "open": "17.0.0",
+   "placement": "17.0.0",
+   "size": "17.0.0",
+   "startIcon": "17.0.0",
+   "variant": "17.0.0"
+  },
+  "known": []
  },
  "Splitter": {
   "added": "9.7.0",
-  "changed": "15.0.0",
-  "api": "84556eb62302",
+  "changed": "17.0.0",
+  "api": "31e7afa528d8",
   "props": {
    "orientation": "14.3.0"
   },
@@ -2288,8 +2385,8 @@
  },
  "Stack": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "dc9ba0bf84b7",
+  "changed": "17.0.0",
+  "api": "e0779185aa62",
   "props": {},
   "known": [
    "align",
@@ -2300,10 +2397,16 @@
    "wrap"
   ]
  },
+ "StatTile": {
+  "added": "17.0.0",
+  "changed": null,
+  "api": "5bd44f00ac2e",
+  "props": {}
+ },
  "StatusTracker": {
   "added": "14.7.0",
-  "changed": null,
-  "api": "2d2677b0e4ce",
+  "changed": "17.0.0",
+  "api": "d7ce036b21c5",
   "props": {},
   "known": [
    "date",
@@ -2323,8 +2426,8 @@
  },
  "Stepper": {
   "added": null,
-  "changed": "14.6.0",
-  "api": "b12a29f12187",
+  "changed": "17.0.0",
+  "api": "5f907024dff3",
   "props": {
    "back": "14.0.0",
    "defaultStep": "14.0.0",
@@ -2365,17 +2468,18 @@
  },
  "Switch": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "d4fc473f0aa2",
+  "changed": "17.0.0",
+  "api": "a0d3899a2d6c",
   "props": {
    "loading": "14.3.0",
-   "icon": "16.0.0"
+   "icon": "16.0.0",
+   "event": "17.0.0",
+   "labelPlacement": "17.0.0"
   },
   "known": [
    "children",
    "description",
    "invalid",
-   "labelPosition",
    "onCheckedChange",
    "readOnly",
    "size"
@@ -2383,8 +2487,8 @@
  },
  "TabNav": {
   "added": "14.5.0",
-  "changed": null,
-  "api": "8a45c81eaa17",
+  "changed": "17.0.0",
+  "api": "18215c8661fd",
   "props": {},
   "known": [
    "as",
@@ -2396,8 +2500,8 @@
  },
  "Table": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "e96f0d17f674",
+  "changed": "17.0.0",
+  "api": "5d99e4b67d98",
   "props": {
    "hideCaption": "12.0.0",
    "href": "13.0.0",
@@ -2441,7 +2545,8 @@
    "sticky": "16.0.0",
    "tableAllSelected": "16.0.0",
    "tableSelectAll": "16.0.0",
-   "total": "16.0.0"
+   "total": "16.0.0",
+   "inHeader": "17.0.0"
   },
   "known": [
    "align",
@@ -2452,7 +2557,6 @@
    "clearSelection",
    "containerProps",
    "count",
-   "header",
    "label",
    "onClear",
    "onSort",
@@ -2468,8 +2572,8 @@
  },
  "TableOfContents": {
   "added": "14.3.0",
-  "changed": "15.0.0",
-  "api": "8af03e4058d9",
+  "changed": "17.0.0",
+  "api": "8baa7b856528",
   "props": {
    "variant": "15.0.0"
   },
@@ -2487,9 +2591,14 @@
  },
  "Tabs": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "a27b90ec1b66",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "406462c595c8",
+  "props": {
+   "addLabel": "17.0.0",
+   "onAdd": "17.0.0",
+   "onClose": "17.0.0",
+   "tabCloseHint": "17.0.0"
+  },
   "known": [
    "activation",
    "defaultValue",
@@ -2504,8 +2613,8 @@
  },
  "TagGroup": {
   "added": "14.7.0",
-  "changed": "16.0.0",
-  "api": "0654e5b0ee90",
+  "changed": "17.0.0",
+  "api": "fa8414a481b8",
   "props": {
    "avatar": "16.0.0",
    "icon": "16.0.0"
@@ -2527,8 +2636,8 @@
  },
  "Text": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "81200745272c",
+  "changed": "17.0.0",
+  "api": "90129700d07d",
   "props": {
    "measure": "12.0.0",
    "lines": "14.3.0"
@@ -2544,8 +2653,8 @@
  },
  "Textarea": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "f92fe37c9df9",
+  "changed": "17.0.0",
+  "api": "b7bda170119d",
   "props": {
    "actions": "14.3.0"
   },
@@ -2561,8 +2670,8 @@
  },
  "TimePicker": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "b126e27f8b4d",
+  "changed": "17.0.0",
+  "api": "d8e35c43b107",
   "props": {
    "defaultOpen": "16.1.0",
    "onOpenChange": "16.1.0",
@@ -2586,8 +2695,8 @@
  },
  "TimeZonePicker": {
   "added": "14.2.0",
-  "changed": "16.0.0",
-  "api": "a9c938826329",
+  "changed": "17.0.0",
+  "api": "524a9203b0f8",
   "props": {
    "timeZonePlaceholder": "16.0.0"
   },
@@ -2605,8 +2714,8 @@
  },
  "Timeline": {
   "added": "9.7.0",
-  "changed": "16.1.0",
-  "api": "4886f2b7de94",
+  "changed": "17.0.0",
+  "api": "9950d7c9ef92",
   "props": {
    "orientation": "14.3.0",
    "stackWhenNarrow": "14.3.0",
@@ -2618,15 +2727,14 @@
    "children",
    "dateTime",
    "icon",
-   "status",
    "time",
    "title"
   ]
  },
  "Toast": {
   "added": null,
-  "changed": "16.1.0",
-  "api": "aa7e7e9de205",
+  "changed": "17.0.0",
+  "api": "d3c06a8dbb0b",
   "props": {
    "placement": "14.3.0"
   },
@@ -2660,8 +2768,8 @@
  },
  "ToggleButton": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "5cdb7736e15e",
+  "changed": "17.0.0",
+  "api": "c1cc76b7163c",
   "props": {
    "icon": "15.0.0"
   },
@@ -2674,9 +2782,11 @@
  },
  "ToggleGroup": {
   "added": "9.3.0",
-  "changed": "14.0.0",
-  "api": "16fd20b9a875",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "8a387a2be14a",
+  "props": {
+   "selectionMode": "17.0.0"
+  },
   "known": [
    "children",
    "defaultValue",
@@ -2684,15 +2794,14 @@
    "onValueChange",
    "required",
    "size",
-   "type",
    "value",
    "variant"
   ]
  },
  "Toolbar": {
   "added": "9.2.0",
-  "changed": "16.0.0",
-  "api": "b0d15c10ea53",
+  "changed": "17.0.0",
+  "api": "5c9fb90326b7",
   "props": {
    "size": "14.3.0",
    "moreLabel": "16.0.0",
@@ -2706,8 +2815,8 @@
  },
  "Tooltip": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "571a41f4462d",
+  "changed": "17.0.0",
+  "api": "0e91378219da",
   "props": {
    "openDelay": "14.3.0"
   },
@@ -2726,8 +2835,8 @@
  },
  "Tour": {
   "added": "14.0.0",
-  "changed": null,
-  "api": "78619c7aea4f",
+  "changed": "17.0.0",
+  "api": "90e595b127e4",
   "props": {},
   "known": [
    "content",
@@ -2750,8 +2859,8 @@
  },
  "TransferList": {
   "added": "14.7.0",
-  "changed": "16.1.0",
-  "api": "1e8562e208f1",
+  "changed": "17.0.0",
+  "api": "121d861d4b04",
   "props": {
    "readOnly": "16.1.0",
    "required": "16.1.0"
@@ -2782,9 +2891,12 @@
  },
  "TreeView": {
   "added": "9.3.0",
-  "changed": "14.0.0",
-  "api": "11e89ef3a505",
-  "props": {},
+  "changed": "17.0.0",
+  "api": "5ec9b05bcdcd",
+  "props": {
+   "cascade": "17.0.0",
+   "cascadeValue": "17.0.0"
+  },
   "known": [
    "children",
    "defaultExpanded",
@@ -2804,8 +2916,8 @@
  },
  "TruncatedText": {
   "added": "16.0.0",
-  "changed": "16.1.0",
-  "api": "931d80f6ec64",
+  "changed": "17.0.0",
+  "api": "4676ca25f6c1",
   "props": {
    "as": "16.1.0",
    "children": "16.1.0",
@@ -2817,8 +2929,8 @@
  },
  "TypeToConfirm": {
   "added": "10.0.0",
-  "changed": "14.0.0",
-  "api": "b50a841fdef8",
+  "changed": "17.0.0",
+  "api": "a3f63af69922",
   "props": {},
   "known": [
    "caseSensitive",
@@ -2835,8 +2947,8 @@
  },
  "VirtualList": {
   "added": "13.0.0",
-  "changed": "14.0.0",
-  "api": "1c5bf6cc8bf8",
+  "changed": "17.0.0",
+  "api": "d292d9d86856",
   "props": {},
   "known": [
    "as",
@@ -2851,8 +2963,8 @@
  },
  "VisuallyHidden": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "26a3231898de",
+  "changed": "17.0.0",
+  "api": "2f93804eebdf",
   "props": {},
   "known": [
    "as",

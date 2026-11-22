@@ -15,8 +15,16 @@ export interface FormErrorsValue {
   list: () => Array<{ name: string; field: string; message: React.ReactNode }>;
   /** Changes with each new errors object, so a summary takes focus for a new submit but not for a cleared message. */
   version: number;
+  /** Form only: the words a field shows while its answer is being checked ("Checking…"), or null. */
+  checking?: ((name: string) => React.ReactNode) | undefined;
+  /** Form only: the value a field starts with, from the form's defaultValues (or a restored draft). Undefined once
+   *  the form has mounted, so a field added later (a new FieldList row) starts empty. */
+  defaultValue?: ((name: string) => unknown) | undefined;
 }
 export const FormErrorsContext = /* @__PURE__ */ React.createContext<FormErrorsValue | null>(null);
+
+/** True while a Form is sending: a submit Button inside shows loading, as it does for a React form action. */
+export const FormSubmittingContext = /* @__PURE__ */ React.createContext(false);
 
 const shown = (m: React.ReactNode) => m != null && m !== false && m !== '';
 

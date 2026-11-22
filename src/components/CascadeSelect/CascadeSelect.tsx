@@ -17,6 +17,7 @@ import { en as words } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useControllable } from '../../internal/controllable';
 import { useRequired } from '../../internal/required';
+import { isRtl } from '../../internal/position';
 
 /** One choice in a CascadeSelect, with the choices under it. */
 export interface CascadeOption {
@@ -102,7 +103,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const panel = React.useRef<HTMLDivElement | null>(null);
   const hidden = React.useRef<HTMLInputElement | null>(null);
   const typed = React.useRef<Typed>({ text: '', at: 0 });
-  const rtl = () => !!button.current && getComputedStyle(button.current).direction === 'rtl';
+  const rtl = () => !!button.current && isRtl(button.current);
   // The hint names the arrow that opens a column, which flips right to left: read from the page once it opens.
   const [openRtl, setOpenRtl] = React.useState(false);
   useIsoLayoutEffect(() => { if (open) setOpenRtl(rtl()); }, [open]);

@@ -102,6 +102,9 @@ describe('TagGroup', () => {
     expect(focused()).toBe('checkout');
     await userEvent.keyboard('{ArrowLeft}');
     expect(focused()).toBe('bug');
+    // Alt with an arrow is the browser's Back or Forward, not a move.
+    await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}');
+    expect(focused()).toBe('bug');
     await userEvent.keyboard('{End}');
     expect(focused()).toBe('mobile');
     await userEvent.keyboard('{ArrowDown}');

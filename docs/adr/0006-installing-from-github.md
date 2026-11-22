@@ -6,6 +6,7 @@
 **Date:** 2026-10-17
 **Update (2 November 2026):** Diki chose to keep `serupa-ds` as the final name. Registry publishing no longer waits on a name, only on Diki's go-ahead; until then releases install from GitHub as below.
 **Update (11 November 2026):** For a while the repository lived on GitLab, and releases were installed from its tags the same way (`gitlab:` in place of `github:`). It's back on GitHub, so this decision holds as written.
+**Update (21 November 2026):** From 15.0.0 the package is `@diki-stwn/serupa-ds`, published to GitHub Packages as well (never to the public npm registry; README, Install). The prebuilt release tags below still work, so installing from GitHub holds as written.
 **Deciders:** Diki
 
 ## Context

@@ -35,6 +35,11 @@
 # ReadOnly
 - searchbox "Search projects": Atlas
 
+# Sizes
+- searchbox "Search projects, sm"
+- searchbox "Search projects, md"
+- searchbox "Search projects, lg"
+
 # WithText
 - searchbox "Search projects": Atlas
 - button "Clear search"
