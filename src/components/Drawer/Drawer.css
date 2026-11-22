@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Drawer: a native <dialog> (showModal) that fills the screen; its panel sits against one edge: full height and
-   320, 384 or 512px wide (left, right, start, end), or full width and as tall as its content (top, bottom, rounded on the
+   320, 384 or 512px wide (start, end), or full width and as tall as its content (top, bottom, rounded on the
    open side). Header, a body that scrolls, and a footer under a line. The page behind is dimmed and doesn't
    scroll. Slides in from its edge (300ms) and back out to it faster (motion-exit-lg); fades with reduced motion.
    --------------------------------------------------------------- */
@@ -20,10 +20,6 @@
 .srp-drawer[open] { display: flex; }
 /* Against its edge whether open or closing (FN1): on [open] alone, a right or bottom panel jumped to the
    opposite edge as it began to slide out. */
-.srp-drawer--right { justify-content: flex-end; }
-/* right and left are physical, like the slide-in: right is the right edge in a right-to-left page too, where flex-end is the left. */
-.srp-drawer--right:dir(rtl) { justify-content: flex-start; }
-.srp-drawer--left:dir(rtl) { justify-content: flex-end; }
 /* start and end are logical: the edges the reading starts and ends at, flex-start and flex-end in either direction. */
 .srp-drawer--end { justify-content: flex-end; }
 .srp-drawer--bottom { align-items: flex-end; }
@@ -41,7 +37,7 @@
 .srp-drawer--nonmodal > .srp-dialog { pointer-events: auto; }
 /* Swipe to close: a left or right panel leaves vertical panning to the browser and hands horizontal drags to the
    drawer; a top or bottom one is dragged by its header and footer, so its body still scrolls. */
-.srp-drawer--left .srp-drawer__panel, .srp-drawer--right .srp-drawer__panel, .srp-drawer--start .srp-drawer__panel, .srp-drawer--end .srp-drawer__panel { touch-action: pan-y; }
+.srp-drawer--start .srp-drawer__panel, .srp-drawer--end .srp-drawer__panel { touch-action: pan-y; }
 .srp-drawer--top .srp-drawer__header, .srp-drawer--top .srp-drawer__footer, .srp-drawer--bottom .srp-drawer__header, .srp-drawer--bottom .srp-drawer__footer { touch-action: none; }
 .srp-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
@@ -56,15 +52,13 @@
 /* The shadow falls from the panel toward the page, from the one light above (AD8): up from a bottom sheet, sideways
    from a side panel; a top panel's falls down, as a dialog's does. --drawer-shadow still sets one for every side. */
 .srp-drawer--bottom { --srp-drawer-shadow: var(--elevation-modal-up); }
-.srp-drawer--left, .srp-drawer--start { --srp-drawer-shadow: var(--elevation-modal-right); }
-.srp-drawer--right, .srp-drawer--end { --srp-drawer-shadow: var(--elevation-modal-left); }
+.srp-drawer--start { --srp-drawer-shadow: var(--elevation-modal-right); }
+.srp-drawer--end { --srp-drawer-shadow: var(--elevation-modal-left); }
 .srp-drawer--start:dir(rtl) { --srp-drawer-shadow: var(--elevation-modal-left); }
 .srp-drawer--end:dir(rtl) { --srp-drawer-shadow: var(--elevation-modal-right); }
 /* Behind the panel's outer edge, a copy of its background while a drag pulls it away from the edge (up to 24px,
    Drawer.tsx INWARD) and while it settles back, so a pull inward never opens a gap at the screen's edge (KW5a). */
 .srp-drawer__panel[data-inward]::after { content: ""; position: absolute; inset: var(--spacing-0); translate: var(--srp-drawer-from); background: inherit; pointer-events: none; }
-.srp-drawer--right { --srp-drawer-from: var(--sizing-full) 0; }
-.srp-drawer--left { --srp-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
 .srp-drawer--start { --srp-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
 .srp-drawer--end { --srp-drawer-from: var(--sizing-full) 0; }
 .srp-drawer--start:dir(rtl) { --srp-drawer-from: var(--sizing-full) 0; }

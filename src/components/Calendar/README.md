@@ -92,7 +92,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The selected day, controlled or not: a Date (its time is ignored) or a plain `"yyyy-mm-dd"` string for that local day. |
-| `onValueChange` | `(date: Date, iso: string) => void` | | Called with the picked day (local midnight) and the same day as `"yyyy-mm-dd"`. |
+| `onValueChange` | `(date: Date, details: { iso: string }) => void` | | Called with the picked day (local midnight) and details: `iso` is the same day as `"yyyy-mm-dd"`. |
 | `month` / `defaultMonth` | `Date` | the selected day's month, or today's | The month shown: any day in it. |
 | `onMonthChange` | `(month: Date) => void` | | Called with the first of the newly shown month. |
 | `min`, `max` | `Date \| string` | | Days outside can't be picked, and the month buttons stop there. A Date or `"yyyy-mm-dd"`. |

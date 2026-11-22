@@ -38,16 +38,16 @@ export const LeftStart: Story = { name: 'Placement: left-start', args: { placeme
 export const LeftEnd: Story = { name: 'Placement: left-end', args: { placement: 'left-end' } };
 export const TopStart: Story = {
   name: 'Placement: top-start',
-  args: { placement: 'top-start', content: 'Saves a copy to your device', children: <Button variant="secondary" leftIcon="download">Download</Button> },
+  args: { placement: 'top-start', content: 'Saves a copy to your device', children: <Button variant="secondary" startIcon="download">Download</Button> },
 };
 export const BottomEnd: Story = {
   name: 'Placement: bottom-end',
-  args: { placement: 'bottom-end', content: 'Saves a copy to your device', children: <Button variant="secondary" leftIcon="download">Download</Button> },
+  args: { placement: 'bottom-end', content: 'Saves a copy to your device', children: <Button variant="secondary" startIcon="download">Download</Button> },
 };
 
 export const OnText: Story = {
   name: 'On a text button',
-  args: { content: 'Ctrl + S', children: <Button variant="secondary" leftIcon="save">Save</Button> },
+  args: { content: 'Ctrl + S', children: <Button variant="secondary" startIcon="save">Save</Button> },
 };
 export const LongText: Story = {
   name: 'Long text',
@@ -61,7 +61,7 @@ export const OnDisabledLooking: Story = {
   name: 'Explaining an unavailable action',
   args: {
     placement: 'right', content: 'Only owners can delete a project',
-    children: <Button variant="outline" destructive aria-disabled="true" leftIcon="delete">Delete</Button>,
+    children: <Button variant="outline" destructive aria-disabled="true" startIcon="delete">Delete</Button>,
   },
 };
 export const Disabled: Story = {

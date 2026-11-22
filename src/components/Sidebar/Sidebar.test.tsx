@@ -34,16 +34,16 @@ function App(props: { sref?: React.Ref<HTMLElement>; iref?: React.Ref<HTMLAnchor
   return <div style={{ display: 'flex', height: '600px' }}>
     <Sidebar id="sb" ref={props.sref} className="extra" data-x="y" collapsed={collapsed} header={<strong id="hdr">Acme</strong>} footer={<span id="ftr">Ada</span>}>
       <S>
-        <I href="#home" icon="home" label="Home" active id="ihome" ref={props.iref} />
+        <I href="#home" icon="home" label="Home" current id="ihome" ref={props.iref} />
         <I href="#inbox" icon="inbox" label="Inbox" badge={<Badge count={4} />} id="iinbox" />
       </S>
       <S title="Workspace">
         <I icon="folder" label="Projects" id="gproj">
           <I href="#web" label="Website" id="iweb" />
-          <I href="#app" label="Mobile app" active={false} />
+          <I href="#app" label="Mobile app" current={false} />
         </I>
         <I icon="group" label="Team" id="gteam" defaultOpen={false}>
-          <I href="#members" label="Members" active id="imembers" />
+          <I href="#members" label="Members" current id="imembers" />
         </I>
         <I as={RouterLink} to="/reports" icon="bar_chart" label="Reports" id="irep" />
       </S>
@@ -61,7 +61,7 @@ describe('Sidebar', () => {
     const a = React.createRef<HTMLAnchorElement>(), r = React.createRef<HTMLAnchorElement>(), g = React.createRef<HTMLElement>();
     await render(<Sidebar aria-label="Typed">
       <I id="st-a" href="#a" label="A" ref={a} />
-      <I id="st-r" as={RouterLink} to="/r" label="Router" ref={r} active />
+      <I id="st-r" as={RouterLink} to="/r" label="Router" ref={r} current />
       <I id="st-g" label="Group" ref={g}><I href="#g1" label="G1" /></I>
       {/* @ts-expect-error RouterLink needs to */}
       <I id="st-x" as={RouterLink} label="No to" />
@@ -209,9 +209,9 @@ describe('Sidebar', () => {
     function Nav() {
       const [page, set] = React.useState('home'); go = set;
       return <Sidebar aria-label="Main">
-        <I href="#home" label="Home" active={page === 'home'} />
-        <I label="Team" id="l8e108a"><I href="#members" label="Members" active={page === 'members'} /></I>
-        <I label="Billing" id="l8e108b" defaultOpen={false}><I href="#plans" label="Plans" active={page === 'plans'} /></I>
+        <I href="#home" label="Home" current={page === 'home'} />
+        <I label="Team" id="l8e108a"><I href="#members" label="Members" current={page === 'members'} /></I>
+        <I label="Billing" id="l8e108b" defaultOpen={false}><I href="#plans" label="Plans" current={page === 'plans'} /></I>
       </Sidebar>;
     }
     await render(<Nav />);
@@ -437,7 +437,7 @@ describe('Sidebar', () => {
   test('a group opens and shows active when a grandchild is the current page', async () => {
     await render(<Sidebar id="snest" collapsed={false}>
       <I icon="folder" label="Docs" id="gdocs">
-        <I label="Guides" id="gguides"><I href="#g1" label="Getting started" active id="ig1" /></I>
+        <I label="Guides" id="gguides"><I href="#g1" label="Getting started" current id="ig1" /></I>
         <I as={RouterLink} to="/api" label="API" />
       </I>
     </Sidebar>);
@@ -448,7 +448,7 @@ describe('Sidebar', () => {
   test('collapsed rail menu: router links stay router links, and the current page is marked', async () => {
     await render(<Sidebar id="srail" collapsed>
       <I icon="folder" label="Docs" id="grail">
-        <I href="#intro" label="Intro" active />
+        <I href="#intro" label="Intro" current />
         <I as={RouterLink} to="/api" label="API" target="_self" />
       </I>
     </Sidebar>);
@@ -463,7 +463,7 @@ describe('Sidebar', () => {
   test('collapsed rail menu: a nested group is a submenu, so its items can still be reached (L8E68)', async () => {
     await render(<Sidebar id="srailn" collapsed>
       <I icon="folder" label="Docs" id="grailn">
-        <I label="Guides" icon="book" id="grailg"><I href="#g1" label="Getting started" active id="ig1n" /></I>
+        <I label="Guides" icon="book" id="grailg"><I href="#g1" label="Getting started" current id="ig1n" /></I>
         <I href="#api" label="API" />
       </I>
     </Sidebar>);
@@ -544,7 +544,7 @@ describe('Sidebar', () => {
   });
 
   test('nested items inside a Fragment count: a group with the current page inside opens on its own', async () => {
-    await render(<Sidebar id="sfrag"><I href="/" icon="home" label="Home" /><I label="Teams" icon="group"><><I href="/t1" label="One" /><I href="/t2" label="Two" active /></></I></Sidebar>);
+    await render(<Sidebar id="sfrag"><I href="/" icon="home" label="Home" /><I label="Teams" icon="group"><><I href="/t1" label="One" /><I href="/t2" label="Two" current /></></I></Sidebar>);
     const group = [...el('sfrag').querySelectorAll<HTMLElement>('[aria-expanded]')].find((b) => b.textContent.includes('Teams'))!;
     expect(group.getAttribute('aria-expanded')).toBe('true');
   });
@@ -552,7 +552,7 @@ describe('Sidebar', () => {
     const calls: Array<[boolean, string]> = [];
     function Ctl() {
       const [open, setOpen] = React.useState(false);
-      return <Sidebar id="sctl"><I label="Teams" icon="group" id="gctl" open={open} onOpenChange={(o, d) => { calls.push([o, d.reason]); setOpen(o); }}><I href="/t1" label="One" active /></I>
+      return <Sidebar id="sctl"><I label="Teams" icon="group" id="gctl" open={open} onOpenChange={(o, d) => { calls.push([o, d.reason]); setOpen(o); }}><I href="/t1" label="One" current /></I>
         <I label="Fixed" icon="lock" id="gfix" open onOpenChange={(o, d) => calls.push([o, d.reason])}><I href="/t2" label="Two" /></I></Sidebar>;
     }
     await render(<Ctl />);

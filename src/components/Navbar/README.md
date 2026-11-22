@@ -12,7 +12,7 @@ import { Navbar, NavbarLink, Button, Avatar } from '@diki-stwn/serupa-ds';
   brand={<a href="/">Acme</a>}
   actions={<><Button variant="ghost" size="sm">Docs</Button><Avatar name="Ada Lovelace" size="sm" /></>}
 >
-  <NavbarLink href="/" active>Dashboard</NavbarLink>
+  <NavbarLink href="/" current>Dashboard</NavbarLink>
   <NavbarLink href="/projects">Projects</NavbarLink>
   <NavbarLink as={RouterLink} to="/team">Team</NavbarLink>
 </Navbar>
@@ -43,7 +43,7 @@ Drawn from the `Playground` story.
 
 - A NavbarMenu's parts (the `Menus` story): its button (`.srp-navbar__menu-button`), with the section's name and a chevron that turns while it's open; the panel (`.srp-navbar__menu-panel`) across the bar under it; its groups (`.srp-navbar__menu-group`), each a title over a list of links; and each link (`.srp-navbar__menu-link`), its name and a muted line about it.
 - Keep the links to the main pages, a few short words each; below 768px, or when they don't fit beside the brand and the actions (seven links, long translated labels), they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
-- Mark the current page with `active` on its NavbarLink.
+- Mark the current page with `current` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
 - Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen (a brand passed as text shows whole on hover and focus; in a link of your own, put the name in a [TruncatedText](../TruncatedText/README.md) to do the same); if they still don't, they scroll sideways within the bar (Tab scrolls each into view), and the page never does.
 - Set `size` to the same width as the page's Container, so the bar lines up with the content.
@@ -95,7 +95,7 @@ Drawn from the `Playground` story.
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
-| `active` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
+| `current` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component. Set it once for the app with `configure({ link })`; `as` wins for one link. Typed: the props and `ref` are those of the element `as` names, so `as={RouterLink} to="/team"` checks `to`, and without `as` they're an `<a>`'s. A link set only with `configure({ link })` is typed as an `<a>`, so pass it `href`. |
 
 Following a link closes the small-screen menu. `href`, `className`, `ref` and everything else go to the link (an `<a>`, or what `as` names).
@@ -106,7 +106,7 @@ Following a link closes the small-screen menu. `href`, `className`, `ref` and ev
 | --- | --- | --- | --- |
 | `label` | node | | The button's text: what its links are about |
 | `children` | NavbarMenuGroups or NavbarMenuLinks | none | The panel's links; links on their own are one list |
-| `active` | boolean | `false` | The current page is one of its links: the button is shaded and barred as the current page's link is, with `aria-current="true"` |
+| `current` | boolean | `false` | The current page is one of its links: the button is shaded and barred as the current page's link is, with `aria-current="true"` |
 
 `id`, `className`, `ref` and everything else go to its wrapping `<div>`, which has `data-state="open"` or `"closed"`.
 
@@ -124,7 +124,7 @@ Following a link closes the small-screen menu. `href`, `className`, `ref` and ev
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `description` | node | none | A line under the name saying what's there, read as the link's description |
-| `active` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
+| `current` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component, as on NavbarLink |
 
 Following one closes its panel and the small-screen menu. `id`, `href`, `className`, `ref` and everything else go to the link.

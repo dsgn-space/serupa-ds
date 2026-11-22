@@ -13,7 +13,7 @@ interface MentionInputProps extends Omit<TextareaProps, "defaultValue" | "value"
     onValueChange?: ((value: string) => void) | undefined;
     onSearch?: ((query: null | string) => void) | undefined;
     onMention?: ((option: MentionOption) => void) | undefined;
-    trigger?: string | undefined;
+    triggerChar?: string | undefined;
     filter?: boolean | undefined;
     maxOptions?: number | undefined;
 }

@@ -18,7 +18,9 @@ interface DatePreset {
 interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: Date | null | string | undefined;
     defaultValue?: Date | null | string | undefined;
-    onValueChange?: ((value: Date, iso: string) => void) | undefined;
+    onValueChange?: ((value: Date, details: {
+        iso: string;
+    }) => void) | undefined;
     month?: Date | undefined;
     defaultMonth?: Date | undefined;
     onMonthChange?: ((month: Date) => void) | undefined;

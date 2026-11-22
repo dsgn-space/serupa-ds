@@ -94,7 +94,7 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
             <>
               <p className="m-0 text-sm">Turn on your camera so others in the call can see you. Your browser will ask first, and you can turn it off at any time during the call.</p>
               <div>
-                <Button leftIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
+                <Button startIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
               </div>
             </>
           )}

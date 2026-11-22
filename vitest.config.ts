@@ -115,7 +115,7 @@ export default defineConfig({
         name: 'checks',
         include: ['tools/test/*.mjs'],
         // Shared code, the cross-browser comparison (npm run test:safari), the visual and Storybook steps, which
-        // run.mjs shards across CI jobs, the install on older Node (consumer.mjs, its own CI job) and the framework
+        // run.mjs shards across CI jobs (and visual-base.mjs, which builds main's Storybook for Visual), the install on older Node (consumer.mjs, its own CI job) and the framework
         // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two) and the mutation run (mutation.mjs,
         // nightly: it starts a components Vitest of its own), and the proof brand's leak report (proof-brand.mjs, a
         // report on demand, not a check).
@@ -124,8 +124,9 @@ export default defineConfig({
         // class's computed styles with Chromium's baseline, which other engines write differently (538px for 539px);
         // tools/test/compat.mjs is the comparison between engines.
         // On CI the build job checks the size budgets (SERUPA_SIZE_IN_BUILD), so the checks leave size.mjs out there.
-        // A pull request that builds main's package again (SERUPA_BUILT_AS_BASE, run.mjs --since) leaves out the built package's checks.
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,consistency,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs']), ...(process.env.SERUPA_SIZE_IN_BUILD ? ['tools/test/size.mjs'] : []), ...(process.env.SERUPA_BUILT_AS_BASE ? ['tools/test/{tree-shake,purge-components,no-css,reproducible}.mjs'] : [])],
+        // A pull request that builds main's package again (SERUPA_BUILT_AS_BASE, run.mjs --since) leaves out the built package's checks,
+        // and one that builds the same docs site (SERUPA_SITE_AS_BASE) the site check.
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,visual-base,consistency,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs']), ...(process.env.SERUPA_SIZE_IN_BUILD ? ['tools/test/size.mjs'] : []), ...(process.env.SERUPA_BUILT_AS_BASE ? ['tools/test/{tree-shake,purge-components,no-css,reproducible}.mjs'] : []), ...(process.env.SERUPA_SITE_AS_BASE ? ['tools/test/site.mjs'] : [])],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,

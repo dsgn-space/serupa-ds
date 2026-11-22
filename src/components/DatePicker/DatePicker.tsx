@@ -28,8 +28,8 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   value?: Date | string | null | undefined;
   /** The chosen day at first (uncontrolled), as a Date or "yyyy-mm-dd". */
   defaultValue?: Date | string | null | undefined;
-  /** Called with the new day (local midnight) and the same day as "yyyy-mm-dd", or null and null when the field is cleared. */
-  onValueChange?: ((value: Date | null, iso: string | null) => void) | undefined;
+  /** Called with the new day (local midnight) and details (iso: the same day as "yyyy-mm-dd"), or null and iso null when the field is cleared. */
+  onValueChange?: ((value: Date | null, details: { iso: string | null }) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a date, "unavailable" when it
       is one that can't be chosen (outside min..max, or isDateDisabled). The field also says so to screen readers. */
   onInvalidInput?: ((text: string, reason: 'unreadable' | 'unavailable') => void) | undefined;
@@ -108,7 +108,7 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
     setText(d ? formatDate(d, locale) : '');
     if ((d ? d.getTime() : null) === (value ? value.getTime() : null)) return;
     if (!controlled) setOwn(d);
-    if (onValueChange) onValueChange(d, d ? isoDate(d) : null);
+    if (onValueChange) onValueChange(d, { iso: d ? isoDate(d) : null });
   };
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const read = () => {

@@ -9,9 +9,11 @@ interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     onValueChange?: ((value: {
         start: Date;
         end: Date;
-    }, iso: {
-        start: string;
-        end: string;
+    }, details: {
+        iso: {
+            start: string;
+            end: string;
+        };
     }) => void) | undefined;
     months?: 1 | 2 | undefined;
     month?: Date | undefined;

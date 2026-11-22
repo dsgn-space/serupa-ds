@@ -66,7 +66,7 @@ export interface TableSelectCellProps extends Omit<CheckboxProps, 'children' | '
   /** The checkbox's name for screen readers, such as "Select Alpha", or "Select all rows" in the header. */
   label: string;
   /** In the header row: renders a <th>, for a select-all checkbox (with indeterminate while some rows are). Default: false. */
-  header?: boolean | undefined;
+  inHeader?: boolean | undefined;
   /** Props for the cell around the checkbox. */
   cellProps?: React.TdHTMLAttributes<HTMLTableCellElement> | undefined;
 }
@@ -317,18 +317,18 @@ function TableRowRender({ ref, ...props }: TableRowProps & React.RefAttributes<H
 export const TableRow = /* @__PURE__ */ named('TableRow', TableRowRender);
 
 function TableSelectCellRender({ ref, ...props }: TableSelectCellProps & React.RefAttributes<HTMLInputElement>) {
-  const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
+  const { label, inHeader, cellProps, ...rest } = props;   // the rest is the Checkbox's
   const cp = cellProps || {};
   const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
   const cls = cn('srp-table__cell srp-table__select', cp.className);
-  return header ? <th scope="col" {...cp} className={cn(cls, 'srp-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
+  return inHeader ? <th scope="col" {...cp} className={cn(cls, 'srp-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
 }
 
 /* TableSelectCell: a narrow cell holding a checkbox named by label, for picking rows ("Select Alpha") or, with
    header, all of them. checked, onChange, indeterminate, disabled, name, value and ref go to the checkbox, and
    cellProps to the cell. A row whose checkbox is checked is shaded like a selected row, so an uncontrolled one
    works too; set the row's selected as well when you keep the selection yourself. */
-/** A cell with a checkbox for selecting its row (or, with header, every row); the checkbox carries the selected state for screen readers. */
+/** A cell with a checkbox for selecting its row (or, with inHeader, every row); the checkbox carries the selected state for screen readers. */
 export const TableSelectCell = /* @__PURE__ */ named('TableSelectCell', TableSelectCellRender);
 
 const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
@@ -645,14 +645,14 @@ export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCe
   /** The id of the row's TableDetailRow, for aria-controls. */
   controls?: string | undefined;
   /** In the header row: a <th> named "Details" for screen readers, with nothing shown. Default: false. */
-  header?: boolean | undefined;
+  inHeader?: boolean | undefined;
 }
 
 function TableExpandCellRender({ ref, ...props }: TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>) {
   const labels = useSettings(words).labels;
-  const rest = omit(props, { expanded: 1, onExpandedChange: 1, label: 1, controls: 1, header: 1, className: 1, children: 1 });
+  const rest = omit(props, { expanded: 1, onExpandedChange: 1, label: 1, controls: 1, inHeader: 1, className: 1, children: 1 });
   const cls = cn('srp-table__cell srp-table__expand', props.className);
-  if (props.header) return <th scope="col" {...rest} ref={ref} className={cn(cls, 'srp-table__header')}><span className="srp-visually-hidden">{labels.tableDetails}</span></th>;
+  if (props.inHeader) return <th scope="col" {...rest} ref={ref} className={cn(cls, 'srp-table__header')}><span className="srp-visually-hidden">{labels.tableDetails}</span></th>;
   const open = !!props.expanded;
   return (
     <td {...rest} ref={ref} className={cls}>

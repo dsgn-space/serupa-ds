@@ -18,8 +18,6 @@ import { useControllable } from '../../internal/controllable';
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** The slides, one per child (pictures, cards, anything). */
   children?: React.ReactNode | undefined;
-  /** What the carousel shows, such as "Featured products": it names the region. Required unless you give aria-label, or aria-labelledby pointing at a visible heading. */
-  label?: string | undefined;
   /** The slide shown (from 0), when you control it. */
   index?: number | undefined;
   /** The first slide shown when you don't control it. Default: 0. */
@@ -71,7 +69,7 @@ function usePerView(per: CarouselProps['perView']): number {
 }
 
 /* Carousel: one slide at a time with previous and next buttons, a dot per slide and swipe. The outer
-   <section> is a region named by label (aria-roledescription "carousel"); each slide is a group named
+   <section> is a region named by aria-label (aria-roledescription "carousel"); each slide is a group named
    "2 of 5", and the slides not shown are inert. It never moves on its own. The slides sit in a native scroll
    container with scroll snap: a touch swipe, a trackpad and Shift with the wheel scroll it with the platform's own
    momentum, one slide per gesture (scroll-snap-stop), and the index follows where it settles. The buttons, dots
@@ -79,7 +77,7 @@ function usePerView(per: CarouselProps['perView']): number {
    slides already scroll and snap, and none is inert. className and every other prop go to the <section>. With
    perView, two or more slides show side by side: index is the first one shown, the buttons still move one slide,
    and the dots count pages. */
-const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
+const OWN = { children: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
 const SWIPE = 40; // px a mouse drag must travel to change the slide
 const FLICK = 0.3; // px per ms over the last 100ms: a shorter drag this fast changes the slide too
 const QUIET = 120; // ms without scrolling that counts as settled, where scrollend isn't there
@@ -279,7 +277,7 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
 
   return (
     <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('srp-carousel', (multi || props.peek) && 'srp-carousel--multi', props.peek && 'srp-carousel--peek', props.className)} style={style}
-      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
+      aria-roledescription={sds.labels.carouselRole} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
       <div className="srp-carousel__frame">
         {/* A scroll container is a keyboard stop of its own (WCAG 2.1.1, axe's scrollable-region-focusable): focused,
             the arrow keys scroll it a slide at a time, and it's named by the slides in view ("2 of 5"). */}

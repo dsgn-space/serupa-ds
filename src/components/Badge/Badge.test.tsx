@@ -97,29 +97,29 @@ function App() {
     <Badge id="mion" onClick={hit} style={{ '--badge-press-scale': 'var(--scale-97)' } as React.CSSProperties}>Shrinks</Badge>
     <Badge id="mipd" onClick={hit} onPointerDown={(e) => e.preventDefault()}>Mine</Badge>
     <Badge id="both" onClick={hit} onRemove={() => {}}>Both</Badge>
-    <Badge id="ld" tone="success" leftIcon="check" onClick={hit} loading={loading}>Approve request</Badge>
+    <Badge id="ld" tone="success" startIcon="check" onClick={hit} loading={loading}>Approve request</Badge>
     <Badge id="ldspan" loading loadingLabel="Syncing">Syncing</Badge>
     <Badge id="ldrm" loading onRemove={() => { removed.push('ldrm'); }}>Tag</Badge>
     <div id="ob">
       <Badge>Status</Badge>
-      <Badge leftIcon="category">Status</Badge>
+      <Badge startIcon="category">Status</Badge>
       <Badge dot>Status</Badge>
       <Badge onRemove={() => {}}>Status</Badge>
-      <Badge leftIcon="category" onRemove={() => {}}>Status</Badge>
+      <Badge startIcon="category" onRemove={() => {}}>Status</Badge>
       <Badge count={5} />
-      <span dir="rtl"><Badge leftIcon="category">Status</Badge></span>
+      <span dir="rtl"><Badge startIcon="category">Status</Badge></span>
     </div>
     <Badge id="pg" dot ping tone="danger" variant="solid">Live</Badge>
     <Badge id="pgind" dot ping tone="success" />
     <Badge id="pgabs" dot ping className="absolute" style={{ top: '0px', left: '0px' }} />
     <Badge id="pgnodot" ping>No dot</Badge>
-    <Badge id="pgicon" ping dot leftIcon="check">Icon</Badge>
+    <Badge id="pgicon" ping dot startIcon="check">Icon</Badge>
     <Badge id="ind" dot tone="danger" />
     <Badge id="indsm" dot variant="outline" />
     <Badge id="indnamed" dot tone="success" aria-label="Online" />
     <Badge id="indclick" dot onClick={hit} onRemove={() => {}} />
     <Badge id="dot" tone="success" dot>Online</Badge>
-    <Badge id="icon" tone="warning" leftIcon="schedule" dot>Pending</Badge>
+    <Badge id="icon" tone="warning" startIcon="schedule" dot>Pending</Badge>
     <Badge id="c3" tone="danger" variant="solid" count={3} />
     <Badge id="c120" count={120} />
     <Badge id="c12m9" count={12} max={9} />
@@ -239,7 +239,7 @@ describe('Badge', () => {
     expect(parseFloat(s.borderTopLeftRadius)).toBeGreaterThanOrEqual(3);
   });
 
-  test('leftIcon: a Material Symbols icon before the label at 12px, decorative; it replaces the dot', async () => {
+  test('startIcon: a Material Symbols icon before the label at 12px, decorative; it replaces the dot', async () => {
     await show();
     const e = el('icon'), i = e.querySelector(':scope > span[aria-hidden] > [data-icon]')!.parentElement as HTMLElement;
     expect([(i.querySelector('[data-icon]') as HTMLElement).dataset.icon, i.getAttribute('aria-hidden'), css(i.querySelector('[data-icon]')).fontSize, !!e.querySelector(DOT)])

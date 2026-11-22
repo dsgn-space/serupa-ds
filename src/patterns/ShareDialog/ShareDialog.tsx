@@ -164,11 +164,11 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
       <header className="flex flex-wrap items-center gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 flex-1 text-base font-semibold">Acme Docs</p>
         {others.length ? (
-          <AvatarGroup size="sm" max={3} label={sharedWith(others.length, locale)}>
+          <AvatarGroup size="sm" max={3} aria-label={sharedWith(others.length, locale)}>
             {others.map((p) => <Avatar key={p.id} name={p.name} src={p.avatar} />)}
           </AvatarGroup>
         ) : null}
-        <Button leftIcon="share" onClick={() => close(true)}>Share</Button>
+        <Button startIcon="share" onClick={() => close(true)}>Share</Button>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-8 outline-none">
         <Heading level={1}>{name}</Heading>

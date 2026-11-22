@@ -26,7 +26,7 @@ import { holdDelay, holdRepeat } from '../../internal/timing';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWords);
 
-export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'rightIcon' | 'min' | 'max' | 'step'> {
+export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'endIcon' | 'min' | 'max' | 'step'> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
   value?: number | null | undefined;
   /** The number at first (uncontrolled). */
@@ -76,7 +76,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const sds = useSettings(words);
   // The callbacks read once: called through props, they could change props (and the options) for the compiler.
   const { onValueChange, onInvalidInput } = props;
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, startIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   // Without a locale from the prop or a provider: en-US on the server and while hydrating, then the browser's.
@@ -231,7 +231,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   };
   const current = parse(text);
   const now = typeof current === 'number' ? current : value;
-  const left = asIcon(props.leftIcon);
+  const left = asIcon(props.startIcon);
   const niId = domId('srp-ni', React.useId());
   const affix = useAffixes(props.prefix, props.suffix, niId, el);
   const press = (by: number) => { nudge(by); if (el.current && document.activeElement !== el.current) el.current.focus({ preventScroll: true }); };
@@ -267,7 +267,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
     <>
     <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
-      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--left" aria-hidden>{left}</span> : null}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {affix.prefix}
       <input {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}

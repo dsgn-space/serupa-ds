@@ -154,7 +154,7 @@ describe('table()', () => {
     return (
       <Table>
         <TableHead><TableRow>
-          <TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : PEOPLE.map((p) => p.name))} />
+          <TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : PEOPLE.map((p) => p.name))} />
           <TableHeaderCell>Name</TableHeaderCell>
           <TableHeaderCell align="end" sort={sort} onSort={() => setSort(sort === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell>
         </TableRow></TableHead>
@@ -210,7 +210,7 @@ describe('calendar() and datePicker()', () => {
     expect(c.selected()).toEqual(['2027-02-03']);
     await c.pick(new Date(2025, 9, 31));
     expect(c.selected()).toEqual(['2025-10-31']);
-    expect(onValueChange).toHaveBeenLastCalledWith(expect.any(Date), '2025-10-31');
+    expect(onValueChange).toHaveBeenLastCalledWith(expect.any(Date), { iso: '2025-10-31' });
   });
 
   test('opens a DatePicker, picks a date, and the field shows it', async () => {

@@ -23,7 +23,7 @@ const files = (x: number) => p6(x, { zero: 'لا ملفات', one: 'ملف وا�
 
 export const labels: SerupaLabels = {
   expandAll: 'توسيع الكل',
-  chartKind: (type) => ({ line: 'مخطط خطي', bar: 'مخطط شريطي', area: 'مخطط مساحي', donut: 'مخطط حلقي' })[type],
+  chartKind: (type) => ({ line: 'مخطط خطي', bar: 'مخطط شريطي', area: 'مخطط مساحي', donut: 'مخطط حلقي', heatmap: 'خريطة حرارية' })[type],
   chartSummary: (kind, series, points, first, last) => kind + '، ' + p6(series, { zero: 'لا سلاسل', one: 'سلسلة واحدة', two: 'سلسلتان', few: '# سلاسل', many: '# سلسلة', other: '# سلسلة' }) + '، ' + p6(points, { zero: 'لا نقاط', one: 'نقطة واحدة', two: 'نقطتان', few: '# نقاط', many: '# نقطة', other: '# نقطة' }) + (points > 1 ? ' من ' + first + ' إلى ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': الأدنى ' + low + ' (' + lowAt + ')، الأعلى ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + '، ' + category + ': ' + value : category + ': ' + value),
@@ -307,6 +307,10 @@ export const labels: SerupaLabels = {
   tourNext: 'التالي',
   tourDone: 'تم',
   sparklineSummary: (label, first, last, min, max) => label + ': من ' + first + ' إلى ' + last + '، الأدنى ' + min + '، الأعلى ' + max,
+  statTileUp: (amount) => 'ارتفاع ' + amount,
+  statTileDown: (amount) => 'انخفاض ' + amount,
+  statTileFlat: 'بلا تغيير',
+  statTileTrend: (label, count) => label + '، آخر ' + count + ' فترات',
   table: 'جدول',
   timeline: 'المخطط الزمني',
   signatureMethod: 'طريقة التوقيع',

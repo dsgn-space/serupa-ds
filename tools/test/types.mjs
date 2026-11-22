@@ -70,6 +70,7 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // FabMenu and its FabMenuAction type (20 Nov 2026), on top of FieldList, take them to 247,156, so 247,600.
 // 17.0.0's components as plain functions taking ref as a prop, each typed React.FC<Props & React.RefAttributes<T>>
 // (20 Nov 2026, ES1): with FieldList and FabMenu, types fall to 96,312 and instantiations come to 247,579, so 96,500 and 248,000.
+// Main's StatTile and StatsRow (21 Nov 2026), on top of that, take types to 96,508, so 96,800.
 // Form, generic over its schema, with FormSteps and the Standard Schema types (21 Nov 2026), takes them to 96,562 and
 // 248,612, so 96,600 and 248,800.
 // Main's merges of 21 Nov evening, with Form, take types to 96,620, so 96,800.

@@ -12,7 +12,7 @@ const meta = {
     icon: 'folder_open',
     title: 'No projects yet',
     description: 'Create a project to start tracking your work.',
-    actions: <><Button leftIcon="add">New project</Button><Button variant="outline">Import</Button></>,
+    actions: <><Button startIcon="add">New project</Button><Button variant="outline">Import</Button></>,
   },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] }, variant: { control: 'inline-radio', options: ['plain', 'dashed'] }, actions: { control: false }, icon: iconArg },
 } satisfies Meta<typeof EmptyState>;
@@ -66,7 +66,7 @@ export const LongText: Story = {
 /** Do: say what's empty, why, and what to do next. */
 export const DoSayWhatNext: Story = {
   name: 'Do: say what to do next',
-  args: { icon: 'receipt_long', title: 'No invoices yet', description: 'Invoices you send show up here.', actions: <Button leftIcon="add">New invoice</Button> },
+  args: { icon: 'receipt_long', title: 'No invoices yet', description: 'Invoices you send show up here.', actions: <Button startIcon="add">New invoice</Button> },
 };
 /** Don't: a bare "No data", which leaves people stuck. */
 export const DontNoData: Story = {

@@ -56,20 +56,20 @@ let setCtl: (i: number) => void = () => {};
 function Ctl() {
   const [i, set] = React.useState(1);
   setCtl = set;
-  return <Carousel id="ctl" label="Controlled" index={i} onIndexChange={(n) => { changes.push(n); }}>{slides(3, 'c')}</Carousel>;
+  return <Carousel id="ctl" aria-label="Controlled" index={i} onIndexChange={(n) => { changes.push(n); }}>{slides(3, 'c')}</Carousel>;
 }
 function App({ carRef }: { carRef?: React.Ref<HTMLElement> }) {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '400px' }}>
-    <Carousel id="car" label="Photos" ref={carRef} className="extra" data-x="y">{slides(4, 'a')}</Carousel>
-    <Carousel id="loop" label="Loop" loop defaultIndex={0} slideLabel={(i, n) => `Photo ${i + 1} / ${n}`} previousLabel="Back" nextLabel="Forward">{slides(3, 'l')}</Carousel>
+    <Carousel id="car" aria-label="Photos" ref={carRef} className="extra" data-x="y">{slides(4, 'a')}</Carousel>
+    <Carousel id="loop" aria-label="Loop" loop defaultIndex={0} slideLabel={(i, n) => `Photo ${i + 1} / ${n}`} previousLabel="Back" nextLabel="Forward">{slides(3, 'l')}</Carousel>
     <Ctl />
-    <Carousel id="one" label="One">{slides(1, 'o')}</Carousel>
-    <Carousel id="bare" label="Bare" arrows={false} dots={false} defaultIndex={9}>{slides(3, 'b')}</Carousel>
-    <div dir="rtl"><Carousel id="rtl" label="RTL">{slides(3, 'r')}</Carousel></div>
-    <Carousel id="pics" label="Pictures">{['#c00', '#0c0', '#00c'].map((c) => <img key={c} alt={c} style={{ display: 'block', width: '100%', height: 120 }} src={svg(c)} />)}</Carousel>
-    <div style={{ direction: 'rtl' }}><Carousel id="cssrtl" label="CSS RTL" defaultIndex={1}>{slides(3, 'x')}</Carousel></div>
-    <Carousel id="fixed" label="Fixed" index={0} onIndexChange={() => {}}>{slides(3, 'f')}</Carousel>
-    <Carousel id="tok" label="Tokens" style={{ '--carousel-dot-active': 'rgb(1, 2, 3)', '--carousel-radius': '3px' } as React.CSSProperties}>{slides(2, 't')}</Carousel>
+    <Carousel id="one" aria-label="One">{slides(1, 'o')}</Carousel>
+    <Carousel id="bare" aria-label="Bare" arrows={false} dots={false} defaultIndex={9}>{slides(3, 'b')}</Carousel>
+    <div dir="rtl"><Carousel id="rtl" aria-label="RTL">{slides(3, 'r')}</Carousel></div>
+    <Carousel id="pics" aria-label="Pictures">{['#c00', '#0c0', '#00c'].map((c) => <img key={c} alt={c} style={{ display: 'block', width: '100%', height: 120 }} src={svg(c)} />)}</Carousel>
+    <div style={{ direction: 'rtl' }}><Carousel id="cssrtl" aria-label="CSS RTL" defaultIndex={1}>{slides(3, 'x')}</Carousel></div>
+    <Carousel id="fixed" aria-label="Fixed" index={0} onIndexChange={() => {}}>{slides(3, 'f')}</Carousel>
+    <Carousel id="tok" aria-label="Tokens" style={{ '--carousel-dot-active': 'rgb(1, 2, 3)', '--carousel-radius': '3px' } as React.CSSProperties}>{slides(2, 't')}</Carousel>
   </div>;
 }
 
@@ -103,7 +103,7 @@ const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'meta
 
 describe('Carousel', () => {
   test('the slides scroll natively and snap, one per gesture: where a scroll settles (a touch swipe, a trackpad, Shift and the wheel, find-in-page) becomes the index, and the dots follow', async () => {
-    await render(<div style={{ width: '400px' }}><Carousel id="wh" label="Wheel" onIndexChange={(n) => { changes.push(n); }}>{slides(4, 'w')}</Carousel></div>);
+    await render(<div style={{ width: '400px' }}><Carousel id="wh" aria-label="Wheel" onIndexChange={(n) => { changes.push(n); }}>{slides(4, 'w')}</Carousel></div>);
     const v = part('wh', SCROLLER), sl = slidesOf(el('wh')), at = () => el('wh').dataset.index;
     expect([getComputedStyle(v).overflowX, getComputedStyle(v).scrollSnapType, getComputedStyle(v).overscrollBehaviorX, getComputedStyle(sl[1]!).scrollSnapAlign, getComputedStyle(sl[1]!).scrollSnapStop])
       .toEqual(['auto', 'x mandatory', 'contain', 'start', 'always']);
@@ -120,7 +120,7 @@ describe('Carousel', () => {
     await expect.poll(at).toBe('1');
     expect(v.getAttribute('aria-label')).toBe('2 of 4');
     // A controlled parent that keeps its index: the scroll goes back to that slide.
-    await render(<div style={{ width: '400px' }}><Carousel id="kept" label="Kept" index={0} onIndexChange={() => {}}>{slides(3, 'k')}</Carousel></div>);
+    await render(<div style={{ width: '400px' }}><Carousel id="kept" aria-label="Kept" index={0} onIndexChange={() => {}}>{slides(3, 'k')}</Carousel></div>);
     const k = part('kept', SCROLLER);
     k.scrollTo({ left: slidesOf(el('kept'))[1]!.offsetLeft - slidesOf(el('kept'))[0]!.offsetLeft, behavior: 'instant' });
     await expect.poll(() => k.scrollLeft).toBeGreaterThan(100);
@@ -129,7 +129,7 @@ describe('Carousel', () => {
   });
 
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
-    await render(<Carousel id="mk" label="Photos"><div>A</div><div>B</div><div>C</div></Carousel>);
+    await render(<Carousel id="mk" aria-label="Photos"><div>A</div><div>B</div><div>C</div></Carousel>);
     const t = document.querySelector('#mk button[aria-current="true"]') as HTMLElement;
     t.focus();
     const before = t.getAttribute('aria-current');
@@ -137,7 +137,7 @@ describe('Carousel', () => {
   });
 
   test('the slide and dot names and the role descriptions come from labels, so SerupaProvider translates them: "korsel", "2 dari 3" in Indonesian', async () => {
-    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Carousel id="cid" label="Foto">{slides(3, 'i')}</Carousel></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Carousel id="cid" aria-label="Foto">{slides(3, 'i')}</Carousel></SerupaProvider>);
     const c = el('cid');
     expect([...c.querySelectorAll(DOTS)].map((x) => x.getAttribute('aria-label'))).toEqual(['1 dari 3', '2 dari 3', '3 dari 3']);
     const s = slidesOf(c)[0]!;
@@ -284,7 +284,7 @@ describe('Carousel', () => {
     await new Promise((f) => setTimeout(f, 100));
     expect(state('car').index).toBe(0);
     await expect.poll(() => part('car', SCROLLER).scrollLeft).toBe(0);
-    await render(<div style={{ width: '432px' }}><Carousel id="mv" label="Products" perView={3}>{slides(9, 'm')}</Carousel></div>);
+    await render(<div style={{ width: '432px' }}><Carousel id="mv" aria-label="Products" perView={3}>{slides(9, 'm')}</Carousel></div>);
     await trace('mv', [[-10, 100], [-20, 100], [-160, 10]]);
     await expect.poll(() => state('mv').index).toBe(1);
   });
@@ -406,7 +406,7 @@ describe('Carousel', () => {
     const inner = document.createElement('div');
     host.attachShadow({ mode: 'open' }).append(inner);
     try {
-      await render(<Carousel label="Shadow"><div>One</div><div>Two</div></Carousel>, { container: inner });
+      await render(<Carousel aria-label="Shadow"><div>One</div><div>Two</div></Carousel>, { container: inner });
       const root = host.shadowRoot!;
       root.querySelector<HTMLElement>('[aria-label="Next slide"]')!.focus();
       await userEvent.keyboard('{Enter}');
@@ -428,7 +428,7 @@ describe('Carousel', () => {
   });
 
   test('perView={3}: three slides share the width, 16px apart, all three reachable; next moves one slide and stops when the last is in view; the dots count pages, named "1–3 of 7"', async () => {
-    await render(<div style={{ width: '432px' }}><Carousel id="pv" label="Products" perView={3}>{slides(7, 'p')}</Carousel></div>);
+    await render(<div style={{ width: '432px' }}><Carousel id="pv" aria-label="Products" perView={3}>{slides(7, 'p')}</Carousel></div>);
     const sl = [...el('pv').querySelectorAll('[aria-roledescription="slide"]')].map((s) => s.getBoundingClientRect());
     expect([Math.round(sl[0]!.width), Math.round(sl[1]!.left - sl[0]!.right)]).toEqual([133, 16]);
     expect(state('pv')).toMatchObject({ index: 0, inert: '0001111', hidden: '0001111', dots: 'C0 --1 --1', prev: true, next: false });
@@ -445,7 +445,7 @@ describe('Carousel', () => {
   });
 
   test('peek: the next slide shows 32px past a 16px gap, out of the tab order; on the last slide the previous one shows at the start instead', async () => {
-    await render(<div style={{ width: '400px' }}><Carousel id="pk" label="Products" peek>{slides(3, 'k')}</Carousel></div>);
+    await render(<div style={{ width: '400px' }}><Carousel id="pk" aria-label="Products" peek>{slides(3, 'k')}</Carousel></div>);
     const view = () => part('pk', VIEW).getBoundingClientRect(), sl = () => [...el('pk').querySelectorAll('[aria-roledescription="slide"]')].map((s) => s.getBoundingClientRect());
     const rtl = getComputedStyle(el('pk')).direction === 'rtl', near = (r: DOMRect) => Math.round(rtl ? view().right - r.right : r.left - view().left), far = (r: DOMRect) => Math.round(rtl ? view().right - r.left : r.right - view().left);
     expect([Math.round(sl()[0]!.width), near(sl()[0]!), near(sl()[1]!), Math.round(view().width) - near(sl()[1]!)]).toEqual([336, 0, 352, 48]);
@@ -461,7 +461,7 @@ describe('Carousel', () => {
     const w = window.innerWidth, h = window.innerHeight;
     try {
       await page.viewport(500, 700);
-      await render(<><Carousel id="rv" label="Reviews" perView={{ base: 1, md: 2 }}>{slides(4, 'v')}</Carousel><Carousel id="few" label="Few" perView={3}>{slides(2, 'w')}</Carousel></>);
+      await render(<><Carousel id="rv" aria-label="Reviews" perView={{ base: 1, md: 2 }}>{slides(4, 'v')}</Carousel><Carousel id="few" aria-label="Few" perView={3}>{slides(2, 'w')}</Carousel></>);
       expect(state('rv').dots.split(' ').length).toBe(4);
       await page.viewport(900, 700);
       await expect.poll(() => state('rv').dots.split(' ').length).toBe(2);
@@ -478,7 +478,7 @@ describe('Carousel', () => {
     const dots = () => [...host.querySelectorAll('button')].filter((b) => /of 5$/.test(b.getAttribute('aria-label') || '') && getComputedStyle(b).display !== 'none');
     try {
       await page.viewport(900, 700);
-      host.innerHTML = renderToString(<Carousel id="ssr" label="Reviews" perView={{ base: 1, md: 2 }}>{slides(5, 's')}</Carousel>);
+      host.innerHTML = renderToString(<Carousel id="ssr" aria-label="Reviews" perView={{ base: 1, md: 2 }}>{slides(5, 's')}</Carousel>);
       document.body.appendChild(host);
       expect(width(slide())).toBeCloseTo((width(region()) - 16) / 2, 0);
       expect(dots().length).toBe(3);
@@ -493,7 +493,7 @@ describe('Carousel', () => {
   });
 
   test('slides inside a Fragment are slides of their own', async () => {
-    await render(<Carousel id="cfrag" label="Photos"><div>A</div><><div>B</div><div>C</div></></Carousel>);
+    await render(<Carousel id="cfrag" aria-label="Photos"><div>A</div><><div>B</div><div>C</div></></Carousel>);
     expect(el('cfrag').querySelectorAll(DOTS).length).toBe(3);
   });
 });
@@ -501,8 +501,8 @@ describe('Carousel', () => {
 describe('Carousel token names', () => {
   test('the current dot is --carousel-dot-width-active wide (the state last); the old --carousel-dot-active-width is gone since 15.0.0', async () => {
     await render(<>
-      <Carousel id="tk-new" label="New" style={{ '--carousel-dot-width-active': '40px' } as React.CSSProperties}>{slides(2, 'n')}</Carousel>
-      <Carousel id="tk-old" label="Old" style={{ '--carousel-dot-active-width': '32px' } as React.CSSProperties}>{slides(2, 'o')}</Carousel>
+      <Carousel id="tk-new" aria-label="New" style={{ '--carousel-dot-width-active': '40px' } as React.CSSProperties}>{slides(2, 'n')}</Carousel>
+      <Carousel id="tk-old" aria-label="Old" style={{ '--carousel-dot-active-width': '32px' } as React.CSSProperties}>{slides(2, 'o')}</Carousel>
     </>);
     const w = (id: string) => getComputedStyle(dot(id, 0), '::before').getPropertyValue('--srp-dot-w').trim();
     expect(w('tk-new')).toBe('40px');

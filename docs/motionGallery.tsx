@@ -51,7 +51,7 @@ const ENTRIES: Entry[] = [
     roles: 'motion-enter-sm, ease-enter; motion-exit-sm, ease-exit', demo: <Tooltip content="Download as PDF"><Button variant="secondary">Hover or focus me</Button></Tooltip> },
   { name: 'Menu', why: 'Where it came from: it grows out of its button, from the side it opens on.', often: 'Many times a session',
     roles: 'motion-enter-sm, ease-enter; motion-exit-sm, ease-exit',
-    demo: <Menu trigger={<Button variant="secondary" rightIcon="expand_more">Sort</Button>}><MenuItem>Name</MenuItem><MenuItem>Date modified</MenuItem><MenuItem>Size</MenuItem></Menu> },
+    demo: <Menu trigger={<Button variant="secondary" endIcon="expand_more">Sort</Button>}><MenuItem>Name</MenuItem><MenuItem>Date modified</MenuItem><MenuItem>Size</MenuItem></Menu> },
   { name: 'Tabs and SegmentedControl indicator', why: 'Two states joined: the indicator slides to the new choice instead of jumping.', often: 'Many times a session',
     roles: 'motion-change-sm, ease-move',
     demo: <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>

@@ -21,8 +21,8 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   value?: DateRangeInput | null | undefined;
   /** The picked range at first (uncontrolled). */
   defaultValue?: DateRangeInput | null | undefined;
-  /** Called once both ends are picked, with the range (local midnights, start first) and the same as "yyyy-mm-dd". */
-  onValueChange?: ((value: { start: Date; end: Date }, iso: { start: string; end: string }) => void) | undefined;
+  /** Called once both ends are picked, with the range (local midnights, start first), and details: iso is the same range as "yyyy-mm-dd". */
+  onValueChange?: ((value: { start: Date; end: Date }, details: { iso: { start: string; end: string } }) => void) | undefined;
   /** Months side by side: 1 (default) or 2. Two stack on a narrow screen. */
   months?: 1 | 2 | undefined;
   /** The month shown first (controlled): any day in it. Use with onMonthChange. */
@@ -104,7 +104,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
     const r = order(anchor, d);
     setAnchor(null);
     if (!controlled) setOwn(r);
-    if (props.onValueChange) props.onValueChange(r, { start: isoDate(r.start), end: isoDate(r.end) });
+    if (props.onValueChange) props.onValueChange(r, { iso: { start: isoDate(r.start), end: isoDate(r.end) } });
   };
   // What's shown: the preview while one end is picked, else the value.
   const shown: DateRange = anchor ? order(anchor, hover || anchor) : value;

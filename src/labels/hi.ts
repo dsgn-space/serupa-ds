@@ -18,7 +18,7 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: 'सभी खोलें',
-  chartKind: (type) => ({ line: 'लाइन चार्ट', bar: 'बार चार्ट', area: 'क्षेत्र चार्ट', donut: 'डोनट चार्ट' })[type],
+  chartKind: (type) => ({ line: 'लाइन चार्ट', bar: 'बार चार्ट', area: 'क्षेत्र चार्ट', donut: 'डोनट चार्ट', heatmap: 'हीटमैप' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + ' सीरीज़' + ', ' + n(points) + ' बिंदु' + (points > 1 ? ', ' + first + ' से ' + last + ' तक' : '') + '।',
   chartRange: (series, low, lowAt, high, highAt) => series + ': न्यूनतम ' + low + ' (' + lowAt + '), अधिकतम ' + high + ' (' + highAt + ')।',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -302,6 +302,10 @@ export const labels: SerupaLabels = {
   tourNext: 'आगे',
   tourDone: 'हो गया',
   sparklineSummary: (label, first, last, min, max) => label + ': ' + first + ' से ' + last + ', न्यूनतम ' + min + ', अधिकतम ' + max,
+  statTileUp: (amount) => amount + ' बढ़ा',
+  statTileDown: (amount) => amount + ' घटा',
+  statTileFlat: 'कोई बदलाव नहीं',
+  statTileTrend: (label, count) => label + ', पिछली ' + count + ' अवधियाँ',
   table: 'टेबल',
   timeline: 'टाइमलाइन',
   signatureMethod: 'हस्ताक्षर का तरीका',

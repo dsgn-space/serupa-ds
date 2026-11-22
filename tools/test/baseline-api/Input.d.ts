@@ -17,8 +17,8 @@ interface InputLabels {
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "children" | "prefix" | "size"> {
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
-    leftIcon?: IconSource | undefined;
-    rightIcon?: IconSource | undefined;
+    startIcon?: IconSource | undefined;
+    endIcon?: IconSource | undefined;
     prefix?: React.ReactNode | undefined;
     suffix?: React.ReactNode | undefined;
     showCount?: boolean | undefined;

@@ -22,7 +22,7 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Expandir tudo',
-  chartKind: (type) => ({ line: 'Gráfico de linhas', bar: 'Gráfico de barras', area: 'Gráfico de área', donut: 'Gráfico de rosca' })[type],
+  chartKind: (type) => ({ line: 'Gráfico de linhas', bar: 'Gráfico de barras', area: 'Gráfico de área', donut: 'Gráfico de rosca', heatmap: 'Mapa de calor' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + (series === 1 ? ' série' : ' séries') + ', ' + n(points) + (points === 1 ? ' ponto' : ' pontos') + (points > 1 ? ' de ' + first + ' a ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': mínimo ' + low + ' (' + lowAt + '), máximo ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -306,6 +306,10 @@ export const labels: SerupaLabels = {
   tourNext: 'Próximo',
   tourDone: 'Concluir',
   sparklineSummary: (label, first, last, min, max) => label + ': de ' + first + ' a ' + last + ', mínimo ' + min + ', máximo ' + max,
+  statTileUp: (amount) => 'Subiu ' + amount,
+  statTileDown: (amount) => 'Desceu ' + amount,
+  statTileFlat: 'Sem alteração',
+  statTileTrend: (label, count) => label + ', últimos ' + count + ' períodos',
   table: 'Tabela',
   timeline: 'Linha do tempo',
   signatureMethod: 'Forma de assinar',

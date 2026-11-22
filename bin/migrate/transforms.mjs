@@ -148,6 +148,38 @@ const propRename = (version, id, component, from, to, { leftovers = true } = {})
   },
 });
 
+// Props renamed on several components at once (17.0.0's icon and nav names). As propRename, what's left of an old name
+// in a file that names one of them is listed to check by hand.
+const ICON_PROP_COMPONENTS = ['Button', 'SplitButton', 'Badge', 'Input', 'Select', 'Combobox', 'NumberInput', 'PasswordInput', 'PhoneInput'];
+function propsRename(version, id, title, components, pairs, { leftovers = true } = {}) {
+  return {
+    version, id, exts: CODE, title,
+    run(src) {
+      const here = components.filter((c) => new RegExp(`\\b${c}\\b`).test(src));
+      if (!here.length) return { text: src, count: 0, notes: [] };
+      let text = src, count = 0;
+      for (const c of here) for (const [from, to] of pairs) { const r = renameProp(text, c, from, to); text = r.text; count += r.count; }
+      const notes = leftovers ? pairs.flatMap(([from, to]) => notesFor(text, new RegExp(`\\b${from}\\b`, 'g'), `\`${from}\` here isn't on a <${here.join('>, <')}> tag: if it reaches one (in a props object or a spread), rename it to \`${to}\``)) : [];
+      return { text, count, notes };
+    },
+  };
+}
+
+// The callbacks whose second argument became a details object in 17.0.0: [component, prop, what it was, what it is].
+const DETAILS_17 = [
+  ['Calendar', 'onValueChange', 'the day as "yyyy-mm-dd"', '{ iso }'],
+  ['DatePicker', 'onValueChange', 'the day as "yyyy-mm-dd"', '{ iso }'],
+  ['DateRangePicker', 'onValueChange', 'the range as "yyyy-mm-dd" strings ({ start, end })', '{ iso: { start, end } }'],
+  ['RangeCalendar', 'onValueChange', 'the range as "yyyy-mm-dd" strings ({ start, end })', '{ iso: { start, end } }'],
+  ['PeriodPicker', 'onValueChange', 'the first and last days ({ start, end })', '{ range: { start, end } }'],
+  ['Checkbox', 'onCheckedChange', 'the change event', '{ event }'],
+  ['CheckboxGroup', 'onValueChange', 'the change event', '{ event }'],
+  ['RadioGroup', 'onValueChange', 'the change event', '{ event }'],
+  ['Switch', 'onCheckedChange', 'the change event', '{ event }'],
+  ['TableSelectCell', 'onCheckedChange', 'the change event', '{ event }'],
+  ['Pagination', 'onPageSizeChange', 'the page, as a number', '{ page }'],
+];
+
 // Component tokens that put the state before the property, renamed with the state last in 14.x (the old names read as
 // fallbacks until 15.0.0). tools/test/upgrades.mjs checks this list against each $deprecated token.
 export const TOKENS_15 = {
@@ -439,18 +471,18 @@ export const TRANSFORMS = [
     // It changes what code means, not a name, so it edits only when --from says the code was written for an earlier
     // major; without --from, code may be 17.0.0's already, and each Accordion with no type is listed to check instead.
     version: '17.0.0', id: 'accordion-type-single', exts: CODE, withFrom: true,
-    title: 'Accordion: `type` is `"multiple"` by default; one written without a type gets `type="single"`, so it stays one open at a time',
+    title: 'Accordion: `selectionMode` (16.x `type`) is `"multiple"` by default; one written without one gets `selectionMode="single"`, so it stays one open at a time',
     run(src, file, listOnly = false) {
       if (!/\bAccordion\b/.test(src)) return { text: src, count: 0, notes: [] };
       let count = 0;
       const notes = [];
       for (const [s, e] of openTags(src, 'Accordion').reverse()) {
         const mask = topLevel(src.slice(s, e));
-        if (attrAt('type').test(mask)) continue;
+        if (attrAt('type').test(mask) || attrAt('selectionMode').test(mask)) continue;
         // Props spread in may carry a type: leave the tag, and say where to look.
-        if (listOnly) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with no `type`: it is `"multiple"` by default from 17.0.0; add type="single" if it should stay one open at a time (or run with --from)' }); continue; }
-        if (/\{\s*\.\.\./.test(src.slice(s, e))) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with spread props and no `type`: it is `"multiple"` by default now; add type="single" if the spread doesn\'t set one and it should stay one open at a time' }); continue; }
-        src = src.slice(0, s) + ' type="single"' + src.slice(s);
+        if (listOnly) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with no `selectionMode`: it is `"multiple"` by default from 17.0.0; add selectionMode="single" if it should stay one open at a time (or run with --from)' }); continue; }
+        if (/\{\s*\.\.\./.test(src.slice(s, e))) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with spread props and no `selectionMode`: it is `"multiple"` by default now; add selectionMode="single" if the spread doesn\'t set one and it should stay one open at a time' }); continue; }
+        src = src.slice(0, s) + ' selectionMode="single"' + src.slice(s);
         count++;
       }
       return { text: src, count, notes };
@@ -461,7 +493,93 @@ export const TRANSFORMS = [
     title: 'The `dk` prefix is `srp`: `dk-*` classes, `--dk-*` properties, `data-dk-*` attributes and the `dk.*` cascade layers',
     run: (src) => ({ ...renamePrefix(src), notes: [] }),
   },
+  {
+    version: '17.0.0', id: 'brands-opt-in', exts: ALL,
+    title: 'Every brand but blue is its own file, `brands/<brand>.css`, loaded after `tokens.css`',
+    run(src) {
+      const notes = [], seen = new Set();
+      for (const m of src.matchAll(BRAND_USE)) {
+        const brand = m[1] || m[2] || m[3];
+        // A file that already loads the brand (or every brand) has it.
+        if (seen.has(brand) || new RegExp(`brands/(?:${brand}|all)\\.css`).test(src)) continue;
+        seen.add(brand);
+        notes.push({ line: lineOf(src, m.index), message: `the ${brand} brand is no longer in tokens.css: import '@diki-stwn/serupa-ds/brands/${brand}.css' after tokens.css (once, where the app imports it), or brands/all.css where people can switch between brands; without it the page draws blue` });
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
+  {
+    version: '17.0.0', id: 'utilities-trimmed', exts: [...CODE, ...MARKUP],
+    title: 'The palette-step, mask, gradient, filter and 3D utility classes are removed (`bg-red-500`, `mask-*`, `bg-linear-*`, `blur-*`, `rotate-*`, `scale-*`)',
+    run(src) {
+      const names = new Set([...src.matchAll(PALETTE_CLASS), ...src.matchAll(MOVED)].map((m) => m[0]));
+      for (const m of src.matchAll(TRIMMED_17)) if (inClassList(src, m.index)) names.add(m[0]);
+      if (!names.size) return { text: src, count: 0, notes: [] };
+      const list = [...names];
+      const first = Math.min(...list.map((n) => src.indexOf(n)));
+      return { text: src, count: 0, notes: [{ line: lineOf(src, first),
+        message: `${list.slice(0, 3).join(', ')}${list.length > 3 ? ` and ${list.length - 3} more` : ''} ${list.length === 1 ? 'is' : 'are'} no longer a class: for a color use a role class (bg-primary, text-text-muted, border-border), which follows the theme, or var(--red-500) in the app's own CSS; for a mask, gradient, filter or rotate, write that CSS property in the app's own CSS` }] };
+    },
+  },
+  propsRename('17.0.0', 'icon-start-end', 'The icon props say start and end, not left and right: `leftIcon` is `startIcon`, `rightIcon` is `endIcon`',
+    ICON_PROP_COMPONENTS, [['leftIcon', 'startIcon'], ['rightIcon', 'endIcon']]),
+  propsRename('17.0.0', 'nav-current', 'A nav link marks the current page with `current`, as BreadcrumbItem and TabNavLink do: `active` is `current`',
+    ['BottomNavLink', 'NavbarLink', 'NavbarMenu', 'NavbarMenuLink', 'SidebarItem'], [['active', 'current']], { leftovers: false }),
+  {
+    version: '17.0.0', id: 'callback-details', exts: CODE,
+    title: 'A callback\'s second argument is a details object on the eleven callbacks that took a bare value: `(value, { iso })`, `(value, { event })`, `(pageSize, { page })`',
+    run(src) {
+      const notes = [];
+      for (const [component, prop, was, now] of DETAILS_17) {
+        if (!new RegExp(`\\b${component}\\b`).test(src)) continue;
+        for (const [s, e] of openTags(src, component)) {
+          const m = attrAt(prop).exec(topLevel(src.slice(s, e)));
+          if (m) notes.push({ line: lineOf(src, s + m.index), message: `${component} ${prop}: the second argument was ${was}, and is now ${now}. A handler that reads it changes; one that takes only the first doesn't` });
+        }
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
+  {
+    version: '17.0.0', id: 'text-tone-neutral', exts: CODE,
+    title: 'Text: `tone="default"` is `tone="neutral"`, the name every other tone uses',
+    run: (src) => (/\bText\b/.test(src) ? { ...renameValue(src, 'Text', 'tone', 'default', 'neutral'), notes: [] } : { text: src, count: 0, notes: [] }),
+  },
+  propsRename('17.0.0', 'selection-mode', 'Accordion and ToggleGroup say one or many with `selectionMode`, as List, TagGroup and TreeView do: `type` is `selectionMode`',
+    ['Accordion', 'ToggleGroup'], [['type', 'selectionMode']], { leftovers: false }),
+  propsRename('17.0.0', 'group-aria-label', 'BottomNav, Carousel, Toaster and AvatarGroup take their name for screen readers as `aria-label`, as every other landmark and group does: `label` is `aria-label`',
+    ['BottomNav', 'Carousel', 'Toaster', 'AvatarGroup'], [['label', 'aria-label']], { leftovers: false }),
+  propsRename('17.0.0', 'switch-label-placement', 'Switch: `labelPosition` is `labelPlacement`, the word every other side or edge uses',
+    ['Switch'], [['labelPosition', 'labelPlacement']]),
+  propsRename('17.0.0', 'mention-trigger-char', 'MentionInput: `trigger` is `triggerChar`, since `trigger` is the element that opens a Menu, Popover or HoverCard',
+    ['MentionInput'], [['trigger', 'triggerChar']], { leftovers: false }),
+  propsRename('17.0.0', 'table-cell-in-header', 'TableSelectCell and TableExpandCell: `header` is `inHeader`, since `header` is content on Sidebar',
+    ['TableSelectCell', 'TableExpandCell'], [['header', 'inHeader']], { leftovers: false }),
+  propsRename('17.0.0', 'list-loading-show-description', 'ListLoadingItems: `description` is `showDescription`, since `description` is text everywhere else',
+    ['ListLoadingItems'], [['description', 'showDescription']], { leftovers: false }),
+  {
+    version: '17.0.0', id: 'drawer-start-end', exts: CODE,
+    title: 'Drawer: `placement` is `start`, `end`, `top` or `bottom`; `left` is `start` and `right` is `end`, which follow the reading direction',
+    run(src) {
+      if (!/\bDrawer\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const a = renameValue(src, 'Drawer', 'placement', 'left', 'start');
+      const b = renameValue(a.text, 'Drawer', 'placement', 'right', 'end');
+      return { text: b.text, count: a.count + b.count, notes: [] };
+    },
+  },
 ];
+
+// The brands 17.0.0 moved out of tokens.css, as a page names them: data-brand="violet", data-theme="violet-dark", or
+// brand: 'violet' (Serupa.theme.set, useTheme().set).
+const OPT_IN_BRANDS = 'red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose';
+const BRAND_USE = new RegExp(`data-brand\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS})["'\`]|data-theme\\s*=\\s*\\{?\\s*["'\`](${OPT_IN_BRANDS})-(?:light|dark)["'\`]|\\bbrand\\s*:\\s*["'\`](${OPT_IN_BRANDS})["'\`]`, 'g');
+// A utility class on a palette step, as written in a class list: with its variants (md:, hover:) and an opacity
+// (/50), not a custom property (--red-500), and not a gradient stop (from-red-500: 14.0.0's utilities-extra.css).
+const RAMPS = 'slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose';
+// The other families 17.0.0 removed (tools/utilities/trimmed.mjs), as written in a class list: words like blur, scale
+// and transform are common elsewhere, so these count only inside class="…" (inClassList).
+const TRIMMED_17 = /(?<![\w$./-])(?:[a-z0-9@[\]-]+:)*-?(?:(?:from|via|to)(?=-[a-z0-9[(])|blur|brightness|contrast|grayscale|invert|sepia|hue-rotate|saturate|drop-shadow|backdrop-[a-z]+|mix-blend|bg-blend|rotate|skew|scale|perspective|backface|transform|zoom|origin|columns|break-(?:after|before|inside)|text-shadow|inset-shadow|inset-ring|tab|scroll-[mp](?:r|b|l|y|bs|be)(?=-)|(?<=-)scroll-m[a-z]*(?=-)|translate(?=-(?:z-|\d|full|px|3d))|border-(?:[trblxy]|s|e|bs|be)(?=-[a-z]))(?:-[\w./%]+)*(?![\w-])/g;
+const PALETTE_CLASS = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?!(?:from|via|to)-)[a-z][a-z-]*-(?:${RAMPS})-(?:50|[1-9]00|950)(?:\\/[\\d.]+)?(?![\\w-])`, 'g');
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);
 

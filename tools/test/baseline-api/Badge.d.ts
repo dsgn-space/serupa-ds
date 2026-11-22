@@ -6,7 +6,7 @@ interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, "onClick"> 
     tone?: BadgeTone | undefined;
     dot?: boolean | undefined;
     ping?: boolean | undefined;
-    leftIcon?: IconSource | undefined;
+    startIcon?: IconSource | undefined;
     count?: number | undefined;
     max?: number | undefined;
     showZero?: boolean | undefined;

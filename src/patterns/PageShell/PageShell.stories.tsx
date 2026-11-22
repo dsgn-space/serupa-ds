@@ -49,27 +49,27 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
       header={<Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
         actions={<><Button variant="ghost" size="sm">Docs</Button><Me /></>}>
-        <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
+        <NavbarLink href="#dashboard" current>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
         {/* The Sidebar's links, for a phone, where the Sidebar is gone (the adaptive shell has a BottomNav instead). */}
         {adaptive ? null : <NavbarMenu label="Workspace" className="sm:hidden">
-          <NavbarMenuLink href="#home" active>Home</NavbarMenuLink>
+          <NavbarMenuLink href="#home" current>Home</NavbarMenuLink>
           <NavbarMenuLink href="#workspace-projects">Projects</NavbarMenuLink>
           <NavbarMenuLink href="#team">Team</NavbarMenuLink>
         </NavbarMenu>}
       </Navbar>}
       sidebar={<Sidebar aria-label="Workspace" collapsed={rail}>
         <SidebarSection>
-          <SidebarItem href="#home" icon="home" label="Home" active />
+          <SidebarItem href="#home" icon="home" label="Home" current />
           <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
           <SidebarItem href="#team" icon="group" label="Team" />
         </SidebarSection>
       </Sidebar>}
       footer="© 2026 Acme"
       bottomNav={adaptive ? (
-        <BottomNav label="Workspace" hideFrom="md">
-          <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+        <BottomNav aria-label="Workspace" hideFrom="md">
+          <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
           <BottomNavLink href="#workspace-projects" icon="folder">Projects</BottomNavLink>
           <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
         </BottomNav>

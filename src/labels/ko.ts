@@ -21,7 +21,7 @@ const ga = (w: string) => { const c = w.charCodeAt(w.length - 1); return c >= 0x
 
 export const labels: SerupaLabels = {
   expandAll: '모두 펼치기',
-  chartKind: (type) => ({ line: '선 차트', bar: '막대 차트', area: '영역 차트', donut: '도넛 차트' })[type],
+  chartKind: (type) => ({ line: '선 차트', bar: '막대 차트', area: '영역 차트', donut: '도넛 차트', heatmap: '히트맵' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', 계열 ' + n(series) + '개, 데이터 ' + n(points) + '개' + (points > 1 ? ' (' + first + '~' + last + ')' : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': 최저 ' + low + ' (' + lowAt + '), 최고 ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -305,6 +305,10 @@ export const labels: SerupaLabels = {
   tourNext: '다음',
   tourDone: '완료',
   sparklineSummary: (label, first, last, min, max) => label + ': ' + first + '에서 ' + last + '까지, 최저 ' + min + ', 최고 ' + max,
+  statTileUp: (amount) => amount + ' 증가',
+  statTileDown: (amount) => amount + ' 감소',
+  statTileFlat: '변동 없음',
+  statTileTrend: (label, count) => label + ', 최근 ' + count + '개 기간',
   table: '표',
   timeline: '타임라인',
   signatureMethod: '서명 방법',

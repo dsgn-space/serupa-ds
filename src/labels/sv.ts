@@ -19,7 +19,7 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Visa alla',
-  chartKind: (type) => ({ line: 'Linjediagram', bar: 'Stapeldiagram', area: 'Ytdiagram', donut: 'Ringdiagram' })[type],
+  chartKind: (type) => ({ line: 'Linjediagram', bar: 'Stapeldiagram', area: 'Ytdiagram', donut: 'Ringdiagram', heatmap: 'Värmekarta' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + (series === 1 ? ' serie' : ' serier') + ', ' + n(points) + (points === 1 ? ' punkt' : ' punkter') + (points > 1 ? ' från ' + first + ' till ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': lägst ' + low + ' (' + lowAt + '), högst ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -303,6 +303,10 @@ export const labels: SerupaLabels = {
   tourNext: 'Nästa',
   tourDone: 'Klar',
   sparklineSummary: (label, first, last, min, max) => label + ': från ' + first + ' till ' + last + ', lägst ' + min + ', högst ' + max,
+  statTileUp: (amount) => 'Upp ' + amount,
+  statTileDown: (amount) => 'Ned ' + amount,
+  statTileFlat: 'Oförändrat',
+  statTileTrend: (label, count) => label + ', senaste ' + count + ' perioderna',
   table: 'Tabell',
   timeline: 'Tidslinje',
   signatureMethod: 'Sätt att signera',

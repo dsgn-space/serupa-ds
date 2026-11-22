@@ -89,7 +89,7 @@ Drawn from the `Controlled` story.
 
 ## Props
 
-Every Input prop works (`size`, `invalid`, `leftIcon`, `prefix`, `suffix`, `placeholder`, `disabled`, `readOnly`…), except `type` and `rightIcon`. A `suffix` such as "kg" or "%" sits before the steppers.
+Every Input prop works (`size`, `invalid`, `startIcon`, `prefix`, `suffix`, `placeholder`, `disabled`, `readOnly`…), except `type` and `endIcon`. A `suffix` such as "kg" or "%" sits before the steppers.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |

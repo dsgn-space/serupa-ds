@@ -19,7 +19,7 @@ const cap = (t: string) => t.charAt(0).toLocaleUpperCase('tr') + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Tümünü genişlet',
-  chartKind: (type) => ({ line: 'Çizgi grafik', bar: 'Çubuk grafik', area: 'Alan grafiği', donut: 'Halka grafik' })[type],
+  chartKind: (type) => ({ line: 'Çizgi grafik', bar: 'Çubuk grafik', area: 'Alan grafiği', donut: 'Halka grafik', heatmap: 'Isı haritası' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + ' seri' + ', ' + n(points) + ' nokta' + (points > 1 ? ', ' + first + ' – ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': en düşük ' + low + ' (' + lowAt + '), en yüksek ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -303,6 +303,10 @@ export const labels: SerupaLabels = {
   tourNext: 'İleri',
   tourDone: 'Bitti',
   sparklineSummary: (label, first, last, min, max) => label + ': ' + first + ' değerinden ' + last + ' değerine, en düşük ' + min + ', en yüksek ' + max,
+  statTileUp: (amount) => amount + ' arttı',
+  statTileDown: (amount) => amount + ' azaldı',
+  statTileFlat: 'Değişiklik yok',
+  statTileTrend: (label, count) => label + ', son ' + count + ' dönem',
   table: 'Tablo',
   timeline: 'Zaman çizelgesi',
   signatureMethod: 'İmza yöntemi',

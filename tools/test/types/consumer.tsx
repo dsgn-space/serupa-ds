@@ -86,7 +86,7 @@ export const tagsPicker = <Combobox multiple aria-label="Tags" options={['a']} v
 // @ts-expect-error: with multiple, the value is a list
 export const tagsWrong = <Combobox multiple aria-label="Tags" options={['a']} value="a" />;
 is<Equal<ParamOf<React.ComponentProps<typeof DatePicker>['onValueChange']>, Date | null>>();
-is<Equal<Parameters<NonNullable<React.ComponentProps<typeof DatePicker>['onValueChange']>>[1], string | null>>();
+is<Equal<Parameters<NonNullable<React.ComponentProps<typeof DatePicker>['onValueChange']>>[1], { iso: string | null }>>();
 is<Equal<ParamOf<React.ComponentProps<typeof DateRangePicker>['onValueChange']>, DateRange>>();
 is<Equal<ParamOf<React.ComponentProps<typeof NumberInput>['onValueChange']>, number | null>>();
 is<Equal<ParamOf<React.ComponentProps<typeof SegmentedControl>['onValueChange']>, string>>();
@@ -136,7 +136,7 @@ export const layout = [
 const someIcon: IconData = { name: 'add', d: 'M0 0' };
 is<Equal<IconData, { readonly name: string; readonly d: string }>>();
 export const iconName: IconName = 'category';
-export const iconData = <Button leftIcon={someIcon}>Add</Button>;
+export const iconData = <Button startIcon={someIcon}>Add</Button>;
 
 // Localization: labels are a full set; a provider takes some of them.
 const words: SerupaLabels = idLabels;

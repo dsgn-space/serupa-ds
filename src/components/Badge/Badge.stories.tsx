@@ -10,7 +10,7 @@ const meta = {
   argTypes: {
     variant: { control: 'inline-radio', options: ['subtle', 'solid', 'outline'] },
     tone: { control: 'select', options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'] },
-    leftIcon: iconArg,
+    startIcon: iconArg,
   },
 } satisfies Meta<typeof Badge>;
 export default meta;
@@ -36,7 +36,7 @@ export const Extras: Story = {
   render: () => <Row>
     <Badge tone="success" dot>Online</Badge>
     <Badge tone="danger" dot ping>Live</Badge>
-    <Badge tone="info" leftIcon="schedule">Scheduled</Badge>
+    <Badge tone="info" startIcon="schedule">Scheduled</Badge>
     <Badge tone="primary" count={8} />
     <Badge variant="solid" tone="danger" count={120} />
     <Badge onRemove={() => {}}>Design</Badge>

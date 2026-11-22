@@ -19,7 +19,7 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Kembangkan semua',
-  chartKind: (type) => ({ line: 'Carta garis', bar: 'Carta bar', area: 'Carta kawasan', donut: 'Carta donut' })[type],
+  chartKind: (type) => ({ line: 'Carta garis', bar: 'Carta bar', area: 'Carta kawasan', donut: 'Carta donut', heatmap: 'Peta haba' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + ' siri' + ', ' + n(points) + ' titik' + (points > 1 ? ' dari ' + first + ' hingga ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': terendah ' + low + ' (' + lowAt + '), tertinggi ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
@@ -303,6 +303,10 @@ export const labels: SerupaLabels = {
   tourNext: 'Seterusnya',
   tourDone: 'Selesai',
   sparklineSummary: (label, first, last, min, max) => label + ': dari ' + first + ' hingga ' + last + ', terendah ' + min + ', tertinggi ' + max,
+  statTileUp: (amount) => 'Naik ' + amount,
+  statTileDown: (amount) => 'Turun ' + amount,
+  statTileFlat: 'Tiada perubahan',
+  statTileTrend: (label, count) => label + ', ' + count + ' tempoh terakhir',
   table: 'Jadual',
   timeline: 'Garis masa',
   signatureMethod: 'Cara tandatangan',
