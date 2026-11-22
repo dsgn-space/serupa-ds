@@ -116,6 +116,17 @@ describe('Dialog', () => {
     await expect.poll(() => el('dlg').dataset.state).toBe('closed');
   });
 
+  test('a dialog drawn open inside the page, not as a modal (as the docs\' anatomy pictures draw one), doesn\'t stop the page scrolling; a modal one does', async () => {
+    const s = await render(<div style={{ height: 3000 }}>
+      <dialog className="srp-dialog srp-dialog--lg" open><div className="srp-dialog__panel">Still</div></dialog>
+      <dialog className="srp-drawer srp-drawer--right" open><div className="srp-drawer__panel">Still</div></dialog>
+    </div>);
+    expect(getComputedStyle(document.documentElement).overflowY).not.toBe('hidden');
+    await s.unmount();
+    await render(<Dialog open title="Modal" onOpenChange={() => {}}>Body</Dialog>);
+    expect(getComputedStyle(document.documentElement).overflowY).toBe('hidden');
+  });
+
   test('open: a modal <dialog> (top layer), named by the title and described by the description, focus inside; ref and className reach it; md: 512px wide, centered on the screen; the page behind doesn\'t scroll and can\'t be clicked', async () => {
     const ref = React.createRef<HTMLDialogElement>();
     await render(<App asks={[]} ctl={{}} dref={ref} />);
