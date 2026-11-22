@@ -4,16 +4,16 @@ import { TreeView, type TreeViewItem } from './TreeView';
 const files: TreeViewItem[] = [
   { id: 'src', label: 'src', icon: 'folder', children: [
     { id: 'components', label: 'components', icon: 'folder', children: [
-      { id: 'button', label: 'Button.tsx', icon: 'draft' },
-      { id: 'menu', label: 'Menu.tsx', icon: 'draft' },
+      { id: 'button', label: 'Button.tsx', icon: 'code' },
+      { id: 'menu', label: 'Menu.tsx', icon: 'code' },
     ] },
-    { id: 'index', label: 'index.ts', icon: 'draft' },
+    { id: 'index', label: 'index.ts', icon: 'code' },
   ] },
   { id: 'docs', label: 'docs', icon: 'folder', children: [
-    { id: 'intro', label: 'Introduction.mdx', icon: 'draft' },
+    { id: 'intro', label: 'Introduction.mdx', icon: 'description' },
     { id: 'old', label: 'Archive (read only)', icon: 'folder', disabled: true, children: [] },
   ] },
-  { id: 'readme', label: 'README.md', icon: 'draft' },
+  { id: 'readme', label: 'README.md', icon: 'description' },
 ];
 
 const meta = {
@@ -48,8 +48,8 @@ export const LongLabels: Story = {
   args: {
     items: [
       { id: 'src', label: 'a-folder-with-a-very-long-name-for-every-component', icon: 'folder', children: [
-        { id: 'long', label: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte.tsx', icon: 'draft' },
-        { id: 'menu', label: 'Menu.tsx', icon: 'draft' },
+        { id: 'long', label: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte.tsx', icon: 'code' },
+        { id: 'menu', label: 'Menu.tsx', icon: 'code' },
       ] },
     ],
     defaultExpanded: ['src'],
@@ -72,7 +72,7 @@ export const LoadingAndErrors: Story = {
     items: [
       { id: 'src', label: 'src', icon: 'folder', children: [{ id: 'src-wait', label: 'Loading…', disabled: true }] },
       { id: 'docs', label: 'docs', icon: 'folder', children: [{ id: 'docs-wait', label: 'Didn’t load. Close and open the folder to try again.', disabled: true }] },
-      { id: 'readme', label: 'README.md', icon: 'draft' },
+      { id: 'readme', label: 'README.md', icon: 'description' },
     ],
   },
 };
