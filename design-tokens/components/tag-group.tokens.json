@@ -228,7 +228,7 @@
       },
       "icon-size": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-3.5}",
+        "$value": "{spacing.spacing-3_5}",
         "$description": "A tag's icon, the check of a selected tag and the × (14px), beside the 12px label, as in a small Button.",
         "$extensions": {
           "com.serupa": {
