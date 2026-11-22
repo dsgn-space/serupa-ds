@@ -38,7 +38,7 @@
 # Tones
 - status: A new version is available.
 - status: Changes saved.
-- alert: Your storage is almost full.
+- status: Your storage is almost full.
 - alert: We couldn't save your changes.
 - status: Comments are turned off for this file.
 

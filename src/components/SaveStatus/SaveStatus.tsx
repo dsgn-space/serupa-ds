@@ -42,7 +42,8 @@ function SaveStatusRender({ ref, ...props }: SaveStatusProps & React.RefAttribut
     before.current = status;
     if (was === status) return;
     if (status === 'saved') announce(sds.labels.saved);
-    else if (status === 'error' && text.current) announce(text.current.textContent || sds.labels.saveFailed);
+    // A failed save interrupts, as a danger toast does: the work isn't saved.
+    else if (status === 'error' && text.current) announce(text.current.textContent || sds.labels.saveFailed, { assertive: true });
   }, [status, sds.labels]);
   // The status going out stays a moment, inert and hidden from screen readers, in the same cell as the one coming in,
   // so the two cross-fade (KW19). One keyed list, so the face going out is the same element, which then transitions; with no transition to wait for (reduced motion still fades, a test page doesn't) it

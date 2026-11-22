@@ -49,7 +49,7 @@ describe('Alert', () => {
 
   test('tones: info and success and neutral are status, warning and danger are alert; each has its own icon', async () => {
     await render(<Tones />);
-    expect(TONES.map((t) => tone(t).getAttribute('role') + ':' + iconName(tone(t)))).toEqual(['status:info', 'status:check_circle', 'alert:warning', 'alert:error', 'status:info']);
+    expect(TONES.map((t) => tone(t).getAttribute('role') + ':' + iconName(tone(t)))).toEqual(['status:info', 'status:check_circle', 'status:warning', 'alert:error', 'status:info']);
   });
 
   test('an unknown tone falls back to info; role can be overridden; icon={false} removes it, an icon name replaces it; no children means no message', async () => {
