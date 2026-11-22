@@ -303,6 +303,65 @@ describe('Form', () => {
     await expect.poll(() => errorOf('n')).toBe('Taken');
   });
 
+  test('useForm: values (a group of checkboxes, radios, a multiple select), submit with its checks, reset and discardDraft; a check that fails to answer lets the value through; a file stays out of the draft', async () => {
+    let api: FormHandle | null = null;
+    function Spy() { api = useForm(); return null; }
+    const onSubmit = vi.fn();
+    const checks = { code: (value: unknown) => (value === 'down' ? Promise.reject(new Error('offline')) : value === 'slow' ? new Promise<null>(() => {}) : value === 'taken' ? 'That code is taken' : null) };
+    const Page = () => <SerupaProvider locale="en"><Form draft="extras" onSubmit={onSubmit} checks={checks}>
+      <Field label="Code"><Input id="code" name="code" defaultValue="taken" /></Field>
+      <fieldset><legend>Tags</legend>
+        <label><input type="checkbox" id="t1" name="tags" value="a" defaultChecked /> A</label>
+        <label><input type="checkbox" id="t2" name="tags" value="b" /> B</label>
+      </fieldset>
+      <fieldset><legend>Size</legend>
+        <label><input type="radio" id="s1" name="size" value="s" /> S</label>
+        <label><input type="radio" id="s2" name="size" value="m" /> M</label>
+      </fieldset>
+      <label>Days <select id="days" name="days" multiple defaultValue={['mon', 'tue']}><option value="mon">Mon</option><option value="tue">Tue</option><option value="wed">Wed</option></select></label>
+      <label>Photo <input id="photo" type="file" name="photo" /></label>
+      <Spy />
+    </Form></SerupaProvider>;
+    const first = await render(<Page />);
+    await tick();
+    expect(api!.values()).toMatchObject({ code: 'taken', tags: ['a'], size: undefined, days: ['mon', 'tue'] });
+    await userEvent.click(el('s2'));
+    expect(api!.values()).toMatchObject({ size: 'm' });
+    // Submit runs the checks for fields the schema passed.
+    await React.act(async () => { api!.submit(); });
+    await expect.poll(() => errorOf('code')).toBe('That code is taken');
+    expect(onSubmit).not.toHaveBeenCalled();
+    // A check that can't answer (offline) doesn't block the form.
+    await userEvent.clear(el('code'));
+    await userEvent.type(el('code'), 'down');
+    await React.act(async () => { api!.submit(); });
+    await expect.poll(() => onSubmit.mock.calls.length).toBe(1);
+    // Changes are kept as a draft, never the file; reset puts the defaults back and clears the messages.
+    await userEvent.upload(el('photo'), new File(['x'], 'me.png', { type: 'image/png' }));
+    await userEvent.click(el('t2'));
+    await expect.poll(() => window.localStorage.getItem('serupa-form-draft:extras')).toContain('"b"');
+    expect(window.localStorage.getItem('serupa-form-draft:extras')).not.toContain('photo');
+    await React.act(async () => { api!.setErrors({ code: 'Nope' }); });
+    await expect.poll(() => errorOf('code')).toBe('Nope');
+    await React.act(async () => { api!.reset(); });
+    await expect.poll(() => errorOf('code')).toBe(null);
+    expect([el('code').value, el('t2').checked]).toEqual(['taken', false]);
+    // Unmounting stops the waits and the checks still running; discardDraft forgets the saved answers.
+    await userEvent.click(el('t2'));
+    await expect.poll(() => window.localStorage.getItem('serupa-form-draft:extras')).toContain('"b"');
+    await userEvent.clear(el('code'));
+    await userEvent.type(el('code'), 'slow');
+    await userEvent.tab();
+    await expect.poll(() => el('code').closest('[data-component="field"]')!.textContent).toContain('Checking…');
+    await userEvent.type(el('code'), 'er');
+    await first.unmount();
+    await render(<Page />);
+    await expect.poll(() => api!.draftRestored).toBe(true);
+    await React.act(async () => { api!.discardDraft(); });
+    expect(window.localStorage.getItem('serupa-form-draft:extras')).toBe(null);
+    await expect.poll(() => api!.draftRestored).toBe(false);
+  });
+
   test('without a schema, the controls’ own constraints are checked; summary={false} moves focus to the first field with a problem', async () => {
     await render(<SerupaProvider locale="en"><Form summary={false}>
       <Field label="Name"><Input id="n" name="name" /></Field>
@@ -400,6 +459,16 @@ describe('FormSteps', () => {
     await userEvent.click(button('Create account'));
     await expect.poll(() => onSubmit.mock.calls.length).toBe(1);
     expect(onSubmit.mock.calls[0]![0]).toEqual({ email: 'ani@example.com', city: 'Bandung', plan: 'pro' });
+  });
+
+  test('a step already done can be opened again from the progress bar', async () => {
+    await render(<Wizard />);
+    await userEvent.type(el('email'), 'ani@example.com');
+    await userEvent.click(button('Next'));
+    await expect.poll(() => panels()[1]).toBe(null);
+    const back = Array.from(document.querySelectorAll<HTMLElement>('[data-component="stepper"] button')).find((b) => b.textContent.includes('Account'))!;
+    await userEvent.click(back);
+    await expect.poll(() => panels()).toEqual([null, 'until-found', 'until-found']);
   });
 
   test('a summary link to a field on another step opens that step and focuses the field', async () => {
