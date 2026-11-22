@@ -33,11 +33,15 @@ export const LongLabel: Story = {
   ),
 };
 
+/** Every variant (outline by default) and size (sm by default), as a Button's, so it sits beside the field or toolbar it serves. */
 export const VariantsAndSizes: Story = {
-  render: (args) => <div className="flex flex-wrap gap-3 items-center">
-    <CopyButton {...args} variant="primary">Copy, primary</CopyButton>
-    <CopyButton {...args} variant="link">Copy, link</CopyButton>
-    <CopyButton {...args} size="lg">Copy, lg</CopyButton>
+  render: (args) => <div className="flex flex-col gap-3 items-start">
+    <div className="flex flex-wrap gap-3 items-center">
+      {(['primary', 'secondary', 'outline', 'ghost', 'link'] as const).map((v) => <CopyButton key={v} {...args} variant={v}>{'Copy, ' + v}</CopyButton>)}
+    </div>
+    <div className="flex flex-wrap gap-3 items-center">
+      {(['sm', 'md', 'lg'] as const).map((z) => <CopyButton key={z} {...args} size={z}>{'Copy, ' + z}</CopyButton>)}
+    </div>
   </div>,
 };
 

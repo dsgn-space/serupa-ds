@@ -54,6 +54,20 @@
   - radio "Week" [checked]
   - radio "Month"
 
+# Sizes
+- radiogroup "Period, sm":
+  - radio "Day"
+  - radio "Week" [checked]
+  - radio "Month"
+- radiogroup "Period, md":
+  - radio "Day"
+  - radio "Week" [checked]
+  - radio "Month"
+- radiogroup "Period, lg":
+  - radio "Day"
+  - radio "Week" [checked]
+  - radio "Month"
+
 # WithIcons
 - radiogroup "View":
   - radio "List" [checked]

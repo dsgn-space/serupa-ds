@@ -29,6 +29,12 @@ export const Default: Story = {};
 export const Open: Story = { args: { open: true } };
 /** Extended: the Fab shows its label too. */
 export const Extended: Story = { args: { extended: true, open: true } };
+/** Sizes: md (56px) by default, sm (40px) where a full Fab would cover too much of a small screen. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end' }}>
+    {(['md', 'sm'] as const).map((z) => <FabMenu key={z} {...args} size={z} label={'Create, ' + z} />)}
+  </div>,
+};
 /** Loading: the Fab shows its spinner and can't open until it's done, as a Fab does. */
 export const Loading: Story = { args: { loading: true } };
 /** With an action that can't be picked now, and one that deletes. */

@@ -5,7 +5,7 @@ Each record says why Serupa is built the way it is: the context, the options wei
 | # | Decision | Status |
 |---|---|---|
 | [0001](0001-three-layer-tokens.md) | Three token layers (palette, semantic, component) as CSS custom properties | Accepted |
-| [0002](0002-token-source-and-generation.md) | Edit tokens in `tokens.json` and generate every output from it | Accepted |
+| [0002](0002-token-source-and-generation.md) | Generate every token output from one source (written in the W3C format since [0014](0014-dtcg-token-source.md)) | Accepted |
 | [0003](0003-theming.md) | Themes as brand × mode on `data-theme` | Superseded by [0011](0011-theming-v2.md) |
 | [0004](0004-icon-font.md) | Icons from the Material Symbols font | Superseded by [0009](0009-svg-icons.md) |
 | [0005](0005-build-and-packaging.md) | Build into `dist/` with tsup and joined CSS | Accepted |

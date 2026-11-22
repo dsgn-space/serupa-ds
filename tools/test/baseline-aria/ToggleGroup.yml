@@ -48,6 +48,22 @@
   - button "Align center"
   - button "Align right"
 
+# Variants
+- group "Text alignment, outline":
+  - button "Align left" [pressed]
+  - button "Align center"
+  - button "Align right"
+- group "Text alignment, ghost":
+  - button "Align left" [pressed]
+  - button "Align center"
+  - button "Align right"
+
+# Vertical
+- group "Text alignment":
+  - button "Align left" [pressed]
+  - button "Align center"
+  - button "Align right"
+
 # WithLabels
 - group "View":
   - button "Day"

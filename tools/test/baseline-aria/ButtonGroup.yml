@@ -31,6 +31,20 @@
   - button "Cut"
   - button "Paste"
 
+# Sizes
+- group "Clipboard, sm":
+  - button "Copy"
+  - button "Cut"
+  - button "Paste"
+- group "Clipboard, md":
+  - button "Copy"
+  - button "Cut"
+  - button "Paste"
+- group "Clipboard, lg":
+  - button "Copy"
+  - button "Cut"
+  - button "Paste"
+
 # SmallIcons
 - group "Text alignment":
   - button "Align left"
