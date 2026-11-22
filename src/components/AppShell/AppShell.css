@@ -14,10 +14,12 @@
 .srp-app-shell > .srp-app-shell__footer { grid-area: footer; }
 .srp-app-shell > .srp-app-shell__bottom { grid-area: bottom; }
 .srp-app-shell--muted .srp-app-shell__main { background: var(--app-shell-bg-muted, var(--surface-muted)); --surface-behind: var(--app-shell-bg-muted, var(--surface-muted)); }
-.srp-app-shell__main--padded { padding: var(--app-shell-padding, var(--spacing-4)); }
-.srp-app-shell__footer { border-block-start: var(--border-width-1) solid var(--app-shell-border, var(--border)); padding: var(--app-shell-footer-padding, var(--spacing-6)); color: var(--app-shell-footer-text, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-@media (min-width: 640px) { .srp-app-shell__main--padded { padding: var(--app-shell-padding-sm, var(--spacing-6)); } }
-@media (min-width: 1024px) { .srp-app-shell__main--padded { padding: var(--app-shell-padding-lg, var(--spacing-8)); } }
+/* main's padding at each width, which the footer's sides follow, so its text starts where main's content does. */
+.srp-app-shell { --srp-app-shell-pad: var(--app-shell-padding, var(--spacing-4)); }
+.srp-app-shell__main--padded { padding: var(--srp-app-shell-pad); }
+.srp-app-shell__footer { border-block-start: var(--border-width-1) solid var(--app-shell-border, var(--border)); padding: var(--app-shell-footer-padding, var(--spacing-6) var(--srp-app-shell-pad)); color: var(--app-shell-footer-text, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+@media (min-width: 640px) { .srp-app-shell { --srp-app-shell-pad: var(--app-shell-padding-sm, var(--spacing-6)); } }
+@media (min-width: 1024px) { .srp-app-shell { --srp-app-shell-pad: var(--app-shell-padding-lg, var(--spacing-8)); } }
 @media (max-width: 639.98px) { .srp-app-shell > .srp-app-shell__side--from-sm { display: none; } }
 @media (max-width: 767.98px) { .srp-app-shell > .srp-app-shell__side--from-md { display: none; } }
 @media (max-width: 1023.98px) { .srp-app-shell > .srp-app-shell__side--from-lg { display: none; } }
