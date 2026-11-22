@@ -23,6 +23,11 @@ import { pageShared } from '../../internal/pageShared';
 import { isApple } from '../../internal/keys';
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+/** Where a Toaster shows its toasts. 'top' and 'bottom' are centered, as a Placement spells the middle. */
+export type ToasterPlacement = 'top-start' | 'top' | 'top-end' | 'bottom-start' | 'bottom' | 'bottom-end'
+  /** @deprecated 'top-center' and 'bottom-center' are 'top' and 'bottom'; removed in 18.0.0. */
+  | 'top-center' | 'bottom-center';
+/** @deprecated Use ToasterPlacement, the name of the prop it types; removed in 18.0.0. */
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
 
 export interface ToastOptions {
@@ -215,8 +220,8 @@ function unseen() {
 export const toast = /* @__PURE__ */ Object.assign(show, { dismiss, promise, undo });
 
 export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
-  /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom-center', 'top-start', 'top-center' or 'top-end'. Start and end follow the text direction. */
-  placement?: ToasterPosition | undefined;
+  /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom', 'top-start', 'top' or 'top-end'. 'top' and 'bottom' are centered; start and end follow the text direction. */
+  placement?: ToasterPlacement | undefined;
   /** The region's name for screen readers. Default: 'Notifications'. */
   'aria-label'?: string | undefined;
   /** The close button's name. Default: 'Dismiss'. */
@@ -229,7 +234,8 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   autoDismiss?: boolean | undefined;
 }
 
-const POSITIONS: readonly ToasterPosition[] = ['top-start', 'top-center', 'top-end', 'bottom-start', 'bottom-center', 'bottom-end'];
+// The centered ones keep their -center class and position, so 'bottom' and the deprecated 'bottom-center' look the same.
+const POSITIONS = ['top-start', 'top-center', 'top-end', 'bottom-start', 'bottom-center', 'bottom-end'] as const;
 const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error };
 
 // A field that edits text has its own undo, so Ctrl+Z or ⌘Z there undoes the typing, not a toast.undo.
@@ -261,7 +267,8 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
     void Promise.resolve().then(() => { arriving.current = false; });
     return () => { page.listeners.delete(take); emit(); unseen(); };
   }, []);
-  const pos = oneOf(POSITIONS, placement, 'bottom-end');
+  if (process.env.NODE_ENV !== 'production' && (placement === 'top-center' || placement === 'bottom-center')) warnOnce('deprecated-prop', `Toaster: placement="${placement}" is deprecated and removed in 18.0.0. Use placement="${placement.split('-')[0]}", as a Placement spells the middle.`, 'deprecated-prop:Toaster:' + placement);
+  const pos = oneOf(POSITIONS, placement === 'top' || placement === 'bottom' ? `${placement}-center` as const : placement, 'bottom-end');
   // The F8 hint is set once the Toaster is in the page, not while rendering, and goes with it: with no Toaster, F8
   // does nothing, so a toast doesn't mention it.
   const shortcut = sds.labels.toastShortcut(HOTKEY);

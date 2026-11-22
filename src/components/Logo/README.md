@@ -39,8 +39,8 @@ Drawn from the `Default` story.
 
 ### Do and don't
 
-- **Do:** Give it `darkSrc` (and `markDarkSrc`) wherever it can show on dark. (`DoDarkVersion`)
-- **Don't:** Ship only the light logo: in a dark theme it's dark on dark. (`DontNoDarkVersion`)
+- **Do:** Give it `darkSrc` (and `markDarkSrc`) wherever it can show on dark. (`Default`)
+- **Don't:** Ship only the light logo: in a dark theme it's dark on dark. (`LightOnly`)
 
 ## Accessibility
 

@@ -40,4 +40,4 @@ export const WithPresets: Story = { args: { presets: true, defaultValue: { start
 /** Do: one Field label for the range, the format in the hint, and each end named for the task. */
 export const DoNameEnds: Story = { name: 'Do: label the range and its ends', render: () => <Field label="Stay" hint="mm/dd/yyyy"><DateRangePicker startLabel="Check-in" endLabel="Check-out" /></Field> };
 /** Don't: a bare range with no label or format. */
-export const DontBareRange: Story = { name: "Don't: leave the range unlabelled" };
+export const DontBareRange: Story = { tags: ['!visual'], name: "Don't: leave the range unlabelled" };

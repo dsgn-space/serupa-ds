@@ -57,7 +57,7 @@ export const DoWhatAndNext: Story = {
   render: () => <Col><Alert tone="danger" title="Payment failed" actions={<Button size="sm" variant="secondary">Update card</Button>}>Your card was declined. Update it by Friday to keep your plan.</Alert></Col>,
 };
 /** Don't: a generic error with no way forward. */
-export const DontGenericError: Story = {
+export const DontGenericError: Story = { tags: ['!visual'],
   name: "Don't: a generic error",
   render: () => <Col><Alert tone="danger" title="Error">Something went wrong.</Alert></Col>,
 };
@@ -67,7 +67,7 @@ export const DoMatchTone: Story = {
   render: () => <Col><Alert tone="info" title="New version available">Reload the page to get the latest changes.</Alert></Col>,
 };
 /** Don't: danger for news, which makes real problems easier to miss. */
-export const DontAlarmingTone: Story = {
+export const DontAlarmingTone: Story = { tags: ['!visual'],
   name: "Don't: an alarming tone",
   render: () => <Col><Alert tone="danger" title="New version available">Reload the page to get the latest changes.</Alert></Col>,
 };

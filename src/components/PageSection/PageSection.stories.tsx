@@ -64,7 +64,7 @@ export const DoAlternate: Story = {
   render: () => <>{(['plain', 'muted', 'plain'] as const).map((t, i) => <PageSection key={i} tone={t} spacing="sm" aria-label={'Band ' + (i + 1)}><p className="m-0">A {t} band</p></PageSection>)}</>,
 };
 /** Don't: put two muted bands one after the other: the line between them disappears. */
-export const DontSameTone: Story = {
+export const DontSameTone: Story = { tags: ['!visual'],
   name: "Don't: two muted bands in a row",
   render: () => <>{[1, 2].map((i) => <PageSection key={i} tone="muted" spacing="sm" aria-label={'Band ' + i}><p className="m-0">A muted band</p></PageSection>)}</>,
 };

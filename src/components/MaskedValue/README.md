@@ -42,7 +42,7 @@ Drawn from the `Revealable` story.
 
 ### Do and don't
 
-- **Do:** Keep the end the owner knows it by, such as a card's last four. (`DoKeepTheEnd`)
+- **Do:** Keep the end the owner knows it by, such as a card's last four. (`Default`)
 - **Don't:** Hide it all: with nothing kept, nobody can tell which card it is. (`DontHideAll`)
 
 ## Accessibility

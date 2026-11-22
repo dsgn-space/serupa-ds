@@ -66,4 +66,4 @@ export const LongText: Story = {
 /** Do: put what helps people with the main content in the narrow column: filters, a summary, a page's sections. */
 export const DoSupportingSide: Story = { name: 'Do: support the content', args: { sidebar: <Box>Filters</Box>, children: <Box tall>Results</Box> } };
 /** Don't: put the page's main content in the narrow column: on a phone it comes first, and people scroll past it to find the rest. */
-export const DontMainInSide: Story = { name: "Don't: the main content in the side", args: { sidebar: <Box tall>The article people came to read</Box>, children: <Box>Related links</Box> } };
+export const DontMainInSide: Story = { tags: ['!visual'], name: "Don't: the main content in the side", args: { sidebar: <Box tall>The article people came to read</Box>, children: <Box>Related links</Box> } };

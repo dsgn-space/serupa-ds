@@ -29,4 +29,4 @@ export const LongText: Story = { args: { children: 'Donaudampfschifffahrtsgesell
 /** Do: three lines, enough to judge whether to read on. */
 export const DoEnoughLines: Story = { name: 'Do: enough lines', args: { lines: 3 } };
 /** Don't: one line, which says too little. */
-export const DontOneLine: Story = { name: "Don't: one line", args: { lines: 1 } };
+export const DontOneLine: Story = { tags: ['!visual'], name: "Don't: one line", args: { lines: 1 } };

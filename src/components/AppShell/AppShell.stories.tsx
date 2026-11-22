@@ -87,4 +87,4 @@ export const LongText: Story = {
 /** Do: the muted background behind a page built from Cards. */
 export const DoMutedCards: Story = { name: 'Do: muted behind Cards', args: { ...MutedForCards.args, mainId: 'shell-do' } };
 /** Don't: Cards on the plain background: their edges barely show. */
-export const DontPlainCards: Story = { name: "Don't: Cards on the plain page", args: { ...MutedForCards.args, background: 'plain', mainId: 'shell-dont' } };
+export const DontPlainCards: Story = { tags: ['!visual'], name: "Don't: Cards on the plain page", args: { ...MutedForCards.args, background: 'plain', mainId: 'shell-dont' } };

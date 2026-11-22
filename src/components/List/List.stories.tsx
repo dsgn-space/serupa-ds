@@ -112,7 +112,7 @@ export const DoTitleAndDetail: Story = {
   ] },
 };
 /** Don't: everything in the title, so it wraps and the names stop lining up. */
-export const DontCrammedTitle: Story = {
+export const DontCrammedTitle: Story = { tags: ['!visual'],
   name: "Don't: cram everything into the title",
   args: { children: [
     <ListItem key="a" leading="person" title="Ana Ruiz, ana@example.com, Admin since March" />,

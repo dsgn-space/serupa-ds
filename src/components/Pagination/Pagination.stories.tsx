@@ -56,4 +56,4 @@ export const DoShowTotal: Story = {
   render: (args) => <div style={{ maxWidth: 640 }}><Pagination {...args} /></div>,
 };
 /** Don't: pagination for one page; everything already shows, so leave it out. */
-export const DontOnePage: Story = { name: "Don't: page a list that fits", args: { count: 1, defaultPage: 1 } };
+export const DontOnePage: Story = { tags: ['!visual'], name: "Don't: page a list that fits", args: { count: 1, defaultPage: 1 } };

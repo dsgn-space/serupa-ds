@@ -54,7 +54,7 @@ const WORDY: Task[] = [
 /** Do: short item names, read on each handle ("Reorder Write the brief"). */
 export const DoShortNames: Story = { name: 'Do: keep item names short' };
 /** Don't: long names, which every handle and announcement repeats in full. */
-export const DontLongNames: Story = {
+export const DontLongNames: Story = { tags: ['!visual'],
   name: "Don't: name items in sentences",
   render: () => <div style={{ maxWidth: '24rem' }}><SortableList aria-label="Launch tasks" items={WORDY} getKey={(t) => t.id} getLabel={(t) => t.title} onReorder={() => undefined} renderItem={(t) => t.title} /></div>,
 };

@@ -18,6 +18,7 @@ import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { ColorPicker } from '../../components/ColorPicker/ColorPicker';
 
 /* Settings form: a settings page of sections, each with its own Save, errors and status, and a question before
    unsaved changes are lost. For an app to copy. What it carries (WCAG 2.2):
@@ -32,7 +33,11 @@ import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
      changes?" first, with Keep editing focused (useUnsavedChanges).
    Storing the settings is the app's job: `onSave` gets each section's values. */
 
-export interface Profile { name: string; email: string; bio: string; timeZone: string }
+export interface Profile {
+  name: string; email: string; bio: string; timeZone: string;
+  /** The color behind your initials where there's no photo, as #rrggbb. Leave it out for the app's own. */
+  color?: string | undefined;
+}
 export interface Notifications { comments: boolean; summary: boolean; news: boolean }
 export interface SettingsValues { profile: Profile; notifications: Notifications }
 
@@ -57,13 +62,18 @@ export interface SettingsFormProps {
 }
 
 const demo: SettingsValues = {
-  profile: { name: 'Ada Lovelace', email: 'ada@example.com', bio: '', timeZone: 'Europe/London' },
+  profile: { name: 'Ada Lovelace', email: 'ada@example.com', bio: '', timeZone: 'Europe/London', color: '#1d4ed8' },
   notifications: { comments: true, summary: true, news: false },
 };
 const ZONES = [
   { value: 'America/Los_Angeles', label: 'Los Angeles (UTC−8)' }, { value: 'America/New_York', label: 'New York (UTC−5)' },
   { value: 'Europe/London', label: 'London (UTC+0)' }, { value: 'Europe/Berlin', label: 'Berlin (UTC+1)' },
   { value: 'Asia/Jakarta', label: 'Jakarta (UTC+7)' }, { value: 'Asia/Tokyo', label: 'Tokyo (UTC+9)' },
+];
+/** The colors behind initials, each dark enough for white letters on it (4.5:1). */
+const COLORS = [
+  { value: '#1d4ed8', label: 'Blue' }, { value: '#6d28d9', label: 'Violet' }, { value: '#047857', label: 'Green' },
+  { value: '#b91c1c', label: 'Red' }, { value: '#a16207', label: 'Ochre' }, { value: '#3f3f46', label: 'Gray' },
 ];
 const BIO_MAX = 160;
 const id = (k: keyof Profile) => `profile-${k}`;
@@ -168,6 +178,9 @@ function Loaded({ initial = demo, onSave, onLeave, online }: Omit<SettingsFormPr
           </Field>
           <Field label="Time zone" hint="For the times on comments and the weekly summary.">
             <Select id={id('timeZone')} name="timeZone" value={p.timeZone} options={ZONES} onChange={(e) => profile.set({ timeZone: e.target.value })} />
+          </Field>
+          <Field label="Initials color" hint="Behind your initials where there’s no photo. A color of your own is checked against the white letters.">
+            <ColorPicker swatches={COLORS} value={p.color ?? null} onValueChange={(color) => profile.set({ color })} custom contrastWith="#ffffff" minContrast={4.5} />
           </Field>
         </SettingsSection>
         <SettingsSection title="Notifications" description="What reaches you by email. Everything is in the app either way."

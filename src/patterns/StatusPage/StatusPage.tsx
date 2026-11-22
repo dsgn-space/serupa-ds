@@ -118,7 +118,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
   };
 
   const incident = (i: Incident) => (
-    <article key={i.id} aria-labelledby={`incident-${i.id}`} className="flex flex-col gap-3">
+    <article key={i.id} aria-labelledby={`incident-${i.id}`} className="flex flex-col gap-3 text-sm">
       <h3 id={`incident-${i.id}`} className="m-0 text-base font-semibold">{i.title}</h3>
       <p className="m-0 text-sm text-text-muted">Affects {names(i.services)}</p>
       <ol className="m-0 flex list-none flex-col gap-3 border-s-2 border-border ps-4">

@@ -16,6 +16,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
 import { Stack } from '../../components/Stack/Stack';
+import { Tour, type TourStep } from '../../components/Tour/Tour';
 
 /* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
@@ -97,6 +98,13 @@ function save(key: string | undefined, state: OnboardingState) {
 }
 
 /** The first-run page: a skip link, a header, then main with the welcome, the setup checklist and an empty project list. */
+/** The tour: three stops, each at the part of the page it explains. */
+const TOUR: TourStep[] = [
+  { target: '#setup-title', title: 'Your setup checklist', content: 'A few steps that get your workspace ready. Tick each one off as you go; we keep your place.' },
+  { target: '#projects-title', title: 'Your projects', content: 'Each project holds a piece of work: its tasks, its files and the talk about them.' },
+  { title: 'That’s the tour', content: 'Take it again any time from Take a quick tour at the top of this page.' },
+];
+
 export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard', loading = false, loadFailed = false, onRetry, online }: OnboardingProps) {
   const locale = useLocale();
   const start = (): OnboardingState => {
@@ -120,6 +128,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
 
   // After hiding or showing, focus goes to what took the place of the button that was pressed.
   const showButton = React.useRef<HTMLButtonElement | null>(null);
+  const [touring, setTouring] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement | null>(null);
   const moved = React.useRef(false);
   React.useEffect(() => {
@@ -138,7 +147,9 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
       <Container as="main" size="md" className="py-8 outline-none" id="main">
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">Your progress is kept on this device. Some steps need a connection.</OfflineBanner>
-          <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
+          <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place."
+            primary={{ label: 'Take a quick tour', onSelect: () => setTouring(true) }} />
+          <Tour open={touring} onOpenChange={setTouring} steps={TOUR} />
 
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Skeleton shape="text" lines={6} label="Loading your setup checklist" /></Card> : (

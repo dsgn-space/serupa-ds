@@ -81,7 +81,7 @@ export const DoOnePerArea: Story = {
   render: () => <div style={{ display: 'grid', placeItems: 'center', maxWidth: 320, height: 132, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}><Loader label="Loading projects" /></div>,
 };
 /** Don't: a ring on every row, which spins in many places at once. */
-export const DontOnePerRow: Story = {
+export const DontOnePerRow: Story = { tags: ['!visual'],
   name: "Don't: one per row",
   render: () => <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 320, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
     {ROWS.map((r) => <div key={r} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--spacing-3)' }}>{r}<Loader size="sm" label={`Loading ${r}`} /></div>)}

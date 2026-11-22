@@ -64,6 +64,13 @@ describe('Patterns/Account security', () => {
     await expect.element(next()).toHaveValue('another long phrase');
   });
 
+  test('two-step setup: a QR code of the key to scan, the key as text beside it', async () => {
+    const screen = await render(<AccountSecurity setupKey="ABCD EFGH" />);
+    await screen.getByRole('button', { name: 'Turn on' }).click();
+    const dialog = screen.getByRole('dialog', { name: 'Turn on two-step verification' });
+    await expect.element(dialog.getByRole('img', { name: 'Code to scan with your authenticator app' })).toBeVisible();
+    await expect.element(dialog.getByText('ABCD EFGH')).toBeVisible();
+  });
   test('two-step setup: the key as text with Copy, a wrong code says what to check, a right one shows the recovery codes once', async () => {
     const onEnableTwoStep = vi.fn((code: string) => (code === '123456' ? Promise.resolve() : Promise.reject(new Error('no'))));
     const screen = await render(<AccountSecurity onEnableTwoStep={onEnableTwoStep} setupKey="ABCD EFGH" recoveryCodes={['aaaa-1111', 'bbbb-2222']} />);

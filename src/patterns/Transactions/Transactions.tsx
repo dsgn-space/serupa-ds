@@ -118,7 +118,7 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
             : !transactions.length ? <div className="pt-6"><EmptyState icon="receipt_long" title="No transactions yet" headingLevel={2}
                 description="Money in and out of this account shows here, by month, as soon as it moves." /></div> : (<>
           <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">
-            <Field label="Month" id="tx-month">
+            <Field label="Month" id="tx-month" className="justify-self-start">
               <Select value={month} onChange={(e) => { setMonth(e.target.value); setCategory(''); }} options={months.map((m) => ({ value: m, label: monthName(m) }))} />
             </Field>
             <Card padding="sm" variant="filled">

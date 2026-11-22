@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { IconSource } from '../Icon/Icon';
 import { oneOf } from '../../internal/cn';
 import { named } from '../../internal/component';
-import { Fab, type FabPosition, type FabProps } from '../Fab/Fab';
+import { Fab, type FabPlacement, type FabProps } from '../Fab/Fab';
 import { Menu, MenuItem } from '../Menu/Menu';
 
 /** One of a FabMenu's actions: its words (always shown), an icon, and what it does. */
@@ -29,7 +29,7 @@ export interface FabMenuProps extends Omit<FabProps, 'onClick'> {
   onOpenChange?: ((open: boolean) => void) | undefined;
 }
 
-const POSITIONS: readonly FabPosition[] = ['bottom-end', 'bottom-start', 'top-end', 'top-start', 'static'];
+const POSITIONS: readonly FabPlacement[] = ['bottom-end', 'bottom-start', 'top-end', 'top-start', 'static'];
 
 /* FabMenu: a Fab that opens a few related actions, in place of doing one. It is a Menu whose button is the Fab:
    the button gets aria-haspopup and aria-expanded, the arrow keys move through the actions, and Escape, a pick or

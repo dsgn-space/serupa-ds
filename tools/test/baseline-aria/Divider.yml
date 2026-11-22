@@ -1,8 +1,3 @@
-# DoShortLabel
-- text: Above
-- separator "or"
-- text: Below
-
 # DontSentenceLabel
 - text: Above
 - separator "Or you can continue with one of these other options"

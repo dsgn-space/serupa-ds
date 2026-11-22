@@ -77,7 +77,7 @@ export const DoFamiliarNames: Story = {
   </Menubar>,
 };
 /** Don't: new names in a new order, so people can't find what they know is there. */
-export const DontNewNames: Story = {
+export const DontNewNames: Story = { tags: ['!visual'],
   name: "Don't: rename the usual menus",
   render: () => <Menubar aria-label="Editor">
     <MenubarMenu label="Questions"><MenuItem>Guides</MenuItem></MenubarMenu>

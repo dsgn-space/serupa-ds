@@ -1162,6 +1162,12 @@
    "value"
   ]
  },
+ "Form": {
+  "added": "17.1.0",
+  "changed": null,
+  "api": "6d8a7f42d13e",
+  "props": {}
+ },
  "FormattedDate": {
   "added": "17.0.0",
   "changed": null,
@@ -1923,10 +1929,11 @@
  },
  "Popover": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "fd205a1c0ac8",
+  "changed": "17.1.0",
+  "api": "aab06fa2d4cb",
   "props": {
-   "sheet": "14.0.0"
+   "sheet": "14.0.0",
+   "finalFocus": "17.1.0"
   },
   "known": [
    "children",

@@ -45,7 +45,7 @@ Drawn from the `Statuses` story.
 
 ### Do and don't
 
-- **Do:** A short URL, which makes big modules that scan fast, even from a screen. (`DoShortValue`)
+- **Do:** A short URL, which makes big modules that scan fast, even from a screen. (`Default`)
 - **Don't:** A long text in the code: it packs the modules too small to scan. Link to a page that holds the text. (`DontLongValue`)
 
 ## Accessibility

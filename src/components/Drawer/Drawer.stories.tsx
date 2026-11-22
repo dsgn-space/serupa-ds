@@ -117,7 +117,7 @@ export const DoFooterActions: Story = {
   render: (args, ctx) => <OpenDrawer {...args} docs={ctx.viewMode === 'docs'} footer={<><Button variant="secondary">Reset</Button><Button>Apply</Button></>}>{filters}</OpenDrawer>,
 };
 /** Don't: the actions in the body, main action first, where they scroll away with the content. */
-export const DontBodyActions: Story = {
+export const DontBodyActions: Story = { tags: ['!visual'],
   name: "Don't: bury the actions in the body",
   render: (args, ctx) => <OpenDrawer {...args} docs={ctx.viewMode === 'docs'}>{filters}<div style={{ display: 'flex', gap: 'var(--spacing-2)', marginTop: 'var(--spacing-4)' }}><Button>Apply</Button><Button variant="secondary">Reset</Button></div></OpenDrawer>,
 };

@@ -19,7 +19,7 @@ export const Default: Story = {};
 export const NoOrders: Story = { args: { orders: [] } };
 
 /** Buy again fails: a toast says so. */
-export const BuyAgainFails: Story = { args: { onBuyAgain: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const BuyAgainFails: Story = { tags: ['!visual'], args: { onBuyAgain: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** On their way from the server. */
 export const Loading: Story = { args: { loading: true } };

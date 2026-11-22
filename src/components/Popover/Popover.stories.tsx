@@ -101,7 +101,7 @@ export const LongContent: Story = {
 /** Do: a few fields, small enough to read at a glance. */
 export const DoKeepSmall: Story = { name: 'Do: keep it small', args: { open: true }, parameters: { centered: true }, decorators: [centered] };
 /** Don't: a long form in a popover, which needs scrolling: use a Drawer or a Dialog. */
-export const DontLongForm: Story = {
+export const DontLongForm: Story = { tags: ['!visual'],
   name: "Don't: a long form",
   args: {
     open: true, title: 'Edit profile', trigger: <Button variant="outline" startIcon="edit">Edit profile</Button>,

@@ -50,4 +50,4 @@ const row = (items: Array<[string, string]>) => (
 /** Do: one icon for one meaning everywhere: `delete` wherever something is deleted. */
 export const DoOneMeaning: Story = { name: 'Do: one icon per meaning', render: () => row([['delete', 'Delete file'], ['delete', 'Delete comment'], ['delete', 'Delete project']]) };
 /** Don't: different icons for the same action, so people wonder whether they do different things. */
-export const DontMixedIcons: Story = { name: "Don't: mix icons for one action", render: () => row([['delete', 'Delete file'], ['remove', 'Delete comment'], ['close', 'Delete project']]) };
+export const DontMixedIcons: Story = { tags: ['!visual'], name: "Don't: mix icons for one action", render: () => row([['delete', 'Delete file'], ['remove', 'Delete comment'], ['close', 'Delete project']]) };

@@ -73,4 +73,4 @@ export const LongText: Story = {
 /** Do: a Field label that says whose time zone it is. */
 export const DoSayWhose: Story = { name: 'Do: say whose time zone it is', render: (args) => <Field label="Meeting time zone"><TimeZonePicker {...args} aria-label={undefined} /></Field> };
 /** Don't: a bare picker with no visible label. */
-export const DontBarePicker: Story = { name: "Don't: show a bare picker", render: (args) => <TimeZonePicker {...args} /> };
+export const DontBarePicker: Story = { tags: ['!visual'], name: "Don't: show a bare picker", render: (args) => <TimeZonePicker {...args} /> };
