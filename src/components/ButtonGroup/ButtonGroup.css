@@ -18,6 +18,15 @@
    an on toggle shares with it, nor an on one over a focus ring. */
 @media (hover: hover) { .srp-button-group--attached > .srp-btn:hover { z-index: var(--z-10); } }
 .srp-button-group--attached > .srp-btn[aria-pressed="true"] { z-index: var(--z-20); }
+/* The shared line is drawn by whichever button is on top, and the order above flips at once: so the border color
+   switches at once too (the fill still fades), or the newly on button would cover the other's line in its old gray
+   for a moment. Button's own timings, with border-color's (the third) at 0s. */
+.srp-button-group--attached > .srp-btn {
+  transition-duration: var(--motion-hover), var(--motion-hover), var(--duration-0), var(--motion-hover), var(--motion-hover), var(--motion-release);
+}
+.srp-button-group--attached > .srp-btn:not(.srp-btn--link):is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) {
+  transition-duration: var(--motion-hover), var(--motion-hover), var(--duration-0), var(--motion-hover), var(--motion-hover), var(--button-press-duration, var(--motion-press));
+}
 .srp-button-group--attached > .srp-btn:focus-visible { z-index: var(--z-30); }
 .srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn ~ .srp-btn { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
 .srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn:has(~ .srp-btn) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
