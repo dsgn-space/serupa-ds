@@ -174,7 +174,7 @@
       },
       "card-border-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A checked card's border, 2px.",
         "$extensions": {
           "com.serupa": {
@@ -209,6 +209,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--checkbox-text-disabled"
+          }
+        }
+      },
+      "edge-checked": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-edge-checked"
           }
         }
       }

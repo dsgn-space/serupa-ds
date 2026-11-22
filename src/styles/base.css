@@ -66,13 +66,13 @@
    wraps instead of widening the page (WCAG 1.4.10). An <a> with no href (an anchor target, a router link before it
    hydrates) can't be focused or followed, so it reads as text. */
 :where(a[href]) {
-  color: var(--link-text, var(--primary));
+  color: var(--link-text, var(--primary-text));
   text-decoration-line: underline; text-decoration-thickness: var(--link-thickness, var(--decoration-1)); text-underline-offset: var(--link-offset, var(--underline-offset-2));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
   overflow-wrap: anywhere;
 }
 :where(td, th) :where(a[href]) { overflow-wrap: break-word; }   /* in a table cell the words stay whole, as for <Link> */
-@media (hover: hover) { :where(a[href]:hover) { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
+@media (hover: hover) { :where(a[href]:hover) { color: var(--link-text-hover, var(--primary-text-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 :where(a:not([href])) { color: inherit; text-decoration: none; }
 
 :where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
@@ -87,7 +87,7 @@
 /* Native controls nobody styled (a bare checkbox, range or progress) and the text caret take the brand color. Set on
    every theme root too: both inherit, so a nested theme would otherwise keep its parent's color. Scrollbars are left
    alone: color-scheme already darkens them, and scrollbar-color swaps Chromium to thin scrollbars, which moves layout. */
-:where(:root, [data-theme], [data-brand], [data-mode]) { accent-color: var(--primary); caret-color: var(--primary); }
+:where(:root, [data-theme], [data-brand], [data-mode]) { accent-color: var(--primary); caret-color: var(--primary-text); }
 
 /* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
 :where(:focus-visible) {

@@ -139,6 +139,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-check-bg` | `field` | With cascade: an unchecked box's fill. |
 | `--tree-view-check-bg-checked` | `primary` | With cascade: a checked or mixed box's fill and border (3:1 on the row). |
 | `--tree-view-check-mark` | `on-primary` | With cascade: the check or dash on a filled box. |
+| `--tree-view-check-edge-checked` | `primary-edge` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Radius**
 

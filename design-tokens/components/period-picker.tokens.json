@@ -134,7 +134,7 @@
       },
       "current": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "This month, quarter or year (4.5:1 on panel-bg).",
         "$extensions": {
           "com.serupa": {
@@ -189,6 +189,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--period-picker-panel-divider"
+          }
+        }
+      },
+      "edge-selected": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The selected period's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-edge-selected"
           }
         }
       }

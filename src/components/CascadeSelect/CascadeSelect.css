@@ -77,12 +77,12 @@
    name wraps the same once picked. */
 .srp-cascade-select__option { --srp-bar: var(--border-width-2); }
 .srp-cascade-select__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); box-shadow: inset var(--srp-bar) 0 0 var(--cascade-select-option-indicator, var(--primary)); }
+.srp-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); box-shadow: inset var(--srp-bar) 0 0 var(--cascade-select-option-indicator, var(--primary-text)); }
 .srp-cascade-select__option:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-cascade-select__option[aria-disabled="true"], .srp-cascade-select__option[aria-disabled="true"] * { color: var(--cascade-select-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-cascade-select__label { flex: auto; min-inline-size: var(--spacing-0); }
 .srp-cascade-select__more, .srp-cascade-select__check { flex: none; font-size: var(--spacing-4); color: var(--cascade-select-muted, var(--text-muted)); }
-.srp-cascade-select__check { color: var(--cascade-select-check, var(--primary)); }
+.srp-cascade-select__check { color: var(--cascade-select-check, var(--primary-text)); }
 .srp-cascade-select__note { padding: var(--spacing-3) var(--spacing-2); color: var(--cascade-select-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 /* One column at a time on a phone (narrower than 640px, as DateRangePicker): the focused one, with Back to the one before. */
 @media (max-width: 639.98px) {

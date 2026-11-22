@@ -172,11 +172,12 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-neutral-outline-text` | `text` | Neutral outline: text and icon |
 | `--badge-neutral-outline-border` | `border-strong` | Neutral outline: border |
 | `--badge-primary-subtle-bg` | `primary-subtle` | Primary subtle: fill |
-| `--badge-primary-subtle-text` | `primary` | Primary subtle: text and icon |
+| `--badge-primary-subtle-text` | `primary-text` | Primary subtle: text and icon |
 | `--badge-primary-solid-bg` | `primary` | Primary solid: fill |
 | `--badge-primary-solid-text` | `on-primary` | Primary solid: text and icon |
-| `--badge-primary-outline-text` | `primary` | Primary outline: text and icon |
-| `--badge-primary-outline-border` | `primary` | Primary outline: border |
+| `--badge-primary-solid-hover` | `primary-hover` | Primary solid: the color a clickable badge moves toward on hover and press |
+| `--badge-primary-outline-text` | `primary-text` | Primary outline: text and icon |
+| `--badge-primary-outline-border` | `primary-text` | Primary outline: border |
 | `--badge-success-subtle-bg` | `success-subtle` | Success subtle: fill |
 | `--badge-success-subtle-text` | `success-text` | Success subtle: text and icon |
 | `--badge-success-solid-bg` | `success` | Success solid: fill |

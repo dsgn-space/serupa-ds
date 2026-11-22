@@ -76,7 +76,7 @@
 .srp-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-combobox__option--active .srp-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
-.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary)); font-size: var(--spacing-4); }
+.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary-text)); font-size: var(--spacing-4); }
 .srp-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
 /* multiple: the tags and the text wrap inside the box, which grows a row at a time; the buttons stay at the end. */
 .srp-combobox--multiple { height: auto; min-height: var(--srp-input-h); }

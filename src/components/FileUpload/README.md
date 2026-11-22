@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-zone-border-hover` | `field-border-hover` | The drop area's outline while the pointer is over it (a click there browses for files). |
 | `--file-upload-zone-bg-pressed` | `field-hover` | The drop area's fill while pressed (a click there browses for files), as a field's buttons fill. |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
-| `--file-upload-zone-border-active` | `primary` | Its outline then. |
+| `--file-upload-zone-border-active` | `primary-text` | Its outline then. |
 | `--file-upload-zone-border-invalid` | `danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |
 | `--file-upload-icon-color` | `text-muted` | The upload icon and file icons (3:1). |
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |

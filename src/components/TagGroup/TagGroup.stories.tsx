@@ -46,7 +46,7 @@ export const WithIconsAndAvatars: Story = {
 };
 export const Limited: Story = { args: { label: 'Skills', items: skills, max: 3 } };
 /** Nothing yet: the empty text. */
-export const Empty: Story = { args: { label: 'Labels', items: [], empty: 'No labels yet' } };
+export const Empty: Story = { args: { label: 'Labels', items: [], emptyText: 'No labels yet' } };
 /** A tag that can't be removed (it was added by a rule) among ones that can. */
 export const WithDisabled: Story = { name: 'With disabled', render: () => <Removable initial={[{ id: 'auto', label: 'Auto-assigned', disabled: true }, ...labels.slice(0, 3)]} /> };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.

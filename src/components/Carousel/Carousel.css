@@ -80,7 +80,7 @@
   clip-path: inset(var(--spacing-0) var(--srp-dot-clip) round var(--rounded-full));
   transition: clip-path var(--motion-change-sm) var(--ease-settle);
 }
-.srp-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); }
+.srp-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--carousel-dot-edge-active, var(--primary-edge)); }
 @media (hover: hover) { .srp-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--border-control-hover)); } }
 .srp-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
 .srp-carousel__dot:focus { outline: none; }

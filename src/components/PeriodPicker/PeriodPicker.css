@@ -74,8 +74,8 @@
 .srp-period-picker__period:active:not([aria-disabled="true"], .srp-period-picker__period--selected) { background: var(--period-picker-period-bg-pressed, var(--pressed)); }
 .srp-period-picker__period:focus { outline: none; }
 .srp-period-picker__period:focus-visible { outline: var(--focus-ring-width) solid var(--period-picker-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-period-picker__period--current { color: var(--period-picker-current, var(--primary)); font-weight: var(--font-semibold); }
-.srp-period-picker__period--selected { background: var(--period-picker-bg-selected, var(--primary)); color: var(--period-picker-text-selected, var(--on-primary)); }
+.srp-period-picker__period--current { color: var(--period-picker-current, var(--primary-text)); font-weight: var(--font-semibold); }
+.srp-period-picker__period--selected { background: var(--period-picker-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--period-picker-edge-selected, var(--primary-edge)); color: var(--period-picker-text-selected, var(--on-primary)); }
 .srp-period-picker__period--disabled { color: var(--period-picker-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   .srp-period-picker__panel { border-color: CanvasText; }

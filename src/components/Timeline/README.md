@@ -132,7 +132,7 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-icon-neutral` | `text-muted` | The icon of a neutral event (3:1 on its circle). |
 | `--timeline-icon-bg-neutral` | `surface-muted` | The circle behind a neutral event's icon. |
 | `--timeline-dot-primary` | `primary` | The dot of a primary event. |
-| `--timeline-icon-primary` | `primary` | The icon of a primary event (3:1 on its circle). |
+| `--timeline-icon-primary` | `primary-text` | The icon of a primary event (3:1 on its circle). |
 | `--timeline-icon-bg-primary` | `primary-subtle` | The circle behind a primary event's icon. |
 | `--timeline-dot-success` | `success` | The dot of a success event. |
 | `--timeline-icon-success` | `success-text` | The icon of a success event (3:1 on its circle). |
@@ -147,6 +147,7 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-icon-info` | `info-text` | The icon of a info event (3:1 on its circle). |
 | `--timeline-icon-bg-info` | `info-subtle` | The circle behind a info event's icon. |
 | `--timeline-focus-ring` | `focus-ring` | The ring around a horizontal timeline's scrolling box when the keyboard is in it. |
+| `--timeline-dot-edge` | `primary-edge` | A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Border**
 

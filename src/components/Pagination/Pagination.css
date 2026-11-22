@@ -38,7 +38,7 @@
 }
 .srp-pagination__item:active:not(:disabled, [aria-disabled="true"], .srp-pagination__item--current) { background: var(--pagination-bg-pressed, var(--pressed)); }
 .srp-pagination__item:focus-visible { outline: var(--focus-ring-width) solid var(--pagination-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-pagination__item--current { background: var(--pagination-bg-current, var(--primary)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
+.srp-pagination__item--current { background: var(--pagination-bg-current, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--pagination-edge-current, var(--primary-edge)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
 .srp-pagination__item:disabled, .srp-pagination__item[aria-disabled="true"] { color: var(--pagination-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-pagination__ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: var(--srp-pagination-size); height: var(--srp-pagination-size); color: var(--pagination-ellipsis, var(--text-muted)); -webkit-user-select: none; user-select: none; }
 /* With total and pageSize (O7): the summary, muted, then the pages at the end of the row. When both don't fit on

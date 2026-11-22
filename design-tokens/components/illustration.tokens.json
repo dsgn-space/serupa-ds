@@ -24,7 +24,7 @@
       },
       "accent": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind).",
         "$extensions": {
           "com.serupa": {

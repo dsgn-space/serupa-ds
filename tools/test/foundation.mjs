@@ -28,7 +28,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { HERE, projectArg, report, done } from './lib.mjs';
-import { PAIRS } from '../tokens/contrast-pairs.mjs';
+import { PAIRS, FILL_SURFACES } from '../tokens/contrast-pairs.mjs';
 import { toSource, fromSource } from '../tokens/source.mjs';
 import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import { isDeepStrictEqual } from 'node:util';
@@ -227,6 +227,15 @@ for (const th of THEMES) for (const [fg, bg, need] of PAIRS) {
   if (r < need) low.push(`${th}: ${fg} on ${bg} ${r.toFixed(2)}:1 (needs ${need})`);
 }
 check(`contrast: ${PAIRS.length} text, control and focus pairs pass WCAG in all ${THEMES.length} themes`, !low.length, low.slice(0, 8).join('; '));
+// A primary fill passes 3:1 on every surface by itself, or inside the theme's primary-edge (transparent where it isn't needed).
+const bare = [];
+for (const th of THEMES) for (const bg of FILL_SURFACES) {
+  const edge = resolve('primary-edge', th), solid = !/^#[0-9a-f]{6}00$/i.test(edge);
+  const r = ratio(resolve('primary', th), resolve(bg, th)), e = solid ? ratio(edge, resolve(bg, th)) : 0;
+  if (Math.max(r, e) < 3) bare.push(`${th}: primary on ${bg} ${r.toFixed(2)}:1${solid ? `, its edge ${e.toFixed(2)}:1` : ', no edge'}`);
+  if (solid && r >= 3) bare.push(`${th}: primary is ${r.toFixed(2)}:1 on ${bg}, so primary-edge should be transparent`);
+}
+check(`a primary fill is 3:1 on ${FILL_SURFACES.length} surfaces in all ${THEMES.length} themes, or has a primary-edge that is (and only then)`, !bare.length, bare.slice(0, 8).join('; '));
 
 // 9. responsive variants use the breakpoint tokens
 const SCR = Object.fromEntries(groups.layout.tokens.filter((x) => x.name.startsWith('screen-')).map((x) => [x.name.slice(7), x.value]));

@@ -94,7 +94,7 @@
       },
       "check": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The chosen last step's check (3:1).",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "option-indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The 2px bar at the start of each option on the chosen path (3:1 on option-on).",
         "$extensions": {
           "com.serupa": {

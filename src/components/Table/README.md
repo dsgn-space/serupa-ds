@@ -195,7 +195,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |
 | `--table-action-bar-bg` | `primary-subtle` | TableActionBar's background. |
 | `--table-action-bar-text` | `text` | TableActionBar's count (4.5:1 on its background). |
-| `--table-resize-active` | `primary` | A column's resize handle on hover, while dragged and on focus. |
+| `--table-resize-active` | `primary-text` | A column's resize handle on hover, while dragged and on focus. |
 
 **Shadow**
 

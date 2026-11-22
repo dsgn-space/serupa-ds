@@ -75,7 +75,7 @@
 .srp-sidebar__dot {
   position: absolute; inset-block-start: calc(var(--spacing-0) - var(--spacing-0\.5)); inset-inline-end: calc(var(--spacing-0) - var(--spacing-0\.5));
   width: var(--spacing-2); height: var(--spacing-2); border-radius: var(--rounded-full);
-  background: var(--sidebar-dot, var(--primary)); box-shadow: 0 0 0 var(--border-width-2) var(--sidebar-bg, var(--surface));
+  background: var(--sidebar-dot, var(--primary-text)); box-shadow: 0 0 0 var(--border-width-2) var(--sidebar-bg, var(--surface));
 }
 @media (forced-colors: active) { .srp-sidebar__dot { background: CanvasText; } }
 .srp-sidebar__icon .srp-icon { font-size: var(--sidebar-icon-size, var(--spacing-5)); }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion, seen } from '../../../tools/test/vitest/helpers';
 import { TreeView, type TreeViewItem } from './TreeView';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -516,7 +516,7 @@ describe('TreeView: cascade, a checkbox tree', () => {
     const bg = (e: HTMLElement) => css(e.closest<HTMLElement>('[role=tree]')).backgroundColor;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      expect(contrast(css(on).backgroundColor, bg(on)), th + ' checked').toBeGreaterThanOrEqual(3);
+      expect(contrast(seen(on), bg(on)), th + ' checked').toBeGreaterThanOrEqual(3);
       expect(contrast(css(off).borderTopColor, bg(off)), th + ' unchecked').toBeGreaterThanOrEqual(1.3);
       expect(contrast(css(on).color, css(on).backgroundColor), th + ' mark').toBeGreaterThanOrEqual(4.5);
     }

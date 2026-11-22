@@ -100,7 +100,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-text` | `text` | The rows' text. |
 | `--sortable-list-item-bg` | `surface` | A row's background. |
 | `--sortable-list-item-border` | `border` | A row's border. |
-| `--sortable-list-item-border-active` | `primary` | The border of the row being moved. |
+| `--sortable-list-item-border-active` | `primary-text` | The border of the row being moved. |
 | `--sortable-list-handle` | `text-muted` | The handle (3:1 on the row). |
 | `--sortable-list-handle-active` | `text` | The handle on hover and while its row moves. |
 | `--sortable-list-handle-bg-hover` | `secondary` | The handle's background on hover. |

@@ -133,7 +133,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-picker-border` | `border-overlay` | The list's border. |
 | `--select-option-bg-active` | `highlight` | The option under the pointer or the keyboard, as Combobox's. |
 | `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
-| `--select-check` | `primary` | The tick by the chosen option. |
+| `--select-check` | `primary-text` | The tick by the chosen option. |
 | `--select-group-label` | `text-muted` | A group's name over its options. |
 | `--select-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

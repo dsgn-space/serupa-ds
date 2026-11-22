@@ -13,7 +13,13 @@
 //          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on primary-subtle
 //          more contrast    primary the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
 //                           darker; focus ring the lightest at 4.5:1
-//   dark   the same, mirrored: the darkest of 500 to 200, with brand 950 text and tint, on zinc-900 and zinc-800
+//          primary-text     primary itself: the shade is picked to pass as text too
+//   dark   primary          the light theme's primary, lightened only as far as 3:1 on a raised card (zinc-800) asks,
+//                           with white text, so a button is the same color in both modes; hover and held down are the
+//                           light theme's, lightened as much
+//          primary-text     the darkest of 500 to 200 at 4.5:1 on zinc-900, zinc-950, zinc-800 and the tints, with a
+//                           hover one step lighter that passes too
+//          more contrast    as before 18.0.0: primary the darkest of 400 to 100 at 7:1, with brand 950 text on it
 //
 // Every other alias is copied from the blue theme of the same mode, so the neutrals, the status colors and the
 // shadows are the system's own. A color too light or too dark for any step to pass is an error, with the reason.
@@ -23,19 +29,21 @@
 /** @type {[string, string, number][]} */
 const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
-  ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5], ['primary', 'primary-subtle', 4.5],
-  ['on-primary', 'primary-pressed', 4.5], ['primary-hover', 'primary-subtle-pressed', 4.5], ['on-primary', 'more:primary-pressed', 4.5],
+  ['primary', 'surface', 3], ['primary', 'surface-muted', 3], ['primary', 'surface-raised', 3], ['primary', 'surface-overlay', 3],
+  ['primary-text', 'surface', 4.5], ['primary-text', 'surface-muted', 4.5], ['primary-text', 'surface-raised', 4.5], ['primary-text', 'surface-overlay', 4.5],
+  ['primary-text-hover', 'surface', 4.5], ['primary-text-hover', 'surface-muted', 4.5], ['primary-text-hover', 'primary-subtle', 4.5], ['primary-text', 'primary-subtle', 4.5],
+  ['on-primary', 'primary-pressed', 4.5], ['primary-text-hover', 'primary-subtle-pressed', 4.5], ['more:on-primary', 'more:primary-pressed', 4.5],
   ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
   ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3], ['focus-ring', 'field', 3], ['field-action', 'field', 4.5],
-  ['more:primary', 'surface', 7], ['more:primary', 'primary-subtle', 7], ['more:primary-hover', 'surface', 7],
-  ['on-primary', 'more:primary', 4.5], ['on-primary', 'more:primary-hover', 4.5], ['more:focus-ring', 'surface', 3],
+  ['more:primary-text', 'surface', 7], ['more:primary-text', 'primary-subtle', 7], ['more:primary-text-hover', 'surface', 7],
+  ['more:on-primary', 'more:primary', 4.5], ['more:on-primary', 'more:primary-hover', 4.5], ['more:focus-ring', 'surface', 3],
 ];
 
 const STEPS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950'];
 // Chroma at each step, as a share of the color's own (peaks at 600, like the shipped hues).
 const CHROMA = [0.06, 0.13, 0.24, 0.43, 0.67, 0.87, 1, 0.99, 0.81, 0.6, 0.37];
 // The aliases the brand sets; every other one is copied.
-export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action'];
+export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'primary-text', 'primary-text-hover', 'focus-ring', 'link-visited', 'field-action'];
 const CORNERS = {
   sharp: { 'radius-inner': 'rounded-none', 'radius-control': 'rounded-xs', 'radius-surface': 'rounded-sm', 'radius-container': 'rounded-md' },
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
@@ -102,6 +110,25 @@ export const oklchOf = (hex) => rgbToOklch(parseHex(hex));
 const lum = (hex) => { const [r, g, b] = parseHex(hex).map(toLin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
 export const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
 
+// --- a dark theme's fills ---
+// A dark theme fills with the light theme's own shade, so a primary button is the same color in both: lightened in
+// OKLCH (hue and chroma kept) only as far as 3:1 on a raised dark card asks, with a little room, and white text keeps
+// 4.5:1. Hover and held down are the light theme's too, lightened by the same amount.
+export const FILL_ON_RAISED = 3.05;
+/** How much lighter (OKLCH L) a light theme's fill must be to stand 3:1 on a dark theme's raised surface. 0 when it already does. */
+export function darkFillShift(hex, raised) {
+  const [L, C, h] = oklchOf(hex);
+  let d = 0;
+  while (d < 0.5 && contrast(d ? clip([L + d, C, h]) : hex, raised) < FILL_ON_RAISED) d = Math.round((d + 0.0005) * 1e4) / 1e4;
+  return d;
+}
+/** The color, this much lighter. */
+export function lighter(hex, d) {
+  if (!d) return hexOf(parseHex(hex));
+  const [L, C, h] = oklchOf(hex);
+  return clip([L + d, C, h]);
+}
+
 // --- the shipped tokens ---
 const ref = (v) => /^\{(.+)\}$/.exec(String(v))?.[1];
 /** The shipped tokens.json, read for what a theme needs: palette hex values and every alias per theme. */
@@ -151,9 +178,10 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
 
   for (const mode of ['light', 'dark']) {
     const b = base(mode);
-    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b), field = hexAt(b.field, b);
+    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), raised = hexAt(b['surface-raised'], b), muted = hexAt(b['surface-muted'], b), field = hexAt(b.field, b);
     const light = mode === 'light';
-    const on = light ? palette.get('white') : S('950');
+    // White on every fill. Only a dark theme with more contrast, whose fill is a light shade, takes brand 950.
+    const on = palette.get('white'), onMore = light ? on : S('950');
     const subtle = light ? S('50') : S('950'), subtleHeld = light ? S('100') : S('900');
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
@@ -163,18 +191,24 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
     // It's text on the tints too: its own (a primary Badge, a selected tag) and the status ones (a link in an Alert).
     const tints = [subtle, ...['info-subtle', 'success-subtle', 'warning-subtle', 'danger-subtle'].map((n) => hexAt(b[n], b))];
-    const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3
+    // In light the fill is the text shade too, so it carries white text; in dark the fill is worked out below.
+    const okText = (s) => (!light || contrast(on, S(s)) >= 4.5) && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 4.5 && contrast(S(s), raised) >= 4.5
       && tints.every((x) => contrast(S(s), x) >= 4.5);
-    const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && contrast(on, S(held(next(s)))) >= 4.5;
+    const passes = (s) => okText(s) && okText(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && (!light || contrast(on, S(held(next(s)))) >= 4.5);
     // The color itself when it passes, so the buttons are the brand's own; else the shade nearest the page's end.
     const cands = order(light ? '500' : '200', light ? '800' : '500');
     const primary = cands.includes(seedStep) && passes(seedStep) ? seedStep : cands.find(passes);
-    if (!primary) fail(mode, `${light ? 'white' : 'dark'} text at 4.5:1 and 4.5:1 on the ${light ? 'white' : 'dark'} page, with a hover that passes too`);
+    if (!primary) fail(mode, light ? 'white text at 4.5:1 and 4.5:1 on the white page, with a hover that passes too' : 'text at 4.5:1 on the dark page, with a hover that passes too');
+    // A dark theme's fills: the light theme's, each lightened as far as 3:1 on a raised card asks of the first.
+    const lp = picks.light?.primary;
+    const lightFills = light ? null : [lp, STEPS[STEPS.indexOf(lp) + 1], STEPS[STEPS.indexOf(lp) + 2] ?? STEPS[STEPS.indexOf(lp) + 1]];
+    const shift = light ? 0 : darkFillShift(S(lp), raised);
+    const fills = light ? [`{${name}-${primary}}`, `{${name}-${next(primary)}}`, `{${name}-${held(next(primary))}}`] : lightFills.map((x) => lighter(S(x), shift));
     // The ring goes round a field and round an action inside one, so it needs 3:1 on the field's fill too (zinc-800 in dark).
     const ring = (need) => (s) => contrast(S(s), surface) >= need && contrast(S(s), overlay) >= need && contrast(S(s), subtle) >= need && contrast(S(s), field) >= need;
     const focus = order(light ? '400' : '200', light ? '800' : '600').find(ring(3));
     if (!focus) fail(mode, 'a focus ring at 3:1 on the surface');
-    const strong = (s) => contrast(S(s), surface) >= 7 && contrast(S(s), subtle) >= 7 && contrast(on, S(s)) >= 4.5;
+    const strong = (s) => contrast(S(s), surface) >= 7 && contrast(S(s), subtle) >= 7 && contrast(onMore, S(s)) >= 4.5;
     const more = order(light ? '600' : '100', light ? '900' : '400').find((s) => strong(s) && strong(next(s)));
     if (!more) fail(mode, 'a stronger primary at 7:1 for more contrast');
     const moreFocus = order(light ? '500' : '100', light ? '900' : '500').find(ring(4.5)) || more;
@@ -185,12 +219,14 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     // A text action in a field: primary in light; in dark primary, or the first shade lighter with 4.5:1 on the field.
     const action = light ? primary : STEPS.slice(0, STEPS.indexOf(primary) + 1).reverse().find((x) => contrast(S(x), field) >= 4.5);
     if (!action) fail(mode, 'a text action at 4.5:1 on the field');
-    picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus };
+    picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus, ...(light ? {} : { fill: fills[0], fillFrom: lp }) };
     Object.assign(b, {
-      primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-pressed': `{${name}-${held(next(primary))}}`,
+      primary: fills[0], 'primary-hover': fills[1], 'primary-pressed': fills[2],
       'primary-subtle': `{${name}-${light ? '50' : '950'}}`, 'primary-subtle-pressed': `{${name}-${light ? '100' : '900'}}`,
-      'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-action': `{${name}-${action}}`,
-      'srp-more-primary': `{${name}-${more}}`, 'srp-more-primary-hover': `{${name}-${next(more)}}`, 'srp-more-primary-pressed': `{${name}-${held(next(more))}}`, 'srp-more-focus-ring': `{${name}-${moreFocus}}`,
+      'on-primary': '{white}', 'primary-text': `{${name}-${primary}}`, 'primary-text-hover': `{${name}-${next(primary)}}`,
+      'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-action': `{${name}-${action}}`,
+      'srp-more-primary': `{${name}-${more}}`, 'srp-more-primary-hover': `{${name}-${next(more)}}`, 'srp-more-primary-pressed': `{${name}-${held(next(more))}}`,
+      'srp-more-on-primary': light ? '{white}' : `{${name}-950}`, 'srp-more-primary-text': `{${name}-${more}}`, 'srp-more-primary-text-hover': `{${name}-${next(more)}}`, 'srp-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;
   }
@@ -212,7 +248,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
   const v = (x) => { const r = ref(x); return r ? `var(--${r})` : x; };
   const block = (sel, own) => `${sel} {\n${Object.entries(own).map(([k, x]) => `  --${k}: ${v(x)};\n`).join('')}}\n`;
   const L = picks.light.values, D = picks.dark.values;
-  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'srp-more-primary', 'srp-more-primary-hover', 'srp-more-primary-pressed', 'srp-more-focus-ring']
+  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'primary-text', 'primary-text-hover', 'focus-ring', 'link-visited', 'field-action', 'srp-more-primary', 'srp-more-primary-hover', 'srp-more-primary-pressed', 'srp-more-on-primary', 'srp-more-primary-text', 'srp-more-primary-text-hover', 'srp-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
   // A corners preset sets the radius roles and a motion preset the durations, the same in light and dark.
   const roles = Object.fromEntries([...Object.entries(CORNERS[corners] ?? {}), ...Object.entries(MOTION[motion] ?? {})].map(([k, x]) => [k, `{${x}}`]));

@@ -38,8 +38,6 @@ interface ButtonOwnProps {
       light media, the same in every theme. Put a scrim on the media so the button keeps its contrast at the media's
       lightest (or darkest) point. */
   surface?: 'dark' | 'light' | undefined;
-  /** @deprecated Use surface, the same values; removed in 18.0.0. Read when surface isn't given. */
-  onMedia?: 'dark' | 'light' | undefined;
   /** Height: sm 24px, md 32px, lg 44px (the control-height tokens). Default: 'md'. */
   size?: ButtonSize | undefined;
   /** Icon before the label: an icon name (custom or Material Symbols, "add") or any element. */
@@ -93,7 +91,7 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
-const OWN = { variant: 1, size: 1, destructive: 1, surface: 1, onMedia: 1, className: 1, children: 1, startIcon: 1, endIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
+const OWN = { variant: 1, size: 1, destructive: 1, surface: 1, className: 1, children: 1, startIcon: 1, endIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
 function slot(source: IconSource, side: string): React.ReactNode {
@@ -112,8 +110,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   const groupSize = React.useContext(ControlSize);   // a ButtonGroup's size, for a button with none of its own
   const size = oneOf(SIZES, props.size ?? groupSize, 'md');
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, wrap: props.wrap, className: props.className });
-  if (process.env.NODE_ENV !== 'production' && props.onMedia !== undefined) warnOnce('deprecated-prop', 'Button: `onMedia` is deprecated and removed in 18.0.0. Use `surface`, the same values: a prop named on… reads as an event handler.', 'deprecated-prop:Button:onMedia');
-  const surface = props.surface ?? props.onMedia;
+  const surface = props.surface;
   if (surface === 'dark' || surface === 'light') classes += ' srp-btn--on-' + surface;
   if (process.env.NODE_ENV !== 'production' && iconOnly && !rest['aria-label'] && !rest['aria-labelledby'] && !rest.title) {
     warnOnce('button-icon-label', 'Button: an icon-only button needs an aria-label.');

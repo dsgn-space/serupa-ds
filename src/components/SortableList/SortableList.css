@@ -24,7 +24,7 @@
 .srp-sortable-list__item[data-flip] { transition: none; }   /* placed back where it was, to glide from there (SortableList.tsx) */
 .srp-sortable-list--disabled .srp-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
 .srp-sortable-list__item--dragging {
-  z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary));
+  z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary-text));
   box-shadow: var(--sortable-list-item-shadow-active, var(--elevation-raised));
 }
 .srp-sortable-list__handle {

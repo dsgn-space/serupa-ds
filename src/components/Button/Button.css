@@ -77,15 +77,15 @@
 @media (hover: hover) { .srp-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
 .srp-btn--outline:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-pressed, var(--secondary-hover)); }
 
-.srp-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
-@media (hover: hover) { .srp-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); } }
-.srp-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--primary-subtle-pressed)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); }
+.srp-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary-text)); border-color: var(--button-secondary-border, var(--primary-text)); }   /* an outline in the brand color */
+@media (hover: hover) { .srp-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-text-hover)); border-color: var(--button-secondary-border-hover, var(--primary-text-hover)); } }
+.srp-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--primary-subtle-pressed)); color: var(--button-secondary-text-hover, var(--primary-text-hover)); border-color: var(--button-secondary-border-hover, var(--primary-text-hover)); }
 
 .srp-btn--ghost { background-color: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
 @media (hover: hover) { .srp-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-hover, var(--secondary)); } }
 .srp-btn--ghost:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-pressed, var(--secondary-hover)); }
 
-.srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
+.srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary-text)); text-underline-offset: var(--underline-offset-4); }
 @media (hover: hover) { .srp-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
 /* surface: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the

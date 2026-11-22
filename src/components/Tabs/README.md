@@ -117,7 +117,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-text` | `text-muted` | A tab's label (4.5:1 on surface). |
 | `--tabs-text-hover` | `text` | A tab's label on hover. |
 | `--tabs-text-selected` | `text` | The selected tab's label (line). |
-| `--tabs-indicator` | `primary` | The line under the selected tab (3:1 on surface). |
+| `--tabs-indicator` | `primary-text` | The line under the selected tab (3:1 on surface). |
 | `--tabs-border` | `border` | The line under the whole tab list (line). |
 | `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
 | `--tabs-pill-bg-pressed` | `pressed` | A pill tab's background while it's pressed, before it's selected, one step past hover. |
@@ -128,6 +128,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tabs-close-bg-hover` | `secondary` | A closable tab's × under the pointer. |
 | `--tabs-close-bg-pressed` | `pressed` | A closable tab's × while it's pressed, one step past hover. |
+| `--tabs-pill-edge-selected` | `primary-edge` | The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

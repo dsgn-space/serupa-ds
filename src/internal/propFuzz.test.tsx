@@ -170,7 +170,7 @@ describe(`random prop combinations draw without a throw, a console.error or an a
       const bad: string[] = [];
       for (let i = 0; i < COMBOS; i++) {
         const c = combination(r, from.args, s);
-        const problems = await attempt(storyElement(from.meta, from.story, c.args), c.rtl, c.theme, c.args.surface ?? c.args.onMedia);
+        const problems = await attempt(storyElement(from.meta, from.story, c.args), c.rtl, c.theme, c.args.surface);
         const known = (p: string) => KNOWN.has(name) || [...KNOWN].some((k) => k.startsWith(`${name}: `) && p.startsWith(k.slice(name.length + 2)));
         for (const p of problems.filter((p) => !known(p))) bad.push(`${p}\n    with ${c.changed.join(' ') || 'the story as it is'}${c.rtl ? ', dir="rtl"' : ''}, ${c.theme}`);
       }

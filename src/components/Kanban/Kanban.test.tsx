@@ -206,7 +206,7 @@ describe('Kanban', () => {
     await render(<Board />);
     const li = handle('Alpha').element().closest('li')!;
     const probe = document.body.appendChild(document.createElement('div'));
-    probe.style.cssText = 'border: 1px solid var(--primary); box-shadow: var(--elevation-raised)';
+    probe.style.cssText = 'border: 1px solid var(--primary-text); box-shadow: var(--elevation-raised)';
     handle('Alpha').element().focus();
     await userEvent.keyboard(' ');
     await expect.poll(() => li.dataset.state).toBe('dragging');
