@@ -58,8 +58,7 @@ function AlertRender({ ref, ...props }: AlertProps & React.RefAttributes<HTMLDiv
   const rest = omit(props, OWN);
   const tone = oneOf(TONES, props.tone, 'info');
   const has = (n: React.ReactNode) => n != null && n !== false && n !== '';
-  // Only danger interrupts, as a danger toast does; a warning waits for a pause (Hooks and helpers, announce).
-  if (rest.role == null) rest.role = tone === 'danger' ? 'alert' : 'status';
+  if (rest.role == null) rest.role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status';
   const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon icon={ICONS[tone]} /> : asIcon(props.icon);
   return (
     <div {...rest} ref={ref} className={cn('srp-alert', 'srp-alert--' + tone, props.className)} data-component="alert" data-tone={tone}>
