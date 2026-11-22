@@ -32,6 +32,14 @@ describe('Patterns/Sign agreement', () => {
     await expect.poll(() => active().textContent).toMatch(/problem/i);
     expect(screen.getByRole('link', { name: 'Tick the box to say you agree.' }).elements()).toHaveLength(1);
     expect(onSign).not.toHaveBeenCalled();
+    // Fixing a field takes its problem away at once, from the field and the summary.
+    const problem = (text: string) => [...document.querySelectorAll('main a')].some((l) => l.textContent === text);
+    expect(problem('Tick the box to say you agree.')).toBe(true);
+    await screen.getByRole('checkbox', { name: /I’ve read the agreement/ }).click();
+    await expect.poll(() => problem('Tick the box to say you agree.')).toBe(false);
+    await screen.getByRole('radio', { name: 'Type' }).click();
+    await screen.getByRole('textbox', { name: /Full name/ }).fill('Ana Lima');
+    await expect.poll(() => problem('Sign: draw your signature, or choose Type and type your name.')).toBe(false);
   });
 
   test('ticking the box and typing a name signs; a send that fails says so and keeps both; then the answer takes focus', async () => {
