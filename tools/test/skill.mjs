@@ -27,6 +27,11 @@ const index = /<!-- components:start[^>]*-->([\s\S]*?)<!-- components:end -->/.e
 // A beta component's line reads "- **Name** (beta): …".
 const listed = [...index.matchAll(/^- \*\*(\w+)\*\*(?: \([^)]*\))?:/gm)].map((m) => m[1]);
 t('it has a components index (node tools/build/registry.mjs --readme writes it)', listed.length, 'no "- **Name**:" lines between the components markers');
+// The index is written from the component folders, so every folder has to be in the manifest, a component with no
+// CSS of its own (FormattedDate) too: the 17.0.0 release branch failed here when it wasn't.
+const folders = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((n) => fs.statSync(path.join(PROJECT, 'src', 'components', n)).isDirectory());
+const unlisted = folders.filter((n) => !components[n]);
+t('every component folder is in the package manifest (dist/components.json)', !unlisted.length, `${unlisted.join(', ')}: tools/build/build.mjs leaves them out`);
 const gone = listed.filter((n) => !components[n]);
 t('every component it lists is in the package (dist/components.json)', !gone.length, `${gone.join(', ')}: run node tools/build/registry.mjs --readme`);
 
