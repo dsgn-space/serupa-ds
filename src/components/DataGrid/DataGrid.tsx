@@ -6,7 +6,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import { en as words } from './labels';
 import { useStickyHead } from '../../internal/stickyHead';
 import { useClipboardHandOn } from '../../internal/clipboardHandOn';

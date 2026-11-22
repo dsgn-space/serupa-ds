@@ -121,6 +121,7 @@ export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, reci
               <form onSubmit={review} noValidate aria-labelledby="send-form" className="flex flex-col gap-4">
                 <h2 id="send-form" ref={heading} tabIndex={-1} className={h2}>Who and how much</h2>
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Send to" group error={problems.to} required>
                   <RadioGroup id="send-to" name="send-to" variant="card" value={to} onValueChange={(v: string) => { setTo(v); setFailed(false); }}>
                     {recipients.map((r) => <Radio key={r.id} value={r.id} description={r.bank}>{r.name}</Radio>)}

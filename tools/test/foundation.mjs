@@ -425,7 +425,7 @@ check('print: every component that floats over the page (position: fixed, popove
 check('forced colors: every state that only changes the background also changes a border, outline or color, or has a forced-colors rule', !fadesInForcedColors.length, [...new Set(fadesInForcedColors)].join('; '));
 
 // 17. no dead component CSS (idea 80): every srp-* class a component stylesheet styles is one the code can produce:
-// written out ("srp-btn__label"), built from a prefix the code joins ("srp-loader__px--d" + n, `srp-tag--${tone}`), or
+// written out ("srp-btn__label"), built from a prefix the code joins ("srp-loader--" + variant, `srp-tag--${tone}`), or
 // ending in a piece the code joins on ("srp-" + name + "__ripple"). A class nothing produces is a rule that never applies.
 const sources = srcFiles('src').filter((f) => /\.tsx?$/.test(f)).map((f) => read(f)).join('\n')
   + fs.readdirSync(path.join(P, 'src', 'components')).flatMap((n) => fs.existsSync(path.join(P, 'src', 'components', n, 'preview.html')) ? [read(path.join('src', 'components', n, 'preview.html'))] : []).join('\n');

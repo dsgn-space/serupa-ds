@@ -12,7 +12,7 @@ import { StatusTracker, type StatusDay, type StatusState } from '../../component
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -144,7 +144,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
           <OfflineBanner online={online} placement="inline" className="mb-6">This is the status from when the page loaded. It may have changed.</OfflineBanner>
           <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the status" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the status" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the status" /></Card> : (<>
           <div className="flex flex-col gap-8 pt-6">
             <Alert tone={STATE[overall].tone} title={TITLE[overall]}>
               {open.length ? `${open.length === 1 ? 'An incident is' : `${formatNumber(open.length, locale)} incidents are`} open; the latest updates are below.` : 'No open incidents.'}

@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
-import { useRowWrap } from '../../internal/useRowWrap';
+import { cn, oneOf, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
-import type { ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
+import { ButtonGroup, type ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
 import type { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import { useControllable } from '../../internal/controllable';
 
@@ -52,17 +51,13 @@ function ToggleGroupRender({ ref, ...props }: ToggleGroupProps & React.RefAttrib
       disabled: own.disabled || props.disabled,
     });
   });
-  // As ButtonGroup: an attached row wider than its container wraps as separate buttons (GP1).
-  const root = React.useRef<HTMLDivElement | null>(null);
-  const wrapped = useRowWrap(root, props.attached !== false && !vertical, props.children);
-  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
+  // A ButtonGroup, so it looks, lays out and wraps the same (GP1). size goes to each button rather than through
+  // ButtonGroup's, so a button's own size still wins.
   return (
-    // ButtonGroup's markup and classes, so it looks and lays out the same.
-    <div role="group" {...rest} ref={mergedRef} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
-      data-wrapped={wrapped || undefined}
-      className={cn('srp-button-group srp-toggle-group', vertical && 'srp-button-group--vertical', props.attached !== false && !wrapped && 'srp-button-group--attached', props.className)}>
+    <ButtonGroup {...rest} ref={ref} {...{ 'data-component': 'toggle-group', 'data-type': single ? 'single' : 'multiple' }}
+      orientation={vertical ? 'vertical' : 'horizontal'} attached={props.attached} className={cn('srp-toggle-group', props.className)}>
       {children}
-    </div>
+    </ButtonGroup>
   );
 }
 

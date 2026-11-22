@@ -49,7 +49,7 @@ this table doesn't list, or when a row no longer matches the code. Nothing here 
 | --- | --- | --- | --- |
 | `src/theme.js` | localStorage | `serupa-theme` | The chosen brand and mode, as JSON. `SerupaTheme.reset()` clears it. |
 | `src/debug.js` | sessionStorage | `serupa-debug` | `1` while the debug outlines are on, for the tab only. |
-| `src/components/KeyboardShortcuts/KeyboardShortcuts.tsx` | localStorage | `serupa-single-key-shortcuts` | `off` once someone turns off single-key shortcuts in the help dialog, for every page of the app. Turning them back on removes it. |
+| `src/internal/shortcuts.ts` | localStorage | `serupa-single-key-shortcuts` | `off` once someone turns off single-key shortcuts in the help dialog, for every page of the app. Turning them back on removes it. |
 | `src/components/Form/Form.tsx` | localStorage | your `draft` | Kept under `serupa-form-draft:` and the `draft` you pass: a Form's answers while it's filled in, with the time they were kept, as JSON. Cleared once the form is sent, or by `discardDraft()`. Never a password, card number or one-time code. |
 | `src/components/Splitter/Splitter.tsx` | localStorage | your `storageKey` | An uncontrolled Splitter's size, as a number. |
 | `src/patterns/ConsentBanner/ConsentBanner.tsx` | localStorage | your `saveKey` | The cookie choice, `accepted` or `rejected`, so the banner doesn't ask again. |

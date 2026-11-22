@@ -237,8 +237,9 @@ export function Checkout({
 
   const set = (k: Text) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setD({ ...d, [k]: e.target.value });
   const fieldError = (k: keyof CheckoutDetails) => errors.find((e) => e.field === id(k))?.message;
+  const optional = (k: Text) => k === 'line2' || k === 'phone';
   const text = (k: Text, label: string, autoComplete: string, extra: Partial<React.ComponentProps<typeof Input>> = {}, hint?: string) => (
-    <Field label={label} hint={hint} error={fieldError(k)} optional={k === 'line2' || k === 'phone'}>
+    <Field label={label} hint={hint} error={fieldError(k)} required={!optional(k)} optional={optional(k)}>
       <Input id={id(k)} name={k} autoComplete={autoComplete} value={d[k]} onChange={set(k)} {...extra} />
     </Field>
   );
@@ -298,6 +299,7 @@ export function Checkout({
               {step === 'details' ? (
                 <form noValidate onSubmit={review} className="flex flex-col gap-6">
                   {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={3} /> : null}
+                  <p className="m-0 text-text-muted">Fields marked * are required.</p>
                   <Card className="flex flex-col gap-4">
                     <Heading level={3}>Delivery address</Heading>
                     {text('name', 'Full name', 'shipping name')}
@@ -307,7 +309,7 @@ export function Checkout({
                       {text('city', 'Town or city', 'shipping address-level2')}
                       {text('postcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
                     </div>
-                    <Field label="Country" error={fieldError('country')}>
+                    <Field label="Country" error={fieldError('country')} required>
                       <Select id={id('country')} name="country" autoComplete="shipping country" value={d.country} onChange={set('country')}
                         placeholder="Choose a country" options={COUNTRIES} />
                     </Field>
@@ -337,7 +339,7 @@ export function Checkout({
                         {text('cardNumber', 'Card number', 'cc-number', { inputMode: 'numeric', spellCheck: false }, 'The long number on the front of the card.')}
                         {text('cardName', 'Name on card', 'cc-name')}
                         <div className="grid gap-4 sm:grid-cols-2">
-                          <Field label="Expiry date" hint="MM/YY, like 08/27" error={fieldError('cardExpiry')}>
+                          <Field label="Expiry date" hint="MM/YY, like 08/27" error={fieldError('cardExpiry')} required>
                             <Input id={id('cardExpiry')} name="cardExpiry" autoComplete="cc-exp" inputMode="numeric" maxLength={7} className="max-w-48"
                               value={d.cardExpiry} onChange={(e) => { const v = e.target.value; setD((x) => ({ ...x, cardExpiry: formatExpiry(v, x.cardExpiry) })); }} />
                           </Field>

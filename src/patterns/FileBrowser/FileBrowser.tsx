@@ -260,6 +260,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
             description="Choose the folder to move to.">
             <form onSubmit={move} noValidate className="flex flex-col gap-4">
               {moveFailed ? <Alert tone="danger">Couldn’t move {moving ? said(moving) : ''}. Try again.</Alert> : null}
+              <p className="m-0 text-text-muted">Fields marked * are required.</p>
               <Field group label="Folder" error={moveError ?? undefined} required>
                 <TreeView aria-label="Folders" items={toItems(folders)} selectionMode="single" value={target ? [target] : []}
                   onValueChange={(v) => { setTarget(v[0] ?? ''); setMoveError(null); }} />

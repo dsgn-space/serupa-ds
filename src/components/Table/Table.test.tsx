@@ -8,6 +8,7 @@ import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Card } from '../Card/Card';
+import { Avatar } from '../Avatar/Avatar';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -76,10 +77,10 @@ describe('Table', () => {
     expect(getComputedStyle(page.getByRole('table', { name: 'Alone' }).element().parentElement!).borderTopWidth).toBe('1px');
   });
 
-  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
-    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
-      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
-    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  test('an end cell sets its numbers in tabular figures, digit under digit; a start cell keeps proportional ones, so a hyphen in its text isn\'t widened', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell align="end">Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">hotel-invoice.pdf</TableCell><TableCell id="tt" align="end">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['normal', 'tabular-nums']);
   });
 
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
@@ -151,6 +152,17 @@ describe('Table', () => {
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
+  });
+
+  test('an Avatar in a shaded row steps its fill up to secondary-hover, so it stays apart from the shade (the same zinc-100 as secondary in light themes); a plain row keeps secondary', async () => {
+    await render(<Table aria-label="People"><TableBody>
+      <TableRow data-i="p"><TableCell><Avatar id="avp" name="Ada Lovelace" size="sm" /></TableCell></TableRow>
+      <TableRow data-i="s" selected><TableCell><Avatar id="avs" name="Grace Hopper" size="sm" /></TableCell></TableRow>
+    </TableBody></Table>);
+    const fill = (i: string) => css(q(`#av${i}`).firstElementChild).backgroundColor;   // the Avatar's frame
+    await expect.poll(() => css(q('[data-i="s"]')).backgroundColor).toBe(bg('var(--surface-hover)'));
+    expect([fill('p'), fill('s')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect(fill('s')).not.toBe(css(q('[data-i="s"]')).backgroundColor);
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {

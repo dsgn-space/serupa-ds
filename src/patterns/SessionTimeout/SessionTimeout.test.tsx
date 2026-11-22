@@ -52,7 +52,7 @@ describe('Patterns/Session time-out', () => {
   test('the warning opens before the end with "Stay signed in" focused, says the time once, and staying puts focus back', async () => {
     const onExtend = vi.fn();
     const screen = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
-    await screen.getByLabelText('Message').click();
+    await screen.getByRole('textbox', { name: 'Message', exact: true }).click();
     await vi.waitFor(() => expect(latin(active().textContent)).toBe('Stay signed in'), WAIT);
     await expect.element(screen.getByRole('alertdialog', { name: 'You’ll be signed out soon' })).toBeVisible();
     await vi.waitFor(() => expect(said()).toContain('You’ll be signed out in 2 seconds.'));
@@ -80,14 +80,14 @@ describe('Patterns/Session time-out', () => {
   test('when it runs out, the signed-out page takes focus, and signing in again brings back what was typed', async () => {
     const onExpire = vi.fn();
     const screen = await render(<SessionTimeout duration={3} warnBefore={1} saveKey={KEY} onExpire={onExpire} />);
-    await userEvent.fill(screen.getByLabelText('Subject'), 'Invoice is wrong');
-    await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice in May.');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Subject', exact: true }), 'Invoice is wrong');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Message', exact: true }), 'Charged twice in May.');
     await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), WAIT);
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toEqual({ subject: 'Invoice is wrong', message: 'Charged twice in May.' });
     await screen.getByRole('button', { name: 'Sign in again' }).click();
-    await expect.element(screen.getByLabelText('Subject')).toHaveValue('Invoice is wrong');
-    await expect.element(screen.getByLabelText('Message')).toHaveValue('Charged twice in May.');
+    await expect.element(screen.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('Invoice is wrong');
+    await expect.element(screen.getByRole('textbox', { name: 'Message', exact: true })).toHaveValue('Charged twice in May.');
   });
 
   test('typing keeps the session: no warning mid-sentence, and the server is told at most once per activityEvery', async () => {
@@ -95,7 +95,7 @@ describe('Patterns/Session time-out', () => {
     // The warning comes 3 seconds after each refresh: room for a slow runner between two keys, which come 0.7s apart and
     // refresh at most once a second (with 2 seconds, a Thai run on a busy runner saw the warning first).
     const screen = await render(<SessionTimeout duration={4} warnBefore={1} activityEvery={1} onExtend={onExtend} />);
-    await screen.getByLabelText('Message').click();
+    await screen.getByRole('textbox', { name: 'Message', exact: true }).click();
     for (let i = 0; i < 6; i++) {
       await userEvent.keyboard('a');
       await new Promise((r) => setTimeout(r, 700));
@@ -108,7 +108,7 @@ describe('Patterns/Session time-out', () => {
     // When the server refuses, typing doesn't hide the end: the warning still comes.
     const refused = vi.fn(() => Promise.reject(new Error('offline')));
     const again = await render(<SessionTimeout duration={4} warnBefore={1} activityEvery={1} onExtend={refused} />);
-    await again.getByLabelText('Message').click();
+    await again.getByRole('textbox', { name: 'Message', exact: true }).click();
     await new Promise((r) => setTimeout(r, 1100));
     await userEvent.keyboard('a');
     await vi.waitFor(() => expect(refused).toHaveBeenCalled());
@@ -118,7 +118,7 @@ describe('Patterns/Session time-out', () => {
   test('a draft saved before a reload comes back', async () => {
     window.sessionStorage.setItem(KEY, JSON.stringify({ subject: 'Saved', message: 'Before the reload' }));
     const screen = await render(<SessionTimeout saveKey={KEY} />);
-    await expect.element(screen.getByLabelText('Subject')).toHaveValue('Saved');
+    await expect.element(screen.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('Saved');
   });
 
   test('"Sign out" ends it at once and clears the draft from the computer; a refused extension lets it run out as warned', async () => {
@@ -126,13 +126,13 @@ describe('Patterns/Session time-out', () => {
     // The warning opens a second in and the session runs out well after it: on a busy runner a 4-second session ran
     // out before the fill, which then waited on a field that takes no typing.
     const first = await render(<SessionTimeout duration={30} warnBefore={29} saveKey={KEY} onExpire={onExpire} />);
-    await userEvent.fill(first.getByLabelText('Subject'), 'Private');
+    await userEvent.fill(first.getByRole('textbox', { name: 'Subject', exact: true }), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
     await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve signed out'));
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(window.sessionStorage.getItem(KEY)).toBeNull();
     await first.getByRole('button', { name: 'Sign in again' }).click();
-    await expect.element(first.getByLabelText('Subject')).toHaveValue('');
+    await expect.element(first.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('');
     await first.unmount();
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
     const second = await render(<SessionTimeout duration={6} warnBefore={5} onExtend={onExtend} />);
@@ -162,7 +162,7 @@ describe('Patterns/Session time-out', () => {
   test('drafts are kept for the tab only, never in localStorage, and only the subject and message', async () => {
     window.sessionStorage.setItem(KEY, JSON.stringify({ subject: 'Hi', message: 'There', password: 'hunter2' }));
     const screen = await render(<SessionTimeout saveKey={KEY} />);
-    await userEvent.fill(screen.getByLabelText('Message'), 'There again');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Message', exact: true }), 'There again');
     expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toEqual({ subject: 'Hi', message: 'There again' });
     expect(window.localStorage.getItem(KEY)).toBeNull();
   });
@@ -170,8 +170,8 @@ describe('Patterns/Session time-out', () => {
   test('sending the message clears the draft once onSend resolves, and keeps it when onSend rejects; each outcome shows on screen', async () => {
     const refused = vi.fn(() => Promise.reject(new Error('offline')));
     const first = await render(<SessionTimeout saveKey={KEY} onSend={refused} />);
-    await userEvent.fill(first.getByLabelText('Subject'), 'Refund');
-    await userEvent.fill(first.getByLabelText('Message'), 'Charged twice');
+    await userEvent.fill(first.getByRole('textbox', { name: 'Subject', exact: true }), 'Refund');
+    await userEvent.fill(first.getByRole('textbox', { name: 'Message', exact: true }), 'Charged twice');
     await first.getByRole('button', { name: 'Send message' }).click();
     await expect.element(first.getByRole('alert')).toHaveTextContent('The message wasn’t sent. What you typed is kept: try again.');
     expect(refused).toHaveBeenCalledWith({ subject: 'Refund', message: 'Charged twice' });
@@ -179,14 +179,14 @@ describe('Patterns/Session time-out', () => {
     await first.unmount();
     const onSend = vi.fn();
     const second = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
-    await expect.element(second.getByLabelText('Subject')).toHaveValue('Refund');
+    await expect.element(second.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('Refund');
     await second.getByRole('button', { name: 'Send message' }).click();
     const sent = second.getByRole('status').filter({ hasText: 'Message sent' });
     await expect.element(sent).toBeVisible();
     expect(active()).toBe(sent.element());
     expect(onSend).toHaveBeenCalledWith({ subject: 'Refund', message: 'Charged twice' });
     expect(window.sessionStorage.getItem(KEY)).toBeNull();
-    await expect.element(second.getByLabelText('Subject')).toHaveValue('');
+    await expect.element(second.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('');
   });
 
   test('an empty Subject or Message isn\'t sent: each says what\'s missing, and the first empty one takes focus', async () => {
@@ -194,13 +194,13 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
     await screen.getByRole('button', { name: 'Send message' }).click();
     expect(onSend).not.toHaveBeenCalled();
-    await expect.element(screen.getByLabelText('Subject')).toHaveAccessibleDescription(/Enter a subject/);
-    await expect.element(screen.getByLabelText('Message')).toHaveAccessibleDescription(/Enter your message/);
-    expect(active()).toBe(screen.getByLabelText('Subject').element());
-    await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
-    await expect.element(screen.getByLabelText('Subject')).not.toHaveAccessibleDescription(/Enter a subject/);
+    await expect.element(screen.getByRole('textbox', { name: 'Subject', exact: true })).toHaveAccessibleDescription(/Enter a subject/);
+    await expect.element(screen.getByRole('textbox', { name: 'Message', exact: true })).toHaveAccessibleDescription(/Enter your message/);
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Subject', exact: true }).element());
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Subject', exact: true }), 'Refund');
+    await expect.element(screen.getByRole('textbox', { name: 'Subject', exact: true })).not.toHaveAccessibleDescription(/Enter a subject/);
     await screen.getByRole('button', { name: 'Send message' }).click();
-    expect(active()).toBe(screen.getByLabelText('Message').element());
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Message', exact: true }).element());
     expect(onSend).not.toHaveBeenCalled();
   });
 
@@ -208,8 +208,8 @@ describe('Patterns/Session time-out', () => {
     let done!: () => void;
     const onSend = vi.fn(() => new Promise<void>((r) => { done = r; }));
     const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
-    await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
-    await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Subject', exact: true }), 'Refund');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Message', exact: true }), 'Charged twice');
     const button = screen.getByRole('button', { name: 'Send message' });
     await button.click();
     await expect.element(button).toHaveAttribute('aria-busy', 'true');
@@ -227,8 +227,8 @@ describe('Patterns/Session time-out', () => {
     const get = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
     const set = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('full'); });
     const screen = await render(<SessionTimeout saveKey={KEY} />);
-    await userEvent.fill(screen.getByLabelText('Subject'), 'Kept in the page');
-    await expect.element(screen.getByLabelText('Subject')).toHaveValue('Kept in the page');
+    await userEvent.fill(screen.getByRole('textbox', { name: 'Subject', exact: true }), 'Kept in the page');
+    await expect.element(screen.getByRole('textbox', { name: 'Subject', exact: true })).toHaveValue('Kept in the page');
     get.mockRestore();
     set.mockRestore();
   });

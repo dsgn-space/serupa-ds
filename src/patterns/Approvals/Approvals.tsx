@@ -15,7 +15,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -132,7 +132,7 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
           <OfflineBanner online={online} placement="inline" className="mb-6">These are the requests loaded before you went offline. Approving or declining needs a connection.</OfflineBanner>
           <PageHeader title="Approvals" description={loading || loadFailed ? undefined : waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your requests" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading requests" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading requests" /></Card> : (<>
           <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
             <SegmentedControl aria-label="Show" value={show} onValueChange={setShow}
               options={[{ value: 'waiting', label: 'Waiting' }, { value: 'decided', label: 'Decided' }]} />

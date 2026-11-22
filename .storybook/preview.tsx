@@ -180,6 +180,9 @@ const preview: Preview = {
     layout: 'padded',
     controls: { expanded: true, sort: 'requiredFirst' },
     backgrounds: { disabled: true },   // the theme sets the page background (surface)
+    // A Do or Don't story is drawn once on its docs page, in the guide's figure beside its rule (docs/doDont.tsx), and
+    // not again under Examples. guides.mjs holds that the README names every one.
+    docs: { stories: { filter: (story: { id: string }) => !/--do(nt)?-/.test(story.id) } },
     a11y: { context: '#storybook-root' },
     // The docs pages and the Foundations pages keep their reading order; the component groups and the
     // components in them go A-Z. Stories in one component keep the order of their file. Storybook turns this

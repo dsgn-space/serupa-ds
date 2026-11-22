@@ -97,10 +97,10 @@ export function removeProp(src, component, prop) {
   for (const [s, e] of openTags(src, component).reverse()) {
     let attrs = src.slice(s, e);
     for (const m of [...topLevel(attrs).matchAll(attrAt(prop))].reverse()) {
-      let i = m.index + prop.length;
-      while (/\s/.test(attrs[i] || '')) i++;
-      if (attrs[i] === '=') {
-        i++;
+      let i = m.index + prop.length, j = i;
+      while (/\s/.test(attrs[j] || '')) j++;
+      if (attrs[j] === '=') {
+        i = j + 1;
         while (/\s/.test(attrs[i] || '')) i++;
         if (attrs[i] === '"' || attrs[i] === "'") i = attrs.indexOf(attrs[i], i + 1) + 1;
         else if (attrs[i] === '{') i = closeBrace(attrs, i) + 1;

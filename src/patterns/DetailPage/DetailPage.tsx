@@ -14,7 +14,7 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { Alert } from '../../components/Alert/Alert';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
@@ -159,7 +159,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
               <Link href="#projects">Back to projects</Link>
               <Heading level={1} className="sr-only">Project</Heading>
               {loadFailed ? <EmptyLoadFailed title="Couldn’t load this project" onRetry={() => onRetry?.()} headingLevel={2} />
-                : <Card><Loader variant="skeleton" shape="text" lines={4} label="Loading project" /></Card>}
+                : <Card><Skeleton shape="text" lines={4} label="Loading project" /></Card>}
             </>
           ) : deleted ? (
             <div className="flex flex-col gap-3">

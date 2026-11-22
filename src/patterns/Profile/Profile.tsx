@@ -10,7 +10,7 @@ import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { FileUpload } from '../../components/FileUpload/FileUpload';
 import { SaveStatus, type SaveState } from '../../components/SaveStatus/SaveStatus';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
@@ -143,11 +143,12 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
 
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load your profile" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading profile" /></Card> : (
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading profile" /></Card> : (
                 <div className="grid items-start gap-6 md:grid-cols-3">
                   <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-4 md:col-span-2">
                     <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
                     <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                    <p className="m-0 text-text-muted">Fields marked * are required.</p>
                     <div className="flex flex-wrap items-center gap-4">
                       <Avatar size="xl" name={draft.name || saved.name} src={photo || undefined} alt={photo ? `Photo of ${draft.name || saved.name}` : undefined} />
                       {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}

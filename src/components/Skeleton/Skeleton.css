@@ -1,0 +1,64 @@
+/* ---------------------------------------------------------------
+   Skeleton: placeholder shapes in the place of content that is loading, a lighter band sweeping across them every
+   2s (ease-move). Shapes: "text" (lines as tall as the size's text line, the last of several shorter), "circle" (an
+   avatar) and "rect" (an image or a card, full width). Width and height follow utility classes (w-48, size-12, h-40,
+   aspect-video), which come later in the cascade and win. Structure: .srp-skeleton > .srp-skeleton__line >
+   .srp-skeleton__bone (text), or > .srp-skeleton__bone (circle, rect). The fill is the text color at
+   --skeleton-fill, so it fits any surface. Every value reads one of its own tokens (skeleton.tokens.json).
+   --------------------------------------------------------------- */
+@layer srp.components {
+.srp-skeleton {
+  --srp-skeleton-size: var(--skeleton-size-md, var(--spacing-6));
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--spacing-0);
+  vertical-align: middle;
+  animation: srp-skeleton-in var(--motion-enter-sm) var(--ease-enter) both;   /* fades in once shown */
+}
+.srp-skeleton--size-sm { --srp-skeleton-size: var(--skeleton-size-sm, var(--spacing-4)); }
+.srp-skeleton--size-lg { --srp-skeleton-size: var(--skeleton-size-lg, var(--spacing-10)); }
+.srp-skeleton--inverse { color: var(--skeleton-inverse, var(--white)); }
+.srp-skeleton--waiting { visibility: hidden; animation: none; }   /* during the show-after delay: keeps its space, shows nothing */
+.srp-skeleton--text { display: flex; flex-direction: column; align-items: stretch; width: var(--sizing-full); }   /* lines shrink in a row (next to an avatar) */
+.srp-skeleton--rect { display: flex; width: var(--sizing-full); height: var(--skeleton-rect-height, var(--spacing-24)); }
+.srp-skeleton--circle { flex-shrink: 0; width: var(--srp-skeleton-size); height: var(--srp-skeleton-size); }
+.srp-skeleton__line { display: flex; align-items: center; font-size: var(--text-sm); height: var(--text-sm--line-height); }
+.srp-skeleton--size-sm .srp-skeleton__line { font-size: var(--text-xs); height: var(--text-xs--line-height); }
+.srp-skeleton--size-lg .srp-skeleton__line { font-size: var(--text-base); height: var(--text-base--line-height); }
+.srp-skeleton__bone {
+  --srp-skeleton-fill: color-mix(in srgb, currentColor var(--skeleton-fill, var(--opacity-10)), transparent);
+  --srp-skeleton-glint: color-mix(in srgb, currentColor var(--skeleton-shine, var(--opacity-5)), transparent);
+  position: relative;
+  overflow: hidden;
+  display: block; flex-shrink: 0; width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--skeleton-radius, var(--radius-control));
+}
+.srp-skeleton__line > .srp-skeleton__bone { height: 1em; border-radius: var(--skeleton-text-radius, var(--radius-inner)); }
+.srp-skeleton__line:last-child:not(:first-child) > .srp-skeleton__bone { width: var(--sizing-3-5); }   /* a paragraph's last line: 3/5 wide */
+.srp-skeleton--circle > .srp-skeleton__bone { border-radius: var(--rounded-full); }
+/* The shine is a layer three bones wide, sliding on translate (the compositor) from its last third on the bone to its first. */
+.srp-skeleton__bone::after {
+  --srp-skeleton-sweep: calc(var(--sizing-full) * 2 / 3);
+  content: "";
+  position: absolute;
+  inset-block: var(--spacing-0);
+  inset-inline-end: var(--spacing-0);
+  width: calc(var(--sizing-full) + var(--sizing-full) + var(--sizing-full));
+  background-image: linear-gradient(to right, var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-glint), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill));   /* evenly spaced stops: a band about half the bone wide */
+  animation: srp-skeleton-sweep calc(var(--motion-loop-placeholder) + var(--motion-loop-placeholder)) var(--ease-move) infinite;   /* two placeholder beats: 2s, as Loader's sweep */
+}
+.srp-skeleton__bone:dir(rtl)::after { --srp-skeleton-sweep: calc(var(--sizing-full) * -2 / 3); }
+@keyframes srp-skeleton-sweep { to { translate: var(--srp-skeleton-sweep) 0; } }
+@keyframes srp-skeleton-in { from { opacity: var(--opacity-0); } }
+/* Reduced motion: a still fill, without the shine. */
+@media (prefers-reduced-motion: reduce) {
+  /* stylelint-disable-next-line serupa/color-through-component-token -- the fill worked out above from --skeleton-fill */
+  .srp-skeleton__bone { background-color: var(--srp-skeleton-fill); }
+  .srp-skeleton__bone::after { display: none; }
+}
+/* Forced colors (Windows high contrast) drop background colors, which would leave a skeleton screen blank: the
+   bones keep a still GrayText fill, the system color for content that isn't there yet. */
+@media (forced-colors: active) {
+  .srp-skeleton__bone { forced-color-adjust: none; background-color: GrayText; }
+  .srp-skeleton__bone::after { display: none; }
+}
+}

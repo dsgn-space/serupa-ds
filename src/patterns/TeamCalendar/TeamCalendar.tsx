@@ -10,7 +10,7 @@ import { TimePicker } from '../../components/TimePicker/TimePicker';
 import { Switch } from '../../components/Switch/Switch';
 import { Alert } from '../../components/Alert/Alert';
 import { Card } from '../../components/Card/Card';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { EventCalendar, type CalendarEvent, type CalendarSlot } from '../../components/EventCalendar/EventCalendar';
 import { useLocale } from '../../internal/provider';
@@ -200,7 +200,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
             primary={{ label: 'New event', icon: 'add', onSelect: () => { newButton.current = document.activeElement as HTMLElement | null; ask(); }, disabled: loading || loadFailed }} />
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load the events" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading events" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading events" /></Card>
               : <EventCalendar ref={calendar} events={events} defaultMonth={defaultMonth} headingLevel={2}
                   onSlotSelect={(slot) => { newButton.current = document.activeElement as HTMLElement | null; ask(slot); }}
                   onEventClick={setOpen} onEventMove={move} />}
@@ -210,6 +210,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
             {draft ? (
               <form onSubmit={add} noValidate className="flex flex-col gap-4">
                 {addFailed ? <Alert tone="danger">Couldn’t add the event. Try again.</Alert> : null}
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Title" id="event-title" error={problems.title} required>
                   <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
                 </Field>

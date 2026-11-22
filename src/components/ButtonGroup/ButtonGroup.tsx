@@ -28,7 +28,8 @@ function ButtonGroupRender({ ref, ...props }: ButtonGroupProps & React.RefAttrib
   const root = React.useRef<HTMLDivElement | null>(null);
   const wrapped = useRowWrap(root, attached && !vertical, props.children);
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
-  return <div role="group" {...rest} ref={mergedRef} data-component="button-group" data-orientation={vertical ? 'vertical' : 'horizontal'}
+  // ToggleGroup renders a ButtonGroup and names itself (data-component="toggle-group").
+  return <div role="group" {...rest} ref={mergedRef} data-component={(rest as Record<string, unknown>)['data-component'] as string | undefined ?? 'button-group'} data-orientation={vertical ? 'vertical' : 'horizontal'}
     data-wrapped={wrapped || undefined}
     className={cn('srp-button-group', vertical && 'srp-button-group--vertical', attached && !wrapped && 'srp-button-group--attached', props.className)}>
     {size ? <ControlSize.Provider value={size}>{props.children}</ControlSize.Provider> : props.children}

@@ -119,6 +119,7 @@ export function FeedbackSurvey({ about = 'your visit', onSend, online }: Feedbac
               </section>
             ) : (
               <form onSubmit={send} noValidate aria-label="Survey" className="flex flex-col gap-6">
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="How would you rate it?" error={problems.rating} required>
                   <Rating ref={rating} value={answers.rating} onValueChange={(v) => { edit({ rating: v }); setProblems((p) => ({ ...p, rating: undefined })); }} invalid={!!problems.rating} size="lg" />
                 </Field>

@@ -187,6 +187,7 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister, 
                 <h2 id="register" className="m-0 text-lg font-semibold">{full ? 'Join the waiting list' : 'Get tickets'}</h2>
                 {full ? <p className="m-0">It’s full. Leave your name, and we’ll email you if a place comes free.</p> : null}
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 {full ? null : (
                   <>
                     <Field label="Ticket" error={problems.ticket} group required>
@@ -197,7 +198,9 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister, 
                     <Field label="How many tickets?" id="event-count" hint={`Up to ${formatNumber(Math.min(MOST, left), locale)}.`} error={problems.count} required>
                       <NumberInput min={1} max={Math.min(MOST, left)} value={r.count} onValueChange={(n) => edit({ count: n ?? 0 })} className="max-w-36" />
                     </Field>
-                    <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : null}</p>
+                    <Card padding="sm" variant="filled">
+                      <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : 'Choose a ticket to see your total.'}</p>
+                    </Card>
                   </>
                 )}
                 <Field label="Your name" id="event-name" error={problems.name} required>
