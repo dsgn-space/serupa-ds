@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v16.1.0
+npm install github:dsgn-space/serupa-ds#v17.0.0
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -111,6 +111,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **DataGrid** (beta): A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. Also called: spreadsheet, editable data table.
 - **DescriptionList** (beta): A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. Also called: key-value list, definition list, property list.
 - **Duration**: How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". Also called: formatted duration, time span, elapsed time.
+- **FormattedDate**: Writes a date, a time or a range of dates the way the reader's language does: "November 20, 2026" in English, "20 November 2026" in Indonesian, "٢٠ نوفمبر ٢٠٢٦" in Egyptian Arabic. Also called: date format, date display, formatted time.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. Also called: number format, currency display.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette. Also called: mark, match highlighting.
 - **Icon**: Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Also called: glyph, symbol.
@@ -133,10 +134,11 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Data display
 
-- **Chart** (beta): A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, or a donut of one series' shares, such as traffic by source. Also called: graph, data visualization.
+- **Chart** (beta): A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, a donut of one series' shares, such as traffic by source, or a heatmap of a grid of values, such as orders by weekday and hour. Also called: graph, data visualization.
 - **Countdown**: Shows the time left until a moment, as a clock ("4:59") or in words ("4 minutes, 59 seconds"), and keeps itself up to date. Also called: timer, countdown timer.
 - **EventCalendar** (beta): A month of events: meetings, deadlines, bookings. Also called: scheduler, agenda.
 - **Sparkline** (beta): A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. Also called: microchart, trend line, inline chart.
+- **StatTile** (beta): One key number on a card, for the top of a dashboard: what it is, the number, how it changed since the period before (in words, with an arrow), and an optional trend line. Also called: KPI card, stat card, metric tile, scorecard.
 - **StatusTracker** (beta): A strip of bars, one a day, for uptime or a job's history: up, degraded, down or no data, told apart by shape as well as color. Also called: uptime bar, uptime tracker, status page bar.
 - **Timeline**: An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. Also called: activity feed, history.
 
