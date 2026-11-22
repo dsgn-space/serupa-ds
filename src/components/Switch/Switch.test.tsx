@@ -99,7 +99,7 @@ describe('Switch', () => {
     expect([changes.join(), el('md').checked]).toEqual(['true', true]);
     await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--primary)'), 2, color('var(--white)')]);
     document.documentElement.setAttribute('data-theme', 'blue-dark');
-    try { expect([box('md').thumbBg, css(document.querySelector('label:has(#md) input + span')!).backgroundColor]).toEqual([color('var(--white)'), color('var(--white)')]); } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
+    try { expect([box('md').thumbBg, css(document.querySelector('label:has(#md) input + span')).backgroundColor]).toEqual([color('var(--white)'), color('var(--white)')]); } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
   });
 
   test('Space flips it from the keyboard; it is announced as a checked switch', async () => {
