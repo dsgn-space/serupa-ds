@@ -1,19 +1,19 @@
 /* ---------------------------------------------------------------
    SortableList: rows with a drag handle at the start. The row being moved is raised (a shadow and the primary
-   border) and, while dragged, follows the pointer; the others move out of its way. Structure: .dk-sortable-list
-   (the <ul>) > .dk-sortable-list__item (<li>) > .dk-sortable-list__handle (button), .dk-sortable-list__content.
+   border) and, while dragged, follows the pointer; the others move out of its way. Structure: .srp-sortable-list
+   (the <ul>) > .srp-sortable-list__item (<li>) > .srp-sortable-list__handle (button), .srp-sortable-list__content.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-sortable-list {
+@layer srp.components {
+.srp-sortable-list {
   display: flex; flex-direction: column; gap: var(--sortable-list-gap, var(--spacing-2));
   margin: var(--spacing-0); padding: var(--spacing-0); list-style: none;
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--sortable-list-text, var(--text));
 }
 /* A row scrolls sideways inside itself rather than widening the page (WCAG 1.4.10); the block padding leaves room for
    the raised row's shadow and the focus ring, which the scroll box would clip. */
-.dk-sortable-list[data-orientation="horizontal"] { flex-direction: row; align-items: stretch; overflow-x: auto; overscroll-behavior-x: contain; padding-block: var(--spacing-2); }
-.dk-sortable-list[data-orientation="horizontal"] .dk-sortable-list__item { flex: none; }
-.dk-sortable-list__item {
+.srp-sortable-list[data-orientation="horizontal"] { flex-direction: row; align-items: stretch; overflow-x: auto; overscroll-behavior-x: contain; padding-block: var(--spacing-2); }
+.srp-sortable-list[data-orientation="horizontal"] .srp-sortable-list__item { flex: none; }
+.srp-sortable-list__item {
   position: relative; display: flex; align-items: center; gap: var(--sortable-list-item-gap, var(--spacing-2));
   padding: var(--sortable-list-item-padding-y, var(--spacing-2)) var(--sortable-list-item-padding-x, var(--spacing-3));
   padding-inline-start: var(--sortable-list-item-padding-start, var(--spacing-1));
@@ -21,34 +21,34 @@
   border: var(--border-width-1) solid var(--sortable-list-item-border, var(--border)); border-radius: var(--sortable-list-item-radius, var(--radius-control));
   transition: box-shadow var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move), translate var(--motion-change-sm) var(--ease-move);
 }
-.dk-sortable-list__item[data-flip] { transition: none; }   /* placed back where it was, to glide from there (SortableList.tsx) */
-.dk-sortable-list--disabled .dk-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
-.dk-sortable-list__item--dragging {
+.srp-sortable-list__item[data-flip] { transition: none; }   /* placed back where it was, to glide from there (SortableList.tsx) */
+.srp-sortable-list--disabled .srp-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
+.srp-sortable-list__item--dragging {
   z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary));
   box-shadow: var(--sortable-list-item-shadow-active, var(--elevation-raised));
 }
-.dk-sortable-list__handle {
+.srp-sortable-list__handle {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   min-width: var(--sortable-list-handle-size, var(--spacing-6)); min-height: var(--sortable-list-handle-size, var(--spacing-6));
   margin: var(--spacing-0); padding: var(--spacing-0); border: 0; border-radius: var(--radius-inner);
   background: transparent; color: var(--sortable-list-handle, var(--text-muted)); cursor: var(--cursor-grab); touch-action: none;
 }
-.dk-sortable-list__handle .dk-icon { font-size: var(--spacing-5); }
+.srp-sortable-list__handle .srp-icon { font-size: var(--spacing-5); }
 /* Touch (EQ1): the handle takes a press 44px high, as Apple and Material ask, without moving anything; the width
    stays, so a press beside it still lands on the item's own content. */
 @media (pointer: coarse) {
-  .dk-sortable-list__handle { position: relative; isolation: isolate; }
-  .dk-sortable-list__handle::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); }
+  .srp-sortable-list__handle { position: relative; isolation: isolate; }
+  .srp-sortable-list__handle::after { --srp-under: calc(var(--z-10) * -1); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset-block: var(--srp-reach-block); inset-inline: var(--spacing-0); }
 }
-.dk-sortable-list__item--dragging .dk-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
-@media (hover: hover) { .dk-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
+.srp-sortable-list__item--dragging .srp-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
+@media (hover: hover) { .srp-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
-.dk-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
-@media (prefers-reduced-motion: reduce) { .dk-sortable-list__handle { transition: none; } }
-.dk-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
-.dk-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-sortable-list--sorting { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
-.dk-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */
-@media (prefers-reduced-motion: reduce) { .dk-sortable-list__item { transition: none; } }
-@media (forced-colors: active) { .dk-sortable-list__item--dragging { outline: var(--outline-width-2) solid Highlight; } }
+.srp-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .srp-sortable-list__handle { transition: none; } }
+.srp-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
+.srp-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-sortable-list--sorting { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
+.srp-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */
+@media (prefers-reduced-motion: reduce) { .srp-sortable-list__item { transition: none; } }
+@media (forced-colors: active) { .srp-sortable-list__item--dragging { outline: var(--outline-width-2) solid Highlight; } }
 }

@@ -54,17 +54,17 @@ function StatTileRender({ ref, ...props }: StatTileProps & React.RefAttributes<H
   const Tag = props.as === 'li' || props.as === 'article' ? props.as : 'div';
   const trend = props.trend && props.trend.length > 1 ? props.trend : null;
   return (
-    <Tag {...rest} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} aria-busy={props.loading || undefined} className={cn('dk-stat-tile', props.className)} data-component="stat-tile">
+    <Tag {...rest} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} aria-busy={props.loading || undefined} className={cn('srp-stat-tile', props.className)} data-component="stat-tile">
       {props.loading ? <Loader variant="skeleton" shape="text" lines={3} label={props.loadingLabel} /> : <>
-        <p className="dk-stat-tile__label">{props.label}</p>
-        <p className="dk-stat-tile__value">{props.value}</p>
+        <p className="srp-stat-tile__label">{props.label}</p>
+        <p className="srp-stat-tile__value">{props.value}</p>
         {c ? (
-          <p className="dk-stat-tile__change">
+          <p className="srp-stat-tile__change">
             <Badge tone={tone} leftIcon={ARROW[direction]}>{direction === 'up' ? sds.labels.statTileUp(c.amount) : direction === 'down' ? sds.labels.statTileDown(c.amount) : sds.labels.statTileFlat}</Badge>
             {props.period ? <span>{props.period}</span> : null}
           </p>
         ) : null}
-        {trend ? <Sparkline className="dk-stat-tile__trend" data={trend} format={props.trendFormat} label={props.trendLabel ?? sds.labels.statTileTrend(props.label, trend.length)} /> : null}
+        {trend ? <Sparkline className="srp-stat-tile__trend" data={trend} format={props.trendFormat} label={props.trendLabel ?? sds.labels.statTileTrend(props.label, trend.length)} /> : null}
       </>}
     </Tag>
   );

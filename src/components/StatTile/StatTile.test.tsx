@@ -16,7 +16,7 @@ describe('StatTile', () => {
     const ref = React.createRef<HTMLElement>();
     await render(<StatTile id="x" ref={ref} className="extra" data-x="y" label="Revenue" value="€48,200" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.classList.contains('dk-stat-tile'), e.classList.contains('extra'), e.dataset.x, e.dataset.component]).toEqual(['DIV', true, true, true, 'y', 'stat-tile']);
+    expect([e.tagName, ref.current === e, e.classList.contains('srp-stat-tile'), e.classList.contains('extra'), e.dataset.x, e.dataset.component]).toEqual(['DIV', true, true, true, 'y', 'stat-tile']);
   });
 
   test('as="li" and as="article" change the element', async () => {

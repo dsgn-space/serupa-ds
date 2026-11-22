@@ -2,8 +2,8 @@
 /* Serupa base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
    built with the system; leave it out when the system is dropped into an existing app.
    Every value is a token. It sets defaults only (all selectors are :where(), so any class wins). */
-@layer dk.tokens, dk.base, dk.components, dk.utilities;
-@layer dk.base {
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.base {
 
 /* Sizing includes padding and border everywhere, the way components are measured. */
 :where(*), :where(*)::before, :where(*)::after { box-sizing: border-box; }
@@ -117,8 +117,8 @@
 /* Print: filled controls keep their colors, on-screen layers don't print, data-print="hide" leaves out what's only for
    the screen, and data-print-urls shows link addresses. */
 @media print {
-  :where(.dk-btn, .dk-badge, .dk-progress, .dk-switch, .dk-checkbox__input, .dk-radio__input, .dk-avatar, .dk-stepper__indicator, .dk-segmented, .dk-alert, .dk-slider, .dk-calendar, .dk-pagination, .dk-tabs) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }   /* the prefix for Chrome before 136 */
-  :where(.dk-toaster, .dk-tooltip, .dk-menu, .dk-popover, .dk-combobox__popup, .dk-date-picker__popup, .dk-time-picker__list, .dk-fab) { display: none !important; }
+  :where(.srp-btn, .srp-badge, .srp-progress, .srp-switch, .srp-checkbox__input, .srp-radio__input, .srp-avatar, .srp-stepper__indicator, .srp-segmented, .srp-alert, .srp-slider, .srp-calendar, .srp-pagination, .srp-tabs) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }   /* the prefix for Chrome before 136 */
+  :where(.srp-toaster, .srp-tooltip, .srp-menu, .srp-popover, .srp-combobox__popup, .srp-date-picker__popup, .srp-time-picker__list, .srp-fab) { display: none !important; }
   :where([data-print="hide"]) { display: none !important; }
   :where([data-print-urls] a[href^="http"])::after { content: " (" attr(href) ")"; font-size: var(--text-xs); overflow-wrap: anywhere; }
   /* Printers drop backgrounds, so a dark page would print light text on white paper. A data-mode page or section
@@ -136,36 +136,36 @@
    (and a view-transition-name) slides in the direction of travel. Forward, the new step comes in from the end
    and the old one leaves toward the start; back, the other way; mirrored right to left. Under reduced motion
    it only crossfades, like every View Transition. */
-@keyframes dk-step-from-end { from { opacity: 0; translate: var(--spacing-8) 0; } }
-@keyframes dk-step-to-start { to { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
-@keyframes dk-step-from-start { from { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
-@keyframes dk-step-to-end { to { opacity: 0; translate: var(--spacing-8) 0; } }
+@keyframes srp-step-from-end { from { opacity: 0; translate: var(--spacing-8) 0; } }
+@keyframes srp-step-to-start { to { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
+@keyframes srp-step-from-start { from { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
+@keyframes srp-step-to-end { to { opacity: 0; translate: var(--spacing-8) 0; } }
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-new(.step) { animation-duration: var(--motion-enter-md); animation-timing-function: var(--ease-enter); }
   ::view-transition-old(.step) { animation-duration: var(--motion-exit-md); animation-timing-function: var(--ease-exit); }
   :root:active-view-transition-type(forward)::view-transition-new(.step),
-  :root:dir(rtl):active-view-transition-type(back)::view-transition-new(.step) { animation-name: dk-step-from-end; }
+  :root:dir(rtl):active-view-transition-type(back)::view-transition-new(.step) { animation-name: srp-step-from-end; }
   :root:active-view-transition-type(forward)::view-transition-old(.step),
-  :root:dir(rtl):active-view-transition-type(back)::view-transition-old(.step) { animation-name: dk-step-to-start; }
+  :root:dir(rtl):active-view-transition-type(back)::view-transition-old(.step) { animation-name: srp-step-to-start; }
   :root:active-view-transition-type(back)::view-transition-new(.step),
-  :root:dir(rtl):active-view-transition-type(forward)::view-transition-new(.step) { animation-name: dk-step-from-start; }
+  :root:dir(rtl):active-view-transition-type(forward)::view-transition-new(.step) { animation-name: srp-step-from-start; }
   :root:active-view-transition-type(back)::view-transition-old(.step),
-  :root:dir(rtl):active-view-transition-type(forward)::view-transition-old(.step) { animation-name: dk-step-to-end; }
+  :root:dir(rtl):active-view-transition-type(forward)::view-transition-old(.step) { animation-name: srp-step-to-end; }
 }
 
-/* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. A component (a dk- class)
+/* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. A component (a srp- class)
    keeps only its fades: its own reduced-motion rules leave a short opacity fade where it helps (a popup appearing),
    which a 0s duration here would beat, since an !important in an earlier layer wins over the later ones. Colors,
    moves and scales still stop, and so does visibility: it changes at once (a hidden control can't stay on screen). */
 @media (prefers-reduced-motion: reduce) {
   :where(html) { scroll-behavior: auto; }
   :where(*) { scroll-behavior: auto !important; }
-  :where(:not([class^="dk-"], [class*=" dk-"])),
-  :where(:not([class^="dk-"], [class*=" dk-"]))::before,
-  :where(:not([class^="dk-"], [class*=" dk-"]))::after { transition-duration: var(--duration-0) !important; }
-  :where([class^="dk-"], [class*=" dk-"]),
-  :where([class^="dk-"], [class*=" dk-"])::before,
-  :where([class^="dk-"], [class*=" dk-"])::after { transition-property: opacity, display, overlay, content-visibility !important; }
+  :where(:not([class^="srp-"], [class*=" srp-"])),
+  :where(:not([class^="srp-"], [class*=" srp-"]))::before,
+  :where(:not([class^="srp-"], [class*=" srp-"]))::after { transition-duration: var(--duration-0) !important; }
+  :where([class^="srp-"], [class*=" srp-"]),
+  :where([class^="srp-"], [class*=" srp-"])::before,
+  :where([class^="srp-"], [class*=" srp-"])::after { transition-property: opacity, display, overlay, content-visibility !important; }
   /* A View Transition only crossfades: nothing travels or resizes. */
   ::view-transition-group(*) { animation-name: none; }
 }

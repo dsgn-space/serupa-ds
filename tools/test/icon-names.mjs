@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
 await p.goto(writePage('icon-names.html', APP, { react: true }));
 await p.evaluate(() => document.fonts.load('24px "Source"'));
 await p.waitForTimeout(300);
-const drawn = await p.evaluate(() => [...document.querySelectorAll('.dk-icon[data-icon]')].filter((e) => e.querySelector('svg path')).map((e) => e.dataset.icon));
+const drawn = await p.evaluate(() => [...document.querySelectorAll('.srp-icon[data-icon]')].filter((e) => e.querySelector('svg path')).map((e) => e.dataset.icon));
 const missing = names.filter((n) => !drawn.includes(n));
 const iife = read('dist/serupa.iife.js'), table = read('dist/serupa-icons.iife.js');
 t('serupa.iife.js leaves the full table to serupa-icons.iife.js (it has "sports_cricket", serupa.iife.js does not)', !iife.includes('"sports_cricket"') && table.includes('"sports_cricket"'));
@@ -69,7 +69,7 @@ if (ENGINE === 'chromium') t('each icon draws exactly as the 5.x icon font did',
 
 const one = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);
-  return { data: [q('#data').dataset.icon, !!q('#data svg path')], btn: !!q('#btn .dk-btn__icon svg path'), reg: !!q('#reg svg path'), unknown: [q('#unknown').dataset.icon, !!q('#unknown svg'), q('#unknown').getBoundingClientRect().width] };
+  return { data: [q('#data').dataset.icon, !!q('#data svg path')], btn: !!q('#btn .srp-btn__icon svg path'), reg: !!q('#reg svg path'), unknown: [q('#unknown').dataset.icon, !!q('#unknown svg'), q('#unknown').getBoundingClientRect().width] };
 });
 t('icon={…} (an import from serupa-ds/icons) draws it, and Button leftIcon takes one too', one.data[0] === 'test_imported' && one.data[1] && one.btn, JSON.stringify(one));
 t('registerIcons() makes a name work', one.reg);
@@ -94,6 +94,17 @@ await lone.goto(`${srv.base}/${path.relative(PROJECT, fileURLToPath(writePage('i
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`, { react: true })))}`);
 await lone.waitForTimeout(300);
 t('when serupa-icons.iife.js is missing, the icon stays empty and the warning says to include it', !(await lone.evaluate(() => document.querySelector('#r svg'))) && said.some((w) => w.includes('include serupa-icons.iife.js')), said.join(' | '));
+// An element named "currentScript" in the page's HTML answers for document.currentScript (<img name>, which HTML
+// sanitizers let through): its src must not choose where the icons' script comes from. The icon stays empty instead.
+const named = await b.newPage();
+const asked = [];
+named.on('request', (r) => asked.push(r.url()));
+await named.route('https://elsewhere.invalid/**', (r) => r.abort());
+const libs = ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/serupa.iife.js'].map((s) => `<script src="../${s}"></script>`).join('');
+await named.goto(`${srv.base}/${path.relative(PROJECT, fileURLToPath(writePage('icon-named.html', `<img name="currentScript" src="https://elsewhere.invalid/x/" alt=""><div id="root"></div>${libs}<script>
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`)))}`);
+await named.waitForTimeout(300);
+t('an element named "currentScript" on the page doesn\'t choose where serupa-icons.iife.js comes from', !asked.some((u) => u.startsWith('https://elsewhere.invalid/') && u.includes('.js')), asked.filter((u) => u.includes('elsewhere')).join(' | '));
 await b.close();
 srv.close();
 cleanup();

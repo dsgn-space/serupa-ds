@@ -14,7 +14,7 @@ describe('Divider', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Wide><Divider id="dh" ref={r} className="extra" /></Wide>);
     const e = el('dh'), s = css(e), b = e.getBoundingClientRect();
-    expect([e.tagName, e.getAttribute('role'), e.className, r.current === e]).toEqual(['HR', null, 'dk-divider extra', true]);
+    expect([e.tagName, e.getAttribute('role'), e.className, r.current === e]).toEqual(['HR', null, 'srp-divider extra', true]);
     expect([`${s.borderTopWidth} ${s.borderTopStyle}`, b.height, b.width, s.marginTop]).toEqual(['1px solid', 1, 600, '0px']);
   });
 

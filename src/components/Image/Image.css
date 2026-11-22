@@ -6,88 +6,88 @@
    viewable picture is a button with a focus ring and a zoom-in cursor; the remove button sits in the top end
    corner. The viewer is a large Dialog with the picture fitted to the screen.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-image {
-  --dk-image-ratio: auto;
+@layer srp.components {
+.srp-image {
+  --srp-image-ratio: auto;
   position: relative; display: inline-block; box-sizing: border-box; max-width: var(--sizing-full);
-  aspect-ratio: var(--dk-image-ratio); overflow: hidden; vertical-align: middle; background: var(--image-bg, var(--surface-muted));
+  aspect-ratio: var(--srp-image-ratio); overflow: hidden; vertical-align: middle; background: var(--image-bg, var(--surface-muted));
 }
-.dk-image--ratio-square { --dk-image-ratio: var(--aspect-square); }
-.dk-image--ratio-4-3 { --dk-image-ratio: 4 / 3; }
-.dk-image--ratio-video { --dk-image-ratio: var(--aspect-video); }
+.srp-image--ratio-square { --srp-image-ratio: var(--aspect-square); }
+.srp-image--ratio-4-3 { --srp-image-ratio: 4 / 3; }
+.srp-image--ratio-video { --srp-image-ratio: var(--aspect-video); }
 /* A fixed ratio with no size of its own fills its container's width, so its shape holds while loading and on error (GR21).
    A width the frame is given (frameProps' style or a utility class) wins. */
-.dk-image--fill { width: var(--sizing-full); }
-.dk-image--ratio-auto { min-width: var(--image-min-size, var(--spacing-12)); min-height: var(--image-min-size, var(--spacing-12)); }
-.dk-image--ratio-auto.dk-image--loaded { min-width: var(--spacing-0); min-height: var(--spacing-0); background: transparent; }
-.dk-image--rounded { border-radius: var(--image-radius, var(--radius-surface)); }
+.srp-image--fill { width: var(--sizing-full); }
+.srp-image--ratio-auto { min-width: var(--image-min-size, var(--spacing-12)); min-height: var(--image-min-size, var(--spacing-12)); }
+.srp-image--ratio-auto.srp-image--loaded { min-width: var(--spacing-0); min-height: var(--spacing-0); background: transparent; }
+.srp-image--rounded { border-radius: var(--image-radius, var(--radius-surface)); }
 /* The picture sits above the loading sweep (::before), so one that arrives before the page's script runs covers it. */
-.dk-image__img { position: relative; display: block; width: var(--sizing-full); height: auto; max-width: var(--sizing-full); }
-.dk-image__picture { display: contents; }   /* sources: the <img> inside lays out as if the <picture> weren't there */
-.dk-image:not(.dk-image--ratio-auto) .dk-image__img, .dk-image:not(.dk-image--ratio-auto) .dk-image__view, .dk-image--sized .dk-image__img, .dk-image--sized .dk-image__view { height: var(--sizing-full); }
+.srp-image__img { position: relative; display: block; width: var(--sizing-full); height: auto; max-width: var(--sizing-full); }
+.srp-image__picture { display: contents; }   /* sources: the <img> inside lays out as if the <picture> weren't there */
+.srp-image:not(.srp-image--ratio-auto) .srp-image__img, .srp-image:not(.srp-image--ratio-auto) .srp-image__view, .srp-image--sized .srp-image__img, .srp-image--sized .srp-image__view { height: var(--sizing-full); }
 /* ratio auto with width and height: the frame keeps their shape (and is at most as wide as its container) before and after the picture loads. */
-.dk-image--sized.dk-image--ratio-auto { min-width: var(--spacing-0); min-height: var(--spacing-0); }
-.dk-image--cover .dk-image__img { object-fit: cover; }
-.dk-image--contain .dk-image__img { object-fit: contain; }
+.srp-image--sized.srp-image--ratio-auto { min-width: var(--spacing-0); min-height: var(--spacing-0); }
+.srp-image--cover .srp-image__img { object-fit: cover; }
+.srp-image--contain .srp-image__img { object-fit: contain; }
 /* Server HTML shows the picture as it arrives. Once the script runs, a lazy picture still loading is hidden and fades in
-   when it arrives (dk-image--fades); a priority one (a hero) is never hidden, so it paints as soon as it can. */
-.dk-image--fades.dk-image--loading .dk-image__img { opacity: var(--opacity-0); }
-.dk-image--fades.dk-image--loaded .dk-image__img { transition: opacity var(--motion-enter-md) var(--ease-enter); }   /* hides at once, fades in */
+   when it arrives (srp-image--fades); a priority one (a hero) is never hidden, so it paints as soon as it can. */
+.srp-image--fades.srp-image--loading .srp-image__img { opacity: var(--opacity-0); }
+.srp-image--fades.srp-image--loaded .srp-image__img { transition: opacity var(--motion-enter-md) var(--ease-enter); }   /* hides at once, fades in */
 /* While loading, a lighter band sweeps through the placeholder fill every 2s (ease-move), like Loader's skeleton: a layer
    three frames wide slides on translate (the compositor) from its last third on the frame to its first. Right to left, it
    sweeps from the right. It's ::before, so the remove button stays above it. */
-.dk-image--loading::before {
-  --dk-image-glint: color-mix(in srgb, var(--image-shine, var(--surface)) var(--opacity-60), transparent);
-  --dk-image-sweep: calc(var(--sizing-full) * 2 / 3);
+.srp-image--loading::before {
+  --srp-image-glint: color-mix(in srgb, var(--image-shine, var(--surface)) var(--opacity-60), transparent);
+  --srp-image-sweep: calc(var(--sizing-full) * 2 / 3);
   content: "";
   position: absolute;
   inset-block: var(--spacing-0);
   inset-inline-end: var(--spacing-0);
   width: calc(var(--sizing-full) + var(--sizing-full) + var(--sizing-full));
   pointer-events: none;
-  background-image: linear-gradient(to right, transparent, transparent, transparent, transparent, transparent, transparent, var(--dk-image-glint), transparent, transparent, transparent, transparent, transparent, transparent);
-  animation: dk-image-sweep calc(var(--motion-loop-placeholder) + var(--motion-loop-placeholder)) var(--ease-move) infinite;
+  background-image: linear-gradient(to right, transparent, transparent, transparent, transparent, transparent, transparent, var(--srp-image-glint), transparent, transparent, transparent, transparent, transparent, transparent);
+  animation: srp-image-sweep calc(var(--motion-loop-placeholder) + var(--motion-loop-placeholder)) var(--ease-move) infinite;
 }
-.dk-image--loading:dir(rtl)::before { --dk-image-sweep: calc(var(--sizing-full) * -2 / 3); }
-@keyframes dk-image-sweep { to { translate: var(--dk-image-sweep) 0; } }
+.srp-image--loading:dir(rtl)::before { --srp-image-sweep: calc(var(--sizing-full) * -2 / 3); }
+@keyframes srp-image-sweep { to { translate: var(--srp-image-sweep) 0; } }
 /* A picture that failed stays in the frame, hidden under the fallback, so the size its className or style gives the
    frame is kept; with no size of its own the frame is at least --image-min-size wide, so the fallback shows (GJ1). */
-.dk-image--error { min-width: var(--image-min-size, var(--spacing-12)); }
-.dk-image--error .dk-image__img { visibility: hidden; }
-.dk-image__fallback { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--image-fallback-color, var(--text-muted)); }
-.dk-image__fallback .dk-icon { font-size: var(--image-fallback-icon, var(--spacing-6)); }
-.dk-image__view { display: block; width: var(--sizing-full); margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: inherit; background: transparent; cursor: zoom-in; }
-.dk-image__view:focus { outline: none; }
-.dk-image:has(.dk-image__view:focus-visible) { overflow: visible; }
-.dk-image__view:focus-visible { outline: var(--focus-ring-width) solid var(--image-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-image__view .dk-image__img { border-radius: inherit; }
+.srp-image--error { min-width: var(--image-min-size, var(--spacing-12)); }
+.srp-image--error .srp-image__img { visibility: hidden; }
+.srp-image__fallback { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--image-fallback-color, var(--text-muted)); }
+.srp-image__fallback .srp-icon { font-size: var(--image-fallback-icon, var(--spacing-6)); }
+.srp-image__view { display: block; width: var(--sizing-full); margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: inherit; background: transparent; cursor: zoom-in; }
+.srp-image__view:focus { outline: none; }
+.srp-image:has(.srp-image__view:focus-visible) { overflow: visible; }
+.srp-image__view:focus-visible { outline: var(--focus-ring-width) solid var(--image-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-image__view .srp-image__img { border-radius: inherit; }
 /* A hairline just inside a loaded photo's edge (picture-edge: black at 10%, white at 10% in dark), so a picture with a
    white or black background keeps its shape on a page of the same color. Not with fit="contain", where the box is
    wider or taller than the picture. */
-.dk-image--loaded:not(.dk-image--contain) .dk-image__img {
+.srp-image--loaded:not(.srp-image--contain) .srp-image__img {
   border-radius: inherit;
   outline: var(--outline-width-1) solid var(--image-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 /* dim: in a dark color scheme, a layer of --image-dim at 20% over a loaded picture darkens it a shade (light-dark(), so it
    follows the frame's color-scheme: a *-dark theme, a data-mode or the screen's). The remove button stays above it. */
-.dk-image--dim.dk-image--loaded::after {
+.srp-image--dim.srp-image--loaded::after {
   content: ""; position: absolute; inset: var(--spacing-0); pointer-events: none; border-radius: inherit;
   background: light-dark(transparent, color-mix(in srgb, var(--image-dim, var(--black)) var(--opacity-20), transparent));
 }
-.dk-image__remove { position: absolute; z-index: var(--z-10); inset-block-start: var(--image-remove-offset, var(--spacing-2)); inset-inline-end: var(--image-remove-offset, var(--spacing-2)); box-shadow: var(--image-remove-shadow, var(--elevation-part)); }
-.dk-image__viewer { --dk-image-full-max: calc(var(--sizing-dvh) - var(--spacing-40)); }
-.dk-image__viewer .dk-dialog__body { display: flex; justify-content: center; }
-/* The viewer's stage has the picture's shape (--dk-image-ratio) at its own width (--dk-image-w) at most, within the dialog
+.srp-image__remove { position: absolute; z-index: var(--z-10); inset-block-start: var(--image-remove-offset, var(--spacing-2)); inset-inline-end: var(--image-remove-offset, var(--spacing-2)); box-shadow: var(--image-remove-shadow, var(--elevation-part)); }
+.srp-image__viewer { --srp-image-full-max: calc(var(--sizing-dvh) - var(--spacing-40)); }
+.srp-image__viewer .srp-dialog__body { display: flex; justify-content: center; }
+/* The viewer's stage has the picture's shape (--srp-image-ratio) at its own width (--srp-image-w) at most, within the dialog
    and the screen's height; the placeholder fill, its sweep and the fallback are the frame's. */
-.dk-image__stage {
-  position: relative; display: block; overflow: hidden; aspect-ratio: var(--dk-image-ratio);
-  width: min(var(--sizing-full), var(--dk-image-w), calc(var(--dk-image-full-max) * (var(--dk-image-ratio))));
+.srp-image__stage {
+  position: relative; display: block; overflow: hidden; aspect-ratio: var(--srp-image-ratio);
+  width: min(var(--sizing-full), var(--srp-image-w), calc(var(--srp-image-full-max) * (var(--srp-image-ratio))));
   border-radius: var(--image-radius, var(--radius-surface)); background: var(--image-bg, var(--surface-muted));
 }
-.dk-image__stage.dk-image--loaded { background: transparent; }
-.dk-image__full { position: relative; display: block; width: var(--sizing-full); height: var(--sizing-full); object-fit: contain; }
-.dk-image__stage.dk-image--loading .dk-image__full { opacity: var(--opacity-0); }
-.dk-image__stage.dk-image--loaded .dk-image__full { transition: opacity var(--motion-enter-md) var(--ease-enter); }
-@media (prefers-reduced-motion: reduce) { .dk-image--loading::before { display: none; } .dk-image--fades.dk-image--loaded .dk-image__img, .dk-image__stage.dk-image--loaded .dk-image__full { transition: none; } }   /* a still fill; the picture appears at once */
-@media (forced-colors: active) { .dk-image--dim.dk-image--loaded::after { display: none; } .dk-image__img { outline: none; } .dk-image { border: var(--border-width-1) solid CanvasText; } .dk-image--loading::before { display: none; } }
+.srp-image__stage.srp-image--loaded { background: transparent; }
+.srp-image__full { position: relative; display: block; width: var(--sizing-full); height: var(--sizing-full); object-fit: contain; }
+.srp-image__stage.srp-image--loading .srp-image__full { opacity: var(--opacity-0); }
+.srp-image__stage.srp-image--loaded .srp-image__full { transition: opacity var(--motion-enter-md) var(--ease-enter); }
+@media (prefers-reduced-motion: reduce) { .srp-image--loading::before { display: none; } .srp-image--fades.srp-image--loaded .srp-image__img, .srp-image__stage.srp-image--loaded .srp-image__full { transition: none; } }   /* a still fill; the picture appears at once */
+@media (forced-colors: active) { .srp-image--dim.srp-image--loaded::after { display: none; } .srp-image__img { outline: none; } .srp-image { border: var(--border-width-1) solid CanvasText; } .srp-image--loading::before { display: none; } }
 }

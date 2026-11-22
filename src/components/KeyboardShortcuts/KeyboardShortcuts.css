@@ -3,11 +3,11 @@
    does at the start and its keys at the end, with a line between rows. Kept short: bundle.css is near its 2 MB budget. Every value reads one of its own tokens
    (keyboard-shortcuts.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-keyboard-shortcuts__group + .dk-keyboard-shortcuts__group { margin-top: var(--keyboard-shortcuts-group-gap, var(--spacing-5)); }
-.dk-keyboard-shortcuts__heading { margin: var(--spacing-0) var(--spacing-0) var(--spacing-1); font-size: var(--text-sm); font-weight: var(--keyboard-shortcuts-heading-weight, var(--font-semibold)); color: var(--keyboard-shortcuts-heading, var(--text-muted)); }
-.dk-keyboard-shortcuts__list { gap: var(--spacing-0); }   /* a DescriptionList, split: what a shortcut does, then its keys */
-.dk-keyboard-shortcuts__list > .dk-keyboard-shortcuts__row { align-items: center; gap: var(--spacing-1) var(--spacing-4); padding-block: var(--keyboard-shortcuts-row-padding, var(--spacing-2)); }
-.dk-keyboard-shortcuts__row + .dk-keyboard-shortcuts__row { border-top: var(--border-width-1) solid var(--keyboard-shortcuts-divider, var(--border)); }
-.dk-keyboard-shortcuts__single { inline-size: var(--sizing-full); }   /* the footer's switch: the whole width, from the start (the footer is a row of buttons at the end) */
+@layer srp.components {
+.srp-keyboard-shortcuts__group + .srp-keyboard-shortcuts__group { margin-top: var(--keyboard-shortcuts-group-gap, var(--spacing-5)); }
+.srp-keyboard-shortcuts__heading { margin: var(--spacing-0) var(--spacing-0) var(--spacing-1); font-size: var(--text-sm); font-weight: var(--keyboard-shortcuts-heading-weight, var(--font-semibold)); color: var(--keyboard-shortcuts-heading, var(--text-muted)); }
+.srp-keyboard-shortcuts__list { gap: var(--spacing-0); }   /* a DescriptionList, split: what a shortcut does, then its keys */
+.srp-keyboard-shortcuts__list > .srp-keyboard-shortcuts__row { align-items: center; gap: var(--spacing-1) var(--spacing-4); padding-block: var(--keyboard-shortcuts-row-padding, var(--spacing-2)); }
+.srp-keyboard-shortcuts__row + .srp-keyboard-shortcuts__row { border-top: var(--border-width-1) solid var(--keyboard-shortcuts-divider, var(--border)); }
+.srp-keyboard-shortcuts__single { inline-size: var(--sizing-full); }   /* the footer's switch: the whole width, from the start (the footer is a row of buttons at the end) */
 }

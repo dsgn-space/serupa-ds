@@ -27,9 +27,9 @@ import { DateField, Field } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Playground` story.
 
-1. **Group** (`.dk-date-field`): the three parts in a row, named by the Field's label. In a narrow column the parts wrap.
-2. **Part** (`.dk-date-field__part`): a small label (`.dk-date-field__label`), Day, Month or Year, over its box.
-3. **Box** (`.dk-date-field__input`): an [Input](../Input/README.md) sized for two digits, or four for the year.
+1. **Group** (`.srp-date-field`): the three parts in a row, named by the Field's label. In a narrow column the parts wrap.
+2. **Part** (`.srp-date-field__part`): a small label (`.srp-date-field__label`), Day, Month or Year, over its box.
+3. **Box** (`.srp-date-field__input`): an [Input](../Input/README.md) sized for two digits, or four for the year.
 
 ## Usage
 

@@ -16,7 +16,7 @@ describe('TruncatedText', () => {
     const ref = React.createRef<HTMLElement>();
     await render(<><TruncatedText id="x" ref={ref} className="extra" data-x="y">Hello</TruncatedText><TruncatedText id="p" as="p">Hi</TruncatedText></>);
     const e = el('x');
-    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component, el('p').tagName]).toEqual(['SPAN', 'Hello', true, 'dk-truncated-text extra', 'y', 'truncated-text', 'P']);
+    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component, el('p').tagName]).toEqual(['SPAN', 'Hello', true, 'srp-truncated-text extra', 'y', 'truncated-text', 'P']);
   });
 
   test('text that fits is plain text: no tab stop, and nothing shows on hover', async () => {

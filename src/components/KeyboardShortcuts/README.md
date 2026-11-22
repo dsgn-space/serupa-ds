@@ -31,11 +31,11 @@ function Inbox() {
 
 Drawn from the `WithListedShortcuts` story.
 
-1. **Group** (`.dk-keyboard-shortcuts__group`): the shortcuts for one part of the app.
-2. **Heading** (`.dk-keyboard-shortcuts__heading`): names the group.
-3. **Shortcut** (`.dk-keyboard-shortcuts__row`): one shortcut: what it does and its keys.
-4. **What it does** (`.dk-description-list__term`): the row's action, in words.
-5. **Keys** (`.dk-description-list__details`): the keys to press for it.
+1. **Group** (`.srp-keyboard-shortcuts__group`): the shortcuts for one part of the app.
+2. **Heading** (`.srp-keyboard-shortcuts__heading`): names the group.
+3. **Shortcut** (`.srp-keyboard-shortcuts__row`): one shortcut: what it does and its keys.
+4. **What it does** (`.srp-description-list__term`): the row's action, in words.
+5. **Keys** (`.srp-description-list__details`): the keys to press for it.
 
 ## Usage
 

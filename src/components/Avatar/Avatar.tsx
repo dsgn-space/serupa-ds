@@ -75,10 +75,10 @@ function AvatarRender({ ref, ...props }: AvatarProps & React.RefAttributes<HTMLS
   const text = initials(props.name);
   const under = late && late[0] === props.src ? late : null;
   const img = props.imgProps;
-  const fallback = text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span> : <Icon className="dk-avatar__icon" icon={icons.Person} />;
+  const fallback = text ? <span className="srp-avatar__initials" aria-hidden="true">{text}</span> : <Icon className="srp-avatar__icon" icon={icons.Person} />;
   const body = showImg
     // Lazy and async by default, so a long list of people doesn't fetch every picture at once.
-    ? <><img loading="lazy" decoding="async" {...img} className={cn('dk-avatar__img', under && 'dk-avatar__img--late', under && under[1] && 'dk-avatar__img--in', img && img.className)} src={props.src} alt="" ref={pic}
+    ? <><img loading="lazy" decoding="async" {...img} className={cn('srp-avatar__img', under && 'srp-avatar__img--late', under && under[1] && 'srp-avatar__img--in', img && img.className)} src={props.src} alt="" ref={pic}
         onLoad={(e) => { if (img && img.onLoad) img.onLoad(e); if (under) setLate([under[0], true]); }}
         onAnimationEnd={(e) => { if (img && img.onAnimationEnd) img.onAnimationEnd(e); setLate(null); }}
         onError={(e) => { if (img && img.onError) img.onError(e); setFailedSrc(props.src as string); }} />{under ? fallback : null}</>
@@ -86,10 +86,10 @@ function AvatarRender({ ref, ...props }: AvatarProps & React.RefAttributes<HTMLS
   // With alt="" the name is written next to it, but the status isn't: then only the dot is read ("online").
   if (full) { rest.role = 'img'; rest['aria-label'] = full; } else if (!status) rest['aria-hidden'] = true;
   return (
-    <span {...rest} ref={ref} className={cn('dk-avatar', 'dk-avatar--' + size, square && 'dk-avatar--square', props.className)}
+    <span {...rest} ref={ref} className={cn('srp-avatar', 'srp-avatar--' + size, square && 'srp-avatar--square', props.className)}
       data-component="avatar" data-size={size} data-shape={square ? 'square' : 'circle'}>
-      <span className="dk-avatar__frame">{body}</span>
-      {status ? <span className={'dk-avatar__status dk-avatar__status--' + status} {...(full ? { 'aria-hidden': true } : { role: 'img', 'aria-label': said })} /> : null}
+      <span className="srp-avatar__frame">{body}</span>
+      {status ? <span className={'srp-avatar__status srp-avatar__status--' + status} {...(full ? { 'aria-hidden': true } : { role: 'img', 'aria-label': said })} /> : null}
     </span>
   );
 }

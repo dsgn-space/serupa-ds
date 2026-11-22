@@ -51,7 +51,7 @@ describe('Radio', () => {
     await render(<Grid><Letters changes={[]} gref={gref} /></Grid>);
     const g = document.getElementById('ctl')!, names = [...g.querySelectorAll('input')].map((i) => i.name);
     expect([g.getAttribute('role'), gref.current === g, g.dataset.x, g.dataset.component, g.dataset.orientation, css(g).flexDirection]).toEqual(['radiogroup', true, 'y', 'radio-group', 'vertical', 'column']);
-    expect(g.className).toMatch(/dk-radio-group dk-radio-group--vertical extra/);
+    expect(g.className).toMatch(/srp-radio-group srp-radio-group--vertical extra/);
     expect(new Set(names).size).toBe(1);
     expect(names[0]).toBeTruthy();
     expect(names[0]).not.toBe('ignored');
@@ -72,7 +72,7 @@ describe('Radio', () => {
     expect(input('rr-pro').checked).toBe(true);
   });
 
-  test('Radio: a native radio (no system look) in a <label class="dk-radio"> (data-component="radio"); md: a 16px circle, 1px field border, text-sm, centered on the label\'s first line; ref goes to the <input>', async () => {
+  test('Radio: a native radio (no system look) in a <label class="srp-radio"> (data-component="radio"); md: a 16px circle, 1px field border, text-sm, centered on the label\'s first line; ref goes to the <input>', async () => {
     const rref = React.createRef<HTMLInputElement>();
     await render(<Grid><Letters changes={[]} rref={rref} /></Grid>);
     await document.fonts.ready;
@@ -176,15 +176,15 @@ describe('Radio', () => {
     expect(css(d).color).toBe(color('var(--text-muted)'));
     await expect.element(page.getByRole('radio', { name: 'Bravo', exact: true })).toBeInTheDocument();
     await expect.element(page.getByRole('radio', { name: 'Bare', exact: true })).toBeInTheDocument();
-    expect(wrap('bare').className).toMatch(/dk-radio--bare/);
+    expect(wrap('bare').className).toMatch(/srp-radio--bare/);
   });
 
   test('invalid and required on the group: aria-invalid and aria-required on it, required on each radio, a danger border on each', async () => {
     await render(<Grid><Invalid /></Grid>);
     const g = document.getElementById('none')!;
     expect([g.getAttribute('aria-invalid'), g.getAttribute('aria-required'), input('x1').required]).toEqual(['true', 'true', true]);
-    expect(g.className).toMatch(/dk-radio-group--invalid/);
-    expect(wrap('x1').className).toMatch(/dk-radio--invalid/);
+    expect(g.className).toMatch(/srp-radio-group--invalid/);
+    expect(wrap('x1').className).toMatch(/srp-radio--invalid/);
     await expect.poll(() => css(input('x1')).borderTopColor).toBe(color('var(--field-border-invalid)'));
   });
 
@@ -218,7 +218,7 @@ describe('Radio', () => {
     const hoverEditable = css(input('rw')).borderTopColor;
     await userEvent.hover(input('ro-c'));
     expect([at, checked, changes, sent, document.getElementById('ro')!.getAttribute('aria-readonly'), input('ro-a').disabled]).toEqual(['ro-b', ['ro-b'], [], 'b', 'true', false]);
-    expect([css(wrap('ro-c')).cursor, wrap('ro-c').className]).toEqual(['default', expect.stringMatching(/dk-radio--readonly/)]);
+    expect([css(wrap('ro-c')).cursor, wrap('ro-c').className]).toEqual(['default', expect.stringMatching(/srp-radio--readonly/)]);
     expect(css(input('ro-c')).borderTopColor).not.toBe(hoverEditable);
   });
 
@@ -257,7 +257,7 @@ describe('Radio', () => {
     expect(fs.querySelector('legend')!.textContent).toBe('Plan');
     expect(fs.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent).join('|')).toBe('You can change it later.|Pick a plan.');
     expect(g.getAttribute('aria-invalid')).toBe('true');
-    expect(wrap('f1').className).toMatch(/dk-radio--invalid/);
+    expect(wrap('f1').className).toMatch(/srp-radio--invalid/);
     expect([input('o1').matches(':disabled'), disabledLook(wrap('o1'))]).toEqual([true, 'neutral']);
   });
 
@@ -284,9 +284,9 @@ describe('Radio', () => {
     </RadioGroup>);
     const [a, b, c] = page.getByRole('radio').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
-    expect(card(a!).className).toMatch(/dk-radio--card/);
-    expect(card(c!).className).not.toMatch(/dk-radio--card/);
-    expect(page.getByRole('radiogroup').element().className).toMatch(/dk-radio-group--card/);
+    expect(card(a!).className).toMatch(/srp-radio--card/);
+    expect(card(c!).className).not.toMatch(/srp-radio--card/);
+    expect(page.getByRole('radiogroup').element().className).toMatch(/srp-radio-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
     expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));

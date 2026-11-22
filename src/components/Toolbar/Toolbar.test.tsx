@@ -42,7 +42,7 @@ describe('Toolbar', () => {
     await render(<Toolbar id="x" ref={ref} aria-label="Tools" className="extra" data-x="y"><Button>One</Button></Toolbar>);
     const e = el('x');
     expect([e.tagName, page.getByRole('toolbar', { name: 'Tools' }).element() === e, e.getAttribute('aria-orientation'), ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.orientation])
-      .toEqual(['DIV', true, 'horizontal', true, 'dk-toolbar extra', 'y', 'toolbar', 'horizontal']);
+      .toEqual(['DIV', true, 'horizontal', true, 'srp-toolbar extra', 'y', 'toolbar', 'horizontal']);
   });
 
   test('size: every button in it without its own, in a ButtonGroup too, takes the toolbar\'s (sm 24, md 32, lg 44px); a group\'s or a button\'s own size wins', async () => {

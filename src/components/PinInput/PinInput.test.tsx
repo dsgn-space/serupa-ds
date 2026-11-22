@@ -34,7 +34,7 @@ describe('PinInput', () => {
     await render(<PinInput id="p" ref={ref} aria-label="Code" name="code" className="extra" style={{ margin: '3px' }} data-x="y" />);
     const i = el('p'), r = root('p');
     expect([page.getByRole('textbox', { name: 'Code' }).element() === i, ref.current === i, i.type, i.name, i.dataset.x, i.inputMode, i.getAttribute('autocomplete'), i.pattern, r.className, r.style.margin, r.dataset.component, boxes('p').length, boxes('p')[0]!.parentElement!.getAttribute('aria-hidden'), boxes('p')[0]!.parentElement!.parentElement === r])
-      .toEqual([true, true, 'text', 'code', 'y', 'numeric', 'one-time-code', '[0-9]{6}', 'dk-pin-input dk-pin-input--size-md extra', '3px', 'pin-input', 6, 'true', true]);
+      .toEqual([true, true, 'text', 'code', 'y', 'numeric', 'one-time-code', '[0-9]{6}', 'srp-pin-input srp-pin-input--size-md extra', '3px', 'pin-input', 6, 'true', true]);
   });
 
   test('typing fills the boxes one by one and drops what isn\'t a digit; Backspace empties the last; onValueChange, then onComplete when full', async () => {
@@ -105,9 +105,9 @@ describe('PinInput', () => {
 
   test('the caret stays at the end, and the box it\'s in gets the focus ring (the last one once full)', async () => {
     await render(<PinInput id="p" aria-label="Code" length={3} defaultValue="4" />);
-    expect(boxes('p').some((b) => b.classList.contains('dk-pin-input__box--active'))).toBe(false);
+    expect(boxes('p').some((b) => b.classList.contains('srp-pin-input__box--active'))).toBe(false);
     await userEvent.click(el('p'), { position: { x: 4, y: 4 } });
-    expect([el('p').selectionStart, boxes('p').findIndex((b) => b.classList.contains('dk-pin-input__box--active'))]).toEqual([1, 1]);
+    expect([el('p').selectionStart, boxes('p').findIndex((b) => b.classList.contains('srp-pin-input__box--active'))]).toEqual([1, 1]);
     const b = css(boxes('p')[1]!);
     expect(b.boxShadow).not.toBe('none');
     await userEvent.keyboard('{Home}');
@@ -115,7 +115,7 @@ describe('PinInput', () => {
     await userEvent.keyboard('{ArrowLeft}');
     await expect.poll(() => el('p').selectionStart).toBe(1);
     await userEvent.keyboard('56');
-    expect(boxes('p').findIndex((x) => x.classList.contains('dk-pin-input__box--active'))).toBe(2);
+    expect(boxes('p').findIndex((x) => x.classList.contains('srp-pin-input__box--active'))).toBe(2);
   });
 
   test('controlled: the value shows and the boxes follow it; alphanumeric keeps letters', async () => {
@@ -199,7 +199,7 @@ describe('PinInput', () => {
     await render(<PinInput id="pm" aria-label="Code" length={3} />);
     const shadows = (b: HTMLElement) => b.getAnimations().filter((a) => (a as CSSTransition).transitionProperty === 'box-shadow').length;
     el('pm').focus();
-    await expect.poll(() => boxes('pm')[0]!.classList.contains('dk-pin-input__box--active')).toBe(true);
+    await expect.poll(() => boxes('pm')[0]!.classList.contains('srp-pin-input__box--active')).toBe(true);
     expect([shadows(boxes('pm')[0]!), css(boxes('pm')[0]!).boxShadow]).toEqual([0, expect.stringMatching(/0px 0px 0px 1px/)]);
     // Counted as each transition starts, not after the key returns: a key is a round trip through the driver, and on a
     // busy runner the fade out can be over by then ([0, 0]).
@@ -210,7 +210,7 @@ describe('PinInput', () => {
     boxes('pm')[1]!.addEventListener('transitionrun', c1);
     try {
       await userEvent.keyboard('7');
-      await expect.poll(() => boxes('pm')[1]!.classList.contains('dk-pin-input__box--active')).toBe(true);
+      await expect.poll(() => boxes('pm')[1]!.classList.contains('srp-pin-input__box--active')).toBe(true);
       await expect.poll(() => started[0]).toBe(1);
       expect([started[1], shadows(boxes('pm')[1]!)]).toEqual([0, 0]);
     } finally {

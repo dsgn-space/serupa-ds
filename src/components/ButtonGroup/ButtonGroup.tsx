@@ -30,7 +30,7 @@ function ButtonGroupRender({ ref, ...props }: ButtonGroupProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return <div role="group" {...rest} ref={mergedRef} data-component="button-group" data-orientation={vertical ? 'vertical' : 'horizontal'}
     data-wrapped={wrapped || undefined}
-    className={cn('dk-button-group', vertical && 'dk-button-group--vertical', attached && !wrapped && 'dk-button-group--attached', props.className)}>
+    className={cn('srp-button-group', vertical && 'srp-button-group--vertical', attached && !wrapped && 'srp-button-group--attached', props.className)}>
     {size ? <ControlSize.Provider value={size}>{props.children}</ControlSize.Provider> : props.children}
   </div>;
 }

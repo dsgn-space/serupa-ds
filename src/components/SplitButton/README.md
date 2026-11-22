@@ -27,8 +27,8 @@ import { SplitButton, MenuItem } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Main button** (`.dk-btn`): runs the main action (`onClick`) and shows its label.
-2. **Menu button** (`.dk-split-button__menu`): the arrow, named by `menuLabel`, which opens the menu.
+1. **Main button** (`.srp-btn`): runs the main action (`onClick`) and shows its label.
+2. **Menu button** (`.srp-split-button__menu`): the arrow, named by `menuLabel`, which opens the menu.
 
 ## Usage
 

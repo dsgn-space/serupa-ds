@@ -45,11 +45,11 @@ import { Card, CardHeader, CardBody, CardFooter, Button, Badge } from '@diki-stw
 
 Drawn from the `FooterLayouts` story.
 
-1. **Header** (`.dk-card__header`): the title and description, with an optional action beside them.
-2. **Title** (`.dk-card__title`): what the card is about.
-3. **Description** (`.dk-card__description`): a line or two more about it.
-4. **Body** (`.dk-card__body`): the card's content.
-5. **Footer** (`.dk-card__footer`): actions or details at the end.
+1. **Header** (`.srp-card__header`): the title and description, with an optional action beside them.
+2. **Title** (`.srp-card__title`): what the card is about.
+3. **Description** (`.srp-card__description`): a line or two more about it.
+4. **Body** (`.srp-card__body`): the card's content.
+5. **Footer** (`.srp-card__footer`): actions or details at the end.
 
 ## Usage
 

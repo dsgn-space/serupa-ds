@@ -35,7 +35,7 @@ export interface AnchoredLayerOptions {
   placement?: Placement;
   /** The placement when `placement` is missing (default "bottom"). */
   fallback?: Placement;
-  /** The custom property holding the gap between anchor and layer, such as "--dk-menu-offset". */
+  /** The custom property holding the gap between anchor and layer, such as "--srp-menu-offset". */
   offsetVar: string;
   /** Called on a press outside the layer and `inside`, and when the <dialog> it sits in closes. On touch it waits
       for the tap's click, so a finger that starts a scroll outside doesn't close the layer. */

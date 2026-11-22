@@ -1,7 +1,7 @@
 /* Only for the Storybook pages (docs/blocks.tsx): a dot that pulses at a token's duration. */
-@keyframes dk-sb-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-.dk-sb-pulse { animation: dk-sb-pulse 1s infinite; }
-@media (prefers-reduced-motion: reduce) { .dk-sb-pulse { animation: none; } }
+@keyframes srp-sb-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+.srp-sb-pulse { animation: srp-sb-pulse 1s infinite; }
+@media (prefers-reduced-motion: reduce) { .srp-sb-pulse { animation: none; } }
 
 /* The theme toolbar's mode reaches the whole preview: the canvas and the Docs pages take the theme's surface
    and text, so dark components sit on a dark page. Storybook paints its docs white with its own colors, so in
@@ -13,8 +13,8 @@ html, body { background-color: var(--surface-page); }
 [data-theme$="-dark"] .sbdocs-content, [data-theme$="-dark"] .sbdocs-content :is(h1, h2, h3, h4, h5, h6, p, li, td, th):not(.docs-story *, .sb-unstyled *) { color: var(--text); }
 [data-theme$="-dark"] .sbdocs-content :is(h1, h2, h3, h4, h5, h6):not(.docs-story *) { border-color: var(--border); }
 [data-theme$="-dark"] .sbdocs-content a:not(.docs-story *, .sb-unstyled *) { color: var(--primary); }
-[data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) :is(tr, td, th) { background-color: var(--surface); border-color: var(--border); }
-[data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) tr:nth-of-type(2n) :is(td, th) { background-color: var(--surface-muted); }
+[data-theme$="-dark"] .sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *) :is(tr, td, th) { background-color: var(--surface); border-color: var(--border); }
+[data-theme$="-dark"] .sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *) tr:nth-of-type(2n) :is(td, th) { background-color: var(--surface-muted); }
 /* Code, in every mode, as the site's CodeBlock draws it rather than Storybook's own (EV-DOCS): a surface-muted block
    with a border, names and keywords in primary, comments in text-muted-shaded and the rest in text, each 4.5:1 on
    surface-muted in light and dark (Storybook's syntax colors, dark blue and maroon, vanish on a dark page). */
@@ -44,7 +44,7 @@ html, body { background-color: var(--surface-page); }
 .sbdocs-wrapper :is(code, pre, pre *, kbd, samp):not(.docs-story *) { font-family: var(--font-mono); }
 
 /* A table's column headers start where their cells do, as the system's Table does, not centred over left-aligned text. */
-.sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) th { text-align: start; }
+.sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *) th { text-align: start; }
 
 /* Running text on the Docs pages stops near 65 characters a line (container-prose, KW14), like Text's measure:
    a page is 1000px wide, about 120 characters of body text. Tables, code, story frames and the docs' own blocks
@@ -98,7 +98,7 @@ html, body { background-color: var(--surface-page); }
 [data-theme$="-dark"] a.sbdocs-a:not(.docs-story *) { color: var(--primary) !important; }
 
 /* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
-.sbdocs [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.sbdocs [role="region"][tabindex="0"]:not([class*="srp-"]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 /* A token table or swatch grid wider than the page scrolls in its own box (Wide in docs/blocks.tsx), not the page. */
 /* Scrolls only once its content is wider than the page (Wide in docs/blocks.tsx), so a page that fits lays out as before.
    A box that scrolls keeps its child's margins inside; the table's 16px goes on the box, so it still collapses with the text around it. */

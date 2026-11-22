@@ -11,7 +11,7 @@ describe('Quote', () => {
     const ref = React.createRef<HTMLElement>();
     await render(<Quote id="x" ref={ref} className="extra" data-x="y">Hello</Quote>);
     const e = el('x');
-    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['FIGURE', 'Hello', true, 'dk-quote extra', 'y', 'quote']);
+    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['FIGURE', 'Hello', true, 'srp-quote extra', 'y', 'quote']);
   });
 
   test('the words are in a <blockquote> with cite; who said them is in a <figcaption> outside it', async () => {

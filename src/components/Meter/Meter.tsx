@@ -63,7 +63,7 @@ function MeterRender({ ref, ...props }: MeterProps & React.RefAttributes<HTMLDiv
   const restyle = useServerStyles(ref);
   const rest = omit(props, OWN);
   const locale = useLocale();
-  const base = domId('dk-mtr', React.useId());
+  const base = domId('srp-mtr', React.useId());
   const size = oneOf(SIZES, props.size, 'md');
   const min = num(props.min) ?? 0;
   const max = Math.max(num(props.max) ?? 100, min);
@@ -80,17 +80,17 @@ function MeterRender({ ref, ...props }: MeterProps & React.RefAttributes<HTMLDiv
   const showValue = !!props.showValue;
   const outer = omit(rest, { 'aria-label': 1, 'aria-labelledby': 1 } as const);
   return (
-    <div {...outer} ref={restyle} className={cn('dk-meter', 'dk-meter--size-' + size, tone && 'dk-meter--' + tone, props.className)}
+    <div {...outer} ref={restyle} className={cn('srp-meter', 'srp-meter--size-' + size, tone && 'srp-meter--' + tone, props.className)}
       data-component="meter" data-size={size} data-state={state}>
       {hasLabel || showValue ? (
-        <div className="dk-meter__header">
-          {hasLabel ? <span className="dk-meter__label" id={base + '-label'}>{props.label}</span> : null}
-          {showValue ? <span className="dk-meter__value" aria-hidden>{spoken}</span> : null}
+        <div className="srp-meter__header">
+          {hasLabel ? <span className="srp-meter__label" id={base + '-label'}>{props.label}</span> : null}
+          {showValue ? <span className="srp-meter__value" aria-hidden>{spoken}</span> : null}
         </div>
       ) : null}
-      <div ref={nameRef} className="dk-meter__track" role="meter" aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={spoken}
+      <div ref={nameRef} className="srp-meter__track" role="meter" aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={spoken}
         aria-label={rest['aria-label']} aria-labelledby={rest['aria-labelledby'] || (hasLabel && !rest['aria-label'] ? base + '-label' : undefined)}>
-        <div className="dk-meter__fill" style={{ '--dk-meter-rest': +((1 - share) * 100).toFixed(4) + '%' } as React.CSSProperties} />
+        <div className="srp-meter__fill" style={{ '--srp-meter-rest': +((1 - share) * 100).toFixed(4) + '%' } as React.CSSProperties} />
       </div>
     </div>
   );

@@ -32,6 +32,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: the toolbar sets its controls' size, so sm, md and lg line up with the fields around it. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <Toolbar key={s} {...args} aria-label={'Text formatting, ' + s} size={s}>{Formatting()}</Toolbar>)}
+  </div>,
+};
+
 export const Vertical: Story = {
   args: { orientation: 'vertical', 'aria-label': 'Drawing tools', children: [
     <ToggleButton key="s" icon="arrow_selector_tool" aria-label="Select" defaultPressed />,

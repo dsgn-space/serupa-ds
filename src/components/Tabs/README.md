@@ -39,10 +39,10 @@ import { Tabs, TabList, Tab, TabPanel } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Pill` story.
 
-1. **Tab list** (`.dk-tabs__list`): the tabs, in one row that scrolls when they don't fit.
-2. **Tab** (`.dk-tabs__tab`): shows its panel; the arrow keys move between tabs.
-3. **Icon** (`.dk-tabs__icon`): an optional picture beside the tab's name.
-4. **Panel** (`.dk-tabs__panel`): the content of the chosen tab.
+1. **Tab list** (`.srp-tabs__list`): the tabs, in one row that scrolls when they don't fit.
+2. **Tab** (`.srp-tabs__tab`): shows its panel; the arrow keys move between tabs.
+3. **Icon** (`.srp-tabs__icon`): an optional picture beside the tab's name.
+4. **Panel** (`.srp-tabs__panel`): the content of the chosen tab.
 
 ## Usage
 

@@ -52,11 +52,11 @@ describe('Textarea', () => {
     expect([notes!.getAttribute('rows'), grows!.getAttribute('style')?.includes('Infinity') ?? false]).toEqual(['3', false]);
   });
 
-  test('a native <textarea> in a .dk-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
+  test('a native <textarea> in a .srp-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
     await setup();
     const md = box('md');
     expect([el('md').tagName, md.comp, md.rows, md.fs, md.pl, md.pt, md.bw, md.r, md.fh]).toEqual(['TEXTAREA', 'textarea', 3, '14px', '12px', '6px', '1px', '6px', 3 * 20 + 12]);
-    expect(md.wrap).toMatch(/dk-textarea dk-textarea--size-md/);
+    expect(md.wrap).toMatch(/srp-textarea srp-textarea--size-md/);
   });
 
   test('sizes: sm text-xs 8px/4px padding, lg text-base 16px/10px padding; rows sets the height; unknown size falls back to md and a bad rows to 3', async () => {
@@ -179,10 +179,10 @@ describe('Textarea', () => {
   test('showCount: "2 / 5" under the text, linked by aria-describedby after the field\'s own; counts typing, stops at maxLength and turns text-colored', async () => {
     await setup();
     const c0 = count('cnt'), col0 = css(c0).color;
-    expect([c0.textContent, el('cnt').getAttribute('aria-describedby'), c0.classList.contains('dk-textarea__count--full')]).toEqual(['2 / 5', 'hint ' + c0.id, false]);
+    expect([c0.textContent, el('cnt').getAttribute('aria-describedby'), c0.classList.contains('srp-textarea__count--full')]).toEqual(['2 / 5', 'hint ' + c0.id, false]);
     await userEvent.click(el('cnt'));
     await userEvent.keyboard('{End}cdefg');
-    expect([count('cnt').textContent, count('cnt').classList.contains('dk-textarea__count--full')]).toEqual(['5 / 5', true]);
+    expect([count('cnt').textContent, count('cnt').classList.contains('srp-textarea__count--full')]).toEqual(['5 / 5', true]);
     expect(css(count('cnt')).color).not.toBe(col0);
   });
 
@@ -298,7 +298,7 @@ describe('Textarea actions', () => {
   test('a row under the text, inside the box, its buttons at the end and after the field in the Tab order; it groups nothing for a screen reader', async () => {
     await render(<Comment />);
     const b = el('ac').parentElement!.getBoundingClientRect(), t = el('ac').getBoundingClientRect(), r = row().getBoundingClientRect(), send = el('send').getBoundingClientRect();
-    expect([r.top >= t.bottom - 0.5, r.bottom <= b.bottom, Math.round(b.right - send.right), row().getAttribute('role'), el('ac').parentElement!.className.includes('dk-textarea--actions')]).toEqual([true, true, 7, 'none', true]);
+    expect([r.top >= t.bottom - 0.5, r.bottom <= b.bottom, Math.round(b.right - send.right), row().getAttribute('role'), el('ac').parentElement!.className.includes('srp-textarea--actions')]).toEqual([true, true, 7, 'none', true]);
     el('ac').focus();
     await userEvent.tab();
     expect(document.activeElement!.id).toBe('attach');

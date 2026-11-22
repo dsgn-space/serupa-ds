@@ -37,11 +37,11 @@ import { Chart } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Line` story.
 
-1. **Title** (`.dk-chart__title`): what the chart shows, and its name.
-2. **Table button** (`.dk-chart__toggle`): shows the same numbers as a table, and back.
-3. **Plot** (`.dk-chart__plot`): the SVG, with grid lines and value labels (`.dk-chart__gridline`, `.dk-chart__label`) and the category axis (`.dk-chart__baseline`).
-4. **Series** (`.dk-chart__series`): a line (`.dk-chart__line`) with a marker per point (`.dk-chart__marker`), or a bar per value (`.dk-chart__bar`). An area chart adds a filled shape under each line (`.dk-chart__area`). A donut has a slice per category (`.dk-chart__slice`) round the total (`.dk-chart__total`) in place of the grid, the axis and the series. A heatmap has a cell per value (`.dk-chart__cell`), a row per series named on its start side.
-5. **Legend** (`.dk-chart__legend`): each series' marker or pattern and its name; in a donut, each slice's pattern, name and share (`.dk-chart__key-value`); in a heatmap, the scale: its lowest value, each step's shade from low to high, and its highest.
+1. **Title** (`.srp-chart__title`): what the chart shows, and its name.
+2. **Table button** (`.srp-chart__toggle`): shows the same numbers as a table, and back.
+3. **Plot** (`.srp-chart__plot`): the SVG, with grid lines and value labels (`.srp-chart__gridline`, `.srp-chart__label`) and the category axis (`.srp-chart__baseline`).
+4. **Series** (`.srp-chart__series`): a line (`.srp-chart__line`) with a marker per point (`.srp-chart__marker`), or a bar per value (`.srp-chart__bar`). An area chart adds a filled shape under each line (`.srp-chart__area`). A donut has a slice per category (`.srp-chart__slice`) round the total (`.srp-chart__total`) in place of the grid, the axis and the series. A heatmap has a cell per value (`.srp-chart__cell`), a row per series named on its start side.
+5. **Legend** (`.srp-chart__legend`): each series' marker or pattern and its name; in a donut, each slice's pattern, name and share (`.srp-chart__key-value`); in a heatmap, the scale: its lowest value, each step's shade from low to high, and its highest.
 
 While the pointer is over a category or a point has focus, a tooltip beside it lists that category's values.
 

@@ -31,7 +31,7 @@ describe('Chart', () => {
     const ref = React.createRef<HTMLElement>();
     await render(<Chart id="c" ref={ref} className="extra" data-x="y" title="Visitors" categories={CATS} series={TWO} />);
     const e = el('c');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.type]).toEqual(['FIGURE', true, 'dk-chart dk-chart--line extra', 'y', 'chart', 'line']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.type]).toEqual(['FIGURE', true, 'srp-chart srp-chart--line extra', 'y', 'chart', 'line']);
     await expect.element(page.getByRole('figure', { name: 'Visitors' })).toBeInTheDocument();
   });
 
@@ -340,12 +340,12 @@ describe('Chart', () => {
   test('the line draws in once and the bars grow, unless motion is reduced (CSS)', async () => {
     await render(<><Chart title="L" categories={CATS} series={TWO} /><Chart type="bar" title="B" categories={CATS} series={TWO} /></>);
     await withMotion(async () => {
-      expect(css(document.querySelector('svg[aria-describedby] g[role="group"] > path[aria-hidden]')).animationName).toBe('dk-chart-draw');
-      expect(css(document.querySelector('figure[data-type="bar"] g[role="group"] > [role="img"]')).animationName).toBe('dk-chart-grow');
+      expect(css(document.querySelector('svg[aria-describedby] g[role="group"] > path[aria-hidden]')).animationName).toBe('srp-chart-draw');
+      expect(css(document.querySelector('figure[data-type="bar"] g[role="group"] > [role="img"]')).animationName).toBe('srp-chart-grow');
     });
     const sheet = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules]; } catch { return []; } });
     const text = sheet.map((r) => r.cssText).join('\n');
-    expect(text).toMatch(/prefers-reduced-motion: no-preference\)[^@]*dk-chart-draw/);
+    expect(text).toMatch(/prefers-reduced-motion: no-preference\)[^@]*srp-chart-draw/);
   });
 
   test('labels, title and table text read 4.5:1 on the surface in every theme', async () => {
@@ -371,7 +371,7 @@ describe('Chart', () => {
     const tall = e.getBoundingClientRect().height;
     const art = e.querySelector('[data-component="loader"]') as HTMLElement;
     expect(art.getAttribute('aria-hidden')).toBe('true');
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
     const block = art.getBoundingClientRect().height;
     await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} height={200} />);
     expect([block, (e.querySelector('svg') as SVGElement).getBoundingClientRect().height, e.hasAttribute('aria-busy')]).toEqual([200, 200, false]);
@@ -382,12 +382,12 @@ describe('Chart', () => {
     expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);
     // Without a loadingLabel it says the shared "Loading…".
     await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} loading />);
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
   });
 
   const DAYS = ['Mon', 'Tue', 'Wed'];
   const HOURS = [{ name: 'Morning', values: [0, 10, 20] }, { name: 'Evening', values: [30, null, 50] }];
-  const step = (name: string) => /dk-chart__cell--([sd]\d)/.exec(page.getByRole('img', { name }).element().getAttribute('class') ?? '')?.[1];
+  const step = (name: string) => /srp-chart__cell--([sd]\d)/.exec(page.getByRole('img', { name }).element().getAttribute('class') ?? '')?.[1];
 
   test('heatmap: a cell per value named with its row, column and value, shaded low to high on the sequential scale', async () => {
     await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);

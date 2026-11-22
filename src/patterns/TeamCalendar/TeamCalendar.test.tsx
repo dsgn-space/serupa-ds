@@ -50,7 +50,8 @@ describe('Patterns/Team calendar', () => {
     await screen.getByRole('button', { name: 'New event' }).click();
     const dialog = screen.getByRole('dialog', { name: 'New event' });
     await dialog.getByRole('button', { name: 'Add event' }).click();
-    await expect.element(dialog.getByText('Enter a title for the event.')).toBeVisible();
+    // Field also says it through the live region a moment later, so the text can be there twice.
+    await expect.element(dialog.getByText('Enter a title for the event.').first()).toBeVisible();
     expect(active().id).toBe('event-title');
     expect(onAdd).not.toHaveBeenCalled();
     await userEvent.type(active(), 'Retro');
@@ -58,7 +59,7 @@ describe('Patterns/Team calendar', () => {
     await userEvent.fill(dialog.getByRole('combobox', { name: /Ends/ }), '08:00');
     await userEvent.keyboard('{Tab}');
     await dialog.getByRole('button', { name: 'Add event' }).click();
-    await expect.element(dialog.getByText('Choose an end after the start.')).toBeVisible();
+    await expect.element(dialog.getByText('Choose an end after the start.').first()).toBeVisible();
     expect(active().id).toBe('event-end');
     // All day has no times to get wrong.
     await dialog.getByRole('switch', { name: 'All day' }).click();

@@ -4,26 +4,26 @@
    than 384px, then the actions. dashed: in a 1px dashed, rounded frame. Suggestions: a muted
    text-sm line of underlined link buttons under the description.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-empty-state { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: var(--empty-state-gap, var(--spacing-4)); padding: var(--empty-state-padding, var(--spacing-12)); text-align: center; font-family: var(--font-sans); }
-.dk-empty-state--sm { padding: var(--empty-state-padding-sm, var(--spacing-6)); }
-.dk-empty-state--dashed { border: var(--empty-state-border-width, var(--border-width-1)) dashed var(--empty-state-border, var(--border)); border-radius: var(--empty-state-radius, var(--radius-surface)); }
-.dk-empty-state__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--empty-state-icon-box, var(--spacing-12)); height: var(--empty-state-icon-box, var(--spacing-12)); border-radius: var(--rounded-full); background: var(--empty-state-icon-bg, var(--secondary)); color: var(--empty-state-icon-color, var(--text-muted)); }
-.dk-empty-state__icon .dk-icon { font-size: var(--empty-state-icon-size, var(--spacing-6)); }
-.dk-empty-state--sm .dk-empty-state__icon { width: var(--empty-state-icon-box-sm, var(--spacing-10)); height: var(--empty-state-icon-box-sm, var(--spacing-10)); }
-.dk-empty-state__icon--custom { width: auto; height: auto; border-radius: var(--spacing-0); background: transparent; }
-.dk-empty-state--sm .dk-empty-state__icon--custom { width: auto; height: auto; }
-.dk-empty-state__text { display: flex; flex-direction: column; gap: var(--spacing-1); max-width: var(--empty-state-max-width, var(--container-sm)); overflow-wrap: anywhere; }
-.dk-empty-state__title { text-wrap: balance; margin: var(--spacing-0); color: var(--empty-state-title-color, var(--text)); font-size: var(--empty-state-title-size, var(--text-base)); line-height: var(--text-base--line-height); font-weight: var(--empty-state-title-weight, var(--font-semibold)); }
-.dk-empty-state--sm .dk-empty-state__title { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-empty-state__description { margin: var(--spacing-0); color: var(--empty-state-description-color, var(--text-muted)); font-size: var(--empty-state-description-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
-.dk-empty-state__suggestions { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: var(--spacing-2); row-gap: var(--spacing-1); margin: var(--spacing-0); color: var(--empty-state-description-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-empty-state__suggestions .dk-empty-state__suggestion { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; max-inline-size: var(--sizing-full); height: auto; min-height: var(--spacing-6); padding-block: var(--spacing-0); padding-inline: var(--spacing-0); font-size: inherit; line-height: inherit; text-decoration: underline; }
-strong.dk-empty-state__suggestion { color: var(--empty-state-title-color, var(--text)); font-weight: var(--font-semibold); text-decoration: none; }
-.dk-empty-state__actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }
+@layer srp.components {
+.srp-empty-state { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: var(--empty-state-gap, var(--spacing-4)); padding: var(--empty-state-padding, var(--spacing-12)); text-align: center; font-family: var(--font-sans); }
+.srp-empty-state--sm { padding: var(--empty-state-padding-sm, var(--spacing-6)); }
+.srp-empty-state--dashed { border: var(--empty-state-border-width, var(--border-width-1)) dashed var(--empty-state-border, var(--border)); border-radius: var(--empty-state-radius, var(--radius-surface)); }
+.srp-empty-state__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--empty-state-icon-box, var(--spacing-12)); height: var(--empty-state-icon-box, var(--spacing-12)); border-radius: var(--rounded-full); background: var(--empty-state-icon-bg, var(--secondary)); color: var(--empty-state-icon-color, var(--text-muted)); }
+.srp-empty-state__icon .srp-icon { font-size: var(--empty-state-icon-size, var(--spacing-6)); }
+.srp-empty-state--sm .srp-empty-state__icon { width: var(--empty-state-icon-box-sm, var(--spacing-10)); height: var(--empty-state-icon-box-sm, var(--spacing-10)); }
+.srp-empty-state__icon--custom { width: auto; height: auto; border-radius: var(--spacing-0); background: transparent; }
+.srp-empty-state--sm .srp-empty-state__icon--custom { width: auto; height: auto; }
+.srp-empty-state__text { display: flex; flex-direction: column; gap: var(--spacing-1); max-width: var(--empty-state-max-width, var(--container-sm)); overflow-wrap: anywhere; }
+.srp-empty-state__title { text-wrap: balance; margin: var(--spacing-0); color: var(--empty-state-title-color, var(--text)); font-size: var(--empty-state-title-size, var(--text-base)); line-height: var(--text-base--line-height); font-weight: var(--empty-state-title-weight, var(--font-semibold)); }
+.srp-empty-state--sm .srp-empty-state__title { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-empty-state__description { margin: var(--spacing-0); color: var(--empty-state-description-color, var(--text-muted)); font-size: var(--empty-state-description-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.srp-empty-state__suggestions { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: var(--spacing-2); row-gap: var(--spacing-1); margin: var(--spacing-0); color: var(--empty-state-description-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-empty-state__suggestions .srp-empty-state__suggestion { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; max-inline-size: var(--sizing-full); height: auto; min-height: var(--spacing-6); padding-block: var(--spacing-0); padding-inline: var(--spacing-0); font-size: inherit; line-height: inherit; text-decoration: underline; }
+strong.srp-empty-state__suggestion { color: var(--empty-state-title-color, var(--text)); font-weight: var(--font-semibold); text-decoration: none; }
+.srp-empty-state__actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }
 /* A long label wraps onto more lines rather than widening the whole state past a narrow screen (GR71): the
    button's own wrap look, its height growing from its size's height (centered in the row, so a short one keeps its own). */
-.dk-empty-state__actions > .dk-btn:not(.dk-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-empty-state__actions > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-.dk-empty-state__actions > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
+.srp-empty-state__actions > .srp-btn:not(.srp-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-empty-state__actions > .srp-btn--size-sm:not(.srp-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+.srp-empty-state__actions > .srp-btn--size-lg:not(.srp-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
 }

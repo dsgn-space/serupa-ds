@@ -17,24 +17,24 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-// Rows, options and cells: hover changes at once. A class counts with its modifiers (dk-calendar__day--today).
+// Rows, options and cells: hover changes at once. A class counts with its modifiers (srp-calendar__day--today).
 const ROWS = [
-  'dk-calendar__day', 'dk-period-picker__period', 'dk-cascade-select__option', 'dk-combobox__option', 'dk-command-palette__option',
-  'dk-mention-input__option', 'dk-time-picker__option', 'dk-menu__item', 'dk-list__item', 'dk-tree-view__row', 'dk-table__row',
-  'dk-data-grid__row', 'dk-data-grid__cell', 'dk-event-calendar__event', 'dk-event-calendar__more', 'dk-event-calendar__day',
-  'dk-kanban__card', 'dk-notification-center__item', 'dk-sidebar__item', 'dk-sidebar__menu-item', 'dk-navbar__menu-link', 'dk-toc__link',
+  'srp-calendar__day', 'srp-period-picker__period', 'srp-cascade-select__option', 'srp-combobox__option', 'srp-command-palette__option',
+  'srp-mention-input__option', 'srp-time-picker__option', 'srp-menu__item', 'srp-list__item', 'srp-tree-view__row', 'srp-table__row',
+  'srp-data-grid__row', 'srp-data-grid__cell', 'srp-event-calendar__event', 'srp-event-calendar__more', 'srp-event-calendar__day',
+  'srp-kanban__card', 'srp-notification-center__item', 'srp-sidebar__item', 'srp-sidebar__menu-item', 'srp-navbar__menu-link', 'srp-toc__link',
 ];
 /** @type {Record<string, string>} */
 const EXEMPT = {
-  'dk-color-picker__swatch': 'a swatch shows its color: hover draws a ring, the fill never changes',
-  'dk-table__resize': 'the resize line shows at once, so it is under the pointer the moment a drag can start',
-  'dk-splitter__handle': 'as Table\'s resize line',
-  'dk-toggle-button': 'the pressed fill is a state, set at once; Button\'s own transition covers hover',
+  'srp-color-picker__swatch': 'a swatch shows its color: hover draws a ring, the fill never changes',
+  'srp-table__resize': 'the resize line shows at once, so it is under the pointer the moment a drag can start',
+  'srp-splitter__handle': 'as Table\'s resize line',
+  'srp-toggle-button': 'the pressed fill is a state, set at once; Button\'s own transition covers hover',
 };
 // The end of a field: the element measured, and the field it sits in.
-const FIELD = '.dk-input, .dk-select, .dk-cascade-select__button, .dk-period-picker__button';
+const FIELD = '.srp-input, .srp-select, .srp-cascade-select__button, .srp-period-picker__button';
 const END_GAP = 9;   // 8px inside the 1px border
-const END = ['.dk-combobox__toggle', '.dk-date-picker__button', '.dk-time-picker__button', '.dk-password-input__toggle', '.dk-select__icon--chevron', '.dk-cascade-select__chevron', '.dk-period-picker__icon'];
+const END = ['.srp-combobox__toggle', '.srp-date-picker__button', '.srp-time-picker__button', '.srp-password-input__toggle', '.srp-select__icon--chevron', '.srp-cascade-select__chevron', '.srp-period-picker__icon'];
 
 /** Runs in the page: the classes whose fill a :hover rule changes. The stylesheets are the same on every story, so
     this is read once a run (walking them is most of the cost: about 100 ms a page). */
@@ -50,7 +50,7 @@ function hoverClasses() {
       for (const part of r.selectorText.split(/,(?![^()]*\))/)) {
         const bare = strip(part);
         if (!bare.includes(':hover') || bare.includes('::')) continue;
-        const cls = bare.trim().split(/[\s>+~]+/).pop().match(/\.(dk-[\w-]+)/);
+        const cls = bare.trim().split(/[\s>+~]+/).pop().match(/\.(srp-[\w-]+)/);
         if (cls) hover.set(cls[1], [...(hover.get(cls[1]) || []), part.replace(/:hover/g, '').trim()]);
       }
     }
@@ -65,21 +65,21 @@ function inPage({ FIELD, END, hover }) {
   function optical() {
     const out = [];
     const px = (v) => parseFloat(v) || 0;
-    const name = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || '';
+    const name = (el) => [...el.classList].find((c) => c.startsWith('srp-')) || '';
     const shown = (s) => {
       const bg = s.backgroundColor.match(/[\d.]+/g);
       return (bg && (bg.length < 4 || +bg[3] > 0)) || s.backgroundImage !== 'none' || px(s.borderTopWidth) > 0 || s.boxShadow !== 'none';
     };
     const radius = (s, r, corner) => Math.min(px(s[`border${corner}Radius`]), r.width / 2, r.height / 2);
     // Concentric: a filled box tucked into a rounded corner has the parent's inner radius less the gap between them.
-    for (const el of document.querySelectorAll('body [class*="dk-"]')) {
+    for (const el of document.querySelectorAll('body [class*="srp-"]')) {
       const r = el.getBoundingClientRect();
       if (r.width < 8 || r.height < 8) continue;
       const s = getComputedStyle(el);
       if (!shown(s) || s.position === 'fixed') continue;
       let p = el.parentElement, depth = 0;
       while (p && depth < 4 && !px(getComputedStyle(p).borderTopLeftRadius) && !px(getComputedStyle(p).borderTopRightRadius)) { p = p.parentElement; depth++; }
-      if (!p || depth >= 4 || !p.matches('[class*="dk-"]')) continue;
+      if (!p || depth >= 4 || !p.matches('[class*="srp-"]')) continue;
       const ps = getComputedStyle(p), pr = p.getBoundingClientRect();
       const inner = { left: pr.left + px(ps.borderLeftWidth), right: pr.right - px(ps.borderRightWidth), top: pr.top + px(ps.borderTopWidth), bottom: pr.bottom - px(ps.borderBottomWidth) };
       const gaps = { left: r.left - inner.left, right: inner.right - r.right, top: r.top - inner.top, bottom: inner.bottom - r.bottom };
@@ -96,14 +96,14 @@ function inPage({ FIELD, END, hover }) {
       }
     }
     // Tabular figures: a number that a component draws (a count, a time, a page, a cell) keeps its width as it changes.
-    for (const el of document.querySelectorAll('body [class*="dk-"]')) {
+    for (const el of document.querySelectorAll('body [class*="srp-"]')) {
       const text = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('').trim();
       if (!/^[+\-\u2212]?[\d][\d.,:%\s/\u00a0\u202f]*$/.test(text) || !el.getClientRects().length) continue;
       const s = getComputedStyle(el);
       if (!s.fontVariantNumeric.includes('tabular-nums')) out.push({ rule: 'tabular', cls: name(el), text });
     }
     // Icons beside text: the icon's middle is on the text's middle (an inline icon on the baseline sits high or low).
-    for (const icon of document.querySelectorAll('body .dk-icon')) {
+    for (const icon of document.querySelectorAll('body .srp-icon')) {
       const parent = icon.parentElement;
       const texts = [...parent.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim());
       if (!texts.length || !icon.getClientRects().length) continue;
@@ -131,7 +131,7 @@ function inPage({ FIELD, END, hover }) {
     for (const sel of END) {
       for (const el of document.querySelectorAll(sel)) {
         const field = el.closest(FIELD);
-        const icon = el.matches('.dk-icon') ? el : el.querySelector('.dk-icon') || el;
+        const icon = el.matches('.srp-icon') ? el : el.querySelector('.srp-icon') || el;
         if (!field || !icon.getClientRects().length) continue;
         const f = field.getBoundingClientRect(), i = icon.getBoundingClientRect();
         const gap = Math.round((f.right - i.right) * 2) / 2;
@@ -143,13 +143,13 @@ function inPage({ FIELD, END, hover }) {
   // Motion: what moves on the page as it loads (an overlay opening, a toast arriving, a bar filling) changes only what
   // the compositor can draw without layout: transform, translate, scale, rotate, opacity, filter, clip-path, colours.
   const LAYOUT = /^(width|height|(min|max)-(width|height)|(min-|max-)?(inline|block)-size|top|right|bottom|left|inset.*|margin.*|padding.*|gap|(row|column)-gap|grid-template.*|flex(-basis|-grow|-shrink)?|font-size|line-height|border(-[a-z]+)*-width|letter-spacing)$/;
-  const nameOf = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || '';
+  const nameOf = (el) => [...el.classList].find((c) => c.startsWith('srp-')) || '';
   for (const a of /** @type {any[]} */ (document.getAnimations())) {
     const target = a.effect?.target;
-    if (!target || !target.closest?.('[class*="dk-"]')) continue;
+    if (!target || !target.closest?.('[class*="srp-"]')) continue;
     const props = a instanceof CSSTransition ? [a.transitionProperty] : (a.effect.getKeyframes?.() || []).flatMap((k) => Object.keys(k).filter((p) => !['offset', 'computedOffset', 'easing', 'composite'].includes(p)));
     for (const prop of new Set(props.map((p) => p.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())))) {
-      if (LAYOUT.test(prop)) out.push({ rule: 'motion', cls: nameOf(target.closest('[class*="dk-"]')), prop, anim: a.animationName || a.id || a.transitionProperty || '' });
+      if (LAYOUT.test(prop)) out.push({ rule: 'motion', cls: nameOf(target.closest('[class*="srp-"]')), prop, anim: a.animationName || a.id || a.transitionProperty || '' });
     }
   }
   return out;
@@ -187,7 +187,7 @@ export function judge(rows) {
   }
   const seen = (rule) => [...new Map(rows.filter((r) => r.rule === rule).map((r) => [JSON.stringify(r), r])).values()];
   for (const r of seen('concentric')) out.push(`.${r.cls} in .${r.parent} (${r.corner}, ${r.gap}px in): its corner is ${r.have}px, concentric is ${r.want}px (the parent's inner radius less the gap)`);
-  for (const cls of new Set(seen('tabular').map((r) => r.cls))) out.push(`.${cls || '(no dk- class)'} shows a number in proportional figures: add font-variant-numeric: tabular-nums so it keeps its width as it changes`);
+  for (const cls of new Set(seen('tabular').map((r) => r.cls))) out.push(`.${cls || '(no srp- class)'} shows a number in proportional figures: add font-variant-numeric: tabular-nums so it keeps its width as it changes`);
   for (const r of seen('motion')) out.push(`.${r.cls} animates ${r.prop}${r.anim ? ` (${r.anim})` : ''}, which lays the page out again on every frame: move it with transform, scale or clip-path instead`);
   for (const r of seen('icon')) out.push(`.${r.cls}: its icon's middle is ${r.off}px ${r.off > 0 ? 'below' : 'above'} its text's middle`);
   for (const k of Object.keys(EXEMPT)) if (isRow(k)) out.push(`.${k} is in both ROWS and EXEMPT: keep one`);

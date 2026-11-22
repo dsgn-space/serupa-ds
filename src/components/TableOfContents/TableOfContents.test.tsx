@@ -33,9 +33,16 @@ describe('TableOfContents', () => {
     await render(<Page toc={<TableOfContents id="toc" ref={ref} className="extra" data-x="y" container="#art" />} />);
     await expect.element(page.getByRole('navigation', { name: 'On this page' })).toBeVisible();
     const nav = document.getElementById('toc')!;
-    expect([nav.tagName, nav.className, nav.dataset.x, nav.dataset.component, ref.current === nav]).toEqual(['NAV', 'dk-toc extra', 'y', 'table-of-contents', true]);
+    expect([nav.tagName, nav.className, nav.dataset.x, nav.dataset.component, ref.current === nav]).toEqual(['NAV', 'srp-toc extra', 'y', 'table-of-contents', true]);
     await expect.poll(() => links().map((a) => [a.textContent, a.getAttribute('href')])).toEqual([['Alpha', '#a'], ['Beta part', '#beta-part'], ['Gamma', '#c']]);
     expect(document.querySelector('h3')!.id).toBe('beta-part');
+  });
+
+  test('a link whose #fragment isn\'t valid percent-encoding ("#%E0%A4%A") still shows the page and its list', async () => {
+    history.replaceState(null, '', '#%E0%A4%A');
+    await render(<Page />);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma']);
+    await expect.element(page.getByRole('heading', { name: 'Gamma' })).toBeInTheDocument();
   });
 
   test('an h3 steps in from the h2s', async () => {
@@ -239,7 +246,7 @@ describe('TableOfContents: rules no test covered', () => {
 
   test('the indent counts from the shallowest level given, and an item with no level is level 2', async () => {
     await render(<TableOfContents id="toc" items={[{ id: 'x', label: 'One', level: 3 }, { id: 'y', label: 'Two', level: 5 }]} />);
-    const depths = (id: string) => [...document.querySelectorAll<HTMLElement>(`#${id} li`)].map((li) => li.style.getPropertyValue('--dk-toc-depth'));
+    const depths = (id: string) => [...document.querySelectorAll<HTMLElement>(`#${id} li`)].map((li) => li.style.getPropertyValue('--srp-toc-depth'));
     expect(depths('toc')).toEqual(['0', '2']);
     await render(<TableOfContents id="toc3" items={[{ id: 'p', label: 'One' }, { id: 'q', label: 'Two', level: 4 }]} />);
     expect(depths('toc3')).toEqual(['0', '2']);

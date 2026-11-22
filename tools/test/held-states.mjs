@@ -10,16 +10,16 @@ import path from 'node:path';
 import { PROJECT, done, report } from './lib.mjs';
 
 const EXEMPT = {
-  'Calendar .dk-calendar__day--in-range': 'a day in the range keeps its range fill; the plain day has the held fill',
-  'Calendar .dk-calendar__day--selected': 'the chosen day keeps its primary fill; the plain day has the held fill',
-  'Calendar .dk-calendar__period--selected': 'the chosen month or year keeps its primary fill, as the chosen day does; the plain one has the held fill',
-  'Navbar .dk-navbar__link--active': 'the current page keeps its fill; the plain link has the held fill',
-  'Navbar .dk-navbar__menu-link--active': 'the current page keeps its fill; the plain menu link has the held fill',
+  'Calendar .srp-calendar__day--in-range': 'a day in the range keeps its range fill; the plain day has the held fill',
+  'Calendar .srp-calendar__day--selected': 'the chosen day keeps its primary fill; the plain day has the held fill',
+  'Calendar .srp-calendar__period--selected': 'the chosen month or year keeps its primary fill, as the chosen day does; the plain one has the held fill',
+  'Navbar .srp-navbar__link--active': 'the current page keeps its fill; the plain link has the held fill',
+  'Navbar .srp-navbar__menu-link--active': 'the current page keeps its fill; the plain menu link has the held fill',
 };
 const GAPS = {};
 
 const DIR = path.join(PROJECT, 'src', 'components');
-const HOVER = /(?:^|[\s,{(>])((?:[a-z]+)?(?:\.dk-[a-z0-9_-]+)+):hover[^{]*\{([^{}]*)\}/gm;
+const HOVER = /(?:^|[\s,{(>])((?:[a-z]+)?(?:\.srp-[a-z0-9_-]+)+):hover[^{]*\{([^{}]*)\}/gm;
 const missing = new Set();
 for (const name of fs.readdirSync(DIR).sort()) {
   const file = path.join(DIR, name, `${name}.css`);

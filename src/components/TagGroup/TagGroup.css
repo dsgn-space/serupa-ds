@@ -3,62 +3,62 @@
    A picked tag is primary-subtle with primary words, a primary border and a tick, so it isn't shown by color alone.
    Every value reads one of its own tokens (tag-group.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-label-gap, var(--spacing-1\.5)); min-inline-size: var(--spacing-0); }
-.dk-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium); }
-.dk-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.dk-tag-group__empty:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
-.dk-tag-group__tag {
+@layer srp.components {
+.srp-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-label-gap, var(--spacing-1\.5)); min-inline-size: var(--spacing-0); }
+.srp-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium); }
+.srp-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.srp-tag-group__empty:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
+.srp-tag-group__tag {
   display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
   min-block-size: var(--control-height-sm); padding-block: var(--border-width-1); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
   border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
   font-size: var(--text-sm); line-height: var(--text-sm--line-height); cursor: default; touch-action: manipulation;
 }
-.dk-tag-group__tag:has(.dk-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
-.dk-tag-group__tag[aria-selected] { cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none; }   /* picked and dropped, no word highlights */
+.srp-tag-group__tag:has(.srp-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
+.srp-tag-group__tag[aria-selected] { cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none; }   /* picked and dropped, no word highlights */
 /* A tag that can be picked answers the pointer as a ToggleButton does: surface-hover, pressed while held; a picked one keeps its colors. */
-.dk-tag-group__tag[aria-selected] { transition: background-color var(--motion-hover) var(--ease-move); }
-@media (hover: hover) { .dk-tag-group__tag[aria-selected="false"]:not([aria-disabled="true"]):hover { background: var(--tag-group-bg-hover, var(--surface-hover)); } }
-.dk-tag-group__tag[aria-selected="false"]:not([aria-disabled="true"]):active { background: var(--tag-group-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
-@media (prefers-reduced-motion: reduce) { .dk-tag-group__tag[aria-selected] { transition: none; } }
-.dk-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-tag-group__tag--selected {
+.srp-tag-group__tag[aria-selected] { transition: background-color var(--motion-hover) var(--ease-move); }
+@media (hover: hover) { .srp-tag-group__tag[aria-selected="false"]:not([aria-disabled="true"]):hover { background: var(--tag-group-bg-hover, var(--surface-hover)); } }
+.srp-tag-group__tag[aria-selected="false"]:not([aria-disabled="true"]):active { background: var(--tag-group-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { .srp-tag-group__tag[aria-selected] { transition: none; } }
+.srp-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.srp-tag-group__tag--selected {
   border-color: var(--tag-group-border-selected, var(--primary)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary));
 }
-.dk-tag-group__tag[aria-disabled="true"], .dk-tag-group__tag[aria-disabled="true"] * { border-color: var(--tag-group-border-disabled, var(--disabled-border)); color: var(--tag-group-text-disabled, var(--disabled-text)); }
-.dk-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
+.srp-tag-group__tag[aria-disabled="true"], .srp-tag-group__tag[aria-disabled="true"] * { border-color: var(--tag-group-border-disabled, var(--disabled-border)); color: var(--tag-group-text-disabled, var(--disabled-text)); }
+.srp-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
 /* An avatar sits at the tag's start edge, as a recipient's picture does in a To field; an icon takes the check's place. */
-.dk-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); margin-block: calc(var(--spacing-0) - var(--border-width-1) - var(--border-width-1)); border-radius: var(--radius-pill); overflow: hidden; }   /* 24px over the tag's 1px padding and 1px border, as tall as the tag */
+.srp-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); margin-block: calc(var(--spacing-0) - var(--border-width-1) - var(--border-width-1)); border-radius: var(--radius-pill); overflow: hidden; }   /* 24px over the tag's 1px padding and 1px border, as tall as the tag */
 /* Whatever picture is passed (an Avatar of any size, an <img>) is drawn at that size, so the tag keeps its height. */
-.dk-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
-.dk-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
-.dk-tag-group__check { flex: none; }
-.dk-tag-group__cell { display: inline-flex; }
-.dk-tag-group__remove {
-  position: relative; display: inline-grid; place-items: center; inline-size: var(--dk-tag-inner); block-size: var(--dk-tag-inner); margin: calc(var(--spacing-0) - var(--border-width-1)) var(--spacing-0); padding: var(--spacing-0);
+.srp-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
+.srp-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
+.srp-tag-group__check { flex: none; }
+.srp-tag-group__cell { display: inline-flex; }
+.srp-tag-group__remove {
+  position: relative; display: inline-grid; place-items: center; inline-size: var(--srp-tag-inner); block-size: var(--srp-tag-inner); margin: calc(var(--spacing-0) - var(--border-width-1)) var(--spacing-0); padding: var(--spacing-0);
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 /* Every tag is 24px, as small controls are: 1px border, 1px over and under the 20px line (so a wrapped tag keeps a
    one-line tag's inset). The × is 22px, inside the border, reaching over the 1px padding, and still takes a 24px
    press (WCAG 2.5.8) through a box 1px past each edge, as SearchInput's small × does. */
-.dk-tag-group__tag { --dk-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); }
-.dk-tag-group__remove::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1)); }
+.srp-tag-group__tag { --srp-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); }
+.srp-tag-group__remove::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1)); }
 /* A tag's icons (its own, the check of a selected tag, the ×) are 16px beside the 14px label, as a field's icon:
    an Icon's own default is 24px, which filled the whole 24px tag. */
-.dk-tag-group__tag .dk-icon { font-size: var(--tag-group-icon-size, var(--spacing-4)); }
-@media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
-.dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
-@media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
-.dk-tag-group__more {
+.srp-tag-group__tag .srp-icon { font-size: var(--tag-group-icon-size, var(--spacing-4)); }
+@media (hover: hover) { .srp-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
+.srp-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { .srp-tag-group__remove { transition: none; } }
+.srp-tag-group__more {
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   text-decoration: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 /* Show more is underlined as a link is (1px, 2px below the words), and answers a pointer as one does: primary-hover, and the underline thickens to 2px. */
-@media (hover: hover) { .dk-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
-.dk-tag-group__more { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
-@media (prefers-reduced-motion: reduce) { .dk-tag-group__more { transition: none; } }
-.dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-@media (forced-colors: active) { .dk-tag-group__tag { border-color: CanvasText; } .dk-tag-group__tag--selected { border-width: var(--border-width-2); } }
+@media (hover: hover) { .srp-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+.srp-tag-group__more { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
+@media (prefers-reduced-motion: reduce) { .srp-tag-group__more { transition: none; } }
+.srp-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+@media (forced-colors: active) { .srp-tag-group__tag { border-color: CanvasText; } .srp-tag-group__tag--selected { border-width: var(--border-width-2); } }
 }

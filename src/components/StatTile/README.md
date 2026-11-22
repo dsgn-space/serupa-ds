@@ -32,10 +32,10 @@ import { StatTile } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Default` story.
 
-1. **Label** (`.dk-stat-tile__label`): what the number is.
-2. **Value** (`.dk-stat-tile__value`): the number, large, in tabular figures.
-3. **Change** (`.dk-stat-tile__change`): a [Badge](../Badge/README.md) that says "Up 12%" with an arrow, green or red by whether that is good news, and the period beside it.
-4. **Trend** (`.dk-stat-tile__trend`): a [Sparkline](../Sparkline/README.md) across the tile.
+1. **Label** (`.srp-stat-tile__label`): what the number is.
+2. **Value** (`.srp-stat-tile__value`): the number, large, in tabular figures.
+3. **Change** (`.srp-stat-tile__change`): a [Badge](../Badge/README.md) that says "Up 12%" with an arrow, green or red by whether that is good news, and the period beside it.
+4. **Trend** (`.srp-stat-tile__trend`): a [Sparkline](../Sparkline/README.md) across the tile.
 
 ## Usage
 

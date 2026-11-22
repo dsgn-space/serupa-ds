@@ -40,13 +40,13 @@ import { FieldList, Field, Input } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Errors` story.
 
-1. **Legend** (`.dk-field-list__label`): the list's name.
-2. **Row** (`.dk-field-list__row`): one item, a group named by `itemLabel`.
-3. **Fields** (`.dk-field-list__fields`): the row's fields, side by side, wrapping in a narrow column.
-4. **Remove** (`.dk-field-list__remove`): takes the row away; hidden at `min`.
-5. **Row error** (`.dk-field-list__row-error`): what's wrong with that row.
-6. **List error** (`.dk-field-list__error`): what's wrong with the list as a whole.
-7. **Add** (`.dk-field-list__add`): adds a row at the end; at `max`, the limit shows beside it.
+1. **Legend** (`.srp-field-list__label`): the list's name.
+2. **Row** (`.srp-field-list__row`): one item, a group named by `itemLabel`.
+3. **Fields** (`.srp-field-list__fields`): the row's fields, side by side, wrapping in a narrow column.
+4. **Remove** (`.srp-field-list__remove`): takes the row away; hidden at `min`.
+5. **Row error** (`.srp-field-list__row-error`): what's wrong with that row.
+6. **List error** (`.srp-field-list__error`): what's wrong with the list as a whole.
+7. **Add** (`.srp-field-list__add`): adds a row at the end; at `max`, the limit shows beside it.
 
 ## Usage
 

@@ -3,8 +3,8 @@
    change as a Badge with the period beside it, and a full-width trend line under them. Every value reads one of its
    own tokens (stat-tile.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-stat-tile {
+@layer srp.components {
+.srp-stat-tile {
   display: flex;
   flex-direction: column;
   gap: var(--stat-tile-gap, var(--spacing-2));
@@ -20,10 +20,10 @@
   text-align: start;
   break-inside: avoid;
 }
-.dk-stat-tile__label, .dk-stat-tile__value, .dk-stat-tile__change { margin: var(--spacing-0); }
-.dk-stat-tile__label, .dk-stat-tile__change { color: var(--stat-tile-label-text, var(--text-muted)); font-size: var(--stat-tile-label-size, var(--text-sm)); }
-.dk-stat-tile__label { overflow-wrap: anywhere; }
-.dk-stat-tile__value {
+.srp-stat-tile__label, .srp-stat-tile__value, .srp-stat-tile__change { margin: var(--spacing-0); }
+.srp-stat-tile__label, .srp-stat-tile__change { color: var(--stat-tile-label-text, var(--text-muted)); font-size: var(--stat-tile-label-size, var(--text-sm)); }
+.srp-stat-tile__label { overflow-wrap: anywhere; }
+.srp-stat-tile__value {
   color: var(--stat-tile-value-text, var(--text));
   font-size: var(--stat-tile-value-size, var(--text-2xl));
   line-height: var(--stat-tile-value-line-height, var(--text-2xl--line-height));
@@ -31,7 +31,7 @@
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.dk-stat-tile__change { display: flex; flex-wrap: wrap; align-items: center; gap: var(--stat-tile-gap, var(--spacing-2)); }
-.dk-stat-tile__trend { display: block; --sparkline-width: var(--sizing-full); --sparkline-height: var(--stat-tile-trend-height, var(--spacing-8)); }
-@media (forced-colors: active) { .dk-stat-tile { border-color: CanvasText; } }
+.srp-stat-tile__change { display: flex; flex-wrap: wrap; align-items: center; gap: var(--stat-tile-gap, var(--spacing-2)); }
+.srp-stat-tile__trend { display: block; --sparkline-width: var(--sizing-full); --sparkline-height: var(--stat-tile-trend-height, var(--spacing-8)); }
+@media (forced-colors: active) { .srp-stat-tile { border-color: CanvasText; } }
 }

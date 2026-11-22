@@ -95,7 +95,7 @@ const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeo
 
 function slot(source: IconSource, side: string): React.ReactNode {
   const node = asIcon(source);
-  return node == null || node === false ? null : <span className={'dk-btn__icon dk-btn__icon--' + side} aria-hidden key={side}>{node}</span>;
+  return node == null || node === false ? null : <span className={'srp-btn__icon srp-btn__icon--' + side} aria-hidden key={side}>{node}</span>;
 }
 
 function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource | undefined } & React.RefAttributes<HTMLElement>) {
@@ -109,7 +109,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   const groupSize = React.useContext(ControlSize);   // a ButtonGroup's size, for a button with none of its own
   const size = oneOf(SIZES, props.size ?? groupSize, 'md');
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, wrap: props.wrap, className: props.className });
-  if (props.onMedia === 'dark' || props.onMedia === 'light') classes += ' dk-btn--on-' + props.onMedia;
+  if (props.onMedia === 'dark' || props.onMedia === 'light') classes += ' srp-btn--on-' + props.onMedia;
   if (process.env.NODE_ENV !== 'production' && iconOnly && !rest['aria-label'] && !rest['aria-labelledby'] && !rest.title) {
     warnOnce('button-icon-label', 'Button: an icon-only button needs an aria-label.');
   }
@@ -159,7 +159,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   const formPending = formStatus ? formStatus().pending : false;
   const loading = (props.loading != null ? !!props.loading : !isLink && rest.type === 'submit' && formPending) || busy;
   const disabled = !!rest.disabled;
-  const reasonId = domId('dk-btn-why', React.useId());
+  const reasonId = domId('srp-btn-why', React.useId());
   const reason = disabled && props.disabledReason ? props.disabledReason : '';
   const loadingText = props.loadingLabel ?? sds.labels.loading;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
@@ -174,14 +174,14 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
 
   // Loading: the spinner sits in the center over the hidden content (label and icons), so the width stays the same.
   // Decorative (the button announces loadingLabel itself): Loader's ring, without the rest of Loader (GR311).
-  const spin = <LoaderRing className="dk-btn__spinner" />;
+  const spin = <LoaderRing className="srp-btn__spinner" />;
   let content: React.ReactNode[] = iconOnly ? [slot(props.icon, 'only')] : [
     slot(props.leftIcon, 'left'),
-    props.children == null || (props.children as unknown) === false ? null : <span className="dk-btn__label" key="label">{props.children}</span>,
+    props.children == null || (props.children as unknown) === false ? null : <span className="srp-btn__label" key="label">{props.children}</span>,
     slot(props.rightIcon, 'right')
   ];
-  if (loading) content = content.concat([<span className="dk-btn__loader" aria-hidden key="loader">{spin}</span>]);
-  else if (success) content = content.concat([<span className="dk-btn__loader dk-btn__success" aria-hidden key="success"><span className="dk-btn__check" /></span>]);
+  if (loading) content = content.concat([<span className="srp-btn__loader" aria-hidden key="loader">{spin}</span>]);
+  else if (success) content = content.concat([<span className="srp-btn__loader srp-btn__success" aria-hidden key="success"><span className="srp-btn__check" /></span>]);
   // The reason: a hidden element can still be a description (aria-describedby), and isn't part of the name.
   // A description passed in (a Tooltip around it, with the same words) is used instead, so it isn't read twice.
   if (reason && !rest['aria-describedby']) {
@@ -195,7 +195,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   const text = typeof props.children === 'string' || typeof props.children === 'number' ? String(props.children) : '';
   const tipOk = !!text && !iconOnly && !props.wrap && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-btn__label'));
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.srp-btn__label'));
   if (cut && tipOk) rest.title = text;
   const setNode = useMergedRef(ref, (n: HTMLElement | null) => { node.current = n; });
 
@@ -211,7 +211,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   if (props.destructive) rest['data-destructive'] = '';
   if (iconOnly) rest['data-icon-only'] = '';
   if (disabled) rest['data-disabled'] = '';
-  if (success && !loading) { classes = cn(classes, 'dk-btn--loading-cover', 'dk-btn--success'); rest['data-success'] = ''; }
+  if (success && !loading) { classes = cn(classes, 'srp-btn--loading-cover', 'srp-btn--success'); rest['data-success'] = ''; }
   if (reason) {
     // Disabled, but focusable: aria-disabled instead of the disabled attribute, and clicks blocked.
     delete rest.disabled;
@@ -219,7 +219,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
     rest.onClick = block;
   }
   if (loading) {
-    classes = cn(classes, 'dk-btn--loading', 'dk-btn--loading-cover');
+    classes = cn(classes, 'srp-btn--loading', 'srp-btn--loading-cover');
     rest['aria-busy'] = true;
     rest['aria-disabled'] = true;   // stays focusable (focus isn't lost mid-request), but announced as unavailable
     rest['data-loading'] = '';

@@ -55,13 +55,13 @@ import { Menu, ContextMenu, MenuItem, MenuGroup, MenuSeparator, Button, IconButt
 
 Drawn from the `BottomEnd` story, opened.
 
-1. **Item** (`.dk-menu__item`): one action; Enter or a click runs it.
-2. **Icon** (`.dk-menu__icon`): an optional picture of the action.
-3. **Label** (`.dk-menu__label`): the action, in words.
-4. **Shortcut** (`.dk-menu__shortcut`): the keys that do the same, when there are some.
-5. **Group label** (`.dk-menu__group-label`): names a group of items.
-6. **Separator** (`.dk-menu__separator`): a line between groups.
-7. **Destructive item** (`.dk-menu__item--destructive`): an action that deletes or can't be undone, in the danger color and words that say so.
+1. **Item** (`.srp-menu__item`): one action; Enter or a click runs it.
+2. **Icon** (`.srp-menu__icon`): an optional picture of the action.
+3. **Label** (`.srp-menu__label`): the action, in words.
+4. **Shortcut** (`.srp-menu__shortcut`): the keys that do the same, when there are some.
+5. **Group label** (`.srp-menu__group-label`): names a group of items.
+6. **Separator** (`.srp-menu__separator`): a line between groups.
+7. **Destructive item** (`.srp-menu__item--destructive`): an action that deletes or can't be undone, in the danger color and words that say so.
 
 ## Usage
 

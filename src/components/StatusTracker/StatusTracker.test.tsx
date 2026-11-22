@@ -30,7 +30,7 @@ describe('StatusTracker', () => {
   test('a list named by label with a bar a day, each named with its date, state and note; props reach the root', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Days ref={ref} className="extra" data-x="y" />);
-    expect([root().dataset.component, root().className, root().dataset.x, ref.current === root()]).toEqual(['status-tracker', 'dk-status-tracker extra', 'y', true]);
+    expect([root().dataset.component, root().className, root().dataset.x, ref.current === root()]).toEqual(['status-tracker', 'srp-status-tracker extra', 'y', true]);
     expect(bars().length).toBe(90);
     expect([bar(0).getAttribute('aria-label'), bar(20).getAttribute('aria-label'), bar(47).getAttribute('aria-label'), bar(89).getAttribute('aria-label')])
       .toEqual(['Aug 9, 2026: No data', 'Aug 29, 2026: Degraded. Slow responses', 'Sep 25, 2026: Down. Outage, 42 minutes', 'Nov 6, 2026: Up']);

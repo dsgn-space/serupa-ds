@@ -51,7 +51,7 @@ export function TeamSettings({
           </Text>
         ) : (
           <Table>
-            <caption className="dk-visually-hidden">Team members</caption>
+            <caption className="srp-visually-hidden">Team members</caption>
             <thead>
               <tr>
                 <th scope="col">Name</th>

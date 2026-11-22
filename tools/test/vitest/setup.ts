@@ -64,7 +64,7 @@ afterEach(async () => {
 // said during the next one, which then reads it as its own. Let it finish, then empty them.
 afterEach(async () => {
   await vi.waitFor(() => { if (!announcerIdle()) throw new Error('the announcer is still speaking'); }, { timeout: 3000 });
-  for (const el of document.querySelectorAll('[data-dk-announcer], [data-dk-announcer-assertive]')) el.textContent = '';
+  for (const el of document.querySelectorAll('[data-srp-announcer], [data-srp-announcer-assertive]')) el.textContent = '';
 });
 // The tests run in a frame, and Firefox gives a frame keyboard focus only once something clicks into it: until then
 // el.focus() leaves focus on the body and keys go nowhere. So a click in the empty corner first, when it's needed.

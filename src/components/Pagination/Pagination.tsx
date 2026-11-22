@@ -6,8 +6,11 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
 import { announce } from '../../internal/announce';
+import { leave } from '../../internal/leave';
 import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
+import { latinDigits } from '../../internal/digits';
+import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
 import { paginationRange } from './paginationRange';
 import { useFocusHandover } from '../../internal/focus';
@@ -120,12 +123,12 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
   const go = (n: number, e: React.MouseEvent) => {
     if (n < 1 || n > count || n === page) { if (!props.getHref || n === page) e.preventDefault(); return; }
     const from = e.currentTarget as HTMLElement;
-    if (from.classList.contains('dk-pagination__arrow')) handover(from, () => { const all = from.closest('nav')?.querySelectorAll<HTMLElement>('.dk-pagination__arrow'); return all && all[n < page ? all.length - 1 : 0]; });
+    if (from.classList.contains('srp-pagination__arrow')) handover(from, () => { const all = from.closest('nav')?.querySelectorAll<HTMLElement>('.srp-pagination__arrow'); return all && all[n < page ? all.length - 1 : 0]; });
     if (!controlled) setOwn(n);
     if (props.onPageChange) props.onPageChange(n);
   };
   const item = (n: number, content: React.ReactNode, aria: React.AriaAttributes & { rel?: string }, disabled: boolean, cls: string) => {
-    const common = Object.assign({ className: cn('dk-pagination__item', cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
+    const common = Object.assign({ className: cn('srp-pagination__item', cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
     if (props.getHref) return disabled ? <a {...common} role="link" aria-disabled="true">{content}</a> : React.createElement(props.linkAs || config.link, Object.assign(common, { href: props.getHref(n) }), content);
     return <button type="button" {...common} disabled={disabled}>{content}</button>;
   };
@@ -133,7 +136,7 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
     const n = dir === 'prev' ? page - 1 : page + 1;
     // The chevrons flip in right-to-left text by themselves (Icon's mirror).
     const arrows = <Icon icon={dir === 'prev' ? icons.ChevronLeft : icons.ChevronRight} />;
-    return <li key={dir}>{item(n, arrows, { 'aria-label': dir === 'prev' ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, 'dk-pagination__arrow')}</li>;
+    return <li key={dir}>{item(n, arrows, { 'aria-label': dir === 'prev' ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, 'srp-pagination__arrow')}</li>;
   };
   // O7: with total and pageSize, which items this page shows, in the locale's digits and grouping ("1,001–1,010 of 12,345").
   const total = int(props.total, 0, -1), per = int(props.pageSize, 1, 0);
@@ -151,32 +154,35 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
   const jumpId = React.useId();
   const [typed, setTyped] = React.useState('');
   const jumpTo = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== 'Enter' || isComposing(e)) return;
     e.preventDefault();
-    const n = parseInt(typed.replace(/[^\d]/g, ''), 10);
-    if (!isFinite(n) || count < 1) return;
+    // In the digits the pages are written in ("١٢" in ar-EG), or full width from an IME, with or without the marks
+    // that group thousands ("1,200"); "2.5" is no page.
+    const t = latinDigits(typed.normalize('NFKC')).trim().replace(/[\s,.'\u066c\u2019](?=\d{3}(?!\d))/g, '');
+    if (!/^\d+$/.test(t) || count < 1) return;
+    const n = Number(t);
     const to = Math.min(Math.max(n, 1), count);
     setTyped('');
     announce(said(to));
     if (to === page) return;
     if (!controlled) setOwn(to);
     if (props.onPageChange) props.onPageChange(to);
-    else if (props.getHref && typeof window !== 'undefined') window.location.assign(props.getHref(to));
+    else if (props.getHref && typeof window !== 'undefined') leave(props.getHref(to));   // a web page only: never a javascript: URL
   };
-  const jump = props.jump && count > 1 ? <span className="dk-pagination__jump"><label htmlFor={jumpId}>{sds.labels.goToPage}</label>
+  const jump = props.jump && count > 1 ? <span className="srp-pagination__jump"><label htmlFor={jumpId}>{sds.labels.goToPage}</label>
     {/* Input's box and field classes, without Input's own code (its masks, count and actions) in Pagination's bundle. */}
-    <span className={cn('dk-input', 'dk-input--size-' + size, 'dk-pagination__jump-field')}><input id={jumpId} className="dk-input__field" type="text" inputMode="numeric" autoComplete="off" enterKeyHint="go" value={typed} onChange={(e) => setTyped(e.currentTarget.value)} onKeyDown={jumpTo} /></span></span> : null;
+    <span className={cn('srp-input', 'srp-input--size-' + size, 'srp-pagination__jump-field')}><input id={jumpId} className="srp-input__field" type="text" inputMode="numeric" autoComplete="off" enterKeyHint="go" value={typed} onChange={(e) => setTyped(e.currentTarget.value)} onKeyDown={jumpTo} /></span></span> : null;
   const bar = summary != null || sizes != null || jump != null;
   return (
-    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('dk-pagination', size !== 'md' && 'dk-pagination--' + size, bar && 'dk-pagination--summary', props.className)}>
-      {summary != null ? <p className="dk-pagination__summary">{summary}</p> : null}
-      {sizes ? <span className="dk-pagination__page-size"><label htmlFor={sizeId}>{sds.labels.perPage}</label>
+    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('srp-pagination', size !== 'md' && 'srp-pagination--' + size, bar && 'srp-pagination--summary', props.className)}>
+      {summary != null ? <p className="srp-pagination__summary">{summary}</p> : null}
+      {sizes ? <span className="srp-pagination__page-size"><label htmlFor={sizeId}>{sds.labels.perPage}</label>
         <Select id={sizeId} size={size} value={String(per)} onChange={resize} options={(sizes.indexOf(per) < 0 ? sizes.concat(per).sort((a, b) => a - b) : sizes).map((n) => ({ value: String(n), label: displayNumber(n, locale) }))} /></span> : null}
-      <ul className="dk-pagination__list" ref={list}>
+      <ul className="srp-pagination__list" ref={list}>
         {arrow('prev')}
         {paginationRange(page, count, Math.max(siblings - cut, 0), Math.max(boundaries - Math.max(cut - siblings, 0), 0)).map((e) => typeof e === 'number'
-          ? <li key={e}>{item(e, displayNumber(e, locale), { 'aria-label': said(e), 'aria-current': e === page ? 'page' : undefined }, false, e === page ? 'dk-pagination__item--current' : '')}</li>
-          : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
+          ? <li key={e}>{item(e, displayNumber(e, locale), { 'aria-label': said(e), 'aria-current': e === page ? 'page' : undefined }, false, e === page ? 'srp-pagination__item--current' : '')}</li>
+          : <li key={e} className="srp-pagination__ellipsis" aria-hidden="true">…</li>)}
         {arrow('next')}
       </ul>
       {jump}

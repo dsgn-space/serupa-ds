@@ -76,7 +76,7 @@ describe('Progress', () => {
   test('no value: indeterminate, without valuenow or valuetext, a sliding segment', async () => {
     await render(<Wrap><Progress id="ind" label="Preparing" /></Wrap>);
     expect([pb('ind').hasAttribute('aria-valuenow'), pb('ind').hasAttribute('aria-valuetext'), el('ind').dataset.state]).toEqual([false, false, 'indeterminate']);
-    expect(withMotion(() => css(el('ind').querySelector('[role=progressbar] > div')).animationName)).toBe('dk-progress-slide');
+    expect(withMotion(() => css(el('ind').querySelector('[role=progressbar] > div')).animationName)).toBe('srp-progress-slide');
   });
 
   test('sizes: sm 4px, lg 12px', async () => {
@@ -95,7 +95,7 @@ describe('Progress', () => {
     expect([Math.round(r('c1').width), Math.round(r('c1').height), Math.round(r('csm').width), Math.round(r('clg').width)]).toEqual([40, 40, 24, 64]);
     expect([el('c1').getAttribute('role'), el('c1').getAttribute('aria-valuenow'), el('c1').getAttribute('aria-label'), dash('c1')]).toEqual(['progressbar', '30', 'Storage', '30 100']);
     expect([value('c1'), value('clg'), value('csm')]).toEqual(['30%', '30%', null]);
-    expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('svg')).animationName)]).toEqual([null, '25 100', 'dk-progress-turn']);
+    expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('svg')).animationName)]).toEqual([null, '25 100', 'srp-progress-turn']);
   });
 
   test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in every theme', async () => {
@@ -114,7 +114,7 @@ describe('Progress', () => {
         const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
         for (const [what, r] of [['fill on the page', contrast(fill, 'var(--surface)')], ['fill on its track', contrast(fill, css(track).backgroundColor)], ['track edge on the page', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${tone} ${what} ${r.toFixed(2)}`); }
       }
-      for (const sel of ['#p1 .dk-progress__label', '#p1 .dk-progress__value', '#c1 .dk-progress__value']) {
+      for (const sel of ['#p1 .srp-progress__label', '#p1 .srp-progress__value', '#c1 .srp-progress__value']) {
         const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++;
         if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`);
       }
@@ -165,7 +165,7 @@ describe('Progress: done', () => {
         <Progress id="pfull" aria-label="Quota" value={100} announceComplete onComplete={() => dones.push(-1)} /></>;
     }
     const screen = await render(<App v={10} />);
-    const live = document.querySelector('[data-dk-announcer]')!;
+    const live = document.querySelector('[data-srp-announcer]')!;
     const watch = new MutationObserver(() => { if (live.textContent) said.push(live.textContent); });
     watch.observe(live, { childList: true, characterData: true, subtree: true });
     await screen.rerender(<App v={60} />);
@@ -198,11 +198,11 @@ describe('Progress: done', () => {
     const ring = el('crm').querySelector('svg') as SVGElement;
     const rules = [...document.styleSheets].flatMap((sh) => { try { return [...sh.cssRules]; } catch { return []; } });
     const flat = (rs: CSSRule[]): CSSRule[] => rs.flatMap((r) => (r instanceof CSSGroupingRule ? [r, ...flat([...r.cssRules])] : [r]));
-    const rm = flat(rules).filter((r): r is CSSMediaRule => r instanceof CSSMediaRule && /prefers-reduced-motion:\s*reduce/.test(r.conditionText) && /dk-progress/.test(r.cssText));
+    const rm = flat(rules).filter((r): r is CSSMediaRule => r instanceof CSSMediaRule && /prefers-reduced-motion:\s*reduce/.test(r.conditionText) && /srp-progress/.test(r.cssText));
     const was = rm.map((r) => r.media.mediaText);
     rm.forEach((r) => { r.media.mediaText = '(min-width: 0px)'; });
     try {
-      expect(withMotion(() => { const s = css(ring); return `${s.animationName} ${s.animationDuration}`; })).toBe('dk-progress-breathe 1.4s');
+      expect(withMotion(() => { const s = css(ring); return `${s.animationName} ${s.animationDuration}`; })).toBe('srp-progress-breathe 1.4s');
     } finally { rm.forEach((r, i) => { r.media.mediaText = was[i]!; }); }
   });
 

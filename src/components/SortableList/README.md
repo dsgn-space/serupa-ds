@@ -33,9 +33,9 @@ const [tasks, setTasks] = React.useState([{ id: "brief", title: "Write the brief
 
 Drawn from the `Horizontal` story.
 
-1. **Item** (`.dk-sortable-list__item`): one thing to put in order.
-2. **Handle** (`.dk-sortable-list__handle`): drag it, or press Space and use the arrow keys, to move the item.
-3. **Content** (`.dk-sortable-list__content`): what the item shows.
+1. **Item** (`.srp-sortable-list__item`): one thing to put in order.
+2. **Handle** (`.srp-sortable-list__handle`): drag it, or press Space and use the arrow keys, to move the item.
+3. **Content** (`.srp-sortable-list__content`): what the item shows.
 
 ## Usage
 

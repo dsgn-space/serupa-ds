@@ -41,14 +41,14 @@ import { Sidebar, SidebarSection, SidebarItem, Badge } from '@diki-stwn/serupa-d
 
 Drawn from the `Playground` story.
 
-1. **Header** (`.dk-sidebar__header`): the product's name or a switcher, at the top.
-2. **Section title** (`.dk-sidebar__section-title`): names a group of links.
-3. **Link** (`.dk-sidebar__item`): a page to go to.
-4. **Current link** (`.dk-sidebar__item--active`): the page you're on.
-5. **Icon** (`.dk-sidebar__icon`): a picture of the page; it alone shows when the sidebar is collapsed, with the name as a tooltip.
-6. **Badge** (`.dk-sidebar__badge`): an optional count, such as unread items.
-7. **Nested links** (`.dk-sidebar__list--nested`): the pages under a link, shown when it's open.
-8. **Footer** (`.dk-sidebar__footer`): the account or settings, at the bottom.
+1. **Header** (`.srp-sidebar__header`): the product's name or a switcher, at the top.
+2. **Section title** (`.srp-sidebar__section-title`): names a group of links.
+3. **Link** (`.srp-sidebar__item`): a page to go to.
+4. **Current link** (`.srp-sidebar__item--active`): the page you're on.
+5. **Icon** (`.srp-sidebar__icon`): a picture of the page; it alone shows when the sidebar is collapsed, with the name as a tooltip.
+6. **Badge** (`.srp-sidebar__badge`): an optional count, such as unread items.
+7. **Nested links** (`.srp-sidebar__list--nested`): the pages under a link, shown when it's open.
+8. **Footer** (`.srp-sidebar__footer`): the account or settings, at the bottom.
 
 ## Usage
 

@@ -19,7 +19,7 @@ const named = (id: string, name: string) => q(id, `[aria-label="${name}"]`);
 const shown = (id: string) => [...el(id).querySelectorAll('li')].map((li) => {
   const e = li.firstElementChild as HTMLButtonElement | null;
   if (!e) return li.textContent;
-  if (e.classList.contains('dk-pagination__arrow')) {
+  if (e.classList.contains('srp-pagination__arrow')) {
     const dir = li.previousElementSibling ? '>' : '<';
     return e.disabled || e.getAttribute('aria-disabled') ? `(${dir})` : dir;
   }
@@ -42,11 +42,34 @@ describe('Pagination', () => {
     field.focus();
     await userEvent.keyboard('120{Enter}');
     expect([seen, q('pj', '[aria-current="page"]').textContent, field.value, document.activeElement]).toEqual([[120], '120', '', field]);
-    await expect.poll(() => (document.querySelector('[data-dk-announcer]') as HTMLElement).textContent).toBe('Page 120');
+    await expect.poll(() => (document.querySelector('[data-srp-announcer]') as HTMLElement).textContent).toBe('Page 120');
     await userEvent.keyboard('9999{Enter}');
     expect(seen).toEqual([120, 400]);
     await userEvent.keyboard('abc{Enter}');
     expect(seen).toEqual([120, 400]);
+  });
+
+  test('jump: reads the page in the digits the pages show, and in full width, and waits for an IME to finish', async () => {
+    // The pages are in the locale's digits ("١٢" in ar-EG), so that's what people type back; a Japanese IME in
+    // full-width mode types "１２". Enter that ends a composition picks the text, it doesn't go anywhere yet.
+    const seen: number[] = [];
+    await render(<><SerupaProvider locale="ar-EG"><Pagination id="pja" count={40} jump onPageChange={(n) => seen.push(n)} /></SerupaProvider>
+      <SerupaProvider locale="ja"><Pagination id="pjj" count={40} jump onPageChange={(n) => seen.push(n)} /></SerupaProvider></>);
+    const ar = el('pja').querySelector('input')!, ja = el('pjj').querySelector('input')!;
+    ar.focus();
+    await userEvent.keyboard('١٢{Enter}');
+    ja.focus();
+    await userEvent.keyboard('３');
+    const ime = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true, cancelable: true });
+    ja.dispatchEvent(ime);
+    expect([seen, ime.defaultPrevented, ja.value]).toEqual([[12], false, '３']);
+    await userEvent.keyboard('{Enter}');
+    expect(seen).toEqual([12, 3]);
+    await userEvent.keyboard('2.5{Enter}');
+    expect(seen).toEqual([12, 3]);
+    await userEvent.clear(ja);
+    await userEvent.keyboard('1,000{Enter}');
+    expect(seen).toEqual([12, 3, 40]);
   });
 
   test('jump: no field for a single page; Indonesian words under an id provider', async () => {
@@ -63,6 +86,18 @@ describe('Pagination', () => {
       await userEvent.keyboard('7{Enter}');
       expect(location.hash).toBe('#p7');
     } finally { history.replaceState(null, '', location.pathname + location.search + before); }
+  });
+
+  test('jump with a getHref that gives a javascript: URL runs nothing: only a web page is followed', async () => {
+    const w = window as unknown as { __jumpRan?: number };
+    w.__jumpRan = 0;
+    try {
+      await render(<EnUS><Pagination id="pj4" count={50} jump getHref={(n) => 'javascript:window.__jumpRan=' + n} /></EnUS>);
+      el('pj4').querySelector('input')!.focus();
+      await userEvent.keyboard('7{Enter}');
+      await new Promise((r) => setTimeout(r, 50));
+      expect(w.__jumpRan).toBe(0);
+    } finally { delete w.__jumpRan; }
   });
 
   test('the arrows are the icon of an icon-only Button of the same size: 14, 16 and 20px (GR420)', async () => {
@@ -103,10 +138,10 @@ describe('Pagination', () => {
     await render(<Pagination id="pdef" count={10} ref={ref} className="extra" data-x="y" />, { wrapper: EnUS });
     const n = el('pdef');
     expect([n.tagName, n.getAttribute('aria-label'), n.className, n.dataset.component, ref.current === n, n.dataset.x, n.firstElementChild!.tagName])
-      .toEqual(['NAV', 'Pagination', 'dk-pagination extra', 'pagination', true, 'y', 'UL']);
+      .toEqual(['NAV', 'Pagination', 'srp-pagination extra', 'pagination', true, 'y', 'UL']);
     expect([...n.querySelectorAll('button')].map((b) => b.getAttribute('aria-label')).join())
       .toBe('Previous page,Page 1,Page 2,Page 3,Page 4,Page 5,Page 10,Next page');
-    expect(q('pdef', '.dk-pagination__ellipsis').getAttribute('aria-hidden')).toBe('true');
+    expect(q('pdef', '.srp-pagination__ellipsis').getAttribute('aria-hidden')).toBe('true');
   });
 
   test('uncontrolled: starts on page 1 with previous disabled; clicking a page moves there; next moves one page on', async () => {
@@ -198,7 +233,7 @@ describe('Pagination', () => {
     const s = css(named('pbad', 'Previous page'));
     expect([disabledLook(named('pbad', 'Previous page')), s.cursor]).toEqual(['neutral', 'not-allowed']);
     expect(shown('pbad')).toBe('(<) (>)');
-    expect(el('pbad').className).toBe('dk-pagination');
+    expect(el('pbad').className).toBe('srp-pagination');
   });
 
   test('the row stays on one line: in 320px the defaults drop siblings, then boundaries, until it fits; with room again they come back (ET1)', async () => {
@@ -251,7 +286,7 @@ describe('Pagination', () => {
   test('contrast: pages (also on hover), the current page and the ellipsis keep 4.5:1 in every theme', async () => {
     // On page 7, as the script left it: page 1 is a plain page and there is an ellipsis.
     await render(<Pagination id="pdef" count={10} defaultPage={7} />, { wrapper: EnUS });
-    const pg = named('pdef', 'Page 1'), cur = q('pdef', '[aria-current]'), ell = q('pdef', '.dk-pagination__ellipsis');
+    const pg = named('pdef', 'Page 1'), cur = q('pdef', '[aria-current]'), ell = q('pdef', '.srp-pagination__ellipsis');
     const low: string[] = [];
     let n = 0;
     for (const th of THEMES) {

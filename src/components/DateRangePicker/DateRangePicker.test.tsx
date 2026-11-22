@@ -75,6 +75,14 @@ describe('DateRangePicker', () => {
     expect([f.value, calls]).toEqual(['5/1', []]);
   });
 
+  test('in the popup the ends and the days between have names, as RangeCalendar\'s do, so the range isn\'t carried by color alone', async () => {
+    await render(<Trip />);
+    await userEvent.click(btn('trip'));
+    await expect.poll(() => isOpen('trip')).toBe(true);
+    expect(['2025-03-10', '2025-03-12', '2025-03-14', '2025-03-15'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
+      'Monday, March 10, 2025, Start date', 'Wednesday, March 12, 2025, in the range', 'Friday, March 14, 2025, End date', 'Saturday, March 15, 2025']);
+  });
+
   test('both fields are described by the Field hint and the format to type', async () => {
     await render(<Trip />);
     expect(fields('trip').map((f) => (f.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)!.textContent).join(' | '))).toEqual(['mm/dd/yyyy | Format: mm/dd/yyyy', 'mm/dd/yyyy | Format: mm/dd/yyyy']);
@@ -113,12 +121,12 @@ describe('DateRangePicker', () => {
     expect([calls, vals('drps')]).toEqual([['Mon Oct 05 2026..Mon Oct 12 2026 2026-10-05..2026-10-12'], '10/05/2026 – 10/12/2026']);
   });
 
-  test('a role="group" dk-input box with "Start date" and "End date" fields, a "Choose dates" button; Field labels the start field and describes both; ref and className; defaultValue fills both fields', async () => {
+  test('a role="group" srp-input box with "Start date" and "End date" fields, a "Choose dates" button; Field labels the start field and describes both; ref and className; defaultValue fills both fields', async () => {
     const ref = React.createRef<HTMLSpanElement>();
     await render(<Trip tref={ref} />);
     const el = box('trip'), [s, e] = fields('trip');
     expect(ref.current).toBe(el);
-    expect(el.className).toMatch(/dk-input.*extra/);
+    expect(el.className).toMatch(/srp-input.*extra/);
     expect([el.getAttribute('role'), s!.getAttribute('aria-label'), e!.getAttribute('aria-label'), s!.placeholder, btn('trip').getAttribute('aria-label')]).toEqual(['group', 'Start date', 'End date', 'mm/dd/yyyy', 'Choose dates']);
     expect(!!s!.id && document.querySelector('label')!.htmlFor === s!.id).toBe(true);
     expect(!!s!.getAttribute('aria-describedby') && s!.getAttribute('aria-describedby') === e!.getAttribute('aria-describedby')).toBe(true);

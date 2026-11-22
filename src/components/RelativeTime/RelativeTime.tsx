@@ -114,7 +114,7 @@ function RelativeTimeRender({ ref, ...props }: RelativeTimeProps & React.RefAttr
   // A day has no time of day to show, and its datetime is the day itself.
   const title = !valid || props.titleFormat === false ? undefined : dateFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
   // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
-  return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
+  return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('srp-relative-time', props.className)}
     data-component="relative-time" suppressHydrationWarning>{text}</time>;
 }
 

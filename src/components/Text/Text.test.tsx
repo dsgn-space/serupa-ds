@@ -14,7 +14,7 @@ describe('Text', () => {
     const r = React.createRef<HTMLElement>();
     await render(<Text id="tdef" ref={r} className="extra">Default</Text>);
     const e = el('tdef');
-    expect([e.tagName, e.className, r.current === e, css(e).marginTop]).toEqual(['P', 'dk-text extra', true, '0px']);
+    expect([e.tagName, e.className, r.current === e, css(e).marginTop]).toEqual(['P', 'srp-text extra', true, '0px']);
   });
 
   test('size, tone and weight follow the parent when unset', async () => {
@@ -35,7 +35,7 @@ describe('Text', () => {
 
   test('unknown as, size, tone and weight fall back to <p> and inherit', async () => {
     await render(<Text id="tbad" as={'section' as never} size={'huge' as never} tone={'gold' as never} weight={'heavy' as never}>Bad</Text>);
-    expect([el('tbad').tagName, el('tbad').className].join(' ')).toBe('P dk-text');
+    expect([el('tbad').tagName, el('tbad').className].join(' ')).toBe('P srp-text');
   });
 
   test('as label passes htmlFor', async () => {
@@ -65,7 +65,7 @@ describe('Text', () => {
     expect(two.textContent).toBe(long);
     expect([two.hasAttribute('style'), Math.round(el('many').getBoundingClientRect().height)]).toEqual([false, Math.round(lh * 6)]);
     expect(css(el('both')).whiteSpace).toBe('nowrap');
-    expect(el('both').className).not.toMatch(/dk-text--clamp/);
+    expect(el('both').className).not.toMatch(/srp-text--clamp/);
   });
 
   test('measure caps the line at 65ch of its own text, and only when asked (KW14)', async () => {

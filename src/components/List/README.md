@@ -39,11 +39,11 @@ import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds'
 
 Drawn from the `Settings` story.
 
-1. **Item** (`.dk-list__item`): one row.
-2. **Leading** (`.dk-list__leading`): an optional icon, avatar or image before the text.
-3. **Title** (`.dk-list__title`): the row's main line.
-4. **Description** (`.dk-list__description`): a second line with more detail.
-5. **Trailing** (`.dk-list__trailing`): an optional value, badge, switch or action at the end.
+1. **Item** (`.srp-list__item`): one row.
+2. **Leading** (`.srp-list__leading`): an optional icon, avatar or image before the text.
+3. **Title** (`.srp-list__title`): the row's main line.
+4. **Description** (`.srp-list__description`): a second line with more detail.
+5. **Trailing** (`.srp-list__trailing`): an optional value, badge, switch or action at the end.
 
 ## Usage
 

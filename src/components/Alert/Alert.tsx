@@ -40,7 +40,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
 // the current one, tabindex -1: L8E23). A handler that moves focus, or keeps the alert, is left alone.
 function dismissAndRefocus(e: React.MouseEvent<HTMLElement>, onDismiss: () => void): void {
   // Inside a shadow root, what has focus and what can take it are the root's, not the page's (GR60).
-  const me = e.currentTarget, box = me.closest('.dk-alert'), doc = me.ownerDocument, r = rootOf(me);
+  const me = e.currentTarget, box = me.closest('.srp-alert'), doc = me.ownerDocument, r = rootOf(me);
   const near = box && r.activeElement === me ? Array.from(r.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((el) => el.tabIndex >= 0 && !box.contains(el)) : [];
   const next = near.filter((el) => box!.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
   const prev = near.filter((el) => !next.includes(el)).reverse();
@@ -61,14 +61,14 @@ function AlertRender({ ref, ...props }: AlertProps & React.RefAttributes<HTMLDiv
   if (rest.role == null) rest.role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status';
   const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon icon={ICONS[tone]} /> : asIcon(props.icon);
   return (
-    <div {...rest} ref={ref} className={cn('dk-alert', 'dk-alert--' + tone, props.className)} data-component="alert" data-tone={tone}>
-      {icon ? <span className="dk-alert__icon" aria-hidden="true">{icon}</span> : null}
-      <div className="dk-alert__content">
-        {has(props.title) ? <p className="dk-alert__title">{props.title}</p> : null}
-        {has(props.children) ? <div className="dk-alert__message">{props.children}</div> : null}
-        {has(props.actions) ? <div className="dk-alert__actions">{props.actions}</div> : null}
+    <div {...rest} ref={ref} className={cn('srp-alert', 'srp-alert--' + tone, props.className)} data-component="alert" data-tone={tone}>
+      {icon ? <span className="srp-alert__icon" aria-hidden="true">{icon}</span> : null}
+      <div className="srp-alert__content">
+        {has(props.title) ? <p className="srp-alert__title">{props.title}</p> : null}
+        {has(props.children) ? <div className="srp-alert__message">{props.children}</div> : null}
+        {has(props.actions) ? <div className="srp-alert__actions">{props.actions}</div> : null}
       </div>
-      {props.onDismiss ? <ButtonBase className="dk-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={(e) => dismissAndRefocus(e, props.onDismiss!)} /> : null}
+      {props.onDismiss ? <ButtonBase className="srp-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={(e) => dismissAndRefocus(e, props.onDismiss!)} /> : null}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -107,7 +107,7 @@ describe('ColorPicker', () => {
     expect([group().getAttribute('aria-label'), radios().map((r) => r.getAttribute('aria-label')), radios().map((r) => r.getAttribute('aria-checked')), radios().map((r) => r.tabIndex)])
       .toEqual(['Label color', ['Blue', 'Yellow', 'White', 'Black'], ['true', 'false', 'false', 'false'], [0, -1, -1, -1]]);
     expect([ref.current === document.getElementById('cp'), ref.current!.className, ref.current!.dataset.component, !!swatch('Blue').querySelector('[data-icon]'), css(swatch('Blue')).backgroundColor])
-      .toEqual([true, 'dk-color-picker dk-color-picker--size-md extra', 'color-picker', true, 'rgb(29, 78, 216)']);
+      .toEqual([true, 'srp-color-picker srp-color-picker--size-md extra', 'color-picker', true, 'rgb(29, 78, 216)']);
   });
 
   test('keyboard table: ArrowUp picks the previous swatch, as ArrowLeft does, and wraps (FH1)', async () => {
@@ -243,6 +243,16 @@ describe('ColorPicker', () => {
     expect(new FormData(f).get('color')).toBe('#1d4ed8');
   });
 
+  test('required: the field the form checks takes no text of its own; what reaches it (autofill, a script) leaves the picked color as it was', async () => {
+    const onValueChange = vi.fn();
+    await render(<form id="cpv"><ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" required onValueChange={onValueChange} /></form>);
+    const field = document.querySelector<HTMLInputElement>('input[required][aria-hidden]')!;
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(field, '#ffffff');
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    await expect.poll(() => field.value).toBe('#1d4ed8');
+    expect([swatch('Blue').getAttribute('aria-checked'), onValueChange.mock.calls.length]).toEqual(['true', 0]);
+  });
+
   test('form without name: outside its form, that form\'s reset still puts the first color back', async () => {
     await render(<><form id="fn" /><ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" form="fn" required /></>);
     await userEvent.click(swatch('Black'));
@@ -256,7 +266,7 @@ describe('ColorPicker', () => {
     await render(<SerupaProvider locale="en-US"><Controlled calls={calls} /></SerupaProvider>);
     expect([line().getAttribute('aria-live'), line().textContent, line().querySelector('[data-icon]')]).toEqual(['polite', 'Contrast 6.7:1', null]);
     await userEvent.click(swatch('Yellow'));
-    expect([line().textContent, line().classList.contains('dk-color-picker__contrast--low'), !!line().querySelector('[data-icon]')])
+    expect([line().textContent, line().classList.contains('srp-color-picker__contrast--low'), !!line().querySelector('[data-icon]')])
       .toEqual(['Contrast 1.3:1, below 4.5:1, which can be hard to read', true, true]);
   });
 
