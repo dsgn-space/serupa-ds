@@ -32,6 +32,24 @@ describe('Patterns/Article', () => {
     for (const a of links) expect(document.getElementById(a.getAttribute('href')!.slice(1))?.tagName).toBe('H2');
   });
 
+  test('the author\'s name links to their page, and focusing it previews them with a link to all their posts', async () => {
+    const screen = await render(<Article />);
+    const name = screen.getByRole('link', { name: 'Ana Putri' });
+    expect(name.element().getAttribute('href')).toBe('#authors/ana-putri');
+    (name.element() as HTMLElement).focus();
+    await expect.element(screen.getByRole('link', { name: 'All posts by Ana Putri' })).toBeVisible();
+    await expect.element(screen.getByText(/writes about making them work for everyone/)).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => [...document.querySelectorAll('a')].some((a) => a.textContent === 'All posts by Ana Putri' && a.checkVisibility())).toBe(false);
+    expect(document.activeElement).toBe(name.element());
+  });
+
+  test('without an href the author is plain text, with no preview', async () => {
+    const screen = await render(<Article author={{ name: 'Ana Putri' }} />);
+    expect(screen.getByRole('link', { name: 'Ana Putri' }).elements()).toHaveLength(0);
+    await expect.element(screen.getByText('Ana Putri')).toBeVisible();
+  });
+
   test('the breadcrumb leads back to the blog and marks this post as the current page', async () => {
     await render(<Article title="A new start page" />);
     const crumbs = page.getByRole('navigation', { name: /breadcrumb/i });
