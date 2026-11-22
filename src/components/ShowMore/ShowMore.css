@@ -3,22 +3,22 @@
    button under it, 4px away, its words lined up with the text's start (its padding reaches out past it). Every value reads one of its own tokens (show-more.tokens.json), which
    fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-show-more { display: flex; flex-direction: column; align-items: flex-start; gap: var(--show-more-gap, var(--spacing-1)); }
-.dk-show-more__text { align-self: stretch; overflow-wrap: anywhere; }
-.dk-show-more__text > :first-child { margin-block-start: var(--spacing-0); }
-.dk-show-more__text > :last-child { margin-block-end: var(--spacing-0); }
-.dk-show-more > .dk-show-more__toggle { margin-inline-start: calc(var(--spacing-0) - var(--button-padding-x-sm, var(--spacing-2))); }
-.dk-show-more__text--cut { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-show-more-lines); line-clamp: var(--dk-show-more-lines); overflow: hidden; }
-.dk-show-more__text--cut[data-lines="1"] { --dk-show-more-lines: var(--line-clamp-1); }
-.dk-show-more__text--cut[data-lines="2"] { --dk-show-more-lines: var(--line-clamp-2); }
-.dk-show-more__text--cut[data-lines="3"] { --dk-show-more-lines: var(--line-clamp-3); }
-.dk-show-more__text--cut[data-lines="4"] { --dk-show-more-lines: var(--line-clamp-4); }
-.dk-show-more__text--cut[data-lines="5"] { --dk-show-more-lines: var(--line-clamp-5); }
-.dk-show-more__text--cut[data-lines="6"] { --dk-show-more-lines: var(--line-clamp-6); }
+@layer srp.components {
+.srp-show-more { display: flex; flex-direction: column; align-items: flex-start; gap: var(--show-more-gap, var(--spacing-1)); }
+.srp-show-more__text { align-self: stretch; overflow-wrap: anywhere; }
+.srp-show-more__text > :first-child { margin-block-start: var(--spacing-0); }
+.srp-show-more__text > :last-child { margin-block-end: var(--spacing-0); }
+.srp-show-more > .srp-show-more__toggle { margin-inline-start: calc(var(--spacing-0) - var(--button-padding-x-sm, var(--spacing-2))); }
+.srp-show-more__text--cut { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--srp-show-more-lines); line-clamp: var(--srp-show-more-lines); overflow: hidden; }
+.srp-show-more__text--cut[data-lines="1"] { --srp-show-more-lines: var(--line-clamp-1); }
+.srp-show-more__text--cut[data-lines="2"] { --srp-show-more-lines: var(--line-clamp-2); }
+.srp-show-more__text--cut[data-lines="3"] { --srp-show-more-lines: var(--line-clamp-3); }
+.srp-show-more__text--cut[data-lines="4"] { --srp-show-more-lines: var(--line-clamp-4); }
+.srp-show-more__text--cut[data-lines="5"] { --srp-show-more-lines: var(--line-clamp-5); }
+.srp-show-more__text--cut[data-lines="6"] { --srp-show-more-lines: var(--line-clamp-6); }
 /* Printed, the whole text, and no Show more button, which paper can't press. */
 @media print {
-  .dk-show-more__text--cut[data-lines] { --dk-show-more-lines: none; display: block; overflow: visible; }
-  .dk-show-more > .dk-show-more__toggle { display: none; }
+  .srp-show-more__text--cut[data-lines] { --srp-show-more-lines: none; display: block; overflow: visible; }
+  .srp-show-more > .srp-show-more__toggle { display: none; }
 }
 }

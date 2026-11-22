@@ -16,6 +16,7 @@ import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { StatsRow } from '../../blocks/StatsRow/StatsRow';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Referral: invite friends with your own link or by email, and see who joined and what you've earned. For an app to
    copy. What it carries (WCAG 2.2):
@@ -50,6 +51,9 @@ export interface ReferralProps {
   referrals?: ReferralInvite[] | undefined;
   /** Sends invites. Reject its promise when they can't be sent. */
   onInvite?: ((emails: string[]) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: ReferralInvite[] = [
@@ -78,7 +82,7 @@ export function referralProblem(emails: readonly string[], invited: readonly str
 }
 
 /** The referral page: a skip link, a header, then main with the h1, the totals, the link, the invite form and the invites. */
-export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10, currency = 'USD', referrals = demo, onInvite }: ReferralProps) {
+export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10, currency = 'USD', referrals = demo, onInvite, online }: ReferralProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(referrals);
   const focusing = React.useRef(false);   // the press that focuses the link field
@@ -114,6 +118,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">You can copy your link. Sending invites needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Invite friends' }]} title="Invite friends"
           description={`Give ${money(reward)}, get ${money(reward)}. A friend gets ${money(reward)} off their first order, and you get ${money(reward)} in credit once it ships.`} />
         <div className="flex flex-col gap-8 pt-6">

@@ -1,8 +1,8 @@
 /* Button: every value is a token. Colors, spacing, sizes and borders go through Button's own component
    tokens (--button-*, listed in src/components/Button/button.tokens.json): set one on the page, a container or a
    single button to override it; unset, it falls back to the shared token, resolved in the button's own theme. */
-@layer dk.components {
-.dk-btn {
+@layer srp.components {
+.srp-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,104 +34,104 @@
   transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-release);
   transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-enter);
   position: relative;
-  --dk-btn-press: var(--button-press-scale, var(--scale-100));   /* off by default: a press shows as the darker held fill below; opt in with --button-press-scale */
-  --dk-btn-nudge: var(--button-icon-nudge, var(--spacing-0));   /* off by default; opt in with --button-icon-nudge */
-  --dk-btn-loader-from: var(--scale-50);
-  --dk-btn-shadow: var(--shadow-none);
-  --dk-btn-ring: var(--button-focus-ring, var(--focus-ring));
-  box-shadow: var(--dk-btn-shadow);
+  --srp-btn-press: var(--button-press-scale, var(--scale-100));   /* off by default: a press shows as the darker held fill below; opt in with --button-press-scale */
+  --srp-btn-nudge: var(--button-icon-nudge, var(--spacing-0));   /* off by default; opt in with --button-icon-nudge */
+  --srp-btn-loader-from: var(--scale-50);
+  --srp-btn-shadow: var(--shadow-none);
+  --srp-btn-ring: var(--button-focus-ring, var(--focus-ring));
+  box-shadow: var(--srp-btn-shadow);
 }
 /* A label longer than the room it has ends in an ellipsis; the whole label is still the button's name, and a Tooltip shows it. */
-.dk-btn__label { display: block; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; }
-.dk-btn:focus-visible {
+.srp-btn__label { display: block; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; }
+.srp-btn:focus-visible {
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
-  outline: var(--focus-ring-width) solid var(--dk-btn-ring); outline-offset: var(--focus-ring-offset);
+  outline: var(--focus-ring-width) solid var(--srp-btn-ring); outline-offset: var(--focus-ring-offset);
 }
-.dk-btn__icon {
+.srp-btn__icon {
   display: inline-flex;
   flex-shrink: 0;
 }
-.dk-btn svg {
+.srp-btn svg {
   width: var(--button-icon-size-md, var(--spacing-4));
   height: var(--button-icon-size-md, var(--spacing-4));
   flex-shrink: 0;
   pointer-events: none;
 }
-.dk-btn .dk-icon { font-size: var(--button-icon-size-md, var(--spacing-4)); }
+.srp-btn .srp-icon { font-size: var(--button-icon-size-md, var(--spacing-4)); }
 
 /* Variants */
-.dk-btn--primary { background-color: var(--button-primary-bg, var(--primary)); color: var(--button-primary-text, var(--on-primary)); }
+.srp-btn--primary { background-color: var(--button-primary-bg, var(--primary)); color: var(--button-primary-text, var(--on-primary)); }
 /* A primary button given its own background (--button-primary-bg) and no hover color gets one worked out from it
    (176): darker in light themes, lighter in dark, the way the brand steps go, so its text keeps its contrast. With
-   no --button-primary-bg, --dk-btn-hover reads an unset variable, so it falls back to primary-hover. */
-.dk-btn--primary {
+   no --button-primary-bg, --srp-btn-hover reads an unset variable, so it falls back to primary-hover. */
+.srp-btn--primary {
   /* stylelint-disable-next-line serupa/no-raw-value, function-disallowed-list -- a relative color from the brand token; the lightness step of one brand shade (600 to 700, 400 to 300) in OKLCH */
-  --dk-btn-hover: light-dark(oklch(from var(--button-primary-bg) calc(l - 0.06) c h), oklch(from var(--button-primary-bg) calc(l + 0.1) c h));
+  --srp-btn-hover: light-dark(oklch(from var(--button-primary-bg) calc(l - 0.06) c h), oklch(from var(--button-primary-bg) calc(l + 0.1) c h));
   /* stylelint-disable-next-line serupa/no-raw-value, function-disallowed-list -- the held fill, a second brand step past the hover one */
-  --dk-btn-pressed: light-dark(oklch(from var(--button-primary-bg) calc(l - 0.12) c h), oklch(from var(--button-primary-bg) calc(l + 0.2) c h));
+  --srp-btn-pressed: light-dark(oklch(from var(--button-primary-bg) calc(l - 0.12) c h), oklch(from var(--button-primary-bg) calc(l + 0.2) c h));
 }
-@media (hover: hover) { .dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--dk-btn-hover, var(--primary-hover))); } }
-.dk-btn--primary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-pressed, var(--dk-btn-pressed, var(--primary-pressed))); }
+@media (hover: hover) { .srp-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--srp-btn-hover, var(--primary-hover))); } }
+.srp-btn--primary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-pressed, var(--srp-btn-pressed, var(--primary-pressed))); }
 
-.dk-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-overlay)); }   /* border-overlay: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
-@media (hover: hover) { .dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
-.dk-btn--outline:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-pressed, var(--secondary-hover)); }
+.srp-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-overlay)); }   /* border-overlay: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
+@media (hover: hover) { .srp-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
+.srp-btn--outline:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-pressed, var(--secondary-hover)); }
 
-.dk-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
-@media (hover: hover) { .dk-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); } }
-.dk-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--primary-subtle-pressed)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); }
+.srp-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
+@media (hover: hover) { .srp-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); } }
+.srp-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--primary-subtle-pressed)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); }
 
-.dk-btn--ghost { background-color: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
-@media (hover: hover) { .dk-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-hover, var(--secondary)); } }
-.dk-btn--ghost:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-pressed, var(--secondary-hover)); }
+.srp-btn--ghost { background-color: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
+@media (hover: hover) { .srp-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-hover, var(--secondary)); } }
+.srp-btn--ghost:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-pressed, var(--secondary-hover)); }
 
-.dk-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
-@media (hover: hover) { .dk-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
+.srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
+@media (hover: hover) { .srp-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
 /* onMedia: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the
    variants' own tokens set to the one ink, a translucent wash of it on hover, and a ring in it. No shadow, which
    would read as a smudge on a photo. Destructive keeps its danger colors. */
-.dk-btn--on-dark {
-  --dk-btn-ink: var(--button-on-dark, var(--white)); --dk-btn-paper: var(--button-on-dark-text, var(--black));
-  --button-primary-bg: var(--dk-btn-ink); --button-primary-text: var(--dk-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-85), var(--dk-btn-paper)); --button-primary-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-75), var(--dk-btn-paper));
-  --button-outline-bg: transparent; --button-outline-text: var(--dk-btn-ink); --button-outline-border: var(--dk-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-outline-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent);
-  --button-secondary-bg: transparent; --button-secondary-text: var(--dk-btn-ink); --button-secondary-border: var(--dk-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-secondary-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent); --button-secondary-text-hover: var(--dk-btn-ink); --button-secondary-border-hover: var(--dk-btn-ink);
-  --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-ghost-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent);
-  --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
-  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
+.srp-btn--on-dark {
+  --srp-btn-ink: var(--button-on-dark, var(--white)); --srp-btn-paper: var(--button-on-dark-text, var(--black));
+  --button-primary-bg: var(--srp-btn-ink); --button-primary-text: var(--srp-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-85), var(--srp-btn-paper)); --button-primary-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-75), var(--srp-btn-paper));
+  --button-outline-bg: transparent; --button-outline-text: var(--srp-btn-ink); --button-outline-border: var(--srp-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-outline-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent);
+  --button-secondary-bg: transparent; --button-secondary-text: var(--srp-btn-ink); --button-secondary-border: var(--srp-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-secondary-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent); --button-secondary-text-hover: var(--srp-btn-ink); --button-secondary-border-hover: var(--srp-btn-ink);
+  --button-ghost-text: var(--srp-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-ghost-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent);
+  --button-link-text: var(--srp-btn-ink); --button-focus-ring: var(--srp-btn-ink);
+  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-40), transparent);
 }
-.dk-btn--on-light {
-  --dk-btn-ink: var(--button-on-light, var(--black)); --dk-btn-paper: var(--button-on-light-text, var(--white));
-  --button-primary-bg: var(--dk-btn-ink); --button-primary-text: var(--dk-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-85), var(--dk-btn-paper)); --button-primary-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-75), var(--dk-btn-paper));
-  --button-outline-bg: transparent; --button-outline-text: var(--dk-btn-ink); --button-outline-border: var(--dk-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-outline-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent);
-  --button-secondary-bg: transparent; --button-secondary-text: var(--dk-btn-ink); --button-secondary-border: var(--dk-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-secondary-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent); --button-secondary-text-hover: var(--dk-btn-ink); --button-secondary-border-hover: var(--dk-btn-ink);
-  --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-ghost-bg-pressed: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-25), transparent);
-  --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
-  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
+.srp-btn--on-light {
+  --srp-btn-ink: var(--button-on-light, var(--black)); --srp-btn-paper: var(--button-on-light-text, var(--white));
+  --button-primary-bg: var(--srp-btn-ink); --button-primary-text: var(--srp-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-85), var(--srp-btn-paper)); --button-primary-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-75), var(--srp-btn-paper));
+  --button-outline-bg: transparent; --button-outline-text: var(--srp-btn-ink); --button-outline-border: var(--srp-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-outline-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent);
+  --button-secondary-bg: transparent; --button-secondary-text: var(--srp-btn-ink); --button-secondary-border: var(--srp-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-secondary-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent); --button-secondary-text-hover: var(--srp-btn-ink); --button-secondary-border-hover: var(--srp-btn-ink);
+  --button-ghost-text: var(--srp-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-15), transparent); --button-ghost-bg-pressed: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-25), transparent);
+  --button-link-text: var(--srp-btn-ink); --button-focus-ring: var(--srp-btn-ink);
+  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--srp-btn-ink) var(--opacity-40), transparent);
 }
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
-.dk-btn.dk-btn--on-dark, .dk-btn.dk-btn--on-light { --dk-btn-shadow: var(--shadow-none); }
-.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--elevation-rest); }
-.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); }
+.srp-btn.srp-btn--on-dark, .srp-btn.srp-btn--on-light { --srp-btn-shadow: var(--shadow-none); }
+.srp-btn--primary, .srp-btn--secondary, .srp-btn--outline { --srp-btn-shadow: var(--elevation-rest); }
+.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not(.srp-btn--loading) { --srp-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
-.dk-btn--destructive { --dk-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
-.dk-btn--primary.dk-btn--destructive { background-color: var(--button-destructive-primary-bg, var(--danger)); color: var(--button-destructive-primary-text, var(--on-danger)); }
-@media (hover: hover) { .dk-btn--primary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-hover, var(--danger-hover)); } }
-.dk-btn--primary.dk-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-pressed, var(--danger-pressed)); }
-.dk-btn--secondary.dk-btn--destructive { background-color: var(--button-destructive-secondary-bg, var(--surface-raised)); color: var(--button-destructive-secondary-text, var(--danger-text)); border-color: var(--button-destructive-secondary-border, var(--danger)); }
-@media (hover: hover) { .dk-btn--secondary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); } }
-.dk-btn--secondary.dk-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-pressed, var(--danger-subtle-hover)); color: var(--button-destructive-secondary-text, var(--danger-text)); }
-.dk-btn--outline.dk-btn--destructive { background-color: var(--button-destructive-outline-bg, var(--surface-raised)); color: var(--button-destructive-outline-text, var(--danger-text)); border-color: var(--button-destructive-outline-border, var(--danger-border)); }
-@media (hover: hover) { .dk-btn--outline.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); } }
-.dk-btn--outline.dk-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-pressed, var(--danger-subtle-hover)); }
-.dk-btn--ghost.dk-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
-@media (hover: hover) { .dk-btn--ghost.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); } }
-.dk-btn--ghost.dk-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-pressed, var(--danger-subtle-hover)); }
-.dk-btn--link.dk-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
+.srp-btn--destructive { --srp-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
+.srp-btn--primary.srp-btn--destructive { background-color: var(--button-destructive-primary-bg, var(--danger)); color: var(--button-destructive-primary-text, var(--on-danger)); }
+@media (hover: hover) { .srp-btn--primary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-hover, var(--danger-hover)); } }
+.srp-btn--primary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-pressed, var(--danger-pressed)); }
+.srp-btn--secondary.srp-btn--destructive { background-color: var(--button-destructive-secondary-bg, var(--surface-raised)); color: var(--button-destructive-secondary-text, var(--danger-text)); border-color: var(--button-destructive-secondary-border, var(--danger)); }
+@media (hover: hover) { .srp-btn--secondary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); } }
+.srp-btn--secondary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-pressed, var(--danger-subtle-hover)); color: var(--button-destructive-secondary-text, var(--danger-text)); }
+.srp-btn--outline.srp-btn--destructive { background-color: var(--button-destructive-outline-bg, var(--surface-raised)); color: var(--button-destructive-outline-text, var(--danger-text)); border-color: var(--button-destructive-outline-border, var(--danger-border)); }
+@media (hover: hover) { .srp-btn--outline.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); } }
+.srp-btn--outline.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-pressed, var(--danger-subtle-hover)); }
+.srp-btn--ghost.srp-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
+@media (hover: hover) { .srp-btn--ghost.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); } }
+.srp-btn--ghost.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-pressed, var(--danger-subtle-hover)); }
+.srp-btn--link.srp-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
 /* After the variants and destructive ones, so it wins over each of them. */
-.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
+.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not(.srp-btn--loading) {
   /* Disabled is drawn in muted colors, not by fading the button's own: a faded label fell to about 2.4:1, fainter than
      the disabled fields beside it (3.4:1 and up), and stayed there with more contrast. The muted pair follows the
      contrast axis like every other text. */
@@ -140,55 +140,55 @@
   cursor: var(--cursor-disabled);          /* no hover change; disabled buttons ignore clicks */
 }
 /* Ghost and link buttons have no box of their own, disabled or not. */
-.dk-btn--ghost:disabled, .dk-btn--link:disabled, .dk-btn--ghost[aria-disabled="true"]:not(.dk-btn--loading), .dk-btn--link[aria-disabled="true"]:not(.dk-btn--loading) { background: transparent; border-color: transparent; }
+.srp-btn--ghost:disabled, .srp-btn--link:disabled, .srp-btn--ghost[aria-disabled="true"]:not(.srp-btn--loading), .srp-btn--link[aria-disabled="true"]:not(.srp-btn--loading) { background: transparent; border-color: transparent; }
 
 /* Sizes: sm 24px, md 32px, lg 44px */
-.dk-btn--size-sm { height: var(--button-height-sm, var(--control-height-sm)); padding: var(--spacing-0) var(--button-padding-x-sm, var(--spacing-2)); gap: var(--button-gap-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-btn--size-sm svg { width: var(--button-icon-size-sm, var(--spacing-3\.5)); height: var(--button-icon-size-sm, var(--spacing-3\.5)); }
-.dk-btn--size-sm .dk-icon { font-size: var(--button-icon-size-sm, var(--spacing-3\.5)); }
-.dk-btn--size-lg { height: var(--button-height-lg, var(--control-height-lg)); padding: var(--spacing-0) var(--button-padding-x-lg, var(--spacing-5)); gap: var(--button-gap-lg, var(--spacing-2)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-btn--size-lg svg { width: var(--button-icon-size-lg, var(--spacing-5)); height: var(--button-icon-size-lg, var(--spacing-5)); }
-.dk-btn--size-lg .dk-icon { font-size: var(--button-icon-size-lg, var(--spacing-5)); }
+.srp-btn--size-sm { height: var(--button-height-sm, var(--control-height-sm)); padding: var(--spacing-0) var(--button-padding-x-sm, var(--spacing-2)); gap: var(--button-gap-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-btn--size-sm svg { width: var(--button-icon-size-sm, var(--spacing-3\.5)); height: var(--button-icon-size-sm, var(--spacing-3\.5)); }
+.srp-btn--size-sm .srp-icon { font-size: var(--button-icon-size-sm, var(--spacing-3\.5)); }
+.srp-btn--size-lg { height: var(--button-height-lg, var(--control-height-lg)); padding: var(--spacing-0) var(--button-padding-x-lg, var(--spacing-5)); gap: var(--button-gap-lg, var(--spacing-2)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-btn--size-lg svg { width: var(--button-icon-size-lg, var(--spacing-5)); height: var(--button-icon-size-lg, var(--spacing-5)); }
+.srp-btn--size-lg .srp-icon { font-size: var(--button-icon-size-lg, var(--spacing-5)); }
 
 /* wrap: the label takes as many lines as it needs, and the height grows from each size's height (min-height) */
-.dk-btn--wrap { white-space: normal; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-btn--wrap.dk-btn--size-sm { height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-.dk-btn--wrap.dk-btn--size-lg { height: auto; min-height: var(--button-height-lg, var(--control-height-lg)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-btn--wrap .dk-btn__label { overflow: visible; text-overflow: clip; overflow-wrap: break-word; }
+.srp-btn--wrap { white-space: normal; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-btn--wrap.srp-btn--size-sm { height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+.srp-btn--wrap.srp-btn--size-lg { height: auto; min-height: var(--button-height-lg, var(--control-height-lg)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-btn--wrap .srp-btn__label { overflow: visible; text-overflow: clip; overflow-wrap: break-word; }
 /* A wrapping button doesn't shrink below its longest word, so it breaks between words, not inside one; max-inline-size
    (above) still keeps it inside its container, where a word too long for any line breaks after all. */
-.dk-btn--wrap { min-inline-size: auto; }
+.srp-btn--wrap { min-inline-size: auto; }
 
 /* Icon only: a square at each size's height */
-.dk-btn--icon-only { flex-shrink: 0; padding: var(--spacing-0); width: var(--button-height-md, var(--control-height-md)); }   /* a fixed square: it never shrinks in a row (GR5) */
-.dk-btn--icon-only.dk-btn--size-sm { width: var(--button-height-sm, var(--control-height-sm)); }
-.dk-btn--icon-only.dk-btn--size-lg { width: var(--button-height-lg, var(--control-height-lg)); }
+.srp-btn--icon-only { flex-shrink: 0; padding: var(--spacing-0); width: var(--button-height-md, var(--control-height-md)); }   /* a fixed square: it never shrinks in a row (GR5) */
+.srp-btn--icon-only.srp-btn--size-sm { width: var(--button-height-sm, var(--control-height-sm)); }
+.srp-btn--icon-only.srp-btn--size-lg { width: var(--button-height-lg, var(--control-height-lg)); }
 
 /* Optical balance: an icon looks lighter than text, so the text side gets icon-offset (4px) more padding.
    Inline start and end, so in right-to-left text the extra space is still on the text side. */
-.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
-.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
-.dk-btn--size-sm.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
-.dk-btn--size-sm.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
-.dk-btn--size-lg.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
-.dk-btn--size-lg.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
+.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--size-sm.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
+.srp-btn--size-sm.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--size-lg.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
+.srp-btn--size-lg.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
 
 /* Loading: full color (not faded), not clickable, keeps keyboard focus and its width */
-.dk-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
+.srp-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
 /* opacity, not visibility: hidden, so the label stays in the accessibility tree and the button keeps its name */
-.dk-btn--loading-cover > .dk-btn__label,
-.dk-btn--loading-cover > .dk-btn__icon { opacity: var(--opacity-0); }
-.dk-btn__loader { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; }
+.srp-btn--loading-cover > .srp-btn__label,
+.srp-btn--loading-cover > .srp-btn__icon { opacity: var(--opacity-0); }
+.srp-btn__loader { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; }
 /* The success check (successText), drawn in CSS so Button keeps no icon data: two borders of a box turned 45°. */
-.dk-btn__check {
+.srp-btn__check {
   box-sizing: border-box; width: var(--spacing-1\.5); height: var(--spacing-3); margin-top: calc(var(--spacing-0) - var(--spacing-0\.5));
   /* stylelint-disable-next-line serupa/no-physical-shorthand -- a check mark is drawn the same way in right-to-left text */
   border: solid currentColor; border-width: var(--spacing-0) var(--border-width-2) var(--border-width-2) var(--spacing-0);
-  --dk-btn-check-turn: 45deg; rotate: var(--dk-btn-check-turn);
+  --srp-btn-check-turn: 45deg; rotate: var(--srp-btn-check-turn);
 }
 /* The spinner is the Loader component (ring): its motion, and its calmer reduced-motion version, are in the Loader section. */
 /* A Button with href that is disabled renders <a> without href and with aria-disabled: no pointer events */
-a.dk-btn[aria-disabled="true"] { pointer-events: none; }
+a.srp-btn[aria-disabled="true"] { pointer-events: none; }
 
 /* Micro-interactions. Only scale, translate and opacity move, so nothing reflows. Each has a component
    token (src/components/Button/button.tokens.json) to tune it or turn it off; under reduced motion the
@@ -197,57 +197,57 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
    its held fill (the …-bg-pressed tokens above), one step past its hover. Nothing shrinks by default: a shrink is
    hard to see under a finger, and on a small button it reads as a glitch. --button-press-scale opts back in to one.
    Not on the link variant, which reads as text. */
-.dk-btn:not(.dk-btn--link):active:not(:disabled, [aria-disabled="true"]),
-.dk-btn:not(.dk-btn--link)[data-pressed]:not(:disabled, [aria-disabled="true"]) {
-  scale: var(--dk-btn-press);
+.srp-btn:not(.srp-btn--link):active:not(:disabled, [aria-disabled="true"]),
+.srp-btn:not(.srp-btn--link)[data-pressed]:not(:disabled, [aria-disabled="true"]) {
+  scale: var(--srp-btn-press);
   transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--button-press-duration, var(--motion-press));
   transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-settle);
 }
 /* Nudge (off by default): on hover (devices that hover), a right icon slides --button-icon-nudge in its direction.
    Set it, e.g. to var(--spacing-0\.5), where right icons are arrows that mean "go forward". */
-.dk-btn__label {
+.srp-btn__label {
   transition-property: opacity, filter;
   transition-duration: var(--button-loading-duration, var(--motion-enter-sm));
   transition-timing-function: var(--ease-move);
 }
-.dk-btn__icon {
+.srp-btn__icon {
   transition-property: opacity, filter, translate;
   transition-duration: var(--button-loading-duration, var(--motion-enter-sm)), var(--button-loading-duration, var(--motion-enter-sm)), var(--button-icon-nudge-duration, var(--motion-change-sm));
   transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-settle);
 }
 @media (hover: hover) {
-  .dk-btn:hover:not(:disabled, [aria-disabled="true"]) > .dk-btn__icon--right { translate: var(--dk-btn-nudge) 0; }
-  .dk-btn:dir(rtl):hover:not(:disabled, [aria-disabled="true"]) > .dk-btn__icon--right { translate: calc(var(--spacing-0) - var(--dk-btn-nudge)) 0; }
+  .srp-btn:hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--end { translate: var(--srp-btn-nudge) 0; }
+  .srp-btn:dir(rtl):hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--end { translate: calc(var(--spacing-0) - var(--srp-btn-nudge)) 0; }
 }
 /* Loading: the content fades out (transition above) while the spinner fades and grows in. Both blur a
    little (blur-xs) while they cross, so they read as one change rather than two layers. */
-.dk-btn__loader { animation: dk-btn-loader-in var(--button-loading-duration, var(--motion-enter-sm)) var(--ease-enter) both; }
-@keyframes dk-btn-loader-in { from { opacity: var(--opacity-0); scale: var(--dk-btn-loader-from); filter: var(--dk-btn-cross-blur); } }
+.srp-btn__loader { animation: srp-btn-loader-in var(--button-loading-duration, var(--motion-enter-sm)) var(--ease-enter) both; }
+@keyframes srp-btn-loader-in { from { opacity: var(--opacity-0); scale: var(--srp-btn-loader-from); filter: var(--srp-btn-cross-blur); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-btn { --dk-btn-cross-blur: blur(var(--blur-xs)); }
-  .dk-btn--loading-cover > .dk-btn__label,
-  .dk-btn--loading-cover > .dk-btn__icon { filter: var(--dk-btn-cross-blur); }
+  .srp-btn { --srp-btn-cross-blur: blur(var(--blur-xs)); }
+  .srp-btn--loading-cover > .srp-btn__label,
+  .srp-btn--loading-cover > .srp-btn__icon { filter: var(--srp-btn-cross-blur); }
 }
 /* Touch: 44px to press on a touch screen, as the Design principles promise, without moving or redrawing anything. A
    box behind the button reaches past its edges up to 44px on each axis (a 32px IconButton takes a press 6px outside
-   it). With another button in the same row it stops halfway into the gap (--dk-touch-gap, set by the rows that hold
+   it). With another button in the same row it stops halfway into the gap (--srp-touch-gap, set by the rows that hold
    buttons; 4px, the smallest gap between buttons, when nothing says), so it never takes a press meant for its neighbour.
    Above and below it keeps its full reach: a row of buttons (a dialog's footer, an attached group) is one line, and a
    press beside a wrapped row's lines goes to the line below it. */
 @media (pointer: coarse) {
-  /* The box is placed from inside the border (--dk-btn-bw), so each reach counts it back out. */
-  .dk-btn::after {
-    --dk-btn-bw: var(--button-border-width, var(--border-width-1));
-    --dk-btn-reach: calc(min(var(--spacing-0), (100% + 2 * var(--dk-btn-bw) - var(--spacing-11)) / 2) - var(--dk-btn-bw));
-    content: ""; position: absolute; inset: var(--dk-btn-reach);
+  /* The box is placed from inside the border (--srp-btn-bw), so each reach counts it back out. */
+  .srp-btn::after {
+    --srp-btn-bw: var(--button-border-width, var(--border-width-1));
+    --srp-btn-reach: calc(min(var(--spacing-0), (100% + 2 * var(--srp-btn-bw) - var(--spacing-11)) / 2) - var(--srp-btn-bw));
+    content: ""; position: absolute; inset: var(--srp-btn-reach);
   }
-  :is(.dk-btn ~ .dk-btn, .dk-btn:has(~ .dk-btn))::after { --dk-btn-gap: calc(var(--spacing-0) - var(--dk-touch-gap, var(--spacing-1)) / 2 - var(--dk-btn-bw)); inset-inline: max(var(--dk-btn-reach), var(--dk-btn-gap)); }
+  :is(.srp-btn ~ .srp-btn, .srp-btn:has(~ .srp-btn))::after { --srp-btn-gap: calc(var(--spacing-0) - var(--srp-touch-gap, var(--spacing-1)) / 2 - var(--srp-btn-bw)); inset-inline: max(var(--srp-btn-reach), var(--srp-btn-gap)); }
 }
 /* A pressed toggle (aria-pressed) in forced colors: the variants' fills are gone there, so the pressed one takes the
    system highlight, as ToggleButton's does. */
-@media (forced-colors: active) { .dk-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
+@media (forced-colors: active) { .srp-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .dk-btn { --dk-btn-press: var(--scale-100); --dk-btn-nudge: var(--spacing-0); --dk-btn-loader-from: var(--scale-100); }
-  .dk-btn__loader { animation-name: dk-loader-in; }   /* only fades in: nothing grows */
+  .srp-btn { --srp-btn-press: var(--scale-100); --srp-btn-nudge: var(--spacing-0); --srp-btn-loader-from: var(--scale-100); }
+  .srp-btn__loader { animation-name: srp-loader-in; }   /* only fades in: nothing grows */
 }
 }

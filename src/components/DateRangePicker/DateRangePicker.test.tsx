@@ -75,6 +75,14 @@ describe('DateRangePicker', () => {
     expect([f.value, calls]).toEqual(['5/1', []]);
   });
 
+  test('in the popup the ends and the days between have names, as RangeCalendar\'s do, so the range isn\'t carried by color alone', async () => {
+    await render(<Trip />);
+    await userEvent.click(btn('trip'));
+    await expect.poll(() => isOpen('trip')).toBe(true);
+    expect(['2025-03-10', '2025-03-12', '2025-03-14', '2025-03-15'].map((d) => day('trip', d).getAttribute('aria-label'))).toEqual([
+      'Monday, March 10, 2025, Start date', 'Wednesday, March 12, 2025, in the range', 'Friday, March 14, 2025, End date', 'Saturday, March 15, 2025']);
+  });
+
   test('both fields are described by the Field hint and the format to type', async () => {
     await render(<Trip />);
     expect(fields('trip').map((f) => (f.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)!.textContent).join(' | '))).toEqual(['mm/dd/yyyy | Format: mm/dd/yyyy', 'mm/dd/yyyy | Format: mm/dd/yyyy']);
@@ -104,7 +112,7 @@ describe('DateRangePicker', () => {
     const calls: string[] = [];
     function Plain() {
       const [v, setV] = React.useState<{ start: string | null; end: string | null }>({ start: '2026-10-05', end: '2026-10-09' });
-      return <DateRangePicker data-testid="drps" locale="en-US" value={v} max="2026-10-31" onValueChange={(r, iso) => { calls.push(str(r) + ' ' + iso.start + '..' + iso.end); setV(iso); }} />;
+      return <DateRangePicker data-testid="drps" locale="en-US" value={v} max="2026-10-31" onValueChange={(r, { iso }) => { calls.push(str(r) + ' ' + iso.start + '..' + iso.end); setV(iso); }} />;
     }
     await render(<Plain />);
     expect(vals('drps')).toBe('10/05/2026 – 10/09/2026');
@@ -113,12 +121,12 @@ describe('DateRangePicker', () => {
     expect([calls, vals('drps')]).toEqual([['Mon Oct 05 2026..Mon Oct 12 2026 2026-10-05..2026-10-12'], '10/05/2026 – 10/12/2026']);
   });
 
-  test('a role="group" dk-input box with "Start date" and "End date" fields, a "Choose dates" button; Field labels the start field and describes both; ref and className; defaultValue fills both fields', async () => {
+  test('a role="group" srp-input box with "Start date" and "End date" fields, a "Choose dates" button; Field labels the start field and describes both; ref and className; defaultValue fills both fields', async () => {
     const ref = React.createRef<HTMLSpanElement>();
     await render(<Trip tref={ref} />);
     const el = box('trip'), [s, e] = fields('trip');
     expect(ref.current).toBe(el);
-    expect(el.className).toMatch(/dk-input.*extra/);
+    expect(el.className).toMatch(/srp-input.*extra/);
     expect([el.getAttribute('role'), s!.getAttribute('aria-label'), e!.getAttribute('aria-label'), s!.placeholder, btn('trip').getAttribute('aria-label')]).toEqual(['group', 'Start date', 'End date', 'mm/dd/yyyy', 'Choose dates']);
     expect(!!s!.id && document.querySelector('label')!.htmlFor === s!.id).toBe(true);
     expect(!!s!.getAttribute('aria-describedby') && s!.getAttribute('aria-describedby') === e!.getAttribute('aria-describedby')).toBe(true);
@@ -359,7 +367,7 @@ describe('DateRangePicker presets (RU11)', () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
     const min = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 10);
-    await render(<DateRangePicker data-testid="pre" aria-label="Report" locale="en-US" min={min} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await render(<DateRangePicker data-testid="pre" aria-label="Report" locale="en-US" min={min} presets onValueChange={(_r, { iso: s }) => got.push(s.start + '..' + s.end)} />);
     await userEvent.click(btn('pre'));
     const group = pop('pre').querySelector('[role=group][aria-label=Shortcuts]')!;
     expect(group.getAttribute('aria-label')).toBe('Shortcuts');
@@ -381,7 +389,7 @@ describe('DateRangePicker presets (RU11)', () => {
   test('with max today, "This month" is the month so far and can be picked (GR287)', async () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
-    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, { iso: s }) => got.push(s.start + '..' + s.end)} />);
     await userEvent.click(btn('mx'));
     const month = presetBtns('mx')[4]!;
     expect([month.textContent, month.getAttribute('aria-disabled')]).toEqual(['This month', null]);

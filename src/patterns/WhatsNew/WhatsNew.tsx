@@ -12,6 +12,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* What's new: the product's changes, newest first, by month; what's new since your last visit marked; a filter by kind;
    and older months on request. For an app to copy. What it carries (WCAG 2.2):
@@ -36,6 +37,9 @@ export interface WhatsNewProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Change[] = [
@@ -66,7 +70,7 @@ export function byMonth(changes: Change[]) {
 }
 
 /** The What's new page: a skip link, a header, then main with the h1, the filter, and the changes by month. */
-export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, loading = false, loadFailed = false, onRetry }: WhatsNewProps) {
+export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, loading = false, loadFailed = false, onRetry, online }: WhatsNewProps) {
   const locale = useLocale();
   const [kind, setKind] = React.useState<'all' | ChangeKind>('all');
   const [shown, setShown] = React.useState(months);
@@ -97,6 +101,7 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, 
         <Link underline="hover" href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the changes loaded before you went offline.</OfflineBanner>
         <PageHeader title="What’s new" description={loading || loadFailed ? undefined : unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load what’s new" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading what’s new" /></Card> : (<>

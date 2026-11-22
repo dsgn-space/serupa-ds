@@ -57,9 +57,9 @@ function Page() {
 describe('touch-sized targets (EQ1)', () => {
   test('with a mouse: 24px, so a press 20px off the middle misses; the Splitter handle takes one 3px off its sides but not 6px', async () => {
     await render(<Page />);
-    expect(around('.hit-alone', '.dk-checkbox')).toEqual(['', '']);
-    expect(around('.dk-switch', '.dk-switch')).toEqual(['', '']);
-    expect(around('.hit-slider', '.dk-slider')).toEqual(['', '']);
+    expect(around('.hit-alone', '.srp-checkbox')).toEqual(['', '']);
+    expect(around('.srp-switch', '.srp-switch')).toEqual(['', '']);
+    expect(around('.hit-slider', '.srp-slider')).toEqual(['', '']);
     $('[role="separator"]').scrollIntoView({ block: 'center' });
       const h = box('[role="separator"]'), y = h.top + h.height / 2;
     const sep = (x: number) => document.elementFromPoint(x, y)?.closest('[role="separator"]') ?? null;
@@ -70,19 +70,19 @@ describe('touch-sized targets (EQ1)', () => {
     await render(<Page />);
     await coarsePointer(async (active) => {
       if (!active) return;
-      expect(around('.hit-alone', '.dk-checkbox')).toEqual(['alone', 'alone']);
-      expect(around('.dk-switch', '.dk-switch')).toEqual(['switch', 'switch']);
-      expect(around('.hit-slider', '.dk-slider')).toEqual(['slider', 'slider']);
-      $('.dk-segmented__item').classList.add('hit-seg');
-      expect(around('.dk-segmented__item', '.dk-segmented__item')).toEqual(['seg', 'seg']);
-      expect(around('.dk-breadcrumb__link', '.dk-breadcrumb__link')).toEqual(['crumb', 'crumb']);
+      expect(around('.hit-alone', '.srp-checkbox')).toEqual(['alone', 'alone']);
+      expect(around('.srp-switch', '.srp-switch')).toEqual(['switch', 'switch']);
+      expect(around('.hit-slider', '.srp-slider')).toEqual(['slider', 'slider']);
+      $('.srp-segmented__item').classList.add('hit-seg');
+      expect(around('.srp-segmented__item', '.srp-segmented__item')).toEqual(['seg', 'seg']);
+      expect(around('.srp-breadcrumb__link', '.srp-breadcrumb__link')).toEqual(['crumb', 'crumb']);
       $('.hit-tue').scrollIntoView({ block: 'center' });
       // The group's rows: above the first and below the last they reach out; between two, each stops at the middle of the gap.
       const mon = box('.hit-mon'), tue = box('.hit-tue'), x = mon.left + 8, mid = (mon.bottom + tue.top) / 2;
-      expect([at(x, mon.top - 6, '.dk-checkbox'), at(x, mid - 1, '.dk-checkbox'), at(x, mid + 1, '.dk-checkbox')]).toEqual(['mon', 'mon', 'tue']);
+      expect([at(x, mon.top - 6, '.srp-checkbox'), at(x, mid - 1, '.srp-checkbox'), at(x, mid + 1, '.srp-checkbox')]).toEqual(['mon', 'mon', 'tue']);
       $('.hit-s').scrollIntoView({ block: 'center' });
       const s = box('.hit-s'), m = box('.hit-m'), cy = s.top + s.height / 2;
-      expect([at(s.left + 4, cy - 20, '.dk-radio'), at(m.right - 4, cy + 20, '.dk-radio'), at((s.right + m.left) / 2, cy, '.dk-radio')]).toEqual(['s', 'm', '']);
+      expect([at(s.left + 4, cy - 20, '.srp-radio'), at(m.right - 4, cy + 20, '.srp-radio'), at((s.right + m.left) / 2, cy, '.srp-radio')]).toEqual(['s', 'm', '']);
       $('[role="separator"]').scrollIntoView({ block: 'center' });
       const h = box('[role="separator"]'), y = h.top + h.height / 2;
       expect([document.elementFromPoint(h.left - 6, y)?.closest('[role="separator"]'), document.elementFromPoint(h.right + 6, y)?.closest('[role="separator"]')]).toEqual([$('[role="separator"]'), $('[role="separator"]')]);
@@ -199,12 +199,12 @@ describe('touch-sized buttons', () => {
 function Rows() {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
     <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
-    <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
+    <Carousel aria-label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
   </div>;
 }
 const rows = () => {
-  const day = box('.dk-calendar__day');
-  $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
+  const day = box('.srp-calendar__day');
+  $('.srp-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
   return { day: [Math.round(day.width), Math.round(day.height)], dot: around('.hit-dot', '.hit-dot') };
 };
 

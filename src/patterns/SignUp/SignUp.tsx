@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { Center } from '../../components/Center/Center';
+import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
@@ -15,6 +17,7 @@ import { Icon } from '../../components/Icon/Icon';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Alert } from '../../components/Alert/Alert';
 import { announce } from '../../internal/announce';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Sign-up: name, email, an optional phone, a password whose rules are shown before typing, and the terms; then a
    code sent by email; then done. For an app to copy. What it carries (WCAG 2.2):
@@ -48,6 +51,9 @@ export interface SignUpProps {
   /** Sends a new code to the email, from "Send a new code". Return its promise: the button is busy until it settles,
    *  and a rejection says the code didn't go. */
   onResend?: ((email: string) => void | PromiseLike<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const MIN = 12;
@@ -74,7 +80,7 @@ export function signUpProblems(v: SignUpValues): ErrorSummaryItem[] {
 const empty: SignUpValues = { name: '', email: '', phone: '', password: '', terms: false };
 
 /** The sign-up page: a skip link, then main with the step's form. */
-export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed, verify = (c) => c === '123456', onResend }: SignUpProps) {
+export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed, verify = (c) => c === '123456', onResend, online }: SignUpProps) {
   const [step, setStep] = React.useState<SignUpStep>(start);
   const [v, setV] = React.useState<SignUpValues>({ ...empty, ...initial });
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
@@ -125,7 +131,9 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
+      <Center as="main" id="main" vertical className="outline-none">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your details stay here. Creating the account needs a connection.</OfflineBanner>
         <p className="m-0 text-base font-semibold">Acme</p>
         <Card className="flex flex-col gap-4">
           {step === 'form' ? (
@@ -192,7 +200,8 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
             </>
           )}
         </Card>
-      </main>
+        </Stack>
+      </Center>
     </div>
   );
 }

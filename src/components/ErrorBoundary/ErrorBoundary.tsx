@@ -112,7 +112,7 @@ const Boundary = /* @__PURE__ */ (() => class Boundary extends React.Component<B
     if (typeof p.fallback === 'function') return p.fallback({ error: this.state.error, reset: this.reset });
     if (p.fallback !== undefined) return p.fallback;
     return (
-      <div ref={this.box} tabIndex={-1} className={cn('dk-error-boundary', p.className)} data-component="error-boundary">
+      <div ref={this.box} tabIndex={-1} className={cn('srp-error-boundary', p.className)} data-component="error-boundary">
         <Alert tone="danger" title={p.title ?? p.labels.errorTitle}
           actions={<Button size="sm" variant="outline" onClick={this.reset}>{p.labels.tryAgain}</Button>}>
           {p.description ?? p.labels.errorDescription}

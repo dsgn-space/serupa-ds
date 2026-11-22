@@ -28,8 +28,8 @@ import { PasswordInput, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `CapsLockOn` story.
 
-1. **Field** (`.dk-input__field`): where the password is typed, hidden as dots.
-2. **Show password** (`.dk-password-input__toggle`): shows and hides what was typed.
+1. **Field** (`.srp-input__field`): where the password is typed, hidden as dots.
+2. **Show password** (`.srp-password-input__toggle`): shows and hides what was typed.
 
 ## Usage
 
@@ -85,7 +85,7 @@ Drawn from the `CapsLockOn` story.
 | `toggleLabel` | string | `"Show password"` | The button's name |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Input |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid` |
-| `leftIcon` | an icon name or element | none | A decorative icon before the text |
+| `startIcon` | an icon name or element | none | A decorative icon before the text |
 | `capsLockHint` | boolean | `true` | Shows and reads out "Caps Lock is on" while it is |
 
 `autoComplete` defaults to `"current-password"`; use `"new-password"` when creating one. `ref`, `value`, `onChange` and every other input attribute go to the `<input>`; `className` and `style` go to the box, which has `data-component="password-input"`.

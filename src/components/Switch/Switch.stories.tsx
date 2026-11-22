@@ -7,8 +7,8 @@ import { Button } from '../Button/Button';
 const meta = {
   title: 'Components/Forms/Switch',
   component: Switch,
-  args: { children: 'Wi-Fi', size: 'md', labelPosition: 'end' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, labelPosition: { control: 'inline-radio', options: ['end', 'start'] } },
+  args: { children: 'Wi-Fi', size: 'md', labelPlacement: 'end' },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, labelPlacement: { control: 'inline-radio', options: ['end', 'start'] } },
 } satisfies Meta<typeof Switch>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -29,7 +29,7 @@ export const States: Story = {
     <Switch readOnly defaultChecked>Read-only and on</Switch>
     <Switch disabled>Disabled</Switch>
     <Switch disabled defaultChecked>Disabled and on</Switch>
-    <div style={{ maxWidth: 320 }}><Switch labelPosition="start" className="w-full justify-between">Label first</Switch></div>
+    <div style={{ maxWidth: 320 }}><Switch labelPlacement="start" className="w-full justify-between">Label first</Switch></div>
   </Col>,
 };
 
@@ -60,12 +60,12 @@ export const LongLabel: Story = {
 /** Do: name the setting; the switch shows on or off. */
 export const DoNameTheSetting: Story = {
   name: 'Do: name the setting',
-  render: () => <div style={{ maxWidth: 280 }}><Switch labelPosition="start" className="w-full justify-between" defaultChecked>Email notifications</Switch></div>,
+  render: () => <div style={{ maxWidth: 280 }}><Switch labelPlacement="start" className="w-full justify-between" defaultChecked>Email notifications</Switch></div>,
 };
 /** Don't: a label that states the state, and changes with it. */
 export const DontLabelTheState: Story = {
   name: "Don't: label the state",
-  render: () => <div style={{ maxWidth: 280 }}><Switch labelPosition="start" className="w-full justify-between" defaultChecked>Notifications are on</Switch></div>,
+  render: () => <div style={{ maxWidth: 280 }}><Switch labelPlacement="start" className="w-full justify-between" defaultChecked>Notifications are on</Switch></div>,
 };
 /** Do: checkboxes in a form that waits for Save. */
 export const DoCheckboxInForm: Story = {

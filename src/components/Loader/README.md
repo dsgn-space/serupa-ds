@@ -45,9 +45,9 @@ import { Loader } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story.
 
-1. **Loader** (`.dk-loader`): the whole indicator, named "Loading" (or your label) for screen readers.
-2. **Track** (`.dk-loader__track`): the spinner's faint full circle.
-3. **Arc** (`.dk-loader__arc`): the part that turns; it stops under reduced motion and pulses instead.
+1. **Loader** (`.srp-loader`): the whole indicator, named "Loading" (or your label) for screen readers.
+2. **Track** (`.srp-loader__track`): the spinner's faint full circle.
+3. **Arc** (`.srp-loader__arc`): the part that turns; it stops under reduced motion and pulses instead.
 
 ## Usage
 

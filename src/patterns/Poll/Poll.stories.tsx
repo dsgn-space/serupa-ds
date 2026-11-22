@@ -27,3 +27,6 @@ export const VoteFails: Story = { args: { onVote: () => new Promise((_, no) => s
 export const SlowVote: Story = {
   args: { onVote: (id, previous) => new Promise((ok) => setTimeout(() => ok(recount({ beach: 9, boat: 14, garden: 5, escape: 2 }, id, previous)), 1200)) },
 };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

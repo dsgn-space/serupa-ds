@@ -44,7 +44,7 @@ export const PageSize: Story = {
   args: { total: 245, pageSizeOptions: [10, 25, 50] },
   render: function Render(args) {
     const [per, setPer] = React.useState(10), [page, setPage] = React.useState(3);
-    return <div style={{ maxWidth: 640 }}><Pagination {...args} count={Math.ceil(245 / per)} page={page} onPageChange={setPage} pageSize={per} onPageSizeChange={(n, p) => { setPer(n); setPage(p); }} /></div>;
+    return <div style={{ maxWidth: 640 }}><Pagination {...args} count={Math.ceil(245 / per)} page={page} onPageChange={setPage} pageSize={per} onPageSizeChange={(n, { page: p }) => { setPer(n); setPage(p); }} /></div>;
   },
 };
 

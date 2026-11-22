@@ -29,7 +29,7 @@ export interface PhoneValueDetails {
   complete: boolean;
 }
 
-export interface PhoneInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'onChange' | 'leftIcon' | 'rightIcon'> {
+export interface PhoneInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'onChange' | 'startIcon' | 'endIcon'> {
   /** The number in E.164, such as "+6281234567890", or "" (controlled). Use with onValueChange. */
   value?: string | undefined;
   /** The number at first (uncontrolled), in E.164. */
@@ -232,17 +232,17 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   // page writes "مصر (+20)", not "(20+)" (GR49).
   const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? '' : 'server-') + c.code} value={c.code} suppressHydrationWarning>{name + ' (\u2066+' + c.dial + '\u2069)'}</option>), [list, hydrated]);
   return (
-    <span className={cn('dk-input dk-phone-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
+    <span className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="phone-input" data-size={size} onMouseDown={(e) => pressFocuses(input)(e)}>
-      <span className="dk-phone-input__country">
-        <span className="dk-phone-input__dial" aria-hidden>+{country.dial}</span>
-        <Icon icon={icons.ExpandMore} className="dk-phone-input__chevron" />
-        <select ref={select} className="dk-phone-input__select" value={country.code} onChange={onCountry} disabled={rest.disabled || rest.readOnly}
+      <span className="srp-phone-input__country">
+        <span className="srp-phone-input__dial" aria-hidden>+{country.dial}</span>
+        <Icon icon={icons.ExpandMore} className="srp-phone-input__chevron" />
+        <select ref={select} className="srp-phone-input__select" value={country.code} onChange={onCountry} disabled={rest.disabled || rest.readOnly}
           aria-label={props.countryLabel || sds.labels.country}>
           {options}
         </select>
       </span>
-      <input autoComplete="tel" {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={setRef} type="tel" inputMode="tel" className="dk-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
+      <input autoComplete="tel" {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={setRef} type="tel" inputMode="tel" className="srp-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={toE164(shown, country)} disabled={rest.disabled} /> : null}
     </span>
   );

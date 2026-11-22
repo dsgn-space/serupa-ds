@@ -7,14 +7,14 @@ Avatars in an overlapping row, such as the people on a project or the assignees 
 ```tsx
 import { Avatar, AvatarGroup } from "@diki-stwn/serupa-ds";
 
-<AvatarGroup label="Assigned to" max={3}>
+<AvatarGroup aria-label="Assigned to" max={3}>
   <Avatar name="Ada Lovelace" src="/ada.jpg" />
   <Avatar name="Grace Hopper" />
   <Avatar name="Alan Turing" />
   <Avatar name="Katherine Johnson" />
 </AvatarGroup>
 
-<AvatarGroup label="Members" size="sm" total={members.length}>
+<AvatarGroup aria-label="Members" size="sm" total={members.length}>
   {members.slice(0, 5).map((m) => <Avatar key={m.id} name={m.name} src={m.photo} />)}
 </AvatarGroup>
 ```
@@ -34,8 +34,8 @@ import { Avatar, AvatarGroup } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Overflow` story.
 
-1. **Avatar** (`.dk-avatar-group__item`): one person, overlapping the next.
-2. **More** (`.dk-avatar-group__more`): how many more there are, after the ones that fit.
+1. **Avatar** (`.srp-avatar-group__item`): one person, overlapping the next.
+2. **More** (`.srp-avatar-group__more`): how many more there are, after the ones that fit.
 
 ## Usage
 
@@ -78,7 +78,7 @@ Drawn from the `Overflow` story.
 | `max` | `number` | all | The most avatars to show; the rest become "+N". |
 | `total` | `number` | the number of children | How many there are in all, when you pass only some. "+N" counts the ones not shown. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Every avatar's size, wrapped ones included. It wins over each avatar's own `size`. |
-| `label` | `string` | | The group's accessible name, such as "Assigned to". |
+| `aria-label` | `string` | | The group's accessible name, such as "Assigned to". |
 | `showMore` | `boolean` | `false` | Makes "+N" a button that opens a popover listing the people not shown. |
 | `onMore` | `(event) => void` | | Makes "+N" a button that calls this, to show the rest your own way. Wins over `showMore`. |
 | `moreLabel` | `(count, formatted) => string` | `"N more"` | What a screen reader hears for "+N", and the last line of the showMore list. `formatted` is the count in the locale's digits and grouping ("1,234", "١٬٢٣٤"); `count` is for plural rules. By default the `avatarMore` label ("N lainnya" in `idLabels`). |

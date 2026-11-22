@@ -21,7 +21,7 @@ export function ProjectCard({ headingLevel = 3 }: { headingLevel?: 2 | 3 | 4 }) 
     <CardHeader headingLevel={headingLevel} title="Website refresh" description="Due 28 November" action={<Badge tone="success" dot>On track</Badge>} />
     <CardBody className="flex flex-col gap-4">
       <Progress value={68} label="Tasks done" showValue />
-      <AvatarGroup label="Team" size="lg" max={3} total={7}>{TEAM.map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>
+      <AvatarGroup aria-label="Team" size="lg" max={3} total={7}>{TEAM.map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>
     </CardBody>
   </Card>;
 }

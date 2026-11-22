@@ -41,14 +41,14 @@ function Sink() {
           <Text tone="muted">Website redesign, due 30 November. <Link href="#">Project brief</Link></Text>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <AvatarGroup label="Members" max={3}>
+          <AvatarGroup aria-label="Members" max={3}>
             <Avatar name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Alan Turing" /><Avatar name="Katherine Johnson" />
           </AvatarGroup>
           <ButtonGroup aria-label="Share">
-            <Button variant="outline" leftIcon="link">Copy link</Button>
+            <Button variant="outline" startIcon="link">Copy link</Button>
             <IconButton variant="outline" icon="more_horiz" label="More actions" />
           </ButtonGroup>
-          <Button leftIcon="add">New task</Button>
+          <Button startIcon="add">New task</Button>
         </div>
       </div>
     </div>
@@ -75,12 +75,12 @@ function Sink() {
             <Badge tone="success" dot>Online</Badge>
             <Badge variant="solid" tone="primary">New</Badge>
             <Badge variant="outline" tone="info">Beta</Badge>
-            <Badge tone="warning" leftIcon="schedule">Pending</Badge>
+            <Badge tone="warning" startIcon="schedule">Pending</Badge>
           </div>
           <Table caption="Team members">
             <TableHead>
               <TableRow>
-                <TableSelectCell header label="Select all rows" checked={picked.size === people.length} indeterminate={picked.size > 0 && picked.size < people.length}
+                <TableSelectCell inHeader label="Select all rows" checked={picked.size === people.length} indeterminate={picked.size > 0 && picked.size < people.length}
                   onChange={() => setPicked(picked.size === people.length ? new Set() : new Set(people.map((p) => p.id)))} />
                 <TableHeaderCell>Name</TableHeaderCell>
                 <TableHeaderCell>Role</TableHeaderCell>

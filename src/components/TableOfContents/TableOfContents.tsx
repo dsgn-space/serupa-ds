@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { reducedMotion as reduced } from '../../internal/mediaList';
 import { named } from '../../internal/component';
+import { pageHash } from '../../internal/hash';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
 import { en as words } from './labels';
@@ -39,7 +40,7 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { items: 1, container: 1, headings: 1, title: 1, offset: 1, variant: 1, className: 1 } as const);
   const rail = props.variant === 'rail';
-  const titleId = domId('dk-toc', React.useId()) + '-title';
+  const titleId = domId('srp-toc', React.useId()) + '-title';
   const offset = props.offset ?? 96;
   const [found, setFound] = React.useState<TocItem[]>([]);
   const items = props.items || found;
@@ -71,7 +72,7 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
       // A shared link to a heading whose id is made here (#beta-part): the browser looked for it before it existed,
       // so the page opened at the top. Go there once, as the browser would have, the first time the id exists.
       if (!hashDone) {
-        const hash = decodeURIComponent(window.location.hash.slice(1));
+        const hash = pageHash();
         const h = hash ? document.getElementById(hash) : null;
         if (!hash) hashDone = true;
         else if (h && used.has(hash)) { hashDone = true; h.scrollIntoView({ block: 'start' }); }
@@ -171,27 +172,27 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
   const title = props.title === undefined ? L.tocTitle : props.title;
   const minLevel = items.reduce((m, i) => Math.min(m, i.level ?? 2), 6);
   const list = (
-    <ul className="dk-toc__list" role="list">
+    <ul className="srp-toc__list" role="list">
       {items.map((it) => (
-        <li key={it.id} className="dk-toc__item" style={{ '--dk-toc-depth': Math.max(0, (it.level ?? 2) - minLevel) } as React.CSSProperties}>
-          <a className="dk-toc__link" href={'#' + it.id} aria-current={current === it.id ? 'location' : undefined} onClick={(e) => { go(e, it.id); if (rail) setOpen(false); }}>{it.label}</a>
+        <li key={it.id} className="srp-toc__item" style={{ '--srp-toc-depth': Math.max(0, (it.level ?? 2) - minLevel) } as React.CSSProperties}>
+          <a className="srp-toc__link" href={'#' + it.id} aria-current={current === it.id ? 'location' : undefined} onClick={(e) => { go(e, it.id); if (rail) setOpen(false); }}>{it.label}</a>
         </li>
       ))}
     </ul>
   );
-  const head = title != null ? <p className="dk-toc__title" id={titleId}>{title}</p> : null;
+  const head = title != null ? <p className="srp-toc__title" id={titleId}>{title}</p> : null;
   return (
-    <nav {...rest} {...railHandlers} ref={setNav} className={cn('dk-toc', rail && 'dk-toc--rail', props.className)} data-component="table-of-contents"
+    <nav {...rest} {...railHandlers} ref={setNav} className={cn('srp-toc', rail && 'srp-toc--rail', props.className)} data-component="table-of-contents"
       data-variant={rail ? 'rail' : undefined} data-open={rail && open ? '' : undefined} data-dismissed={rail && dismissed ? '' : undefined}
       aria-labelledby={props['aria-label'] || props['aria-labelledby'] || title == null ? props['aria-labelledby'] : titleId}>
       {rail ? <>
         {/* The dashes are a picture of the list: the links are in the panel, for the keyboard and screen readers. A
             tap (touch or pen) shows the panel, as the pointer over it does with a mouse. */}
-        <div className="dk-toc__rail" aria-hidden="true" onPointerDown={(e) => { if (e.pointerType !== 'mouse') { setDismissed(false); setOpen((o) => !o); } }}>
-          {items.map((it) => <span key={it.id} className="dk-toc__dash" data-current={current === it.id ? '' : undefined}
-            style={{ '--dk-toc-depth': Math.min(2, Math.max(0, (it.level ?? 2) - minLevel)) } as React.CSSProperties} />)}
+        <div className="srp-toc__rail" aria-hidden="true" onPointerDown={(e) => { if (e.pointerType !== 'mouse') { setDismissed(false); setOpen((o) => !o); } }}>
+          {items.map((it) => <span key={it.id} className="srp-toc__dash" data-current={current === it.id ? '' : undefined}
+            style={{ '--srp-toc-depth': Math.min(2, Math.max(0, (it.level ?? 2) - minLevel)) } as React.CSSProperties} />)}
         </div>
-        <div className="dk-toc__panel" onFocus={rail ? reveal : undefined}>{head}{list}</div>
+        <div className="srp-toc__panel" onFocus={rail ? reveal : undefined}>{head}{list}</div>
       </> : <>{head}{list}</>}
     </nav>
   );

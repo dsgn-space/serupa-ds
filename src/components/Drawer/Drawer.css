@@ -1,79 +1,73 @@
 /* ---------------------------------------------------------------
    Drawer: a native <dialog> (showModal) that fills the screen; its panel sits against one edge: full height and
-   320, 384 or 512px wide (left, right, start, end), or full width and as tall as its content (top, bottom, rounded on the
+   320, 384 or 512px wide (start, end), or full width and as tall as its content (top, bottom, rounded on the
    open side). Header, a body that scrolls, and a footer under a line. The page behind is dimmed and doesn't
    scroll. Slides in from its edge (300ms) and back out to it faster (motion-exit-lg); fades with reduced motion.
    --------------------------------------------------------------- */
-@layer dk.components {
+@layer srp.components {
 /* Under 640px wide, space-surface is 16px inside the drawer (24px elsewhere): its panel, and a Card in it, keep most
    of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
    --drawer-padding still sets the panel's padding everywhere. */
-@media (max-width: 639.98px) { .dk-drawer { --space-surface: var(--spacing-4); } }
-.dk-drawer {
-  --dk-drawer-width: var(--drawer-width-md, var(--container-sm));
+@media (max-width: 639.98px) { .srp-drawer { --space-surface: var(--spacing-4); } }
+.srp-drawer {
+  --srp-drawer-width: var(--drawer-width-md, var(--container-sm));
   box-sizing: border-box; position: fixed; inset: var(--spacing-0);
   width: var(--sizing-full); max-width: none; height: var(--sizing-full); max-height: none;
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent;
   overflow: clip;   /* clip, not hidden: not a scroll container, so focusing a control while the panel is still off-screen can't scroll it into view (FN1) */
   color: var(--drawer-text, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-drawer[open] { display: flex; }
+.srp-drawer[open] { display: flex; }
 /* Against its edge whether open or closing (FN1): on [open] alone, a right or bottom panel jumped to the
    opposite edge as it began to slide out. */
-.dk-drawer--right { justify-content: flex-end; }
-/* right and left are physical, like the slide-in: right is the right edge in a right-to-left page too, where flex-end is the left. */
-.dk-drawer--right:dir(rtl) { justify-content: flex-start; }
-.dk-drawer--left:dir(rtl) { justify-content: flex-end; }
 /* start and end are logical: the edges the reading starts and ends at, flex-start and flex-end in either direction. */
-.dk-drawer--end { justify-content: flex-end; }
-.dk-drawer--bottom { align-items: flex-end; }
-.dk-drawer--sm { --dk-drawer-width: var(--drawer-width-sm, var(--container-xs)); }
-.dk-drawer--lg { --dk-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
-.dk-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
-:root:has(.dk-drawer[open]:not(.dk-drawer--nonmodal)) { overflow: hidden; }
-/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-dk-gutter). */
-:root[data-dk-gutter]:has(.dk-drawer[open]:not(.dk-drawer--nonmodal)) { scrollbar-gutter: stable; }
+.srp-drawer--end { justify-content: flex-end; }
+.srp-drawer--bottom { align-items: flex-end; }
+.srp-drawer--sm { --srp-drawer-width: var(--drawer-width-sm, var(--container-xs)); }
+.srp-drawer--lg { --srp-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
+.srp-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
+:root:has(.srp-drawer[open]:not(.srp-drawer--nonmodal)) { overflow: hidden; }
+/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-srp-gutter). */
+:root[data-srp-gutter]:has(.srp-drawer[open]:not(.srp-drawer--nonmodal)) { scrollbar-gutter: stable; }
 /* Non-modal (modal={false}): shown in place, not in the top layer, so it sits over the page by z-index; the
    full-screen box lets presses through, and only the panel takes them. */
-.dk-drawer--nonmodal { z-index: var(--z-overlay); pointer-events: none; }
-.dk-drawer--nonmodal .dk-drawer__panel { pointer-events: auto; }
+.srp-drawer--nonmodal { z-index: var(--z-overlay); pointer-events: none; }
+.srp-drawer--nonmodal .srp-drawer__panel { pointer-events: auto; }
 /* The "Discard changes?" question (unsaved) is a Dialog inside the drawer, beside the panel: it takes clicks too. */
-.dk-drawer--nonmodal > .dk-dialog { pointer-events: auto; }
+.srp-drawer--nonmodal > .srp-dialog { pointer-events: auto; }
 /* Swipe to close: a left or right panel leaves vertical panning to the browser and hands horizontal drags to the
    drawer; a top or bottom one is dragged by its header and footer, so its body still scrolls. */
-.dk-drawer--left .dk-drawer__panel, .dk-drawer--right .dk-drawer__panel, .dk-drawer--start .dk-drawer__panel, .dk-drawer--end .dk-drawer__panel { touch-action: pan-y; }
-.dk-drawer--top .dk-drawer__header, .dk-drawer--top .dk-drawer__footer, .dk-drawer--bottom .dk-drawer__header, .dk-drawer--bottom .dk-drawer__footer { touch-action: none; }
-.dk-drawer__panel {
+.srp-drawer--start .srp-drawer__panel, .srp-drawer--end .srp-drawer__panel { touch-action: pan-y; }
+.srp-drawer--top .srp-drawer__header, .srp-drawer--top .srp-drawer__footer, .srp-drawer--bottom .srp-drawer__header, .srp-drawer--bottom .srp-drawer__footer { touch-action: none; }
+.srp-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
-  width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
+  width: var(--srp-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay)); --surface-behind: var(--drawer-bg, var(--surface-overlay)); --border: var(--drawer-divider, var(--border-overlay));
-  --dk-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
+  --srp-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
   --field: var(--drawer-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
-  box-shadow: var(--drawer-shadow, var(--dk-drawer-shadow, var(--elevation-modal)));
+  box-shadow: var(--drawer-shadow, var(--srp-drawer-shadow, var(--elevation-modal)));
   position: relative;
 }
 /* The shadow falls from the panel toward the page, from the one light above (AD8): up from a bottom sheet, sideways
    from a side panel; a top panel's falls down, as a dialog's does. --drawer-shadow still sets one for every side. */
-.dk-drawer--bottom { --dk-drawer-shadow: var(--elevation-modal-up); }
-.dk-drawer--left, .dk-drawer--start { --dk-drawer-shadow: var(--elevation-modal-right); }
-.dk-drawer--right, .dk-drawer--end { --dk-drawer-shadow: var(--elevation-modal-left); }
-.dk-drawer--start:dir(rtl) { --dk-drawer-shadow: var(--elevation-modal-left); }
-.dk-drawer--end:dir(rtl) { --dk-drawer-shadow: var(--elevation-modal-right); }
+.srp-drawer--bottom { --srp-drawer-shadow: var(--elevation-modal-up); }
+.srp-drawer--start { --srp-drawer-shadow: var(--elevation-modal-right); }
+.srp-drawer--end { --srp-drawer-shadow: var(--elevation-modal-left); }
+.srp-drawer--start:dir(rtl) { --srp-drawer-shadow: var(--elevation-modal-left); }
+.srp-drawer--end:dir(rtl) { --srp-drawer-shadow: var(--elevation-modal-right); }
 /* Behind the panel's outer edge, a copy of its background while a drag pulls it away from the edge (up to 24px,
    Drawer.tsx INWARD) and while it settles back, so a pull inward never opens a gap at the screen's edge (KW5a). */
-.dk-drawer__panel[data-inward]::after { content: ""; position: absolute; inset: var(--spacing-0); translate: var(--dk-drawer-from); background: inherit; pointer-events: none; }
-.dk-drawer--right { --dk-drawer-from: var(--sizing-full) 0; }
-.dk-drawer--left { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
-.dk-drawer--start { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
-.dk-drawer--end { --dk-drawer-from: var(--sizing-full) 0; }
-.dk-drawer--start:dir(rtl) { --dk-drawer-from: var(--sizing-full) 0; }
-.dk-drawer--end:dir(rtl) { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
-.dk-drawer--top { --dk-drawer-from: 0 calc(var(--spacing-0) - var(--sizing-full)); }
-.dk-drawer--bottom { --dk-drawer-from: 0 var(--sizing-full); }
-.dk-drawer--top .dk-drawer__panel, .dk-drawer--bottom .dk-drawer__panel { width: var(--sizing-full); height: auto; max-height: calc(var(--sizing-full) - var(--spacing-16)); }
-.dk-drawer--top .dk-drawer__panel { border-end-start-radius: var(--drawer-radius, var(--radius-container)); border-end-end-radius: var(--drawer-radius, var(--radius-container)); }
-.dk-drawer--bottom .dk-drawer__panel { border-start-start-radius: var(--drawer-radius, var(--radius-container)); border-start-end-radius: var(--drawer-radius, var(--radius-container)); }
+.srp-drawer__panel[data-inward]::after { content: ""; position: absolute; inset: var(--spacing-0); translate: var(--srp-drawer-from); background: inherit; pointer-events: none; }
+.srp-drawer--start { --srp-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
+.srp-drawer--end { --srp-drawer-from: var(--sizing-full) 0; }
+.srp-drawer--start:dir(rtl) { --srp-drawer-from: var(--sizing-full) 0; }
+.srp-drawer--end:dir(rtl) { --srp-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
+.srp-drawer--top { --srp-drawer-from: 0 calc(var(--spacing-0) - var(--sizing-full)); }
+.srp-drawer--bottom { --srp-drawer-from: 0 var(--sizing-full); }
+.srp-drawer--top .srp-drawer__panel, .srp-drawer--bottom .srp-drawer__panel { width: var(--sizing-full); height: auto; max-height: calc(var(--sizing-full) - var(--spacing-16)); }
+.srp-drawer--top .srp-drawer__panel { border-end-start-radius: var(--drawer-radius, var(--radius-container)); border-end-end-radius: var(--drawer-radius, var(--radius-container)); }
+.srp-drawer--bottom .srp-drawer__panel { border-start-start-radius: var(--drawer-radius, var(--radius-container)); border-start-end-radius: var(--drawer-radius, var(--radius-container)); }
 /* Motion (DZ1): transitions, not keyframes, so closing while it slides in turns back from where it is. In from
    @starting-style; out, back the way it came, with the <dialog> kept shown (display, allow-discrete) and, modal, in
    the top layer (overlay) until the panel is gone and the backdrop has faded with it. Focus goes back at once, and
@@ -81,62 +75,62 @@
    closes it at once. A swipe hands the panel to the finger (no transition while dragged); let go, it slides back,
    or out from where it was. Open on arrival (data-instant), it has no starting style: there from the first frame.
    Reduced motion: the panel fades instead of sliding. */
-@supports (overlay: auto) { .dk-drawer { transition: display var(--motion-exit-lg) allow-discrete, overlay var(--motion-exit-lg) allow-discrete; } }
-.dk-drawer--nonmodal { transition: display var(--motion-exit-lg) allow-discrete; }
-.dk-drawer:not([open]), .dk-drawer:not([open])::backdrop, .dk-drawer:not([open]) .dk-drawer__panel { pointer-events: none; }
-.dk-drawer__panel, .dk-drawer::backdrop { transition: opacity var(--motion-exit-lg) var(--ease-exit), translate var(--motion-exit-lg) var(--ease-exit); }
-.dk-drawer[open] .dk-drawer__panel, .dk-drawer[open]::backdrop { transition: opacity var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter), translate var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter); }
-.dk-drawer[open] .dk-drawer__panel[data-dragging] { transition: none; }
+@supports (overlay: auto) { .srp-drawer { transition: display var(--motion-exit-lg) allow-discrete, overlay var(--motion-exit-lg) allow-discrete; } }
+.srp-drawer--nonmodal { transition: display var(--motion-exit-lg) allow-discrete; }
+.srp-drawer:not([open]), .srp-drawer:not([open])::backdrop, .srp-drawer:not([open]) .srp-drawer__panel { pointer-events: none; }
+.srp-drawer__panel, .srp-drawer::backdrop { transition: opacity var(--motion-exit-lg) var(--ease-exit), translate var(--motion-exit-lg) var(--ease-exit); }
+.srp-drawer[open] .srp-drawer__panel, .srp-drawer[open]::backdrop { transition: opacity var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter), translate var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter); }
+.srp-drawer[open] .srp-drawer__panel[data-dragging] { transition: none; }
 /* In, as a sequence: the backdrop starts, then the panel motion-sequence later (modal only: a side panel has no
    backdrop to wait for). Out, they leave together. */
-.dk-drawer[open]:not(.dk-drawer--nonmodal) .dk-drawer__panel:not([data-settling]) { transition-delay: var(--motion-sequence); }
-.dk-drawer:not([open])::backdrop { opacity: var(--opacity-0); }
-@starting-style { .dk-drawer[open]:not([data-instant])::backdrop { opacity: var(--opacity-0); } }
+.srp-drawer[open]:not(.srp-drawer--nonmodal) .srp-drawer__panel:not([data-settling]) { transition-delay: var(--motion-sequence); }
+.srp-drawer:not([open])::backdrop { opacity: var(--opacity-0); }
+@starting-style { .srp-drawer[open]:not([data-instant])::backdrop { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dk-drawer:not([open]) .dk-drawer__panel { translate: var(--dk-drawer-from); }
-  @starting-style { .dk-drawer[open]:not([data-instant]) .dk-drawer__panel { translate: var(--dk-drawer-from); } }
+  .srp-drawer:not([open]) .srp-drawer__panel { translate: var(--srp-drawer-from); }
+  @starting-style { .srp-drawer[open]:not([data-instant]) .srp-drawer__panel { translate: var(--srp-drawer-from); } }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dk-drawer:not([open]) .dk-drawer__panel { opacity: var(--opacity-0); }
-  @starting-style { .dk-drawer[open]:not([data-instant]) .dk-drawer__panel { opacity: var(--opacity-0); } }
+  .srp-drawer:not([open]) .srp-drawer__panel { opacity: var(--opacity-0); }
+  @starting-style { .srp-drawer[open]:not([data-instant]) .srp-drawer__panel { opacity: var(--opacity-0); } }
 }
-/* snapPoints: a bottom sheet as tall as its stop's share of the screen (--dk-drawer-snap, set by Drawer.tsx), up to
+/* snapPoints: a bottom sheet as tall as its stop's share of the screen (--srp-drawer-snap, set by Drawer.tsx), up to
    the whole screen. A drag follows the finger (the height inline); let go, or a press on the handle, and it glides to
    its stop by translate alone (Drawer.tsx), at the finger's speed like a swipe. Reduced motion: it jumps. */
-.dk-drawer--snaps .dk-drawer__panel { height: calc(var(--sizing-full) * var(--dk-drawer-snap)); max-height: var(--sizing-full); }
-.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel {
+.srp-drawer--snaps .srp-drawer__panel { height: calc(var(--sizing-full) * var(--srp-drawer-snap)); max-height: var(--sizing-full); }
+.srp-drawer[open].srp-drawer--snaps .srp-drawer__panel {
   transition: opacity var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter), translate var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter);
 }
-.dk-drawer[open]:where(:not(.dk-drawer--nonmodal)).dk-drawer--snaps .dk-drawer__panel:where(:not([data-settling])) { transition-delay: var(--motion-sequence); }
-.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel[data-settling] { transition: translate var(--dk-drawer-settle) var(--ease-fling); }
-.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel[data-dragging] { transition: none; }
+.srp-drawer[open]:where(:not(.srp-drawer--nonmodal)).srp-drawer--snaps .srp-drawer__panel:where(:not([data-settling])) { transition-delay: var(--motion-sequence); }
+.srp-drawer[open].srp-drawer--snaps .srp-drawer__panel[data-settling] { transition: translate var(--srp-drawer-settle) var(--ease-fling); }
+.srp-drawer[open].srp-drawer--snaps .srp-drawer__panel[data-dragging] { transition: none; }
 /* The handle: a grip centered at the sheet's top, in the padding, 48 by 24px to press; it's dragged as the header is. */
-.dk-drawer__handle {
+.srp-drawer__handle {
   flex-shrink: 0; align-self: center; display: grid; place-items: center;
   inline-size: var(--spacing-12); block-size: var(--spacing-6);
   margin-block: calc(var(--spacing-0) - var(--spacing-4)) calc(var(--spacing-0) - var(--spacing-2));
   padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--radius-control); background: none;
   cursor: var(--cursor-grab); touch-action: none;
 }
-.dk-drawer__grip { inline-size: var(--spacing-9); block-size: var(--spacing-1); border-radius: var(--radius-pill); background: var(--drawer-grip, var(--text-muted)); }
-.dk-drawer__handle:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-@media (forced-colors: active) { .dk-drawer__grip { background: CanvasText; } }
+.srp-drawer__grip { inline-size: var(--spacing-9); block-size: var(--spacing-1); border-radius: var(--radius-pill); background: var(--drawer-grip, var(--text-muted)); }
+.srp-drawer__handle:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+@media (forced-colors: active) { .srp-drawer__grip { background: CanvasText; } }
 /* Let go after a swipe: it carries on from under the finger, over a time Drawer.tsx sets from the distance and speed. */
-.dk-drawer[open] .dk-drawer__panel[data-settling] { transition: translate var(--dk-drawer-settle) var(--ease-fling); }
-.dk-drawer__header { display: flex; align-items: flex-start; gap: var(--spacing-3); flex-shrink: 0; }
+.srp-drawer[open] .srp-drawer__panel[data-settling] { transition: translate var(--srp-drawer-settle) var(--ease-fling); }
+.srp-drawer__header { display: flex; align-items: flex-start; gap: var(--spacing-3); flex-shrink: 0; }
 /* Long words wrap inside the panel rather than overflow it. */
-.dk-drawer__panel { overflow-wrap: anywhere; }
-.dk-drawer__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
-.dk-drawer__title { text-wrap: balance; margin: var(--spacing-0); font-family: var(--font-heading, var(--font-sans)), var(--font-sans); color: var(--drawer-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--drawer-title-weight, var(--font-semibold)); }
-.dk-drawer__description { margin: var(--spacing-0); color: var(--drawer-description-color, var(--text-muted)); }
+.srp-drawer__panel { overflow-wrap: anywhere; }
+.srp-drawer__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
+.srp-drawer__title { text-wrap: balance; margin: var(--spacing-0); font-family: var(--font-heading, var(--font-sans)), var(--font-sans); color: var(--drawer-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--drawer-title-weight, var(--font-semibold)); }
+.srp-drawer__description { margin: var(--spacing-0); color: var(--drawer-description-color, var(--text-muted)); }
 /* The × centers on the title's first line (28px), not on its top: 2px down, as Tour's and Alert's sit on theirs. */
-.dk-drawer__close { --dk-drawer-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--dk-drawer-close-nudge); }
+.srp-drawer__close { --srp-drawer-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--srp-drawer-close-nudge); }
 /* Room for a focus ring on every side: the body scrolls, so it clips, and a control at its edge would lose part of
    its ring. Padding gives the room and an equal negative margin takes it back, so the content stays where it was;
    scroll-padding keeps the room when focus scrolls a control into view. */
-.dk-drawer__body { --dk-drawer-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--dk-drawer-ring-room); margin: calc(var(--spacing-0) - var(--dk-drawer-ring-room)); scroll-padding: var(--dk-drawer-ring-room); }
-.dk-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-drawer__footer {
+.srp-drawer__body { --srp-drawer-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--srp-drawer-ring-room); margin: calc(var(--spacing-0) - var(--srp-drawer-ring-room)); scroll-padding: var(--srp-drawer-ring-room); }
+.srp-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-drawer__footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); flex-shrink: 0;
   margin: var(--spacing-0) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface))) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface)));
   padding: var(--spacing-4) var(--drawer-padding, var(--space-surface));
@@ -144,28 +138,28 @@
 }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the footer is narrowest
    and there is no hover to show the rest. The Button keeps its size's height as the least it can be. */
-.dk-drawer__footer > .dk-btn:not(.dk-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-drawer__footer > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
-.dk-drawer__footer > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
+.srp-drawer__footer > .srp-btn:not(.srp-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.srp-drawer__footer > .srp-btn--size-sm:not(.srp-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
+.srp-drawer__footer > .srp-btn--size-lg:not(.srp-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
 /* Safe areas: on a phone with a notch or a home bar (with viewport-fit=cover), the panel's padding and the
    footer clear them; elsewhere env() is 0 and nothing changes. */
-.dk-drawer__panel {
-  --dk-drawer-pad: var(--drawer-padding, var(--space-surface));
-  padding-top: max(var(--dk-drawer-pad), env(safe-area-inset-top));
-  padding-bottom: max(var(--dk-drawer-pad), env(safe-area-inset-bottom));
+.srp-drawer__panel {
+  --srp-drawer-pad: var(--drawer-padding, var(--space-surface));
+  padding-top: max(var(--srp-drawer-pad), env(safe-area-inset-top));
+  padding-bottom: max(var(--srp-drawer-pad), env(safe-area-inset-bottom));
 }
-.dk-drawer--left .dk-drawer__panel { padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
-.dk-drawer--right .dk-drawer__panel { padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
+.srp-drawer--left .srp-drawer__panel { padding-inline-start: max(var(--srp-drawer-pad), env(safe-area-inset-left)); }
+.srp-drawer--right .srp-drawer__panel { padding-inline-end: max(var(--srp-drawer-pad), env(safe-area-inset-right)); }
 /* Right to left, the physical edge is the other logical one. */
-.dk-drawer--left .dk-drawer__panel:dir(rtl) { padding-inline-start: var(--dk-drawer-pad); padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
-.dk-drawer--right .dk-drawer__panel:dir(rtl) { padding-inline-end: var(--dk-drawer-pad); padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
+.srp-drawer--left .srp-drawer__panel:dir(rtl) { padding-inline-start: var(--srp-drawer-pad); padding-inline-end: max(var(--srp-drawer-pad), env(safe-area-inset-left)); }
+.srp-drawer--right .srp-drawer__panel:dir(rtl) { padding-inline-end: var(--srp-drawer-pad); padding-inline-start: max(var(--srp-drawer-pad), env(safe-area-inset-right)); }
 /* start and end: the logical edge stays, and the safe area is the physical one it lands on. */
-.dk-drawer--start .dk-drawer__panel { padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
-.dk-drawer--end .dk-drawer__panel { padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
-.dk-drawer--start .dk-drawer__panel:dir(rtl) { padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
-.dk-drawer--end .dk-drawer__panel:dir(rtl) { padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
-.dk-drawer__footer {
-  margin-bottom: calc(var(--spacing-0) - max(var(--dk-drawer-pad), env(safe-area-inset-bottom)));
+.srp-drawer--start .srp-drawer__panel { padding-inline-start: max(var(--srp-drawer-pad), env(safe-area-inset-left)); }
+.srp-drawer--end .srp-drawer__panel { padding-inline-end: max(var(--srp-drawer-pad), env(safe-area-inset-right)); }
+.srp-drawer--start .srp-drawer__panel:dir(rtl) { padding-inline-start: max(var(--srp-drawer-pad), env(safe-area-inset-right)); }
+.srp-drawer--end .srp-drawer__panel:dir(rtl) { padding-inline-end: max(var(--srp-drawer-pad), env(safe-area-inset-left)); }
+.srp-drawer__footer {
+  margin-bottom: calc(var(--spacing-0) - max(var(--srp-drawer-pad), env(safe-area-inset-bottom)));
   padding-bottom: max(var(--spacing-4), env(safe-area-inset-bottom));
 }
 /* A short screen (GR52: 400% zoom makes 1024px tall 256px): the header and footer alone can fill the panel, which
@@ -174,9 +168,9 @@
    scrolled to and focusing one brings it into view. Sideways it stays clipped, so the copy behind a dragged panel's
    edge (data-inward) never adds a scrollbar. */
 @media (max-height: 479.98px) {
-  .dk-drawer__panel { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
-  .dk-drawer__body { flex: none; overflow: visible; }
+  .srp-drawer__panel { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+  .srp-drawer__body { flex: none; overflow: visible; }
 }
-@media (prefers-reduced-motion: reduce) { .dk-drawer[open] .dk-drawer__panel[data-settling], .dk-drawer[open].dk-drawer--snaps .dk-drawer__panel { transition: none; } }
-@media (forced-colors: active) { .dk-drawer__panel { border: var(--border-width-1) solid CanvasText; } }
+@media (prefers-reduced-motion: reduce) { .srp-drawer[open] .srp-drawer__panel[data-settling], .srp-drawer[open].srp-drawer--snaps .srp-drawer__panel { transition: none; } }
+@media (forced-colors: active) { .srp-drawer__panel { border: var(--border-width-1) solid CanvasText; } }
 }

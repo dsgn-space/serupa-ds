@@ -34,23 +34,23 @@ import { Chat, ChatMessage, ChatDivider, ChatComposer, Avatar, Attachment } from
 
 Drawn from the `Statuses` story.
 
-1. **Log** (`.dk-chat__log`): the scrolling list of messages.
-2. **Divider** (`.dk-chat-divider`): the day the next messages were sent.
-3. **Message** (`.dk-chat-message`): avatar, then author and time, the bubble, files and status.
-4. **Bubble** (`.dk-chat-message__bubble`): what the message says; own messages are tinted and sit at the end.
-5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with "Try again".
-6. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
+1. **Log** (`.srp-chat__log`): the scrolling list of messages.
+2. **Divider** (`.srp-chat-divider`): the day the next messages were sent.
+3. **Message** (`.srp-chat-message`): avatar, then author and time, the bubble, files and status.
+4. **Bubble** (`.srp-chat-message__bubble`): what the message says; own messages are tinted and sit at the end.
+5. **Status** (`.srp-chat-message__status`): "Sending…", or "Not sent" with "Try again".
+6. **Composer** (`.srp-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
 
 An assistant's reply (the `AgentReply` story) adds these parts:
 
-- **Reasoning** (`.dk-chat-message__reasoning`): "Thought for 12 seconds", closed until the reader opens it.
-- **Steps** (`.dk-chat-steps`): the tools it called, each in progress, done or failed.
-- **Thinking** (`.dk-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
-- **Versions** (`.dk-chat-message__branches`): "2 / 3" between previous and next, under a regenerated reply.
+- **Reasoning** (`.srp-chat-message__reasoning`): "Thought for 12 seconds", closed until the reader opens it.
+- **Steps** (`.srp-chat-steps`): the tools it called, each in progress, done or failed.
+- **Thinking** (`.srp-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
+- **Versions** (`.srp-chat-message__branches`): "2 / 3" between previous and next, under a regenerated reply.
 
-An assistant also asks before it acts with a `ChatApproval` card (`.dk-chat-approval`, the `Approval` story), offers Copy, Regenerate and a rating under a reply with `ChatReplyActions` (`.dk-chat-reply-actions`, the `ReplyActions` story), and names its sources with `ChatCitation` chips (`.dk-chat-citation`, the `Citations` story).
+An assistant also asks before it acts with a `ChatApproval` card (`.srp-chat-approval`, the `Approval` story), offers Copy, Regenerate and a rating under a reply with `ChatReplyActions` (`.srp-chat-reply-actions`, the `ReplyActions` story), and names its sources with `ChatCitation` chips (`.srp-chat-citation`, the `Citations` story).
 
-While the reader is further up and new messages arrive, a "3 new messages" button (`.dk-chat__jump`) sits at the bottom of the log; it scrolls down and focuses the log.
+While the reader is further up and new messages arrive, a "3 new messages" button (`.srp-chat__jump`) sits at the bottom of the log; it scrolls down and focuses the log.
 
 ## Usage
 

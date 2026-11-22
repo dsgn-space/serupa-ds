@@ -13,6 +13,7 @@ import { DescriptionList, DescriptionItem } from '../../components/DescriptionLi
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Return request: sending back some of an order, with why, how it goes back and where the money goes, and what
    happens next. For an app to copy. What it carries (WCAG 2.2):
@@ -57,6 +58,9 @@ export interface ReturnRequestProps {
   until?: string | undefined;
   /** Makes the return. Resolve with its number ("R-2041"); reject when it can't be made. */
   onSend?: ((choice: ReturnChoice) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: ReturnItem[] = [
@@ -90,7 +94,7 @@ export function refundOf(items: readonly ReturnItem[], chosen: readonly string[]
 }
 
 /** The return page: a skip link, a header, then main with the h1 and the form, or the next steps once sent. */
-export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD', pickupFee = 5, until = 'December 20', onSend }: ReturnRequestProps) {
+export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD', pickupFee = 5, until = 'December 20', onSend, online }: ReturnRequestProps) {
   const [chosen, setChosen] = React.useState<string[]>([]);
   const [reasons, setReasons] = React.useState<Record<string, string>>({});
   const [method, setMethod] = React.useState<ReturnChoice['method']>('dropoff');
@@ -132,6 +136,7 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Sending the request needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: `Order ${order}`, href: `#order-${order}` }, { label: 'Return' }]}
           title={`Return items from order ${order}`} description={`Send them back by ${until}. Choose what, why, and how.`} />
         <div className="pt-6">

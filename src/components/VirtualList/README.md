@@ -39,7 +39,7 @@ import { VirtualList, ListItem } from "@diki-stwn/serupa-ds";
 
 ```tsx
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Members didn't load.</Alert>
-  : state === 'loading' ? <List aria-label="Members" loading><ListLoadingItems rows={6} description leading="sm" label="Loading members" /></List>
+  : state === 'loading' ? <List aria-label="Members" loading><ListLoadingItems rows={6} showDescription leading="sm" label="Loading members" /></List>
   : !people.length ? <EmptyState size="sm" title="No members yet" />
   : <VirtualList aria-label="Members" count={people.length} itemKey={(i) => people[i].id} renderItem={row} />}
 ```

@@ -26,7 +26,7 @@
     Row('Palette', PAL.map(function (t) { return h(T.Badge, { key: t, tone: t }, name(t)); })),
     Row('Extras', [
       h(T.Badge, { key: 1, tone: 'success', dot: true }, 'Online'),
-      h(T.Badge, { key: 2, tone: 'warning', leftIcon: 'schedule' }, 'Pending'),
+      h(T.Badge, { key: 2, tone: 'warning', startIcon: 'schedule' }, 'Pending'),
       h(T.Badge, { key: 3, tone: 'danger', variant: 'solid', count: 3 }),
       h(T.Badge, { key: 4, tone: 'primary', variant: 'solid', count: 128 }),
       h(T.Badge, { key: 5, tone: 'info', variant: 'outline' }, 'Beta')

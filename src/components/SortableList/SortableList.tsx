@@ -43,7 +43,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   // Rows taken away while one is held (another user deleted them) bring its place back inside the list.
   const drag = held && held.to > items.length - 1 ? { ...held, to: Math.max(0, items.length - 1) } : held;
   const current = useLatest(drag);
-  const hintId = domId('dk-sl', React.useId()) + '-hint';
+  const hintId = domId('srp-sl', React.useId()) + '-hint';
   const list = React.useRef<HTMLUListElement | null>(null);
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
   // start and at are the pointer along the list's axis: clientY in a column, clientX in a row.
@@ -52,7 +52,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   // Where a box starts and how long it is along the axis.
   const lead = (b: DOMRect) => row ? b.left : b.top, span = (b: DOMRect) => row ? b.width : b.height;
   const rtl = () => row && !!list.current && getComputedStyle(list.current).direction === 'rtl';
-  useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>('.dk-sortable-list__handle'));
+  useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>('.srp-sortable-list__handle'));
   const total = items.length;
   const from = drag ? items.findIndex((it) => getKey(it) === drag.key) : -1;
   // While dragging, the list shows the item at its new place; nothing is reported until it's dropped.
@@ -263,7 +263,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const mergedRef = useMergedRef(ref, (n) => { list.current = n; });
   return (<>
     <ul role="list" {...rest} ref={mergedRef}
-      className={cn('dk-sortable-list', drag && 'dk-sortable-list--sorting', props.disabled && 'dk-sortable-list--disabled', props.className)} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
+      className={cn('srp-sortable-list', drag && 'srp-sortable-list--sorting', props.disabled && 'srp-sortable-list--disabled', props.className)} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
       {shown.map((it, index) => {
         const key = getKey(it), dragging = !!drag && drag.key === key;
         return <SortableRow key={key} item={it} itemKey={key} name={name + ' ' + label(it)} index={index} dragging={dragging}
@@ -299,16 +299,16 @@ const SortableRow = /* @__PURE__ */ React.memo(function SortableRow(props: {
 }) {
   const { itemKey: key, index, dragging, api } = props;
   return (
-    <li data-key={String(key)} className={cn('dk-sortable-list__item', dragging && 'dk-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
+    <li data-key={String(key)} className={cn('srp-sortable-list__item', dragging && 'srp-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
       {props.disabled ? null : (
-        <button type="button" className="dk-sortable-list__handle" aria-label={props.name} aria-describedby={props.hint} aria-pressed={props.pressed}
+        <button type="button" className="srp-sortable-list__handle" aria-label={props.name} aria-describedby={props.hint} aria-pressed={props.pressed}
           ref={(n) => api.current.handle(key, n)}
           onClick={() => api.current.click(key, index)} onKeyDown={(e) => api.current.keyDown(e)} onBlur={() => api.current.blur()}
           onPointerDown={(e) => api.current.pointerDown(key, e)}>
           <Icon icon={icons.DragIndicator} />
         </button>
       )}
-      <div className="dk-sortable-list__content">{props.renderItem(props.item, { index, dragging })}</div>
+      <div className="srp-sortable-list__content">{props.renderItem(props.item, { index, dragging })}</div>
     </li>
   );
 });

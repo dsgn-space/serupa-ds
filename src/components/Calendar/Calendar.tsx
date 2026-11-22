@@ -26,8 +26,8 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   value?: Date | string | null | undefined;
   /** The selected day at first (uncontrolled), as a Date or "yyyy-mm-dd". */
   defaultValue?: Date | string | null | undefined;
-  /** Called with the day people pick (local midnight), and the same day as "yyyy-mm-dd". */
-  onValueChange?: ((value: Date, iso: string) => void) | undefined;
+  /** Called with the day people pick (local midnight), and details: iso is the same day as "yyyy-mm-dd". */
+  onValueChange?: ((value: Date, details: { iso: string }) => void) | undefined;
   /** The month shown (controlled): any day in it. Use with onMonthChange. */
   month?: Date | undefined;
   /** The month shown at first. Default: the selected day's, or today's (min's or max's when today is outside them). */
@@ -146,14 +146,14 @@ const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
   const disabled = (d: Date) => (p.min !== null && d.getTime() < p.min) || (p.max !== null && d.getTime() > p.max) || (p.isDateDisabled ? p.isDateDisabled(d) : false);
   return weeks.map((row, w) => (
     <tr key={w}>
-      {p.week != null ? <th scope="row" className="dk-calendar__week"><span className="dk-visually-hidden">{p.week + ' '}</span>{isoWeek(row.find((d) => d.getDay() === 4) || row[0]!)}</th> : null}
+      {p.week != null ? <th scope="row" className="srp-calendar__week"><span className="srp-visually-hidden">{p.week + ' '}</span>{isoWeek(row.find((d) => d.getDay() === 4) || row[0]!)}</th> : null}
       {row.map((d) => {
         const t = d.getTime(), off = !!disabled(d), sel = p.isDateSelected ? p.isDateSelected(d) : t === p.value, outside = !p.cal.same(d, month), now = t === p.marked;
-        if (outside && p.hideOutside) return <td key={t} role="gridcell" className="dk-calendar__blank" />;
+        if (outside && p.hideOutside) return <td key={t} role="gridcell" className="srp-calendar__blank" />;
         return (
           <td key={t} aria-selected={sel} role="gridcell">
             <button type="button" tabIndex={t === p.stop ? 0 : -1} aria-label={p.dayLabel ? p.dayLabel(d, full.format(d)) : full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
-              className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', now && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', p.dayClassName && p.dayClassName(d))}
+              className={cn('srp-calendar__day', outside && 'srp-calendar__day--outside', sel && 'srp-calendar__day--selected', now && 'srp-calendar__day--today', off && 'srp-calendar__day--disabled', p.dayClassName && p.dayClassName(d))}
               data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
               onClick={() => p.on.pick(d)} onFocus={() => p.on.focus(d)} onMouseEnter={p.hover ? () => p.on.hover(d) : undefined}>
               {p.cal.date(d)}
@@ -202,7 +202,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   // day of a month a UTC server draws October and a visitor in Jakarta is in November, and other weeks in the grid
   // make React throw the server's calendar away. So hydration starts on the month the server drew, read from its
   // title, and the visitor's month follows right after, as their today does (GR396).
-  const titleId = domId('dk-cal', React.useId()) + '-title';
+  const titleId = domId('srp-cal', React.useId()) + '-title';
   const drawn = React.useRef<number | null>(null);
   const [ownMonth, setOwnMonth] = React.useState(() => {
     const given = props.defaultMonth || value;
@@ -269,7 +269,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const pick = (d: Date) => {
     if (disabled(d)) return;
     if (!controlledValue) setOwnValue(d);
-    if (props.onValueChange) props.onValueChange(d, isoDate(d));
+    if (props.onValueChange) props.onValueChange(d, { iso: isoDate(d) });
     if (!cal.same(d, month)) showMonth(d);
     setFocus(d);
   };
@@ -365,31 +365,31 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), []);
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.weekNumbers && 'dk-calendar--weeks', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
-      <div className="dk-calendar__header">
-        {view === 'days' ? <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
+    <div {...rest} ref={ref} className={cn('srp-calendar', presets && 'srp-calendar--presets', props.weekNumbers && 'srp-calendar--weeks', props.pairedNav && 'srp-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
+      <div className="srp-calendar__header">
+        {view === 'days' ? <IconButton icon={icons.ChevronLeft} className="srp-calendar__nav srp-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(cal.add(month, -1)); }} ref={prevNav} />
-          : <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={sds.labels.periodPrevious(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
+          : <IconButton icon={icons.ChevronLeft} className="srp-calendar__nav srp-calendar__nav--prev" label={sds.labels.periodPrevious(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
           disabled={minN(view) != null && pPage - 1 < minN(view)!} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); setPFocus(clampN(view, pFocus - 12)); }} ref={prevNav} />}
-        <H className={cn('dk-calendar__title', (props.monthYearPicker || drill) && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{view === 'days' ? title : periodTitle}</H>
+        <H className={cn('srp-calendar__title', (props.monthYearPicker || drill) && 'srp-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{view === 'days' ? title : periodTitle}</H>
         {props.monthYearPicker ? <MonthYear cal={cal} fmt={fmts} month={month} min={min} max={max} today={hydrated ? today : month} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
-        {drill && view !== 'years' ? <button ref={heading} type="button" className="dk-calendar__heading" lang={lang} aria-describedby={titleId + '-hint'}
+        {drill && view !== 'years' ? <button ref={heading} type="button" className="srp-calendar__heading" lang={lang} aria-describedby={titleId + '-hint'}
           onClick={() => (view === 'days' ? showPeriods('months', cal.index(month)) : (inYear.current = pFocus % 12, showPeriods('years', Math.floor(pFocus / 12))))}>
-          {view === 'days' ? title : periodTitle}<Icon icon={icons.ExpandMore} className="dk-calendar__heading-icon" />
+          {view === 'days' ? title : periodTitle}<Icon icon={icons.ExpandMore} className="srp-calendar__heading-icon" />
           <span id={titleId + '-hint'} hidden>{sds.labels.periodPlaceholder(view === 'days' ? 'month' : 'year')}</span>
         </button> : null}
-        {drill && view === 'years' ? <span className="dk-calendar__heading dk-calendar__heading--static" lang={lang} aria-hidden>{periodTitle}</span> : null}
-        {view === 'days' ? <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
+        {drill && view === 'years' ? <span className="srp-calendar__heading srp-calendar__heading--static" lang={lang} aria-hidden>{periodTitle}</span> : null}
+        {view === 'days' ? <IconButton icon={icons.ChevronRight} className="srp-calendar__nav srp-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
           disabled={!!max && compare(cal.add(month, 1), max) > 0} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); showMonth(cal.add(month, 1)); }} ref={nextNav} />
-          : <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={sds.labels.periodNext(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
+          : <IconButton icon={icons.ChevronRight} className="srp-calendar__nav srp-calendar__nav--next" label={sds.labels.periodNext(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
           disabled={maxN(view) != null && pPage + 12 > maxN(view)!} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); setPFocus(clampN(view, pFocus + 12)); }} ref={nextNav} />}
       </div>
-      {view !== 'days' ? <table ref={periods} lang={lang} role="grid" className="dk-calendar__periods" data-view={view} aria-labelledby={titleId} onKeyDown={onPeriodKey}>
+      {view !== 'days' ? <table ref={periods} lang={lang} role="grid" className="srp-calendar__periods" data-view={view} aria-labelledby={titleId} onKeyDown={onPeriodKey}>
         <Periods view={view} page={pPage} focus={pFocus} value={value} today={marked} min={minN(view)} max={maxN(view)} fmt={fmts} cal={cal} onPick={pickPeriod} onFocus={setPFocus} />
       </table> : null}
-      <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" hidden={view !== 'days' || undefined} aria-labelledby={titleId} onKeyDown={onKeyDown}>
+      <table ref={grid} lang={lang} className="srp-calendar__grid" role="grid" hidden={view !== 'days' || undefined} aria-labelledby={titleId} onKeyDown={onKeyDown}>
         <thead>
-          <tr>{props.weekNumbers ? <th scope="col" className="dk-calendar__week" abbr={sds.labels.week}><span aria-hidden>{sds.labels.weekShort}</span><span className="dk-visually-hidden">{sds.labels.week}</span></th> : null}{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
+          <tr>{props.weekNumbers ? <th scope="col" className="srp-calendar__week" abbr={sds.labels.week}><span aria-hidden>{sds.labels.weekShort}</span><span className="srp-visually-hidden">{sds.labels.week}</span></th> : null}{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="srp-visually-hidden">{long.format(d)}</span></th>)}</tr>
         </thead>
         <tbody>
           <Weeks month={monthTime} ws={ws} stop={stop.getTime()} value={value ? value.getTime() : null} marked={marked ? marked.getTime() : null} min={min ? min.getTime() : null} max={max ? max.getTime() : null}
@@ -432,9 +432,9 @@ function Periods(p: { view: PeriodView; page: number; focus: number; value: Date
               return (
                 <td key={n} role="gridcell" aria-selected={n === sel}>
                   <button type="button" tabIndex={n === p.focus ? 0 : -1} aria-disabled={off || undefined} aria-current={n === now ? 'date' : undefined}
-                    className={cn('dk-calendar__period', n === sel && 'dk-calendar__period--selected', n === now && 'dk-calendar__period--today', off && 'dk-calendar__period--disabled')}
+                    className={cn('srp-calendar__period', n === sel && 'srp-calendar__period--selected', n === now && 'srp-calendar__period--today', off && 'srp-calendar__period--disabled')}
                     onClick={() => p.onPick(n)} onFocus={() => { if (n !== p.focus) p.onFocus(n); }}>
-                    {p.view === 'months' ? <><span aria-hidden>{p.fmt.monthShort.format(p.cal.at(n))}</span><span className="dk-visually-hidden">{p.fmt.title.format(p.cal.at(n))}</span></> : yearText(p.fmt, p.cal, n)}
+                    {p.view === 'months' ? <><span aria-hidden>{p.fmt.monthShort.format(p.cal.at(n))}</span><span className="srp-visually-hidden">{p.fmt.title.format(p.cal.at(n))}</span></> : yearText(p.fmt, p.cal, n)}
                   </button>
                 </td>
               );
@@ -464,11 +464,11 @@ function MonthYear(p: { cal: Cal; fmt: Formats; month: Date; min: Date | null; m
   const years: number[] = [];
   for (let i = from; i <= to; i++) years.push(i);
   return (
-    <span className="dk-calendar__menus">
-      <select className="dk-calendar__menu" form="" aria-label={p.monthLabel} lang={p.lang} value={m} onChange={(e) => go(y * 12 + +e.currentTarget.value)}>
+    <span className="srp-calendar__menus">
+      <select className="srp-calendar__menu" form="" aria-label={p.monthLabel} lang={p.lang} value={m} onChange={(e) => go(y * 12 + +e.currentTarget.value)}>
         {Array.from({ length: 12 }, (_, i) => <option key={i} value={i} disabled={out(y * 12 + i)}>{p.names.format(cal.at(y * 12 + i))}</option>)}
       </select>
-      <select className="dk-calendar__menu" form="" aria-label={p.yearLabel} lang={cal.id === 'gregory' ? undefined : p.lang} value={y} onChange={(e) => go(+e.currentTarget.value * 12 + m)}>
+      <select className="srp-calendar__menu" form="" aria-label={p.yearLabel} lang={cal.id === 'gregory' ? undefined : p.lang} value={y} onChange={(e) => go(+e.currentTarget.value * 12 + m)}>
         {years.map((yy) => <option key={yy} value={yy}>{cal.id === 'gregory' ? yy : yearText(p.fmt, cal, yy)}</option>)}
       </select>
     </span>

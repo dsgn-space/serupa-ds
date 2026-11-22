@@ -55,7 +55,7 @@ import * as en from '@diki-stwn/serupa-ds/labels/en';
 import * as id from '@diki-stwn/serupa-ds/labels/id';
 import * as ar from '@diki-stwn/serupa-ds/labels/ar';
 
-export function AppShell({ locale, children }: { locale: string; children: React.ReactNode }) {
+export function LocaleRoot({ locale, children }: { locale: string; children: React.ReactNode }) {
   return (
     <div lang={locale} dir={localeDir(locale)}>
       <SerupaProvider locale={locale} languages={[en, id, ar]}>{children}</SerupaProvider>

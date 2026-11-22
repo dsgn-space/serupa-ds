@@ -16,20 +16,20 @@ import { en as words } from './labels';
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
   /** 'multiple' (default): any number can be open, so people can compare them. 'single': opening one closes the others. */
-  type?: 'single' | 'multiple' | undefined;
+  selectionMode?: 'single' | 'multiple' | undefined;
   /** The open items' values (controlled). Use with onValueChange. */
   value?: string[] | undefined;
   /** The items open at first (uncontrolled). Default: none. */
   defaultValue?: string[] | undefined;
   /** Called with the open items' values when one opens or closes. */
   onValueChange?: ((value: string[]) => void) | undefined;
-  /** With type="single": lets the open item close again, leaving none open. Default: true. */
+  /** With selectionMode="single": lets the open item close again, leaving none open. Default: true. */
   collapsible?: boolean | undefined;
   /** 'plain' (default): lines between items. 'card': a bordered, rounded frame. */
   variant?: 'plain' | 'card' | undefined;
   /** The heading level of the titles, to fit the page's outline. Default: 3. */
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
-  /** With type="multiple": an "Expand all" button above the items, which becomes "Collapse all" once every item
+  /** With selectionMode="multiple": an "Expand all" button above the items, which becomes "Collapse all" once every item
       is open. Disabled items stay as they are. Default: false. */
   showExpandAll?: boolean | undefined;
 }
@@ -51,7 +51,7 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
-// The time a closing panel's height takes when another opens as it closes (type="single"): the opening one's, so both
+// The time a closing panel's height takes when another opens as it closes (selectionMode="single"): the opening one's, so both
 // move together. 0 when it closes on its own.
 const swapTime = (panel: HTMLElement, swapping: boolean) => {
   if (!swapping) return 0;
@@ -60,11 +60,11 @@ const swapTime = (panel: HTMLElement, swapping: boolean) => {
 };
 
 function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes<HTMLDivElement>) {
-  const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
+  const rest = omit(props, { selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
   const labels = useSettings(words).labels;
-  const single = props.type === 'single';
+  const single = props.selectionMode === 'single';
   const [open, setInner, controlled] = useControllable<string[]>(props.value, (props.defaultValue || []).slice(0, single ? 1 : undefined), 'Accordion', 'value');
-  if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
+  if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with selectionMode="single", so ${open.length} items show open; pass one value, or selectionMode="multiple".`);
   const collapsible = props.collapsible !== false;
   const onChange = useLatest(props.onValueChange);
   const change = React.useCallback((next: string[]) => {
@@ -98,8 +98,8 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
     // aria-expanded as well as the words: VoiceOver doesn't reliably say a label that changes on its own. Expanded
     // only once every item is open (modern web guidance, accordion).
     all = (
-      <div className="dk-accordion__toolbar">
-        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-accordion__all' })} onClick={onAll} disabled={!values.length} aria-expanded={allOpen}>
+      <div className="srp-accordion__toolbar">
+        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'srp-accordion__all' })} onClick={onAll} disabled={!values.length} aria-expanded={allOpen}>
           {allOpen ? labels.collapseAll : labels.expandAll}
         </button>
       </div>
@@ -107,7 +107,7 @@ function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes
   }
   return (
     <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, many }}>
-      <div {...rest} ref={ref} data-component="accordion" className={cn('dk-accordion', variant === 'card' && 'dk-accordion--card', props.className)}>{all}{items}</div>
+      <div {...rest} ref={ref} data-component="accordion" className={cn('srp-accordion', variant === 'card' && 'srp-accordion--card', props.className)}>{all}{items}</div>
     </AccordionContext.Provider>
   );
 }
@@ -126,7 +126,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   delete rest['data-index'];
   const value = props.value != null ? props.value : index;
   const open = !!ctx && ctx.open.indexOf(value) >= 0;
-  const id = domId('dk-acc', React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
+  const id = domId('srp-acc', React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
   // an open item in a single, non-collapsible accordion can't close: say so with aria-disabled
   const locked = !!ctx && open && ctx.single && !ctx.collapsible;
   const H = ('h' + (ctx ? ctx.level : 3)) as 'h3';
@@ -144,14 +144,14 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   const keep = props.keepMounted !== false;
   const [mounted, setMounted] = React.useState(open || keep);
   if ((open || keep) && !mounted) setMounted(true);
-  // One item closing as another opens (type="single"): both heights move over the opening one's time and curve, so
+  // One item closing as another opens (selectionMode="single"): both heights move over the opening one's time and curve, so
   // their sum goes straight from the old height to the new. On their own curves (the closing one slow to start, the
   // opening one fast) the two were briefly taller together than either, and what's below dipped and came back.
   const swapping = useLatest(!!ctx && ctx.single && !open && ctx.open.length > 0);
   // The height animation (below); the fold's cleanup cancels one still running.
   const growRef = React.useRef<Animation | null>(null);
   React.useLayoutEffect(function () {
-    const el = content.current, panel = el && el.closest<HTMLElement>('.dk-accordion__panel');
+    const el = content.current, panel = el && el.closest<HTMLElement>('.srp-accordion__panel');
     if (!el || !panel) return;
     if (open || (!findable && keep)) { el.removeAttribute('hidden'); return; }
     const style = getComputedStyle(panel);
@@ -175,7 +175,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   // mid-way turns back from the height it has. Not under reduced motion (the fade alone, and the height at once).
   const was = React.useRef(open);
   React.useLayoutEffect(function () {
-    const panel = content.current && content.current.closest<HTMLElement>('.dk-accordion__panel');
+    const panel = content.current && content.current.closest<HTMLElement>('.srp-accordion__panel');
     if (!panel || was.current === open) return;
     was.current = open;
     const from = growRef.current ? panel.getBoundingClientRect().height : open ? 0 : panel.offsetHeight;
@@ -189,7 +189,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     const swap = swapTime(panel, swapping.current);
     const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue(swap ? '--ease-enter' : '--ease-move').trim() || timing.easing;
     growRef.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
-    growRef.current.id = 'dk-accordion-height';
+    growRef.current.id = 'srp-accordion-height';
     if (open) growRef.current.onfinish = () => { growRef.current = null; };
   }, [open, swapping]);
   React.useEffect(() => () => { if (growRef.current) growRef.current.cancel(); }, []);
@@ -202,16 +202,16 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
   }, [toggle]);
   return (
-    <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('dk-accordion__item', open && 'dk-accordion__item--open', props.disabled && 'dk-accordion__item--disabled', props.className)}>
-      <H className="dk-accordion__heading">
-        <button type="button" id={id + '-t'} className="dk-accordion__trigger" aria-expanded={open} aria-controls={id + '-p'} disabled={props.disabled}
+    <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('srp-accordion__item', open && 'srp-accordion__item--open', props.disabled && 'srp-accordion__item--disabled', props.className)}>
+      <H className="srp-accordion__heading">
+        <button type="button" id={id + '-t'} className="srp-accordion__trigger" aria-expanded={open} aria-controls={id + '-p'} disabled={props.disabled}
           aria-disabled={locked ? true : undefined} onClick={() => { if (ctx && !locked) ctx.toggle(value); }}>
-          <span className="dk-accordion__title">{props.title}</span>
-          <Icon icon={icons.ExpandMore} className="dk-accordion__icon" />
+          <span className="srp-accordion__title">{props.title}</span>
+          <Icon icon={icons.ExpandMore} className="srp-accordion__icon" />
         </button>
       </H>
-      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="dk-accordion__panel">
-        <div className="dk-accordion__clip"><div ref={content} className="dk-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
+      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="srp-accordion__panel">
+        <div className="srp-accordion__clip"><div ref={content} className="srp-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
       </div>
     </div>
   );

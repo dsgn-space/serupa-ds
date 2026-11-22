@@ -27,9 +27,9 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
   invalid?: boolean | undefined;
   /** A decorative icon inside the field, before the text: an icon name or an element. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** A decorative icon inside the field, after the text. */
-  rightIcon?: IconSource | undefined;
+  endIcon?: IconSource | undefined;
   /** Text inside the field, before what's typed, such as "https://" or "@". It's added to the field's description, so it's heard too. */
   prefix?: React.ReactNode | undefined;
   /** Text inside the field, after what's typed, such as "kg" or ".com". It's added to the field's description too. */
@@ -98,7 +98,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
 function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
-  let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
+  let rest = omit(props, { size: 1, invalid: 1, startIcon: 1, endIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
@@ -112,7 +112,7 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
   rest = useMask(rest, props.mask);
   const limited = useTextLimit(rest, own, { announce: !!props.showCount }), { length, max } = limited;
   rest = useValidityMessages(limited.props, own);   // the browser's message for a failed constraint, in the provider's words
-  const countId = domId('dk-in', React.useId());
+  const countId = domId('srp-in', React.useId());
   const locale = useLocale();
   const num = (n: number) => displayNumber(n, locale, PLAIN);   // the locale's digits, as Textarea's
   const setRefs = useMergedRef(ref, function (node: HTMLInputElement | null) {
@@ -123,26 +123,26 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
   if (affix.ids || props.showCount) rest = { ...rest, 'aria-describedby': cn(rest['aria-describedby'], affix.ids, props.showCount && countId) };
   const icon = function (source: IconSource, side: string) {
     const node = asIcon(source);
-    return node == null || node === false ? null : <span className={'dk-input__icon dk-input__icon--' + side} aria-hidden key={side}>{node}</span>;
+    return node == null || node === false ? null : <span className={'srp-input__icon srp-input__icon--' + side} aria-hidden key={side}>{node}</span>;
   };
   return (
-    <span className={cn('dk-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
-      {icon(props.leftIcon, 'left')}
+    <span className={cn('srp-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
+      {icon(props.startIcon, 'start')}
       {affix.prefix}
-      <input {...rest} ref={setRefs} className="dk-input__field" key="field" />
+      <input {...rest} ref={setRefs} className="srp-input__field" key="field" />
       {affix.suffix}
-      {props.showCount ? <span className={cn('dk-input__count', max != null && length >= max && 'dk-input__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
-      {icon(props.rightIcon, 'right')}
-      {props.actions != null && props.actions !== false ? <span className="dk-input__actions" key="actions"><InputBox.Provider value={{ disabled: !!rest.disabled }}>{props.actions}</InputBox.Provider></span> : null}
+      {props.showCount ? <span className={cn('srp-input__count', max != null && length >= max && 'srp-input__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
+      {icon(props.endIcon, 'end')}
+      {props.actions != null && props.actions !== false ? <span className="srp-input__actions" key="actions"><InputBox.Provider value={{ disabled: !!rest.disabled }}>{props.actions}</InputBox.Provider></span> : null}
     </span>
   );
 }
 
 /* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
-   Button); invalid (a danger border and aria-invalid); leftIcon / rightIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
+   Button); invalid (a danger border and aria-invalid); startIcon / endIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
    showCount (a character count at the end, "12 / 50" with maxLength); maxLength (in characters as people see them,
    applied by Input). Email, URL, username and one-time-code fields get autocapitalize, autocorrect and spellcheck off.
-   Renders <span class="dk-input"> around a native <input>: className and style go to the wrapper, every other
+   Renders <span class="srp-input"> around a native <input>: className and style go to the wrapper, every other
    prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
 /** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
 export const Input = /* @__PURE__ */ named('Input', InputRender);
@@ -154,9 +154,9 @@ function InputActionRender({ ref, ...props }: InputActionProps & React.RefAttrib
   const iconOnly = node != null && node !== false;
   return (
     <button type="button" {...rest} ref={ref} disabled={rest.disabled ?? box.disabled}
-      className={cn('dk-input-action', iconOnly ? 'dk-input-action--icon' : 'dk-input-action--text', props.className)} data-component="input-action"
+      className={cn('srp-input-action', iconOnly ? 'srp-input-action--icon' : 'srp-input-action--text', props.className)} data-component="input-action"
       aria-label={iconOnly ? rest['aria-label'] ?? props.label : rest['aria-label']}>
-      {iconOnly ? <span className="dk-input-action__icon" aria-hidden>{node}</span> : props.label}
+      {iconOnly ? <span className="srp-input-action__icon" aria-hidden>{node}</span> : props.label}
     </button>
   );
 }

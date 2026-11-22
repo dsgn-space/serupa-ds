@@ -11,7 +11,7 @@ import { EmptyState, Button } from '@diki-stwn/serupa-ds';
   icon="folder_open"
   title="No projects yet"
   description="Create a project to start tracking your work."
-  actions={<Button leftIcon="add">New project</Button>}
+  actions={<Button startIcon="add">New project</Button>}
 />
 
 // Inside a table or a card, after a search: announce says it to screen readers as it appears
@@ -42,11 +42,11 @@ import { EmptyState, Button } from '@diki-stwn/serupa-ds';
 
 Drawn from the `LongText` story.
 
-1. **Icon** (`.dk-empty-state__icon`): a picture of what would be here.
-2. **Title** (`.dk-empty-state__title`): says what's empty, or why.
-3. **Description** (`.dk-empty-state__description`): what to do about it.
-4. **Suggestions** (`.dk-empty-state__suggestions`): optional other things to try, such as a search that would find something.
-5. **Actions** (`.dk-empty-state__actions`): the next step, such as creating the first item.
+1. **Icon** (`.srp-empty-state__icon`): a picture of what would be here.
+2. **Title** (`.srp-empty-state__title`): says what's empty, or why.
+3. **Description** (`.srp-empty-state__description`): what to do about it.
+4. **Suggestions** (`.srp-empty-state__suggestions`): optional other things to try, such as a search that would find something.
+5. **Actions** (`.srp-empty-state__actions`): the next step, such as creating the first item.
 
 ## Usage
 

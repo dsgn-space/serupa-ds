@@ -6,7 +6,10 @@ import { BottomNav, BottomNavLink } from '../../components/BottomNav/BottomNav';
 import { Button } from '../../components/Button/Button';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
-import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { AppShell } from '../../components/AppShell/AppShell';
+import { Card } from '../../components/Card/Card';
+import { Stack } from '../../components/Stack/Stack';
+import { Text } from '../../components/Text/Text';
 import { useName } from '../../../.storybook/content';
 
 /* Patterns are whole screens built from the components, for apps to copy (FEC1). Unlike a component's stories they
@@ -38,56 +41,52 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
   // Adaptive: the full Sidebar from 1024px, its icon rail from 768px, and a BottomNav below that.
   const wide = useWide('(min-width: 1024px)');
   const rail = adaptive ? !wide : collapsed;
-  const phone = adaptive ? '48rem' : '40rem';
+  // AppShell lays it out: the skip link, the sticky Navbar, the Sidebar beside main and the footer (sticking below the
+  // bar, gone on a phone, where the Navbar's menu has the same links under "Workspace"), main and the footer.
   return (
-    <div className="min-h-screen bg-surface text-text">
-      {/* The Sidebar stays beside main and below the bar while the page scrolls, and gives its room to main on a phone,
-          where the Navbar's menu has the same links under "Workspace". */}
-      <style>{`.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: ${phone}) { .page-shell__side { display: none; } } @media (min-width: calc(${phone} + 0.01rem)) { .page-shell__phone { display: none; } }`}</style>
-      <SkipLink />
-      <Navbar sticky
+    <AppShell
+      sidebarFrom={adaptive ? 'md' : 'sm'}
+      header={<Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
         actions={<><Button variant="ghost" size="sm">Docs</Button><Me /></>}>
-        <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
+        <NavbarLink href="#dashboard" current>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
         {/* The Sidebar's links, for a phone, where the Sidebar is gone (the adaptive shell has a BottomNav instead). */}
-        {adaptive ? null : <NavbarMenu label="Workspace" className="page-shell__phone">
-          <NavbarMenuLink href="#home" active>Home</NavbarMenuLink>
+        {adaptive ? null : <NavbarMenu label="Workspace" className="sm:hidden">
+          <NavbarMenuLink href="#home" current>Home</NavbarMenuLink>
           <NavbarMenuLink href="#workspace-projects">Projects</NavbarMenuLink>
           <NavbarMenuLink href="#team">Team</NavbarMenuLink>
         </NavbarMenu>}
-      </Navbar>
-      <div className="flex">
-        <div className="page-shell__side">
-          <Sidebar aria-label="Workspace" collapsed={rail}>
-            <SidebarSection>
-              <SidebarItem href="#home" icon="home" label="Home" active />
-              <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
-              <SidebarItem href="#team" icon="group" label="Team" />
-            </SidebarSection>
-          </Sidebar>
-        </div>
-        <main id="main" className="min-w-0 flex-1 p-6 outline-none">
-          <Heading level={1}>Projects</Heading>
-          <p className="mt-2 text-sm text-text-muted">Twelve active projects in the Acme workspace.</p>
-          <section aria-labelledby="recent" className="mt-6">
-            <Heading level={2} id="recent">Recent</Heading>
-            <ul className="mt-3 flex list-none flex-col gap-3 p-0">
-              {rows.map((r) => <li key={r} className="rounded-md border border-border p-4">{r}</li>)}
-            </ul>
-          </section>
-        </main>
-      </div>
-      <footer className="border-t border-border p-6 text-sm text-text-muted">© 2026 Acme</footer>
-      {adaptive ? (
-        <BottomNav label="Workspace">
-          <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+      </Navbar>}
+      sidebar={<Sidebar aria-label="Workspace" collapsed={rail}>
+        <SidebarSection>
+          <SidebarItem href="#home" icon="home" label="Home" current />
+          <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
+          <SidebarItem href="#team" icon="group" label="Team" />
+        </SidebarSection>
+      </Sidebar>}
+      footer="© 2026 Acme"
+      bottomNav={adaptive ? (
+        <BottomNav aria-label="Workspace" hideFrom="md">
+          <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
           <BottomNavLink href="#workspace-projects" icon="folder">Projects</BottomNavLink>
           <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
         </BottomNav>
-      ) : null}
-    </div>
+      ) : null}>
+      <Stack gap={6}>
+        <Stack gap={2}>
+          <Heading level={1}>Projects</Heading>
+          <Text tone="muted" size="sm">Twelve active projects in the Acme workspace.</Text>
+        </Stack>
+        <Stack as="section" gap={3} aria-labelledby="recent">
+          <Heading level={2} id="recent">Recent</Heading>
+          <Stack as="ul" gap={3}>
+            {rows.map((r) => <Card as="li" key={r} padding="sm">{r}</Card>)}
+          </Stack>
+        </Stack>
+      </Stack>
+    </AppShell>
   );
 }
 

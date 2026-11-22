@@ -21,7 +21,7 @@ function Members({ links, ...args }: ListProps & { links?: boolean }) {
     <List {...args}>
       {people.map((p, i) => links
         ? <ListItem key={p.name} href="#" selected={i === 0} leading={<Avatar name={p.name} alt="" size="sm" />} title={p.name} description={p.email}
-            trailing={<IconButton icon="more_horiz" label={`More for ${p.name}`} size="sm" />} />
+            trailing={<IconButton icon="more_vert" label={`More for ${p.name}`} size="sm" />} />
         : <ListItem key={p.name} leading={<Avatar name={p.name} alt="" size="sm" />} title={p.name} description={p.email} trailing={p.role ? <Badge>{p.role}</Badge> : undefined} />)}
     </List>
   );
@@ -96,7 +96,7 @@ function States(args: ListProps) {
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Members didn't load. Check your connection and try again.</Alert>
         : state === 'empty' ? <EmptyState size="sm" title="No members yet" description="Invite people to work on this project with you." />
         : state === 'loaded' ? <Members {...args} />
-        : <List {...args} loading><ListLoadingItems rows={4} description leading="sm" label="Loading members" /></List>}
+        : <List {...args} loading><ListLoadingItems rows={4} showDescription leading="sm" label="Loading members" /></List>}
     </div>
   );
 }

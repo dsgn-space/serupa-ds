@@ -33,8 +33,8 @@ function IconTileRender({ ref, ...props }: IconTileProps & React.RefAttributes<H
   const named = props.label ? { role: 'img', 'aria-label': props.label } : { 'aria-hidden': true as const };
   return (
     <span {...named} {...rest} ref={ref} data-component="icon-tile"
-      className={cn('dk-icon-tile', 'dk-icon-tile--' + tone, 'dk-icon-tile--' + size, props.shape === 'circle' && 'dk-icon-tile--circle', props.className)}>
-      <span className="dk-icon-tile__icon">{asIcon(props.icon)}</span>
+      className={cn('srp-icon-tile', 'srp-icon-tile--' + tone, 'srp-icon-tile--' + size, props.shape === 'circle' && 'srp-icon-tile--circle', props.className)}>
+      <span className="srp-icon-tile__icon">{asIcon(props.icon)}</span>
     </span>
   );
 }

@@ -10,7 +10,7 @@ import { Badge } from '@diki-stwn/serupa-ds';
 <Badge>Draft</Badge>                                    // subtle, neutral
 <Badge tone="success" dot>Online</Badge>
 <Badge variant="solid" tone="danger" dot ping>Live</Badge>          // live states only
-<Badge tone="warning" leftIcon="schedule">Pending</Badge>
+<Badge tone="warning" startIcon="schedule">Pending</Badge>
 <Badge variant="solid" tone="primary">New</Badge>
 <Badge variant="outline" tone="info">Beta</Badge>
 <Badge tone="violet" onRemove={() => removeTag("Design")}>Design</Badge>
@@ -49,9 +49,9 @@ import { Badge } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Extras` story.
 
-1. **Dot** (`.dk-badge__dot`): an optional mark of the tone before the label.
-2. **Label** (`.dk-badge__label`): the word or number the badge says.
-3. **Remove** (`.dk-badge__remove`): takes the badge away, when it can be removed (a filter, a tag).
+1. **Dot** (`.srp-badge__dot`): an optional mark of the tone before the label.
+2. **Label** (`.srp-badge__label`): the word or number the badge says.
+3. **Remove** (`.srp-badge__remove`): takes the badge away, when it can be removed (a filter, a tag).
 
 ## Usage
 
@@ -88,7 +88,7 @@ Palette tones use the fixed palette steps in the Styles table. Status tones use 
 - **Dot**: `dot` adds a 6px dot before the label, centered in a box as tall as an icon and 2px narrower (10×12px), so a dot badge spaces like an icon badge with a little less room for the lighter dot. Use it for live states ("Online", "Away").
 - **Indicator**: `dot` with no label, icon or count renders a lone dot that says "something new" without a number, for the corner of an icon or avatar. It's a solid circle in the tone's fill (any `variant` is ignored), 8px, with a 2px ring in the surface color so it stays apart from what it overlaps. You place it (for example `className="absolute top-0 right-0"` inside a `relative` parent). It can't be clicked or removed (too small to target): `onClick`, `href` and `onRemove` are dropped with a warning. Switch to `count` once you know how many.
 - **Ping**: `ping` with `dot` adds the system's ping animation (the same `ping` keyframes and `--animate-ping` token as the `animate-ping` utility): a copy of the dot grows to twice its size and fades, every second, while the dot stays put. It works on a dot in a label and on the indicator. Use it for live states ("Live", "Recording", "In a call"), not for unread or ordinary statuses: several pinging dots on one screen compete for attention. Off under reduced motion and in forced-colors mode. Constant motion lasting more than 5 seconds should be stoppable (WCAG 2.2.2), so turn `ping` off when the state ends or after a while.
-- **Icon**: `leftIcon` adds a 12px icon before the label. It replaces the dot.
+- **Icon**: `startIcon` adds a 12px icon before the label. It replaces the dot.
 - **Count**: `count` makes a round pill, as wide as it is tall for one digit, with tabular digits. Past `max` (99) it shows "99+", while screen readers hear the real count and a tooltip (`title`) shows it, unless you pass your own `title`; at 0 it renders nothing unless `showZero`. The number is written in the digits of the locale from `SerupaProvider` (or the browser), as Calendar writes its days: ٩٩+ in Egyptian Arabic. A count badge has no label, dot, icon or remove button.
 - **Optical balance**: like Button, an icon reads lighter than text, so a badge with an icon on one side only gets 2px more padding on the text side (`--badge-icon-offset`): a leading icon or dot pads the end (6 + 2px), a × pads the start. With an icon on both sides, or none, the padding is even. Logical sides, so right-to-left mirrors it.
 - **Remove**: `onRemove` adds a × button at the end, for filter chips and tags. It's a real `<button type="button">` named "Remove" + the label, with a 2px focus ring. The × mirrors a leading icon: an icon-sized box (12px), `--badge-gap` from the label, and the same end padding as the start, so a badge with an icon, a label and a × is balanced. Because the × glyph sits further inside its box than most icons, the box is pulled in 2px on each side to even out what you see. The button still has a full 24×24 target (the WCAG 2.2 minimum, as on a small Button), reaching 2px past the badge's top and bottom, and its focus ring goes round all of it.
@@ -142,7 +142,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `tone` | `'neutral'` \| `'primary'` \| `'success'` \| `'warning'` \| `'danger'` \| `'info'` \| a palette family (`'red'` … `'rose'`) | `'neutral'` | The color |
 | `dot` | boolean | `false` | A 6px status dot before the label, in the text color. With no label, icon or count, a lone indicator dot (see Extras) |
 | `ping` | boolean | `false` | With `dot` (in a label or the indicator): the dot pings, growing and fading every second. For live states. Ignored without a dot |
-| `leftIcon` | icon name or element | | An icon before the label (Material Symbols or custom icon name); replaces the dot |
+| `startIcon` | icon name or element | | An icon before the label (Material Symbols or custom icon name); replaces the dot |
 | `count` | number | | Makes it a count badge: a round pill with the number. 0 renders nothing |
 | `max` | number | `99` | Past this, the count shows `99+` |
 | `showZero` | boolean | `false` | Show a count of 0 |

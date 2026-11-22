@@ -48,11 +48,11 @@ describe('Select', () => {
     }
   });
 
-  test('a native <select> (no system arrow) in a .dk-select box (data-component="select"); md 32px text-sm, 12px start padding and room for the chevron at the end, 1px border, 6px corners', async () => {
+  test('a native <select> (no system arrow) in a .srp-select box (data-component="select"); md 32px text-sm, 12px start padding and room for the chevron at the end, 1px border, 6px corners', async () => {
     await render(<Grid><Role changes={[]} /></Grid>);
     const b = css(box('md')), f = css(field('md'));
     expect([field('md').tagName, box('md').dataset.component, f.appearance]).toEqual(['SELECT', 'select', CSS.supports('appearance', 'base-select') ? 'base-select' : 'none']);
-    expect(box('md').className).toMatch(/dk-select dk-select--size-md/);
+    expect(box('md').className).toMatch(/srp-select srp-select--size-md/);
     expect([b.height, f.fontSize, f.paddingLeft, f.paddingRight, b.borderTopWidth, b.borderRadius]).toEqual(['32px', '14px', '12px', '32px', '1px', '6px']);
   });
 
@@ -103,10 +103,10 @@ describe('Select', () => {
     await render(<Grid><Select id="ph" placeholder="Choose one" options={['One', 'Two']} aria-label="Placeholder" /></Grid>);
     const o = field('ph').options[0]!;
     expect([o.value, o.textContent, o.disabled, field('ph').value]).toEqual(['', 'Choose one', true, '']);
-    expect(box('ph').className).toMatch(/dk-select--empty/);
+    expect(box('ph').className).toMatch(/srp-select--empty/);
     expect(css(field('ph')).color).toBe(color('var(--placeholder)'));
     await userEvent.selectOptions(field('ph'), 'Two');
-    await expect.poll(() => box('ph').className).not.toMatch(/dk-select--empty/);
+    await expect.poll(() => box('ph').className).not.toMatch(/srp-select--empty/);
     expect([field('ph').value, css(field('ph')).color]).toEqual(['Two', color('var(--text)')]);
   });
 
@@ -117,17 +117,17 @@ describe('Select', () => {
     </form>);
     await userEvent.selectOptions(field('ph'), 'M');
     await userEvent.selectOptions(field('dv'), 'a');
-    expect([box('ph').classList.contains('dk-select--empty'), field('dv').value]).toEqual([false, 'a']);
+    expect([box('ph').classList.contains('srp-select--empty'), field('dv').value]).toEqual([false, 'a']);
     (document.getElementById('f') as HTMLFormElement).reset();
-    await expect.poll(() => box('ph').classList.contains('dk-select--empty')).toBe(true);
+    await expect.poll(() => box('ph').classList.contains('srp-select--empty')).toBe(true);
     const data = new FormData(document.getElementById('f') as HTMLFormElement);
     expect([field('ph').value, field('dv').value, data.get('ph'), data.get('dv')]).toEqual(['', 'b', null, 'b']);
     await userEvent.selectOptions(field('ph'), 'S');
-    expect(box('ph').classList.contains('dk-select--empty')).toBe(false);
+    expect(box('ph').classList.contains('srp-select--empty')).toBe(false);
   });
 
   test('groups, plain options and <option> children together; the left icon and chevron are decorative and don\'t take clicks; the text starts after the icon', async () => {
-    await render(<Grid><Select id="grp" leftIcon="schedule" aria-label="Groups" options={[{ label: 'Europe', options: ['London', 'Paris'] }, 'Tokyo']}><option value="kid">Child</option></Select></Grid>);
+    await render(<Grid><Select id="grp" startIcon="schedule" aria-label="Groups" options={[{ label: 'Europe', options: ['London', 'Paris'] }, 'Tokyo']}><option value="kid">Child</option></Select></Grid>);
     const i = field('grp');
     expect([...i.querySelectorAll('optgroup')].map((g) => g.label + '=' + [...g.children].map((o) => (o as HTMLOptionElement).value).join('/')).join()).toBe('Europe=London/Paris');
     expect([...i.options].map((o) => o.value).join()).toBe('London,Paris,Tokyo,kid');
@@ -199,7 +199,7 @@ describe('Select', () => {
     const roBefore = css(box('ro')).borderTopColor;
     await userEvent.hover(field('ro'));
     expect([at, keyed, space, press, changes, sent, field('ro').getAttribute('aria-readonly'), field('ro').disabled]).toEqual(['ro', 'b', true, true, [], 'b', 'true', false]);
-    expect([css(box('ro')).backgroundColor, css(field('ro')).cursor, box('ro').className]).toEqual([color('var(--field-readonly)'), 'default', expect.stringMatching(/dk-select--readonly/)]);
+    expect([css(box('ro')).backgroundColor, css(field('ro')).cursor, box('ro').className]).toEqual([color('var(--field-readonly)'), 'default', expect.stringMatching(/srp-select--readonly/)]);
     expect(css(box('ro')).borderTopColor).toBe(roBefore);
   });
 
@@ -219,7 +219,7 @@ describe('Select', () => {
     await render(<Grid><Field label="Country" error="Pick a country."><Select id="fld" placeholder="Choose" options={['DK']} /></Field></Grid>);
     const i = field('fld');
     expect([i.labels[0]!.textContent, i.getAttribute('aria-invalid'), !!i.getAttribute('aria-describedby')]).toEqual(['Country', 'true', true]);
-    expect(box('fld').className).toMatch(/dk-select--invalid/);
+    expect(box('fld').className).toMatch(/srp-select--invalid/);
   });
 
   test('contrast in every theme: text and placeholder 4.5:1 on the field; chevron, focus ring and invalid border 3:1, the soft border 1.3:1', () => {

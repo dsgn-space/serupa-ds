@@ -15,7 +15,7 @@ const meta = {
   subcomponents: { AccordionItem },
   args: { defaultValue: ['shipping'], children: items },
   argTypes: {
-    type: { control: 'inline-radio', options: ['single', 'multiple'] },
+    selectionMode: { control: 'inline-radio', options: ['single', 'multiple'] },
     variant: { control: 'inline-radio', options: ['plain', 'card'] },
     children: { control: false },
   },
@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
-export const Multiple: Story = { args: { type: 'multiple', defaultValue: ['shipping', 'returns'] } };
+export const Multiple: Story = { args: { selectionMode: 'multiple', defaultValue: ['shipping', 'returns'] } };
 
 export const Card: Story = { args: { variant: 'card' } };
 
@@ -34,8 +34,8 @@ export const WithDisabled: Story = {
   args: { children: [...items, <AccordionItem key="gift" value="gift" title="Gift wrapping (coming soon)" disabled>Not yet available.</AccordionItem>] },
 };
 
-/** type="multiple" with showExpandAll: one button opens every item, then closes them all. */
-export const ExpandAll: Story = { args: { type: 'multiple', showExpandAll: true, defaultValue: [] } };
+/** selectionMode="multiple" with showExpandAll: one button opens every item, then closes them all. */
+export const ExpandAll: Story = { args: { selectionMode: 'multiple', showExpandAll: true, defaultValue: [] } };
 
 export const LongText: Story = {
   args: {

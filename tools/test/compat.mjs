@@ -76,10 +76,10 @@ const EQUIV = [['none', undefined], ['normal', undefined], ['row', undefined], [
 const equiv = (a, b) => EQUIV.some(([x, y]) => (norm(a) === x && b === y) || (norm(b) === x && a === y)) || (a && b && norm(a).split(', ').every((x, i, arr) => x === arr[0]) && norm(b).split(', ').every((x, i, arr) => x === arr[0]) && norm(a).split(', ')[0] === norm(b).split(', ')[0]);
 
 // ---------- measurement (runs in both engines)
-const css = (read('dist/bundle.css') + read('dist/utilities-extra.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+const css = read('dist/bundle.css').replace(/\/\*[\s\S]*?\*\//g, '');
 const unescape = (n) => n.replace(/\\([0-9a-f]{1,6}) ?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
-const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))].filter((c) => !c.startsWith('dk-')).sort();
-const internal = [...new Set([...css.matchAll(/--dk-[a-z0-9-]+/g)].map((m) => m[0]))];
+const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))].filter((c) => !c.startsWith('srp-')).sort();
+const internal = [...new Set([...css.matchAll(/--srp-[a-z0-9-]+/g)].map((m) => m[0]))];
 const measure = ([list, internal]) => {
   const host = document.getElementById('host'); host.innerHTML = '';
   const base = document.createElement('div'); base.innerHTML = '<i>a</i><i>b</i>'; host.appendChild(base);
@@ -91,7 +91,7 @@ const measure = ([list, internal]) => {
     props.forEach((p) => { const v = s.getPropertyValue(p); if (v !== bv[p]) o[p] = v; const v1 = s1.getPropertyValue(p); if (v1 !== b1[p]) o['child ' + p] = v1; }); return o; }) };
 };
 // Neutral page: the same font, line height and margins in every engine, so only the system's CSS is compared.
-const PAGE = () => writePage('compat.html', '<div id="host" style="position:relative;width:1000px;font-family:var(--font-sans);font-size:16px;line-height:20px"></div>', { extraHead: '<style>html,body{margin:0}</style>', extra: true });
+const PAGE = () => writePage('compat.html', '<div id="host" style="position:relative;width:1000px;font-family:var(--font-sans);font-size:16px;line-height:20px"></div>', { extraHead: '<style>html,body{margin:0}</style>' });
 async function measureAll(page) {
   await page.goto(PAGE());
   await page.evaluate(() => document.fonts.ready);
@@ -199,24 +199,24 @@ try {
   const h0 = await wd.evaluate(() => location.hash); await wd.evaluate(() => document.getElementById('link').click());
   t('Button loading: a link Button does not navigate', (await wd.evaluate(() => location.hash)) === h0);
   t('Button: a disabled link has no href and is skipped by Tab', await wd.evaluate(() => { const d = document.getElementById('dlink'); d.focus(); return !d.hasAttribute('href') && d.getAttribute('aria-disabled') === 'true' && document.activeElement !== d; }));
-  t('Button loading: "Loading" is announced', (await wd.evaluate(() => new Promise((r) => setTimeout(() => r(document.querySelector('[data-dk-announcer]').textContent), 150)))) === 'Loading');
+  t('Button loading: "Loading" is announced', (await wd.evaluate(() => new Promise((r) => setTimeout(() => r(document.querySelector('[data-srp-announcer]').textContent), 150)))) === 'Loading');
 
   // Loader: the ring's arc grows and shrinks (dash animation on a pathLength="100" circle), and the dots pulse
   await wd.goto(writePage('compat-loader.html', '<div id="root"></div><script>var h=React.createElement;ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment,null,h(Serupa.Loader,{id:"r",size:"lg",delay:0}),h(Serupa.Loader,{id:"d",variant:"dots",delay:0}),h(Serupa.Loader,{id:"sp",variant:"spokes",delay:0}),h(Serupa.Loader,{id:"px",variant:"pixel",delay:0}),h(Serupa.Loader,{id:"l",variant:"text",label:"Loading projects",delay:0}),h("div",{style:{display:"flex",gap:"12px",width:"300px"}},h(Serupa.Loader,{id:"sc",variant:"skeleton",shape:"circle",size:"lg",label:"",delay:0}),h(Serupa.Loader,{id:"st",variant:"skeleton",lines:3,label:"",delay:0}))));</script>', { react: true }));
   const sp = await wd.evaluate(() => new Promise((res) => setTimeout(() => {
-    const arc = document.querySelector('#r .dk-loader__arc'), svg = document.querySelector('#r svg');
-    const len = (ms) => { const a = arc.getAnimations().find((x) => /** @type {CSSAnimation} */ (x).animationName === 'dk-loader-arc'); if (!a) return NaN; a.pause(); a.currentTime = ms; return parseFloat(getComputedStyle(arc).strokeDasharray); };
-    const v = { dot: len(0), long: len(750), turn: getComputedStyle(svg).animationName + ' ' + getComputedStyle(svg).animationDuration, dots: [...document.querySelectorAll('#d .dk-loader__dot')].map((c) => getComputedStyle(c).animationName), w: Math.round(document.getElementById('r').getBoundingClientRect().width), lab: (() => { const l = document.querySelector('#l .dk-loader__label'), g = l.querySelector('.dk-loader__glint'), st = getComputedStyle(g, '::after'); return [st.content, getComputedStyle(l).webkitTextFillColor, /gradient/.test(getComputedStyle(g).maskImage || getComputedStyle(g).webkitMaskImage), st.animationName, Math.round(l.getBoundingClientRect().width)]; })(),
-      px: [...document.querySelectorAll('#px rect.dk-loader__px')].map((r) => getComputedStyle(r).animationName + '@' + getComputedStyle(r).animationDelay).join(','),
+    const arc = document.querySelector('#r .srp-loader__arc'), svg = document.querySelector('#r svg');
+    const len = (ms) => { const a = arc.getAnimations().find((x) => /** @type {CSSAnimation} */ (x).animationName === 'srp-loader-arc'); if (!a) return NaN; a.pause(); a.currentTime = ms; return parseFloat(getComputedStyle(arc).strokeDasharray); };
+    const v = { dot: len(0), long: len(750), turn: getComputedStyle(svg).animationName + ' ' + getComputedStyle(svg).animationDuration, dots: [...document.querySelectorAll('#d .srp-loader__dot')].map((c) => getComputedStyle(c).animationName), w: Math.round(document.getElementById('r').getBoundingClientRect().width), lab: (() => { const l = document.querySelector('#l .srp-loader__label'), g = l.querySelector('.srp-loader__glint'), st = getComputedStyle(g, '::after'); return [st.content, getComputedStyle(l).webkitTextFillColor, /gradient/.test(getComputedStyle(g).maskImage || getComputedStyle(g).webkitMaskImage), st.animationName, Math.round(l.getBoundingClientRect().width)]; })(),
+      px: [...document.querySelectorAll('#px rect.srp-loader__px')].map((r) => getComputedStyle(r).animationName + '@' + getComputedStyle(r).animationDelay).join(','),
       spk: (() => { const s = document.querySelector('#sp svg'); return [document.querySelectorAll('#sp line').length, getComputedStyle(s).animationName, getComputedStyle(s).animationTimingFunction, getComputedStyle(document.querySelectorAll('#sp line')[7]).opacity]; })(),
-      sk: (() => { const bones = [...document.querySelectorAll('#st .dk-loader__bone')]; return { w: bones.map((x) => Math.round(x.getBoundingClientRect().width)), h: Math.round(document.getElementById('st').getBoundingClientRect().height), c: Math.round(document.getElementById('sc').getBoundingClientRect().width), grad: /gradient/.test(getComputedStyle(bones[0], '::after').backgroundImage), anim: getComputedStyle(bones[0], '::after').animationName }; })() };
+      sk: (() => { const bones = [...document.querySelectorAll('#st .srp-loader__bone')]; return { w: bones.map((x) => Math.round(x.getBoundingClientRect().width)), h: Math.round(document.getElementById('st').getBoundingClientRect().height), c: Math.round(document.getElementById('sc').getBoundingClientRect().width), grad: /gradient/.test(getComputedStyle(bones[0], '::after').backgroundImage), anim: getComputedStyle(bones[0], '::after').animationName }; })() };
     res(v); }, 200)));
   t('Loader: the ring turns (2s) while its arc grows from a dot to most of the ring', sp.dot <= 2 && sp.long >= 60 && sp.turn === 'spin 2s' && sp.w === 40, JSON.stringify(sp));
-  t('Loader: the text variant shines (a full-color copy of the words in a sliding window)', sp.lab[0] === '"Loading projects"' && sp.lab[2] && sp.lab[3] === 'dk-loader-glint' && sp.lab[4] > 40, JSON.stringify(sp.lab));
-  t('Loader: the skeleton draws three 20px lines beside a 40px circle, the last line shorter, shimmering', sp.sk.c === 40 && sp.sk.h === 60 && sp.sk.w[0] === 248 && sp.sk.w[2] === Math.round(248 * 0.6) && sp.sk.grad && sp.sk.anim === 'dk-loader-sweep', JSON.stringify(sp.sk));
-  t('Loader: the pixel grid runs its diagonal wave', sp.px === 'dk-loader-pixel@0s,dk-loader-pixel@0.075s,dk-loader-pixel@0.15s,dk-loader-pixel@0.075s,dk-loader-pixel@0.15s,dk-loader-pixel@0.225s,dk-loader-pixel@0.15s,dk-loader-pixel@0.225s,dk-loader-pixel@0.3s', sp.px);
-  t('Loader: the spokes tick round, fading behind the lead spoke', sp.spk[0] === 8 && sp.spk[1] === 'dk-loader-tick' && /step-end|steps\(1(, (jump-)?end)?\)/.test(sp.spk[2]) && sp.spk[3] === '0.25', JSON.stringify(sp.spk));
-  t('Loader: the dots pulse', sp.dots.length === 3 && sp.dots.every((n) => n === 'dk-loader-dot'), JSON.stringify(sp.dots));
+  t('Loader: the text variant shines (a full-color copy of the words in a sliding window)', sp.lab[0] === '"Loading projects"' && sp.lab[2] && sp.lab[3] === 'srp-loader-glint' && sp.lab[4] > 40, JSON.stringify(sp.lab));
+  t('Loader: the skeleton draws three 20px lines beside a 40px circle, the last line shorter, shimmering', sp.sk.c === 40 && sp.sk.h === 60 && sp.sk.w[0] === 248 && sp.sk.w[2] === Math.round(248 * 0.6) && sp.sk.grad && sp.sk.anim === 'srp-loader-sweep', JSON.stringify(sp.sk));
+  t('Loader: the pixel grid runs its diagonal wave', sp.px === 'srp-loader-pixel@0s,srp-loader-pixel@0.075s,srp-loader-pixel@0.15s,srp-loader-pixel@0.075s,srp-loader-pixel@0.15s,srp-loader-pixel@0.225s,srp-loader-pixel@0.15s,srp-loader-pixel@0.225s,srp-loader-pixel@0.3s', sp.px);
+  t('Loader: the spokes tick round, fading behind the lead spoke', sp.spk[0] === 8 && sp.spk[1] === 'srp-loader-tick' && /step-end|steps\(1(, (jump-)?end)?\)/.test(sp.spk[2]) && sp.spk[3] === '0.25', JSON.stringify(sp.spk));
+  t('Loader: the dots pulse', sp.dots.length === 3 && sp.dots.every((n) => n === 'srp-loader-dot'), JSON.stringify(sp.dots));
 
   // serupa-purge output renders the same in this engine
   const dir = path.join(PROJECT, '.test-tmp'); fs.mkdirSync(dir, { recursive: true });

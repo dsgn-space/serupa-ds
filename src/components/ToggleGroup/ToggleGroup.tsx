@@ -9,14 +9,14 @@ import { useControllable } from '../../internal/controllable';
 
 export interface ToggleGroupProps extends Omit<ButtonGroupProps, 'defaultValue' | 'onChange'> {
   /** 'single' (default): turning one on turns the others off, and pressing the one that's on turns it off. 'multiple': each turns on and off by itself. */
-  type?: 'single' | 'multiple' | undefined;
+  selectionMode?: 'single' | 'multiple' | undefined;
   /** The values of the buttons that are on (controlled). Use with onValueChange. */
   value?: string[] | undefined;
   /** The values of the buttons that are on at first (uncontrolled). */
   defaultValue?: string[] | undefined;
   /** Called with the values of the buttons that are on, when one is pressed. */
   onValueChange?: ((value: string[]) => void) | undefined;
-  /** With type="single": one button always stays on, so pressing the one that's on does nothing. Default: false. */
+  /** With selectionMode="single": one button always stays on, so pressing the one that's on does nothing. Default: false. */
   required?: boolean | undefined;
   /** Turns every button off and out of use. */
   disabled?: boolean | undefined;
@@ -29,9 +29,9 @@ export interface ToggleGroupProps extends Omit<ButtonGroupProps, 'defaultValue' 
 }
 
 function ToggleGroupRender({ ref, ...props }: ToggleGroupProps & React.RefAttributes<HTMLDivElement>) {
-  const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, required: 1, disabled: 1, size: 1, variant: 1, attached: 1, orientation: 1, className: 1, children: 1 });
+  const rest = omit(props, { selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, required: 1, disabled: 1, size: 1, variant: 1, attached: 1, orientation: 1, className: 1, children: 1 });
   const vertical = oneOf(['horizontal', 'vertical'] as const, props.orientation, 'horizontal') === 'vertical';
-  const single = props.type !== 'multiple';
+  const single = props.selectionMode !== 'multiple';
   const [value, setOwn] = useControllable<string[]>(props.value, props.defaultValue || [], 'ToggleGroup', 'value');
   const change = (next: string[]) => {
     if (props.value === undefined) setOwn(next);
@@ -60,14 +60,14 @@ function ToggleGroupRender({ ref, ...props }: ToggleGroupProps & React.RefAttrib
     // ButtonGroup's markup and classes, so it looks and lays out the same.
     <div role="group" {...rest} ref={mergedRef} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
       data-wrapped={wrapped || undefined}
-      className={cn('dk-button-group dk-toggle-group', vertical && 'dk-button-group--vertical', props.attached !== false && !wrapped && 'dk-button-group--attached', props.className)}>
+      className={cn('srp-button-group srp-toggle-group', vertical && 'srp-button-group--vertical', props.attached !== false && !wrapped && 'srp-button-group--attached', props.className)}>
       {children}
     </div>
   );
 }
 
-/* ToggleGroup: a ButtonGroup whose ToggleButtons share one value. With type="single" it works like a set of
-   radios that can all be off (text alignment, a view mode in a toolbar); with type="multiple" each button is its
+/* ToggleGroup: a ButtonGroup whose ToggleButtons share one value. With selectionMode="single" it works like a set of
+   radios that can all be off (text alignment, a view mode in a toolbar); with selectionMode="multiple" each button is its
    own setting but the group reports them together (bold, italic, underline). Each button keeps aria-pressed and
    its own Tab stop, as in a ButtonGroup; inside a Toolbar the arrow keys move between them. */
 /** ToggleButtons that share one value: one on at a time, or any number. */

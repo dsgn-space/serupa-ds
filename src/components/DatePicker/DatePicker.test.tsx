@@ -10,7 +10,7 @@ import { DatePicker } from './DatePicker';
 const described = (e: Element) => (e.getAttribute('aria-describedby') || '').split(' ').filter(Boolean).map((i) => document.getElementById(i)!.textContent).join(' | ');
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
-const announcerA = () => document.querySelector<HTMLElement>('[data-dk-announcer-assertive]');
+const announcerA = () => document.querySelector<HTMLElement>('[data-srp-announcer-assertive]');
 const popup = (id: string) => document.querySelector(`#${id} ~ [role=dialog]`) as HTMLElement;
 const button = (id: string) => document.querySelector(`#${id} ~ button[aria-haspopup=dialog]`) as HTMLButtonElement;
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.id || a.tagName; };
@@ -121,7 +121,7 @@ describe('DatePicker', () => {
     } finally { await page.viewport(900, 700); }
   });
 
-  test('a dk-input field with a "Choose a date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
+  test('a srp-input field with a "Choose a date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<>
       <DatePicker id="dp" aria-label="Start" locale="en-US" ref={ref} />
@@ -130,7 +130,7 @@ describe('DatePicker', () => {
     const i = el('dp'), b = button('dp');
     expect(ref.current).toBe(i);
     expect([i.placeholder, i.inputMode, b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')]).toEqual(['mm/dd/yyyy', 'numeric', 'Choose a date', 'dialog', 'false']);
-    expect(i.parentElement!.className).toMatch(/dk-input/);
+    expect(i.parentElement!.className).toMatch(/srp-input/);
     expect(el('dpde').value + ' ' + el('dpde').placeholder).toBe('22.11.2025 dd.mm.yyyy');
   });
 
@@ -224,7 +224,7 @@ describe('DatePicker', () => {
     function Plain() {
       const [v, setV] = React.useState<string | null>('2026-10-24');
       return <DatePicker id="plain" aria-label="Due" locale="en-US" name="plain" value={v} min="2026-10-01" max="2026-10-31"
-        onValueChange={(d, iso) => { calls.push((d ? d.getHours() + ':' + d.getDate() : 'null') + ' ' + iso); setV(iso); }} />;
+        onValueChange={(d, { iso }) => { calls.push((d ? d.getHours() + ':' + d.getDate() : 'null') + ' ' + iso); setV(iso); }} />;
     }
     await render(<Plain />);
     const hid = () => document.querySelector<HTMLInputElement>('input[type=hidden][name=plain]')!.value;
@@ -273,8 +273,8 @@ describe('DatePicker', () => {
       const pop = popup('ctl'), bg = getComputedStyle(pop).backgroundColor, cs = (sel: string) => getComputedStyle(pop.querySelector(sel)!);
       // A plain day: the third week is always in the month shown; not the picked day, not today.
       const day = pop.querySelector<HTMLElement>('tbody tr:nth-child(3) td:not([aria-selected=true]) > button:not([aria-current])')!;
-      const sel = cs('.dk-calendar__day--selected');
-      const pairs: Array<[string, string, string, number]> = [['title', cs('.dk-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.dk-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', sel.backgroundColor, bg, 3]];
+      const sel = cs('.srp-calendar__day--selected');
+      const pairs: Array<[string, string, string, number]> = [['title', cs('.srp-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.srp-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', sel.backgroundColor, bg, 3]];
       day.style.background = 'var(--calendar-day-bg-hover, var(--surface-muted))';
       pairs.push(['day on hover', getComputedStyle(day).color, getComputedStyle(day).backgroundColor, 4.5]);
       day.style.background = '';
@@ -400,7 +400,7 @@ describe('DatePicker: another calendar system (RX9)', () => {
   const gridTitle = () => { const g = document.querySelector('[role=dialog] [role=grid]:not([hidden])')!; return document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent; };
   test('calendar="persian": the popup shows the Persian month, and the typed date stays Gregorian so it reads back as the same day', async () => {
     const got: string[] = [];
-    await render(<DatePicker aria-label="Due" calendar="persian" locale="en-US" defaultValue="2026-11-15" onValueChange={(_, iso) => got.push(String(iso))} />);
+    await render(<DatePicker aria-label="Due" calendar="persian" locale="en-US" defaultValue="2026-11-15" onValueChange={(_, { iso }) => got.push(String(iso))} />);
     const input = page.getByRole('textbox', { name: 'Due' }).element() as HTMLInputElement;
     expect(input.value).toBe('11/15/2026');
     await userEvent.click(page.getByRole('button', { name: 'Choose a date' }));

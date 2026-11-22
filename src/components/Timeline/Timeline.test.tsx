@@ -24,7 +24,7 @@ describe('Timeline', () => {
     const iref = React.createRef<HTMLLIElement>();
     await render(<Timeline id="x" ref={ref} className="extra" data-x="y"><TimelineItem id="i" ref={iref} className="mine" data-y="z" title="One" /></Timeline>);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['OL', true, 'dk-timeline extra', 'y', 'timeline']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['OL', true, 'srp-timeline extra', 'y', 'timeline']);
     expect([el('i').tagName, iref.current === el('i'), el('i').classList.contains('mine'), el('i').dataset.y]).toEqual(['LI', true, true, 'z']);
   });
 
@@ -33,39 +33,39 @@ describe('Timeline', () => {
     await expect.element(page.getByRole('list', { name: 'Order history' })).toBeInTheDocument();
     expect(page.getByRole('listitem').all().length).toBe(3);
     const t = q(el('a'), 'time');
-    expect([t.textContent, t.getAttribute('dateTime'), q(el('a'), '.dk-timeline__content').textContent]).toEqual(['12 Mar', '2026-03-12', 'Two items.']);
-    expect([el('a').textContent, q(el('a'), '.dk-timeline__rail').getAttribute('aria-hidden')]).toEqual(['Order placed12 MarTwo items.', 'true']);
+    expect([t.textContent, t.getAttribute('dateTime'), q(el('a'), '.srp-timeline__content').textContent]).toEqual(['12 Mar', '2026-03-12', 'Two items.']);
+    expect([el('a').textContent, q(el('a'), '.srp-timeline__rail').getAttribute('aria-hidden')]).toEqual(['Order placed12 MarTwo items.', 'true']);
     // Without children there is no content box; without time, no <time>.
     await render(<Timeline><TimelineItem id="bare" title="Bare" /></Timeline>);
-    expect([el('bare').querySelector('time'), q(el('bare'), '.dk-timeline__content')]).toEqual([null, null]);
+    expect([el('bare').querySelector('time'), q(el('bare'), '.srp-timeline__content')]).toEqual([null, null]);
   });
 
   test('a time without dateTime is a <span>, not a <time> with text no machine can read; a <RelativeTime> passed as time isn\'t nested in another <time> (L8E59)', async () => {
     await render(<Order />);
-    const t = q(el('b'), '.dk-timeline__time');
+    const t = q(el('b'), '.srp-timeline__time');
     expect([t.tagName, t.textContent, el('b').querySelector('time')]).toEqual(['SPAN', '13 Mar', null]);
-    expect(q(el('a'), '.dk-timeline__time').tagName).toBe('TIME');
+    expect(q(el('a'), '.srp-timeline__time').tagName).toBe('TIME');
     await render(<Timeline><TimelineItem id="rt" title="Shipped" time={<time dateTime="2026-03-12">2 hours ago</time>} /></Timeline>);
     expect(el('rt').querySelectorAll('time').length).toBe(1);
   });
 
   test('the line joins each marker to the next, and the last has none; the title\'s first line sits level with the marker', async () => {
     await render(<Order />);
-    const line = (id: string) => getComputedStyle(q(el(id), '.dk-timeline__rail'), '::after');
+    const line = (id: string) => getComputedStyle(q(el(id), '.srp-timeline__rail'), '::after');
     expect([line('a').visibility, line('a').width, line('c').visibility]).toEqual(['visible', '2px', 'hidden']);
-    const m = rect(q(el('b'), '.dk-timeline__marker')), title = rect(q(el('b'), '.dk-timeline__title'));
+    const m = rect(q(el('b'), '.srp-timeline__marker')), title = rect(q(el('b'), '.srp-timeline__title'));
     expect([m.width, m.height, Math.round(title.top - m.top), Math.round(title.height)]).toEqual([24, 24, 0, 24]);
     // The rail of the first item reaches down to the second item's top.
-    expect(Math.round(rect(q(el('a'), '.dk-timeline__rail')).bottom)).toBe(Math.round(rect(el('b')).top));
+    expect(Math.round(rect(q(el('a'), '.srp-timeline__rail')).bottom)).toBe(Math.round(rect(el('b')).top));
   });
 
   test('tone colors the dot, or tints an icon\'s circle; unknown values fall back to neutral', async () => {
     await render(<Timeline><TimelineItem id="s" title="S" tone="danger" /><TimelineItem id="n" title="N" tone={'bogus' as 'info'} /><TimelineItem id="ic" title="I" icon="check" tone="success" /></Timeline>);
-    const dot = (id: string) => getComputedStyle(q(el(id), '.dk-timeline__marker'), '::before').backgroundColor;
-    expect([el('s').classList.contains('dk-timeline__item--danger'), el('n').classList.contains('dk-timeline__item--neutral')]).toEqual([true, true]);
+    const dot = (id: string) => getComputedStyle(q(el(id), '.srp-timeline__marker'), '::before').backgroundColor;
+    expect([el('s').classList.contains('srp-timeline__item--danger'), el('n').classList.contains('srp-timeline__item--neutral')]).toEqual([true, true]);
     expect(dot('s')).not.toBe(dot('n'));
-    const ic = q(el('ic'), '.dk-timeline__marker');
-    expect([getComputedStyle(ic, '::before').content, q(ic, '.dk-icon') !== null, css(ic).backgroundColor !== 'rgba(0, 0, 0, 0)']).toEqual(['none', true, true]);
+    const ic = q(el('ic'), '.srp-timeline__marker');
+    expect([getComputedStyle(ic, '::before').content, q(ic, '.srp-icon') !== null, css(ic).backgroundColor !== 'rgba(0, 0, 0, 0)']).toEqual(['none', true, true]);
   });
 
   test('align="alternate": from 768px up the rail is centered and bodies take turns; narrower they stay on one side', async () => {
@@ -73,18 +73,18 @@ describe('Timeline', () => {
     try {
       await page.viewport(1000, 700);
       await render(<div style={{ width: '800px' }}><Order align="alternate" /></div>);
-      const tl = rect(el('tl')), rail = rect(q(el('a'), '.dk-timeline__rail'));
+      const tl = rect(el('tl')), rail = rect(q(el('a'), '.srp-timeline__rail'));
       expect(Math.abs((rail.left + rail.right) / 2 - (tl.left + tl.right) / 2)).toBeLessThan(1);
-      expect([rect(q(el('a'), '.dk-timeline__body')).left > rail.right, rect(q(el('b'), '.dk-timeline__body')).right <= rect(q(el('b'), '.dk-timeline__rail')).left]).toEqual([true, true]);
-      expect(css(q(el('b'), '.dk-timeline__body')).textAlign).toBe('end');
+      expect([rect(q(el('a'), '.srp-timeline__body')).left > rail.right, rect(q(el('b'), '.srp-timeline__body')).right <= rect(q(el('b'), '.srp-timeline__rail')).left]).toEqual([true, true]);
+      expect(css(q(el('b'), '.srp-timeline__body')).textAlign).toBe('end');
       await page.viewport(500, 700);
-      await expect.poll(() => rect(q(el('b'), '.dk-timeline__body')).left > rect(q(el('b'), '.dk-timeline__rail')).right).toBe(true);
+      await expect.poll(() => rect(q(el('b'), '.srp-timeline__body')).left > rect(q(el('b'), '.srp-timeline__rail')).right).toBe(true);
     } finally { await page.viewport(w, h); }
   });
 
   test('right to left: the rail is on the right', async () => {
     await render(<div dir="rtl"><Order /></div>);
-    expect(rect(q(el('a'), '.dk-timeline__rail')).left > rect(q(el('a'), '.dk-timeline__body')).right).toBe(true);
+    expect(rect(q(el('a'), '.srp-timeline__rail')).left > rect(q(el('a'), '.srp-timeline__body')).right).toBe(true);
   });
 
   test('titles, times and content read 4.5:1 on the page in every theme', async () => {
@@ -92,7 +92,7 @@ describe('Timeline', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(document.body).backgroundColor;
-      for (const sel of ['.dk-timeline__title', '.dk-timeline__time', '.dk-timeline__content']) expect(contrast(css(q(el('a'), sel)).color, bg), th + sel).toBeGreaterThanOrEqual(4.5);
+      for (const sel of ['.srp-timeline__title', '.srp-timeline__time', '.srp-timeline__content']) expect(contrast(css(q(el('a'), sel)).color, bg), th + sel).toBeGreaterThanOrEqual(4.5);
     }
   });
 
@@ -101,7 +101,7 @@ describe('Timeline', () => {
     await render(<Timeline>{all.map((st) => <TimelineItem key={st} id={'i-' + st} title={st} icon="check" tone={st} />)}</Timeline>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      for (const st of all) { const m = q(el('i-' + st), '.dk-timeline__marker'); expect(contrast(css(m).color, css(m).backgroundColor), th + ' ' + st).toBeGreaterThanOrEqual(3); }
+      for (const st of all) { const m = q(el('i-' + st), '.srp-timeline__marker'); expect(contrast(css(m).color, css(m).backgroundColor), th + ' ' + st).toBeGreaterThanOrEqual(3); }
     }
   });
 
@@ -110,7 +110,7 @@ describe('Timeline', () => {
     await render(<div id="box" style={{ width: '240px' }}><Timeline aria-label="Order history">
       <TimelineItem id="lw" title="Donaudampfschifffahrtsgesellschaftskapitänskajüte" time="12 Mar" icon="schedule">Two items. Donaudampfschifffahrtsgesellschaftskapitänskajüte.</TimelineItem>
     </Timeline></div>);
-    const body = q(el('lw'), '.dk-timeline__body');
+    const body = q(el('lw'), '.srp-timeline__body');
     expect([el('box').scrollWidth <= 241, body.scrollWidth <= body.clientWidth + 1, rect(body).right <= rect(el('box')).right + 1]).toEqual([true, true, true]);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
   });
@@ -132,9 +132,9 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     expect(page.getByRole('listitem').all().length).toBe(4);
     const [a, b] = [rect(el('h1')), rect(el('h2'))];
     expect([a.top, Math.round(b.left - a.left), Math.round(a.width) >= 192]).toEqual([b.top, Math.round(a.width), true]);
-    expect(rect(q(el('h1'), '.dk-timeline__rail')).bottom).toBeLessThanOrEqual(rect(q(el('h1'), '.dk-timeline__body')).top);
+    expect(rect(q(el('h1'), '.srp-timeline__rail')).bottom).toBeLessThanOrEqual(rect(q(el('h1'), '.srp-timeline__body')).top);
     // Every marker on one line, however long an event's text.
-    expect(rect(q(el('h1'), '.dk-timeline__marker')).top).toBe(rect(q(el('h2'), '.dk-timeline__marker')).top);
+    expect(rect(q(el('h1'), '.srp-timeline__marker')).top).toBe(rect(q(el('h2'), '.srp-timeline__marker')).top);
   });
 
   test('className and style go to the box around the <ol>; ref and the rest to the <ol>', async () => {

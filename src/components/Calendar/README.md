@@ -28,12 +28,12 @@ const [day, setDay] = React.useState<Date | null>(null);
 
 Drawn from the `MonthYearPicker` story.
 
-1. **Header** (`.dk-calendar__header`): the month shown and the ways to change it.
-2. **Month and year** (`.dk-calendar__menus`): menus to jump to another month or year. Without them, the heading (`.dk-calendar__heading`) opens a grid of months (`.dk-calendar__periods`).
-3. **Previous and next** (`.dk-calendar__nav`): move one month back or forward.
-4. **Grid** (`.dk-calendar__grid`): the days of the month in weeks, with the weekday names above.
-5. **Selected day** (`.dk-calendar__day--selected`): the chosen date.
-6. **Day of another month** (`.dk-calendar__day--outside`): days before and after the month, to fill the weeks.
+1. **Header** (`.srp-calendar__header`): the month shown and the ways to change it.
+2. **Month and year** (`.srp-calendar__menus`): menus to jump to another month or year. Without them, the heading (`.srp-calendar__heading`) opens a grid of months (`.srp-calendar__periods`).
+3. **Previous and next** (`.srp-calendar__nav`): move one month back or forward.
+4. **Grid** (`.srp-calendar__grid`): the days of the month in weeks, with the weekday names above.
+5. **Selected day** (`.srp-calendar__day--selected`): the chosen date.
+6. **Day of another month** (`.srp-calendar__day--outside`): days before and after the month, to fill the weeks.
 
 ## Usage
 
@@ -92,7 +92,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The selected day, controlled or not: a Date (its time is ignored) or a plain `"yyyy-mm-dd"` string for that local day. |
-| `onValueChange` | `(date: Date, iso: string) => void` | | Called with the picked day (local midnight) and the same day as `"yyyy-mm-dd"`. |
+| `onValueChange` | `(date: Date, details: { iso: string }) => void` | | Called with the picked day (local midnight) and details: `iso` is the same day as `"yyyy-mm-dd"`. |
 | `month` / `defaultMonth` | `Date` | the selected day's month, or today's | The month shown: any day in it. |
 | `onMonthChange` | `(month: Date) => void` | | Called with the first of the newly shown month. |
 | `min`, `max` | `Date \| string` | | Days outside can't be picked, and the month buttons stop there. A Date or `"yyyy-mm-dd"`. |

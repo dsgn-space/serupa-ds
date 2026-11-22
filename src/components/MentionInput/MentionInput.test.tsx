@@ -21,7 +21,7 @@ const names = () => [...document.querySelectorAll('[role="option"]')].map(label)
 const activeOption = () => document.getElementById(box().getAttribute('aria-activedescendant') || '');
 const active = () => label(activeOption());
 const isOpen = () => !!list() && !list().closest('[hidden]');
-const said = (text: RegExp) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
+const said = (text: RegExp) => expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
 
 function Box(p: Partial<React.ComponentProps<typeof MentionInput>>) {
   const [v, setV] = React.useState(p.defaultValue || '');

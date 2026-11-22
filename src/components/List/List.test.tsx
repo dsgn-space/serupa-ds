@@ -53,7 +53,7 @@ describe('List', () => {
     await render(<People r={r} ir={ir} />);
     const l = el('ldef'), s = css(l);
     expect([l.tagName, l.className, l.dataset.component, r.current === l, ir.current?.tagName, l.getAttribute('aria-label'), s.listStyleType, s.paddingLeft])
-      .toEqual(['UL', 'dk-list dk-list--divided extra', 'list', true, 'LI', 'People', 'none', '0px']);
+      .toEqual(['UL', 'srp-list srp-list--divided extra', 'list', true, 'LI', 'People', 'none', '0px']);
   });
 
   test('an item: leading avatar, a text-sm font-medium title over a text-sm description, trailing meta at the end; 12px padding', async () => {
@@ -183,7 +183,7 @@ describe('List', () => {
   test('as with linkProps: a router link', async () => {
     await render(<Card clicks={[]} />);
     const a = main('irouter');
-    expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'dk-list__main']);
+    expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'srp-list__main']);
   });
 
   test('disabled: no href, aria-disabled, out of the tab order, in disabled-text, clicks do nothing', async () => {
@@ -215,7 +215,7 @@ describe('List', () => {
   test('divided={false}: no lines; unknown variant and as fall back to plain and ul', async () => {
     await render(<List id="lnodiv" divided={false} variant={'boxed' as never} as={'table' as never}><ListItem title="A" /><ListItem title="B" /></List>);
     const l = el('lnodiv');
-    expect([l.tagName, l.className, css(l.children[1]!).borderTopWidth]).toEqual(['UL', 'dk-list', '0px']);
+    expect([l.tagName, l.className, css(l.children[1]!).borderTopWidth]).toEqual(['UL', 'srp-list', '0px']);
   });
 
   test('tokens (--list-padding-y, --list-title-color) override one list', async () => {
@@ -287,7 +287,7 @@ describe('List loading (GR316)', () => {
     function Lists(props: { loading: boolean }) {
       return <div style={{ width: '400px' }}>{CASES.map((c) => (
         <List key={c.id} id={c.id} loading={props.loading} aria-label={c.id}>
-          {props.loading ? <ListLoadingItems rows={2} description={c.description} leading={c.leading} label={'Loading ' + c.id} />
+          {props.loading ? <ListLoadingItems rows={2} showDescription={c.description} leading={c.leading} label={'Loading ' + c.id} />
             : <ListItem title="Ada Lovelace" description={c.description ? 'Admin' : undefined}
               leading={c.leading === 'icon' ? 'person' : c.leading ? <Avatar name="Ada Lovelace" size={c.leading} /> : undefined} />}
         </List>
@@ -298,7 +298,7 @@ describe('List loading (GR316)', () => {
     // The placeholders are hidden from screen readers; each list's label is said once, after the loader's delay.
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect(CASES.every((c) => [...el(c.id).querySelectorAll('li > div > *')].every((x) => x.querySelector('[aria-hidden="true"]') || x.getAttribute('aria-hidden') === 'true'))).toBe(true);
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading desc-md');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading desc-md');
     const loading = CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height);
     await rerender(<Lists loading={false} />);
     expect(CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height)).toEqual(loading);
@@ -336,7 +336,7 @@ describe('List with selectionMode', () => {
     expect([grid.tagName, grid.getAttribute('aria-multiselectable')]).toEqual(['UL', 'true']);
     expect(page.getByRole('row').elements().map((r) => r.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true', 'false']);
     expect([box('Photo.jpg').checked, box('Budget.xlsx').checked, box('Plan.pdf').disabled]).toEqual([true, false, true]);
-    expect(row('Photo.jpg').classList.contains('dk-list__item--selected')).toBe(true);
+    expect(row('Photo.jpg').classList.contains('srp-list__item--selected')).toBe(true);
     expect(page.getByRole('gridcell').elements().length).toBe(12);
   });
 

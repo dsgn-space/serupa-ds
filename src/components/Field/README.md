@@ -37,11 +37,11 @@ import { Field, Input, Textarea } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Horizontal` story.
 
-1. **Label** (`.dk-field__label`): names the control; clicking it focuses the control.
-2. **Optional** (`.dk-field__optional`): says the field can be left empty, when most are required.
-3. **Control** (`.dk-field__control`): the input, select or other control it wraps.
-4. **Hint** (`.dk-field__hint`): help on what to enter, linked to the control for screen readers.
-5. **Error** (`.dk-field__error`): what's wrong and how to fix it, with an icon, linked to the control too. A warning (`.dk-field__warning`) or "checking…" (`.dk-field__checking`) sits in the same place.
+1. **Label** (`.srp-field__label`): names the control; clicking it focuses the control.
+2. **Optional** (`.srp-field__optional`): says the field can be left empty, when most are required.
+3. **Control** (`.srp-field__control`): the input, select or other control it wraps.
+4. **Hint** (`.srp-field__hint`): help on what to enter, linked to the control for screen readers.
+5. **Error** (`.srp-field__error`): what's wrong and how to fix it, with an icon, linked to the control too. A warning (`.srp-field__warning`) or "checking…" (`.srp-field__checking`) sits in the same place.
 
 ## Usage
 

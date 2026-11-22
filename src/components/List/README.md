@@ -39,11 +39,11 @@ import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds'
 
 Drawn from the `Settings` story.
 
-1. **Item** (`.dk-list__item`): one row.
-2. **Leading** (`.dk-list__leading`): an optional icon, avatar or image before the text.
-3. **Title** (`.dk-list__title`): the row's main line.
-4. **Description** (`.dk-list__description`): a second line with more detail.
-5. **Trailing** (`.dk-list__trailing`): an optional value, badge, switch or action at the end.
+1. **Item** (`.srp-list__item`): one row.
+2. **Leading** (`.srp-list__leading`): an optional icon, avatar or image before the text.
+3. **Title** (`.srp-list__title`): the row's main line.
+4. **Description** (`.srp-list__description`): a second line with more detail.
+5. **Trailing** (`.srp-list__trailing`): an optional value, badge, switch or action at the end.
 
 ## Usage
 
@@ -79,7 +79,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Members didn't load.</Alert>
   : state === 'loaded' && !members.length ? <EmptyState size="sm" title="No members yet" />
   : <List aria-label="Members" loading={state === 'loading'}>
-      {state === 'loading' ? <ListLoadingItems rows={4} description leading="sm" label="Loading members" />
+      {state === 'loading' ? <ListLoadingItems rows={4} showDescription leading="sm" label="Loading members" />
         : members.map((m) => <ListItem key={m.id} title={m.name} description={m.email} leading={<Avatar name={m.name} size="sm" />} />)}
     </List>}
 ```
@@ -166,7 +166,7 @@ Placeholder rows, inside a List, while its rows load.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `rows` | number | `3` | How many placeholder rows (1 to 50) |
-| `description` | boolean | `false` | Each row gets a second, shorter line, for rows with a description |
+| `showDescription` | boolean | `false` | Each row gets a second, shorter line, for rows with a description |
 | `leading` | `'icon'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | none | A circle before the text: a 20px icon's, or an Avatar's of that size |
 | `label` | string | `"Loading"` | Said once as the rows appear, after the loader's delay |
 

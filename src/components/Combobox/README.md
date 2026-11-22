@@ -42,10 +42,10 @@ const [reviewers, setReviewers] = React.useState<string[]>([]);
 
 Drawn from the `Multiple` story.
 
-1. **Chosen values** (`.dk-combobox__values`): the values chosen so far, each with a way to remove it.
-2. **Value** (`.dk-combobox__tag`): one chosen value.
-3. **Toggle** (`.dk-combobox__toggle`): opens and closes the list.
-4. **Clear** (`.dk-combobox__clear`): removes every chosen value.
+1. **Chosen values** (`.srp-combobox__values`): the values chosen so far, each with a way to remove it.
+2. **Value** (`.srp-combobox__tag`): one chosen value.
+3. **Toggle** (`.srp-combobox__toggle`): opens and closes the list.
+4. **Clear** (`.srp-combobox__clear`): removes every chosen value.
 
 ## Usage
 
@@ -112,7 +112,7 @@ Focus stays in the field the whole time.
 
 ## Props
 
-Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`, `readOnly`…), except `type`, `value`, `defaultValue`, `rightIcon` and `onChange`.
+Every Input prop works (`size`, `invalid`, `startIcon`, `placeholder`, `disabled`, `readOnly`…), except `type`, `value`, `defaultValue`, `endIcon` and `onChange`.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |

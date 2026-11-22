@@ -4,58 +4,58 @@
    radios are invisible and laid over their star; the focused one rings its star. Every value reads one of
    its own tokens (rating.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-rating {
-  --dk-rating-size: var(--rating-size-md, var(--spacing-6));
-  display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--rating-size-sm, var(--spacing-5)), var(--dk-rating-size));
+@layer srp.components {
+.srp-rating {
+  --srp-rating-size: var(--rating-size-md, var(--spacing-6));
+  display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--rating-size-sm, var(--spacing-5)), var(--srp-rating-size));
   align-items: center; gap: var(--rating-gap, var(--spacing-0\.5)); max-width: var(--sizing-full); vertical-align: middle;
 }
-.dk-rating--size-sm { --dk-rating-size: var(--rating-size-sm, var(--spacing-5)); }
-.dk-rating--size-lg { --dk-rating-size: var(--rating-size-lg, var(--spacing-8)); }
+.srp-rating--size-sm { --srp-rating-size: var(--rating-size-sm, var(--spacing-5)); }
+.srp-rating--size-lg { --srp-rating-size: var(--rating-size-lg, var(--spacing-8)); }
 /* In a box narrower than the row (ten lg stars on a phone), the stars shrink alike, down to the sm size, rather than
    push the page sideways (GK2). Each star is a column of the Rating's grid, between the sm size and its own, so the
    Rating's narrowest width is the sm row's and a grid column it sits in isn't held at the full row's width (GM1).
    Each star is a container, so its drawing stays the star's width inside the clipped fill. */
-.dk-rating__star { position: relative; display: flex; aspect-ratio: var(--aspect-square); border-radius: var(--radius-inner); container-type: inline-size; }
-.dk-rating__empty, .dk-rating__fill { position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--spacing-0); display: block; overflow: hidden; pointer-events: none; }
-.dk-rating__empty { inset-inline-end: var(--spacing-0); color: var(--rating-empty, var(--border-control)); }
-.dk-rating__fill { width: var(--dk-rating-share); color: var(--rating-fill, var(--warning)); }
+.srp-rating__star { position: relative; display: flex; aspect-ratio: var(--aspect-square); border-radius: var(--radius-inner); container-type: inline-size; }
+.srp-rating__empty, .srp-rating__fill { position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--spacing-0); display: block; overflow: hidden; pointer-events: none; }
+.srp-rating__empty { inset-inline-end: var(--spacing-0); color: var(--rating-empty, var(--border-control)); }
+.srp-rating__fill { width: var(--srp-rating-share); color: var(--rating-fill, var(--warning)); }
 /* Every star is drawn whole and the fill span clips it to its share; base.css's max-width on svg would shrink it to the share instead (GI1). */
-.dk-rating svg { --dk-rating-drawn: 100cqi; display: block; flex: none; width: var(--dk-rating-drawn); max-width: none; height: var(--dk-rating-drawn); fill: currentColor; }   /* stylelint-disable-line serupa/no-raw-value -- the star's own width, as a container unit: no token measures a container */
+.srp-rating svg { --srp-rating-drawn: 100cqi; display: block; flex: none; width: var(--srp-rating-drawn); max-width: none; height: var(--srp-rating-drawn); fill: currentColor; }   /* stylelint-disable-line serupa/no-raw-value -- the star's own width, as a container unit: no token measures a container */
 /* Target size (WCAG 2.5.8, GR104): a star's radio is a press area the star's height and the whole step to its
    neighbours wide, half the gap on each side, so a press between two stars picks one and no gap is dead. Stars are
    at least 24px apart, centre to centre: at sm the gap opens to 4px, and md and lg stars shrinking to fit stop at
    22px. With allowHalf, the half's radio takes no presses: the star's whole radio does, and where in the star the
    press lands picks the half or the whole (Rating.tsx), so each star is one target, never a 12px one. */
-.dk-rating:not(.dk-rating--readonly) {
-  --dk-rating-gap: max(var(--rating-gap, var(--spacing-0\.5)), calc(var(--spacing-6) - var(--dk-rating-size)));
-  --dk-rating-reach: calc((var(--spacing-0) - var(--dk-rating-gap)) / 2);   /* half the gap, outward */
-  gap: var(--dk-rating-gap);
-  grid-auto-columns: minmax(max(var(--rating-size-sm, var(--spacing-5)), calc(var(--spacing-6) - var(--dk-rating-gap))), var(--dk-rating-size));
+.srp-rating:not(.srp-rating--readonly) {
+  --srp-rating-gap: max(var(--rating-gap, var(--spacing-0\.5)), calc(var(--spacing-6) - var(--srp-rating-size)));
+  --srp-rating-reach: calc((var(--spacing-0) - var(--srp-rating-gap)) / 2);   /* half the gap, outward */
+  gap: var(--srp-rating-gap);
+  grid-auto-columns: minmax(max(var(--rating-size-sm, var(--spacing-5)), calc(var(--spacing-6) - var(--srp-rating-gap))), var(--srp-rating-size));
 }
-.dk-rating__choice {
-  position: absolute; inset-block: var(--spacing-0); inset-inline: var(--dk-rating-reach);
+.srp-rating__choice {
+  position: absolute; inset-block: var(--spacing-0); inset-inline: var(--srp-rating-reach);
   margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-rating__choice--half { pointer-events: none; }
+.srp-rating__choice--half { pointer-events: none; }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; across, each star keeps its half of the gap. */
-@media (pointer: coarse) { .dk-rating__choice { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
-.dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+@media (pointer: coarse) { .srp-rating__choice { --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--srp-reach-block); } }
+.srp-rating__star:has(.srp-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 /* The error shows on the empty stars' edge, as on a field's border: drawn as outlines, so a row with nothing picked
    reads as five empty stars to fill, not as five red ones already given. The stroke stays 2px at every size. */
-.dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }
-.dk-rating[aria-invalid="true"] .dk-rating__empty svg { fill: none; stroke: currentColor; stroke-width: var(--border-width-2); stroke-linejoin: round; }
-.dk-rating[aria-invalid="true"] .dk-rating__empty path { vector-effect: non-scaling-stroke; }   /* not inherited: on the path, or the 2px is 2 of the 960 drawing units */
-.dk-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
-.dk-rating--disabled .dk-rating__choice { cursor: var(--cursor-disabled); }
+.srp-rating[aria-invalid="true"] .srp-rating__empty { color: var(--rating-invalid, var(--danger)); }
+.srp-rating[aria-invalid="true"] .srp-rating__empty svg { fill: none; stroke: currentColor; stroke-width: var(--border-width-2); stroke-linejoin: round; }
+.srp-rating[aria-invalid="true"] .srp-rating__empty path { vector-effect: non-scaling-stroke; }   /* not inherited: on the path, or the 2px is 2 of the 960 drawing units */
+.srp-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
+.srp-rating--disabled .srp-rating__choice { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   /* An empty star is an outline in the text color, not GrayText, which forced colors keep for what's disabled: the
      full stars are solid CanvasText, so the score reads by shape, not by a second gray. */
-  .dk-rating__empty { color: CanvasText; }
-  .dk-rating__empty svg { fill: Canvas; stroke: CanvasText; stroke-width: 56px; }   /* stylelint-disable-line serupa/no-raw-value -- in the star's 960-unit viewBox: about 1.4px at 24px */
-  .dk-rating--disabled .dk-rating__empty, .dk-rating--disabled .dk-rating__fill { color: GrayText; }
-  .dk-rating--disabled .dk-rating__empty svg { stroke: GrayText; }
-  .dk-rating__fill { color: CanvasText; }
-  .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline-color: Highlight; }
+  .srp-rating__empty { color: CanvasText; }
+  .srp-rating__empty svg { fill: Canvas; stroke: CanvasText; stroke-width: 56px; }   /* stylelint-disable-line serupa/no-raw-value -- in the star's 960-unit viewBox: about 1.4px at 24px */
+  .srp-rating--disabled .srp-rating__empty, .srp-rating--disabled .srp-rating__fill { color: GrayText; }
+  .srp-rating--disabled .srp-rating__empty svg { stroke: GrayText; }
+  .srp-rating__fill { color: CanvasText; }
+  .srp-rating__star:has(.srp-rating__choice:focus-visible) { outline-color: Highlight; }
 }
 }

@@ -79,7 +79,7 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   const [checkedLeft, setCheckedLeft] = React.useState<string[]>([]);
   const [checkedRight, setCheckedRight] = React.useState<string[]>([]);
   const root = React.useRef<HTMLDivElement | null>(null);
-  const id = domId('dk-transfer', React.useId());
+  const id = domId('srp-transfer', React.useId());
   useFormReset(root, () => { if (!controlled) setOwn(known(defaultValue)); setCheckedLeft([]); setCheckedRight([]); }, form);
   const inDisabledFieldset = useFieldsetDisabled(root);
   const off = !!disabled || inDisabledFieldset;
@@ -119,15 +119,15 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   const side = (which: 'left' | 'right', list: TransferListOption[], checked: string[], setChecked: (v: string[]) => void) => {
     const titleId = id + '-' + which;
     return (
-      <div className="dk-transfer-list__side">
-        <p id={titleId} className="dk-transfer-list__title">{names[which]} <span className="dk-transfer-list__count">({displayNumber(list.length, locale)})</span></p>
+      <div className="srp-transfer-list__side">
+        <p id={titleId} className="srp-transfer-list__title">{names[which]} <span className="srp-transfer-list__count">({displayNumber(list.length, locale)})</span></p>
         {list.length ? (
-          <CheckboxGroup className="dk-transfer-list__options" aria-labelledby={titleId} size="sm" value={checked.filter((v) => list.some((o) => o.value === v))}
+          <CheckboxGroup className="srp-transfer-list__options" aria-labelledby={titleId} size="sm" value={checked.filter((v) => list.some((o) => o.value === v))}
             onValueChange={(v) => setChecked(v.map(String))} invalid={marked} disabled={off} readOnly={readOnly}>
             {list.length > 1 ? <Checkbox selectAll>{sds.labels.transferAll}</Checkbox> : null}
             {list.map(boxOf)}
           </CheckboxGroup>
-        ) : <p className="dk-transfer-list__empty">{sds.labels.transferEmpty}</p>}
+        ) : <p className="srp-transfer-list__empty">{sds.labels.transferEmpty}</p>}
       </div>
     );
   };
@@ -136,18 +136,18 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   return (
     <div {...rest} ref={ref2} role="group" aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)}
       aria-disabled={off || undefined}
-      className={cn('dk-transfer-list', off && 'dk-transfer-list--disabled', className)} data-component="transfer-list">
+      className={cn('srp-transfer-list', off && 'srp-transfer-list--disabled', className)} data-component="transfer-list">
       {side('left', left, checkedLeft, setCheckedLeft)}
-      {readOnly ? null : <div className="dk-transfer-list__moves">
-        <Button variant="secondary" size="sm" rightIcon="arrow_forward" disabled={off || !canAdd} disabledReason={off ? undefined : sds.labels.transferAddReason}
+      {readOnly ? null : <div className="srp-transfer-list__moves">
+        <Button variant="secondary" size="sm" endIcon="arrow_forward" disabled={off || !canAdd} disabledReason={off ? undefined : sds.labels.transferAddReason}
           onClick={() => move('right')}>{sds.labels.transferAdd}</Button>
-        <Button variant="secondary" size="sm" leftIcon="arrow_back" disabled={off || !canRemove} disabledReason={off ? undefined : sds.labels.transferRemoveReason}
+        <Button variant="secondary" size="sm" startIcon="arrow_back" disabled={off || !canRemove} disabledReason={off ? undefined : sds.labels.transferRemoveReason}
           onClick={() => move('left')}>{sds.labels.transferRemove}</Button>
       </div>}
       {side('right', right, checkedRight, setCheckedRight)}
       {name ? chosen.map((v) => <input key={v} type="hidden" name={name} form={form} value={v} disabled={off} />) : null}
       {/* required: a hidden-from-view field the form checks (remade when Chosen fills or empties, so no change handler). */}
-      {required ? <input key={chosen.length ? 'filled' : 'empty'} className="dk-transfer-list__validity" tabIndex={-1} aria-hidden required defaultValue={chosen.length ? 'filled' : ''}
+      {required ? <input key={chosen.length ? 'filled' : 'empty'} className="srp-transfer-list__validity" tabIndex={-1} aria-hidden required defaultValue={chosen.length ? 'filled' : ''}
         disabled={off || readOnly} form={form} onInvalid={onInvalid} /> : null}
     </div>
   );

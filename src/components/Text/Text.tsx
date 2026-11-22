@@ -3,7 +3,7 @@ import { cn, oneOf } from '../../internal/cn';
 import { named } from '../../internal/component';
 
 export type TextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
-export type TextTone = 'default' | 'muted' | 'primary' | 'danger';
+export type TextTone = 'neutral' | 'muted' | 'primary' | 'danger';
 export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
 export interface TextProps extends React.HTMLAttributes<HTMLElement> {
@@ -11,7 +11,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   as?: 'p' | 'span' | 'div' | 'label' | 'strong' | 'em' | 'small' | 'li' | 'figcaption' | undefined;
   /** From the type scale, with its line height. Default: inherited from the parent. */
   size?: TextSize | undefined;
-  /** 'default' (text), 'muted' (secondary), 'primary' or 'danger'. Each keeps 4.5:1 on surface. Default: inherited. */
+  /** 'neutral' (text), 'muted' (secondary), 'primary' or 'danger'. Each keeps 4.5:1 on surface. Default: inherited. */
   tone?: TextTone | undefined;
   /** Default: inherited. */
   weight?: TextWeight | undefined;
@@ -32,7 +32,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
    the parent. className and every other prop go to the element. */
 const TAGS = ['p', 'span', 'div', 'label', 'strong', 'em', 'small', 'li', 'figcaption'] as const;
 const SIZES: readonly TextSize[] = ['xs', 'sm', 'base', 'lg', 'xl'];
-const TONES: readonly TextTone[] = ['default', 'muted', 'primary', 'danger'];
+const TONES: readonly TextTone[] = ['neutral', 'muted', 'primary', 'danger'];
 const WEIGHTS: readonly TextWeight[] = ['normal', 'medium', 'semibold', 'bold'];
 const pick = <T extends string>(list: readonly T[], v: unknown): T | null => (list.indexOf(v as T) < 0 ? null : (v as T));
 
@@ -44,7 +44,7 @@ function TextRender({ ref, ...props }: TextProps & React.RefAttributes<HTMLEleme
     ref: ref, 'data-component': 'text',
     // The count goes in an attribute the CSS reads, not a style attribute, so it holds under a strict CSP too.
     'data-lines': clamp || undefined,
-    className: cn('dk-text', s && 'dk-text--' + s, t && 'dk-text--' + t, w && 'dk-text--' + w, truncate && 'dk-text--truncate', clamp && 'dk-text--clamp', measure && 'dk-text--measure', className),
+    className: cn('srp-text', s && 'srp-text--' + s, t && 'srp-text--' + t, w && 'srp-text--' + w, truncate && 'srp-text--truncate', clamp && 'srp-text--clamp', measure && 'srp-text--measure', className),
   }));
 }
 

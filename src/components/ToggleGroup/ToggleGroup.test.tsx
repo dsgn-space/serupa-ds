@@ -25,7 +25,7 @@ describe('ToggleGroup', () => {
     await render(<Align ref={ref} className="extra" data-x="y" />);
     const e = el('g');
     expect([e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.dataset.x, e.dataset.component, e.dataset.type, e.dataset.orientation]).toEqual(['group', 'Text alignment', true, 'y', 'toggle-group', 'single', 'horizontal']);
-    expect(e.className).toBe('dk-button-group dk-toggle-group dk-button-group--attached extra');
+    expect(e.className).toBe('srp-button-group srp-toggle-group srp-button-group--attached extra');
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
     expect(Math.round(b!.left - a!.right)).toBe(-1);   // attached: the borders overlap into one line
   });
@@ -73,7 +73,7 @@ describe('ToggleGroup', () => {
 
   test('multiple: each turns on and off by itself, and the group reports them together', async () => {
     const onValueChange = vi.fn();
-    await render(<Align type="multiple" defaultValue={['left']} onValueChange={onValueChange} />);
+    await render(<Align selectionMode="multiple" defaultValue={['left']} onValueChange={onValueChange} />);
     expect(el('g').dataset.type).toBe('multiple');
     await btn('Right').click();
     expect([pressed(), onValueChange.mock.calls.at(-1)![0]]).toEqual(['left,right', ['left', 'right']]);
@@ -100,7 +100,7 @@ describe('ToggleGroup', () => {
   test('size, variant and disabled reach buttons that don\'t set their own; a button\'s own onPressedChange still runs', async () => {
     const own = vi.fn();
     await render(
-      <ToggleGroup id="g" aria-label="View" size="sm" variant="ghost" type="multiple">
+      <ToggleGroup id="g" aria-label="View" size="sm" variant="ghost" selectionMode="multiple">
         <ToggleButton value="day" onPressedChange={own}>Day</ToggleButton>
         <ToggleButton value="week" size="lg" variant="outline">Week</ToggleButton>
         <span id="note">plain</span>
@@ -117,7 +117,7 @@ describe('ToggleGroup', () => {
   test('vertical and not attached: a column, and buttons apart', async () => {
     await render(<Align orientation="vertical" attached={false} />);
     const e = el('g');
-    expect([e.dataset.orientation, e.className]).toEqual(['vertical', 'dk-button-group dk-toggle-group dk-button-group--vertical']);
+    expect([e.dataset.orientation, e.className]).toEqual(['vertical', 'srp-button-group srp-toggle-group srp-button-group--vertical']);
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
     expect(b!.top - a!.bottom).toBeGreaterThan(0);
   });
@@ -132,7 +132,7 @@ describe('ToggleGroup at 320px (GP1)', () => {
       <div style={{ display: 'grid' }}>{row('gp1-g')}</div>
     </div>);
     for (const id of ['gp1-b', 'gp1-f', 'gp1-g']) await expect.poll(() => id + ':' + document.getElementById(id)!.dataset.wrapped).toBe(id + ':true');
-    expect([document.getElementById('gp1')!.scrollWidth, document.getElementById('gp1-b')!.classList.contains('dk-button-group--attached')]).toEqual([288, false]);
+    expect([document.getElementById('gp1')!.scrollWidth, document.getElementById('gp1-b')!.classList.contains('srp-button-group--attached')]).toEqual([288, false]);
     document.getElementById('gp1')!.style.width = '600px';
     await expect.poll(() => document.getElementById('gp1-b')!.dataset.wrapped).toBeUndefined();
   });

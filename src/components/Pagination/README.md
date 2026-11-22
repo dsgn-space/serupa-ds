@@ -20,7 +20,7 @@ const [page, setPage] = React.useState(1);
 
 // …and a page-size select
 <Pagination count={Math.ceil(245 / per)} page={page} onPageChange={setPage} total={245} pageSize={per}
-  pageSizeOptions={[10, 25, 50]} onPageSizeChange={(n, p) => { setPer(n); setPage(p); }} />
+  pageSizeOptions={[10, 25, 50]} onPageSizeChange={(n, { page: p }) => { setPer(n); setPage(p); }} />
 ```
 
 ## When to use
@@ -38,12 +38,12 @@ const [page, setPage] = React.useState(1);
 
 Drawn from the `PageSize` story.
 
-1. **Summary** (`.dk-pagination__summary`): which items are shown of how many.
-2. **Previous and next** (`.dk-pagination__arrow`): go one page back or forward.
-3. **Page** (`.dk-pagination__item`): a page to go to.
-4. **Current page** (`.dk-pagination__item--current`): the page you're on.
-5. **Gap** (`.dk-pagination__ellipsis`): stands for the pages not shown.
-6. **Page size** (`.dk-pagination__page-size`): how many items a page holds.
+1. **Summary** (`.srp-pagination__summary`): which items are shown of how many.
+2. **Previous and next** (`.srp-pagination__arrow`): go one page back or forward.
+3. **Page** (`.srp-pagination__item`): a page to go to.
+4. **Current page** (`.srp-pagination__item--current`): the page you're on.
+5. **Gap** (`.srp-pagination__ellipsis`): stands for the pages not shown.
+6. **Page size** (`.srp-pagination__page-size`): how many items a page holds.
 
 ## Usage
 
@@ -101,7 +101,7 @@ An arrow that takes you to the first or last page turns disabled, so focus moves
 | `total` | number | none | How many items there are in all. With `pageSize`, shows the summary |
 | `pageSize` | number | none | How many items a page holds. With `total`, shows the summary |
 | `pageSizeOptions` | number[] | none | The page sizes to offer in an "Items per page" select after the summary. Needs `pageSize` |
-| `onPageSizeChange` | (pageSize, page) => void | none | Called with the size picked and the page that keeps the first item shown in view |
+| `onPageSizeChange` | (pageSize, details: { page }) => void | none | Called with the size picked, and details: `page` is the page that keeps the first item shown in view |
 | `jump` | boolean | `false` | A "Go to page" number field after the pages, for long lists: Enter goes to the page typed (one out of range goes to the nearest end), and the page is said, since focus stays in the field. With `getHref` and no `onPageChange`, it follows that page's link. Not shown for one page |
 
 `className`, `style`, `ref` and everything else go to the `<nav>`, which has `data-component="pagination"`.

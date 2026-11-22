@@ -26,12 +26,12 @@ afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); }
 const Wrap = ({ children }: { children: React.ReactNode }) => <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>{children}</div>;
 const Main = ({ pref }: { pref?: React.Ref<HTMLInputElement> }) => <>
   <label htmlFor="pw">Password</label>
-  <PasswordInput id="pw" ref={pref} className="extra" style={{ marginTop: '2px' }} placeholder="Your password" leftIcon="lock" />
+  <PasswordInput id="pw" ref={pref} className="extra" style={{ marginTop: '2px' }} placeholder="Your password" startIcon="lock" />
 </>;
 
 describe('PasswordInput', () => {
   test('a press on the box (the side padding, the icon) focuses the field with the caret at the end; the reveal button still toggles (GE1)', async () => {
-    await render(<div style={{ width: '300px' }}><PasswordInput id="pp" size="lg" leftIcon="lock" aria-label="Password" defaultValue="secret" /><button id="pp-away">away</button></div>);
+    await render(<div style={{ width: '300px' }}><PasswordInput id="pp" size="lg" startIcon="lock" aria-label="Password" defaultValue="secret" /><button id="pp-away">away</button></div>);
     const y = box('pp').getBoundingClientRect().height / 2;
     for (const x of [2, 20]) {
       (document.getElementById('pp-away') as HTMLElement).focus();
@@ -47,7 +47,7 @@ describe('PasswordInput', () => {
     await render(<Wrap><Main pref={ref} /></Wrap>);
     const i = field('pw'), b = box('pw');
     expect([i.type, i.getAttribute('autocomplete'), ref.current === i, i.spellcheck, i.placeholder, i.labels![0]!.textContent]).toEqual(['password', 'current-password', true, false, 'Your password', 'Password']);
-    expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['dk-input dk-password-input dk-input--size-md extra', 'password-input', '2px', 32]);
+    expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['srp-input srp-password-input srp-input--size-md extra', 'password-input', '2px', 32]);
     expect((b.querySelector(':scope > span[aria-hidden]:first-child [data-icon]') as HTMLElement).dataset.icon).toBe('lock');
   });
 
@@ -121,8 +121,8 @@ describe('PasswordInput', () => {
       {/* @ts-expect-error: an unknown size, as plain JavaScript could pass */}
       <PasswordInput id="pdis" aria-label="Dis" disabled size="huge" />
     </Wrap>);
-    expect([field('pinv').getAttribute('aria-invalid'), box('pinv').className.includes('dk-input--invalid'), Math.round(box('pinv').getBoundingClientRect().height)]).toEqual(['true', true, 24]);
-    expect([field('pdis').disabled, toggle('pdis').disabled, box('pdis').className.includes('dk-input--disabled'), box('pdis').dataset.size]).toEqual([true, true, true, 'md']);
+    expect([field('pinv').getAttribute('aria-invalid'), box('pinv').className.includes('srp-input--invalid'), Math.round(box('pinv').getBoundingClientRect().height)]).toEqual(['true', true, 24]);
+    expect([field('pdis').disabled, toggle('pdis').disabled, box('pdis').className.includes('srp-input--disabled'), box('pdis').dataset.size]).toEqual([true, true, true, 'md']);
   });
 
   test('the token --password-input-toggle overrides one field; the eye icon follows the field\'s icon size: 14, 16, 20px', async () => {
@@ -163,8 +163,8 @@ describe('PasswordInput', () => {
     field('cl').focus();
     key('cl', 'keydown', true);
     await expect.poll(() => hint('cl')?.textContent).toBe('Caps Lock is on');
-    expect([field('cl').getAttribute('aria-describedby'), hint('cl')!.nextElementSibling!.className === 'dk-password-input__toggle']).toEqual([hint('cl')!.id, true]);
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent).toMatch(/Caps Lock is on\.?$/);
+    expect([field('cl').getAttribute('aria-describedby'), hint('cl')!.nextElementSibling!.className === 'srp-password-input__toggle']).toEqual([hint('cl')!.id, true]);
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent).toMatch(/Caps Lock is on\.?$/);
     key('cl', 'keyup', true);
     key('cl', 'keydown', false);
     await expect.poll(() => hint('cl')).toBe(null);

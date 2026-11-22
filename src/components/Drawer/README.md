@@ -31,16 +31,16 @@ const [open, setOpen] = React.useState(false);
 
 Drawn from the `Bottom` story.
 
-1. **Panel** (`.dk-drawer__panel`): slides in from an edge over the dimmed page; focus stays inside while it's open.
-2. **Title** (`.dk-drawer__title`): what the drawer is for; it names it for screen readers.
-3. **Description** (`.dk-drawer__description`): an optional line under the title.
-4. **Close** (`.dk-drawer__close`): closes it, as Escape does.
-5. **Body** (`.dk-drawer__body`): the content; it scrolls on its own.
-6. **Footer** (`.dk-drawer__footer`): the actions, kept in view.
+1. **Panel** (`.srp-drawer__panel`): slides in from an edge over the dimmed page; focus stays inside while it's open.
+2. **Title** (`.srp-drawer__title`): what the drawer is for; it names it for screen readers.
+3. **Description** (`.srp-drawer__description`): an optional line under the title.
+4. **Close** (`.srp-drawer__close`): closes it, as Escape does.
+5. **Body** (`.srp-drawer__body`): the content; it scrolls on its own.
+6. **Footer** (`.srp-drawer__footer`): the actions, kept in view.
 
 ## Usage
 
-- Use `placement="right"` (the default) for details and filters, and `placement="start"` for navigation, which then opens from the side a right-to-left page starts on too; use `bottom` for short sheets on small screens. `right` and `left` are physical edges, the same in a right-to-left page, and `start` and `end` follow the reading.
+- Use `placement="end"` (the default) for details and filters, and `placement="start"` for navigation; both follow the reading direction, so a right-to-left page gets them mirrored. Use `bottom` for short sheets on small screens.
 - Give it a `title` that names what's inside ("Filters", "Order #1042").
 - Put the actions in `footer` so they stay in view, with the main action last.
 - Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
@@ -54,7 +54,7 @@ Drawn from the `Bottom` story.
 - On a touch screen, dragging it toward its edge closes it (`reason: 'swipe'`): past a third of its size, or where it's heading with the speed it's let go at (it carries on as a scroll would, so a slow drag still moving toward the edge counts), or with a flick (as little as 0.2px per ms over the last 100ms, so a gentle one counts); a shorter drag that has stopped springs back. Dragged the other way, away from its edge, it gives a little (24px at most) against growing resistance and springs back, with its background filling the edge behind it. Left and right drawers can be dragged anywhere outside a field, and top and bottom ones by the header or footer, so the body still scrolls. `swipeToClose={false}` turns it off; a sheet with `snapPoints` can still be dragged between its stops.
 - With `snapPoints`, a handle sits at the top of the sheet. A press on it goes to the next stop, and from the tallest back to the shortest; its name says which ("Expand", "Collapse"), so it works from the keyboard and for people who can't drag. A touch drag on the handle or the header follows the finger by the sheet's height, past the tallest stop with growing resistance, and let go it carries on to the stop nearest where its speed would take it. Dragged below the shortest stop, it slides down instead, and a flick or a third of its height closes it; a fast drag down from a taller stop stops at the shortest. The sheet's height is its stop's share of the screen, so it follows the screen as it turns. Reduced motion: it changes height at once.
 - With `modal={false}` it's opened with `show()` instead: no backdrop, the page stays usable and scrolls, focus moves inside but can leave it, and it isn't on the modal stack. Escape with focus inside it and the × close it; closing, or taking it off the page, moves focus back only if focus was still inside.
-- Left and right drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
+- Start and end drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
 - The body scrolls on its own, so the header and footer stay in view. While it scrolls it takes Tab focus (with a focus ring), so the arrow keys and Page Down scroll it in every browser, even with nothing focusable inside. It's a region named by the title.
 - On a screen under 480px tall, such as a laptop at 400% zoom, the whole panel scrolls instead of the body, so the header and footer can't squeeze the body away or push the buttons off screen. Focusing a button scrolls it into view (WCAG 1.4.10 and 2.4.11).
 - It enters as a sequence: a modal drawer's backdrop starts fading in, and 50ms later (`motion-sequence`) the panel slides in over 300ms. It slides back out to its edge over 200ms, together with the backdrop, both in a straight line along that edge; focusing a control as it opens never scrolls it into view early. With `prefers-reduced-motion` it fades instead of sliding. The motion is a transition, so closing it while it slides in turns back from where it is. Focus goes back to what opened it at once, not after the slide, and presses reach the page while it leaves. A swipe moves the panel with the finger; let go short and it slides back, far enough and it slides out from where it is. One open on arrival (`defaultOpen`, or `open` on the first render) is there from the first frame. Firefox and Safari can't keep a closing modal drawer in the top layer yet, so there it closes at once; a non-modal one slides out everywhere.
@@ -92,7 +92,7 @@ Drawn from the `Bottom` story.
 | `open` | `boolean` | | Controlled: close it yourself in `onOpenChange`. |
 | `defaultOpen` | `boolean` | `false` | Open at first, then it closes itself (uncontrolled). Escape, the × or the backdrop close it, and `onOpenChange(false)` still comes. |
 | `onOpenChange` | `(open, { reason }) => void` | | Called with `false` on Escape, the ×, or a click on the backdrop. `reason` says which: `'escape'`, `'close'` (the ×), `'outside'` (the backdrop) or `'api'` (the browser closed it, as `dialog.close()` or a `method="dialog"` form do) |
-| `placement` | `'right' \| 'left' \| 'top' \| 'bottom' \| 'start' \| 'end'` | `'right'` | The edge it slides in from. `right` and `left` are physical edges, so they stay put in right-to-left pages; `start` and `end` are the edges the reading starts and ends at. |
+| `placement` | `'start' \| 'end' \| 'top' \| 'bottom'` | `'end'` | The edge it slides in from. `start` and `end` are the edges the reading starts and ends at: `end` is the right in a left-to-right page and the left in a right-to-left one. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The width of a left or right drawer: 320, 384 or 512px, never wider than the screen. |
 | `title` | `ReactNode` | | The heading; it also names the drawer. Without one, give it an `aria-label`. |
 | `description` | `ReactNode` | | A muted line under the title. |

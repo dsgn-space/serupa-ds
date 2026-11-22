@@ -265,7 +265,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.hover('#b');
   const panel = await p.evaluate(() => document.getElementById('serupa-debug-panel')?.textContent || '');
   t('debug.js: pointing at a Button names it, its variant and size, and the token set on it', /button/.test(panel) && /primary/.test(panel) && /size-md/.test(panel) && /--button-radius\s*0px/.test(panel), panel);
-  const info = await p.evaluate(() => { const i = Serupa.debug.inspect(document.querySelector('#b .dk-btn__label')); return i && { c: i.component, m: i.modifiers, r: i.tokens['--button-radius'], h: i.height }; });
+  const info = await p.evaluate(() => { const i = Serupa.debug.inspect(document.querySelector('#b .srp-btn__label')); return i && { c: i.component, m: i.modifiers, r: i.tokens['--button-radius'], h: i.height }; });
   t('debug.js: inspect() finds the component from an element inside it', info?.c === 'button' && info.m.includes('primary') && info.r === '0px' && info.h === 32, JSON.stringify(info));
   await p.goto(url);
   await p.waitForSelector('#b');
@@ -274,7 +274,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
     const g = document.querySelector('#serupa-debug-theme[role="group"]');
     return g ? { mode: Serupa.theme.get().mode, names: [...g.querySelectorAll('select')].map((x) => x.name + '=' + x.value + ':' + (x.labels[0]?.textContent || '')), text: g.textContent } : null;
   });
-  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 8 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
+  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 7 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
   await p.selectOption('#serupa-debug-theme-radius', 'round');
   await p.selectOption('#serupa-debug-theme-mode', 'dark');
   await p.waitForFunction(() => /-dark$/.test(document.documentElement.getAttribute('data-theme')), null, { timeout: 3000 }).catch(() => {});
@@ -282,6 +282,9 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   t('debug.js: picking a setting applies it to the page live, brand and mode through theme.js', picked.radius === 'round' && /-dark$/.test(picked.theme) && picked.mode === 'dark', JSON.stringify(picked));
   const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: /** @type {HTMLSelectElement | null} */ (document.getElementById('serupa-debug-theme-density'))?.value }));
   t('debug.js: theme(o) changes settings, \'\' puts one back, and the pairs are checked again in the new theme', tried.theme.radius === '' && tried.theme.contrast === 'more' && tried.theme.density === 'compact' && tried.lowContrast.length === 0 && !tried.attr && tried.select === 'compact', JSON.stringify(tried));
+  // Every brand tokens.json has, and no setting the tokens no longer read (depth went with the tactile look in 16.0.0).
+  const debugBrands = await p.evaluate(() => ({ brands: [...(/** @type {HTMLSelectElement | null} */ (document.getElementById('serupa-debug-theme-brand'))?.options ?? [])].map((o) => o.value).filter(Boolean).length, depth: !!document.getElementById('serupa-debug-theme-depth') }));
+  t('debug.js: the Theme panel offers all 17 brands and no depth setting', debugBrands.brands === 17 && !debugBrands.depth, JSON.stringify(debugBrands));
   await p.evaluate(() => Serupa.debug.theme({ contrast: '', density: '', mode: 'auto' }));
   await p.keyboard.press('Escape');
   t('debug.js: Escape turns it off and takes its outline and panels away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && !document.getElementById('serupa-debug-theme') && sessionStorage.getItem('serupa-debug') === null));
@@ -321,7 +324,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
   const out = path.join(dir, 'min.css');
   execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
-  // Component styles (dk-*) are always kept and grow with every component, so the size check trims utilities.css,
+  // Component styles (srp-*) are always kept and grow with every component, so the size check trims utilities.css,
   // the part purge decides on.
   const full = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size, small = fs.statSync(out).size;
   const outU = path.join(dir, 'min-utilities.css');

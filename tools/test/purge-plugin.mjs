@@ -28,7 +28,7 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-purge-plugin-'));
 try {
   fs.mkdirSync(path.join(dir, 'src'));
   // The package's files by name (the build below maps serupa-ds to dist/), as a project imports them.
-  fs.writeFileSync(path.join(dir, 'src', 'main.js'), 'import "@diki-stwn/serupa-ds/bundle.css";\nimport "@diki-stwn/serupa-ds/utilities-extra.css";\nimport "./app.css";\ndocument.body.className = "flex md:grid-cols-3 bg-linear-to-r from-primary"; // renders <Button>\n');
+  fs.writeFileSync(path.join(dir, 'src', 'main.js'), 'import "@diki-stwn/serupa-ds/bundle.css";\nimport "./app.css";\ndocument.body.className = "flex md:grid-cols-3 bg-primary"; // renders <Button>\n');
   fs.writeFileSync(path.join(dir, 'src', 'app.css'), '.my-card { color: red }\n.grid-cols-7 { color: blue }\n');
   fs.writeFileSync(path.join(dir, 'index.html'), '<!doctype html><title>t</title><script type="module" src="/src/main.js"></script>');
   fs.writeFileSync(path.join(dir, 'safe.txt'), 'gap-7\n');
@@ -43,12 +43,13 @@ try {
   const css = [out].flat().flatMap((o) => /** @type {any} */ (o).output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
   t('Vite: the build keeps the utility classes the sources use', has(css, 'flex') && has(css, 'md:grid-cols-3'), css.length);
   t('Vite: it drops one they don\'t use, and --keep\'s safelist file works', !has(css, 'grid-cols-5') && has(css, 'gap-7'), css.length);
-  t('Vite: utilities-extra.css is trimmed too (from-primary stays, from-danger goes)', has(css, 'from-primary') && has(css, 'bg-linear-to-r') && !has(css, 'from-danger'), css.length);
-  t('Vite: the component styles stay', has(css, 'dk-btn') && has(css, 'dk-dialog'), css.length);
+  t('Vite: the component styles stay', has(css, 'srp-btn') && has(css, 'srp-dialog'), css.length);
   t('Vite: the app\'s own CSS is left alone, a rule named like a utility too', has(css, 'my-card') && has(css, 'grid-cols-7'), css.length);
-  // Trimmed means well under half of bundle.css (a quarter on 9 Nov 2026: 391 of 1,648 KB); a fixed byte count broke as
-  // components were added, while an untrimmed file is the whole of it.
-  const trimmed = (n) => n < bundle.length / 2;
+  // Trimmed means at least half the utility classes gone (the component styles all stay: 540 of 1,070 KB on 21 Nov 2026,
+  // with 530 KB of component styles); a fixed byte count broke as components were added, while an untrimmed file is the
+  // whole of it.
+  const utilities = fs.readFileSync(path.join(PROJECT, 'dist', 'utilities.css'), 'utf8').length;
+  const trimmed = (n) => n < bundle.length - utilities / 2;
   t('Vite: the stylesheet is about the size the command makes, not the whole bundle.css', trimmed(css.length), `${Math.round(css.length / 1024)} of ${Math.round(bundle.length / 1024)} KB`);
   t('Vite: the dev server is left alone (apply: "build")', serupaPurge().apply === 'build');
 
@@ -64,7 +65,7 @@ try {
   const mixed = (await postcss([serupaPurgePostcss({ root: dir })]).process(merged, { from: path.join(dir, 'src', 'app.css') })).css;
   t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && trimmed(mixed.length), `${Math.round(mixed.length / 1024)} of ${Math.round(bundle.length / 1024)} KB: ${mixed.slice(0, 200)}`);
   const lean = await run(bundle, BUNDLE, { components: true });
-  t('PostCSS: components: true drops the components the sources never name', has(lean, 'dk-btn') && !has(lean, 'dk-dialog') && lean.length < own.length, `${lean.length} vs ${own.length}`);
+  t('PostCSS: components: true drops the components the sources never name', has(lean, 'srp-btn') && !has(lean, 'srp-dialog') && lean.length < own.length, `${lean.length} vs ${own.length}`);
   // The trimmed CSS must still parse: Vite's default minifier (lightningcss) stops the build on a broken rule, which
   // browsers would silently drop (C1: a comma inside :is(… :not(…)) split one ButtonGroup rule into two halves).
   const parses = (css) => { try { transform({ filename: 'bundle.css', code: Buffer.from(css), minify: true, errorRecovery: false }); return ''; } catch (e) { return String(e.message); } };

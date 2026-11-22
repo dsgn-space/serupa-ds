@@ -1,8 +1,23 @@
 # Bottom
 - button "Share"
+- dialog "Share":
+  - heading "Share" [level=2]
+  - paragraph: Anyone with the link can view.
+  - button "Close"
+  - text: Link
+  - textbox "Link": https://acme.example/d/atlas
+  - button "Done"
 
 # BottomSheet
 - button "Cafés nearby"
+- dialog "Nearby":
+  - button "Expand"
+  - heading "Nearby" [level=2]
+  - paragraph: Cafés within a 10-minute walk.
+  - button "Close"
+  - paragraph: Kopi Kenangan, 3 minutes
+  - paragraph: Tanamera, 6 minutes
+  - paragraph: Anomali, 9 minutes
 
 # DoFooterActions
 - button "Open filters"
@@ -34,28 +49,128 @@
 
 # Large
 - button "Project details"
-
-# Left
-- button "Menu"
+- dialog "Project details":
+  - heading "Project details" [level=2]
+  - paragraph: Everything about Atlas in one place.
+  - button "Close"
+  - paragraph: Atlas is the new customer portal, due on 28 November.
+  - paragraph: "Owner: Dewi Lestari. 12 people, 48 tasks, 9 open."
+  - button "Open project"
 
 # LongText
 - button "Release notes"
+- dialog "Release notes":
+  - heading "Release notes" [level=2]
+  - button "Close"
+  - region "Release notes":
+    - paragraph: Release 24. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 23. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 22. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 21. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 20. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 19. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 18. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 17. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 16. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 15. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 14. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 13. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 12. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 11. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 10. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 9. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 8. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 7. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 6. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 5. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 4. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 3. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 2. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
+    - paragraph: Release 1. Faster search, a new export menu, and fixes for the calendar in right-to-left pages.
 
 # NoCloseButton
 - button "Open filters"
+- dialog "Filters":
+  - heading "Filters" [level=2]
+  - paragraph: Narrow the list of projects.
+  - text: Name
+  - textbox "Name":
+    - /placeholder: Search projects
+  - checkbox "Only mine"
+  - text: Only mine
+  - checkbox "Include archived"
+  - text: Include archived
+  - button "Reset"
+  - button "Apply"
 
 # Playground
 - button "Open filters"
 
 # Small
 - button "Open filters"
+- dialog "Filters":
+  - heading "Filters" [level=2]
+  - paragraph: Narrow the list of projects.
+  - button "Close"
+  - text: Name
+  - textbox "Name":
+    - /placeholder: Search projects
+  - checkbox "Only mine"
+  - text: Only mine
+  - checkbox "Include archived"
+  - text: Include archived
+  - button "Reset"
+  - button "Apply"
+
+# Start
+- button "Menu"
+- dialog "Menu":
+  - heading "Menu" [level=2]
+  - button "Close"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: "#home"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+      - listitem:
+        - link "Settings":
+          - /url: "#settings"
 
 # StaysOpenOnBackdropPress
 - button "Open filters"
+- dialog "Unsaved filters":
+  - heading "Unsaved filters" [level=2]
+  - paragraph: Apply or reset them to close.
+  - button "Close"
+  - text: Name
+  - textbox "Name":
+    - /placeholder: Search projects
+  - checkbox "Only mine"
+  - text: Only mine
+  - checkbox "Include archived"
+  - text: Include archived
+  - button "Reset"
+  - button "Apply"
 
 # Top
 - button "What’s new"
+- dialog "Announcements":
+  - heading "Announcements" [level=2]
+  - paragraph: What changed this week.
+  - button "Close"
+  - paragraph: Search now finds archived projects.
+  - paragraph: Exports include comments.
 
 # UnsavedChanges
 - button "Edit Atlas"
+- dialog "Edit project":
+  - heading "Edit project" [level=2]
+  - button "Close"
+  - text: Name
+  - textbox "Name": Atlas
+  - button "Cancel"
+  - button "Save"
 

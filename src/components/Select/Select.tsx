@@ -19,7 +19,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
   /** A danger border and focus ring, and aria-invalid. */
   invalid?: boolean | undefined;
   /** A decorative icon before the text: an icon name or an element. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** A first, empty option shown in the placeholder color until something is picked (it can't be picked back). An uncontrolled Select starts on it. */
   placeholder?: string | undefined;
   /** The options: strings, { value, label, disabled }, or groups { label, options }. Or pass <option> and <optgroup> children (after these). */
@@ -29,11 +29,11 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
 }
 
 /* Select: a native <select> styled like Input. size "sm", "md" (default) or "lg" (the control heights);
-   invalid; leftIcon (decorative); placeholder (a first, empty option shown in the placeholder color until
+   invalid; startIcon (decorative); placeholder (a first, empty option shown in the placeholder color until
    something is picked); options (strings, { value, label, disabled } or groups { label, options }) or your own
-   <option> children. Renders <span class="dk-select"> around the <select>: className and style go to the box,
+   <option> children. Renders <span class="srp-select"> around the <select>: className and style go to the box,
    every other prop (value, defaultValue, onChange, name, disabled, required, aria-*…) and ref to the <select>. */
-const OWN = { size: 1, invalid: 1, leftIcon: 1, placeholder: 1, options: 1, children: 1, className: 1, style: 1, multiple: 1, readOnly: 1 } as const;
+const OWN = { size: 1, invalid: 1, startIcon: 1, placeholder: 1, options: 1, children: 1, className: 1, style: 1, multiple: 1, readOnly: 1 } as const;
 
 function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined): React.ReactNode[] {
   return (list || []).map(function (o, i) {
@@ -81,16 +81,16 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => { e.target.value = shownRef.current; },
   } : { onChange: (e: React.ChangeEvent<HTMLSelectElement>) => { if (!controlled) setPicked(e.target.value); if (onChange) onChange(e); } };
   const empty = hasPh && (cur == null || cur === '');
-  const left = asIcon(props.leftIcon);
+  const left = asIcon(props.startIcon);
   return (
-    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', props.disabled && 'dk-select--disabled', readOnly && 'dk-select--readonly', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
-      {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
-      <select {...rest} {...handlers} ref={setRefs} className="dk-select__field" key="field">
-        {hasPh ? <option value="" disabled key="__placeholder" className="dk-select__placeholder">{props.placeholder}</option> : null}
+    <span className={cn('srp-select', 'srp-select--size-' + size, invalid && 'srp-select--invalid', props.disabled && 'srp-select--disabled', readOnly && 'srp-select--readonly', empty && 'srp-select--empty', left != null && left !== false && 'srp-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
+      {left == null || left === false ? null : <span className="srp-select__icon srp-select__icon--start" aria-hidden key="left">{left}</span>}
+      <select {...rest} {...handlers} ref={setRefs} className="srp-select__field" key="field">
+        {hasPh ? <option value="" disabled key="__placeholder" className="srp-select__placeholder">{props.placeholder}</option> : null}
         {optionNodes(props.options)}
         {props.children}
       </select>
-      <span className="dk-select__icon dk-select__icon--chevron" aria-hidden key="chevron"><Icon icon={icons.ExpandMore} /></span>
+      <span className="srp-select__icon srp-select__icon--chevron" aria-hidden key="chevron"><Icon icon={icons.ExpandMore} /></span>
     </span>
   );
 }

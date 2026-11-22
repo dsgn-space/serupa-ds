@@ -42,7 +42,7 @@ export function Themes() {
             <section aria-labelledby={`theme-${t.id}`} className="site-theme" data-brand={brand} data-mode={mode} {...attrs}>
               <div className="site-theme__head">
                 <Heading level={2} id={`theme-${t.id}`} className="site-theme__name">{t.name}</Heading>
-                <Button size="sm" variant={current ? 'secondary' : 'outline'} aria-pressed={current} leftIcon={current ? 'check' : undefined} onClick={() => set({ brand, mode: mode as 'light' | 'dark' })}>
+                <Button size="sm" variant={current ? 'secondary' : 'outline'} aria-pressed={current} startIcon={current ? 'check' : undefined} onClick={() => set({ brand, mode: mode as 'light' | 'dark' })}>
                   {current ? 'This site’s theme' : 'Use on this site'}
                 </Button>
               </div>

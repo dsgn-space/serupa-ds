@@ -26,7 +26,7 @@ import { holdDelay, holdRepeat } from '../../internal/timing';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWords);
 
-export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'rightIcon' | 'min' | 'max' | 'step'> {
+export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'endIcon' | 'min' | 'max' | 'step'> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
   value?: number | null | undefined;
   /** The number at first (uncontrolled). */
@@ -76,7 +76,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const sds = useSettings(words);
   // The callbacks read once: called through props, they could change props (and the options) for the compiler.
   const { onValueChange, onInvalidInput } = props;
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, startIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   // Without a locale from the prop or a provider: en-US on the server and while hydrating, then the browser's.
@@ -231,8 +231,8 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   };
   const current = parse(text);
   const now = typeof current === 'number' ? current : value;
-  const left = asIcon(props.leftIcon);
-  const niId = domId('dk-ni', React.useId());
+  const left = asIcon(props.startIcon);
+  const niId = domId('srp-ni', React.useId());
   const affix = useAffixes(props.prefix, props.suffix, niId, el);
   const press = (by: number) => { nudge(by); if (el.current && document.activeElement !== el.current) el.current.focus({ preventScroll: true }); };
   // Holding − or + repeats: one step on the press, then after 400ms one every 50ms, until the pointer goes up or
@@ -265,25 +265,25 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, nameRef, el);
   return (
     <>
-    <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
+    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
-      {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {affix.prefix}
       <input {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
         role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? show(now) : undefined} aria-valuemin={min} aria-valuemax={max}
-        autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text}
+        autoComplete={rest.autoComplete || 'off'} className="srp-input__field" value={text}
         aria-describedby={cn(rest['aria-describedby'], affix.ids, rejected && niId + '-rejected') || undefined}
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={rest.onFocus} />
       {affix.suffix}
       {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? '' : String(out(value))} /> : null}
       {props.steppers !== false ? (
-        <span className="dk-number-input__steppers">
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
+        <span className="srp-number-input__steppers">
+          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
             disabled={atEnd(-1)} onPointerDown={(e) => holdDown(e, -1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(-1)}>
             <Icon icon={icons.Remove} />
           </button>
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
+          <button type="button" tabIndex={-1} className="srp-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
             disabled={atEnd(1)} onPointerDown={(e) => holdDown(e, 1)} onPointerLeave={stop} onContextMenu={longTouch} onClick={() => clickStep(1)}>
             <Icon icon={icons.Add} />
           </button>
@@ -291,7 +291,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
       ) : null}
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
-      {rejected && <span id={niId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+      {rejected && <span id={niId + '-rejected'} className="srp-input-rejected">{rejected}</span>}
     </>
   );
 }

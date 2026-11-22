@@ -36,14 +36,13 @@ export function tokensCss(t = tokens()) {
 
 // A page with the tokens, bundle.css and (optionally) React + serupa.iife.js, written next to the
 // project so file:// URLs to fonts and libraries resolve.
-// extra: also load utilities-extra.css (the masks and gradients) after the bundle, as a page that uses them does.
-export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../dist/bundle.css', extra = false } = {}) {
+export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../dist/bundle.css' } = {}) {
   const dir = path.join(PROJECT, '.test-tmp');
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'tokens.test.css'), tokensCss().css);
   const libs = react ? ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/serupa.iife.js'].map((s) => `<script src="../${s}"></script>`).join('') : '';
   const attrs = htmlAttrs ?? `data-theme="${tokensCss().themes[0]}"`;
-  const head = (theme ? '<script src="../dist/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../dist/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">` + (extra ? '<link rel="stylesheet" href="../dist/utilities-extra.css">' : '');
+  const head = (theme ? '<script src="../dist/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../dist/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">`;
   const html = `<!doctype html><html ${attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${head}${libs}${extraHead}</head><body>${body}</body></html>`;
   const file = path.join(dir, name);
   fs.writeFileSync(file, html);
@@ -53,9 +52,8 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 
 // On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
 // a component that reads the browser's language where it should take the provider's, or a test that expects English
-// without saying so, fails. A full run (main, the merge queue) runs all of them again in that one; a pull request that
-// changes only component folders runs the changed components and the ones using them again in its one, and the
-// changed components' own tests in the other three, so a new test that
+// without saying so, fails. Pull requests and the queue run only the tests a language can break in them
+// (languageTests): the changed components' and any changed shared test in all four, so a new test that
 // expects English fails on its pull request instead of turning main red for everyone (as Sparkline's did, #1462). Right-to-left with Arabic
 // digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
 // To repeat one: node tools/test/run.mjs --group components --locale id-ID; tools/ci.mjs runs them all.
@@ -78,7 +76,7 @@ export async function browser(args) {
   try { return await pw[ENGINE].launch(opts); } catch (e) { fail(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); }
 }
 
-// The browser build this Playwright installs and the baselines are drawn with (in CI, npx playwright install). A
+// The browser build this Playwright installs and the pictures are drawn with (in CI, npx playwright install). A
 // browser from another build draws text differently: a container whose Chromium 153 stood in for Playwright's 156
 // drew Inter's medium weight as regular, and every picture failed. '' when Playwright doesn't say.
 export function expectedVersion() {
@@ -221,7 +219,7 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
-  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
+  String.raw`tools/test/(?!(lib|run|visual|visual-base|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
   // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
   // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
@@ -232,13 +230,13 @@ const NEUTRAL = new RegExp('^(' + [
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
-// tokens, tooling, Storybook's setup) could change any of them. Their tests, visual baselines, API baseline,
+// tokens, tooling, Storybook's setup) could change any of them. Their tests, API baseline,
 // server-render case and size budgets count as theirs; the NEUTRAL files touch none. A block or pattern
 // (src/blocks/<Name>/, src/patterns/<Name>/) counts as one too: nothing in the package imports it, so only its own
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
 // own, named by file as storybook.mjs names a page ("Introduction.mdx").
 export const FOLDERS = ['components', 'blocks', 'patterns'];
-// A component's name in kebab case, as its classes (dk-<kebab>), data-component and tokens file use it: DatePicker is
+// A component's name in kebab case, as its classes (srp-<kebab>), data-component and tokens file use it: DatePicker is
 // date-picker, and a run of capitals stays one word, so OTPInput is otp-input and QRCode qr-code (R7: the generator,
 // the contract and the --since scope each had their own, and they disagreed on names like these).
 export const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
@@ -295,7 +293,6 @@ export const sharedRaise = (raises, line) => +raises.reduce((t, r) => t + (Numbe
 export const raiseTag = (branch) => String(branch === 'HEAD' ? '' : branch || '').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'local';
 // The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
 const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-  || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
   || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
   || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
 // The components, blocks and patterns a change edits itself, whatever else it changes: unlike affectedComponents,
@@ -309,7 +306,6 @@ export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-      || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
       || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
     // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).
@@ -328,9 +324,31 @@ export function affectedComponents(files) {
 // that base (run.mjs --since: a pull request's, a queue group's) leaves them out; the nightly run checks main whole. They took
 // about 240 s of the checks group's 650 (13 Nov), and 24 of 80 pull requests on 15 and 16 Nov changed nothing they read.
 export const BUILT_CHECKS = ['tree-shake', 'purge-components', 'no-css', 'reproducible'];
-export const builtUnchanged = (files) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
-  && !/^(\.github\/actions|tools\/build)\//.test(f) && !/^tools\/test\/baseline-server\//.test(f)
-  && !new RegExp(`^tools/test/(lib|${BUILT_CHECKS.join('|')})\\.mjs$`).test(f));
+// The tools a script reads: the ones it imports, and the ones it runs as path.join(P, 'tools', …), followed through.
+// What the build reads this way (tools/utilities/, tools/tokens/, tools/lint/a11y-components.mjs, …) builds the package
+// too: a list of folders by hand left those out, so a change to the utility template skipped the built checks.
+export function toolsRead(entries) {
+  const seen = new Set();
+  const todo = [...entries];
+  while (todo.length) {
+    const f = todo.pop();
+    const abs = path.join(PROJECT, f);
+    if (seen.has(f) || !fs.existsSync(abs) || !fs.statSync(abs).isFile()) continue;
+    seen.add(f);
+    const code = fs.readFileSync(abs, 'utf8');
+    for (const m of code.matchAll(/(?:from|import\()\s*['"](\.\.?\/[^'"]+)['"]/g)) todo.push(path.posix.normalize(path.posix.join(path.posix.dirname(f), m[1])));
+    for (const m of code.matchAll(/path\.join\(\s*\w+\s*,\s*'tools'((?:\s*,\s*'[^']+')+)\s*\)/g)) todo.push(['tools', ...[...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])].join('/'));
+  }
+  return seen;
+}
+// A change to nothing but workflows and tools, none of which the given scripts read (the setup action and the server
+// baselines count as read: they set the Node and the packages, and the markup).
+const onlyToolsBesides = (files, read) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
+  && !/^\.github\/actions\//.test(f) && !/^tools\/test\/baseline-server\//.test(f) && !read.has(f));
+export const builtUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/build/build.mjs', ...BUILT_CHECKS.map((c) => `tools/test/${c}.mjs`)]));
+// The docs site check (site.mjs, 380 s of a checks shard, 13 Nov) builds the site from src/, docs/ and site/ with
+// tools/site/: a change to tools it doesn't read builds the very site its base did, which passed it (SERUPA_SITE_AS_BASE).
+export const siteUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/test/site.mjs', 'tools/site/vite.config.mjs']));
 // The SERUPA_ONLY name a docs site page answers to: its component, block or pattern folder, or the page's own file.
 export const sitePageKey = (file) => /^src\/(?:components|blocks|patterns)\/(\w+)\//.exec(file)?.[1] ?? file;
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
@@ -356,11 +374,11 @@ export function withDependents(names) {
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
     .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
-  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
-  // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
+  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .srp-input box, Fab
+  // reads .srp-navbar--sticky. "srp-date-picker__x" is DatePicker's; a class no component is named after counts for none.
   const byKebab = new Map(folders.map((n) => [kebab(n), n]));
   const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bsrp-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
     .filter((c) => c && c !== n));
   const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
@@ -371,6 +389,29 @@ export function withDependents(names) {
   }
   for (const [n, deps] of shown) if ([...deps].some((d) => all.has(d))) all.add(n);
   return all;
+}
+// The tests a second language can break, which pull requests and the queue run in the other languages (run.mjs
+// --since); the nightly Languages jobs run everything in each. A component's folder when its code reads the language
+// (dates, times, numbers, plurals, digits, money, sorting, Intl, useLocale) or uses one that does: Pagination's page
+// numbers in Arabic digits reach DataGrid's tests too. And the shared tests whose subject is the language: right to
+// left, scripts, long words, hydrating in the browser's locale after the server's en-US, Arabic digits in every story.
+// The other story-wide tests (activity, motion, tabWalk, leaks, …) were about 1,800 s of a language's 2,900 and test
+// nothing a language changes; they run in English on every pull request and in all four languages every night.
+const READS_LANGUAGE = /internal\/(dates|times|numbers|plural|digits|currency|collator|datePresets)['"]|\buseLocale\(|\bIntl\.|\.toLocale\w*\(/;
+export const LANGUAGE_TESTS = ['badLocale', 'browserLocale', 'collator', 'currency', 'dates', 'digitsStories', 'dirIslands', 'graphemes',
+  'hydrateLocale', 'hydrateStories', 'ime', 'intl', 'labels', 'longWords', 'numbers', 'overflowWrap', 'ownLang', 'plural', 'provider',
+  'pseudo', 'tabularFigures', 'times', 'typeahead', 'announceContract'].map((f) => `src/internal/${f}.test.tsx`)
+  .concat(['jaHeadings', 'longWords'].map((f) => `src/styles/${f}.test.tsx`));
+/** The test paths (component folders and shared test files) to run in a language other than English. */
+export function languageTests() {
+  const reads = new Set(FOLDERS.flatMap((d) => {
+    const DIR = path.join(PROJECT, 'src', d);
+    return fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((n) => {
+      const dir = path.join(DIR, n);
+      return fs.statSync(dir).isDirectory() && fs.readdirSync(dir).some((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f) && READS_LANGUAGE.test(fs.readFileSync(path.join(dir, f), 'utf8')));
+    }) : [];
+  }));
+  return new Set([...[...withDependents(reads)].map(folderOf).filter(Boolean), ...LANGUAGE_TESTS.filter((f) => fs.existsSync(path.join(PROJECT, f)))]);
 }
 // The shared tests in src/internal/ that render one of the components (announceContract, formContract, nameCheck, …),
 // so a pull request that changes LoadMore runs announceContract's LoadMore case too, not only LoadMore's own folder.

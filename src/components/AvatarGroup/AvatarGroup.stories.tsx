@@ -15,7 +15,7 @@ const avatars = (names: string[], { pictures = false, status = false } = {}) => 
 const meta = {
   title: 'Components/Content/AvatarGroup',
   component: AvatarGroup,
-  args: { label: 'Assigned to', size: 'md', max: 4 },
+  args: { 'aria-label': 'Assigned to', size: 'md', max: 4 },
   argTypes: { size: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] } },
   render: function Render(args) { return <AvatarGroup {...args}>{avatars(useNames(DEMO), { pictures: true })}</AvatarGroup>; },
 } satisfies Meta<typeof AvatarGroup>;
@@ -27,13 +27,13 @@ export const Sizes: Story = {
   render: function Render(args) {
     const names = useNames(DEMO);
     return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
-      {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <AvatarGroup key={s} {...args} size={s} label={'Assigned to, ' + s}>{avatars(names)}</AvatarGroup>)}
+      {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <AvatarGroup key={s} {...args} size={s} aria-label={'Assigned to, ' + s}>{avatars(names)}</AvatarGroup>)}
     </div>;
   },
 };
 export const AllShown: Story = { args: { max: undefined } };
 export const Total: Story = {
-  args: { label: 'Members', max: undefined, total: 120, size: 'sm' },
+  args: { 'aria-label': 'Members', max: undefined, total: 120, size: 'sm' },
   render: function Render(args) { return <AvatarGroup {...args}>{avatars(useNames(DEMO).slice(0, 5))}</AvatarGroup>; },
 };
 export const WithStatus: Story = {

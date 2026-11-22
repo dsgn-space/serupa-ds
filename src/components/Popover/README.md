@@ -7,7 +7,7 @@ A small panel next to its trigger for content people interact with: a short form
 ```jsx
 import { Popover, Button, Field, Input } from '@diki-stwn/serupa-ds';
 
-<Popover title="Share" trigger={<Button variant="outline" leftIcon="share">Share</Button>}>
+<Popover title="Share" trigger={<Button variant="outline" startIcon="share">Share</Button>}>
   {(close) => (
     <form onSubmit={(e) => { e.preventDefault(); invite(); close(); }}>
       <Field label="Email"><Input type="email" /></Field>
@@ -38,8 +38,8 @@ import { Popover, Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Playground` story, opened.
 
-1. **Title** (`.dk-popover__title`): an optional heading that names the popover.
-2. **Body** (`.dk-popover__body`): its content.
+1. **Title** (`.srp-popover__title`): an optional heading that names the popover.
+2. **Body** (`.srp-popover__body`): its content.
 
 ## Usage
 

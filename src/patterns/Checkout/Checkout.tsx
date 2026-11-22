@@ -18,6 +18,7 @@ import { announce } from '../../internal/announce';
 import { minorDigits } from '../../internal/currency';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { Badge } from '../../components/Badge/Badge';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import {
   demoMethods, expired, formatExpiry, methodOf, methodSummary, MethodDetails, MethodList, PayNext,
   type PaymentAnswers, type PaymentInstructions, type PaymentMethod,
@@ -127,6 +128,9 @@ export interface CheckoutProps {
   /** Checks a promo code against the order (subtotal in minor units). Resolve with what it takes off; reject with
       an Error whose message says why it doesn't apply ("This code has expired"). Default: WELCOME10 takes 10% off. */
   onApplyPromo?: ((code: string, subtotal: number) => Promise<AppliedPromo>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoLines: OrderLine[] = [
@@ -188,8 +192,7 @@ const later = (m: PaymentMethod | undefined) => m?.kind === 'bank' || m?.kind ==
 /** The checkout page: a skip link, a header, then main with the form (or the review, or the confirmation) and the order summary. */
 export function Checkout({
   lines = demoLines, currency = 'USD', expressPrice = 900, initial, startAtReview, failed: startFailed, placed, onPlaceOrder,
-  methods = demoMethods, instructions: startInstructions, onApplyPromo = demoPromo, promo: startPromo,
-}: CheckoutProps) {
+  methods = demoMethods, instructions: startInstructions, onApplyPromo = demoPromo, promo: startPromo, online }: CheckoutProps) {
   // The first method that can be used is chosen at first, and a saved card's first one that hasn't expired.
   const start = (): CheckoutDetails => {
     const s = { ...blank, ...initial };
@@ -280,6 +283,7 @@ export function Checkout({
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Your details stay here. Placing the order needs a connection.</OfflineBanner>
         <PageHeader title="Checkout" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">

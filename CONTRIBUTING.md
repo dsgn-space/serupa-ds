@@ -41,7 +41,7 @@ do, say so and stop here.
 
 **First, pick a direction by looking.** `npm run new-component -- <Name> --directions` writes one story, Directions/<Name> in `src/directions/`, with two or three takes behind one Storybook switch. The takes should differ in kind, such as layout, density or motion, not in polish. Draw each one just far enough to judge, flip between them, and pick one. Write the pick and the reason in the pull request, then delete the file. The contract check fails while it's there, so it never merges.
 
-1. `npm run new-component -- <Name> --group <Storybook group>` writes `src/components/<Name>/` with every file the contract asks for, already wired to the system: the component as a plain function that takes `ref` as a prop, named through `named()`, its CSS in `@layer dk.components` reading its own tokens, its tokens file, stories, a starting test, the Storybook page, the usage guide with its required headings, the preview page and the server-render case.
+1. `npm run new-component -- <Name> --group <Storybook group>` writes `src/components/<Name>/` with every file the contract asks for, already wired to the system: the component as a plain function that takes `ref` as a prop, named through `named()`, its CSS in `@layer srp.components` reading its own tokens, its tokens file, stories, a starting test, the Storybook page, the usage guide with its required headings, the preview page and the server-render case.
 2. Fill in every `TODO(new-component)`. The contract check fails while one is left.
 3. Build it to the standard every component meets, which the checks hold it to:
    - **Accessibility:** WCAG 2.2 AA in every theme (contrast in its test, axe on every story), keyboard use as the ARIA pattern describes, a visible focus ring (the outline recipe, `focus-ring-width` and `focus-ring-offset`), a forced-colors fallback for any state shown only by background, and nothing floating over the page when printing.
@@ -63,6 +63,15 @@ do, say so and stop here.
 
    Each Release pull request lists the betas that meet all four, and that release either takes their tags off or names the open bug that keeps each one in beta, so no component stays beta just because nobody looked.
 7. `npx changeset` (minor, "Added: <Name> …"), open the pull request, and look at its screenshots in the `visual review` job's summary, then add the `design-qa` label.
+
+## A new pattern
+
+A pattern is a whole page or flow an app copies into its own code: a dashboard, a sign-in page, a checkout. A component is a part the package ships and keeps working across releases. Something is a pattern, not a component, when apps need to change its words, its data and its layout to fit their product, so a prop for every difference would never end. It is a component when every app needs it to behave the same and a fix should reach them all.
+
+- **Built only from what's here.** A pattern uses the package's components, blocks and layout components, and the utility classes for details inside a part ([ADR-0019](docs/adr/0019-layout-components-and-utilities.md)). If it needs a part that doesn't exist, that part is a component proposal first.
+- **Every state, not just the happy path** ([ADR-0023](docs/adr/0023-every-pattern-shows-every-state.md)). A pattern that loads data has `Loading`, `LoadFailed`, `Empty`, `Partial` and `Offline` stories. One that only sends has `SendFails` and `Offline`. `src/internal/patternStates.test.tsx` lists which patterns load and fails one that's missing a state; a state that can't happen there goes in its `NOT_HERE` with the reason.
+- **Its own test file** checks what a person meets: one main and one h1, the skip link first, headings in order, the states above, and nothing scrolling sideways at 320px.
+- Patterns don't ship in the package, so a pull request that only adds or changes patterns takes the `no-changeset` label.
 
 ## Reviews by eye
 
@@ -152,7 +161,7 @@ Every component names the same things the same way, so learning one teaches the 
 - **A callback's second argument**, when it has one, is a details object: `onValueChange(value, details)` and `onOpenChange(open, details)`, with fields such as `event`, `reason` or `iso`. Never a bare event, string or number, so a later release can add a field without a new signature. A callback that only reports its value takes one argument. `node tools/test/props.mjs` holds new callbacks to it; the older ones that pass an event, an ISO string or a number are listed there and move in the next major.
 - **A boolean** is named for what it turns on or shows, in the positive: an adjective or a verb phrase (`loading`, `clearable`, `showCount`, `closeOnBackdrop`). To hide a part, `hideX` (`hideOutside`), never `noX` or `xHidden`; and `disabled` everywhere, never `enabled`. A part shown by default may default to `true` and is turned off with `={false}` (`closeButton={false}`, `arrows={false}`). `node tools/test/props.mjs` holds every prop to it; a renamed one keeps its old name only as `@deprecated`, with a warning (13.0.0 removed `noTitle` and `captionHidden`, a release after `hideTitle` and `hideCaption` replaced them).
 - **`size`** on controls is `'sm' | 'md' | 'lg'`, at the control heights 24, 32 and 44px. Components on another scale say so in the type: Heading and Text follow the type scale, Container the page widths, Avatar and Icon their own sizes.
-- **`tone`** is what a color means (`neutral`, `primary`, `info`, `success`, `warning`, `danger`), and **`variant`** is the visual style (for example `solid`, `subtle`, `outline`, `ghost`). Badge takes both: `tone="danger" variant="outline"`.
+- **`tone`** is what a color means (`neutral`, `primary`, `info`, `success`, `warning`, `danger`), and **`variant`** is the visual style (for example `solid`, `subtle`, `outline`, `ghost`). Badge takes both: `tone="danger" variant="outline"`. Button, SplitButton and ToggleButton are the one exception: their `variant` holds `primary` and `secondary` beside the styles, and danger is `destructive` ([ADR-0018](docs/adr/0018-tone-and-variant-names.md)). Nothing else copies that shape.
 - **An optional prop takes undefined:** `size?: ButtonSize | undefined`, not `size?: ButtonSize`, so a project with `exactOptionalPropertyTypes` on can pass one through (`size={props.size}`) or switch one off (`disabled={busy || undefined}`), as it can with React's DOM props. `node tools/test/optional-undefined.mjs` holds every component's props to it (`tools/test/baseline-optional-undefined.json` lists known exceptions: none).
 - **A console warning** about a mistake goes through `warnOnce()` (`src/internal/warn.ts`), inside `if (process.env.NODE_ENV !== "production" && …)`, so a production build drops it and its text. Its first argument is a code (`"tabs-value"`) with a section in [docs/warnings.md](docs/warnings.md), which the warning links to. `node tools/test/dev-warnings.mjs` fails on a warning that isn't guarded or has no section.
 
@@ -167,8 +176,14 @@ One idea has one name in every component. A new prop takes the name in the first
 | A composite's value | `value`, `defaultValue`, `onValueChange(value, details?)` | `onChange` (only a native wrapper keeps it), `onSelect` for a value |
 | An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
 | Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
-| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
-| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
+| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'`; a side panel's edge is `start` or `end`, which follow the reading | `position`, `side`, or a name that ends in them (`labelPosition`); `left`, `right` for an edge |
+| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color; `default` for neutral |
+| The current page or item | `current` (it sets `aria-current`) | `active`, `selected` for a page |
+| An icon at the start or end of a label | `startIcon`, `endIcon` (they mirror in right-to-left text) | `leftIcon`, `rightIcon` |
+| A callback's second argument | a details object: `{ iso }`, `{ event }`, `{ reason }`, `{ page }` | a bare event, string or number |
+| One item or many | `selectionMode`: `'single' \| 'multiple'` (and `'none'` where nothing is picked), with `selected`, `onSelectedChange` for picked rows or `value` for a composite's value | `type`, `multiple` (Combobox keeps `multiple`, as the native `<select multiple>` does) |
+| A landmark's or a group's name for screen readers | `aria-label` (or `aria-labelledby`) | `label`, which is shown text |
+| Data or children | children for parts people compose (RadioGroup, Tabs, Timeline); an array prop (`options` of `{ value, label }`, `items` of `{ id, label }`) for data the component lays out itself (SegmentedControl, Stepper, TagGroup) | mixing both for one job |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
 | Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |
@@ -177,9 +192,11 @@ One idea has one name in every component. A new prop takes the name in the first
 | Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
 | Size of a control | `size`: `'sm' \| 'md' \| 'lg'` | `small`, `compact` |
 
+**Button is the one exception to the tone and variant rows** (Diki, 21 Nov 2026): it keeps `variant="primary" | "secondary" | "outline" | "ghost" | "link"` and `destructive`, as SplitButton does, because every app writes them and no button would look different.
+
 A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
 
-`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words, delay, current-page and icon rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
 
 ### Token names
 
@@ -190,8 +207,8 @@ A component token names the part, then the property, then the state: `--<compone
 Breaking changes come together, on a schedule, so a project upgrades once rather than every few days (GR247).
 
 - **Minors and patches go out every day.** At 00:00 UTC (07:00 in Jakarta) the Daily release workflow merges the open `Release: <version>` pull request, which has gathered every changeset merged since the last release, once its checks pass; merging it tags the version and makes the GitHub release (see AGENTS.md). A project pinned to a tag is never more than a day behind `main`. A day with nothing pending has no release.
-- **One scheduled major.** Every breaking changeset (`"@diki-stwn/serupa-ds": major`) waits for the next scheduled major, 15.0.0, and adds its section to [docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md) in the same pull request. Fixes and new features keep shipping as minors and patches in the meantime.
-- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may. **Suspended for now:** while the API is still being adjusted, `"deprecationWindow": false` in `tools/release-policy.json` turns this check off, so a major may remove a name right after deprecating it. It still needs its migration note in the changeset and, where a script can make the change, its `serupa-migrate` transform. Set it back to `true` to bring the window back.
+- **One scheduled major, then a pause.** Every breaking changeset (`"@diki-stwn/serupa-ds": major`) waits for the next scheduled major and adds its section to that major's RFC in `docs/rfcs/` in the same pull request. 17.0.0 is the cleanup major (Diki, 21 Nov 2026): it gathers every breaking change the deep audit of 21 Nov accepted, after 16 majors in five weeks. After it, no major for at least three months: a breaking idea is deprecated in a minor and waits, and the next major is scheduled only once a quarter's worth has gathered. Fixes and new features keep shipping as minors and patches in the meantime.
+- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may. **Back after 17.0.0:** it was suspended from 14 Nov 2026 while the API was still being adjusted. `"suspendedThrough": "17.0.0"` in `tools/release-policy.json` keeps it off for 17.0.0 and turns it on for every major after it, with no change needed. (`"deprecationWindow": false` turns it off entirely.)
 - **The previous major gets fixes for four weeks.** For 28 days after a major ships, bug fixes and security fixes also go out as patches of the major before it (14.x after 15.0.0), from a `14.x` branch. New features go only into the new major. A fix for it is a pull request to `14.x` with its changeset and the version it makes (`node tools/version.mjs` in the branch, since the Release pull request is main's alone); CI tests it, and when it merges the Release workflow tags and releases that version without taking GitHub's "Latest" from the new major.
 - **Deprecate before you rename.** A renamed prop, class or token keeps its old name as a deprecated alias for at least those four weeks (see the [API naming table](#api-naming-table)). The major then only removes.
 

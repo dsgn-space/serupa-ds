@@ -19,6 +19,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* File browser: one folder's files as a list people pick from, to move or delete several at once, with rename, move
    and delete on each row too. For an app to copy. What it carries (WCAG 2.2):
@@ -83,6 +84,9 @@ export interface FileBrowserProps {
   loadFailed?: boolean | undefined;
   /** Loads the files again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const now = Date.now();
@@ -111,7 +115,7 @@ export function nameProblem(name: string, id: string, files: readonly BrowserFil
 
 /** The file browser: a skip link, a header, then main with the folder's h1, the selection bar and the list. */
 export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files', href: '#files' }], files: all = demoFiles, folders = demoFolders,
-  defaultSelected, onDelete, onMove, onRename, onUpload, loading = false, loadFailed = false, onRetry }: FileBrowserProps) {
+  defaultSelected, onDelete, onMove, onRename, onUpload, loading = false, loadFailed = false, onRetry, online }: FileBrowserProps) {
   const locale = useLocale();
   // What's shown: the files, less those deleted or moved away, with any new names.
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
@@ -204,6 +208,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the files loaded before you went offline. Opening, moving or uploading needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[...path, { label: folder }]} title={folder} headingRef={title} primary={upload}
           description={loading || loadFailed ? undefined : countFiles(files.length, locale)} />
 
@@ -211,20 +216,20 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the files" onRetry={() => onRetry?.()} headingLevel={2} />
             : !loading && !files.length ? (
               <EmptyState icon="folder_open" title="This folder is empty" headingLevel={2} description="Upload files to keep them here, or move some in from another folder."
-                actions={<Button leftIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
+                actions={<Button startIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
             ) : <>
               {loading ? null : (
                 <div className="flex min-h-10 flex-wrap items-center gap-3">
                   <ListSelectAll values={files.map((f) => f.id)} selected={chosen} onSelectedChange={setPicked} />
                   <TableActionBar count={chosen.length} onClear={() => setPicked([])} className="flex-1">
-                    <Button size="sm" variant="outline" leftIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
-                    <Button size="sm" variant="outline" destructive leftIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
+                    <Button size="sm" variant="outline" startIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
+                    <Button size="sm" variant="outline" destructive startIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
                   </TableActionBar>
                 </div>
               )}
               <List id="file-list" aria-label={`Files in ${folder}`} variant="card" loading={loading} selectionMode={loading ? 'none' : 'multiple'}
                 selected={chosen} onSelectedChange={setPicked}>
-                {loading ? <ListLoadingItems rows={5} description leading="icon" label="Loading files" /> : files.map((f) => (
+                {loading ? <ListLoadingItems rows={5} showDescription leading="icon" label="Loading files" /> : files.map((f) => (
                   <ListItem key={f.id} value={f.id} href={f.href} leading={ICON[f.kind ?? 'other']} title={f.name}
                     description={<>{f.kind === 'folder' ? 'Folder' : f.bytes != null ? formatFileSize(f.bytes, locale) : null}{f.kind === 'folder' || f.bytes != null ? ', ' : null}<span className="whitespace-nowrap">changed <RelativeTime date={f.modified} /></span></>}
                     trailing={(

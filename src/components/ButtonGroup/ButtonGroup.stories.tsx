@@ -10,7 +10,7 @@ const meta = {
   component: ButtonGroup,
   args: {
     'aria-label': 'Clipboard',
-    children: [<Button key="c" variant="outline" leftIcon="content_copy">Copy</Button>, <Button key="x" variant="outline" leftIcon="content_cut">Cut</Button>, <Button key="p" variant="outline" leftIcon="content_paste">Paste</Button>],
+    children: [<Button key="c" variant="outline" startIcon="content_copy">Copy</Button>, <Button key="x" variant="outline" startIcon="content_cut">Cut</Button>, <Button key="p" variant="outline" startIcon="content_paste">Paste</Button>],
   },
   argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, children: { control: false } },
 } satisfies Meta<typeof ButtonGroup>;

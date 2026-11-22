@@ -4,9 +4,8 @@
 //                          component keeps its "use client" and works from React Server Components
 //   icons.js, icons-outlined.js  serupa-ds/icons and serupa-ds/icons/outlined: every Material Symbol, filled and outlined
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
-//   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
+//   components.css         the srp-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
-//   utilities-extra.css    the masks and gradients, which utilities.css and bundle.css leave out (tools/utilities/extra.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   debug.js               the opt-in debug overlay (?serupa-debug), from src/
@@ -28,8 +27,8 @@ import { compileReact, compiles } from './react-compiler.mjs';
 import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
 import { withMotionAttribute } from './motion-attribute.mjs';
-import { split } from '../utilities/extra.mjs';
-import { buildRegistry, cascade } from './registry.mjs';
+import { assertTrimmed } from '../utilities/trimmed.mjs';
+import { buildRegistry, cascade, components as componentFolders } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
 import { nativeFiles } from './native-tokens.mjs';
 import { emailFiles } from './email-kit.mjs';
@@ -66,9 +65,9 @@ if (!process.argv.includes('--css')) {
 
 const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
 const utilities = buildUtilities(P);
-// Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
+// Each file declares the system's cascade layers in one order (srp.tokens, srp.base, srp.components, srp.utilities),
 // so page styles outside the layers win over them whatever loads first.
-const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
+const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer srp.tokens, srp.base, srp.components, srp.utilities;\n`;
 // Shipped without the source comments (the explained copy is src/), which are about 40% of components.css
 // gzipped, and compacted: no spaces or line breaks around { } ; : , > (compact-css.mjs, about 5 KiB gzipped across
 // components.css and utilities.css, 9 Nov 2026). Only whitespace goes, and each rule still ends its line, so devtools
@@ -76,37 +75,39 @@ const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG
 // Each reduced-motion rule also answers an app's own setting, data-motion="reduce" (motion-attribute.mjs).
 const bare = (css) => compactCss(withMotionAttribute(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '')));
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
-// The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
-// the few pages that use them.
-const { core, extra } = split(utilities);
-fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(core));
-fs.writeFileSync(path.join(D, 'utilities-extra.css'), banner('masks and gradients, after utilities.css or bundle.css') + bare(extra));
-fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(core));
+// 17.0.0 removed the palette-step, mask, gradient, filter and 3D families (tools/utilities/trimmed.mjs); this fails
+// when a template edit brings one back.
+assertTrimmed(utilities);
+fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(utilities));
+fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(utilities));
 // base.css and theme.js say __VERSION__ in src/; the build writes package.json's version there, so a release changes
 // the number in one place.
 const stamp = (s) => s.replaceAll('__VERSION__', version);
 fs.writeFileSync(path.join(D, 'base.css'), stamp(bare(read('src/styles/base.css'))));
 
-// components.json: for each component, the names it exports, the dk-* classes its CSS uses and the components it
+// components.json: for each component, the names it exports, the srp-* classes its CSS uses and the components it
 // needs (the ones it imports, and the ones whose classes it writes out). serupa-purge --components reads it to
 // drop the styles of components a project never uses.
 const cssOf = Object.fromEntries(IMPORTS.map((n) => [n, read(`src/components/${n}/${n}.css`)]));
-const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(dk-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
+const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(srp-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
 // A component's code, with the shared drawings it renders from src/internal/*.tsx (Loader's ring in Button, GR311):
 // the classes those write out are the component's too.
 const ownTsx = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
 const drawn = (code) => [...new Set([...code.matchAll(/from ["']\.\.\/\.\.\/internal\/(\w+)["']/g)].map((m) => m[1]))].filter((m) => fs.existsSync(path.join(P, 'src', 'internal', m + '.tsx'))).map((m) => read(`src/internal/${m}.tsx`));
 const tsxOf = (n) => { const own = ownTsx(n); return [own, ...drawn(own)].join('\n'); };
+// Every component is in it, the ones with no CSS of their own too (FormattedDate): they have no classes, and the
+// skill's index (tools/test/skill.mjs) and serupa-purge still find them.
+const ALL = [...IMPORTS, ...componentFolders(P).filter((n) => !IMPORTS.includes(n))];
 const manifest = {};
-for (const n of IMPORTS) {
+for (const n of ALL) {
   const code = tsxOf(n);
   const exports = [...new Set([...code.matchAll(/^export (?:const|function|class) (\w+)/gm)].map((m) => m[1]))].sort();
   const imported = [...code.matchAll(/from ["']\.\.\/(\w+)\//g)].map((m) => m[1]);
-  // A class written out in the code ("dk-btn", or a "dk-btn--" prefix) belongs to the first component in the cascade
+  // A class written out in the code ("srp-btn", or a "srp-btn--" prefix) belongs to the first component in the cascade
   // whose CSS has it: a component's own styles come before the ones that style it in context (index.css).
-  const written = [...new Set([...code.matchAll(/dk-[a-z0-9_-]+/g)].map((m) => m[0]))];
+  const written = [...new Set([...code.matchAll(/srp-[a-z0-9_-]+/g)].map((m) => m[0]))];
   const owners = written.flatMap((w) => IMPORTS.filter((o) => classesOf[o].some((c) => c === w || (w.endsWith('-') && c.startsWith(w)))).slice(0, 1));
-  manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && IMPORTS.includes(u)).sort(), classes: classesOf[n] };
+  manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && ALL.includes(u)).sort(), classes: classesOf[n] ?? [] };
 }
 // Utility classes the components put on elements themselves (the announcer's sr-only): serupa-purge keeps them
 // whatever the sources use. Any word in a string in src/ that names a utility class counts, which keeps a few extra
@@ -116,7 +117,7 @@ const code = [];
 const scan = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) { if (!(dir === path.join(P, 'src') && /^(blocks|patterns)$/.test(e.name))) scan(f); } else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\.tsx?$/.test(e.name)) code.push(fs.readFileSync(f, 'utf8')); } };
 scan(path.join(P, 'src'));
 // Component classes a utility rule names (the focus ring on a Card inside a fill, GR80) are not utilities.
-const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('dk-')));
+const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('srp-')));
 const runtimeUtilities = [...new Set(code.join('\n').match(/["'`][^"'`\n]*["'`]/g)?.flatMap((q) => q.slice(1, -1).split(/\s+/)) || [])].filter((w) => /^[a-z]/.test(w) && utilityNames.has(w)).sort();
 fs.writeFileSync(path.join(D, 'components.json'), JSON.stringify({ version, runtimeUtilities, components: manifest }, null, 1) + '\n');
 // The versions serupa-create pins in a new app: the ones this release was tested with, from devDependencies, which a
@@ -179,7 +180,8 @@ for (const f of fs.readdirSync(path.join(P, 'src', 'labels')).filter((x) => x.en
 fs.writeFileSync(path.join(D, 'purge.js'), stamp(read('src/purge.js')));
 fs.copyFileSync(path.join(P, 'src', 'purge.d.ts'), path.join(D, 'purge.d.ts'));
 // VS Code custom data: the utility classes and tokens, for editor autocomplete (tools/build/editor-data.mjs).
-const editor = editorData(utilities, read('tokens.css'), tokenDescriptions(JSON.parse(read('tokens.json'))));
+// Every brand's themes: tokens.css has blue, brands/all.css the rest (17.0.0).
+const editor = editorData(utilities, read('tokens.css') + read('brands/all.css'), tokenDescriptions(JSON.parse(read('tokens.json'))));
 fs.mkdirSync(path.join(D, 'vscode'), { recursive: true });
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.html-data.json'), JSON.stringify(editor.html) + '\n');
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.css-data.json'), JSON.stringify(editor.css) + '\n');

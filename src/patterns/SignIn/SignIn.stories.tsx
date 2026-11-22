@@ -26,3 +26,6 @@ export const Code: Story = { args: { start: 'code' } };
 
 /** Signed in. */
 export const Done: Story = { args: { start: 'done' } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

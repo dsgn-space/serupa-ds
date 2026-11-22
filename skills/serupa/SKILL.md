@@ -19,11 +19,10 @@ Pin a release tag, never `#main`. Then load the CSS once, in this order, before 
 import '@diki-stwn/serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
 import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding Serupa to an existing app
 import '@diki-stwn/serupa-ds/bundle.css';   // components and utility classes (or components.css, plus utilities.css)
-// import '@diki-stwn/serupa-ds/utilities-extra.css';   // only for masks and gradients: mask-*, bg-linear-*, from-*, via-*, to-*
 import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 ```
 
-The styles sit in cascade layers (`dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`). The app's own unlayered CSS always wins over them, so an override never needs `!important`.
+The styles sit in cascade layers (`srp.tokens`, `srp.base`, `srp.components`, `srp.utilities`). The app's own unlayered CSS always wins over them, so an override never needs `!important`.
 
 For production, trim the CSS in the build: `import { serupaPurge } from '@diki-stwn/serupa-ds/purge'` and add `serupaPurge()` to Vite's `plugins` (or `serupaPurgePostcss()` to `postcss.config.mjs` for Next.js and webpack). Without a bundler: `npx serupa-purge src -o public/bundle.min.css --components`. List any class the code builds at runtime with `keep: [...]` (or `--keep`).
 
@@ -35,7 +34,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 <html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 ```
 
-Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
+Pick the brand by its color: `blue` (the default) or any other palette color (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`) and import its `brands/<brand>.css` after `tokens.css`. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
 One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`; its `size="sm"` (or `"lg"`) sets every form control's default size, so don't repeat `size` on each one. For router links, call `configure({ link: Link })` once at startup.
 
@@ -49,7 +48,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
    5. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
 3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary`, `on-primary`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For text in a status color, use the `*-text` alias, never the fill.
-4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa.
+4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `srp-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa.
 5. **Shared props.** `size` is `'sm' | 'md' | 'lg'`, at heights of 24, 32 and 44px. Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
 6. **Pick feedback by how long it stays.** To confirm that something worked ("Saved", "Invite sent"), call `toast("Saved")`, and render one `<Toaster />` near the app's root. It goes away on its own and screen readers hear it. Use an `Alert` for a message that must stay on the page until it's dealt with, and `SaveStatus` for autosave.
 7. **Words.** Every button starts with a verb that says what it does ("Save changes", "Send message"), never "OK", "Submit" or "Click here", and a dialog's title uses the same verb ("Delete project?" has a "Delete" button). Sentence case everywhere. No exclamation marks, emoji or "Oops". An error says what to do: "Enter your email", not "This field is required" or "Invalid input"; "We couldn't load your projects. Try again.", not "Something went wrong". An empty state says what goes here and offers to add the first one. The rest is in Content and voice: https://github.com/dsgn-space/serupa-ds/blob/main/docs/foundations.md#content-and-voice
@@ -196,14 +195,18 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Layout and type
 
+- **AppShell** (beta): The frame around an app's pages: a skip link, the header, the sidebar, main, the footer and a bottom navigation, laid out and kept in place as the page scrolls. Also called: app layout, page shell, application frame.
+- **Center** (beta): Keeps content to a maximum width in the middle of the space it's in, and with `vertical`, in the middle of the screen's height too. Also called: centered layout, auth layout.
 - **Container**: Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide. Also called: wrapper, page width.
 - **Divider**: A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or". Also called: separator, horizontal rule, vertical rule.
 - **Grid**: Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. Also called: layout grid, columns.
 - **Heading**: A heading, `h1` to `h6`, in the system's type. Also called: title, headline.
+- **PageSection** (beta): One full-width band of a long page, such as a landing page's hero, features, pricing or questions. Also called: section, band, strip, hero.
 - **Prose**: Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. Also called: rich text, article content.
 - **ScrollArea** (beta): A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. Also called: scroll container, scroll box.
+- **SidebarLayout** (beta): Puts a narrow column beside a wide one, and stacks them once the space gets too narrow for both. Also called: two-column layout, aside layout, split layout.
 - **Splitter**: Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. Also called: resizable panels, split view, split pane.
-- **Stack**: Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. Also called: flex stack, VStack, HStack.
+- **Stack**: Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. Also called: flex stack, VStack, HStack, inline, cluster.
 - **Text**: Body text in the system's type: a paragraph, a caption, an error line. Also called: paragraph, body text.
 - **TruncatedText** (beta): Text that may not fit its space, such as a file name in a narrow column: cut with an ellipsis, with the whole text shown beside it on hover, keyboard focus or a tap. Also called: ellipsis, text overflow, line clamp.
 - **VisuallyHidden**: Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. Also called: screen-reader only, sr-only.

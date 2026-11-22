@@ -77,14 +77,14 @@ describe('NumberInput', () => {
     const i = field('qty'), box = i.parentElement!;
     expect([i.type, i.getAttribute('role'), i.getAttribute('aria-valuenow'), i.getAttribute('aria-valuemin'), i.getAttribute('aria-valuemax'), i.inputMode, r.current === i])
       .toEqual(['text', 'spinbutton', '5', '0', '100', 'numeric', true]);
-    expect(box.className).toMatch(/dk-input dk-number-input dk-input--size-md/);
+    expect(box.className).toMatch(/srp-input srp-number-input srp-input--size-md/);
     expect(box.className).toMatch(/extra/);
     expect([box.dataset.component, box.getBoundingClientRect().height, i.labels![0]!.textContent, i.value]).toEqual(['number-input', 32, 'Quantity', '5']);
     expect(steps('qty').map((b) => `${b.getAttribute('aria-label')}:${b.tabIndex}:${b.querySelector<HTMLElement>('[data-icon]')?.dataset.icon}`)).toEqual(['Decrease:-1:remove', 'Increase:-1:add']);
   });
 
   test('a press on the box (the icon, the side padding) focuses the field with the caret at the end; a press on + still steps (GE1)', async () => {
-    await render(<Col><NumberInput id="nb" size="lg" leftIcon="search" aria-label="Qty" defaultValue={12} locale="en-US" /><button id="nb-away">away</button></Col>);
+    await render(<Col><NumberInput id="nb" size="lg" startIcon="search" aria-label="Qty" defaultValue={12} locale="en-US" /><button id="nb-away">away</button></Col>);
     const b = field('nb').parentElement!, y = b.getBoundingClientRect().height / 2;
     for (const x of [2, 20]) {
       (document.getElementById('nb-away') as HTMLElement).focus();
@@ -505,7 +505,7 @@ describe('NumberInput', () => {
     expect([seen, field('inv').value]).toEqual([['250:range', '-4:range', 'abc:unreadable'], '42']);
     await fill('inv', 'xyz');
     await blur('inv');
-    await expect.poll(() => announcerIdle() && document.querySelector('[data-dk-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn’t accepted/);
+    await expect.poll(() => announcerIdle() && document.querySelector('[data-srp-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn’t accepted/);
   });
 
   test('steppers={false}: no buttons', async () => {
@@ -532,7 +532,7 @@ describe('NumberInput', () => {
       document.documentElement.setAttribute('data-theme', th);
       // The colors transition into the new theme: read them once that's done.
       await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined)));
-      for (const [sel, need] of [['.dk-number-input__step', 3], ['.dk-input__field', 4.5]] as const) {
+      for (const [sel, need] of [['.srp-number-input__step', 3], ['.srp-input__field', 4.5]] as const) {
         const r = contrast(css(box.querySelector(sel)).color, css(box).backgroundColor);
         if (r < need) low.push(`${th} ${sel} ${r.toFixed(2)}`);
       }

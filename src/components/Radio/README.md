@@ -37,10 +37,10 @@ import { Radio, RadioGroup, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Disabled` story.
 
-1. **Circle** (`.dk-radio__control`): the ring that shows chosen or not, over the native radio button.
-2. **Dot** (`.dk-radio__dot`): fills the ring when it's chosen.
-3. **Label** (`.dk-radio__text`): what choosing it means; clicking it chooses it too.
-4. **Description** (`.dk-radio__description`): optional detail under the label.
+1. **Circle** (`.srp-radio__control`): the ring that shows chosen or not, over the native radio button.
+2. **Dot** (`.srp-radio__dot`): fills the ring when it's chosen.
+3. **Label** (`.srp-radio__text`): what choosing it means; clicking it chooses it too.
+4. **Description** (`.srp-radio__description`): optional detail under the label.
 
 ## Usage
 
@@ -104,7 +104,7 @@ Drawn from the `Disabled` story.
 | `id` | string | none | Goes to the root `<div role="radiogroup">`. A `<label htmlFor>` can't name it; inside a Field, the Field's label names it through this id. |
 | `value` | string \| number \| null | | The picked radio's value (controlled). `null` picks none |
 | `defaultValue` | string \| number | | The value picked at first (uncontrolled) |
-| `onValueChange` | `(value, event) => void` | | Called with the picked radio's value and the change event, like SegmentedControl's and Tabs' |
+| `onValueChange` | `(value, details: { event }) => void` | | Called with the picked radio's value and details (`event`: the change event), like SegmentedControl's and Tabs' |
 | `name` | string | generated | The radios' name, for forms |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | A stack 8px apart, or a wrapping row 16px apart |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Every radio's size, unless one sets its own |

@@ -1,6 +1,6 @@
 // npm run new-component -- <Name> [--group <Storybook group>]: starts a component folder with every file the
 // contract asks for (tools/test/contract.mjs), already wired to the system: the component as a plain function named through named(), its
-// CSS in the dk.components layer reading its own tokens, the tokens file, stories, a test, the Storybook page, the
+// CSS in the srp.components layer reading its own tokens, the tokens file, stories, a test, the Storybook page, the
 // usage guide with its required headings, the preview page, its export list and its server-render case.
 //   node tools/new-component.mjs Rating --group Forms
 // Every place that still needs your words says TODO(new-component); tools/test/contract.mjs fails while one is left,
@@ -76,7 +76,7 @@ export interface ${name}Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function ${name}Render({ ref, className, ...rest }: ${name}Props & React.RefAttributes<HTMLDivElement>) {
-  return <div {...rest} ref={ref} className={cn('dk-${kebab}', className)} data-component="${kebab}" />;
+  return <div {...rest} ref={ref} className={cn('srp-${kebab}', className)} data-component="${kebab}" />;
 }
 
 /** ${TODO}: one line on what ${name} is for.
@@ -91,8 +91,8 @@ export type { ${name}Props } from './${name}';
    ${name}: ${TODO} what it looks like, in a sentence or two. Every value reads one of its own tokens
    (${kebab}.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-${kebab} {
+@layer srp.components {
+.srp-${kebab} {
   padding: var(--${kebab}-padding, var(--spacing-4));
   border-radius: var(--${kebab}-radius, var(--rounded-md));
   background: var(--${kebab}-bg, var(--surface));
@@ -136,7 +136,7 @@ describe('${name}', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<${name} id="x" ref={ref} className="extra" data-x="y">Hello</${name}>);
     const e = el('x');
-    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'Hello', true, 'dk-${kebab} extra', 'y', '${kebab}']);
+    expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'Hello', true, 'srp-${kebab} extra', 'y', '${kebab}']);
   });
 
   test('its text reads 4.5:1 on its background in every theme', async () => {
@@ -253,4 +253,4 @@ console.log(`Made src/components/${name}/ (${Object.keys(files).length} files) a
   3. The motion review and the worst-case review, and before its first release the bug bash (CONTRIBUTING.md,
      "Reviews by eye"). A component that takes a name goes in src/internal/formContract.test.tsx.
   4. npx changeset (minor: "Added: ${name} …").
-  5. Open the pull request and add the "update-visual-baselines" label for its pictures.`);
+  5. Open the pull request. Its visual review shows the new pictures; look at them, then add the design-qa label.`);

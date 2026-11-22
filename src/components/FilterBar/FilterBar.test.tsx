@@ -30,7 +30,7 @@ describe('FilterBar', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><FilterBar ref={ref} id="fb" className="extra" data-x="y" fields={fields} defaultValue={{ status: ['open', 'closed'], owner: 'Ana', due: { start: '2026-11-02', end: '2026-11-08' }, archived: true, q: 'login' }} /></SerupaProvider>);
     const e = document.getElementById('fb')!;
-    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.dataset.component, e.dataset.x, e.className, ref.current === e]).toEqual(['group', 'Filters', 'filter-bar', 'y', 'dk-filter-bar extra', true]);
+    expect([e.getAttribute('role'), e.getAttribute('aria-label'), e.dataset.component, e.dataset.x, e.className, ref.current === e]).toEqual(['group', 'Filters', 'filter-bar', 'y', 'srp-filter-bar extra', true]);
     const chips = [...e.querySelectorAll('li')].map((li) => li.querySelector('button')!.textContent);
     expect(chips).toEqual(['Status is Open or Closed', 'Owner is Ana', 'Due is Nov 2 – 8, 2026', 'Archived', 'Title contains “login”', 'Add filter']);
     await expect.element(page.getByRole('button', { name: 'Remove filter: Status' })).toBeVisible();
@@ -112,6 +112,20 @@ describe('FilterBar', () => {
     await userEvent.keyboard('bug{Enter}');
     expect(log.at(-1)).toEqual({ archived: true, owner: 'Budi', q: 'bug' });
     await expect.poll(focused).toBe('Title contains “bug”');
+  });
+
+  test('a date-range filter takes the days typed in its picker, as "yyyy-mm-dd"', async () => {
+    const log: FilterValues[] = [];
+    await render(<Bar log={log} />);
+    await userEvent.click(page.getByRole('button', { name: 'Add filter' }));
+    await userEvent.click(page.getByRole('menuitem', { name: 'Due' }));
+    const dialog = page.getByRole('dialog', { name: 'Due' });
+    await userEvent.fill(dialog.getByRole('textbox', { name: 'Start date' }), '11/02/2026');
+    await userEvent.keyboard('{Tab}');
+    await userEvent.fill(dialog.getByRole('textbox', { name: 'End date' }), '11/08/2026');
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => log.at(-1)).toEqual({ due: { start: '2026-11-02', end: '2026-11-08' } });
+    await expect.element(chip('Due is Nov 2 – 8, 2026')).toBeVisible();
   });
 
   test('the Enter that confirms an input method\'s composition doesn\'t close a text filter (GR299)', async () => {

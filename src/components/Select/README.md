@@ -16,7 +16,7 @@ import { Select, Field } from '@diki-stwn/serupa-ds';
 <Select aria-label="Country" placeholder="Choose a country" options={countries} />
 
 // labels, disabled options and groups
-<Select aria-label="Time zone" leftIcon="schedule" options={[
+<Select aria-label="Time zone" startIcon="schedule" options={[
   { label: "Europe", options: [{ value: "Europe/London", label: "London (GMT+1)" }, { value: "Europe/Paris", label: "Paris (GMT+2)" }] },
   { value: "UTC", label: "UTC", disabled: true },
 ]} />
@@ -41,9 +41,9 @@ import { Select, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `WithIcon` story.
 
-1. **Leading icon** (`.dk-select__icon--left`): an optional picture of what is chosen.
-2. **Field** (`.dk-select__field`): the native select, showing the chosen option.
-3. **Chevron** (`.dk-select__icon--chevron`): says it opens a list.
+1. **Leading icon** (`.srp-select__icon--start`): an optional picture of what is chosen.
+2. **Field** (`.srp-select__field`): the native select, showing the chosen option.
+3. **Chevron** (`.srp-select__icon--chevron`): says it opens a list.
 
 ## Usage
 
@@ -105,7 +105,7 @@ Drawn from the `WithIcon` story.
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24px with `text-xs`, 32px with `text-sm`, 44px with `text-base`, like Input |
 | `options` | array | | Strings (value and label), `{ value, label, disabled }`, or groups `{ label, options, disabled }`. `<option>` and `<optgroup>` children come after them |
 | `placeholder` | string | | A first, empty option shown in the placeholder color until something is picked. It can't be picked back. An uncontrolled Select starts on it |
-| `leftIcon` | icon name or element | | A decorative icon before the text (14, 16 or 20px, in `text-muted`) |
+| `startIcon` | icon name or element | | A decorative icon before the text (14, 16 or 20px, in `text-muted`) |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), and a form still sends the value, unlike `disabled`; keys, a press and the phone's picker don't change it, and `onChange` doesn't run |
 

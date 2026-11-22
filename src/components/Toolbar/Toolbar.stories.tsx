@@ -18,7 +18,7 @@ const Formatting = () => [
   <IconButton key="l" variant="ghost" icon="link" label="Insert link" />,
   <IconButton key="i" variant="ghost" icon="image" label="Insert image" disabled />,
   <Divider key="d2" orientation="vertical" />,
-  <Menu key="m" trigger={<Button variant="ghost" rightIcon="expand_more">More</Button>}><MenuItem>Clear formatting</MenuItem><MenuItem>Word count</MenuItem></Menu>,
+  <Menu key="m" trigger={<Button variant="ghost" endIcon="expand_more">More</Button>}><MenuItem>Clear formatting</MenuItem><MenuItem>Word count</MenuItem></Menu>,
 ];
 
 const meta = {
@@ -32,6 +32,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: the toolbar sets its controls' size, so sm, md and lg line up with the fields around it. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <Toolbar key={s} {...args} aria-label={'Text formatting, ' + s} size={s}>{Formatting()}</Toolbar>)}
+  </div>,
+};
+
 export const Vertical: Story = {
   args: { orientation: 'vertical', 'aria-label': 'Drawing tools', children: [
     <ToggleButton key="s" icon="arrow_selector_tool" aria-label="Select" defaultPressed />,
@@ -44,9 +51,9 @@ export const Vertical: Story = {
 
 export const Actions: Story = {
   args: { 'aria-label': 'Selected files', children: [
-    <Button key="d" variant="outline" leftIcon="download">Download</Button>,
-    <Button key="m" variant="outline" leftIcon="drive_file_move">Move</Button>,
-    <Button key="x" variant="outline" leftIcon="delete" destructive>Delete</Button>,
+    <Button key="d" variant="outline" startIcon="download">Download</Button>,
+    <Button key="m" variant="outline" startIcon="drive_file_move">Move</Button>,
+    <Button key="x" variant="outline" startIcon="delete" destructive>Delete</Button>,
   ] },
 };
 

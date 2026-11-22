@@ -19,8 +19,8 @@ export interface RadioGroupProps<V extends string | number = string | number> ex
   value?: V | null | undefined;
   /** The value picked at first (uncontrolled). */
   defaultValue?: V | undefined;
-  /** Called with the picked radio's value (and the change event), like SegmentedControl, Tabs and Slider. */
-  onValueChange?: ((value: V, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  /** Called with the picked radio's value, and details (event: the change event), like SegmentedControl, Tabs and Slider. */
+  onValueChange?: ((value: V, details: { event: React.ChangeEvent<HTMLInputElement> }) => void) | undefined;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
   orientation?: 'vertical' | 'horizontal' | undefined;
   /** The radios' size, unless a Radio sets its own. */
@@ -69,14 +69,14 @@ const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | nul
 
 /* RadioGroup: one choice from a set of Radios. It names them (name, or a generated one), holds the value
    (value with onValueChange, or defaultValue), and passes size, invalid, disabled and required down. onValueChange
-   gets (value, event); the old onChange alias is gone (use onValueChange). orientation "vertical" (default) or "horizontal". Renders <div role="radiogroup">: label it
+   gets (value, { event }); the old onChange alias is gone (use onValueChange). orientation "vertical" (default) or "horizontal". Renders <div role="radiogroup">: label it
    with Field group (a fieldset and legend), aria-label or aria-labelledby. */
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, readOnly: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
 function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('RadioGroup', NAME_HOW.group);   // warns when it has no accessible name
   const rest = omit(props, GROUP_OWN);
-  const autoName = domId('dk-rg', React.useId());
+  const autoName = domId('srp-rg', React.useId());
   const [cur, setPicked, controlled] = useControllable<string | number | null | undefined>(props.value, props.defaultValue, 'RadioGroup', 'value');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const orientation = props.orientation === 'horizontal' ? 'horizontal' : 'vertical';
@@ -87,7 +87,7 @@ function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttribut
   useFormReset(root, function () { if (!controlled) setPicked(props.defaultValue); rerender(function (n) { return n + 1; }); });
   const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
   const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: around, variant: props.variant, invalid: invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly,
-    select: function (v, e) { if (!controlled) setPicked(v as string | number); if (onValueChange) onValueChange(v as string | number, e); } };
+    select: function (v, e) { if (!controlled) setPicked(v as string | number); if (onValueChange) onValueChange(v as string | number, { event: e }); } };
   // The arrows wrap from the last radio to the first and back, as the radio group pattern asks: Chromium and Firefox
   // do that themselves, but WebKit stops at the ends. A radio hidden by CSS isn't one of the ends: wrapping to it checked
   // it out of sight while focus stayed put (L8E82).
@@ -117,7 +117,7 @@ function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttribut
   });
   return (
     <div {...rest} ref={groupRef} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || rest['aria-required'] || undefined} aria-disabled={props.disabled || undefined} aria-readonly={props.readOnly || undefined}
-      className={cn('dk-radio-group', 'dk-radio-group--' + orientation, props.variant === 'card' && 'dk-radio-group--card', invalid && 'dk-radio-group--invalid', props.className)} data-component="radio-group" data-orientation={orientation}>
+      className={cn('srp-radio-group', 'srp-radio-group--' + orientation, props.variant === 'card' && 'srp-radio-group--card', invalid && 'srp-radio-group--invalid', props.className)} data-component="radio-group" data-orientation={orientation}>
       <RadioContext.Provider value={ctx}>{props.children}</RadioContext.Provider>
     </div>
   );
@@ -163,20 +163,20 @@ function RadioRender({ ref, ...props }: RadioProps & React.RefAttributes<HTMLInp
   // The ring for keyboard focus where the browser's :focus-visible leaves one out (internal/keyFocus.ts).
   markKeyFocus(rest);
   useIsoLayoutEffect(listenForInput, []);
-  const base = domId('dk-rd', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const base = domId('srp-rd', React.useId()), labelId = base + '-label', descId = base + '-desc';
   const hasLabel = props.children != null && props.children !== false && props.children !== '';
   const hasDesc = props.description != null && props.description !== false && props.description !== '';
   if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;   // the description stays out of the name
   return (
-    <label className={cn('dk-radio', 'dk-radio--size-' + size, card && 'dk-radio--card', (invalid || (ctx && ctx.invalid)) && 'dk-radio--invalid', rest.disabled && 'dk-radio--disabled', readOnly && 'dk-radio--readonly', !hasLabel && !hasDesc && 'dk-radio--bare', props.className)} style={props.style} data-component="radio" data-size={size as string}>
-      <span className="dk-radio__control" key="control">
-        <input {...rest} ref={nameRef} type="radio" className="dk-radio__input" key="input" />
-        <span className="dk-radio__dot" aria-hidden key="dot" />
+    <label className={cn('srp-radio', 'srp-radio--size-' + size, card && 'srp-radio--card', (invalid || (ctx && ctx.invalid)) && 'srp-radio--invalid', rest.disabled && 'srp-radio--disabled', readOnly && 'srp-radio--readonly', !hasLabel && !hasDesc && 'srp-radio--bare', props.className)} style={props.style} data-component="radio" data-size={size as string}>
+      <span className="srp-radio__control" key="control">
+        <input {...rest} ref={nameRef} type="radio" className="srp-radio__input" key="input" />
+        <span className="srp-radio__dot" aria-hidden key="dot" />
       </span>
-      {hasLabel || hasDesc ? <span className="dk-radio__text" key="text">
-        {hasLabel ? <span className="dk-radio__label" id={labelId} key="label">{props.children}</span> : null}
-        {hasDesc ? <span className="dk-radio__description" id={descId} key="desc">{props.description}</span> : null}
+      {hasLabel || hasDesc ? <span className="srp-radio__text" key="text">
+        {hasLabel ? <span className="srp-radio__label" id={labelId} key="label">{props.children}</span> : null}
+        {hasDesc ? <span className="srp-radio__description" id={descId} key="desc">{props.description}</span> : null}
       </span> : null}
     </label>
   );

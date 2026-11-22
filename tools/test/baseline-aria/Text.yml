@@ -24,7 +24,7 @@
 - paragraph: "text-xl: The quick brown fox"
 
 # Tones
-- paragraph: "default: The quick brown fox"
+- paragraph: "neutral: The quick brown fox"
 - paragraph: "muted: The quick brown fox"
 - paragraph: "primary: The quick brown fox"
 - paragraph: "danger: The quick brown fox"

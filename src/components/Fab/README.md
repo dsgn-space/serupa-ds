@@ -27,8 +27,8 @@ import { Fab } from '@diki-stwn/serupa-ds';
 
 Drawn from the `ExtendedAuto` story. It's a primary [Button](../Button/README.md), so its icon and label are Button's.
 
-1. **Button** (`.dk-fab`): the round, raised primary button, fixed to a corner of the screen; extended, a pill with the label.
-2. **Label** (`.dk-fab__label`): with `extended="auto"`, the label's text in a box that folds to nothing while the page scrolls down and opens again on the way up.
+1. **Button** (`.srp-fab`): the round, raised primary button, fixed to a corner of the screen; extended, a pill with the label.
+2. **Label** (`.srp-fab__label`): with `extended="auto"`, the label's text in a box that folds to nothing while the page scrolls down and opens again on the way up.
 
 ## Usage
 

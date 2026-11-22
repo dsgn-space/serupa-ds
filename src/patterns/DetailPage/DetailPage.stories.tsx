@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DetailPage } from './DetailPage';
 import { Card } from '../../components/Card/Card';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Detail page: one project with a breadcrumb, its name and details editable in place, tabs, removals with Undo and a
    delete behind typing its name. DetailPage.mdx says why each part is there and what stays the app's job. The links
@@ -45,3 +46,17 @@ export const WithActivity: Story = {
     },
   },
 };
+
+/** Partly loaded: the project came in, its activity didn't. The pane says so in its own place, with Try again, and the
+    tabs work as usual. */
+export const Partial: Story = {
+  args: {
+    aside: {
+      title: 'Activity',
+      content: <Card><EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the activity" description="The project itself is up to date." onRetry={() => {}} /></Card>,
+    },
+  },
+};
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

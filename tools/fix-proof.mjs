@@ -15,7 +15,7 @@ import { parseChangeset } from './changesets.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 if (!process.argv[2]) { console.error('Usage: node tools/fix-proof.mjs <base commit>'); process.exit(2); }
-const git = (...a) => execFileSync('git', a, { cwd: P, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+const git = (...a) => execFileSync('git', a, { cwd: P, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 256 * 1024 * 1024 });
 const base = git('rev-parse', process.argv[2]).trim();
 
 const changed = git('diff', '--name-status', '--no-renames', `${base}...HEAD`).trim().split('\n').filter(Boolean).map((l) => l.split('\t'));

@@ -16,6 +16,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Leave request: time off asked for on a calendar, with the working days counted, weekends and holidays shown and
    left out of the count, and the balance that's left. For an app to copy. What it carries (WCAG 2.2):
@@ -79,6 +80,9 @@ export interface LeaveRequestProps {
   loadFailed?: boolean | undefined;
   /** Loads the balance again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoHolidays: LeaveHoliday[] = [
@@ -124,7 +128,7 @@ const dayWords = (locale: string | undefined, a: string, b?: string, weekday = f
 };
 
 /** The leave page: a skip link, a header, then main with the h1, the balance, the request form and the requests. */
-export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = [0, 6], requests: first = demoRequests, today = '2025-03-10', onSubmit, loading = false, loadFailed = false, onRetry }: LeaveRequestProps) {
+export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = [0, 6], requests: first = demoRequests, today = '2025-03-10', onSubmit, loading = false, loadFailed = false, onRetry, online }: LeaveRequestProps) {
   const locale = useLocale(undefined);
   const [requests, setRequests] = React.useState(first);
   // The kind radios' name is this form's own, so two leave requests on a page don't share one group.
@@ -159,7 +163,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
     setFailed(false);
     if (problem || !range) {
       setAsked(true);
-      calendar.current?.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]')?.focus();
+      calendar.current?.querySelector<HTMLElement>('.srp-calendar__day[tabindex="0"]')?.focus();
       return;
     }
     const draft: LeaveDraft = { kind, ...range, days, note: note.trim() };
@@ -183,6 +187,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
         <p className="m-0 text-base font-semibold">Acme People</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your request stays here. Sending it needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Time off', href: '#time-off' }, { label: 'Request leave' }]} title="Request leave" />
 
         <div className="pt-6">
@@ -200,7 +205,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
                     <p className="m-0 text-sm text-text-muted">Choose your first day away, then your last. Weekends and holidays are struck through and aren’t counted.</p>
                     <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'leave-problem' : undefined} months={2}
                       month={month} onMonthChange={setMonth} min={today} isDateDisabled={closed} value={range}
-                      onValueChange={(_, iso) => { setFailed(false); setRange(iso); }} />
+                      onValueChange={(_, { iso }) => { setFailed(false); setRange(iso); }} />
                     {range ? (
                       <p className="m-0 font-semibold">
                         {formatNumber(days, locale)} working {days === 1 ? 'day' : 'days'}{inside.length ? <span className="font-normal">, without {inside.map((h) => `${h.name} (${dayWords(locale, h.date)})`).join(', ')}</span> : null}

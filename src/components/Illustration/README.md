@@ -24,9 +24,9 @@ import { EmptyState, Illustration } from "@diki-stwn/serupa-ds";
 
 Drawn from the `Search` story.
 
-1. **Fill** (`.dk-illustration__fill`): the soft shapes, in `--illustration-fill`.
-2. **Line** (`.dk-illustration__line`): the outlines, 3:1 on the surface.
-3. **Accent** (`.dk-illustration__accent`): the one detail that says what happened, in the primary color.
+1. **Fill** (`.srp-illustration__fill`): the soft shapes, in `--illustration-fill`.
+2. **Line** (`.srp-illustration__line`): the outlines, 3:1 on the surface.
+3. **Accent** (`.srp-illustration__accent`): the one detail that says what happened, in the primary color.
 
 ## Usage
 

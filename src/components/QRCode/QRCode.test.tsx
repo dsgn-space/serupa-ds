@@ -9,7 +9,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const announcer = () => document.querySelector('[data-dk-announcer]')?.textContent || '';
+const announcer = () => document.querySelector('[data-srp-announcer]')?.textContent || '';
 // A matrix as one string of rows, and a short fingerprint of it.
 const rows = (m: boolean[][]) => m.map((r) => r.map((b) => (b ? 1 : 0)).join('')).join('/');
 const hash = (s: string) => { let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h; };
@@ -47,7 +47,7 @@ describe('QRCode', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<QRCode id="x" ref={ref} className="extra" data-x="y" value="https://example.com/pay/1042" label="QR code to pay order 1042" />);
     const e = el('x');
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.status]).toEqual(['DIV', true, 'dk-qr-code dk-qr-code--md extra', 'y', 'qr-code', 'active']);
+    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.status]).toEqual(['DIV', true, 'srp-qr-code srp-qr-code--md extra', 'y', 'qr-code', 'active']);
     const svg = e.querySelector('svg')!;
     expect([svg.getAttribute('role'), svg.getAttribute('aria-label'), svg.getAttribute('viewBox')]).toEqual(['img', 'QR code to pay order 1042', '0 0 37 37']);
     expect(e.querySelectorAll('path').length).toBe(1);

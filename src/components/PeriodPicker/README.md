@@ -8,7 +8,7 @@ A month, a quarter or a year, picked from a grid: for a report's month, a billin
 import { PeriodPicker, Field } from '@diki-stwn/serupa-ds';
 
 <Field label="Report month">
-  <PeriodPicker name="month" value={month} onValueChange={(value, { start, end }) => setMonth(value)} />
+  <PeriodPicker name="month" value={month} onValueChange={(value, { range }) => setMonth(value)} />
 </Field>
 
 // a quarter, no earlier than the first one on record and no later than this one
@@ -33,10 +33,10 @@ import { PeriodPicker, Field } from '@diki-stwn/serupa-ds';
 
 Drawn from the `Months` story.
 
-1. **Button** (`.dk-period-picker__button`): the chosen period in words, or the placeholder, and a calendar icon at the end.
-2. **Popup** (`.dk-period-picker__panel`): a dialog named "Choose a month" (or quarter, or year).
-3. **Header** (`.dk-period-picker__header`): the year, or the twelve years shown, between the arrows to the page before and after.
-4. **Period** (`.dk-period-picker__period`): one month, quarter or year in the grid. The chosen one is filled with `primary`, the current one is `primary` text in semibold, and ones outside `min` and `max` are faded and struck through.
+1. **Button** (`.srp-period-picker__button`): the chosen period in words, or the placeholder, and a calendar icon at the end.
+2. **Popup** (`.srp-period-picker__panel`): a dialog named "Choose a month" (or quarter, or year).
+3. **Header** (`.srp-period-picker__header`): the year, or the twelve years shown, between the arrows to the page before and after.
+4. **Period** (`.srp-period-picker__period`): one month, quarter or year in the grid. The chosen one is filled with `primary`, the current one is `primary` text in semibold, and ones outside `min` and `max` are faded and struck through.
 
 ## Usage
 
@@ -93,7 +93,7 @@ Keys stop at `min` and `max`.
 | `unit` | `'month'` \| `'quarter'` \| `'year'` | `'month'` | What is chosen |
 | `value` | string \| null | | The chosen period (controlled): `"2026-11"`, `"2026-Q4"` or `"2026"` |
 | `defaultValue` | string \| null | | The period it starts with (uncontrolled), written the same way |
-| `onValueChange` | `(value, { start, end }) => void` | | Called with the picked period and its first and last days |
+| `onValueChange` | `(value, details: { range: { start, end } }) => void` | | Called with the picked period, and details: `range` is its first and last days |
 | `min`, `max` | string | | The earliest and latest periods that can be chosen, written as `value` is |
 | `locale` | string | the provider's, else the browser's | Month names and digits |
 | `placeholder` | string | "Choose a month" | Shown with nothing chosen |

@@ -26,7 +26,7 @@ const near = (a: number, b: number) => Math.abs(a - b) <= 1;
 
 function Actions({ chosen }: { chosen: string[] }) {
   const pick = (k: string) => () => { chosen.push(k); };
-  return <Menu trigger={<Button id="mb" variant="secondary" rightIcon="expand_more">Actions</Button>}>
+  return <Menu trigger={<Button id="mb" variant="secondary" endIcon="expand_more">Actions</Button>}>
     <MenuItem icon="edit" shortcut="⌘E" onSelect={pick('edit')}>Edit</MenuItem>
     <MenuItem icon="content_copy" onSelect={pick('dup')}>Duplicate</MenuItem>
     <MenuItem disabled onSelect={pick('arch')}>Archive</MenuItem>
@@ -820,6 +820,21 @@ describe('ContextMenu', () => {
     await expect.poll(() => menu().matches(':popover-open')).toBe(true);
     const area = document.getElementById('area')!.getBoundingClientRect(), m = menu().getBoundingClientRect();
     expect([Math.abs(m.top - area.top) < 12, Math.abs(m.left - area.left) < 12, document.activeElement?.textContent]).toEqual([true, true, 'Open']);
+  });
+
+  test('opened from outside again after the target moved: at the target\'s corner where it is now, not where it was', async () => {
+    const Moving = ({ open, top }: { open: boolean; top: number }) => <ContextMenu aria-label="File actions" open={open}
+      target={<div id="area" style={{ width: '300px', height: '100px', marginTop: top + 'px' }}>Report.pdf</div>}><MenuItem>Open</MenuItem></ContextMenu>;
+    const r = await render(<Moving open top={20} />);
+    const menu = () => document.querySelector<HTMLElement>('[role="menu"]')!;
+    const near = () => Math.abs(menu().getBoundingClientRect().top - document.getElementById('area')!.getBoundingClientRect().top) < 12;
+    await expect.poll(() => menu().matches(':popover-open') && near()).toBe(true);
+    await r.rerender(<Moving open={false} top={20} />);
+    await expect.poll(() => menu().matches(':popover-open')).toBe(false);
+    await r.rerender(<Moving open={false} top={260} />);
+    await r.rerender(<Moving open top={260} />);
+    await expect.poll(() => menu().matches(':popover-open')).toBe(true);
+    await expect.poll(near).toBe(true);
   });
 
   test('ContextMenu onOpenChange says why: trigger (right-click or keys), select, escape, outside', async () => {

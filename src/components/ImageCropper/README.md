@@ -32,9 +32,9 @@ const photo = area && await cropImage(src, area, { width: 256 });
 
 Drawn from the `Playground` story.
 
-1. **Frame** (`.dk-image-cropper__frame`): the crop's shape (`aspect`), with the picture behind it filling it edge to edge. A round one dims the picture outside a circle and rings it.
-2. **Thirds** (`.dk-image-cropper__grid`): thin lines in thirds while the picture is dragged.
-3. **Zoom row** (`.dk-image-cropper__zoom`): Zoom out, a small [Slider](../Slider/README.md) named "Zoom", Zoom in.
+1. **Frame** (`.srp-image-cropper__frame`): the crop's shape (`aspect`), with the picture behind it filling it edge to edge. A round one dims the picture outside a circle and rings it.
+2. **Thirds** (`.srp-image-cropper__grid`): thin lines in thirds while the picture is dragged.
+3. **Zoom row** (`.srp-image-cropper__zoom`): Zoom out, a small [Slider](../Slider/README.md) named "Zoom", Zoom in.
 
 ## Usage
 

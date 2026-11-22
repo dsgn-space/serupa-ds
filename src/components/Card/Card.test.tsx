@@ -84,7 +84,7 @@ describe('Card', () => {
     await render(<Card id="def" ref={r} className="extra" data-x="y"><Parts /></Card>);
     const e = el('def');
     expect([e.tagName, e.className, e.dataset.component, e.dataset.variant, r.current === e, e.dataset.x, [...e.children].map((c) => c.className).join(' | ')])
-      .toEqual(['DIV', 'dk-card extra', 'card', 'outline', true, 'y', 'dk-card__header | dk-card__body | dk-card__footer']);
+      .toEqual(['DIV', 'srp-card extra', 'card', 'outline', true, 'y', 'srp-card__header | srp-card__body | srp-card__footer']);
     const header = e.firstElementChild!, byText = (t: string) => [...header.querySelectorAll('*')].find((n) => n.textContent === t && !n.children.length)!;
     expect([byText('Team plan').tagName, byText('Up to 10 members').tagName, byText('Active').closest('[data-component=badge]')!.parentElement!.parentElement === header])
       .toEqual(['H3', 'P', true]);
@@ -97,8 +97,8 @@ describe('Card', () => {
       <Card id="art" as="article"><CardHeader title="Level 2" headingLevel={2} /></Card>
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}><Card id="li" as="li">Item</Card></ul>
     </Col>);
-    expect([el('bad').tagName, el('bad').className, el('bad').dataset.variant]).toEqual(['DIV', 'dk-card', 'outline']);
-    expect([el('art').tagName, el('li').tagName, q('#art .dk-card__title').tagName]).toEqual(['ARTICLE', 'LI', 'H2']);
+    expect([el('bad').tagName, el('bad').className, el('bad').dataset.variant]).toEqual(['DIV', 'srp-card', 'outline']);
+    expect([el('art').tagName, el('li').tagName, q('#art .srp-card__title').tagName]).toEqual(['ARTICLE', 'LI', 'H2']);
   });
 
   test('outline: 20px padding, a 1px border, 12px corners, a hairline shadow, parts 16px apart, text-sm', async () => {
@@ -183,8 +183,8 @@ describe('Card', () => {
 
   test('title: text-base, font-semibold, no margins; description 4px under it', async () => {
     await render(<Card id="def"><Parts /></Card>);
-    const s = css(q('#def .dk-card__title'));
-    expect([s.fontSize, s.lineHeight, s.fontWeight, s.marginTop + s.marginBottom, css(q('#def .dk-card__description')).marginTop, css(q('#def .dk-card__heading')).rowGap])
+    const s = css(q('#def .srp-card__title'));
+    expect([s.fontSize, s.lineHeight, s.fontWeight, s.marginTop + s.marginBottom, css(q('#def .srp-card__description')).marginTop, css(q('#def .srp-card__heading')).rowGap])
       .toEqual(['16px', '24px', '600', '0px0px', '0px', '4px']);
   });
 
@@ -193,7 +193,7 @@ describe('Card', () => {
       <Card id="bare"><CardHeader title="Only a title" description="" /></Card>
       <Card id="kids"><CardHeader title="T"><span id="extra">More</span></CardHeader></Card>
     </Col>);
-    expect([!!q('#bare .dk-card__description'), !!q('#bare .dk-card__action'), el('extra').parentElement!.className]).toEqual([false, false, 'dk-card__heading']);
+    expect([!!q('#bare .srp-card__description'), !!q('#bare .srp-card__action'), el('extra').parentElement!.className]).toEqual([false, false, 'srp-card__heading']);
   });
 
   test('a narrow card stacks its footer actions, each the full row (75); a wider one keeps them side by side at their own width', async () => {
@@ -212,7 +212,7 @@ describe('Card', () => {
       <Card id="jst"><CardFooter justify="start">a</CardFooter><CardFooter justify="between">b</CardFooter><CardFooter justify="up">c</CardFooter></Card>
     </Col>);
     expect([...el('jst').children].map((f) => flexAlign(css(f).justifyContent))).toEqual(['flex-start', 'space-between', 'flex-end']);
-    expect(flexAlign(css(q('#def .dk-card__footer')).justifyContent)).toBe('flex-end');
+    expect(flexAlign(css(q('#def .srp-card__footer')).justifyContent)).toBe('flex-end');
   });
 
   test('href: the card stays a <div> (or as), and its CardHeader title is the link, named by the title only; its area covers the card; target _blank adds rel="noopener noreferrer"; ref is the card', async () => {
@@ -221,7 +221,7 @@ describe('Card', () => {
     const e = el('lnk'), a = e.querySelector('a')!, box = e.getBoundingClientRect();
     expect([e.tagName, r.current === e, e.dataset.x, e.querySelectorAll('a').length, a.parentElement!.tagName, a.getAttribute('href'), a.textContent, css(a).textDecorationLine, el('blank').querySelector('a')!.getAttribute('rel'), el('blank').querySelector('a')!.target, el('blank').hasAttribute('target')])
       .toEqual(['ARTICLE', true, 'y', 1, 'H3', '#here', 'Atlas', 'none', 'noopener noreferrer', '_blank', false]);
-    expect(e.className).toMatch(/dk-card--link/);
+    expect(e.className).toMatch(/srp-card--link/);
     // A click anywhere on the card lands on the link's stretched area.
     const hit = document.elementFromPoint(box.left + box.width / 2, box.bottom - 6)!;
     expect([hit === a, css(e).cursor]).toEqual([true, 'pointer']);
@@ -247,7 +247,7 @@ describe('Card', () => {
     await render(<Col><Card id="bare" href="#bare">Read the guide</Card><Card id="lab" href="#lab" aria-label="Open Beacon"><p>Beacon</p></Card></Col>);
     const a = el('bare').querySelector('a')!, a2 = el('lab').querySelector('a')!;
     expect([a.className, a.getAttribute('aria-labelledby'), a.textContent, a2.getAttribute('aria-label'), a2.hasAttribute('aria-labelledby'), el('lab').hasAttribute('aria-label')])
-      .toEqual(['dk-card__link dk-card__link--cover', 'bare', '', 'Open Beacon', false, false]);
+      .toEqual(['srp-card__link srp-card__link--cover', 'bare', '', 'Open Beacon', false, false]);
     await userEvent.click(el('bare'));
     expect(location.hash).toBe('#bare');
     history.replaceState(null, '', location.pathname + location.search);
@@ -328,7 +328,7 @@ describe('Card', () => {
       document.documentElement.setAttribute('data-theme', th);
       for (const id of ['def', 'el', 'fi']) {
         const card = el(id), bg = rgb(css(card).backgroundColor);
-        for (const sel of ['.dk-card__title', '.dk-card__description', '.dk-card__body']) {
+        for (const sel of ['.srp-card__title', '.srp-card__description', '.srp-card__body']) {
           const r = ratio(over(rgb(css(card.querySelector(sel)).color), bg), bg); n++;
           if (r < 4.5) low.push(`${th} ${id} ${sel}: ${r.toFixed(2)}`);
         }

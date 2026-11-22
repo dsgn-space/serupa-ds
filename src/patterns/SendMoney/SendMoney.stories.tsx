@@ -17,3 +17,6 @@ export const Default: Story = {};
 
 /** Sending fails at the last step: it says nothing moved, and stays on the review. */
 export const SendFails: Story = { args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

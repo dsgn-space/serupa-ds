@@ -34,8 +34,8 @@ const undoButton = (t: Element) => t.querySelector('button:not([aria-label])') a
 describe('Toast', () => {
   test('the Toaster is a <section> named "Notifications" holding a list, and the shared live region exists', async () => {
     await render(<App />);
-    const s = q('.dk-toaster');
-    expect([s.tagName, s.getAttribute('aria-label'), s.firstElementChild!.tagName, !!document.querySelector('[data-dk-announcer]')]).toEqual(['SECTION', 'Notifications', 'OL', true]);
+    const s = q('.srp-toaster');
+    expect([s.tagName, s.getAttribute('aria-label'), s.firstElementChild!.tagName, !!document.querySelector('[data-srp-announcer]')]).toEqual(['SECTION', 'Notifications', 'OL', true]);
     expect(s.className).toMatch(/extra/);
   });
 
@@ -59,7 +59,7 @@ describe('Toast', () => {
     await render(<App />);
     let id = '';
     React.act(() => { id = toast({ title: 'Changes saved', description: 'All files are up to date.', tone: 'success', duration: 0 }); });
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')!.textContent).toBe('Changes saved. All files are up to date.');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')!.textContent).toBe('Changes saved. All files are up to date.');
     await landed();
     const x = toasts()[0]!, r = x.getBoundingClientRect();
     expect(typeof id).toBe('string');
@@ -149,7 +149,7 @@ describe('Toast', () => {
     expect(toasts().map((x) => x.dataset.tone + ':' + !!x.querySelector(':scope > span[aria-hidden] > [data-icon]'))).toEqual(['success:true', 'neutral:false']);
     React.act(() => { toast({ id, title: 'Saved again', tone: 'info', duration: 0 }); });
     expect(titles()).toEqual(['Saved again', 'Plain message']);
-    await userEvent.click(q('.dk-toast:first-child button[aria-label="Dismiss"]'));
+    await userEvent.click(q('.srp-toast:first-child button[aria-label="Dismiss"]'));
     expect(titles()).toEqual(['Plain message']);
   });
 
@@ -174,7 +174,7 @@ describe('Toast', () => {
     await React.act(async () => { fail(new Error('The server is offline.')); await b.catch(() => {}); });
     await expect.poll(() => titles()).toEqual(['3 files saved', 'Couldn\'t save']);
     expect(toasts().map((x) => x.dataset.tone)).toEqual(['success', 'danger']);
-    await expect.poll(() => q('[data-dk-announcer-assertive]').textContent).toBe('Couldn\'t save. The server is offline.');
+    await expect.poll(() => q('[data-srp-announcer-assertive]').textContent).toBe('Couldn\'t save. The server is offline.');
   });
 
   test('toast.promise whose message function throws: a throwing success shows the error message, a throwing error closes the toast; nothing is left loading or unhandled (GR234)', async () => {
@@ -213,7 +213,7 @@ describe('Toast', () => {
     React.act(() => { toast({ title: 'Upload failed', description: 'The file was too large to upload in one go.' }); });
     await expect.poll(() => toasts().length).toBe(1);
     const t = toasts()[0]!;
-    await expect.poll(() => getComputedStyle(document.documentElement).getPropertyValue('--dk-toaster-space-bottom-end')).not.toBe('');
+    await expect.poll(() => getComputedStyle(document.documentElement).getPropertyValue('--srp-toaster-space-bottom-end')).not.toBe('');
     // Put the button just above the bottom of the screen, where the toast is, then Tab to it from the one before.
     window.scrollTo(0, document.getElementById('under')!.offsetTop - window.innerHeight + 40);
     const before = document.createElement('button'); before.textContent = 'Before'; document.getElementById('under')!.before(before); before.focus({ preventScroll: true });
@@ -228,15 +228,15 @@ describe('Toast', () => {
     await render(<App />);
     let undos = 0;
     React.act(() => { toast({ title: 'Moved to trash', action: { label: 'Undo', onClick: () => { undos++; } }, duration: 0 }); });
-    await userEvent.click(q('.dk-toast button:not([aria-label])'));
+    await userEvent.click(q('.srp-toast button:not([aria-label])'));
     expect([undos, titles().length]).toEqual([1, 0]);
   });
 
   test('with an action it goes after the usual 5s like any other (FY1), unless autoDismiss is false; the first one tells screen readers about F8, once', async () => {
     await render(<App />);
     const said = new Set<string>();
-    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) said.add(t); });
-    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    const watch = new MutationObserver(() => { const t = q('[data-srp-announcer]').textContent; if (t) said.add(t); });
+    watch.observe(q('[data-srp-announcer]'), { childList: true, characterData: true, subtree: true });
     React.act(() => { toast({ title: 'Message deleted', action: { label: 'Undo', onClick: () => {} }, autoDismiss: false }); });
     await expect.poll(() => [...said].join(' | ')).toMatch(/Message deleted\. Press F8 to reach it\./);
     React.act(() => { toast({ title: 'Another deleted', action: { label: 'Undo', onClick: () => {} } }); });
@@ -252,8 +252,8 @@ describe('Toast', () => {
     const r = await render(<App />);
     await r.unmount();
     const said = new Set<string>();
-    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) said.add(t); });
-    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    const watch = new MutationObserver(() => { const t = q('[data-srp-announcer]').textContent; if (t) said.add(t); });
+    watch.observe(q('[data-srp-announcer]'), { childList: true, characterData: true, subtree: true });
     React.act(() => { toast({ title: 'Archived', action: { label: 'Undo', onClick: () => {} } }); });
     await expect.poll(() => [...said].join(' | ')).toMatch(/Archived/);
     watch.disconnect();
@@ -308,7 +308,7 @@ describe('Toast', () => {
     await render(<App />);
     // 1s, hovered at once: a slow runner's hover round trip can't use the time up before the pointer lands.
     React.act(() => { toast({ title: 'Quick', duration: 1000 }); });
-    await userEvent.hover(q('.dk-toast'));
+    await userEvent.hover(q('.srp-toast'));
     await settle(1200);   // past its 1s: only the hover keeps it
     expect(titles().length).toBe(1);
     await away();
@@ -319,7 +319,7 @@ describe('Toast', () => {
     await render(<App />);
     React.act(() => { toast({ title: 'Focus me', duration: 300, action: { label: 'Open', onClick: () => {} } }); });
     await settle(100);
-    q('.dk-toast button:not([aria-label])').focus();
+    q('.srp-toast button:not([aria-label])').focus();
     await settle(500);
     expect(titles().length).toBe(1);
     (document.activeElement as HTMLElement).blur();
@@ -330,8 +330,8 @@ describe('Toast', () => {
     await render(<App />);
     React.act(() => { toast({ title: 'Keep me', duration: 300, action: { label: 'Open', onClick: () => {} } }); });
     await settle(100);
-    q('.dk-toast button:not([aria-label])').focus();
-    await userEvent.hover(q('.dk-toast'));
+    q('.srp-toast button:not([aria-label])').focus();
+    await userEvent.hover(q('.srp-toast'));
     await away();
     await settle(600);
     expect(titles().length).toBe(1);
@@ -365,11 +365,11 @@ describe('Toast', () => {
     await render(<App />);
     React.act(() => { setPos('top-center'); toast({ title: 'First', duration: 0 }); toast({ title: 'Second', duration: 0 }); });
     await landed();
-    const s = q('.dk-toaster').getBoundingClientRect();
+    const s = q('.srp-toaster').getBoundingClientRect();
     expect([Math.round(s.top), Math.round(s.left + s.width / 2), titles().join()]).toEqual([16, Math.round(innerWidth / 2), 'Second,First']);
     React.act(() => { toast.dismiss(); setPos('bottom-start'); toast({ title: 'info', duration: 0 }); });
     await landed();
-    expect(Math.round(q('.dk-toaster').getBoundingClientRect().left)).toBe(16);
+    expect(Math.round(q('.srp-toaster').getBoundingClientRect().left)).toBe(16);
   });
 
   test('contrast: title and description 4.5:1, icons 3:1, for every tone in every theme', async () => {
@@ -381,7 +381,7 @@ describe('Toast', () => {
       document.documentElement.setAttribute('data-theme', th);
       for (const x of toasts()) {
         const bg = css(x).backgroundColor;
-        for (const [sel, min] of [['.dk-toast__title', 4.5], ['.dk-toast__description', 4.5], ['.dk-toast__icon', 3]] as const) { const r = contrast(css(x.querySelector(sel)).color, bg); n++; if (r < min) low.push(`${th} ${x.dataset.tone} ${sel}: ${r.toFixed(2)}`); }
+        for (const [sel, min] of [['.srp-toast__title', 4.5], ['.srp-toast__description', 4.5], ['.srp-toast__icon', 3]] as const) { const r = contrast(css(x.querySelector(sel)).color, bg); n++; if (r < min) low.push(`${th} ${x.dataset.tone} ${sel}: ${r.toFixed(2)}`); }
       }
     }
     still.remove();
@@ -391,10 +391,10 @@ describe('Toast', () => {
   test('look: 16px padding, 8px corners, a 1px border, shadow-lg; --toast-bg on the Toaster overrides every toast', async () => {
     await render(<App />);
     React.act(() => { toast({ title: 'Look', duration: 0 }); toast({ title: 'Again', duration: 0 }); });
-    const s = css(q('.dk-toast'));
+    const s = css(q('.srp-toast'));
     expect([s.paddingTop, s.borderTopLeftRadius, s.borderTopWidth]).toEqual(['16px', '8px', '1px']);
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
-    q('.dk-toaster').style.setProperty('--toast-bg', 'rgb(1, 2, 3)');
+    q('.srp-toaster').style.setProperty('--toast-bg', 'rgb(1, 2, 3)');
     expect(toasts().map((x) => css(x).backgroundColor)).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)']);
   });
 
@@ -402,23 +402,23 @@ describe('Toast', () => {
     // In en-US whatever SERUPA_LOCALE the run uses: the count is in the locale's digits (GR25, tested below).
     await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
     React.act(() => { for (let i = 0; i < 12; i++) toast({ title: 'Network error', tone: 'danger', duration: 0 }); });
-    expect([toasts().length, q('.dk-toast__count [aria-hidden]').textContent, q('.dk-toast__count .dk-visually-hidden').textContent]).toEqual([1, '×12', ', 12 times']);
+    expect([toasts().length, q('.srp-toast__count [aria-hidden]').textContent, q('.srp-toast__count .srp-visually-hidden').textContent]).toEqual([1, '×12', ', 12 times']);
     React.act(() => { toast({ title: 'Network error', tone: 'warning', duration: 0 }); toast({ title: 'Network error', tone: 'danger', id: 'mine', duration: 0 }); toast({ title: 'Network error', tone: 'danger', duration: 0, action: { label: 'Retry', onClick: () => {} } }); });
     expect(toasts().length).toBe(3);   // the warning and the one with an id; the third waits past the limit
-    expect(q('.dk-toaster__more').textContent).toBe('+1 more');
+    expect(q('.srp-toaster__more').textContent).toBe('+1 more');
   });
 
   test('at most 3 show (newest nearest the edge), the rest wait under "+9 more", and none goes off screen; closing one brings the next back; limit sets the number', async () => {
     await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
     React.act(() => { for (let i = 1; i <= 12; i++) toast({ title: 'Upload ' + i + ' failed', duration: 0 }); });
     await landed();
-    expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['Upload 10 failed', 'Upload 11 failed', 'Upload 12 failed'], '+9 more']);
-    expect(Math.min(...toasts().map((x) => x.getBoundingClientRect().top), q('.dk-toaster__more').getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
+    expect([titles(), q('.srp-toaster__more').textContent]).toEqual([['Upload 10 failed', 'Upload 11 failed', 'Upload 12 failed'], '+9 more']);
+    expect(Math.min(...toasts().map((x) => x.getBoundingClientRect().top), q('.srp-toaster__more').getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
     await userEvent.click(toasts()[2]!.querySelector('button[aria-label="Dismiss"]')!);
     await expect.poll(titles).toEqual(['Upload 9 failed', 'Upload 10 failed', 'Upload 11 failed']);
-    expect(q('.dk-toaster__more').textContent).toBe('+8 more');
+    expect(q('.srp-toaster__more').textContent).toBe('+8 more');
     setPos('top-center');
-    await expect.poll(() => q('.dk-toaster__list').lastElementChild!.className).toBe('dk-toaster__more');
+    await expect.poll(() => q('.srp-toaster__list').lastElementChild!.className).toBe('srp-toaster__more');
     expect(titles()[0]).toBe('Upload 11 failed');
   });
 
@@ -427,7 +427,7 @@ describe('Toast', () => {
 
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Toaster limit={1} /></SerupaProvider>);
     React.act(() => { toast({ title: 'A', duration: 0 }); toast({ title: 'B', duration: 0 }); toast({ title: 'C', duration: 0 }); });
-    expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
+    expect([titles(), q('.srp-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
   });
 
   test('contrast: the count and the waiting line 4.5:1 in every theme', async () => {
@@ -437,7 +437,7 @@ describe('Toast', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       await settle();
-      const more = q('.dk-toaster__more'), count = q('.dk-toast__count');
+      const more = q('.srp-toaster__more'), count = q('.srp-toast__count');
       for (const [name, el, bg] of [['waiting line', more, css(more).backgroundColor], ['count', count, css(count.closest('[data-toast]')).backgroundColor]] as const) {
         const r = contrast(css(el).color, bg);
         if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`);
@@ -478,15 +478,15 @@ describe('Toast with a Dialog open', () => {
     await userEvent.click(q('#save'));
     await expect.poll(() => toasts().length).toBe(1);
     await landed();
-    const r = q('.dk-toast__action, .dk-toast button').getBoundingClientRect();
+    const r = q('.srp-toast__action, .srp-toast button').getBoundingClientRect();
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    expect([modal.contains(q('.dk-toaster')), !!hit && q('.dk-toast').contains(hit)]).toEqual([true, true]);
+    expect([modal.contains(q('.srp-toaster')), !!hit && q('.srp-toast').contains(hit)]).toEqual([true, true]);
     // A danger toast interrupts: the assertive region, inside the dialog.
-    await expect.poll(() => q('[data-dk-announcer-assertive]')?.textContent).toBe('Couldn\'t save. Press F8 to reach it.');
-    expect([modal.contains(q('[data-dk-announcer-assertive]')), modal.contains(q('[data-dk-announcer]')), q('[data-dk-announcer-assertive]').getAttribute('aria-live')]).toEqual([true, true, 'assertive']);
+    await expect.poll(() => q('[data-srp-announcer-assertive]')?.textContent).toBe('Couldn\'t save. Press F8 to reach it.');
+    expect([modal.contains(q('[data-srp-announcer-assertive]')), modal.contains(q('[data-srp-announcer]')), q('[data-srp-announcer-assertive]').getAttribute('aria-live')]).toEqual([true, true, 'assertive']);
     React.act(() => setOpen(false));
-    await expect.poll(() => q('.dk-toaster').parentElement === modal).toBe(false);
-    expect([modal.contains(q('[data-dk-announcer]')), modal.contains(q('[data-dk-announcer-assertive]'))]).toEqual([false, false]);
+    await expect.poll(() => q('.srp-toaster').parentElement === modal).toBe(false);
+    expect([modal.contains(q('[data-srp-announcer]')), modal.contains(q('[data-srp-announcer-assertive]'))]).toEqual([false, false]);
   });
 
   test('a Button loading inside a Dialog is announced from inside it', async () => {
@@ -497,15 +497,15 @@ describe('Toast with a Dialog open', () => {
     await render(<Loading />);
     const modal = q('dialog[open]');
     await userEvent.click(q('#up'));
-    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading…');
-    expect(modal.contains(q('[data-dk-announcer]'))).toBe(true);
+    await expect.poll(() => q('[data-srp-announcer]').textContent).toBe('Loading…');
+    expect(modal.contains(q('[data-srp-announcer]'))).toBe(true);
   });
 
   test('two quick announcements are both said, in turn', async () => {
     await render(<Toaster />);
     const seen = new Set<string>();
-    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) seen.add(t); });
-    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    const watch = new MutationObserver(() => { const t = q('[data-srp-announcer]').textContent; if (t) seen.add(t); });
+    watch.observe(q('[data-srp-announcer]'), { childList: true, characterData: true, subtree: true });
     React.act(() => { toast('First'); toast('Second'); });
     // Said in turn, or together when another message was just said; never only the second.
     await expect.poll(() => [...seen].join(' | ')).toMatch(/First(\. | \| )Second/);
@@ -515,8 +515,8 @@ describe('Toast with a Dialog open', () => {
   test('a burst is said when the toast first shows, and once more with the count a second after the last repeat (not twelve times); Indonesian count words', async () => {
     const said: string[] = [];
     await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
-    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) said.push(t); });
-    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    const watch = new MutationObserver(() => { const t = q('[data-srp-announcer]').textContent; if (t) said.push(t); });
+    watch.observe(q('[data-srp-announcer]'), { childList: true, characterData: true, subtree: true });
     React.act(() => { toast({ title: 'Network error', duration: 0 }); });
     for (let i = 0; i < 11; i++) { await new Promise((r) => setTimeout(r, 50)); React.act(() => { toast({ title: 'Network error', duration: 0 }); }); }
     await expect.poll(() => said.filter((x) => /12 times/.test(x)).length, { timeout: 4000 }).toBe(1);
@@ -540,7 +540,7 @@ describe('Toast: motion (DZ1)', () => {
         React.act(() => { toast({ title: 'Second', duration: 0 }); });
         await landed();
         React.act(() => { toast.dismiss(byTitle('Second').dataset.toast); });
-        const glide = byTitle('First').getAnimations().find((x) => x.id === 'dk-toast-move');
+        const glide = byTitle('First').getAnimations().find((x) => x.id === 'srp-toast-move');
         expect(glide && ms(glide)).toBe(200);
       });
     } finally { document.documentElement.style.removeProperty('--motion-enter-md'); }
@@ -558,7 +558,7 @@ describe('Toast: motion (DZ1)', () => {
       // Bottom-end: the newest is last, nearest the edge; it leaves downward, toward it, and the first glides down.
       expect([second.isConnected, second.hasAttribute('data-leaving'), second.inert, runs(second)]).toEqual([true, true, true, [['opacity', 150], ['translate', 150]]]);
       // It leaves the flow at once, so the first glides into its place now, not once the fade has ended.
-      const glide = first.getAnimations().find((a) => a.id === 'dk-toast-move');
+      const glide = first.getAnimations().find((a) => a.id === 'srp-toast-move');
       expect(glide && ms(glide)).toBe(200);
       await settled(second);
       await expect.poll(() => second.isConnected).toBe(false);
@@ -591,7 +591,7 @@ describe('Toast: motion (DZ1)', () => {
       const tops: number[] = [], fades: string[] = [];
       React.act(() => { toast({ title: 'Update ready', tone: 'info', duration: 0 }); });
       // Newest on top, the waiting line last: the one pushed out stays below the one it was under.
-      expect([trash.dataset.leaving, toasts().indexOf(trash) > toasts().indexOf(failed), q('.dk-toaster__more').textContent]).toEqual(['queued', true, '+1 more']);
+      expect([trash.dataset.leaving, toasts().indexOf(trash) > toasts().indexOf(failed), q('.srp-toaster__more').textContent]).toEqual(['queued', true, '+1 more']);
       expect(runs(trash)).toEqual([['opacity', 150], ['scale', 150], ['translate', 150]]);
       await frames(() => { tops.push(Math.round(failed.getBoundingClientRect().top)); fades.push(css(failed).opacity); });
       expect([trash.isConnected, failed.getAnimations().filter((a) => a instanceof CSSTransition).length]).toEqual([false, 0]);
@@ -607,11 +607,11 @@ describe('Toast: motion (DZ1)', () => {
       React.act(() => { toast({ title: 'One', duration: 0 }); });
       await landed();
       React.act(() => { toast({ title: 'Two', duration: 0 }); });
-      const more = q('.dk-toaster__more');
+      const more = q('.srp-toaster__more');
       expect(runs(more)).toEqual([['opacity', 200]]);
       // The one pushed out leaves the flow at once, so the line appears where it stays: nothing moves a second time.
       await landed();
-      expect(more.getAnimations().some((a) => a.id === 'dk-toast-move')).toBe(false);
+      expect(more.getAnimations().some((a) => a.id === 'srp-toast-move')).toBe(false);
       expect(Math.round(byTitle('Two').getBoundingClientRect().top - more.getBoundingClientRect().bottom)).toBe(8);
       React.act(() => { toast.dismiss(byTitle('Two').dataset.toast); });
       await expect.poll(() => more.hasAttribute('data-leaving')).toBe(true);
@@ -648,7 +648,7 @@ describe('Toast: interrupted exits and a hidden page', () => {
       React.act(() => { toast({ title: 'One', duration: 0 }); });
       React.act(() => { toast({ title: 'Two', duration: 0 }); });
       await landed();
-      const more = q('.dk-toaster__more'), two = byTitle('Two');
+      const more = q('.srp-toaster__more'), two = byTitle('Two');
       React.act(() => { toast.dismiss(two.dataset.toast); });
       await expect.poll(() => more.hasAttribute('data-leaving')).toBe(true);
       // Cancelled, a fade's finished promise rejects rather than resolving: they still go.
@@ -682,7 +682,7 @@ describe('Toast: time in the waiting line (FO1)', () => {
     try {
       for (const n of [1, 2, 3, 4]) { React.act(() => { toast({ id: 'q' + n, title: 'Note ' + n, duration: 700 }); }); await new Promise((r) => setTimeout(r, 40)); }
       expect(titles()).toEqual(['Note 2', 'Note 3', 'Note 4']);
-      await expect.poll(() => toasts().length + (q('.dk-toaster__more') ? 1 : 0), { timeout: 4000 }).toBe(0);
+      await expect.poll(() => toasts().length + (q('.srp-toaster__more') ? 1 : 0), { timeout: 4000 }).toBe(0);
       for (const [id] of spy.mock.calls) if (id && !order.includes(id)) order.push(id);
       expect(order).toEqual(['q1', 'q2', 'q3', 'q4']);
     } finally { spy.mockRestore(); }
@@ -693,7 +693,7 @@ describe('Toast: time in the waiting line (FO1)', () => {
     await away();
     React.act(() => { toast({ title: 'Older', duration: 300 }); toast({ title: 'Newer', duration: 0 }); });
     await new Promise((r) => setTimeout(r, 500));
-    expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['Newer'], '+1 more']);
+    expect([titles(), q('.srp-toaster__more').textContent]).toEqual([['Newer'], '+1 more']);
     React.act(() => { toast.dismiss(toasts()[0]!.dataset.toast); });
     await expect.poll(titles).toEqual(['Older']);
     await new Promise((r) => setTimeout(r, 150));

@@ -12,7 +12,8 @@ import { Button } from '../Button/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';
 import { en as words } from './labels';
 
-export type ChartType = 'line' | 'bar' | 'area' | 'donut';
+export type ChartType = 'line' | 'bar' | 'area' | 'donut' | 'heatmap';
+export type ChartScale = 'sequential' | 'diverging';
 export type ChartView = 'chart' | 'table';
 export interface ChartSeries {
   /** The series' name: in the legend, the table's heading and each point's name. */
@@ -24,15 +25,22 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   /** 'line' (default): a line per series with a marker at each point, for a change over time. 'bar': bars side by
       side in each category, for comparing amounts. 'area': a line with the space under it filled, stacked with
       `stacked`, for amounts over time that add up. 'donut': the first series' values as slices of a ring, for the
-      shares of one whole; categories past the seventh go into one "Other" slice, so it keeps to the eight chart colors. */
+      shares of one whole; categories past the seventh go into one "Other" slice, so it keeps to the eight chart colors.
+      'heatmap': a grid with a row per series and a column per category, each cell shaded by its value on the
+      sequential or diverging scale (`scale`), for patterns across two dimensions, such as visits by weekday and hour. */
   type?: ChartType | undefined;
+  /** With type 'heatmap': 'sequential' (default) shades from light (low) to dark (high), for amounts; 'diverging'
+      shades away from `midpoint` in two hues, red below and blue above, for change from a baseline. */
+  scale?: ChartScale | undefined;
+  /** With type 'heatmap' and scale 'diverging': the value in the middle of the scale, shaded neutral. Default: 0. */
+  midpoint?: number | undefined;
   /** With type 'area': each series stands on the one before it, so the top line is the total. Default: false. */
   stacked?: boolean | undefined;
   /** A visible title above the chart, which also names it. Without one, give it an aria-label. */
   title?: React.ReactNode | undefined;
   /** The categories along the bottom, in order (months, regions, …): the labels of the points. */
   categories: ReadonlyArray<string>;
-  /** Up to eight series, each with a value per category. Each gets a chart color (chart-1 to chart-8) and, so color
+  /** Up to eight series (a heatmap's rows: up to 64), each with a value per category. Each gets a chart color (chart-1 to chart-8) and, so color
       isn't the only difference, its own marker shape (line) or pattern (bar), in the legend too. */
   series: ReadonlyArray<ChartSeries>;
   /** Turns a value into words, on the axis, in the tooltip, the table and what's read out: (value) => "Rp 1,2 jt".
@@ -40,7 +48,7 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   formatValue?: ((value: number) => string) | undefined;
   /** The heading of the categories' column in the table. Default: "Category" (labels.chartCategory). */
   categoryLabel?: string | undefined;
-  /** The plot's height in pixels; the width is the box's. Default: 240. */
+  /** The plot's height in pixels; the width is the box's. Default: 240, or for a heatmap 32 a row. */
   height?: number | undefined;
   /** Hides the legend under the chart: with a single series, or when the title already names each one. Default: false. */
   hideLegend?: boolean | undefined;
@@ -58,8 +66,10 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   loadingLabel?: string | undefined;
 }
 
-const OWN = { type: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, loading: 1, loadingLabel: 1, className: 1 } as const;
-const TYPES = ['line', 'bar', 'area', 'donut'] as const;
+const OWN = { type: 1, scale: 1, midpoint: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, loading: 1, loadingLabel: 1, className: 1 } as const;
+const TYPES = ['line', 'bar', 'area', 'donut', 'heatmap'] as const;
+const SCALES = ['sequential', 'diverging'] as const;
+const ROWS = 64, ROW = 32;
 const VIEWS = ['chart', 'table'] as const;
 const COLORS = 8;
 // The plot's frame in pixels, and a label's character width (text-xs) for laying out axis labels without measuring.
@@ -70,7 +80,7 @@ const WIDTH = 640;   // before the box is measured: the server render and the fi
 function ChartPlaceholder({ height, label }: { height: number; label: string }) {
   const shown = useSkeletonShown(label);
   const ref = useServerStyles<HTMLDivElement>();   // the height holds under a strict CSP too
-  return <div ref={ref} className="dk-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
+  return <div ref={ref} className="srp-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
 }
 
 /** Round ticks from lo to hi, about count of them, in steps of 1, 2, 2.5 or 5 times a power of ten. */
@@ -158,8 +168,8 @@ const Marks = /* @__PURE__ */ React.memo(function Marks(p: {
       open = true;
     }
     return (
-      <g key={s} className={'dk-chart__series dk-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
-        {linear && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
+      <g key={s} className={'srp-chart__series srp-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
+        {linear && d ? <path className="srp-chart__line" d={d} pathLength={1} aria-hidden /> : null}
         {Array.from({ length: n }, (_, i) => {
           const v = val(s, i);
           if (v == null) return null;
@@ -172,9 +182,9 @@ const Marks = /* @__PURE__ */ React.memo(function Marks(p: {
             onFocus: (e: React.FocusEvent<SVGElement>) => api.current.focus(s, i, e.currentTarget.matches(':focus-visible')),
             onBlur: () => api.current.blur(),
           };
-          if (linear) return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, x(i), py(s, i), MARKER)} />;
+          if (linear) return <path key={i} {...common} className="srp-chart__marker srp-chart__point" d={markerPath(s, x(i), py(s, i), MARKER)} />;
           const b = bar(s, i);
-          return <rect key={i} {...common} className={cn('dk-chart__bar dk-chart__point', b.neg && 'dk-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)}
+          return <rect key={i} {...common} className={cn('srp-chart__bar srp-chart__point', b.neg && 'srp-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)}
             fill={s && series.length > 1 ? `url(#${p.base}-p${s})` : undefined} />;
         })}
       </g>
@@ -192,19 +202,21 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const locale = useLocale();
   const labels = useSettings(words).labels;
   const busy = !!props.loading;
-  const base = domId('dk-chart', React.useId());
+  const base = domId('srp-chart', React.useId());
   const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || NONE;
-  const series = React.useMemo(() => (props.series || []).slice(0, COLORS), [props.series]);
+  const heat = type === 'heatmap';
+  const series = React.useMemo(() => (props.series || []).slice(0, heat ? ROWS : COLORS), [props.series, heat]);
   const n = categories.length;
   const waiting = busy && !n;   // nothing to draw yet: the placeholder
-  const height = Math.max(80, Math.round(Number(props.height) || 240));
+  const height = Math.max(80, Math.round(Number(props.height) || (heat ? series.length * ROW + PAD_TOP + AXIS : 240)));
   const fmt = (v: number) => (props.formatValue ? props.formatValue(v) : displayNumber(v, locale));
   const [ownView, setOwnView] = React.useState<ChartView>(() => oneOf(VIEWS, props.defaultView, 'chart'));
   const view = oneOf(VIEWS, props.view, ownView);
   const [width, setWidth] = React.useState(WIDTH);
   const [rtl, setRtl] = React.useState(false);
   const [hover, setHover] = React.useState<number | null>(null);
+  const [hoverRow, setHoverRow] = React.useState<number | null>(null);   // a heatmap's row under the pointer
   // Escape hid the tip (WCAG 1.4.13): it stays hidden until another point or category is shown (GR156).
   const [hushed, setHushed] = React.useState(false);
   const [focus, setFocus] = React.useState<Focused | null>(null);
@@ -248,12 +260,27 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const ticks = niceTicks(lo, hi, Math.max(2, Math.floor((height - PAD_TOP - AXIS) / 48)));
   const t0 = ticks[0] ?? lo, tN = ticks[ticks.length - 1] ?? hi;
   const tickText = ticks.map(fmt);
-  const start = Math.ceil(Math.max(...tickText.map((t) => t.length)) * CHAR) + 10;
+  const start = Math.ceil(Math.max(...(heat ? series.map((sr) => sr.name) : tickText).map((t) => t.length)) * CHAR) + 10;
   const pw = Math.max(1, width - start - PAD_END), ph = Math.max(1, height - PAD_TOP - AXIS);
   const { band, flip, x: xAt, y: yAt, py, bar } = layout(series, n, type, stacked, start, pw, ph, t0, tN, width, rtl);
-  const step = type === 'bar' ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
+  const step = type === 'bar' || heat ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
   // Every category gets a label when they fit side by side; else every second, third…, from the first.
   const every = Math.max(1, Math.ceil((Math.max(1, ...categories.map((c) => c.length)) * CHAR + 8) / Math.max(1, step)));
+
+  // A heatmap's cells: a row per series and a column per category, each in one step of the scale. Sequential: five
+  // equal steps from the lowest value to the highest. Diverging: seven, the middle one neutral around the midpoint,
+  // three each side as far as the value furthest from it.
+  const diverging = heat && oneOf(SCALES, props.scale, 'sequential') === 'diverging';
+  const midpoint = typeof props.midpoint === 'number' && isFinite(props.midpoint) ? props.midpoint : 0;
+  const steps = diverging ? 7 : 5;
+  const vlo = all.length ? Math.min(...all.map((p) => p.v)) : 0, vhi = all.length ? Math.max(...all.map((p) => p.v)) : 1;
+  const reach = Math.max(Math.abs(vlo - midpoint), Math.abs(vhi - midpoint)) || 1;
+  const edges = Array.from({ length: steps + 1 }, (_, k) => (diverging ? midpoint - reach + (2 * reach * k) / steps : vlo + ((vhi - vlo) * k) / steps));
+  const stepOf = (v: number) => (diverging
+    ? Math.min(steps, Math.max(1, Math.floor(((v - midpoint + reach) / (2 * reach)) * steps) + 1))
+    : vhi > vlo ? Math.min(steps, Math.floor(((v - vlo) / (vhi - vlo)) * steps) + 1) : Math.ceil(steps / 2));
+  const rh = ph / Math.max(1, series.length);
+  const cell = (s: number, i: number) => ({ x: rtl ? width - start - band * (i + 1) : start + band * i, y: PAD_TOP + rh * s, w: band, h: rh });
 
   // A donut's slices: the first series' values above zero, in order; past the seventh, the rest are one "Other".
   const donut = type === 'donut';
@@ -314,10 +341,17 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
     if (!n || donut) return;   // a donut's slices say when the pointer is on them
     const x = flip(e.clientX - e.currentTarget.getBoundingClientRect().left);
     const i = type === 'bar' ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
-    const to = x >= start - INSET && i >= 0 && i < n ? i : null;
+    const to = x >= start - (heat ? 0 : INSET) && i >= 0 && i < n ? i : null;
+    if (heat) {
+      const s = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().top - PAD_TOP) / rh);
+      const row = to != null && s >= 0 && s < series.length && val(s, to) != null ? s : null;
+      if (row !== hoverRow || (row == null ? null : to) !== hover) { setHoverRow(row); setHover(row == null ? null : to); setHushed(false); }
+      return;
+    }
     if (to !== hover) { setHover(to); setHushed(false); }
   };
   const shown = hushed ? null : focus ? focus.i : hover;
+  const shownRow = focus ? focus.s : hoverRow;   // a heatmap shows one cell, not a whole category
   // The points call back through a ref, so the memoised marks redraw when the data or the layout change, not on every
   // pointer move; the shown category's markers are marked here instead.
   const api = useLatest<MarksApi>({
@@ -328,7 +362,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   // every render: any change of data or layout can draw the markers again, and the shown ones are found afresh.
   useIsoLayoutEffect(() => {
     if (shown == null || donut) return;
-    const on = series.map((_, s) => points.current.get(s + ':' + shown)).filter((el): el is SVGElement => !!el);
+    const on = (heat ? [shownRow ?? -1] : series.map((_, s) => s)).map((s) => points.current.get(s + ':' + shown)).filter((el): el is SVGElement => !!el);
     for (const el of on) el.setAttribute('data-active', '');
     return () => { for (const el of on) el.removeAttribute('data-active'); };
   });
@@ -376,11 +410,12 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
 
   const tipRows = shown == null ? []
     : donut ? (slices[shown] ? [{ s: shown, name: '', text: share(slices[shown].v) }] : [])
-      : series.map((sr, s) => ({ s, name: sr.name, v: val(s, shown) })).filter((r) => r.v != null).map((r) => ({ s: r.s, name: r.name, text: fmt(r.v!) }));
+      : series.map((sr, s) => ({ s, name: sr.name, v: val(s, shown) })).filter((r) => r.v != null && (!heat || r.s === shownRow)).map((r) => ({ s: r.s, name: r.name, text: fmt(r.v!) }));
   const mid = donut && shown != null ? (angle(shown) + angle(shown + 1)) / 2 : 0;
   const tip = shown == null || !tipRows.length ? null
     : donut ? { i: shown, title: slices[shown]?.name, x: flip(cx + R * Math.cos(mid)), y: cy + R * Math.sin(mid) }
-      : { i: shown, title: categories[shown], x: xAt(shown), y: Math.min(...tipRows.map((r) => py(r.s, shown))) };
+      : heat ? { i: shown, title: categories[shown], x: cell(tipRows[0]!.s, shown).x + band / 2, y: cell(tipRows[0]!.s, shown).y + rh / 2 }
+        : { i: shown, title: categories[shown], x: xAt(shown), y: Math.min(...tipRows.map((r) => py(r.s, shown))) };
   // Beside the category, on the other side near the edge, inside the frame: set through the CSSOM, which a strict
   // style-src allows.
   // every render: the tip's size follows its words, which change with the category, the series and the format.
@@ -411,22 +446,22 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const lineX = [flip(start), flip(width - PAD_END)].sort((a, b) => a - b);
 
   return (
-    <figure {...rest} ref={nameRef} className={cn('dk-chart', 'dk-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
+    <figure {...rest} ref={nameRef} className={cn('srp-chart', 'srp-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
       aria-busy={rest['aria-busy'] ?? (busy || undefined)}
       aria-labelledby={rest['aria-labelledby'] || (hasTitle && !rest['aria-label'] ? base + '-title' : undefined)}>
-      {hasTitle ? <figcaption className="dk-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
+      {hasTitle ? <figcaption className="srp-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
       {/* While the first numbers load, the toggle and the legend's line are there already (the toggle disabled, the line
           empty), so nothing below moves when the chart arrives. */}
-      <Button className="dk-chart__toggle" variant="ghost" size="sm" disabled={waiting || undefined} onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
+      <Button className="srp-chart__toggle" variant="ghost" size="sm" disabled={waiting || undefined} onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
         {view === 'chart' ? labels.chartShowTable : labels.chartShowChart}
       </Button>
       {waiting ? (
         <>
-          <div className="dk-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
-          {props.hideLegend ? null : <div className="dk-chart__legend dk-chart__legend--waiting" aria-hidden />}
+          <div className="srp-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
+          {props.hideLegend ? null : <div className="srp-chart__legend srp-chart__legend--waiting" aria-hidden />}
         </>
       ) : view === 'table' ? (
-        <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
+        <Table className="srp-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
           <TableHead>
             <TableRow>
               <TableHeaderCell scope="col" sort={sort.col === -1 ? sort.dir : 'none'} onSort={() => onSort(-1)}>{props.categoryLabel || labels.chartCategory}</TableHeaderCell>
@@ -444,19 +479,19 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
         </Table>
       ) : (
         <>
-          <div className="dk-chart__frame" ref={frame}>
-            <svg className="dk-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
+          <div className="srp-chart__frame" ref={frame}>
+            <svg className="srp-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
               aria-describedby={base + '-summary'} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => { setHover(null); setHushed(false); }}>
               <desc id={base + '-summary'}>{summary.join(' ')}</desc>
               {(type === 'bar' && series.length > 1) || (donut && slices.length > 1) ? (
                 <defs>
                   {Array.from({ length: donut ? slices.length : series.length }, (_, s) => (s ? (
-                    <pattern key={s} id={`${base}-p${s}`} className={'dk-chart__pattern dk-chart--s' + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
+                    <pattern key={s} id={`${base}-p${s}`} className={'srp-chart__pattern srp-chart--s' + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
                       patternTransform={s === 1 || s === 4 ? 'rotate(45)' : s === 2 ? 'rotate(-45)' : undefined}>
-                      <rect className="dk-chart__pattern-fill" width="6" height="6" />
-                      {s <= 3 ? <rect className="dk-chart__pattern-mark" width={s === 3 ? 1.5 : 6} height={s === 3 ? 6 : 1.5} x={s === 3 ? 2.25 : 0} y={s === 3 ? 0 : 2.25} />
-                        : s <= 5 ? <circle className="dk-chart__pattern-mark" cx="3" cy="3" r={s === 4 ? 1.1 : 1.7} />
-                        : <path className="dk-chart__pattern-mark" d={s === 6 ? 'M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z' : 'M0 0H3V3H0ZM3 3H6V6H3Z'} />}
+                      <rect className="srp-chart__pattern-fill" width="6" height="6" />
+                      {s <= 3 ? <rect className="srp-chart__pattern-mark" width={s === 3 ? 1.5 : 6} height={s === 3 ? 6 : 1.5} x={s === 3 ? 2.25 : 0} y={s === 3 ? 0 : 2.25} />
+                        : s <= 5 ? <circle className="srp-chart__pattern-mark" cx="3" cy="3" r={s === 4 ? 1.1 : 1.7} />
+                        : <path className="srp-chart__pattern-mark" d={s === 6 ? 'M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z' : 'M0 0H3V3H0ZM3 3H6V6H3Z'} />}
                     </pattern>
                   ) : null))}
                 </defs>
@@ -467,80 +502,118 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
                     {slices.map((sl, k) => (
                       <path key={k} ref={(el) => { if (el) points.current.set('0:' + k, el); else points.current.delete('0:' + k); }}
                         role="img" aria-label={labels.chartPoint(null, sl.name, share(sl.v))} tabIndex={current && current.i === k ? 0 : -1}
-                        className={'dk-chart__slice dk-chart__point dk-chart--s' + (k + 1)} d={ring(angle(k), angle(k + 1), IN, R)} fill={fill(k, slices.length)}
+                        className={'srp-chart__slice srp-chart__point srp-chart--s' + (k + 1)} d={ring(angle(k), angle(k + 1), IN, R)} fill={fill(k, slices.length)}
                         fillRule="evenodd" data-active={shown === k ? '' : undefined}
                         onPointerEnter={() => { if (k !== hover) { setHover(k); setHushed(false); } }}
                         onFocus={(e) => { setLast({ s: 0, i: k }); setHushed(false); setFocus({ s: 0, i: k, ring: e.currentTarget.matches(':focus-visible') }); }}
                         onBlur={() => setFocus(null)} />
                     ))}
-                    {focus && focus.ring && slices[focus.i] ? <path className="dk-chart__focus" aria-hidden fillRule="evenodd" d={ring(angle(focus.i), angle(focus.i + 1), IN - 3, R + 3)} /> : null}
+                    {focus && focus.ring && slices[focus.i] ? <path className="srp-chart__focus" aria-hidden fillRule="evenodd" d={ring(angle(focus.i), angle(focus.i + 1), IN - 3, R + 3)} /> : null}
                   </g>
-                  {slices.length ? <text className="dk-chart__total" aria-hidden x={at(cx)} y={at(cy)} dy="0.32em" textAnchor="middle">{labels.chartTotal(fmt(total))}</text> : null}
+                  {slices.length ? <text className="srp-chart__total" aria-hidden x={at(cx)} y={at(cy)} dy="0.32em" textAnchor="middle">{labels.chartTotal(fmt(total))}</text> : null}
+                </>
+              ) : heat ? (
+                <>
+                  <g className="srp-chart__axis" aria-hidden>
+                    {series.map((sr, s) => <text key={s} className="srp-chart__label" x={flip(start - 6)} y={at(PAD_TOP + rh * (s + 0.5))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{sr.name}</text>)}
+                    {categories.map((c, i) => (i % every ? null : <text key={i} className="srp-chart__label" x={at(cell(0, i).x + band / 2)} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
+                  </g>
+                  {series.map((sr, s) => (
+                    <g key={s} className="srp-chart__series" role="group" aria-label={sr.name}>
+                      {Array.from({ length: n }, (_, i) => {
+                        const v = val(s, i), c = cell(s, i);
+                        if (v == null) return <rect key={i} className="srp-chart__cell srp-chart__cell--empty" aria-hidden x={at(c.x)} y={at(c.y)} width={at(c.w)} height={at(c.h)} />;
+                        return <rect key={i} ref={(el) => { if (el) points.current.set(s + ':' + i, el); else points.current.delete(s + ':' + i); }}
+                          role="img" aria-label={labels.chartPoint(sr.name, categories[i] ?? '', fmt(v))} tabIndex={current && current.s === s && current.i === i ? 0 : -1}
+                          className={'srp-chart__cell srp-chart__point srp-chart__cell--' + (diverging ? 'd' : 's') + stepOf(v)} x={at(c.x)} y={at(c.y)} width={at(c.w)} height={at(c.h)}
+                          onFocus={(e) => api.current.focus(s, i, e.currentTarget.matches(':focus-visible'))} onBlur={() => api.current.blur()} />;
+                      })}
+                    </g>
+                  ))}
+                  {focus && focus.ring && val(focus.s, focus.i) != null ? (() => {
+                    const c = cell(focus.s, focus.i);
+                    return <rect className="srp-chart__focus" aria-hidden x={at(c.x + 1.5)} y={at(c.y + 1.5)} width={at(Math.max(1, c.w - 3))} height={at(Math.max(1, c.h - 3))} rx="2" />;
+                  })() : null}
                 </>
               ) : (<>
-              <g className="dk-chart__grid" aria-hidden>
+              <g className="srp-chart__grid" aria-hidden>
                 {ticks.map((t, k) => (
                   <g key={k}>
-                    <line className={t === 0 && t0 < 0 ? 'dk-chart__zero' : 'dk-chart__gridline'} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
-                    <text className="dk-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{tickText[k]}</text>
+                    <line className={t === 0 && t0 < 0 ? 'srp-chart__zero' : 'srp-chart__gridline'} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
+                    <text className="srp-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{tickText[k]}</text>
                   </g>
                 ))}
               </g>
-              <g className="dk-chart__axis" aria-hidden>
-                <line className="dk-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === 'bar' ? zero : PAD_TOP + ph)} y2={at(type === 'bar' ? zero : PAD_TOP + ph)} />
-                {categories.map((c, i) => (i % every ? null : <text key={i} className="dk-chart__label" x={at(xAt(i))} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
+              <g className="srp-chart__axis" aria-hidden>
+                <line className="srp-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === 'bar' ? zero : PAD_TOP + ph)} y2={at(type === 'bar' ? zero : PAD_TOP + ph)} />
+                {categories.map((c, i) => (i % every ? null : <text key={i} className="srp-chart__label" x={at(xAt(i))} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
               </g>
               {type === 'area' ? (
                 <g aria-hidden>
-                  {series.map((_, s) => <path key={s} className={'dk-chart__area dk-chart--s' + (s + 1)} d={areaPath(s)} />)}
+                  {series.map((_, s) => <path key={s} className={'srp-chart__area srp-chart--s' + (s + 1)} d={areaPath(s)} />)}
                 </g>
               ) : null}
-              {shown != null ? <line className="dk-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
+              {shown != null ? <line className="srp-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
               <Marks series={series} categories={categories} type={type} stacked={stacked} start={start} pw={pw} ph={ph} t0={t0} tN={tN} width={width} rtl={rtl}
                 formatValue={props.formatValue} locale={locale} labels={labels} base={base} tabS={current ? current.s : -1} tabI={current ? current.i : -1} api={api} />
               {focus && focus.ring && val(focus.s, focus.i) != null ? (() => {
                 // The focus ring, a gap away from the point so it shows against the series' own color.
-                if (linear) return <circle className="dk-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(py(focus.s, focus.i))} r={MARKER + 5} />;
+                if (linear) return <circle className="srp-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(py(focus.s, focus.i))} r={MARKER + 5} />;
                 const b = bar(focus.s, focus.i);
-                return <rect className="dk-chart__focus" aria-hidden x={at(b.x - 3)} y={at(b.y - 3)} width={at(b.w + 6)} height={at(b.h + 6)} rx="2" />;
+                return <rect className="srp-chart__focus" aria-hidden x={at(b.x - 3)} y={at(b.y - 3)} width={at(b.w + 6)} height={at(b.h + 6)} rx="2" />;
               })() : null}
               </>)}
             </svg>
             {tip ? (
-              <div ref={tipRef} className="dk-chart__tip" aria-hidden>
-                <div className="dk-chart__tip-title">{tip.title}</div>
+              <div ref={tipRef} className="srp-chart__tip" aria-hidden>
+                <div className="srp-chart__tip-title">{tip.title}</div>
                 {tipRows.map((r) => (
-                  <div key={r.s} className={cn('dk-chart__tip-row', 'dk-chart--s' + (r.s + 1), focus && focus.s === r.s && 'dk-chart__tip-row--focus')}>
-                    <svg className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
-                      {linear ? <path className="dk-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} /> : <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s, donut ? slices.length : series.length)} />}
+                  <div key={r.s} className={cn('srp-chart__tip-row', 'srp-chart--s' + (r.s + 1), focus && focus.s === r.s && 'srp-chart__tip-row--focus')}>
+                    <svg className="srp-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                      {linear ? <path className="srp-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} />
+                        : heat ? <rect className={'srp-chart__cell srp-chart__cell--' + (diverging ? 'd' : 's') + stepOf(val(r.s, tip.i) ?? 0)} x="1" y="1" width="10" height="10" />
+                        : <rect className="srp-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s, donut ? slices.length : series.length)} />}
                     </svg>
-                    {series.length > 1 && !donut ? <span className="dk-chart__tip-name">{r.name}</span> : null}
-                    <span className="dk-chart__tip-value">{r.text}</span>
+                    {(series.length > 1 && !donut) || heat ? <span className="srp-chart__tip-name">{r.name}</span> : null}
+                    <span className="srp-chart__tip-value">{r.text}</span>
                   </div>
                 ))}
               </div>
             ) : null}
           </div>
-          {!props.hideLegend && donut && slices.length ? (
-            // A donut's legend names each slice with its share, so the slices are told apart in words, not by color alone.
-            <ul role="list" className="dk-chart__legend" aria-hidden>
-              {slices.map((sl, k) => (
-                <li key={k} className={'dk-chart__key dk-chart--s' + (k + 1)}>
-                  <svg className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
-                    <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(k, slices.length)} />
+          {!props.hideLegend && heat && all.length ? (
+            // A heatmap's legend is its scale: its lowest value, a swatch per step from low to high, and its highest.
+            <div className="srp-chart__legend srp-chart__legend--scale" aria-hidden>
+              <span className="srp-chart__key-value">{fmt(edges[0] ?? 0)}</span>
+              <span className="srp-chart__scale">
+                {Array.from({ length: steps }, (_, k) => (
+                  <svg key={k} className="srp-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                    <rect className={'srp-chart__cell srp-chart__cell--' + (diverging ? 'd' : 's') + (k + 1)} width="12" height="12" />
                   </svg>
-                  {sl.name}<span className="dk-chart__key-value">{share(sl.v)}</span>
+                ))}
+              </span>
+              <span className="srp-chart__key-value">{fmt(edges[steps] ?? 0)}</span>
+            </div>
+          ) : !props.hideLegend && donut && slices.length ? (
+            // A donut's legend names each slice with its share, so the slices are told apart in words, not by color alone.
+            <ul role="list" className="srp-chart__legend" aria-hidden>
+              {slices.map((sl, k) => (
+                <li key={k} className={'srp-chart__key srp-chart--s' + (k + 1)}>
+                  <svg className="srp-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
+                    <rect className="srp-chart__bar" x="1" y="1" width="10" height="10" fill={fill(k, slices.length)} />
+                  </svg>
+                  {sl.name}<span className="srp-chart__key-value">{share(sl.v)}</span>
                 </li>
               ))}
             </ul>
           ) : !props.hideLegend && series.length && !donut ? (
-            <ul role="list" className="dk-chart__legend" aria-hidden>
+            <ul role="list" className="srp-chart__legend" aria-hidden>
               {series.map((sr, s) => (
-                <li key={s} className={'dk-chart__key dk-chart--s' + (s + 1)}>
-                  <svg className="dk-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
+                <li key={s} className={'srp-chart__key srp-chart--s' + (s + 1)}>
+                  <svg className="srp-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
                     {linear
-                      ? <><path className="dk-chart__line" d="M1 6H19" /><path className="dk-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
-                      : <rect className="dk-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
+                      ? <><path className="srp-chart__line" d="M1 6H19" /><path className="srp-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
+                      : <rect className="srp-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
                   </svg>
                   {sr.name}
                 </li>
@@ -553,6 +626,6 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   );
 }
 
-/** A line, bar or area chart of a few series over the same categories, or a donut of one series' shares, drawn as SVG, with a summary, keyboard focus on each point and the same numbers as a table.
+/** A line, bar or area chart of a few series over the same categories, a donut of one series' shares, or a heatmap of a grid of values, drawn as SVG, with a summary, keyboard focus on each point and the same numbers as a table.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Chart = /* @__PURE__ */ named('Chart', ChartRender);

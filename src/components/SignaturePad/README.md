@@ -30,10 +30,10 @@ const png = signature && await signatureToPng(signature.svg);
 
 Drawn from the `Playground` story.
 
-1. **Method switch** (`.dk-signature-pad__method`): a [SegmentedControl](../SegmentedControl/README.md), Draw or Type.
-2. **How-to text** (`.dk-signature-pad__how`): what to do; while drawing it points to Type. It describes the group.
-3. **Box** (`.dk-signature-pad__box`): an outlined surface with a line near its foot; the strokes, or the typed name, sit on the line.
-4. **Actions** (`.dk-signature-pad__actions`): Undo (the last stroke) and Clear (every stroke), while drawing.
+1. **Method switch** (`.srp-signature-pad__method`): a [SegmentedControl](../SegmentedControl/README.md), Draw or Type.
+2. **How-to text** (`.srp-signature-pad__how`): what to do; while drawing it points to Type. It describes the group.
+3. **Box** (`.srp-signature-pad__box`): an outlined surface with a line near its foot; the strokes, or the typed name, sit on the line.
+4. **Actions** (`.srp-signature-pad__actions`): Undo (the last stroke) and Clear (every stroke), while drawing.
 
 ## Usage
 

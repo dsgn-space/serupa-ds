@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
 import { announce, ensureAnnouncer } from './announce';
 
-const region = () => document.querySelector('[data-dk-announcer]') as HTMLElement;
+const region = () => document.querySelector('[data-srp-announcer]') as HTMLElement;
 const settle = () => new Promise((ok) => setTimeout(ok, 700));
 
 describe('announce', () => {

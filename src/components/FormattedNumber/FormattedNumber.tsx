@@ -40,7 +40,7 @@ function segments(text: string, mask: boolean[], change: number): React.ReactNod
   for (let i = 0; i < text.length;) {
     let j = i;
     while (j < text.length && mask[j] === mask[i]) j++;
-    out.push(mask[i] ? <span key={`${change}-${i}`} className="dk-formatted-number__changed" data-changed="">{text.slice(i, j)}</span> : text.slice(i, j));
+    out.push(mask[i] ? <span key={`${change}-${i}`} className="srp-formatted-number__changed" data-changed="">{text.slice(i, j)}</span> : text.slice(i, j));
     i = j;
   }
   return out;
@@ -62,7 +62,7 @@ function FormattedNumberRender({ ref, ...props }: FormattedNumberProps & React.R
   // every render: it keeps what was shown last, which a re-render with a new value must compare against.
   React.useEffect(() => { last.current = now; });
   // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
-  return <data lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('dk-formatted-number', props.className)}
+  return <data lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('srp-formatted-number', props.className)}
     data-component="formatted-number" data-format={format}>{now.mask ? segments(text, now.mask, now.change) : text}</data>;
 }
 

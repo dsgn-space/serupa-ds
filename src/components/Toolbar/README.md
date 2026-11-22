@@ -14,7 +14,7 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
   </ButtonGroup>
   <Divider orientation="vertical" />
   <IconButton variant="ghost" icon="link" label="Insert link" />
-  <Menu trigger={<Button variant="ghost" rightIcon="expand_more">More</Button>}>
+  <Menu trigger={<Button variant="ghost" endIcon="expand_more">More</Button>}>
     <MenuItem>Clear formatting</MenuItem>
   </Menu>
 </Toolbar>
@@ -41,8 +41,8 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 
 Drawn from the `MoreMenu` story.
 
-1. **Toolbar** (`.dk-toolbar`): the row (or column) of controls, on its own surface, with one Tab stop.
-2. **More** (`.dk-toolbar__more`): with `overflow`, the button at the end of the row that opens the controls with no room; it shows only while one is hidden.
+1. **Toolbar** (`.srp-toolbar`): the row (or column) of controls, on its own surface, with one Tab stop.
+2. **More** (`.srp-toolbar__more`): with `overflow`, the button at the end of the row that opens the controls with no room; it shows only while one is hidden.
 
 ## Usage
 

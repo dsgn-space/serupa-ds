@@ -16,6 +16,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Invoice: one bill, as the person paying it reads it: whether it's due, paid or overdue in words, who it's from and
    to, its lines as a table, the totals, and a way to pay or keep a copy. For an app to copy. What it carries (WCAG 2.2):
@@ -71,6 +72,9 @@ export interface InvoiceProps {
   loadFailed?: boolean | undefined;
   /** Loads the invoice again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: InvoiceInfo = {
@@ -107,7 +111,7 @@ const BADGE: Record<'paid' | 'due' | 'overdue', { label: string; tone: BadgeTone
 };
 
 /** The invoice page: a skip link, a header, then main with the invoice's h1, where it stands, its lines and totals. */
-export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025-03-20', onPay, loading = false, loadFailed = false, onRetry }: InvoiceProps) {
+export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025-03-20', onPay, loading = false, loadFailed = false, onRetry, online }: InvoiceProps) {
   const locale = useLocale(undefined);
   const [inv, setInv] = React.useState(start);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -145,6 +149,7 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is the invoice as it was when the page loaded. Paying needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Invoices', href: '#invoices' }, { label: inv.number }]} title={name} headingRef={heading} />
 
         <div className="flex flex-col gap-8 pt-6">

@@ -13,6 +13,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Roles and permissions: what each role in a workspace can do, as a grid of checkboxes, where a permission that needs
    another brings it along, and nothing changes until Save. For an app to copy. What it carries (WCAG 2.2):
@@ -43,6 +44,9 @@ export interface RolePermissionsProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoRoles: Role[] = [
@@ -88,7 +92,7 @@ export function countChanges(before: Grants, after: Grants) {
 }
 
 /** The page: a skip link, a header, then main with the h1, the grid, and Save. */
-export function RolePermissions({ roles = demoRoles, permissions = demoPerms, grants = demoGrants, onSave, loading = false, loadFailed = false, onRetry }: RolePermissionsProps) {
+export function RolePermissions({ roles = demoRoles, permissions = demoPerms, grants = demoGrants, onSave, loading = false, loadFailed = false, onRetry, online }: RolePermissionsProps) {
   const locale = useLocale();
   const [saved, setSaved] = React.useState(grants);
   const [draft, setDraft] = React.useState(grants);
@@ -129,6 +133,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
         <Link underline="hover" href="#workspace">Workspace settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"
           description="Choose what people in each role can do. Changes apply to everyone in the role once you save." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the roles" onRetry={() => onRetry?.()} headingLevel={2} /></div>

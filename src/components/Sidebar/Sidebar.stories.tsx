@@ -8,7 +8,7 @@ import { useName } from '../../../.storybook/content';
 
 const items = [
   <SidebarSection key="a">
-    <SidebarItem href="#" icon="home" label="Home" active />
+    <SidebarItem href="#" icon="home" label="Home" current />
     <SidebarItem href="#" icon="inbox" label="Inbox" badge={<Badge count={4} />} />
   </SidebarSection>,
   <SidebarSection key="b" title="Workspace">
@@ -60,7 +60,7 @@ export const LongLabels: Story = {
   args: {
     children: [
       <SidebarSection key="a" title="Workspace settings for every team">
-        <SidebarItem href="#" icon="home" label="Home and recent activity across projects" active />
+        <SidebarItem href="#" icon="home" label="Home and recent activity across projects" current />
         <SidebarItem href="#" icon="inbox" label="Donaudampfschifffahrtsgesellschaftskapitänskajüte" badge={<Badge count={1234} />} />
       </SidebarSection>,
     ],

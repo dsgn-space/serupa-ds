@@ -110,8 +110,18 @@ export const tooSoon = (name, changelog, pending, today) => {
 // The window can be switched off in tools/release-policy.json ("deprecationWindow": false): Diki suspended it on
 // 14 Nov 2026, while the API is still being adjusted, so a major may remove a name as soon as it is deprecated. It
 // still needs its migration note and, where a script can make it, its serupa-migrate change.
-const windowOn = JSON.parse(read('tools/release-policy.json')).deprecationWindow !== false;
-t(`reads the deprecation window's switch from tools/release-policy.json (${windowOn ? 'on' : 'off'})`, typeof windowOn === 'boolean');
+// On 21 Nov 2026 Diki made 17.0.0 the last major of that kind: "suspendedThrough": "17.0.0" keeps it off for the
+// majors up to 17.0.0 and brings it back for every major after it, with no one having to remember to.
+export const windowOnFor = (policy, version) => {
+  const major = (v) => Number(String(v).split('.')[0]);
+  if (policy.deprecationWindow === false) return false;
+  return !policy.suspendedThrough || major(version) + 1 > major(policy.suspendedThrough);
+};
+t('the deprecation window: off through the suspended major, on for every major after it',
+  windowOnFor({ deprecationWindow: true, suspendedThrough: '17.0.0' }, '16.1.0') === false && windowOnFor({ deprecationWindow: true, suspendedThrough: '17.0.0' }, '17.0.0') === true
+  && windowOnFor({ deprecationWindow: true, suspendedThrough: '17.0.0' }, '17.3.1') === true && windowOnFor({ deprecationWindow: true }, '16.1.0') === true && windowOnFor({ deprecationWindow: false }, '18.0.0') === false, 'windowOnFor');
+const windowOn = windowOnFor(JSON.parse(read('tools/release-policy.json')), JSON.parse(read('package.json')).version);
+t(`reads the deprecation window's switch from tools/release-policy.json (${windowOn ? 'on' : 'off'} for the next major)`, typeof windowOn === 'boolean');
 const today = process.env.SERUPA_TODAY || new Date().toISOString().slice(0, 10);
 const changelog = read('CHANGELOG.md');
 const pendingText = changesets.map((n) => read(path.join('.changeset', n))).join('\n');

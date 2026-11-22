@@ -13,7 +13,7 @@ const day = (iso: string) => document.querySelector<HTMLButtonElement>(`[data-da
 const status = () => document.querySelector('[data-component="range-calendar"] > p[aria-live]')!.textContent;
 type Got = { start: Date; end: Date };
 function Stay({ log = [] as [Got, { start: string; end: string }][], ...rest }: { log?: [Got, { start: string; end: string }][] } & Partial<React.ComponentProps<typeof RangeCalendar>>) {
-  return <SerupaProvider locale="en-US"><RangeCalendar defaultMonth={nov} onValueChange={(r, iso) => log.push([r, iso])} {...rest} /></SerupaProvider>;
+  return <SerupaProvider locale="en-US"><RangeCalendar defaultMonth={nov} onValueChange={(r, { iso }) => log.push([r, iso])} {...rest} /></SerupaProvider>;
 }
 
 let errors: MockInstance<typeof console.error>;
@@ -38,12 +38,12 @@ describe('RangeCalendar', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Stay ref={ref} id="rc" className="extra" data-x="y" defaultValue={{ start: '2026-11-03', end: '2026-11-05' }} />);
     const e = document.getElementById('rc')!;
-    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual([true, 'dk-range-calendar extra', 'y', 'range-calendar']);
+    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual([true, 'srp-range-calendar extra', 'y', 'range-calendar']);
     await expect.element(page.getByRole('group', { name: 'Choose dates' })).toBeVisible();
     await expect.element(page.getByRole('grid', { name: 'November 2026' })).toBeVisible();
     expect([day('2026-11-03'), day('2026-11-04'), day('2026-11-05'), day('2026-11-06')].map((b) => b.getAttribute('aria-label'))).toEqual([
       'Tuesday, November 3, 2026, Start date', 'Wednesday, November 4, 2026, in the range', 'Thursday, November 5, 2026, End date', 'Friday, November 6, 2026']);
-    expect([day('2026-11-03').parentElement!.getAttribute('aria-selected'), day('2026-11-04').classList.contains('dk-calendar__day--in-range')]).toEqual(['true', true]);
+    expect([day('2026-11-03').parentElement!.getAttribute('aria-selected'), day('2026-11-04').classList.contains('srp-calendar__day--in-range')]).toEqual(['true', true]);
     expect(status()).toBe('Selected range: Nov 3 – 5, 2026');
   });
 
@@ -63,7 +63,7 @@ describe('RangeCalendar', () => {
     await userEvent.click(day('2026-11-10'));
     expect(status()).toBe('Choose the end date');
     await userEvent.hover(day('2026-11-07'));
-    expect(day('2026-11-08').classList.contains('dk-calendar__day--in-range')).toBe(true);
+    expect(day('2026-11-08').classList.contains('srp-calendar__day--in-range')).toBe(true);
     expect(log).toEqual([]);
     await userEvent.click(day('2026-11-07'));
     expect(log.map(([, iso]) => iso)).toEqual([{ start: '2026-11-07', end: '2026-11-10' }]);
@@ -93,7 +93,7 @@ describe('RangeCalendar', () => {
 
   test('the rest of the keys: Tab reaches the start day, Up a week back, Home and End the week’s ends, Page Down and Page Up a month on and back, Space picks', async () => {
     const log: [Got, { start: string; end: string }][] = [];
-    await render(<SerupaProvider locale="en-US"><button type="button">Before</button><RangeCalendar defaultMonth={nov} weekStartsOn={0} defaultValue={{ start: '2026-11-11', end: '2026-11-12' }} onValueChange={(r, iso) => log.push([r, iso])} /></SerupaProvider>);
+    await render(<SerupaProvider locale="en-US"><button type="button">Before</button><RangeCalendar defaultMonth={nov} weekStartsOn={0} defaultValue={{ start: '2026-11-11', end: '2026-11-12' }} onValueChange={(r, { iso }) => log.push([r, iso])} /></SerupaProvider>);
     page.getByRole('button', { name: 'Before' }).element().focus();
     // Previous month, the heading (it opens the months), Next month, then the days.
     await userEvent.keyboard('{Tab}{Tab}{Tab}{Tab}');
@@ -115,20 +115,20 @@ describe('RangeCalendar', () => {
     await render(<Stay log={log} value={{ start: '2026-11-03', end: '2026-11-05' }} />);
     await userEvent.click(day('2026-11-16'));
     await userEvent.hover(day('2026-11-19'));
-    expect(day('2026-11-18').classList.contains('dk-calendar__day--in-range')).toBe(true);
+    expect(day('2026-11-18').classList.contains('srp-calendar__day--in-range')).toBe(true);
     await userEvent.hover(page.getByText('Choose the end date'));
     await userEvent.unhover(day('2026-11-19'));
-    expect(day('2026-11-18').classList.contains('dk-calendar__day--in-range')).toBe(false);
+    expect(day('2026-11-18').classList.contains('srp-calendar__day--in-range')).toBe(false);
     await userEvent.click(day('2026-11-17'));
     expect(log.length).toBe(1);
-    expect(day('2026-11-04').classList.contains('dk-calendar__day--in-range')).toBe(true);
+    expect(day('2026-11-04').classList.contains('srp-calendar__day--in-range')).toBe(true);
   });
 
   test('two months: the range runs across both, the first turns back and the second forward, and one pair moves both', async () => {
     const months: Date[] = [];
     await render(<Stay months={2} defaultValue={{ start: '2026-11-28', end: '2026-12-02' }} onMonthChange={(m) => months.push(m)} />);
     expect(page.getByRole('grid').elements().map((g) => g.getAttribute('aria-labelledby') && document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent)).toEqual(['November 2026', 'December 2026']);
-    expect(day('2026-12-01').classList.contains('dk-calendar__day--in-range')).toBe(true);
+    expect(day('2026-12-01').classList.contains('srp-calendar__day--in-range')).toBe(true);
     await userEvent.click(page.getByRole('button', { name: 'Next month' }).last());
     expect(months).toEqual([new Date(2026, 11, 1)]);
     await expect.element(page.getByRole('grid', { name: 'January 2027' })).toBeVisible();
@@ -226,7 +226,7 @@ describe('RangeCalendar', () => {
 describe('RangeCalendar: another calendar system (RX9)', () => {
   test('calendar="persian" with two months: Aban and Azar side by side, and the range said in the Persian calendar', async () => {
     const got: string[] = [];
-    await render(<RangeCalendar calendar="persian" months={2} locale="en-US" defaultMonth={new Date(2026, 10, 15)} onValueChange={(_, iso) => got.push(iso.start + '/' + iso.end)} />);
+    await render(<RangeCalendar calendar="persian" months={2} locale="en-US" defaultMonth={new Date(2026, 10, 15)} onValueChange={(_, { iso }) => got.push(iso.start + '/' + iso.end)} />);
     const titles = [...document.querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
     const fmt = (d: Date) => new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(d);
     expect(titles).toEqual([fmt(new Date(2026, 10, 1)), fmt(new Date(2026, 11, 1))]);

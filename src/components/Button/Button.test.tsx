@@ -16,7 +16,7 @@ keepMotion();
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
 const attrs = (id: string) => Object.fromEntries([...el(id).attributes].map((a) => [a.name, a.value]));
-const announcer = () => document.querySelector('[data-dk-announcer]') as HTMLElement;
+const announcer = () => document.querySelector('[data-srp-announcer]') as HTMLElement;
 const vars = (v: Record<string, string>) => v as React.CSSProperties;
 const scale = (id: string) => getComputedStyle(el(id)).scale;
 const translate = (sel: string) => getComputedStyle(q(sel)).translate;
@@ -86,7 +86,7 @@ function App({ linkRef }: { linkRef?: React.Ref<HTMLAnchorElement> }) {
     <Button href="#bad" id="dlink" disabled onClick={() => log.push('BAD-disabledlink')}>Off</Button>
     <Button id="dis" disabled variant="outline" size="lg" destructive onClick={() => log.push('BAD-dis')}>Dis</Button>
     <ButtonBase id="icononly" icon="settings" aria-label="Settings" loading={loading} />
-    <Button id="left" leftIcon="save" loading={loading}>Save file</Button>
+    <Button id="left" startIcon="save" loading={loading}>Save file</Button>
     <Button id="attrs" type="submit" form="other" formAction="/x" formMethod="post" formEncType="multipart/form-data" formNoValidate formTarget="_blank" name="intent" value="save">All</Button>
     <Button id="pbtn" popoverTarget="pop" popoverTargetAction="toggle">Pop</Button>
     <Button id="cbtn" commandfor="dlg" command="show-modal">Cmd</Button>
@@ -125,7 +125,7 @@ describe('Button', () => {
       expect(take()).toEqual(['btnclick', 'router:#x']);
       const la = attrs('link');
       expect(el('link').tagName).toBe('A');
-      expect(la.class).toMatch(/dk-btn/);
+      expect(la.class).toMatch(/srp-btn/);
       expect(['type' in la, 'data-router' in la]).toEqual([false, true]);
       expect(linkRef.current).toBe(el('link'));
       expect(attrs('ext').rel).toBe('noopener noreferrer');
@@ -363,7 +363,7 @@ describe('Button', () => {
         return { n: s.length, dx: Math.abs(Math.round(r.left + r.width / 2 - (b.left + b.width / 2))) <= 1, dy: Math.abs(Math.round(r.top + r.height / 2 - (b.top + b.height / 2))) <= 1 };
       });
       expect(geo).toEqual([{ n: 1, dx: true, dy: true }, { n: 1, dx: true, dy: true }, { n: 1, dx: true, dy: true }]);
-      const s = q('#sub .dk-btn__spinner');
+      const s = q('#sub .srp-btn__spinner');
       expect([s.dataset.component, s.dataset.variant, getComputedStyle(s.querySelector('svg')!).animationName, getComputedStyle(s.querySelector('svg > circle:last-of-type')!).animationName]).toEqual(['loader', 'ring', 'spin', 'none']);
     });
   });
@@ -372,7 +372,7 @@ describe('Button', () => {
     await render(<><Button id="btn" loading>Save</Button><Button id="btnlg" loading size="lg">Save</Button></>);
     await eased(el('btn')); await eased(el('btnlg'));
     const bt = ['btn', 'btnlg'].map((id) => {
-      const s = q(`#${id} .dk-btn__spinner`), r = s.getBoundingClientRect(), b = el(id).getBoundingClientRect();
+      const s = q(`#${id} .srp-btn__spinner`), r = s.getBoundingClientRect(), b = el(id).getBoundingClientRect();
       return [s.dataset.component, s.dataset.variant, s.getAttribute('aria-hidden'), Math.round(r.width), Math.abs(Math.round(r.left + r.width / 2 - (b.left + b.width / 2))) <= 1, Math.abs(Math.round(r.top + r.height / 2 - (b.top + b.height / 2))) <= 1, getComputedStyle(s.querySelector('svg')!).animationName];
     });
     expect(bt).toEqual([['loader', 'ring', 'true', 16, true, true, 'spin'], ['loader', 'ring', 'true', 20, true, true, 'spin']]);
@@ -380,8 +380,8 @@ describe('Button', () => {
 
   test('the text side gets the extra 4px in both directions: after a left icon on the right in LTR, on the left in RTL (and the reverse for a right icon)', async () => {
     await render(<>
-      <div dir="ltr"><Button id="l-ltr" leftIcon="save">Save</Button><Button id="r-ltr" rightIcon="arrow_forward">Next</Button></div>
-      <div dir="rtl"><Button id="l-rtl" leftIcon="save">Save</Button><Button id="r-rtl" rightIcon="arrow_forward">Next</Button></div>
+      <div dir="ltr"><Button id="l-ltr" startIcon="save">Save</Button><Button id="r-ltr" endIcon="arrow_forward">Next</Button></div>
+      <div dir="rtl"><Button id="l-rtl" startIcon="save">Save</Button><Button id="r-rtl" endIcon="arrow_forward">Next</Button></div>
     </>);
     const pad = (id: string) => { const cs = getComputedStyle(el(id)); return [cs.paddingLeft, cs.paddingRight]; };
     expect(pad('l-ltr')).toEqual(['12px', '16px']);
@@ -400,7 +400,7 @@ describe('Button', () => {
     expect([typeof buttonClass, typeof Serupa.buttonClass, typeof Serupa.configure]).toEqual(['function', 'function', 'function']);
     expect('buttonVariants' in Serupa).toBe(false);
     expect('TailwindPalette' in window).toBe(false);
-    expect(buttonClass()).toBe('dk-btn dk-btn--primary dk-btn--size-md');
+    expect(buttonClass()).toBe('srp-btn srp-btn--primary srp-btn--size-md');
   });
 
   test('Buttons and Loaders can be removed from the page (unmounted) without errors', async () => {
@@ -450,8 +450,8 @@ describe('Button', () => {
     await render(<Button id="sub" loading>Save</Button>);
     const restore = reduceMotion();
     try {
-      const s = getComputedStyle(q('#sub .dk-btn__spinner svg'));
-      expect([`${s.animationName} ${s.animationDuration}`, getComputedStyle(q('#sub [data-component=loader]').parentElement!).animationName]).toEqual(['dk-loader-breathe 1.4s', 'dk-loader-in']);
+      const s = getComputedStyle(q('#sub .srp-btn__spinner svg'));
+      expect([`${s.animationName} ${s.animationDuration}`, getComputedStyle(q('#sub [data-component=loader]').parentElement!).animationName]).toEqual(['srp-loader-breathe 1.4s', 'srp-loader-in']);
     } finally { restore(); }
   });
   test('wrap: buttons side by side break between words, not inside one, while a word fits (PL-LINKWRAP)', async () => {
@@ -469,17 +469,17 @@ function Motion() {
   const nudge = vars({ '--button-icon-nudge': 'var(--spacing-0\\.5)' });
   return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
     <Button id="press" variant="secondary" onClick={() => log.push('click')}>Press me</Button>
-    <div style={nudge}><Button id="next" rightIcon="arrow_forward">Continue</Button></div>
-    <Button id="plainright" rightIcon="expand_more">Options</Button>
-    <Button id="back" leftIcon="arrow_back" variant="outline">Back</Button>
-    <div dir="rtl" style={nudge}><Button id="rtl" rightIcon="arrow_forward">RTL</Button></div>
+    <div style={nudge}><Button id="next" endIcon="arrow_forward">Continue</Button></div>
+    <Button id="plainright" endIcon="expand_more">Options</Button>
+    <Button id="back" startIcon="arrow_back" variant="outline">Back</Button>
+    <div dir="rtl" style={nudge}><Button id="rtl" endIcon="arrow_forward">RTL</Button></div>
     <Button id="lnk" variant="link">Link style</Button>
     <Button id="dis" disabled>Disabled</Button>
-    <Button id="busy" loading={busy} leftIcon="save">Save</Button>
+    <Button id="busy" loading={busy} startIcon="save">Save</Button>
     <Button id="big" size="lg" style={{ width: '240px' }}>Wide</Button>
     <Button id="nopress" style={vars({ '--button-press-scale': '1' })}>No press</Button>
     <Button id="shrink" variant="secondary" style={vars({ '--button-press-scale': 'var(--scale-97)' })}>Shrink</Button>
-    <div style={nudge}><div style={vars({ '--button-icon-nudge': '0px' })}><Button id="nonudge" rightIcon="arrow_forward">No nudge</Button></div></div>
+    <div style={nudge}><div style={vars({ '--button-icon-nudge': '0px' })}><Button id="nonudge" endIcon="arrow_forward">No nudge</Button></div></div>
     <Button id="mine" onPointerDown={() => log.push('mine-down')} onKeyDown={() => log.push('mine-key')} onKeyUp={() => log.push('mine-up')}>Mine</Button>
   </div>;
 }
@@ -601,19 +601,19 @@ describe('Button micro-interactions', () => {
   test('nudge: off by default; --button-icon-nudge: var(--spacing-0.5) slides a right icon 2px forward on hover (the other way in right-to-left text), never a left icon; 0 turns it off again inside an area that turned it on; back in place after hover', async () => {
     await render(<Motion />);
     const hovered = async (id: string, sel: string) => { await userEvent.hover(el(id)); await eased(el(id)); return translate(sel); };
-    expect(await hovered('next', '#next .dk-btn__icon--right')).toBe('2px');
-    expect(home).toContain(await hovered('back', '#back .dk-btn__icon--left'));
-    expect(await hovered('rtl', '#rtl .dk-btn__icon--right')).toBe('-2px');
-    expect(home).toContain(await hovered('plainright', '#plainright .dk-btn__icon--right'));
-    expect(home).toContain(await hovered('nonudge', '#nonudge .dk-btn__icon--right'));
+    expect(await hovered('next', '#next .srp-btn__icon--end')).toBe('2px');
+    expect(home).toContain(await hovered('back', '#back .srp-btn__icon--start'));
+    expect(await hovered('rtl', '#rtl .srp-btn__icon--end')).toBe('-2px');
+    expect(home).toContain(await hovered('plainright', '#plainright .srp-btn__icon--end'));
+    expect(home).toContain(await hovered('nonudge', '#nonudge .srp-btn__icon--end'));
     await userEvent.unhover(el('nonudge'));
     await eased(el('next'));
-    expect(home).toContain(translate('#next .dk-btn__icon--right'));
+    expect(home).toContain(translate('#next .srp-btn__icon--end'));
   });
 
   test('loading: the label fades and blurs out instead of vanishing while the spinner fades, sharpens and grows in; once faded, label and icon are hidden; the content fades back when done', async () => {
     await render(<Motion />);
-    const label = q('#busy .dk-btn__label');
+    const label = q('#busy .srp-btn__label');
     expect(getComputedStyle(label).opacity).toBe('1');   // its style before loading, for the transition to start from
     // What starts on the label, heard as it starts (transitionrun), and how long it lasts: neither depends on catching
     // the 150ms fade part way at one moment, which WebKit in CI misses (its samples went 1 1 0 0, frames apart).
@@ -624,9 +624,9 @@ describe('Button micro-interactions', () => {
     await expect.poll(() => [...new Set(ran)].sort(), { message: 'the label fades and blurs on transitions' }).toEqual(['filter', 'opacity']);
     const { transitionProperty, transitionDuration } = getComputedStyle(label), lasts = transitionDuration.split(', ').map(parseFloat);
     expect(transitionProperty.split(', ').map((p, i) => [p, lasts[i % lasts.length]! > 0]), 'each over a time, not at once').toEqual([['opacity', true], ['filter', true]]);
-    expect(getComputedStyle(q('#busy .dk-btn__loader')).animationName).toBe('dk-btn-loader-in');
+    expect(getComputedStyle(q('#busy .srp-btn__loader')).animationName).toBe('srp-btn-loader-in');
     // They cross as one change: the label blurs on its way out, the spinner starts blurred (blur-xs) and sharpens.
-    const ld = q('#busy .dk-btn__loader'), grow = ld.getAnimations().find((a) => (a as CSSAnimation).animationName === 'dk-btn-loader-in')!;
+    const ld = q('#busy .srp-btn__loader'), grow = ld.getAnimations().find((a) => (a as CSSAnimation).animationName === 'srp-btn-loader-in')!;
     grow.pause();
     grow.currentTime = 0;
     const blurFrom = getComputedStyle(ld).filter;
@@ -634,13 +634,13 @@ describe('Button micro-interactions', () => {
     expect(blurFrom).toBe('blur(4px)');
     await eased(el('busy'));
     expect([getComputedStyle(label).filter, getComputedStyle(ld).filter.replace('blur(0px)', 'none')]).toEqual(['blur(4px)', 'none']);
-    expect([getComputedStyle(label).opacity, getComputedStyle(q('#busy .dk-btn__icon')).opacity, getComputedStyle(q('#busy .dk-btn__loader')).opacity]).toEqual(['0', '0', '1']);
+    expect([getComputedStyle(label).opacity, getComputedStyle(q('#busy .srp-btn__icon')).opacity, getComputedStyle(q('#busy .srp-btn__loader')).opacity]).toEqual(['0', '0', '1']);
     setBusy(false);
     // Waited for as on the way out (frames, then the fade's end), not polled: WebKit in CI moves a transition on only
     // at a rendering update, and polling asks for none, so it read the fade's first frame (0.0024) for a second.
     await expect.poll(() => el('busy').hasAttribute('data-loading')).toBe(false);
     await eased(el('busy'));
-    const back = q('#busy .dk-btn__label');
+    const back = q('#busy .srp-btn__label');
     expect([getComputedStyle(back).opacity, getComputedStyle(back).filter]).toEqual(['1', 'none']);
   });
 
@@ -673,10 +673,10 @@ describe('Button micro-interactions', () => {
       expect(still).toContain(await hold(el('press'), () => scale('press'), { ms: 300 }));
       await userEvent.hover(el('next'));
       await eased(el('next'));
-      expect(home).toContain(translate('#next .dk-btn__icon--right'));
+      expect(home).toContain(translate('#next .srp-btn__icon--end'));
       setBusy(true);
       await expect.poll(() => document.querySelector('#busy > [aria-hidden] > [data-component="loader"]')).toBeTruthy();
-      const ld = q('#busy .dk-btn__loader'), a = ld.getAnimations().find((x) => (x as CSSAnimation).animationName === 'dk-btn-loader-in');
+      const ld = q('#busy .srp-btn__loader'), a = ld.getAnimations().find((x) => (x as CSSAnimation).animationName === 'srp-btn-loader-in');
       a?.pause();
       if (a) a.currentTime = 0;
       const from = [getComputedStyle(ld).scale, getComputedStyle(ld).filter];
@@ -696,10 +696,10 @@ describe('Button long labels (DV1)', () => {
       <Button id="ws" wrap size="sm">Short</Button>
     </div>);
     const b = el('w'), label = b.querySelector('span:not([aria-hidden])') as HTMLElement;
-    expect([b.classList.contains('dk-btn--wrap'), b.getBoundingClientRect().height > 32, b.getBoundingClientRect().width <= 120, label.scrollWidth <= label.clientWidth]).toEqual([true, true, true, true]);
+    expect([b.classList.contains('srp-btn--wrap'), b.getBoundingClientRect().height > 32, b.getBoundingClientRect().width <= 120, label.scrollWidth <= label.clientWidth]).toEqual([true, true, true, true]);
     // A short label keeps the size's height.
     expect(Math.round(el('ws').getBoundingClientRect().height)).toBe(24);
-    expect(buttonClass({ wrap: true })).toContain('dk-btn--wrap');
+    expect(buttonClass({ wrap: true })).toContain('srp-btn--wrap');
   });
 
   test('a cut text label shows in full as the title; one that fits, or a button with its own name or wrap, gets none', async () => {
@@ -745,10 +745,10 @@ describe('loading ring', () => {
     expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
     await render(<>
       <Button id="ring-btn" loading>Save</Button>
-      <div id="ring-loader"><Loader className="dk-btn__spinner" label="" delay={0} /></div>
+      <div id="ring-loader"><Loader className="srp-btn__spinner" label="" delay={0} /></div>
     </>);
-    await expect.poll(() => q('#ring-btn .dk-btn__spinner')).toBeTruthy();
-    expect(q('#ring-btn .dk-btn__spinner').outerHTML).toBe(q('#ring-loader .dk-btn__spinner').outerHTML);
+    await expect.poll(() => q('#ring-btn .srp-btn__spinner')).toBeTruthy();
+    expect(q('#ring-btn .srp-btn__spinner').outerHTML).toBe(q('#ring-loader .srp-btn__spinner').outerHTML);
   });
 });
 
@@ -854,7 +854,7 @@ describe('Button onMedia', () => {
     expect(getComputedStyle(el('m-dark-ghost')).outlineColor).toBe('rgb(255, 255, 255)');
     style.remove();
     expect(low).toEqual([]);
-    expect(el('m-light-primary').className).toContain('dk-btn--on-light');
+    expect(el('m-light-primary').className).toContain('srp-btn--on-light');
   });
 
   test('an onMedia that isn\'t dark or light is left out, and the --button-on-dark token changes the ink', async () => {

@@ -74,9 +74,9 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      # Held: the pull request carries the update-visual-baselines label, so Update baselines is drawing its pictures
-      # now and will push them (a new run) or, with nothing to change, start this run again once the label is off.
-      # Testing this commit meanwhile would only be done twice. The bot's own picture commit is never held.
+      # Held: the pull request carries the update-visual-baselines label, so Update baselines is measuring its utilities
+      # baseline now and will push it (a new run) or, with nothing to change, start this run again once the label is
+      # off. Testing this commit meanwhile would only be done twice. The bot's own baseline commit is never held.
       - id: hold
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
@@ -90,7 +90,7 @@ jobs:
           # Heal's merge isn't held: it adds no Chromium redraw label any more (ADR-0016), so its run tests it.
           if [ "$subject" != "Update test baselines on the CI runner" ] && grep -qx update-visual-baselines <<< "$labels"; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
-            echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "Held: Update baselines is measuring this pull request's utilities baseline; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
       # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines) while a self-hosted runner has started a job
       # in the last 100 minutes, GitHub's runners otherwise, and for a fork's pull request or when the variable is unset.
@@ -156,10 +156,13 @@ jobs:
             pull_request)
               if [ "$QUEUE" = 1 ]; then since="$(git rev-parse HEAD^1)"; else full=1; wide=1; fi ;;
           esac
-          # Visual on a narrowed run only when the change touches what a story's picture is built from.
+          # Visual on a narrowed run only when the change touches what a story's picture is built from. A change to how CI
+          # runs (this workflow, its actions, Node's version, setup.mjs) or to how the tests are picked (lib.mjs, run.mjs)
+          # draws main and the branch alike, so it draws nothing: #2261, one line of this file, drew 311 stories twice in
+          # each of four shards, 23 minutes (21 Nov). The nightly flake hunt draws main whole.
           visual=1
           if [ -n "$since" ] && [ "$EVENT" = pull_request ]; then
-            if ! git diff --name-only "$since" HEAD | grep -qE '^(src/|docs/|\.storybook/|design-tokens/|tokens/|tokens\.(css|json)$|fonts/|package(-lock)?\.json$|tsconfig\.json$|tsup\.config\.mjs$|\.nvmrc$|README\.md$|CHANGELOG\.md$|\.changeset/[^/]+\.md$|\.github/workflows/ci\.yml$|\.github/actions/|bin/migrate/|tools/(build|tokens|utilities|typescript|icons|fonts)/|tools/setup\.mjs$|tools/test/(lib|run|visual|storybook)\.mjs$|tools/test/baseline-visual/)'; then visual=""; fi
+            if ! git diff --name-only "$since" HEAD | grep -qE '^(src/|docs/|\.storybook/|design-tokens/|tokens/|tokens\.(css|json)$|fonts/|package(-lock)?\.json$|tsconfig\.json$|tsup\.config\.mjs$|README\.md$|CHANGELOG\.md$|\.changeset/[^/]+\.md$|bin/migrate/|tools/(build|tokens|utilities|typescript|icons|fonts)/|tools/test/(visual|visual-base|storybook)\.mjs$)'; then visual=""; fi
           fi
           # All the component tests in the other languages run in the merge queue only, on the commit that becomes main: a
           # pull request's own run tests its components in English, with the changed components' own tests in the other
@@ -167,10 +170,14 @@ jobs:
           # failures a pull request meets most, so they are found before the queue, where one failure drops every
           # group behind it.
           # Shards: a pull request's run takes 3 base and 5 Visual jobs (8, its max-parallel on GitHub's runners). A queue group has the 28
-          # burst slots behind it and gates every merge, so it splits wider: 5 base, 5 locale and 7 Visual (17 of its 24),
-          # about a third off its longest job (each shard still pays about a minute of setup).
+          # burst slots behind it and gates every merge, so it splits wider: 5 base and 7 Visual, about a third off its
+          # longest job (each shard still pays about a minute of setup).
+          # Locale in three: the other languages run only the tests a language can break (languageTests in
+          # tools/test/lib.mjs), about 900 s of a whole language's 2,900; the nightly Languages jobs run the rest. A queue
+          # group that ran every test in three other languages (#2240, 21 Nov) took 13 to 20+ minutes in each of five locale
+          # shards and ran past the job's 30 minutes in ten.
           shards() { local g=$1 p=$2 n=$3 out="" k; for k in $(seq 1 "$n"); do out="$out,{\"group\":\"$g\"${p:+,\"part\":\"$p\"},\"shard\":\"$k/$n\"}"; done; echo "$out"; }
-          if [ "$EVENT" = merge_group ]; then nb=5; nl=5; nv=7; else nb=3; nl=3; nv=5; fi
+          if [ "$EVENT" = merge_group ]; then nb=5; nl=3; nv=7; else nb=3; nl=3; nv=5; fi
           # On the burst runners a pull request runs four x86 jobs at once (max-parallel), so Visual takes four shards:
           # with five, the fifth started after the first wave and a whole run took 47 minutes (#2044, 16 Nov), against
           # about 31 with four (three base and one Visual shard, then the other three).
@@ -258,7 +265,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
-      - name: tokens.css is generated from tokens.json
+      - name: tokens.css and brands/ are generated from tokens.json
         run: node tools/tokens/build.mjs --check
       - name: Build the package
         run: npm run build
@@ -385,7 +392,8 @@ jobs:
       options: --cpus 4
     # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
     # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
-    # to run again (16 Nov). The other groups take under 15 anywhere.
+    # to run again (16 Nov). The other groups take under 15 anywhere: the locale shards run only the tests a language can
+    # break and never the story-wide ones (languageTests, lib.mjs), 4 to 6 minutes each in the queue (22 Nov).
     timeout-minutes: ${{ matrix.group == 'visual' && 40 || 30 }}
     strategy:
       # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
@@ -447,21 +455,9 @@ jobs:
         shell: bash
         env:
           GROUP: ${{ matrix.group }}
-          EVENT: ${{ github.event_name }}
-          SINCE: ${{ needs.plan.outputs.since }}
         run: |
           npm run build
           if [ "$GROUP" != components ]; then npm run build-storybook; fi
-          # Visual on a pull request draws main's pictures too (ADR-0016): main's Storybook, built from the commit this
-          # run merges into, in a worktree beside this one. Its own dependencies only when its lockfile differs.
-          if [ "$GROUP" = visual ] && [ "$EVENT" = pull_request ] && [ -n "$SINCE" ]; then
-            rm -rf ../main-tree && git worktree prune
-            git worktree add --detach ../main-tree "$SINCE"
-            if cmp -s package-lock.json ../main-tree/package-lock.json; then ln -s "$PWD/node_modules" ../main-tree/node_modules
-            else (cd ../main-tree && npm ci --ignore-scripts --no-audit --no-fund); fi
-            (cd ../main-tree && npm run build && npm run build-storybook)
-            echo "SERUPA_VISUAL_BASE=$(cd ../main-tree && pwd)/storybook-static" >> "$GITHUB_ENV"
-          fi
       - name: Test suite
         if: steps.done.outputs.cache-hit != 'true'
         shell: bash
@@ -472,6 +468,8 @@ jobs:
           # The component tests' base shards write the coverage blobs the coverage job merges.
           SERUPA_COVERAGE: ${{ matrix.part == 'base' && '1' || '' }}
           SINCE: ${{ needs.plan.outputs.since }}
+          # Visual draws the pictures of the commit this run merges into first (run.mjs, visual-base.mjs; ADR-0016).
+          SERUPA_VISUAL_REF: ${{ needs.plan.outputs.since }}
         run: |
           set -o pipefail
           node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
@@ -504,7 +502,7 @@ jobs:
           name: visual-review-${{ strategy.job-index }}
           path: .visual-review/
           include-hidden-files: true
-          retention-days: 14
+          retention-days: 7
           if-no-files-found: ignore
       - if: matrix.part == 'base'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -534,7 +532,9 @@ jobs:
           path: |
             test-output.txt
             .test-tmp/
-            tools/test/baseline-visual/**/*.actual.png
+            .visual-main/**/*.actual.png
+          # A failure is looked at the day it happens; without this they were kept the repository's default 90 days.
+          retention-days: 7
           if-no-files-found: ignore
       # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
       # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on

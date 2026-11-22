@@ -31,9 +31,9 @@ const [slug, setSlug] = React.useState("apollo-plan");
 
 Drawn from the `States` story.
 
-1. **Value** (`.dk-inline-edit__view`): the text as it reads; activating it starts editing.
-2. **Text** (`.dk-inline-edit__text`): the value, or the placeholder when it's empty.
-3. **Edit icon** (`.dk-inline-edit__icon`): says the text can be edited.
+1. **Value** (`.srp-inline-edit__view`): the text as it reads; activating it starts editing.
+2. **Text** (`.srp-inline-edit__text`): the value, or the placeholder when it's empty.
+3. **Edit icon** (`.srp-inline-edit__icon`): says the text can be edited.
 
 ## Usage
 

@@ -4,35 +4,35 @@
    edge with more past it fades out over 32px (a mask, so it works on any background). Every value reads one of
    its own tokens (scroll-area.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-scroll-area {
+@layer srp.components {
+.srp-scroll-area {
   min-width: var(--spacing-0); min-height: var(--spacing-0);
   scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--border-control)) transparent;
 }
 /* Each way it scrolls stops scroll chaining in the same rule, so reaching its end doesn't scroll the page. */
-.dk-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
-.dk-scroll-area--horizontal { overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; }
-.dk-scroll-area--both { overflow: auto; overscroll-behavior: contain; }
-.dk-scroll-area:focus-visible { outline: var(--focus-ring-width) solid var(--scroll-area-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-scroll-area--more-start, .dk-scroll-area--more-end { --dk-sa-a: var(--spacing-0); --dk-sa-b: var(--spacing-0); }
-.dk-scroll-area--more-start { --dk-sa-a: var(--scroll-area-fade, var(--spacing-8)); }
-.dk-scroll-area--more-end { --dk-sa-b: var(--scroll-area-fade, var(--spacing-8)); }
+.srp-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.srp-scroll-area--horizontal { overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; }
+.srp-scroll-area--both { overflow: auto; overscroll-behavior: contain; }
+.srp-scroll-area:focus-visible { outline: var(--focus-ring-width) solid var(--scroll-area-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.srp-scroll-area--more-start, .srp-scroll-area--more-end { --srp-sa-a: var(--spacing-0); --srp-sa-b: var(--spacing-0); }
+.srp-scroll-area--more-start { --srp-sa-a: var(--scroll-area-fade, var(--spacing-8)); }
+.srp-scroll-area--more-end { --srp-sa-b: var(--scroll-area-fade, var(--spacing-8)); }
 /* A control reached with Tab scrolls clear of a fade, rather than stopping half see-through in it
    (scrollability-affordance-hints). */
-.dk-scroll-area:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) { scroll-padding: var(--scroll-area-fade, var(--spacing-8)); }
-.dk-scroll-area--vertical:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end), .dk-scroll-area--both:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
-  mask-image: linear-gradient(to bottom, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+.srp-scroll-area:is(.srp-scroll-area--more-start, .srp-scroll-area--more-end) { scroll-padding: var(--scroll-area-fade, var(--spacing-8)); }
+.srp-scroll-area--vertical:is(.srp-scroll-area--more-start, .srp-scroll-area--more-end), .srp-scroll-area--both:is(.srp-scroll-area--more-start, .srp-scroll-area--more-end) {
+  mask-image: linear-gradient(to bottom, transparent, black var(--srp-sa-a), black calc(var(--sizing-full) - var(--srp-sa-b)), transparent);
 }
-.dk-scroll-area--horizontal:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
-  mask-image: linear-gradient(to right, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+.srp-scroll-area--horizontal:is(.srp-scroll-area--more-start, .srp-scroll-area--more-end) {
+  mask-image: linear-gradient(to right, transparent, black var(--srp-sa-a), black calc(var(--sizing-full) - var(--srp-sa-b)), transparent);
 }
-.dk-scroll-area--horizontal:dir(rtl):is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
-  mask-image: linear-gradient(to left, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+.srp-scroll-area--horizontal:dir(rtl):is(.srp-scroll-area--more-start, .srp-scroll-area--more-end) {
+  mask-image: linear-gradient(to left, transparent, black var(--srp-sa-a), black calc(var(--sizing-full) - var(--srp-sa-b)), transparent);
 }
-@media (forced-colors: active) { .dk-scroll-area { scrollbar-color: auto; } }
+@media (forced-colors: active) { .srp-scroll-area { scrollbar-color: auto; } }
 /* Printed, paper has no scrollbar: a vertical box (or one that scrolls both ways) grows to its whole content, whatever height the app gave it (style
    or class, hence !important), and the edge fade goes, so nothing past the part in view is dropped. */
 @media print {
-  .dk-scroll-area--vertical, .dk-scroll-area--both { overflow: visible; block-size: auto !important; max-block-size: none !important; mask-image: none; }
+  .srp-scroll-area--vertical, .srp-scroll-area--both { overflow: visible; block-size: auto !important; max-block-size: none !important; mask-image: none; }
 }
 }

@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Status when written:** Accepted, with changes proposed for 5.0
-**Checked against main (31 October 2026, 11.0.0):** The cascade layers shipped (`@layer dk.tokens, dk.base, dk.components, dk.utilities` in `tokens.css`), and the utility classes are generated (tools/utilities/build.mjs).
+**Checked against main (31 October 2026, 11.0.0):** The cascade layers shipped (`@layer srp.tokens, srp.base, srp.components, srp.utilities` in `tokens.css`), and the utility classes are generated (tools/utilities/build.mjs).
 **Date:** 2026-10-17
 **Deciders:** Diki
 
@@ -56,8 +56,12 @@ The JavaScript side is sound and conventional. The CSS side works but was shaped
 
 The masks and gradients moved out of `utilities.css` and `bundle.css` into `utilities-extra.css` (`tools/utilities/extra.mjs` splits them off at build time; the template, Storybook and the tests keep them in one place). They were a quarter of the utility rules (about 530 KB of 1.76 MB) and few pages use them. A page that does imports the extra file after `bundle.css`.
 
+## Update, 21 November 2026 (17.0)
+
+The extra file is gone, and so are the classes on a palette step and the filter, 3D-transform, blend, column-break and text-shadow families: about two thirds of the utility rules, none used by the system. `tools/utilities/trimmed.mjs` names what was removed, and the build fails if a template edit brings one back. A page that wants one writes the CSS property itself, from the tokens. `bundle.css` is 1.10 MB (135 KB gzipped), from 1.70 MB in 16.1.0. The scales inside the families that stay lost what nothing used too: a color on one side of a border, most scroll-margin and scroll-padding sides, and translate on both axes or z.
+
 ## Action items
 
-1. [x] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins". Done: the stylesheets are in the `dk.*` layers, and `tools/test/foundation.mjs` fails on a fallback after a shared token.
+1. [x] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins". Done: the stylesheets are in the `srp.*` layers, and `tools/test/foundation.mjs` fails on a fallback after a shared token.
 2. [x] 5.0: decide the fate of `diki.iife.js` and `dist/lib/`. Both stay: the browser script is now `serupa.iife.js`.
 3. [x] Now: add a React 19 job to CI (non-breaking). React 19 is now the only supported React.

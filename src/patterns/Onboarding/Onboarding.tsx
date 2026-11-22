@@ -13,6 +13,7 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
@@ -66,6 +67,9 @@ export interface OnboardingProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoSteps: SetupStep[] = [
@@ -79,7 +83,10 @@ function load(key: string | undefined): Partial<OnboardingState> | null {
   if (!key) return null;
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as Partial<OnboardingState>) : null;
+    const s = raw ? (JSON.parse(raw) as { done?: unknown; hidden?: unknown } | null) : null;
+    // Only the shape this page writes: anything else under the key (another script's value, an older shape) would
+    // throw on every visit until the storage was cleared.
+    return s && typeof s === 'object' ? { done: Array.isArray(s.done) ? s.done.filter((id): id is string => typeof id === 'string') : [], hidden: s.hidden === true } : null;
   } catch { return null; }
 }
 function save(key: string | undefined, state: OnboardingState) {
@@ -88,7 +95,7 @@ function save(key: string | undefined, state: OnboardingState) {
 }
 
 /** The first-run page: a skip link, a header, then main with the welcome, the setup checklist and an empty project list. */
-export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard', loading = false, loadFailed = false, onRetry }: OnboardingProps) {
+export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard', loading = false, loadFailed = false, onRetry, online }: OnboardingProps) {
   const locale = useLocale();
   const start = (): OnboardingState => {
     const saved = load(saveKey) ?? initial ?? {};
@@ -127,6 +134,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Your progress is kept on this device. Some steps need a connection.</OfflineBanner>
         <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />

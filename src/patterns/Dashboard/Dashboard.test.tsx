@@ -132,6 +132,17 @@ describe('Patterns/Dashboard', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('partly loaded: the rest shows, and the activity card alone says it failed, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Dashboard activityFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Activity' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 3, name: 'Couldn’t load the activity' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { name: 'Recent projects' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Website redesign' }).elements().length).toBeGreaterThan(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });
 
 // How many lines an element's text takes on screen.

@@ -86,7 +86,7 @@ describe('Table', () => {
     const ref = React.createRef<HTMLTableElement>();
     await setup(ref);
     const t = el('tdef') as HTMLTableElement, f = t.parentElement!;
-    expect([t.tagName, t.className, ref.current === t, f.className, f.dataset.component, f.dataset.frame, t.caption?.textContent]).toEqual(['TABLE', 'dk-table__table extra', true, 'dk-table', 'table', 'f', 'Team members']);
+    expect([t.tagName, t.className, ref.current === t, f.className, f.dataset.component, f.dataset.frame, t.caption?.textContent]).toEqual(['TABLE', 'srp-table__table extra', true, 'srp-table', 'table', 'f', 'Team members']);
     expect([...t.querySelectorAll('th')].map((x) => x.scope)).toEqual(['col', 'col', 'col']);
     expect([f.getAttribute('tabindex'), f.getAttribute('role')]).toEqual([null, null]);
   });
@@ -126,7 +126,7 @@ describe('Table', () => {
 
   test('header: surface-muted, muted text, font-medium; align="end": right-aligned, tabular digits', async () => {
     await setup();
-    const h = css(q('#tdef th')), e = css(q('#tdef td.dk-table__cell--end'));
+    const h = css(q('#tdef th')), e = css(q('#tdef td.srp-table__cell--end'));
     expect([h.backgroundColor, h.color, h.fontWeight]).toEqual([bg('var(--surface-muted)'), color('var(--text-muted)'), '500']);
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
@@ -166,7 +166,7 @@ describe('Table', () => {
       const [sel, set] = React.useState<string[]>(['Grace']);
       const all = sel.length === ROWS.length;
       return <Table id="tsel" caption="Pick">
-        <TableHead><TableRow><TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && sel.length > 0} onChange={() => set(all ? [] : ROWS.map((x) => x[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
+        <TableHead><TableRow><TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && sel.length > 0} onChange={() => set(all ? [] : ROWS.map((x) => x[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
         <TableBody>{ROWS.map((x, i) => <TableRow key={x[0]} data-i={i} selected={sel.includes(x[0])}>
           <TableSelectCell label={'Select ' + x[0]} name="who" value={x[0]} ref={i === 0 ? r : undefined} cellProps={{ 'data-c': 'c' } as React.TdHTMLAttributes<HTMLTableCellElement>} checked={sel.includes(x[0])}
             onChange={(e) => { picks.push(x[0]); set(e.target.checked ? [...sel, x[0]] : sel.filter((n) => n !== x[0])); }} />
@@ -174,12 +174,12 @@ describe('Table', () => {
       </Table>;
     }
     await render(<><Pick /><Table id="tun"><TableBody><TableRow data-i="u"><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table></>);
-    const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .dk-table__select');
+    const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .srp-table__select');
     expect([head.tagName, head.getAttribute('scope'), boxes.map((b) => b.getAttribute('aria-label')).join('|'), boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate, r.current === boxes[1], boxes[1]!.name, boxes[1]!.value, (boxes[1]!.closest('td') as HTMLElement).dataset.c])
       .toEqual(['TH', 'col', 'Select all rows|Select Ada|Select Grace|Select Linus', 'false,false,true,false', true, true, 'who', 'Ada', 'c']);
     expect(Math.round(head.getBoundingClientRect().width) < 48).toBe(true);
     await userEvent.click(boxes[1]!);
-    expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('dk-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
+    expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('srp-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
     await userEvent.click(boxes[0]!);
     expect([boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate]).toEqual(['true,true,true,true', false]);
     const u = q('#tun [data-i="u"]');
@@ -225,7 +225,7 @@ describe('Table', () => {
 
   test('pressing it calls onSort: aria-sort and the arrow follow the order', async () => {
     await setup();
-    const state = () => [el('hsort').getAttribute('aria-sort'), [...el('tsort').querySelectorAll('tbody tr td:first-child')].map((x) => x.textContent).join(), q('#hsort .dk-icon').dataset.icon];
+    const state = () => [el('hsort').getAttribute('aria-sort'), [...el('tsort').querySelectorAll('tbody tr td:first-child')].map((x) => x.textContent).join(), q('#hsort .srp-icon').dataset.icon];
     q('#hsort button').focus();
     await userEvent.keyboard('{Enter}');
     expect(state()).toEqual(['ascending', 'Grace,Linus,Ada', 'arrow_upward']);
@@ -235,7 +235,7 @@ describe('Table', () => {
 
   test('a new order is read out ("Sorted by Calls, ascending."), not on the first render; Indonesian words (180)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await setup();
     await new Promise((r) => setTimeout(r, 700));
@@ -266,7 +266,7 @@ describe('Table', () => {
     const walk = (list: CSSRuleList, inPrint: boolean) => { for (const r of Array.from(list)) { if (r instanceof CSSMediaRule) walk(r.cssRules, inPrint || /print/.test(r.conditionText)); else if (r instanceof CSSStyleRule) { if (inPrint) rules.push(r); } else if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules, inPrint); } };
     for (const sh of Array.from(document.styleSheets)) { try { walk(sh.cssRules, false); } catch { /* another origin */ } }
     const get = (sel: string) => rules.find((r) => r.selectorText === sel)?.style;
-    expect([get('.dk-table')?.overflow, get('.dk-table__head')?.display, get('.dk-table__row')?.breakInside, get('.dk-card')?.breakInside]).toEqual(['visible', 'table-header-group', 'avoid', 'avoid']);
+    expect([get('.srp-table')?.overflow, get('.srp-table__head')?.display, get('.srp-table__row')?.breakInside, get('.srp-card')?.breakInside]).toEqual(['visible', 'table-header-group', 'avoid', 'avoid']);
   });
 
   test('the sort button fills the header, lines up with align="end", and shows a focus ring', async () => {
@@ -284,7 +284,7 @@ describe('Table', () => {
 
   test('select all next to a sortable header: the checkbox keeps 24px around its center clear of the sort button (2.5.8)', async () => {
     const screen = await render(<Table caption="People"><TableHead><TableRow>
-      <TableSelectCell header label="Select all rows" /><TableHeaderCell sort="none" onSort={() => {}}>Name</TableHeaderCell>
+      <TableSelectCell inHeader label="Select all rows" /><TableHeaderCell sort="none" onSort={() => {}}>Name</TableHeaderCell>
     </TableRow></TableHead><TableBody><TableRow><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table>);
     const box = screen.getByRole('checkbox', { name: 'Select all rows' }).element().getBoundingClientRect();
     const sort = screen.getByRole('button', { name: /Name/ }).element().getBoundingClientRect();
@@ -320,7 +320,7 @@ describe('Table', () => {
 
   test('stickyHeader with link rows: a row scrolled under the header stays under it, so its checkbox and button don\'t paint over the header or take its clicks (GR76)', async () => {
     await render(<Table id="tlsh" stickyHeader containerProps={{ style: { maxHeight: '240px' }, 'aria-label': 'Projects' }}>
-      <TableHead><TableRow><TableSelectCell header label="Select all" /><TableHeaderCell>Project</TableHeaderCell><TableHeaderCell>Actions</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableSelectCell inHeader label="Select all" /><TableHeaderCell>Project</TableHeaderCell><TableHeaderCell>Actions</TableHeaderCell></TableRow></TableHead>
       <TableBody>{Array.from({ length: 12 }, (_, i) => <TableRow key={i} href={'#p' + i}><TableSelectCell label={'Select Project ' + i} /><TableCell>{'Project ' + i}</TableCell><TableCell><Button size="sm" variant="ghost">{'Edit ' + i}</Button></TableCell></TableRow>)}</TableBody>
     </Table>);
     const f = el('tlsh').parentElement!;
@@ -352,7 +352,7 @@ describe('Table', () => {
 
   test('unknown size and align fall back to md and start', async () => {
     await setup();
-    expect([el('tbad').parentElement!.className, q('#tbad td').className]).toEqual(['dk-table', 'dk-table__cell']);
+    expect([el('tbad').parentElement!.className, q('#tbad td').className]).toEqual(['srp-table', 'srp-table__cell']);
   });
 
   test('Table tokens (--table-header-bg, --table-padding-x) override one table', async () => {
@@ -369,7 +369,7 @@ describe('Table', () => {
       document.documentElement.setAttribute('data-theme', th);
       const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)'), shaded = bg('var(--surface-hover)');
       // Muted text in a selected row (shaded like a hovered or striped one) is read from that row: it steps to text-muted-shaded.
-      const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .dk-text')).color, mts = css(q('#tdef [data-i="1"] .dk-text')).color, hd = css(q('#tdef th')).color;
+      const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .srp-text')).color, mts = css(q('#tdef [data-i="1"] .srp-text')).color, hd = css(q('#tdef th')).color;
       const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
       const bar = contrast('var(--primary)', shaded); n++;
@@ -385,14 +385,14 @@ describe('Table', () => {
 });
 
 describe('Table: stickyHeader and focus', () => {
-  test('walking up the rows with Shift+Tab, no focused link ends up under the sticky header (WCAG 2.4.11); the frame measures the header into --dk-table-head', async () => {
+  test('walking up the rows with Shift+Tab, no focused link ends up under the sticky header (WCAG 2.4.11); the frame measures the header into --srp-table-head', async () => {
     const rows = []; for (let i = 0; i < 40; i++) rows.push(<TableRow key={i}><TableCell>Invoice {i}</TableCell><TableCell><a href={'#e' + i} id={'e' + i}>Edit</a></TableCell></TableRow>);
     await render(<Table stickyHeader caption="Invoices" containerProps={{ style: { maxHeight: '240px' } }}>
       <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Action</TableHeaderCell></TableRow></TableHead>
       <TableBody>{rows}</TableBody>
     </Table>);
     const head = document.querySelector('thead') as HTMLElement, frame = head.closest('[data-component="table"]') as HTMLElement;
-    await expect.poll(() => frame.style.getPropertyValue('--dk-table-head')).toBe(head.getBoundingClientRect().height + 'px');
+    await expect.poll(() => frame.style.getPropertyValue('--srp-table-head')).toBe(head.getBoundingClientRect().height + 'px');
     el('e39').focus();
     const covered: number[] = [];
     for (let i = 38; i >= 0; i--) {
@@ -421,7 +421,7 @@ function Picker(props: { log: string[] }) {
       <Button size="sm" variant="outline" onClick={() => { props.log.push('delete ' + picked.join(',')); setPicked([]); }}>Delete</Button>
     </TableActionBar>
     <Table caption="People">
-      <TableHead><TableRow><TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : ROWS.map((r) => r[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : ROWS.map((r) => r[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
       <TableBody>{ROWS.map((r) => <TableRow key={r[0]} selected={picked.includes(r[0])}>
         <TableSelectCell label={'Select ' + r[0]} checked={picked.includes(r[0])} onChange={() => setPicked((l) => (l.includes(r[0]) ? l.filter((x) => x !== r[0]) : [...l, r[0]]))} />
         <TableCell>{r[0]}</TableCell>
@@ -491,7 +491,7 @@ describe('TableActionBar (62)', () => {
 
   test('a new count is read out ("3 selected"), not on the first render or at 0; Indonesian words', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<SerupaProvider locale="en"><Picker log={[]} /></SerupaProvider>);
     await new Promise((r) => setTimeout(r, 300));
@@ -504,7 +504,7 @@ describe('TableActionBar (62)', () => {
 
   test('GR55: a bar rendered only while rows are selected reads out its first count', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const screen = await render(<div />);
     await screen.rerender(<SerupaProvider locale="en"><TableActionBar id="bar" count={1} /></SerupaProvider>);
@@ -798,7 +798,7 @@ describe('Table layout="fixed" (PT4)', () => {
   test('a header cell\'s width sets its column, as a CSS length or pixels; the select column stays the checkbox\'s width', async () => {
     const s = await render(<Paged page={0} layout="fixed" widths />);
     expect(widths()[0]).toBeCloseTo(480 * 0.3, -1);
-    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell header label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
+    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell inHeader label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
     expect(el('h1').style.width).toBe('200px');
     expect(el('h1').style.color).toBe('red');
     const box = s.getByRole('checkbox').element().closest('th')!.getBoundingClientRect().width;
@@ -1004,7 +1004,7 @@ describe('Table column tools (RU10)', () => {
   function Expanding(p: { striped?: boolean }) {
     const [open, setOpen] = React.useState<Record<string, boolean>>({});
     return <Table caption="Orders" striped={p.striped}>
-      <TableHead><TableRow><TableExpandCell header /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableExpandCell inHeader /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
       <TableBody>{['1', '2', '3'].map((n) => <React.Fragment key={n}>
         <TableRow data-row={n}><TableExpandCell label={'Order ' + n} expanded={!!open[n]} controls={'d' + n} onExpandedChange={(v) => setOpen({ ...open, [n]: v })} /><TableCell>Order {n}</TableCell></TableRow>
         <TableDetailRow id={'d' + n} open={!!open[n]} colSpan={2}>Notes for {n}</TableDetailRow>
@@ -1067,7 +1067,7 @@ describe('Table loading and messages (GR316)', () => {
     }
     // One name for the whole table: the rest of the placeholders are hidden from screen readers.
     // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
     // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);

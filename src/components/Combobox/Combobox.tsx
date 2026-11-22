@@ -34,7 +34,7 @@ import { useControllable } from '../../internal/controllable';
 export type ComboboxOption<V extends string = string> = V | { value: V; label: string; description?: React.ReactNode; disabled?: boolean };
 /** Options under a heading, as Select's optgroup: { label, options }. disabled turns off every option in it. */
 export interface ComboboxOptionGroup<V extends string = string> { label: string; options: readonly ComboboxOption<V>[]; disabled?: boolean }
-interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'rightIcon' | 'onChange'> {
+interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'endIcon' | 'onChange'> {
   /** The choices: strings, or { value, label, description, disabled }. The label is what's typed to find it and shown once picked.
       Groups { label, options } put options under a heading; a group with no match left hides its heading.
       With loadOptions, the ones shown before anything has loaded (or leave it out). */
@@ -158,13 +158,13 @@ const Row = /* @__PURE__ */ React.memo(function Row(p: { o: Opt; id: string; ind
     <div id={p.id} role="option" data-index={p.slot} style={p.top == null ? undefined : { position: 'absolute', insetInline: 0, top: p.top }}
       aria-selected={p.selected} aria-posinset={p.index + 1} aria-setsize={p.size} aria-disabled={o.disabled || undefined}
       aria-description={typeof o.description === 'string' && o.description ? o.description : undefined}
-      className={cn('dk-combobox__option', p.active && 'dk-combobox__option--active', p.selected && 'dk-combobox__option--selected')}
+      className={cn('srp-combobox__option', p.active && 'srp-combobox__option--active', p.selected && 'srp-combobox__option--selected')}
       onMouseMove={() => { if (!o.disabled && !p.active) p.onMove(o.i); }} onClick={() => p.onPick(o.i)}>
-      <span className="dk-combobox__text">
-        <span className="dk-combobox__label">{p.query ? <Highlight query={p.query}>{o.label}</Highlight> : o.label}</span>
-        {o.description != null && o.description !== '' ? <span className="dk-combobox__description" aria-hidden={typeof o.description === 'string' || undefined}>{o.description}</span> : null}
+      <span className="srp-combobox__text">
+        <span className="srp-combobox__label">{p.query ? <Highlight query={p.query}>{o.label}</Highlight> : o.label}</span>
+        {o.description != null && o.description !== '' ? <span className="srp-combobox__description" aria-hidden={typeof o.description === 'string' || undefined}>{o.description}</span> : null}
       </span>
-      {p.selected ? <Icon icon={icons.Check} className="dk-combobox__check" /> : null}
+      {p.selected ? <Icon icon={icons.Check} className="srp-combobox__check" /> : null}
     </div>
   );
 });
@@ -176,13 +176,13 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, startIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
   const multi = props.multiple === true;
   const free = !multi && props.freeText === true, inline = free && !!props.inlineComplete;
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
-  const base = domId('dk-cbx', React.useId());
+  const base = domId('srp-cbx', React.useId());
   // Mapped, with each label folded for matching, once per options array rather than on every render and keystroke.
   // With loadOptions, the options are the latest answer (the options prop until one comes).
   const [loaded, setLoaded] = React.useState<readonly Given[] | null>(null);
@@ -539,7 +539,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   // Place the list under the field, in the top layer, as wide as the field at least.
   // Closing: the options stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
   const exit = useExit(open, pop), shownList = open || exit.leaving;
-  useAnchoredLayer(open, pop, box, { placement: 'bottom-start', offsetVar: '--dk-combobox-offset', matchWidth: true });
+  useAnchoredLayer(open, pop, box, { placement: 'bottom-start', offsetVar: '--srp-combobox-offset', matchWidth: true });
   // The listbox scrolls, and draws only the rows in view and a few either side (useVirtual, as VirtualList does);
   // its ::before and ::after stand in for the rest. The active row is always drawn, and scrolled into view.
   const listbox = React.useRef<HTMLDivElement | null>(null);
@@ -573,7 +573,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
     select.current = null;
     if (r && el && el.value.length >= r[1]) el.setSelectionRange(r[0], r[1]);
   });
-  const left = asIcon(props.leftIcon);
+  const left = asIcon(props.startIcon);
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
   const listId = base + '-list';
   // Stable handlers for the memoised rows, reading the latest state through a ref.
@@ -595,7 +595,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   // and may be scrolled out of the drawn window while its options aren't).
   const rows: React.ReactNode[] = [];
   const inGroup = (key: string, g: number | undefined, gl: string | undefined, kids: React.ReactNode[]) =>
-    g === undefined ? kids : [<div key={key} role="group" aria-label={gl} className="dk-combobox__group">{kids}</div>];
+    g === undefined ? kids : [<div key={key} role="group" aria-label={gl} className="srp-combobox__group">{kids}</div>];
   if (shownList) {
     const a = lay.slot[at] ?? -1, out = a >= 0 && (a < win.start || a >= win.end);
     const lone = () => inGroup('ga', shown[at]?.g, shown[at]?.gl, [row(at, win.offsetOf(a))]);
@@ -606,7 +606,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
       const it = lay.items[k];
       if (!it) continue;
       if (it.g !== g) { flush(); g = it.g; gl = it.gl; }
-      seg.push(it.n >= 0 ? row(it.n) : <div key={'h' + it.g} data-index={k} role="presentation" aria-hidden className="dk-combobox__group-label">{it.gl}</div>);
+      seg.push(it.n >= 0 ? row(it.n) : <div key={'h' + it.g} data-index={k} role="presentation" aria-hidden className="srp-combobox__group-label">{it.gl}</div>);
     }
     flush();
     if (out && a >= win.end) rows.push(...lone());
@@ -615,7 +615,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
       <input {...rest} ref={mergedRef}
         type="text" role="combobox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-autocomplete={inline ? 'both' : 'list'} aria-haspopup="listbox"
         aria-activedescendant={open && activeShown ? base + '-opt-' + active : undefined}
-        autoComplete={rest.autoComplete || 'off'} autoCorrect="off" autoCapitalize={rest.autoCapitalize ?? 'off'} spellCheck={false} className="dk-input__field" value={text}
+        autoComplete={rest.autoComplete || 'off'} autoCorrect="off" autoCapitalize={rest.autoCapitalize ?? 'off'} spellCheck={false} className="srp-input__field" value={text}
         // With multiple, the text is empty once tags are picked, so a native required blocked the form with tags in
         // it: the browser's check needs a tag or text, and screen readers still hear "required" (L8E18).
         required={multi && values.length ? false : rest.required} aria-required={rest['aria-required'] ?? (rest.required || undefined)}
@@ -623,34 +623,34 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show('selected'); }} />
   );
   return (
-    <span ref={box} className={cn('dk-input dk-combobox', multi && 'dk-combobox--multiple', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
+    <span ref={box} className={cn('srp-input srp-combobox', multi && 'srp-combobox--multiple', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="combobox" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={pressFocuses(input)}>
-      {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
-      {multi ? <span className="dk-combobox__values">
-        {values.length ? <span className="dk-combobox__tags" onMouseDown={keep}>
-          {values.map((v) => <Badge key={v} className="dk-combobox__tag" removeLabel={sds.labels.remove}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
+      {multi ? <span className="srp-combobox__values">
+        {values.length ? <span className="srp-combobox__tags" onMouseDown={keep}>
+          {values.map((v) => <Badge key={v} className="srp-combobox__tag" removeLabel={sds.labels.remove}
             onRemove={locked ? undefined : () => { remove(v); if (input.current) input.current.focus(); }}>{labelOf(v)}</Badge>)}
         </span> : null}
         {field}
       </span> : field}
       {showClear ? (
-        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || sds.labels.clearValue(name || '')} onMouseDown={keep} onClick={clear}>
+        <button type="button" tabIndex={-1} className="srp-combobox__button srp-combobox__clear" aria-label={props.clearLabel || sds.labels.clearValue(name || '')} onMouseDown={keep} onClick={clear}>
           <Icon icon={icons.Close} />
         </button>
       ) : null}
-      <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || sds.labels.showOptions} aria-expanded={open} aria-controls={open ? listId : undefined}
+      <button type="button" tabIndex={-1} className="srp-combobox__button srp-combobox__toggle" aria-label={props.toggleLabel || sds.labels.showOptions} aria-expanded={open} aria-controls={open ? listId : undefined}
         disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide('trigger'); else show('selected'); if (input.current) input.current.focus(); }}>
         <Icon icon={icons.ExpandMore} />
       </button>
-      <div ref={pop} className="dk-combobox__popup" {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} onMouseDown={keep}>
-        {loading ? <div className="dk-combobox__message" role="status"><LoaderRing size="sm" />{props.loadingText || sds.labels.loadingResults}</div> : null}
-        <div ref={setListbox} id={listId} role="listbox" className="dk-combobox__listbox" style={win.before || win.after ? { '--dk-cbx-before': win.before + 'px', '--dk-cbx-after': win.after + 'px' } as React.CSSProperties : undefined} aria-multiselectable={multi || undefined} aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
+      <div ref={pop} className="srp-combobox__popup" {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} onMouseDown={keep}>
+        {loading ? <div className="srp-combobox__message" role="status"><LoaderRing size="sm" />{props.loadingText || sds.labels.loadingResults}</div> : null}
+        <div ref={setListbox} id={listId} role="listbox" className="srp-combobox__listbox" style={win.before || win.after ? { '--srp-cbx-before': win.before + 'px', '--srp-cbx-after': win.after + 'px' } as React.CSSProperties : undefined} aria-multiselectable={multi || undefined} aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
           {/* Only while open (and fading out): a closed Combobox with thousands of options keeps none of them in the page. */}
           {shownList ? rows : null}
         </div>
-        {more && !loading && !failed ? <div className="dk-combobox__message">{moreText}</div> : null}
-        {!loading && failed ? <div className="dk-combobox__message">{sds.labels.loadFailed}</div> : null}
-        {!loading && !failed && shown.length === 0 ? <div className="dk-combobox__message">{props.emptyText ?? sds.labels.noResults}</div> : null}
+        {more && !loading && !failed ? <div className="srp-combobox__message">{moreText}</div> : null}
+        {!loading && failed ? <div className="srp-combobox__message">{sds.labels.loadFailed}</div> : null}
+        {!loading && !failed && shown.length === 0 ? <div className="srp-combobox__message">{props.emptyText ?? sds.labels.noResults}</div> : null}
       </div>
       {props.name && multi ? values.map((v) => <input key={v} type="hidden" name={props.name} form={rest.form} value={v} disabled={rest.disabled} />) : null}
       {props.name && !multi ? <input type="hidden" name={props.name} form={rest.form} value={value ?? ''} disabled={rest.disabled} /> : null}

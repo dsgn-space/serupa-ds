@@ -29,3 +29,9 @@ export const AlmostFull: Story = { args: { event: { ...event, taken: 58 } } };
 
 /** Full: the form becomes the waiting list, with no tickets to choose. */
 export const Full: Story = { args: { event: { ...event, taken: 60 } } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Register fails: everything entered stays, and it says to try again. At rest it looks like Default, so it has no screenshot. */
+export const RegisterFails: Story = { tags: ['!visual'], args: { onRegister: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

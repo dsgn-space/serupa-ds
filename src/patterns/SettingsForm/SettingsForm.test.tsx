@@ -9,6 +9,9 @@ const said = () => [...document.querySelectorAll('[aria-live="polite"],[role="st
 
 // Settings form (PT3): each section saves alone, says what's wrong with links to the fields, says when it's saved,
 // and asks before unsaved changes are lost.
+// Whether main, or the content inside it, is marked busy.
+const busy = () => document.querySelector('main[aria-busy="true"], main [aria-busy="true"]') !== null;
+
 describe('Patterns/Settings form', () => {
   test('the profile rules, in the order of the fields', () => {
     expect(profileProblems({ name: ' ', email: 'ada', bio: 'x'.repeat(161), timeZone: '' }).map((e) => e.field))
@@ -92,14 +95,14 @@ describe('Patterns/Settings form', () => {
 
   test('loading: the page and its sections are there, busy, named once; the form then starts from the settings that came in', async () => {
     const screen = await render(<SettingsForm loading />);
-    expect(document.querySelector('main')!.getAttribute('aria-busy')).toBe('true');
+    expect(busy()).toBe(true);
     expect(screen.getByRole('heading', { level: 2 }).elements().map((h) => h.textContent)).toEqual(['Profile', 'Notifications']);
     await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading settings']);
     expect(screen.getByRole('textbox').elements()).toHaveLength(0);
     const initial = { profile: { name: 'Budi Santoso', email: 'budi@example.com', bio: '', timeZone: 'Asia/Jakarta' }, notifications: { comments: true, summary: false, news: false } };
     await screen.rerender(<SettingsForm initial={initial} />);
     await expect.element(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue('Budi Santoso');
-    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+    expect(busy()).toBe(false);
   });
 
   test('a failed load keeps the page and its h1, says so in the sections\' place, and Try again calls onRetry', async () => {
@@ -107,7 +110,7 @@ describe('Patterns/Settings form', () => {
     const screen = await render(<SettingsForm loading loadFailed onRetry={onRetry} />);
     expect(screen.getByRole('heading', { level: 1 }).elements().map((h) => h.textContent)).toEqual(['Settings']);
     await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your settings' })).toBeVisible();
-    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+    expect(busy()).toBe(false);
     expect(screen.getByRole('textbox').elements()).toHaveLength(0);
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledOnce();

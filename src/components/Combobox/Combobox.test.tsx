@@ -114,7 +114,7 @@ describe('Combobox', () => {
     // Brazil was picked already; Denmark (dk) is disabled; Narnia matches nothing.
     expect(seen).toEqual([['Brazil', 'Argentina', 'ci']]);
     await expect.poll(() => el('pst').value).toBe('Narnia, dk');
-    await expect.poll(() => (document.querySelector('[data-dk-announcer]') as HTMLElement).textContent).toBe('Argentina, Côte d’Ivoire added');
+    await expect.poll(() => (document.querySelector('[data-srp-announcer]') as HTMLElement).textContent).toBe('Argentina, Côte d’Ivoire added');
   });
 
   test('multiple: a paste with no separator, or one that matches nothing, is pasted as text; a single Combobox never splits', async () => {
@@ -167,7 +167,7 @@ describe('Combobox', () => {
     // aria-controls only while the list is open, on the field and the chevron.
     expect([i.getAttribute('aria-controls'), toggle.getAttribute('aria-controls')]).toEqual([null, null]);
     expect([list.getAttribute('role'), list.parentElement!.hidden, i.labels![0]!.textContent, ref.current === i]).toEqual(['listbox', true, 'Country', true]);
-    expect(box.className).toMatch(/dk-input dk-combobox.*extra/);
+    expect(box.className).toMatch(/srp-input srp-combobox.*extra/);
     expect([box.dataset.component, box.offsetHeight, toggle.getAttribute('aria-label'), toggle.tabIndex]).toEqual(['combobox', 32, 'Show options', -1]);
   });
 
@@ -179,8 +179,8 @@ describe('Combobox', () => {
 
   test('a press on the box (left icon, side padding, past the chevron) focuses the field with the caret at the end; a disabled box stays put (GG2)', async () => {
     await render(<div style={{ width: '320px' }}>
-      <Combobox id="bx" size="lg" leftIcon="search" options={COUNTRIES} defaultValue="Canada" aria-label="Country" />
-      <Combobox id="bx-off" size="lg" leftIcon="search" options={COUNTRIES} disabled aria-label="Off" />
+      <Combobox id="bx" size="lg" startIcon="search" options={COUNTRIES} defaultValue="Canada" aria-label="Country" />
+      <Combobox id="bx-off" size="lg" startIcon="search" options={COUNTRIES} disabled aria-label="Off" />
       <button id="bx-away">away</button>
     </div>);
     const box = (id: string) => el(id).closest('[data-component=combobox]') as HTMLElement;
@@ -389,7 +389,7 @@ describe('Combobox', () => {
 
   test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const made: string[] = [], picked: Array<string | null> = [];
     function Tags() {
@@ -642,7 +642,7 @@ describe('Combobox', () => {
 
   test('once typing stops, how many options match is said ("2 results"); Indonesian "2 hasil" (BE1)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     // In English, whatever language the browser runs in: the digits' own test follows.
     await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
@@ -658,7 +658,7 @@ describe('Combobox', () => {
 
   test('the count said is in the locale\'s digits and grouping: "٢ results" in ar-EG, "1,200 results" in en-US', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const many = Array.from({ length: 1200 }, (_, i) => 'Item ' + (i + 1));
     await render(<>
@@ -678,7 +678,7 @@ describe('Combobox', () => {
   // read, so typing that matched nothing said nothing. The shared announcer says it now, as it says the counts.
   test('typing that matches nothing says "No results" through the announcer, then a match says its count again; the row is plain text, said once (GR53)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
@@ -692,7 +692,7 @@ describe('Combobox', () => {
 
   test('a load that fails says "Couldn\'t load" through the announcer (GR53)', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<Combobox id="lf" aria-label="Country" debounce={0} loadOptions={() => Promise.reject(new Error('offline'))} />);
     el('lf').focus();
@@ -787,7 +787,7 @@ describe('Combobox: autocomplete', () => {
       <Combobox id="ks" aria-label="Keys" options={COUNTRIES} onKeyDown={(e) => { if (e.key === 'ArrowDown') e.preventDefault(); }} />
       <Combobox id="ro" aria-label="Locked" options={COUNTRIES} readOnly defaultValue="France" />
     </form>);
-    expect([el('cb').getAttribute('aria-invalid'), el('cb').parentElement!.className.includes('dk-input--invalid')]).toEqual(['true', true]);
+    expect([el('cb').getAttribute('aria-invalid'), el('cb').parentElement!.className.includes('srp-input--invalid')]).toEqual(['true', true]);
     await userEvent.click(el('cb'));
     await userEvent.keyboard('{ArrowDown}{ArrowDown}{Enter}');
     expect(el('cb').value).not.toBe('Canada');
@@ -840,7 +840,7 @@ describe('Combobox multiple (DF1)', () => {
 
   test('controlled; each pick and removal is read out ("Argentina added", "Argentina removed"; Indonesian "ditambahkan", "dihapus"); × clears every tag; leaving the field empties the search text', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     function Team() {
       const [v, setV] = React.useState<string[]>(['ci']);
@@ -1237,7 +1237,7 @@ describe('Combobox: limit', () => {
   const MANY = Array.from({ length: 30 }, (_, i) => 'Item ' + (i + 1));
   test('shows at most limit matches, with "+N more, keep typing" under them, said with the count', async () => {
     const said: string[] = [];
-    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-srp-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     await render(<SerupaProvider locale="en-US"><Combobox id="lim" aria-label="Item" options={MANY} limit={5} /></SerupaProvider>);   // digits read as en-US
     el('lim').focus();

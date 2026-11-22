@@ -25,12 +25,12 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   variant?: BadgeVariant | undefined;
   /** 'neutral' (default) and 'primary' use the alias colors; 'success' (green), 'warning' (amber), 'danger' (red) and 'info' (sky) are statuses; the palette families are for categories and tags. Every tone and variant keeps 4.5:1 text in light and dark. */
   tone?: BadgeTone | undefined;
-  /** A small status dot before the label, in the badge's text color. Ignored with leftIcon or count. With no label, icon or count, renders a lone indicator dot ("something new"): decorative unless given aria-label. */
+  /** A small status dot before the label, in the badge's text color. Ignored with startIcon or count. With no label, icon or count, renders a lone indicator dot ("something new"): decorative unless given aria-label. */
   dot?: boolean | undefined;
   /** With dot (in a label or the lone indicator): a copy of the dot grows and fades every second (the system's ping animation), for live states. Off under reduced motion. Ignored without a dot. Default false. */
   ping?: boolean | undefined;
   /** A Material Symbols (or custom) icon name, or an element, before the label. Decorative. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** Makes it a count badge: a round pill with the number. 0 renders nothing unless showZero. */
   count?: number | undefined;
   /** With count: above this, shows "max+" (default 99: "99+"). */
@@ -62,7 +62,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
 /* Badge: a short label for status, counts and categories. variant "subtle" (default: a tint), "solid" (a full
    fill) or "outline" (a border); tone "neutral" (default), "primary", "success", "warning", "danger", "info" or a
    palette family for categories ("violet", "teal"…). One size: 20px tall, text-xs, 12px icons. Extras: a status
-   dot (dot; with no label, icon or count, dot alone renders a lone indicator dot; ping adds the system's ping animation to the dot), a leading icon (leftIcon: a Material Symbols or custom icon name, or an element), a count (count,
+   dot (dot; with no label, icon or count, dot alone renders a lone indicator dot; ping adds the system's ping animation to the dot), a leading icon (startIcon: a Material Symbols or custom icon name, or an element), a count (count,
    max: shows "99+" past max, and nothing at 0 unless showZero) and a remove button (onRemove; its accessible
    name is removeLabel + the label, "Remove Design"). Interactive: with onClick it renders a <button type="button">,
    with href a link (the configured link component, like Button), and only then has hover, focus and active
@@ -71,7 +71,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
 const VARIANTS: readonly BadgeVariant[] = ['subtle', 'solid', 'outline'];
 const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const PLAIN = { useGrouping: false } as const;
-const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
+const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, startIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
 
 function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
@@ -97,7 +97,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   const text = !isCount && (typeof props.children === 'string' || typeof props.children === 'number') ? String(props.children) : '';
   const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-badge__label'));
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.srp-badge__label'));
   const setNode = useMergedRef(ref, (n: HTMLElement | null) => { node.current = n; });
   let label: React.ReactNode = props.children;
   if (isCount) {
@@ -121,14 +121,14 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   // Indicator: dot with no label, icon or count is a lone dot ("something new", no number): a solid circle in the
   // tone with a ring in the surface color, for the corner of an icon or avatar. Decorative unless you name it.
   const hasLabel = !(label == null || label === false || label === '');
-  if (!isCount && props.dot && !hasLabel && (props.leftIcon == null || props.leftIcon === false)) {
+  if (!isCount && props.dot && !hasLabel && (props.startIcon == null || props.startIcon === false)) {
     if (process.env.NODE_ENV !== 'production' && (interactive || typeof props.onRemove === 'function')) warnOnce('badge-indicator', "Badge: a dot indicator can't be clicked or removed (it's too small to target); name and handle the control it sits on.");
     delete rest.href; delete rest.onClick; delete rest.type; delete rest.disabled; delete rest.target; delete rest.rel;
     rest['data-component'] = 'badge';
     rest['data-variant'] = 'indicator';
     rest['data-tone'] = tone;
     if (rest['aria-label'] || rest['aria-labelledby']) rest.role = rest.role || 'img'; else rest['aria-hidden'] = true;
-    return <span {...rest} ref={ref} className={cn('dk-badge', 'dk-badge--indicator', 'dk-badge--tone-' + tone, props.ping && 'dk-badge--ping', props.className)} />;
+    return <span {...rest} ref={ref} className={cn('srp-badge', 'srp-badge--indicator', 'srp-badge--tone-' + tone, props.ping && 'srp-badge--ping', props.className)} />;
   }
   if (cut && tipOk) rest.title = text;
   rest['data-component'] = 'badge';
@@ -143,19 +143,19 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
       rest.onClick = block;           // clicks, Space and Enter do nothing while it loads
     }
   }
-  const icon = !isCount && props.leftIcon != null && props.leftIcon !== false
-    ? <span className="dk-badge__icon" aria-hidden key="icon">{asIcon(props.leftIcon)}</span> : null;
+  const icon = !isCount && props.startIcon != null && props.startIcon !== false
+    ? <span className="srp-badge__icon" aria-hidden key="icon">{asIcon(props.startIcon)}</span> : null;
   const dot = !isCount && !icon && props.dot   // in an icon-sized box, so a dot badge lines up with icon badges
-    ? <span className="dk-badge__icon dk-badge__icon--dot" aria-hidden key="dot"><span className="dk-badge__dot" /></span> : null;
+    ? <span className="srp-badge__icon srp-badge__icon--dot" aria-hidden key="dot"><span className="srp-badge__dot" /></span> : null;
   const named = typeof label === 'string' || typeof label === 'number' ? ' ' + label : '';
   const remove = removable
-    ? <button type="button" className="dk-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.dk-badge', '.dk-badge__remove')} disabled={loading || undefined}
+    ? <button type="button" className="srp-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.srp-badge', '.srp-badge__remove')} disabled={loading || undefined}
         aria-label={(props.removeLabel || sds.labels.remove) + named}><Icon icon={icons.Close} /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingLabel)
-  const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
-  const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
-  const content = <>{dot}{icon}<span className="dk-badge__label">{label}</span>{remove}{spin}</>;
+  const spin = loading ? <span className="srp-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
+  const classes = cn('srp-badge', 'srp-badge--' + variant, 'srp-badge--tone-' + tone, isCount && 'srp-badge--count', (icon || dot) && 'srp-badge--lead', dot && props.ping && 'srp-badge--ping', removable && 'srp-badge--removable', interactive && 'srp-badge--interactive', loading && 'srp-badge--loading', props.className);
+  const content = <>{dot}{icon}<span className="srp-badge__label">{label}</span>{remove}{spin}</>;
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
     rest.onKeyDown = chain(rest.onKeyDown, pressKey);

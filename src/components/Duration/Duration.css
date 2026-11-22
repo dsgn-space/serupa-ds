@@ -3,6 +3,6 @@
    together, so words wrap only between units; a clock ("1:30:00") stays on one line with tabular digits, so a
    column of them lines up.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-duration--digital { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@layer srp.components {
+.srp-duration--digital { white-space: nowrap; font-variant-numeric: tabular-nums; }
 }

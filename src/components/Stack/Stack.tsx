@@ -40,24 +40,24 @@ function StackRender({ ref, ...props }: StackProps & React.RefAttributes<HTMLEle
     let d = dir, a = align;
     for (const w of WIDTHS) {
       const dw = dirAt(dirs ? dirs[w] : props.direction), aw = alignAt(aligns ? aligns[w] : props.align, dw);
-      if (dw !== d) widths.push('dk-stack--' + w + '-' + dw);
-      if (aw !== a) widths.push('dk-stack--' + w + '-align-' + aw);
+      if (dw !== d) widths.push('srp-stack--' + w + '-' + dw);
+      if (aw !== a) widths.push('srp-stack--' + w + '-align-' + aw);
       d = dw; a = aw;
     }
   }
   if (gaps) {
-    vars['--dk-stack-gap-base'] = space(gaps.base) || GAP;
-    for (const w of WIDTHS) vars['--dk-stack-gap-' + w] = space(gaps[w]) || GAP;
-    widths.push('dk-stack--gaps');
+    vars['--srp-stack-gap-base'] = space(gaps.base) || GAP;
+    for (const w of WIDTHS) vars['--srp-stack-gap-' + w] = space(gaps[w]) || GAP;
+    widths.push('srp-stack--gaps');
   } else {
     const gap = space(props.gap);
-    if (gap) vars['--dk-stack-gap'] = gap;
+    if (gap) vars['--srp-stack-gap'] = gap;
   }
   const tag = oneOf(TAGS, props.as, 'div');
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   return React.createElement(tag, Object.assign(rest, {
     ref: ref, 'data-component': 'stack', role: rest.role ?? (tag === 'ul' || tag === 'ol' ? 'list' : undefined),
-    className: cn('dk-stack', row && 'dk-stack--row', 'dk-stack--align-' + align, justify !== 'start' && 'dk-stack--justify-' + justify, props.wrap && 'dk-stack--wrap', widths.join(' '), props.className),
+    className: cn('srp-stack', row && 'srp-stack--row', 'srp-stack--align-' + align, justify !== 'start' && 'srp-stack--justify-' + justify, props.wrap && 'srp-stack--wrap', widths.join(' '), props.className),
     style: Object.keys(vars).length ? Object.assign(vars, props.style) : props.style,
   }));
 }

@@ -23,12 +23,12 @@ const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const b = await browser();
 const p = await b.newPage();
 await p.goto(writePage('print.html', APP, { react: true, base: true }));
-await p.waitForSelector('.dk-toast');
+await p.waitForSelector('.srp-toast');
 const read = () => p.evaluate(() => {
   const cs = (s, pseudo) => getComputedStyle(document.querySelector(s), pseudo);
-  return { btn: cs('#btn').printColorAdjust, badge: cs('#badge').printColorAdjust, toaster: cs('.dk-toaster').display, fab: cs('#fab').display,
+  return { btn: cs('#btn').printColorAdjust, badge: cs('#badge').printColorAdjust, toaster: cs('.srp-toaster').display, fab: cs('#fab').display,
     out: cs('#out', '::after').content, inner: cs('#in', '::after').content, plain: cs('#plain', '::after').content,
-    spl: Math.round(document.getElementById('spl').getBoundingClientRect().height), pane: document.getElementById('spl-b').closest('.dk-splitter__pane').getBoundingClientRect().height >= 1200,
+    spl: Math.round(document.getElementById('spl').getBoundingClientRect().height), pane: document.getElementById('spl-b').closest('.srp-splitter__pane').getBoundingClientRect().height >= 1200,
     sep: getComputedStyle(document.querySelector('#spl [role="separator"]')).display };
 });
 const screen = await read();

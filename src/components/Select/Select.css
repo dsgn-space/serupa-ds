@@ -1,83 +1,83 @@
 /* ---------------------------------------------------------------
    Select: a native <select> styled like Input, at the control heights (24, 32, 44px). The <select> fills the box,
-   so a click anywhere opens it; the icons sit over it and don't take clicks. Structure: .dk-select (the box) >
-   .dk-select__icon--left, .dk-select__field (the native <select>), .dk-select__icon--chevron. Every value goes
+   so a click anywhere opens it; the icons sit over it and don't take clicks. Structure: .srp-select (the box) >
+   .srp-select__icon--start, .srp-select__field (the native <select>), .srp-select__icon--chevron. Every value goes
    through --select-* tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-select {
-  --dk-select-h: var(--select-height-md, var(--control-height-md));
-  --dk-select-px: var(--select-padding-x-md, var(--spacing-3));
-  --dk-select-icon: var(--select-icon-size-md, var(--spacing-4));
-  --dk-select-bd: var(--select-border, var(--field-border));
-  --dk-select-ring: var(--select-focus-ring, var(--focus-ring));
+@layer srp.components {
+.srp-select {
+  --srp-select-h: var(--select-height-md, var(--control-height-md));
+  --srp-select-px: var(--select-padding-x-md, var(--spacing-3));
+  --srp-select-icon: var(--select-icon-size-md, var(--spacing-4));
+  --srp-select-bd: var(--select-border, var(--field-border));
+  --srp-select-ring: var(--select-focus-ring, var(--focus-ring));
   position: relative; display: inline-flex;
-  box-sizing: border-box; width: var(--sizing-full); height: var(--dk-select-h);
+  box-sizing: border-box; width: var(--sizing-full); height: var(--srp-select-h);
   background: var(--select-bg, var(--field)); color: var(--select-text, var(--text));
-  border: var(--select-border-width, var(--border-width-1)) solid var(--dk-select-bd);
+  border: var(--select-border-width, var(--border-width-1)) solid var(--srp-select-bd);
   border-radius: var(--select-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
-.dk-select--size-sm { --dk-select-h: var(--select-height-sm, var(--control-height-sm)); --dk-select-px: var(--select-padding-x-sm, var(--spacing-2)); --dk-select-icon: var(--select-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-select--size-lg { --dk-select-h: var(--select-height-lg, var(--control-height-lg)); --dk-select-px: var(--select-padding-x-lg, var(--spacing-4)); --dk-select-icon: var(--select-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
-.dk-select__field {
+.srp-select--size-sm { --srp-select-h: var(--select-height-sm, var(--control-height-sm)); --srp-select-px: var(--select-padding-x-sm, var(--spacing-2)); --srp-select-icon: var(--select-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.srp-select--size-lg { --srp-select-h: var(--select-height-lg, var(--control-height-lg)); --srp-select-px: var(--select-padding-x-lg, var(--spacing-4)); --srp-select-icon: var(--select-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.srp-select__field {
   appearance: none; -webkit-appearance: none;
   flex: auto; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); height: var(--sizing-full);
   margin: var(--spacing-0); border: 0; border-radius: inherit; background: transparent; outline: none;
   padding-block: var(--spacing-0);
-  padding-inline: var(--dk-select-px) calc(var(--spacing-2) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2)));
+  padding-inline: var(--srp-select-px) calc(var(--spacing-2) + var(--srp-select-icon) + var(--select-gap, var(--spacing-2)));
   color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
-.dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
-.dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
+.srp-select--has-icon .srp-select__field { padding-inline-start: calc(var(--srp-select-px) + var(--srp-select-icon) + var(--select-gap, var(--spacing-2))); }
+.srp-select__field option, .srp-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
+.srp-select--empty .srp-select__field { color: var(--select-placeholder, var(--placeholder)); }
 /* Filled in by the browser (a country, a card's month): the box keeps its look, as Input's does (GR411). */
-.dk-select__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--select-text, var(--text)); }
+.srp-select__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--select-text, var(--text)); }
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
    people edit the text or focus the field, whose ring is the mark then. */
-.dk-select:has(.dk-select__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-bd); }
-.dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
-.dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
+.srp-select:has(.srp-select__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--select-border-width, var(--border-width-1)) var(--srp-select-bd); }
+.srp-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
+.srp-select__icon--start { inset-inline-start: var(--srp-select-px); }
 /* The chevron sits 8px inside the end edge at every size, where Combobox, DatePicker and the other fields put
    theirs, so the chevrons of a column of fields line up. */
-.dk-select__icon--chevron { inset-inline-end: var(--spacing-2); }
-.dk-select__icon .dk-icon { font-size: var(--dk-select-icon); }
-@media (hover: hover) { .dk-select:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), .dk-select--readonly, :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
+.srp-select__icon--chevron { inset-inline-end: var(--spacing-2); }
+.srp-select__icon .srp-icon { font-size: var(--srp-select-icon); }
+@media (hover: hover) { .srp-select:hover:not(.srp-select--disabled, :has(.srp-select__field:disabled), .srp-select--readonly, :focus-within) { --srp-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws. */
-.dk-select:focus-within { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.dk-select--invalid { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); --dk-select-ring: var(--select-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-select--invalid:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), :focus-within) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
+.srp-select:focus-within { transition-duration: var(--duration-0); --srp-select-bd: var(--srp-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--srp-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.srp-select--invalid { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); --srp-select-ring: var(--select-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-select--invalid:hover:not(.srp-select--disabled, :has(.srp-select__field:disabled), :focus-within) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* A required select left on its empty option after people change it or try to send the form: as Input (:user-invalid). */
-.dk-select:has(.dk-select__field:user-invalid) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); --dk-select-ring: var(--select-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .dk-select:has(.dk-select__field:user-invalid):hover:not(:focus-within) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
+.srp-select:has(.srp-select__field:user-invalid) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); --srp-select-ring: var(--select-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-select:has(.srp-select__field:user-invalid):hover:not(:focus-within) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native select follows that on its own). */
-.dk-select--disabled, .dk-select:where(:has(.dk-select__field:disabled)) { --dk-select-bd: var(--select-border-disabled, var(--disabled-border)); background: var(--select-bg-disabled, var(--field-readonly)); color: var(--select-text-disabled, var(--disabled-text)); }
+.srp-select--disabled, .srp-select:where(:has(.srp-select__field:disabled)) { --srp-select-bd: var(--select-border-disabled, var(--disabled-border)); background: var(--select-bg-disabled, var(--field-readonly)); color: var(--select-text-disabled, var(--disabled-text)); }
 /* Full opacity: older Chrome (129, the floor) fades a disabled select to 0.7 on top of the disabled color. */
-.dk-select--disabled .dk-select__field, .dk-select__field:disabled { color: var(--select-text-disabled, var(--disabled-text)); opacity: var(--opacity-100); }
-.dk-select--disabled .dk-select__field, .dk-select__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-select--disabled .srp-select__field, .srp-select__field:disabled { color: var(--select-text-disabled, var(--disabled-text)); opacity: var(--opacity-100); }
+.srp-select--disabled .srp-select__field, .srp-select__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* Read-only: the read-only field background, as Input, and a default cursor, since it doesn't open. */
-.dk-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
-.dk-select--readonly .dk-select__field { cursor: default; }
-@media (forced-colors: active) { .dk-select__icon { color: CanvasText; } }
+.srp-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
+.srp-select--readonly .srp-select__field { cursor: default; }
+@media (forced-colors: active) { .srp-select__icon { color: CanvasText; } }
 /* Where the browser lets the page style a select's list (appearance: base-select), the list is drawn as Combobox's:
    an overlay surface with its border, radius and shadow, options with the highlight fill under the pointer or the
    keyboard (and a bar at the start with more contrast), and the tick in primary. It stays a native <select>: the same keys, the
    same form value, the phone's own picker where the browser keeps one. Elsewhere the browser draws its own list. */
 @supports (appearance: base-select) {
-  .dk-select__field, .dk-select__field::picker(select) { appearance: base-select; }
+  .srp-select__field, .srp-select__field::picker(select) { appearance: base-select; }
   /* A value too long for the box stops at the content edge, before the chevron; overflow: hidden alone clips at the
      padding edge, so the text ran on under it. */
-  .dk-select__field { display: flex; align-items: center; white-space: nowrap; overflow: clip; overflow-clip-margin: content-box; }
-  .dk-select__field::picker-icon { display: none; }   /* the box draws its own chevron */
-  .dk-select__field::picker(select) {
-    --dk-select-nest: max(var(--spacing-0), calc(var(--select-picker-radius, var(--radius-surface)) - var(--select-picker-padding, var(--spacing-1)) - var(--border-width-1)));
+  .srp-select__field { display: flex; align-items: center; white-space: nowrap; overflow: clip; overflow-clip-margin: content-box; }
+  .srp-select__field::picker-icon { display: none; }   /* the box draws its own chevron */
+  .srp-select__field::picker(select) {
+    --srp-select-nest: max(var(--spacing-0), calc(var(--select-picker-radius, var(--radius-surface)) - var(--select-picker-padding, var(--spacing-1)) - var(--border-width-1)));
     /* As wide as the box, border and all, and lined up with its outer edges, as Combobox's list is: the anchor is the
        <select> inside the box's border. */
-    --dk-select-out: calc(var(--select-border-width, var(--border-width-1)) * -1);
-    box-sizing: border-box; min-inline-size: calc(anchor-size(inline) + var(--select-border-width, var(--border-width-1)) + var(--select-border-width, var(--border-width-1))); margin-inline: var(--dk-select-out); max-block-size: var(--select-picker-max-height, var(--spacing-60));
+    --srp-select-out: calc(var(--select-border-width, var(--border-width-1)) * -1);
+    box-sizing: border-box; min-inline-size: calc(anchor-size(inline) + var(--select-border-width, var(--border-width-1)) + var(--select-border-width, var(--border-width-1))); margin-inline: var(--srp-select-out); max-block-size: var(--select-picker-max-height, var(--spacing-60));
     /* As wide as Combobox's list at most, and inside the window: a long option wraps (the field itself stays on one line). */
     max-inline-size: min(calc(var(--sizing-full) - var(--spacing-4)), var(--container-md)); white-space: normal; overflow-wrap: anywhere;
     margin-block: var(--spacing-1); padding: var(--select-picker-padding, var(--spacing-1)); overflow-y: auto; overscroll-behavior: contain;
@@ -86,47 +86,47 @@
     box-shadow: var(--select-picker-shadow, var(--elevation-overlay));
     font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   }
-  .dk-select__field option {
-    --dk-bar: var(--border-width-2);
+  .srp-select__field option {
+    --srp-bar: var(--border-width-2);
     display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-block-size: var(--select-option-height, var(--control-height-md));
-    padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)); border-radius: var(--dk-select-nest, var(--radius-control));
+    padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)); border-radius: var(--srp-select-nest, var(--radius-control));
     background: transparent; color: var(--select-text, var(--text)); cursor: var(--cursor-interactive); touch-action: manipulation; outline: none;
   }
-  .dk-select__field option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-  .dk-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
+  .srp-select__field option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
+  .srp-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
   @media (hover: hover) {
-    .dk-select__field option:hover:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
+    .srp-select__field option:hover:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
   }
   /* The tick: Combobox's own (the Material check, drawn as a clip-path shape), at the end of the row, so an option's
      text lines up with the field's text as Combobox's does. The row runs reversed and packs to its start, so the tick
      (the browser puts it first) lands at the end, pushed there by its auto margin. Only the chosen option has one: no
      space kept in the others. */
-  .dk-select__field option::checkmark {
+  .srp-select__field option::checkmark {
     margin-inline-start: auto; flex-shrink: 0; color: var(--select-check, var(--primary));
     content: "" / ""; inline-size: var(--spacing-4); block-size: var(--spacing-4); background: currentColor;
     /* stylelint-disable-next-line serupa/no-raw-value -- the Material check's path (the icon Combobox shows), as fractions of its 16px box: points of a drawing, not sizes */
     clip-path: shape(from 39.7917% 63.125%, line by 35.3125% -35.3125%, curve by 2.9167% -1.25% with 1.25% -1.25%, smooth by 2.9167% 1.25%, smooth by 1.25% 2.9688%, smooth by -1.25% 2.9688%, line by -38.2292% 38.3333%, curve by -2.9167% 1.25% with -1.25% 1.25%, smooth by -2.9167% -1.25%, line by -17.9167% -17.9167%, curve by -1.1979% -2.9688% with -1.25% -1.25%, smooth by 1.3021% -2.9688%, smooth by 2.9688% -1.25%, smooth by 2.9688% 1.25%, close);
   }
-  .dk-select__field option:not(:checked)::checkmark { display: none; }
+  .srp-select__field option:not(:checked)::checkmark { display: none; }
   /* The chevron turns over while the list is open, as Combobox's does. */
-  .dk-select__icon--chevron .dk-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
-  .dk-select:has(.dk-select__field:open) .dk-select__icon--chevron .dk-icon { --dk-select-turn: 180deg; rotate: var(--dk-select-turn); }
-  @media (prefers-reduced-motion: reduce) { .dk-select__icon--chevron .dk-icon { transition: none; } }
+  .srp-select__icon--chevron .srp-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
+  .srp-select:has(.srp-select__field:open) .srp-select__icon--chevron .srp-icon { --srp-select-turn: 180deg; rotate: var(--srp-select-turn); }
+  @media (prefers-reduced-motion: reduce) { .srp-select__icon--chevron .srp-icon { transition: none; } }
   /* The placeholder is the field's own text, as Combobox's: it isn't a row of the list. */
-  .dk-select__field option.dk-select__placeholder { display: none; }
+  .srp-select__field option.srp-select__placeholder { display: none; }
   /* Open, focus is in the list, so :focus-within no longer holds: the field keeps its focus ring, as Combobox's does. */
-  .dk-select:has(.dk-select__field:open) { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-  .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
-  .dk-select__field optgroup { display: block; background: transparent; }   /* on the list's surface: the field's color (lighter on a raised Card) showed as a band */
-  .dk-select__field optgroup legend { padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--select-group-label, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
-  @media (pointer: coarse) { .dk-select__field option { min-block-size: var(--select-option-height-touch, var(--control-height-lg)); } }
+  .srp-select:has(.srp-select__field:open) { transition-duration: var(--duration-0); --srp-select-bd: var(--srp-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--srp-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+  .srp-select__field option:disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+  .srp-select__field optgroup { display: block; background: transparent; }   /* on the list's surface: the field's color (lighter on a raised Card) showed as a band */
+  .srp-select__field optgroup legend { padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--select-group-label, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+  @media (pointer: coarse) { .srp-select__field option { min-block-size: var(--select-option-height-touch, var(--control-height-lg)); } }
   @media (forced-colors: active) {
-    .dk-select__field option:focus-visible:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-    @media (hover: hover) { .dk-select__field option:hover:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
-    .dk-select__field option::checkmark { color: CanvasText; background: CanvasText; }
+    .srp-select__field option:focus-visible:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+    @media (hover: hover) { .srp-select__field option:hover:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
+    .srp-select__field option::checkmark { color: CanvasText; background: CanvasText; }
   }
 }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
-@supports (-webkit-touch-callout: none) { .dk-select:not(.dk-select--size-lg) .dk-select__field { font-size: var(--text-base); } }
+@supports (-webkit-touch-callout: none) { .srp-select:not(.srp-select--size-lg) .srp-select__field { font-size: var(--text-base); } }
 }

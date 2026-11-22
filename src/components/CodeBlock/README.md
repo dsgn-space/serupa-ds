@@ -25,11 +25,11 @@ import { CodeBlock } from "@diki-stwn/serupa-ds";
 
 Drawn from the `LineNumbers` story.
 
-1. **Header** (`.dk-code-block__header`): the title, or the language when there's no title, and the copy button.
-2. **Title** (`.dk-code-block__title`): the file name or what the code is.
-3. **Copy button** (`.dk-code-block__copy`): copies the whole code and says "Copied".
-4. **Code** (`.dk-code-block__pre`): the code, which scrolls sideways when it's wider than the box.
-5. **Line** (`.dk-code-block__line`): one line, with its number before it; a marked line (`.dk-code-block__line--marked`) has a tint and a bar at its start.
+1. **Header** (`.srp-code-block__header`): the title, or the language when there's no title, and the copy button.
+2. **Title** (`.srp-code-block__title`): the file name or what the code is.
+3. **Copy button** (`.srp-code-block__copy`): copies the whole code and says "Copied".
+4. **Code** (`.srp-code-block__pre`): the code, which scrolls sideways when it's wider than the box.
+5. **Line** (`.srp-code-block__line`): one line, with its number before it; a marked line (`.srp-code-block__line--marked`) has a tint and a bar at its start.
 
 ## Usage
 

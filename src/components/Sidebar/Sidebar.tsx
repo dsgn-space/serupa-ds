@@ -44,7 +44,7 @@ export interface SidebarItemOwnProps {
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
   icon?: IconSource | undefined;
   /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
   /** Something at the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read it. */
   badge?: React.ReactNode | undefined;
   /** Nested SidebarItems: the item becomes a button that shows and hides them. */
@@ -90,8 +90,8 @@ function SidebarRender({ ref, ...props }: SidebarProps & React.RefAttributes<HTM
   const keep = React.useRef<Element | null>(null);
   const setShown = React.useCallback((v: boolean) => {
     const n = nav.current, a = activeIn(n);   // its own root's focus, in a shadow root too (GR90)
-    let li = n && a && n.contains(a) ? a.closest('.dk-sidebar__li') : null;
-    for (let up = li && li.parentElement ? li.parentElement.closest('.dk-sidebar__li') : null; up && n && n.contains(up); up = up.parentElement ? up.parentElement.closest('.dk-sidebar__li') : null) li = up;
+    let li = n && a && n.contains(a) ? a.closest('.srp-sidebar__li') : null;
+    for (let up = li && li.parentElement ? li.parentElement.closest('.srp-sidebar__li') : null; up && n && n.contains(up); up = up.parentElement ? up.parentElement.closest('.srp-sidebar__li') : null) li = up;
     keep.current = li;
     setShownNow(v);
   }, []);
@@ -126,7 +126,7 @@ function SidebarRender({ ref, ...props }: SidebarProps & React.RefAttributes<HTM
   // runs of loose items get their own list
   const body: React.ReactNode[] = [];
   let run: React.ReactNode[] = [];
-  const flush = () => { if (run.length) { body.push(<ul key={'l' + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
+  const flush = () => { if (run.length) { body.push(<ul key={'l' + body.length} className="srp-sidebar__list">{run}</ul>); run = []; } };
   flattenChildren(props.children).forEach((c) => { if (isSection(c)) { flush(); body.push(c); } else run.push(c); });
   flush();
   const mergedRef = useMergedRef(ref, (n) => { nav.current = n; });
@@ -134,10 +134,10 @@ function SidebarRender({ ref, ...props }: SidebarProps & React.RefAttributes<HTM
     <SidebarContext.Provider value={{ collapsed: shown, depth: 0 }}>
       <nav {...rest} aria-label={props['aria-label'] || sds.labels.mainNavigation} ref={mergedRef} data-component="sidebar" data-collapsed={shown ? '' : undefined}
         data-slide={slide || undefined} onTransitionEnd={(e) => { onEnd(e); if (props.onTransitionEnd) props.onTransitionEnd(e); }}
-        className={cn('dk-sidebar', shown && 'dk-sidebar--collapsed', props.className)}>
-        {props.header != null ? <div className="dk-sidebar__header">{props.header}</div> : null}
-        <div className="dk-sidebar__body">{body}</div>
-        {props.footer != null ? <div className="dk-sidebar__footer">{props.footer}</div> : null}
+        className={cn('srp-sidebar', shown && 'srp-sidebar--collapsed', props.className)}>
+        {props.header != null ? <div className="srp-sidebar__header">{props.header}</div> : null}
+        <div className="srp-sidebar__body">{body}</div>
+        {props.footer != null ? <div className="srp-sidebar__footer">{props.footer}</div> : null}
       </nav>
     </SidebarContext.Provider>
   );
@@ -151,12 +151,12 @@ export const Sidebar = /* @__PURE__ */ named('Sidebar', SidebarRender);
 
 function SidebarSectionRender({ ref, ...props }: SidebarSectionProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { title: 1, className: 1, children: 1 });
-  const id = domId('dk-sbs', React.useId());
+  const id = domId('srp-sbs', React.useId());
   const titled = props.title != null && props.title !== false && props.title !== '';
   return (
-    <div {...rest} ref={ref} className={cn('dk-sidebar__section', props.className)}>
-      {titled ? <div id={id} className="dk-sidebar__section-title">{props.title}</div> : null}
-      <ul className="dk-sidebar__list" aria-labelledby={titled ? id : undefined}>{props.children}</ul>
+    <div {...rest} ref={ref} className={cn('srp-sidebar__section', props.className)}>
+      {titled ? <div id={id} className="srp-sidebar__section-title">{props.title}</div> : null}
+      <ul className="srp-sidebar__list" aria-labelledby={titled ? id : undefined}>{props.children}</ul>
     </div>
   );
 }
@@ -164,18 +164,18 @@ function SidebarSectionRender({ ref, ...props }: SidebarSectionProps & React.Ref
 /** A group of items in a Sidebar, with an optional small heading. */
 export const SidebarSection = /* @__PURE__ */ named('SidebarSection', SidebarSectionRender);
 
-const ITEM_OWN = { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, open: 1, onOpenChange: 1, as: 1, className: 1 } as const;
+const ITEM_OWN = { label: 1, icon: 1, current: 1, badge: 1, children: 1, defaultOpen: 1, open: 1, onOpenChange: 1, as: 1, className: 1 } as const;
 type ItemElement = React.ReactElement<ItemProps>;
 const itemsOf = (children: React.ReactNode) => flattenChildren(children).filter(React.isValidElement) as ItemElement[];
 /** The item is the current page, or one of its items is, at any depth: a group opens and shows active for a grandchild too. */
-const activeWithin = (k: ItemElement): boolean => !!k.props.active || itemsOf(k.props.children).some(activeWithin);
+const activeWithin = (k: ItemElement): boolean => !!k.props.current || itemsOf(k.props.children).some(activeWithin);
 
 /* The rail's Menu for a group: each item keeps its link component (as), its other link attributes and the current
    page, and a nested group is a submenu of its own items, so they can still be reached (L8E68). */
 function railItems(kids: ItemElement[]): React.ReactNode {
   return kids.map((k, i) => {
     const key = k.key != null ? k.key : i, inner = itemsOf(k.props.children);
-    const common = { icon: k.props.icon, 'aria-current': activeWithin(k) ? ('page' as const) : undefined, className: cn('dk-sidebar__menu-item', k.props.className) };
+    const common = { icon: k.props.icon, 'aria-current': activeWithin(k) ? ('page' as const) : undefined, className: cn('srp-sidebar__menu-item', k.props.className) };
     if (inner.length) return <MenuSub key={key} {...common} label={k.props.label}>{railItems(inner)}</MenuSub>;
     return <MenuItem key={key} {...omit(k.props, ITEM_OWN) as object} onClick={undefined} as={k.props.as} {...common}
       onSelect={k.props.onClick as ((e: React.SyntheticEvent) => void) | undefined}>{k.props.label}</MenuItem>;
@@ -198,7 +198,7 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
     if (!controlled) setOwn(!open);
     if (props.onOpenChange) props.onOpenChange(!open, { reason: 'trigger' });
   };
-  const listId = domId('dk-sbi', React.useId());
+  const listId = domId('srp-sbi', React.useId());
   // A group's nested list unfolds and folds as Accordion's panel does (GM4): it stays (inert) while it folds away.
   // From the keyboard it opens at once, as it closes at once (KW1).
   const nested = React.useRef<HTMLUListElement | null>(null);
@@ -231,19 +231,19 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
   const text = typeof props.label === 'string' || typeof props.label === 'number' ? String(props.label) : '';
   const tipOk = !!text && !rail && rest.title == null && !described;
   const inner = (chevron: boolean) => <>
-    {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="dk-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
-    <span className="dk-sidebar__label">{tipOk ? <TruncatedText>{text}</TruncatedText> : props.label}</span>
-    {props.badge != null ? <span className="dk-sidebar__badge" id={dot ? badgeId : undefined}>{props.badge}</span> : null}
-    {chevron && !rail ? <Icon icon={icons.ExpandMore} className="dk-sidebar__chevron" /> : null}
+    {props.icon ? <span className="srp-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="srp-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
+    <span className="srp-sidebar__label">{tipOk ? <TruncatedText>{text}</TruncatedText> : props.label}</span>
+    {props.badge != null ? <span className="srp-sidebar__badge" id={dot ? badgeId : undefined}>{props.badge}</span> : null}
+    {chevron && !rail ? <Icon icon={icons.ExpandMore} className="srp-sidebar__chevron" /> : null}
   </>;
   // An item with children is a button, not a link: its other attributes and handlers go to the button. Its events and
   // ref are typed for HTMLElement, which both the link and the button are.
   const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 });
-  const cls = cn('dk-sidebar__item', ctx.depth > 0 && 'dk-sidebar__item--nested', (props.active || (group && childActive)) && 'dk-sidebar__item--active', props.className);
+  const cls = cn('srp-sidebar__item', ctx.depth > 0 && 'srp-sidebar__item--nested', (props.current || (group && childActive)) && 'srp-sidebar__item--active', props.className);
 
   if (group && rail) {
     return (
-      <li className="dk-sidebar__li">
+      <li className="srp-sidebar__li">
         <Menu placement="right-start" trigger={
           props.label != null && props.label !== false && props.label !== ''
             ? <Tooltip content={props.label} placement="right" role="label"><button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls}>{inner(false)}</button></Tooltip>
@@ -256,18 +256,18 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
   }
   if (group) {
     return (
-      <li className="dk-sidebar__li" data-state={open ? 'open' : 'closed'}>
+      <li className="srp-sidebar__li" data-state={open ? 'open' : 'closed'}>
         <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
-          <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={shut} inert={(!open && exit.leaving) || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
+          <ul ref={nested} id={listId} className="srp-sidebar__list srp-sidebar__list--nested" hidden={shut} inert={(!open && exit.leaving) || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
         </SidebarContext.Provider>
       </li>
     );
   }
   const Tag = props.as || config.link;
-  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.active ? 'page' : undefined}>{inner(false)}</Tag>;
+  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.current ? 'page' : undefined}>{inner(false)}</Tag>;
   return (
-    <li className="dk-sidebar__li">
+    <li className="srp-sidebar__li">
       {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
     </li>
   );

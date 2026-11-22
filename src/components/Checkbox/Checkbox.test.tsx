@@ -13,13 +13,13 @@ const input = (id: string) => document.getElementById(id) as HTMLInputElement;
 const label = (id: string) => input(id).closest('[data-component="checkbox"]') as HTMLElement;
 
 describe('Checkbox', () => {
-  test('a native checkbox in a <label class="dk-checkbox">: md is a 16px box with a 1px field border, 4px corners and text-sm', async () => {
+  test('a native checkbox in a <label class="srp-checkbox">: md is a 16px box with a 1px field border, 4px corners and text-sm', async () => {
     await render(<Checkbox id="md">Newsletter</Checkbox>);
     const i = input('md'), s = css(i);
     expect(i.type).toBe('checkbox');
     expect(label('md').tagName).toBe('LABEL');
     expect(label('md').dataset.component).toBe('checkbox');
-    expect(label('md').className).toMatch(/dk-checkbox dk-checkbox--size-md/);
+    expect(label('md').className).toMatch(/srp-checkbox srp-checkbox--size-md/);
     expect([s.appearance, s.width, s.height, s.borderTopWidth, s.borderTopLeftRadius]).toEqual(['none', '16px', '16px', '1px', '4px']);
     expect(s.borderTopColor).toBe(color('var(--field-border)'));
     expect(css(label('md')).fontSize).toBe('14px');
@@ -92,7 +92,7 @@ describe('Checkbox', () => {
   test('onCheckedChange gets the new state and the event after onChange, in a group too; not when read-only', async () => {
     const calls: string[] = [];
     await render(<div>
-      <Checkbox id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, e) => calls.push(v + ' ' + e.type)}>Alone</Checkbox>
+      <Checkbox id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, { event: e }) => calls.push(v + ' ' + e.type)}>Alone</Checkbox>
       <Checkbox id="ocr" readOnly onCheckedChange={(v) => calls.push('ro ' + v)}>Locked</Checkbox>
     </div>);
     await userEvent.click(input('occ'));
@@ -141,7 +141,7 @@ describe('Checkbox', () => {
 
   test('without a label it is just the 16px box', async () => {
     await render(<Checkbox id="b" aria-label="Select row" />);
-    expect(label('b').className).toMatch(/dk-checkbox--bare/);
+    expect(label('b').className).toMatch(/srp-checkbox--bare/);
     expect(label('b').getBoundingClientRect().height).toBe(16);
     expect(label('b').querySelector(':scope > span + span')).toBeNull();
   });
@@ -163,7 +163,7 @@ describe('Checkbox', () => {
     await render(<Checkbox id="i" invalid>Terms</Checkbox>);
     expect(input('i').getAttribute('aria-invalid')).toBe('true');
     expect(css(input('i')).borderTopColor).toBe(color('var(--field-border-invalid)'));
-    expect(label('i').className).toMatch(/dk-checkbox--invalid/);
+    expect(label('i').className).toMatch(/srp-checkbox--invalid/);
   });
 
   test('disabled: native disabled in the neutral disabled colors with a not-allowed cursor; clicks do nothing', async () => {
@@ -178,7 +178,7 @@ describe('Checkbox', () => {
       expect([th, css(input('x')).backgroundColor]).toEqual([th, color('var(--zinc-900)')]);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
-    expect(label('x').className).toMatch(/dk-checkbox--disabled/);
+    expect(label('x').className).toMatch(/srp-checkbox--disabled/);
     label('x').click();
     expect(input('x').checked).toBe(false);
     expect(onChange).not.toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe('Checkbox', () => {
   test('readOnly: focusable with aria-readonly; a click on the box or label and Space leave it as it was (checked or not), onClick still runs, and a checked box is submitted', async () => {
     const onChange = vi.fn(), onClick = vi.fn();
     await render(<form id="ro-form"><Checkbox id="ro" name="a" readOnly defaultChecked onChange={onChange} onClick={onClick}>Agreed</Checkbox><Checkbox id="ro2" readOnly>Not yet</Checkbox></form>);
-    expect([input('ro').getAttribute('aria-readonly'), label('ro').className.includes('dk-checkbox--readonly'), css(label('ro')).cursor]).toEqual(['true', true, 'default']);
+    expect([input('ro').getAttribute('aria-readonly'), label('ro').className.includes('srp-checkbox--readonly'), css(label('ro')).cursor]).toEqual(['true', true, 'default']);
     await userEvent.click(label('ro'));
     await userEvent.click(input('ro2'));
     input('ro').focus();
@@ -211,7 +211,7 @@ describe('Checkbox', () => {
     </>);
     expect([...(input('fld').labels || [])].map((l) => l.textContent).join('|')).toMatch(/I accept the terms/);
     expect(input('fld').getAttribute('aria-invalid')).toBe('true');
-    expect(label('fld').className).toMatch(/dk-checkbox--invalid/);
+    expect(label('fld').className).toMatch(/srp-checkbox--invalid/);
     expect(input('fld').getAttribute('aria-describedby')).toBeTruthy();
     expect(disabledLook(label('g1'))).toBe('neutral');
     expect(input('g2').matches(':disabled')).toBe(true);
@@ -252,7 +252,7 @@ describe('CheckboxGroup', () => {
     const names = [...g.querySelectorAll('input')].map((i) => i.name);
     expect(new Set(names).size).toBe(1);
     expect(names[0]).not.toBe('');
-    expect([...g.querySelectorAll('[data-component=checkbox]')].map((l) => [l.getAttribute('data-size'), l.classList.contains('dk-checkbox--invalid')])).toEqual([['sm', true], ['sm', true], ['sm', true]]);
+    expect([...g.querySelectorAll('[data-component=checkbox]')].map((l) => [l.getAttribute('data-size'), l.classList.contains('srp-checkbox--invalid')])).toEqual([['sm', true], ['sm', true], ['sm', true]]);
     await userEvent.click(box('2'));
     await userEvent.click(box('1'));
     await userEvent.click(box('2'));
@@ -380,9 +380,9 @@ describe('CheckboxGroup', () => {
     </CheckboxGroup>);
     const [a, b, c] = page.getByRole('checkbox').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
-    expect(card(a!).className).toMatch(/dk-checkbox--card/);
-    expect(card(c!).className).not.toMatch(/dk-checkbox--card/);
-    expect(page.getByRole('group').element().className).toMatch(/dk-checkbox-group--card/);
+    expect(card(a!).className).toMatch(/srp-checkbox--card/);
+    expect(card(c!).className).not.toMatch(/srp-checkbox--card/);
+    expect(page.getByRole('group').element().className).toMatch(/srp-checkbox-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
     expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));

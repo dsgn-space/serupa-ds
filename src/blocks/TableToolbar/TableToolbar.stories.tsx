@@ -53,7 +53,7 @@ function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as
     >
       <Table caption="Projects" hideCaption>
         <TableHead><TableRow>
-          <TableSelectCell header label="Select all projects" checked={all} indeterminate={!all && rows.some((p) => picked.includes(p.name))} onChange={() => setPicked(all ? [] : rows.map((p) => p.name))} />
+          <TableSelectCell inHeader label="Select all projects" checked={all} indeterminate={!all && rows.some((p) => picked.includes(p.name))} onChange={() => setPicked(all ? [] : rows.map((p) => p.name))} />
           <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell><TableHeaderCell>Owner</TableHeaderCell>
         </TableRow></TableHead>
         <TableBody>{rows.map((p) => (

@@ -138,7 +138,7 @@ describe('Patterns/Sign-up', () => {
 
   test('a second wrong code is said again, though the words under the field are the same', async () => {
     const screen = await render(<SignUp start="code" />);
-    const region = document.querySelector('[data-dk-announcer]') as HTMLElement;
+    const region = document.querySelector('[data-srp-announcer]') as HTMLElement;
     await userEvent.click(input('sign-up-code'));
     await userEvent.keyboard('111111');
     await screen.getByRole('button', { name: 'Verify email' }).click();

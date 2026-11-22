@@ -33,7 +33,7 @@ describe('VirtualList', () => {
     const ref = React.createRef<HTMLUListElement>();
     await render(<VirtualList id="v" ref={ref} className="extra" data-x="y" aria-label="Rows" count={3} renderItem={item} />);
     const e = el('v');
-    expect([e.tagName, e.getAttribute('role'), e.tabIndex, ref.current === e, e.classList.contains('extra'), e.classList.contains('dk-list'), e.dataset.x, e.dataset.component, e.getAttribute('aria-label')])
+    expect([e.tagName, e.getAttribute('role'), e.tabIndex, ref.current === e, e.classList.contains('extra'), e.classList.contains('srp-list'), e.dataset.x, e.dataset.component, e.getAttribute('aria-label')])
       .toEqual(['UL', 'list', 0, true, true, true, 'y', 'virtual-list', 'Rows']);
     expect(titles('v')).toEqual(['Row 1', 'Row 2', 'Row 3']);
     expect(css(e).overflowY).toBe('auto');
@@ -160,7 +160,7 @@ describe('VirtualList', () => {
     await screen.rerender(page(ids.slice(1)));
     expect([rows('v')[1] === third, rows('v')[1]!.getAttribute('aria-setsize')]).toEqual([true, '49']);
     await screen.rerender(page([]));
-    expect([rows('v').length, el('v').style.getPropertyValue('--dk-vl-after'), el('v').scrollHeight <= el('v').clientHeight]).toEqual([0, '0px', true]);
+    expect([rows('v').length, el('v').style.getPropertyValue('--srp-vl-after'), el('v').scrollHeight <= el('v').clientHeight]).toEqual([0, '0px', true]);
   });
 
   test('GR93: after a jump to the middle, each small scroll moves the view by about as much, while the rows it brings in are measured', async () => {
@@ -296,7 +296,7 @@ describe('VirtualList', () => {
   test('the loading recipe: ListLoadingItems rows are as tall as the VirtualList rows that replace them', async () => {
     const person = (i: number) => <ListItem leading={<Avatar name={'Ada ' + i} alt="" size="sm" />} title={'Ada ' + i} description="ada@example.com" />;
     await render(<div style={{ width: 400 }}>
-      <List id="wait" aria-label="Members" loading><ListLoadingItems rows={3} description leading="sm" label="Loading members" /></List>
+      <List id="wait" aria-label="Members" loading><ListLoadingItems rows={3} showDescription leading="sm" label="Loading members" /></List>
       <VirtualList id="v" aria-label="Members" count={3} renderItem={person} />
     </div>);
     expect(el('wait').getAttribute('aria-busy')).toBe('true');

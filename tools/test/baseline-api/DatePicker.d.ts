@@ -7,7 +7,9 @@ interface DatePickerLabels {
 interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "children" | "defaultValue" | "max" | "min" | "onChange" | "size" | "value"> {
     value?: Date | null | string | undefined;
     defaultValue?: Date | null | string | undefined;
-    onValueChange?: ((value: Date | null, iso: null | string) => void) | undefined;
+    onValueChange?: ((value: Date | null, details: {
+        iso: null | string;
+    }) => void) | undefined;
     onInvalidInput?: ((text: string, reason: "unavailable" | "unreadable") => void) | undefined;
     min?: Date | string | undefined;
     max?: Date | string | undefined;

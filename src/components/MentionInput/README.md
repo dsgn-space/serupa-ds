@@ -34,8 +34,8 @@ const notify = mentionsIn(text, people).map((p) => p.id);
 
 Drawn from the `Default` story.
 
-1. **Field** (`.dk-textarea`): a [Textarea](../Textarea/README.md), with every prop it takes.
-2. **List** (`.dk-mention-input__popup`): the people who match, under the line the caret is on. Each option shows an [Avatar](../Avatar/README.md), the name and its `description` line.
+1. **Field** (`.srp-textarea`): a [Textarea](../Textarea/README.md), with every prop it takes.
+2. **List** (`.srp-mention-input__popup`): the people who match, under the line the caret is on. Each option shows an [Avatar](../Avatar/README.md), the name and its `description` line.
 
 ## Usage
 
@@ -82,7 +82,7 @@ Every other key types. Nothing is taken while an input method is composing a cha
 | `onValueChange` | `(value: string) => void` | | Every change, typing or a mention put in. |
 | `onSearch` | `(query: string \| null) => void` | | What's typed after "@" while the list is open, then `null`. |
 | `onMention` | `(option: MentionOption) => void` | | A mention was put in. |
-| `trigger` | `string` | `'@'` | The character that starts a mention. |
+| `triggerChar` | `string` | `'@'` | The character that starts a mention. |
 | `filter` | `boolean` | `true` | Narrows `options` to what's typed. Off when you filter. |
 | `maxOptions` | `number` | `8` | The most options shown. |
 

@@ -48,7 +48,7 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
   const restyle = useServerStyles(ref);
   const rest = omit(props, OWN);
   const locale = useLocale();
-  const base = domId('dk-prg', React.useId());
+  const base = domId('srp-prg', React.useId());
   const variant = props.variant === 'circle' ? 'circle' : 'bar';
   const size = oneOf(SIZES, props.size, 'md');
   const tone = oneOf(TONES, props.tone, 'primary');
@@ -84,7 +84,7 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
   const ringText = nameless && variant === 'circle' && said != null;
   if (ringText) aria['aria-label'] = said;
   else if (nameless) aria['aria-labelledby'] = base + '-label';
-  const cls = cn('dk-progress', 'dk-progress--' + variant, 'dk-progress--size-' + size, tone !== 'primary' && 'dk-progress--' + tone, !known && 'dk-progress--indeterminate', props.className);
+  const cls = cn('srp-progress', 'srp-progress--' + variant, 'srp-progress--size-' + size, tone !== 'primary' && 'srp-progress--' + tone, !known && 'srp-progress--indeterminate', props.className);
   const data = { 'data-component': 'progress', 'data-variant': variant, 'data-size': size, 'data-tone': tone, 'data-state': known ? (value >= max ? 'complete' : 'loading') : 'indeterminate' };
 
   if (variant === 'circle') {
@@ -93,11 +93,11 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
     const done = known ? share * 100 : 25;
     return (
       <div {...rest} {...aria} {...data} ref={(n) => { restyle(n); nameRef(n); }} className={cls}>
-        <svg className="dk-progress__ring" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
-          <circle className="dk-progress__track" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={Math.max(0, 100 - done - 2 * RING_GAP) + ' 100'} strokeDashoffset={-(done + RING_GAP)} />
-          <circle className="dk-progress__arc" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={done + ' 100'} />
+        <svg className="srp-progress__ring" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
+          <circle className="srp-progress__track" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={Math.max(0, 100 - done - 2 * RING_GAP) + ' 100'} strokeDashoffset={-(done + RING_GAP)} />
+          <circle className="srp-progress__arc" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={done + ' 100'} />
         </svg>
-        {showValue && size !== 'sm' ? <span className="dk-progress__value" aria-hidden>{text}</span> : null}
+        {showValue && size !== 'sm' ? <span className="srp-progress__value" aria-hidden>{text}</span> : null}
         {nameless && !ringText ? <span id={base + '-label'} hidden>{props.label}</span> : null}
       </div>
     );
@@ -106,13 +106,13 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
   return (
     <div {...outer} {...data} ref={restyle} className={cls}>
       {hasLabel || showValue ? (
-        <div className="dk-progress__header">
-          {hasLabel ? <span className="dk-progress__label" id={base + '-label'}>{props.label}</span> : null}
-          {showValue ? <span className="dk-progress__value" aria-hidden>{text}</span> : null}
+        <div className="srp-progress__header">
+          {hasLabel ? <span className="srp-progress__label" id={base + '-label'}>{props.label}</span> : null}
+          {showValue ? <span className="srp-progress__value" aria-hidden>{text}</span> : null}
         </div>
       ) : null}
-      <div {...aria} ref={nameRef} className="dk-progress__track" aria-label={rest['aria-label']} aria-labelledby={rest['aria-labelledby'] || aria['aria-labelledby']}>
-        <div className="dk-progress__fill" style={known ? { '--dk-progress-rest': +((1 - share) * 100).toFixed(4) + '%' } as React.CSSProperties : undefined} />
+      <div {...aria} ref={nameRef} className="srp-progress__track" aria-label={rest['aria-label']} aria-labelledby={rest['aria-labelledby'] || aria['aria-labelledby']}>
+        <div className="srp-progress__fill" style={known ? { '--srp-progress-rest': +((1 - share) * 100).toFixed(4) + '%' } as React.CSSProperties : undefined} />
       </div>
     </div>
   );

@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents, builtUnchanged, BUILT_CHECKS } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, languageTests, onlyComponents, withDependents, touchedComponents, builtUnchanged, siteUnchanged, BUILT_CHECKS } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -40,7 +40,8 @@ if (arg('--locale')) process.env.SERUPA_LOCALE = arg('--locale');
 // The visual and Storybook steps, by group. They drive a browser through every preview and story, sharded across
 // CI jobs, so they stay scripts of their own.
 const GROUPS = {
-  visual: [['Visual snapshots', 'visual.mjs', ...update]],
+  // No picture is committed (ADR-0016): Visual draws the commit this tree starts from, then this tree (below).
+  visual: [['Visual snapshots', 'visual.mjs']],
   storybook: [['Storybook', 'storybook.mjs']],
 };
 // The tests that check every story against a baseline or a rule: a change to one component can break its line in them.
@@ -56,7 +57,7 @@ let sharedTests = [];
 let changedTests = [];
 if (arg('--since')) {
   // Lines only added to shared files (a new component's labels, icons and export) don't widen it (ADDITIVE in lib.mjs).
-  const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
+  const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
   // A story-wide test (STORY_WIDE) goes through the covered components' stories, so a change to one tests everything.
   const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
   // It changes no picture and no Storybook page, though: Visual and Storybook stay narrowed to the changed components.
@@ -76,6 +77,11 @@ if (arg('--since')) {
   if (diff.status === 0 && builtUnchanged(diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter(Boolean))) {
     process.env.SERUPA_BUILT_AS_BASE = '1';
     if (!arg('--group') || arg('--group') === 'checks') console.log(`Leaving out ${BUILT_CHECKS.join(', ')}: the change builds the same package as ${arg('--since')}`);
+  }
+  // And one that builds the same docs site leaves out the site check (siteUnchanged).
+  if (diff.status === 0 && siteUnchanged(diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter(Boolean))) {
+    process.env.SERUPA_SITE_AS_BASE = '1';
+    if (!arg('--group') || arg('--group') === 'checks') console.log(`Leaving out site: the change builds the same docs site as ${arg('--since')}`);
   }
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
@@ -122,12 +128,25 @@ const steps = [
     // A test file the change edits outside the component folders (src/styles/touchTargets.test.tsx, say) runs in every
     // language too: on 14 Nov one new test read Pagination's page numbers as 0 to 9, passed its pull request in English,
     // and failed in ar-EG in the queue, dropping three pull requests behind it.
-    const own = [...new Set([...(direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : []), ...changedTests])];
+    // Against a base (--since: pull requests and the queue), only the tests a language can break (languageTests,
+    // lib.mjs), and any shared test the change edits but the story-wide ones: those go through every story and none
+    // reads a language (activity and motion took 372 and 284 s each, on one shard in every language, and ran the
+    // queue's locale jobs past 30 minutes, 21 Nov). The nightly Languages jobs run everything in each language.
+    const lang = arg('--since') ? languageTests() : null;
+    const forLanguage = (files) => (lang ? files.filter((f) => lang.has(f) || (changedTests.includes(f) && !STORY_WIDE.includes(f))) : files);
+    const own = forLanguage([...new Set([...(direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : []), ...changedTests])]);
     // SERUPA_SHARD with SERUPA_PART=locale (CI): every third file of each, like the base shards (GR322: the whole run
     // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
     // with none passes.
-    const shard = process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests'] : [];
-    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...(direct || [])].sort().join(','), ...more }];
+    // Each language's run turns the shard number by the language's place in LOCALES, so a file that is a shard on its
+    // own lands on a different job in each language. Without the turn, every language put activity.test.tsx (about
+    // 7.5 minutes) alone on shard 1, and a change that edits it ran it four times in one job, past the job's limit
+    // (the srp rename, 21 Nov). The turn is a permutation, so the jobs together still run every shard in every language.
+    const [shardIndex, shardCount] = (process.env.SERUPA_SHARD || '').split('/').map(Number);
+    const shardIn = (l) => !(process.env.SERUPA_SHARD && arg('--group') === 'components') ? []
+      : [`--shard=${((shardIndex - 1 + Math.max(0, LOCALES.indexOf(l))) % shardCount) + 1}/${shardCount}`, '--passWithNoTests'];
+    const shard = shardIn(locale);
+    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shardIn(l), ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...(direct || [])].sort().join(','), ...more }];
     // A narrowed pull request runs no locale jobs, so its base jobs take the changed components' own tests in all four
     // languages: a test that failed only in one of them was found in the queue, where it drops every group behind it.
     // The queue does the same in seconds, so it costs about a minute (SERUPA_OWN keeps the steps in the base part).
@@ -136,9 +155,10 @@ const steps = [
     // own tests are then every component's: in all four languages that was five whole passes in each base job, and
     // ES1's (20 Nov) ran past the job's 30 minutes. It takes the commit's language over everything instead, and the
     // queue's locale jobs the other three.
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard), { SERUPA_LOCALE: locale, SERUPA_OWN: '1' }]];
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...(lang ? [...lang] : [])), { SERUPA_LOCALE: locale, SERUPA_OWN: '1' }]];
+    const inLocale = lang ? forLanguage(only ? covered : [...lang]) : covered;
     return [
-      [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...covered), { SERUPA_LOCALE: locale }],
+      ...(inLocale.length || !lang ? [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...inLocale), { SERUPA_LOCALE: locale }]] : []),
       ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => ownIn(l)) : []),
     ];
   })() : []),
@@ -151,17 +171,29 @@ const steps = [
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];
-// SERUPA_VISUAL_BASE=<main's storybook-static> (CI on a pull request, ADR-0016): Visual draws main's pictures first, from
-// that build, then compares this tree with them and reports what differs, for review, instead of comparing with the
-// committed pictures, which another pull request's merge could have made stale.
-if (process.env.SERUPA_VISUAL_BASE && !update.length) {
-  const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
-  fs.rmSync(main, { recursive: true, force: true });
-  fs.rmSync(report, { recursive: true, force: true });
+// Visual (ADR-0016): no picture is committed. It draws the pictures of the commit this tree starts from, then this tree's,
+// and reports what differs for review (the design-qa label signs it off): a picture is never a failure, a story that
+// can't be drawn is. The commit is SERUPA_VISUAL_REF, else where this branch left main (visual-base.mjs builds its
+// Storybook in a worktree beside this one). On main itself it draws this tree twice, and there a difference fails:
+// a story that doesn't draw the same twice (the nightly flake hunt, Cross-browser in Firefox and WebKit).
+// SERUPA_VISUAL_BASE=<a Storybook already built> skips the build and compares with it.
+{
   const at = steps.findIndex((step) => step[3] === 'visual');
-  if (at >= 0) steps.splice(at, 1,
-    ["Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: process.env.SERUPA_VISUAL_BASE, SERUPA_VISUAL_DIR: main }],
-    ['Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, SERUPA_VISUAL_REPORT: report }]);
+  if (at >= 0) {
+    const { baseCommit, commitOf, STORYBOOK } = await import('./visual-base.mjs');
+    const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
+    const sha = process.env.SERUPA_VISUAL_BASE ? '' : baseCommit();
+    const self = !process.env.SERUPA_VISUAL_BASE && sha === commitOf('HEAD');
+    const sb = process.env.SERUPA_VISUAL_BASE || (self ? path.join(PROJECT, 'storybook-static') : STORYBOOK);
+    if (!arg('--list')) {
+      fs.rmSync(main, { recursive: true, force: true });
+      fs.rmSync(report, { recursive: true, force: true });
+    }
+    steps.splice(at, 1,
+      ...(sha && !self ? [[`Visual snapshots: build ${sha.slice(0, 9)}'s Storybook`, 'node', [path.join(HERE, 'visual-base.mjs'), sha], 'visual', {}]] : []),
+      [self ? 'Visual snapshots: this tree, first pass' : "Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: sb, SERUPA_VISUAL_DIR: main }],
+      [self ? 'Visual snapshots: this tree again, against the first pass' : 'Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, ...(self ? {} : { SERUPA_VISUAL_REPORT: report }) }]);
+  }
 }
 if (arg('--group')) {
   const g = arg('--group');

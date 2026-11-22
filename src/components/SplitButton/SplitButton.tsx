@@ -26,7 +26,7 @@ export interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   /** The danger color, for a main action that deletes or can't be undone. */
   destructive?: boolean | undefined;
   /** An icon before the main label. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** Turns off both halves. */
   disabled?: boolean | undefined;
   /** While the main action runs: the main button shows a Loader and can't be pressed again. The menu stays usable. */
@@ -41,7 +41,7 @@ export interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
-const OWN = { children: 1, onClick: 1, menu: 1, menuLabel: 1, variant: 1, size: 1, destructive: 1, leftIcon: 1, disabled: 1, loading: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const;
+const OWN = { children: 1, onClick: 1, menu: 1, menuLabel: 1, variant: 1, size: 1, destructive: 1, startIcon: 1, disabled: 1, loading: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const;
 
 function SplitButtonRender({ ref, ...props }: SplitButtonProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
@@ -51,12 +51,12 @@ function SplitButtonRender({ ref, ...props }: SplitButtonProps & React.RefAttrib
   const label = rest['aria-label'], labelledBy = rest['aria-labelledby'];
   delete rest['aria-label']; delete rest['aria-labelledby'];
   return (
-    <div {...rest} ref={ref} className={cn('dk-split-button', props.className)} data-component="split-button">
+    <div {...rest} ref={ref} className={cn('srp-split-button', props.className)} data-component="split-button">
     {/* ButtonGroup's markup and classes, attached, but never coming apart: a long label shortens with an ellipsis instead. */}
-    <div role="group" aria-label={label} aria-labelledby={labelledBy} data-component="button-group" data-orientation="horizontal" className="dk-button-group dk-button-group--attached">
-      <Button size={size} variant={variant} destructive={props.destructive} leftIcon={props.leftIcon} disabled={props.disabled} loading={props.loading} onClick={props.onClick}>{props.children}</Button>
+    <div role="group" aria-label={label} aria-labelledby={labelledBy} data-component="button-group" data-orientation="horizontal" className="srp-button-group srp-button-group--attached">
+      <Button size={size} variant={variant} destructive={props.destructive} startIcon={props.startIcon} disabled={props.disabled} loading={props.loading} onClick={props.onClick}>{props.children}</Button>
       <Menu placement={props.placement ?? 'bottom-end'} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
-        trigger={<IconButton className="dk-split-button__menu" size={size} variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
+        trigger={<IconButton className="srp-split-button__menu" size={size} variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
         {props.menu}
       </Menu>
     </div>

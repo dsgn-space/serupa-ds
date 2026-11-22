@@ -7,14 +7,14 @@ const meta = {
   title: 'Components/Actions/ToggleGroup',
   component: ToggleGroup,
   args: {
-    'aria-label': 'Text alignment', type: 'single', defaultValue: ['left'],
+    'aria-label': 'Text alignment', selectionMode: 'single', defaultValue: ['left'],
     children: [
       <ToggleButton key="l" value="left" icon="format_align_left" aria-label="Align left" />,
       <ToggleButton key="c" value="center" icon="format_align_center" aria-label="Align center" />,
       <ToggleButton key="r" value="right" icon="format_align_right" aria-label="Align right" />,
     ],
   },
-  argTypes: { type: { control: 'inline-radio', options: ['single', 'multiple'] }, children: { control: false } },
+  argTypes: { selectionMode: { control: 'inline-radio', options: ['single', 'multiple'] }, children: { control: false } },
 } satisfies Meta<typeof ToggleGroup>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -23,7 +23,7 @@ export const Playground: Story = {};
 
 export const Multiple: Story = {
   args: {
-    'aria-label': 'Text style', type: 'multiple', defaultValue: ['bold', 'underline'],
+    'aria-label': 'Text style', selectionMode: 'multiple', defaultValue: ['bold', 'underline'],
     children: [
       <ToggleButton key="b" value="bold" icon="format_bold" aria-label="Bold" />,
       <ToggleButton key="i" value="italic" icon="format_italic" aria-label="Italic" />,

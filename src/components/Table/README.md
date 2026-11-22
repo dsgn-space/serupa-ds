@@ -10,7 +10,7 @@ import { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Tabl
 <Table caption="Team members">
   <TableHead>
     <TableRow>
-      <TableSelectCell header label="Select all rows" checked={all} indeterminate={some} onChange={toggleAll} />
+      <TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={some} onChange={toggleAll} />
       <TableHeaderCell>Name</TableHeaderCell>
       <TableHeaderCell>Role</TableHeaderCell>
       <TableHeaderCell align="end" sort={sort} onSort={() => setSort(sort === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell>
@@ -46,12 +46,12 @@ import { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Tabl
 
 Drawn from the `Sortable` story.
 
-1. **Caption** (`.dk-table__caption`): names the table for everyone, screen readers too.
-2. **Header row** (`.dk-table__head`): the column names.
-3. **Sortable header** (`.dk-table__header--sortable`): a column you can sort by; the arrow says which way.
-4. **Row** (`.dk-table__row`): one record.
-5. **Cell** (`.dk-table__cell`): one value; numbers line up at the end.
-6. **Footer** (`.dk-table__foot`): totals or a summary.
+1. **Caption** (`.srp-table__caption`): names the table for everyone, screen readers too.
+2. **Header row** (`.srp-table__head`): the column names.
+3. **Sortable header** (`.srp-table__header--sortable`): a column you can sort by; the arrow says which way.
+4. **Row** (`.srp-table__row`): one record.
+5. **Cell** (`.srp-table__cell`): one value; numbers line up at the end.
+6. **Footer** (`.srp-table__foot`): totals or a summary.
 
 ## Usage
 
@@ -68,9 +68,9 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - A button that removes its own row (Delete, Archive) takes focus away with the row, and focus then falls to the top of the page. Move it yourself once the row is gone: to the same button in the next row, else the one before, else the table's heading. With a confirmation Dialog, pass that element as its `finalFocus`.
 - Let people widen a column whose content gets cut or wraps a lot: `resizable` on its `TableHeaderCell`, in a table with `layout="fixed"`, starting from a `width` in pixels. A handle at the header's end edge drags; with focus, the arrow keys move it 16px at a time and Home and End go to `minWidth` (48) and `maxWidth` (800); a double-click fits the column to its widest cell on one line. A click on the handle (or Enter or Space on it) opens Narrower, Wider and Fit to content, so a width never needs a drag (WCAG 2.5.7). Uncontrolled, the column keeps its own width; to remember widths, pass `width` and `onWidthChange` together and keep the number.
 - When a table scrolls sideways, keep the column that names each row in view with `pinStart`, and a column of row actions with `pinEnd`. Pinned cells take their row's shading, and lift with a shadow while there's more to scroll to under them (where scroll-state container queries are supported). It's the first and the last cell of each row, so put a select or expand column after the name, or leave it unpinned.
-- The column tools' parts: a resize handle (`.dk-table__resize`) at a resizable header's end edge; a pinned first or last column (`pinStart`, `pinEnd`) that stays in view; an expand button (`.dk-table__expand-button`) whose chevron turns down while the row's details (`.dk-table__detail`) show under it; and the Columns button (`TableColumnsMenu`).
+- The column tools' parts: a resize handle (`.srp-table__resize`) at a resizable header's end edge; a pinned first or last column (`pinStart`, `pinEnd`) that stays in view; an expand button (`.srp-table__expand-button`) whose chevron turns down while the row's details (`.srp-table__detail`) show under it; and the Columns button (`TableColumnsMenu`).
 - For tables with more columns than people need at once, put a `TableColumnsMenu` above the table with the same list you draw the columns from (`columns`, each `{ id, label, visible, required? }`), and draw the table from the list `onColumnsChange(columns, { id, visible })` gives back. Mark the column that names each row `required`; the last one shown can't be cleared either, so the table is never empty.
-- For rows with more than fits in their cells (an order's note, a log entry's message), start each row with a `TableExpandCell` (`label`: the row's name, `expanded`, `onExpandedChange`, `controls`: the detail row's id) and follow it with a `TableDetailRow` (`id`, `open`, `colSpan` of every column). The header row gets a `TableExpandCell header`. `striped` counts only the rows of data, so open details don't swap the shading.
+- For rows with more than fits in their cells (an order's note, a log entry's message), start each row with a `TableExpandCell` (`label`: the row's name, `expanded`, `onExpandedChange`, `controls`: the detail row's id) and follow it with a `TableDetailRow` (`id`, `open`, `colSpan` of every column). The header row gets a `TableExpandCell inHeader`. `striped` counts only the rows of data, so open details don't swap the shading.
 - With `stickyHeader`, give the frame a height through `containerProps`. The frame measures the header and keeps that much scroll padding at the top, so a focused link or button in a row scrolls into view below the header, not under it (WCAG 2.4.11).
 - For thousands of rows, use `TableVirtualBody` in place of `TableBody`: it draws only the rows in view of the frame, plus a few either side, so 10,000 rows scroll as quickly as 20. Give the frame a height (`containerProps={{ style: { maxHeight: 480 } }}`, usually with `stickyHeader`), since without one every row is in view. Columns size to the rows drawn, so set widths (`table-layout: fixed` or a width per header cell) where a column mustn't shift while scrolling. Each drawn row gets `aria-rowindex` and the table `aria-rowcount`, a row with focus stays drawn when it scrolls away, and `striped` shades the same rows as a `TableBody` would. In print it draws every row, up to the first 5,000 (about 100 pages); for more, offer an export (CSV) instead of print. Sorting and filtering stay yours: sort the data, then draw row `index` from it.
 
@@ -161,11 +161,11 @@ With Ctrl, ⌘ or Alt held, a resize handle leaves the arrows, Home and End to t
 | --- | --- | --- |
 | `TableHead`, `TableBody`, `TableFoot` | `<thead>`, `<tbody>`, `<tfoot>` | everything goes to the element |
 | `TableRow` | `<tr>` | `selected`: shaded (with a bar at its start when more contrast is asked for); `href` (with `target`, `rel`): the whole row is one link, from its link cell |
-| `TableSelectCell` | `<td>`, or `<th scope="col">` with `header` | `label` (required, the checkbox's name: "Select Ada", "Select all rows"); `checked`, `defaultChecked`, `indeterminate`, `onChange`, `disabled`, `name`, `value` and `ref` go to the [Checkbox](../Checkbox/README.md); `cellProps` to the cell. A row whose checkbox is checked is shaded like a selected one |
+| `TableSelectCell` | `<td>`, or `<th scope="col">` with `inHeader` | `label` (required, the checkbox's name: "Select Ada", "Select all rows"); `checked`, `defaultChecked`, `indeterminate`, `onChange`, `disabled`, `name`, `value` and `ref` go to the [Checkbox](../Checkbox/README.md); `cellProps` to the cell. A row whose checkbox is checked is shaded like a selected one |
 | `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `width`: the column's width with `layout="fixed"`; `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button; `resizable` adds a resize handle, within `minWidth` (48) and `maxWidth` (800), with `onWidthChange(width)` (with a number `width`, it's controlled). Pass `scope="row"` for a row header, drawn in the row's text and fill like its other cells |
 | `TableActionBar` | `<div role="group">`, before the Table | `count` (required: the bar shows while it's above 0); `onClear` adds "Clear selection"; `clearLabel` renames it; `total` with `onSelectAll` adds "Select all 1,240"; `sticky` keeps it in view; children are the actions; `className`, `ref` and the rest go to the `<div>` |
 | `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers; `link`: in a row with `href`, this cell holds the row's link (default: the first `TableCell`) |
-| `TableExpandCell` | `<td>` with a button, or `<th scope="col">` with `header` | `label`: the row's name, for the button's; `expanded`, `onExpandedChange(expanded)`; `controls`: its `TableDetailRow`'s id; the rest goes to the cell |
+| `TableExpandCell` | `<td>` with a button, or `<th scope="col">` with `inHeader` | `label`: the row's name, for the button's; `expanded`, `onExpandedChange(expanded)`; `controls`: its `TableDetailRow`'s id; the rest goes to the cell |
 | `TableDetailRow` | `<tr>` with one `<td>` across | `open` (required: hidden while false), `colSpan` (required: every column); `id`, `className`, `ref` and the rest go to the `<tr>` |
 | `TableLoadingRows` | `<tbody>` of placeholder rows | `columns` (required: every column), `rows` (default 3), `label`: said once as they appear (default "Loading"); the rest goes to the `<tbody>` |
 | `TableMessageRow` | `<tr>` with one `<td>` across | `colSpan` (required: every column); children are the message, such as an EmptyState or an Alert with Retry; the rest goes to the `<tr>` |

@@ -19,12 +19,12 @@ export function onModalChange(fn: () => void): () => void {
 /** Dialog and Drawer call this right before showModal(). While a modal is open the page can't scroll (overflow:
  *  hidden, in Dialog.css and Drawer.css), which takes away a classic scrollbar (Windows, Linux, and macOS set to show
  *  them) and would make the page behind 15px wider, shifting it sideways. So when the first modal opens, a page that
- *  shows a scrollbar keeps its space (scrollbar-gutter: stable, under data-dk-gutter); one that doesn't gets none. */
+ *  shows a scrollbar keeps its space (scrollbar-gutter: stable, under data-srp-gutter); one that doesn't gets none. */
 export function modalOpening(): void {
   if (page.modals.length || typeof document === 'undefined') return;
   const root = document.documentElement;
-  if (window.innerWidth - root.clientWidth > 0) root.setAttribute('data-dk-gutter', '');
-  else root.removeAttribute('data-dk-gutter');
+  if (window.innerWidth - root.clientWidth > 0) root.setAttribute('data-srp-gutter', '');
+  else root.removeAttribute('data-srp-gutter');
 }
 
 /** Dialog and Drawer call this right after showModal(). */

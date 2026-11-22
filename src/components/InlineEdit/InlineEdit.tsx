@@ -72,7 +72,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const view = React.useRef<HTMLButtonElement | null>(null);
   const refocus = React.useRef(false);   // a keyboard save or cancel puts focus back on the button
   const closing = React.useRef(false);   // saved or cancelled: the blur from the field going away saves nothing
-  const errorId = domId('dk-ie', React.useId()) + '-error';
+  const errorId = domId('srp-ie', React.useId()) + '-error';
   // A failed save keeps focus in the field, and screen readers don't read a focused field's description again, so
   // the error is said (politely, as Field says its errors), on every failed try, even with the same words.
   const [tries, setTries] = React.useState(0);
@@ -138,8 +138,8 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   };
 
   const empty = value === '';
-  const text = <span className={cn('dk-inline-edit__text', empty && 'dk-inline-edit__text--placeholder')}>{empty ? props.placeholder : value}</span>;
-  const cls = cn('dk-inline-edit', 'dk-inline-edit--size-' + size, editing && 'dk-inline-edit--editing', props.disabled && 'dk-inline-edit--disabled', error != null && 'dk-inline-edit--invalid', props.className);
+  const text = <span className={cn('srp-inline-edit__text', empty && 'srp-inline-edit__text--placeholder')}>{empty ? props.placeholder : value}</span>;
+  const cls = cn('srp-inline-edit', 'srp-inline-edit--size-' + size, editing && 'srp-inline-edit--editing', props.disabled && 'srp-inline-edit--disabled', error != null && 'srp-inline-edit--invalid', props.className);
   return (
     <div {...rest} ref={ref} className={cls} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
       {editing ? (
@@ -148,16 +148,16 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
           aria-busy={checking || undefined}
           onChange={(e) => { setDraft(e.target.value); if (checking) { check.current++; setChecking(false); } if (error != null) setError(null); if (ip.onChange) ip.onChange(e); }} onKeyDown={onKeyDown} onBlur={onBlur} />
       ) : locked ? (
-        <span className="dk-inline-edit__view dk-inline-edit__view--static">{text}</span>
+        <span className="srp-inline-edit__view srp-inline-edit__view--static">{text}</span>
       ) : (
-        <button type="button" ref={view} className={cn('dk-inline-edit__view', empty && !props.placeholder && 'dk-inline-edit__view--blank')} onClick={open}>
+        <button type="button" ref={view} className={cn('srp-inline-edit__view', empty && !props.placeholder && 'srp-inline-edit__view--blank')} onClick={open}>
           <VisuallyHidden>{props.label}: </VisuallyHidden>
           {text}
           <VisuallyHidden>, {props.editLabel || sds.labels.edit}</VisuallyHidden>
-          <Icon icon={icons.Edit} className="dk-inline-edit__icon" />
+          <Icon icon={icons.Edit} className="srp-inline-edit__icon" />
         </button>
       )}
-      {editing && error != null ? <div className="dk-inline-edit__error" id={errorId}><Icon icon={icons.Error} className="dk-inline-edit__error-icon" /><span ref={errorText}>{error}</span></div> : null}
+      {editing && error != null ? <div className="srp-inline-edit__error" id={errorId}><Icon icon={icons.Error} className="srp-inline-edit__error-icon" /><span ref={errorText}>{error}</span></div> : null}
     </div>
   );
 }

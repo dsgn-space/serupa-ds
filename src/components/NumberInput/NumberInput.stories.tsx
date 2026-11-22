@@ -21,7 +21,7 @@ export const Sizes: Story = {
     {(['sm', 'md', 'lg'] as const).map((s) => <NumberInput key={s} {...args} aria-label={'Quantity, ' + s} size={s} />)}
   </div>,
 };
-export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, leftIcon: 'attach_money' } };
+export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, startIcon: 'attach_money' } };
 export const Locales: Story = {
   render: () => <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
     <Field label="Harga (id-ID, rupiah)"><NumberInput locale="id-ID" defaultValue={1500000} step={500} min={0} formatOptions={{ style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }} /></Field>

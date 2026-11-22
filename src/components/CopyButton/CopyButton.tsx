@@ -12,7 +12,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { feedbackHold } from '../../internal/timing';
 
-export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'leftIcon' | 'rightIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
+export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'startIcon' | 'endIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
   value: string | (() => string | Promise<string>);
   /** The button's text. Default: "Copy" (labels.copy). */
@@ -62,15 +62,15 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
     }
   };
   // Both icons share one cell and cross-fade (KW18): the copy icon gives way to the check as one icon changing.
-  const glyph = <span className="dk-copy-btn__icons">
-    <Icon icon={icons.ContentCopy} className="dk-copy-btn__icon dk-copy-btn__icon--copy" />
-    <Icon icon={icons.Check} className="dk-copy-btn__icon dk-copy-btn__icon--done" />
-    <Icon icon={icons.Error} className="dk-copy-btn__icon dk-copy-btn__icon--failed" />
+  const glyph = <span className="srp-copy-btn__icons">
+    <Icon icon={icons.ContentCopy} className="srp-copy-btn__icon srp-copy-btn__icon--copy" />
+    <Icon icon={icons.Check} className="srp-copy-btn__icon srp-copy-btn__icon--done" />
+    <Icon icon={icons.Error} className="srp-copy-btn__icon srp-copy-btn__icon--failed" />
   </span>;
   const failedShort = sds.labels.copyFailedShort;
   const common = {
     ...rest, ref: ref as React.Ref<HTMLElement>, onClick, variant: variant || 'outline', size: size || 'sm',
-    'data-copied': copied ? '' : undefined, 'data-failed': failed ? '' : undefined, className: cn('dk-copy-btn', copied && 'dk-copy-btn--copied', failed && 'dk-copy-btn--failed', className),
+    'data-copied': copied ? '' : undefined, 'data-failed': failed ? '' : undefined, className: cn('srp-copy-btn', copied && 'srp-copy-btn--copied', failed && 'srp-copy-btn--failed', className),
   };
   if (iconOnly) {
     // Its name shows in a Tooltip on hover and on keyboard focus, as IconButton's does: a title shows on hover only.
@@ -81,12 +81,12 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
     return own ? button : <Tooltip content={said} role="label">{button}</Tooltip>;
   }
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
-  return <ButtonBase {...common} leftIcon={glyph}>
-    <span className="dk-copy-btn__labels">
-      <span className={cn('dk-copy-btn__label', shown && 'dk-copy-btn__label--off')} aria-hidden={shown ? true : undefined}>{label}</span>
-      <span className={cn('dk-copy-btn__label', !copied && 'dk-copy-btn__label--off')} aria-hidden={!copied || undefined}>{done}</span>
+  return <ButtonBase {...common} startIcon={glyph}>
+    <span className="srp-copy-btn__labels">
+      <span className={cn('srp-copy-btn__label', shown && 'srp-copy-btn__label--off')} aria-hidden={shown ? true : undefined}>{label}</span>
+      <span className={cn('srp-copy-btn__label', !copied && 'srp-copy-btn__label--off')} aria-hidden={!copied || undefined}>{done}</span>
       {/* Only while it shows: a rare message, so the button's usual width stays that of "Copy" and "Copied". */}
-      {failed ? <span className="dk-copy-btn__label">{failedShort}</span> : null}
+      {failed ? <span className="srp-copy-btn__label">{failedShort}</span> : null}
     </span>
   </ButtonBase>;
 }

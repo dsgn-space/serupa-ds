@@ -8,7 +8,7 @@ import { Calendar, type CalendarProps } from './Calendar';
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
 const cal = <T extends HTMLElement = HTMLElement>(sel: string) => q<T>(`[data-testid=cal] ${sel}`);
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.id || a.tagName; };
-const title = () => cal('.dk-calendar__title').textContent;
+const title = () => cal('.srp-calendar__title').textContent;
 
 // The script's main calendar: March 2025, Sunday weeks, min Feb 3, max Jun 20, March Sundays refused.
 function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTMLDivElement> } & Partial<CalendarProps>) {
@@ -41,7 +41,7 @@ describe('Calendar', () => {
     expect(focused()).toBe('2025-03-08');
     await page.viewport(320, 640);
     try {
-      expect(cal('.dk-calendar__grid').getBoundingClientRect().width).toBeLessThanOrEqual(320 - 32);
+      expect(cal('.srp-calendar__grid').getBoundingClientRect().width).toBeLessThanOrEqual(320 - 32);
     } finally { await page.viewport(1280, 800); }
   });
 
@@ -82,7 +82,7 @@ describe('Calendar', () => {
 
   test('plain "yyyy-mm-dd" strings: value, min and max take them as those local days, and onValueChange also gets the day as "yyyy-mm-dd"', async () => {
     const picks: string[] = [];
-    await render(<div data-testid="cal"><Calendar value="2026-10-14" min="2026-10-10" max="2026-10-20" onValueChange={(d, iso) => picks.push(d.getHours() + ':' + d.getDate() + ' ' + iso)} /></div>);
+    await render(<div data-testid="cal"><Calendar value="2026-10-14" min="2026-10-10" max="2026-10-20" onValueChange={(d, iso) => picks.push(d.getHours() + ':' + d.getDate() + ' ' + iso.iso)} /></div>);
     expect([cal<HTMLElement>('[aria-selected="true"] [data-date]').dataset.date, cal('[data-date="2026-10-09"]').getAttribute('aria-disabled'), cal('[data-date="2026-10-21"]').getAttribute('aria-disabled')]).toEqual(['2026-10-14', 'true', 'true']);
     cal<HTMLElement>('[data-date="2026-10-16"]').click();
     expect(picks).toEqual(['0:16 2026-10-16']);
@@ -120,19 +120,19 @@ describe('Calendar', () => {
 
   test('right to left: the previous-month chevron points right and the next one left', async () => {
     await render(<div dir="rtl"><Calendar data-testid="cal" defaultValue={new Date(2025, 2, 15)} /></div>);
-    expect([cal('.dk-calendar__nav--prev [data-icon]'), cal('.dk-calendar__nav--next [data-icon]')].map(iconPoints)).toEqual(['right', 'left']);
+    expect([cal('.srp-calendar__nav--prev [data-icon]'), cal('.srp-calendar__nav--next [data-icon]')].map(iconPoints)).toEqual(['right', 'left']);
   });
 
   test('de-DE: German names and weeks starting on Monday', async () => {
     await render(<Calendar data-testid="de" locale="de-DE" defaultMonth={new Date(2025, 2, 1)} />);
-    const de = [...document.querySelectorAll('[data-testid=de] th [aria-hidden]')].map((x) => x.textContent).join() + ' ' + q('[data-testid=de] .dk-calendar__title').textContent;
+    const de = [...document.querySelectorAll('[data-testid=de] th [aria-hidden]')].map((x) => x.textContent).join() + ' ' + q('[data-testid=de] .srp-calendar__title').textContent;
     expect(de).toMatch(/^Mo\.?,Di\.?,Mi\.?,Do\.?,Fr\.?,Sa\.?,So\.? März 2025$/);
   });
 
   test('th, fa, ja-u-ca-japanese, ar-EG: the title and day labels name the Gregorian month shown in the grid, with localized month names', async () => {
     await render(<>{['th', 'fa', 'ja-u-ca-japanese', 'ar-EG'].map((l) => <Calendar key={l} data-testid={l} locale={l} defaultMonth={new Date(2025, 10, 1)} />)}</>);
     for (const l of ['th', 'fa', 'ja-u-ca-japanese', 'ar-EG']) {
-      const t = q(`[data-testid="${l}"] .dk-calendar__title`).textContent;
+      const t = q(`[data-testid="${l}"] .srp-calendar__title`).textContent;
       const label = q(`[data-testid="${l}"] [data-date="2025-11-22"]`).getAttribute('aria-label')!;
       expect(t, l).toContain('2025');
       expect(t, l).toContain(new Intl.DateTimeFormat(l, { calendar: 'gregory', month: 'long' }).format(new Date(2025, 10, 1)));
@@ -202,14 +202,14 @@ describe('Calendar', () => {
     await render(<Cal picks={picks} defaultMonth={new Date(2025, 3, 1)} />);
     await userEvent.click(cal('button[aria-label="Previous month"]'));
     await userEvent.click(cal('button[aria-label="Previous month"]'));
-    expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--prev').disabled]).toEqual(['February 2025', true]);
+    expect([title(), cal<HTMLButtonElement>('.srp-calendar__nav--prev').disabled]).toEqual(['February 2025', true]);
     expect([cal('[data-date="2025-02-02"]').getAttribute('aria-disabled'), cal('[data-date="2025-02-03"]').getAttribute('aria-disabled')]).toEqual(['true', null]);
     await userEvent.click(cal('button[aria-label="Next month"]'));
     await userEvent.click(cal('[data-date="2025-03-16"]'), { force: true });
     expect([cal('[data-date="2025-03-16"]').getAttribute('aria-disabled'), picks.length]).toEqual(['true', 0]);
     await expect.poll(() => disabledLook(cal('[data-date="2025-03-16"]'))).toBe('neutral');
     for (let i = 0; i < 3; i++) await userEvent.click(cal('button[aria-label="Next month"]'));
-    expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--next').disabled]).toEqual(['June 2025', true]);
+    expect([title(), cal<HTMLButtonElement>('.srp-calendar__nav--next').disabled]).toEqual(['June 2025', true]);
   });
 
   test('--calendar-bg-selected and --calendar-color-selected override one calendar; the old names, state first (--calendar-selected-bg), are gone since 15.0.0', async () => {
@@ -217,7 +217,7 @@ describe('Calendar', () => {
       <Calendar data-testid="tok" style={{ '--calendar-bg-selected': 'rgb(1, 2, 3)', '--calendar-color-selected': 'rgb(4, 5, 6)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />
       <Calendar data-testid="tok-old" style={{ '--calendar-selected-bg': 'rgb(1, 2, 3)', '--calendar-selected-color': 'rgb(4, 5, 6)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />
     </>);
-    const look = (id: string) => { const c = getComputedStyle(q(`[data-testid=${id}] .dk-calendar__day--selected`)); return `${c.backgroundColor} / ${c.color}`; };
+    const look = (id: string) => { const c = getComputedStyle(q(`[data-testid=${id}] .srp-calendar__day--selected`)); return `${c.backgroundColor} / ${c.color}`; };
     await expect.poll(() => look('tok')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6)');
     await expect.poll(() => look('tok-old')).not.toContain('rgb(1, 2, 3)');
   });
@@ -249,17 +249,17 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
   test('the heading opens the year\'s months, and theirs twelve years: a birth date in 1990 is four clicks away, and a pick goes back down to its month\'s days', async () => {
     const months: string[] = [];
     await render(<Cal months={months} min={undefined} max={undefined} isDateDisabled={undefined} />);
-    const head = cal<HTMLButtonElement>('.dk-calendar__heading');
+    const head = cal<HTMLButtonElement>('.srp-calendar__heading');
     // Named by what it shows, described by what it does.
     expect([head.textContent.startsWith('March 2025'), document.getElementById(head.getAttribute('aria-describedby')!)!.textContent]).toEqual([true, 'Choose a month']);
     await userEvent.click(head);
     const grid = () => cal<HTMLTableElement>('[role=grid]:not([hidden])');
     const cells = () => [...grid().querySelectorAll('button')].map((b) => b.querySelector('[aria-hidden]')?.textContent ?? b.textContent);
     // The year's months, named by the hidden title that announces the change, the day grid gone, focus on March.
-    expect([title(), cells().join(' '), grid().getAttribute('aria-labelledby'), cal('.dk-calendar__grid').hidden]).toEqual(['2025', 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec', cal('.dk-calendar__title').id, true]);
+    expect([title(), cells().join(' '), grid().getAttribute('aria-labelledby'), cal('.srp-calendar__grid').hidden]).toEqual(['2025', 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec', cal('.srp-calendar__title').id, true]);
     expect([(document.activeElement as HTMLElement).textContent, grid().querySelector('[aria-selected=true]')!.textContent]).toEqual(['MarMarch 2025', 'MarMarch 2025']);
     expect(document.querySelector('[aria-label="Previous year"]')).not.toBeNull();
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     expect([title(), cells()[0], cells()[11], (document.activeElement as HTMLElement).textContent]).toEqual(['2016–2027', '2016', '2027', '2025']);
     await userEvent.click(page.getByRole('button', { name: 'Previous 12 years' }));
     await userEvent.click(page.getByRole('button', { name: 'Previous 12 years' }));
@@ -268,13 +268,13 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     await userEvent.click(page.getByText('1990', { exact: true }));
     expect([title(), (document.activeElement as HTMLElement).textContent]).toEqual(['1990', 'MarMarch 1990']);
     await userEvent.click(page.getByText('Jul', { exact: true }));
-    expect([title(), cal('.dk-calendar__grid').hidden, months.at(-1), focused()]).toEqual(['July 1990', false, new Date(1990, 6, 1).toDateString(), '1990-07-10']);
+    expect([title(), cal('.srp-calendar__grid').hidden, months.at(-1), focused()]).toEqual(['July 1990', false, new Date(1990, 6, 1).toDateString(), '1990-07-10']);
   });
 
   test('the months and years by keyboard: Enter on the heading, arrows by one and by a row, Page keys by a page, Enter picks; Escape goes back a level and doesn\'t reach the page (a DatePicker\'s popup stays open)', async () => {
     const outside = vi.fn<(key: string) => void>();
     await render(<div onKeyDown={(e) => outside(e.key)}><Cal min={undefined} max={undefined} isDateDisabled={undefined} /></div>);
-    cal<HTMLButtonElement>('.dk-calendar__heading').focus();
+    cal<HTMLButtonElement>('.srp-calendar__heading').focus();
     const at = () => (document.activeElement as HTMLElement).textContent;
     await userEvent.keyboard('{Enter}');
     expect(at()).toBe('MarMarch 2025');
@@ -285,9 +285,9 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     await userEvent.keyboard('{End}{PageDown}');
     expect([at(), title()]).toEqual(['SepSeptember 2026', '2026']);
     await userEvent.keyboard('{Escape}');
-    expect([title(), document.activeElement === cal('.dk-calendar__heading'), cal('.dk-calendar__grid').hidden, outside.mock.calls.flat().filter((k) => k === 'Escape')]).toEqual(['March 2025', true, false, []]);
+    expect([title(), document.activeElement === cal('.srp-calendar__heading'), cal('.srp-calendar__grid').hidden, outside.mock.calls.flat().filter((k) => k === 'Escape')]).toEqual(['March 2025', true, false, []]);
     await userEvent.keyboard('{Enter}');
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     expect(at()).toBe('2025');
     await userEvent.keyboard('{ArrowUp}{PageUp}');
     expect([at(), title()]).toEqual(['2010', '2004–2015']);
@@ -300,7 +300,7 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
 
   test('the year buttons turn the months a year at a time, and the one that reaches min or max hands focus to the other, as the month arrows do', async () => {
     await render(<Calendar data-testid="cal" locale="en-US" defaultValue={new Date(2025, 2, 10)} min={new Date(2024, 4, 1)} max={new Date(2026, 8, 30)} />);
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     const prev = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Previous year"]'), next = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Next year"]');
     await userEvent.click(next());
     expect([title(), next().disabled, document.activeElement === prev()]).toEqual(['2026', true, true]);
@@ -312,7 +312,7 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
   test('the months and years keep to min and max: the ones outside are disabled and can\'t be picked, the page buttons stop, and keys stop at the ends', async () => {
     const months: string[] = [];
     await render(<Cal months={months} />);   // min Feb 3 2025, max Jun 20 2025
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     const off = () => [...cal('[role=grid]:not([hidden])').querySelectorAll('[aria-disabled=true]')].map((b) => b.querySelector('[aria-hidden]')?.textContent ?? b.textContent);
     expect(off()).toEqual(['Jan', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
     // Drawn as a disabled day is: disabled-text, struck through, at full opacity (it was faded by opacity alone).
@@ -324,7 +324,7 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     expect(title()).toBe('2025');
     await userEvent.keyboard('{End}{ArrowDown}{ArrowDown}');
     expect((document.activeElement as HTMLElement).textContent).toBe('JunJune 2025');
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     expect(off()).toEqual(['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2026', '2027']);
     await userEvent.keyboard('{Enter}{Enter}');
     expect([title(), months]).toEqual(['June 2025', [new Date(2025, 5, 1).toDateString()]]);
@@ -334,13 +334,13 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     await render(<Cal min={undefined} max={undefined} isDateDisabled={undefined} />);
     const box = () => { const r = q('[data-testid=cal]').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; };
     const days = box();
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     expect(box()).toEqual(days);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const bg = css(q('body')).backgroundColor, sel = cal('.dk-calendar__period--selected');
-      for (const [k, fg, on] of [['heading', css(cal('.dk-calendar__heading')).color, bg], ['month', css(cal('.dk-calendar__period:not(.dk-calendar__period--selected)')).color, bg], ['picked', css(sel).color, css(sel).backgroundColor]] as const) {
+      const bg = css(q('body')).backgroundColor, sel = cal('.srp-calendar__period--selected');
+      for (const [k, fg, on] of [['heading', css(cal('.srp-calendar__heading')).color, bg], ['month', css(cal('.srp-calendar__period:not(.srp-calendar__period--selected)')).color, bg], ['picked', css(sel).color, css(sel).backgroundColor]] as const) {
         const r = contrast(fg, on); if (r < 4.5) low.push(`${th} ${k} ${r.toFixed(2)}`);
       }
     }
@@ -350,7 +350,7 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
 
   test('a little space between the weeks (calendar-row-gap, 4px)', async () => {
     await render(<Cal />);
-    const rows = [...cal('.dk-calendar__grid tbody').querySelectorAll('tr')].map((r) => r.querySelector('button')!.getBoundingClientRect());
+    const rows = [...cal('.srp-calendar__grid tbody').querySelectorAll('tr')].map((r) => r.querySelector('button')!.getBoundingClientRect());
     expect(Math.round(rows[1]!.top - rows[0]!.bottom)).toBe(4);
   });
 
@@ -365,9 +365,9 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     await pickOption(m!, '3');
     expect(title()).toBe('April 2028');
     expect(seen.length).toBe(2);
-    expect(cal('.dk-calendar__title').getBoundingClientRect().width).toBeLessThanOrEqual(1);
-    expect(cal('.dk-calendar__header').getBoundingClientRect().width).toBeLessThanOrEqual(cal('.dk-calendar__grid').getBoundingClientRect().width + 1);
-    expect(cal('.dk-calendar__header').scrollWidth).toBeLessThanOrEqual(cal('.dk-calendar__header').clientWidth);
+    expect(cal('.srp-calendar__title').getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    expect(cal('.srp-calendar__header').getBoundingClientRect().width).toBeLessThanOrEqual(cal('.srp-calendar__grid').getBoundingClientRect().width + 1);
+    expect(cal('.srp-calendar__header').scrollWidth).toBeLessThanOrEqual(cal('.srp-calendar__header').clientWidth);
   });
 
   test('monthYearPicker inside a form: a reset leaves the Month and Year menus on the month the grid shows (GR87)', async () => {
@@ -506,7 +506,7 @@ describe('server-rendered on another day than the visitor\'s', () => {
       try {
         expect(r.errors).toEqual([]);
         expect(today(r.host)).toEqual(['2026-11-08']);
-        expect([...r.host.querySelectorAll('button')].filter((b) => b.classList.contains('dk-calendar__day--today')).map((b) => b.dataset.date)).toEqual(['2026-11-08']);
+        expect([...r.host.querySelectorAll('button')].filter((b) => b.classList.contains('srp-calendar__day--today')).map((b) => b.dataset.date)).toEqual(['2026-11-08']);
       } finally { r.done(); }
     });
   }
@@ -564,7 +564,7 @@ describe('Calendar presets (RU11)', () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
     const max = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 3);
-    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, s) => got.push(s)} />);
+    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, { iso: s }) => got.push(s)} />);
     const group = page.getByRole('group', { name: 'Shortcuts' });
     await expect.element(group).toBeInTheDocument();
     const btns = [...group.element().querySelectorAll('button')];
@@ -615,7 +615,7 @@ describe('Calendar: other calendar systems (RX9)', () => {
 
   test('calendar="persian": the grid is the Persian month (Aban 1405 runs 23 Oct to 21 Nov 2026), its days numbered 1 to 30; keys and picks give Dates', async () => {
     const picks: string[] = [], months: string[] = [];
-    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" weekStartsOn={6} defaultValue="2026-11-15" onValueChange={(_, iso) => picks.push(iso)} onMonthChange={(m) => months.push(m.toDateString())} />);
+    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" weekStartsOn={6} defaultValue="2026-11-15" onValueChange={(_, { iso }) => picks.push(iso)} onMonthChange={(m) => months.push(m.toDateString())} />);
     const days = inMonth();
     expect([title(), days.length, days[0]!.dataset.date, days[0]!.textContent, days.at(-1)!.dataset.date, days.at(-1)!.textContent]).toEqual([titleIn('persian', new Date(2026, 10, 15)), 30, '2026-10-23', '1', '2026-11-21', '30']);
     expect(title()).toContain('1405');
@@ -633,7 +633,7 @@ describe('Calendar: other calendar systems (RX9)', () => {
     await render(<Calendar data-testid="cal" calendar="islamic-umalqura" locale="ar-SA" defaultMonth={new Date(2026, 10, 15)} />);
     expect([title(), inMonth()[0]!.dataset.date, inMonth()[0]!.textContent]).toEqual([titleIn('islamic-umalqura', new Date(2026, 10, 15), 'ar-SA'), '2026-11-11', '1']);
     const lengths: number[] = [];
-    for (let i = 0; i < 12; i++) { lengths.push(inMonth().length); await userEvent.click(cal('.dk-calendar__nav--next')); }
+    for (let i = 0; i < 12; i++) { lengths.push(inMonth().length); await userEvent.click(cal('.srp-calendar__nav--next')); }
     // Every month has 29 or 30 days, and twelve of them make a lunar year of 354 or 355.
     expect([lengths.every((n) => n === 29 || n === 30), [354, 355].includes(lengths.reduce((a, b) => a + b))]).toEqual([true, true]);
   });
@@ -648,7 +648,7 @@ describe('Calendar: other calendar systems (RX9)', () => {
 
   test('the months, the years and the menus count in the calendar: the heading opens Persian 1405, and Dey starts on 22 Dec 2026', async () => {
     await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
-    await userEvent.click(cal('.dk-calendar__heading'));
+    await userEvent.click(cal('.srp-calendar__heading'));
     const grid = () => cal<HTMLTableElement>('[role=grid]:not([hidden])');
     const cells = () => [...grid().querySelectorAll('button')].map((b) => b.querySelector('span:last-child')?.textContent ?? b.textContent);
     expect([title(), cells()[0], cells()[9]]).toEqual([new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', year: 'numeric' }).format(new Date(2026, 10, 15)), titleIn('persian', new Date(2026, 2, 21)), titleIn('persian', new Date(2026, 11, 22))]);
@@ -674,7 +674,7 @@ describe('Calendar: other calendar systems (RX9)', () => {
       expect([calendar, days.map((b) => b.textContent).join(), dates.every((d, i) => i === 0 || d === after(dates[i - 1]!)), days.length >= 29 && days.length <= 31])
         .toEqual([calendar, days.map((_, i) => String(i + 1)).join(), true, true]);
       expect(title()).toBe(titleIn(calendar, new Date(2026, 10, 15)));
-      await userEvent.click(cal('.dk-calendar__nav--next'));
+      await userEvent.click(cal('.srp-calendar__nav--next'));
       expect([calendar, inMonth()[0]!.dataset.date]).toEqual([calendar, after(dates.at(-1)!)]);
       await r.unmount();
     }

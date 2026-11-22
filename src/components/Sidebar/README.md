@@ -10,7 +10,7 @@ import { Sidebar, SidebarSection, SidebarItem, Badge } from '@diki-stwn/serupa-d
 <div style={{ display: 'flex', height: '100vh' }}>
   <Sidebar header={<Logo src="/logo.svg" markSrc="/mark.svg" variant={collapsed ? "mark" : "full"} alt="Acme" />} footer={<UserButton />} collapsed={collapsed}>
     <SidebarSection>
-      <SidebarItem href="/" icon="home" label="Home" active />
+      <SidebarItem href="/" icon="home" label="Home" current />
       <SidebarItem href="/inbox" icon="inbox" label="Inbox" badge={<Badge count={4} />} />
     </SidebarSection>
     <SidebarSection title="Workspace">
@@ -41,14 +41,14 @@ import { Sidebar, SidebarSection, SidebarItem, Badge } from '@diki-stwn/serupa-d
 
 Drawn from the `Playground` story.
 
-1. **Header** (`.dk-sidebar__header`): the product's name or a switcher, at the top.
-2. **Section title** (`.dk-sidebar__section-title`): names a group of links.
-3. **Link** (`.dk-sidebar__item`): a page to go to.
-4. **Current link** (`.dk-sidebar__item--active`): the page you're on.
-5. **Icon** (`.dk-sidebar__icon`): a picture of the page; it alone shows when the sidebar is collapsed, with the name as a tooltip.
-6. **Badge** (`.dk-sidebar__badge`): an optional count, such as unread items.
-7. **Nested links** (`.dk-sidebar__list--nested`): the pages under a link, shown when it's open.
-8. **Footer** (`.dk-sidebar__footer`): the account or settings, at the bottom.
+1. **Header** (`.srp-sidebar__header`): the product's name or a switcher, at the top.
+2. **Section title** (`.srp-sidebar__section-title`): names a group of links.
+3. **Link** (`.srp-sidebar__item`): a page to go to.
+4. **Current link** (`.srp-sidebar__item--active`): the page you're on.
+5. **Icon** (`.srp-sidebar__icon`): a picture of the page; it alone shows when the sidebar is collapsed, with the name as a tooltip.
+6. **Badge** (`.srp-sidebar__badge`): an optional count, such as unread items.
+7. **Nested links** (`.srp-sidebar__list--nested`): the pages under a link, shown when it's open.
+8. **Footer** (`.srp-sidebar__footer`): the account or settings, at the bottom.
 
 ## Usage
 
@@ -56,7 +56,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 
 - Give top-level items an `icon`, so they still show when the sidebar is collapsed, and use a string `label` so the tooltip can show it.
 - Group related items under a `SidebarSection` with a short `title`; keep nesting to one level of SidebarItems.
-- Mark the current page with `active`; a group holding it, at any depth, starts open.
+- Mark the current page with `current`; a group holding it, at any depth, starts open.
 - Put settings and the signed-in user in `footer`, so they stay at the bottom.
 - Collapsed, the header and footer have the 64px rail too: pass a logo mark or an avatar then, such as a [Logo](../Logo/README.md) with `variant={collapsed ? "mark" : "full"}`. Longer text there ends in an ellipsis rather than spilling over the page.
 - Collapsing and expanding slide over 200ms without laying out the page on every frame. The column's width changes once: at the start when expanding, and at the end when collapsing. In between, only the sidebar's visible edge moves, so a heavy page beside it doesn't stutter. Toggling again mid-way turns back from where it is. With reduced motion it switches at once.
@@ -105,7 +105,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 | --- | --- | --- | --- |
 | `label` | node | required | The item's text |
 | `icon` | an icon name or element | none | A 20px icon; top-level items need one to show when collapsed |
-| `active` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
+| `current` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
 | `badge` | node | none | At the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read the badge |
 | `children` | SidebarItems | none | Makes it a group: a button that shows and hides them. They unfold and fold with the chevron, as an Accordion panel does (only a fade under reduced motion); opened or closed from the keyboard, they show and hide at once |
 | `defaultOpen` | boolean | open when a child is active | Whether a group starts open |

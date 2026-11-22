@@ -33,9 +33,9 @@ const [stars, setStars] = React.useState<number | null>(null);
 
 Drawn from the `Disabled` story.
 
-1. **Star** (`.dk-rating__star`): one point of the score.
-2. **Filled** (`.dk-rating__fill`): the part of each star the score covers, half stars too.
-3. **Empty** (`.dk-rating__empty`): the part it doesn't.
+1. **Star** (`.srp-rating__star`): one point of the score.
+2. **Filled** (`.srp-rating__fill`): the part of each star the score covers, half stars too.
+3. **Empty** (`.srp-rating__empty`): the part it doesn't.
 
 ## Usage
 

@@ -4,7 +4,7 @@ declare function buttonClass(opts?: {
     destructive?: boolean;
     size?: ButtonSize;
     iconOnly?: boolean;
-    iconPosition?: "left" | "right";
+    iconPosition?: "end" | "start";
     wrap?: boolean;
     className?: string;
 }): string;
@@ -15,8 +15,8 @@ interface ButtonOwnProps {
     destructive?: boolean | undefined;
     onMedia?: "dark" | "light" | undefined;
     size?: ButtonSize | undefined;
-    leftIcon?: IconSource | undefined;
-    rightIcon?: IconSource | undefined;
+    startIcon?: IconSource | undefined;
+    endIcon?: IconSource | undefined;
     loading?: boolean | undefined;
     loadingLabel?: string | undefined;
     disabledReason?: string | undefined;

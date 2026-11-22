@@ -130,7 +130,7 @@ describe('Fab', () => {
     const e = el('fab');
     await settled(e);   // the ring fades in
     const probe = document.createElement('span');
-    probe.style.color = 'var(--dk-btn-ring)';
+    probe.style.color = 'var(--srp-btn-ring)';
     e.appendChild(probe);
     const ring = getComputedStyle(probe).color;
     probe.remove();
@@ -216,9 +216,9 @@ describe('Fab onMedia', () => {
   test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
     await render(<div><Fab id="om-dark" icon="add" label="New" onMedia="dark" /><Fab id="om-light" icon="add" label="Add" onMedia="light" placement="top-start" /></div>);
     const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
-    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(document.getElementById('om-dark')!.className).toContain('srp-btn--on-dark');
     expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
-    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(document.getElementById('om-light')!.className).toContain('srp-btn--on-light');
     expect(inks('om-light')).toContain('rgb(0, 0, 0)');
   });
 });

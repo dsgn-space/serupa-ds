@@ -6,24 +6,24 @@
    block scrolls in its own box, not the page. Links are base.css's bare links (Link's look), and a visited one takes
    --prose-link-visited, so readers see what they've read. Every value reads one of its own tokens.
    --------------------------------------------------------------- */
-@layer dk.components {
-.dk-prose {
+@layer srp.components {
+.srp-prose {
   max-inline-size: var(--container-prose);   /* about 65 characters a line, as Text measure */
   color: var(--prose-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-base); line-height: var(--text-base--line-height);
   overflow-wrap: break-word;
 }
-/* Prose styles its own content, never a component inside it: each rule's scope stops at an element with a dk- class
+/* Prose styles its own content, never a component inside it: each rule's scope stops at an element with a srp- class
    (a Pagination's list, a Table, a Kbd), which styles itself. The flow rules stop one level lower, so a component
    is still spaced from the block before it. */
-@scope (.dk-prose) to (:is([class^="dk-"], [class*=" dk-"]):not(.dk-prose) > *) {
+@scope (.srp-prose) to (:is([class^="srp-"], [class*=" srp-"]):not(.srp-prose) > *) {
   /* Flow: each block after another, in the column or inside a list item, quote, cell or details. */
   :scope > * + *, :scope :where(li, blockquote, dd, details, figure, td, th) > * + * { margin-block-start: var(--prose-flow, var(--spacing-4)); }
   :scope > * + :where(h1, h2, h3, h4, h5, h6) { margin-block-start: var(--prose-flow-heading, var(--spacing-8)); }
   :scope > :where(h1, h2, h3, h4, h5, h6) + * { margin-block-start: var(--prose-flow-after-heading, var(--spacing-3)); }
   :scope :where(li + li) { margin-block-start: var(--prose-flow-list, var(--spacing-2)); }
 }
-@scope (.dk-prose) to (:is([class^="dk-"], [class*=" dk-"]):not(.dk-prose)) {
+@scope (.srp-prose) to (:is([class^="srp-"], [class*=" srp-"]):not(.srp-prose)) {
   :scope :where(h1, h2, h3, h4, h5, h6) { color: var(--prose-heading, var(--text)); font-weight: var(--font-semibold); }
   :scope :where(h1) { font-size: var(--text-3xl); line-height: var(--text-3xl--line-height); letter-spacing: var(--tracking-tight); }
   :scope :where(h2) { font-size: var(--text-2xl); line-height: var(--text-2xl--line-height); letter-spacing: var(--tracking-tight); }

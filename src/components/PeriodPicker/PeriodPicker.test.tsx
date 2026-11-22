@@ -42,7 +42,7 @@ describe('PeriodPicker', () => {
     await render(<EnUS><PeriodPicker ref={ref} aria-label="Report month" className="extra" data-x="y" /></EnUS>);
     const b = button(), root = b.parentElement!;
     expect([b.tagName, b.getAttribute('role'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded'), b.getAttribute('aria-label'), b.dataset.x, ref.current === b]).toEqual(['BUTTON', 'combobox', 'dialog', 'false', 'Report month', 'y', true]);
-    expect([root.dataset.component, root.dataset.unit, root.className]).toEqual(['period-picker', 'month', 'dk-period-picker dk-period-picker--size-md extra']);
+    expect([root.dataset.component, root.dataset.unit, root.className]).toEqual(['period-picker', 'month', 'srp-period-picker srp-period-picker--size-md extra']);
     expect(b.textContent).toBe('Choose a month');
     expect([css(b).height, css(b).borderTopWidth, css(b).borderRadius]).toEqual(['32px', '1px', '6px']);
   });
@@ -74,7 +74,7 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'February 2025');
     const feb = periods()[1]!, mar = periods()[2]!;
     expect([feb.parentElement!.getAttribute('aria-selected'), feb.tabIndex, mar.getAttribute('aria-current'), periods().filter((p) => p.tabIndex === 0).length]).toEqual(['true', 0, 'date', 1]);
-    expect(feb.className).toContain('dk-period-picker__period--selected');
+    expect(feb.className).toContain('srp-period-picker__period--selected');
   });
 
   test('a max brought in while the popup is open, before the month in focus: the month that can be reached is the max, not one that is disabled', async () => {
@@ -92,7 +92,7 @@ describe('PeriodPicker', () => {
     await userEvent.click(button());
     await until(() => focused() === 'March 2025');
     await userEvent.click(page.getByRole('button', { name: 'May 2025' }));
-    expect(changed).toHaveBeenCalledWith('2025-05', { start: new Date(2025, 4, 1), end: new Date(2025, 4, 31) });
+    expect(changed).toHaveBeenCalledWith('2025-05', { range: { start: new Date(2025, 4, 1), end: new Date(2025, 4, 31) } });
     expect([button().getAttribute('aria-expanded'), button().textContent, document.activeElement === button()]).toEqual(['false', 'May 2025', true]);
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('month')).toBe('2025-05');
   });
@@ -108,7 +108,7 @@ describe('PeriodPicker', () => {
     for (const [k, want] of seq) { await userEvent.keyboard(k); await until(() => focused() === want); }
     expect(panel().querySelector('h2')!.textContent).toBe('2026');
     await userEvent.keyboard('{Enter}');
-    expect(changed).toHaveBeenCalledWith('2026-01', { start: new Date(2026, 0, 1), end: new Date(2026, 0, 31) });
+    expect(changed).toHaveBeenCalledWith('2026-01', { range: { start: new Date(2026, 0, 1), end: new Date(2026, 0, 31) } });
   });
 
   test('right to left, ArrowLeft goes to the next month', async () => {
@@ -158,7 +158,7 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'Q1 2026');
     // Space chooses, as Enter does.
     await userEvent.keyboard(' ');
-    expect(changed).toHaveBeenCalledWith('2026-Q1', { start: new Date(2026, 0, 1), end: new Date(2026, 2, 31) });
+    expect(changed).toHaveBeenCalledWith('2026-Q1', { range: { start: new Date(2026, 0, 1), end: new Date(2026, 2, 31) } });
     expect(button().textContent).toBe('Q1 2026');
   });
 
@@ -170,7 +170,7 @@ describe('PeriodPicker', () => {
     await userEvent.click(page.getByRole('button', { name: 'Next 12 years' }));
     expect(panel().querySelector('h2')!.textContent).toBe('2028–2039');
     await userEvent.click(page.getByRole('button', { name: '2030' }));
-    expect(changed).toHaveBeenCalledWith('2030', { start: new Date(2030, 0, 1), end: new Date(2030, 11, 31) });
+    expect(changed).toHaveBeenCalledWith('2030', { range: { start: new Date(2030, 0, 1), end: new Date(2030, 11, 31) } });
   });
 
   test('min and max: periods outside are aria-disabled and do nothing, keys stop at them, and an arrow with nothing past it is disabled', async () => {
@@ -238,7 +238,7 @@ describe('PeriodPicker', () => {
   test('in a Field: its label names the button, and its error sets aria-invalid and the danger outline', async () => {
     await render(<EnUS><Field label="Billing month" error="Choose a month."><PeriodPicker /></Field></EnUS>);
     await expect.element(page.getByRole('combobox', { name: 'Billing month' })).toHaveAttribute('aria-invalid', 'true');
-    expect(button().parentElement!.className).toContain('dk-period-picker--invalid');
+    expect(button().parentElement!.className).toContain('srp-period-picker--invalid');
   });
 
   test('in the locale: German month names, Indonesian words and quarters, Eastern Arabic digits in ar-EG', async () => {

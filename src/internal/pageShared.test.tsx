@@ -27,17 +27,17 @@ describe('what the page shares is kept once with two copies of the package (G2)'
     const layers = await copy<typeof import('./layers')>('./layers.ts');
     ensureAnnouncer();
     other.ensureAnnouncer();
-    expect(document.querySelectorAll('[data-dk-announcer]').length).toBe(1);
+    expect(document.querySelectorAll('[data-srp-announcer]').length).toBe(1);
     const dialog = document.createElement('div');
     document.body.appendChild(dialog);
     try {
       layers.modalOpened(dialog);
-      expect(document.querySelector('[data-dk-announcer]')!.parentElement).toBe(dialog);
+      expect(document.querySelector('[data-srp-announcer]')!.parentElement).toBe(dialog);
       announce('Saved');
       other.announce('Sent');
-      await expect.poll(() => document.querySelector('[data-dk-announcer]')!.textContent, { timeout: 3000 }).toBe('Saved. Sent');
+      await expect.poll(() => document.querySelector('[data-srp-announcer]')!.textContent, { timeout: 3000 }).toBe('Saved. Sent');
       await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);
     } finally { layers.modalClosed(dialog); dialog.remove(); }
-    expect(document.querySelector('[data-dk-announcer]')!.parentElement).toBe(document.body);
+    expect(document.querySelector('[data-srp-announcer]')!.parentElement).toBe(document.body);
   });
 });
