@@ -21,7 +21,7 @@ const LOADS = new Set(['AccountSecurity', 'ActivityLog', 'AddressBook', 'Agenda'
   'Billing', 'Booking', 'CourseOverview', 'Dashboard', 'DataExport', 'DetailPage', 'ExpenseReport', 'FileBrowser',
   'HelpCenter', 'Integrations', 'Invoice', 'Leaderboard', 'LeaveRequest', 'ListDetail', 'ListSearch', 'Messages',
   'Notifications', 'Onboarding', 'OrderHistory', 'OrderStatus', 'ProductCompare', 'ProductPage', 'Profile', 'Quiz',
-  'Reviews', 'RolePermissions', 'SavedItems', 'SettingsForm', 'StatusPage', 'StoreLocator', 'TaskBoard', 'TeamCalendar',
+  'Reviews', 'RolePermissions', 'SavedItems', 'SettingsForm', 'StatusPage', 'StockCount', 'StoreLocator', 'TaskBoard', 'TeamCalendar',
   'TeamMembers', 'Timesheet', 'Transactions', 'WhatsNew']);
 const required = (name: string): State[] => (LOADS.has(name) ? ['Loading', 'LoadFailed', 'Empty', 'Partial', 'Offline'] : ['SendFails', 'Offline']);
 
