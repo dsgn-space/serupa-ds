@@ -62,7 +62,7 @@ describe('Patterns/Profile', () => {
   });
 
   test('Save sends the trimmed profile and the new photo, says Saved, and the new photo shows with its name', async () => {
-    const onSave = vi.fn((_p: ProfileInfo, _f: File | null) => Promise.resolve());
+    const onSave = vi.fn((_p: ProfileInfo, _f: File | null, _c?: unknown) => Promise.resolve());
     const screen = await render(<Profile profile={me} onSave={onSave} />);
     await userEvent.upload(document.getElementById('profile-photo') as HTMLInputElement, [png()]);
     await expect.poll(() => document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
@@ -71,13 +71,25 @@ describe('Patterns/Profile', () => {
     await expect.poll(() => onSave.mock.calls.length).toBe(1);
     expect(onSave.mock.calls[0]![0]).toEqual({ ...me, location: 'Jakarta' });
     expect(onSave.mock.calls[0]![1]?.name).toBe('me.png');
+    // The photo comes with the square of it to keep, from the cropper under the upload: here all of a 1×1 picture.
+    expect(onSave.mock.calls[0]![2]).toEqual({ x: 0, y: 0, width: 1, height: 1 });
     await expect.poll(() => document.body.textContent).toContain('Saved');
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
     expect(document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
   });
 
+  test('a new photo can be framed: a cropper under the upload, named by its field, with a zoom slider; none without one', async () => {
+    const screen = await render(<Profile profile={me} />);
+    expect(screen.getByRole('group', { name: 'Frame your photo' }).elements()).toHaveLength(0);
+    await userEvent.upload(document.getElementById('profile-photo') as HTMLInputElement, [png()]);
+    const frame = screen.getByRole('group', { name: 'Frame your photo' });
+    await expect.element(frame).toBeVisible();
+    await expect.element(frame.getByRole('slider')).toBeVisible();
+    await expect.poll(() => frame.element().querySelector('[role="application"]') != null).toBe(true);
+  });
+
   test('a time zone is picked from the list by city, and saved with the profile', async () => {
-    const onSave = vi.fn((_p: ProfileInfo, _f: File | null) => Promise.resolve());
+    const onSave = vi.fn((_p: ProfileInfo, _f: File | null, _c?: unknown) => Promise.resolve());
     const screen = await render(<Profile profile={me} onSave={onSave} />);
     const zone = screen.getByRole('combobox', { name: /^Time zone/ });
     await zone.fill('Tokyo');
