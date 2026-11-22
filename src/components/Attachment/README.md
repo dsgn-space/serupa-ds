@@ -41,9 +41,10 @@ Drawn from the `Upload` story.
 
 - Pass `type` when you have it (a `File`'s `type`, or the server's content type): it picks the icon before the extension does. `kind` overrides both, for a file whose name says nothing ("scan-0042").
 - `bytes` is shown in steps of 1000, as phones and macOS count: 1,482,000 is "1.5 MB". Leave it out when you don't know the size.
-- While uploading, set `progress` from 0 to 100, or `null` when you can't tell. Take it away when the upload is done.
+- While uploading, set `progress` from 0 to 100, or `null` when you can't tell. Take it away when the upload is done, and set `done` to say "Complete" after the size.
 - A failed upload: set `error` to what went wrong ("Larger than 100 MB"), or `true` for "Couldn’t upload". Pass `onRetry` only when trying again can work.
 - Put several in a `<ul role="list">` with one per `<li>`, in a wrapping row or a column. Each grows to its content, up to 320px (`--attachment-max-width`), and never wider than its container.
+- `thumbnail` takes the icon's place, such as a 40px picture of an image file. FileUpload draws its files this way.
 - `attachmentKind(name, type)` returns the kind on its own, for a filter or your own icon. It runs in a Server Component too.
 
 ```tsx
@@ -89,6 +90,8 @@ Drawn from the `Upload` story.
 | `href` | `string` | | Makes the name a link. |
 | `download` | `boolean \| string` | | With `href`, the link's `download` attribute. |
 | `progress` | `number \| null` | | 0 to 100 while uploading; `null` when unknown. |
+| `done` | `boolean` | `false` | The upload finished: "Complete" with a check after the size. |
+| `thumbnail` | `ReactNode` | | Shown in place of the kind's icon. |
 | `error` | `ReactNode \| boolean` | | A failed upload's message; `true` says "Couldn’t upload". |
 | `onRetry` | `() => void` | | Adds "Try again" to a failed upload. |
 | `onRemove` | `() => void` | | Adds the remove button. |
@@ -115,9 +118,11 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-border-error` | `danger` | The outline of a failed upload (3:1 on the page). |
 | `--attachment-error` | `danger-text` | A failed upload's message (4.5:1 on bg). |
 | `--attachment-focus-ring` | `focus-ring` | The ring around a focused link, or around a cut name that takes keyboard focus. |
+| `--attachment-done` | `success-text` | "Complete" and its check once an upload is done (4.5:1 on bg). |
 | `--attachment-radius` | `radius-control` | The corners (6px). |
 | `--attachment-padding` | `spacing-2` | Space inside (8px). |
 | `--attachment-padding-start` | `spacing-3` | Space before the icon (12px). |
 | `--attachment-gap` | `spacing-2` | Space between the icon, the name and the buttons (8px). |
 | `--attachment-max-width` | `spacing-80` | The widest it grows (320px); a narrower container makes it narrower. |
+| `--attachment-width` | `sizing-max` | How wide it is up to max-width: as wide as its name. FileUpload sets it to the full width of its list. |
 <!-- token-table:end -->

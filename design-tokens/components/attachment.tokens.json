@@ -101,6 +101,16 @@
             "cssVar": "--attachment-focus-ring"
           }
         }
+      },
+      "done": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "\"Complete\" and its check once an upload is done (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-done"
+          }
+        }
       }
     },
     "radius": {
@@ -153,6 +163,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--attachment-max-width"
+          }
+        }
+      },
+      "width": {
+        "$type": "dimension",
+        "$value": "{sizing.sizing-max}",
+        "$description": "How wide it is up to max-width: as wide as its name. FileUpload sets it to the full width of its list.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-width"
           }
         }
       }

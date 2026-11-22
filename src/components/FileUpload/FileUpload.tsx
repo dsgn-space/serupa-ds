@@ -1,16 +1,14 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, isInvalid, omit, useMergedRef } from '../../internal/cn';
+import { Attachment } from '../Attachment/Attachment';
 import { Button } from '../Button/Button';
-import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
-import { Progress } from '../Progress/Progress';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
-import { formatFileSize } from './formatFileSize';
-import { attachmentKind } from '../Attachment/attachmentKind';
-import { KIND_ICONS } from '../Attachment/kindIcon';
-import { MiddleCutName } from '../../internal/middleCutName';
+import { formatFileSize } from '../../internal/formatFileSize';
+import { attachmentKind } from '../../internal/fileKind';
+import { KIND_ICONS } from '../../internal/fileKindIcon';
 import * as icons from '../../material/builtin';
 import { useFieldLabel } from '../../internal/fieldLabel';
 import { useFieldControl } from '../../internal/field';
@@ -114,7 +112,6 @@ const iconFor = (f: File) => KIND_ICONS[attachmentKind(f.name, f.type)];
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 // A file's name, cut in the middle when it doesn't fit (internal/middleCutName.tsx).
-const NAME = { root: 'srp-file-upload__name', start: 'srp-file-upload__name-start', end: 'srp-file-upload__name-end', hidden: 'srp-visually-hidden' };
 
 /* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
    pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps
@@ -226,7 +223,7 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   React.useEffect(() => {
     if (refocus == null) return;
     setRefocus(null);
-    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>('li > button:last-of-type') : [];
+    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>('li > [data-component="attachment"] > button:last-of-type') : [];
     const to = left.length ? left[Math.min(refocus, left.length - 1)] : chooser.current;
     if (to) to.focus();
   }, [refocus, files]);
@@ -344,28 +341,16 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
       {files.length ? (
         <ul ref={list} role="list" className="srp-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
           {files.map((f, i) => {
-            const st = statuses[i], id = base + '-file-' + i, icon = <Icon icon={iconFor(f)} className="srp-file-upload__file-icon" />;
-            const failed = st && st.state === 'error';
+            const st = statuses[i], failed = !!st && st.state === 'error';
+            // Each file is an Attachment; an image's thumbnail takes its icon's place, and the icon comes back if the picture can't be drawn.
             return (
-              <li key={f.name + f.size + f.lastModified + i} className={cn('srp-file-upload__item', failed && 'srp-file-upload__item--error')}>
-                {props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}>{icon}</Thumbnail> : icon}
-                <span className="srp-file-upload__file">
-                  <MiddleCutName name={f.name} id={id + '-name'} cls={NAME} />
-                  <span className="srp-file-upload__size" dir="auto">
-                    {formatFileSize(f.size, locale)}
-                    {st && st.state === 'done' ? <span className="srp-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete('')}</span> : null}
-                  </span>
-                  {st && st.state === 'uploading' ? (
-                    <Progress className="srp-file-upload__progress" size="sm" value={typeof st.progress === 'number' && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + '-name'} />
-                  ) : null}
-                  {failed ? <span className="srp-file-upload__failed" id={id + '-error'}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
-                </span>
-                {failed && props.onRetry && !still ? (
-                  <Button className="srp-file-upload__retry" variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + '-retry ' + id + '-name'} aria-describedby={id + '-error'}>
-                    <span id={id + '-retry'}>{L.tryAgain}</span>
-                  </Button>
-                ) : null}
-                {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
+              <li key={f.name + f.size + f.lastModified + i} className="srp-file-upload__item">
+                <Attachment name={f.name} bytes={f.size} type={f.type} disabled={disabled}
+                  thumbnail={props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}><Icon icon={iconFor(f)} /></Thumbnail> : undefined}
+                  progress={st && st.state === 'uploading' ? (typeof st.progress === 'number' ? st.progress : null) : undefined}
+                  done={!!st && st.state === 'done'} error={failed ? (st.message ?? true) : undefined}
+                  onRetry={failed && props.onRetry && !still ? () => props.onRetry!(f) : undefined}
+                  onRemove={readOnly ? undefined : () => remove(f)} removeLabel={removeLabel} />
               </li>
             );
           })}

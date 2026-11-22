@@ -178,6 +178,17 @@ describe('Attachment', () => {
     expect([part(root('g'), 'error').textContent.replace(/^error/, ''), root('g').querySelectorAll('button').length]).toEqual(['Larger than 100 MB', 0]);
   });
 
+  test('done says "Complete" after the size; not while uploading or failed', async () => {
+    await render(<SerupaProvider locale="en-US"><Attachment id="d" name="a.pdf" bytes={1000} done /><Attachment id="du" name="b.pdf" done progress={10} /><Attachment id="de" name="c.pdf" done error /></SerupaProvider>);
+    expect([meta(root('d')), meta(root('du')), meta(root('de'))]).toEqual(['PDF1 kBComplete', 'PDF', 'PDF']);
+  });
+
+  test('thumbnail takes the kind icon\'s place', async () => {
+    await render(<Attachment id="t" name="photo.png" thumbnail={<img alt="" width={40} height={40} src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />} />);
+    const first = root('t').firstElementChild!;
+    expect([first.hasAttribute('data-icon'), first.querySelector('img') !== null, root('t').querySelectorAll('[data-icon]').length]).toEqual([false, true, 0]);
+  });
+
   test('error={false} and error="" are not a failure', async () => {
     await render(<><Attachment id="e1" name="a.pdf" error={false} /><Attachment id="e2" name="a.pdf" error="" /></>);
     expect([root('e1').className, root('e2').className]).toEqual(['srp-attachment', 'srp-attachment']);
@@ -190,8 +201,8 @@ describe('Attachment', () => {
     expect(calls).toBe(0);
   });
 
-  test('its name, kind, size, link and error read 4.5:1, and its outline and icon 3:1, in every theme', async () => {
-    await render(<><Attachment id="c" name="a.pdf" bytes={10} /><Attachment id="cl" name="a.pdf" href="#a" /><Attachment id="ce" name="a.pdf" error /></>);
+  test('its name, kind, size, link, error and "Complete" read 4.5:1, and its outline and icon 3:1, in every theme', async () => {
+    await render(<><Attachment id="c" name="a.pdf" bytes={10} /><Attachment id="cl" name="a.pdf" href="#a" /><Attachment id="ce" name="a.pdf" error /><Attachment id="cd" name="a.pdf" done /></>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(root('c')).backgroundColor, page = css(document.body).backgroundColor;
@@ -199,6 +210,7 @@ describe('Attachment', () => {
       expect(contrast(css(part(root('c'), 'meta')).color, bg), th + ' meta').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(root('cl').querySelector('a')).color, bg), th + ' link').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(part(root('ce'), 'error')).color, bg), th + ' error').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(part(root('cd'), 'meta').lastElementChild).color, bg), th + ' done').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(root('c').querySelector('[data-icon]')).color, bg), th + ' icon').toBeGreaterThanOrEqual(3);
       expect(contrast(css(root('ce')).borderTopColor, page), th + ' error outline').toBeGreaterThanOrEqual(3);
     }

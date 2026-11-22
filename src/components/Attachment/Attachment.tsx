@@ -7,17 +7,19 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
 import { Progress } from '../Progress/Progress';
-import { formatFileSize } from '../FileUpload/formatFileSize';
+import { formatFileSize } from '../../internal/formatFileSize';
 import * as icons from '../../material/builtin';
-import { attachmentKind, type AttachmentKind } from './attachmentKind';
-import { KIND_ICONS } from './kindIcon';
+import { attachmentKind, type AttachmentKind } from '../../internal/fileKind';
+import { KIND_ICONS } from '../../internal/fileKindIcon';
 import { en as ownWords } from './labels';
 import { en as fileWords } from '../FileUpload/labels';
 import { en as boundary } from '../ErrorBoundary/labels';
+import { en as progressWords } from '../Progress/labels';
 import { MiddleCutName } from '../../internal/middleCutName';
 
-// Its own words, FileUpload's "Couldn’t upload" for a failed one and ErrorBoundary's "Try again" for its retry button.
-const words = /* @__PURE__ */ Object.assign({}, boundary, fileWords, ownWords);
+// Its own words, FileUpload's "Couldn’t upload" for a failed one, ErrorBoundary's "Try again" for its retry button and
+// Progress's "Complete" for one that's done.
+const words = /* @__PURE__ */ Object.assign(Object.assign({}, boundary, progressWords), fileWords, ownWords);
 
 export { attachmentKind };
 export type { AttachmentKind };
@@ -37,6 +39,10 @@ export interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   download?: boolean | string | undefined;
   /** While the file uploads, how far along, from 0 to 100, as a bar under the name; null when you can't tell (the bar moves on its own). Leave it out once it's done. */
   progress?: number | null | undefined;
+  /** Shown in place of the kind's icon, such as a small picture of an image file. Keep it 40px or under. */
+  thumbnail?: React.ReactNode | undefined;
+  /** The upload finished: "Complete" with a check after the size. Default: false. */
+  done?: boolean | undefined;
   /** The upload failed: a danger outline and this message under the name; true shows "Couldn’t upload". */
   error?: React.ReactNode | boolean | undefined;
   /** Called by the "Try again" button, shown only with error. */
@@ -49,7 +55,7 @@ export interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   disabled?: boolean | undefined;
 }
 
-const OWN = { name: 1, bytes: 1, type: 1, kind: 1, href: 1, download: 1, progress: 1, error: 1, onRetry: 1, onRemove: 1, removeLabel: 1, disabled: 1, className: 1 } as const;
+const OWN = { name: 1, bytes: 1, type: 1, kind: 1, href: 1, download: 1, progress: 1, thumbnail: 1, done: 1, error: 1, onRetry: 1, onRemove: 1, removeLabel: 1, disabled: 1, className: 1 } as const;
 
 const ICONS = KIND_ICONS;
 const WORD = {
@@ -73,7 +79,7 @@ function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttribut
   const removeLabel = props.removeLabel || ((n: string) => L.remove + ' ' + n);
   return (
     <div {...rest} ref={ref} className={cn('srp-attachment', failed && 'srp-attachment--error', uploading && 'srp-attachment--uploading', disabled && 'srp-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
-      <Icon icon={ICONS[kind]} className="srp-attachment__icon" />
+      {props.thumbnail != null ? <span className="srp-attachment__thumbnail">{props.thumbnail}</span> : <Icon icon={ICONS[kind]} className="srp-attachment__icon" />}
       <span className="srp-attachment__body">
         {props.href && !disabled ? (
           <a className="srp-attachment__name" href={props.href} download={props.download === true ? '' : props.download || undefined} aria-describedby={cn(base + '-meta', failed && base + '-error')}>{name}</a>
@@ -81,6 +87,7 @@ function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttribut
         <span className="srp-attachment__meta" id={base + '-meta'} dir="auto">
           <span className="srp-attachment__kind">{L[WORD[kind]]}</span>
           {size ? <span className="srp-attachment__size">{size}</span> : null}
+          {props.done && !failed && !uploading ? <span className="srp-attachment__done"><Icon icon={icons.CheckCircle} />{L.progressComplete('')}</span> : null}
         </span>
         {uploading ? <Progress className="srp-attachment__progress" size="sm" value={value} aria-labelledby={base + '-name'} /> : null}
         {failed ? <span className="srp-attachment__error" id={base + '-error'}><Icon icon={icons.Error} />{props.error === true ? L.fileError : props.error}</span> : null}

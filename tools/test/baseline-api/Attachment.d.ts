@@ -1,4 +1,4 @@
-// exports: Attachment, attachmentKind, type AttachmentKind, type AttachmentProps
+// exports: Attachment, type AttachmentProps
 interface AttachmentLabels {
     attachmentPdf: string;
     attachmentImage: string;
@@ -11,8 +11,6 @@ interface AttachmentLabels {
     attachmentVideo: string;
     attachmentOther: string;
 }
-type AttachmentKind = "archive" | "audio" | "code" | "doc" | "image" | "other" | "pdf" | "sheet" | "slides" | "video";
-declare function attachmentKind(name: string, type?: string): AttachmentKind;
 interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     name: string;
     bytes?: number | undefined;
@@ -21,6 +19,8 @@ interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ch
     href?: string | undefined;
     download?: boolean | string | undefined;
     progress?: null | number | undefined;
+    thumbnail?: React.ReactNode | undefined;
+    done?: boolean | undefined;
     error?: boolean | React.ReactNode | undefined;
     onRetry?: (() => void) | undefined;
     onRemove?: (() => void) | undefined;
