@@ -38,6 +38,15 @@ beforeEach(async () => { errors = vi.spyOn(console, 'error'); await page.viewpor
 afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('CascadeSelect', () => {
+  test('a second click on the button closes the popup without a change', async () => {
+    const changes: string[][] = [];
+    await render(<CascadeSelect aria-label="Wilayah" options={regions} onValueChange={(v) => changes.push(v)} />);
+    await userEvent.click(button());
+    await expect.poll(() => button().getAttribute('aria-expanded')).toBe('true');
+    await userEvent.click(button());
+    await expect.poll(() => button().getAttribute('aria-expanded')).toBe('false');
+    expect([panel().hidden, changes]).toEqual([true, []]);
+  });
   test('a chosen path cut short in a narrow field shows whole on hover and on keyboard focus', async () => {
     await render(<div style={{ width: 180 }}><CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} /></div>);
     const t = button().querySelector<HTMLElement>('[data-component="truncated-text"]')!;
