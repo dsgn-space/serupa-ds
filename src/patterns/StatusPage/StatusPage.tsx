@@ -16,6 +16,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Status page: is it working now, each service's last 90 days, what's being done about a problem, and email updates.
    For an app to copy. What it carries (WCAG 2.2):
@@ -137,56 +139,58 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
         <p className="m-0 text-base font-semibold">Acme status</p>
         <Link underline="hover" href="#support">Contact support</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is the status from when the page loaded. It may have changed.</OfflineBanner>
-        <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the status" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the status" /></Card> : (<>
-        <div className="flex flex-col gap-8 pt-6">
-          <Alert tone={STATE[overall].tone} title={TITLE[overall]}>
-            {open.length ? `${open.length === 1 ? 'An incident is' : `${formatNumber(open.length, locale)} incidents are`} open; the latest updates are below.` : 'No open incidents.'}
-          </Alert>
-          {open.length ? (
-            <section aria-labelledby="status-now" className="flex flex-col gap-4">
-              <h2 id="status-now" className="m-0 text-lg font-semibold">Open incidents</h2>
-              {open.map((i) => <Card key={i.id}>{incident(i)}</Card>)}
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is the status from when the page loaded. It may have changed.</OfflineBanner>
+          <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the status" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the status" /></Card> : (<>
+          <div className="flex flex-col gap-8 pt-6">
+            <Alert tone={STATE[overall].tone} title={TITLE[overall]}>
+              {open.length ? `${open.length === 1 ? 'An incident is' : `${formatNumber(open.length, locale)} incidents are`} open; the latest updates are below.` : 'No open incidents.'}
+            </Alert>
+            {open.length ? (
+              <section aria-labelledby="status-now" className="flex flex-col gap-4">
+                <h2 id="status-now" className="m-0 text-lg font-semibold">Open incidents</h2>
+                {open.map((i) => <Card key={i.id}>{incident(i)}</Card>)}
+              </section>
+            ) : null}
+            <section aria-labelledby="status-services" className="flex flex-col gap-4">
+              <h2 id="status-services" className="m-0 text-lg font-semibold">Services</h2>
+              <ul className="m-0 flex list-none flex-col gap-4 p-0">
+                {services.map((s, n) => (
+                  <li key={s.id}>
+                    <Card className="flex flex-col gap-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <h3 className="m-0 text-base font-semibold">{s.name}</h3>
+                        <Badge tone={STATE[s.state].tone}>{STATE[s.state].word}</Badge>
+                      </div>
+                      <StatusTracker label={s.name} days={s.days} legend={n === services.length - 1} />
+                    </Card>
+                  </li>
+                ))}
+              </ul>
             </section>
-          ) : null}
-          <section aria-labelledby="status-services" className="flex flex-col gap-4">
-            <h2 id="status-services" className="m-0 text-lg font-semibold">Services</h2>
-            <ul className="m-0 flex list-none flex-col gap-4 p-0">
-              {services.map((s, n) => (
-                <li key={s.id}>
-                  <Card className="flex flex-col gap-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="m-0 text-base font-semibold">{s.name}</h3>
-                      <Badge tone={STATE[s.state].tone}>{STATE[s.state].word}</Badge>
-                    </div>
-                    <StatusTracker label={s.name} days={s.days} legend={n === services.length - 1} />
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          </section>
-          {past.length ? (
-            <section aria-labelledby="status-past" className="flex flex-col gap-4">
-              <h2 id="status-past" className="m-0 text-lg font-semibold">Past incidents</h2>
-              {past.map((i) => incident(i))}
+            {past.length ? (
+              <section aria-labelledby="status-past" className="flex flex-col gap-4">
+                <h2 id="status-past" className="m-0 text-lg font-semibold">Past incidents</h2>
+                {past.map((i) => incident(i))}
+              </section>
+            ) : null}
+            <section aria-labelledby="status-updates" className="flex flex-col gap-4">
+              <h2 id="status-updates" className="m-0 text-lg font-semibold">Get updates by email</h2>
+              <form onSubmit={subscribe} noValidate className="flex max-w-md flex-col items-start gap-3" aria-labelledby="status-updates">
+                <Field label="Email" id="status-email" hint="We email when an incident starts, changes or ends. Unsubscribe from any email." error={problem || undefined} className="w-full">
+                  <Input type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setProblem(''); }} />
+                </Field>
+                <Button type="submit" loading={busy}>Subscribe</Button>
+              </form>
+              <p role="status" id="status-subscribed" className="m-0">{done}</p>
             </section>
-          ) : null}
-          <section aria-labelledby="status-updates" className="flex flex-col gap-4">
-            <h2 id="status-updates" className="m-0 text-lg font-semibold">Get updates by email</h2>
-            <form onSubmit={subscribe} noValidate className="flex max-w-md flex-col items-start gap-3" aria-labelledby="status-updates">
-              <Field label="Email" id="status-email" hint="We email when an incident starts, changes or ends. Unsubscribe from any email." error={problem || undefined} className="w-full">
-                <Input type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setProblem(''); }} />
-              </Field>
-              <Button type="submit" loading={busy}>Subscribe</Button>
-            </form>
-            <p role="status" id="status-subscribed" className="m-0">{done}</p>
-          </section>
-        </div>
-        </>)}
-      </main>
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

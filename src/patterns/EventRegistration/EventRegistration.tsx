@@ -17,6 +17,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Event registration: what, when and where an event is, how many places are left, and a short form to get tickets,
    or to join the waiting list once it's full. For an app to copy. What it carries (WCAG 2.2):
@@ -153,67 +155,69 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister, 
         <p className="m-0 text-base font-semibold">Acme events</p>
         <Link underline="hover" href="#events">All events</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your details stay here. Registering needs a connection, and the places left may have changed.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Events', href: '#events' }, { label: event.title }]} title={event.title}
-          description="An evening of short talks on design systems, then dinner. Talks are in English, with live captions on the screen." />
-        <div className="flex flex-col gap-8 pt-6">
-          <Card>
-            <section aria-labelledby="event-facts" className="flex flex-col gap-4">
-              <h2 id="event-facts" className="m-0 text-lg font-semibold">When and where</h2>
-              <DescriptionList>
-                <DescriptionItem term="When"><time dateTime={event.start}>{when}</time>, {event.zone}</DescriptionItem>
-                <DescriptionItem term="Where">{event.place}</DescriptionItem>
-                <DescriptionItem term="Getting in">Step-free, with a lift to the 5th floor</DescriptionItem>
-              </DescriptionList>
-              <Meter label="Places" value={event.taken} max={event.capacity} high={event.capacity * 0.8} optimum={0}
-                formatValue={() => placesWords(left, locale)} showValue />
-            </section>
-          </Card>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your details stay here. Registering needs a connection, and the places left may have changed.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Events', href: '#events' }, { label: event.title }]} title={event.title}
+            description="An evening of short talks on design systems, then dinner. Talks are in English, with live captions on the screen." />
+          <div className="flex flex-col gap-8 pt-6">
+            <Card>
+              <section aria-labelledby="event-facts" className="flex flex-col gap-4">
+                <h2 id="event-facts" className="m-0 text-lg font-semibold">When and where</h2>
+                <DescriptionList>
+                  <DescriptionItem term="When"><time dateTime={event.start}>{when}</time>, {event.zone}</DescriptionItem>
+                  <DescriptionItem term="Where">{event.place}</DescriptionItem>
+                  <DescriptionItem term="Getting in">Step-free, with a lift to the 5th floor</DescriptionItem>
+                </DescriptionList>
+                <Meter label="Places" value={event.taken} max={event.capacity} high={event.capacity * 0.8} optimum={0}
+                  formatValue={() => placesWords(left, locale)} showValue />
+              </section>
+            </Card>
 
-          {done ? (
-            <section aria-labelledby="registered" className="flex flex-col items-start gap-3">
-              <h2 id="registered" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">{done.waitlist ? 'You’re on the waiting list' : 'You’re going'}</h2>
-              {done.waitlist
-                ? <p className="m-0">We’ll email {done.email} as soon as a place comes free, and hold it for you for 24 hours.</p>
-                : <p className="m-0">{done.count === 1 ? `1 ${ticket!.label} ticket` : `${formatNumber(done.count, locale)} ${ticket!.label} tickets`}, {money(ticket!.price * done.count)} in all. The tickets are on their way to {done.email}; show them on your phone at the door.</p>}
-              {done.waitlist ? null : <Link href={`data:text/calendar;charset=utf-8,${encodeURIComponent(icsFor(event))}`} download="event.ics">Add to your calendar</Link>}
-            </section>
-          ) : (
-            <form onSubmit={register} noValidate aria-labelledby="register" className="flex flex-col gap-4">
-              <h2 id="register" className="m-0 text-lg font-semibold">{full ? 'Join the waiting list' : 'Get tickets'}</h2>
-              {full ? <p className="m-0">It’s full. Leave your name, and we’ll email you if a place comes free.</p> : null}
-              <ErrorSummary key={tries} errors={errors} />
-              {full ? null : (
-                <>
-                  <Field label="Ticket" error={problems.ticket} group required>
-                    <RadioGroup id="event-ticket" name="event-ticket" variant="card" value={r.ticket} onValueChange={(v: string) => edit({ ticket: v })}>
-                      {event.tickets.map((t) => <Radio key={t.value} value={t.value} description={t.who}>{t.label}: {money(t.price)}</Radio>)}
-                    </RadioGroup>
-                  </Field>
-                  <Field label="How many tickets?" id="event-count" hint={`Up to ${formatNumber(Math.min(MOST, left), locale)}.`} error={problems.count} required>
-                    <NumberInput min={1} max={Math.min(MOST, left)} value={r.count} onValueChange={(n) => edit({ count: n ?? 0 })} className="max-w-36" />
-                  </Field>
-                  <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : null}</p>
-                </>
-              )}
-              <Field label="Your name" id="event-name" error={problems.name} required>
-                <Input autoComplete="name" value={r.name} onChange={(e) => edit({ name: e.target.value })} />
-              </Field>
-              <Field label="Email" id="event-email" error={problems.email} required>
-                <Input type="email" autoComplete="email" spellCheck={false} value={r.email} onChange={(e) => edit({ email: e.target.value })} />
-              </Field>
-              <Field label="Anything that would make it easier to come?" id="event-needs" hint="Seating, food, a quiet room, a sign language interpreter. We’ll be in touch." optional>
-                <Textarea rows={3} maxLength={500} value={r.needs} onChange={(e) => edit({ needs: e.target.value })} />
-              </Field>
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t register you. Try again; everything you entered is still here.</Alert> : null}
-                <Button type="submit" loading={busy}>{full ? 'Join the waiting list' : 'Register'}</Button>
-              </div>
-            </form>
-          )}
-        </div>
-      </main>
+            {done ? (
+              <section aria-labelledby="registered" className="flex flex-col items-start gap-3">
+                <h2 id="registered" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">{done.waitlist ? 'You’re on the waiting list' : 'You’re going'}</h2>
+                {done.waitlist
+                  ? <p className="m-0">We’ll email {done.email} as soon as a place comes free, and hold it for you for 24 hours.</p>
+                  : <p className="m-0">{done.count === 1 ? `1 ${ticket!.label} ticket` : `${formatNumber(done.count, locale)} ${ticket!.label} tickets`}, {money(ticket!.price * done.count)} in all. The tickets are on their way to {done.email}; show them on your phone at the door.</p>}
+                {done.waitlist ? null : <Link href={`data:text/calendar;charset=utf-8,${encodeURIComponent(icsFor(event))}`} download="event.ics">Add to your calendar</Link>}
+              </section>
+            ) : (
+              <form onSubmit={register} noValidate aria-labelledby="register" className="flex flex-col gap-4">
+                <h2 id="register" className="m-0 text-lg font-semibold">{full ? 'Join the waiting list' : 'Get tickets'}</h2>
+                {full ? <p className="m-0">It’s full. Leave your name, and we’ll email you if a place comes free.</p> : null}
+                <ErrorSummary key={tries} errors={errors} />
+                {full ? null : (
+                  <>
+                    <Field label="Ticket" error={problems.ticket} group required>
+                      <RadioGroup id="event-ticket" name="event-ticket" variant="card" value={r.ticket} onValueChange={(v: string) => edit({ ticket: v })}>
+                        {event.tickets.map((t) => <Radio key={t.value} value={t.value} description={t.who}>{t.label}: {money(t.price)}</Radio>)}
+                      </RadioGroup>
+                    </Field>
+                    <Field label="How many tickets?" id="event-count" hint={`Up to ${formatNumber(Math.min(MOST, left), locale)}.`} error={problems.count} required>
+                      <NumberInput min={1} max={Math.min(MOST, left)} value={r.count} onValueChange={(n) => edit({ count: n ?? 0 })} className="max-w-36" />
+                    </Field>
+                    <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : null}</p>
+                  </>
+                )}
+                <Field label="Your name" id="event-name" error={problems.name} required>
+                  <Input autoComplete="name" value={r.name} onChange={(e) => edit({ name: e.target.value })} />
+                </Field>
+                <Field label="Email" id="event-email" error={problems.email} required>
+                  <Input type="email" autoComplete="email" spellCheck={false} value={r.email} onChange={(e) => edit({ email: e.target.value })} />
+                </Field>
+                <Field label="Anything that would make it easier to come?" id="event-needs" hint="Seating, food, a quiet room, a sign language interpreter. We’ll be in touch." optional>
+                  <Textarea rows={3} maxLength={500} value={r.needs} onChange={(e) => edit({ needs: e.target.value })} />
+                </Field>
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t register you. Try again; everything you entered is still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>{full ? 'Join the waiting list' : 'Register'}</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

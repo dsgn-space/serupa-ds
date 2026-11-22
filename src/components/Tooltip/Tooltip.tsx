@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -63,17 +63,17 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const tipRef = React.useRef<HTMLDivElement | null>(null);
   const anchorRef = React.useRef<HTMLElement | null>(null);
   const timer = React.useRef<number | undefined>(undefined);
-  const onOpenChange = React.useRef(props.onOpenChange); onOpenChange.current = props.onOpenChange;
+  const onOpenChange = useLatest(props.onOpenChange);
   // What it shows, and whether it may show: a press, a blur or the pointer leaving while it's hidden (or one of them
   // while disabled) asked onOpenChange to hide it, or to show it, when nothing was to change (L8E106).
-  const shown = React.useRef(open); shown.current = open;
-  const off = React.useRef(props.disabled); off.current = props.disabled;
+  const shown = useLatest(open);
+  const off = useLatest(props.disabled);
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
     window.clearTimeout(timer.current);
     if (v === shown.current || (v && off.current)) return;
     if (!controlled) { shown.current = v; setInner(v); }
     if (onOpenChange.current) onOpenChange.current(v, { reason });
-  }, [controlled, setInner]);
+  }, [controlled, setInner, off, onOpenChange, shown]);
   // Escape while a hover is waiting out the delay cancels the show (GR89): it was dismissed before it appeared.
   // Nothing is on screen yet, so that Escape goes on to whatever else handles it.
   const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);
@@ -94,7 +94,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   // so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
   const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, 'hover'); } };
-  const interest = React.useRef(fromInterest); interest.current = fromInterest;
+  const interest = useLatest(fromInterest);
   React.useEffect(() => {
     const tip = tipRef.current;
     if (!tip) return;
@@ -103,7 +103,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     tip.addEventListener('interest', on);
     tip.addEventListener('loseinterest', lose);
     return () => { tip.removeEventListener('interest', on); tip.removeEventListener('loseinterest', lose); };
-  }, []);
+  }, [interest]);
   // The open tooltip is the warm one: opening another closes it, and closing it keeps others warm for hoverWarm.
   const self = React.useRef({});
   // Opened warm: no fade, so moving along a toolbar swaps one tooltip for the next without a flicker. One open on

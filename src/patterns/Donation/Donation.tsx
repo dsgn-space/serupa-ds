@@ -15,6 +15,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Donation: give once or every month, choose an amount that says what it pays for, cover the card fee if you like, and
    see the total before you give. For an app to copy. What it carries (WCAG 2.2):
@@ -109,60 +111,62 @@ export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee
         <p className="m-0 text-base font-semibold">Acme Schools</p>
         <Link underline="hover" href="#about">About us</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Giving needs a connection.</OfflineBanner>
-        <PageHeader title="Give to Acme Schools" description="Every gift goes to schools in the villages we work in. We’re a registered charity; your gift may be tax-deductible." />
-        {given ? (
-          <section aria-labelledby="donate-thanks" className="flex flex-col items-start gap-3 pt-6">
-            <h2 id="donate-thanks" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you, {given.name}</h2>
-            <p className="m-0">
-              We’ve taken {money(given.amount + given.fee)}{given.monthly ? ', and will take it on this day each month' : ''}. Your receipt is on its way to {given.email}.
-            </p>
-            {given.monthly ? <p className="m-0">You can change or stop your monthly gift at any time from the link in the receipt.</p> : null}
-            <Link href="#about">See what your gift does</Link>
-          </section>
-        ) : (
-          <form onSubmit={give} noValidate aria-label="Your gift" className="flex flex-col gap-4 pt-6">
-            <ErrorSummary key={tries} errors={errors} />
-            <Field label="How often?" group>
-              <RadioGroup name="donate-often" orientation="horizontal" value={d.monthly} onValueChange={(v: string) => edit({ monthly: v })}>
-                <Radio value="once">Once</Radio>
-                <Radio value="monthly">Every month</Radio>
-              </RadioGroup>
-            </Field>
-            <Field label="How much?" group error={problems.amount} required>
-              <RadioGroup id="donate-amount" name="donate-amount" value={d.amount} onValueChange={(v: string) => edit({ amount: v })}>
-                {amounts.map((a) => <Radio key={a.amount} value={String(a.amount)} description={a.buys}>{money(a.amount)}{every}</Radio>)}
-                <Radio value="other">Another amount</Radio>
-              </RadioGroup>
-            </Field>
-            {d.amount === 'other' ? (
-              <Field label={`Your amount${every}`} id="donate-other" hint={`${money(min)} or more.`} error={problems.other} required>
-                <NumberInput currency={currency} min={0} value={d.other} onValueChange={(n) => edit({ other: n })} className="max-w-48" />
-              </Field>
-            ) : null}
-            <Checkbox checked={d.cover} onCheckedChange={(on) => edit({ cover: on })}
-              description={amount ? `Adds ${money(coverFee(amount, fee))}${every}, so we get all of your gift.` : 'Adds a little, so we get all of your gift.'}>
-              Cover the card fee
-            </Checkbox>
-            <Field label="Your name" id="donate-name" error={problems.name} required>
-              <Input autoComplete="name" value={d.name} onChange={(e) => edit({ name: e.target.value })} />
-            </Field>
-            <Field label="Your email" id="donate-email" hint="For your receipt. We never share it." error={problems.email} required>
-              <Input type="email" autoComplete="email" value={d.email} onChange={(e) => edit({ email: e.target.value })} />
-            </Field>
-            <Card padding="sm" variant="filled">
-              <p className="m-0" aria-live="polite" id="donate-total">
-                {amount ? <>You’ll give <strong>{money(amount + added)}{every}</strong>{added ? `, ${money(added)} of it for the card fee` : ''}.</> : 'Choose an amount to see your total.'}
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Giving needs a connection.</OfflineBanner>
+          <PageHeader title="Give to Acme Schools" description="Every gift goes to schools in the villages we work in. We’re a registered charity; your gift may be tax-deductible." />
+          {given ? (
+            <section aria-labelledby="donate-thanks" className="flex flex-col items-start gap-3 pt-6">
+              <h2 id="donate-thanks" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you, {given.name}</h2>
+              <p className="m-0">
+                We’ve taken {money(given.amount + given.fee)}{given.monthly ? ', and will take it on this day each month' : ''}. Your receipt is on its way to {given.email}.
               </p>
-            </Card>
-            <div className="flex flex-col items-start gap-3">
-              {failed ? <Alert tone="danger">Couldn’t take your gift, and nothing was charged. Try again; everything is still here.</Alert> : null}
-              <Button type="submit" loading={busy}>{amount ? `Give ${money(amount + added)}${every}` : 'Give'}</Button>
-            </div>
-          </form>
-        )}
-      </main>
+              {given.monthly ? <p className="m-0">You can change or stop your monthly gift at any time from the link in the receipt.</p> : null}
+              <Link href="#about">See what your gift does</Link>
+            </section>
+          ) : (
+            <form onSubmit={give} noValidate aria-label="Your gift" className="flex flex-col gap-4 pt-6">
+              <ErrorSummary key={tries} errors={errors} />
+              <Field label="How often?" group>
+                <RadioGroup name="donate-often" orientation="horizontal" value={d.monthly} onValueChange={(v: string) => edit({ monthly: v })}>
+                  <Radio value="once">Once</Radio>
+                  <Radio value="monthly">Every month</Radio>
+                </RadioGroup>
+              </Field>
+              <Field label="How much?" group error={problems.amount} required>
+                <RadioGroup id="donate-amount" name="donate-amount" value={d.amount} onValueChange={(v: string) => edit({ amount: v })}>
+                  {amounts.map((a) => <Radio key={a.amount} value={String(a.amount)} description={a.buys}>{money(a.amount)}{every}</Radio>)}
+                  <Radio value="other">Another amount</Radio>
+                </RadioGroup>
+              </Field>
+              {d.amount === 'other' ? (
+                <Field label={`Your amount${every}`} id="donate-other" hint={`${money(min)} or more.`} error={problems.other} required>
+                  <NumberInput currency={currency} min={0} value={d.other} onValueChange={(n) => edit({ other: n })} className="max-w-48" />
+                </Field>
+              ) : null}
+              <Checkbox checked={d.cover} onCheckedChange={(on) => edit({ cover: on })}
+                description={amount ? `Adds ${money(coverFee(amount, fee))}${every}, so we get all of your gift.` : 'Adds a little, so we get all of your gift.'}>
+                Cover the card fee
+              </Checkbox>
+              <Field label="Your name" id="donate-name" error={problems.name} required>
+                <Input autoComplete="name" value={d.name} onChange={(e) => edit({ name: e.target.value })} />
+              </Field>
+              <Field label="Your email" id="donate-email" hint="For your receipt. We never share it." error={problems.email} required>
+                <Input type="email" autoComplete="email" value={d.email} onChange={(e) => edit({ email: e.target.value })} />
+              </Field>
+              <Card padding="sm" variant="filled">
+                <p className="m-0" aria-live="polite" id="donate-total">
+                  {amount ? <>You’ll give <strong>{money(amount + added)}{every}</strong>{added ? `, ${money(added)} of it for the card fee` : ''}.</> : 'Choose an amount to see your total.'}
+                </p>
+              </Card>
+              <div className="flex flex-col items-start gap-3">
+                {failed ? <Alert tone="danger">Couldn’t take your gift, and nothing was charged. Try again; everything is still here.</Alert> : null}
+                <Button type="submit" loading={busy}>{amount ? `Give ${money(amount + added)}${every}` : 'Give'}</Button>
+              </div>
+            </form>
+          )}
+        </Stack>
+      </Container>
     </div>
   );
 }

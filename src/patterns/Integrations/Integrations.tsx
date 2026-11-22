@@ -17,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Integrations: the other apps a workspace can connect, which are connected, connecting one and disconnecting one.
    For an app to copy. What it carries (WCAG 2.2):
@@ -154,41 +156,43 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the apps loaded before you went offline. Connecting or disconnecting needs a connection.</OfflineBanner>
-        <PageHeader title="Integrations" description="Connect the other apps your team uses. Only admins can connect or disconnect them." />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the apps loaded before you went offline. Connecting or disconnecting needs a connection.</OfflineBanner>
+          <PageHeader title="Integrations" description="Connect the other apps your team uses. Only admins can connect or disconnect them." />
 
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your integrations" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
-          <ul role="list" aria-busy="true" className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
-            {/* One name for all of them: the first card is named, the others are only pictures. */}
-            {[0, 1, 2, 3].map((i) => <li key={i}><Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading integrations' : ''} /></Card></li>)}
-          </ul>
-        ) : <>
-          <Field label="Search integrations" className="max-w-md">
-            <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery('')} clearLabel="Clear the search" />
-          </Field>
-          <p role="status" className="m-0 text-sm text-text-muted">{found.length === 1 ? '1 app' : `${formatNumber(found.length, locale)} apps`}</p>
-          {found.length ? <>
-            {list('Connected', connected, 'None of these are connected.')}
-            {list('Available', available, 'Every one of these is connected.')}
-          </> : (
-            <EmptyNoResults query={query.trim()} headingLevel={2} title={(q) => `No apps match “${q}”`}
-              description="Try another name, or what you want it to do." onClearFilters={() => setQuery('')} />
-          )}
-        </>}
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your integrations" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
+            <ul role="list" aria-busy="true" className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
+              {/* One name for all of them: the first card is named, the others are only pictures. */}
+              {[0, 1, 2, 3].map((i) => <li key={i}><Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading integrations' : ''} /></Card></li>)}
+            </ul>
+          ) : <>
+            <Field label="Search integrations" className="max-w-md">
+              <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery('')} clearLabel="Clear the search" />
+            </Field>
+            <p role="status" className="m-0 text-sm text-text-muted">{found.length === 1 ? '1 app' : `${formatNumber(found.length, locale)} apps`}</p>
+            {found.length ? <>
+              {list('Connected', connected, 'None of these are connected.')}
+              {list('Available', available, 'Every one of these is connected.')}
+            </> : (
+              <EmptyNoResults query={query.trim()} headingLevel={2} title={(q) => `No apps match “${q}”`}
+                description="Try another name, or what you want it to do." onClearFilters={() => setQuery('')} />
+            )}
+          </>}
 
-        <Dialog alert open={!!asking} onOpenChange={(o) => { if (!o) ask(null); }}
-          title={asking ? `Disconnect ${asking.name}?` : 'Disconnect?'}
-          description={`${asking?.stops ?? 'It stops working with this workspace.'} You can connect it again at any time.`}>
-          <div className="flex flex-col gap-4">
-            {disconnectFailed ? <Alert tone="danger">Couldn’t disconnect {asking?.name}. It’s still connected. Try again.</Alert> : null}
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => ask(null)}>Keep it</Button>
-              <Button variant="outline" destructive loading={!!asking && busy === asking.id} onClick={disconnect}>Disconnect</Button>
+          <Dialog alert open={!!asking} onOpenChange={(o) => { if (!o) ask(null); }}
+            title={asking ? `Disconnect ${asking.name}?` : 'Disconnect?'}
+            description={`${asking?.stops ?? 'It stops working with this workspace.'} You can connect it again at any time.`}>
+            <div className="flex flex-col gap-4">
+              {disconnectFailed ? <Alert tone="danger">Couldn’t disconnect {asking?.name}. It’s still connected. Try again.</Alert> : null}
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" onClick={() => ask(null)}>Keep it</Button>
+                <Button variant="outline" destructive loading={!!asking && busy === asking.id} onClick={disconnect}>Disconnect</Button>
+              </div>
             </div>
-          </div>
-        </Dialog>
-      </main>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

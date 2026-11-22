@@ -52,8 +52,11 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   autoFocus?: boolean | undefined;
 }
 
+/** What DateRangePicker asks of the RangeCalendar in its popup: the start is its value the moment it's picked (so its
+ *  start field shows it), and Escape closes the popup rather than dropping the start. */
+export const RangePickContext = /* @__PURE__ */ React.createContext<{ onStart: (start: Date) => void } | null>(null);
+
 const norm = (r: DateRangeInput | null | undefined): DateRange => ({ start: r ? toDay(r.start, 'RangeCalendar') : null, end: r ? toDay(r.end, 'RangeCalendar') : null });
-const order = (a: Date, b: Date) => (compare(a, b) <= 0 ? { start: a, end: b } : { start: b, end: a });
 const between = (d: Date, s: Date, e: Date) => compare(d, s) > 0 && compare(d, e) < 0;
 
 function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAttributes<HTMLDivElement>) {
@@ -99,15 +102,20 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   const fieldLabel = React.useContext(FieldContext)?.labelId;
   const labelledBy = rest['aria-labelledby'] ?? (rest['aria-label'] ? undefined : fieldLabel);
 
+  const inPicker = React.useContext(RangePickContext);
+  // The start waiting for its end: picked here, or a value with a start and no end yet (typed in DateRangePicker).
+  const open = anchor || (value.start && !value.end ? value.start : null);
+  // The one rule for picking a range (DateRangePicker's too): the first pick is the start; a day before the start moves
+  // the start; a day on or after it is the end.
   const pick = (d: Date) => {
-    if (!anchor) { setAnchor(d); setHover(d); return; }
-    const r = order(anchor, d);
+    if (!open || compare(d, open) < 0) { setAnchor(d); setHover(null); if (inPicker) inPicker.onStart(d); return; }
+    const r = { start: open, end: d };
     setAnchor(null);
     if (!controlled) setOwn(r);
     if (props.onValueChange) props.onValueChange(r, { iso: { start: isoDate(r.start), end: isoDate(r.end) } });
   };
-  // What's shown: the preview while one end is picked, else the value.
-  const shown: DateRange = anchor ? order(anchor, hover || anchor) : value;
+  // What's shown: the start and the day under the pointer or focus after it while the end is to come, else the value.
+  const shown: DateRange = open ? { start: open, end: hover && compare(hover, open) > 0 ? hover : null } : value;
   // The days' marks, made again only when the shown ends move, so each month's days (Calendar's Weeks) aren't drawn
   // again when a parent renders with the same props, or a key or the pointer moves without changing the preview.
   const from = shown.start ? shown.start.getTime() : null, to = shown.end ? shown.end.getTime() : null;
@@ -130,7 +138,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   const range = (r: DateRange) => (r.start && r.end
     ? dateFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
     : '');
-  const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
+  const status = open ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 
   // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
   const leave = (first: boolean) => (d: Date) => {
@@ -149,11 +157,11 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   return (
     <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}
       className={cn('srp-range-calendar', two && 'srp-range-calendar--two', props.className)} data-component="range-calendar">
-      {/* Escape drops a half-picked range, and goes no further (a Dialog around it stays open); leaving the days puts
-          the preview back on the end picked. */}
+      {/* Escape drops a half-picked range, and goes no further (a Dialog around it stays open); in DateRangePicker the
+          start is already its value, so Escape is the popup's. Leaving the days takes the preview away. */}
       <div className="srp-range-calendar__months" role="presentation" id={monthsId} data-month={isoDate(base)}
-        onKeyDown={(e) => { if (e.key === 'Escape' && anchor) { e.preventDefault(); e.stopPropagation(); setAnchor(null); setHover(null); } }}
-        onMouseLeave={() => { if (anchor) setHover(anchor); }}>
+        onKeyDown={(e) => { if (e.key === 'Escape' && anchor && !inPicker) { e.preventDefault(); e.stopPropagation(); setAnchor(null); setHover(null); } }}
+        onMouseLeave={() => { if (open) setHover(null); }}>
         {cal(base, true)}{two ? cal(system.add(base, 1), false) : null}
       </div>
       <p className="srp-range-calendar__status" aria-live="polite">{status}</p>
@@ -162,9 +170,9 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
 }
 
 /* RangeCalendar: a calendar that stays on the page and picks a start and an end (a booking's dates, a report's period,
-   a leave request), one or two months side by side. The first pick (a press, or Enter on a day) is one end, the second
-   the other, in either order; while one end is picked, the days up to the one under the pointer or focus are shaded
-   as a preview. The value changes only once both are picked, and the range is then said ("Selected range: Nov 3 – 8,
+   a leave request), one or two months side by side. The first pick (a press, or Enter on a day) is the start, and the
+   next on or after it the end; a day before the start moves the start. While the end is to come, the days up to the
+   one under the pointer or focus are shaded as a preview. The value changes only once both are picked, and the range is then said ("Selected range: Nov 3 – 8,
    2026"). Escape drops a half-picked range. The ends are named "start date" and "end date" and the days between
    "in the range", in words as well as color. Each month is Calendar's grid, with its keys. */
 /** A calendar on the page that picks a range of days: a start and an end, with one or two months side by side.

@@ -415,7 +415,7 @@ describe('DateRangePicker presets (RU11)', () => {
     expect(vals('own')).toBe('03/24/2025 – 03/28/2025');
     expect(inRange('own')).toBe('03-25,03-26,03-27');
     await userEvent.click(btn('none'));
-    expect(pop('none').querySelector('[role=group]')).toBe(null);
+    expect(pop('none').querySelector('[role=group][aria-label=Shortcuts]')).toBe(null);
   });
 });
 

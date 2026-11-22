@@ -120,7 +120,7 @@ Each is an optional override: set it on the page, a container or one accordion. 
 | `--accordion-title-size` | `text-sm` | Title text (14px). |
 | `--accordion-title-weight` | `font-medium` | Title weight (500). |
 | `--accordion-content-size` | `text-sm` | Content text (14px). |
-| `--accordion-padding-y` | `spacing-4` | Space above and below a title, and below the content (16px). |
+| `--accordion-padding-y` | `space-content` | Space above and below a title, and below the content: 16px, 12px in the compact density. |
 | `--accordion-padding-x` | `spacing-4` | Side padding in variant="card" (16px). |
 | `--accordion-icon-size` | `spacing-5` | The chevron (20px). |
 | `--accordion-border-width` | `border-width-1` | Lines and frame (1px). |

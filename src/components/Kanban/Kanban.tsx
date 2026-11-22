@@ -12,6 +12,8 @@ import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuItem } from '../Menu/Menu';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
+import { modified } from '../../internal/roving';
 
 /** One column of a Kanban board. */
 export interface KanbanColumn<T> {
@@ -133,7 +135,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
   const H = ('h' + level) as 'h3';
-  const rtl = () => !!board.current && getComputedStyle(board.current).direction === 'rtl';
+  const rtl = () => !!board.current && isRtl(board.current);
 
   const find = (key: string | number): Place | null => {
     for (const [c, col] of columns.entries()) {
@@ -177,7 +179,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
     announce(L.kanbanGrabbed(getLabel(item), col.title, at.index + 1, col.items.length));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!drag || drag.pointer || !from || isComposing(e) || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!drag || drag.pointer || !from || isComposing(e) || modified(e)) return;
     const k = e.key, back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';
     let to = drag.to;
     const last = (c: number) => sizeAt({ column: c, index: 0 }, true) - 1;

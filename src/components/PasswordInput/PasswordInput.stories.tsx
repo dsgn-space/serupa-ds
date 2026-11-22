@@ -15,6 +15,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: sm for a dense form, md by default, lg for a touch-first sign-in. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, maxWidth: 320 }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <PasswordInput key={s} {...args} aria-label={'Password, ' + s} size={s} />)}
+  </div>,
+};
+
 export const InAField: Story = {
   render: () => <div style={{ maxWidth: 320 }}><Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field></div>,
 };

@@ -5,6 +5,8 @@ import { cn, omit, setRef, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
+import { modified } from '../../internal/roving';
 
 /** A day's state: up, degraded (partly working), down, or none (no data). */
 export type StatusState = 'up' | 'degraded' | 'down' | 'none';
@@ -73,8 +75,8 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
     if (el instanceof HTMLElement) el.focus();
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLOListElement>) => {
-    if ((e.altKey || e.ctrlKey || e.metaKey) && e.key.startsWith('Arrow')) return;   // Alt+arrow is the browser's Back and Forward
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    if (modified(e)) return;
+    const rtl = isRtl(e.currentTarget);
     const k = e.key, next = rtl ? 'ArrowLeft' : 'ArrowRight', prev = rtl ? 'ArrowRight' : 'ArrowLeft';
     if (k === next) move(current + 1);
     else if (k === prev) move(current - 1);
@@ -93,7 +95,7 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
   // Too many days for the width: the strip scrolls in its own box, starting at the latest day.
   React.useEffect(() => {
     const el = list.current;
-    if (el && el.scrollWidth > el.clientWidth) el.scrollLeft = getComputedStyle(el).direction === 'rtl' ? -el.scrollWidth : el.scrollWidth;
+    if (el && el.scrollWidth > el.clientWidth) el.scrollLeft = isRtl(el) ? -el.scrollWidth : el.scrollWidth;
   }, [days.length]);
   // The bars read the latest setAt through this, so Bars' props stay the same while only the pointed day changes.
   const live = useLatest(setAt);

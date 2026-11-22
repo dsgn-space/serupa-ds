@@ -210,6 +210,51 @@ describe('Popover', () => {
     expect(document.activeElement).toBe(p);
   });
 
+  test('initialFocus and finalFocus as refs, as on Dialog: focus starts on the ref inside, and Escape and close() return it to finalFocus', async () => {
+    function Refs() {
+      const start = React.useRef<HTMLInputElement>(null), back = React.useRef<HTMLButtonElement>(null);
+      return <>
+        <Button id="rback" ref={back}>Back here</Button>
+        <Popover aria-label="Refs" initialFocus={start} finalFocus={back} trigger={<Button id="trefs">Refs</Button>}>
+          {(close) => <><input id="rfirst" aria-label="First" /><input id="rstart" aria-label="Start" ref={start} /><Button id="rdone" onClick={close}>Done</Button></>}
+        </Popover>
+      </>;
+    }
+    await render(<Refs />);
+    await userEvent.click(el('trefs'));
+    await expect.poll(() => isOpen('trefs')).toBe(true);
+    expect(active()).toBe('rstart');
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => isOpen('trefs')).toBe(false);
+    expect(active()).toBe('rback');
+    await userEvent.click(el('trefs'));
+    await expect.poll(() => isOpen('trefs')).toBe(true);
+    await userEvent.click(el('rdone'));
+    await expect.poll(() => isOpen('trefs')).toBe(false);
+    expect(active()).toBe('rback');
+  });
+
+  test('finalFocus no longer on the page: focus goes back to the trigger', async () => {
+    function Gone() {
+      const back = React.useRef<HTMLButtonElement>(null);
+      const [shown, setShown] = React.useState(true);
+      return <>
+        {shown ? <Button id="gback" ref={back}>Gone soon</Button> : null}
+        <Popover aria-label="Gone" finalFocus={back} trigger={<Button id="tgone">Gone</Button>}>
+          <Button id="gdel" onClick={() => setShown(false)}>Delete</Button>
+        </Popover>
+      </>;
+    }
+    await render(<Gone />);
+    await userEvent.click(el('tgone'));
+    await expect.poll(() => isOpen('tgone')).toBe(true);
+    await userEvent.click(el('gdel'));
+    await expect.poll(() => el('gback')).toBe(null);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => isOpen('tgone')).toBe(false);
+    expect(active()).toBe('tgone');
+  });
+
   test('a new placement while open moves it there', async () => {
     const { rerender } = await render(<Popover aria-label="Move" placement="bottom" trigger={<Button id="tmove">Move</Button>}><p>m</p></Popover>);
     await userEvent.click(el('tmove'));

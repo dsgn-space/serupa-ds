@@ -217,8 +217,8 @@ Each is an optional override: set it on the page, a container or one table's fra
 | Token | Default | Use |
 | --- | --- | --- |
 | `--table-padding-x` | `spacing-3` | A cell's side padding (12px). |
-| `--table-padding-y` | `spacing-3` | A cell's top and bottom padding at size md (12px). |
-| `--table-padding-y-sm` | `spacing-2` | At size sm (8px). |
+| `--table-padding-y` | `space-row` | A cell's top and bottom padding at size md: 12px, 6px in the compact density. |
+| `--table-padding-y-sm` | `space-item` | At size sm: 8px, 4px in the compact density. |
 | `--table-action-bar-padding` | `spacing-2` | Space inside TableActionBar (8px). |
 | `--table-action-bar-top` | `spacing-0` | How far below the top of the page a sticky TableActionBar stops: the height of your own sticky header, if the page has one. |
 

@@ -31,7 +31,7 @@ Drawn from the `Disabled` story.
 
 1. **Start date** (`.srp-date-range-picker__field`): the first day, typed or chosen.
 2. **Dash** (`.srp-date-range-picker__dash`): between the two dates.
-3. **Calendar button** (`.srp-date-range-picker__button`): opens two months to choose both days. Side by side they have one pair of arrows, at the outer edges, as RangeCalendar has.
+3. **Calendar button** (`.srp-date-range-picker__button`): opens two months to choose both days.
 
 ## Usage
 

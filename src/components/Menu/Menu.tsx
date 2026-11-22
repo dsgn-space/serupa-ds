@@ -17,6 +17,7 @@ import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openCha
 import { submenuIntent } from '../../internal/timing';
 import { activeIn } from '../../internal/root';
 import { shortcutShown, useApple } from '../../internal/keys';
+import { isRtl } from '../../internal/position';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -525,7 +526,7 @@ function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTM
   const hover = React.useRef(false);   // the pointer is on the item and it opens in a moment
   const stop = () => { clearTimeout(timer.current); hover.current = false; };
   const later = (fn: () => void) => { stop(); timer.current = setTimeout(fn, submenuIntent); };
-  const rtl = () => !!itemRef.current && getComputedStyle(itemRef.current).direction === 'rtl';
+  const rtl = () => !!itemRef.current && isRtl(itemRef.current);
   const show = (focus: boolean) => {
     stop();
     if (props.disabled) return;

@@ -1,15 +1,14 @@
 'use client';
-import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
-import { compare, datePattern, formatDate, isoDate, parseDate, sameDay, toDay } from '../../internal/dates';
+import { compare, datePattern, formatDate, isoDate, parseDate, toDay } from '../../internal/dates';
 import { calendarOf, type CalendarSystem } from '../../internal/calendars';
 import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
-import { Calendar } from '../Calendar/Calendar';
-import { Icon } from '../Icon/Icon';
+import { RangeCalendar, RangePickContext } from '../RangeCalendar/RangeCalendar';
+import { InputAction } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -131,8 +130,6 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   // Focus goes into the months when the person opens them (the button, Alt+ArrowDown), not when they show on arrival
   // (defaultOpen) or because the app set open.
   const [focusIn, setFocusIn] = React.useState(false);
-  const [picking, setPicking] = React.useState<'start' | 'end'>('start');
-  const [hover, setHover] = React.useState<Date | null>(null);
   // With no start, today, or min or max when today is outside them, so the popup doesn't open on a month where
   // nothing can be picked (L8E79).
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
@@ -147,7 +144,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   useFormReset(startField, () => {
     if (controlled) return;
     const r = norm(props.defaultValue);
-    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false, 'api'); setPicking('start');
+    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false, 'api');
   });
   const button = React.useRef<HTMLButtonElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
@@ -174,11 +171,10 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
     }
     commit(r);
   };
-  const close = (focus: boolean, reason: OpenChangeReason) => { setOpen(false, reason); setFocusIn(false); setHover(null); if (focus && startField.current) startField.current.focus(); };
+  const close = (focus: boolean, reason: OpenChangeReason) => { setOpen(false, reason); setFocusIn(false); if (focus && startField.current) startField.current.focus(); };
   const show = () => {
     const typed = parseDate(text.start, locale);
     setBase(system.start((typed && allowed(typed) ? typed : null) || value.start || home()));
-    setPicking(value.start && !value.end ? 'end' : 'start');
     setFocusIn(true);
     setOpen(true, 'trigger');
   };
@@ -186,35 +182,11 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   const exit = useExit(open, panel);
   useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--srp-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
-  // A full range is said, as RangeCalendar says it ("Selected range: Nov 1 – 30, 2026"): the next day picked starts a new one.
-  const rangeText = (a: Date, b: Date) => dateFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(a, b).replace(/[\u2009\u202f]/g, ' ');
-  const pick = (d: Date) => {
-    if (picking === 'start' || !value.start || compare(d, value.start) < 0) { commit({ start: d, end: null }); setPicking('end'); return; }
-    commit({ start: value.start, end: d });
-    close(true, 'select');
-  };
-  const to = picking === 'end' && value.start && !value.end && hover && compare(hover, value.start) > 0 ? hover : value.end;
-  const dayClass = (d: Date) => {
-    const s = value.start;
-    if (!s || !to) return undefined;
-    if (compare(d, s) > 0 && compare(d, to) < 0) return 'srp-calendar__day--in-range';
-    // The ends join the band between them, so each is square on the band's side (none when they're the same day).
-    if (compare(s, to) < 0) { if (sameDay(d, s)) return 'srp-calendar__day--range-start'; if (sameDay(d, to)) return 'srp-calendar__day--range-end'; }
-    return undefined;
-  };
-  const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);
-  // The ends and the band have names, not only a color, as RangeCalendar gives them: "…, start date", "…, in the range".
-  const dayLabel = (d: Date, name: string) => {
-    const s = value.start, e = to, L = sds.labels;
-    if (sameDay(d, s)) return name + ', ' + (sameDay(d, e) ? L.startDate + ', ' + L.endDate : L.startDate);
-    if (sameDay(d, e)) return name + ', ' + L.endDate;
-    return s && e && compare(d, s) > 0 && compare(d, e) < 0 ? name + ', ' + L.inRange : name;
-  };
   const off = !!disabled || !!readOnly;
   const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels, max)
     : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
   // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
-  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(system.start(it.start)); setPicking('start'); setHover(null); };
+  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(system.start(it.start)); };
   const field = (which: 'start' | 'end') => (
     <input type="text" inputMode="numeric" autoComplete="off" className="srp-input__field srp-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
@@ -227,19 +199,15 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
         else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(which); show(); }
       }} />
   );
-  // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
-  const leave = (first: boolean) => (d: Date) => {
-    if (!two || !system.same(d, first ? system.add(base, 1) : base)) return false;
-    const grid = panel.current && panel.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
-    const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
-    if (!b) return false;
-    b.focus();
-    return b.matches(':focus');
-  };
-  const cal = (m: Date, first: boolean) => (
-    <Calendar month={m} onMonthChange={(n) => setBase(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first && focusIn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
-      isDateSelected={isSel} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
+  // The months are RangeCalendar's, so the two pick a range the same way and name its days the same way; the start is
+  // the value as soon as it's picked, and the end closes the popup.
+  const starts = { onStart: (d: Date) => { commit({ start: d, end: null }); } };
+  const months = (
+    <RangePickContext.Provider value={starts}>
+      <RangeCalendar className="srp-date-range-picker__calendar" aria-label={buttonLabel || sds.labels.chooseDates} value={value} months={two ? 2 : 1} month={base} onMonthChange={setBase}
+        min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={focusIn}
+        onValueChange={(r) => { commit(r); close(true, 'select'); }} />
+    </RangePickContext.Provider>
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
   return (
@@ -251,21 +219,19 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
       <span className="srp-date-range-picker__dash" aria-hidden>–</span>
       <span id={popId + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {field('end')}
-      <button ref={button} type="button" className="srp-date-picker__button srp-date-range-picker__button" aria-label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
-        disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }}>
-        <Icon icon={icons.DateRange} />
-      </button>
+      <span className="srp-input__actions srp-date-range-picker__actions">
+        <InputAction ref={button} className="srp-date-picker__button srp-date-range-picker__button" icon={icons.DateRange} label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
+          disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }} />
+      </span>
       {startName ? <input type="hidden" name={startName} form={form} value={value.start ? isoDate(value.start) : ''} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} form={form} value={value.end ? isoDate(value.end) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-date-picker__popup srp-date-range-picker__popup"
-        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}
-        onMouseLeave={() => setHover(null)}>
+        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
         {open || exit.leaving ? <>
           {presets ? <div className="srp-date-range-picker__body">
-            <div className="srp-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>
+            {months}
             <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
-          </div> : <div className="srp-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>}
-          <p className="srp-date-range-picker__status" aria-live="polite">{picking === 'end' ? sds.labels.chooseEndDate : value.start && value.end ? sds.labels.rangeSelected(rangeText(value.start, value.end)) : sds.labels.chooseStartDate}</p>
+          </div> : months}
         </> : null}
       </div>
     </span>
@@ -277,8 +243,8 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
 
 /* DateRangePicker: two date fields (start – end) in one box with a calendar button, for a stay, a report period
    or a filter. People type either end in the locale's order (or yyyy-mm-dd), or pick both in a popup with two
-   months side by side: the first pick is the start, the second the end (a day before the start moves the start
-   instead), and the days between preview under the pointer. Typed text is read on blur and Enter; text that
+   months side by side (RangeCalendar's, so the rule is the same): the first pick is the start, the next the end (a
+   day before the start moves the start instead), and the days between preview under the pointer. Typed text is read on blur and Enter; text that
    can't be used puts back the last good day, and a start after the end clears the end. The popup opens on the
    button or Alt+ArrowDown, and closes when the range is complete, on Escape, a click outside or focus moving past it. */
 /** Two date fields for a start and end, with a two-month calendar popup to pick the range. */

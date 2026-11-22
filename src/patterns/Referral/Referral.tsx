@@ -17,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { StatsRow } from '../../blocks/StatsRow/StatsRow';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Referral: invite friends with your own link or by email, and see who joined and what you've earned. For an app to
    copy. What it carries (WCAG 2.2):
@@ -117,61 +119,63 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">You can copy your link. Sending invites needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Invite friends' }]} title="Invite friends"
-          description={`Give ${money(reward)}, get ${money(reward)}. A friend gets ${money(reward)} off their first order, and you get ${money(reward)} in credit once it ships.`} />
-        <div className="flex flex-col gap-8 pt-6">
-          <StatsRow title="So far" stats={[
-            { label: 'Invited', value: formatNumber(list.length, locale) },
-            { label: 'Joined', value: formatNumber(joined, locale) },
-            { label: 'Earned', value: money(earned) },
-          ]} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">You can copy your link. Sending invites needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Invite friends' }]} title="Invite friends"
+            description={`Give ${money(reward)}, get ${money(reward)}. A friend gets ${money(reward)} off their first order, and you get ${money(reward)} in credit once it ships.`} />
+          <div className="flex flex-col gap-8 pt-6">
+            <StatsRow title="So far" stats={[
+              { label: 'Invited', value: formatNumber(list.length, locale) },
+              { label: 'Joined', value: formatNumber(joined, locale) },
+              { label: 'Earned', value: money(earned) },
+            ]} />
 
-          <Card>
-            <section aria-labelledby="share" className="flex flex-col gap-4">
-              <h2 id="share" className="m-0 text-lg font-semibold">Share your link</h2>
-              <div className="flex flex-wrap items-end gap-2">
-                <Field label="Your invite link" id="referral-link" className="min-w-0 flex-1">
-                  {/* Safari puts the caret where the click lands on the mouseup after focus, which undid the select-all: that
-                      one mouseup is passed over. */}
-                  <Input readOnly value={link} onFocus={(e) => e.currentTarget.select()}
-                    onMouseDown={(e) => { focusing.current = document.activeElement !== e.currentTarget; }}
-                    onMouseUp={(e) => { if (focusing.current) e.preventDefault(); focusing.current = false; }} />
-                </Field>
-                <CopyButton value={link} copiedLabel="Copied" size="md">Copy link</CopyButton>
-              </div>
-              <form onSubmit={send} noValidate aria-label="Invite by email" className="flex flex-col items-start gap-3">
-                <Field label="Or invite by email" id="referral-emails" hint="Separate addresses with commas or new lines." error={problem ?? undefined} className="w-full">
-                  <Textarea rows={3} autoComplete="off" value={text} onChange={(e) => { setText(e.target.value); if (problem) setProblem(null); setFailed(false); }} />
-                </Field>
-                {failed ? <Alert tone="danger">Couldn’t send the invites. Try again; the addresses are still here.</Alert> : null}
-                <Button type="submit" loading={busy}>Send invites</Button>
-              </form>
+            <Card>
+              <section aria-labelledby="share" className="flex flex-col gap-4">
+                <h2 id="share" className="m-0 text-lg font-semibold">Share your link</h2>
+                <div className="flex flex-wrap items-end gap-2">
+                  <Field label="Your invite link" id="referral-link" className="min-w-0 flex-1">
+                    {/* Safari puts the caret where the click lands on the mouseup after focus, which undid the select-all: that
+                        one mouseup is passed over. */}
+                    <Input readOnly value={link} onFocus={(e) => e.currentTarget.select()}
+                      onMouseDown={(e) => { focusing.current = document.activeElement !== e.currentTarget; }}
+                      onMouseUp={(e) => { if (focusing.current) e.preventDefault(); focusing.current = false; }} />
+                  </Field>
+                  <CopyButton value={link} copiedLabel="Copied" size="md">Copy link</CopyButton>
+                </div>
+                <form onSubmit={send} noValidate aria-label="Invite by email" className="flex flex-col items-start gap-3">
+                  <Field label="Or invite by email" id="referral-emails" hint="Separate addresses with commas or new lines." error={problem ?? undefined} className="w-full">
+                    <Textarea rows={3} autoComplete="off" value={text} onChange={(e) => { setText(e.target.value); if (problem) setProblem(null); setFailed(false); }} />
+                  </Field>
+                  {failed ? <Alert tone="danger">Couldn’t send the invites. Try again; the addresses are still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>Send invites</Button>
+                </form>
+              </section>
+            </Card>
+
+            <section aria-labelledby="invited" className="flex flex-col gap-4">
+              <h2 id="invited" className="m-0 text-lg font-semibold">Who you’ve invited</h2>
+              {list.length ? (
+                <Table caption="Friends you’ve invited, newest first" hideCaption>
+                  <TableHead><TableRow>
+                    <TableHeaderCell>Friend</TableHeaderCell>
+                    <TableHeaderCell>Invited</TableHeaderCell>
+                    <TableHeaderCell>Status</TableHeaderCell>
+                  </TableRow></TableHead>
+                  <TableBody>{list.map((r) => (
+                    <TableRow key={r.email}>
+                      <TableCell className="wrap-break-word">{r.email}</TableCell>
+                      <TableCell className="whitespace-nowrap"><FormattedDate value={r.invited} /></TableCell>
+                      <TableCell><Badge tone={STATE[r.state].tone}>{r.state === 'rewarded' ? `${STATE.rewarded.label} ${money(reward)}` : STATE[r.state].label}</Badge></TableCell>
+                    </TableRow>
+                  ))}</TableBody>
+                </Table>
+              ) : <p className="m-0 text-text-muted">Nobody yet. Friends you invite show here, with where they’ve got to.</p>}
             </section>
-          </Card>
-
-          <section aria-labelledby="invited" className="flex flex-col gap-4">
-            <h2 id="invited" className="m-0 text-lg font-semibold">Who you’ve invited</h2>
-            {list.length ? (
-              <Table caption="Friends you’ve invited, newest first" hideCaption>
-                <TableHead><TableRow>
-                  <TableHeaderCell>Friend</TableHeaderCell>
-                  <TableHeaderCell>Invited</TableHeaderCell>
-                  <TableHeaderCell>Status</TableHeaderCell>
-                </TableRow></TableHead>
-                <TableBody>{list.map((r) => (
-                  <TableRow key={r.email}>
-                    <TableCell className="wrap-break-word">{r.email}</TableCell>
-                    <TableCell className="whitespace-nowrap"><FormattedDate value={r.invited} /></TableCell>
-                    <TableCell><Badge tone={STATE[r.state].tone}>{r.state === 'rewarded' ? `${STATE.rewarded.label} ${money(reward)}` : STATE[r.state].label}</Badge></TableCell>
-                  </TableRow>
-                ))}</TableBody>
-              </Table>
-            ) : <p className="m-0 text-text-muted">Nobody yet. Friends you invite show here, with where they’ve got to.</p>}
-          </section>
-        </div>
-      </main>
+          </div>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

@@ -1,14 +1,15 @@
 /* ---------------------------------------------------------------
    Attachment: a file as one compact row (surface, a 1px outline, 6px corners, up to 320px wide): a 20px muted icon
    for its kind, the name on one line cut in the middle, and under it the kind and size in small muted text. A linked
-   name is primary and underlined. While uploading, a small bar under the name; failed, a danger outline and a danger
+   name is primary and underlined. A thumbnail can take the icon's place, and a finished upload says "Complete" in green
+   after the size. While uploading, a small bar under the name; failed, a danger outline and a danger
    message. The remove button sits at the end. Disabled: the name is plain text and the buttons are faded.
    --------------------------------------------------------------- */
 @layer srp.components {
 /* min-inline-size 0: in a grid or flex row too, a long name is cut in place of widening it. */
 .srp-attachment {
   display: inline-grid; grid-template-columns: auto minmax(var(--spacing-0), 1fr); align-items: center; column-gap: var(--attachment-gap, var(--spacing-2)); box-sizing: border-box;
-  min-inline-size: var(--spacing-0); max-inline-size: min(var(--sizing-full), var(--attachment-max-width, var(--spacing-80))); inline-size: var(--sizing-max);
+  min-inline-size: var(--spacing-0); max-inline-size: min(var(--sizing-full), var(--attachment-max-width, var(--spacing-80))); inline-size: var(--srp-attachment-width, var(--sizing-max));   /* FileUpload's rows set it to the list's width */
   padding: var(--attachment-padding, var(--spacing-2)); padding-inline-start: var(--attachment-padding-start, var(--spacing-3));
   border: var(--border-width-1) solid var(--attachment-border, var(--border)); border-radius: var(--attachment-radius, var(--radius-control));
   background: var(--attachment-bg, var(--surface)); --surface-behind: var(--attachment-bg, var(--surface)); color: var(--attachment-text, var(--text));
@@ -22,14 +23,16 @@
 .srp-attachment:has(> .srp-attachment__retry) { grid-template: "icon name retry" "icon meta retry" ". progress ." ". error error" / auto minmax(var(--spacing-0), 1fr) auto; }
 .srp-attachment:has(> .srp-attachment__retry):has(> .srp-attachment__remove) { grid-template: "icon name retry remove" "icon meta retry remove" ". progress . ." ". error error error" / auto minmax(var(--spacing-0), 1fr) auto auto; }
 .srp-attachment__body { display: contents; }
-.srp-attachment__icon { grid-area: icon; }
+.srp-attachment__icon, .srp-attachment__thumbnail { grid-area: icon; }
 .srp-attachment__name { grid-area: name; }
 .srp-attachment__meta { grid-area: meta; }
 .srp-attachment__progress { grid-area: progress; }
 .srp-attachment__error { grid-area: error; }
 .srp-attachment__retry { grid-area: retry; }
 .srp-attachment__remove { grid-area: remove; }
-.srp-attachment__icon { flex: none; color: var(--attachment-icon, var(--text-muted)); font-size: var(--spacing-5); }
+.srp-attachment__icon, .srp-attachment__thumbnail { flex: none; color: var(--attachment-icon, var(--text-muted)); font-size: var(--spacing-5); }
+/* A thumbnail takes the icon's place, as big as it is (up to 40px). */
+.srp-attachment__thumbnail { display: flex; align-items: center; justify-content: center; }
 .srp-attachment__name { display: flex; min-inline-size: var(--spacing-0); color: inherit; font-weight: var(--font-medium); border-radius: var(--radius-inner); }
 a.srp-attachment__name { color: var(--attachment-link, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
 @media (hover: hover) { a.srp-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
@@ -47,6 +50,9 @@ a.srp-attachment__name:focus-visible { outline: var(--focus-ring-width) solid va
 /* The dot between kind and size is drawn, not text, so screen readers read "PDF 1.5 MB". */
 .srp-attachment__size { display: inline-flex; align-items: center; gap: var(--spacing-1); }
 .srp-attachment__size::before { content: ""; inline-size: var(--spacing-0\.5); block-size: var(--spacing-0\.5); border-radius: var(--rounded-full); background: currentcolor; }
+/* Done: "Complete" and a check after the size, in the success color. */
+.srp-attachment__done { display: inline-flex; align-items: center; gap: var(--spacing-1); margin-inline-start: var(--spacing-1); color: var(--attachment-done, var(--success-text)); }
+.srp-attachment__done .srp-icon { font-size: var(--spacing-4); }
 .srp-attachment__progress { margin-block-start: var(--spacing-1); }
 /* While it uploads, it's at least 192px wide, so a short name still gets a bar long enough to read. */
 .srp-attachment--uploading { min-inline-size: min(var(--sizing-full), var(--spacing-48)); }

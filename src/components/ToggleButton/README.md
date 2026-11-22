@@ -29,7 +29,7 @@ import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 
 ## Usage
 
-- Group related toggles in a [ButtonGroup](../ButtonGroup/README.md) with an `aria-label` that says what they're for ("Text formatting").
+- Group related toggles that each keep their own state (mute, captions) in a [ButtonGroup](../ButtonGroup/README.md) with an `aria-label` that says what they're for ("Playback"), and put several groups of tools in a [Toolbar](../Toolbar/README.md).
 - To give a set of toggles one value, with one on at a time (alignment) or any number (text styles), use a [ToggleGroup](../ToggleGroup/README.md).
 - Use `variant="ghost"` in toolbars and the default `outline` elsewhere.
 - Give the toggles in one group the same `size`.
@@ -43,7 +43,7 @@ import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 
 - `aria-pressed` tells screen readers it's on or off. Keep the label the same either way ("Bold", not "Make bold" / "Remove bold"), since the state is announced separately.
 - An icon-only toggle needs an `aria-label`.
-- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in all six themes (`ToggleButton.test.tsx`). In Windows high-contrast mode it uses the system highlight colors.
+- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in the six themes the tests draw (blue, yellow and violet, light and dark) (`ToggleButton.test.tsx`). In Windows high-contrast mode it uses the system highlight colors.
 
 ### Keyboard
 

@@ -16,6 +16,8 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Write a review: stars, a few words and, if you like, photos, for something you bought; then a thank-you that says
    when it will show. For an app to copy. What it carries (WCAG 2.2):
@@ -100,56 +102,58 @@ export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend, on
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#orders">Your orders</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your review stays here. Sending it needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Your orders', href: '#orders' }, { label: 'Write a review' }]} title="Write a review" />
-        <div className="flex flex-col gap-6 pt-6">
-          <Card padding="sm" className="flex flex-row items-center gap-4">
-            <Image src={product.image} alt="" ratio="square" rounded className="w-16 shrink-0" />
-            <div className="min-w-0">
-              <p className="m-0 font-semibold wrap-break-word">{product.name}</p>
-              <p className="m-0 text-sm text-text-muted">Bought <FormattedDate value={product.bought} dateStyle="long" /></p>
-            </div>
-          </Card>
-          {sent ? (
-            <section aria-labelledby="review-sent" className="flex flex-col items-start gap-3">
-              <h2 id="review-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you for your review</h2>
-              <p className="m-0">We read every review before it shows, usually within 2 days. It will show as {r.name.trim()}; we’ll email you if we can’t show it, and why.</p>
-              <Link href="#orders">Back to your orders</Link>
-            </section>
-          ) : (
-            <form onSubmit={send} noValidate aria-label="Your review" className="flex flex-col gap-4">
-              <ErrorSummary key={tries} errors={errors} />
-              <Field label="How many stars?" error={problems.stars} required>
-                <Rating id="review-stars" size="lg" value={r.stars} onValueChange={(v) => edit({ stars: v })} />
-              </Field>
-              <Field label="Title" id="review-title" hint="A few words that sum it up." optional>
-                <Input maxLength={80} value={r.title} onChange={(e) => edit({ title: e.target.value })} />
-              </Field>
-              <Field label="Your review" id="review-body" hint={`At least ${MIN} characters. What did you like, and what didn’t you? How does it fit?`} error={problems.body} required>
-                <Textarea rows={6} maxLength={MAX} showCount value={r.body} onChange={(e) => edit({ body: e.target.value })} />
-              </Field>
-              <Field label="Would you recommend it?" group optional>
-                <RadioGroup name="review-recommend" orientation="horizontal" value={r.recommend} onValueChange={(v: string) => edit({ recommend: v })}>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </Field>
-              <Field label="Photos" optional>
-                <FileUpload id="review-photos" multiple maxFiles={4} maxSize={10 * 1024 * 1024} accept="image/*" thumbnails hint="Up to 4, 10 MB each. Leave out faces other than yours."
-                  files={r.photos} onFilesChange={(f) => edit({ photos: f })} />
-              </Field>
-              <Field label="Show it as" id="review-name" hint="Your first name and an initial is enough." error={problems.name} required>
-                <Input autoComplete="nickname" value={r.name} onChange={(e) => edit({ name: e.target.value })} className="max-w-64" />
-              </Field>
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t send your review. Try again; everything, the photos too, is still here.</Alert> : null}
-                <Button type="submit" loading={busy}>Send review</Button>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your review stays here. Sending it needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Your orders', href: '#orders' }, { label: 'Write a review' }]} title="Write a review" />
+          <div className="flex flex-col gap-6 pt-6">
+            <Card padding="sm" className="flex flex-row items-center gap-4">
+              <Image src={product.image} alt="" ratio="square" rounded className="w-16 shrink-0" />
+              <div className="min-w-0">
+                <p className="m-0 font-semibold wrap-break-word">{product.name}</p>
+                <p className="m-0 text-sm text-text-muted">Bought <FormattedDate value={product.bought} dateStyle="long" /></p>
               </div>
-            </form>
-          )}
-        </div>
-      </main>
+            </Card>
+            {sent ? (
+              <section aria-labelledby="review-sent" className="flex flex-col items-start gap-3">
+                <h2 id="review-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you for your review</h2>
+                <p className="m-0">We read every review before it shows, usually within 2 days. It will show as {r.name.trim()}; we’ll email you if we can’t show it, and why.</p>
+                <Link href="#orders">Back to your orders</Link>
+              </section>
+            ) : (
+              <form onSubmit={send} noValidate aria-label="Your review" className="flex flex-col gap-4">
+                <ErrorSummary key={tries} errors={errors} />
+                <Field label="How many stars?" error={problems.stars} required>
+                  <Rating id="review-stars" size="lg" value={r.stars} onValueChange={(v) => edit({ stars: v })} />
+                </Field>
+                <Field label="Title" id="review-title" hint="A few words that sum it up." optional>
+                  <Input maxLength={80} value={r.title} onChange={(e) => edit({ title: e.target.value })} />
+                </Field>
+                <Field label="Your review" id="review-body" hint={`At least ${MIN} characters. What did you like, and what didn’t you? How does it fit?`} error={problems.body} required>
+                  <Textarea rows={6} maxLength={MAX} showCount value={r.body} onChange={(e) => edit({ body: e.target.value })} />
+                </Field>
+                <Field label="Would you recommend it?" group optional>
+                  <RadioGroup name="review-recommend" orientation="horizontal" value={r.recommend} onValueChange={(v: string) => edit({ recommend: v })}>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no">No</Radio>
+                  </RadioGroup>
+                </Field>
+                <Field label="Photos" optional>
+                  <FileUpload id="review-photos" multiple maxFiles={4} maxSize={10 * 1024 * 1024} accept="image/*" thumbnails hint="Up to 4, 10 MB each. Leave out faces other than yours."
+                    files={r.photos} onFilesChange={(f) => edit({ photos: f })} />
+                </Field>
+                <Field label="Show it as" id="review-name" hint="Your first name and an initial is enough." error={problems.name} required>
+                  <Input autoComplete="nickname" value={r.name} onChange={(e) => edit({ name: e.target.value })} className="max-w-64" />
+                </Field>
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t send your review. Try again; everything, the photos too, is still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>Send review</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

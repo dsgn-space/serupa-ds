@@ -14,6 +14,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Activity log: what people did in a workspace, newest first, with a search, a type filter, more on request, and an
    export. For an app to copy, as the record admins check after something changes. What it carries (WCAG 2.2):
@@ -104,50 +106,52 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the events loaded before you went offline. New ones show when you’re back.</OfflineBanner>
-        <PageHeader title="Activity log" description="What people did in this workspace, newest first. Kept for a year."
-          primary={onExport && !loadFailed ? { label: 'Export', onSelect: () => onExport(found) } : undefined} />
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load the activity log" onRetry={() => onRetry?.()} headingLevel={2} /> : <>
-          <div className="flex flex-wrap items-end gap-3">
-            <Field label="Search the log" className="min-w-0 flex-1 basis-60">
-              <SearchInput value={query} onChange={(e) => refine(() => setQuery(e.target.value))} onClear={() => refine(() => setQuery(''))} clearLabel="Clear the search" />
-            </Field>
-            <Field label="Type" className="w-44">
-              <Select value={kind} onChange={(e) => refine(() => setKind(e.target.value as ActivityKind | 'all'))}
-                options={[{ value: 'all', label: 'All types' }, ...KINDS]} />
-            </Field>
-          </div>
-          <p role="status" className="m-0 text-sm text-text-muted">{count}</p>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the events loaded before you went offline. New ones show when you’re back.</OfflineBanner>
+          <PageHeader title="Activity log" description="What people did in this workspace, newest first. Kept for a year."
+            primary={onExport && !loadFailed ? { label: 'Export', onSelect: () => onExport(found) } : undefined} />
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the activity log" onRetry={() => onRetry?.()} headingLevel={2} /> : <>
+            <div className="flex flex-wrap items-end gap-3">
+              <Field label="Search the log" className="min-w-0 flex-1 basis-60">
+                <SearchInput value={query} onChange={(e) => refine(() => setQuery(e.target.value))} onClear={() => refine(() => setQuery(''))} clearLabel="Clear the search" />
+              </Field>
+              <Field label="Type" className="w-44">
+                <Select value={kind} onChange={(e) => refine(() => setKind(e.target.value as ActivityKind | 'all'))}
+                  options={[{ value: 'all', label: 'All types' }, ...KINDS]} />
+              </Field>
+            </div>
+            <p role="status" className="m-0 text-sm text-text-muted">{count}</p>
 
-          {loading ? (
-            <Table caption="Events" hideCaption loading>
-              <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
-              <TableLoadingRows columns={3} rows={5} label="" />
-            </Table>
-          ) : !events.length ? (
-            <EmptyState icon="history" title="Nothing has happened yet" headingLevel={2}
-              description="When people join, change settings or edit projects, it’s recorded here." />
-          ) : !found.length ? (
-            <EmptyNoResults query={query.trim() || kindLabel(kind as ActivityKind)} headingLevel={2}
-              title={(q) => (query.trim() ? `No events match “${q}”` : `No ${q.toLowerCase()} events`)}
-              description="Try other words, or another type." onClearFilters={() => refine(() => { setQuery(''); setKind('all'); })} />
-          ) : <>
-            <Table caption="Events" hideCaption>
-              <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
-              <TableBody>{rows.map((e) => (
-                <TableRow key={e.id}>
-                  <TableCell className="whitespace-nowrap"><FormattedDate value={e.time} timeStyle="short" /></TableCell>
-                  <TableCell>{e.actor}</TableCell>
-                  <TableCell><span className="me-2">{e.action}</span><Badge>{kindLabel(e.kind)}</Badge></TableCell>
-                </TableRow>
-              ))}</TableBody>
-            </Table>
-            <LoadMore onLoadMore={() => setShownCount((n) => n + pageSize)} hasMore={rows.length < found.length}
-              count={rows.length} total={found.length} endText={filtered || found.length > pageSize ? 'That’s every event' : null} />
+            {loading ? (
+              <Table caption="Events" hideCaption loading>
+                <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
+                <TableLoadingRows columns={3} rows={5} label="" />
+              </Table>
+            ) : !events.length ? (
+              <EmptyState icon="history" title="Nothing has happened yet" headingLevel={2}
+                description="When people join, change settings or edit projects, it’s recorded here." />
+            ) : !found.length ? (
+              <EmptyNoResults query={query.trim() || kindLabel(kind as ActivityKind)} headingLevel={2}
+                title={(q) => (query.trim() ? `No events match “${q}”` : `No ${q.toLowerCase()} events`)}
+                description="Try other words, or another type." onClearFilters={() => refine(() => { setQuery(''); setKind('all'); })} />
+            ) : <>
+              <Table caption="Events" hideCaption>
+                <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
+                <TableBody>{rows.map((e) => (
+                  <TableRow key={e.id}>
+                    <TableCell className="whitespace-nowrap"><FormattedDate value={e.time} timeStyle="short" /></TableCell>
+                    <TableCell>{e.actor}</TableCell>
+                    <TableCell><span className="me-2">{e.action}</span><Badge>{kindLabel(e.kind)}</Badge></TableCell>
+                  </TableRow>
+                ))}</TableBody>
+              </Table>
+              <LoadMore onLoadMore={() => setShownCount((n) => n + pageSize)} hasMore={rows.length < found.length}
+                count={rows.length} total={found.length} endText={filtered || found.length > pageSize ? 'That’s every event' : null} />
+            </>}
           </>}
-        </>}
-      </main>
+        </Stack>
+      </Container>
     </div>
   );
 }

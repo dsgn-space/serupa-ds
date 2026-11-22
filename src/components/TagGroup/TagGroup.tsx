@@ -11,6 +11,8 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { en as comboWords } from '../Combobox/labels';
 import { en as moreWords } from '../ShowMore/labels';
+import { isRtl } from '../../internal/position';
+import { modified } from '../../internal/roving';
 
 const allWords = /* @__PURE__ */ Object.assign({}, words, comboWords, moreWords);
 
@@ -98,8 +100,8 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
     announce(L.valueRemoved(t.label));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, t: TagItem, i: number) => {
-    if ((e.altKey || e.ctrlKey || e.metaKey) && e.key.startsWith('Arrow')) return;   // Alt+arrow is the browser's Back and Forward
-    const rtl = grid.current ? getComputedStyle(grid.current).direction === 'rtl' : false;
+    if (modified(e)) return;
+    const rtl = grid.current ? isRtl(grid.current) : false;
     const step = (d: number) => { const n = shown[Math.min(Math.max(i + d, 0), shown.length - 1)]; if (n) { setActive(n.id); const r = rowOf(n.id); if (r) r.focus(); } };
     switch (e.key) {
       case 'ArrowRight': step(rtl ? -1 : 1); break;

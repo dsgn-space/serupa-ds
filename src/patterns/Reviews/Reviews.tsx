@@ -17,6 +17,8 @@ import { Card } from '../../components/Card/Card';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Reviews: the average and how the stars split, then the reviews themselves, filtered by stars and sorted, a few at a
    time, each one marked helpful or not. For an app to copy. What it carries (WCAG 2.2):
@@ -106,63 +108,65 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
         <p className="m-0 text-base font-semibold">Acme Outdoors</p>
         <Link underline="hover" href="#bag">Bag</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the reviews loaded before you went offline. Marking one helpful needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>
-        <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-3">
-          <section aria-labelledby="reviews-summary" className="flex flex-col gap-4">
-            <h2 id="reviews-summary" className="m-0 text-lg font-semibold">Overall</h2>
-            <div className="flex flex-wrap items-center gap-3">
-              <Rating readOnly value={average} allowHalf size="lg" />
-              <p className="m-0 text-text-muted">{formatNumber(average, locale, { minimumFractionDigits: 1 })} from {reviewsWords(reviews.length)}</p>
-            </div>
-            <ul className="m-0 flex list-none flex-col gap-2 p-0">
-              {counts.map((c) => (
-                <li key={c.stars}>
-                  <Meter label={c.stars === 1 ? '1 star' : `${num(c.stars)} stars`} showValue size="sm" value={c.count} max={Math.max(1, reviews.length)}
-                    formatValue={(v) => `${reviewsWords(v)}, ${formatNumber(reviews.length ? v / reviews.length : 0, locale, { style: 'percent' })}`} />
-                </li>
-              ))}
-            </ul>
-            <Link href="#write">Write a review</Link>
-          </section>
-          <section aria-labelledby="reviews-list" className="flex flex-col gap-4 md:col-span-2">
-            <h2 id="reviews-list" className="m-0 text-lg font-semibold">What people say</h2>
-            <div className="flex flex-wrap items-end gap-3">
-              <Field label="Show">
-                <Select value={stars} onChange={(e) => { setStars(e.target.value); setShown(pageSize); }}
-                  options={[{ value: '0', label: 'All stars' }, ...[5, 4, 3, 2, 1].map((s) => ({ value: String(s), label: s === 1 ? '1 star only' : `${num(s)} stars only` }))]} />
-              </Field>
-              <Field label="Sort by">
-                <Select value={sort} onChange={(e) => { setSort(e.target.value as Sort); setShown(pageSize); }}
-                  options={[{ value: 'recent', label: 'Most recent' }, { value: 'helpful', label: 'Most helpful' }, { value: 'high', label: 'Highest stars' }, { value: 'low', label: 'Lowest stars' }]} />
-              </Field>
-            </div>
-            <p role="status" id="reviews-count" className="m-0 text-sm text-text-muted">{list.length ? `Showing ${num(visible.length)} of ${reviewsWords(list.length)}` : 'No reviews with these stars yet.'}</p>
-            {visible.map((r) => {
-              const on = pressed.includes(r.id);
-              return (
-                <article key={r.id} aria-labelledby={`review-${r.id}`} className="flex flex-col gap-2 border-b border-border pb-4">
-                  <Rating readOnly value={r.stars} size="sm" />
-                  <h3 id={`review-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{r.title}</h3>
-                  <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <span>{r.author}</span>·<FormattedDate value={r.date} dateStyle="long" />{r.bought ? <Badge tone="success">Bought it</Badge> : null}
-                  </p>
-                  <p className="m-0">{r.body}</p>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <ToggleButton size="sm" variant="outline" pressed={on} onPressedChange={(v) => press(r.id, v)} aria-label={`Helpful: ${r.title}`}>Helpful</ToggleButton>
-                    <span className="text-sm text-text-muted">{helpfulWords(r.helpful + (on ? 1 : 0))}</span>
-                  </div>
-                </article>
-              );
-            })}
-            {list.length > shown ? <div><Button variant="secondary" onClick={more}>Show more reviews</Button></div> : null}
-          </section>
-        </div>
-        </>)}
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the reviews loaded before you went offline. Marking one helpful needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>
+          <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-3">
+            <section aria-labelledby="reviews-summary" className="flex flex-col gap-4">
+              <h2 id="reviews-summary" className="m-0 text-lg font-semibold">Overall</h2>
+              <div className="flex flex-wrap items-center gap-3">
+                <Rating readOnly value={average} allowHalf size="lg" />
+                <p className="m-0 text-text-muted">{formatNumber(average, locale, { minimumFractionDigits: 1 })} from {reviewsWords(reviews.length)}</p>
+              </div>
+              <ul className="m-0 flex list-none flex-col gap-2 p-0">
+                {counts.map((c) => (
+                  <li key={c.stars}>
+                    <Meter label={c.stars === 1 ? '1 star' : `${num(c.stars)} stars`} showValue size="sm" value={c.count} max={Math.max(1, reviews.length)}
+                      formatValue={(v) => `${reviewsWords(v)}, ${formatNumber(reviews.length ? v / reviews.length : 0, locale, { style: 'percent' })}`} />
+                  </li>
+                ))}
+              </ul>
+              <Link href="#write">Write a review</Link>
+            </section>
+            <section aria-labelledby="reviews-list" className="flex flex-col gap-4 md:col-span-2">
+              <h2 id="reviews-list" className="m-0 text-lg font-semibold">What people say</h2>
+              <div className="flex flex-wrap items-end gap-3">
+                <Field label="Show">
+                  <Select value={stars} onChange={(e) => { setStars(e.target.value); setShown(pageSize); }}
+                    options={[{ value: '0', label: 'All stars' }, ...[5, 4, 3, 2, 1].map((s) => ({ value: String(s), label: s === 1 ? '1 star only' : `${num(s)} stars only` }))]} />
+                </Field>
+                <Field label="Sort by">
+                  <Select value={sort} onChange={(e) => { setSort(e.target.value as Sort); setShown(pageSize); }}
+                    options={[{ value: 'recent', label: 'Most recent' }, { value: 'helpful', label: 'Most helpful' }, { value: 'high', label: 'Highest stars' }, { value: 'low', label: 'Lowest stars' }]} />
+                </Field>
+              </div>
+              <p role="status" id="reviews-count" className="m-0 text-sm text-text-muted">{list.length ? `Showing ${num(visible.length)} of ${reviewsWords(list.length)}` : 'No reviews with these stars yet.'}</p>
+              {visible.map((r) => {
+                const on = pressed.includes(r.id);
+                return (
+                  <article key={r.id} aria-labelledby={`review-${r.id}`} className="flex flex-col gap-2 border-b border-border pb-4">
+                    <Rating readOnly value={r.stars} size="sm" />
+                    <h3 id={`review-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{r.title}</h3>
+                    <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
+                      <span>{r.author}</span>·<FormattedDate value={r.date} dateStyle="long" />{r.bought ? <Badge tone="success">Bought it</Badge> : null}
+                    </p>
+                    <p className="m-0">{r.body}</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <ToggleButton size="sm" variant="outline" pressed={on} onPressedChange={(v) => press(r.id, v)} aria-label={`Helpful: ${r.title}`}>Helpful</ToggleButton>
+                      <span className="text-sm text-text-muted">{helpfulWords(r.helpful + (on ? 1 : 0))}</span>
+                    </div>
+                  </article>
+                );
+              })}
+              {list.length > shown ? <div><Button variant="secondary" onClick={more}>Show more reviews</Button></div> : null}
+            </section>
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

@@ -15,6 +15,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Poll: one question, a few answers, a vote, then the results so far, with yours marked, and a way to change it while
    it's open. For an app to copy. What it carries (WCAG 2.2):
@@ -113,49 +115,51 @@ export function Poll({ question = 'Where should the summer party be?', options =
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#polls">Polls</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These results are from when the page loaded. Voting needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Polls', href: '#polls' }, { label: question }]} title={question}
-          description={closed ? 'This poll has closed.' : `Open until ${closeDay}. Others see the totals, not who voted for what.`} />
-        <div className="flex flex-col gap-6 pt-6">
-          {voting ? (
-            <form onSubmit={send} noValidate aria-label="Your vote" className="flex flex-col gap-4">
-              <ErrorSummary key={tries} errors={missing ? [{ field: 'poll-choice', message: 'Choose an answer.' }] : []} />
-              <Field label="Your answer" group error={missing ? 'Choose an answer.' : undefined} required>
-                <RadioGroup id="poll-choice" name="poll-choice" value={choice} onValueChange={(v: string) => { setChoice(v); setMissing(false); setFailed(false); }}>
-                  {options.map((o) => <Radio key={o.id} value={o.id}>{o.label}</Radio>)}
-                </RadioGroup>
-              </Field>
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t send your vote. Try again; your answer is still chosen.</Alert> : null}
-                <div className="flex flex-wrap gap-3">
-                  <Button type="submit" loading={busy}>{vote ? 'Change vote' : 'Vote'}</Button>
-                  {vote ? <Button variant="secondary" onClick={() => { setChoice(vote); setMissing(false); setFailed(false); shown.current = true; setVoting(false); }}>Keep my vote</Button> : null}
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These results are from when the page loaded. Voting needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Polls', href: '#polls' }, { label: question }]} title={question}
+            description={closed ? 'This poll has closed.' : `Open until ${closeDay}. Others see the totals, not who voted for what.`} />
+          <div className="flex flex-col gap-6 pt-6">
+            {voting ? (
+              <form onSubmit={send} noValidate aria-label="Your vote" className="flex flex-col gap-4">
+                <ErrorSummary key={tries} errors={missing ? [{ field: 'poll-choice', message: 'Choose an answer.' }] : []} />
+                <Field label="Your answer" group error={missing ? 'Choose an answer.' : undefined} required>
+                  <RadioGroup id="poll-choice" name="poll-choice" value={choice} onValueChange={(v: string) => { setChoice(v); setMissing(false); setFailed(false); }}>
+                    {options.map((o) => <Radio key={o.id} value={o.id}>{o.label}</Radio>)}
+                  </RadioGroup>
+                </Field>
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t send your vote. Try again; your answer is still chosen.</Alert> : null}
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="submit" loading={busy}>{vote ? 'Change vote' : 'Vote'}</Button>
+                    {vote ? <Button variant="secondary" onClick={() => { setChoice(vote); setMissing(false); setFailed(false); shown.current = true; setVoting(false); }}>Keep my vote</Button> : null}
+                  </div>
                 </div>
-              </div>
-            </form>
-          ) : (
-            <section aria-labelledby="poll-results" className="flex flex-col items-start gap-4">
-              <h2 id="poll-results" ref={results} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">
-                {closed ? 'Results' : 'Results so far'}
-              </h2>
-              <p className="m-0 text-text-muted">{votesWords(total)} in all.{vote ? ` You voted for “${options.find((o) => o.id === vote)?.label}”.` : ''}</p>
-              <ul className="m-0 flex w-full list-none flex-col gap-4 p-0">
-                {rows.map((r) => (
-                  <li key={r.id}>
-                    <Card padding="sm" className="flex flex-col gap-2">
-                      {r.id === vote ? <Badge tone="info" className="self-start">Your vote</Badge> : null}
-                      <Meter label={r.label} showValue value={r.percent} max={100}
-                        formatValue={() => `${votesWords(r.votes)}, ${formatNumber(r.percent / 100, locale, { style: 'percent' })}`} />
-                    </Card>
-                  </li>
-                ))}
-              </ul>
-              {!closed ? <Button variant="secondary" onClick={() => { setChoice(vote ?? ''); setVoting(true); }}>Change your vote</Button> : null}
-            </section>
-          )}
-        </div>
-      </main>
+              </form>
+            ) : (
+              <section aria-labelledby="poll-results" className="flex flex-col items-start gap-4">
+                <h2 id="poll-results" ref={results} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">
+                  {closed ? 'Results' : 'Results so far'}
+                </h2>
+                <p className="m-0 text-text-muted">{votesWords(total)} in all.{vote ? ` You voted for “${options.find((o) => o.id === vote)?.label}”.` : ''}</p>
+                <ul className="m-0 flex w-full list-none flex-col gap-4 p-0">
+                  {rows.map((r) => (
+                    <li key={r.id}>
+                      <Card padding="sm" className="flex flex-col gap-2">
+                        {r.id === vote ? <Badge tone="info" className="self-start">Your vote</Badge> : null}
+                        <Meter label={r.label} showValue value={r.percent} max={100}
+                          formatValue={() => `${votesWords(r.votes)}, ${formatNumber(r.percent / 100, locale, { style: 'percent' })}`} />
+                      </Card>
+                    </li>
+                  ))}
+                </ul>
+                {!closed ? <Button variant="secondary" onClick={() => { setChoice(vote ?? ''); setVoting(true); }}>Change your vote</Button> : null}
+              </section>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

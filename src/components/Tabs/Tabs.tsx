@@ -14,6 +14,7 @@ import { useSettings } from '../../internal/provider';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -212,7 +213,7 @@ function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTM
     const tabs = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])')).filter((t) => t.getClientRects().length > 0);
     const i = tabs.indexOf(activeIn(e.currentTarget) as HTMLButtonElement);
     if (i < 0 || !tabs.length) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     const fwd = ctx.vertical ? 'ArrowDown' : rtl ? 'ArrowLeft' : 'ArrowRight', back = ctx.vertical ? 'ArrowUp' : rtl ? 'ArrowRight' : 'ArrowLeft';
     let next = -1;
     if (e.key === fwd) next = (i + 1) % tabs.length;

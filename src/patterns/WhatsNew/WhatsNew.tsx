@@ -13,6 +13,8 @@ import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* What's new: the product's changes, newest first, by month; what's new since your last visit marked; a filter by kind;
    and older months on request. For an app to copy. What it carries (WCAG 2.2):
@@ -100,39 +102,41 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, 
         <p className="m-0 text-base font-semibold">Acme Boards</p>
         <Link underline="hover" href="#help">Help</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the changes loaded before you went offline.</OfflineBanner>
-        <PageHeader title="What’s new" description={loading || loadFailed ? undefined : unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load what’s new" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading what’s new" /></Card> : (<>
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
-          <SegmentedControl aria-label="Show" value={kind} onValueChange={(v) => { setKind(v); setShown(months); }}
-            options={[{ value: 'all', label: 'All' }, { value: 'new', label: 'New' }, { value: 'improved', label: 'Improved' }, { value: 'fixed', label: 'Fixed' }]} />
-          <p role="status" id="changes-count" className="m-0 text-sm text-text-muted">{count === 1 ? 'Showing 1 change' : `Showing ${formatNumber(count, locale)} changes`}</p>
-        </div>
-        <div className="flex flex-col gap-8 pt-6">
-          {visible.map((g) => (
-            <section key={g.month} aria-labelledby={`month-${g.month}`} className="flex flex-col gap-4">
-              <h2 id={`month-${g.month}`} className="m-0 border-b border-border pb-2 text-lg font-semibold">{monthName(g.month)}</h2>
-              {g.changes.map((c) => (
-                <article key={c.id} aria-labelledby={`change-${c.id}-title`} className="flex flex-col gap-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge tone={KINDS[c.kind].tone}>{KINDS[c.kind].label}</Badge>
-                    {c.date > lastSeen ? <Badge tone="primary" variant="outline">Since your last visit</Badge> : null}
-                    <time dateTime={c.date} className="text-sm text-text-muted">{dayName(c.date)}</time>
-                  </div>
-                  <h3 id={`change-${c.id}-title`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{c.title}</h3>
-                  <p className="m-0">{c.body}</p>
-                  {c.href ? <Link href={c.href} aria-label={`Try it: ${c.title}`}>Try it</Link> : null}
-                </article>
-              ))}
-            </section>
-          ))}
-          {!visible.length ? <p className="m-0 text-text-muted">No changes of this kind yet.</p> : null}
-          {groups.length > shown ? <div><Button variant="secondary" onClick={more}>Show older months</Button></div> : null}
-        </div>
-        </>)}
-      </main>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the changes loaded before you went offline.</OfflineBanner>
+          <PageHeader title="What’s new" description={loading || loadFailed ? undefined : unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load what’s new" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading what’s new" /></Card> : (<>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
+            <SegmentedControl aria-label="Show" value={kind} onValueChange={(v) => { setKind(v); setShown(months); }}
+              options={[{ value: 'all', label: 'All' }, { value: 'new', label: 'New' }, { value: 'improved', label: 'Improved' }, { value: 'fixed', label: 'Fixed' }]} />
+            <p role="status" id="changes-count" className="m-0 text-sm text-text-muted">{count === 1 ? 'Showing 1 change' : `Showing ${formatNumber(count, locale)} changes`}</p>
+          </div>
+          <div className="flex flex-col gap-8 pt-6">
+            {visible.map((g) => (
+              <section key={g.month} aria-labelledby={`month-${g.month}`} className="flex flex-col gap-4">
+                <h2 id={`month-${g.month}`} className="m-0 border-b border-border pb-2 text-lg font-semibold">{monthName(g.month)}</h2>
+                {g.changes.map((c) => (
+                  <article key={c.id} aria-labelledby={`change-${c.id}-title`} className="flex flex-col gap-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge tone={KINDS[c.kind].tone}>{KINDS[c.kind].label}</Badge>
+                      {c.date > lastSeen ? <Badge tone="primary" variant="outline">Since your last visit</Badge> : null}
+                      <time dateTime={c.date} className="text-sm text-text-muted">{dayName(c.date)}</time>
+                    </div>
+                    <h3 id={`change-${c.id}-title`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{c.title}</h3>
+                    <p className="m-0">{c.body}</p>
+                    {c.href ? <Link href={c.href} aria-label={`Try it: ${c.title}`}>Try it</Link> : null}
+                  </article>
+                ))}
+              </section>
+            ))}
+            {!visible.length ? <p className="m-0 text-text-muted">No changes of this kind yet.</p> : null}
+            {groups.length > shown ? <div><Button variant="secondary" onClick={more}>Show older months</Button></div> : null}
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

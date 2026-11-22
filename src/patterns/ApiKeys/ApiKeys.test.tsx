@@ -52,6 +52,9 @@ describe('Patterns/API keys', () => {
     expect(onCreate).toHaveBeenCalledWith({ name: 'CI runner', access: 'write', expiresInDays: null });
     await expect.poll(() => inDialog('acme_test_abcdefghWXYZ')).toBe(true);
     await expect.poll(() => active().id).toBe('key-copy');
+    // A request to try it with, the key already in it.
+    const tryIt = document.querySelector('[data-component="code-block"]');
+    expect(tryIt?.textContent).toContain('Authorization: Bearer acme_test_abcdefghWXYZ');
     // Copy and Done sit in one row at one height.
     const h = (el: Element) => Math.round(el.getBoundingClientRect().height);
     expect(h(active())).toBe(h(screen.getByRole('button', { name: 'Done' }).element()));

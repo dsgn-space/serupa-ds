@@ -11,6 +11,8 @@ import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { Checkbox, CheckboxGroup } from '../../components/Checkbox/Checkbox';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Feedback survey: a few questions after something happened (a visit, an order, a call): a rating, what you came to
    do, what could be better, your words, and whether we may write back. For an app to copy. What it carries (WCAG 2.2):
@@ -105,48 +107,50 @@ export function FeedbackSurvey({ about = 'your visit', onSend, online }: Feedbac
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending them needs a connection.</OfflineBanner>
-        <PageHeader title={`How was ${about}?`} description="Four questions. Only the first is needed, and it takes a few seconds." />
-        <div className="pt-6">
-          {sent ? (
-            <section aria-labelledby="thanks" className="flex flex-col items-start gap-3">
-              <h2 id="thanks" ref={thanks} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you</h2>
-              <p className="m-0">We read every answer. {answers.contact ? 'If we write back, it’ll be to the address you gave.' : 'You won’t hear from us about this.'}</p>
-            </section>
-          ) : (
-            <form onSubmit={send} noValidate aria-label="Survey" className="flex flex-col gap-6">
-              <Field label="How would you rate it?" error={problems.rating} required>
-                <Rating ref={rating} value={answers.rating} onValueChange={(v) => { edit({ rating: v }); setProblems((p) => ({ ...p, rating: undefined })); }} invalid={!!problems.rating} size="lg" />
-              </Field>
-              <Field label="What did you come to do?" optional group>
-                <RadioGroup name="survey-reason" value={answers.reason || null} onValueChange={(v: string) => edit({ reason: v })}>
-                  {REASONS.map((r) => <Radio key={r.value} value={r.value}>{r.label}</Radio>)}
-                </RadioGroup>
-              </Field>
-              <Field label="What could be better?" hint="Choose any." optional group>
-                <CheckboxGroup name="survey-better" value={answers.better} onValueChange={(v: string[]) => edit({ better: v })}>
-                  {BETTER.map((b) => <Checkbox key={b.value} value={b.value}>{b.label}</Checkbox>)}
-                </CheckboxGroup>
-              </Field>
-              <Field label="Anything else?" optional>
-                <Textarea rows={4} value={answers.comments} onChange={(e) => edit({ comments: e.target.value })} />
-              </Field>
-              <Checkbox checked={answers.contact} onCheckedChange={(on) => { edit({ contact: on }); if (!on) setProblems((p) => ({ ...p, email: undefined })); }}
-                description="Only about what you wrote here.">You may write back to me</Checkbox>
-              {answers.contact ? (
-                <Field label="Email" id="survey-email" error={problems.email} required>
-                  <Input type="email" autoComplete="email" value={answers.email} onChange={(e) => edit({ email: e.target.value })} />
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending them needs a connection.</OfflineBanner>
+          <PageHeader title={`How was ${about}?`} description="Four questions. Only the first is needed, and it takes a few seconds." />
+          <div className="pt-6">
+            {sent ? (
+              <section aria-labelledby="thanks" className="flex flex-col items-start gap-3">
+                <h2 id="thanks" ref={thanks} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Thank you</h2>
+                <p className="m-0">We read every answer. {answers.contact ? 'If we write back, it’ll be to the address you gave.' : 'You won’t hear from us about this.'}</p>
+              </section>
+            ) : (
+              <form onSubmit={send} noValidate aria-label="Survey" className="flex flex-col gap-6">
+                <Field label="How would you rate it?" error={problems.rating} required>
+                  <Rating ref={rating} value={answers.rating} onValueChange={(v) => { edit({ rating: v }); setProblems((p) => ({ ...p, rating: undefined })); }} invalid={!!problems.rating} size="lg" />
                 </Field>
-              ) : null}
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t send your answers. Try again; they’re all still here.</Alert> : null}
-                <Button type="submit" loading={busy}>Send</Button>
-              </div>
-            </form>
-          )}
-        </div>
-      </main>
+                <Field label="What did you come to do?" optional group>
+                  <RadioGroup name="survey-reason" value={answers.reason || null} onValueChange={(v: string) => edit({ reason: v })}>
+                    {REASONS.map((r) => <Radio key={r.value} value={r.value}>{r.label}</Radio>)}
+                  </RadioGroup>
+                </Field>
+                <Field label="What could be better?" hint="Choose any." optional group>
+                  <CheckboxGroup name="survey-better" value={answers.better} onValueChange={(v: string[]) => edit({ better: v })}>
+                    {BETTER.map((b) => <Checkbox key={b.value} value={b.value}>{b.label}</Checkbox>)}
+                  </CheckboxGroup>
+                </Field>
+                <Field label="Anything else?" optional>
+                  <Textarea rows={4} value={answers.comments} onChange={(e) => edit({ comments: e.target.value })} />
+                </Field>
+                <Checkbox checked={answers.contact} onCheckedChange={(on) => { edit({ contact: on }); if (!on) setProblems((p) => ({ ...p, email: undefined })); }}
+                  description="Only about what you wrote here.">You may write back to me</Checkbox>
+                {answers.contact ? (
+                  <Field label="Email" id="survey-email" error={problems.email} required>
+                    <Input type="email" autoComplete="email" value={answers.email} onChange={(e) => edit({ email: e.target.value })} />
+                  </Field>
+                ) : null}
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t send your answers. Try again; they’re all still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>Send</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

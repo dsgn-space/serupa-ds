@@ -14,8 +14,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: the five steps of the icon scale (xs 14px, sm 16px, md 20px, lg 24px, xl 40px), the icon-size tokens. */
 export const Sizes: Story = {
-  render: () => <div className="flex items-end gap-4">{[16, 20, 24, 32, 40].map((s) => <Icon key={s} name="favorite" size={s} />)}</div>,
+  render: () => <div className="flex items-end gap-4">{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Icon key={s} name="favorite" size={s} />)}</div>,
+};
+
+/** Weights: regular beside body text, semibold beside font-semibold text, bold beside bold text and headings. */
+export const Weights: Story = {
+  render: () => <div className="flex items-center gap-4">{(['regular', 'semibold', 'bold'] as const).map((w) => <Icon key={w} name="settings" size="lg" weight={w} />)}</div>,
 };
 
 export const Color: Story = {

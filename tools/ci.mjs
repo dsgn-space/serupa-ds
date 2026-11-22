@@ -18,7 +18,7 @@
 //   node tools/ci.mjs --clean          start from a clean install (npm ci --ignore-scripts), as CI does
 //   node tools/ci.mjs --report <file>  also write the results as Markdown (commit, Node, each step's pass or fail
 //                                      with its test counts), ready to paste under "Local checks" in a pull request
-// npm run check -- <options> is the same. Run it before every push (GitLab CI runs the same jobs as the merge gate):
+// npm run check -- <options> is the same. Run it before every push (GitHub CI runs the same jobs as the merge gate):
 //   npm run check -- --clean --since origin/main --report local-checks.md
 // Like CI, it runs the component tests in English and in the one second language the commit's hash picks (LOCALES in
 // test/lib.mjs): each pass takes about 9 minutes on 4 cores. --all-locales runs all four, for a change to locale code.

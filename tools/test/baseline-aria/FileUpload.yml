@@ -33,8 +33,8 @@
 - button "Choose files" [disabled]
 - paragraph: Images or PDF, up to 5 MB each
 - list "Chosen files":
-  - listitem: site-plan.pdf 240 kB
-  - listitem: cover.jpg 1.6 MB
+  - listitem: site-plan.pdf PDF 240 kB
+  - listitem: cover.jpg Image 1.6 MB
 
 # SingleFile
 - paragraph: Drag a file here
@@ -47,14 +47,14 @@
 - paragraph: Images or PDF, up to 5 MB each
 - list "Chosen files":
   - listitem:
-    - text: site-photo.png 70 bytes Complete
+    - text: site-photo.png Image 70 bytes Complete
     - button "Remove site-photo.png"
   - listitem:
-    - text: site-plan.pdf 246 kB
+    - text: site-plan.pdf PDF 246 kB
     - progressbar "site-plan.pdf"
     - button "Remove site-plan.pdf"
   - listitem:
-    - text: invoice-0412.pdf 1.7 MB The server didn't answer. Try again in a moment.
+    - text: invoice-0412.pdf PDF 1.7 MB The server didn't answer. Try again in a moment.
     - button "Try again invoice-0412.pdf": Try again
     - button "Remove invoice-0412.pdf"
 
@@ -64,9 +64,9 @@
 - paragraph: Images or PDF, up to 5 MB each
 - list "Chosen files":
   - listitem:
-    - text: site-plan.pdf 240 kB
+    - text: site-plan.pdf PDF 240 kB
     - button "Remove site-plan.pdf"
   - listitem:
-    - text: cover.jpg 1.6 MB
+    - text: cover.jpg Image 1.6 MB
     - button "Remove cover.jpg"
 

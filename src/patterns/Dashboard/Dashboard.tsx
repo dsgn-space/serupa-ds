@@ -8,6 +8,7 @@ import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
 import { Meter } from '../../components/Meter/Meter';
 import { Progress } from '../../components/Progress/Progress';
+import { Chart } from '../../components/Chart/Chart';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
 import { StatsRow, type Stat } from '../../blocks/StatsRow/StatsRow';
 import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/ActivityFeed';
@@ -16,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
    the team did, with skeletons while it loads and a first-run state before there's anything to show. For an app to
@@ -40,6 +43,8 @@ export interface RecentProject {
 export interface DashboardData {
   /** The key numbers, two to four (StatsRow). */
   stats: readonly Stat[];
+  /** Tasks opened and done each week, oldest first, for the chart. Leave it out and the chart isn't shown. */
+  weekly?: { weeks: readonly string[]; opened: readonly (number | null)[]; done: readonly (number | null)[] } | undefined;
   /** Storage used and the plan's limit, in GB. */
   storage: { used: number; limit: number };
   /** A goal for the period: "Launch checklist", 3 of 5 done. */
@@ -83,6 +88,7 @@ const demo: DashboardData = {
     { label: 'Open issues', value: '23', change: { amount: '3%', direction: 'down', good: true } },
     { label: 'Spend', value: '$3,240', change: { amount: '8%', direction: 'up', good: false } },
   ],
+  weekly: { weeks: ['Oct 5', 'Oct 12', 'Oct 19', 'Oct 26', 'Nov 2', 'Nov 9'], opened: [30, 34, 28, 36, 31, 38], done: [24, 29, 31, 30, 35, 40] },
   storage: { used: 8.6, limit: 10 },
   goal: { label: 'Launch checklist', done: 3, total: 5 },
   projects: [
@@ -128,82 +134,95 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These numbers are from when the page loaded. They update when you’re back.</OfflineBanner>
-        <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
+      <Container as="main" size="xl" className="py-8 outline-none" id="main" aria-busy={loading || undefined}>
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These numbers are from when the page loaded. They update when you’re back.</OfflineBanner>
+          <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
 
-        {loadFailed ? (
-          <Card>
-            <EmptyLoadFailed title="Couldn’t load your dashboard" onRetry={() => onRetry?.()} headingLevel={2} />
-          </Card>
-        ) : firstRun ? (
-          <Card>
-            <EmptyFirstRun title="No projects yet" headingLevel={2} createLabel="New project" onCreate={() => onCreateProject?.()}
-              description="A project holds the tasks, files and people for one piece of work. Start one, and its numbers show up here."
-              learnHref="#guide" learnLabel="How projects work" />
-          </Card>
-        ) : (
-          <>
-            <StatsRow title="This month" period="vs last month" stats={data.stats} loading={loading} />
+          {loadFailed ? (
+            <Card>
+              <EmptyLoadFailed title="Couldn’t load your dashboard" onRetry={() => onRetry?.()} headingLevel={2} />
+            </Card>
+          ) : firstRun ? (
+            <Card>
+              <EmptyFirstRun title="No projects yet" headingLevel={2} createLabel="New project" onCreate={() => onCreateProject?.()}
+                description="A project holds the tasks, files and people for one piece of work. Start one, and its numbers show up here."
+                learnHref="#guide" learnLabel="How projects work" />
+            </Card>
+          ) : (
+            <>
+              <StatsRow title="This month" period="vs last month" stats={data.stats} loading={loading} />
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <section aria-labelledby="dash-projects" className="flex min-w-0 flex-col gap-4 lg:col-span-2">
-                <div className="flex flex-wrap items-baseline justify-between gap-3">
-                  <Heading level={2} size="lg" id="dash-projects">Recent projects</Heading>
-                  <Link href="#projects">All projects</Link>
-                </div>
-                <Card padding="none" className="min-w-0 overflow-x-auto">
-                  {loading ? (
-                    <div className="p-4"><Loader variant="skeleton" shape="text" lines={5} label="Loading: Recent projects" /></div>
-                  ) : (
-                    <Table caption="Recent projects" hideCaption>
-                      <TableHead><TableRow>
-                        <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell><TableHeaderCell>Updated</TableHeaderCell>
-                      </TableRow></TableHead>
-                      <TableBody>{data.projects.map((p) => (
-                        <TableRow key={p.href}>
-                          <TableCell><Link href={p.href}>{p.name}</Link></TableCell>
-                          <TableCell><Badge dot tone={p.statusTone ?? 'neutral'}>{p.status}</Badge></TableCell>
-                          <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
-                        </TableRow>
-                      ))}</TableBody>
-                    </Table>
-                  )}
-                </Card>
-              </section>
-
-              <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
-                <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
-                <Card className="flex flex-col gap-4">
-                  {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
-                    <>
-                      <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}
-                        formatValue={(v, _, max) => `${gb(v, locale)} of ${gb(max, locale)}${v >= max * 0.8 ? ', almost full' : ''}`} />
-                      <Progress label={data.goal.label} showValue value={data.goal.done} max={data.goal.total}
-                        formatValue={(v, max) => `${v} of ${max} done`} />
-                      <Link href="#billing">Change plan</Link>
-                    </>
-                  )}
-                </Card>
-              </section>
-            </div>
-
-            {/* One shape loading and loaded, so the heading doesn't jump when the events arrive: the feed's own
-                skeleton rows (an avatar and two lines) stand in for the events. */}
-            {activityFailed && !loading ? (
-              <Card>
-                <section aria-labelledby="dash-activity" className="flex flex-col gap-4">
-                  <Heading level={2} size="lg" id="dash-activity">Activity</Heading>
-                  <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the activity" description="The rest of the dashboard is up to date." onRetry={() => onRetry?.()} />
+              {data.weekly || loading ? (
+                <section aria-labelledby="dash-weekly" className="flex min-w-0 flex-col gap-4">
+                  <Heading level={2} size="lg" id="dash-weekly">Tasks each week</Heading>
+                  <Card>
+                    <Chart aria-label="Tasks each week" type="bar" height={200} categoryLabel="Week" loading={loading} loadingLabel="Loading: Tasks each week"
+                      categories={loading ? [] : [...(data.weekly?.weeks ?? [])]}
+                      series={loading ? [] : [{ name: 'Opened', values: [...(data.weekly?.opened ?? [])] }, { name: 'Done', values: [...(data.weekly?.done ?? [])] }]} />
+                  </Card>
                 </section>
-              </Card>
-            ) : <Card>
-              <ActivityFeed events={events} loading={loading} headingSize="lg" onLoadMore={more} total={onLoadMoreActivity ? undefined : data.activity.length}
-                hasMore={onLoadMoreActivity ? hasMoreActivity : shown < data.activity.length} />
-            </Card>}
-          </>
-        )}
-      </main>
+              ) : null}
+
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <section aria-labelledby="dash-projects" className="flex min-w-0 flex-col gap-4 lg:col-span-2">
+                  <div className="flex flex-wrap items-baseline justify-between gap-3">
+                    <Heading level={2} size="lg" id="dash-projects">Recent projects</Heading>
+                    <Link href="#projects">All projects</Link>
+                  </div>
+                  <Card padding="none" className="min-w-0 overflow-x-auto">
+                    {loading ? (
+                      <div className="p-4"><Loader variant="skeleton" shape="text" lines={5} label="Loading: Recent projects" /></div>
+                    ) : (
+                      <Table caption="Recent projects" hideCaption>
+                        <TableHead><TableRow>
+                          <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell><TableHeaderCell>Updated</TableHeaderCell>
+                        </TableRow></TableHead>
+                        <TableBody>{data.projects.map((p) => (
+                          <TableRow key={p.href}>
+                            <TableCell><Link href={p.href}>{p.name}</Link></TableCell>
+                            <TableCell><Badge dot tone={p.statusTone ?? 'neutral'}>{p.status}</Badge></TableCell>
+                            <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
+                          </TableRow>
+                        ))}</TableBody>
+                      </Table>
+                    )}
+                  </Card>
+                </section>
+
+                <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
+                  <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
+                  <Card className="flex flex-col gap-4">
+                    {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
+                      <>
+                        <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}
+                          formatValue={(v, _, max) => `${gb(v, locale)} of ${gb(max, locale)}${v >= max * 0.8 ? ', almost full' : ''}`} />
+                        <Progress label={data.goal.label} showValue value={data.goal.done} max={data.goal.total}
+                          formatValue={(v, max) => `${v} of ${max} done`} />
+                        <Link href="#billing">Change plan</Link>
+                      </>
+                    )}
+                  </Card>
+                </section>
+              </div>
+
+              {/* One shape loading and loaded, so the heading doesn't jump when the events arrive: the feed's own
+                  skeleton rows (an avatar and two lines) stand in for the events. */}
+              {activityFailed && !loading ? (
+                <Card>
+                  <section aria-labelledby="dash-activity" className="flex flex-col gap-4">
+                    <Heading level={2} size="lg" id="dash-activity">Activity</Heading>
+                    <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the activity" description="The rest of the dashboard is up to date." onRetry={() => onRetry?.()} />
+                  </section>
+                </Card>
+              ) : <Card>
+                <ActivityFeed events={events} loading={loading} headingSize="lg" onLoadMore={more} total={onLoadMoreActivity ? undefined : data.activity.length}
+                  hasMore={onLoadMoreActivity ? hasMoreActivity : shown < data.activity.length} />
+              </Card>}
+            </>
+          )}
+        </Stack>
+      </Container>
     </div>
   );
 }

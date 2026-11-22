@@ -19,6 +19,8 @@ import { minorDigits } from '../../internal/currency';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { Badge } from '../../components/Badge/Badge';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 import {
   demoMethods, expired, formatExpiry, methodOf, methodSummary, MethodDetails, MethodList, PayNext,
   type PaymentAnswers, type PaymentInstructions, type PaymentMethod,
@@ -282,145 +284,147 @@ export function Checkout({
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Your details stay here. Placing the order needs a connection.</OfflineBanner>
-        <PageHeader title="Checkout" />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
-            <div className="flex flex-col gap-1">
-              <p className="m-0 text-sm text-text-muted">{steps[step]}</p>
-              <Heading level={2} size="lg" id="checkout-step" ref={stepHeading} tabIndex={-1} className="outline-none">{titles[step]}</Heading>
-            </div>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your details stay here. Placing the order needs a connection.</OfflineBanner>
+          <PageHeader title="Checkout" />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
+              <div className="flex flex-col gap-1">
+                <p className="m-0 text-sm text-text-muted">{steps[step]}</p>
+                <Heading level={2} size="lg" id="checkout-step" ref={stepHeading} tabIndex={-1} className="outline-none">{titles[step]}</Heading>
+              </div>
 
-            {step === 'details' ? (
-              <form noValidate onSubmit={review} className="flex flex-col gap-6">
-                {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={3} /> : null}
-                <Card className="flex flex-col gap-4">
-                  <Heading level={3}>Delivery address</Heading>
-                  {text('name', 'Full name', 'shipping name')}
-                  {text('line1', 'Address line 1', 'shipping address-line1')}
-                  {text('line2', 'Address line 2', 'shipping address-line2')}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {text('city', 'Town or city', 'shipping address-level2')}
-                    {text('postcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
-                  </div>
-                  <Field label="Country" error={fieldError('country')}>
-                    <Select id={id('country')} name="country" autoComplete="shipping country" value={d.country} onChange={set('country')}
-                      placeholder="Choose a country" options={COUNTRIES} />
-                  </Field>
-                  {text('email', 'Email', 'email', { type: 'email', spellCheck: false, autoCapitalize: 'none' }, 'For the receipt and the delivery updates.')}
-                  {text('phone', 'Phone', 'tel', { type: 'tel' }, 'Only for the courier, if they can’t find the address.')}
-                </Card>
-
-                <Card className="flex flex-col gap-4">
-                  <Heading level={3}>Delivery</Heading>
-                  <Field label="Delivery speed" group>
-                    <RadioGroup name="delivery" value={d.delivery} onValueChange={(v) => setD({ ...d, delivery: v })}>
-                      <Radio value="standard" description="3 to 5 working days">Standard: free</Radio>
-                      <Radio value="express" description="Next working day, ordered before 2 pm">Express: {money(expressPrice)}</Radio>
-                    </RadioGroup>
-                  </Field>
-                  <Field label="Tip for the courier" hint="Every cent goes to the courier." optional>
-                    <NumberInput id={id('tip')} name="tip" currency={currency} minorUnits min={0} max={10000} step={50} value={d.tip}
-                      onValueChange={(tip) => setD({ ...d, tip })} className="max-w-48" />
-                  </Field>
-                </Card>
-
-                <Card className="flex flex-col gap-4">
-                  <Heading level={3}>Payment</Heading>
-                  <MethodList methods={methods} value={d.method} onChange={(m) => setPayment({ method: m })} error={fieldError('method')} />
-                  <MethodDetails method={method} a={answers} set={setPayment} error={(k) => fieldError(k)} card={(
-                    <>
-                      {text('cardNumber', 'Card number', 'cc-number', { inputMode: 'numeric', spellCheck: false }, 'The long number on the front of the card.')}
-                      {text('cardName', 'Name on card', 'cc-name')}
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <Field label="Expiry date" hint="MM/YY, like 08/27" error={fieldError('cardExpiry')}>
-                          <Input id={id('cardExpiry')} name="cardExpiry" autoComplete="cc-exp" inputMode="numeric" maxLength={7} className="max-w-48"
-                            value={d.cardExpiry} onChange={(e) => { const v = e.target.value; setD((x) => ({ ...x, cardExpiry: formatExpiry(v, x.cardExpiry) })); }} />
-                        </Field>
-                        {text('cardCode', 'Security code', 'cc-csc', { inputMode: 'numeric', className: 'max-w-48' }, '3 digits on the back, 4 on the front for Amex')}
-                      </div>
-                    </>
-                  )} />
-                </Card>
-                <div><Button type="submit">Review your order</Button></div>
-              </form>
-            ) : step === 'review' ? (
-              <div className="flex flex-col gap-4">
-                {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or {method?.kind === 'card' ? 'use another card' : 'choose another way to pay'}.</p> : null}
-                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
-                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
+              {step === 'details' ? (
+                <form noValidate onSubmit={review} className="flex flex-col gap-6">
+                  {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={3} /> : null}
+                  <Card className="flex flex-col gap-4">
                     <Heading level={3}>Delivery address</Heading>
-                    <p className="m-0 whitespace-pre-line text-sm">{[d.name, d.line1, d.line2, `${d.city} ${d.postcode}`, country].filter(Boolean).join('\n')}</p>
-                    <p className="m-0 text-sm text-text-muted">{[d.email, d.phone].filter(Boolean).join(' · ')}</p>
-                  </div>
-                  {change('address', 'the delivery address')}
-                </Card>
-                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
-                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
-                    <Heading level={3}>Delivery</Heading>
-                    <p className="m-0 text-sm">{d.delivery === 'express' ? 'Express, next working day' : 'Standard, 3 to 5 working days'}</p>
-                    {d.tip ? <p className="m-0 text-sm">Tip for the courier: {money(d.tip)}</p> : null}
-                  </div>
-                  {change('delivery', 'the delivery')}
-                </Card>
-                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
-                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
-                    <Heading level={3}>Payment</Heading>
-                    <p className="m-0 text-sm">{methodSummary(method, answers, { last4, expiry: d.cardExpiry })}</p>
-                  </div>
-                  {change('payment', 'how you pay')}
-                </Card>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {method && later(method) ? (
-                  <Card>
-                    <PayNext method={method} a={answers} total={money(total)} totalText={moneyText(total)} instructions={pay}
-                      expiredNow={timeUp} onExpired={() => setTimeUp(true)} onChooseAnother={() => { setTimeUp(false); go('details', FIRST.payment); }} />
+                    {text('name', 'Full name', 'shipping name')}
+                    {text('line1', 'Address line 1', 'shipping address-line1')}
+                    {text('line2', 'Address line 2', 'shipping address-line2')}
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {text('city', 'Town or city', 'shipping address-level2')}
+                      {text('postcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
+                    </div>
+                    <Field label="Country" error={fieldError('country')}>
+                      <Select id={id('country')} name="country" autoComplete="shipping country" value={d.country} onChange={set('country')}
+                        placeholder="Choose a country" options={COUNTRIES} />
+                    </Field>
+                    {text('email', 'Email', 'email', { type: 'email', spellCheck: false, autoCapitalize: 'none' }, 'For the receipt and the delivery updates.')}
+                    {text('phone', 'Phone', 'tel', { type: 'tel' }, 'Only for the courier, if they can’t find the address.')}
                   </Card>
-                ) : null}
-                <p className="m-0 wrap-anywhere">{later(method)
-                  ? <>We’ve sent these instructions to {d.email}, and we’ll email the receipt once you’ve paid.</>
-                  : <>We’ve sent the receipt to {d.email}. We’ll email again when it’s on its way.</>}</p>
-              </div>
-            )}
-          </section>
 
-          {/* From lg up the summary stays in view beside the long form, so the total is always on screen. */}
-          <aside aria-labelledby="checkout-summary" className="top-6 min-w-0 lg:sticky lg:col-span-1 lg:self-start">
-            <Card className="flex flex-col gap-3">
-              <Heading level={2} size="lg" id="checkout-summary">Order summary</Heading>
-              <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
-                {lines.map((l) => (
-                  <li key={l.id} className="flex justify-between gap-3 text-sm">
-                    <span className="min-w-0 wrap-anywhere">{l.name} × {formatNumber(l.quantity, locale)}</span>{money(l.quantity * l.price)}
-                  </li>
-                ))}
-              </ul>
-              <DescriptionList layout="split" className="gap-1 border-t border-border pt-3 text-sm">
-                <DescriptionItem term="Subtotal">{money(subtotal)}</DescriptionItem>
-                {promo ? <DescriptionItem term={`Discount (${promo.code})`}>−{money(discount)}</DescriptionItem> : null}
-                <DescriptionItem term="Delivery">{deliveryCost ? money(deliveryCost) : 'Free'}</DescriptionItem>
-                {d.tip ? <DescriptionItem term="Tip">{money(d.tip)}</DescriptionItem> : null}
-                <DescriptionItem term="Total" emphasis>{money(total)}</DescriptionItem>
-              </DescriptionList>
-              {step === 'placed' ? null : <PromoCode applied={promo} locked={busy}
-                onApply={(code) => onApplyPromo(code, subtotal).then((p) => { setPromo(p); return p; })} onRemove={() => setPromo(null)} />}
-            </Card>
-          </aside>
-          {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg
-              up the summary sits beside the review and this row under it. */}
-          {step === 'review' ? (
-            <div className="flex flex-wrap gap-3 lg:col-span-2">
-              <Button wrap loading={busy} loadingLabel="Placing your order" onClick={() => void place()}>
-                {method?.kind === 'wallet' ? <>Pay {money(total)} with {method.label}</> : <>Place order: pay {money(total)}</>}
-              </Button>
-              <Button variant="ghost" onClick={() => go('details')} disabled={busy} disabledReason={placing}>Back</Button>
-            </div>
-          ) : null}
-        </div>
-      </main>
+                  <Card className="flex flex-col gap-4">
+                    <Heading level={3}>Delivery</Heading>
+                    <Field label="Delivery speed" group>
+                      <RadioGroup name="delivery" value={d.delivery} onValueChange={(v) => setD({ ...d, delivery: v })}>
+                        <Radio value="standard" description="3 to 5 working days">Standard: free</Radio>
+                        <Radio value="express" description="Next working day, ordered before 2 pm">Express: {money(expressPrice)}</Radio>
+                      </RadioGroup>
+                    </Field>
+                    <Field label="Tip for the courier" hint="Every cent goes to the courier." optional>
+                      <NumberInput id={id('tip')} name="tip" currency={currency} minorUnits min={0} max={10000} step={50} value={d.tip}
+                        onValueChange={(tip) => setD({ ...d, tip })} className="max-w-48" />
+                    </Field>
+                  </Card>
+
+                  <Card className="flex flex-col gap-4">
+                    <Heading level={3}>Payment</Heading>
+                    <MethodList methods={methods} value={d.method} onChange={(m) => setPayment({ method: m })} error={fieldError('method')} />
+                    <MethodDetails method={method} a={answers} set={setPayment} error={(k) => fieldError(k)} card={(
+                      <>
+                        {text('cardNumber', 'Card number', 'cc-number', { inputMode: 'numeric', spellCheck: false }, 'The long number on the front of the card.')}
+                        {text('cardName', 'Name on card', 'cc-name')}
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <Field label="Expiry date" hint="MM/YY, like 08/27" error={fieldError('cardExpiry')}>
+                            <Input id={id('cardExpiry')} name="cardExpiry" autoComplete="cc-exp" inputMode="numeric" maxLength={7} className="max-w-48"
+                              value={d.cardExpiry} onChange={(e) => { const v = e.target.value; setD((x) => ({ ...x, cardExpiry: formatExpiry(v, x.cardExpiry) })); }} />
+                          </Field>
+                          {text('cardCode', 'Security code', 'cc-csc', { inputMode: 'numeric', className: 'max-w-48' }, '3 digits on the back, 4 on the front for Amex')}
+                        </div>
+                      </>
+                    )} />
+                  </Card>
+                  <div><Button type="submit">Review your order</Button></div>
+                </form>
+              ) : step === 'review' ? (
+                <div className="flex flex-col gap-4">
+                  {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or {method?.kind === 'card' ? 'use another card' : 'choose another way to pay'}.</p> : null}
+                  <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
+                    <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
+                      <Heading level={3}>Delivery address</Heading>
+                      <p className="m-0 whitespace-pre-line text-sm">{[d.name, d.line1, d.line2, `${d.city} ${d.postcode}`, country].filter(Boolean).join('\n')}</p>
+                      <p className="m-0 text-sm text-text-muted">{[d.email, d.phone].filter(Boolean).join(' · ')}</p>
+                    </div>
+                    {change('address', 'the delivery address')}
+                  </Card>
+                  <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
+                    <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
+                      <Heading level={3}>Delivery</Heading>
+                      <p className="m-0 text-sm">{d.delivery === 'express' ? 'Express, next working day' : 'Standard, 3 to 5 working days'}</p>
+                      {d.tip ? <p className="m-0 text-sm">Tip for the courier: {money(d.tip)}</p> : null}
+                    </div>
+                    {change('delivery', 'the delivery')}
+                  </Card>
+                  <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
+                    <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
+                      <Heading level={3}>Payment</Heading>
+                      <p className="m-0 text-sm">{methodSummary(method, answers, { last4, expiry: d.cardExpiry })}</p>
+                    </div>
+                    {change('payment', 'how you pay')}
+                  </Card>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {method && later(method) ? (
+                    <Card>
+                      <PayNext method={method} a={answers} total={money(total)} totalText={moneyText(total)} instructions={pay}
+                        expiredNow={timeUp} onExpired={() => setTimeUp(true)} onChooseAnother={() => { setTimeUp(false); go('details', FIRST.payment); }} />
+                    </Card>
+                  ) : null}
+                  <p className="m-0 wrap-anywhere">{later(method)
+                    ? <>We’ve sent these instructions to {d.email}, and we’ll email the receipt once you’ve paid.</>
+                    : <>We’ve sent the receipt to {d.email}. We’ll email again when it’s on its way.</>}</p>
+                </div>
+              )}
+            </section>
+
+            {/* From lg up the summary stays in view beside the long form, so the total is always on screen. */}
+            <aside aria-labelledby="checkout-summary" className="top-6 min-w-0 lg:sticky lg:col-span-1 lg:self-start">
+              <Card className="flex flex-col gap-3">
+                <Heading level={2} size="lg" id="checkout-summary">Order summary</Heading>
+                <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
+                  {lines.map((l) => (
+                    <li key={l.id} className="flex justify-between gap-3 text-sm">
+                      <span className="min-w-0 wrap-anywhere">{l.name} × {formatNumber(l.quantity, locale)}</span>{money(l.quantity * l.price)}
+                    </li>
+                  ))}
+                </ul>
+                <DescriptionList layout="split" className="gap-1 border-t border-border pt-3 text-sm">
+                  <DescriptionItem term="Subtotal">{money(subtotal)}</DescriptionItem>
+                  {promo ? <DescriptionItem term={`Discount (${promo.code})`}>−{money(discount)}</DescriptionItem> : null}
+                  <DescriptionItem term="Delivery">{deliveryCost ? money(deliveryCost) : 'Free'}</DescriptionItem>
+                  {d.tip ? <DescriptionItem term="Tip">{money(d.tip)}</DescriptionItem> : null}
+                  <DescriptionItem term="Total" emphasis>{money(total)}</DescriptionItem>
+                </DescriptionList>
+                {step === 'placed' ? null : <PromoCode applied={promo} locked={busy}
+                  onApply={(code) => onApplyPromo(code, subtotal).then((p) => { setPromo(p); return p; })} onRemove={() => setPromo(null)} />}
+              </Card>
+            </aside>
+            {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg
+                up the summary sits beside the review and this row under it. */}
+            {step === 'review' ? (
+              <div className="flex flex-wrap gap-3 lg:col-span-2">
+                <Button wrap loading={busy} loadingLabel="Placing your order" onClick={() => void place()}>
+                  {method?.kind === 'wallet' ? <>Pay {money(total)} with {method.label}</> : <>Place order: pay {money(total)}</>}
+                </Button>
+                <Button variant="ghost" onClick={() => go('details')} disabled={busy} disabledReason={placing}>Back</Button>
+              </div>
+            ) : null}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

@@ -8,10 +8,13 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Prose } from '../../components/Prose/Prose';
 import { TableOfContents } from '../../components/TableOfContents/TableOfContents';
 import { Card, CardHeader } from '../../components/Card/Card';
+import { Divider } from '../../components/Divider/Divider';
 import { Link } from '../../components/Link/Link';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
 import { useLocale } from '../../internal/provider';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Article: one post of a blog, a changelog or a help article, for an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: an <article> with one h1, its sections as h2s, and the byline's date in a <time> with the machine date,
@@ -87,55 +90,58 @@ export function Article({ title = 'Projects now open on what’s due this week',
         <NavbarLink href="#product">Product</NavbarLink>
         <NavbarLink href="#blog" current>Blog</NavbarLink>
       </Navbar>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-8 outline-none">
-        <Breadcrumb>
-          <BreadcrumbItem href="#blog">Blog</BreadcrumbItem>
-          <BreadcrumbItem current as="span">{title}</BreadcrumbItem>
-        </Breadcrumb>
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-4">
-          <article lang={lang} aria-labelledby="article-title" className="flex min-w-0 flex-col gap-8 lg:col-span-3">
-            <header className="flex flex-col gap-4">
-              <Heading level={1} size="3xl" id="article-title" className="text-balance">{title}</Heading>
-              {summary ? <p className="m-0 text-lg text-text-muted">{summary}</p> : null}
-              <div className="flex items-center gap-3">
-                <Avatar name={author.name} src={author.avatar} />
-                <div className="flex flex-col text-sm">
-                  <span className="font-medium">{author.name}{author.role ? <span className="font-normal text-text-muted">, {author.role}</span> : null}</span>
-                  <span className="text-text-muted"><time dateTime={published}>{date}</time>{minutes ? ` · ${minutes} min read` : null}</span>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={10}>
+          <Breadcrumb>
+            <BreadcrumbItem href="#blog">Blog</BreadcrumbItem>
+            <BreadcrumbItem current as="span">{title}</BreadcrumbItem>
+          </Breadcrumb>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-4">
+            <article lang={lang} aria-labelledby="article-title" className="flex min-w-0 flex-col gap-8 lg:col-span-3">
+              <header className="flex flex-col gap-4">
+                <Heading level={1} size="3xl" id="article-title" className="text-balance">{title}</Heading>
+                {summary ? <p className="m-0 text-lg text-text-muted">{summary}</p> : null}
+                <div className="flex items-center gap-3">
+                  <Avatar name={author.name} src={author.avatar} />
+                  <div className="flex flex-col text-sm">
+                    <span className="font-medium">{author.name}{author.role ? <span className="font-normal text-text-muted">, {author.role}</span> : null}</span>
+                    <span className="text-text-muted"><time dateTime={published}>{date}</time>{minutes ? ` · ${minutes} min read` : null}</span>
+                  </div>
                 </div>
+              </header>
+              <Prose>
+                {sections.map((s) => (
+                  <React.Fragment key={s.id}>
+                    <h2 id={s.id}>{s.title}</h2>
+                    {s.body}
+                  </React.Fragment>
+                ))}
+              </Prose>
+            </article>
+            <div data-print="hide" className="order-first lg:order-none">
+              <div className="top-8 lg:sticky">
+                <TableOfContents items={sections.map((s) => ({ id: s.id, label: s.title }))} />
               </div>
-            </header>
-            <Prose>
-              {sections.map((s) => (
-                <React.Fragment key={s.id}>
-                  <h2 id={s.id}>{s.title}</h2>
-                  {s.body}
-                </React.Fragment>
-              ))}
-            </Prose>
-          </article>
-          <div data-print="hide" className="order-first lg:order-none">
-            <div className="top-8 lg:sticky">
-              <TableOfContents items={sections.map((s) => ({ id: s.id, label: s.title }))} />
             </div>
           </div>
-        </div>
-        {related.length ? (
-          <section aria-labelledby="article-next" data-print="hide" className="flex flex-col gap-4 border-t border-border pt-8">
-            <Heading level={2} size="lg" id="article-next">Read next</Heading>
-            <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
-              {related.map((r) => (
-                <li key={r.id} className="flex">
-                  <Card href={r.href} className="w-full">
-                    <CardHeader title={r.title} description={r.summary} headingLevel={3} />
-                  </Card>
-                </li>
-              ))}
-            </ul>
-            <p className="m-0"><Link href="#blog">All posts</Link></p>
-          </section>
-        ) : null}
-      </main>
+          {related.length ? <Divider decorative data-print="hide" /> : null}
+          {related.length ? (
+            <section aria-labelledby="article-next" data-print="hide" className="flex flex-col gap-4">
+              <Heading level={2} size="lg" id="article-next">Read next</Heading>
+              <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
+                {related.map((r) => (
+                  <li key={r.id} className="flex">
+                    <Card href={r.href} className="w-full">
+                      <CardHeader title={r.title} description={r.summary} headingLevel={3} />
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+              <p className="m-0"><Link href="#blog">All posts</Link></p>
+            </section>
+          ) : null}
+        </Stack>
+      </Container>
       <Footer groups={footer} legal={<p className="m-0">© 2026 Acme, Inc. <Link href="#terms">Terms</Link> · <Link href="#privacy">Privacy</Link></p>} />
     </div>
   );

@@ -70,14 +70,13 @@
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .srp-input:not(.srp-input--size-lg) .srp-input__field { font-size: var(--text-base); } }
-/* actions: InputAction buttons at the end of the box. A text action ("Apply"), in the primary color, is the field's
-   height less the border and a 2px inset (26px at md). An icon action is the button every field puts at its end
-   (SearchInput's clear, PasswordInput's eye, DatePicker's calendar): a muted icon with 4px around it (24px at md, 22px
-   at sm), 4px from the edge, shaded on hover. Each has its own focus ring inside the box's. Where a button is under
-   24px, a box behind it reaches out to 24px to press (WCAG 2.5.8). */
+/* actions: InputAction buttons at the end of the box, a 2px inset from its edge. A text action ("Apply") is the field's
+   height less the border and that inset, in the primary color. An icon action is a muted icon with 4px round it (22,
+   24 or 28px by size), centred and shaded on hover: the same button as SearchInput's ×, PasswordInput's eye and the
+   pickers' buttons, which are InputActions. Each has its own focus ring inside the box's. Under 24px, a box behind it
+   reaches out to 24px to press (WCAG 2.5.8). */
 .srp-input:has(> .srp-input__actions) { padding-inline-end: var(--input-actions-inset, var(--spacing-0\.5)); }
-.srp-input:has(> .srp-input__actions):not(:has(> .srp-input__actions > .srp-input-action--text)) { padding-inline-end: var(--input-actions-inset, var(--spacing-1)); }
-.srp-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); box-sizing: border-box; padding-block: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); }
 .srp-input-action {
   position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   box-sizing: border-box;
@@ -87,7 +86,8 @@
   cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-.srp-input-action--icon { align-self: center; padding: var(--spacing-1); color: var(--input-action, var(--text-muted)); }
+.srp-input-action--text { margin-block: var(--input-actions-inset, var(--spacing-0\.5)); }
+.srp-input-action--icon { align-self: center; padding: var(--input-action-icon-padding, var(--spacing-1)); color: var(--input-action, var(--text-muted)); }
 .srp-input-action__icon { display: inline-flex; }
 .srp-input-action__icon .srp-icon { font-size: var(--srp-input-icon); }
 @media (hover: hover) {
@@ -102,7 +102,13 @@
 /* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
    field the whole box is dimmed already, so the action isn't dimmed twice. */
 .srp-input-action:disabled { color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-input--readonly .srp-input-action:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
 .srp-input--disabled .srp-input-action:disabled, .srp-input:where(:has(.srp-input__field:disabled)) .srp-input-action:disabled { opacity: var(--opacity-100); }
 .srp-input-action::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 @media (prefers-reduced-motion: reduce) { .srp-input-action { transition: none; } }
+/* Touch: an icon action takes a press up the field's whole height and 10px toward the text, so a finger a little off
+   it doesn't land in the text and open the keyboard. */
+@media (pointer: coarse) {
+  .srp-input-action--icon::after { --srp-reach-block: min(var(--spacing-0), calc((100% - var(--srp-input-h)) / 2)); --srp-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--srp-reach-block); inset-inline: var(--srp-reach-text) var(--spacing-0); }
+}
 }

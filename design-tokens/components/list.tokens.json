@@ -158,8 +158,8 @@
       },
       "padding-y": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-3}",
-        "$description": "An item's top and bottom padding (12px).",
+        "$value": "{spacing.space-row}",
+        "$description": "An item's top and bottom padding: 12px, 6px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--list-padding-y"

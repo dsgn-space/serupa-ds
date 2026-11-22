@@ -18,6 +18,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Order status: where an order is, after it's placed: its stage in words, the steps it goes through, what happened
    and when, what was bought, and a way to cancel while that's still possible. For an app to copy. What it carries
@@ -168,71 +170,73 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Cancelling needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: name }]} title={name} headingRef={heading} />
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Cancelling needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: name }]} title={name} headingRef={heading} />
 
-        <div className="flex flex-col gap-8 pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the order" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading order" /></Card> : <>
-              <section aria-labelledby="stage" className={section}>
-                <h2 id="stage" className="m-0 text-2xl font-semibold">{words.title}</h2>
-                <p className="m-0 text-text-muted">{words.detail}</p>
-                {order.delay && !order.cancelled ? <Alert tone="warning" title="It’s running late">{order.delay}</Alert> : null}
-                {order.cancelled ? null : <Stepper aria-label="Order progress" steps={STEPS} current={order.stage === 'delivered' ? STEPS.length : STAGES.indexOf(order.stage)} />}
-                <div className="flex flex-wrap items-center gap-3">
-                  {order.carrier && !order.cancelled && order.stage !== 'placed' && order.stage !== 'packed'
-                    ? <Link href={order.carrier.href} external>Track the parcel with {order.carrier.name}</Link> : null}
-                  {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)} data-print="hide">Cancel order</Button> : null}
-                </div>
-                {!order.cancelled && !canCancel(order) && order.stage === 'shipped'
-                  ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be cancelled. You can send it back once it arrives.</p> : null}
-              </section>
+          <div className="flex flex-col gap-8 pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the order" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading order" /></Card> : <>
+                <section aria-labelledby="stage" className={section}>
+                  <h2 id="stage" className="m-0 text-2xl font-semibold">{words.title}</h2>
+                  <p className="m-0 text-text-muted">{words.detail}</p>
+                  {order.delay && !order.cancelled ? <Alert tone="warning" title="It’s running late">{order.delay}</Alert> : null}
+                  {order.cancelled ? null : <Stepper aria-label="Order progress" steps={STEPS} current={order.stage === 'delivered' ? STEPS.length : STAGES.indexOf(order.stage)} />}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {order.carrier && !order.cancelled && order.stage !== 'placed' && order.stage !== 'packed'
+                      ? <Link href={order.carrier.href} external>Track the parcel with {order.carrier.name}</Link> : null}
+                    {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)} data-print="hide">Cancel order</Button> : null}
+                  </div>
+                  {!order.cancelled && !canCancel(order) && order.stage === 'shipped'
+                    ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be cancelled. You can send it back once it arrives.</p> : null}
+                </section>
 
-              <section aria-labelledby="happened" className={section}>
-                <h2 id="happened" className={h2}>What’s happened</h2>
-                <Timeline aria-labelledby="happened">
-                  {order.events.map((e, i) => (
-                    <TimelineItem key={e.id} title={e.title} time={<FormattedDate value={e.at} timeStyle="short" />} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
-                  ))}
-                </Timeline>
-              </section>
+                <section aria-labelledby="happened" className={section}>
+                  <h2 id="happened" className={h2}>What’s happened</h2>
+                  <Timeline aria-labelledby="happened">
+                    {order.events.map((e, i) => (
+                      <TimelineItem key={e.id} title={e.title} time={<FormattedDate value={e.at} timeStyle="short" />} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
+                    ))}
+                  </Timeline>
+                </section>
 
-              <section aria-labelledby="items" className={section}>
-                <h2 id="items" className={h2}>Items</h2>
-                <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
-                  {order.items.map((i) => (
-                    <li key={i.id} className="flex flex-wrap justify-between gap-3 border-b border-border pb-2">
-                      <span>{formatNumber(i.quantity, locale)} × {i.name}</span>
-                      <span>{money(i.price * i.quantity)}</span>
-                    </li>
-                  ))}
-                </ul>
-                <DescriptionList layout="split">
-                  <DescriptionItem term="Subtotal">{money(sum)}</DescriptionItem>
-                  <DescriptionItem term="Delivery">{order.delivery ? money(order.delivery) : 'Free'}</DescriptionItem>
-                  <DescriptionItem term="Total" emphasis>{money(sum + order.delivery)}</DescriptionItem>
-                </DescriptionList>
-              </section>
+                <section aria-labelledby="items" className={section}>
+                  <h2 id="items" className={h2}>Items</h2>
+                  <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
+                    {order.items.map((i) => (
+                      <li key={i.id} className="flex flex-wrap justify-between gap-3 border-b border-border pb-2">
+                        <span>{formatNumber(i.quantity, locale)} × {i.name}</span>
+                        <span>{money(i.price * i.quantity)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <DescriptionList layout="split">
+                    <DescriptionItem term="Subtotal">{money(sum)}</DescriptionItem>
+                    <DescriptionItem term="Delivery">{order.delivery ? money(order.delivery) : 'Free'}</DescriptionItem>
+                    <DescriptionItem term="Total" emphasis>{money(sum + order.delivery)}</DescriptionItem>
+                  </DescriptionList>
+                </section>
 
-              <section aria-labelledby="address" className={section}>
-                <h2 id="address" className={h2}>Delivery address</h2>
-                <address className="not-italic">{order.address.map((line) => <div key={line}>{line}</div>)}</address>
-              </section>
-            </>}
-        </div>
-
-        <Dialog open={asking} onOpenChange={ask} title={`Cancel ${name.toLowerCase()}?`}
-          description="It won’t be sent, and anything you paid goes back to you within 5 working days.">
-          <div className="flex flex-col gap-4">
-            {failed ? <Alert tone="danger">Couldn’t cancel the order. Try again.</Alert> : null}
-            <div className="flex flex-wrap gap-2">
-              <Button destructive loading={busy} onClick={cancel}>Cancel order</Button>
-              <Button variant="outline" onClick={() => ask(false)}>Keep order</Button>
-            </div>
+                <section aria-labelledby="address" className={section}>
+                  <h2 id="address" className={h2}>Delivery address</h2>
+                  <address className="not-italic">{order.address.map((line) => <div key={line}>{line}</div>)}</address>
+                </section>
+              </>}
           </div>
-        </Dialog>
-      </main>
+
+          <Dialog open={asking} onOpenChange={ask} title={`Cancel ${name.toLowerCase()}?`}
+            description="It won’t be sent, and anything you paid goes back to you within 5 working days.">
+            <div className="flex flex-col gap-4">
+              {failed ? <Alert tone="danger">Couldn’t cancel the order. Try again.</Alert> : null}
+              <div className="flex flex-wrap gap-2">
+                <Button destructive loading={busy} onClick={cancel}>Cancel order</Button>
+                <Button variant="outline" onClick={() => ask(false)}>Keep order</Button>
+              </div>
+            </div>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

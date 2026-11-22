@@ -40,8 +40,12 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   /** Show it as a sheet along the bottom of the screen, full width, instead of next to its trigger: true always,
       'mobile' under 640px (the sm breakpoint), where a panel by a button is small to tap and covers what's around it. */
   sheet?: boolean | 'mobile' | undefined;
-  /** Where focus goes when it opens: 'first' (default: the first control inside, or the panel) or 'panel'. */
-  initialFocus?: 'first' | 'panel' | undefined;
+  /** Where focus goes when it opens: 'first' (default: the first control inside, or the panel), 'panel', or a ref to
+      an element inside, as Dialog's initialFocus takes. */
+  initialFocus?: 'first' | 'panel' | React.RefObject<HTMLElement | null> | undefined;
+  /** Where focus goes when Escape or close() closes it, as Dialog's finalFocus: this element if it's still on the
+      page, else the trigger. */
+  finalFocus?: React.RefObject<HTMLElement | null> | undefined;
   /** Classes on the panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
   className?: string | undefined;
   /** Styles on the panel. */
@@ -51,7 +55,7 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
 // The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
 // trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
 const Panel = 'span' as 'div';
-const OWN = { trigger: 1, children: 1, title: 1, 'aria-label': 1, 'aria-labelledby': 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, sheet: 1, initialFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
+const OWN = { trigger: 1, children: 1, title: 1, 'aria-label': 1, 'aria-labelledby': 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, sheet: 1, initialFocus: 1, finalFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
 // 'mobile': under the sm breakpoint, as Dialog's fullScreen="mobile" (Dialog.css).
 const NARROW = '(max-width: 639.98px)';
 const noSubscribe = () => () => {};
@@ -79,9 +83,18 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
     if (!controlled) { shownRef.current = v; setInner(v); }
     if (askRef.current) askRef.current(v, { reason });
   }, [controlled, setInner, askRef, shownRef]);
-  const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => { set(false, reason); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
+  const finalRef = useLatest(props.finalFocus);
+  // Back to finalFocus when it's still on the page, else to the trigger (Dialog does the same).
+  const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => {
+    set(false, reason);
+    if (!focusTrigger) return;
+    const back = finalRef.current && finalRef.current.current;
+    const to = back && back.isConnected ? back : triggerRef.current;
+    if (to) to.focus();
+  }, [set, finalRef]);
   const closeFromContent = React.useCallback(() => close('close', true), [close]);
   const focusFirst = props.initialFocus !== 'panel';
+  const initialRef = useLatest(typeof props.initialFocus === 'object' ? props.initialFocus : undefined);
 
   // Closing: the content stays (inert) while the panel fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, panelRef);
@@ -102,6 +115,9 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
     // Opened from the keyboard, the ring shows where focus went: Firefox doesn't work that out on its own for focus
     // moved by script inside a shadow root.
     const how = lastInputKeyboard() ? { focusVisible: true } : undefined;
+    // initialFocus as a ref, when it points inside, wins over both.
+    const pick = initialRef.current && initialRef.current.current;
+    if (pick && panel.contains(pick)) { pick.focus(how); if (activeIn(pick) === pick) return; }
     const took = focusFirst && Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).some((el) => el.tabIndex >= 0 && (el.focus(how), activeIn(el) === el));   // its own root's focus, in a shadow root too (GR60)
     if (!took) panel.focus(how);
   }, [open]);

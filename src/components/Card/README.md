@@ -163,7 +163,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | Token | Default | Use |
 | --- | --- | --- |
 | `--card-padding-sm` | `spacing-3` | Padding, `sm` |
-| `--card-padding-md` | `spacing-5` | Padding, `md` |
+| `--card-padding-md` | `space-card` | Padding, `md`: 20px, 12px in the compact density. |
 | `--card-padding-lg` | `space-surface` | Padding, `lg` |
 | `--card-gap` | `spacing-4` | The space between the parts |
 | `--card-header-gap` | `spacing-1` | The space between the title and the description |

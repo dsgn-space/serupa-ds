@@ -1,4 +1,4 @@
-// exports: type FileRejection, FileUpload, type FileUploadProps, type FileUploadStatus, formatFileSize
+// exports: type FileRejection, FileUpload, type FileUploadProps, type FileUploadStatus
 interface FileUploadLabels {
     dragFiles: string;
     dragFile: string;
@@ -17,7 +17,6 @@ interface FileUploadLabels {
     fileRemoved: (name: string) => string;
     fileError: string;
 }
-declare function formatFileSize(bytes: number, locale?: string): string;
 interface FileUploadStatus {
     state: "done" | "error" | "uploading";
     progress?: number | undefined;

@@ -104,6 +104,8 @@ describe('Kanban', () => {
     await expect.element(handle('Alpha')).toHaveAttribute('aria-pressed', 'true');
     await userEvent.keyboard('{ArrowDown}');
     await said('Alpha, To do, position 2 of 3.');
+    // Alt with an arrow is the browser's Back or Forward, not a move: the card stays in To do.
+    await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}');
     await userEvent.keyboard('{ArrowRight}');
     await said('Alpha, Doing, position 2 of 2.');
     expect(document.activeElement).toBe(handle('Alpha').element());

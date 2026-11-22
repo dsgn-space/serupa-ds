@@ -18,6 +18,7 @@ import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { en as CalendarWords } from '../Calendar/labels';
 import { en as EventCalendarWords } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
+import { isRtl } from '../../internal/position';
 // Its own words and the month buttons' names it shares with Calendar.
 const words = /* @__PURE__ */ Object.assign({}, EventCalendarWords, CalendarWords);
 
@@ -495,7 +496,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     // Escape on an event goes back to its day (not from a Popover's list, which closes on its own).
     if (e.key === 'Escape' && target.tagName === 'BUTTON' && !target.closest('[role=dialog]')) { const cell = target.closest('td'); if (cell) { e.preventDefault(); cell.focus(); } return; }
     dragged.current = false;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     // Shift and an arrow on an event move it: a day to either side, and up or down a week in the month or a quarter
     // hour in the hours (an all-day event there stays on its day). Focus follows it to its new day.
     const id = e.shiftKey && movable && !target.closest('[role=dialog]') ? target.dataset.eventId : undefined;

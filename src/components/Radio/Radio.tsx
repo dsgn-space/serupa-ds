@@ -10,6 +10,7 @@ import { warnOnce } from '../../internal/warn';
 import { markKeyFocus } from '../../internal/keyFocus';
 import { listenForInput } from '../../internal/lastInput';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
+import { isRtl } from '../../internal/position';
 
 /** V is the radios' value type: string (or number) as you use them, inferred from value or onValueChange. */
 export interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
@@ -99,7 +100,7 @@ function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttribut
     if (props.readOnly && t.type === 'radio' && k.indexOf('Arrow') === 0) { e.preventDefault(); return; }
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || t.type !== 'radio' || k.indexOf('Arrow') !== 0) return;
     const all = Array.prototype.filter.call(root.current!.querySelectorAll('input[type=radio]'), function (r: HTMLInputElement) { return r.name === t.name && !r.disabled && r.getClientRects().length > 0; }) as HTMLInputElement[];
-    const fwd = k === 'ArrowDown' || k === (getComputedStyle(t).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight'), i = all.indexOf(t);
+    const fwd = k === 'ArrowDown' || k === (isRtl(t) ? 'ArrowLeft' : 'ArrowRight'), i = all.indexOf(t);
     const to = fwd ? (i === all.length - 1 ? all[0] : null) : (i === 0 ? all[all.length - 1] : null);
     if (!to || to === t) return;
     e.preventDefault();

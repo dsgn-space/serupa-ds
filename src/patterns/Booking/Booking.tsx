@@ -15,6 +15,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Booking: a stay at one place, picked on two months side by side, with the nights counted, the nights already
    booked named, the price worked out and a way to reserve. For an app to copy. What it carries (WCAG 2.2):
@@ -161,68 +163,70 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Stays</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These dates are from when the page loaded and may have gone. Reserving needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Stays', href: '#stays' }, { label: place.name }]} title={place.name}
-          description={loading || loadFailed ? undefined : <>{place.where} · {money(place.price)} a night · Sleeps {formatNumber(place.maxGuests, locale)}</>} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These dates are from when the page loaded and may have gone. Reserving needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Stays', href: '#stays' }, { label: place.name }]} title={place.name}
+            description={loading || loadFailed ? undefined : <>{place.where} · {money(place.price)} a night · Sleeps {formatNumber(place.maxGuests, locale)}</>} />
 
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the place" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading place" /></Card>
-            : booked ? (
-              <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
-                <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked</h2>
-                <p className="m-0">{words(locale, booked.start, booked.end)}, {nightWords(nightsBetween(booked.start, booked.end))}, for {formatNumber(booked.guests, locale)} {booked.guests === 1 ? 'guest' : 'guests'}. We’ve sent the details to your email.</p>
-                <Button variant="outline" onClick={() => { setBooked(null); setStay(null); setAsked(false); }}>Book other dates</Button>
-              </section>
-            ) : (
-              <div className="grid items-start gap-6 md:grid-cols-3">
-                <div className="flex flex-col gap-8 md:col-span-2">
-                  <section aria-labelledby="dates" className="flex flex-col gap-4">
-                    <h2 id="dates" className={h2}>Your dates</h2>
-                    <p className="m-0 text-sm text-text-muted">Choose the day you arrive, then the day you leave. Stays are {formatNumber(place.minNights, locale)} nights at least.</p>
-                    <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'stay-problem' : undefined} months={2}
-                      defaultMonth={day(today)} min={today} isDateDisabled={closed} value={stay}
-                      onValueChange={(_, { iso }) => { setFailed(false); setStay(iso); }} />
-                    {shownProblem ? <Alert id="stay-problem" tone="danger">{shownProblem}</Alert> : null}
-                    {place.taken.length ? (
-                      <div className="flex flex-col gap-1">
-                        <h3 id="taken" className="m-0 text-base font-semibold">Already booked</h3>
-                        <ul aria-labelledby="taken" className="m-0 flex flex-col gap-1 ps-5">
-                          {bookedStays(place.taken).map((b) => <li key={b.start}>{words(locale, b.start, b.end)}</li>)}
-                        </ul>
-                        <p className="m-0 text-sm text-text-muted">A stay can end on the day one of these starts, and start on the day one ends.</p>
-                      </div>
-                    ) : null}
-                  </section>
-                  <section aria-labelledby="who" className="flex flex-col gap-4">
-                    <h2 id="who" className={h2}>Who’s coming</h2>
-                    <Field label="Guests" hint={`Up to ${formatNumber(place.maxGuests, locale)}.`} required>
-                      <NumberInput value={guests} onValueChange={setGuests} min={1} max={place.maxGuests} />
-                    </Field>
-                  </section>
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the place" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading place" /></Card>
+              : booked ? (
+                <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
+                  <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked</h2>
+                  <p className="m-0">{words(locale, booked.start, booked.end)}, {nightWords(nightsBetween(booked.start, booked.end))}, for {formatNumber(booked.guests, locale)} {booked.guests === 1 ? 'guest' : 'guests'}. We’ve sent the details to your email.</p>
+                  <Button variant="outline" onClick={() => { setBooked(null); setStay(null); setAsked(false); }}>Book other dates</Button>
+                </section>
+              ) : (
+                <div className="grid items-start gap-6 md:grid-cols-3">
+                  <div className="flex flex-col gap-8 md:col-span-2">
+                    <section aria-labelledby="dates" className="flex flex-col gap-4">
+                      <h2 id="dates" className={h2}>Your dates</h2>
+                      <p className="m-0 text-sm text-text-muted">Choose the day you arrive, then the day you leave. Stays are {formatNumber(place.minNights, locale)} nights at least.</p>
+                      <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'stay-problem' : undefined} months={2}
+                        defaultMonth={day(today)} min={today} isDateDisabled={closed} value={stay}
+                        onValueChange={(_, { iso }) => { setFailed(false); setStay(iso); }} />
+                      {shownProblem ? <Alert id="stay-problem" tone="danger">{shownProblem}</Alert> : null}
+                      {place.taken.length ? (
+                        <div className="flex flex-col gap-1">
+                          <h3 id="taken" className="m-0 text-base font-semibold">Already booked</h3>
+                          <ul aria-labelledby="taken" className="m-0 flex flex-col gap-1 ps-5">
+                            {bookedStays(place.taken).map((b) => <li key={b.start}>{words(locale, b.start, b.end)}</li>)}
+                          </ul>
+                          <p className="m-0 text-sm text-text-muted">A stay can end on the day one of these starts, and start on the day one ends.</p>
+                        </div>
+                      ) : null}
+                    </section>
+                    <section aria-labelledby="who" className="flex flex-col gap-4">
+                      <h2 id="who" className={h2}>Who’s coming</h2>
+                      <Field label="Guests" hint={`Up to ${formatNumber(place.maxGuests, locale)}.`} required>
+                        <NumberInput value={guests} onValueChange={setGuests} min={1} max={place.maxGuests} />
+                      </Field>
+                    </section>
+                  </div>
+                  <Card>
+                    <section aria-labelledby="price" className="flex flex-col gap-4">
+                      <h2 id="price" className={h2}>Your stay</h2>
+                      {stay && !problem ? (
+                        <DescriptionList layout="split">
+                          <DescriptionItem term="Arrive">{words(locale, stay.start)}</DescriptionItem>
+                          <DescriptionItem term="Leave">{words(locale, stay.end)}</DescriptionItem>
+                          <DescriptionItem term={<>{money(place.price)} × {nightWords(nights)}</>}>{money(place.price * nights)}</DescriptionItem>
+                          {place.cleaning ? <DescriptionItem term="Cleaning">{money(place.cleaning)}</DescriptionItem> : null}
+                          <DescriptionItem term="Total" emphasis>{money(place.price * nights + place.cleaning)}</DescriptionItem>
+                        </DescriptionList>
+                      ) : <p className="m-0 text-text-muted">Choose your dates to see the price.</p>}
+                      {failed ? <Alert tone="danger">Couldn’t book these dates. Try again.</Alert> : null}
+                      <Button loading={busy} onClick={reserve}>Reserve</Button>
+                      <p className="m-0 text-sm text-text-muted">You won’t pay until the host confirms.</p>
+                    </section>
+                  </Card>
                 </div>
-                <Card>
-                  <section aria-labelledby="price" className="flex flex-col gap-4">
-                    <h2 id="price" className={h2}>Your stay</h2>
-                    {stay && !problem ? (
-                      <DescriptionList layout="split">
-                        <DescriptionItem term="Arrive">{words(locale, stay.start)}</DescriptionItem>
-                        <DescriptionItem term="Leave">{words(locale, stay.end)}</DescriptionItem>
-                        <DescriptionItem term={<>{money(place.price)} × {nightWords(nights)}</>}>{money(place.price * nights)}</DescriptionItem>
-                        {place.cleaning ? <DescriptionItem term="Cleaning">{money(place.cleaning)}</DescriptionItem> : null}
-                        <DescriptionItem term="Total" emphasis>{money(place.price * nights + place.cleaning)}</DescriptionItem>
-                      </DescriptionList>
-                    ) : <p className="m-0 text-text-muted">Choose your dates to see the price.</p>}
-                    {failed ? <Alert tone="danger">Couldn’t book these dates. Try again.</Alert> : null}
-                    <Button loading={busy} onClick={reserve}>Reserve</Button>
-                    <p className="m-0 text-sm text-text-muted">You won’t pay until the host confirms.</p>
-                  </section>
-                </Card>
-              </div>
-            )}
-        </div>
-      </main>
+              )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

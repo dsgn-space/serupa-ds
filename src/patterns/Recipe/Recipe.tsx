@@ -12,6 +12,8 @@ import { Duration } from '../../components/Duration/Duration';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Recipe: what it is and how long it takes, the ingredients for as many people as you're cooking for, ticked off as
    you gather them, and the steps in order, ticked off as you go. For an app to copy. What it carries (WCAG 2.2):
@@ -85,48 +87,50 @@ export function Recipe({ recipe = demo }: RecipeProps) {
         <p className="m-0 text-base font-semibold">Acme Kitchen</p>
         <Link underline="hover" href="#recipes">Recipes</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <PageHeader breadcrumb={[{ label: 'Recipes', href: '#recipes' }, { label: recipe.title }]} title={recipe.title} description={recipe.about} />
-        <div className="flex flex-col gap-8 pt-6">
-          <Image src={recipe.image} alt={recipe.imageAlt} ratio="video" rounded />
-          <DescriptionList layout="inline">
-            <DescriptionItem term="Prep"><Duration value={recipe.prep} unit="minute" /></DescriptionItem>
-            <DescriptionItem term="Cook"><Duration value={recipe.cook} unit="minute" /></DescriptionItem>
-            <DescriptionItem term="Ready in"><Duration value={recipe.prep + recipe.cook} unit="minute" /></DescriptionItem>
-          </DescriptionList>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <section aria-labelledby="recipe-ingredients" className="flex flex-col gap-4">
-              <h2 id="recipe-ingredients" className="m-0 text-xl font-semibold">Ingredients</h2>
-              <Field label="Servings" hint="From 1 to 24." id="recipe-serves">
-                <NumberInput min={1} max={24} value={serves} onValueChange={setServes} className="max-w-32" />
-              </Field>
-              <ul className="m-0 flex list-none flex-col gap-2 p-0">
-                {recipe.ingredients.map((i) => (
-                  <li key={i.id}>
-                    <Checkbox checked={got.includes(i.id)} onCheckedChange={(on) => setGot((g) => (on ? [...g, i.id] : g.filter((x) => x !== i.id)))}>
-                      <span className={got.includes(i.id) ? 'text-text-muted line-through' : undefined}>{amountOf(i)}{i.name}</span>
-                    </Checkbox>
-                  </li>
-                ))}
-              </ul>
-            </section>
-            <section aria-labelledby="recipe-steps" className="flex flex-col gap-4 md:col-span-2">
-              <h2 id="recipe-steps" className="m-0 text-xl font-semibold">Method</h2>
-              <p className="m-0 text-text-muted">{done.length === recipe.steps.length ? 'Every step done. Enjoy!' : `${num(done.length)} of ${num(recipe.steps.length)} steps done.`}</p>
-              <ol className="m-0 flex list-none flex-col gap-4 p-0">
-                {recipe.steps.map((s, n) => (
-                  <li key={n}>
-                    <h3 className="m-0 text-base font-semibold">Step {num(n + 1)}{done.includes(n) ? ', done' : ''}</h3>
-                    <Checkbox checked={done.includes(n)} onCheckedChange={(on) => setDone((d) => (on ? [...d, n] : d.filter((x) => x !== n)))}>
-                      <span className={done.includes(n) ? 'text-text-muted line-through' : undefined}>{s}</span>
-                    </Checkbox>
-                  </li>
-                ))}
-              </ol>
-            </section>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <PageHeader breadcrumb={[{ label: 'Recipes', href: '#recipes' }, { label: recipe.title }]} title={recipe.title} description={recipe.about} />
+          <div className="flex flex-col gap-8 pt-6">
+            <Image src={recipe.image} alt={recipe.imageAlt} ratio="video" rounded />
+            <DescriptionList layout="inline">
+              <DescriptionItem term="Prep"><Duration value={recipe.prep} unit="minute" /></DescriptionItem>
+              <DescriptionItem term="Cook"><Duration value={recipe.cook} unit="minute" /></DescriptionItem>
+              <DescriptionItem term="Ready in"><Duration value={recipe.prep + recipe.cook} unit="minute" /></DescriptionItem>
+            </DescriptionList>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <section aria-labelledby="recipe-ingredients" className="flex flex-col gap-4">
+                <h2 id="recipe-ingredients" className="m-0 text-xl font-semibold">Ingredients</h2>
+                <Field label="Servings" hint="From 1 to 24." id="recipe-serves">
+                  <NumberInput min={1} max={24} value={serves} onValueChange={setServes} className="max-w-32" />
+                </Field>
+                <ul className="m-0 flex list-none flex-col gap-2 p-0">
+                  {recipe.ingredients.map((i) => (
+                    <li key={i.id}>
+                      <Checkbox checked={got.includes(i.id)} onCheckedChange={(on) => setGot((g) => (on ? [...g, i.id] : g.filter((x) => x !== i.id)))}>
+                        <span className={got.includes(i.id) ? 'text-text-muted line-through' : undefined}>{amountOf(i)}{i.name}</span>
+                      </Checkbox>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section aria-labelledby="recipe-steps" className="flex flex-col gap-4 md:col-span-2">
+                <h2 id="recipe-steps" className="m-0 text-xl font-semibold">Method</h2>
+                <p className="m-0 text-text-muted">{done.length === recipe.steps.length ? 'Every step done. Enjoy!' : `${num(done.length)} of ${num(recipe.steps.length)} steps done.`}</p>
+                <ol className="m-0 flex list-none flex-col gap-4 p-0">
+                  {recipe.steps.map((s, n) => (
+                    <li key={n}>
+                      <h3 className="m-0 text-base font-semibold">Step {num(n + 1)}{done.includes(n) ? ', done' : ''}</h3>
+                      <Checkbox checked={done.includes(n)} onCheckedChange={(on) => setDone((d) => (on ? [...d, n] : d.filter((x) => x !== n)))}>
+                        <span className={done.includes(n) ? 'text-text-muted line-through' : undefined}>{s}</span>
+                      </Checkbox>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </div>
           </div>
-        </div>
-      </main>
+        </Stack>
+      </Container>
     </div>
   );
 }

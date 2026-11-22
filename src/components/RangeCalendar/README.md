@@ -1,6 +1,6 @@
 # RangeCalendar
 
-A calendar on the page that picks a range of days: the check-in and check-out of a booking, a report's period, the first and last day of a leave request. The first day picked is one end and the second the other, with the days between shaded as the pointer or focus moves.
+A calendar on the page that picks a range of days: the check-in and check-out of a booking, a report's period, the first and last day of a leave request. The first day picked is the start and the next on or after it the end, with the days between shaded as the pointer or focus moves. DateRangePicker's popup is a RangeCalendar, so the two pick the same way.
 
 **Also called:** date range calendar.
 
@@ -32,7 +32,7 @@ Drawn from the `Playground` story.
 ## Usage
 
 - Use `months={2}` where there's room: a range often runs into the next month. Two months stack on a narrow screen.
-- The value changes only when both ends are picked, start first, whichever was picked first. Show what the range means beside it ("5 nights").
+- The first pick is the start; a day before it moves the start, and the next day on or after it is the end. The value changes only when both ends are picked. Show what the range means beside it ("5 nights").
 - Use `min`, `max` and `isDateDisabled` for days that can't be an end. A disabled day can sit inside a range; check the whole range yourself when it can't.
 - Escape, or a press outside the days, leaves the value as it was; Escape drops a half-picked range.
 
@@ -54,10 +54,10 @@ Drawn from the `Playground` story.
 | Key | Does |
 | --- | --- |
 | Tab | To the month buttons, then the day that holds the Tab stop in each month |
-| Arrow keys | The day before or after, or the same day a week away; the range previews as focus moves once one end is picked. With two months, crossing into the month the other grid shows moves focus there, and the months stay put |
+| Arrow keys | The day before or after, or the same day a week away; the range previews as focus moves once the start is picked. With two months, crossing into the month the other grid shows moves focus there, and the months stay put |
 | PageUp, PageDown | The same day a month before or after; with Shift, a year |
 | Home / End | The first or last day of the week |
-| Enter / Space | Picks the focused day: the first pick is one end, the second the other |
+| Enter / Space | Picks the focused day: the first pick is the start, a day before it moves the start, and one on or after it is the end |
 | Escape | Drops a half-picked range, keeping the value as it was |
 
 ## Props

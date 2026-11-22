@@ -102,4 +102,11 @@ describe('Patterns/Sign in', () => {
       await r.unmount();
     }
   });
+
+  test('the product is its Logo, named by its alt, above the card', async () => {
+    const screen = await render(<SignIn />);
+    const logo = screen.getByRole('img', { name: 'Acme' });
+    await expect.element(logo).toBeVisible();
+    expect(logo.element().getAttribute('data-component')).toBe('logo');
+  });
 });
