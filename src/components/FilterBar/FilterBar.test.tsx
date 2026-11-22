@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { lowContrast } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { FilterBar, type FilterField, type FilterValues } from './FilterBar';
@@ -199,11 +199,25 @@ describe('FilterBar', () => {
     // The × before it has a tooltip of its own, naming it.
     await expect.poll(() => tip()?.textContent).toBe('Remove filter: Owner');
   });
-  test('chip text 4.5:1 on the chip, its outline 3:1, the count 4.5:1 on the page, in every theme', () => {
+  test('a chip answers as a button does: border-strong as a tag; under the pointer a gray fill, not an underline; open, a pressed fill with its text unchanged', async () => {
+    await render(<Bar start={{ owner: 'Ana' }} />);
+    const edit = chip('Owner is Ana').element() as HTMLElement, li = edit.closest('li')!;
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
+    expect(css(li).borderTopColor).toBe(color('var(--border-strong)'));
+    await userEvent.hover(edit);
+    expect([css(edit).textDecorationLine, css(li).backgroundColor]).toEqual(['none', color('var(--surface-hover)')]);
+    await userEvent.click(edit);
+    await expect.element(page.getByRole('dialog', { name: 'Owner' })).toBeVisible();
+    await userEvent.unhover(edit);
+    expect([css(edit).color, css(li).backgroundColor]).toEqual([color('var(--text)'), color('var(--pressed)')]);
+    await userEvent.keyboard('{Escape}');
+    still.remove();
+  });
+
+  test('chip text 4.5:1 on the chip, the count 4.5:1 on the page, in every theme', () => {
     expect(lowContrast([
       ['chip text', 'var(--text)', 'var(--surface)', 4.5],
-      ['open chip', 'var(--link)', 'var(--surface)', 4.5],
-      ['outline', 'var(--border-control)', 'var(--surface)', 3],
+      ['chip text, open', 'var(--text)', 'var(--pressed)', 4.5],
       ['count', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);
