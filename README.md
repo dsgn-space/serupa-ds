@@ -346,6 +346,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [OfflineBanner](src/components/OfflineBanner/README.md) (beta) | Says when the connection drops and when it comes back, on screen and to screen readers. |
 | [Progress](src/components/Progress/README.md) | Shows how far along a task is when you can tell: an upload, a setup, a quota. |
 | [SaveStatus](src/components/SaveStatus/README.md) | A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. |
+| [Skeleton](src/components/Skeleton/README.md) (beta) | Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. |
 | [Toast](src/components/Toast/README.md) | A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. |
 
 ### Forms

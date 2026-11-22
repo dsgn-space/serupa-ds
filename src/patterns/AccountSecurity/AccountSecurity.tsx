@@ -19,7 +19,7 @@ import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummar
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -303,7 +303,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
               {loadFailed ? <EmptyLoadFailed title="Couldn’t load where you’re signed in" onRetry={() => onRetry?.()} headingLevel={3} /> : loading ? (
                 // One name for all of them: the first row is named, the others are only pictures.
                 <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col divide-y divide-border p-0">
-                  {[0, 1, 2].map((i) => <li key={i} className="py-3"><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading where you’re signed in' : ''} /></li>)}
+                  {[0, 1, 2].map((i) => <li key={i} className="py-3"><Skeleton shape="text" size="sm" lines={2} label={i === 0 ? 'Loading where you’re signed in' : ''} /></li>)}
                 </ul>
               ) : <>
               <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">

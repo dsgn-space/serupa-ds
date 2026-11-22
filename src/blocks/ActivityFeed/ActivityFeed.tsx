@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading, type HeadingSize } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 import { LoadMore } from '../../components/LoadMore/LoadMore';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
@@ -89,9 +89,9 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-2">
-              <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
+              <Skeleton shape="circle" label="" className="shrink-0" />
               {/* One name for all of them: the first row is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? (loadingLabel ?? 'Loading: ' + title) : ''} className="min-w-0 flex-1" />
+              <Skeleton shape="text" size="sm" lines={2} label={i === 0 ? (loadingLabel ?? 'Loading: ' + title) : ''} className="min-w-0 flex-1" />
             </li>
           ))}
         </ul>

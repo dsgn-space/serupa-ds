@@ -76,10 +76,10 @@ describe('Table', () => {
     expect(getComputedStyle(page.getByRole('table', { name: 'Alone' }).element().parentElement!).borderTopWidth).toBe('1px');
   });
 
-  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
-    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
-      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
-    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  test('an end cell sets its numbers in tabular figures, digit under digit; a start cell keeps proportional ones, so a hyphen in its text isn\'t widened', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell align="end">Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">hotel-invoice.pdf</TableCell><TableCell id="tt" align="end">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['normal', 'tabular-nums']);
   });
 
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {

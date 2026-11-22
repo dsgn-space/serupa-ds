@@ -15,7 +15,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
@@ -134,7 +134,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
           <OfflineBanner online={online} placement="inline" className="mb-6">These stores and hours are from when the page loaded. Finding stores near you needs a connection.</OfflineBanner>
           <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading stores" /></Card> : (<>
           <div className="flex flex-col gap-6 pt-6">
             <div role="search" aria-label="Shops" className="flex flex-col gap-3">
               <div className="flex flex-wrap items-end gap-3">
@@ -146,7 +146,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
               {noLocation ? <Alert tone="warning">Couldn’t get your location. Your browser may have been asked not to share it; search by town or postcode instead.</Alert> : null}
               <Switch checked={openOnly} onCheckedChange={setOpenOnly}>Open now only</Switch>
             </div>
-            <p id="store-count" role="status" className="m-0 text-text-muted">
+            <p id="store-count" role="status" className="m-0 text-sm text-text-muted">
               {shown.length === 1 ? '1 shop' : `${formatNumber(shown.length, locale)} shops`}{here && shown.length ? ', nearest first' : ''}
             </p>
             {shown.length ? (

@@ -6,7 +6,7 @@ import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuItem } from '../Menu/Menu';

@@ -19,7 +19,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -182,7 +182,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
           <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
             description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading expenses" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading expenses" /></Card> : (<>
           <div className="flex flex-col gap-8 pt-6">
             {sent ? (
               <section aria-labelledby="report-sent" className="flex flex-col items-start gap-3">

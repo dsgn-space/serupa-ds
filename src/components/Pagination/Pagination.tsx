@@ -8,6 +8,7 @@ import { Select } from '../Select/Select';
 import { announce } from '../../internal/announce';
 import { leave } from '../../internal/leave';
 import { named } from '../../internal/component';
+import { useControlSize } from '../../internal/controlSize';
 import { displayNumber } from '../../internal/numbers';
 import { latinDigits } from '../../internal/digits';
 import { isComposing } from '../../internal/ime';
@@ -37,7 +38,7 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   siblings?: number | undefined;
   /** Pages always shown at the start and the end. Default: 1. Fewer show, after the siblings, when the row wouldn't fit. */
   boundaries?: number | undefined;
-  /** 'md' (default, 32px), 'sm' (24px) or 'lg' (44px with 16px text, the touch-target size, beside lg fields and buttons). */
+  /** 'md' (32px), 'sm' (24px) or 'lg' (44px with 16px text, the touch-target size, beside lg fields and buttons). Default: a SerupaProvider's size, else md. */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** The nav's accessible name. Default: "Pagination". */
   'aria-label'?: string | undefined;
@@ -72,7 +73,7 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
   const count = int(props.count, 0, 0);
   const [held, setOwn, controlled] = useControllable<number>(props.page, int(props.defaultPage, 1, 1), 'Pagination', 'page');
   const page = Math.min(Math.max(int(held, 1, 1), 1), Math.max(count, 1));
-  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
+  const size = oneOf(['sm', 'md', 'lg'] as const, useControlSize(props.size), 'md');   // a SerupaProvider's size too, as its controls are control-height
   const label = props.pageLabel || sds.labels.page;
   // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible
   // text, as WCAG 2.5.3 asks: "Page ١٠", not "Page 10".

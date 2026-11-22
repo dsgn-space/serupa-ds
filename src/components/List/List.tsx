@@ -6,7 +6,7 @@ import { config } from '../../internal/config';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { named } from '../../internal/component';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';

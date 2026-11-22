@@ -18,7 +18,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
 import { useServerStyles } from '../../internal/serverStyles';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';

@@ -7,7 +7,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Image } from '../../components/Image/Image';
 import { Input, InputAction } from '../../components/Input/Input';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -195,7 +195,7 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
     <section aria-labelledby={`${base}-title`} aria-busy={loading && !loadFailed ? true : undefined} className="flex flex-col gap-4">
       <Heading level={headingLevel} size="lg" id={`${base}-title`} ref={heading} tabIndex={-1} className="outline-none">{l.title}</Heading>
       {loadFailed ? <EmptyLoadFailed title={l.loadFailed} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} />
-        : loading ? <Loader variant="skeleton" shape="text" lines={4} label={l.loading} />
+        : loading ? <Skeleton shape="text" lines={4} label={l.loading} />
         : shown.length ? <>
         <ul role="list" className="m-0 flex list-none flex-col p-0">
           {shown.map((item) => (

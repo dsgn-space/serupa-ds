@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SignAgreement.stories';
+
+<Meta of={Stories} />
+
+# Sign agreement
+
+An agreement to read in a box of its own, a box to tick that you agree, and your signature, drawn or typed.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Someone signs one document: a contract, a consent form, a lease, terms they have to accept with a signature.
+- Not for terms that a ticked box is enough for: that's the checkbox in [Sign-up](?path=/docs/patterns-sign-up--docs).
+- Not for many documents at once, or for people signing in turn: that needs a list of documents and who has signed.
+
+## What each part is for
+
+- **The agreement in a ScrollArea.** A long text scrolls in its own box, so the signature stays close. The box is a Tab stop and a region named by the title, so the keyboard can scroll it and a screen reader can find it (2.1.1). Signing doesn't wait for it to be scrolled to the end: that proves nothing and blocks people who read it elsewhere.
+- **A box to tick.** "I've read the agreement and I agree to it" is a separate, plain statement, not hidden in the button.
+- **A SignaturePad, drawn or typed.** Drawing needs a pointer, so Type is always there: a full name in a handwriting face counts the same (2.5.7, 2.1.1).
+- **What signing means, before the button.** "Signing here is the same as signing on paper" sits next to Sign (3.3.2).
+- **Problems in a summary.** Signing with the box unticked or no signature shows an ErrorSummary that takes focus, each problem a link to its field, which says it too (3.3.1).
+- **Busy, failed, done.** Sign shows it's busy; a signature that can't be sent says so and keeps everything (3.3.4); once signed, the "Signed" heading takes focus (2.4.3).
+
+<Canvas of={Stories.SignFails} />
+
+## What stays your app's job
+
+- **Keeping the signature.** `onSign` gets `{ method, svg, name }`; `signatureToPng` turns the SVG into a picture for the signed copy. Record who signed and when, and the exact text they signed.
+- **The words.** Your agreement goes in `children`, as headings and paragraphs.
