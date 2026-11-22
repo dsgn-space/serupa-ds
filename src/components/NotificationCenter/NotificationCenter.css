@@ -21,7 +21,7 @@
 .srp-notification-center__description, .srp-notification-center__time, .srp-notification-center__empty { font-size: var(--text-sm); color: var(--notification-center-description, var(--text-muted)); }
 .srp-notification-center__ask { inline-size: var(--sizing-full); margin: var(--spacing-0); font-size: var(--text-sm); }
 .srp-notification-center__settings { margin-inline-end: auto; }   /* the link starts the footer, the buttons stay at its end */
-.srp-notification-center__dot { flex-shrink: 0; width: var(--spacing-2); height: var(--spacing-2); margin-block: var(--spacing-2); border-radius: var(--rounded-full); background: var(--notification-center-unread, var(--primary)); }
+.srp-notification-center__dot { flex-shrink: 0; width: var(--spacing-2); height: var(--spacing-2); margin-block: var(--spacing-2); border-radius: var(--rounded-full); background: var(--notification-center-unread, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge); }
 /* Forced colors paint every background Canvas, which would erase the dot: draw it in CanvasText, as Badge's indicator (GR27). */
 @media (forced-colors: active) { .srp-notification-center__dot { forced-color-adjust: none; background: CanvasText; } }
 }

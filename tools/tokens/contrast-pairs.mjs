@@ -65,8 +65,6 @@ export const PAIRS = [
   ['info', 'surface', 4.5, 'Info icon'],
   ['primary-text', 'surface-overlay', 4.5, 'Brand text and icons in a popover or dialog (a Select\'s tick, a link in a Dialog)'],
   ['primary-text', 'surface-raised', 4.5, 'Brand text and icons on a raised card'],
-  ['primary', 'surface', 3, 'A primary fill on a card: a checked box, a Switch that\'s on, a Progress or Slider fill'],
-  ['primary', 'surface-overlay', 3, 'A primary fill in a popover or dialog (the selected day in a DatePicker)'],
   ['danger', 'surface', 3, 'Destructive secondary button border'],
   // The resting field border is soft by design (zinc-300 in light, zinc-700 in dark): below the 3:1 WCAG 1.4.11 asks
   // of a control's boundary, a deliberate exception. These pairs hold it to 1.3:1, so it never fades out entirely; the
@@ -115,7 +113,6 @@ export const PAIRS = [
   ['chart-label', 'surface-raised', 4.5, 'Chart labels on a raised card'],
   ['success', 'surface', 3, 'A Meter or Progress fill in success, on the page (its track is the page with a border-control edge)'],
   ['warning', 'surface', 3, 'A Meter or Progress fill in warning, on the page'],
-  ['primary', 'surface-muted', 3, 'A Meter fill on a muted surface'],
   ['danger', 'surface-muted', 3, 'A Meter fill in danger on a muted surface'],
   ['field-border', 'surface-muted', 1.3, 'A field border on a muted surface, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface-raised', 1.3, 'A field border on a raised card, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
@@ -128,10 +125,14 @@ export const PAIRS = [
   ['focus-ring', 'surface-muted', 3, 'The focus ring on a muted surface'],
   ['focus-ring', 'primary-subtle', 3, 'The focus ring on a primary-subtle highlight (a selected row or option)'],
   ['danger-text', 'surface-raised', 4.5, 'An error message on a raised card'],
-  ['primary', 'surface-raised', 3, 'A primary fill on a raised card'],
   ['primary-text', 'primary-subtle', 3, 'A primary icon, border or check on a primary-subtle highlight'],
   ['placeholder', 'surface-overlay', 4.5, 'A placeholder in a field in a dialog'],
   ['danger', 'surface-overlay', 3, 'A danger border or icon in a dialog or popover'],
   ['danger', 'surface-raised', 3, 'A danger border or icon on a raised card'],
   ['text-muted', 'secondary', 3, 'A muted icon on a secondary fill (IconTile, EmptyState): icons only, not text'],
 ];
+
+// A `primary` fill with no text on it (a checked box, a Switch that's on, a Progress, Slider or Meter fill, the selected
+// day) is 3:1 on each of these (WCAG 1.4.11), or the theme gives it a `primary-edge` that is: Yellow Light's yellow 500
+// is 1.9:1 on white inside a yellow 700 edge. tools/test/foundation.mjs checks it in every theme.
+export const FILL_SURFACES = ['surface', 'surface-overlay', 'surface-raised', 'surface-muted'];

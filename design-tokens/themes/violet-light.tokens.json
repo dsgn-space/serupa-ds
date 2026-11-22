@@ -3,7 +3,7 @@
     "primary": {
       "$type": "color",
       "$value": "{color.violet-600}",
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow Dark is the exception: it keeps the bright yellow 400 under yellow-950 text, since a yellow dark enough for white text reads as brown. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -30,6 +30,25 @@
         }
       }
     },
+    "primary-edge": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0,
+          0
+        ],
+        "hex": "#000000",
+        "alpha": 0
+      },
+      "$description": "Alias. A 1px edge just inside a `primary` fill that has no text on it (a checked box, a Switch that's on, a Slider or Progress fill, a dot), for a theme whose fill is under 3:1 on the page: Yellow Light's bright yellow 500 takes a yellow 700 edge (4.9:1 on white, WCAG 1.4.11). Transparent in every other theme, where the fill passes by itself, so nothing is drawn.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-edge"
+        }
+      }
+    },
     "primary-subtle": {
       "$type": "color",
       "$value": "{color.violet-50}",
@@ -53,7 +72,7 @@
     "on-primary": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes. Yellow Dark, whose fill is the bright yellow 400, takes yellow 950; so does every dark theme with more contrast, where the fill is brand 300.",
+      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes, yellow 950 in Yellow Light and Yellow Dark, whose fills are bright (brand 950 in dark with more contrast, where the fill is brand 300).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--on-primary"

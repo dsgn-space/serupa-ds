@@ -380,15 +380,18 @@ describe('Density axis', () => {
     const hue = (v: string) => /^\{(?!zinc|slate|gray|neutral|stone)[a-z]+-\d+\}$/.test(v);
     // A dark theme's fills are its light theme's shades, a little lighter: colors between two palette steps (ADR-0025).
     const darkFill = (t: Tok, mode: string, v: string) => mode === 'dark' && ['primary', 'primary-hover', 'primary-pressed'].includes(t.name) && /^#[0-9a-f]{6}$/.test(v);
+    // primary-edge is transparent but where a fill needs it; Yellow Light's hover is between yellow 500 and 600, where dark text still has 4.5:1.
+    const edge = (t: Tok, v: string) => t.name === 'primary-edge' && v === '#00000000';
+    const yellowHover = (t: Tok, v: string) => t.name === 'primary-hover' && /^#[0-9a-f]{6}$/.test(v);
     const wrong: string[] = [];
     for (const [, t] of varied) for (const mode of ['light', 'dark']) {
       const v = Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x);
-      if (new Set(v).size > 1 && !v.every((x) => hue(x) || darkFill(t, mode, x) || (t.name === 'on-primary' && x === '{white}'))) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
+      if (new Set(v).size > 1 && !v.every((x) => hue(x) || darkFill(t, mode, x) || (t.name === 'on-primary' && x === '{white}') || edge(t, x) || yellowHover(t, x))) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
     }
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
     // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
     // hue so a visited link isn't the primary; a dark fill written as a color is held to its light shade by tools/test/brand.mjs.
     const offHue: string[] = [];

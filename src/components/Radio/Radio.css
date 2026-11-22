@@ -41,7 +41,7 @@
 @media (hover: hover) { .srp-radio:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --srp-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
 .srp-radio:active .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bg: var(--radio-bg-pressed, var(--secondary)); --srp-radio-fill: var(--radio-bg-checked-pressed, var(--primary-pressed)); }
 .srp-radio:not(.srp-radio--invalid):active .srp-radio__input:not(:disabled, [readonly], :user-invalid) { --srp-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
-.srp-radio__input:checked { background: var(--srp-radio-fill); border-color: var(--srp-radio-fill); }
+.srp-radio__input:checked { background: var(--srp-radio-fill); border-color: var(--primary-edge); }   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge where the fill is under 3:1 on the page (Yellow Light) */
 .srp-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--srp-radio-dot); height: var(--srp-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .srp-radio__input:checked + .srp-radio__dot { visibility: visible; }
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */

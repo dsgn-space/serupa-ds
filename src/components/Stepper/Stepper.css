@@ -44,7 +44,7 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
 .srp-stepper__indicator .srp-icon { font-size: var(--spacing-4); }
 .srp-stepper--size-sm .srp-stepper__indicator .srp-icon { font-size: var(--spacing-3\.5); }
 .srp-stepper__step--current .srp-stepper__indicator, .srp-stepper__step--complete .srp-stepper__indicator {
-  border-color: var(--stepper-bg-active, var(--primary)); background: var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));
+  border-color: var(--primary-edge); background: var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge (Yellow Light) */
 }
 .srp-stepper__step--current .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
 .srp-stepper__step--error .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
@@ -55,7 +55,7 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
 .srp-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
 .srp-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
-.srp-stepper__step--done .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
+.srp-stepper__step--done .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge); }
 .srp-stepper--horizontal .srp-stepper__connector {
   align-self: flex-start; min-width: var(--spacing-4); height: var(--srp-step-line);
   margin: var(--srp-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);

@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, settle, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, settle, withMotion, disabledLook, edged } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Checkbox, CheckboxGroup } from './Checkbox';
 import { SerupaProvider } from '../../internal/provider';
@@ -79,7 +79,7 @@ describe('Checkbox', () => {
     expect(input('c').checked).toBe(true);
     expect(changes).toEqual([true]);
     expect(css(input('c')).backgroundColor).toBe(color('var(--primary)'));
-    expect(css(input('c')).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(input('c')).borderTopColor).toBe(color('var(--primary-edge)'));   // the border is the fill's edge: transparent over it, but in Yellow Light
     expect(css(icon).visibility).toBe('visible');
     expect(css(icon).color).toBe(color('var(--on-primary)'));
     expect(icon.getAttribute('aria-hidden')).toBe('true');
@@ -223,7 +223,7 @@ describe('Checkbox', () => {
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
-      ['checked fill', 'var(--primary)', 'var(--surface)', 3],
+      ['checked fill, or its edge where the theme has one', () => edged('var(--primary)'), 'var(--surface)', 3],
       ['check on fill', 'var(--on-primary)', 'var(--primary)', 4.5],
       ['check on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 4.5],
       ['focus ring', 'var(--focus-ring)', 'var(--surface)', 3],
@@ -344,7 +344,7 @@ describe('CheckboxGroup', () => {
     const look = (id: string) => [css(el(id)).backgroundColor, css(el(id)).borderTopColor, css(box(id)).scale.replace('none', '1')];
     const rest = look('pd');
     expect(await press(el('pc').closest('label')!, () => look('pc'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-pressed)'), '1']);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-edge)'), '1']);
     expect((await press(el('pi').closest('label')!, () => look('pi')))[1]).toBe(color('var(--field-border-invalid)'));
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });

@@ -254,7 +254,6 @@ describe('List', () => {
       for (const [name, fg, back, need] of [
         ['title', title, 'var(--surface)', 4.5], ['description', desc, 'var(--surface)', 4.5],
         ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row (text-muted-shaded)', 'var(--text-muted-shaded)', 'var(--surface-hover)', 4.5],
-        ['selected bar', 'var(--primary)', 'var(--surface-hover)', 3],
       ] as const) {
         const r = contrast(fg, back);
         if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);

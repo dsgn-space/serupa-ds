@@ -11,15 +11,16 @@
 @layer srp.components {
 .srp-progress {
   --srp-progress-fill: var(--progress-fill, var(--primary));
+  --srp-progress-edge: var(--primary-edge);   /* the primary fill's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere, and for the other tones */
   --srp-progress-h: var(--progress-height-md, var(--spacing-2));
   --srp-progress-ring: var(--progress-circle-md, var(--spacing-10));
   color: var(--progress-label-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
 .srp-progress--size-sm { --srp-progress-h: var(--progress-height-sm, var(--spacing-1)); --srp-progress-ring: var(--progress-circle-sm, var(--spacing-6)); }
 .srp-progress--size-lg { --srp-progress-h: var(--progress-height-lg, var(--spacing-3)); --srp-progress-ring: var(--progress-circle-lg, var(--spacing-16)); }
-.srp-progress--success { --srp-progress-fill: var(--progress-fill-success, var(--success)); }
-.srp-progress--warning { --srp-progress-fill: var(--progress-fill-warning, var(--warning)); }
-.srp-progress--danger { --srp-progress-fill: var(--progress-fill-danger, var(--danger)); }
+.srp-progress--success { --srp-progress-fill: var(--progress-fill-success, var(--success)); --srp-progress-edge: transparent; }
+.srp-progress--warning { --srp-progress-fill: var(--progress-fill-warning, var(--warning)); --srp-progress-edge: transparent; }
+.srp-progress--danger { --srp-progress-fill: var(--progress-fill-danger, var(--danger)); --srp-progress-edge: transparent; }
 .srp-progress--bar { display: flex; flex-direction: column; gap: var(--progress-gap, var(--spacing-1\.5)); width: var(--sizing-full); }
 .srp-progress__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
 .srp-progress__label { font-weight: var(--progress-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
@@ -31,7 +32,7 @@
   box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border-control));
 }
 .srp-progress__fill {
-  height: var(--sizing-full); border-radius: inherit; background: var(--srp-progress-fill);
+  height: var(--sizing-full); border-radius: inherit; background: var(--srp-progress-fill); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--srp-progress-edge);
   transition: translate var(--progress-duration, var(--motion-change-lg)) var(--ease-settle);
 }
 /* The fill is the track's full length, slid back by the part not done (the track clips it): a new value moves it on
@@ -45,10 +46,13 @@
 .srp-progress--indeterminate .srp-progress__fill:dir(rtl) { --srp-progress-from: 100%; --srp-progress-to: -250%; }
 @keyframes srp-progress-slide { from { translate: var(--srp-progress-from) 0; } to { translate: var(--srp-progress-to) 0; } }
 .srp-progress--circle { --srp-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--srp-progress-ring); height: var(--srp-progress-ring); flex-shrink: 0; vertical-align: middle; }
-.srp-progress__ring { display: block; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }
+.srp-progress__ring { display: block; overflow: visible; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }   /* overflow: the arc's edge reaches half a unit past the box */
 .srp-progress__ring .srp-progress__track, .srp-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
 .srp-progress__ring .srp-progress__track { stroke: var(--progress-ring-track, var(--secondary)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
-.srp-progress__arc { stroke: var(--srp-progress-fill); stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
+/* The arc's edge: the same arc a third wider, drawn under it. */
+.srp-progress__arc--edge { stroke: var(--srp-progress-edge); stroke-width: calc(var(--progress-stroke-width, var(--stroke-width-3)) * 4 / 3); }
+.srp-progress__arc:not(.srp-progress__arc--edge) { stroke: var(--srp-progress-fill); }
+.srp-progress__arc { stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
 .srp-progress--circle .srp-progress__value { position: absolute; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--progress-label-color, var(--text)); font-weight: var(--progress-label-weight, var(--font-medium)); }
 .srp-progress--circle.srp-progress--size-lg .srp-progress__value { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .srp-progress--circle.srp-progress--indeterminate .srp-progress__ring { --srp-progress-turn: 270deg; animation: srp-progress-turn var(--motion-loop-spinner) var(--ease-linear) infinite; }

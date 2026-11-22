@@ -33,6 +33,8 @@
 }
 @media (hover: hover) { .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-hover, var(--border-control-hover)); --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
 .srp-switch__input:checked { background: var(--srp-switch-on); }
+/* The on track's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. :where keeps the invalid and disabled edges over it. */
+.srp-switch__input:where(:checked) { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge); }
 .srp-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
   width: var(--srp-switch-thumb); height: var(--srp-switch-thumb); margin-block: auto;
@@ -61,21 +63,22 @@
    or disabled. */
 .srp-switch:not(.srp-switch--readonly, .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control-pressed)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
 .srp-switch:active:not(.srp-switch--readonly, .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
-/* Pending: Loader's ring on the thumb (EE1): a quarter arc in primary (3:1 on the off thumb's field, and on the
-   on thumb's on-primary) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
+/* Pending: Loader's ring on the thumb (EE1): a quarter arc in the brand (primary-text on the off thumb's field, primary on the
+   on thumb's on-primary, 3:1 on each) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */
 .srp-switch--pending { cursor: progress; }
 .srp-switch__thumb { display: inline-flex; align-items: center; justify-content: center; }
 .srp-switch__spinner {
   --srp-switch-spin: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2);
   box-sizing: border-box; width: var(--srp-switch-spin); height: var(--srp-switch-spin);
-  color: var(--switch-pending, var(--primary));
+  color: var(--switch-pending, var(--primary-text));
   border: var(--border-width-2) solid color-mix(in srgb, currentColor var(--opacity-20), transparent); border-block-start-color: currentColor; border-radius: var(--rounded-full);
   animation: spin var(--motion-loop-spinner) var(--ease-linear) infinite;
 }
 /* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
 .srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--primary)); }
 .srp-switch__input:checked + .srp-switch__thumb > .srp-switch__check { display: block; }
+.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending, var(--primary)); }
 @keyframes srp-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-switch:has(.srp-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }

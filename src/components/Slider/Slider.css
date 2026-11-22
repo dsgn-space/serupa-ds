@@ -35,6 +35,9 @@
   box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
   cursor: var(--cursor-grab); transition: scale var(--motion-change-sm) var(--ease-settle);
 }
+/* The fill's and the thumb ring's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. */
+.srp-slider:not(.srp-slider--invalid, .srp-slider--disabled) .srp-slider__fill { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge); }
+.srp-slider:not(.srp-slider--invalid, .srp-slider--disabled) .srp-slider__thumb { box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge), var(--slider-thumb-shadow, var(--elevation-part)); }
 .srp-slider__range {
   /* The native range over the drawn thumb: unseen and not in the way of presses, but the same box, so a screen
      reader's touch exploration finds it where the thumb is. */

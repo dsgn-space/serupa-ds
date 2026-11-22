@@ -52,7 +52,7 @@
 /* cascade: a checkbox before the icon and label, drawn as Checkbox's box: a field-colored square with a 3:1 border,
    filled in primary with a check (or a dash for some) once checked. */
 .srp-tree-view__check { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; box-sizing: border-box; width: var(--tree-view-check-size, var(--spacing-4)); height: var(--tree-view-check-size, var(--spacing-4)); border: var(--border-width-1) solid var(--tree-view-check-border, var(--field-border)); border-radius: var(--tree-view-check-radius, var(--radius-inner)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-check-mark, var(--on-primary)); }
-.srp-tree-view__check:not([data-state="unchecked"]) { border-color: var(--tree-view-check-bg-checked, var(--primary)); background: var(--tree-view-check-bg-checked, var(--primary)); }
+.srp-tree-view__check:not([data-state="unchecked"]) { border-color: var(--primary-edge); background: var(--tree-view-check-bg-checked, var(--primary)); }   /* the border is the fill's edge, as Checkbox's */
 .srp-tree-view__check .srp-icon { font-size: var(--spacing-3\.5); }
 .srp-tree-view__item--disabled > .srp-tree-view__row .srp-tree-view__check { border-color: var(--tree-view-text-disabled, var(--disabled-text)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-text-disabled, var(--disabled-text)); }
 @media (forced-colors: active) { .srp-tree-view__check { border-color: CanvasText; } .srp-tree-view__check:not([data-state="unchecked"]) { background: Highlight; color: HighlightText; } }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, ringCut } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, ringCut, seen } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { toast } from '../Toast/Toast';
@@ -186,7 +186,7 @@ describe('NotificationCenter', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(description).color, backdropOf(description)), th).toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(dot).backgroundColor, backdropOf(dot.parentElement!)), th).toBeGreaterThanOrEqual(3);
+      expect(contrast(seen(dot), backdropOf(dot.parentElement!)), th).toBeGreaterThanOrEqual(3);
     }
   });
 

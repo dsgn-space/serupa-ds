@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { renderToString } from 'react-dom/server';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, keepMotion, press, THEMES } from '../../../tools/test/vitest/helpers';
+import { color, contrast, keepMotion, press, THEMES, seen } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { resetWarnings } from '../../internal/warn';
 import { SerupaProvider } from '../../internal/provider';
@@ -358,7 +358,7 @@ describe('Carousel', () => {
       const bc = getComputedStyle(arrow('car', 'next'));
       for (const [k, r] of [
         ['dot', contrast(getComputedStyle(part('car', `${DOTS}:not([aria-current])`), '::before').backgroundColor, 'var(--surface)')],
-        ['current dot', contrast(getComputedStyle(part('car', `${DOTS}[aria-current="true"]`), '::before').backgroundColor, 'var(--surface)')],
+        ['current dot', contrast(seen(part('car', `${DOTS}[aria-current="true"]`), '::before'), 'var(--surface)')],
         ['button icon', contrast(bc.color, bc.backgroundColor)],
       ] as const) { n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
