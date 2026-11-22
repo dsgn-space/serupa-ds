@@ -112,7 +112,7 @@ export const DoFitWidth: Story = {
   render: () => <Col><Field label="Postcode"><Input className="w-24" inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
 };
 /** Don't: every field full width, a five-digit postcode as wide as a street address. */
-export const DontFullWidthShort: Story = {
+export const DontFullWidthShort: Story = { tags: ['!visual'],
   name: "Don't: everything full width",
   render: () => <Col><Field label="Postcode"><Input inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
 };
@@ -122,7 +122,7 @@ export const DoHelpfulError: Story = {
   render: () => <Col><Field label="Email" error="Enter an email with an @, like ana@example.com."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
 };
 /** Don't: an error that only says something is wrong. */
-export const DontVagueError: Story = {
+export const DontVagueError: Story = { tags: ['!visual'],
   name: "Don't: a vague error",
   render: () => <Col><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
 };

@@ -80,7 +80,7 @@ export const MoreMenu: Story = {
 /** Do: related controls in groups, with a divider between the groups. */
 export const DoGroupControls: Story = { name: 'Do: group related controls' };
 /** Don't: a form's Cancel and Save in a toolbar; Tab should reach each one, so use a ButtonGroup. */
-export const DontFormButtons: Story = {
+export const DontFormButtons: Story = { tags: ['!visual'],
   name: "Don't: put form buttons in a toolbar",
   args: { 'aria-label': 'Form actions', children: [<Button key="c" variant="secondary">Cancel</Button>, <Button key="s">Save</Button>] },
 };

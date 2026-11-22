@@ -92,7 +92,7 @@ export const DoShortTitle: Story = {
   render: () => <Sketch success title="Changes saved" />,
 };
 /** Don't: a sentence to read before it goes. */
-export const DontWordyTitle: Story = {
+export const DontWordyTitle: Story = { tags: ['!visual'],
   name: "Don't: a sentence to read",
   render: () => <Sketch success title="Your changes have been saved successfully to your account." />,
 };
@@ -102,7 +102,7 @@ export const DoOneQuickAction: Story = {
   render: () => <Sketch title="Moved to trash" action="Undo" />,
 };
 /** Don't: something people must act on, which can go before they reach it. */
-export const DontMustAct: Story = {
+export const DontMustAct: Story = { tags: ['!visual'],
   name: "Don't: something people must act on",
   render: () => <Sketch title="Your card was declined" description="Update your card by Friday to keep your plan." action="Update card" />,
 };

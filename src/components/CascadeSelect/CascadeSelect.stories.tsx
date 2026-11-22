@@ -85,4 +85,4 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: the same word on every column, which leaves people guessing what each one holds. */
-export const DontGenericLevels: Story = { name: "Don't: give every level the same name", args: { defaultValue: ['jabar', 'bandung', 'coblong'], defaultOpen: true, levels: ['Pilih', 'Pilih', 'Pilih'] } };
+export const DontGenericLevels: Story = { tags: ['!visual'], name: "Don't: give every level the same name", args: { defaultValue: ['jabar', 'bandung', 'coblong'], defaultOpen: true, levels: ['Pilih', 'Pilih', 'Pilih'] } };

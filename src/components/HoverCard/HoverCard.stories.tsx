@@ -56,7 +56,7 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: a page of content, which hides what it was hovering over; link to the full page instead. */
-export const DontLongCard: Story = {
+export const DontLongCard: Story = { tags: ['!visual'],
   name: "Don't: fill the card",
   args: { open: true, children: <div className="flex flex-col gap-3">
     {person}

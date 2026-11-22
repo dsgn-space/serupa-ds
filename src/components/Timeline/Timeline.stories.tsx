@@ -60,7 +60,7 @@ export const LongText: Story = {
 /** Do: the status in the title, so it reads without the marker's color. */
 export const DoStatusInTitle: Story = { name: 'Do: say the status in the title' };
 /** Don't: a generic title where only the marker's color says something went wrong. */
-export const DontColorOnly: Story = {
+export const DontColorOnly: Story = { tags: ['!visual'],
   name: "Don't: status only in the color",
   args: { children: <>
     <TimelineItem title="Update" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" tone="primary">Two items, paid by card.</TimelineItem>

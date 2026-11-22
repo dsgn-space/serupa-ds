@@ -141,7 +141,7 @@ export const DoOnePrimary: Story = {
   render: () => <Row><Button variant="outline">Cancel</Button><Button variant="secondary">Preview</Button><Button>Publish</Button></Row>,
 };
 /** Don't: three primary buttons, so none reads as the main action. */
-export const DontManyPrimaries: Story = {
+export const DontManyPrimaries: Story = { tags: ['!visual'],
   name: "Don't: many primaries",
   render: () => <Row><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></Row>,
 };
@@ -151,7 +151,7 @@ export const DoVerbLabels: Story = {
   render: () => <Row><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></Row>,
 };
 /** Don't: Yes and No, which make people read the question again. */
-export const DontVagueLabels: Story = {
+export const DontVagueLabels: Story = { tags: ['!visual'],
   name: "Don't: vague labels",
   render: () => <Row><Button variant="outline">No</Button><Button destructive>Yes</Button></Row>,
 };

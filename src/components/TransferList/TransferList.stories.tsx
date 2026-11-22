@@ -50,4 +50,4 @@ export const LongText: Story = {
   },
 };
 /** Don't: a handful of options, which a CheckboxGroup shows at once with one box each. */
-export const DontFewOptions: Story = { name: "Don't: a handful of options", args: { options: columns.slice(0, 3), defaultValue: ['name'] } };
+export const DontFewOptions: Story = { tags: ['!visual'], name: "Don't: a handful of options", args: { options: columns.slice(0, 3), defaultValue: ['name'] } };

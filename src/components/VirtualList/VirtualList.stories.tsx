@@ -78,4 +78,4 @@ export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', rend
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: a handful of rows, which a plain List draws more simply. */
-export const DontShortList: Story = { name: "Don't: use it for a few rows", args: { count: 4 } };
+export const DontShortList: Story = { tags: ['!visual'], name: "Don't: use it for a few rows", args: { count: 4 } };

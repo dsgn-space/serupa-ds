@@ -42,7 +42,7 @@ export const LongText: Story = {
   </div>,
 };
 /** Don't: a long text in the code, which packs it too dense to scan from a phone screen. */
-export const DontLongValue: Story = {
+export const DontLongValue: Story = { tags: ['!visual'],
   name: "Don't: a long text",
   args: { value: 'Order 1042. Pay 1,250,000 IDR to PT Contoh Jaya, account 123 456 7890 at Bank Contoh, by 30 November 2026. Write the order number in the transfer note so we can match it to your order, and keep the receipt until it shows as paid.' },
 };

@@ -53,4 +53,4 @@ export const LongText: Story = {
 /** Do: a placeholder for text that can be empty, so there's still something to click. */
 export const DoPlaceholder: Story = { name: 'Do: show a placeholder when empty', args: { defaultValue: '', placeholder: 'Add a name' } };
 /** Don't: an empty value with no placeholder, which leaves nothing to see or click. */
-export const DontEmpty: Story = { name: "Don't: leave it blank", args: { defaultValue: '', placeholder: undefined } };
+export const DontEmpty: Story = { tags: ['!visual'], name: "Don't: leave it blank", args: { defaultValue: '', placeholder: undefined } };

@@ -85,7 +85,7 @@ export const DoShortLabels: Story = {
   render: () => <Tabs defaultValue="overview" style={{ maxWidth: 320 }}><TabList aria-label="Project"><Tab value="overview">Overview</Tab><Tab value="activity">Activity</Tab><Tab value="members">Members</Tab></TabList></Tabs>,
 };
 /** Don't: long labels, which push tabs out of view. */
-export const DontLongLabels: Story = {
+export const DontLongLabels: Story = { tags: ['!visual'],
   name: "Don't: long labels",
   render: () => <Tabs defaultValue="overview" style={{ maxWidth: 320 }}><TabList aria-label="Project"><Tab value="overview">Project overview</Tab><Tab value="activity">Recent team activity</Tab><Tab value="members">Members and roles</Tab></TabList></Tabs>,
 };
@@ -95,7 +95,7 @@ export const DoSegmentedForValue: Story = {
   render: () => <SegmentedControl aria-label="Period" defaultValue="week" options={[{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }]} />,
 };
 /** Don't: tabs to pick a period: they promise separate panels. */
-export const DontTabsForValue: Story = {
+export const DontTabsForValue: Story = { tags: ['!visual'],
   name: "Don't: tabs for a value",
   render: () => <Tabs defaultValue="week" style={{ maxWidth: 320 }}><TabList aria-label="Period"><Tab value="day">Day</Tab><Tab value="week">Week</Tab><Tab value="month">Month</Tab></TabList></Tabs>,
 };

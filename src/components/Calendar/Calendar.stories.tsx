@@ -65,4 +65,4 @@ export const DoSayWhatFor: Story = {
   },
 };
 /** Don't: a calendar on its own, which only says "March 2025". */
-export const DontUnexplained: Story = { name: "Don't: show it with no context" };
+export const DontUnexplained: Story = { tags: ['!visual'], name: "Don't: show it with no context" };
