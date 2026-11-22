@@ -117,7 +117,7 @@ export function StockCount({ items: initial = demo, place = 'Main Street shop', 
     { key: 'name', header: 'Product' },
     ...(has('location') ? [{ key: 'location', header: 'Location' } as const] : []),
     ...(has('expected') ? [{ key: 'expected', header: 'On record', align: 'end', format: (r: StockItem) => num(r.expected) } as const] : []),
-    { key: 'counted', header: 'Counted', align: 'end', editable: true, width: '8rem', format: (r) => (r.counted == null ? '' : String(r.counted)) },
+    { key: 'counted', header: 'Counted', align: 'end', editable: true, format: (r) => (r.counted == null ? '' : String(r.counted)) },
     // The difference is a signed number in words' place: "+2", "−2", or blank until counted (1.4.1).
     ...(has('difference') ? [{ key: 'id', header: 'Difference', align: 'end', format: (r: StockItem) => {
       if (r.counted == null) return '';
