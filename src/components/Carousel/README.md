@@ -114,6 +114,7 @@ Each is an optional override: set it on the page, a container or one carousel. T
 | `--carousel-dot-pressed` | `text` | A dot while it's held down, a step past hover. |
 | `--carousel-dot-active` | `primary` | The current slide's dot. |
 | `--carousel-focus-ring` | `focus-ring` | A dot's keyboard focus ring. |
+| `--carousel-dot-edge-active` | `primary-edge` | The current dot's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--carousel-radius` | `radius-container` | The slides' corners (12px). |
 | `--carousel-dot-size` | `spacing-2` | A dot's size (8px). |
 | `--carousel-dot-width-active` | `spacing-6` | The current dot's width (24px). |

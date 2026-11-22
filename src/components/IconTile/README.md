@@ -73,7 +73,7 @@ Each is an optional override: set it on the page, a container or one tile. The l
 | `--icon-tile-neutral-bg` | `secondary` | A neutral tile's fill. |
 | `--icon-tile-neutral-icon` | `text-muted` | A neutral tile's icon (3:1 on its fill). |
 | `--icon-tile-primary-bg` | `primary-subtle` | A primary tile's fill. |
-| `--icon-tile-primary-icon` | `primary` | A primary tile's icon (3:1 on its fill). |
+| `--icon-tile-primary-icon` | `primary-text` | A primary tile's icon (3:1 on its fill). |
 | `--icon-tile-success-bg` | `success-subtle` | A success tile's fill. |
 | `--icon-tile-success-icon` | `success-text` | A success tile's icon (3:1 on its fill). |
 | `--icon-tile-warning-bg` | `warning-subtle` | A warning tile's fill. |

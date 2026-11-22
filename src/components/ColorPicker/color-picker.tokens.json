@@ -24,7 +24,7 @@
       },
       "ring": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The ring around the picked swatch (3:1).",
         "$extensions": {
           "com.serupa": {

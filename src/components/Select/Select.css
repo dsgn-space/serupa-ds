@@ -102,7 +102,7 @@
      (the browser puts it first) lands at the end, pushed there by its auto margin. Only the chosen option has one: no
      space kept in the others. */
   .srp-select__field option::checkmark {
-    margin-inline-start: auto; flex-shrink: 0; color: var(--select-check, var(--primary));
+    margin-inline-start: auto; flex-shrink: 0; color: var(--select-check, var(--primary-text));
     content: "" / ""; inline-size: var(--spacing-4); block-size: var(--spacing-4); background: currentColor;
     /* stylelint-disable-next-line serupa/no-raw-value -- the Material check's path (the icon Combobox shows), as fractions of its 16px box: points of a drawing, not sizes */
     clip-path: shape(from 39.7917% 63.125%, line by 35.3125% -35.3125%, curve by 2.9167% -1.25% with 1.25% -1.25%, smooth by 2.9167% 1.25%, smooth by 1.25% 2.9688%, smooth by -1.25% 2.9688%, line by -38.2292% 38.3333%, curve by -2.9167% 1.25% with -1.25% 1.25%, smooth by -2.9167% -1.25%, line by -17.9167% -17.9167%, curve by -1.1979% -2.9688% with -1.25% -1.25%, smooth by 1.3021% -2.9688%, smooth by 2.9688% -1.25%, smooth by 2.9688% 1.25%, close);

@@ -104,6 +104,7 @@ Each is an optional override: set it on the page, a container or one meter. The 
 | `--meter-fill-poor` | `danger` | The filled part in the worst zone. |
 | `--meter-label-color` | `text` | The label. |
 | `--meter-value-color` | `text-muted` | The value at the end of the label row (4.5:1). |
+| `--meter-fill-edge` | `primary-edge` | The primary fill's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--meter-height-sm` | `spacing-1` | The bar's thickness, size sm (4px). |
 | `--meter-height-md` | `spacing-2` | The bar's thickness, size md (8px, the default). |
 | `--meter-height-lg` | `spacing-3` | The bar's thickness, size lg (12px). |

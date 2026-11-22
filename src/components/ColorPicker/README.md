@@ -119,7 +119,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | --- | --- | --- |
 | `--color-picker-text` | `text` | The picker's text. |
 | `--color-picker-swatch-border` | `border-control` | The thin inset border on every swatch and round the native color well (3:1 on the page). |
-| `--color-picker-ring` | `primary` | The ring around the picked swatch (3:1). |
+| `--color-picker-ring` | `primary-text` | The ring around the picked swatch (3:1). |
 | `--color-picker-ring-hover` | `border-control` | The ring round a swatch the pointer is on, before it is picked (3:1 on the page). |
 | `--color-picker-invalid` | `danger` | The swatches' border while invalid (3:1), so the error shows on the swatches as well as in the Field's message. |
 | `--color-picker-focus-ring` | `focus-ring` | The keyboard focus ring. |

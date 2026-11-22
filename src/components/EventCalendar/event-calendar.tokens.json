@@ -34,7 +34,7 @@
       },
       "today": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Today's date, in the month and the agenda.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "event-tone": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The bar at the start of an event with no tone.",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "now": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The line across today at the time now, in the week and day views.",
         "$extensions": {
           "com.serupa": {

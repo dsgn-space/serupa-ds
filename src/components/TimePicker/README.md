@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-option-color` | `text` | A time in the list. |
 | `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
 | `--time-picker-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
-| `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
+| `--time-picker-check` | `primary-text` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
 | `--time-picker-list-radius` | `radius-surface` | The list's corners (8px). |

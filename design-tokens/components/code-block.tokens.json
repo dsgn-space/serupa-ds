@@ -54,7 +54,7 @@
       },
       "mark-bar": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The bar at a marked line's start.",
         "$extensions": {
           "com.serupa": {

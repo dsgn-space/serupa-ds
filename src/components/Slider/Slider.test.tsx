@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, drag, disabledLook, seen } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Slider } from './Slider';
@@ -353,7 +353,7 @@ describe('Slider', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
-      const parts = { track: q(':scope > div').backgroundColor, fill: q(':scope > div > div').backgroundColor, thumb: q('input[type=range]').borderTopColor };
+      const parts = { track: q(':scope > div').backgroundColor, fill: seen(el('one').querySelector(':scope > div > div')!), thumb: q('input[type=range]').borderTopColor };
       for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     expect([low, n]).toEqual([[], 18]);

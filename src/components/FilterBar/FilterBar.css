@@ -20,7 +20,7 @@
 }
 @media (hover: hover) { .srp-filter-bar__edit:hover { text-decoration: underline; } }
 .srp-filter-bar__edit:focus-visible { outline: var(--focus-ring-width) solid var(--filter-bar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-filter-bar__edit[aria-expanded="true"] { color: var(--filter-bar-chip-open, var(--primary)); }
+.srp-filter-bar__edit[aria-expanded="true"] { color: var(--filter-bar-chip-open, var(--primary-text)); }
 .srp-filter-bar__count { margin-inline-start: auto; color: var(--filter-bar-muted, var(--text-muted)); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .srp-filter-bar__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); }
 .srp-filter-bar__editor { display: flex; flex-direction: column; gap: var(--spacing-3); min-inline-size: var(--filter-bar-editor-width, var(--spacing-56)); }

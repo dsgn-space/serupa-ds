@@ -48,7 +48,7 @@
 }
 .srp-code-block__line--marked {
   background: var(--code-block-mark-bg, var(--primary-subtle)); color: inherit;
-  box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--primary));
+  box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--primary-text));
 }
 /* text-muted is under 4.5:1 on the tint in Blue Light, so a marked line's number takes the code's color. */
 .srp-code-block--numbered .srp-code-block__line--marked::before { color: inherit; }

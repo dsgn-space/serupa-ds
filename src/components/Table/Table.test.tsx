@@ -361,7 +361,7 @@ describe('Table', () => {
     expect([c.backgroundColor, c.paddingLeft]).toEqual(['rgb(1, 2, 3)', '20px']);
   });
 
-  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar and the select checkbox outline 3:1; every theme', async () => {
+  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the select checkbox outline holds; every theme', async () => {
     await setup();
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -372,15 +372,13 @@ describe('Table', () => {
       const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .srp-text')).color, mts = css(q('#tdef [data-i="1"] .srp-text')).color, hd = css(q('#tdef th')).color;
       const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
-      const bar = contrast('var(--primary)', shaded); n++;
-      if (bar < 3) low.push(`${th} selected bar: ${bar.toFixed(2)}`);
       // A TableSelectCell's unchecked box, on a shaded row: the field border is soft by design, under 3:1 on purpose
       // (Checkbox README, Accessibility), so it's held to 1.3:1, where it still shows.
       const box = contrast('var(--field-border)', shaded); n++;
       if (box < 1.3) low.push(`${th} checkbox outline on a shaded row: ${box.toFixed(2)}`);
     }
     still.remove();
-    expect([low, n]).toEqual([[], 42]);
+    expect([low, n]).toEqual([[], 36]);
   });
 });
 

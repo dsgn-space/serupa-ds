@@ -119,7 +119,7 @@ describe('Loader', () => {
     expect(rs.every((r) => r.getAttribute('width') === '8' && r.getAttribute('height') === '8' && !r.getAttribute('rx'))).toBe(true);
     expect([box('px'), box('pxlg')]).toEqual([[24, 24], [40, 40]]);
     expect(css(rs[0]!).fill).toBe(css(el('px')).color);
-    expect(css(q('#pxlg svg > g > rect')).fill).toBe(color('var(--primary)'));
+    expect(css(q('#pxlg svg > g > rect')).fill).toBe(color('var(--primary-text)'));
   });
 
   test('pixel: subtle dividers between the squares, cut out of them (a mask per loader) and drawn on top in its color at 10%, half a grid unit wide', async () => {
@@ -274,7 +274,7 @@ describe('Loader', () => {
     expect((ls[0]!.parentNode as Element).getAttribute('transform')).toBe('scale(0.625)');
     expect(['x1', 'y1', 'x2', 'y2'].map((k) => ls[0]!.getAttribute(k)).join()).toBe('19.2,4,19.2,9.6');
     expect(s.stroke).toBe(css(el('spk')).color);
-    expect(css(q('#spklg line')).stroke).toBe(color('var(--primary)'));
+    expect(css(q('#spklg line')).stroke).toBe(color('var(--primary-text)'));
     expect([box('spk'), box('spklg')]).toEqual([[24, 24], [40, 40]]);
   });
 
@@ -330,13 +330,13 @@ describe('Loader', () => {
       <div data-theme="violet-dark"><Loader id="nested" tone="primary" delay={0} /></div>
     </>);
     const art = (id: string) => css(q(`#${id} > span`)).color;
-    expect(art('primary')).toBe(color('var(--primary)'));
-    expect(css(q('#primary svg > circle:last-of-type')).stroke).toBe(color('var(--primary)'));
+    expect(art('primary')).toBe(color('var(--primary-text)'));
+    expect(css(q('#primary svg > circle:last-of-type')).stroke).toBe(color('var(--primary-text)'));
     expect(art('muted')).toBe(color('var(--text-muted)'));
     expect(art('primary')).not.toBe(css(el('ring')).color);
     const probe = document.createElement('div');
     probe.setAttribute('data-theme', 'violet-dark');
-    probe.style.color = 'var(--primary)';
+    probe.style.color = 'var(--primary-text)';
     document.body.appendChild(probe);
     const violet = css(probe).color;
     probe.remove();

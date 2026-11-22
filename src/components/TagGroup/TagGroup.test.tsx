@@ -199,9 +199,9 @@ describe('TagGroup', () => {
     await render(<Removable max={2} />);
     const more = page.getByRole('button', { name: 'Show more' });
     const look = () => { const c = css(more.element()); return [c.color, c.textDecorationThickness, c.textUnderlineOffset]; };
-    expect(look()).toEqual([color('var(--primary)'), '1px', '2px']);
+    expect(look()).toEqual([color('var(--primary-text)'), '1px', '2px']);
     await more.hover();
-    await expect.poll(look).toEqual([color('var(--primary-hover)'), '2px', '2px']);
+    await expect.poll(look).toEqual([color('var(--primary-text-hover)'), '2px', '2px']);
     await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 

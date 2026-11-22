@@ -237,7 +237,7 @@ Each is an optional override: set it on the page, a container or one loader. Uns
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--loader-primary` | `primary` | Color with `tone="primary"` |
+| `--loader-primary` | `primary-text` | Color with `tone="primary"` |
 | `--loader-muted` | `text-muted` | Color with `tone="muted"` |
 | `--loader-inverse` | `white` | Color with `tone="inverse"` (every variant) |
 

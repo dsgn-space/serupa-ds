@@ -75,6 +75,6 @@ Each is an optional override: set it on the page, a container or one element. Th
 | --- | --- | --- |
 | `--text-color` | `text` | tone="neutral". |
 | `--text-color-muted` | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
-| `--text-color-primary` | `primary` | tone="primary". |
+| `--text-color-primary` | `primary-text` | tone="primary". |
 | `--text-color-danger` | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
 <!-- token-table:end -->

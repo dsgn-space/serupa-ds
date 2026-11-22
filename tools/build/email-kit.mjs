@@ -58,7 +58,7 @@ export function emailRules(c, s) {
     'serupa-h2': [['margin', `0 0 ${sp(3)}`], ['font-family', FONT], ['font-weight', '600'], ['color', c.text], ...type('xl')],
     'serupa-text': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c.text], ...type('base')],
     'serupa-muted': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c['text-muted']], ...type('sm')],
-    'serupa-link': [['color', c.primary], ['text-decoration', 'underline']],
+    'serupa-link': [['color', c['primary-text']], ['text-decoration', 'underline']],
     'serupa-button-cell': [['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['mso-padding-alt', `${sp(3)} ${sp(5)}`]],
     'serupa-button': [['display', 'inline-block'], ['padding', `${sp(3)} ${sp(5)}`], ['font-family', FONT], ['font-weight', '600'], ['color', c['on-primary']], ['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['text-decoration', 'none'], ...type('base'), ['mso-padding-alt', '0']],
     'serupa-divider': [['border-top', `1px solid ${c.border}`], ['font-size', '0'], ['line-height', '0'], ['height', '1px']],

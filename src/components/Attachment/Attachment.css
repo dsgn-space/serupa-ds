@@ -34,8 +34,8 @@
 /* A thumbnail takes the icon's place, as big as it is (up to 40px). */
 .srp-attachment__thumbnail { display: flex; align-items: center; justify-content: center; }
 .srp-attachment__name { display: flex; min-inline-size: var(--spacing-0); color: inherit; font-weight: var(--font-medium); border-radius: var(--radius-inner); }
-a.srp-attachment__name { color: var(--attachment-link, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
-@media (hover: hover) { a.srp-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+a.srp-attachment__name { color: var(--attachment-link, var(--primary-text)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
+@media (hover: hover) { a.srp-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-text-hover)); text-decoration-thickness: var(--decoration-2); } }
 /* The name fades to its hover color as a Link does (motion-hover); reduced motion: at once. */
 a.srp-attachment__name { transition: color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { a.srp-attachment__name { transition: none; } }

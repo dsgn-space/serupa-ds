@@ -114,7 +114,7 @@
       },
       "today-color": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Today's number (4.5:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -189,6 +189,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--calendar-text-disabled"
+          }
+        }
+      },
+      "edge-selected": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-edge-selected"
           }
         }
       }

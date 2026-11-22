@@ -99,7 +99,7 @@ Each is an optional override: set it on the page, a container or one FilterBar. 
 | `--filter-bar-muted` | `text-muted` | The results count (4.5:1 on the page). |
 | `--filter-bar-chip-bg` | `surface` | A chip's background. |
 | `--filter-bar-chip-border` | `border-control` | A chip's outline (3:1 on the page). |
-| `--filter-bar-chip-open` | `primary` | A chip's text while its editor is open (4.5:1 on chip-bg). |
+| `--filter-bar-chip-open` | `primary-text` | A chip's text while its editor is open (4.5:1 on chip-bg). |
 | `--filter-bar-focus-ring` | `focus-ring` | The ring around a focused chip. |
 | `--filter-bar-chip-radius` | `radius-control` | A chip's corners (6px). |
 | `--filter-bar-gap` | `spacing-2` | Space between chips, buttons and the count (8px). |

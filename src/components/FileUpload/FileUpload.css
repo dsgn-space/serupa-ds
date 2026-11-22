@@ -21,7 +21,7 @@
 @media (hover: hover) { .srp-file-upload:not([data-disabled], [data-readonly], [data-invalid]) .srp-file-upload__zone:hover:not([data-over]) { border-color: var(--file-upload-zone-border-hover, var(--field-border-hover)); } }
 /* Pressed: it fills while held, then the file dialog opens. */
 .srp-file-upload:not([data-disabled], [data-readonly]) .srp-file-upload__zone:active:not([data-over]) { background: var(--file-upload-zone-bg-pressed, var(--field-hover)); transition-duration: var(--duration-0); }
-.srp-file-upload__zone:where([data-over]) { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
+.srp-file-upload__zone:where([data-over]) { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary-text)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
 .srp-file-upload__zone:where([data-over]) .srp-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
 .srp-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }
 .srp-file-upload__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--font-medium); pointer-events: none; overflow-wrap: anywhere; }

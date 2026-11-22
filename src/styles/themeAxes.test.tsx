@@ -146,9 +146,9 @@ describe('Contrast axis', () => {
     ]),
     ...['success', 'warning', 'info'].map((s): [string, string, string, number] => [`${s} icon`, `var(--${s})`, 'var(--surface)', 4.5]),
     // The brand (V6 phase 2): each brand's own stronger shade, for links, the secondary button and the focus ring.
-    ['brand text', 'var(--primary)', 'var(--surface)', 7],
-    ['brand text on its tint', 'var(--primary)', 'var(--primary-subtle)', 7],
-    ['brand text on hover', 'var(--primary-hover)', 'var(--primary-subtle)', 7],
+    ['brand text', 'var(--primary-text)', 'var(--surface)', 7],
+    ['brand text on its tint', 'var(--primary-text)', 'var(--primary-subtle)', 7],
+    ['brand text on hover', 'var(--primary-text-hover)', 'var(--primary-subtle)', 7],
     ['primary button text', 'var(--on-primary)', 'var(--primary)', 7],
     ['primary button text on hover', 'var(--on-primary)', 'var(--primary-hover)', 7],
     ['focus ring', 'var(--focus-ring)', 'var(--surface)', 4.5],
@@ -200,8 +200,31 @@ describe('Contrast axis', () => {
     }
   });
 
+  test('a dark theme fills with its light theme\'s brand shade under white text, and brand text is lighter (ADR-0026)', () => {
+    const color = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
+    const rgb = (c: string) => c.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+    for (const brand of ['blue', 'violet']) {
+      axes(brand, 'light');
+      const light = { fill: color('primary'), on: color('on-primary'), text: color('primary-text') };
+      axes(brand, 'dark');
+      const dark = { fill: color('primary'), on: color('on-primary'), text: color('primary-text') };
+      // In light one shade does both jobs. In dark the fill stays within a few points of it, channel by channel
+      // (blue-600 rgb(37, 99, 235) is rgb(41, 104, 240)); brand 400 was 60 or more away.
+      expect(light.text, brand).toBe(light.fill);
+      expect(Math.max(...rgb(dark.fill).map((v, i) => Math.abs(v - rgb(light.fill)[i]!))), `${brand}: ${light.fill} and ${dark.fill}`).toBeLessThanOrEqual(16);
+      expect([light.on, dark.on], brand).toEqual(['rgb(255, 255, 255)', 'rgb(255, 255, 255)']);
+      expect(dark.text, brand).toBe(color(`${brand}-400`));
+      expect(dark.text, brand).not.toBe(dark.fill);
+    }
+    axes('blue', 'dark');
+    expect(color('primary')).toBe('rgb(41, 104, 240)');
+    // Yellow Dark is the exception: the bright yellow 400 under yellow-950 text, since a yellow that takes white reads as brown.
+    axes('yellow', 'dark');
+    expect([color('primary'), color('on-primary')]).toEqual([color('yellow-400'), color('yellow-950')]);
+  });
+
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
-    const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary)'; const c = getComputedStyle(p).color; p.remove(); return c; };
+    const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary-text)'; const c = getComputedStyle(p).color; p.remove(); return c; };
     const swatch = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
     for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'emerald-300'], ['yellow', 'light', 'yellow-900'], ['blue', 'dark', 'blue-300']]) {
       axes(brand, mode);
@@ -355,19 +378,24 @@ describe('Density axis', () => {
     const varied = groups.flatMap(([g, grp]) => grp.tokens!.filter((t) => new Set(Object.values(per(t) ?? {})).size > 1).map((t) => [g, t] as const));
     expect(varied.filter(([g]) => g !== 'color').map(([, t]) => t.name)).toEqual([]);
     const hue = (v: string) => /^\{(?!zinc|slate|gray|neutral|stone)[a-z]+-\d+\}$/.test(v);
+    // A dark theme's fills are its light theme's shades, a little lighter: colors between two palette steps (ADR-0026).
+    const darkFill = (t: Tok, mode: string, v: string) => mode === 'dark' && ['primary', 'primary-hover', 'primary-pressed'].includes(t.name) && /^#[0-9a-f]{6}$/.test(v);
+    // primary-edge is transparent but where a fill needs it; Yellow Light's hover is between yellow 500 and 600, where dark text still has 4.5:1.
+    const edge = (t: Tok, v: string) => t.name === 'primary-edge' && v === '#00000000';
+    const yellowHover = (t: Tok, v: string) => t.name === 'primary-hover' && /^#[0-9a-f]{6}$/.test(v);
     const wrong: string[] = [];
     for (const [, t] of varied) for (const mode of ['light', 'dark']) {
       const v = Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x);
-      if (new Set(v).size > 1 && !v.every(hue)) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
+      if (new Set(v).size > 1 && !v.every((x) => hue(x) || darkFill(t, mode, x) || (t.name === 'on-primary' && x === '{white}') || edge(t, x) || yellowHover(t, x))) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
     }
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
     // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
-    // hue so a visited link isn't the primary; a neutral or white (on-primary on yellow, lime) is left to the check above.
+    // hue so a visited link isn't the primary; a dark fill written as a color is held to its light shade by tools/test/brand.mjs.
     const offHue: string[] = [];
-    for (const [, t] of varied) if (['field-action', 'focus-ring', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
+    for (const [, t] of varied) if (['field-action', 'focus-ring', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
       const ramp = /^\{([a-z]+)-\d+\}$/.exec(v)?.[1];
       if (ramp && !/^(zinc|slate|gray|neutral|stone)$/.test(ramp) && ramp !== th.replace(/-(light|dark)$/, '')) offHue.push(`${t.name} ${th}: ${v}`);
     }

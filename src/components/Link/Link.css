@@ -4,7 +4,7 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-link {
-  color: var(--link-text, var(--primary)); cursor: var(--cursor-interactive); touch-action: manipulation; border-radius: var(--link-focus-radius, var(--radius-inner));
+  color: var(--link-text, var(--primary-text)); cursor: var(--cursor-interactive); touch-action: manipulation; border-radius: var(--link-focus-radius, var(--radius-inner));
   text-decoration-line: underline; text-decoration-thickness: var(--link-thickness, var(--decoration-1)); text-underline-offset: var(--link-offset, var(--underline-offset-2));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
   transition: color var(--motion-hover) var(--ease-move);
@@ -13,7 +13,7 @@
 /* In a table cell the column takes its width from the narrowest the text can go, which anywhere would make one
    letter: the words stay whole there, and a URL longer than the column widens the table, which scrolls. */
 :where(td, th) .srp-link { overflow-wrap: break-word; }
-@media (hover: hover) { .srp-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
+@media (hover: hover) { .srp-link:hover { color: var(--link-text-hover, var(--primary-text-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 .srp-link--neutral { color: inherit; }
 /* surface: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
 .srp-link--on-dark { --srp-link-ink: var(--link-on-dark, var(--white)); }

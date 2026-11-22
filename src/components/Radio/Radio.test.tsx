@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, disabledLook } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, disabledLook, edged } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Radio, RadioGroup } from './Radio';
 
@@ -89,7 +89,7 @@ describe('Radio', () => {
     const prim = color('var(--primary)');
     expect([input('a').checked, input('b').checked]).toEqual([false, true]);
     // The fill eases in over 100ms (motion-press).
-    await expect.poll(() => [css(input('b')).backgroundColor, css(input('b')).borderTopColor]).toEqual([prim, prim]);
+    await expect.poll(() => [css(input('b')).backgroundColor, css(input('b')).borderTopColor]).toEqual([prim, color('var(--primary-edge)')]);   // the border is the fill's edge: transparent over it, but in Yellow Light
     expect([css(dot('b')).visibility, css(dot('a')).visibility, dot('b').getBoundingClientRect().width, css(dot('b')).backgroundColor]).toEqual(['visible', 'hidden', 6, color('var(--on-primary)')]);
     const dr = dot('b').getBoundingClientRect(), ir = input('b').getBoundingClientRect();
     expect(Math.abs(dr.left + dr.width / 2 - (ir.left + ir.width / 2)) + Math.abs(dr.top + dr.height / 2 - (ir.top + ir.height / 2))).toBeLessThan(0.5);
@@ -267,7 +267,7 @@ describe('Radio', () => {
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
-      ['checked fill', 'var(--primary)', 'var(--surface)', 3],
+      ['checked fill, or its edge where the theme has one', () => edged('var(--primary)'), 'var(--surface)', 3],
       ['dot on fill', 'var(--on-primary)', 'var(--primary)', 3],
       ['dot on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
@@ -289,7 +289,7 @@ describe('Radio', () => {
     expect(page.getByRole('radiogroup').element().className).toMatch(/srp-radio-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary-text)'));
     expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
     expect(css(card(a!)).backgroundColor).toBe(css(card(b!)).backgroundColor);
     expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
@@ -312,7 +312,7 @@ describe('Radio', () => {
 
   test('variant card: a checked card\'s border 3:1 on the card and the page, in every theme', () => {
     expect(lowContrast([
-      ['checked card border', 'var(--primary)', 'var(--surface)', 3],
+      ['checked card border', 'var(--primary-text)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 
@@ -322,7 +322,7 @@ describe('Radio', () => {
     const dot = (id: string) => input(id).parentElement as HTMLElement;   // the control around the input
     const look = (id: string) => [css(input(id)).backgroundColor, css(input(id)).borderTopColor, css(dot(id)).scale.replace('none', '1')];
     const rest = look('pq');
-    expect(await press(dot('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-pressed)'), '1']);
+    expect(await press(dot('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-edge)'), '1']);
     expect(await press(dot('pr').closest('label')!, () => look('pr'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
     expect(await press(dot('pq').closest('label')!, () => look('pq'))).toEqual(rest);
   });
