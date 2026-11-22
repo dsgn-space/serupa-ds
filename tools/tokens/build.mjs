@@ -6,10 +6,13 @@
 // tokens.css, in order:
 //   :root, [data-theme="<first theme>"]   every themed token (the colors and the shadows) at its first theme's value
 //   [data-theme$="-light"], [$="-dark"]   the alias colors every brand shares, once per mode
-//   [data-theme="<theme>"]                each other theme: the alias colors its brand changes
+//   [data-theme="<theme>"]                the default brand's dark theme: the alias colors it changes
 //   theme axes (ADR-0011)                 data-brand / data-mode on an element without data-theme: the colors that
 //                                         differ between themes as light-dark() pairs, so the operating system's
-//                                         light or dark setting applies from the first paint, with no JavaScript
+//                                         light or dark setting applies from the first paint, with no JavaScript.
+//                                         Only the default brand (blue) is here: every other brand is its own file,
+//                                         brands/<brand>.css, that a page loads after tokens.css (17.0.0), and
+//                                         brands/all.css holds them all (buildBrandCss below)
 //   :root                                 every other token, the font families, and the type-* shorthands
 //   contrast and density axes             data-contrast="more" (and prefers-contrast: more) and data-density="compact"
 //   shadow axis (73)                      data-shadow="brand": the box shadows in a deep shade of the brand color,
@@ -24,7 +27,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(import.meta.dirname, '..', '..'));
-const OUT = path.join(P, 'tokens.css');
 // A contrastMore keyed by theme id ({ "blue-light": …, "violet-dark": … }) rather than { light, dark }.
 const perTheme = (x) => !!x.contrastMore && typeof x.contrastMore === 'object' && !('light' in x.contrastMore);
 
@@ -35,23 +37,57 @@ export function tokenDescriptions(t) {
   return out;
 }
 
+const brandOf = (theme) => theme.split('-')[0];
+const themed = (x) => x.value && typeof x.value === 'object';
+const escName = (n) => n.replace(/[\\.]/g, '\\$&');
+const ref = (v) => String(v).replace(/\{([^}]+)\}/g, (_, n) => `var(--${escName(n)})`);
+// No comments: tokens.css is the first stylesheet a page waits for, and the descriptions were over half of it. They
+// stay in tokens.json (tokenDescriptions below), design-tokens/ and the editor data.
+const line = (n, v) => `  --${escName(n)}: ${ref(v)};\n`;
+// Every token, plus the internal ones: a contrastMore with a value per theme (a brand color: violet's is violet) can't
+// be one light-dark() pair, so it becomes an internal themed token, --srp-more-<name>, that every theme and brand rule
+// sets like any alias; the contrast rule then points the token at it (contrastAndDensity).
+function allTokens(t) {
+  const tokens = Object.values(t).filter((g) => g && Array.isArray(g.tokens)).flatMap((g) => g.tokens);
+  return [...tokens, ...tokens.filter(perTheme).map((x) => ({ name: `srp-more-${x.name}`, value: x.contrastMore }))];
+}
+const varyingOf = (all) => all.filter((x) => themed(x) && new Set(Object.values(x.value)).size > 1);
+// The themed tokens with more than one value, and those of them a brand changes (the rest are set once per mode).
+function brandSplit(t, all) {
+  const themes = t.color.themes.map((x) => x.id);
+  const multi = all.filter((x) => themed(x) && Object.keys(x.value).length > 1);
+  const ofMode = (mode) => themes.filter((th) => th.endsWith(`-${mode}`));
+  const byBrand = new Set(multi.filter((x) => ['light', 'dark'].some((mode) => new Set(ofMode(mode).map((th) => x.value[th])).size > 1)));
+  return { multi, byBrand };
+}
+// One flat theme per rule, data-theme="<brand>-<mode>": the alias colors its brand changes.
+const themeBlocks = (themes, multi, byBrand, line) => themes.map((th) => `[data-theme="${th}"] {\n${multi.filter((x) => byBrand.has(x) && x.value[th] != null).map((x) => line(x.name, x.value[th])).join('')}}\n`).join('');
+
+/** The brands in tokens.json, the default (the first theme's) first. */
+export const brandsOf = (t) => [...new Set(t.color.themes.map((x) => brandOf(x.id)))];
+
+const LAYERS = '@layer srp.tokens, srp.base, srp.components, srp.utilities;\n';
+// A brand's rules: its flat themes (data-theme) and its data-brand rules.
+function brandRules(t, brand) {
+  if (brand === brandsOf(t)[0]) throw new Error(`${brand} is the default brand: it is in tokens.css`);
+  if (!brandsOf(t).includes(brand)) throw new Error(`no brand ${brand} in tokens.json`);
+  const all = allTokens(t);
+  const { multi, byBrand } = brandSplit(t, all);
+  return themeBlocks([`${brand}-light`, `${brand}-dark`], multi, byBrand, line) + brandAxes(t, varyingOf(all), line, [brand]);
+}
+
+/** brands/<brand>.css: one brand other than the default, to load after tokens.css, in the srp.tokens layer like
+ *  tokens.css. A page that never names the brand never loads it (17.0.0). */
+export const buildBrandCss = (t, brand) =>
+  `/* Serupa — the ${brand} brand, generated from tokens.json. Load it after tokens.css. */\n${LAYERS}@layer srp.tokens {\n${brandRules(t, brand)}}\n`;
+
+/** brands/all.css: every brand but the default, for a page that lets people switch brands (the docs, Storybook). */
+export const buildAllBrandsCss = (t) =>
+  `/* Serupa — every brand but ${brandsOf(t)[0]}, generated from tokens.json. Load it after tokens.css. */\n${LAYERS}@layer srp.tokens {\n${brandsOf(t).slice(1).map((b) => brandRules(t, b)).join('')}}\n`;
+
 export function buildTokensCss(t) {
   const themes = t.color.themes.map((x) => x.id);
-  const themed = (x) => x.value && typeof x.value === 'object';
-  const name = (n) => n.replace(/[\\.]/g, '\\$&');
-  const ref = (v) => String(v).replace(/\{([^}]+)\}/g, (_, n) => `var(--${name(n)})`);
-  // No comments: tokens.css is the first stylesheet a page waits for, and the descriptions were over half of it. They
-  // stay in tokens.json (tokenDescriptions below), design-tokens/ and the editor data.
-  const line = (n, v) => `  --${name(n)}: ${ref(v)};\n`;
-  const groups = Object.values(t).filter((g) => g && Array.isArray(g.tokens));
-  const tokens = groups.flatMap((g) => g.tokens);
-  // A contrastMore with a value per theme (a brand color: violet's is violet) can't be one light-dark() pair, so it
-  // becomes an internal themed token, --srp-more-<name>, that every theme and brand rule below sets like any alias;
-  // the contrast rule then points the token at it (contrastAndDensity).
-  const all = [
-    ...tokens,
-    ...tokens.filter(perTheme).map((x) => ({ name: `srp-more-${x.name}`, value: x.contrastMore })),
-  ];
+  const all = allTokens(t);
 
   let css = '/* Serupa — generated from tokens.json */\n';
   css += '@layer srp.tokens, srp.base, srp.components, srp.utilities;\n@layer srp.tokens {\n';
@@ -60,9 +96,8 @@ export function buildTokensCss(t) {
   css += '}\n';
   // A theme is a brand and a mode. The colors every brand shares (the neutrals, the status colors, the charts) are
   // written once per mode, for every theme of that mode; each theme then sets only the few its brand changes.
-  const multi = all.filter((x) => themed(x) && Object.keys(x.value).length > 1);
+  const { multi, byBrand } = brandSplit(t, all);
   const ofMode = (mode) => themes.filter((th) => th.endsWith(`-${mode}`));
-  const byBrand = new Set(multi.filter((x) => ['light', 'dark'].some((mode) => new Set(ofMode(mode).map((th) => x.value[th])).size > 1)));
   for (const mode of ['light', 'dark']) {
     const th = ofMode(mode)[0];
     if (!th) continue;
@@ -70,13 +105,9 @@ export function buildTokensCss(t) {
     for (const x of multi.filter((x) => !byBrand.has(x))) css += line(x.name, x.value[th]);
     css += '}\n';
   }
-  for (const th of themes.slice(1)) {
-    css += `[data-theme="${th}"] {\n`;
-    for (const x of multi.filter((x) => byBrand.has(x) && x.value[th] != null)) css += line(x.name, x.value[th]);
-    css += '}\n';
-  }
+  css += themeBlocks(themes.slice(1).filter((th) => brandOf(th) === brandOf(themes[0])), multi, byBrand, line);
 
-  css += axes(t, all.filter((x) => themed(x) && new Set(Object.values(x.value)).size > 1), line);
+  css += axes(t, varyingOf(all), line);
 
   const styles = t.type.groups.flatMap((g) => g.styles.map((s) => ({ ...s, family: s.family || g.family })));
   css += ':root {\n';
@@ -135,15 +166,38 @@ function scripts(t, all) {
 // (set by data-mode, "light dark" for auto) chooses, wherever the color is used: so a data-mode="dark" section works
 // inside a light page. An element with data-theme keeps the flat theme above (theme.js sets it), so nothing changes
 // for pages that use it. The root without either attribute stays light, as before.
-function axes(t, varying, line) {
-  const themes = t.color.themes.map((x) => x.id);
-  const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
-  // A theme sets colors only (src/styles/themeAxes.test.tsx holds the token source to it), so every pair is two colors.
+// The brands' light-dark() pairs: a theme sets colors only (src/styles/themeAxes.test.tsx holds the token source to
+// it), so every pair is two colors.
+function brandPairs(t, varying) {
+  const brands = brandsOf(t);
   const pair = (x, b) => {
     const [l, d] = [x.value[b + '-light'], x.value[b + '-dark']];
     return l === d ? l : `light-dark(${l}, ${d})`;
   };
-  const byBrand = varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1);
+  return { pair, byBrand: varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1) };
+}
+
+// A brand's data-brand rules: on the root or any element, and on a nested data-mode element inside the brand's page or
+// section, which keeps the brand around it.
+function brandAxes(t, varying, line, brands) {
+  const { pair, byBrand } = brandPairs(t, varying);
+  let css = '';
+  for (const b of brands) {
+    css += `:root[data-brand="${b}"]:not([data-theme]), [data-brand="${b}"]:not([data-theme]) {\n`;
+    for (const x of byBrand) css += line(x.name, pair(x, b));
+    css += '}\n';
+  }
+  for (const b of brands) {
+    css += `:is([data-theme^="${b}-"], [data-brand="${b}"]) [data-mode]:not([data-theme], [data-brand]) {\n`;
+    for (const x of byBrand) css += line(x.name, pair(x, b));
+    css += '}\n';
+  }
+  return css;
+}
+
+function axes(t, varying, line) {
+  const brands = brandsOf(t);
+  const { pair } = brandPairs(t, varying);
   // The full set goes on the root when it has an axis, and on any nested data-mode element, so a dark section works
   // inside a page with no axes or with data-theme (whose flat values can't flip). :where() keeps it at one
   // attribute's weight: it still beats :root (it comes later), and data-contrast beats it.
@@ -152,17 +206,8 @@ function axes(t, varying, line) {
 `;
   for (const x of varying) css += line(x.name, pair(x, brands[0]));
   css += '}\n';
-  for (const b of brands) {
-    css += `:root[data-brand="${b}"]:not([data-theme]), [data-brand="${b}"]:not([data-theme]) {\n`;
-    for (const x of byBrand) css += line(x.name, pair(x, b));
-    css += '}\n';
-  }
-  // A nested data-mode element keeps the brand of the page or section around it.
-  for (const b of brands) {
-    css += `:is([data-theme^="${b}-"], [data-brand="${b}"]) [data-mode]:not([data-theme], [data-brand]) {\n`;
-    for (const x of byBrand) css += line(x.name, pair(x, b));
-    css += '}\n';
-  }
+  // Only the default brand here; the others are in brands/<brand>.css (buildBrandCss).
+  css += brandAxes(t, varying, line, [brands[0]]);
   css += `:root[data-mode="auto"]:not([data-theme]), [data-mode="auto"]:not([data-theme]) { color-scheme: light dark; }\n`;
   css += `:root[data-mode="light"]:not([data-theme]), [data-mode="light"]:not([data-theme]) { color-scheme: light; }\n`;
   css += `:root[data-mode="dark"]:not([data-theme]), [data-mode="dark"]:not([data-theme]) { color-scheme: dark; }\n`;
@@ -274,13 +319,27 @@ const ratio = (lh, size) => r4(rem(lh) != null ? rem(lh) / rem(size) : parseFloa
 // first, so a product that is already on the grid (30px × 1.2) isn't pushed up a step by rounding error.
 export const snap = (size, r) => `round(up, calc(${size} * ${r} - 0.01px), 0.25rem)`;
 
+/** Every file this script writes, by its path from the project: tokens.css and brands/*.css. */
+export function tokenFiles(t) {
+  const out = { 'tokens.css': buildTokensCss(t) };
+  for (const b of brandsOf(t).slice(1)) out[`brands/${b}.css`] = buildBrandCss(t, b);
+  out['brands/all.css'] = buildAllBrandsCss(t);
+  return out;
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
-  const css = buildTokensCss(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')));
-  const now = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : null;
+  const files = tokenFiles(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')));
+  const now = (f) => (fs.existsSync(path.join(P, f)) ? fs.readFileSync(path.join(P, f), 'utf8') : null);
+  const dir = path.join(P, 'brands');
+  // A brands/ file no brand makes any more (a brand was removed) is stale too.
+  const stray = fs.existsSync(dir) ? fs.readdirSync(dir).map((f) => `brands/${f}`).filter((f) => !(f in files)) : [];
+  const stale = Object.keys(files).filter((f) => now(f) !== files[f]);
   if (process.argv.includes('--check')) {
-    if (now === css) { console.log('tokens.css is up to date with tokens.json'); process.exit(0); }
-    console.error('tokens.css is out of date with tokens.json: run npm run tokens and commit it'); process.exit(1);
+    if (!stale.length && !stray.length) { console.log('tokens.css and brands/ are up to date with tokens.json'); process.exit(0); }
+    console.error(`${[...stale, ...stray].join(', ')} out of date with tokens.json: run npm run tokens and commit it`); process.exit(1);
   }
-  if (now !== css) fs.writeFileSync(OUT, css);
-  console.log(now === css ? 'tokens.css unchanged' : 'Wrote tokens.css');
+  fs.mkdirSync(dir, { recursive: true });
+  for (const f of stale) fs.writeFileSync(path.join(P, f), files[f]);
+  for (const f of stray) fs.rmSync(path.join(P, f));
+  console.log(stale.length || stray.length ? `Wrote ${[...stale, ...stray.map((f) => `(removed) ${f}`)].join(', ')}` : 'tokens.css and brands/ unchanged');
 }

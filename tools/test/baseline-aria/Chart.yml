@@ -334,6 +334,101 @@
       - 'img "Sensor B, Nov: 8"'
       - 'img "Sensor B, Dec: 8"'
 
+# Heatmap
+- figure "Orders by weekday and hour":
+  - text: Orders by weekday and hour
+  - button "Show as table"
+  - group "Heatmap":
+    - group "Mon":
+      - 'img "Mon, 8: 13"'
+      - 'img "Mon, 10: 35"'
+      - 'img "Mon, 12: 50"'
+      - 'img "Mon, 14: 36"'
+      - 'img "Mon, 16: 33"'
+      - 'img "Mon, 18: 50"'
+      - 'img "Mon, 20: 33"'
+    - group "Tue":
+      - 'img "Tue, 8: 20"'
+      - 'img "Tue, 10: 33"'
+      - 'img "Tue, 12: 48"'
+      - 'img "Tue, 14: 43"'
+      - 'img "Tue, 16: 31"'
+      - 'img "Tue, 18: 48"'
+      - 'img "Tue, 20: 40"'
+    - group "Wed":
+      - 'img "Wed, 8: 18"'
+      - 'img "Wed, 10: 40"'
+      - 'img "Wed, 12: 46"'
+      - 'img "Wed, 14: 41"'
+      - 'img "Wed, 16: 38"'
+      - 'img "Wed, 18: 46"'
+      - 'img "Wed, 20: 38"'
+    - group "Thu":
+      - 'img "Thu, 8: 16"'
+      - 'img "Thu, 10: 38"'
+      - 'img "Thu, 12: 44"'
+      - 'img "Thu, 14: 39"'
+      - 'img "Thu, 16: 36"'
+      - 'img "Thu, 18: 44"'
+      - 'img "Thu, 20: 36"'
+    - group "Fri":
+      - 'img "Fri, 8: 14"'
+      - 'img "Fri, 10: 36"'
+      - 'img "Fri, 12: 51"'
+      - 'img "Fri, 14: 37"'
+      - 'img "Fri, 16: 34"'
+      - 'img "Fri, 18: 51"'
+      - 'img "Fri, 20: 34"'
+    - group "Sat":
+      - 'img "Sat, 8: 15"'
+      - 'img "Sat, 10: 24"'
+      - 'img "Sat, 12: 42"'
+      - 'img "Sat, 14: 44"'
+      - 'img "Sat, 16: 38"'
+      - 'img "Sat, 18: 67"'
+      - 'img "Sat, 20: 62"'
+    - group "Sun":
+      - 'img "Sun, 8: 13"'
+      - 'img "Sun, 10: 22"'
+      - 'img "Sun, 12: 40"'
+      - 'img "Sun, 14: 42"'
+      - 'img "Sun, 16: 36"'
+      - 'img "Sun, 18: 65"'
+      - 'img "Sun, 20: 60"'
+
+# HeatmapDiverging
+- figure "Sales against last year":
+  - text: Sales against last year
+  - button "Show as table"
+  - group "Heatmap":
+    - group "North":
+      - 'img "North, Jan: +12%"'
+      - 'img "North, Feb: +8%"'
+      - 'img "North, Mar: −4%"'
+      - 'img "North, Apr: −10%"'
+      - 'img "North, May: +2%"'
+      - 'img "North, Jun: +16%"'
+    - group "South":
+      - 'img "South, Jan: −18%"'
+      - 'img "South, Feb: −6%"'
+      - 'img "South, Mar: 0%"'
+      - 'img "South, Apr: +6%"'
+      - 'img "South, May: +14%"'
+      - 'img "South, Jun: +20%"'
+    - group "East":
+      - 'img "East, Jan: +4%"'
+      - 'img "East, Mar: −2%"'
+      - 'img "East, Apr: −14%"'
+      - 'img "East, May: −8%"'
+      - 'img "East, Jun: +3%"'
+    - group "West":
+      - 'img "West, Jan: +9%"'
+      - 'img "West, Feb: +11%"'
+      - 'img "West, Mar: +5%"'
+      - 'img "West, Apr: 0%"'
+      - 'img "West, May: −5%"'
+      - 'img "West, Jun: −12%"'
+
 # Line
 - figure "Visitors and sign-ups":
   - text: Visitors and sign-ups

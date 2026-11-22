@@ -186,7 +186,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
     }
     if (f.type === 'date-range') {
       const r = (v && typeof v === 'object' && !Array.isArray(v) ? v : { start: null, end: null });
-      return <DateRangePicker aria-label={f.label} value={r} onValueChange={(_, iso) => put(iso)} />;
+      return <DateRangePicker aria-label={f.label} value={r} onValueChange={(_, { iso }) => put(iso)} />;
     }
     if (f.type === 'boolean') return <Switch checked={v === true} onCheckedChange={(on) => put(on)}>{f.label}</Switch>;
     return <Input aria-label={f.label} placeholder={f.placeholder} value={typeof v === 'string' ? v : ''} onChange={(e) => put(e.target.value)}
@@ -214,7 +214,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
           </li>
         ))}
         <li className="srp-filter-bar__add">
-          <Menu trigger={<Button variant="ghost" size="sm" leftIcon={<Icon icon={icons.Add} />} disabled={!unused.length} data-filter-add="">{L.filterAdd}</Button>}>
+          <Menu trigger={<Button variant="ghost" size="sm" startIcon={<Icon icon={icons.Add} />} disabled={!unused.length} data-filter-add="">{L.filterAdd}</Button>}>
             {unused.map((f) => <MenuItem key={f.id} onSelect={() => add(f)}>{f.label}</MenuItem>)}
           </Menu>
         </li>

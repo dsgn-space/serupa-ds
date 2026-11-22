@@ -7,7 +7,7 @@ A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a
 ```jsx
 import { Menu, ContextMenu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton, Card } from '@diki-stwn/serupa-ds';
 
-<Menu trigger={<Button variant="secondary" rightIcon="expand_more">Actions</Button>}>
+<Menu trigger={<Button variant="secondary" endIcon="expand_more">Actions</Button>}>
   <MenuItem icon="edit" shortcut={['mod', 'E']} onSelect={edit}>Edit</MenuItem>
   <MenuItem icon="content_copy" onSelect={duplicate}>Duplicate</MenuItem>
   <MenuItem href="/share" icon="link">Share link</MenuItem>

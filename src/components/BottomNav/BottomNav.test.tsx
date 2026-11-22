@@ -10,9 +10,9 @@ import { Badge } from '../Badge/Badge';
 const nav = () => document.querySelector('[data-component="bottom-nav"]') as HTMLElement;
 const links = () => [...nav().querySelectorAll('a')] as HTMLElement[];
 const Bar = (p: Partial<React.ComponentProps<typeof BottomNav>>) => (
-  <BottomNav label="Main" {...p}>
+  <BottomNav aria-label="Main" {...p}>
     <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
-    <BottomNavLink href="#inbox" icon="inbox" active>Inbox</BottomNavLink>
+    <BottomNavLink href="#inbox" icon="inbox" current>Inbox</BottomNavLink>
     <BottomNavLink href="#me" icon="person">Account</BottomNavLink>
   </BottomNav>
 );
@@ -22,7 +22,7 @@ afterEach(async () => { await page.viewport(414, 800); });
 describe('BottomNav', () => {
   test("a label cut short shows whole on hover; the link's name is the whole label", async () => {
     await page.viewport(320, 640);
-    await render(<div style={{ width: 320 }}><BottomNav label="Main"><BottomNavLink href="#a" icon="home">Donaudampfschifffahrtsgesellschaft</BottomNavLink><BottomNavLink href="#b" icon="search">Search</BottomNavLink><BottomNavLink href="#c" icon="person">Account settings</BottomNavLink></BottomNav></div>);
+    await render(<div style={{ width: 320 }}><BottomNav aria-label="Main"><BottomNavLink href="#a" icon="home">Donaudampfschifffahrtsgesellschaft</BottomNavLink><BottomNavLink href="#b" icon="search">Search</BottomNavLink><BottomNavLink href="#c" icon="person">Account settings</BottomNavLink></BottomNav></div>);
     const t = document.querySelector<HTMLElement>('a[href="#a"] [data-component="truncated-text"]')!;
     await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
     await userEvent.hover(t);
@@ -74,7 +74,7 @@ describe('BottomNav', () => {
   });
 
   test('badge: a count on the icon\'s top-end corner, read after the link\'s name; the link keeps its name and size', async () => {
-    await render(<BottomNav label="Main" hideFrom={false}>
+    await render(<BottomNav aria-label="Main" hideFrom={false}>
       <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
       <BottomNavLink href="#inbox" icon="inbox" badge={<Badge count={4} />} aria-describedby="hint">Inbox</BottomNavLink>
     </BottomNav>);

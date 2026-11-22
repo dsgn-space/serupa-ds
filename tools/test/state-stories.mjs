@@ -18,7 +18,7 @@ const SHOWN = {
   'Loader.loading': 'on by default: every story shows a Loader loading',
   'Radio.checked': "the group's value checks one Radio: the stories set it on RadioGroup",
 };
-// No story yet, each to get one in its own pull request (X1, with the "update-visual-baselines" label).
+// No story yet, each to get one in its own pull request (X1).
 const KNOWN = {
 };
 

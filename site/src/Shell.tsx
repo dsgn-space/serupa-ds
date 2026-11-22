@@ -37,7 +37,7 @@ function SectionNav({ section, path }: { section: NavSection; path: string }) {
   }, [path]);
   return <Sidebar ref={nav} aria-label={section.label} className="site-sidebar">
     {section.groups.map((g) => <SidebarSection key={g.title} title={g.title || undefined}>
-      {g.pages.map((p) => <SidebarItem key={p.path} href={p.path} label={p.name} active={p.path === path} />)}
+      {g.pages.map((p) => <SidebarItem key={p.path} href={p.path} label={p.name} current={p.path === path} />)}
     </SidebarSection>)}
   </Sidebar>;
 }
@@ -56,19 +56,19 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
       brand={<a href="/" className="site-brand" aria-label="Serupa, home"><svg className="site-brand__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 2h2v2h-2zM5 2h2v2h-2zM17 2h2v2h-2zM20 2h2v2h-2zM2 5h2v2h-2zM5 5h2v2h-2zM8 5h2v2h-2zM14 5h2v2h-2zM17 5h2v2h-2zM20 5h2v2h-2zM5 8h2v2h-2zM8 8h2v2h-2zM14 8h2v2h-2zM17 8h2v2h-2zM11 11h2v2h-2zM5 14h2v2h-2zM8 14h2v2h-2zM14 14h2v2h-2zM17 14h2v2h-2zM2 17h2v2h-2zM5 17h2v2h-2zM8 17h2v2h-2zM14 17h2v2h-2zM17 17h2v2h-2zM20 17h2v2h-2zM2 20h2v2h-2zM5 20h2v2h-2zM17 20h2v2h-2zM20 20h2v2h-2z" /></svg>Serupa</a>}
       // Search and the theme switches are for the screen: a printed page leaves them out.
       actions={<div className="contents" data-print="hide">
-        <Button className="site-search" variant="outline" size="sm" leftIcon="search" onClick={() => setSearch(true)}>Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
+        <Button className="site-search" variant="outline" size="sm" startIcon="search" onClick={() => setSearch(true)}>Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
         <IconButton className="site-search-compact" icon="search" label="Search" variant="ghost" onClick={() => setSearch(true)} />
         <ThemeControls />
       </div>}>
-      {sections.map((s) => <NavbarLink key={s.id} href={s.path} active={section?.id === s.id}>{s.label}</NavbarLink>)}
-      {EXTRA.map(([to, label]) => <NavbarLink key={to} href={to} active={path === to}>{label}</NavbarLink>)}
+      {sections.map((s) => <NavbarLink key={s.id} href={s.path} current={section?.id === s.id}>{s.label}</NavbarLink>)}
+      {EXTRA.map(([to, label]) => <NavbarLink key={to} href={to} current={path === to}>{label}</NavbarLink>)}
     </Navbar>
     <CommandPalette commands={commands} open={search} onOpenChange={setSearch} placeholder="Search the docs" emptyText="No page matches" />
     <div className="site-body" data-side={side ? '' : undefined} data-aside={aside ? '' : undefined}>
       {side && <div className="site-side" data-print="hide">{<SectionNav section={side} path={path} />}</div>}
       <main id="main" className="site-main">
         {side && <div className="site-browse" data-print="hide">
-          <Button variant="outline" size="sm" leftIcon="menu" onClick={() => setBrowse(true)}>{side.label}</Button>
+          <Button variant="outline" size="sm" startIcon="menu" onClick={() => setBrowse(true)}>{side.label}</Button>
           <Drawer open={browse} onOpenChange={setBrowse} title={side.label} placement="start">
             <SectionNav section={side} path={path} />
           </Drawer>

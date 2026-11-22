@@ -1,6 +1,6 @@
 # Accordion
 
-A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `type="multiple"`.
+A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `selectionMode="multiple"`.
 
 **Also called:** collapsible, disclosure, expander, expandable section.
 
@@ -12,7 +12,7 @@ import { Accordion, AccordionItem } from '@diki-stwn/serupa-ds';
   <AccordionItem value="returns" title="Can I return an item?">Yes, within 30 days.</AccordionItem>
 </Accordion>
 
-<Accordion type="multiple" variant="card" headingLevel={2}>…</Accordion>
+<Accordion selectionMode="multiple" variant="card" headingLevel={2}>…</Accordion>
 
 // Controlled
 <Accordion value={open} onValueChange={setOpen}>…</Accordion>
@@ -44,10 +44,10 @@ Drawn from the `Playground` story.
 ## Usage
 
 - Write titles that say what's inside, so people can pick one without opening the others.
-- Use `type="multiple"` when people may want two sections open to compare them.
+- Use `selectionMode="multiple"` when people may want two sections open to compare them.
 - Set `headingLevel` to fit the page's outline.
 - Keep anything people must not miss out of a closed item: closed content is hidden from everyone.
-- With many items and `type="multiple"`, add `showExpandAll` so people can open everything at once (to read or print the whole page) and close it again.
+- With many items and `selectionMode="multiple"`, add `showExpandAll` so people can open everything at once (to read or print the whole page) and close it again.
 - The browser's find-in-page (Ctrl+F or ⌘F) searches closed items too, and opens the item a match is in.
 - Closed items keep their content, and its state (a half-filled form, a playing video's position). Set `keepMounted={false}` on an item whose content is heavy and doesn't need to, such as a chart or a long table, so it renders only while open. Find-in-page can't find content that isn't there, so keep the default for text people may search.
 
@@ -58,7 +58,7 @@ Drawn from the `Playground` story.
 
 ## Accessibility
 
-- Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; an open item's content is a region labelled by its title. Closed items aren't regions, so screen readers' landmark lists hold only what's showing, and with `type="multiple"` and more than six items no panel is a region (the APG's advice against crowding the landmarks); the content still follows its heading.
+- Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; an open item's content is a region labelled by its title. Closed items aren't regions, so screen readers' landmark lists hold only what's showing, and with `selectionMode="multiple"` and more than six items no panel is a region (the APG's advice against crowding the landmarks); the content still follows its heading.
 - Tab moves between titles, as it does between any buttons, and Enter and Space open and close. The pattern's optional arrow keys are left out: a title acts like every other button on the page, and Up and Down scroll it.
 - Closed content is `hidden="until-found"`, so it's out of the tab order and screen readers skip it, but find-in-page still finds it: a match fires `beforematch`, which opens that item (in `single`, closing the open one). It's set once the closing animation ends. A disabled item's content stays `visibility: hidden` and isn't searchable. Before hydration, and in browsers without `until-found`, closed content is `visibility: hidden` as before.
 - The Expand all button is a plain `<button>` that says "Expand all" or, once every enabled item is open, "Collapse all" (the `expandAll` and `collapseAll` labels in `SerupaProvider`). It has `aria-expanded`, true only once every item is open, since VoiceOver doesn't reliably say a label that changes on its own. Disabled items stay as they are.
@@ -79,7 +79,7 @@ Drawn from the `Playground` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
-| `type` | `'single'` \| `'multiple'` | `'multiple'` | Any number open, so people can compare them, or one at a time |
+| `selectionMode` | `'single'` \| `'multiple'` | `'multiple'` | Any number open, so people can compare them, or one at a time |
 | `value` | `string[]` | none | The open items (controlled) |
 | `defaultValue` | `string[]` | `[]` | The items open at first. With `single`, only the first counts |
 | `onValueChange` | `(value: string[]) => void` | none | Called when an item opens or closes |

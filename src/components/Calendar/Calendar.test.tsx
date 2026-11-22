@@ -82,7 +82,7 @@ describe('Calendar', () => {
 
   test('plain "yyyy-mm-dd" strings: value, min and max take them as those local days, and onValueChange also gets the day as "yyyy-mm-dd"', async () => {
     const picks: string[] = [];
-    await render(<div data-testid="cal"><Calendar value="2026-10-14" min="2026-10-10" max="2026-10-20" onValueChange={(d, iso) => picks.push(d.getHours() + ':' + d.getDate() + ' ' + iso)} /></div>);
+    await render(<div data-testid="cal"><Calendar value="2026-10-14" min="2026-10-10" max="2026-10-20" onValueChange={(d, iso) => picks.push(d.getHours() + ':' + d.getDate() + ' ' + iso.iso)} /></div>);
     expect([cal<HTMLElement>('[aria-selected="true"] [data-date]').dataset.date, cal('[data-date="2026-10-09"]').getAttribute('aria-disabled'), cal('[data-date="2026-10-21"]').getAttribute('aria-disabled')]).toEqual(['2026-10-14', 'true', 'true']);
     cal<HTMLElement>('[data-date="2026-10-16"]').click();
     expect(picks).toEqual(['0:16 2026-10-16']);
@@ -564,7 +564,7 @@ describe('Calendar presets (RU11)', () => {
     const got: string[] = [];
     const t = new Date(); t.setHours(0, 0, 0, 0);
     const max = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 3);
-    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, s) => got.push(s)} />);
+    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, { iso: s }) => got.push(s)} />);
     const group = page.getByRole('group', { name: 'Shortcuts' });
     await expect.element(group).toBeInTheDocument();
     const btns = [...group.element().querySelectorAll('button')];
@@ -615,7 +615,7 @@ describe('Calendar: other calendar systems (RX9)', () => {
 
   test('calendar="persian": the grid is the Persian month (Aban 1405 runs 23 Oct to 21 Nov 2026), its days numbered 1 to 30; keys and picks give Dates', async () => {
     const picks: string[] = [], months: string[] = [];
-    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" weekStartsOn={6} defaultValue="2026-11-15" onValueChange={(_, iso) => picks.push(iso)} onMonthChange={(m) => months.push(m.toDateString())} />);
+    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" weekStartsOn={6} defaultValue="2026-11-15" onValueChange={(_, { iso }) => picks.push(iso)} onMonthChange={(m) => months.push(m.toDateString())} />);
     const days = inMonth();
     expect([title(), days.length, days[0]!.dataset.date, days[0]!.textContent, days.at(-1)!.dataset.date, days.at(-1)!.textContent]).toEqual([titleIn('persian', new Date(2026, 10, 15)), 30, '2026-10-23', '1', '2026-11-21', '30']);
     expect(title()).toContain('1405');

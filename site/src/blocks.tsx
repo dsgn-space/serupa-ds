@@ -131,7 +131,7 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
     {mode === 'held'
       ? <div className="site-held">
         <p>This example opens over the page.</p>
-        <Button variant="outline" leftIcon="play_arrow" onClick={() => setMode('run')}>Open the example<span className="sr-only">: {entry.name}</span></Button>
+        <Button variant="outline" startIcon="play_arrow" onClick={() => setMode('run')}>Open the example<span className="sr-only">: {entry.name}</span></Button>
       </div>
       : <Drawn key={mode}><StoryView entry={entry} /></Drawn>}
   </div>;
@@ -155,7 +155,7 @@ function Demo({ entry }: { entry: StoryEntry }) {
       ? <div className="site-demo__stage" data-site-demo=""><iframe className="site-demo__frame" title={`${entry.name}, example`} src={href(`/frame/${own.id}--${entry.slug}`)} loading="lazy" /></div>
       : <Stage entry={entry} className="site-demo__stage" />}
     <div className="site-demo__bar" data-print="hide">
-      <Button variant="ghost" size="sm" leftIcon="code" aria-expanded={open} aria-controls={id} onClick={toggle}>{open ? 'Hide code' : 'Show code'}</Button>
+      <Button variant="ghost" size="sm" startIcon="code" aria-expanded={open} aria-controls={id} onClick={toggle}>{open ? 'Hide code' : 'Show code'}</Button>
     </div>
     <div id={id} className="site-demo__code" hidden={!open}>
       {open && (code == null ? <Loader size="sm" label="Loading the code" /> : <CodeBlock language="tsx" title={`${entry.exportName} in ${entry.file.split('/').pop()}`} code={code} />)}
@@ -237,7 +237,7 @@ function PropsTable({ doc }: { doc: ComponentDoc }) {
         </TableRow>)}
       </TableBody>
     </Table>
-    {!all && <div className="site-more"><Button variant="outline" size="sm" rightIcon="expand_more" onClick={() => setAll(true)}>Show all {doc.props.length} props</Button></div>}
+    {!all && <div className="site-more"><Button variant="outline" size="sm" endIcon="expand_more" onClick={() => setAll(true)}>Show all {doc.props.length} props</Button></div>}
   </>;
 }
 

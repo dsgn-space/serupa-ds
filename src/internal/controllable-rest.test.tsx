@@ -23,7 +23,7 @@ const CASES: Array<[string, unknown, (v: unknown) => React.ReactElement]> = [
   ['Combobox open', false, (v) => <Combobox aria-label="Country" options={['Argentina', 'Brazil']} open={v as boolean | undefined} />],
   ['FilterBar value', {}, (v) => <FilterBar fields={fields} value={v as Record<string, never> | undefined} />],
   ['RangeCalendar value', { start: '2026-11-01', end: '2026-11-16' }, (v) => <RangeCalendar defaultMonth={new Date(2026, 10, 1)} value={v as { start: string; end: string } | undefined} />],
-  ['Carousel index', 1, (v) => <Carousel label="Photos" index={v as number | undefined}>{slides}</Carousel>],
+  ['Carousel index', 1, (v) => <Carousel aria-label="Photos" index={v as number | undefined}>{slides}</Carousel>],
   ['ChatComposer value', 'Hello', (v) => <ChatComposer value={v as string | undefined} />],
   ['MaskedValue revealed', false, (v) => <MaskedValue value="4111111111111208" label="Card number" revealable revealed={v as boolean | undefined} />],
   ['SidebarItem open', true, (v) => <Sidebar aria-label="Docs"><SidebarItem label="Guides" open={v as boolean | undefined}><SidebarItem href="#a" label="Start" /></SidebarItem></Sidebar>],

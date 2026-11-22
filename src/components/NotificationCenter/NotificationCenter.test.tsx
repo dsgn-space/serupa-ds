@@ -159,10 +159,10 @@ describe('NotificationCenter', () => {
   });
 
   test('placement, size and the other Drawer props go to the Drawer', async () => {
-    const screen = await render(<NotificationCenter defaultOpen items={list} placement="left" size="sm" />);
-    await expect.poll(() => drawer()?.dataset.side).toBe('left');
+    const screen = await render(<NotificationCenter defaultOpen items={list} placement="start" size="sm" />);
+    await expect.poll(() => drawer()?.dataset.side).toBe('start');
     expect(drawer()!.dataset.size).toBe('sm');
-    for (const [side, size] of [['top', 'md'], ['bottom', 'lg'], ['right', 'md'], ['start', 'sm'], ['end', 'md']] as const) {
+    for (const [side, size] of [['top', 'md'], ['bottom', 'lg'], ['start', 'sm'], ['end', 'md']] as const) {
       await screen.rerender(<NotificationCenter defaultOpen items={list} placement={side} size={size} closeButton={false} />);
       expect([drawer()!.dataset.side, drawer()!.dataset.size]).toEqual([side, size]);
     }

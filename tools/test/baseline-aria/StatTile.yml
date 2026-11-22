@@ -1,0 +1,76 @@
+# Default
+- paragraph: Revenue
+- paragraph: €48,200
+- paragraph: Up 12% vs last month
+- 'img "Revenue, last 8 periods: from €38,200 to €48,200, low €38,200, high €48,200"'
+
+# DoSayWhatIsGood
+- paragraph: Costs
+- paragraph: €12,900
+- paragraph: Up 8% vs last month
+
+# DontRiseIsAlwaysGood
+- paragraph: Costs
+- paragraph: €12,900
+- paragraph: Up 8% vs last month
+
+# Down
+- paragraph: Active users
+- paragraph: 1,204
+- paragraph: Down 4% vs last month
+- 'img "Active users, last 6 periods: from 1,320 to 1,204, low 1,204, high 1,320"'
+
+# DownIsGood
+- paragraph: Refunds
+- paragraph: "23"
+- paragraph: Down 31% vs last month
+- 'img "Refunds, last 5 periods: from 41 to 23, low 23, high 41"'
+
+# Flat
+- paragraph: Open incidents
+- paragraph: "3"
+- paragraph: No change vs last month
+
+# InAList
+- list:
+  - listitem:
+    - paragraph: Revenue
+    - paragraph: €48,200
+    - paragraph: Up 12% vs last month
+    - 'img "Revenue, last 8 periods: from 38,200 to 48,200, low 38,200, high 48,200"'
+  - listitem:
+    - paragraph: Orders
+    - paragraph: 1,930
+    - paragraph: Up 3% vs last month
+    - 'img "Orders, last 5 periods: from 1,700 to 1,930, low 1,700, high 1,930"'
+  - listitem:
+    - paragraph: Refunds
+    - paragraph: "23"
+    - paragraph: Down 31% vs last month
+    - 'img "Refunds, last 5 periods: from 41 to 23, low 23, high 41"'
+
+# Loading
+
+
+# LongText
+- paragraph: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung claims paid out this quarter
+- paragraph: €1,234,567,890.12
+- paragraph: Up 1,234.5% compared with the same quarter of the year before
+- 'img "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung claims paid out this quarter, last 8 periods: from €38,200 to €48,200, low €38,200, high €48,200"'
+
+# Playground
+- paragraph: Revenue
+- paragraph: €48,200
+- paragraph: Up 12% vs last month
+- 'img "Revenue, last 8 periods: from €38,200 to €48,200, low €38,200, high €48,200"'
+
+# UpIsBad
+- paragraph: Costs
+- paragraph: €12,900
+- paragraph: Up 8% vs last month
+- 'img "Costs, last 5 periods: from €10,900 to €12,900, low €10,900, high €12,900"'
+
+# ValueOnly
+- paragraph: Customers
+- paragraph: 8,312
+

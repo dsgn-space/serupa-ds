@@ -11,12 +11,12 @@ import { Stack } from '../Stack/Stack';
 
 /* Each story's main gets its own id, since the guide's page shows several shells at once. */
 const header = <Navbar brand={<span className="text-base font-semibold">Acme</span>} aria-label="Main navigation">
-  <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
+  <NavbarLink href="#dashboard" current>Dashboard</NavbarLink>
   <NavbarLink href="#docs">Docs</NavbarLink>
 </Navbar>;
 const sidebar = (collapsed = false) => <Sidebar aria-label="Workspace" collapsed={collapsed}>
   <SidebarSection>
-    <SidebarItem href="#home" icon="home" label="Home" active />
+    <SidebarItem href="#home" icon="home" label="Home" current />
     <SidebarItem href="#projects" icon="folder" label="Projects" />
     <SidebarItem href="#team" icon="group" label="Team" />
   </SidebarSection>
@@ -63,8 +63,8 @@ export const WithBottomNav: Story = {
   name: 'With a BottomNav',
   args: {
     sidebarFrom: 'md', mainId: 'shell-bottom',
-    bottomNav: <BottomNav label="Workspace phone" hideFrom="md">
-      <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+    bottomNav: <BottomNav aria-label="Workspace phone" hideFrom="md">
+      <BottomNavLink href="#home" icon="home" current>Home</BottomNavLink>
       <BottomNavLink href="#projects" icon="folder">Projects</BottomNavLink>
       <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
     </BottomNav>,

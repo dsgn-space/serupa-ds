@@ -26,7 +26,7 @@ afterEach(() => {
 const Grid = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'grid', gap: '16px', width: '420px', justifyItems: 'start' }}>{children}</div>;
 function Letters({ changes, gref, rref }: { changes: string[]; gref?: React.Ref<HTMLDivElement>; rref?: React.Ref<HTMLInputElement> }) {
   const [v, setV] = React.useState('b');
-  return <RadioGroup id="ctl" ref={gref} aria-label="Letters" value={v} onValueChange={(val, e) => { changes.push(val + ':' + e.type); setV(val); }} className="extra" data-x="y">
+  return <RadioGroup id="ctl" ref={gref} aria-label="Letters" value={v} onValueChange={(val, { event: e }) => { changes.push(val + ':' + e.type); setV(val); }} className="extra" data-x="y">
     <Radio id="a" value="a" ref={rref} name="ignored" defaultChecked>Alpha</Radio>
     <Radio id="b" value="b" description="The second letter.">Bravo</Radio>
     <Radio id="c" value="c" size="lg">Charlie</Radio>
@@ -143,7 +143,7 @@ describe('Radio', () => {
   test('the old onChange alias is gone: from plain JavaScript it is the group div\'s own handler, getting the radios\' bubbling change event after onValueChange', async () => {
     const calls: string[] = [];
     const old = { onChange: (e: React.ChangeEvent<HTMLInputElement>) => calls.push('change:' + e.target.value + ':' + e.type) } as object;   // as plain JavaScript passes it; TypeScript rejects onChange
-    await render(<Grid><RadioGroup aria-label="Ship" onValueChange={(v, e) => calls.push('value:' + v + ':' + e.type)} {...old}>
+    await render(<Grid><RadioGroup aria-label="Ship" onValueChange={(v, { event: e }) => calls.push('value:' + v + ':' + e.type)} {...old}>
       <Radio id="dc-air" value="air">Air</Radio><Radio id="dc-sea" value="sea">Sea</Radio>
     </RadioGroup></Grid>);
     await userEvent.click(input('dc-sea'));

@@ -19,8 +19,8 @@ export interface RadioGroupProps<V extends string | number = string | number> ex
   value?: V | null | undefined;
   /** The value picked at first (uncontrolled). */
   defaultValue?: V | undefined;
-  /** Called with the picked radio's value (and the change event), like SegmentedControl, Tabs and Slider. */
-  onValueChange?: ((value: V, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  /** Called with the picked radio's value, and details (event: the change event), like SegmentedControl, Tabs and Slider. */
+  onValueChange?: ((value: V, details: { event: React.ChangeEvent<HTMLInputElement> }) => void) | undefined;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
   orientation?: 'vertical' | 'horizontal' | undefined;
   /** The radios' size, unless a Radio sets its own. */
@@ -69,7 +69,7 @@ const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | nul
 
 /* RadioGroup: one choice from a set of Radios. It names them (name, or a generated one), holds the value
    (value with onValueChange, or defaultValue), and passes size, invalid, disabled and required down. onValueChange
-   gets (value, event); the old onChange alias is gone (use onValueChange). orientation "vertical" (default) or "horizontal". Renders <div role="radiogroup">: label it
+   gets (value, { event }); the old onChange alias is gone (use onValueChange). orientation "vertical" (default) or "horizontal". Renders <div role="radiogroup">: label it
    with Field group (a fieldset and legend), aria-label or aria-labelledby. */
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, readOnly: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
@@ -87,7 +87,7 @@ function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttribut
   useFormReset(root, function () { if (!controlled) setPicked(props.defaultValue); rerender(function (n) { return n + 1; }); });
   const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
   const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: around, variant: props.variant, invalid: invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly,
-    select: function (v, e) { if (!controlled) setPicked(v as string | number); if (onValueChange) onValueChange(v as string | number, e); } };
+    select: function (v, e) { if (!controlled) setPicked(v as string | number); if (onValueChange) onValueChange(v as string | number, { event: e }); } };
   // The arrows wrap from the last radio to the first and back, as the radio group pattern asks: Chromium and Firefox
   // do that themselves, but WebKit stops at the ends. A radio hidden by CSS isn't one of the ends: wrapping to it checked
   // it out of sight while focus stayed put (L8E82).

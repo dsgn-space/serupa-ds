@@ -14,7 +14,7 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
   </ButtonGroup>
   <Divider orientation="vertical" />
   <IconButton variant="ghost" icon="link" label="Insert link" />
-  <Menu trigger={<Button variant="ghost" rightIcon="expand_more">More</Button>}>
+  <Menu trigger={<Button variant="ghost" endIcon="expand_more">More</Button>}>
     <MenuItem>Clear formatting</MenuItem>
   </Menu>
 </Toolbar>

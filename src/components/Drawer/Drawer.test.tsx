@@ -25,7 +25,7 @@ const box = () => { const r = panel().getBoundingClientRect(); return [r.left, r
 
 type Ctl = { setOpen: (v: boolean) => void; setSide: (s: DrawerProps['placement']) => void; setSize: (s: DrawerProps['size']) => void; setBd: (v: boolean) => void };
 function App(props: { asks: boolean[]; ctl: Partial<Ctl>; dref?: React.Ref<HTMLDialogElement>; why?: string[] }) {
-  const [open, setOpen] = React.useState(false), [side, setSide] = React.useState<DrawerProps['placement']>('right'), [size, setSize] = React.useState<DrawerProps['size']>('md'), [bd, setBd] = React.useState(true);
+  const [open, setOpen] = React.useState(false), [side, setSide] = React.useState<DrawerProps['placement']>('end'), [size, setSize] = React.useState<DrawerProps['size']>('md'), [bd, setBd] = React.useState(true);
   Object.assign(props.ctl, { setOpen, setSide, setSize, setBd });
   const rows = []; for (let i = 0; i < 60; i++) rows.push(<p key={i}>Row {i}</p>);
   return <div style={{ height: '2000px' }}>
@@ -102,7 +102,7 @@ describe('Drawer', () => {
     await page.viewport(320, 256);
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
-    for (const side of ['bottom', 'right'] as const) {
+    for (const side of ['bottom', 'end'] as const) {
       React.act(() => ctl.setSide!(side));
       await openDrw();
       const p = panel(), r = p.getBoundingClientRect(), body = p.children[1] as HTMLElement;
@@ -137,7 +137,7 @@ describe('Drawer', () => {
     await expect.poll(() => isOpen()).toBe(true);
     await settled();
     const d = drw();
-    expect([d.matches(':modal'), d.getAttribute('aria-modal'), d.dataset.component, d.dataset.side]).toEqual([true, 'true', 'drawer', 'right']);
+    expect([d.matches(':modal'), d.getAttribute('aria-modal'), d.dataset.component, d.dataset.side]).toEqual([true, 'true', 'drawer', 'end']);
     expect([document.getElementById(d.getAttribute('aria-labelledby')!)!.textContent, document.getElementById(d.getAttribute('aria-describedby')!)!.textContent]).toEqual(['Filters', 'Narrow the list.']);
     expect([d.contains(document.activeElement), ref.current === d]).toEqual([true, true]);
     expect(d.className).toMatch(/extra/);
@@ -430,22 +430,22 @@ describe('Drawer', () => {
     await expect.poll(() => asks.join()).toBe('false close,false escape,false api');
   });
 
-  test('right-to-left page: placement="right" still opens on the right, the edge it slides in from', async () => {
+  test('right-to-left page: placement="end", the default, opens on the left, where the reading ends', async () => {
     document.documentElement.dir = 'rtl';
     try {
-      await render(<Drawer id="drr" open placement="right" title="Filters" />);
+      await render(<Drawer id="drr" open title="Filters" />);
       await settled();
-      const r = panel('drr').getBoundingClientRect();
-      expect([Math.round(r.right), Math.round(r.left) > 0]).toEqual([window.innerWidth, true]);
+      expect(Math.round(panel('drr').getBoundingClientRect().left)).toBe(0);
     } finally { document.documentElement.dir = ''; }
   });
 
-  test('right-to-left page: placement="left" opens on the left', async () => {
+  test('right-to-left page: placement="start" opens on the right', async () => {
     document.documentElement.dir = 'rtl';
     try {
-      await render(<Drawer id="drl2" open placement="left" title="Menu" />);
+      await render(<Drawer id="drl2" open placement="start" title="Menu" />);
       await settled();
-      expect(Math.round(panel('drl2').getBoundingClientRect().left)).toBe(0);
+      const r = panel('drl2').getBoundingClientRect();
+      expect([Math.round(r.right), Math.round(r.left) > 0]).toEqual([window.innerWidth, true]);
     } finally { document.documentElement.dir = ''; }
   });
 
@@ -583,10 +583,10 @@ describe('Drawer', () => {
   test('left, sm: 320px against the left edge; lg: 512px; bottom: full width against the bottom, at most the screen less 64px, rounded only on top; top: against the top, rounded only below', async () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
-    await reopen(ctl, () => { ctl.setSide!('left'); ctl.setSize!('sm'); });
+    await reopen(ctl, () => { ctl.setSide!('start'); ctl.setSize!('sm'); });
     const l = box();
     expect([l[0], l[2], l[3]]).toEqual([0, 320, 700]);
-    await reopen(ctl, () => { ctl.setSide!('right'); ctl.setSize!('lg'); });
+    await reopen(ctl, () => { ctl.setSide!('end'); ctl.setSize!('lg'); });
     const lg = box();
     expect([lg[0], lg[2]]).toEqual([488, 512]);
     await reopen(ctl, () => ctl.setSide!('bottom'));
@@ -601,7 +601,7 @@ describe('Drawer', () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
     await page.viewport(300, 600);
-    await reopen(ctl, () => ctl.setSide!('right'));
+    await reopen(ctl, () => ctl.setSide!('end'));
     const n = box();
     expect([n[0], n[2]]).toEqual([0, 300]);
   });
@@ -628,7 +628,7 @@ describe('Drawer', () => {
   });
 
   test('the shadow falls from the panel toward the page, from one light above: up from a bottom sheet, sideways from a side panel, mirrored right to left; a top panel\'s falls down; --drawer-shadow sets one for every side', async () => {
-    const cases = { bottom: ['bottom'], top: ['top'], left: ['left'], right: ['right'], start: ['start'], end: ['end'], startRtl: ['start', 'rtl'], endRtl: ['end', 'rtl'], own: ['bottom', 'ltr', { '--drawer-shadow': '0 0 0 1px red' }] } as const;
+    const cases = { bottom: ['bottom'], top: ['top'], start: ['start'], end: ['end'], startRtl: ['start', 'rtl'], endRtl: ['end', 'rtl'], own: ['bottom', 'ltr', { '--drawer-shadow': '0 0 0 1px red' }] } as const;
     await render(<>{Object.entries(cases).map(([k, [placement, dir = 'ltr', style]]: [string, readonly unknown[]]) => <div key={k} dir={dir as string}><Drawer id={`sh-${k}`} open={false} placement={placement as DrawerProps['placement']} title={k} style={style as React.CSSProperties}>x</Drawer></div>)}</>);
     const got = Object.fromEntries(Object.keys(cases).map((k) => {
       const d = el(`sh-${k}`) as HTMLDialogElement;
@@ -639,7 +639,7 @@ describe('Drawer', () => {
     }));
     const up = '0px -20px 25px -5px, 0px -8px 10px -6px', down = '0px 20px 25px -5px, 0px 8px 10px -6px';
     const toRight = '20px 0px 25px -5px, 8px 0px 10px -6px', toLeft = '-20px 0px 25px -5px, -8px 0px 10px -6px';
-    expect(got).toEqual({ bottom: up, top: down, left: toRight, right: toLeft, start: toRight, end: toLeft, startRtl: toLeft, endRtl: toRight, own: '0px 0px 0px 1px' });
+    expect(got).toEqual({ bottom: up, top: down, start: toRight, end: toLeft, startRtl: toLeft, endRtl: toRight, own: '0px 0px 0px 1px' });
   });
 
   test('--drawer-bg overrides one drawer', async () => {
@@ -774,9 +774,9 @@ describe('Drawer: motion (DZ1)', () => {
       const ctl: Partial<Ctl> = {};
       await render(<App asks={[]} ctl={ctl} />);
       const d = drw(), pn = panel();
-      for (const side of ['right', 'bottom'] as const) {
+      for (const side of ['end', 'bottom'] as const) {
         React.act(() => ctl.setSide!(side));
-        const edge = () => { const r = pn.getBoundingClientRect(); return Math.round(side === 'right' ? r.left : r.top); };
+        const edge = () => { const r = pn.getBoundingClientRect(); return Math.round(side === 'end' ? r.left : r.top); };
         const frames = async () => { const seen: number[] = []; do { seen.push(edge()); await new Promise(requestAnimationFrame); } while (pn.getAnimations().length); if (getComputedStyle(d).display !== 'none') seen.push(edge()); return seen; };
         const scrolled: number[] = [];
         const onScroll = () => scrolled.push(d.scrollLeft + d.scrollTop);
@@ -787,7 +787,7 @@ describe('Drawer: motion (DZ1)', () => {
         const exit = await frames();
         d.removeEventListener('scroll', onScroll);
         // In: from past the screen's edge, only ever toward where it rests; out: only ever back past the edge.
-        const rest = enter[enter.length - 1]!, far = side === 'right' ? innerWidth : innerHeight;
+        const rest = enter[enter.length - 1]!, far = side === 'end' ? innerWidth : innerHeight;
         expect([enter[0]! >= far - 2, enter.every((v, i) => i === 0 || v <= enter[i - 1]! + 1), rest < far]).toEqual([true, true, true]);
         expect([exit[0]! <= rest + 1, exit.every((v, i) => i === 0 || v >= exit[i - 1]! - 1), exit.filter((v) => v < rest - 1)]).toEqual([true, true, []]);
         expect([scrolled, d.scrollLeft, d.scrollTop]).toEqual([[], 0, 0]);

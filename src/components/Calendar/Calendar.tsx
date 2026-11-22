@@ -26,8 +26,8 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   value?: Date | string | null | undefined;
   /** The selected day at first (uncontrolled), as a Date or "yyyy-mm-dd". */
   defaultValue?: Date | string | null | undefined;
-  /** Called with the day people pick (local midnight), and the same day as "yyyy-mm-dd". */
-  onValueChange?: ((value: Date, iso: string) => void) | undefined;
+  /** Called with the day people pick (local midnight), and details: iso is the same day as "yyyy-mm-dd". */
+  onValueChange?: ((value: Date, details: { iso: string }) => void) | undefined;
   /** The month shown (controlled): any day in it. Use with onMonthChange. */
   month?: Date | undefined;
   /** The month shown at first. Default: the selected day's, or today's (min's or max's when today is outside them). */
@@ -269,7 +269,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const pick = (d: Date) => {
     if (disabled(d)) return;
     if (!controlledValue) setOwnValue(d);
-    if (props.onValueChange) props.onValueChange(d, isoDate(d));
+    if (props.onValueChange) props.onValueChange(d, { iso: isoDate(d) });
     if (!cal.same(d, month)) showMonth(d);
     setFocus(d);
   };

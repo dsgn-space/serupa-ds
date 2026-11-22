@@ -11,7 +11,7 @@ import { EmptyState, Button } from '@diki-stwn/serupa-ds';
   icon="folder_open"
   title="No projects yet"
   description="Create a project to start tracking your work."
-  actions={<Button leftIcon="add">New project</Button>}
+  actions={<Button startIcon="add">New project</Button>}
 />
 
 // Inside a table or a card, after a search: announce says it to screen readers as it appears

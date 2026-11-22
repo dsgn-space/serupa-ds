@@ -137,7 +137,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
   const freeCount = daySlots.filter((s) => s.free).length;
   const dayName = (d: string) => new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric', calendar: 'gregory', numberingSystem: 'latn' }).format(day(d));
 
-  const pickDay = (_: Date, d: string) => { setPicked(d); setTime(null); setPickProblem(null); setFailed(false); };
+  const pickDay = (_: Date, { iso: d }: { iso: string }) => { setPicked(d); setTime(null); setPickProblem(null); setFailed(false); };
   const edit = (patch: Partial<typeof details>) => {
     setDetails((now) => ({ ...now, ...patch }));
     setFailed(false);

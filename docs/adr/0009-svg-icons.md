@@ -24,7 +24,7 @@ Every Material Symbol is an inline SVG. `tools/icons/material.py` reads each ico
 | | A: Imports + names (chosen) | B: Names only | C: Imports only |
 |---|---|---|---|
 | Payload | Everyday set (~40 KB gz) plus what's imported | Everyday set; extras need registering | Only what's imported |
-| Writing icons | `leftIcon="add"` for common ones, `leftIcon={RocketLaunch}` for the rest | Names only; extras need `registerIcons` | Every icon is an import |
+| Writing icons | `startIcon="add"` for common ones, `startIcon={RocketLaunch}` for the rest | Names only; extras need `registerIcons` | Every icon is an import |
 | Migration from 5.x | Names outside the set need an import or one `registerIcons` call | Same | Every name in code and docs changes |
 
 ## Consequences

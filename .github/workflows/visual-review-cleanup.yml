@@ -1,0 +1,47 @@
+name: Visual review cleanup
+
+# The visual review job publishes a pull request's pictures on the branch visual-review/pr-<number>
+# (tools/visual-review.mjs), and nothing removed them: 96 were left on 22 Nov, most for pull requests long merged or
+# closed. This deletes a pull request's branch when it closes, and once a week any left behind (a fork's pull request,
+# whose closing run has no write token, or one that closed before this workflow existed). It checks out nothing and
+# runs no code from any branch: it only reads pull requests and deletes those refs.
+on:
+  pull_request:
+    types: [closed]
+  schedule:
+    - cron: '17 4 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: visual-review-cleanup-${{ github.event.pull_request.number || 'sweep' }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: read
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -uo pipefail
+          # Only a deletion that answers 204 counts; a branch already gone (422) is fine.
+          drop() { gh api -X DELETE "repos/$GH_REPO/git/refs/heads/visual-review/pr-$1" </dev/null >/dev/null 2>&1 && echo "Deleted visual-review/pr-$1"; }
+          if [ -n "$PR" ]; then drop "$PR" || echo "No visual-review/pr-$PR to delete"; exit 0; fi
+          # The weekly sweep: every visual-review/pr-* branch whose pull request is no longer open.
+          refs=$(gh api --paginate "repos/$GH_REPO/git/matching-refs/heads/visual-review/pr-" --jq '.[].ref | sub("^refs/heads/visual-review/pr-"; "")') || exit 1
+          open=$(gh api --paginate "repos/$GH_REPO/pulls?state=open&per_page=100" --jq '.[].number') || exit 1
+          kept=0; gone=0
+          while read -r n; do
+            [[ "$n" =~ ^[0-9]+$ ]] || continue
+            if grep -qx "$n" <<< "$open"; then kept=$((kept + 1)); continue; fi
+            drop "$n" && gone=$((gone + 1))
+          done <<< "$refs"
+          echo "Deleted $gone, kept $kept for open pull requests."

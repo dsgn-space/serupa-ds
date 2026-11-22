@@ -1,5 +1,4 @@
-// Browser baseline: every property, value keyword, function, at-rule and pseudo-class in dist/bundle.css (and in
-// dist/utilities-extra.css, its masks and gradients), and every
+// Browser baseline: every property, value keyword, function, at-rule and pseudo-class in dist/bundle.css, and every
 // static built-in dist/serupa.iife.js reads, works in the oldest browsers the README's "Browser support" names
 // (BASELINE), going by MDN's browser-compat-data.
 //
@@ -46,28 +45,7 @@ const KNOWN = {
   ':open': { why: 'Select\'s styled list, inside @supports (appearance: base-select), which only newer browsers pass: the field keeps its ring and the chevron turns over while it is open' },
   'property overflow-anchor': { why: 'VirtualList turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
   'overflow-anchor: none': { why: 'as overflow-anchor' },
-  'break-before: avoid': { why: 'print and column breaks: a hint browsers may ignore' },
-  'break-before: avoid-page': { why: 'as break-before: avoid' },
-  'break-before: column': { why: 'as break-before: avoid' },
-  'break-after: avoid': { why: 'as break-before: avoid' },
-  'break-after: avoid-page': { why: 'as break-before: avoid' },
-  'break-after: column': { why: 'as break-before: avoid' },
-  // The data says no; the cross-browser test (compat.mjs) measured these working in WebKit.
-  'mask-clip: border-box': { why: 'compat.mjs: works in WebKit' },
-  'mask-clip: padding-box': { why: 'compat.mjs: works in WebKit' },
-  'mask-clip: content-box': { why: 'compat.mjs: works in WebKit' },
-  'mask-clip: no-clip': { why: 'compat.mjs: works in WebKit' },
-  'mask-origin: border-box': { why: 'compat.mjs: works in WebKit' },
-  'mask-origin: padding-box': { why: 'compat.mjs: works in WebKit' },
-  'mask-origin: content-box': { why: 'compat.mjs: works in WebKit' },
   // Classes that do nothing in some browsers: the README's table lists them.
-  'mask-clip: fill-box': { why: 'Safari', readme: '`mask-clip-fill`' },
-  'mask-clip: stroke-box': { why: 'Safari', readme: '`mask-clip-fill`' },
-  'mask-clip: view-box': { why: 'Safari', readme: '`mask-clip-fill`' },
-  'mask-origin: fill-box': { why: 'Safari', readme: 'same `mask-origin-*`' },
-  'mask-origin: stroke-box': { why: 'Safari', readme: 'same `mask-origin-*`' },
-  'mask-origin: view-box': { why: 'Safari', readme: 'same `mask-origin-*`' },
-  'mix-blend-mode: plus-darker': { why: 'Safari only', readme: '`mix-blend-plus-darker`' },
   'property field-sizing': { why: 'Textarea asks @supports first and measures in script elsewhere', readme: '`field-sizing-*`' },
   'field-sizing: fixed': { why: 'as field-sizing', readme: '`field-sizing-*`' },
   'field-sizing: content': { why: 'as field-sizing', readme: '`field-sizing-*`' },
@@ -98,7 +76,7 @@ const note = (key, compat, where, prefixes) => {
   if (g.length && !found.has(key)) found.set(key, `${key} (${g.join(', ')}; e.g. ${where})`);
 };
 const asksFirst = (node, prop) => { for (let n = node.parent; n; n = n.parent) if (n.type === 'atrule' && n.name === 'supports' && n.params.includes(prop)) return true; return false; };
-const css = postcss.parse(fs.readFileSync(file, 'utf8') + fs.readFileSync(path.join(P, 'dist', 'utilities-extra.css'), 'utf8'));
+const css = postcss.parse(fs.readFileSync(file, 'utf8'));
 const types = Object.entries(bcd.css.types);
 css.walkDecls((d) => {
   if (d.prop.startsWith('--') || d.prop.startsWith('-') || d.parent.type === 'atrule' || asksFirst(d, d.prop)) return;

@@ -55,9 +55,9 @@ In a React app (Vite, Next.js, Remix):
 
 ```js
 import '@diki-stwn/serupa-ds/tokens.css';
+// import '@diki-stwn/serupa-ds/brands/violet.css';   // a brand other than blue: its own file, after tokens.css
 import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
 import '@diki-stwn/serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
-// import '@diki-stwn/serupa-ds/utilities-extra.css';   // masks and gradients (mask-*, bg-linear-*, from-*…), if you use them
 import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 export function SignUp() {
@@ -87,7 +87,7 @@ On a plain page without a bundler:
   <link rel="preload" href="fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="dist/base.css">
-  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.5 MB of utility classes would hold up the first paint -->
+  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.3 MB of utility classes would hold up the first paint -->
 </head>
 <body>
   <main id="root"></main>
@@ -112,7 +112,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (about 1.5 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
+`bundle.css` holds the utility classes (about 1.1 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
 
 ```js
 // vite.config.js
@@ -122,7 +122,7 @@ import { serupaPurge } from '@diki-stwn/serupa-ds/purge';
 export default { plugins: [react(), serupaPurge()] };
 ```
 
-`vite build` then ships the component styles (about 530 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+`vite build` then ships the component styles (about 530 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets, never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
 
 ```js
 // postcss.config.mjs
@@ -163,11 +163,11 @@ npx serupa-usage src
 
 | File | What it is |
 | --- | --- |
-| `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
+| `tokens.css` | Every token as a CSS variable, the blue themes, and the fonts. Load it first. |
+| `brands/<brand>.css` | One brand other than blue (`brands/violet.css`): its light and dark themes, about 0.6 KB gzipped. Load it after `tokens.css` for each brand the app uses. `brands/all.css` holds every one, for an app where people switch brands. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, `data-print="hide"` leaves out anything marked only for the screen, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`srp-*`), about 530 KB (70 KB gzipped, 53 KB with Brotli). |
-| `dist/utilities.css` | The utility classes, apart from masks and gradients. |
-| `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
+| `dist/utilities.css` | The utility classes: layout, spacing, sizing, type, the role colors (`bg-primary`, `text-text-muted`), borders, shadows, motion and interaction. No palette steps, masks, gradients, filters or rotate and scale: write those in your own CSS from the tokens (`var(--red-500)`). |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
 | `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
 | `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |
@@ -570,9 +570,7 @@ Current Chrome, Edge, Safari and Firefox. The tests run in Chromium, and the cro
 | --- | --- |
 | `justify-self-*`, `place-self-*` on a child of a plain block (in flex and grid they work everywhere) | Safari |
 | `touch-pan-up`, `-down`, `-left`, `-right` | Safari (use `touch-pan-x` / `touch-pan-y`) |
-| `mask-clip-fill`, `-stroke`, `-view` and the same `mask-origin-*` | Safari |
 | `place-content-baseline` | Safari |
-| `mix-blend-plus-darker` | Everything but Safari |
 | `field-sizing-*` | Firefox (Textarea's `autoResize` measures in script there) |
 
 Command buttons (`command`), `text-wrap: pretty`, phrase breaks in Japanese headings (`word-break: auto-phrase`), scroll-driven animations and `view-transition-name: match-element` are progressive: browsers without them ignore them and the page still works.

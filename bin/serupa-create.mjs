@@ -193,7 +193,7 @@ export default defineConfig({
     'src/main.tsx': `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@diki-stwn/serupa-ds/tokens.css';
-import '@diki-stwn/serupa-ds/base.css';
+${brand === 'blue' ? '' : `import '@diki-stwn/serupa-ds/brands/${brand}.css';\n`}import '@diki-stwn/serupa-ds/base.css';
 import '@diki-stwn/serupa-ds/bundle.css';
 import { App } from './App';
 

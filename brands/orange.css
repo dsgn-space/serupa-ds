@@ -1,0 +1,68 @@
+/* Serupa — the orange brand, generated from tokens.json. Load it after tokens.css. */
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.tokens {
+[data-theme="orange-light"] {
+  --primary: var(--orange-700);
+  --primary-hover: var(--orange-800);
+  --primary-pressed: var(--orange-900);
+  --primary-subtle: var(--orange-50);
+  --primary-subtle-pressed: var(--orange-100);
+  --on-primary: var(--white);
+  --field-action: var(--orange-700);
+  --focus-ring: var(--orange-600);
+  --link-visited: var(--violet-700);
+  --srp-more-primary: var(--orange-900);
+  --srp-more-primary-hover: var(--orange-950);
+  --srp-more-primary-pressed: var(--orange-950);
+  --srp-more-field-action: var(--orange-900);
+  --srp-more-focus-ring: var(--orange-700);
+}
+[data-theme="orange-dark"] {
+  --primary: var(--orange-400);
+  --primary-hover: var(--orange-300);
+  --primary-pressed: var(--orange-200);
+  --primary-subtle: var(--orange-950);
+  --primary-subtle-pressed: var(--orange-900);
+  --on-primary: var(--orange-950);
+  --field-action: var(--orange-400);
+  --focus-ring: var(--orange-400);
+  --link-visited: var(--violet-300);
+  --srp-more-primary: var(--orange-300);
+  --srp-more-primary-hover: var(--orange-200);
+  --srp-more-primary-pressed: var(--orange-100);
+  --srp-more-field-action: var(--orange-300);
+  --srp-more-focus-ring: var(--orange-300);
+}
+:root[data-brand="orange"]:not([data-theme]), [data-brand="orange"]:not([data-theme]) {
+  --primary: light-dark(var(--orange-700), var(--orange-400));
+  --primary-hover: light-dark(var(--orange-800), var(--orange-300));
+  --primary-pressed: light-dark(var(--orange-900), var(--orange-200));
+  --primary-subtle: light-dark(var(--orange-50), var(--orange-950));
+  --primary-subtle-pressed: light-dark(var(--orange-100), var(--orange-900));
+  --on-primary: light-dark(var(--white), var(--orange-950));
+  --field-action: light-dark(var(--orange-700), var(--orange-400));
+  --focus-ring: light-dark(var(--orange-600), var(--orange-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--orange-900), var(--orange-300));
+  --srp-more-primary-hover: light-dark(var(--orange-950), var(--orange-200));
+  --srp-more-primary-pressed: light-dark(var(--orange-950), var(--orange-100));
+  --srp-more-field-action: light-dark(var(--orange-900), var(--orange-300));
+  --srp-more-focus-ring: light-dark(var(--orange-700), var(--orange-300));
+}
+:is([data-theme^="orange-"], [data-brand="orange"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--orange-700), var(--orange-400));
+  --primary-hover: light-dark(var(--orange-800), var(--orange-300));
+  --primary-pressed: light-dark(var(--orange-900), var(--orange-200));
+  --primary-subtle: light-dark(var(--orange-50), var(--orange-950));
+  --primary-subtle-pressed: light-dark(var(--orange-100), var(--orange-900));
+  --on-primary: light-dark(var(--white), var(--orange-950));
+  --field-action: light-dark(var(--orange-700), var(--orange-400));
+  --focus-ring: light-dark(var(--orange-600), var(--orange-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--orange-900), var(--orange-300));
+  --srp-more-primary-hover: light-dark(var(--orange-950), var(--orange-200));
+  --srp-more-primary-pressed: light-dark(var(--orange-950), var(--orange-100));
+  --srp-more-field-action: light-dark(var(--orange-900), var(--orange-300));
+  --srp-more-focus-ring: light-dark(var(--orange-700), var(--orange-300));
+}
+}

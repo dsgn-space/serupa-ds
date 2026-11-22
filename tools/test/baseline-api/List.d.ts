@@ -37,7 +37,7 @@ declare const ListItem: {
 };
 interface ListLoadingItemsProps {
     rows?: number | undefined;
-    description?: boolean | undefined;
+    showDescription?: boolean | undefined;
     leading?: "icon" | "lg" | "md" | "sm" | "xl" | "xs" | undefined;
     label?: string | undefined;
 }
