@@ -15,6 +15,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Quiz: a few questions to check what was learned, all on one page, then the score and, for each question, whether
    it was right and why. For an app to copy. What it carries (WCAG 2.2):
@@ -116,63 +118,65 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
         <p className="m-0 text-base font-semibold">Acme learning</p>
         <Link underline="hover" href="#course">Back to the course</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Checking them needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
-          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like. Questions marked * need an answer.`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
-        <div className="flex flex-col gap-6 pt-6">
-          {checked ? (
-            <section aria-labelledby="quiz-score" className="flex flex-col items-start gap-3">
-              <h2 id="quiz-score" ref={result} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">
-                {score >= pass ? 'You passed' : 'Not passed yet'}: {n(score)} of {n(questions.length)} right
-              </h2>
-              <p className="m-0">{score >= pass ? 'The next lesson is open.' : `Get ${n(pass)} right to pass. Each question below says why its answer is right.`}</p>
-              <div className="flex flex-wrap gap-2">
-                {score >= pass ? <Link href="#next">Go to the next lesson</Link> : null}
-                <Button variant={score >= pass ? 'secondary' : 'primary'} onClick={again}>Try again</Button>
-              </div>
-            </section>
-          ) : (
-            <p id="quiz-progress" role="status" className="m-0 text-text-muted">{n(answered)} of {n(questions.length)} answered</p>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Checking them needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
+            description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like. Questions marked * need an answer.`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
+          <div className="flex flex-col gap-6 pt-6">
+            {checked ? (
+              <section aria-labelledby="quiz-score" className="flex flex-col items-start gap-3">
+                <h2 id="quiz-score" ref={result} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">
+                  {score >= pass ? 'You passed' : 'Not passed yet'}: {n(score)} of {n(questions.length)} right
+                </h2>
+                <p className="m-0">{score >= pass ? 'The next lesson is open.' : `Get ${n(pass)} right to pass. Each question below says why its answer is right.`}</p>
+                <div className="flex flex-wrap gap-2">
+                  {score >= pass ? <Link href="#next">Go to the next lesson</Link> : null}
+                  <Button variant={score >= pass ? 'secondary' : 'primary'} onClick={again}>Try again</Button>
+                </div>
+              </section>
+            ) : (
+              <p id="quiz-progress" role="status" className="m-0 text-text-muted">{n(answered)} of {n(questions.length)} answered</p>
+            )}
+            <form ref={top} onSubmit={check} noValidate aria-label="Quiz" className="flex flex-col gap-6">
+              <ErrorSummary key={tries} errors={errors} />
+              <ol className="m-0 flex list-none flex-col gap-6 p-0">
+                {questions.map((q, i) => {
+                  const many = q.answer.length > 1;
+                  const mine = answers[q.id] ?? [];
+                  const right = checked && scoreQuiz([q], answers) === 1;
+                  const label = `${n(i + 1)}. ${q.question}${many ? ' Choose all that apply.' : ''}`;
+                  const error = missing.includes(q.id) ? 'Choose an answer.' : undefined;
+                  return (
+                    <li key={q.id} className="flex flex-col gap-3">
+                      <Field label={label} error={error} group required disabled={checked}>
+                        {many ? (
+                          <CheckboxGroup id={`quiz-${q.id}`} value={mine} onValueChange={(v: string[]) => choose(q.id, v)}>
+                            {q.options.map((o) => <Checkbox key={o.value} value={o.value}>{o.label}</Checkbox>)}
+                          </CheckboxGroup>
+                        ) : (
+                          <RadioGroup id={`quiz-${q.id}`} name={`quiz-${q.id}`} value={mine[0] ?? ''} onValueChange={(v: string) => choose(q.id, [v])}>
+                            {q.options.map((o) => <Radio key={o.value} value={o.value}>{o.label}</Radio>)}
+                          </RadioGroup>
+                        )}
+                      </Field>
+                      {checked ? (
+                        <Alert tone={right ? 'success' : 'warning'} title={right ? 'Right' : 'Not quite'}>
+                          {right ? '' : `The answer: ${q.options.filter((o) => q.answer.includes(o.value)).map((o) => o.label).join(', and ')}. `}{q.why}
+                        </Alert>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ol>
+              {checked ? null : <Button type="submit" className="self-start">Check answers</Button>}
+            </form>
+          </div>
           )}
-          <form ref={top} onSubmit={check} noValidate aria-label="Quiz" className="flex flex-col gap-6">
-            <ErrorSummary key={tries} errors={errors} />
-            <ol className="m-0 flex list-none flex-col gap-6 p-0">
-              {questions.map((q, i) => {
-                const many = q.answer.length > 1;
-                const mine = answers[q.id] ?? [];
-                const right = checked && scoreQuiz([q], answers) === 1;
-                const label = `${n(i + 1)}. ${q.question}${many ? ' Choose all that apply.' : ''}`;
-                const error = missing.includes(q.id) ? 'Choose an answer.' : undefined;
-                return (
-                  <li key={q.id} className="flex flex-col gap-3">
-                    <Field label={label} error={error} group required disabled={checked}>
-                      {many ? (
-                        <CheckboxGroup id={`quiz-${q.id}`} value={mine} onValueChange={(v: string[]) => choose(q.id, v)}>
-                          {q.options.map((o) => <Checkbox key={o.value} value={o.value}>{o.label}</Checkbox>)}
-                        </CheckboxGroup>
-                      ) : (
-                        <RadioGroup id={`quiz-${q.id}`} name={`quiz-${q.id}`} value={mine[0] ?? ''} onValueChange={(v: string) => choose(q.id, [v])}>
-                          {q.options.map((o) => <Radio key={o.value} value={o.value}>{o.label}</Radio>)}
-                        </RadioGroup>
-                      )}
-                    </Field>
-                    {checked ? (
-                      <Alert tone={right ? 'success' : 'warning'} title={right ? 'Right' : 'Not quite'}>
-                        {right ? '' : `The answer: ${q.options.filter((o) => q.answer.includes(o.value)).map((o) => o.label).join(', and ')}. `}{q.why}
-                      </Alert>
-                    ) : null}
-                  </li>
-                );
-              })}
-            </ol>
-            {checked ? null : <Button type="submit" className="self-start">Check answers</Button>}
-          </form>
-        </div>
-        )}
-      </main>
+        </Stack>
+      </Container>
     </div>
   );
 }

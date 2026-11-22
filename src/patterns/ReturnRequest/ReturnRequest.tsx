@@ -14,6 +14,8 @@ import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumbe
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Return request: sending back some of an order, with why, how it goes back and where the money goes, and what
    happens next. For an app to copy. What it carries (WCAG 2.2):
@@ -135,77 +137,79 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Sending the request needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: `Order ${order}`, href: `#order-${order}` }, { label: 'Return' }]}
-          title={`Return items from order ${order}`} description={`Send them back by ${until}. Choose what, why, and how.`} />
-        <div className="pt-6">
-          {sent != null ? (
-            <section aria-labelledby="next" className="flex flex-col items-start gap-3">
-              <h2 id="next" ref={next} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Return {sent ? `${sent} ` : ''}started</h2>
-              <ol className="m-0 flex flex-col gap-2 ps-5">
-                <li>{method === 'pickup' ? 'A courier will email you to pick a day to collect it.' : 'Print the label from the email we’ve sent, or show its code at a drop-off point.'}</li>
-                <li>Pack the items with their tags, and send them by {until}.</li>
-                <li>Once they’re back, {money(sums.refund)} goes {refundTo === 'credit' ? 'to your store credit, the same day' : 'back to how you paid, in up to 5 working days'}.</li>
-              </ol>
-              <Link href={`#order-${order}`}>Back to order {order}</Link>
-            </section>
-          ) : (
-            <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-6 md:grid-cols-3">
-              <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
-              <div className="flex flex-col gap-6 md:col-span-2">
-                <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>
-                  <div id="return-items" className="flex flex-col gap-4">
-                    {items.map((i) => (
-                      <div key={i.id} className="flex flex-col gap-2">
-                        <Checkbox value={i.id} checked={chosen.includes(i.id)} disabled={!!i.notReturnable}
-                          onCheckedChange={(on) => toggle(on ? [...chosen, i.id] : chosen.filter((x) => x !== i.id))}
-                          description={i.notReturnable ?? i.options}>
-                          {i.name} <span className="text-text-muted">· {money(i.price)}</span>
-                        </Checkbox>
-                        {chosen.includes(i.id) ? (
-                          <Field label={`Why are you returning the ${i.name}?`} id={`reason-${i.id}`} error={problems[`reason-${i.id}`]} required className="ms-7">
-                            <Select placeholder="Choose a reason" options={REASONS} value={reasons[i.id] ?? ''}
-                              onChange={(e) => { setReasons((r) => ({ ...r, [i.id]: e.target.value })); clear(`reason-${i.id}`); setFailed(false); }} />
-                          </Field>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </Field>
-                <Field label="How will you send it back?" group>
-                  <RadioGroup name="return-method" value={method} onValueChange={(v: string) => setMethod(v as ReturnChoice['method'])}>
-                    <Radio value="dropoff" description="At any post office or parcel locker.">Drop it off, free</Radio>
-                    <Radio value="pickup" description="Free when it arrived damaged or wasn’t what you ordered.">
-                      Have it picked up, {money(pickupFee)} off the refund
-                    </Radio>
-                  </RadioGroup>
-                </Field>
-                <Field label="Where should the money go?" group>
-                  <RadioGroup name="return-refund" value={refundTo} onValueChange={(v: string) => setRefundTo(v as ReturnChoice['refund'])}>
-                    <Radio value="original" description="Up to 5 working days after it’s back.">Back to how you paid</Radio>
-                    <Radio value="credit" description="The same day it’s back, to spend here.">Store credit</Radio>
-                  </RadioGroup>
-                </Field>
-              </div>
-              <Card>
-                <section aria-labelledby="refund" className="flex flex-col gap-4">
-                  <h2 id="refund" className="m-0 text-lg font-semibold">Your refund</h2>
-                  {chosen.length ? (
-                    <DescriptionList layout="split">
-                      <DescriptionItem term="Items">{money(sums.value)}</DescriptionItem>
-                      {sums.cost ? <DescriptionItem term="Pickup">−{money(sums.cost)}</DescriptionItem> : null}
-                      <DescriptionItem term="Refund" emphasis>{money(sums.refund)}</DescriptionItem>
-                    </DescriptionList>
-                  ) : <p className="m-0 text-text-muted">Choose an item to see what comes back.</p>}
-                  {failed ? <Alert tone="danger">Couldn’t start the return. Try again; your choices are still here.</Alert> : null}
-                  <Button type="submit" loading={busy}>Start return</Button>
-                </section>
-              </Card>
-            </form>
-          )}
-        </div>
-      </main>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Sending the request needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: `Order ${order}`, href: `#order-${order}` }, { label: 'Return' }]}
+            title={`Return items from order ${order}`} description={`Send them back by ${until}. Choose what, why, and how.`} />
+          <div className="pt-6">
+            {sent != null ? (
+              <section aria-labelledby="next" className="flex flex-col items-start gap-3">
+                <h2 id="next" ref={next} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Return {sent ? `${sent} ` : ''}started</h2>
+                <ol className="m-0 flex flex-col gap-2 ps-5">
+                  <li>{method === 'pickup' ? 'A courier will email you to pick a day to collect it.' : 'Print the label from the email we’ve sent, or show its code at a drop-off point.'}</li>
+                  <li>Pack the items with their tags, and send them by {until}.</li>
+                  <li>Once they’re back, {money(sums.refund)} goes {refundTo === 'credit' ? 'to your store credit, the same day' : 'back to how you paid, in up to 5 working days'}.</li>
+                </ol>
+                <Link href={`#order-${order}`}>Back to order {order}</Link>
+              </section>
+            ) : (
+              <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-6 md:grid-cols-3">
+                <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
+                <div className="flex flex-col gap-6 md:col-span-2">
+                  <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>
+                    <div id="return-items" className="flex flex-col gap-4">
+                      {items.map((i) => (
+                        <div key={i.id} className="flex flex-col gap-2">
+                          <Checkbox value={i.id} checked={chosen.includes(i.id)} disabled={!!i.notReturnable}
+                            onCheckedChange={(on) => toggle(on ? [...chosen, i.id] : chosen.filter((x) => x !== i.id))}
+                            description={i.notReturnable ?? i.options}>
+                            {i.name} <span className="text-text-muted">· {money(i.price)}</span>
+                          </Checkbox>
+                          {chosen.includes(i.id) ? (
+                            <Field label={`Why are you returning the ${i.name}?`} id={`reason-${i.id}`} error={problems[`reason-${i.id}`]} required className="ms-7">
+                              <Select placeholder="Choose a reason" options={REASONS} value={reasons[i.id] ?? ''}
+                                onChange={(e) => { setReasons((r) => ({ ...r, [i.id]: e.target.value })); clear(`reason-${i.id}`); setFailed(false); }} />
+                            </Field>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </Field>
+                  <Field label="How will you send it back?" group>
+                    <RadioGroup name="return-method" value={method} onValueChange={(v: string) => setMethod(v as ReturnChoice['method'])}>
+                      <Radio value="dropoff" description="At any post office or parcel locker.">Drop it off, free</Radio>
+                      <Radio value="pickup" description="Free when it arrived damaged or wasn’t what you ordered.">
+                        Have it picked up, {money(pickupFee)} off the refund
+                      </Radio>
+                    </RadioGroup>
+                  </Field>
+                  <Field label="Where should the money go?" group>
+                    <RadioGroup name="return-refund" value={refundTo} onValueChange={(v: string) => setRefundTo(v as ReturnChoice['refund'])}>
+                      <Radio value="original" description="Up to 5 working days after it’s back.">Back to how you paid</Radio>
+                      <Radio value="credit" description="The same day it’s back, to spend here.">Store credit</Radio>
+                    </RadioGroup>
+                  </Field>
+                </div>
+                <Card>
+                  <section aria-labelledby="refund" className="flex flex-col gap-4">
+                    <h2 id="refund" className="m-0 text-lg font-semibold">Your refund</h2>
+                    {chosen.length ? (
+                      <DescriptionList layout="split">
+                        <DescriptionItem term="Items">{money(sums.value)}</DescriptionItem>
+                        {sums.cost ? <DescriptionItem term="Pickup">−{money(sums.cost)}</DescriptionItem> : null}
+                        <DescriptionItem term="Refund" emphasis>{money(sums.refund)}</DescriptionItem>
+                      </DescriptionList>
+                    ) : <p className="m-0 text-text-muted">Choose an item to see what comes back.</p>}
+                    {failed ? <Alert tone="danger">Couldn’t start the return. Try again; your choices are still here.</Alert> : null}
+                    <Button type="submit" loading={busy}>Start return</Button>
+                  </section>
+                </Card>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

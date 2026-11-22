@@ -15,6 +15,8 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Support ticket: one request to a support team, as the person who asked sees it. Where it's got to, the
    conversation so far, and a reply box; or a way to reopen it once solved. For an app to copy. What it carries
@@ -132,75 +134,77 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen, onlin
         <p className="m-0 text-base font-semibold">Acme help</p>
         <Link underline="hover" href="#tickets">Your requests</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your reply stays here. Sending it needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Your requests', href: '#tickets' }, { label: ticket.reference }]} title={ticket.subject} />
-        <div className="flex flex-col gap-8 pt-6">
-          <Card>
-            <section aria-labelledby="ticket-state" className="flex flex-col gap-4">
-              <div className="flex flex-wrap items-center gap-3">
-                <h2 id="ticket-state" className="m-0 text-lg font-semibold">Where it’s got to</h2>
-                <Badge tone={STATE[state].tone}>{STATE[state].label}</Badge>
-              </div>
-              <p className="m-0">{STATE[state].means}</p>
-              <DescriptionList>
-                <DescriptionItem term="Reference">{ticket.reference}</DescriptionItem>
-                <DescriptionItem term="Opened"><FormattedDate value={ticket.opened} timeStyle="short" /></DescriptionItem>
-                <DescriptionItem term="Priority">{ticket.priority}</DescriptionItem>
-              </DescriptionList>
-            </section>
-          </Card>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your reply stays here. Sending it needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Your requests', href: '#tickets' }, { label: ticket.reference }]} title={ticket.subject} />
+          <div className="flex flex-col gap-8 pt-6">
+            <Card>
+              <section aria-labelledby="ticket-state" className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 id="ticket-state" className="m-0 text-lg font-semibold">Where it’s got to</h2>
+                  <Badge tone={STATE[state].tone}>{STATE[state].label}</Badge>
+                </div>
+                <p className="m-0">{STATE[state].means}</p>
+                <DescriptionList>
+                  <DescriptionItem term="Reference">{ticket.reference}</DescriptionItem>
+                  <DescriptionItem term="Opened"><FormattedDate value={ticket.opened} timeStyle="short" /></DescriptionItem>
+                  <DescriptionItem term="Priority">{ticket.priority}</DescriptionItem>
+                </DescriptionList>
+              </section>
+            </Card>
 
-          <section aria-labelledby="conversation" className="flex flex-col gap-4">
-            <h2 id="conversation" className="m-0 text-lg font-semibold">Conversation</h2>
-            <ol className="m-0 flex list-none flex-col gap-4 p-0">
-              {messages.map((m) => {
-                const mine = m.from === 'you';
-                const who = mine ? 'You' : m.from;
-                return (
-                  <li key={m.id}>
-                    <article aria-labelledby={`msg-${m.id}`} className="flex gap-3">
-                      <Avatar name={mine ? 'You' : m.from} size="sm" />
-                      <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <h3 id={`msg-${m.id}`} className="m-0 flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
-                          <span>{who}</span>
-                          {/* Yours is named "You" already, so only the time follows; theirs says "Support" too. */}
-                          <span className="font-normal text-text-muted">{mine ? null : 'Support, '}<FormattedDate value={m.at} timeStyle="short" /></span>
-                        </h3>
-                        <p className="m-0 whitespace-pre-line wrap-break-word">{m.body}</p>
-                        {m.files?.length ? <p className="m-0 text-sm text-text-muted">Attached: {m.files.join(', ')}</p> : null}
-                      </div>
-                    </article>
-                  </li>
-                );
-              })}
-            </ol>
-          </section>
-
-          {state === 'solved' ? (
-            <section aria-labelledby="solved" className="flex flex-col items-start gap-3">
-              <h2 id="solved" ref={solvedHeading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">This request is solved</h2>
-              <p className="m-0">If it isn’t sorted after all, reopen it and reply; it goes back to the same person.</p>
-              <Button variant="secondary" onClick={reopen}>Reopen</Button>
+            <section aria-labelledby="conversation" className="flex flex-col gap-4">
+              <h2 id="conversation" className="m-0 text-lg font-semibold">Conversation</h2>
+              <ol className="m-0 flex list-none flex-col gap-4 p-0">
+                {messages.map((m) => {
+                  const mine = m.from === 'you';
+                  const who = mine ? 'You' : m.from;
+                  return (
+                    <li key={m.id}>
+                      <article aria-labelledby={`msg-${m.id}`} className="flex gap-3">
+                        <Avatar name={mine ? 'You' : m.from} size="sm" />
+                        <div className="flex min-w-0 flex-1 flex-col gap-1">
+                          <h3 id={`msg-${m.id}`} className="m-0 flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
+                            <span>{who}</span>
+                            {/* Yours is named "You" already, so only the time follows; theirs says "Support" too. */}
+                            <span className="font-normal text-text-muted">{mine ? null : 'Support, '}<FormattedDate value={m.at} timeStyle="short" /></span>
+                          </h3>
+                          <p className="m-0 whitespace-pre-line wrap-break-word">{m.body}</p>
+                          {m.files?.length ? <p className="m-0 text-sm text-text-muted">Attached: {m.files.join(', ')}</p> : null}
+                        </div>
+                      </article>
+                    </li>
+                  );
+                })}
+              </ol>
             </section>
-          ) : (
-            <form onSubmit={send} noValidate aria-labelledby="reply-heading" className="flex flex-col gap-4">
-              <h2 id="reply-heading" className="m-0 text-lg font-semibold">Reply</h2>
-              <Field label="Your reply" id="ticket-reply" hint="We reply within 1 working day." error={problem ?? undefined}>
-                <Textarea ref={reply} rows={5} maxLength={LIMIT} value={body} onChange={(e) => { setBody(e.target.value); setProblem(null); setFailed(false); }} />
-              </Field>
-              <Field label="Files" optional>
-                <FileUpload id="ticket-files" multiple maxFiles={3} maxSize={10 * 1024 * 1024} accept="image/*,.pdf" hint="Photos or PDFs, up to 3, 10 MB each" files={files} onFilesChange={(f) => { setFiles(f); setProblem(null); }} />
-              </Field>
-              {failed ? <Alert tone="danger">Couldn’t send your reply. Try again; your words and files are still here.</Alert> : null}
-              <div className="flex flex-wrap gap-2">
-                <Button type="submit" loading={busy}>Send reply</Button>
-                <Button variant="ghost" disabled={busy} onClick={solve}>Mark as solved</Button>
-              </div>
-            </form>
-          )}
-        </div>
-      </main>
+
+            {state === 'solved' ? (
+              <section aria-labelledby="solved" className="flex flex-col items-start gap-3">
+                <h2 id="solved" ref={solvedHeading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">This request is solved</h2>
+                <p className="m-0">If it isn’t sorted after all, reopen it and reply; it goes back to the same person.</p>
+                <Button variant="secondary" onClick={reopen}>Reopen</Button>
+              </section>
+            ) : (
+              <form onSubmit={send} noValidate aria-labelledby="reply-heading" className="flex flex-col gap-4">
+                <h2 id="reply-heading" className="m-0 text-lg font-semibold">Reply</h2>
+                <Field label="Your reply" id="ticket-reply" hint="We reply within 1 working day." error={problem ?? undefined}>
+                  <Textarea ref={reply} rows={5} maxLength={LIMIT} value={body} onChange={(e) => { setBody(e.target.value); setProblem(null); setFailed(false); }} />
+                </Field>
+                <Field label="Files" optional>
+                  <FileUpload id="ticket-files" multiple maxFiles={3} maxSize={10 * 1024 * 1024} accept="image/*,.pdf" hint="Photos or PDFs, up to 3, 10 MB each" files={files} onFilesChange={(f) => { setFiles(f); setProblem(null); }} />
+                </Field>
+                {failed ? <Alert tone="danger">Couldn’t send your reply. Try again; your words and files are still here.</Alert> : null}
+                <div className="flex flex-wrap gap-2">
+                  <Button type="submit" loading={busy}>Send reply</Button>
+                  <Button variant="ghost" disabled={busy} onClick={solve}>Mark as solved</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

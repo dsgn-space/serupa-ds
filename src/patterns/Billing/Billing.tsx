@@ -17,6 +17,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Billing: the plan with what it costs and when it renews, how much of it is used, how it's paid (a card, a direct
    debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
@@ -155,101 +157,103 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">This is your plan as it was when the page loaded. Changes and payments need a connection.</OfflineBanner>
-        <PageHeader title="Billing" description="Your plan, what it costs, and what you’ve paid." />
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load billing" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
-          ['Plan', 'Usage', 'Invoices'].map((t, i) => (
-            <section key={t} aria-labelledby={`billing-loading-${i}`} className="flex flex-col gap-4">
-              <Heading level={2} size="lg" id={`billing-loading-${i}`}>{t}</Heading>
-              <Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading billing' : ''} /></Card>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main" aria-busy={loading && !loadFailed ? true : undefined}>
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">This is your plan as it was when the page loaded. Changes and payments need a connection.</OfflineBanner>
+          <PageHeader title="Billing" description="Your plan, what it costs, and what you’ve paid." />
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load billing" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
+            ['Plan', 'Usage', 'Invoices'].map((t, i) => (
+              <section key={t} aria-labelledby={`billing-loading-${i}`} className="flex flex-col gap-4">
+                <Heading level={2} size="lg" id={`billing-loading-${i}`}>{t}</Heading>
+                <Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading billing' : ''} /></Card>
+              </section>
+            ))
+          ) : <>
+            {unpaid ? (
+              <Alert tone="danger" title={`The payment on ${date(unpaid.date)} failed`}
+                actions={<Link href={updateCardHref}>{fix}</Link>}>
+                {method?.kind === 'card' ? 'Update your card' : method ? 'Change your payment method' : 'Add a payment method'} to keep {plan.name}. We’ll try the payment again when you do.
+              </Alert>
+            ) : null}
+
+            <section aria-labelledby="billing-plan" className="flex flex-col gap-4">
+              <Heading level={2} size="lg" id="billing-plan">Plan</Heading>
+              <Card className="flex flex-row flex-wrap items-start justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                  <p className="m-0 text-lg font-semibold">{plan.name}{cancelled ? <Badge tone="warning" className="ms-2">Cancelled</Badge> : null}</p>
+                  <p className="m-0">{price} a {plan.interval}</p>
+                  <p className="m-0 text-text-muted">
+                    {cancelled ? `Active until ${date(plan.renews)}, then it stops. Nothing is deleted.` : `Renews on ${date(plan.renews)} for ${price}.`}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {cancelled ? <Button onClick={resume}>Resume plan</Button> : <>
+                    <Button href={changePlanHref} variant="outline">Change plan</Button>
+                    <Button variant="ghost" onClick={() => ask(true)}>Cancel plan</Button>
+                  </>}
+                </div>
+              </Card>
             </section>
-          ))
-        ) : <>
-          {unpaid ? (
-            <Alert tone="danger" title={`The payment on ${date(unpaid.date)} failed`}
-              actions={<Link href={updateCardHref}>{fix}</Link>}>
-              {method?.kind === 'card' ? 'Update your card' : method ? 'Change your payment method' : 'Add a payment method'} to keep {plan.name}. We’ll try the payment again when you do.
-            </Alert>
-          ) : null}
 
-          <section aria-labelledby="billing-plan" className="flex flex-col gap-4">
-            <Heading level={2} size="lg" id="billing-plan">Plan</Heading>
-            <Card className="flex flex-row flex-wrap items-start justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <p className="m-0 text-lg font-semibold">{plan.name}{cancelled ? <Badge tone="warning" className="ms-2">Cancelled</Badge> : null}</p>
-                <p className="m-0">{price} a {plan.interval}</p>
-                <p className="m-0 text-text-muted">
-                  {cancelled ? `Active until ${date(plan.renews)}, then it stops. Nothing is deleted.` : `Renews on ${date(plan.renews)} for ${price}.`}
-                </p>
-              </div>
+            <section aria-labelledby="billing-usage" className="flex flex-col gap-4">
+              <Heading level={2} size="lg" id="billing-usage">Usage</Heading>
+              <Card className="flex flex-col gap-4">
+                <Meter label="Seats" showValue value={usage.seats.used} max={usage.seats.limit} high={usage.seats.limit * 0.8} optimum={0}
+                  formatValue={(v, _, max) => `${v} of ${max} seats${full(v, max)}`} />
+                <Meter label="Storage" showValue value={usage.storageGb.used} max={usage.storageGb.limit} high={usage.storageGb.limit * 0.8} optimum={0}
+                  formatValue={(v, _, max) => `${v} GB of ${max} GB${full(v, max)}`} />
+              </Card>
+            </section>
+
+            <section aria-labelledby="billing-card" className="flex flex-col gap-4">
+              <Heading level={2} size="lg" id="billing-card">Payment method</Heading>
+              <Card className="flex flex-row flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-col gap-1">
+                  {method ? <p className="m-0">
+                    {methodText(method)}{method.kind === 'card' ? `, expires ${date(method.expires)}` : ''}
+                    {runsOut ? <Badge tone="warning" className="ms-2">Expires soon</Badge> : null}
+                  </p> : <p className="m-0">No payment method yet.</p>}
+                  {runsOut ? <p className="m-0 text-text-muted">It runs out before the next payment on {date(plan.renews)}. Update it to keep {plan.name}.</p>
+                    : !method && !cancelled ? <p className="m-0 text-text-muted">Add one before {date(plan.renews)} to keep {plan.name}.</p> : null}
+                </div>
+                <Link href={updateCardHref}>{fix}</Link>
+              </Card>
+            </section>
+
+            <section aria-labelledby="billing-invoices" className="flex flex-col gap-4">
+              <Heading level={2} size="lg" id="billing-invoices">Invoices</Heading>
+              {invoicesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load your invoices" description="Your plan and payment method above are up to date." onRetry={() => onRetry?.()} />
+              : invoices.length ? (
+                <Table caption="Invoices" hideCaption pinEnd>
+                  <TableHead><TableRow>
+                    <TableHeaderCell>Date</TableHeaderCell><TableHeaderCell align="end">Amount</TableHeaderCell>
+                    <TableHeaderCell>Status</TableHeaderCell><TableHeaderCell align="end"><span className="sr-only">Download</span></TableHeaderCell>
+                  </TableRow></TableHead>
+                  <TableBody>{invoices.map((i) => (
+                    <TableRow key={i.id}>
+                      <TableCell className="whitespace-nowrap"><time dateTime={i.date}>{date(i.date)}</time></TableCell>
+                      <TableCell align="end">{money(i.amount, plan.currency, locale)}</TableCell>
+                      <TableCell><Badge tone={STATUS[i.status][1]}>{STATUS[i.status][0]}</Badge></TableCell>
+                      <TableCell align="end" className="whitespace-nowrap"><Link href={i.href} aria-label={`Download the invoice of ${date(i.date)}`}>Download</Link></TableCell>
+                    </TableRow>
+                  ))}</TableBody>
+                </Table>
+              ) : <p className="m-0 text-text-muted">No invoices yet. The first comes on {date(plan.renews)}.</p>}
+            </section>
+          </>}
+
+          <Dialog alert open={asking} onOpenChange={ask} title={`Cancel ${plan.name}?`}
+            description={`${plan.name} stays active until ${date(plan.renews)}, and you won’t be charged again. After that, the workspace moves to the Free plan. Nothing is deleted, and you can resume any time before then.`}>
+            <div className="flex flex-col gap-4">
+              {failed ? <Alert tone="danger">Couldn’t cancel {plan.name}. Try again.</Alert> : null}
               <div className="flex flex-wrap gap-2">
-                {cancelled ? <Button onClick={resume}>Resume plan</Button> : <>
-                  <Button href={changePlanHref} variant="outline">Change plan</Button>
-                  <Button variant="ghost" onClick={() => ask(true)}>Cancel plan</Button>
-                </>}
+                <Button variant="outline" onClick={() => ask(false)}>Keep my plan</Button>
+                <Button variant="outline" destructive loading={busy} onClick={confirm}>Cancel plan</Button>
               </div>
-            </Card>
-          </section>
-
-          <section aria-labelledby="billing-usage" className="flex flex-col gap-4">
-            <Heading level={2} size="lg" id="billing-usage">Usage</Heading>
-            <Card className="flex flex-col gap-4">
-              <Meter label="Seats" showValue value={usage.seats.used} max={usage.seats.limit} high={usage.seats.limit * 0.8} optimum={0}
-                formatValue={(v, _, max) => `${v} of ${max} seats${full(v, max)}`} />
-              <Meter label="Storage" showValue value={usage.storageGb.used} max={usage.storageGb.limit} high={usage.storageGb.limit * 0.8} optimum={0}
-                formatValue={(v, _, max) => `${v} GB of ${max} GB${full(v, max)}`} />
-            </Card>
-          </section>
-
-          <section aria-labelledby="billing-card" className="flex flex-col gap-4">
-            <Heading level={2} size="lg" id="billing-card">Payment method</Heading>
-            <Card className="flex flex-row flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                {method ? <p className="m-0">
-                  {methodText(method)}{method.kind === 'card' ? `, expires ${date(method.expires)}` : ''}
-                  {runsOut ? <Badge tone="warning" className="ms-2">Expires soon</Badge> : null}
-                </p> : <p className="m-0">No payment method yet.</p>}
-                {runsOut ? <p className="m-0 text-text-muted">It runs out before the next payment on {date(plan.renews)}. Update it to keep {plan.name}.</p>
-                  : !method && !cancelled ? <p className="m-0 text-text-muted">Add one before {date(plan.renews)} to keep {plan.name}.</p> : null}
-              </div>
-              <Link href={updateCardHref}>{fix}</Link>
-            </Card>
-          </section>
-
-          <section aria-labelledby="billing-invoices" className="flex flex-col gap-4">
-            <Heading level={2} size="lg" id="billing-invoices">Invoices</Heading>
-            {invoicesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load your invoices" description="Your plan and payment method above are up to date." onRetry={() => onRetry?.()} />
-            : invoices.length ? (
-              <Table caption="Invoices" hideCaption pinEnd>
-                <TableHead><TableRow>
-                  <TableHeaderCell>Date</TableHeaderCell><TableHeaderCell align="end">Amount</TableHeaderCell>
-                  <TableHeaderCell>Status</TableHeaderCell><TableHeaderCell align="end"><span className="sr-only">Download</span></TableHeaderCell>
-                </TableRow></TableHead>
-                <TableBody>{invoices.map((i) => (
-                  <TableRow key={i.id}>
-                    <TableCell className="whitespace-nowrap"><time dateTime={i.date}>{date(i.date)}</time></TableCell>
-                    <TableCell align="end">{money(i.amount, plan.currency, locale)}</TableCell>
-                    <TableCell><Badge tone={STATUS[i.status][1]}>{STATUS[i.status][0]}</Badge></TableCell>
-                    <TableCell align="end" className="whitespace-nowrap"><Link href={i.href} aria-label={`Download the invoice of ${date(i.date)}`}>Download</Link></TableCell>
-                  </TableRow>
-                ))}</TableBody>
-              </Table>
-            ) : <p className="m-0 text-text-muted">No invoices yet. The first comes on {date(plan.renews)}.</p>}
-          </section>
-        </>}
-
-        <Dialog alert open={asking} onOpenChange={ask} title={`Cancel ${plan.name}?`}
-          description={`${plan.name} stays active until ${date(plan.renews)}, and you won’t be charged again. After that, the workspace moves to the Free plan. Nothing is deleted, and you can resume any time before then.`}>
-          <div className="flex flex-col gap-4">
-            {failed ? <Alert tone="danger">Couldn’t cancel {plan.name}. Try again.</Alert> : null}
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => ask(false)}>Keep my plan</Button>
-              <Button variant="outline" destructive loading={busy} onClick={confirm}>Cancel plan</Button>
             </div>
-          </div>
-        </Dialog>
-      </main>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

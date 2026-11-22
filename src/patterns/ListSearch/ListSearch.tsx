@@ -13,6 +13,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -163,74 +165,76 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main ref={mainRef} id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the projects loaded before you went offline. Archiving and exporting need a connection.</OfflineBanner>
-        <PageHeader title="Projects" primary={{ label: 'New project', href: '#new-project' }} />
-        <TableToolbar
-          noun="projects"
-          query={view.q}
-          onQueryChange={(value) => change({ q: value })}
-          filters={[
-            { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
-            { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
-          ]}
-          results={loadFailed ? '' : loading ? 'Loading projects' : found.length === live ? count(found.length) : `${formatNumber(found.length, locale)} of ${count(live)}`}
-          onClearFilters={clear}
-          selectedCount={picked.length}
-          onClearSelection={() => setPicked([])}
-          matchingCount={pages > 1 ? found.length : undefined}
-          onSelectAll={() => setPicked(found.map((p) => p.name))}
-          bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
-        >
-          {loadFailed ? (
-            <EmptyLoadFailed title="Couldn’t load projects" onRetry={() => onRetry?.()} headingLevel={2} />
-          ) : loading ? (
-            // The header stays, so the columns don't move when the rows arrive; the placeholder rows are decorative.
-            <Table caption="Projects" hideCaption loading>
-              <TableHead><TableRow>
-                <TableHeaderCell><span className="sr-only">Select</span></TableHeaderCell>
-                <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell>
-                <TableHeaderCell>Owner</TableHeaderCell><TableHeaderCell>Updated</TableHeaderCell>
-              </TableRow></TableHead>
-              <TableLoadingRows columns={5} rows={Math.min(pageSize, 5)} label="" />
-            </Table>
-          ) : found.length ? (
-            <Table caption="Projects" hideCaption>
-              <TableHead><TableRow>
-                <TableSelectCell inHeader label="Select all projects on this page" checked={all}
-                  indeterminate={!all && rows.some((p) => picked.includes(p.name))}
-                  onChange={() => setPicked(all ? picked.filter((n) => !rows.some((p) => p.name === n)) : [...new Set([...picked, ...rows.map((p) => p.name)])])} />
-                <TableHeaderCell sort={dir('name')} onSort={() => sortBy('name')}>Name</TableHeaderCell>
-                <TableHeaderCell>Status</TableHeaderCell>
-                <TableHeaderCell>Owner</TableHeaderCell>
-                <TableHeaderCell sort={dir('updated')} onSort={() => sortBy('updated')}>Updated</TableHeaderCell>
-              </TableRow></TableHead>
-              <TableBody>{rows.map((p) => (
-                <TableRow key={p.name} selected={picked.includes(p.name)}>
-                  <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
-                  <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
-                  <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
-                </TableRow>
-              ))}</TableBody>
-            </Table>
-          ) : !projects.length ? (
-            // No projects at all is a first visit, not a search that missed: there's no filter to clear.
-            <EmptyState icon="add_circle" title="No projects yet" headingLevel={2}
-              description="A project holds the tasks, files and people for one piece of work. Start one, and it shows up here."
-              actions={<Button href="#new-project">New project</Button>} />
-          ) : (
-            <EmptyNoResults query={view.q} title={(text) => (text ? `No projects match “${text}”` : 'No projects match these filters')}
-              description="Check the spelling, or clear the filters to see every project." headingLevel={2} onClearFilters={() => {
-              clear();
-              mainRef.current?.querySelector<HTMLInputElement>('form[role="search"] input')?.focus();
-            }} />
-          )}
-        </TableToolbar>
-        {!loading && !loadFailed && pages > 1 ? (
-          <Pagination count={pages} page={page} onPageChange={(n) => change({ page: n }, true)} total={found.length} pageSize={pageSize}
-            aria-label="Projects pages" />
-        ) : null}
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" ref={mainRef} id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the projects loaded before you went offline. Archiving and exporting need a connection.</OfflineBanner>
+          <PageHeader title="Projects" primary={{ label: 'New project', href: '#new-project' }} />
+          <TableToolbar
+            noun="projects"
+            query={view.q}
+            onQueryChange={(value) => change({ q: value })}
+            filters={[
+              { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
+              { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
+            ]}
+            results={loadFailed ? '' : loading ? 'Loading projects' : found.length === live ? count(found.length) : `${formatNumber(found.length, locale)} of ${count(live)}`}
+            onClearFilters={clear}
+            selectedCount={picked.length}
+            onClearSelection={() => setPicked([])}
+            matchingCount={pages > 1 ? found.length : undefined}
+            onSelectAll={() => setPicked(found.map((p) => p.name))}
+            bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
+          >
+            {loadFailed ? (
+              <EmptyLoadFailed title="Couldn’t load projects" onRetry={() => onRetry?.()} headingLevel={2} />
+            ) : loading ? (
+              // The header stays, so the columns don't move when the rows arrive; the placeholder rows are decorative.
+              <Table caption="Projects" hideCaption loading>
+                <TableHead><TableRow>
+                  <TableHeaderCell><span className="sr-only">Select</span></TableHeaderCell>
+                  <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell>
+                  <TableHeaderCell>Owner</TableHeaderCell><TableHeaderCell>Updated</TableHeaderCell>
+                </TableRow></TableHead>
+                <TableLoadingRows columns={5} rows={Math.min(pageSize, 5)} label="" />
+              </Table>
+            ) : found.length ? (
+              <Table caption="Projects" hideCaption>
+                <TableHead><TableRow>
+                  <TableSelectCell inHeader label="Select all projects on this page" checked={all}
+                    indeterminate={!all && rows.some((p) => picked.includes(p.name))}
+                    onChange={() => setPicked(all ? picked.filter((n) => !rows.some((p) => p.name === n)) : [...new Set([...picked, ...rows.map((p) => p.name)])])} />
+                  <TableHeaderCell sort={dir('name')} onSort={() => sortBy('name')}>Name</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell>
+                  <TableHeaderCell>Owner</TableHeaderCell>
+                  <TableHeaderCell sort={dir('updated')} onSort={() => sortBy('updated')}>Updated</TableHeaderCell>
+                </TableRow></TableHead>
+                <TableBody>{rows.map((p) => (
+                  <TableRow key={p.name} selected={picked.includes(p.name)}>
+                    <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
+                    <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
+                    <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
+                  </TableRow>
+                ))}</TableBody>
+              </Table>
+            ) : !projects.length ? (
+              // No projects at all is a first visit, not a search that missed: there's no filter to clear.
+              <EmptyState icon="add_circle" title="No projects yet" headingLevel={2}
+                description="A project holds the tasks, files and people for one piece of work. Start one, and it shows up here."
+                actions={<Button href="#new-project">New project</Button>} />
+            ) : (
+              <EmptyNoResults query={view.q} title={(text) => (text ? `No projects match “${text}”` : 'No projects match these filters')}
+                description="Check the spelling, or clear the filters to see every project." headingLevel={2} onClearFilters={() => {
+                clear();
+                mainRef.current?.querySelector<HTMLInputElement>('form[role="search"] input')?.focus();
+              }} />
+            )}
+          </TableToolbar>
+          {!loading && !loadFailed && pages > 1 ? (
+            <Pagination count={pages} page={page} onPageChange={(n) => change({ page: n }, true)} total={found.length} pageSize={pageSize}
+              aria-label="Projects pages" />
+          ) : null}
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

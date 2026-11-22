@@ -22,6 +22,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Product page: one product in a shop, with its pictures, its price, the choices to make (color, size), how many,
    and Add to cart. For an app to copy. What it carries (WCAG 2.2):
@@ -293,16 +295,18 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#cart" tone="neutral">Cart, {countItems(inCart, formatNumber(inCart, locale))}</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">This price and stock are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
-        <Breadcrumb>
-          {/* The last item, the page itself, has no link. */}
-          {[['Shop', '#shop'], ['Shirts', '#shirts'], [loading || loadFailed ? 'Product' : product.name, undefined]].map(([label, href]) => (
-            <BreadcrumbItem key={label} href={href}>{label}</BreadcrumbItem>
-          ))}
-        </Breadcrumb>
-        {body}
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">This price and stock are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
+          <Breadcrumb>
+            {/* The last item, the page itself, has no link. */}
+            {[['Shop', '#shop'], ['Shirts', '#shirts'], [loading || loadFailed ? 'Product' : product.name, undefined]].map(([label, href]) => (
+              <BreadcrumbItem key={label} href={href}>{label}</BreadcrumbItem>
+            ))}
+          </Breadcrumb>
+          {body}
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

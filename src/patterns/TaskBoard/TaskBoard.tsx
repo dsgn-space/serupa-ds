@@ -15,6 +15,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Task board: a team's tasks in columns, moved between stages and saved as they move, with a way to add one. For an
    app to copy. What it carries (WCAG 2.2):
@@ -161,39 +163,41 @@ export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, 
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is the board as it was when the page loaded. Moving or adding cards needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Boards', href: '#boards' }, { label: title }]} title={title}
-          description={loading || loadFailed ? undefined : countTasks(total, locale)}
-          primary={{ label: 'New task', icon: 'add', onSelect: () => ask(true), disabled: loading || loadFailed }} />
+      <Container as="main" size="xl" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is the board as it was when the page loaded. Moving or adding cards needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Boards', href: '#boards' }, { label: title }]} title={title}
+            description={loading || loadFailed ? undefined : countTasks(total, locale)}
+            primary={{ label: 'New task', icon: 'add', onSelect: () => ask(true), disabled: loading || loadFailed }} />
 
-        <div className="flex flex-col gap-4 pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the board" onRetry={() => onRetry?.()} headingLevel={2} /> : <>
-            {!loading && over.length ? (
-              <Alert tone="warning" role="status" title={over.join(' ')}>Finish or move a task before starting another.</Alert>
-            ) : null}
-            <Kanban aria-label={title} headingLevel={2} loading={loading} loadingLabel="Loading tasks"
-              columns={loading ? columns.map((c) => ({ ...c, items: [] })) : columns}
-              getKey={(t) => t.id} getLabel={(t) => t.title} renderCard={card} onMove={move} />
-          </>}
-        </div>
+          <div className="flex flex-col gap-4 pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the board" onRetry={() => onRetry?.()} headingLevel={2} /> : <>
+              {!loading && over.length ? (
+                <Alert tone="warning" role="status" title={over.join(' ')}>Finish or move a task before starting another.</Alert>
+              ) : null}
+              <Kanban aria-label={title} headingLevel={2} loading={loading} loadingLabel="Loading tasks"
+                columns={loading ? columns.map((c) => ({ ...c, items: [] })) : columns}
+                getKey={(t) => t.id} getLabel={(t) => t.title} renderCard={card} onMove={move} />
+            </>}
+          </div>
 
-        <Dialog open={adding} onOpenChange={ask} title="New task">
-          <form onSubmit={add} noValidate className="flex flex-col gap-4">
-            {addFailed ? <Alert tone="danger">Couldn’t add the task. Try again.</Alert> : null}
-            <Field label="Title" id="task-title" hint="A few words that say what’s to be done." error={titleError ?? undefined} required>
-              <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => { setDraft({ ...draft, title: e.target.value }); if (titleError) setTitleError(null); }} />
-            </Field>
-            <Field label="Column" id="task-column">
-              <Select value={draft.column} options={columns.map((c) => ({ value: c.id, label: c.title }))} onChange={(e) => setDraft({ ...draft, column: e.target.value })} />
-            </Field>
-            <div className="flex flex-wrap gap-2">
-              <Button type="submit" loading={busy}>Add task</Button>
-              <Button variant="outline" onClick={() => ask(false)}>Cancel</Button>
-            </div>
-          </form>
-        </Dialog>
-      </main>
+          <Dialog open={adding} onOpenChange={ask} title="New task">
+            <form onSubmit={add} noValidate className="flex flex-col gap-4">
+              {addFailed ? <Alert tone="danger">Couldn’t add the task. Try again.</Alert> : null}
+              <Field label="Title" id="task-title" hint="A few words that say what’s to be done." error={titleError ?? undefined} required>
+                <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => { setDraft({ ...draft, title: e.target.value }); if (titleError) setTitleError(null); }} />
+              </Field>
+              <Field label="Column" id="task-column">
+                <Select value={draft.column} options={columns.map((c) => ({ value: c.id, label: c.title }))} onChange={(e) => setDraft({ ...draft, column: e.target.value })} />
+              </Field>
+              <div className="flex flex-wrap gap-2">
+                <Button type="submit" loading={busy}>Add task</Button>
+                <Button variant="outline" onClick={() => ask(false)}>Cancel</Button>
+              </div>
+            </form>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

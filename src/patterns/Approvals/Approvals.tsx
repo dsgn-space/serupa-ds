@@ -19,6 +19,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Approvals: the requests waiting on you (expenses, leave, purchases), each with what you need to decide, approved in
    one press with Undo, or declined with a reason the asker will read. For an app to copy. What it carries (WCAG 2.2):
@@ -125,59 +127,61 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
         <p className="m-0 text-base font-semibold">Acme People</p>
         <Link underline="hover" href="#team">Your team</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the requests loaded before you went offline. Approving or declining needs a connection.</OfflineBanner>
-        <PageHeader title="Approvals" description={loading || loadFailed ? undefined : waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your requests" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading requests" /></Card> : (<>
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
-          <SegmentedControl aria-label="Show" value={show} onValueChange={setShow}
-            options={[{ value: 'waiting', label: 'Waiting' }, { value: 'decided', label: 'Decided' }]} />
-          <p role="status" id="approvals-shown" className="m-0 text-sm text-text-muted">
-            {show === 'waiting' ? `${formatNumber(waiting.length, locale)} waiting` : `${formatNumber(done.length, locale)} decided`}
-          </p>
-        </div>
-        <section aria-labelledby="approvals-list" className="flex flex-col gap-4 pt-4">
-          <h2 id="approvals-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">{show === 'waiting' ? 'Waiting' : 'Decided'}</h2>
-          {show === 'waiting' ? (
-            waiting.length ? waiting.map((r) => (
-              <Card key={r.id} as="article" padding="sm" aria-labelledby={`approval-${r.id}`} className="gap-3">
-                <h3 id={`approval-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{title(r)}</h3>
-                {details(r)}
-                <div className="flex flex-wrap gap-2">
-                  <Button size="sm" onClick={() => approve(r)} aria-label={`Approve ${title(r)}`}>Approve</Button>
-                  <Button size="sm" variant="outline" onClick={() => { setReason(''); setReasonError(''); setDeclining(r); }} aria-label={`Decline ${title(r)}`}>Decline</Button>
-                </div>
-              </Card>
-            )) : <p className="m-0 text-text-muted">You’re all caught up. New requests show here.</p>
-          ) : (
-            done.length ? done.map(({ d, r }) => (
-              <Card key={r.id} as="article" padding="sm" aria-labelledby={`approval-${r.id}`} className="gap-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 id={`approval-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{title(r)}</h3>
-                  <Badge tone={d.approved ? 'success' : 'danger'}>{d.approved ? 'Approved' : 'Declined'}</Badge>
-                </div>
-                {details(r)}
-                {d.reason ? <p className="m-0 text-sm">Your reason: {d.reason}</p> : null}
-              </Card>
-            )) : <p className="m-0 text-text-muted">You haven’t decided anything yet.</p>
-          )}
-        </section>
-        <Dialog open={!!declining} onOpenChange={(open) => { if (!open) setDeclining(null); }} finalFocus={after}
-          title={declining ? `Decline ${declining.who}’s ${KIND[declining.kind].toLowerCase()}?` : ''}
-          description={declining ? `${declining.what}. ${declining.who} will read your reason.` : ''}>
-          <div className="flex flex-col gap-4">
-            <Field label="Why are you declining it?" id="approval-reason" error={reasonError || undefined} required>
-              <Textarea value={reason} onChange={(e) => { setReason(e.target.value); setReasonError(''); }} />
-            </Field>
-            <div className="flex flex-wrap gap-2">
-              <Button destructive onClick={decline}>Decline</Button>
-              <Button variant="outline" onClick={() => setDeclining(null)}>Cancel</Button>
-            </div>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the requests loaded before you went offline. Approving or declining needs a connection.</OfflineBanner>
+          <PageHeader title="Approvals" description={loading || loadFailed ? undefined : waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your requests" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading requests" /></Card> : (<>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
+            <SegmentedControl aria-label="Show" value={show} onValueChange={setShow}
+              options={[{ value: 'waiting', label: 'Waiting' }, { value: 'decided', label: 'Decided' }]} />
+            <p role="status" id="approvals-shown" className="m-0 text-sm text-text-muted">
+              {show === 'waiting' ? `${formatNumber(waiting.length, locale)} waiting` : `${formatNumber(done.length, locale)} decided`}
+            </p>
           </div>
-        </Dialog>
-        </>)}
-      </main>
+          <section aria-labelledby="approvals-list" className="flex flex-col gap-4 pt-4">
+            <h2 id="approvals-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">{show === 'waiting' ? 'Waiting' : 'Decided'}</h2>
+            {show === 'waiting' ? (
+              waiting.length ? waiting.map((r) => (
+                <Card key={r.id} as="article" padding="sm" aria-labelledby={`approval-${r.id}`} className="gap-3">
+                  <h3 id={`approval-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{title(r)}</h3>
+                  {details(r)}
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" onClick={() => approve(r)} aria-label={`Approve ${title(r)}`}>Approve</Button>
+                    <Button size="sm" variant="outline" onClick={() => { setReason(''); setReasonError(''); setDeclining(r); }} aria-label={`Decline ${title(r)}`}>Decline</Button>
+                  </div>
+                </Card>
+              )) : <p className="m-0 text-text-muted">You’re all caught up. New requests show here.</p>
+            ) : (
+              done.length ? done.map(({ d, r }) => (
+                <Card key={r.id} as="article" padding="sm" aria-labelledby={`approval-${r.id}`} className="gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 id={`approval-${r.id}`} tabIndex={-1} className="m-0 text-base font-semibold outline-none">{title(r)}</h3>
+                    <Badge tone={d.approved ? 'success' : 'danger'}>{d.approved ? 'Approved' : 'Declined'}</Badge>
+                  </div>
+                  {details(r)}
+                  {d.reason ? <p className="m-0 text-sm">Your reason: {d.reason}</p> : null}
+                </Card>
+              )) : <p className="m-0 text-text-muted">You haven’t decided anything yet.</p>
+            )}
+          </section>
+          <Dialog open={!!declining} onOpenChange={(open) => { if (!open) setDeclining(null); }} finalFocus={after}
+            title={declining ? `Decline ${declining.who}’s ${KIND[declining.kind].toLowerCase()}?` : ''}
+            description={declining ? `${declining.what}. ${declining.who} will read your reason.` : ''}>
+            <div className="flex flex-col gap-4">
+              <Field label="Why are you declining it?" id="approval-reason" error={reasonError || undefined} required>
+                <Textarea value={reason} onChange={(e) => { setReason(e.target.value); setReasonError(''); }} />
+              </Field>
+              <div className="flex flex-wrap gap-2">
+                <Button destructive onClick={decline}>Decline</Button>
+                <Button variant="outline" onClick={() => setDeclining(null)}>Cancel</Button>
+              </div>
+            </div>
+          </Dialog>
+          </>)}
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

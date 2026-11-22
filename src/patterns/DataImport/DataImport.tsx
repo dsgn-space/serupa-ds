@@ -19,6 +19,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Data import: a CSV file of customers, its columns matched to the app's fields, every row checked and shown before
    anything is saved, then what happened in words. For an app to copy. What it carries (WCAG 2.2):
@@ -203,102 +205,104 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Your file and columns stay here. Importing needs a connection.</OfflineBanner>
-        <PageHeader title="Import customers" />
-        <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
-        <Card className="flex flex-col gap-4" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
-          {step === 'upload' ? (
-            <>
-              {h2('Choose a file')}
-              <p className="m-0">A CSV file with a heading row, then one row for each customer. A spreadsheet can save one: File, then Download or Export, then CSV.</p>
-              {summary}
-              <form noValidate onSubmit={(e) => { void read(e); }} className="flex flex-col gap-4">
-                <Field label="Customer file" error={error('import-file')}>
-                  <FileUpload id="import-file" accept=".csv,text/csv" maxSize={5 * 1024 * 1024} hint="CSV, up to 5 MB" files={files} onFilesChange={setFiles} />
-                </Field>
-                <Button type="submit" className="self-start">Continue</Button>
-              </form>
-            </>
-          ) : step === 'match' ? (
-            <>
-              {h2('Match columns')}
-              <p className="m-0">Choose the column in <strong>{file?.name}</strong> that holds each detail. We matched the ones whose headings name them.</p>
-              {summary}
-              <form noValidate onSubmit={match} className="flex flex-col gap-4">
-                {FIELDS.map((f) => (
-                  <Field key={f.key} label={f.label} optional={!f.required} error={error(`import-${f.key}`)}>
-                    <Select id={`import-${f.key}`} options={columns} value={String(mapping[f.key])} onChange={(e) => { const v = Number(e.target.value); setMapping((o) => ({ ...o, [f.key]: v })); }} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your file and columns stay here. Importing needs a connection.</OfflineBanner>
+          <PageHeader title="Import customers" />
+          <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
+          <Card className="flex flex-col gap-4" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
+            {step === 'upload' ? (
+              <>
+                {h2('Choose a file')}
+                <p className="m-0">A CSV file with a heading row, then one row for each customer. A spreadsheet can save one: File, then Download or Export, then CSV.</p>
+                {summary}
+                <form noValidate onSubmit={(e) => { void read(e); }} className="flex flex-col gap-4">
+                  <Field label="Customer file" error={error('import-file')}>
+                    <FileUpload id="import-file" accept=".csv,text/csv" maxSize={5 * 1024 * 1024} hint="CSV, up to 5 MB" files={files} onFilesChange={setFiles} />
                   </Field>
-                ))}
-                <div className="flex flex-wrap gap-3">
-                  <Button type="submit">Check rows</Button>
-                  <Button variant="secondary" onClick={() => go('upload')}>Back</Button>
-                </div>
-              </form>
-            </>
-          ) : step === 'check' ? (
-            <>
-              {h2('Check rows')}
-              <p className="m-0">
-                {plural(good.length, 'row is', 'rows are')} ready: {plural(good.length - updates, 'new customer', 'new customers')} and {plural(updates, 'update', 'updates')} to customers you have.
-                {bad.length ? ` ${plural(bad.length, 'row has', 'rows have')} problems, listed first.` : ''} Nothing is saved until you import.
-              </p>
-              {summary}
-              <Table caption={`Rows in ${file?.name}`} hideCaption size="sm">
-                <TableHead>
-                  <TableRow>
-                    <TableHeaderCell align="end">Line</TableHeaderCell>
-                    <TableHeaderCell>Status</TableHeaderCell>
-                    <TableHeaderCell>Problem</TableHeaderCell>
-                    {FIELDS.map((f) => <TableHeaderCell key={f.key}>{f.label}</TableHeaderCell>)}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {[...bad, ...good].map((r) => (
-                    <TableRow key={r.line}>
-                      <TableCell align="end">{r.line}</TableCell>
-                      <TableCell>{r.problems.length ? <Badge tone="danger">Problem</Badge> : r.update ? <Badge tone="info">Update</Badge> : <Badge tone="success">New</Badge>}</TableCell>
-                      <TableCell>{r.problems.join('. ')}</TableCell>
-                      {FIELDS.map((f) => <TableCell key={f.key} className={NOWRAP[f.key]}>{LTR[f.key] ? <bdi dir="ltr">{r.row[f.key]}</bdi> : r.row[f.key]}</TableCell>)}
-                    </TableRow>
+                  <Button type="submit" className="self-start">Continue</Button>
+                </form>
+              </>
+            ) : step === 'match' ? (
+              <>
+                {h2('Match columns')}
+                <p className="m-0">Choose the column in <strong>{file?.name}</strong> that holds each detail. We matched the ones whose headings name them.</p>
+                {summary}
+                <form noValidate onSubmit={match} className="flex flex-col gap-4">
+                  {FIELDS.map((f) => (
+                    <Field key={f.key} label={f.label} optional={!f.required} error={error(`import-${f.key}`)}>
+                      <Select id={`import-${f.key}`} options={columns} value={String(mapping[f.key])} onChange={(e) => { const v = Number(e.target.value); setMapping((o) => ({ ...o, [f.key]: v })); }} />
+                    </Field>
                   ))}
-                </TableBody>
-              </Table>
-              <form noValidate onSubmit={save} className="flex flex-col gap-4">
-                {bad.length ? (
-                  <Field error={error('import-skip')}>
-                    <Checkbox id="import-skip" checked={skip} onCheckedChange={setSkip} invalid={!!error('import-skip')}
-                      description="They stay in your file, so you can fix them and import that file again.">
-                      Skip the {plural(bad.length, 'row', 'rows')} with problems
-                    </Checkbox>
-                  </Field>
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="submit">Check rows</Button>
+                    <Button variant="secondary" onClick={() => go('upload')}>Back</Button>
+                  </div>
+                </form>
+              </>
+            ) : step === 'check' ? (
+              <>
+                {h2('Check rows')}
+                <p className="m-0">
+                  {plural(good.length, 'row is', 'rows are')} ready: {plural(good.length - updates, 'new customer', 'new customers')} and {plural(updates, 'update', 'updates')} to customers you have.
+                  {bad.length ? ` ${plural(bad.length, 'row has', 'rows have')} problems, listed first.` : ''} Nothing is saved until you import.
+                </p>
+                {summary}
+                <Table caption={`Rows in ${file?.name}`} hideCaption size="sm">
+                  <TableHead>
+                    <TableRow>
+                      <TableHeaderCell align="end">Line</TableHeaderCell>
+                      <TableHeaderCell>Status</TableHeaderCell>
+                      <TableHeaderCell>Problem</TableHeaderCell>
+                      {FIELDS.map((f) => <TableHeaderCell key={f.key}>{f.label}</TableHeaderCell>)}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {[...bad, ...good].map((r) => (
+                      <TableRow key={r.line}>
+                        <TableCell align="end">{r.line}</TableCell>
+                        <TableCell>{r.problems.length ? <Badge tone="danger">Problem</Badge> : r.update ? <Badge tone="info">Update</Badge> : <Badge tone="success">New</Badge>}</TableCell>
+                        <TableCell>{r.problems.join('. ')}</TableCell>
+                        {FIELDS.map((f) => <TableCell key={f.key} className={NOWRAP[f.key]}>{LTR[f.key] ? <bdi dir="ltr">{r.row[f.key]}</bdi> : r.row[f.key]}</TableCell>)}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <form noValidate onSubmit={save} className="flex flex-col gap-4">
+                  {bad.length ? (
+                    <Field error={error('import-skip')}>
+                      <Checkbox id="import-skip" checked={skip} onCheckedChange={setSkip} invalid={!!error('import-skip')}
+                        description="They stay in your file, so you can fix them and import that file again.">
+                        Skip the {plural(bad.length, 'row', 'rows')} with problems
+                      </Checkbox>
+                    </Field>
+                  ) : null}
+                  {failed ? <Alert tone="danger" title="Couldn’t import">Nothing was saved. Check your connection and try again.</Alert> : null}
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="submit" loading={busy} disabled={!good.length}>{failed ? 'Try again' : `Import ${plural(good.length, 'customer', 'customers')}`}</Button>
+                    <Button variant="secondary" onClick={() => go('match')}>Back</Button>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <>
+                {h2('Import finished')}
+                {result ? (
+                  <ul className="m-0 flex list-disc flex-col gap-1 ps-5">
+                    <li>{plural(result.added, 'customer', 'customers')} added</li>
+                    <li>{plural(result.updated, 'customer', 'customers')} updated</li>
+                    <li>{plural(result.skipped, 'row', 'rows')} skipped{result.skipped ? ', still in your file to fix' : ''}</li>
+                  </ul>
                 ) : null}
-                {failed ? <Alert tone="danger" title="Couldn’t import">Nothing was saved. Check your connection and try again.</Alert> : null}
-                <div className="flex flex-wrap gap-3">
-                  <Button type="submit" loading={busy} disabled={!good.length}>{failed ? 'Try again' : `Import ${plural(good.length, 'customer', 'customers')}`}</Button>
-                  <Button variant="secondary" onClick={() => go('match')}>Back</Button>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link href="#customers">Go to customers</Link>
+                  <Button variant="secondary" onClick={again}>Import another file</Button>
                 </div>
-              </form>
-            </>
-          ) : (
-            <>
-              {h2('Import finished')}
-              {result ? (
-                <ul className="m-0 flex list-disc flex-col gap-1 ps-5">
-                  <li>{plural(result.added, 'customer', 'customers')} added</li>
-                  <li>{plural(result.updated, 'customer', 'customers')} updated</li>
-                  <li>{plural(result.skipped, 'row', 'rows')} skipped{result.skipped ? ', still in your file to fix' : ''}</li>
-                </ul>
-              ) : null}
-              <div className="flex flex-wrap items-center gap-4">
-                <Link href="#customers">Go to customers</Link>
-                <Button variant="secondary" onClick={again}>Import another file</Button>
-              </div>
-            </>
-          )}
-        </Card>
-      </main>
+              </>
+            )}
+          </Card>
+        </Stack>
+      </Container>
     </div>
   );
 }

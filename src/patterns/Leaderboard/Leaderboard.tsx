@@ -14,6 +14,8 @@ import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Leaderboard: who's ahead this week, this month or of all time, where you are, and who's moving. For an app to copy.
    What it carries (WCAG 2.2):
@@ -115,43 +117,45 @@ export function Leaderboard({ players = demo, me = 'ana', top = 5, loading = fal
         <p className="m-0 text-base font-semibold">Acme Steps</p>
         <Link underline="hover" href="#challenges">Challenges</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These scores are from when the page loaded. They update when you’re back.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Challenges', href: '#challenges' }, { label: 'Leaderboard' }]} title="Leaderboard"
-          description={loading || loadFailed || !players.length ? undefined : mine ? `You’re ${placeWords(mine).toLowerCase()} of ${num(players.length)} ${long}, with ${num(mine.points[period])} points.` : `${num(players.length)} people taking part.`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the leaderboard" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the leaderboard" /></Card>
-          : !players.length ? <div className="pt-6"><EmptyState icon="leaderboard" title="No scores yet" headingLevel={2}
-              description="Every step you log earns points. The first people to log theirs show here." /></div> : (<>
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
-          <SegmentedControl aria-label="Period" value={period} onValueChange={setPeriod} options={PERIODS.map(({ value, label }) => ({ value, label }))} />
-          <p role="status" id="board-period" className="m-0 text-sm text-text-muted">Showing points {long}</p>
-        </div>
-        <div className="pt-4">
-          <Table caption={`Leaderboard, points ${long}`} hideCaption>
-            <TableHead><TableRow>
-              <TableHeaderCell>Place</TableHeaderCell>
-              <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell align="end">Points</TableHeaderCell>
-              <TableHeaderCell>{period === 'all' ? <span className="sr-only">Change</span> : 'Change'}</TableHeaderCell>
-            </TableRow></TableHead>
-            <TableBody>
-              {shown.map(row)}
-              {apart ? (
-                <>
-                  {between ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center text-sm text-text-muted">{between === 1 ? '1 more person' : `${num(between)} more people`} between</TableCell>
-                    </TableRow>
-                  ) : null}
-                  {row(apart)}
-                </>
-              ) : null}
-            </TableBody>
-          </Table>
-        </div>
-        </>)}
-      </main>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These scores are from when the page loaded. They update when you’re back.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Challenges', href: '#challenges' }, { label: 'Leaderboard' }]} title="Leaderboard"
+            description={loading || loadFailed || !players.length ? undefined : mine ? `You’re ${placeWords(mine).toLowerCase()} of ${num(players.length)} ${long}, with ${num(mine.points[period])} points.` : `${num(players.length)} people taking part.`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the leaderboard" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the leaderboard" /></Card>
+            : !players.length ? <div className="pt-6"><EmptyState icon="leaderboard" title="No scores yet" headingLevel={2}
+                description="Every step you log earns points. The first people to log theirs show here." /></div> : (<>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
+            <SegmentedControl aria-label="Period" value={period} onValueChange={setPeriod} options={PERIODS.map(({ value, label }) => ({ value, label }))} />
+            <p role="status" id="board-period" className="m-0 text-sm text-text-muted">Showing points {long}</p>
+          </div>
+          <div className="pt-4">
+            <Table caption={`Leaderboard, points ${long}`} hideCaption>
+              <TableHead><TableRow>
+                <TableHeaderCell>Place</TableHeaderCell>
+                <TableHeaderCell>Name</TableHeaderCell>
+                <TableHeaderCell align="end">Points</TableHeaderCell>
+                <TableHeaderCell>{period === 'all' ? <span className="sr-only">Change</span> : 'Change'}</TableHeaderCell>
+              </TableRow></TableHead>
+              <TableBody>
+                {shown.map(row)}
+                {apart ? (
+                  <>
+                    {between ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-sm text-text-muted">{between === 1 ? '1 more person' : `${num(between)} more people`} between</TableCell>
+                      </TableRow>
+                    ) : null}
+                    {row(apart)}
+                  </>
+                ) : null}
+              </TableBody>
+            </Table>
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

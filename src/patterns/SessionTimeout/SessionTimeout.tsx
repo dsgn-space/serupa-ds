@@ -14,6 +14,8 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
    typed if it ends anyway. For an app to copy. What it carries (WCAG 2.2):
@@ -198,37 +200,39 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Your work stays here. Staying signed in needs a connection.</OfflineBanner>
-        {expired ? (
-          <div className="flex flex-col gap-3">
-            <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? 'You’ve signed out' : 'You’ve been signed out'}</Heading>
-            <p className="m-0">{byChoice
-              ? 'What you typed is cleared from this computer, so nobody else finds it.'
-              : `We signed you out because nothing happened for ${timeLeft(duration, locale)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
-            <div><Button onClick={restart}>Sign in again</Button></div>
-          </div>
-        ) : (
-          <>
-            <PageHeader title="Contact support"
-              description={<>For your security, you’re signed out after {timeLeft(duration, locale)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</>} />
-            <Card as="section" aria-labelledby="message-title">
-              <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
-                <Heading level={2} size="lg" id="message-title">Your message</Heading>
-                {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
-                <Field label="Subject" error={missing.subject}>
-                  <Input name="subject" value={draft.subject} onChange={type('subject')} />
-                </Field>
-                <Field label="Message" hint="What happened, and what you expected." error={missing.message}>
-                  <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
-                </Field>
-                {outcome === 'failed' ? <Alert tone="danger">The message wasn’t sent. What you typed is kept: try again.</Alert> : null}
-                <div><Button type="submit" loading={sending}>Send message</Button></div>
-              </form>
-            </Card>
-          </>
-        )}
-      </main>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your work stays here. Staying signed in needs a connection.</OfflineBanner>
+          {expired ? (
+            <div className="flex flex-col gap-3">
+              <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? 'You’ve signed out' : 'You’ve been signed out'}</Heading>
+              <p className="m-0">{byChoice
+                ? 'What you typed is cleared from this computer, so nobody else finds it.'
+                : `We signed you out because nothing happened for ${timeLeft(duration, locale)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
+              <div><Button onClick={restart}>Sign in again</Button></div>
+            </div>
+          ) : (
+            <>
+              <PageHeader title="Contact support"
+                description={<>For your security, you’re signed out after {timeLeft(duration, locale)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</>} />
+              <Card as="section" aria-labelledby="message-title">
+                <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
+                  <Heading level={2} size="lg" id="message-title">Your message</Heading>
+                  {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
+                  <Field label="Subject" error={missing.subject}>
+                    <Input name="subject" value={draft.subject} onChange={type('subject')} />
+                  </Field>
+                  <Field label="Message" hint="What happened, and what you expected." error={missing.message}>
+                    <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
+                  </Field>
+                  {outcome === 'failed' ? <Alert tone="danger">The message wasn’t sent. What you typed is kept: try again.</Alert> : null}
+                  <div><Button type="submit" loading={sending}>Send message</Button></div>
+                </form>
+              </Card>
+            </>
+          )}
+        </Stack>
+      </Container>
       <Dialog open={warning} alert size="sm" title="You’ll be signed out soon"
         onOpenChange={(open) => { if (!open) void extend(); }}
         footer={<>

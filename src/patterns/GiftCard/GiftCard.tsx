@@ -19,6 +19,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Gift card: choose an amount and a design, say who it's for and when to send it, see what they'll get, and add it to
    the bag. For an app to copy. What it carries (WCAG 2.2):
@@ -126,78 +128,80 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#bag">Bag</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Adding the card to your bag needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Shop', href: '#shop' }, { label: 'Gift cards' }]} title="Send a gift card"
-          description="Sent by email on the day you choose. It never expires and works in our shops and online." />
-        {added ? (
-          <section aria-labelledby="gift-added" className="flex flex-col items-start gap-4 pt-6">
-            <h2 id="gift-added" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Gift card added to your bag</h2>
-            <DescriptionList layout="split" className="max-w-md">
-              <DescriptionItem term="Amount">{money(added.amount)}</DescriptionItem>
-              <DescriptionItem term="For">{added.to}, {added.email}</DescriptionItem>
-              <DescriptionItem term="Sent on">{added.send === today ? 'Today, once you’ve paid' : day(added.send)}</DescriptionItem>
-            </DescriptionList>
-            <div className="flex flex-wrap gap-3">
-              <Link href="#bag">Go to your bag</Link>
-              <Link href="#shop">Keep shopping</Link>
-            </div>
-          </section>
-        ) : (
-          <div className="grid gap-6 pt-6 md:grid-cols-2">
-            <form onSubmit={add} noValidate aria-label="Gift card" className="flex flex-col gap-4">
-              <ErrorSummary key={tries} errors={errors} />
-              <Field label="Amount" hint={`From ${money(min)} to ${money(max)}.`} group error={problems.amount} required>
-                <RadioGroup id="gift-amount" name="gift-amount" orientation="horizontal" value={d.amount} onValueChange={(v: string) => edit({ amount: v })}>
-                  {amounts.map((a) => <Radio key={a} value={String(a)}>{money(a)}</Radio>)}
-                  <Radio value="other">Another amount</Radio>
-                </RadioGroup>
-              </Field>
-              {d.amount === 'other' ? (
-                <Field label="Your amount" id="gift-other" error={problems.other} required>
-                  <NumberInput currency={currency} min={min} max={max} value={d.other} onValueChange={(n) => edit({ other: n })} className="max-w-48" />
-                </Field>
-              ) : null}
-              <Field label="Design" group>
-                <RadioGroup name="gift-design" orientation="horizontal" value={d.design} onValueChange={(v: string) => edit({ design: v })}>
-                  {GIFT_DESIGNS.map((g) => <Radio key={g.id} value={g.id}>{g.label}</Radio>)}
-                </RadioGroup>
-              </Field>
-              <Field label="Who it’s for" id="gift-to" error={problems.to} required>
-                <Input autoComplete="off" value={d.to} onChange={(e) => edit({ to: e.target.value })} />
-              </Field>
-              <Field label="Their email" id="gift-email" hint="We send the card here." error={problems.email} required>
-                <Input type="email" autoComplete="off" value={d.email} onChange={(e) => edit({ email: e.target.value })} />
-              </Field>
-              <Field label="Message" id="gift-message" hint="Printed on the card." error={problems.message} optional>
-                <Textarea rows={3} maxLength={MESSAGE} showCount value={d.message} onChange={(e) => edit({ message: e.target.value })} />
-              </Field>
-              <Field label="Send on" hint="Today, or any day within a year." error={problems.send} required>
-                <DateField id="gift-send" value={d.send} min={today} onValueChange={(v) => edit({ send: v })} />
-              </Field>
-              <Field label="From" id="gift-from" error={problems.from} required>
-                <Input autoComplete="name" value={d.from} onChange={(e) => edit({ from: e.target.value })} />
-              </Field>
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t add it to your bag. Try again; everything is still here.</Alert> : null}
-                <Button type="submit" loading={busy}>Add to bag</Button>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Adding the card to your bag needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Shop', href: '#shop' }, { label: 'Gift cards' }]} title="Send a gift card"
+            description="Sent by email on the day you choose. It never expires and works in our shops and online." />
+          {added ? (
+            <section aria-labelledby="gift-added" className="flex flex-col items-start gap-4 pt-6">
+              <h2 id="gift-added" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Gift card added to your bag</h2>
+              <DescriptionList layout="split" className="max-w-md">
+                <DescriptionItem term="Amount">{money(added.amount)}</DescriptionItem>
+                <DescriptionItem term="For">{added.to}, {added.email}</DescriptionItem>
+                <DescriptionItem term="Sent on">{added.send === today ? 'Today, once you’ve paid' : day(added.send)}</DescriptionItem>
+              </DescriptionList>
+              <div className="flex flex-wrap gap-3">
+                <Link href="#bag">Go to your bag</Link>
+                <Link href="#shop">Keep shopping</Link>
               </div>
-            </form>
-            <section aria-labelledby="gift-preview" className="flex flex-col gap-4 md:self-start">
-              <h2 id="gift-preview" className="m-0 text-lg font-semibold">What they’ll get</h2>
-              <Card padding="none" className="overflow-hidden">
-                <Image src={design.image} alt={`The ${design.label} design`} ratio={1.6} />
-                <div className="flex flex-col gap-1 p-4">
-                  <p className="m-0 text-2xl font-semibold">{amount ? money(amount) : 'Choose an amount'}</p>
-                  <p className="m-0">For {d.to.trim() || 'them'}, from {d.from.trim() || 'you'}</p>
-                  {d.message.trim() ? <p className="m-0 text-text-muted wrap-break-word">{d.message.trim()}</p> : null}
-                  <p className="m-0 text-sm text-text-muted">{d.send ? `Sent on ${day(d.send)}` : 'Choose a day to send it'}</p>
-                </div>
-              </Card>
             </section>
-          </div>
-        )}
-      </main>
+          ) : (
+            <div className="grid gap-6 pt-6 md:grid-cols-2">
+              <form onSubmit={add} noValidate aria-label="Gift card" className="flex flex-col gap-4">
+                <ErrorSummary key={tries} errors={errors} />
+                <Field label="Amount" hint={`From ${money(min)} to ${money(max)}.`} group error={problems.amount} required>
+                  <RadioGroup id="gift-amount" name="gift-amount" orientation="horizontal" value={d.amount} onValueChange={(v: string) => edit({ amount: v })}>
+                    {amounts.map((a) => <Radio key={a} value={String(a)}>{money(a)}</Radio>)}
+                    <Radio value="other">Another amount</Radio>
+                  </RadioGroup>
+                </Field>
+                {d.amount === 'other' ? (
+                  <Field label="Your amount" id="gift-other" error={problems.other} required>
+                    <NumberInput currency={currency} min={min} max={max} value={d.other} onValueChange={(n) => edit({ other: n })} className="max-w-48" />
+                  </Field>
+                ) : null}
+                <Field label="Design" group>
+                  <RadioGroup name="gift-design" orientation="horizontal" value={d.design} onValueChange={(v: string) => edit({ design: v })}>
+                    {GIFT_DESIGNS.map((g) => <Radio key={g.id} value={g.id}>{g.label}</Radio>)}
+                  </RadioGroup>
+                </Field>
+                <Field label="Who it’s for" id="gift-to" error={problems.to} required>
+                  <Input autoComplete="off" value={d.to} onChange={(e) => edit({ to: e.target.value })} />
+                </Field>
+                <Field label="Their email" id="gift-email" hint="We send the card here." error={problems.email} required>
+                  <Input type="email" autoComplete="off" value={d.email} onChange={(e) => edit({ email: e.target.value })} />
+                </Field>
+                <Field label="Message" id="gift-message" hint="Printed on the card." error={problems.message} optional>
+                  <Textarea rows={3} maxLength={MESSAGE} showCount value={d.message} onChange={(e) => edit({ message: e.target.value })} />
+                </Field>
+                <Field label="Send on" hint="Today, or any day within a year." error={problems.send} required>
+                  <DateField id="gift-send" value={d.send} min={today} onValueChange={(v) => edit({ send: v })} />
+                </Field>
+                <Field label="From" id="gift-from" error={problems.from} required>
+                  <Input autoComplete="name" value={d.from} onChange={(e) => edit({ from: e.target.value })} />
+                </Field>
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t add it to your bag. Try again; everything is still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>Add to bag</Button>
+                </div>
+              </form>
+              <section aria-labelledby="gift-preview" className="flex flex-col gap-4 md:self-start">
+                <h2 id="gift-preview" className="m-0 text-lg font-semibold">What they’ll get</h2>
+                <Card padding="none" className="overflow-hidden">
+                  <Image src={design.image} alt={`The ${design.label} design`} ratio={1.6} />
+                  <div className="flex flex-col gap-1 p-4">
+                    <p className="m-0 text-2xl font-semibold">{amount ? money(amount) : 'Choose an amount'}</p>
+                    <p className="m-0">For {d.to.trim() || 'them'}, from {d.from.trim() || 'you'}</p>
+                    {d.message.trim() ? <p className="m-0 text-text-muted wrap-break-word">{d.message.trim()}</p> : null}
+                    <p className="m-0 text-sm text-text-muted">{d.send ? `Sent on ${day(d.send)}` : 'Choose a day to send it'}</p>
+                  </div>
+                </Card>
+              </section>
+            </div>
+          )}
+        </Stack>
+      </Container>
     </div>
   );
 }

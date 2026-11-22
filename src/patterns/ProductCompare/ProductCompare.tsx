@@ -15,6 +15,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Product compare: two to four products side by side, a row for each thing they differ on, and a way to see only the
    differences. For an app to copy. What it carries (WCAG 2.2):
@@ -129,70 +131,72 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#cart">Cart</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Headphones', href: '#shop' }, { label: 'Compare' }]} title="Compare headphones"
-          description="Up to four side by side. Add more from any product page." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the products" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the products" /></Card> : (
-        <section aria-labelledby="compare-table" className="flex flex-col gap-4 pt-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 id="compare-table" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">
-              {list.length === 1 ? '1 product' : `${formatNumber(list.length, locale)} products`}
-            </h2>
-            {list.length > 1 ? <Switch checked={onlyDiff} onCheckedChange={setOnlyDiff}>Only what differs</Switch> : null}
-          </div>
-          {list.length ? (
-            <>
-              <p id="compare-rows" role="status" className="m-0 text-text-muted">
-                {onlyDiff ? `${formatNumber(rows.length, locale)} of ${formatNumber(features.length, locale)} features differ` : `All ${formatNumber(features.length, locale)} features`}
-              </p>
-              <Table caption="The products side by side, a feature in each row" hideCaption layout="fixed" pinStart>
-                <TableHead>
-                  <TableRow>
-                    <TableHeaderCell scope="col" width={160}>Feature</TableHeaderCell>
-                    {list.map((p) => (
-                      <TableHeaderCell key={p.id} scope="col" width={200}>
-                        <span className="flex flex-col gap-2 font-normal">
-                          <Image src={p.image} alt="" ratio="square" rounded />
-                          <Link href={p.href} className="font-semibold">{p.name}</Link>
-                          <span className="text-lg font-semibold">{money(p.price)}</span>
-                        </span>
-                      </TableHeaderCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((f) => (
-                    <TableRow key={f.key}>
-                      <TableHeaderCell scope="row">{f.label}</TableHeaderCell>
-                      {list.map((p) => {
-                        const v = p.values[f.key];
-                        return <TableCell key={p.id} className={v === null || v === undefined ? 'text-text-muted' : undefined}>{valueWords(v, f, locale)}</TableCell>;
-                      })}
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Headphones', href: '#shop' }, { label: 'Compare' }]} title="Compare headphones"
+            description="Up to four side by side. Add more from any product page." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the products" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the products" /></Card> : (
+          <section aria-labelledby="compare-table" className="flex flex-col gap-4 pt-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 id="compare-table" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">
+                {list.length === 1 ? '1 product' : `${formatNumber(list.length, locale)} products`}
+              </h2>
+              {list.length > 1 ? <Switch checked={onlyDiff} onCheckedChange={setOnlyDiff}>Only what differs</Switch> : null}
+            </div>
+            {list.length ? (
+              <>
+                <p id="compare-rows" role="status" className="m-0 text-text-muted">
+                  {onlyDiff ? `${formatNumber(rows.length, locale)} of ${formatNumber(features.length, locale)} features differ` : `All ${formatNumber(features.length, locale)} features`}
+                </p>
+                <Table caption="The products side by side, a feature in each row" hideCaption layout="fixed" pinStart>
+                  <TableHead>
+                    <TableRow>
+                      <TableHeaderCell scope="col" width={160}>Feature</TableHeaderCell>
+                      {list.map((p) => (
+                        <TableHeaderCell key={p.id} scope="col" width={200}>
+                          <span className="flex flex-col gap-2 font-normal">
+                            <Image src={p.image} alt="" ratio="square" rounded />
+                            <Link href={p.href} className="font-semibold">{p.name}</Link>
+                            <span className="text-lg font-semibold">{money(p.price)}</span>
+                          </span>
+                        </TableHeaderCell>
+                      ))}
                     </TableRow>
-                  ))}
-                  <TableRow>
-                    <TableHeaderCell scope="row"><span className="sr-only">Actions</span></TableHeaderCell>
-                    {list.map((p) => (
-                      <TableCell key={p.id}>
-                        <span className="flex flex-col items-start gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => add(p)} aria-label={`Add to cart: ${p.name}`}>Add to cart</Button>
-                          <Button id={`compare-remove-${p.id}`} size="sm" variant="ghost" onClick={() => remove(p)} aria-label={`Remove: ${p.name}`}>Remove</Button>
-                        </span>
-                      </TableCell>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((f) => (
+                      <TableRow key={f.key}>
+                        <TableHeaderCell scope="row">{f.label}</TableHeaderCell>
+                        {list.map((p) => {
+                          const v = p.values[f.key];
+                          return <TableCell key={p.id} className={v === null || v === undefined ? 'text-text-muted' : undefined}>{valueWords(v, f, locale)}</TableCell>;
+                        })}
+                      </TableRow>
                     ))}
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </>
-          ) : (
-            <EmptyState icon="compare_arrows" headingLevel={3} title="Nothing to compare"
-              description="Choose Compare on two or more products to see them side by side." actions={<Link href="#shop">Back to headphones</Link>} />
+                    <TableRow>
+                      <TableHeaderCell scope="row"><span className="sr-only">Actions</span></TableHeaderCell>
+                      {list.map((p) => (
+                        <TableCell key={p.id}>
+                          <span className="flex flex-col items-start gap-2">
+                            <Button size="sm" variant="secondary" onClick={() => add(p)} aria-label={`Add to cart: ${p.name}`}>Add to cart</Button>
+                            <Button id={`compare-remove-${p.id}`} size="sm" variant="ghost" onClick={() => remove(p)} aria-label={`Remove: ${p.name}`}>Remove</Button>
+                          </span>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </>
+            ) : (
+              <EmptyState icon="compare_arrows" headingLevel={3} title="Nothing to compare"
+                description="Choose Compare on two or more products to see them side by side." actions={<Link href="#shop">Back to headphones</Link>} />
+            )}
+          </section>
           )}
-        </section>
-        )}
-      </main>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

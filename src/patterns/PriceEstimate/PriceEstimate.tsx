@@ -14,6 +14,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Price estimate: choose a plan, how many people and any extras, and see what it costs, line by line, as you go.
    For an app to copy. What it carries (WCAG 2.2):
@@ -82,64 +84,66 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
         <p className="m-0 text-base font-semibold">Acme Boards</p>
         <Link underline="hover" href="#pricing">Pricing</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">The estimate works offline. Starting a trial needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Pricing', href: '#pricing' }, { label: 'Price estimate' }]} title="What would it cost?"
-          description="Choose a plan, how many people and any extras. Prices are per month, before tax." />
-        <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-2">
-          <div className="flex flex-col gap-4">
-            <Field label="Plan" group>
-              <RadioGroup name={planName} variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
-                {plans.map((p) => <Radio key={p.id} value={p.id} description={`${money(p.perSeat)} a person. ${p.about}.`}>{p.name}</Radio>)}
-              </RadioGroup>
-            </Field>
-            <Field label="How many people?" id="estimate-seats" hint={`${plan.name} is for ${formatNumber(plan.minSeats, locale)} to ${formatNumber(plan.maxSeats, locale)} people.`}>
-              <NumberInput min={plan.minSeats} max={plan.maxSeats} value={seats} onValueChange={setSeats} className="max-w-40" />
-            </Field>
-            <Field label="Extras" group optional>
-              <CheckboxGroup value={chosen} onValueChange={(v: string[]) => setChosen(v)}>
-                {extras.map((x) => <Checkbox key={x.id} value={x.id} description={`${money(x.price)}${x.perSeat ? ' a person' : ''}. ${x.about}.`}>{x.name}</Checkbox>)}
-              </CheckboxGroup>
-            </Field>
-            <Switch checked={yearly} onCheckedChange={setYearly} description={`${pct} off when you pay for a year at once.`}>Pay yearly</Switch>
-          </div>
-          <section aria-labelledby="estimate-title" className="flex flex-col gap-4 md:self-start">
-            <Card className="flex flex-col gap-4">
-              <h2 id="estimate-title" className="m-0 text-lg font-semibold">Your estimate</h2>
-              <Table caption="Your estimate, a month at a time" hideCaption size="sm">
-                <TableBody>
-                  {e.lines.map((l) => (
-                    <TableRow key={l.id}>
-                      <TableHeaderCell scope="row" className="font-normal">{l.name}</TableHeaderCell>
-                      <TableCell align="end">{money(l.amount)}</TableCell>
-                    </TableRow>
-                  ))}
-                  {e.off ? (
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">The estimate works offline. Starting a trial needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Pricing', href: '#pricing' }, { label: 'Price estimate' }]} title="What would it cost?"
+            description="Choose a plan, how many people and any extras. Prices are per month, before tax." />
+          <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-2">
+            <div className="flex flex-col gap-4">
+              <Field label="Plan" group>
+                <RadioGroup name={planName} variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
+                  {plans.map((p) => <Radio key={p.id} value={p.id} description={`${money(p.perSeat)} a person. ${p.about}.`}>{p.name}</Radio>)}
+                </RadioGroup>
+              </Field>
+              <Field label="How many people?" id="estimate-seats" hint={`${plan.name} is for ${formatNumber(plan.minSeats, locale)} to ${formatNumber(plan.maxSeats, locale)} people.`}>
+                <NumberInput min={plan.minSeats} max={plan.maxSeats} value={seats} onValueChange={setSeats} className="max-w-40" />
+              </Field>
+              <Field label="Extras" group optional>
+                <CheckboxGroup value={chosen} onValueChange={(v: string[]) => setChosen(v)}>
+                  {extras.map((x) => <Checkbox key={x.id} value={x.id} description={`${money(x.price)}${x.perSeat ? ' a person' : ''}. ${x.about}.`}>{x.name}</Checkbox>)}
+                </CheckboxGroup>
+              </Field>
+              <Switch checked={yearly} onCheckedChange={setYearly} description={`${pct} off when you pay for a year at once.`}>Pay yearly</Switch>
+            </div>
+            <section aria-labelledby="estimate-title" className="flex flex-col gap-4 md:self-start">
+              <Card className="flex flex-col gap-4">
+                <h2 id="estimate-title" className="m-0 text-lg font-semibold">Your estimate</h2>
+                <Table caption="Your estimate, a month at a time" hideCaption size="sm">
+                  <TableBody>
+                    {e.lines.map((l) => (
+                      <TableRow key={l.id}>
+                        <TableHeaderCell scope="row" className="font-normal">{l.name}</TableHeaderCell>
+                        <TableCell align="end">{money(l.amount)}</TableCell>
+                      </TableRow>
+                    ))}
+                    {e.off ? (
+                      <TableRow>
+                        <TableHeaderCell scope="row" className="font-normal">Paying yearly, {pct} off</TableHeaderCell>
+                        <TableCell align="end">−{money(e.off)}</TableCell>
+                      </TableRow>
+                    ) : null}
+                  </TableBody>
+                  <TableFoot>
                     <TableRow>
-                      <TableHeaderCell scope="row" className="font-normal">Paying yearly, {pct} off</TableHeaderCell>
-                      <TableCell align="end">−{money(e.off)}</TableCell>
+                      <TableHeaderCell scope="row">A month</TableHeaderCell>
+                      <TableCell align="end" className="font-semibold">{money(e.monthly)}</TableCell>
                     </TableRow>
-                  ) : null}
-                </TableBody>
-                <TableFoot>
-                  <TableRow>
-                    <TableHeaderCell scope="row">A month</TableHeaderCell>
-                    <TableCell align="end" className="font-semibold">{money(e.monthly)}</TableCell>
-                  </TableRow>
-                </TableFoot>
-              </Table>
-              <p className="m-0" id="estimate-total" aria-live="polite">
-                {yearly ? `${money(e.monthly)} a month, billed as ${money(e.yearlyTotal)} once a year. You save ${money(e.off * 12)} a year.` : `${money(e.monthly)} a month, billed monthly.`}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button href={`${trialHref}?${query.toString()}`}>Start a 14-day trial</Button>
-                <Link href="#sales">Talk to sales</Link>
-              </div>
-              <p className="m-0 text-sm text-text-muted">The trial is free and needs no card. You choose the plan when it ends.</p>
-            </Card>
-          </section>
-        </div>
-      </main>
+                  </TableFoot>
+                </Table>
+                <p className="m-0" id="estimate-total" aria-live="polite">
+                  {yearly ? `${money(e.monthly)} a month, billed as ${money(e.yearlyTotal)} once a year. You save ${money(e.off * 12)} a year.` : `${money(e.monthly)} a month, billed monthly.`}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Button href={`${trialHref}?${query.toString()}`}>Start a 14-day trial</Button>
+                  <Link href="#sales">Talk to sales</Link>
+                </div>
+                <p className="m-0 text-sm text-text-muted">The trial is free and needs no card. You choose the plan when it ends.</p>
+              </Card>
+            </section>
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

@@ -18,6 +18,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Store locator: find a shop by town or postcode, or by where you are, with each one's distance, whether it's open
    now, its hours and directions. A list, not a map alone, so it works with any screen reader and at any zoom. For an
@@ -127,67 +129,69 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#help">Help</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These stores and hours are from when the page loaded. Finding stores near you needs a connection.</OfflineBanner>
-        <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>
-        <div className="flex flex-col gap-6 pt-6">
-          <div role="search" aria-label="Shops" className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-end gap-3">
-              <Field label="Town or postcode" className="min-w-0 flex-1">
-                <SearchInput value={q} onChange={(e) => setQ(e.target.value)} onClear={() => setQ('')} />
-              </Field>
-              <Button variant="secondary" loading={locating} onClick={findMe}>Use my location</Button>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These stores and hours are from when the page loaded. Finding stores near you needs a connection.</OfflineBanner>
+          <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>
+          <div className="flex flex-col gap-6 pt-6">
+            <div role="search" aria-label="Shops" className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-end gap-3">
+                <Field label="Town or postcode" className="min-w-0 flex-1">
+                  <SearchInput value={q} onChange={(e) => setQ(e.target.value)} onClear={() => setQ('')} />
+                </Field>
+                <Button variant="secondary" loading={locating} onClick={findMe}>Use my location</Button>
+              </div>
+              {noLocation ? <Alert tone="warning">Couldn’t get your location. Your browser may have been asked not to share it; search by town or postcode instead.</Alert> : null}
+              <Switch checked={openOnly} onCheckedChange={setOpenOnly}>Open now only</Switch>
             </div>
-            {noLocation ? <Alert tone="warning">Couldn’t get your location. Your browser may have been asked not to share it; search by town or postcode instead.</Alert> : null}
-            <Switch checked={openOnly} onCheckedChange={setOpenOnly}>Open now only</Switch>
+            <p id="store-count" role="status" className="m-0 text-text-muted">
+              {shown.length === 1 ? '1 shop' : `${formatNumber(shown.length, locale)} shops`}{here && shown.length ? ', nearest first' : ''}
+            </p>
+            {shown.length ? (
+              <ul role="list" className="m-0 flex list-none flex-col gap-4 p-0">
+                {shown.map((s) => {
+                  const st = openState(s, at);
+                  return (
+                    <Card as="li" key={s.id} aria-labelledby={`store-${s.id}`} className="flex flex-col gap-3">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <h2 id={`store-${s.id}`} className="m-0 text-lg font-semibold">{s.name}</h2>
+                        {here ? <span className="text-text-muted">{km(s)} km away</span> : null}
+                      </div>
+                      <p className="m-0">{s.address}</p>
+                      <p className="m-0 flex flex-wrap items-center gap-2">
+                        <Badge tone={st.open ? 'success' : 'neutral'}>{st.open ? 'Open now' : 'Closed now'}</Badge>
+                        <span className="text-text-muted">{st.words}</span>
+                      </p>
+                      {/* The week's hours fold away under the system's disclosure (its chevron, focus ring and motion), not the
+                          browser's own triangle. Today is in bold at the list's size: emphasis is for a total, and its larger
+                          text would make one day stand out of the column. */}
+                      <Accordion headingLevel={3}>
+                        <AccordionItem title="Opening hours">
+                          <DescriptionList layout="split" className="max-w-xs text-sm">
+                            {DAYS.map((d, i) => (
+                              <DescriptionItem key={d} term={d} className={i === at.getDay() ? 'font-semibold' : undefined}>{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</DescriptionItem>
+                            ))}
+                          </DescriptionList>
+                        </AccordionItem>
+                      </Accordion>
+                      <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
+                        <Link href={`https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lng}`} aria-label={`Directions: ${s.name}`}>Directions</Link>
+                        <Link href={`tel:${s.phone.replace(/\s/g, '')}`} aria-label={`Call ${s.phone}: ${s.name}`}>Call {s.phone}</Link>
+                      </p>
+                    </Card>
+                  );
+                })}
+              </ul>
+            ) : (
+              <EmptyState icon="search_off" headingLevel={2} title="No shops match"
+                description={openOnly ? 'None that match are open now. Turn off “Open now only” to see the rest.' : 'Try a town or a postcode near you, or use your location.'} />
+            )}
           </div>
-          <p id="store-count" role="status" className="m-0 text-text-muted">
-            {shown.length === 1 ? '1 shop' : `${formatNumber(shown.length, locale)} shops`}{here && shown.length ? ', nearest first' : ''}
-          </p>
-          {shown.length ? (
-            <ul role="list" className="m-0 flex list-none flex-col gap-4 p-0">
-              {shown.map((s) => {
-                const st = openState(s, at);
-                return (
-                  <Card as="li" key={s.id} aria-labelledby={`store-${s.id}`} className="flex flex-col gap-3">
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h2 id={`store-${s.id}`} className="m-0 text-lg font-semibold">{s.name}</h2>
-                      {here ? <span className="text-text-muted">{km(s)} km away</span> : null}
-                    </div>
-                    <p className="m-0">{s.address}</p>
-                    <p className="m-0 flex flex-wrap items-center gap-2">
-                      <Badge tone={st.open ? 'success' : 'neutral'}>{st.open ? 'Open now' : 'Closed now'}</Badge>
-                      <span className="text-text-muted">{st.words}</span>
-                    </p>
-                    {/* The week's hours fold away under the system's disclosure (its chevron, focus ring and motion), not the
-                        browser's own triangle. Today is in bold at the list's size: emphasis is for a total, and its larger
-                        text would make one day stand out of the column. */}
-                    <Accordion headingLevel={3}>
-                      <AccordionItem title="Opening hours">
-                        <DescriptionList layout="split" className="max-w-xs text-sm">
-                          {DAYS.map((d, i) => (
-                            <DescriptionItem key={d} term={d} className={i === at.getDay() ? 'font-semibold' : undefined}>{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</DescriptionItem>
-                          ))}
-                        </DescriptionList>
-                      </AccordionItem>
-                    </Accordion>
-                    <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
-                      <Link href={`https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lng}`} aria-label={`Directions: ${s.name}`}>Directions</Link>
-                      <Link href={`tel:${s.phone.replace(/\s/g, '')}`} aria-label={`Call ${s.phone}: ${s.name}`}>Call {s.phone}</Link>
-                    </p>
-                  </Card>
-                );
-              })}
-            </ul>
-          ) : (
-            <EmptyState icon="search_off" headingLevel={2} title="No shops match"
-              description={openOnly ? 'None that match are open now. Turn off “Open now only” to see the rest.' : 'Try a town or a postcode near you, or use your location.'} />
-          )}
-        </div>
-        </>)}
-      </main>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

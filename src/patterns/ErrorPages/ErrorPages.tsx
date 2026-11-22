@@ -6,6 +6,8 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
 import { Illustration } from '../../components/Illustration/Illustration';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Error pages: not found, offline, server error and no access, built from the components only, for an app to copy.
    What they carry (WCAG 2.2):
@@ -93,14 +95,16 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
       <header className="mx-auto max-w-xl px-4 pt-6">
         <Link href={home} className="text-base font-semibold">{SITE}</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-12 outline-none">
-        <Heading level={1} className="text-center">{title}</Heading>
-        <EmptyState icon={<Illustration name={body.picture} size="lg" />} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
-        {kind === 'offline' ? (
-          // Always there, so a screen reader is listening before the connection comes back.
-          <div role="status" className="text-center text-sm">{online ? 'You’re back online. Try again to load the page.' : null}</div>
-        ) : null}
-      </main>
+      <Container as="main" size="prose" className="py-12 outline-none" id="main">
+        <Stack gap={4}>
+          <Heading level={1} className="text-center">{title}</Heading>
+          <EmptyState icon={<Illustration name={body.picture} size="lg" />} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
+          {kind === 'offline' ? (
+            // Always there, so a screen reader is listening before the connection comes back.
+            <div role="status" className="text-center text-sm">{online ? 'You’re back online. Try again to load the page.' : null}</div>
+          ) : null}
+        </Stack>
+      </Container>
     </div>
   );
 }

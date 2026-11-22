@@ -17,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Team calendar: a team's events by month, week, day or as a list, with a way to add one, open one, move one and
    delete one. For an app to copy. What it carries (WCAG 2.2):
@@ -191,56 +193,58 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is the calendar as it was when the page loaded. Adding or moving events needs a connection.</OfflineBanner>
-        <PageHeader title={title}
-          primary={{ label: 'New event', icon: 'add', onSelect: () => { newButton.current = document.activeElement as HTMLElement | null; ask(); }, disabled: loading || loadFailed }} />
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the events" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading events" /></Card>
-            : <EventCalendar ref={calendar} events={events} defaultMonth={defaultMonth} headingLevel={2}
-                onSlotSelect={(slot) => { newButton.current = document.activeElement as HTMLElement | null; ask(slot); }}
-                onEventClick={setOpen} onEventMove={move} />}
-        </div>
+      <Container as="main" size="xl" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is the calendar as it was when the page loaded. Adding or moving events needs a connection.</OfflineBanner>
+          <PageHeader title={title}
+            primary={{ label: 'New event', icon: 'add', onSelect: () => { newButton.current = document.activeElement as HTMLElement | null; ask(); }, disabled: loading || loadFailed }} />
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the events" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading events" /></Card>
+              : <EventCalendar ref={calendar} events={events} defaultMonth={defaultMonth} headingLevel={2}
+                  onSlotSelect={(slot) => { newButton.current = document.activeElement as HTMLElement | null; ask(slot); }}
+                  onEventClick={setOpen} onEventMove={move} />}
+          </div>
 
-        <Dialog open={draft != null} onOpenChange={(o) => { if (!o) setDraft(null); }} title="New event" finalFocus={newButton}>
-          {draft ? (
-            <form onSubmit={add} noValidate className="flex flex-col gap-4">
-              {addFailed ? <Alert tone="danger">Couldn’t add the event. Try again.</Alert> : null}
-              <Field label="Title" id="event-title" error={problems.title} required>
-                <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
-              </Field>
-              <Field label="Day" id="event-day" error={problems.day} required>
-                <DatePicker name="day" value={draft.day || null} onValueChange={(_, { iso }) => edit({ day: iso ?? '' })} />
-              </Field>
-              <Switch checked={draft.allDay} onCheckedChange={(on) => edit({ allDay: on })}>All day</Switch>
-              {draft.allDay ? null : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <Field label="Starts" id="event-start" error={problems.start} required>
-                    <TimePicker name="start" value={draft.start || null} step={15} onValueChange={(v) => edit({ start: v ?? '' })} />
-                  </Field>
-                  <Field label="Ends" id="event-end" error={problems.end} required>
-                    <TimePicker name="end" value={draft.end || null} step={15} onValueChange={(v) => edit({ end: v ?? '' })} />
-                  </Field>
+          <Dialog open={draft != null} onOpenChange={(o) => { if (!o) setDraft(null); }} title="New event" finalFocus={newButton}>
+            {draft ? (
+              <form onSubmit={add} noValidate className="flex flex-col gap-4">
+                {addFailed ? <Alert tone="danger">Couldn’t add the event. Try again.</Alert> : null}
+                <Field label="Title" id="event-title" error={problems.title} required>
+                  <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
+                </Field>
+                <Field label="Day" id="event-day" error={problems.day} required>
+                  <DatePicker name="day" value={draft.day || null} onValueChange={(_, { iso }) => edit({ day: iso ?? '' })} />
+                </Field>
+                <Switch checked={draft.allDay} onCheckedChange={(on) => edit({ allDay: on })}>All day</Switch>
+                {draft.allDay ? null : (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Field label="Starts" id="event-start" error={problems.start} required>
+                      <TimePicker name="start" value={draft.start || null} step={15} onValueChange={(v) => edit({ start: v ?? '' })} />
+                    </Field>
+                    <Field label="Ends" id="event-end" error={problems.end} required>
+                      <TimePicker name="end" value={draft.end || null} step={15} onValueChange={(v) => edit({ end: v ?? '' })} />
+                    </Field>
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <Button type="submit" loading={busy}>Add event</Button>
+                  <Button variant="outline" onClick={() => setDraft(null)}>Cancel</Button>
                 </div>
-              )}
-              <div className="flex flex-wrap gap-2">
-                <Button type="submit" loading={busy}>Add event</Button>
-                <Button variant="outline" onClick={() => setDraft(null)}>Cancel</Button>
-              </div>
-            </form>
-          ) : null}
-        </Dialog>
+              </form>
+            ) : null}
+          </Dialog>
 
-        <Dialog open={open != null} onOpenChange={(o) => { if (!o) setOpen(null); }} title={open?.title ?? ''}
-          description={open ? whenWords(open, locale) + (open.repeating ? '. Repeats.' : '') : undefined}>
-          {open ? (
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" destructive startIcon="delete" onClick={() => remove(open)}>Delete event</Button>
-            </div>
-          ) : null}
-        </Dialog>
-      </main>
+          <Dialog open={open != null} onOpenChange={(o) => { if (!o) setOpen(null); }} title={open?.title ?? ''}
+            description={open ? whenWords(open, locale) + (open.repeating ? '. Repeats.' : '') : undefined}>
+            {open ? (
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" destructive startIcon="delete" onClick={() => remove(open)}>Delete event</Button>
+              </div>
+            ) : null}
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

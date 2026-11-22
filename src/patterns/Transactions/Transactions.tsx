@@ -18,6 +18,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Transactions: an account's money in and out by month, found by what it was or its category, with the month's
    totals first. For an app to copy. What it carries (WCAG 2.2):
@@ -107,71 +109,73 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
         <p className="m-0 text-base font-semibold">Acme Bank</p>
         <Link underline="hover" href="#accounts">Accounts</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the transactions loaded before you went offline. New ones show when you’re back.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: account }]} title={`${account}: transactions`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your transactions" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card>
-          : !transactions.length ? <div className="pt-6"><EmptyState icon="receipt_long" title="No transactions yet" headingLevel={2}
-              description="Money in and out of this account shows here, by month, as soon as it moves." /></div> : (<>
-        <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">
-          <Field label="Month" id="tx-month">
-            <Select value={month} onChange={(e) => { setMonth(e.target.value); setCategory(''); }} options={months.map((m) => ({ value: m, label: monthName(m) }))} />
-          </Field>
-          <Card padding="sm" variant="filled">
-            <h2 className="m-0 pb-2 text-base font-semibold">{name}</h2>
-            <DescriptionList layout="split">
-              <DescriptionItem term="Money in">{money(sum.into)}</DescriptionItem>
-              <DescriptionItem term="Money out">{money(sum.out)}</DescriptionItem>
-              <DescriptionItem term={sum.into >= sum.out ? 'You kept' : 'You spent more by'} emphasis>{money(Math.abs(sum.into - sum.out))}</DescriptionItem>
-            </DescriptionList>
-          </Card>
-        </div>
-        <div role="search" aria-label="Transactions" data-print="hide" className="flex flex-wrap items-end gap-4 pt-6">
-          <div className="min-w-0 flex-1 basis-64">
-            <Field label="Search transactions" id="tx-search">
-              <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the transactions loaded before you went offline. New ones show when you’re back.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: account }]} title={`${account}: transactions`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your transactions" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card>
+            : !transactions.length ? <div className="pt-6"><EmptyState icon="receipt_long" title="No transactions yet" headingLevel={2}
+                description="Money in and out of this account shows here, by month, as soon as it moves." /></div> : (<>
+          <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">
+            <Field label="Month" id="tx-month">
+              <Select value={month} onChange={(e) => { setMonth(e.target.value); setCategory(''); }} options={months.map((m) => ({ value: m, label: monthName(m) }))} />
             </Field>
+            <Card padding="sm" variant="filled">
+              <h2 className="m-0 pb-2 text-base font-semibold">{name}</h2>
+              <DescriptionList layout="split">
+                <DescriptionItem term="Money in">{money(sum.into)}</DescriptionItem>
+                <DescriptionItem term="Money out">{money(sum.out)}</DescriptionItem>
+                <DescriptionItem term={sum.into >= sum.out ? 'You kept' : 'You spent more by'} emphasis>{money(Math.abs(sum.into - sum.out))}</DescriptionItem>
+              </DescriptionList>
+            </Card>
           </div>
-          <Field label="Category" id="tx-category">
-            <Select value={category} onChange={(e) => setCategory(e.target.value)} options={[{ value: '', label: 'All categories' }, ...categories]} />
-          </Field>
-          {filtered ? <Button variant="outline" onClick={() => { setQuery(''); setCategory(''); }}>Clear filters</Button> : null}
-        </div>
-        <p role="status" id="tx-shown" className="m-0 pt-4 text-sm text-text-muted">
-          {filtered ? `Showing ${formatNumber(shown.length, locale)} of ${formatNumber(ofMonth.length, locale)} transactions` : `${formatNumber(ofMonth.length, locale)} transactions`} in {name}
-        </p>
-        <div className="pt-3">
-          {shown.length ? (
-            <Table caption={`Transactions in ${name}`} hideCaption>
-              <TableHead><TableRow>
-                <TableHeaderCell>Date</TableHeaderCell>
-                <TableHeaderCell>Description</TableHeaderCell>
-                <TableHeaderCell>Category</TableHeaderCell>
-                <TableHeaderCell align="end">Money out</TableHeaderCell>
-                <TableHeaderCell align="end">Money in</TableHeaderCell>
-              </TableRow></TableHead>
-              <TableBody>
-                {shown.map((t) => (
-                  <TableRow key={t.id}>
-                    <TableCell className="whitespace-nowrap">{day(t.date)}</TableCell>
-                    <TableHeaderCell scope="row" className="font-normal">
-                      <span className="flex flex-wrap items-center gap-2">
-                        <span className="min-w-0 wrap-break-word">{t.description}</span>
-                        {t.pending ? <Badge tone="warning">Pending</Badge> : null}
-                      </span>
-                    </TableHeaderCell>
-                    <TableCell>{t.category}</TableCell>
-                    <TableCell align="end">{t.amount < 0 ? money(-t.amount) : ''}</TableCell>
-                    <TableCell align="end">{t.amount > 0 ? money(t.amount) : ''}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : <p className="m-0">No transactions in {name} match. Try other words, or clear the filters.</p>}
-        </div>
-        </>)}
-      </main>
+          <div role="search" aria-label="Transactions" data-print="hide" className="flex flex-wrap items-end gap-4 pt-6">
+            <div className="min-w-0 flex-1 basis-64">
+              <Field label="Search transactions" id="tx-search">
+                <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
+              </Field>
+            </div>
+            <Field label="Category" id="tx-category">
+              <Select value={category} onChange={(e) => setCategory(e.target.value)} options={[{ value: '', label: 'All categories' }, ...categories]} />
+            </Field>
+            {filtered ? <Button variant="outline" onClick={() => { setQuery(''); setCategory(''); }}>Clear filters</Button> : null}
+          </div>
+          <p role="status" id="tx-shown" className="m-0 pt-4 text-sm text-text-muted">
+            {filtered ? `Showing ${formatNumber(shown.length, locale)} of ${formatNumber(ofMonth.length, locale)} transactions` : `${formatNumber(ofMonth.length, locale)} transactions`} in {name}
+          </p>
+          <div className="pt-3">
+            {shown.length ? (
+              <Table caption={`Transactions in ${name}`} hideCaption>
+                <TableHead><TableRow>
+                  <TableHeaderCell>Date</TableHeaderCell>
+                  <TableHeaderCell>Description</TableHeaderCell>
+                  <TableHeaderCell>Category</TableHeaderCell>
+                  <TableHeaderCell align="end">Money out</TableHeaderCell>
+                  <TableHeaderCell align="end">Money in</TableHeaderCell>
+                </TableRow></TableHead>
+                <TableBody>
+                  {shown.map((t) => (
+                    <TableRow key={t.id}>
+                      <TableCell className="whitespace-nowrap">{day(t.date)}</TableCell>
+                      <TableHeaderCell scope="row" className="font-normal">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="min-w-0 wrap-break-word">{t.description}</span>
+                          {t.pending ? <Badge tone="warning">Pending</Badge> : null}
+                        </span>
+                      </TableHeaderCell>
+                      <TableCell>{t.category}</TableCell>
+                      <TableCell align="end">{t.amount < 0 ? money(-t.amount) : ''}</TableCell>
+                      <TableCell align="end">{t.amount > 0 ? money(t.amount) : ''}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : <p className="m-0">No transactions in {name} match. Try other words, or clear the filters.</p>}
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }
