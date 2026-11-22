@@ -35,11 +35,12 @@
 @media (hover: hover) and (prefers-reduced-motion: no-preference) { .srp-table__body:hover .srp-table__row { transition: background-color var(--motion-hover) var(--ease-move); } }
 /* Every other row of data, not counting the detail rows under them. --srp-table-row carries a row's shading to its
    pinned cells, which paint their own background over the cells scrolling under them. */
-.srp-table--striped .srp-table__body .srp-table__row:nth-child(even of :is(.srp-table__row, .srp-table__spacer)) { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
+/* A shaded row also steps an Avatar's fill up one (secondary-hover), which in light themes is the same zinc-100 as the shade. */
+.srp-table--striped .srp-table__body .srp-table__row:nth-child(even of :is(.srp-table__row, .srp-table__spacer)) { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
 @media (hover: hover) {
-  .srp-table:not(.srp-table--striped) .srp-table__body .srp-table__row:hover { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
+  .srp-table:not(.srp-table--striped) .srp-table__body .srp-table__row:hover { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
 }
-.srp-table__row--selected, .srp-table .srp-table__body .srp-table__row--selected, .srp-table .srp-table__body .srp-table__row:has(> .srp-table__select :checked) { --srp-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); background: var(--srp-table-row); }
+.srp-table__row--selected, .srp-table .srp-table__body .srp-table__row--selected, .srp-table .srp-table__body .srp-table__row:has(> .srp-table__select :checked) { --srp-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
 .srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
 .srp-table__row--selected:dir(rtl) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
 .srp-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
@@ -97,7 +98,7 @@
 .srp-table__row--link :is(a[href], button, input:not(label input), select, textarea, label, summary, [tabindex]):not(.srp-table__row-link) { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .srp-table__row--link:hover .srp-table__row-link { text-decoration: underline; } }
 /* Held down, a linked row shades a step past its hover, as a List row does; its own buttons and checkboxes press on their own. */
-.srp-table .srp-table__body .srp-table__row--link:has(.srp-table__row-link:active) { --srp-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); }
+.srp-table .srp-table__body .srp-table__row--link:has(.srp-table__row-link:active) { --srp-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); }
 .srp-table__row--link:has(.srp-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media (forced-colors: active) { .srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */

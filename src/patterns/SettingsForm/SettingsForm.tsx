@@ -130,7 +130,7 @@ function Loading({ failed, onRetry, online }: { failed: boolean; onRetry: Settin
       <Center maxWidth="container-4xl" padded={false} aria-busy={failed ? undefined : true}>
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">Saving needs a connection.</OfflineBanner>
-        <PageHeader title="Settings" />
+        <PageHeader title="Settings" description="Fields marked * are required." />
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <Stack as="section" key={t} aria-labelledby={'settings-loading-' + i} gap={4}>
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
@@ -163,7 +163,7 @@ function Loaded({ initial = demo, onSave, onLeave, online }: Omit<SettingsFormPr
     </header>}>
       <Center maxWidth="container-4xl" padded={false}>
         <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
-        <PageHeader title="Settings" />
+        <PageHeader title="Settings" description="Fields marked * are required." />
         <SettingsSection title="Profile" description="How you appear to your team." onSave={profile.save}
           errors={profile.errors} status={profile.status} savedAt={profile.savedAt} onRetry={profile.save} saveLabel="Save profile">
           <Field label="Name" error={err('name')} required>

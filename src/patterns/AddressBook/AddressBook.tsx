@@ -202,6 +202,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
               <form onSubmit={save} noValidate className="flex flex-col gap-4">
                 <ErrorSummary key={tries} errors={errors} headingLevel={3} />
                 {failed ? <Alert tone="danger">Couldn’t save the address. Try again; everything you entered is still here.</Alert> : null}
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Name for this address" id="address-label" hint="Like Home or Office." error={problems.label} required>
                   <Input autoComplete="off" value={draft.label} onChange={(e) => edit({ label: e.target.value })} />
                 </Field>

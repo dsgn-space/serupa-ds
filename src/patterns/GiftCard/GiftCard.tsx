@@ -150,6 +150,7 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
             <div className="grid gap-6 pt-6 md:grid-cols-2">
               <form onSubmit={add} noValidate aria-label="Gift card" className="flex flex-col gap-4">
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Amount" hint={`From ${money(min)} to ${money(max)}.`} group error={problems.amount} required>
                   <RadioGroup id="gift-amount" name="gift-amount" orientation="horizontal" value={d.amount} onValueChange={(v: string) => edit({ amount: v })}>
                     {amounts.map((a) => <Radio key={a} value={String(a)}>{money(a)}</Radio>)}

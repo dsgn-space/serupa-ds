@@ -148,6 +148,7 @@ export function JobApplication({ job = demoJob, onApply, online }: JobApplicatio
               <form onSubmit={apply} noValidate aria-labelledby="apply" className="flex flex-col gap-4">
                 <h2 id="apply" className="m-0 text-lg font-semibold">Apply</h2>
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Full name" id="job-name" error={problems.name} required>
                   <Input autoComplete="name" value={a.name} onChange={(e) => edit({ name: e.target.value })} />
                 </Field>

@@ -170,6 +170,16 @@ describe('List', () => {
     await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
 
+  test('an Avatar in a selected row steps its fill up to secondary-hover, so it stays apart from the shade; a plain row keeps secondary', async () => {
+    await render(<List aria-label="People">
+      <ListItem id="ap" title="Ada Lovelace" leading={<Avatar id="avp" name="Ada Lovelace" size="sm" />} />
+      <ListItem id="as" href="#grace" title="Grace Hopper" selected leading={<Avatar id="avs" name="Grace Hopper" size="sm" />} />
+    </List>);
+    const fill = (id: string) => css(el(id).firstElementChild).backgroundColor;   // the Avatar's frame
+    expect([fill('avp'), fill('avs')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect(fill('avs')).not.toBe(css(el('as')).backgroundColor);
+  });
+
   test('linkProps\' aria-current wins over selected\'s "true", so a nav list can mark the current page (GF3)', async () => {
     await render(<List aria-label="Pages">
       <ListItem id="gp" href="#home" title="Home" selected linkProps={{ 'aria-current': 'page' }} />

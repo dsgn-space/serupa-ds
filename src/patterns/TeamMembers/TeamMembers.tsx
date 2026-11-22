@@ -232,7 +232,8 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
           <Dialog open={inviting} onOpenChange={ask} title="Invite people" description="They get an email with a link to join. It works for 7 days.">
             <form onSubmit={send} noValidate className="flex flex-col gap-4">
               {failed ? <Alert tone="danger">Couldn’t send the invites. Try again.</Alert> : null}
-              <Field label="Email addresses" id="invite-emails" hint="Separate them with commas or new lines." error={problem ?? undefined}>
+              <p className="m-0 text-text-muted">Fields marked * are required.</p>
+              <Field label="Email addresses" id="invite-emails" hint="Separate them with commas or new lines." error={problem ?? undefined} required>
                 <Textarea rows={3} value={text} onChange={(e) => { setText(e.target.value); if (problem) setProblem(null); }} autoComplete="off" />
               </Field>
               <Field label="Role" id="invite-role" hint={ROLES.find((x) => x.value === role)!.hint.replace(/^./, (c) => c.toUpperCase()) + '.'}>
