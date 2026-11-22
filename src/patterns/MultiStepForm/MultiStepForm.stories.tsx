@@ -32,3 +32,6 @@ export const SendFails: Story = { args: { failed: true, initial: ANSWERS, onSubm
 
 /** Sent: the reference, where the copy went, and what happens next. */
 export const Sent: Story = { args: { sent: true, initial: ANSWERS } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

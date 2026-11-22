@@ -26,3 +26,6 @@ export const Loading: Story = { args: { loading: true } };
 
 /** The profile didn't load: the page says so, and Try again loads it again. */
 export const LoadFailed: Story = { args: { loadFailed: true } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

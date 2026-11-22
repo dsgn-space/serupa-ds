@@ -12,6 +12,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -59,6 +60,9 @@ export interface ListSearchProps {
   loading?: boolean | undefined;
   /** Exports the selected rows, by name. */
   onExport?: ((names: string[]) => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const OWNERS = ['Ana', 'Budi', 'Chen', 'Dewi'];
@@ -105,7 +109,7 @@ export function writeView(v: View): string {
 }
 
 /** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
-export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport, loading = false, loadFailed = false, onRetry }: ListSearchProps) {
+export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport, loading = false, loadFailed = false, onRetry, online }: ListSearchProps) {
   const locale = useLocale();
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
@@ -160,6 +164,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main ref={mainRef} id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the projects loaded before you went offline. Archiving and exporting need a connection.</OfflineBanner>
         <PageHeader title="Projects" primary={{ label: 'New project', href: '#new-project' }} />
         <TableToolbar
           noun="projects"

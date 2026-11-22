@@ -15,6 +15,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 
 /* Appointment: a time with someone, picked by day and then by time, with your details and a confirmation. For an
    app to copy. What it carries (WCAG 2.2):
@@ -71,6 +73,9 @@ export interface AppointmentProps {
   loadFailed?: boolean | undefined;
   /** Loads the times again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoService: AppointmentService = { name: 'Eye test', minutes: 30, with: 'Dr. Sari Wijaya', where: 'Jl. Riau 21, Bandung' };
@@ -117,7 +122,7 @@ export function detailProblems(d: Pick<AppointmentRequest, 'name' | 'email'>): P
 }
 
 /** The booking page: a skip link, a header, then main with the service's h1, the day and time, your details and Book. */
-export function Appointment({ service = demoService, slots = demoSlots, today = '2025-03-03', onBook, loading = false, loadFailed = false, onRetry }: AppointmentProps) {
+export function Appointment({ service = demoService, slots = demoSlots, today = '2025-03-03', onBook, loading = false, loadFailed = false, onRetry, online }: AppointmentProps) {
   const locale = useLocale(undefined);
   const [picked, setPicked] = React.useState<string | null>(null);
   const [time, setTime] = React.useState<string | null>(null);
@@ -169,12 +174,15 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
         <p className="m-0 text-base font-semibold">Acme Clinic</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These times are from when the page loaded and may have gone. Booking needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Services', href: '#services' }, { label: service.name }]} title={`Book an ${service.name.toLowerCase()}`}
           description={`${formatNumber(service.minutes, locale)} minutes with ${service.with}`} />
 
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
+            : !first && !booked ? <EmptyState icon="event_busy" title="No free times" headingLevel={2}
+                description={`${service.with} has no free times in the weeks ahead. New times open every Monday.`} />
             : booked ? (
               <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
                 <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked for {slotWords(booked.day, booked.time, locale)}</h2>

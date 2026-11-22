@@ -16,6 +16,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Reviews: the average and how the stars split, then the reviews themselves, filtered by stars and sorted, a few at a
    time, each one marked helpful or not. For an app to copy. What it carries (WCAG 2.2):
@@ -43,6 +44,9 @@ export interface ReviewsProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Review[] = [
@@ -73,7 +77,7 @@ export function pickReviews(reviews: Review[], stars: number, sort: Sort) {
 }
 
 /** The reviews page: a skip link, a header, then main with the h1, the summary, the filters and the reviews. */
-export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageSize = 3, onHelpful, loading = false, loadFailed = false, onRetry }: ReviewsProps) {
+export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageSize = 3, onHelpful, loading = false, loadFailed = false, onRetry, online }: ReviewsProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [stars, setStars] = React.useState('0');
@@ -103,6 +107,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
         <Link underline="hover" href="#bag">Bag</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the reviews loaded before you went offline. Marking one helpful needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>

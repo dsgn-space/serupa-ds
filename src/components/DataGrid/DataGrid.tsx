@@ -10,6 +10,7 @@ import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { en as words } from './labels';
 import { useStickyHead } from '../../internal/stickyHead';
 import { useClipboardHandOn } from '../../internal/clipboardHandOn';
+import { isRtl } from '../../internal/position';
 
 /** A row of data: any object; its id is read from the `rowKey` field ("id" by default). */
 export type DataGridRow = Record<string, unknown>;
@@ -141,7 +142,7 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
     if (then) move(then, false);
   };
 
-  const rtl = () => !!table.current && getComputedStyle(table.current).direction === 'rtl';
+  const rtl = () => !!table.current && isRtl(table.current);
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     props.onKeyDown?.(e);
     if (e.defaultPrevented || edit || isComposing(e)) return;

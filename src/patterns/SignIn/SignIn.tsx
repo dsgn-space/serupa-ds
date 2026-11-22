@@ -3,6 +3,7 @@ import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Center } from '../../components/Center/Center';
 import { Stack } from '../../components/Stack/Stack';
 import { AuthCard, type AuthStep } from '../../blocks/AuthCard/AuthCard';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Sign-in: email and password, then a one-time code, as a page of its own, for an app to copy. The card is the
    Auth card block (src/blocks/AuthCard), which says what it carries for WCAG 2.2: 3.3.8 accessible authentication,
@@ -20,18 +21,22 @@ export interface SignInProps {
   check?: (email: string, password: string) => boolean;
   /** The app's check of the one-time code. Default: "123456". */
   verify?: (code: string) => boolean;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoCheck = (email: string, password: string) => email === 'ada@example.com' && password === 'correct horse';
 const demoVerify = (code: string) => code === '123456';
 
 /** The sign-in page: a skip link, then main with the step's form, in the middle of the screen (Center). */
-export function SignIn({ start = 'password', failed, check = demoCheck, verify = demoVerify }: SignInProps) {
+export function SignIn({ start = 'password', failed, check = demoCheck, verify = demoVerify, online }: SignInProps) {
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <Center as="main" id="main" vertical className="outline-none">
         <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Signing in needs a connection.</OfflineBanner>
         <p className="m-0 text-base font-semibold">Acme</p>
         <AuthCard idPrefix="sign-in" start={start} failed={failed} check={check} verify={verify} forgotHref="#forgot" doneHref="#dashboard"
           defaultEmail={failed === 'wrong' ? 'ada@example.com' : ''} defaultPassword={failed === 'wrong' ? 'correct hose' : ''}

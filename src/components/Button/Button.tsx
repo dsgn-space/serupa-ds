@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { FormSubmittingContext } from '../../internal/formErrors';
 import * as ReactDOM from 'react-dom';
 import { cn, type DataAttributes, domId, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { useCut } from '../../internal/useCut';
@@ -156,7 +157,9 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
     r.then(function () { settle(true); }, function (err: unknown) { settle(false); throw err; });
   };
   // type="submit" in a <form action={fn}> that is being sent (React's form status): loading on its own, unless set.
-  const formPending = formStatus ? formStatus().pending : false;
+  // …and in a Form whose onSubmit is running.
+  const formSending = React.useContext(FormSubmittingContext);
+  const formPending = (formStatus ? formStatus().pending : false) || formSending;
   const loading = (props.loading != null ? !!props.loading : !isLink && rest.type === 'submit' && formPending) || busy;
   const disabled = !!rest.disabled;
   const reasonId = domId('srp-btn-why', React.useId());

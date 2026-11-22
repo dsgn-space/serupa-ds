@@ -65,4 +65,11 @@ describe('Patterns/Leaderboard', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('nobody has scored yet: it says so once, without an empty table or "0 people"', async () => {
+    const screen = await render(<Leaderboard players={[]} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No scores yet' })).toBeVisible();
+    expect(document.querySelector('main table')).toBeNull();
+    expect(document.querySelector('main')!.textContent).not.toMatch(/\b0 people/);
+  });
 });

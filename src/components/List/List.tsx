@@ -11,6 +11,8 @@ import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
+import { modified } from '../../internal/roving';
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -107,10 +109,10 @@ function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUList
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
     const t = e.target as HTMLElement, row = t.closest<HTMLElement>('[data-list-value]');
-    if (!row || row.parentElement !== ul.current) return;
+    if (!row || row.parentElement !== ul.current || (modified(e) && e.key.indexOf('Arrow') === 0)) return;
     const all = rows(), i = all.indexOf(row), onRow = t === row;
     const inside = Array.from(row.querySelectorAll<HTMLElement>(INSIDE)).filter((c) => !(c as HTMLButtonElement).disabled);
-    const rtl = getComputedStyle(row).direction === 'rtl';
+    const rtl = isRtl(row);
     const go = (j: number) => {
       const r = all[Math.max(0, Math.min(j, all.length - 1))];
       if (!r) return;

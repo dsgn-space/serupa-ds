@@ -21,6 +21,7 @@ import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumbe
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Product page: one product in a shop, with its pictures, its price, the choices to make (color, size), how many,
    and Add to cart. For an app to copy. What it carries (WCAG 2.2):
@@ -110,6 +111,9 @@ export interface ProductPageProps {
   loadFailed?: boolean | undefined;
   /** Loads the product again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 // A drawn shirt, so the demo loads nothing from another server.
@@ -159,7 +163,7 @@ export function lineName(product: ProductInfo, line: ProductCartLine, count: str
 export const countItems = (n: number, formatted: string = String(n)): string => (n === 1 ? `${formatted} item` : `${formatted} items`);
 
 /** The product page: a skip link, a header with the cart, then main with the pictures, the product's h1 and its form. */
-export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, onAddToCart, loading = false, loadFailed = false, onRetry }: ProductPageProps) {
+export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, onAddToCart, loading = false, loadFailed = false, onRetry, online }: ProductPageProps) {
   const locale = useLocale(undefined);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
   const off = saving(product.price, product.was);
@@ -290,6 +294,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
         <Link href="#cart" tone="neutral">Cart, {countItems(inCart, formatNumber(inCart, locale))}</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">This price and stock are from when the page loaded. Adding to your bag needs a connection.</OfflineBanner>
         <Breadcrumb>
           {/* The last item, the page itself, has no link. */}
           {[['Shop', '#shop'], ['Shirts', '#shirts'], [loading || loadFailed ? 'Product' : product.name, undefined]].map(([label, href]) => (

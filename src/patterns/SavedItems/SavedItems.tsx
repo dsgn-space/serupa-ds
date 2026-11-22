@@ -15,6 +15,7 @@ import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Saved items: things kept for later, with what changed since (a lower price, few left, sold out), and a way to move
    each to the cart or let it go. For an app to copy. What it carries (WCAG 2.2):
@@ -59,6 +60,9 @@ export interface SavedItemsProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 // A drawn thing in a colored square, so the demo loads nothing from another server.
@@ -99,7 +103,7 @@ export function savedChange(item: SavedItem): { label: string; tone: 'success' |
 }
 
 /** The saved items page: a skip link, a header, then main with the h1, the sort, and the items, or an empty state. */
-export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRemove, loading = false, loadFailed = false, onRetry }: SavedItemsProps) {
+export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRemove, loading = false, loadFailed = false, onRetry, online }: SavedItemsProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(items);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -143,6 +147,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
         <Link underline="hover" href="#cart">Cart</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Moving items to your bag needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Saved items' }]} title="Saved items"
           description="Kept for later. We’ll show here when a price drops or few are left." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your saved items" onRetry={() => onRetry?.()} headingLevel={2} /></div>

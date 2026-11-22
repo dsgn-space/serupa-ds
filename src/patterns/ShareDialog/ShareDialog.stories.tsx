@@ -24,3 +24,9 @@ export const NotShared: Story = { args: { defaultOpen: true, people: [{ id: 'u1'
 
 /** Anyone with the link can view: the hint under the picker says what that means. */
 export const AnyoneWithTheLink: Story = { args: { defaultOpen: true, linkAccess: 'view' } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Adding people fails: what was typed stays, and it says so. At rest it looks like Open, so it has no screenshot. */
+export const ShareFails: Story = { tags: ['!visual'], args: { defaultOpen: true, onInvite: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

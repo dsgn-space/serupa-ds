@@ -20,6 +20,8 @@ Some components look alike but say different things to a screen reader and behav
 | Typing an answer that may not be in any list | [Input](?path=/docs/components-forms-input--docs) |
 | Rating something with stars | [Rating](?path=/docs/components-forms-rating--docs) |
 
+**On the keyboard, these work two ways.** Radio, SegmentedControl and Tabs are one Tab stop: the arrow keys move between the options and pick as they go, wrapping at the ends. ToggleGroup with `selectionMode="single"` is a row of buttons, each its own Tab stop, and Space or Enter presses one (inside a Toolbar, the arrows move between them). So pick by what the control does, not by how it looks: a value or a view is Radio, SegmentedControl or Tabs (Tabs when each option shows its own panel); a tool, such as text alignment in an editor, is ToggleGroup.
+
 ## On or off
 
 | People are… | Use |
@@ -79,7 +81,7 @@ Never use two radios for on and off: one Checkbox or Switch says it in one contr
 | Signing, such as a delivery or a consent form, with a typed name always on offer | [SignaturePad](?path=/docs/components-forms-signaturepad--docs) |
 | Adding files, by choosing or dropping them | [FileUpload](?path=/docs/components-forms-fileupload--docs); each file it lists, or one sent in a message, is an [Attachment](?path=/docs/components-content-attachment--docs) |
 
-Wrap every form control in a [Field](?path=/docs/components-forms-field--docs), which gives it its label, hint and error. When a form is sent with errors, put an [ErrorSummary](?path=/docs/components-forms-errorsummary--docs) at its top.
+Wrap every form control in a [Field](?path=/docs/components-forms-field--docs), which gives it its label, hint and error. When a form is sent with errors, put an [ErrorSummary](?path=/docs/components-forms-errorsummary--docs) at its top. To check the whole form against one schema, with the summary, server errors, drafts and steps taken care of, wrap it in a [Form](?path=/docs/components-forms-form--docs).
 
 ## Showing text, numbers and dates
 

@@ -25,3 +25,9 @@ export const Expired: Story = { args: { start: 'expired', email: 'ana@example.co
 
 /** The password is changed: what that did, and Sign in. */
 export const Done: Story = { args: { start: 'done' } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Sending the link fails: it stays on the step and says the link didn't go. At rest it looks like Default, so it has no screenshot. */
+export const RequestFails: Story = { tags: ['!visual'], args: { onRequest: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

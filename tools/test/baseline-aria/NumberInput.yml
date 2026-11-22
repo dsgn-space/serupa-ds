@@ -63,6 +63,17 @@
 - button "Decrease"
 - button "Increase"
 
+# Sizes
+- spinbutton "Quantity, sm": "1"
+- button "Decrease"
+- button "Increase"
+- spinbutton "Quantity, md": "1"
+- button "Decrease"
+- button "Increase"
+- spinbutton "Quantity, lg": "1"
+- button "Decrease"
+- button "Increase"
+
 # States
 - text: Invalid
 - spinbutton "Invalid" [invalid]: "120"

@@ -18,6 +18,7 @@ import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Order history: every order you've placed, newest first, found by what was in it or by where it's got to, each with a
    way to see it and buy it again. For an app to copy. What it carries (WCAG 2.2):
@@ -60,6 +61,9 @@ export interface OrderHistoryProps {
   /** They failed to load: a message with Try again, which calls onRetry. Default: false. */
   loadFailed?: boolean | undefined;
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 export const STATES: Record<OrderState, { label: string; tone: BadgeTone }> = {
@@ -94,7 +98,7 @@ export function itemWords(items: readonly string[], more: (n: number) => string 
 }
 
 /** The order history page: a skip link, a header, then main with the h1, the search and filter, and the orders. */
-export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, onBuyAgain, loading = false, loadFailed = false, onRetry }: OrderHistoryProps) {
+export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, onBuyAgain, loading = false, loadFailed = false, onRetry, online }: OrderHistoryProps) {
   const locale = useLocale();
   const [q, setQ] = React.useState('');
   const [state, setState] = React.useState<OrderState | ''>('');
@@ -129,6 +133,7 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main ref={mainRef} id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the orders loaded before you went offline. Buying again needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Orders' }]} title="Orders" description="Every order you’ve placed, newest first." />
         <div className="flex flex-col gap-5 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your orders" onRetry={() => onRetry?.()} headingLevel={2} />

@@ -19,6 +19,7 @@ import { Input } from '../Input/Input';
 import * as icons from '../../material/builtin';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 /** A swatch: its color as hex, and its name in words ("Ocean"), which is what screen readers say. */
 export interface ColorSwatch { value: string; label: string }
@@ -154,7 +155,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.defaultPrevented || readOnly || !swatches.length || e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     const i = swatches.findIndex((s) => s.value === e.currentTarget.dataset.value);
     let n: number;
     switch (e.key) {

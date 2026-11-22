@@ -14,6 +14,7 @@ import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { FileUpload } from '../../components/FileUpload/FileUpload';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Job application: what the job is, then one short form to apply, and what happens next. For an app to copy. What it
    carries (WCAG 2.2):
@@ -55,6 +56,9 @@ export interface JobApplicationProps {
   job?: JobPosting | undefined;
   /** Sends the application. Reject when it can't be sent. */
   onApply?: ((answers: JobApplicationAnswers) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoJob: JobPosting = { title: 'Product designer', team: 'Payments', place: 'Jakarta or remote in UTC+7 to UTC+9', hours: 'Full time', pay: '$48,000 to $62,000 a year' };
@@ -79,7 +83,7 @@ export function applicationProblems(a: JobApplicationAnswers): Problems {
 }
 
 /** The job's page: a skip link, a header, then main with the h1, what the job is, and the form, or the answer once sent. */
-export function JobApplication({ job = demoJob, onApply }: JobApplicationProps) {
+export function JobApplication({ job = demoJob, onApply, online }: JobApplicationProps) {
   const [a, setA] = React.useState<JobApplicationAnswers>(blank);
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
@@ -111,6 +115,7 @@ export function JobApplication({ job = demoJob, onApply }: JobApplicationProps) 
         <Link underline="hover" href="#jobs">All jobs</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending the application needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Jobs', href: '#jobs' }, { label: job.title }]} title={job.title}
           description="Applying takes about 5 minutes. All fields are needed unless they say they’re optional." />
         <div className="flex flex-col gap-8 pt-6">

@@ -11,6 +11,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Contact form: a message to the people behind a product, with what they need to answer it, and an answer to say it
    arrived. For an app to copy. What it carries (WCAG 2.2):
@@ -39,6 +40,9 @@ export interface ContactFormProps {
   onSend?: ((message: ContactMessage) => unknown) | undefined;
   /** How soon you answer, for the answer page: "within 2 working days". Default: that. */
   replyTime?: string | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const TOPICS = [
@@ -66,7 +70,7 @@ export function contactProblems(m: ContactMessage): Problems {
 }
 
 /** The contact page: a skip link, a header, then main with the h1 and the form, or the answer once sent. */
-export function ContactForm({ onSend, replyTime = 'within 2 working days' }: ContactFormProps) {
+export function ContactForm({ onSend, replyTime = 'within 2 working days', online }: ContactFormProps) {
   const [m, setM] = React.useState<ContactMessage>(blank);
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
@@ -99,6 +103,7 @@ export function ContactForm({ onSend, replyTime = 'within 2 working days' }: Con
         <Link underline="hover" href="#help">Help center</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your message stays here. Sending it needs a connection.</OfflineBanner>
         <PageHeader title="Contact us" description={`We read every message and reply ${replyTime}. All fields are needed unless they say they’re optional.`} />
         <div className="pt-6">
           {sent ? (

@@ -14,6 +14,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Donation: give once or every month, choose an amount that says what it pays for, cover the card fee if you like, and
    see the total before you give. For an app to copy. What it carries (WCAG 2.2):
@@ -39,6 +40,9 @@ export interface DonationProps {
   fee?: { rate: number; fixed: number } | undefined;
   /** Takes the gift. Reject when it can't be taken. */
   onGive?: ((gift: Gift) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoAmounts = [
@@ -68,7 +72,7 @@ export function giftProblems(d: { amount: string; other: number | null; name: st
 }
 
 /** The donation page: a skip link, a header, then main with the h1, and the form or the thank-you. */
-export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee = { rate: 0.029, fixed: 0.3 }, onGive }: DonationProps) {
+export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee = { rate: 0.029, fixed: 0.3 }, onGive, online }: DonationProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 });
   const [d, setD] = React.useState({ monthly: 'once', amount: '', other: null as number | null, cover: false, name: '', email: '' });
@@ -106,6 +110,7 @@ export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee
         <Link underline="hover" href="#about">About us</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Giving needs a connection.</OfflineBanner>
         <PageHeader title="Give to Acme Schools" description="Every gift goes to schools in the villages we work in. We’re a registered charity; your gift may be tax-deductible." />
         {given ? (
           <section aria-labelledby="donate-thanks" className="flex flex-col items-start gap-3 pt-6">

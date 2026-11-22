@@ -1,0 +1,61 @@
+{
+  "form": {
+    "$description": "Form's component tokens, for Form and FormSteps. Each one is an optional override: set the CSS variable (--form-<name>) on the page, a container or one Form, and every Form inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a step's heading when it has focus from the keyboard.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-focus-ring"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space between the form's parts: the summary, each field, the buttons (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-gap"
+          }
+        }
+      },
+      "actions-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between FormSteps' Next (or submit) and Back buttons (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-actions-gap"
+          }
+        }
+      },
+      "steps-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "Space between FormSteps' progress bar, the step and its buttons (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-steps-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "step-title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The weight of each step's heading.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--form-step-title-weight"
+          }
+        }
+      }
+    }
+  }
+}

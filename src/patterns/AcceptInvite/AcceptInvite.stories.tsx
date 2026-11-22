@@ -26,3 +26,9 @@ export const OtherAccount: Story = { args: { signedInAs: 'ana.lima@work.example'
 
 /** The invite has ended: why, and who to ask. */
 export const Ended: Story = { args: { invite: { ...invite, expires: '2026-01-10T17:00:00Z' }, now: new Date('2026-02-01T00:00:00Z') } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** Join fails: it says nothing has changed, and Join can be pressed again. At rest it looks like Default, so it has no screenshot. */
+export const JoinFails: Story = { tags: ['!visual'], args: { onJoin: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };

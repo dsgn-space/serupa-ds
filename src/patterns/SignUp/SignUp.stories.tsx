@@ -28,3 +28,6 @@ export const SubmitFails: Story = {
 
 /** Done: the account is ready, with the way in. */
 export const Done: Story = { args: { start: 'done', initial: { name: 'Ana Lima', email: 'ana@example.com' } } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

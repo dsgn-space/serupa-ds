@@ -16,3 +16,6 @@ export const Default: Story = {};
 
 /** In euros, with 10% off a yearly bill. */
 export const Euros: Story = { args: { currency: 'EUR', yearlyOff: 0.1 } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

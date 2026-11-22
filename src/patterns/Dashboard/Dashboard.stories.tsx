@@ -24,3 +24,9 @@ export const FirstRun: Story = {
 
 /** The dashboard failed to load: what happened and Try again, said once, in place of the numbers. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };
+
+/** Partly loaded: the numbers, projects and usage came in, the activity didn't; its card says so, with Try again. */
+export const Partial: Story = { args: { activityFailed: true, onRetry: () => {} } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

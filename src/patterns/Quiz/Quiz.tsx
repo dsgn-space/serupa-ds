@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Quiz: a few questions to check what was learned, all on one page, then the score and, for each question, whether
    it was right and why. For an app to copy. What it carries (WCAG 2.2):
@@ -54,6 +55,9 @@ export interface QuizProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: QuizQuestion[] = [
@@ -65,8 +69,8 @@ const demo: QuizQuestion[] = [
     answer: ['autocomplete', 'types'], why: 'Autofill and the right keyboard save typing. A puzzle slows everyone down, and some can’t solve it at all.' },
   { id: 'q4', question: 'After a form is sent, where should focus go?', options: [{ value: 'answer', label: 'To the heading of what happened' }, { value: 'top', label: 'Back to the top of the page' }, { value: 'stay', label: 'Nowhere: leave it on the button' }],
     answer: ['answer'], why: 'The heading says what happened, and a screen reader reads it at once.' },
-  { id: 'q5', question: 'Which fields should say they’re optional?', options: [{ value: 'optional', label: 'The optional ones' }, { value: 'none', label: 'None: a star on required ones is enough' }],
-    answer: ['optional'], why: 'Most fields are usually needed, so marking the few optional ones says the most with the least.' },
+  { id: 'q5', question: 'How should a form mark which fields people must fill?', options: [{ value: 'both', label: 'A star on required fields and “(optional)” on the rest' }, { value: 'optional', label: 'Only “(optional)” on the optional ones' }, { value: 'star', label: 'Only a star on the required ones' }],
+    answer: ['both'], why: 'People skip the note that explains a convention, so each field should say what it is. A sign-in form needs neither.' },
 ];
 
 /** How many questions are answered right: every right option chosen and no other. */
@@ -78,7 +82,7 @@ export function scoreQuiz(questions: readonly QuizQuestion[], answers: QuizAnswe
 }
 
 /** The quiz page: a skip link, a header, then main with the h1, the questions, and the score once checked. */
-export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck, loading = false, loadFailed = false, onRetry }: QuizProps) {
+export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck, loading = false, loadFailed = false, onRetry, online }: QuizProps) {
   const locale = useLocale();
   const [answers, setAnswers] = React.useState<QuizAnswers>({});
   const [missing, setMissing] = React.useState<string[]>([]);
@@ -113,8 +117,9 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
         <Link underline="hover" href="#course">Back to the course</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Checking them needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
-          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like.`} />
+          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like. Questions marked * need an answer.`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
         <div className="flex flex-col gap-6 pt-6">
@@ -143,7 +148,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
                 const error = missing.includes(q.id) ? 'Choose an answer.' : undefined;
                 return (
                   <li key={q.id} className="flex flex-col gap-3">
-                    <Field label={label} error={error} group disabled={checked}>
+                    <Field label={label} error={error} group required disabled={checked}>
                       {many ? (
                         <CheckboxGroup id={`quiz-${q.id}`} value={mine} onValueChange={(v: string[]) => choose(q.id, v)}>
                           {q.options.map((o) => <Checkbox key={o.value} value={o.value}>{o.label}</Checkbox>)}

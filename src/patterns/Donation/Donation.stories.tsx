@@ -20,3 +20,6 @@ export const Euros: Story = { args: { currency: 'EUR', amounts: [{ amount: 15, b
 
 /** Giving fails: it says so, nothing's charged, and everything stays. */
 export const GiveFails: Story = { args: { onGive: () => new Promise((_, no) => setTimeout(() => no(new Error('declined')), 600)) } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

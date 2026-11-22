@@ -22,3 +22,6 @@ export const Denied: Story = { args: { initial: 'denied', request: () => Promise
 
 /** No camera in this browser: said as information, and the page still works. */
 export const Unsupported: Story = { args: { initial: 'unsupported' } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

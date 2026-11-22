@@ -17,3 +17,6 @@ export const Default: Story = {};
 
 /** Sending fails: it says so next to Send, and every field stays. */
 export const SendFails: Story = { args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
