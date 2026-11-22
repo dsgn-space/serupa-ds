@@ -23,13 +23,26 @@ describe('Patterns/API keys', () => {
     expect(keyNameProblem('CI', ['Deploy bot'])).toBeNull();
   });
 
+  test('the Access column says what each kind allows, from a help button beside its heading', async () => {
+    const screen = await render(<ApiKeys />);
+    const help = screen.getByRole('button', { name: 'About access' });
+    await help.click();
+    const panel = screen.getByRole('dialog', { name: 'Access' });
+    await expect.element(panel).toBeVisible();
+    expect(panel.element().textContent?.replace(/\s+/g, ' ')).toContain('Read and write: Can also change and delete projects and data.');
+    await userEvent.keyboard('{Escape}');
+    await expect.element(panel).not.toBeInTheDocument();
+    expect(active()).toBe(help.element());
+  });
+
   test('one main and h1, a table, each Revoke named with its key, and only the last four characters shown', async () => {
     const screen = await render(<ApiKeys />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'API keys']);
     await expect.element(screen.getByRole('table', { name: 'API keys' })).toBeVisible();
     expect(screen.getByRole('button', { name: /^Revoke / }).elements().map((e) => e.getAttribute('aria-label')))
       .toEqual(['Revoke Deploy bot', 'Revoke Analytics export', 'Revoke Old staging test']);
-    await expect.element(screen.getByText('…7Qx2')).toBeVisible();
+    await expect.element(screen.getByText('Deploy bot key ending in 7Qx2')).toBeInTheDocument();
+    expect(document.querySelector('[data-component="masked-value"]')?.textContent).toMatch(/7Qx2/);
     await expect.element(screen.getByText('Never').first()).toBeVisible();
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
@@ -59,7 +72,7 @@ describe('Patterns/API keys', () => {
     const h = (el: Element) => Math.round(el.getBoundingClientRect().height);
     expect(h(active())).toBe(h(screen.getByRole('button', { name: 'Done' }).element()));
     await screen.getByRole('button', { name: 'Done' }).click();
-    await expect.element(screen.getByText('…WXYZ')).toBeVisible();
+    await expect.element(screen.getByText(/key ending in WXYZ$/)).toBeInTheDocument();
     await expect.element(screen.getByRole('button', { name: 'Revoke CI runner' })).toBeVisible();
     expect(latin(active().textContent)).toBe('Create key');
   });

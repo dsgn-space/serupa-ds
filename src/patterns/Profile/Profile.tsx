@@ -17,8 +17,9 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
 import { Stack } from '../../components/Stack/Stack';
+import { TimeZonePicker } from '../../components/TimeZonePicker/TimeZonePicker';
 
-/* Profile: what other people see of you (a photo, your name, a short bio, where you are and a link), edited in one
+/* Profile: what other people see of you (a photo, your name, a short bio, where you are, your time zone and a link), edited in one
    form and saved when you say so. For an app to copy. What it carries (WCAG 2.2):
    - 1.1.1: the photo's preview says whose it is; without a photo, the avatar shows initials and still names you.
    - 3.3.2, 1.3.5: each field says what it's for and its limits: the bio counts what's left as you type, the photo
@@ -41,6 +42,8 @@ export interface ProfileInfo {
   website: string;
   /** The photo's address, or empty for initials. */
   photo: string;
+  /** Your time zone, an IANA name ("Asia/Jakarta"), so others know when you're around. Leave it out for none. */
+  timeZone?: string | undefined;
 }
 
 export interface ProfileProps {
@@ -61,7 +64,7 @@ export interface ProfileProps {
   online?: boolean | undefined;
 }
 
-const demo: ProfileInfo = { name: 'Ana Lima', bio: 'Product designer. I draw interfaces, maps and the odd cat.', location: 'Bandung, Indonesia', website: 'https://ana.example.com', photo: '' };
+const demo: ProfileInfo = { name: 'Ana Lima', bio: 'Product designer. I draw interfaces, maps and the odd cat.', location: 'Bandung, Indonesia', website: 'https://ana.example.com', photo: '', timeZone: 'Asia/Jakarta' };
 
 /** What's wrong with the profile, by field, or {} when it can be saved. */
 export function profileProblems(p: Pick<ProfileInfo, 'name' | 'website' | 'bio'>, bioLimit = 160): Partial<Record<'name' | 'website' | 'bio', string>> {
@@ -75,7 +78,7 @@ export function profileProblems(p: Pick<ProfileInfo, 'name' | 'website' | 'bio'>
 
 /** Whether two profiles differ in anything a person typed. */
 export const profileChanged = (a: ProfileInfo, b: ProfileInfo): boolean =>
-  a.name !== b.name || a.bio !== b.bio || a.location !== b.location || a.website !== b.website || a.photo !== b.photo;
+  a.name !== b.name || a.bio !== b.bio || a.location !== b.location || a.website !== b.website || a.photo !== b.photo || (a.timeZone ?? '') !== (b.timeZone ?? '');
 
 /** The profile page: a skip link, a header, then main with the h1, the form and a preview. */
 /** The fields that can have a problem, in the order they show. */
@@ -156,6 +159,9 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                     </Field>
                     <Field label="Location" optional>
                       <Input autoComplete="address-level2" value={draft.location} onChange={(e) => edit({ location: e.target.value })} />
+                    </Field>
+                    <Field label="Time zone" optional>
+                      <TimeZonePicker value={draft.timeZone ?? null} onValueChange={(z) => edit({ timeZone: z ?? undefined })} />
                     </Field>
                     <Field label="Website" id="profile-website" error={problems.website} optional>
                       <Input type="url" autoComplete="url" inputMode="url" value={draft.website} onChange={(e) => edit({ website: e.target.value })} />

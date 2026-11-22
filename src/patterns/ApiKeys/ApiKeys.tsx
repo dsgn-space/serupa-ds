@@ -24,6 +24,8 @@ import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
 import { Stack } from '../../components/Stack/Stack';
+import { MaskedValue } from '../../components/MaskedValue/MaskedValue';
+import { ContextualHelp } from '../../components/ContextualHelp/ContextualHelp';
 
 /* API keys: the keys a workspace's scripts and tools use, making one, and revoking one. For an app to copy. What it
    carries (WCAG 2.2):
@@ -94,6 +96,8 @@ const ACCESS: { value: ApiKeyAccess; label: string; hint: string }[] = [
   { value: 'read', label: 'Read only', hint: 'Can look at projects and data, not change them.' },
   { value: 'write', label: 'Read and write', hint: 'Can also change and delete projects and data.' },
 ];
+/** Stands in for the part of a key that is never shown again, so only its last four characters are. */
+const HIDDEN = 'x'.repeat(8);
 const EXPIRY = [{ value: '30', label: 'In 30 days' }, { value: '90', label: 'In 90 days' }, { value: '365', label: 'In a year' }, { value: 'never', label: 'Never' }];
 
 /** What's wrong with a new key's name, in words, or null when it's good. Names are compared without case. */
@@ -165,7 +169,11 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
   const accessLabel = (a: ApiKeyAccess) => ACCESS.find((x) => x.value === a)!.label;
   const head = (
     <TableHead><TableRow>
-      <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Key</TableHeaderCell><TableHeaderCell>Access</TableHeaderCell>
+      <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Key</TableHeaderCell><TableHeaderCell>
+        <span className="inline-flex items-center gap-1">Access
+          <ContextualHelp label="About access" title="Access">{ACCESS.map((a) => <p key={a.value} className="m-0"><strong>{a.label}:</strong> {a.hint}</p>)}</ContextualHelp>
+        </span>
+      </TableHeaderCell>
       <TableHeaderCell>Created</TableHeaderCell><TableHeaderCell>Last used</TableHeaderCell><TableHeaderCell>Expires</TableHeaderCell>
       <TableHeaderCell><span className="sr-only">Actions</span></TableHeaderCell>
     </TableRow></TableHead>
@@ -199,7 +207,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
                   <TableBody>{shown.map((k) => (
                     <TableRow key={k.id}>
                       <TableCell className="font-medium">{k.name}</TableCell>
-                      <TableCell className="whitespace-nowrap font-mono">…{k.ends}</TableCell>
+                      <TableCell className="whitespace-nowrap font-mono"><MaskedValue value={HIDDEN + k.ends} label={`${k.name} key`} /></TableCell>
                       <TableCell><Badge>{accessLabel(k.access)}</Badge></TableCell>
                       <TableCell className="whitespace-nowrap">{date(k.created)}</TableCell>
                       <TableCell className="whitespace-nowrap">{k.lastUsed == null ? 'Never' : date(k.lastUsed)}</TableCell>

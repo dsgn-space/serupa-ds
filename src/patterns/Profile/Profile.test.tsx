@@ -18,7 +18,7 @@ describe('Patterns/Profile', () => {
     expect(profileProblems({ ...me, name: ' ', website: 'ana.example' })).toEqual({ name: 'Enter your name.', website: 'Enter a link that starts with https://, like https://example.com.' });
     expect(profileProblems({ ...me, website: '' })).toEqual({});
     expect(profileProblems({ ...me, bio: 'x'.repeat(11) }, 10)).toEqual({ bio: 'Shorten your bio to 10 characters.' });
-    expect([profileChanged(me, { ...me }), profileChanged(me, { ...me, bio: 'Hi' }), profileChanged(me, { ...me, photo: 'a.png' })]).toEqual([false, true, true]);
+    expect([profileChanged(me, { ...me }), profileChanged(me, { ...me, bio: 'Hi' }), profileChanged(me, { ...me, photo: 'a.png' }), profileChanged(me, { ...me, timeZone: 'Asia/Tokyo' })]).toEqual([false, true, true, true]);
   });
 
   test('one main and h1, the skip link first, the form named by whose profile it is, fields with autofill, and the avatar named', async () => {
@@ -74,6 +74,17 @@ describe('Patterns/Profile', () => {
     await expect.poll(() => document.body.textContent).toContain('Saved');
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
     expect(document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
+  });
+
+  test('a time zone is picked from the list by city, and saved with the profile', async () => {
+    const onSave = vi.fn((_p: ProfileInfo, _f: File | null) => Promise.resolve());
+    const screen = await render(<Profile profile={me} onSave={onSave} />);
+    const zone = screen.getByRole('combobox', { name: /^Time zone/ });
+    await zone.fill('Tokyo');
+    await screen.getByRole('option', { name: /^Tokyo/ }).click();
+    await screen.getByRole('button', { name: 'Save profile' }).click();
+    await expect.poll(() => onSave.mock.calls.length).toBe(1);
+    expect(onSave.mock.calls[0]![0]).toEqual({ ...me, timeZone: 'Asia/Tokyo' });
   });
 
   test('a photo can be removed, and a save that fails says so, keeps the changes and saves again from Try again', async () => {

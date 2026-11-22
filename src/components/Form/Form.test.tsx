@@ -254,6 +254,18 @@ describe('Form', () => {
     expect(window.localStorage.getItem('serupa-form-draft:signup')).toBe(null);
   });
 
+  test('draft: a form nobody has typed in keeps no draft and says nothing is saved', async () => {
+    let api: FormHandle | null = null;
+    const Probe = () => { api = useForm(); return null; };
+    await render(<SerupaProvider locale="en"><Form draft="untouched" onSubmit={() => {}}>
+      <Field label="Name"><Input id="u" name="name" /></Field>
+      <Probe />
+    </Form></SerupaProvider>);
+    await new Promise((r) => { window.setTimeout(r, 900); });   // past the 600ms a draft waits for
+    expect(window.localStorage.getItem('serupa-form-draft:untouched')).toBe(null);
+    expect(api!.draftSavedAt).toBe(null);
+  });
+
   test('warnUnsaved: leaving the page asks first while there are changes, and not once they are sent', async () => {
     await render(<Form warnUnsaved onSubmit={() => {}}>
       <Field label="Name"><Input id="n" name="name" /></Field>
