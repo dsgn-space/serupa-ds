@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, oneOf, omit, useMergedRef, SIZES } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
@@ -52,9 +53,8 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   const hasPh = props.placeholder != null && props.placeholder !== '';
-  const controlled = rest.value !== undefined;
-  if (hasPh && !controlled && rest.defaultValue === undefined) rest.defaultValue = '';   // start on the placeholder
-  const [picked, setPicked] = React.useState(controlled ? rest.value : rest.defaultValue), cur = controlled ? rest.value : picked;
+  if (hasPh && rest.value === undefined && rest.defaultValue === undefined) rest.defaultValue = '';   // start on the placeholder
+  const [cur, setPicked, controlled] = useControllable(rest.value, rest.defaultValue, 'Select', 'value');
   const { onChange, onKeyDown, onMouseDown } = rest;
   // A form reset puts the native <select> back on its default; the placeholder look follows it.
   const ownRef = React.useRef<HTMLSelectElement | null>(null);
