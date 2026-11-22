@@ -187,6 +187,21 @@ describe('PhoneInput', () => {
     expect([field('pr').value, sel.value]).toEqual([start, 'ID']);
   });
 
+  test('one focus ring at a time: the country menu from the keyboard rings only the menu, the box keeps its resting border; the number field rings the box', async () => {
+    await render(<Wrap><button id="one-before">Before</button><PhoneInput id="one" aria-label="Phone" defaultCountry="ID" /></Wrap>);
+    const rest = css(box('one')).boxShadow;
+    document.getElementById('one-before')!.focus();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(menu('one'));
+    await settled();
+    expect(css(part('one')).outlineStyle).toBe('solid');
+    expect(css(box('one')).boxShadow).toBe(rest);
+    await userEvent.tab();
+    expect(document.activeElement).toBe(field('one'));
+    await settled();
+    expect(css(box('one')).boxShadow).not.toBe(rest);
+  });
+
   test('form reset with the country unchanged: the menu shows it, not the first option, and ArrowDown on it goes on from there (GR86)', async () => {
     await render(<form id="pg"><PhoneInput id="pgb" aria-label="Phone" name="phone" defaultValue="+442079460958" /><button type="reset" id="pgr">Reset</button></form>);
     const f = document.getElementById('pg') as HTMLFormElement;

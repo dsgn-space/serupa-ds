@@ -28,6 +28,8 @@
 .srp-phone-input__select option { background-color: var(--input-bg, var(--field)); color: var(--input-text, var(--text)); }
 @media (hover: hover) { .srp-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
 .srp-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
+/* One ring at a time: with the menu ringed from the keyboard, the box keeps its resting border instead of its focus ring. */
+.srp-phone-input:has(.srp-phone-input__select:focus-visible) { --srp-input-bd: var(--input-border, var(--field-border)); box-shadow: none; }
 .srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
