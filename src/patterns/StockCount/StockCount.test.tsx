@@ -73,4 +73,12 @@ describe('Patterns/StockCount', () => {
     expect(document.body.textContent).toContain('Nothing to count here');
     expect(page.getByRole('button', { name: 'Save counts' }).elements()).toHaveLength(0);
   });
+  test('a load that fails says so, and Try again asks for the stock again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<StockCount loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load the stock' })).toBeVisible();
+    expect(screen.getByRole('grid').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
 });
