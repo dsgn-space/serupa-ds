@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Logo } from '../../components/Logo/Logo';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
 import { Alert } from '../../components/Alert/Alert';
@@ -26,6 +27,11 @@ import { Stack } from '../../components/Stack/Stack';
    - 2.4.3: after Join or Decline, the answer's heading takes focus and says what happened, with where to go.
    - An invite that has ended or been used says why in the h1, and who to ask, rather than a bare error.
    Joining and declining are the app's: onJoin and onDecline; reject onJoin when it can't. */
+
+// The made-up brand's logo, drawn for light and dark backgrounds: swap in your own files.
+const drawn = (w: number, body: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="32" viewBox="0 0 ${w} 32">${body}</svg>`);
+const mark = (bg: string, fg: string) => `<rect width="32" height="32" rx="8" fill="${bg}"/><path d="M9 23 16 8l7 15h-4l-3-7-3 7z" fill="${fg}"/>`;
+const word = (fill: string) => `<text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="${fill}">Acme</text>`;
 
 export interface WorkspaceInvite {
   from: string;
@@ -97,7 +103,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
-        <p className="m-0 text-base font-semibold">Acme</p>
+        <Logo src={drawn(104, mark('#1d4ed8', '#fff') + word('#0f172a'))} darkSrc={drawn(104, mark('#60a5fa', '#0f172a') + word('#f8fafc'))} alt="Acme" />
         <Link underline="hover" href="#help">Help</Link>
       </header>
       <Container as="main" size="prose" className="py-12 outline-none" id="main">
