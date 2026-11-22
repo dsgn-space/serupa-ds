@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, drag } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -172,14 +172,19 @@ describe('SignaturePad', () => {
     expect([png!.type, bmp.width, bmp.height]).toEqual(['image/png', 120, 40]);
   });
 
-  test('on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in every theme', async () => {
+  test('the drawing box has the field\'s border, as a Textarea has, not the stronger control one', async () => {
+    await render(<SignaturePad aria-label="Signature" />);
+    const box = document.querySelector<HTMLElement>('.srp-signature-pad__box')!;
+    expect(css(box).borderTopColor).toBe(color('var(--field-border)'));
+  });
+
+  test('on the surface, the how-to text and the ink read 4.5:1, and the line 3:1, in every theme', async () => {
     await render(<SignaturePad id="c" aria-label="Signature" />);
     const root = el('c'), box = area(root).parentElement!, line = box.querySelector('span[aria-hidden]')!, ink = area(root).querySelector('g')!;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(box).backgroundColor;
       expect(contrast(css(root.querySelector('p')).color, bg), th + ' hint').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(box).borderTopColor, bg), th + ' outline').toBeGreaterThanOrEqual(3);
       expect(contrast(css(line).borderBottomColor, bg), th + ' line').toBeGreaterThanOrEqual(3);
       expect(contrast(css(ink).stroke, bg), th + ' ink').toBeGreaterThanOrEqual(4.5);
     }

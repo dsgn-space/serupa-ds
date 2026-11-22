@@ -216,7 +216,8 @@ describe('SegmentedControl', () => {
   test('fullWidth with a label too long for its equal share: the segments share by content instead, still filling the width, so "Kisi" gives its spare room to the long ones; wide enough, equal again (GR50)', async () => {
     const opts = [{ value: 'list', label: 'Daftar lengkap' }, { value: 'grid', label: 'Kisi' }, { value: 'map', label: 'Peta lokasi toko' }, { value: 'cal', label: 'Kalender' }];
     let setW: (w: number) => void = () => {};
-    function Box() { const [w, set] = React.useState(326); setW = set;   // 320 and the 6px of gaps between the four segments return <div style={{ width: w + 'px' }}><SegmentedControl id="fit" aria-label="View" fullWidth options={opts} defaultValue="list" /></div>; }
+    // 326: 320 and the 6px of gaps between the four segments.
+    function Box() { const [w, set] = React.useState(326); setW = set; return <div style={{ width: w + 'px' }}><SegmentedControl id="fit" aria-label="View" fullWidth options={opts} defaultValue="list" /></div>; }
     await render(<Box />);
     const widths = () => items('fit').map((b) => Math.round(b.getBoundingClientRect().width));
     const whole = (v: string) => { const l = seg('fit', v).firstElementChild as HTMLElement; return l.scrollWidth <= l.clientWidth; };
