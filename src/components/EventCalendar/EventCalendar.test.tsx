@@ -268,6 +268,14 @@ describe('EventCalendar', () => {
     await expect.element(page.getByRole('grid', { name: 'March 2025' })).toBeInTheDocument();
   });
 
+  test('month: today\'s number is in the weight of the other days, marked by an underline as well as its colour', async () => {
+    await render(<EventCalendar events={[]} view="month" />);
+    const today = document.querySelector<HTMLElement>('[aria-current="date"] .srp-event-calendar__date')!;
+    const other = [...document.querySelectorAll<HTMLElement>('.srp-event-calendar__date')].find((d) => d !== today && !d.closest('[class*="--outside"]'))!;
+    expect([css(today).fontWeight, css(today).textDecorationLine]).toEqual([css(other).fontWeight, 'underline']);
+    expect(css(other).textDecorationLine).toBe('none');
+  });
+
   test('agenda: today is marked by more than colour, an underline, which forced colours keep (GR289)', async () => {
     const now = new Date(), next = new Date(now.getFullYear(), now.getMonth(), now.getDate() === 1 ? 2 : 1);
     const at = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');

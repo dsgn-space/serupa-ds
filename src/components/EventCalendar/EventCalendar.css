@@ -26,7 +26,7 @@
 .srp-event-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--event-calendar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-event-calendar__date { display: block; padding-inline: var(--spacing-1); font-variant-numeric: tabular-nums; }
 .srp-event-calendar__day--outside .srp-event-calendar__date { color: var(--event-calendar-muted, var(--text-muted)); }
-.srp-event-calendar__day--today .srp-event-calendar__date { color: var(--event-calendar-today, var(--primary)); font-weight: var(--font-semibold); }
+.srp-event-calendar__day--today .srp-event-calendar__date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }   /* more than colour, as the agenda's today */
 
 .srp-event-calendar__events { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .srp-event-calendar__event {

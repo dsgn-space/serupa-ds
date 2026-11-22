@@ -2,4 +2,4 @@
 "@diki-stwn/serupa-ds": minor
 ---
 
-Calendar: today is no longer semibold. It keeps its primary color and the same weight as the other days (`--calendar-today-weight` now defaults to `font-normal`). This also applies where a Calendar is used, such as DatePicker.
+Calendar and EventCalendar: today is no longer semibold. Calendar marks it with its primary color and a small dot under the number (`--calendar-today-weight` now defaults to `font-normal`), in every picker built on it, such as DatePicker. EventCalendar's month view underlines today's number, as its agenda does.

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Calendar: a header (previous and next month buttons around the month and year) over a 7 × 6 grid of 32px
-   days with muted weekday names. Days of the other months are muted, today is primary, the
+   days with muted weekday names. Days of the other months are muted, today is primary with a dot under it, the
    selected day is filled in primary, a day under the pointer is secondary (a day of another month reads in full text there), and pressed while held. Disabled days are faded and
    struck through. Always six weeks tall, so it doesn't jump between months.
    --------------------------------------------------------------- */
@@ -65,7 +65,7 @@ button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed,
 .srp-calendar__period:active:not([aria-disabled="true"], .srp-calendar__period--selected) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
 .srp-calendar__period:focus { outline: none; }
 .srp-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-calendar__period--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
+.srp-calendar__period--today { position: relative; color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
 @media (hover: hover) { .srp-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
 .srp-calendar__period--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .srp-calendar__period--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
@@ -85,7 +85,12 @@ button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed,
 .srp-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .srp-calendar__day--outside { color: var(--calendar-outside-color, var(--text-muted)); }
 @media (hover: hover) { .srp-calendar__day--outside:hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
-.srp-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
+.srp-calendar__day--today { position: relative; color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
+/* More than color (1.4.1): a dot under today's number, in its color, so it shows on the hover fill and the selected fill too. */
+.srp-calendar__day--today::after, .srp-calendar__period--today::after {
+  content: ""; position: absolute; inset-block-end: var(--spacing-1); inset-inline: var(--spacing-0); margin-inline: auto;
+  width: var(--spacing-1); height: var(--spacing-1); border-radius: var(--rounded-full); background: currentColor;
+}
 @media (hover: hover) { .srp-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; today keeps its aria-current */
 .srp-calendar__day--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .srp-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
