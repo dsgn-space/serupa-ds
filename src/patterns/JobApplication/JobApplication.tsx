@@ -7,6 +7,7 @@ import { Link } from '../../components/Link/Link';
 import { Card } from '../../components/Card/Card';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Field } from '../../components/Field/Field';
+import { FieldList } from '../../components/FieldList/FieldList';
 import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
@@ -24,6 +25,8 @@ import { Stack } from '../../components/Stack/Stack';
      applying.
    - 3.3.2, 1.3.5: each field says what it's for, which are optional, and its format; name, email and phone say what
      they are for autofill. The CV says the file types and size it takes.
+   - 1.3.1, 4.1.3: links to their work are a FieldList, a group named by its legend whose rows are "Link 1", "Link 2";
+     Add a link puts focus in the new row, and it stops at 3 saying why.
    - 3.3.1, 2.4.3: applying with problems shows a summary at the top that takes focus, each problem a link to its
      field (the CV's link lands on its Choose button, the question's on its first answer), and each field says its own.
    - 3.3.4, 4.1.3: Apply shows it's busy; an application that can't be sent says so next to the button and keeps
@@ -37,6 +40,8 @@ export interface JobApplicationAnswers {
   phone: string;
   /** The CV, one file. */
   cv: File | null;
+  /** Links to their work, optional: a portfolio, a case study, a repository. Up to 3. */
+  links?: string[] | undefined;
   /** Why this job, optional. */
   letter: string;
   /** "yes" or "no": can work where the job is. */
@@ -66,9 +71,14 @@ export interface JobApplicationProps {
 const demoJob: JobPosting = { title: 'Product designer', team: 'Payments', place: 'Jakarta or remote in UTC+7 to UTC+9', hours: 'Full time', pay: '$48,000 to $62,000 a year' };
 const MB = 1024 * 1024;
 const LETTER = 2000;
-const FIELDS = ['name', 'email', 'phone', 'cv', 'letter', 'rightToWork', 'consent'] as const;
+const FIELDS = ['name', 'email', 'phone', 'cv', 'links', 'letter', 'rightToWork', 'consent'] as const;
 type Problems = Partial<Record<(typeof FIELDS)[number], string>>;
 const blank: JobApplicationAnswers = { name: '', email: '', phone: '', cv: null, letter: '', rightToWork: '', consent: false };
+
+/** Each link's problem, in the list's order, or undefined for one that's fine or left blank. */
+export function linkProblems(links: readonly string[]): (string | undefined)[] {
+  return links.map((l, i) => (!l.trim() || /^https?:\/\/[^\s.]+\.[^\s]+$/i.test(l.trim()) ? undefined : `Enter link ${i + 1} as a full address, like https://example.com/work.`));
+}
 
 /** What's wrong with the application, by field, in the order of the form, or {} when it can be sent. */
 export function applicationProblems(a: JobApplicationAnswers): Problems {
@@ -78,6 +88,8 @@ export function applicationProblems(a: JobApplicationAnswers): Problems {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email.trim())) out.email = 'Enter an email address like name@example.com.';
   if (a.phone.trim() && a.phone.replace(/\D/g, '').length < 7) out.phone = 'Enter a phone number with its area code, like +62 21 555 0142.';
   if (!a.cv) out.cv = 'Choose your CV.';
+  const link = linkProblems(a.links ?? []).find(Boolean);
+  if (link) out.links = link;
   if (a.letter.length > LETTER) out.letter = `Shorten this to ${LETTER} characters.`;
   if (!a.rightToWork) out.rightToWork = 'Say whether you can work where the job is.';
   if (!a.consent) out.consent = 'Agree to how we keep your application, so we can read it.';
@@ -94,7 +106,10 @@ export function JobApplication({ job = demoJob, onApply, online }: JobApplicatio
   const [sent, setSent] = React.useState(false);
   const answer = React.useRef<HTMLHeadingElement>(null);
   const edit = (patch: Partial<JobApplicationAnswers>) => { setA((now) => ({ ...now, ...patch })); setFailed(false); };
-  const errors: ErrorSummaryItem[] = FIELDS.filter((f) => problems[f]).map((f) => ({ field: `job-${f}`, message: problems[f] }));
+  const linkErrors = problems.links ? linkProblems(a.links ?? []) : [];
+  // A link's problem goes to its own field: the first link that has one.
+  const fieldOf = (f: (typeof FIELDS)[number]) => (f === 'links' ? `job-link-${linkErrors.findIndex(Boolean)}` : `job-${f}`);
+  const errors: ErrorSummaryItem[] = FIELDS.filter((f) => problems[f]).map((f) => ({ field: fieldOf(f), message: problems[f] }));
 
   const apply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +118,7 @@ export function JobApplication({ job = demoJob, onApply, online }: JobApplicatio
     setProblems(found);
     setTries((t) => t + 1);
     if (Object.keys(found).length) return;
-    const out = { ...a, name: a.name.trim(), email: a.email.trim(), phone: a.phone.trim(), letter: a.letter.trim() };
+    const out = { ...a, links: (a.links ?? []).map((l) => l.trim()).filter(Boolean), name: a.name.trim(), email: a.email.trim(), phone: a.phone.trim(), letter: a.letter.trim() };
     setBusy(true);
     void Promise.resolve().then(() => onApply?.(out)).then(() => setSent(true), () => setFailed(true)).finally(() => setBusy(false));
   };
@@ -161,6 +176,15 @@ export function JobApplication({ job = demoJob, onApply, online }: JobApplicatio
                   <FileUpload id="job-cv" accept=".pdf,.doc,.docx,application/pdf" maxSize={5 * MB} hint="PDF or Word, up to 5 MB"
                     files={a.cv ? [a.cv] : []} onFilesChange={(f) => edit({ cv: f.at(-1) ?? null })} />
                 </Field>
+                <FieldList label="Links to your work" hint="Optional. A portfolio, a case study or a repository: up to 3." itemLabel={(i) => `Link ${i + 1}`}
+                  addLabel="Add a link" newItem={() => ''} min={0} max={3} value={a.links ?? []} onValueChange={(links) => edit({ links })}
+                  errors={linkErrors}>
+                  {(link, row) => (
+                    <Field label="Web address" id={`job-link-${row.index}`}>
+                      <Input type="url" inputMode="url" spellCheck={false} invalid={!!row.error} value={link} onChange={(e) => row.update(e.target.value)} />
+                    </Field>
+                  )}
+                </FieldList>
                 <Field label="Why this job?" id="job-letter" hint={`A few lines are plenty. Up to ${LETTER} characters.`} error={problems.letter} optional>
                   <Textarea rows={5} maxLength={LETTER} showCount value={a.letter} onChange={(e) => edit({ letter: e.target.value })} />
                 </Field>

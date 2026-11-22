@@ -18,6 +18,7 @@ A message to the people behind a product, with what they need to answer it, and 
 ## What each part is for
 
 - **Each field says what it's for**, which are optional, and its format; name and email say what they are for autofill (3.3.2, 1.3.5).
+- **The topic is a CascadeSelect**: a kind, then what about it, read back as one path ("An order, It hasn’t arrived"), so one field narrows the question without a second dropdown appearing. A kind with nothing under it, like "Something else", is chosen in one step. `topic` is the path's values joined by "/".
 - **The order number is asked for only when the topic is an order.**
 - **Sending with problems shows a summary at the top that takes focus**, each problem a link to its field, and each field says its own problem too (3.3.1, 2.4.3).
 - **Send shows it's busy**; a message that can't be sent says so next to the button and keeps every field (3.3.4, 4.1.3).
@@ -29,6 +30,6 @@ A message to the people behind a product, with what they need to answer it, and 
 ## What stays your app's job
 
 - **Sending.** `onSend` gets the message, trimmed: resolve with its reference, or reject when it can't be sent.
-- **The topics.** Copy the pattern and change them; ask for more only when a topic needs it, as the order number does.
+- **The topics.** Copy the pattern and change them, keeping them to two steps; ask for more only when a topic needs it, as the order number does.
 - **Spam.** Check on the server; a test people must pass to send isn't needed for most forms, and when one is, it must have a way that doesn't rely on sight.
 - **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

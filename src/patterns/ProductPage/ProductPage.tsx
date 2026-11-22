@@ -6,6 +6,7 @@ import { Badge } from '../../components/Badge/Badge';
 import { Breadcrumb, BreadcrumbItem } from '../../components/Breadcrumb/Breadcrumb';
 import { Carousel } from '../../components/Carousel/Carousel';
 import { Image } from '../../components/Image/Image';
+import { Lightbox } from '../../components/Lightbox/Lightbox';
 import { Rating } from '../../components/Rating/Rating';
 import { Link } from '../../components/Link/Link';
 import { Field } from '../../components/Field/Field';
@@ -28,7 +29,8 @@ import { Stack } from '../../components/Stack/Stack';
 /* Product page: one product in a shop, with its pictures, its price, the choices to make (color, size), how many,
    and Add to cart. For an app to copy. What it carries (WCAG 2.2):
    - 1.1.1: every picture has its own alt text, which says what that picture shows that the others don't. The
-     pictures are a Carousel that never moves on its own, and each opens larger.
+     pictures are a Carousel that never moves on its own, and View full size opens a Lightbox at the one showing,
+     which goes through them all by arrows or swipe, and back to the same picture in the Carousel.
    - 1.3.1, 1.4.1: a sale price says "Was" in words beside the old price, with the saving in a Badge: never a
      strike-through alone. The rating is one image named by its value, with the number of reviews as a link to them.
    - 1.3.1, 4.1.2: each choice is a group of radios named by its legend ("Size"). A choice that's sold out stays in
@@ -181,6 +183,8 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
   const [quantity, setQuantity] = React.useState<number | null>(1);
   const [missing, setMissing] = React.useState<readonly string[]>([]);
   const [failed, setFailed] = React.useState(false);
+  const [picture, setPicture] = React.useState(0);
+  const [viewing, setViewing] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [inCart, setInCart] = React.useState(cartCount);
 
@@ -217,9 +221,13 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     </div>
   ) : (<>
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <Carousel aria-label={`Pictures of ${product.name}`}>
-        {product.pictures.map((p, i) => <Image key={p.src} src={p.src} alt={p.alt} ratio="square" viewable priority={i === 0} />)}
-      </Carousel>
+      <div className="flex min-w-0 flex-col items-start gap-3">
+        <Carousel aria-label={`Pictures of ${product.name}`} index={picture} onIndexChange={setPicture} className="w-full">
+          {product.pictures.map((p, i) => <Image key={p.src} src={p.src} alt={p.alt} ratio="square" priority={i === 0} />)}
+        </Carousel>
+        <Button variant="outline" size="sm" startIcon="zoom_in" onClick={() => setViewing(true)}>View full size</Button>
+        <Lightbox items={product.pictures} open={viewing} onOpenChange={setViewing} index={picture} onIndexChange={setPicture} />
+      </div>
 
       <div className="flex flex-col gap-4">
         <h1 className="m-0 text-3xl font-semibold">{product.name}</h1>
