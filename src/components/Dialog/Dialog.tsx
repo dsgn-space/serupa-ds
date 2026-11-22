@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
-import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Button } from '../Button/Button';
@@ -68,9 +68,9 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
   const alert = !!props.alert;
   const showClose = props.closeButton != null ? props.closeButton : !alert;
   const backdrop = props.closeOnBackdrop != null ? props.closeOnBackdrop : !alert;
-  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
-  const initial = React.useRef(props.initialFocus); initial.current = props.initialFocus;
-  const final = React.useRef(props.finalFocus); final.current = props.finalFocus;
+  const ask = useLatest(props.onOpenChange);
+  const initial = useLatest(props.initialFocus);
+  const final = useLatest(props.finalFocus);
   // Back to finalFocus, else to the opener, if either is still on the page. A confirmation that deletes the row it
   // was opened from took its button away, and focus fell to <body>, the top of the page for a keyboard (L8E19).
   // Unmounting keeps it: StrictMode mounts it again, open, and it's still owed when that one closes.
@@ -82,9 +82,9 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
   };
   const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Dialog', 'open');
   const open = !!openIn;
-  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner]);
+  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner, ask]);
   // unsaved: a request to close asks "Discard changes?" first, and remembers why it came.
-  const unsaved = React.useRef(props.unsaved); unsaved.current = props.unsaved;
+  const unsaved = useLatest(props.unsaved);
   const [asking, setAsking] = React.useState<OpenChangeReason | null>(null);
   // The app closing it while the question shows takes the question away too, so it can't come back stale (GR96).
   if (!open && asking) setAsking(null);
@@ -129,6 +129,7 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
     }
   }, [open, reopened]);
   // Closed while unmounting: give focus back too.
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- on unmount only: giveBack reads nothing but refs
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); giveBack(true); }; }, []);
 
   // Escape fires "cancel": ask instead of closing, so open stays the truth.
@@ -138,7 +139,7 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel, such as Chromium's second Escape with no click in between): if open is still true, ask to close. A
   // parent that keeps open true gets it shown again, so open stays the truth.
-  const openNow = React.useRef(open); openNow.current = open;
+  const openNow = useLatest(open);
   const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
     if (rest.onClose) rest.onClose(e);
     if (e.target !== e.currentTarget) return;
