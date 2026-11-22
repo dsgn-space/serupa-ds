@@ -27,7 +27,7 @@ import { SegmentedControl } from "@diki-stwn/serupa-ds";
 ## When not to use
 
 - Switching panels of content: use [Tabs](../Tabs/README.md).
-- Independent on/off buttons: use [ButtonGroup](../ButtonGroup/README.md) with [ToggleButton](../ToggleButton/README.md).
+- Independent on/off buttons: use [ToggleButton](../ToggleButton/README.md)s in a [ButtonGroup](../ButtonGroup/README.md); a set of toggles that hold one value, such as text alignment in an editor: use [ToggleGroup](../ToggleGroup/README.md).
 - More than about five options: use [RadioGroup](../Radio/README.md) or [Select](../Select/README.md).
 
 ## Anatomy

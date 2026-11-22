@@ -13,7 +13,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -135,7 +135,7 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
         <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Download your data' }]} title="Download your data"
           description="Get a copy of what you’ve put in Acme Projects. We’ll email you when it’s ready, and the link works for 7 days." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your exports" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your exports" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading your exports" /></Card> : (<>
         <form onSubmit={request} noValidate aria-label="What to download" className="flex flex-col gap-4 pt-6">
           <ErrorSummary key={tries} errors={errors} />
           <Field label="What should it include?" group error={problem || undefined} required>

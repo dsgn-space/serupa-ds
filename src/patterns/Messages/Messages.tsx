@@ -7,7 +7,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Badge } from '../../components/Badge/Badge';
 import { List, ListItem } from '../../components/List/List';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Chat, ChatMessage, ChatComposer } from '../../components/Chat/Chat';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -184,7 +184,7 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
         <PageHeader title="Messages" />
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Loader variant="skeleton" shape="text" lines={6} label="Loading conversations" />
+            : loading ? <Skeleton shape="text" lines={6} label="Loading conversations" />
             : !list.length ? <EmptyState icon="chat" title="No messages yet" headingLevel={2} description="When someone writes to you, the conversation shows here." />
             : wide ? <div className="grid grid-cols-3 gap-6">{rows}{thread ?? (
               <div className="col-span-2"><EmptyState icon="forum" title="Choose a conversation" headingLevel={2} description="Its messages show here, with a field to reply in." /></div>

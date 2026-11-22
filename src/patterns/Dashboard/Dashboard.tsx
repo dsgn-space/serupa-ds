@@ -5,7 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Badge, type BadgeTone } from '../../components/Badge/Badge';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Meter } from '../../components/Meter/Meter';
 import { Progress } from '../../components/Progress/Progress';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
@@ -154,7 +154,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                 </div>
                 <Card padding="none" className="min-w-0 overflow-x-auto">
                   {loading ? (
-                    <div className="p-4"><Loader variant="skeleton" shape="text" lines={5} label="Loading: Recent projects" /></div>
+                    <div className="p-4"><Skeleton shape="text" lines={5} label="Loading: Recent projects" /></div>
                   ) : (
                     <Table caption="Recent projects" hideCaption>
                       <TableHead><TableRow>
@@ -175,7 +175,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
               <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
                 <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
                 <Card className="flex flex-col gap-4">
-                  {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
+                  {loading ? <Skeleton shape="text" lines={4} label="Loading: Usage" /> : (
                     <>
                       <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}
                         formatValue={(v, _, max) => `${gb(v, locale)} of ${gb(max, locale)}${v >= max * 0.8 ? ', almost full' : ''}`} />

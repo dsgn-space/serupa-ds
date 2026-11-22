@@ -12,7 +12,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Duration } from '../../components/Duration/Duration';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -107,7 +107,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
         <OfflineBanner online={online} placement="inline" className="mb-6">This is your progress as it was when the page loaded. Lessons need a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the course" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the course" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the course" /></Card> : (<>
         <div className="flex flex-col gap-6 pt-6">
           <p className="m-0 flex flex-wrap items-center gap-2 text-text-muted">
             <Avatar name={teacher} alt="" size="sm" />

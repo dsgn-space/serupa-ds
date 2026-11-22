@@ -13,7 +13,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -129,7 +129,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
         <OfflineBanner online={online} placement="inline" className="mb-6">This is the agenda as it was when the page loaded. Saving a session needs a connection.</OfflineBanner>
         <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card>
+          : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the agenda" /></Card>
           : !sessions.length ? <div className="pt-6"><EmptyState icon="event" title="The agenda isn’t out yet" headingLevel={2}
               description="The sessions show here once the speakers are confirmed. Your ticket is all you need until then." /></div> : (<>
         <div className="flex flex-wrap items-end justify-between gap-3 pt-6">

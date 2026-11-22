@@ -14,7 +14,7 @@ import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { Alert } from '../../components/Alert/Alert';
 import { Accordion, AccordionItem } from '../../components/Accordion/Accordion';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
@@ -207,10 +207,10 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
   </> : loading ? (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2" aria-busy="true">
       <h1 className="sr-only">Product</h1>
-      <Loader variant="skeleton" shape="rect" label="Loading product" className="aspect-square h-auto" />
+      <Skeleton shape="rect" label="Loading product" className="aspect-square h-auto" />
       <div className="flex flex-col gap-4" aria-hidden="true">
-        <Loader variant="skeleton" shape="text" lines={2} label="" />
-        <Loader variant="skeleton" shape="text" lines={5} label="" />
+        <Skeleton shape="text" lines={2} label="" />
+        <Skeleton shape="text" lines={5} label="" />
       </div>
     </div>
   ) : (<>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
-import { Loader } from '../Loader/Loader';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { DescriptionItem, DescriptionList } from './DescriptionList';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -95,7 +95,7 @@ describe('DescriptionList', () => {
       return <>{SIZES.map(([font, size]) => (
         <div key={size} style={{ width: 600, fontSize: font, lineHeight: `var(--text-${size === 'sm' ? 'xs' : size === 'md' ? 'sm' : 'base'}--line-height)` }}>
           <DescriptionList id={'dl-' + size} aria-busy={p.busy || undefined} layout="inline">
-            {['Owner', 'Created'].map((t) => <DescriptionItem key={t} term={t}>{p.busy ? <Loader variant="skeleton" size={size} label="" /> : 'Ayu Lestari'}</DescriptionItem>)}
+            {['Owner', 'Created'].map((t) => <DescriptionItem key={t} term={t}>{p.busy ? <Skeleton size={size} label="" /> : 'Ayu Lestari'}</DescriptionItem>)}
           </DescriptionList>
         </div>
       ))}</>;

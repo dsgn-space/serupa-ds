@@ -13,7 +13,7 @@ export type LoaderShape = 'text' | 'circle' | 'rect';
 export type LoaderPattern = 'wave' | 'random' | 'sweep' | 'fall' | 'rise' | 'snake' | 'spiral' | 'cross' | 'checker';
 export type LoaderTone = 'neutral' | 'primary' | 'muted' | 'inverse';
 export interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** 'ring' (default): an arc that grows and shrinks as it turns on a faint track. 'spokes': eight rounded spokes fading round a circle, ticking a spoke at a time, like the iOS activity indicator. 'dots': three pulsing dots, softer, for chat-like or inline waits. 'pixel': a 3×3 grid of squares lighting up in a diagonal wave. 'text': the label's words with a shine sweeping through them. 'skeleton': placeholder shapes where the content will be (see shape). */
+  /** 'ring' (default): an arc that grows and shrinks as it turns on a faint track. 'spokes': eight rounded spokes fading round a circle, ticking a spoke at a time, like the iOS activity indicator. 'dots': three pulsing dots, softer, for chat-like or inline waits. 'pixel': a 3×3 grid of squares lighting up in a diagonal wave. 'text': the label's words with a shine sweeping through them. 'skeleton': placeholder shapes where the content will be (see shape); deprecated, use `<Skeleton>`, which the next major keeps alone. */
   variant?: LoaderVariant | undefined;
   /** sm 16px (inline, small controls), md 24px (default: cards, panels, lists), lg 40px (a page or empty area). The text variant's words, and the skeleton's text lines: text-xs, text-sm, text-base. The skeleton circle: 16, 24 or 40px. */
   size?: 'sm' | 'md' | 'lg' | undefined;

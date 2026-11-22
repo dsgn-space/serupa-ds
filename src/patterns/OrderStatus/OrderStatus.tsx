@@ -9,7 +9,7 @@ import { Card } from '../../components/Card/Card';
 import { Stepper } from '../../components/Stepper/Stepper';
 import { Timeline, TimelineItem } from '../../components/Timeline/Timeline';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -174,7 +174,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
 
         <div className="flex flex-col gap-8 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the order" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading order" /></Card> : <>
+            : loading ? <Card><Skeleton shape="text" lines={5} label="Loading order" /></Card> : <>
               <section aria-labelledby="stage" className={section}>
                 <h2 id="stage" className="m-0 text-2xl font-semibold">{words.title}</h2>
                 <p className="m-0 text-text-muted">{words.detail}</p>

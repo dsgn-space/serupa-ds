@@ -5,7 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Button } from '../../components/Button/Button';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Progress } from '../../components/Progress/Progress';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -138,7 +138,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />
-          : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading your setup checklist" /></Card> : (
+          : loading ? <Card><Skeleton shape="text" lines={6} label="Loading your setup checklist" /></Card> : (
         <section aria-labelledby="setup-title" className="flex flex-col gap-4">
           {state.hidden ? (
             <Card padding="sm" className="flex flex-row flex-wrap items-center justify-between gap-3">

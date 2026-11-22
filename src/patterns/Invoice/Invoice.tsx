@@ -9,7 +9,7 @@ import { Badge, type BadgeTone } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -154,7 +154,7 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
 
         <div className="flex flex-col gap-8 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the invoice" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading invoice" /></Card> : <>
+            : loading ? <Card><Skeleton shape="text" lines={6} label="Loading invoice" /></Card> : <>
               <section aria-labelledby="standing" className="flex flex-col items-start gap-3">
                 <h2 id="standing" className="m-0 flex flex-wrap items-center gap-3 text-2xl font-semibold">
                   {money(sums.total)} {inv.paid ? 'paid' : 'to pay'}

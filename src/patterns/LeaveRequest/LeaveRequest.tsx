@@ -10,7 +10,7 @@ import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { RangeCalendar } from '../../components/RangeCalendar/RangeCalendar';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -192,7 +192,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
 
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your leave" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading leave" /></Card> : (
+            : loading ? <Card><Skeleton shape="text" lines={6} label="Loading leave" /></Card> : (
               <div className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <Field label="Kind of leave" group>
