@@ -74,6 +74,14 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('per')).toEqual([0, 0]);
   });
 
+  test('the segments are 2px apart, the same as the track\'s padding around them, and the selection still sits on its segment', async () => {
+    await render(<Col><Period /></Col>);
+    const e = el('per'), it = items('per'), pad = parseFloat(getComputedStyle(e).paddingLeft);
+    const gaps = it.slice(1).map((b, i) => Math.round((b.getBoundingClientRect().left - it[i]!.getBoundingClientRect().right) * 100) / 100);
+    expect([pad, gaps]).toEqual([2, [2, 2, 2]]);
+    await expect.poll(() => off('per')).toEqual([0, 0]);
+  });
+
   test('keys: Tab lands on the checked segment; ArrowRight selects and focuses the next, skips disabled ones and wraps; ArrowLeft back; End and Home; one Tab stop: Tab leaves from the newly checked segment', async () => {
     await render(<Col><Period /></Col>);
     el('before').focus();
@@ -208,13 +216,13 @@ describe('SegmentedControl', () => {
   test('fullWidth with a label too long for its equal share: the segments share by content instead, still filling the width, so "Kisi" gives its spare room to the long ones; wide enough, equal again (GR50)', async () => {
     const opts = [{ value: 'list', label: 'Daftar lengkap' }, { value: 'grid', label: 'Kisi' }, { value: 'map', label: 'Peta lokasi toko' }, { value: 'cal', label: 'Kalender' }];
     let setW: (w: number) => void = () => {};
-    function Box() { const [w, set] = React.useState(320); setW = set; return <div style={{ width: w + 'px' }}><SegmentedControl id="fit" aria-label="View" fullWidth options={opts} defaultValue="list" /></div>; }
+    function Box() { const [w, set] = React.useState(326); setW = set;   // 320 and the 6px of gaps between the four segments return <div style={{ width: w + 'px' }}><SegmentedControl id="fit" aria-label="View" fullWidth options={opts} defaultValue="list" /></div>; }
     await render(<Box />);
     const widths = () => items('fit').map((b) => Math.round(b.getBoundingClientRect().width));
     const whole = (v: string) => { const l = seg('fit', v).firstElementChild as HTMLElement; return l.scrollWidth <= l.clientWidth; };
     await expect.poll(() => whole('cal')).toBe(true);
     const w = widths();
-    expect([whole('grid'), w[1]! < w[0]!, Math.abs(w.reduce((a, b) => a + b, 0) - el('fit').clientWidth) <= 6]).toEqual([true, true, true]);
+    expect([whole('grid'), w[1]! < w[0]!, Math.abs(w.reduce((a, b) => a + b, 0) + 3 * parseFloat(css(el('fit')).columnGap) - el('fit').clientWidth) <= 6]).toEqual([true, true, true]);
     setW(900);
     await expect.poll(() => new Set(widths()).size).toBe(1);
   });
