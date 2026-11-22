@@ -371,6 +371,18 @@ describe('CheckboxGroup', () => {
     await render(tree);
     expect([input('ssr-m').indeterminate, input('ssr-m').hasAttribute('data-indeterminate'), input('ssr-all').indeterminate]).toEqual([true, false, true]);
   });
+  test('variant card: a checked card under the pointer keeps its whole 2px primary border, not a gray outer half', async () => {
+    await render(<CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['a']}>
+      <Checkbox value="a" description="Rp 15.000">Gift wrap</Checkbox>
+      <Checkbox value="b" description="A printed note">Greeting card</Checkbox>
+    </CheckboxGroup>);
+    const [a, b] = page.getByRole('checkbox').elements().map((i) => i.closest('label') as HTMLElement);
+    await userEvent.hover(a!);
+    await expect.poll(() => css(a!).borderTopColor).toBe(color('var(--primary)'));
+    await userEvent.hover(b!);
+    await expect.poll(() => css(b!).borderTopColor).toBe(color('var(--field-border-hover)'));   // an unchecked one still answers
+  });
+
   test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; Space still toggles', async () => {
     const onValueChange = vi.fn();
     await render(<CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['a']} onValueChange={onValueChange}>

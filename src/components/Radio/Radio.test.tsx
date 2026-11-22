@@ -275,6 +275,18 @@ describe('Radio', () => {
     ])).toEqual([]);
   });
 
+  test('variant card: a checked card under the pointer keeps its whole 2px primary border, not a gray outer half', async () => {
+    await render(<RadioGroup aria-label="Add-ons" variant="card" defaultValue={'a'}>
+      <Radio value="a" description="Rp 15.000">Gift wrap</Radio>
+      <Radio value="b" description="A printed note">Greeting card</Radio>
+    </RadioGroup>);
+    const [a, b] = page.getByRole('radio').elements().map((i) => i.closest('label') as HTMLElement);
+    await userEvent.hover(a!);
+    await expect.poll(() => css(a!).borderTopColor).toBe(color('var(--primary)'));
+    await userEvent.hover(b!);
+    await expect.poll(() => css(b!).borderTopColor).toBe(color('var(--field-border-hover)'));   // an unchecked one still answers
+  });
+
   test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; the arrows still move the choice', async () => {
     const onValueChange = vi.fn();
     await render(<RadioGroup aria-label="Delivery" variant="card" defaultValue="a" onValueChange={onValueChange}>
