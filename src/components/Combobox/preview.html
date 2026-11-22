@@ -9,7 +9,7 @@
 <div id="root" style="max-width:280px"></div>
 <script>
   var T = window.Serupa, h = React.createElement;
-  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Combobox, { id: 'pv', 'aria-label': 'Owner', leftIcon: 'person', options: [
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Combobox, { id: 'pv', 'aria-label': 'Owner', startIcon: 'person', options: [
     { value: 'ada', label: 'Ada Lovelace', description: 'ada@example.com' }, { value: 'grace', label: 'Grace Hopper', description: 'grace@example.com' },
     { value: 'margaret', label: 'Margaret Hamilton', description: 'margaret@example.com' }], defaultValue: 'grace' }));
   setTimeout(function () { var i = document.getElementById('pv'); i.focus(); i.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })); }, 50);

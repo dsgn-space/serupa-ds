@@ -37,3 +37,9 @@ export const Loading: Story = { args: { loading: true } };
 
 /** The tasks didn't load: the page says so, and Try again loads them again. */
 export const LoadFailed: Story = { args: { loadFailed: true } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };
+
+/** A new board: the columns with nothing in them, and Add task. */
+export const Empty: Story = { args: { columns: [{ id: 'todo', title: 'To do', items: [] }, { id: 'doing', title: 'In progress', items: [] }, { id: 'done', title: 'Done', items: [] }] } };

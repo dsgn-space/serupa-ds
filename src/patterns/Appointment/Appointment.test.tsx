@@ -122,4 +122,10 @@ describe('Patterns/Appointment', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('no free times at all: it says so, in place of a month of struck-through days and a form', async () => {
+    const screen = await render(<Appointment slots={{}} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No free times' })).toBeVisible();
+    expect(document.querySelector('main [role="grid"], main form')).toBeNull();
+  });
 });

@@ -13,9 +13,11 @@ import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Transactions: an account's money in and out by month, found by what it was or its category, with the month's
    totals first. For an app to copy. What it carries (WCAG 2.2):
@@ -43,6 +45,9 @@ export interface TransactionsProps {
   loadFailed?: boolean | undefined;
   /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const T = (id: string, date: string, description: string, category: string, amount: number, pending?: boolean): Transaction => ({ id, date, description, category, amount, pending });
@@ -79,7 +84,7 @@ export function findTx(tx: Transaction[], month: string, query: string, category
 }
 
 /** The page: a skip link, a header, then main with the h1, the month and its totals, the filters, and the table. */
-export function Transactions({ transactions = demo, currency = 'USD', account = 'Everyday account', loading = false, loadFailed = false, onRetry }: TransactionsProps) {
+export function Transactions({ transactions = demo, currency = 'USD', account = 'Everyday account', loading = false, loadFailed = false, onRetry, online }: TransactionsProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
   const months = monthsOf(transactions);
@@ -103,9 +108,12 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
         <Link underline="hover" href="#accounts">Accounts</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the transactions loaded before you went offline. New ones show when you’re back.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: account }]} title={`${account}: transactions`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your transactions" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card> : (<>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card>
+          : !transactions.length ? <div className="pt-6"><EmptyState icon="receipt_long" title="No transactions yet" headingLevel={2}
+              description="Money in and out of this account shows here, by month, as soon as it moves." /></div> : (<>
         <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">
           <Field label="Month" id="tx-month">
             <Select value={month} onChange={(e) => { setMonth(e.target.value); setCategory(''); }} options={months.map((m) => ({ value: m, label: monthName(m) }))} />

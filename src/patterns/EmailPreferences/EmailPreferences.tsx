@@ -7,6 +7,7 @@ import { Card } from '../../components/Card/Card';
 import { Link } from '../../components/Link/Link';
 import { Switch } from '../../components/Switch/Switch';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Email preferences: the page an email's "Manage emails" or "Unsubscribe" link opens, with no sign-in. Which emails
    come, each one a switch that says what it is and how often, and one button to stop them all. For an app to copy.
@@ -37,6 +38,9 @@ export interface EmailPreferencesProps {
   topics?: EmailTopic[] | undefined;
   /** Saves the choices, by topic id. Reject when they can't be saved. */
   onSave?: ((choices: Record<string, boolean>) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: EmailTopic[] = [
@@ -63,7 +67,7 @@ export function changeWords(c: { on: string[]; off: string[] }): string {
 const choicesOf = (topics: readonly EmailTopic[]) => Object.fromEntries(topics.map((t) => [t.id, t.on]));
 
 /** The email preferences page: a skip link, a header, then main with the h1, the address, the switches, Save and Stop all. */
-export function EmailPreferences({ email = 'ana@example.com', topics = demo, onSave }: EmailPreferencesProps) {
+export function EmailPreferences({ email = 'ana@example.com', topics = demo, onSave, online }: EmailPreferencesProps) {
   const [saved, setSaved] = React.useState<Record<string, boolean>>(() => choicesOf(topics));
   const [choices, setChoices] = React.useState<Record<string, boolean>>(() => choicesOf(topics));
   const [busy, setBusy] = React.useState(false);
@@ -108,6 +112,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
         <Link underline="hover" href="#shop">Go to the shop</Link>
       </header>
       <main ref={page} id="main" className="mx-auto flex max-w-xl flex-col px-4 py-10 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Saving them needs a connection.</OfflineBanner>
         <PageHeader title="Emails from Acme" description={`Choose what comes to ${email}. Changes take effect within a day.`} />
         <Card padding="lg" className="mt-6">
           {stopped ? (

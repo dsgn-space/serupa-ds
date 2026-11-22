@@ -166,12 +166,12 @@
 
 /* Optical balance: an icon looks lighter than text, so the text side gets icon-offset (4px) more padding.
    Inline start and end, so in right-to-left text the extra space is still on the text side. */
-.srp-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
-.srp-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
-.srp-btn--size-sm.srp-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
-.srp-btn--size-sm.srp-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
-.srp-btn--size-lg.srp-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
-.srp-btn--size-lg.srp-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
+.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--size-sm.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
+.srp-btn--size-sm.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
+.srp-btn--size-lg.srp-btn--icon-start { padding-inline-end: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
+.srp-btn--size-lg.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
 
 /* Loading: full color (not faded), not clickable, keeps keyboard focus and its width */
 .srp-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
@@ -216,8 +216,8 @@ a.srp-btn[aria-disabled="true"] { pointer-events: none; }
   transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-settle);
 }
 @media (hover: hover) {
-  .srp-btn:hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--right { translate: var(--srp-btn-nudge) 0; }
-  .srp-btn:dir(rtl):hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--right { translate: calc(var(--spacing-0) - var(--srp-btn-nudge)) 0; }
+  .srp-btn:hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--end { translate: var(--srp-btn-nudge) 0; }
+  .srp-btn:dir(rtl):hover:not(:disabled, [aria-disabled="true"]) > .srp-btn__icon--end { translate: calc(var(--spacing-0) - var(--srp-btn-nudge)) 0; }
 }
 /* Loading: the content fades out (transition above) while the spinner fades and grows in. Both blur a
    little (blur-xs) while they cross, so they read as one change rather than two layers. */

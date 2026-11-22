@@ -14,6 +14,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Profile: what other people see of you (a photo, your name, a short bio, where you are and a link), edited in one
    form and saved when you say so. For an app to copy. What it carries (WCAG 2.2):
@@ -53,6 +54,9 @@ export interface ProfileProps {
   loadFailed?: boolean | undefined;
   /** Loads the profile again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: ProfileInfo = { name: 'Ana Lima', bio: 'Product designer. I draw interfaces, maps and the odd cat.', location: 'Bandung, Indonesia', website: 'https://ana.example.com', photo: '' };
@@ -75,7 +79,7 @@ export const profileChanged = (a: ProfileInfo, b: ProfileInfo): boolean =>
 /** The fields that can have a problem, in the order they show. */
 const PARTS = ['name', 'bio', 'website'] as const;
 
-export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading = false, loadFailed = false, onRetry }: ProfileProps) {
+export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading = false, loadFailed = false, onRetry, online }: ProfileProps) {
   const [saved, setSaved] = React.useState(start);
   const [draft, setDraft] = React.useState(start);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -123,6 +127,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Profile' }]} title="Profile"
           description="What other people see of you." />
 

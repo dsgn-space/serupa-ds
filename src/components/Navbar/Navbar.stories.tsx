@@ -7,7 +7,7 @@ import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useName } from '../../../.storybook/content';
 
 const links = [
-  <NavbarLink key="d" href="#" active>Dashboard</NavbarLink>,
+  <NavbarLink key="d" href="#" current>Dashboard</NavbarLink>,
   <NavbarLink key="p" href="#">Projects</NavbarLink>,
   <NavbarLink key="t" href="#">Team</NavbarLink>,
   <NavbarLink key="r" href="#">Reports</NavbarLink>,
@@ -54,7 +54,7 @@ export const Sizes: Story = {
 
 // Dropdown panels (a mega menu): a nav item opens grouped links, each with a line saying what's there.
 const menus = [
-  <NavbarLink key="d" href="#m1" active>Dashboard</NavbarLink>,
+  <NavbarLink key="d" href="#m1" current>Dashboard</NavbarLink>,
   <NavbarMenu key="p" label="Products">
     <NavbarMenuGroup title="Analytics">
       <NavbarMenuLink href="#m2" description="Charts and reports for your team">Dashboards</NavbarMenuLink>
@@ -80,5 +80,5 @@ export const DoFewLinks: Story = { name: 'Do: keep to the main pages' };
 /** Don't: every page in the bar, which folds most of them away and buries the main ones. */
 export const DontEveryPage: Story = {
   name: "Don't: put every page in the bar",
-  args: { children: ['Dashboard', 'Projects', 'Team', 'Reports', 'Billing', 'Integrations', 'Audit log', 'Settings', 'Help center'].map((l, i) => <NavbarLink key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} active={i === 0}>{l}</NavbarLink>) },
+  args: { children: ['Dashboard', 'Projects', 'Team', 'Reports', 'Billing', 'Integrations', 'Audit log', 'Settings', 'Help center'].map((l, i) => <NavbarLink key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} current={i === 0}>{l}</NavbarLink>) },
 };

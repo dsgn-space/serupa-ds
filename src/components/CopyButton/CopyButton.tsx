@@ -12,7 +12,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { feedbackHold } from '../../internal/timing';
 
-export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'leftIcon' | 'rightIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
+export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'startIcon' | 'endIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
   value: string | (() => string | Promise<string>);
   /** The button's text. Default: "Copy" (labels.copy). */
@@ -81,7 +81,7 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
     return own ? button : <Tooltip content={said} role="label">{button}</Tooltip>;
   }
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
-  return <ButtonBase {...common} leftIcon={glyph}>
+  return <ButtonBase {...common} startIcon={glyph}>
     <span className="srp-copy-btn__labels">
       <span className={cn('srp-copy-btn__label', shown && 'srp-copy-btn__label--off')} aria-hidden={shown ? true : undefined}>{label}</span>
       <span className={cn('srp-copy-btn__label', !copied && 'srp-copy-btn__label--off')} aria-hidden={!copied || undefined}>{done}</span>

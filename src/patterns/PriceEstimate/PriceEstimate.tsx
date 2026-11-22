@@ -13,6 +13,7 @@ import { Table, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Price estimate: choose a plan, how many people and any extras, and see what it costs, line by line, as you go.
    For an app to copy. What it carries (WCAG 2.2):
@@ -34,6 +35,9 @@ export interface PriceEstimateProps {
   yearlyOff?: number | undefined;
   /** Where Start trial goes; the choices are added as a query. Default: "#trial". */
   trialHref?: string | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoPlans: Plan[] = [
@@ -57,7 +61,7 @@ export function estimate(plan: Plan, seats: number, extras: Extra[], yearly: boo
 }
 
 /** The price estimate page: a skip link, a header, then main with the h1, the choices and the estimate. */
-export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = demoExtras, yearlyOff = 0.2, trialHref = '#trial' }: PriceEstimateProps) {
+export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = demoExtras, yearlyOff = 0.2, trialHref = '#trial', online }: PriceEstimateProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 });
   const [planId, setPlanId] = React.useState(plans[1]?.id ?? plans[0]!.id);
@@ -79,6 +83,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
         <Link underline="hover" href="#pricing">Pricing</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">The estimate works offline. Starting a trial needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Pricing', href: '#pricing' }, { label: 'Price estimate' }]} title="What would it cost?"
           description="Choose a plan, how many people and any extras. Prices are per month, before tax." />
         <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-2">

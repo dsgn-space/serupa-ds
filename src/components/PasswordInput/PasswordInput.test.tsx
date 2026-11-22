@@ -26,12 +26,12 @@ afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); }
 const Wrap = ({ children }: { children: React.ReactNode }) => <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>{children}</div>;
 const Main = ({ pref }: { pref?: React.Ref<HTMLInputElement> }) => <>
   <label htmlFor="pw">Password</label>
-  <PasswordInput id="pw" ref={pref} className="extra" style={{ marginTop: '2px' }} placeholder="Your password" leftIcon="lock" />
+  <PasswordInput id="pw" ref={pref} className="extra" style={{ marginTop: '2px' }} placeholder="Your password" startIcon="lock" />
 </>;
 
 describe('PasswordInput', () => {
   test('a press on the box (the side padding, the icon) focuses the field with the caret at the end; the reveal button still toggles (GE1)', async () => {
-    await render(<div style={{ width: '300px' }}><PasswordInput id="pp" size="lg" leftIcon="lock" aria-label="Password" defaultValue="secret" /><button id="pp-away">away</button></div>);
+    await render(<div style={{ width: '300px' }}><PasswordInput id="pp" size="lg" startIcon="lock" aria-label="Password" defaultValue="secret" /><button id="pp-away">away</button></div>);
     const y = box('pp').getBoundingClientRect().height / 2;
     for (const x of [2, 20]) {
       (document.getElementById('pp-away') as HTMLElement).focus();

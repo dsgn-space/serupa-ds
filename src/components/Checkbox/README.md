@@ -128,7 +128,7 @@ Drawn from the `LongLabel` story.
 
 | `selectAll` | boolean | `false` | In a `CheckboxGroup`: checks or clears every other box; checked when all are, indeterminate when some are |
 
-`onCheckedChange(checked, event)` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not on a read-only box.
+`onCheckedChange(checked, { event })` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not on a read-only box.
 
 Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `required`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox">`. In a `CheckboxGroup`, the group sets `name` and `checked` from each box's `value`. `className` and `style` go to the `<label>` around it, which has `data-component="checkbox"` and `data-size`.
 
@@ -138,7 +138,7 @@ Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disa
 | --- | --- | --- | --- |
 | `value` | `(string \| number)[]` | | The checked boxes' values (controlled). Use with `onValueChange` |
 | `defaultValue` | `(string \| number)[]` | `[]` | The values checked at first (uncontrolled). A form reset brings them back, also from outside the group: boxes with a `form` attribute reset with that form. |
-| `onValueChange` | `(value, event) => void` | | Called with the new list, in the boxes' order. Numbers stay numbers |
+| `onValueChange` | `(value, details: { event }) => void` | | Called with the new list, in the boxes' order. Numbers stay numbers |
 | `name` | `string` | generated | Every box's name, so each checked one is submitted with its value |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | Stacked, or a wrapping row |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | | The boxes' size, unless a Checkbox sets its own |

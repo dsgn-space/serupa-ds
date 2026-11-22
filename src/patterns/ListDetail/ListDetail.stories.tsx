@@ -25,3 +25,6 @@ export const Loading: Story = { args: { messages: [], loading: true } };
 
 /** The messages failed to load: what happened and Try again, said once. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

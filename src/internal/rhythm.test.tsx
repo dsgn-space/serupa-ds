@@ -35,7 +35,7 @@ describe('spacing between like parts', () => {
 
   test("a tab's icon is as far from its label as a Button's", async () => {
     await render(<>
-      <Button leftIcon="save">Save</Button>
+      <Button startIcon="save">Save</Button>
       <Tabs defaultValue="one"><TabList aria-label="Sections"><Tab value="one" icon="home">Home</Tab></TabList></Tabs>
     </>);
     expect(iconGap('Home')).toBe(iconGap('Save'));

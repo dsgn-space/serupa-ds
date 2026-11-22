@@ -226,7 +226,7 @@ export interface ListLoadingItemsProps {
   /** How many placeholder rows: about as many as will load, up to a screenful. Default: 3. */
   rows?: number | undefined;
   /** The rows will have a description: each placeholder gets a second, shorter line. Default: false. */
-  description?: boolean | undefined;
+  showDescription?: boolean | undefined;
   /** What the rows will start with: an icon (20px), or an Avatar of that size ('md' is 40px). Default: nothing. */
   leading?: 'icon' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
   /** Said once as the rows appear ("Loading people"), after the loader's delay. Default: "Loading" (labels.loading). */
@@ -283,7 +283,7 @@ export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactEleme
     <li key={r} className="srp-list__item srp-list__loading">
       <div className="srp-list__main srp-list__main--static">
         {lead ? <span className={'srp-list__leading srp-list__leading--' + lead}><SkeletonArt shape="circle" waiting={waiting} /></span> : null}
-        <span className="srp-list__text"><SkeletonArt lines={props.description ? 2 : 1} waiting={waiting} /></span>
+        <span className="srp-list__text"><SkeletonArt lines={props.showDescription ? 2 : 1} waiting={waiting} /></span>
       </div>
     </li>,
   );

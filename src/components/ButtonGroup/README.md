@@ -8,8 +8,8 @@ Related buttons side by side, or stacked: joined into one control with shared bo
 import { ButtonGroup, Button, IconButton, ToggleButton } from '@diki-stwn/serupa-ds';
 
 <ButtonGroup aria-label="Clipboard">
-  <Button variant="outline" leftIcon="content_copy">Copy</Button>
-  <Button variant="outline" leftIcon="content_paste">Paste</Button>
+  <Button variant="outline" startIcon="content_copy">Copy</Button>
+  <Button variant="outline" startIcon="content_paste">Paste</Button>
 </ButtonGroup>
 
 <ButtonGroup attached={false}>

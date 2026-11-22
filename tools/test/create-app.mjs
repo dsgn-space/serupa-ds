@@ -19,7 +19,8 @@ const drift = Object.entries(VERSIONS).filter(([name, v]) => !/^\d+\.\d+\.\d+$/.
 const out = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'violet' });
 const app = JSON.parse(out['package.json']);
 const main = out['src/main.tsx'];
-const order = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css'].map((f) => main.indexOf(f));
+const order = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/brands/violet.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css'].map((f) => main.indexOf(f));
+const blueMain = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'blue' })['src/main.tsx'];
 
 const bin = path.join(PROJECT, 'bin', 'serupa-create.mjs');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-create-'));
@@ -99,7 +100,8 @@ const shipped = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), '
 done(report('Starter app', [
   { name: 'it pins the React, Vite, TypeScript and types the repository tests with', ok: !drift.length, detail: drift.join('; ') },
   { name: 'the app installs the given serupa-ds and builds, checks types and serves with Vite', ok: app.dependencies['@diki-stwn/serupa-ds'] === 'github:diki-stwn/serupa-ds#v1.2.3' && app.scripts.build === 'vite build' && app.scripts.typecheck === 'tsc --noEmit' && app.scripts.dev === 'vite', detail: out['package.json'] },
-  { name: 'the page sets the brand and mode, and the stylesheets load tokens, base, then bundle', ok: out['index.html'].includes('<html lang="en" data-brand="violet" data-mode="auto">') && order.every((n, i) => n > 0 && (i === 0 || n > order[i - 1])), detail: main },
+  { name: 'the page sets the brand and mode, and the stylesheets load tokens, the brand, base, then bundle', ok: out['index.html'].includes('<html lang="en" data-brand="violet" data-mode="auto">') && order.every((n, i) => n > 0 && (i === 0 || n > order[i - 1])), detail: main },
+  { name: 'a blue app loads no brand file (blue is in tokens.css)', ok: blueMain.includes('/tokens.css') && !blueMain.includes('/brands/') },
   { name: 'the app has a skip link, a main landmark it targets, one h1, and a labelled field', ok: /<SkipLink \/>/.test(out['src/App.tsx']) && /as="main" id="main"/.test(out['src/App.tsx']) && (out['src/App.tsx'].match(/level=\{1\}/g) || []).length === 1 && /<Field label="Email"/.test(out['src/App.tsx']) },
   { name: 'theme.js is served and built as its own file ahead of the app, and the build trims the CSS', ok: /injectTo: 'head-prepend'/.test(out['vite.config.ts']) && /emitFile/.test(out['vite.config.ts']) && /serupaPurge\(\{ components: true \}\)/.test(out['vite.config.ts']) },
   { name: 'by default the app installs this release by its tag, named from the folder', ok: made.status === 0 && written.name === 'hello-world' && written.dependencies?.['@diki-stwn/serupa-ds'] === `github:dsgn-space/serupa-ds#v${pkg.version}`, detail: made.stderr + JSON.stringify(written) },

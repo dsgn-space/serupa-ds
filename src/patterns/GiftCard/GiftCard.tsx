@@ -18,6 +18,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Gift card: choose an amount and a design, say who it's for and when to send it, see what they'll get, and add it to
    the bag. For an app to copy. What it carries (WCAG 2.2):
@@ -54,6 +55,9 @@ export interface GiftCardProps {
   today?: string | undefined;
   /** Adds the gift card to the bag. Reject when it can't be added. */
   onAdd?: ((gift: Gift) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const art = (bg: string, fg: string, shape: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 480 300"><rect width="480" height="300" fill="${bg}"/>${shape.replaceAll('F', fg)}</svg>`);
@@ -86,7 +90,7 @@ export function giftProblems(d: Draft, today: string, min: number, max: number, 
 }
 
 /** The gift card page: a skip link, a header, then main with the h1, and the form and its preview or the answer. */
-export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, max = 500, today = iso(new Date()), onAdd }: GiftCardProps) {
+export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, max = 500, today = iso(new Date()), onAdd, online }: GiftCardProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, maximumFractionDigits: 0 });
   const day = (s: string) => formatDate(s, locale, { dateStyle: 'long' });
@@ -123,6 +127,7 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
         <Link underline="hover" href="#bag">Bag</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Adding the card to your bag needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Shop', href: '#shop' }, { label: 'Gift cards' }]} title="Send a gift card"
           description="Sent by email on the day you choose. It never expires and works in our shops and online." />
         {added ? (

@@ -84,7 +84,7 @@ describe('NumberInput', () => {
   });
 
   test('a press on the box (the icon, the side padding) focuses the field with the caret at the end; a press on + still steps (GE1)', async () => {
-    await render(<Col><NumberInput id="nb" size="lg" leftIcon="search" aria-label="Qty" defaultValue={12} locale="en-US" /><button id="nb-away">away</button></Col>);
+    await render(<Col><NumberInput id="nb" size="lg" startIcon="search" aria-label="Qty" defaultValue={12} locale="en-US" /><button id="nb-away">away</button></Col>);
     const b = field('nb').parentElement!, y = b.getBoundingClientRect().height / 2;
     for (const x of [2, 20]) {
       (document.getElementById('nb-away') as HTMLElement).focus();

@@ -34,8 +34,8 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   readOnly?: boolean | undefined;
   /** In a CheckboxGroup: the box that checks or clears every other box. It's checked when all are, and indeterminate when some are. Leave out value. */
   selectAll?: boolean | undefined;
-  /** Called with the new checked state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
-  onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  /** Called with the new checked state and details (event: the change event), after onChange: the same shape as ToggleButton's onPressedChange. */
+  onCheckedChange?: ((checked: boolean, details: { event: React.ChangeEvent<HTMLInputElement> }) => void) | undefined;
 }
 
 /** V is the boxes' value type: string (or number) as you use them, inferred from value, defaultValue or onValueChange. */
@@ -44,8 +44,8 @@ export interface CheckboxGroupProps<V extends string | number = string | number>
   value?: readonly V[] | undefined;
   /** The values checked at first (uncontrolled). Default: none. */
   defaultValue?: readonly V[] | undefined;
-  /** Called with the new list of checked values (in the boxes' order) and the change event. */
-  onValueChange?: ((value: V[], event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  /** Called with the new list of checked values (in the boxes' order) and details (event: the change event). */
+  onValueChange?: ((value: V[], details: { event: React.ChangeEvent<HTMLInputElement> }) => void) | undefined;
   /** The boxes' name, so each checked one is submitted with its value; a generated one by default. */
   name?: string | undefined;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
@@ -144,7 +144,7 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
     const order = [...boxes.keys()].filter((k) => next.has(k)).concat([...next].filter((k) => !boxes.has(k)));
     const out = order.map((k) => (typed.has(k) ? typed.get(k)! : k));
     if (!controlled) setOwn(out);
-    if (props.onValueChange) props.onValueChange(out, e);
+    if (props.onValueChange) props.onValueChange(out, { event: e });
   };
   // Until they have (on the server, and in the first render that hydrates it), the Checkboxes among the children
   // stand in, so select-all is enabled, and checked or mixed, from the first paint.
@@ -254,7 +254,7 @@ function CheckboxRender({ ref, ...props }: CheckboxProps & React.RefAttributes<H
   const checkedChange = props.onCheckedChange;
   if (checkedChange) {
     const before = rest.onChange;
-    rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, e); };
+    rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, { event: e }); };
   }
   // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
   // puts the box back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.

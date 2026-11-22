@@ -41,8 +41,8 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   value?: DateRangeInput | undefined;
   /** The chosen range at first (uncontrolled). */
   defaultValue?: DateRangeInput | undefined;
-  /** Called with the new range whenever either end changes (local midnights), and the same range as "yyyy-mm-dd" strings. */
-  onValueChange?: ((value: DateRange, iso: { start: string | null; end: string | null }) => void) | undefined;
+  /** Called with the new range whenever either end changes (local midnights), and details (iso: the same range as "yyyy-mm-dd" strings). */
+  onValueChange?: ((value: DateRange, details: { iso: { start: string | null; end: string | null } }) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a date, "unavailable" when it
       is one that can't be chosen (outside min..max, or isDateDisabled). The field also says so to screen readers. */
   onInvalidInput?: ((text: string, reason: 'unreadable' | 'unavailable') => void) | undefined;
@@ -156,7 +156,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
     setText({ start: fmt(r.start), end: fmt(r.end) });
     if (key(r.start) === key(value.start) && key(r.end) === key(value.end)) return;
     if (!controlled) setOwn(r);
-    if (onValueChange) onValueChange(r, { start: r.start ? isoDate(r.start) : null, end: r.end ? isoDate(r.end) : null });
+    if (onValueChange) onValueChange(r, { iso: { start: r.start ? isoDate(r.start) : null, end: r.end ? isoDate(r.end) : null } });
   };
   const read = (which: 'start' | 'end') => {
     const raw = text[which].trim();

@@ -82,7 +82,7 @@ Every other key types. Nothing is taken while an input method is composing a cha
 | `onValueChange` | `(value: string) => void` | | Every change, typing or a mention put in. |
 | `onSearch` | `(query: string \| null) => void` | | What's typed after "@" while the list is open, then `null`. |
 | `onMention` | `(option: MentionOption) => void` | | A mention was put in. |
-| `trigger` | `string` | `'@'` | The character that starts a mention. |
+| `triggerChar` | `string` | `'@'` | The character that starts a mention. |
 | `filter` | `boolean` | `true` | Narrows `options` to what's typed. Off when you filter. |
 | `maxOptions` | `number` | `8` | The most options shown. |
 

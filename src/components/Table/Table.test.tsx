@@ -166,7 +166,7 @@ describe('Table', () => {
       const [sel, set] = React.useState<string[]>(['Grace']);
       const all = sel.length === ROWS.length;
       return <Table id="tsel" caption="Pick">
-        <TableHead><TableRow><TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && sel.length > 0} onChange={() => set(all ? [] : ROWS.map((x) => x[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
+        <TableHead><TableRow><TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && sel.length > 0} onChange={() => set(all ? [] : ROWS.map((x) => x[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
         <TableBody>{ROWS.map((x, i) => <TableRow key={x[0]} data-i={i} selected={sel.includes(x[0])}>
           <TableSelectCell label={'Select ' + x[0]} name="who" value={x[0]} ref={i === 0 ? r : undefined} cellProps={{ 'data-c': 'c' } as React.TdHTMLAttributes<HTMLTableCellElement>} checked={sel.includes(x[0])}
             onChange={(e) => { picks.push(x[0]); set(e.target.checked ? [...sel, x[0]] : sel.filter((n) => n !== x[0])); }} />
@@ -284,7 +284,7 @@ describe('Table', () => {
 
   test('select all next to a sortable header: the checkbox keeps 24px around its center clear of the sort button (2.5.8)', async () => {
     const screen = await render(<Table caption="People"><TableHead><TableRow>
-      <TableSelectCell header label="Select all rows" /><TableHeaderCell sort="none" onSort={() => {}}>Name</TableHeaderCell>
+      <TableSelectCell inHeader label="Select all rows" /><TableHeaderCell sort="none" onSort={() => {}}>Name</TableHeaderCell>
     </TableRow></TableHead><TableBody><TableRow><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table>);
     const box = screen.getByRole('checkbox', { name: 'Select all rows' }).element().getBoundingClientRect();
     const sort = screen.getByRole('button', { name: /Name/ }).element().getBoundingClientRect();
@@ -320,7 +320,7 @@ describe('Table', () => {
 
   test('stickyHeader with link rows: a row scrolled under the header stays under it, so its checkbox and button don\'t paint over the header or take its clicks (GR76)', async () => {
     await render(<Table id="tlsh" stickyHeader containerProps={{ style: { maxHeight: '240px' }, 'aria-label': 'Projects' }}>
-      <TableHead><TableRow><TableSelectCell header label="Select all" /><TableHeaderCell>Project</TableHeaderCell><TableHeaderCell>Actions</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableSelectCell inHeader label="Select all" /><TableHeaderCell>Project</TableHeaderCell><TableHeaderCell>Actions</TableHeaderCell></TableRow></TableHead>
       <TableBody>{Array.from({ length: 12 }, (_, i) => <TableRow key={i} href={'#p' + i}><TableSelectCell label={'Select Project ' + i} /><TableCell>{'Project ' + i}</TableCell><TableCell><Button size="sm" variant="ghost">{'Edit ' + i}</Button></TableCell></TableRow>)}</TableBody>
     </Table>);
     const f = el('tlsh').parentElement!;
@@ -421,7 +421,7 @@ function Picker(props: { log: string[] }) {
       <Button size="sm" variant="outline" onClick={() => { props.log.push('delete ' + picked.join(',')); setPicked([]); }}>Delete</Button>
     </TableActionBar>
     <Table caption="People">
-      <TableHead><TableRow><TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : ROWS.map((r) => r[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : ROWS.map((r) => r[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
       <TableBody>{ROWS.map((r) => <TableRow key={r[0]} selected={picked.includes(r[0])}>
         <TableSelectCell label={'Select ' + r[0]} checked={picked.includes(r[0])} onChange={() => setPicked((l) => (l.includes(r[0]) ? l.filter((x) => x !== r[0]) : [...l, r[0]]))} />
         <TableCell>{r[0]}</TableCell>
@@ -798,7 +798,7 @@ describe('Table layout="fixed" (PT4)', () => {
   test('a header cell\'s width sets its column, as a CSS length or pixels; the select column stays the checkbox\'s width', async () => {
     const s = await render(<Paged page={0} layout="fixed" widths />);
     expect(widths()[0]).toBeCloseTo(480 * 0.3, -1);
-    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell header label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
+    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell inHeader label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
     expect(el('h1').style.width).toBe('200px');
     expect(el('h1').style.color).toBe('red');
     const box = s.getByRole('checkbox').element().closest('th')!.getBoundingClientRect().width;
@@ -1004,7 +1004,7 @@ describe('Table column tools (RU10)', () => {
   function Expanding(p: { striped?: boolean }) {
     const [open, setOpen] = React.useState<Record<string, boolean>>({});
     return <Table caption="Orders" striped={p.striped}>
-      <TableHead><TableRow><TableExpandCell header /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+      <TableHead><TableRow><TableExpandCell inHeader /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
       <TableBody>{['1', '2', '3'].map((n) => <React.Fragment key={n}>
         <TableRow data-row={n}><TableExpandCell label={'Order ' + n} expanded={!!open[n]} controls={'d' + n} onExpandedChange={(v) => setOpen({ ...open, [n]: v })} /><TableCell>Order {n}</TableCell></TableRow>
         <TableDetailRow id={'d' + n} open={!!open[n]} colSpan={2}>Notes for {n}</TableDetailRow>

@@ -10,8 +10,8 @@ import { Input, InputAction } from '@diki-stwn/serupa-ds';
 <label htmlFor="name">Name</label>
 <Input id="name" placeholder="Dana Kim" />
 
-<Input aria-label="Search projects" leftIcon="search" type="search" />
-<Input size="lg" type="email" rightIcon="mail" value={email} onChange={(e) => setEmail(e.target.value)} />
+<Input aria-label="Search projects" startIcon="search" type="search" />
+<Input size="lg" type="email" endIcon="mail" value={email} onChange={(e) => setEmail(e.target.value)} />
 
 // invalid: say what's wrong in text, linked to the field
 <Input id="email" invalid aria-describedby="email-error" />
@@ -44,8 +44,8 @@ import { Input, InputAction } from '@diki-stwn/serupa-ds';
 Drawn from the `Icons` story.
 
 1. **Field** (`.srp-input__field`): where the text is typed.
-2. **Leading icon** (`.srp-input__icon--left`): an optional picture of what goes in, such as a search glass.
-3. **Trailing icon** (`.srp-input__icon--right`): an optional picture or status at the end.
+2. **Leading icon** (`.srp-input__icon--start`): an optional picture of what goes in, such as a search glass.
+3. **Trailing icon** (`.srp-input__icon--end`): an optional picture or status at the end.
 4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box: a text action is the field's height less 6px (26px at md), an icon action its icon with 4px round it (24px at md).
 
 ## Usage
@@ -109,8 +109,8 @@ Drawn from the `Icons` story.
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24px with `text-xs`, 32px with `text-sm`, 44px with `text-base` |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
-| `leftIcon` | icon name or element | | A decorative icon before the text (14, 16 or 20px, in `text-muted`) |
-| `rightIcon` | icon name or element | | A decorative icon after the text |
+| `startIcon` | icon name or element | | A decorative icon before the text (14, 16 or 20px, in `text-muted`) |
+| `endIcon` | icon name or element | | A decorative icon after the text |
 | `prefix` | node | | Text in the box before the field, in `text-muted`, such as "https://". Added to the field's description |
 | `suffix` | node | | Text in the box after the field, such as "kg" or ".com". Added to the field's description |
 | `mask` | string | none | Keeps the text in a pattern as people type, paste or delete, with the caret where they left it: `9` a digit, `a` a letter, `A` a letter in capitals, `*` either, `\` makes the next character plain. `value`, `defaultValue` and `onChange` use the masked text, and a digits-only mask gets the number keyboard on phones |

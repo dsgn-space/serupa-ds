@@ -16,6 +16,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Integrations: the other apps a workspace can connect, which are connected, connecting one and disconnecting one.
    For an app to copy. What it carries (WCAG 2.2):
@@ -56,6 +57,9 @@ export interface IntegrationsProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Integration[] = [
@@ -74,7 +78,7 @@ export function matchIntegrations(apps: readonly Integration[], query: string): 
 }
 
 /** The integrations page: a skip link, a header, then main with the h1, a search, and the connected and available apps. */
-export function Integrations({ apps = demo, onConnect, onDisconnect, loading = false, loadFailed = false, onRetry }: IntegrationsProps) {
+export function Integrations({ apps = demo, onConnect, onDisconnect, loading = false, loadFailed = false, onRetry, online }: IntegrationsProps) {
   const locale = useLocale();
   const [on, setOn] = React.useState<Record<string, boolean>>({});
   const [query, setQuery] = React.useState('');
@@ -151,6 +155,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">These are the apps loaded before you went offline. Connecting or disconnecting needs a connection.</OfflineBanner>
         <PageHeader title="Integrations" description="Connect the other apps your team uses. Only admins can connect or disconnect them." />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your integrations" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (

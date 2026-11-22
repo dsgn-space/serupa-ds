@@ -4,7 +4,7 @@ A Serupa component warns in the browser console, once, when it can see a mistake
 
 ## accordion-single-value
 
-An Accordion with `type="single"` got a `value` with more than one item, so more than one item shows open. Pass one value, or use `type="multiple"`.
+An Accordion with `selectionMode="single"` got a `value` with more than one item, so more than one item shows open. Pass one value, or use `selectionMode="multiple"`.
 
 ## bad-locale
 

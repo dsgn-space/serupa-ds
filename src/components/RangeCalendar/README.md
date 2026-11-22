@@ -67,7 +67,7 @@ Drawn from the `Playground` story.
 | `id` | `string` | | Goes to the outer `<div>` |
 | `value` | `{ start, end }` \| `null` | | The picked range (controlled); each end a `Date` or `"yyyy-mm-dd"` |
 | `defaultValue` | `{ start, end }` | | The range at first (uncontrolled) |
-| `onValueChange` | `(range, iso) => void` | | Called once both ends are picked, start first |
+| `onValueChange` | `(range, details: { iso }) => void` | | Called once both ends are picked, start first; `details.iso` is the same range as `"yyyy-mm-dd"` strings |
 | `months` | `1` \| `2` | `1` | Months side by side |
 | `month` / `defaultMonth` / `onMonthChange` | `Date` | the start's month | The first month shown |
 | `min` / `max` | `Date` \| `string` | | The earliest and latest days that can be an end |

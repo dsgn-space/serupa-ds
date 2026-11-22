@@ -17,6 +17,7 @@ import { useSteps } from '../../components/Stepper/useSteps';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Multi-step form: an application for a business account in three steps of questions and a step that shows every
    answer before it's sent, then what happens next. For an app to copy. What it carries (WCAG 2.2):
@@ -53,6 +54,9 @@ export interface MultiStepFormProps {
   sent?: boolean | undefined;
   /** Sends the application. A rejected promise keeps the review and says it wasn't sent. */
   onSubmit?: ((answers: Application) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const EMPTY: Application = {
@@ -112,7 +116,7 @@ const country = (v: string) => COUNTRIES.find((c) => c.value === v)?.label || v;
 const address = (...parts: string[]) => parts.filter((p) => p.trim()).join('\n');
 
 /** The application page: a skip link, then main with the Stepper, the step, and help in the same place on every step. */
-export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: startSent, onSubmit }: MultiStepFormProps) {
+export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: startSent, onSubmit, online }: MultiStepFormProps) {
   const [a, setA] = React.useState<Application>(() => ({ ...EMPTY, ...initial }));
   const [errors, setErrors] = React.useState<Record<number, ErrorSummaryItem[]>>({});
   const [tries, setTries] = React.useState(0);
@@ -177,6 +181,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Your answers stay here. Sending them needs a connection.</OfflineBanner>
         <PageHeader title="Open a business account" />
         <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
         {sent ? (

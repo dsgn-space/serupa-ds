@@ -66,3 +66,6 @@ export const AwaitingQris: Story = { args: { initial: { ...noCard, method: 'qris
 /** A promo code applied: it shows in the summary with Remove, and a discount line comes before the total. Try
     WELCOME10 in the Details story. */
 export const PromoApplied: Story = { args: { initial: filled, startAtReview: true, promo: { code: 'WELCOME10', discount: 615, label: '10% off' } } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

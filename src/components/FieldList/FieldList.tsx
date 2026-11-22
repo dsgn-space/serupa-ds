@@ -171,7 +171,7 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
       {list}
       {errorId ? <div className="srp-field-list__error"><Icon icon={icons.Error} className="srp-field-list__error-icon" /><span id={errorId}>{props.error}</span></div> : null}
       <div className="srp-field-list__add">
-        <Button ref={addRef} variant="secondary" size="sm" leftIcon={icons.Add} disabled={atMax} disabledReason={limit || undefined} onClick={add}>{props.addLabel}</Button>
+        <Button ref={addRef} variant="secondary" size="sm" startIcon={icons.Add} disabled={atMax} disabledReason={limit || undefined} onClick={add}>{props.addLabel}</Button>
         {atMax ? <span className="srp-field-list__limit" aria-hidden>{limit}</span> : null}
       </div>
     </fieldset>

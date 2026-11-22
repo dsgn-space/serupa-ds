@@ -16,7 +16,7 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 
-export interface SearchInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'leftIcon' | 'rightIcon'> {
+export interface SearchInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'startIcon' | 'endIcon'> {
   /** Called with the text when Enter is pressed. */
   onSearch?: ((value: string) => void) | undefined;
   /** Called after the field is cleared, by the × or Escape. The field's onChange also gets an empty value. */
@@ -65,7 +65,7 @@ function SearchInputRender({ ref, ...props }: SearchInputProps & React.RefAttrib
   return (
     <span className={cn('srp-input srp-search-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="search-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
-      <span className="srp-input__icon srp-input__icon--left srp-search-input__icon" aria-hidden={props.loading ? undefined : true}>
+      <span className="srp-input__icon srp-input__icon--start srp-search-input__icon" aria-hidden={props.loading ? undefined : true}>
         {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? sds.labels.searching} /> : <Icon icon={icons.Search} />}
       </span>
       <input {...rest} ref={mergedRef}

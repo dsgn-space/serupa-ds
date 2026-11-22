@@ -17,6 +17,7 @@ import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Order status: where an order is, after it's placed: its stage in words, the steps it goes through, what happened
    and when, what was bought, and a way to cancel while that's still possible. For an app to copy. What it carries
@@ -87,6 +88,9 @@ export interface OrderStatusProps {
   loadFailed?: boolean | undefined;
   /** Loads the order again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: OrderInfo = {
@@ -126,7 +130,7 @@ export const canCancel = (order: Pick<OrderInfo, 'stage' | 'cancelled'>): boolea
 export const subtotal = (items: readonly OrderItem[]): number => items.reduce((n, i) => n + i.price * i.quantity, 0);
 
 /** The order's page: a skip link, a header, then main with the order's h1, its stage, what happened and what's in it. */
-export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, loading = false, loadFailed = false, onRetry }: OrderStatusProps) {
+export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, loading = false, loadFailed = false, onRetry, online }: OrderStatusProps) {
   const locale = useLocale(undefined);
   const [order, setOrder] = React.useState(start);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -165,6 +169,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Cancelling needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: name }]} title={name} headingRef={heading} />
 
         <div className="flex flex-col gap-8 pt-6">

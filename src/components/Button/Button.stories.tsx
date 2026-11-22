@@ -12,8 +12,8 @@ const meta = {
   argTypes: {
     variant: { control: 'inline-radio', options: ['primary', 'secondary', 'outline', 'ghost', 'link'] },
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-    leftIcon: iconArg,
-    rightIcon: iconArg,
+    startIcon: iconArg,
+    endIcon: iconArg,
   },
 } satisfies Meta<ButtonAsButtonProps>;
 export default meta;
@@ -78,8 +78,8 @@ export const Sizes: Story = {
 export const Content: Story = {
   render: () => <Row>
     <Button>Label only</Button>
-    <Button leftIcon="add">New project</Button>
-    <Button variant="outline" rightIcon="arrow_forward">Next</Button>
+    <Button startIcon="add">New project</Button>
+    <Button variant="outline" endIcon="arrow_forward">Next</Button>
     <IconButton icon="more_horiz" label="More actions" />
     <IconButton variant="primary" icon="add" label="Add" size="lg" />
   </Row>,
@@ -90,7 +90,7 @@ export const States: Story = {
     <Button>Default</Button>
     <Button disabled>Disabled</Button>
     <Button loading>Saving</Button>
-    <Button variant="outline" leftIcon="download">Export</Button>
+    <Button variant="outline" startIcon="download">Export</Button>
     <IconButton icon="refresh" label="Refresh" loading />
   </Row>,
 };
@@ -98,7 +98,7 @@ export const States: Story = {
 export const AsLink: Story = {
   name: 'As a link',
   render: () => <Row>
-    <Button href="#docs" variant="outline" rightIcon="arrow_forward">Read the docs</Button>
+    <Button href="#docs" variant="outline" endIcon="arrow_forward">Read the docs</Button>
     <Button href="#docs" variant="link">Inline link</Button>
     <Button href="#docs" disabled>Disabled link</Button>
   </Row>,

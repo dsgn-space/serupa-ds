@@ -83,4 +83,11 @@ describe('Patterns/Conference agenda', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('before the sessions are out: it says so once, without a track filter, "0 sessions" or empty days', async () => {
+    const screen = await render(<Agenda sessions={[]} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'The agenda isn’t out yet' })).toBeVisible();
+    expect(document.querySelector('main select, main [role="tablist"]')).toBeNull();
+    expect(document.querySelector('main')!.textContent).not.toMatch(/\b0 sessions/);
+  });
 });

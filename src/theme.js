@@ -11,6 +11,7 @@
    never contains a closing script tag or an HTML comment opener, either of which would end or break it.
 
    data-brand  blue | red | orange | amber | yellow | lime | green | emerald | teal | cyan | sky | indigo | violet | purple | fuchsia | pink | rose  (default: blue)
+                 tokens.css has blue; load brands/<brand>.css for each other brand the page offers (17.0.0)
    data-brands your own brands (serupa-brand), such as "acme"
    data-mode   auto | light | dark             (default: auto = follow the operating system)
    A page with only data-theme="violet-dark" (no data-brand or data-mode) keeps that theme as its default.

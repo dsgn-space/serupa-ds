@@ -25,7 +25,7 @@ export interface PageHeaderAction {
   /** Or where it goes. */
   href?: string;
   /** An icon before the label: an icon name or any element. */
-  icon?: React.ComponentProps<typeof Button>['leftIcon'];
+  icon?: React.ComponentProps<typeof Button>['startIcon'];
   /** Can't be used now (nothing to do): the button, or the menu item on a phone, says so. */
   disabled?: boolean;
 }
@@ -58,8 +58,8 @@ export interface PageHeaderProps {
 }
 
 const button = (a: PageHeaderAction, variant: 'primary' | 'secondary') =>
-  a.href && !a.disabled ? <Button key={a.label} href={a.href} variant={variant} leftIcon={a.icon}>{a.label}</Button>
-    : <Button key={a.label} variant={variant} leftIcon={a.icon} disabled={a.disabled} onClick={a.onSelect}>{a.label}</Button>;
+  a.href && !a.disabled ? <Button key={a.label} href={a.href} variant={variant} startIcon={a.icon}>{a.label}</Button>
+    : <Button key={a.label} variant={variant} startIcon={a.icon} disabled={a.disabled} onClick={a.onSelect}>{a.label}</Button>;
 
 /** The top of a page: where it is, what it's called, what it's for, and what you can do there. */
 export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections', moreLabel = 'More actions', headingRef }: PageHeaderProps) {
