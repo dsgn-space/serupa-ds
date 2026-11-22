@@ -15,7 +15,7 @@
 }
 @media (hover: hover) { .srp-breadcrumb__link:hover, .srp-breadcrumb__more:hover { color: var(--breadcrumb-text-hover, var(--text)); text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
 .srp-breadcrumb__item:focus-visible { outline: var(--focus-ring-width) solid var(--breadcrumb-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-breadcrumb__item--current { color: var(--breadcrumb-text-current, var(--text)); font-weight: var(--breadcrumb-weight-current, var(--font-medium)); }
+.srp-breadcrumb__item[data-current] { color: var(--breadcrumb-text-current, var(--text)); font-weight: var(--breadcrumb-weight-current, var(--font-medium)); }
 .srp-breadcrumb__more { padding: var(--spacing-0) var(--spacing-0\.5); border: var(--spacing-0); background: transparent; font: inherit; cursor: var(--cursor-interactive); touch-action: manipulation; }
 .srp-breadcrumb__icon { display: inline-flex; }
 .srp-breadcrumb__icon .srp-icon { font-size: var(--breadcrumb-icon-size, var(--spacing-4)); }

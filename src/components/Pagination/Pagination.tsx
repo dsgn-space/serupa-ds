@@ -128,7 +128,7 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
     if (props.onPageChange) props.onPageChange(n);
   };
   const item = (n: number, content: React.ReactNode, aria: React.AriaAttributes & { rel?: string }, disabled: boolean, cls: string) => {
-    const common = Object.assign({ className: cn('srp-pagination__item', cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
+    const common = Object.assign({ className: cn('srp-pagination__item', cls), 'data-current': cls ? '' : undefined, onClick: (e: React.MouseEvent) => go(n, e) }, aria);
     if (props.getHref) return disabled ? <a {...common} role="link" aria-disabled="true">{content}</a> : React.createElement(props.linkAs || config.link, Object.assign(common, { href: props.getHref(n) }), content);
     return <button type="button" {...common} disabled={disabled}>{content}</button>;
   };

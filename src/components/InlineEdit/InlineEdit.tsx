@@ -141,7 +141,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const text = <span className={cn('srp-inline-edit__text', empty && 'srp-inline-edit__text--placeholder')}>{empty ? props.placeholder : value}</span>;
   const cls = cn('srp-inline-edit', 'srp-inline-edit--size-' + size, editing && 'srp-inline-edit--editing', props.disabled && 'srp-inline-edit--disabled', error != null && 'srp-inline-edit--invalid', props.className);
   return (
-    <div {...rest} ref={ref} className={cls} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
+    <div {...rest} ref={ref} className={cls} data-disabled={props.disabled ? '' : undefined} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
       {editing ? (
         <Input {...ip} ref={field} size={size} aria-label={props.label} value={draft} invalid={error != null || ip.invalid}
           aria-describedby={cn(ip['aria-describedby'], error != null && errorId) || undefined}

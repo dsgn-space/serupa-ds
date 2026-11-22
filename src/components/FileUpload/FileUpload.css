@@ -18,11 +18,11 @@
   transition: background-color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }
 /* A click on the drop area browses for files, so pointing at it darkens its outline, as a field's does. */
-@media (hover: hover) { .srp-file-upload:not(.srp-file-upload--disabled, .srp-file-upload--readonly, .srp-file-upload--invalid) .srp-file-upload__zone:hover:not(.srp-file-upload__zone--over) { border-color: var(--file-upload-zone-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .srp-file-upload:not([data-disabled], [data-readonly], [data-invalid]) .srp-file-upload__zone:hover:not([data-over]) { border-color: var(--file-upload-zone-border-hover, var(--field-border-hover)); } }
 /* Pressed: it fills while held, then the file dialog opens. */
-.srp-file-upload:not(.srp-file-upload--disabled, .srp-file-upload--readonly) .srp-file-upload__zone:active:not(.srp-file-upload__zone--over) { background: var(--file-upload-zone-bg-pressed, var(--field-hover)); transition-duration: var(--duration-0); }
-.srp-file-upload__zone--over { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
-.srp-file-upload__zone--over .srp-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
+.srp-file-upload:not([data-disabled], [data-readonly]) .srp-file-upload__zone:active:not([data-over]) { background: var(--file-upload-zone-bg-pressed, var(--field-hover)); transition-duration: var(--duration-0); }
+.srp-file-upload__zone[data-over] { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
+.srp-file-upload__zone[data-over] .srp-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
 .srp-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }
 .srp-file-upload__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--font-medium); pointer-events: none; overflow-wrap: anywhere; }
 .srp-file-upload__hint { margin: var(--spacing-0); color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: none; overflow-wrap: anywhere; }
@@ -41,14 +41,14 @@
   --attachment-done: var(--file-upload-done-color, var(--success-text)); --attachment-focus-ring: var(--file-upload-focus-ring, var(--focus-ring));
 }
 .srp-file-upload__thumbnail { flex: none; inline-size: var(--spacing-10); block-size: var(--spacing-10); border-radius: var(--radius-inner); }
-.srp-file-upload--disabled .srp-file-upload__zone, .srp-file-upload--disabled .srp-file-upload__zone * { border-color: var(--file-upload-border-disabled, var(--disabled-border)); color: var(--file-upload-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-file-upload[data-disabled] .srp-file-upload__zone, .srp-file-upload[data-disabled] .srp-file-upload__zone * { border-color: var(--file-upload-border-disabled, var(--disabled-border)); color: var(--file-upload-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 /* The area's fade covers the button in it: the disabled Button's own fade on top took it to a quarter. */
-.srp-file-upload--disabled .srp-file-upload__zone .srp-btn { opacity: var(--opacity-100); }
-.srp-file-upload--invalid .srp-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
+.srp-file-upload[data-disabled] .srp-file-upload__zone .srp-btn { opacity: var(--opacity-100); }
+.srp-file-upload[data-invalid] .srp-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
 /* Read-only refuses nothing: the plain arrow over the whole area, its dimmed button too, as on every read-only control. */
-.srp-file-upload--readonly .srp-file-upload__zone, .srp-file-upload--readonly .srp-file-upload__zone * { cursor: default; }
-.srp-file-upload--readonly .srp-file-upload__zone .srp-btn[aria-disabled="true"] { cursor: default; }
+.srp-file-upload[data-readonly] .srp-file-upload__zone, .srp-file-upload[data-readonly] .srp-file-upload__zone * { cursor: default; }
+.srp-file-upload[data-readonly] .srp-file-upload__zone .srp-btn[aria-disabled="true"] { cursor: default; }
 @media (prefers-reduced-motion: reduce) { .srp-file-upload__zone { transition: none; } }
 /* Forced colors drop the primary fill and outline, so the drag-over area is told apart by a Highlight border. */
-@media (forced-colors: active) { .srp-file-upload__zone--over { border-color: Highlight; } }
+@media (forced-colors: active) { .srp-file-upload__zone[data-over] { border-color: Highlight; } }
 }

@@ -25,11 +25,11 @@
 .srp-sidebar[data-slide="full"]::after { translate: var(--srp-sidebar-travel); }
 .srp-sidebar[data-slide="full"]:dir(rtl)::after { translate: calc(var(--spacing-0) - var(--srp-sidebar-travel)); }
 @media (forced-colors: active) { .srp-sidebar[data-slide]::after { background: CanvasText; } }
-.srp-sidebar--collapsed { width: var(--sidebar-width-collapsed, var(--spacing-16)); }
+.srp-sidebar[data-collapsed] { width: var(--sidebar-width-collapsed, var(--spacing-16)); }
 .srp-sidebar__header, .srp-sidebar__footer { flex-shrink: 0; padding: var(--sidebar-padding, var(--spacing-3)); }
 /* Collapsed (GR51): the header and footer stay in the rail, a long name ends in an ellipsis rather than spilling
    over the page. Pass a logo mark when collapsed (README). */
-.srp-sidebar--collapsed :is(.srp-sidebar__header, .srp-sidebar__footer) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.srp-sidebar[data-collapsed] :is(.srp-sidebar__header, .srp-sidebar__footer) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .srp-sidebar__footer { border-top: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); }
 .srp-sidebar__body { display: flex; flex-direction: column; gap: var(--sidebar-section-gap, var(--spacing-6)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior-y: contain; padding: var(--sidebar-padding, var(--spacing-3)); }
 .srp-sidebar__section-title { padding: var(--spacing-0) var(--sidebar-item-padding-x, var(--spacing-3)) var(--spacing-2); color: var(--sidebar-section-title-color, var(--text-muted)); font-size: var(--sidebar-section-title-size, var(--text-xs)); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
@@ -60,7 +60,7 @@
 }
 @media (hover: hover) { .srp-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); --surface-behind: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .srp-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
-.srp-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
+.srp-sidebar__item[data-current] { color: var(--sidebar-item-text-active, var(--text)); }
 /* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and
    one step darker under the pointer, so hovering it answers too. */
 .srp-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--sidebar-item-indicator, var(--highlight-indicator)); }
@@ -86,8 +86,8 @@
 /* collapsed: icons only, centered; labels stay for screen readers */
 /* Touch (EQ1): items at least 44px high on a touch screen, as Apple and Material ask; stacked, so the row grows. */
 @media (pointer: coarse) { .srp-sidebar__item { min-height: var(--spacing-11); } }
-.srp-sidebar--collapsed .srp-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
-.srp-sidebar--collapsed .srp-sidebar__label, .srp-sidebar--collapsed .srp-sidebar__section-title, .srp-sidebar--collapsed .srp-sidebar__badge {
+.srp-sidebar[data-collapsed] .srp-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
+.srp-sidebar[data-collapsed] .srp-sidebar__label, .srp-sidebar[data-collapsed] .srp-sidebar__section-title, .srp-sidebar[data-collapsed] .srp-sidebar__badge {
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
 }
 /* The collapsed rail's menu: the current page is in medium weight and the active text color (the highlight is focus's). */

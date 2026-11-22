@@ -24,5 +24,5 @@
 .srp-field--horizontal > .srp-field__label { flex: none; flex-basis: var(--field-label-width, var(--spacing-48)); max-width: var(--sizing-full); }
 .srp-field__body { display: flex; flex: auto; flex-basis: var(--field-control-min-width, var(--container-3xs)); flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
 /* The required mark dims with its label: a disabled field asks for nothing, so no red mark there either. */
-.srp-field--disabled > .srp-field__label, .srp-field--disabled .srp-field__required, .srp-field--disabled .srp-field__body > .srp-field__hint, .srp-field--disabled > .srp-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
+.srp-field[data-disabled] > .srp-field__label, .srp-field[data-disabled] .srp-field__required, .srp-field[data-disabled] .srp-field__body > .srp-field__hint, .srp-field[data-disabled] > .srp-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
 }

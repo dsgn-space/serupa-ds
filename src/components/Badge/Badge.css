@@ -109,7 +109,7 @@
 /* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
    color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
    fill and below the content, so every style and tone gets the same treatment. */
-.srp-badge--interactive, .srp-badge--loading { position: relative; isolation: isolate; }
+.srp-badge--interactive, .srp-badge[data-loading] { position: relative; isolation: isolate; }
 .srp-badge--interactive { margin: var(--spacing-0); cursor: var(--cursor-interactive); touch-action: manipulation; text-decoration: none; text-align: center; -webkit-tap-highlight-color: transparent; }
 .srp-badge--interactive::before {
   content: ""; position: absolute; pointer-events: none;
@@ -127,10 +127,10 @@
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset);
 }
-.srp-badge--interactive:disabled, a.srp-badge--interactive[aria-disabled="true"]:not(.srp-badge--loading) { background: var(--badge-fill-disabled, var(--disabled-surface)); border-color: var(--badge-border-disabled, var(--disabled-border)); color: var(--badge-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-badge--interactive:disabled, a.srp-badge--interactive[aria-disabled="true"]:not([data-loading]) { background: var(--badge-fill-disabled, var(--disabled-surface)); border-color: var(--badge-border-disabled, var(--disabled-border)); color: var(--badge-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 /* Loading: the content fades out under a centered ring at the icon size; the badge keeps its width and colors. */
-.srp-badge--loading { cursor: progress; }
-.srp-badge--loading > :not(.srp-badge__loader) { opacity: var(--opacity-0); }
+.srp-badge[data-loading] { cursor: progress; }
+.srp-badge[data-loading] > :not(.srp-badge__loader) { opacity: var(--opacity-0); }
 .srp-badge__loader { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; }
 .srp-badge .srp-loader { --srp-loader-size: var(--srp-badge-icon); }
 /* Micro-interactions, the same as Button's, each with a component token (src/components/Badge/badge.tokens.json)
@@ -159,7 +159,7 @@
 @keyframes srp-badge-loader-in { from { opacity: var(--opacity-0); scale: var(--srp-badge-loader-from); filter: var(--srp-badge-cross-blur); } }
 @media (prefers-reduced-motion: no-preference) {
   .srp-badge { --srp-badge-cross-blur: blur(var(--blur-xs)); }
-  .srp-badge--loading > :not(.srp-badge__loader) { filter: var(--srp-badge-cross-blur); }
+  .srp-badge[data-loading] > :not(.srp-badge__loader) { filter: var(--srp-badge-cross-blur); }
 }
 @media (prefers-reduced-motion: reduce) {
   .srp-badge { --srp-badge-press: var(--scale-100); --srp-badge-loader-from: var(--scale-100); }

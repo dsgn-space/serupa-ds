@@ -113,7 +113,7 @@
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
 .srp-btn.srp-btn--on-dark, .srp-btn.srp-btn--on-light { --srp-btn-shadow: var(--shadow-none); }
 .srp-btn--primary, .srp-btn--secondary, .srp-btn--outline { --srp-btn-shadow: var(--elevation-rest); }
-.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not(.srp-btn--loading) { --srp-btn-shadow: var(--shadow-none); }
+.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not([data-loading]) { --srp-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
 .srp-btn--destructive { --srp-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
@@ -131,7 +131,7 @@
 .srp-btn--ghost.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-pressed, var(--danger-subtle-hover)); }
 .srp-btn--link.srp-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
 /* After the variants and destructive ones, so it wins over each of them. */
-.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not(.srp-btn--loading) {
+.srp-btn:disabled, .srp-btn[aria-disabled="true"]:not([data-loading]) {
   /* Disabled is drawn in muted colors, not by fading the button's own: a faded label fell to about 2.4:1, fainter than
      the disabled fields beside it (3.4:1 and up), and stayed there with more contrast. The muted pair follows the
      contrast axis like every other text. */
@@ -140,7 +140,7 @@
   cursor: var(--cursor-disabled);          /* no hover change; disabled buttons ignore clicks */
 }
 /* Ghost and link buttons have no box of their own, disabled or not. */
-.srp-btn--ghost:disabled, .srp-btn--link:disabled, .srp-btn--ghost[aria-disabled="true"]:not(.srp-btn--loading), .srp-btn--link[aria-disabled="true"]:not(.srp-btn--loading) { background: transparent; border-color: transparent; }
+.srp-btn--ghost:disabled, .srp-btn--link:disabled, .srp-btn--ghost[aria-disabled="true"]:not([data-loading]), .srp-btn--link[aria-disabled="true"]:not([data-loading]) { background: transparent; border-color: transparent; }
 
 /* Sizes: sm 24px, md 32px, lg 44px */
 .srp-btn--size-sm { height: var(--button-height-sm, var(--control-height-sm)); padding: var(--spacing-0) var(--button-padding-x-sm, var(--spacing-2)); gap: var(--button-gap-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -174,7 +174,7 @@
 .srp-btn--size-lg.srp-btn--icon-end { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
 
 /* Loading: full color (not faded), not clickable, keeps keyboard focus and its width */
-.srp-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
+.srp-btn[data-loading] { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
 /* opacity, not visibility: hidden, so the label stays in the accessibility tree and the button keeps its name */
 .srp-btn--loading-cover > .srp-btn__label,
 .srp-btn--loading-cover > .srp-btn__icon { opacity: var(--opacity-0); }

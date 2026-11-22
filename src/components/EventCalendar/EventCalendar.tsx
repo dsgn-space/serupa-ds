@@ -209,7 +209,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   const eventButton = (s: Shown, day: Date, tab: 0 | -1, detail: boolean) => (
     <button type="button" tabIndex={tab} aria-label={nameOf(s, day, detail)} data-event-id={s.e.id} onClick={() => on.eventClick(s.e)}
       aria-keyshortcuts={movable && !detail ? 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown' : undefined}
-      className={cn('srp-event-calendar__event', 'srp-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'srp-event-calendar__event--all-day', movable && !detail && 'srp-event-calendar__event--movable', p.dragging === s.e.id && 'srp-event-calendar__event--dragging')}>
+      className={cn('srp-event-calendar__event', 'srp-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'srp-event-calendar__event--all-day', movable && !detail && 'srp-event-calendar__event--movable', p.dragging === s.e.id && 'srp-event-calendar__event--dragging')} data-dragging={(p.dragging === s.e.id) ? '' : undefined}>
       {s.allDay && !detail ? null : <><span className="srp-event-calendar__time">{p.dir ? <span dir={p.dir}>{shownTime(s, detail)}</span> : shownTime(s, detail)}</span>{' '}</>}
       <TruncatedText className="srp-event-calendar__title">{s.e.title}</TruncatedText>
       {s.e.repeating ? <span className="srp-event-calendar__repeat" aria-hidden>↻</span> : null}
@@ -246,7 +246,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
                 return (
                   <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1}
                     aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
-                    className={cn('srp-event-calendar__day', !sameMonth(d, month) && 'srp-event-calendar__day--outside', isToday && 'srp-event-calendar__day--today')}
+                    className={cn('srp-event-calendar__day', !sameMonth(d, month) && 'srp-event-calendar__day--outside', isToday && 'srp-event-calendar__day--today')} data-outside={(!sameMonth(d, month)) ? '' : undefined} data-today={isToday ? '' : undefined}
                     onFocus={(e) => { if (e.target === e.currentTarget && !here) on.setFocus(d); }}>
                     {/* The day's name is its text, not an aria-label, so it never hides what the cell shows (its events). */}
                     <span className="srp-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
@@ -274,7 +274,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
             <tr>
               <td aria-hidden className="srp-event-calendar__zone">{zone}</td>
               {span.map((d) => (
-                <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'srp-event-calendar__head--today')}>
+                <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'srp-event-calendar__head--today')} data-today={(marked && sameDay(d, marked)) ? '' : undefined}>
                   <span aria-hidden>{fmt.short.format(d)} <span className="srp-event-calendar__head-date">{d.getDate()}</span></span>
                   <span className="srp-visually-hidden">{fmt.full.format(d)}</span>
                 </th>
@@ -291,7 +291,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
                 const mine = onDay(list, d), whole = mine.filter((s) => s.allDay), here = sameDay(d, focus), isToday = marked !== null && sameDay(d, marked);
                 return (
                   <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1} aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
-                    className={cn('srp-event-calendar__day srp-event-calendar__column', isToday && 'srp-event-calendar__day--today')}
+                    className={cn('srp-event-calendar__day srp-event-calendar__column', isToday && 'srp-event-calendar__day--today')} data-today={isToday ? '' : undefined}
                     onFocus={(e) => { if (e.target === e.currentTarget && !here) on.setFocus(d); }}>
                     <span className="srp-visually-hidden">{fmt.full.format(d) + ', ' + labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
                     <div className="srp-event-calendar__pinned">
@@ -320,7 +320,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
     ) : busy.length ? (
       <ol className="srp-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
         {busy.map(([d, l]) => (
-          <li key={d.getTime()} className={cn('srp-event-calendar__agenda-day', marked && sameDay(d, marked) && 'srp-event-calendar__agenda-day--today')} aria-current={marked && sameDay(d, marked) ? 'date' : undefined}>
+          <li key={d.getTime()} className={cn('srp-event-calendar__agenda-day', marked && sameDay(d, marked) && 'srp-event-calendar__agenda-day--today')} data-today={(marked && sameDay(d, marked)) ? '' : undefined} aria-current={marked && sameDay(d, marked) ? 'date' : undefined}>
             <H2 className="srp-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
             <ul className="srp-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
           </li>

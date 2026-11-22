@@ -24,23 +24,23 @@
   border: 0; border-radius: var(--color-picker-swatch-radius, var(--radius-pill)); cursor: var(--cursor-interactive); touch-action: manipulation;
   box-shadow: inset 0 0 0 var(--border-width-1) var(--color-picker-swatch-border, var(--border-control));
 }
-.srp-color-picker__swatch--checked { outline: var(--outline-width-2) solid var(--color-picker-ring, var(--primary)); outline-offset: var(--outline-width-2); }
+.srp-color-picker__swatch[data-checked] { outline: var(--outline-width-2) solid var(--color-picker-ring, var(--primary)); outline-offset: var(--outline-width-2); }
 .srp-color-picker__swatches[aria-invalid="true"] .srp-color-picker__swatch { box-shadow: inset 0 0 0 var(--border-width-2) var(--color-picker-invalid, var(--danger)); }   /* the error shows on the swatches, as on a field's border */
 /* Pointed at, a swatch not yet picked shows a ring in border-control (3:1 on the page) where the picked one's ring goes, so the
    pointer gets an answer before the press, as other controls give. */
-@media (hover: hover) { .srp-color-picker:not(.srp-color-picker--readonly) .srp-color-picker__swatch:hover:not(.srp-color-picker__swatch--checked, :disabled) { outline: var(--outline-width-2) solid var(--color-picker-ring-hover, var(--border-control)); outline-offset: var(--outline-width-2); } }
+@media (hover: hover) { .srp-color-picker:not([data-readonly]) .srp-color-picker__swatch:hover:not([data-checked], :disabled) { outline: var(--outline-width-2) solid var(--color-picker-ring-hover, var(--border-control)); outline-offset: var(--outline-width-2); } }
 .srp-color-picker__swatch:focus-visible { outline: var(--focus-ring-width) solid var(--color-picker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-color-picker__check { font-size: var(--srp-cp-check); }
 /* With contrastWith: a swatch under minContrast is struck through (in its check color), so it's seen before it's picked. */
-.srp-color-picker__swatch--low:not(.srp-color-picker__swatch--checked)::after {
+.srp-color-picker__swatch--low:not([data-checked])::after {
   content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
   background: linear-gradient(to top right, transparent calc(var(--sizing-1-2) - var(--border-width-1)), var(--srp-swatch-ink) calc(var(--sizing-1-2) - var(--border-width-1)), var(--srp-swatch-ink) calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1)));
 }
-@media (forced-colors: active) { .srp-color-picker__swatch--low:not(.srp-color-picker__swatch--checked)::after { background: linear-gradient(to top right, transparent calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1))); forced-color-adjust: none; } }
+@media (forced-colors: active) { .srp-color-picker__swatch--low:not([data-checked])::after { background: linear-gradient(to top right, transparent calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1))); forced-color-adjust: none; } }
 :is(.srp-color-picker__swatch, .srp-color-picker__native):disabled { cursor: var(--cursor-disabled); }
-.srp-color-picker--readonly :is(.srp-color-picker__swatch, .srp-color-picker__native) { cursor: default; }
+.srp-color-picker[data-readonly] :is(.srp-color-picker__swatch, .srp-color-picker__native) { cursor: default; }
 /* Disabled by the prop, or by a <fieldset disabled> around it (its swatches are disabled only together). */
-.srp-color-picker--disabled, .srp-color-picker:where(:has(.srp-color-picker__swatch:disabled)) { opacity: var(--opacity-disabled); }
+.srp-color-picker[data-disabled], .srp-color-picker:where(:has(.srp-color-picker__swatch:disabled)) { opacity: var(--opacity-disabled); }
 .srp-color-picker__custom { display: flex; align-items: center; gap: var(--spacing-2); }
 .srp-color-picker__native {
   inline-size: var(--srp-cp-size); block-size: var(--srp-cp-size); margin: var(--spacing-0); padding: var(--spacing-0);
@@ -59,5 +59,5 @@
 .srp-color-picker__contrast { display: flex; align-items: flex-start; gap: var(--spacing-1); min-height: var(--text-sm--line-height); color: var(--color-picker-contrast, var(--text-muted)); font-variant-numeric: tabular-nums; }
 .srp-color-picker__contrast--low { color: var(--color-picker-contrast-low, var(--warning-text)); }
 .srp-color-picker__warning { flex-shrink: 0; font-size: var(--spacing-4); height: var(--text-sm--line-height); }
-@media (forced-colors: active) { .srp-color-picker__swatch { forced-color-adjust: none; } .srp-color-picker__swatch--checked { outline-color: Highlight; } }
+@media (forced-colors: active) { .srp-color-picker__swatch { forced-color-adjust: none; } .srp-color-picker__swatch[data-checked] { outline-color: Highlight; } }
 }

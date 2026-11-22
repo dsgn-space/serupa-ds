@@ -43,15 +43,15 @@
 .srp-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Not on the current item: under the pointer it keeps its own color and fill, as it does while held (GR414).
    The hover rule used to outrank the current one, so the current item looked like any other item pointed at. */
-@media (hover: hover) { .srp-bottom-nav__link:not(.srp-bottom-nav__link--active):hover { color: var(--bottom-nav-text-hover, var(--text)); } .srp-bottom-nav__link:not(.srp-bottom-nav__link--active):hover .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-bottom-nav__link:not([data-current]):hover { color: var(--bottom-nav-text-hover, var(--text)); } .srp-bottom-nav__link:not([data-current]):hover .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
 /* The label and the pill fade to their hover colors as the controls beside them do, and the pill fills at once while held. */
 .srp-bottom-nav__link { transition: color var(--motion-hover) var(--ease-move); }
 .srp-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }
-.srp-bottom-nav__link:not(.srp-bottom-nav__link--active):active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
+.srp-bottom-nav__link:not([data-current]):active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .srp-bottom-nav__link, .srp-bottom-nav__icon { transition: none; } }
-.srp-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary)); }
-.srp-bottom-nav__link--active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
+.srp-bottom-nav__link[data-current] { color: var(--bottom-nav-text-active, var(--primary)); }
+.srp-bottom-nav__link[data-current] .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
 .srp-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media print { .srp-bottom-nav, .srp-bottom-nav__spacer { display: none; } }
-@media (forced-colors: active) { .srp-bottom-nav__link--active .srp-bottom-nav__icon { outline: var(--outline-width-2) solid CanvasText; } }
+@media (forced-colors: active) { .srp-bottom-nav__link[data-current] .srp-bottom-nav__icon { outline: var(--outline-width-2) solid CanvasText; } }
 }

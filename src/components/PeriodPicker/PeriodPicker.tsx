@@ -194,12 +194,12 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   for (let i = 0; i < cells.length; i += cols) rows.push(cells.slice(i, i + cols));
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('srp-period-picker', 'srp-period-picker--size-' + size, (invalid || missing) && 'srp-period-picker--invalid', disabled && 'srp-period-picker--disabled', readOnly && 'srp-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
+    <div className={cn('srp-period-picker', 'srp-period-picker--size-' + size, (invalid || missing) && 'srp-period-picker--invalid', disabled && 'srp-period-picker--disabled', readOnly && 'srp-period-picker--readonly', props.className)} data-invalid={(invalid || missing) ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
       <button {...rest} ref={mergedRef} type="button" role="combobox" className="srp-period-picker__button" lang={rest.lang ?? lang}
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
-        <TruncatedText className={cn('srp-period-picker__value', value == null && 'srp-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
+        <TruncatedText className={cn('srp-period-picker__value', value == null && 'srp-period-picker__value--empty')} data-empty={(value == null) ? '' : undefined}>{value == null ? placeholder : name(value)}</TruncatedText>
         <Icon icon={icons.CalendarToday} className="srp-period-picker__icon" />
       </button>
       <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value == null ? '' : periodValue(value, unit)} disabled={disabled || !props.name} />
@@ -225,7 +225,7 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
                     return (
                       <td key={n} role="gridcell" aria-selected={sel}>
                         <button type="button" tabIndex={n === focus ? 0 : -1} aria-disabled={no || undefined} aria-current={here ? 'date' : undefined}
-                          className={cn('srp-period-picker__period', sel && 'srp-period-picker__period--selected', here && 'srp-period-picker__period--current', no && 'srp-period-picker__period--disabled')}
+                          className={cn('srp-period-picker__period', sel && 'srp-period-picker__period--selected', here && 'srp-period-picker__period--current', no && 'srp-period-picker__period--disabled')} data-selected={sel ? '' : undefined} data-current={here ? '' : undefined} data-disabled={no ? '' : undefined}
                           data-value={periodValue(n, unit)} onClick={() => pick(n)} onFocus={() => { if (n !== focus) setFocus(n); }}>
                           {/* "Jan" shown, "January 2025" read: the name holds the year the page shows once, over the grid. */}
                           <span aria-hidden>{cellText(n)}</span><span className="srp-visually-hidden">{name(n)}</span>

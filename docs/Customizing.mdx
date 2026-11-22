@@ -62,8 +62,11 @@ When a token can't do it, select on what's promised to stay the same between min
 | --- | --- |
 | `[data-component="button"]` | Every instance of a component, whatever its variant |
 | `[data-state="open"]`, `[data-state="active"]` … | Its state, from the one vocabulary every component shares ([ADR-0012](https://github.com/dsgn-space/serupa-ds/blob/main/docs/adr/0012-data-state.md)) |
+| `[data-disabled]`, `[data-invalid]`, `[data-readonly]`, `[data-selected]`, `[data-current]`, `[data-loading]` … | A state that can be on with others, present or absent on the element that changes ([ADR-0025](https://github.com/dsgn-space/serupa-ds/blob/main/docs/adr/0025-state-as-attributes.md)) |
 | `[aria-expanded="true"]`, `[aria-invalid="true"]`, `:checked`, `:disabled` | States that native controls and ARIA already say |
 | `.srp-btn`, `.srp-btn--primary` | The component's own class and its variant and size modifiers |
+
+A modifier class is for a variant or a size, never a state. The state classes the components still write (`.srp-input--invalid`, `.srp-list__item--selected`, `.srp-navbar__link--active`) are deprecated and go in 18.0.0: select `.srp-input[data-invalid]`, `.srp-list__item[data-selected]` and `.srp-navbar__link[data-current]` instead. `STATE_CLASSES` in `tools/test/state-hooks.mjs` lists each one with the attribute that replaces it.
 
 Avoid the classes of a component's inner parts (`.srp-btn__label`, `.srp-card__header`) and selectors that depend on how its markup nests (`.srp-card > div`). They move when a component is fixed or improved, and from 16.0.0 the Versioning rules say so: they may change in any release. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
 
