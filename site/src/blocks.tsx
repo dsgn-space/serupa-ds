@@ -6,11 +6,12 @@ import * as React from 'react';
 import { Badge } from '../../src/components/Badge/Badge';
 import { Button } from '../../src/components/Button/Button';
 import { CodeBlock } from '../../src/components/CodeBlock/CodeBlock';
+import { CopyButton } from '../../src/components/CopyButton/CopyButton';
 import { Heading } from '../../src/components/Heading/Heading';
 import { Loader } from '../../src/components/Loader/Loader';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../src/components/Table/Table';
 import { Tab, TabList, TabPanel, Tabs } from '../../src/components/Tabs/Tabs';
-import { Markdown } from './markdown';
+import { Markdown, elements } from './markdown';
 import since from '../../docs/since.json';
 import { sinceText, type Since } from '../../docs/since';
 import { pages, type ComponentDoc, type Page } from './pages';
@@ -50,7 +51,37 @@ export function Title({ children }: { children?: React.ReactNode }) {
       {status && <Badge tone={status.tone} title={status.title}>{status.label}</Badge>}
     </div>
     {page?.component && <SinceLine name={page.component} />}
+    {page && <GetIt page={page} />}
   </header>;
+}
+
+const PACKAGE = '@diki-stwn/serupa-ds';
+/** How to bring in a component, block or pattern, a press away: a component's import line, or the command that writes
+ *  a block or pattern into the app, with a prompt that has a coding agent add it the Serupa way (a component's guide
+ *  has its own "Copy for AI" further down). Other pages have neither. */
+function getIt(page: Page): { line: string; prompt?: string } | null {
+  if (page.component) return { line: `import { ${page.component} } from '${PACKAGE}';` };
+  const kind = /^src\/(blocks|patterns)\/(\w+)\//.exec(page.file);
+  if (!kind?.[2]) return null;
+  const name = kind[2], what = kind[1] === 'blocks' ? 'block' : 'pattern';
+  const line = `npx serupa-add ${name}`;
+  return { line, prompt: `Add the ${name} ${what} from the Serupa design system (${PACKAGE}): run \`${line}\`, which writes src/serupa/${name}.tsx as source this app owns. Before changing it, read node_modules/${PACKAGE}/skills/serupa/SKILL.md and follow it, and look up each component it uses with \`npx serupa-docs <Component>\`. Keep Serupa's components and tokens rather than writing your own, and keep it WCAG 2.2 AA in every theme.` };
+}
+
+const H1 = elements.h1;
+export function PageHeading(props: React.ComponentProps<typeof H1>) {
+  const { page } = useDocs();
+  return <><H1 {...props} />{page && !page.component && <GetIt page={page} />}</>;
+}
+
+function GetIt({ page }: { page: Page }) {
+  const it = getIt(page);
+  if (!it) return null;
+  return <div className="site-get" data-print="hide">
+    <code className="site-get__line">{it.line}</code>
+    <CopyButton value={it.line} variant="ghost" size="sm" iconOnly>{page.component ? 'Copy the import' : 'Copy the command'}</CopyButton>
+    {it.prompt && <CopyButton value={it.prompt} variant="outline" size="sm">Copy for AI</CopyButton>}
+  </div>;
 }
 
 /** Which release the component came in and last changed its API, and its props new in the latest releases (docs/since.json). */
@@ -156,6 +187,7 @@ function Demo({ entry }: { entry: StoryEntry }) {
       : <Stage entry={entry} className="site-demo__stage" />}
     <div className="site-demo__bar" data-print="hide">
       <Button variant="ghost" size="sm" startIcon="code" aria-expanded={open} aria-controls={id} onClick={toggle}>{open ? 'Hide code' : 'Show code'}</Button>
+      <CopyButton value={() => sourceOf(entry)} variant="ghost" size="sm">Copy code<span className="sr-only">: {entry.name}</span></CopyButton>
     </div>
     <div id={id} className="site-demo__code" hidden={!open}>
       {open && (code == null ? <Loader size="sm" label="Loading the code" /> : <CodeBlock language="tsx" title={`${entry.exportName} in ${entry.file.split('/').pop()}`} code={code} />)}

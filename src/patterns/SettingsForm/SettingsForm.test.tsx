@@ -61,7 +61,21 @@ describe('Patterns/Settings form', () => {
     await screen.getByRole('switch', { name: 'Weekly summary' }).click();
     await userEvent.fill(screen.getByLabelText('Bio', { exact: false }), 'Writes the first programs.');
     await screen.getByRole('button', { name: 'Save profile' }).click();
-    expect(onSave).toHaveBeenLastCalledWith('profile', { name: 'Ada Lovelace', email: 'ada@example.com', bio: 'Writes the first programs.', timeZone: 'Asia/Jakarta' });
+    expect(onSave).toHaveBeenLastCalledWith('profile', { name: 'Ada Lovelace', email: 'ada@example.com', bio: 'Writes the first programs.', timeZone: 'Asia/Jakarta', color: '#1d4ed8' });
+  });
+
+  test('the initials color is picked from named swatches by keyboard, saved with the profile, and a color of one\'s own is checked against white', async () => {
+    const onSave = vi.fn();
+    const screen = await render(<SettingsForm onSave={onSave} />);
+    const colors = screen.getByRole('radiogroup', { name: 'Initials color' });
+    await expect.element(colors.getByRole('radio', { name: 'Blue' })).toBeChecked();
+    (colors.getByRole('radio', { name: 'Blue' }).element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.element(colors.getByRole('radio', { name: 'Violet' })).toBeChecked();
+    await screen.getByRole('button', { name: 'Save profile' }).click();
+    expect(onSave).toHaveBeenLastCalledWith('profile', expect.objectContaining({ color: '#6d28d9' }));
+    await userEvent.fill(screen.getByRole('textbox', { name: /hex/i }), '#fde047');
+    await expect.poll(said).toMatch(/below \S+:\S+, which can be hard to read/);
   });
 
   test('a failed save says so with Try again, and keeps the change', async () => {

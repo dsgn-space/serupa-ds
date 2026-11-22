@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ErrorBoundary } from '../../src/components/ErrorBoundary/ErrorBoundary';
 import { Loader } from '../../src/components/Loader/Loader';
 import { TableOfContents } from '../../src/components/TableOfContents/TableOfContents';
-import { ApiAtEnd, Controls, DocsContext, type Docs } from './blocks';
+import { ApiAtEnd, Controls, DocsContext, PageHeading, type Docs } from './blocks';
 import { takingOver } from './drawn';
 import { elements } from './markdown';
 import { loadPage, loadProps, pagesOf, sectionOf, type ComponentDoc, type Page } from './pages';
@@ -113,7 +113,7 @@ export function Doc({ page, initial = null }: { page: Page; initial?: Loaded | n
     {!shown ? <div className="site-loading"><Loader size="lg" label={`Loading ${page.name}`} /></div> : <DocsContext.Provider value={docs}>
       <article id="article" ref={article} className="site-doc" aria-busy={!ready || undefined} key={shown.page.path}>
         <ErrorBoundary className="site-broken" title="This page couldn’t be shown" resetKeys={[shown.page.path]}>
-          <ApiAtEnd.Provider value><shown.Content components={elements} /></ApiAtEnd.Provider>
+          <ApiAtEnd.Provider value><shown.Content components={{ ...elements, h1: PageHeading }} /></ApiAtEnd.Provider>
           <Controls />
         </ErrorBoundary>
       </article>

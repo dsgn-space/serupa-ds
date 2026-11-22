@@ -18,7 +18,7 @@ import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useControllable } from '../../internal/controllable';
 import { useRequired } from '../../internal/required';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
-import { isRtl } from '../../internal/position';
+import { gridKey, periodCell } from '../../internal/gridKeys';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
 export type PeriodUnit = 'month' | 'quarter' | 'year';
@@ -159,20 +159,11 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     if (e.key === 'Escape') return escape(e);
     if (e.altKey || e.ctrlKey || e.metaKey || isComposing(e)) return;
-    const rtl = isRtl(e.currentTarget), at = focus - page, rowStart = focus - (at % cols);
-    switch (e.key) {
-      case 'ArrowLeft': move(focus + (rtl ? 1 : -1)); break;
-      case 'ArrowRight': move(focus + (rtl ? -1 : 1)); break;
-      case 'ArrowUp': move(focus - cols); break;
-      case 'ArrowDown': move(focus + cols); break;
-      case 'Home': move(rowStart); break;
-      case 'End': move(Math.min(rowStart + cols - 1, page + count - 1)); break;
-      case 'PageUp': move(focus - count); break;
-      case 'PageDown': move(focus + count); break;
-      case 'Enter': case ' ': pick(focus); break;
-      default: return;
-    }
+    const k = gridKey(e);
+    if (!k) return;
     e.preventDefault();
+    if (k === 'pick') pick(focus);
+    else move(periodCell(k, focus, page, cols, count));
   };
   useFormReset(hidden, () => { if (!controlled) setOwn(periodIndex(props.defaultValue, unit)); setOpenState(false, 'api'); }, props.form);
   const exit = useExit(open, panel);
