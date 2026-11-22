@@ -86,7 +86,7 @@ export const DoAskTheQuestion: Story = {
   render: () => <Sketch title="Delete Atlas?" description="This removes the project and its files. It can’t be undone." footer={<><Button variant="secondary">Keep project</Button><Button destructive>Delete project</Button></>} />,
 };
 /** Don't: "Are you sure?" with OK and Cancel, which say nothing about what happens. */
-export const DontAreYouSure: Story = {
+export const DontAreYouSure: Story = { tags: ['!visual'],
   name: "Don't: Are you sure?",
   render: () => <Sketch title="Are you sure?" description="This action can’t be undone." footer={<><Button variant="secondary">Cancel</Button><Button destructive>OK</Button></>} />,
 };
@@ -96,7 +96,7 @@ export const DoMainActionLast: Story = {
   render: () => <Sketch title="Invite people" description="They’ll get an email with a link." footer={<><Button variant="secondary">Cancel</Button><Button>Send invite</Button></>} />,
 };
 /** Don't: the main action first, so people read past it to the way out. */
-export const DontMainActionFirst: Story = {
+export const DontMainActionFirst: Story = { tags: ['!visual'],
   name: "Don't: the main action first",
   render: () => <Sketch title="Invite people" description="They’ll get an email with a link." footer={<><Button>Send invite</Button><Button variant="secondary">Cancel</Button></>} />,
 };

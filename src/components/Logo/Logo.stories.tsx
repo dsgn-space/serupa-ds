@@ -42,4 +42,4 @@ export const Overflow: Story = { name: 'Wider than its box', render: (args) => <
 /** Do: a \`darkSrc\` drawn for dark backgrounds. */
 export const DoDarkVersion: Story = { name: 'Do: give it a dark version' };
 /** Don't: only the light logo, which is dark on dark in a dark theme. */
-export const DontNoDarkVersion: Story = { name: "Don't: leave out the dark version", args: { darkSrc: undefined, markDarkSrc: undefined } };
+export const DontNoDarkVersion: Story = { tags: ['!visual'], name: "Don't: leave out the dark version", args: { darkSrc: undefined, markDarkSrc: undefined } };

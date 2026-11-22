@@ -58,7 +58,7 @@ export const DoRulesUpFront: Story = {
   render: () => <div style={{ maxWidth: 320 }}><Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field></div>,
 };
 /** Don't: the rules only in an error, after people have tried. */
-export const DontRulesOnlyInError: Story = {
+export const DontRulesOnlyInError: Story = { tags: ['!visual'],
   name: "Don't: rules only in an error",
   render: () => <div style={{ maxWidth: 320 }}><Field label="New password" error="Use at least 12 characters"><PasswordInput autoComplete="new-password" defaultValue="hunter2" /></Field></div>,
 };

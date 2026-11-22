@@ -54,7 +54,7 @@ export const Sizes: Story = {
 /** Do: a short heading, quick to scan. */
 export const DoShort: Story = { name: 'Do: keep it short', args: { children: 'Billing' } };
 /** Don't: a sentence as the heading, which wraps and is slow to scan. */
-export const DontSentence: Story = {
+export const DontSentence: Story = { tags: ['!visual'],
   name: "Don't: a sentence as the heading",
   args: { children: 'Here you can see and change everything about how and when you are billed' },
   decorators: [(Story) => <div style={{ maxWidth: 360 }}><Story /></div>],

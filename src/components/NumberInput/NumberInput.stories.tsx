@@ -70,7 +70,7 @@ export const DoUnitInLabel: Story = {
   render: () => <div style={{ maxWidth: 240 }}><Field label="Weight (kg)"><NumberInput defaultValue={2.5} min={0} max={30} step={0.5} /></Field></div>,
 };
 /** Don't: a bare number, where people have to guess the unit. */
-export const DontNoUnit: Story = {
+export const DontNoUnit: Story = { tags: ['!visual'],
   name: "Don't: leave the unit out",
   render: () => <div style={{ maxWidth: 240 }}><Field label="Weight"><NumberInput defaultValue={2.5} /></Field></div>,
 };

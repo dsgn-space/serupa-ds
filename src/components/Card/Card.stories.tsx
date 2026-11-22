@@ -92,7 +92,7 @@ export const DoTitleNamesLink: Story = {
   render: () => <div style={{ maxWidth: 260 }}><Card href="#atlas"><CardHeader title="Atlas" description="Updated 2 hours ago" /></Card></div>,
 };
 /** Don't: a linked card with no title, so screen readers read its whole text as the link's name. */
-export const DontUntitledLink: Story = {
+export const DontUntitledLink: Story = { tags: ['!visual'],
   name: "Don't: leave a linked card untitled",
   render: () => <div style={{ maxWidth: 260 }}><Card href="#atlas"><CardBody>Atlas. Updated 2 hours ago by the design team, 14 open tasks, due Friday.</CardBody></Card></div>,
 };

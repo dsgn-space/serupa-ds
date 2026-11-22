@@ -61,7 +61,7 @@ export const DoShapeByKind: Story = {
   render: () => <Row><Avatar src={PHOTO} name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Atlas" shape="square" /><Avatar name="Design team" shape="square" /></Row>,
 };
 /** Don't: a workspace in a circle among people, where it reads as one more person. */
-export const DontMixShapes: Story = {
+export const DontMixShapes: Story = { tags: ['!visual'],
   name: "Don't: one shape for everything",
   render: () => <Row><Avatar src={PHOTO} name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Atlas" /><Avatar name="Design team" /></Row>,
 };

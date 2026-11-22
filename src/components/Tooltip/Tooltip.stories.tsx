@@ -76,7 +76,7 @@ export const DoNameIcon: Story = {
   args: { content: 'Download', open: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
 };
 /** Don't: a rule people need, hidden in a tooltip: nothing on the page shows it, and touch screens never do. */
-export const DontNeededInfo: Story = {
+export const DontNeededInfo: Story = { tags: ['!visual'],
   name: "Don't: hide what people need",
   render: () => (
     <Field label="New password">

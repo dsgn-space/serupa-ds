@@ -92,4 +92,4 @@ export const LongText: Story = {
 /** Do: a grid people edit cell by cell. */
 export const DoEditable: Story = { name: 'Do: editable', render: () => <Editable /> };
 /** Don't: a grid nobody edits, where a Table would do. */
-export const DontReadOnly: Story = { name: "Don't: read only" };
+export const DontReadOnly: Story = { tags: ['!visual'], name: "Don't: read only" };

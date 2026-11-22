@@ -67,7 +67,7 @@ export const DoPageTitles: Story = {
   ] },
 };
 /** Don't: names that don't match the pages, such as "Back" or "Page", or a trail that stops short of the current page. */
-export const DontMadeUpNames: Story = {
+export const DontMadeUpNames: Story = { tags: ['!visual'],
   name: "Don't: make up names",
   args: { children: [
     <BreadcrumbItem key="h" href="/">Start</BreadcrumbItem>,

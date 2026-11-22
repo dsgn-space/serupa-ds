@@ -55,7 +55,7 @@ export const LongText: Story = {
 /** Do: say what failed and what still works. */
 export const DoSayWhatFailed: Story = { name: 'Do: say what failed', args: { title: "Couldn't load the chart", description: 'The rest of the page still works.' } };
 /** Don't: the error's message, which is written for developers. */
-export const DontShowErrorMessage: Story = {
+export const DontShowErrorMessage: Story = { tags: ['!visual'],
   name: "Don't: show the error message",
   args: { fallback: ({ error }) => <p style={{ margin: 0 }}>{error instanceof Error ? error.message : String(error)}</p> },
 };

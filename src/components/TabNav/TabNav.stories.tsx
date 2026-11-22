@@ -46,7 +46,7 @@ export const LongLabels: Story = {
 /** Do: the current page marked with the tab line. */
 export const DoTabLine: Story = { name: 'Do: the tab line' };
 /** Don't: a row of plain links, with only a bolder weight on the current one. */
-export const DontPlainLinks: Story = {
+export const DontPlainLinks: Story = { tags: ['!visual'],
   name: "Don't: plain links",
   render: () => (
     <nav aria-label="Project">

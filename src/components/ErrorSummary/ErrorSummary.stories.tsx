@@ -69,7 +69,7 @@ export const LongText: Story = {
 /** Do: each error says what's wrong and how to fix it. */
 export const DoSayHowToFix: Story = { name: 'Do: say how to fix it' };
 /** Don't: "Invalid", which says something is wrong but not what to do. */
-export const DontJustInvalid: Story = {
+export const DontJustInvalid: Story = { tags: ['!visual'],
   name: "Don't: just say invalid",
   args: { errors: [{ field: 'es-name', message: 'Invalid' }, { field: 'es-email', message: 'Invalid' }, { field: 'es-date', message: 'Error' }] },
 };

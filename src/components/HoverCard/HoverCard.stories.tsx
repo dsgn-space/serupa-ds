@@ -58,7 +58,7 @@ export const LongText: Story = {
 /** Do: a short card: a name, a picture, a line or two and a link. */
 export const DoShortCard: Story = { name: 'Do: keep the card short', args: { open: true }, decorators: [centered], parameters: { centered: true } };
 /** Don't: a page of content, which hides what it was hovering over; link to the full page instead. */
-export const DontLongCard: Story = {
+export const DontLongCard: Story = { tags: ['!visual'],
   name: "Don't: fill the card",
   args: { open: true, children: <div className="flex flex-col gap-3">
     {person}

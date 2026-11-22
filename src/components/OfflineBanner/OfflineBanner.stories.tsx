@@ -47,7 +47,7 @@ export const LongText: Story = {
 /** Do: one sentence on what happens to their changes. */
 export const DoOneSentence: Story = { name: 'Do: add one sentence', args: { children: "Changes are kept on this device and sent when you're back." } };
 /** Don't: a paragraph, which people won't read in a banner. */
-export const DontParagraph: Story = {
+export const DontParagraph: Story = { tags: ['!visual'],
   name: "Don't: explain at length",
   args: { children: "Changes are kept on this device. When your connection comes back, we send them in the order you made them. If someone else changed the same thing meanwhile, you'll be asked which to keep. Files over 10 MB wait until you're on Wi-Fi." },
 };

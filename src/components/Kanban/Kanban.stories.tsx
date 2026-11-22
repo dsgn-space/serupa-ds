@@ -47,7 +47,7 @@ export const LongText: Story = {
 /** Do: a short, unique name for each card, which is read on its buttons and in every announcement. */
 export const DoNameCards: Story = { name: 'Do: name each card', render: () => <Board /> };
 /** Don't: cards all called "Task", which screen readers can't tell apart as they move. */
-export const DontVagueCards: Story = {
+export const DontVagueCards: Story = { tags: ['!visual'],
   name: "Don't: give cards the same name",
   render: () => <Board columns={[
     { id: 'todo', title: 'To do', items: [{ id: 'v1', title: 'Task' }, { id: 'v2', title: 'Task' }] },

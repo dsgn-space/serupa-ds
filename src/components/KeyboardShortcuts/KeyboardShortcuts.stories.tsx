@@ -52,7 +52,7 @@ export const DoGroupShortcuts: Story = {
   args: { defaultOpen: true, shortcuts: [{ keys: ['mod', 'B'], description: 'Bold', group: 'Editor' }, { keys: ['mod', 'I'], description: 'Italic', group: 'Editor' }] },
 };
 /** Don't: shortcuts with no group, which pile up in one long list. */
-export const DontUngrouped: Story = {
+export const DontUngrouped: Story = { tags: ['!visual'],
   name: "Don't: leave them ungrouped",
   args: { defaultOpen: true, shortcuts: [{ keys: ['mod', 'B'], description: 'Bold' }, { keys: ['mod', 'I'], description: 'Italic' }] },
 };

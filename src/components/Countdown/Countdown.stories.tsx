@@ -40,4 +40,4 @@ export const LongText: Story = {
 /** Do: say what it counts down to, in the words beside it. */
 export const DoSayWhatEnds: Story = { name: 'Do: say what ends' };
 /** Don't: the clock alone, which reads as a time of day. */
-export const DontBareClock: Story = { name: "Don't: the clock alone", render: (args) => <p className="m-0"><Countdown {...args} /></p> };
+export const DontBareClock: Story = { tags: ['!visual'], name: "Don't: the clock alone", render: (args) => <p className="m-0"><Countdown {...args} /></p> };

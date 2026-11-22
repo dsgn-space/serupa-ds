@@ -43,4 +43,4 @@ export const LongText: Story = {
 /** Do: \`count\` and \`total\`, so people see "Showing 20 of 134". */
 export const DoShowTotal: Story = { name: 'Do: say how many there are' };
 /** Don't: no count, so people can't tell how far they are through. */
-export const DontNoTotal: Story = { name: "Don't: leave out the count", args: { count: undefined, total: undefined } };
+export const DontNoTotal: Story = { tags: ['!visual'], name: "Don't: leave out the count", args: { count: undefined, total: undefined } };

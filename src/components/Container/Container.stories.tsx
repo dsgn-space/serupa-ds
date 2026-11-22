@@ -48,7 +48,7 @@ export const DoSameSize: Story = {
   render: () => <div style={{ display: 'grid', gap: 8 }}>{['Header', 'Main content', 'Footer'].map((t) => <Container key={t} size="md">{band(t)}</Container>)}</div>,
 };
 /** Don't: a different size for each part, so the edges step in and out down the page. */
-export const DontMixedSizes: Story = {
+export const DontMixedSizes: Story = { tags: ['!visual'],
   name: "Don't: mix sizes on one page",
   render: () => <div style={{ display: 'grid', gap: 8 }}>{([['Header', 'xl'], ['Main content', 'md'], ['Footer', 'lg']] as const).map(([t, s]) => <Container key={t} size={s}>{band(t)}</Container>)}</div>,
 };

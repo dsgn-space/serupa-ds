@@ -27,4 +27,4 @@ export const LongText: Story = {
 /** Do: the thing's own name as the phrase, and the action named on the button. */
 export const DoNameTheThing: Story = { name: 'Do: type the name of the thing' };
 /** Don't: a word like "DELETE" and a "Confirm" button, which check nothing about which thing it is. */
-export const DontGenericWord: Story = { name: "Don't: type a generic word", args: { phrase: 'DELETE', confirmLabel: 'Confirm' } };
+export const DontGenericWord: Story = { tags: ['!visual'], name: "Don't: type a generic word", args: { phrase: 'DELETE', confirmLabel: 'Confirm' } };

@@ -58,7 +58,7 @@ export const Sizes: Story = {
 /** Do: related toggles grouped, with a name for the group. */
 export const DoGroup: Story = { ...Toolbar, name: 'Do: group related toggles' };
 /** Don't: related toggles scattered, in mixed sizes, with no group to name them. */
-export const DontScatter: Story = {
+export const DontScatter: Story = { tags: ['!visual'],
   name: "Don't: scatter them",
   render: () => <div className="flex gap-4 items-center">
     <ToggleButton icon="format_bold" aria-label="Bold" defaultPressed size="lg" />

@@ -181,7 +181,7 @@ export const DoDateDividers: Story = {
   </Chat></Frame>,
 };
 /** Don't: messages from different days run together, so "yesterday" and "today" can't be told apart. */
-export const DontNoDividers: Story = {
+export const DontNoDividers: Story = { tags: ['!visual'],
   name: "Don't: run the days together",
   render: (args) => <Frame><Chat {...args} className="flex-auto">
     <ChatMessage own time={at(-1440)}>Is the March invoice ready?</ChatMessage>

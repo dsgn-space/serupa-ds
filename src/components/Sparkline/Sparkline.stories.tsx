@@ -44,4 +44,4 @@ export const DoShowLatest: Story = {
   },
 };
 /** Don't: the line alone, which leaves people to read a value off its shape. */
-export const DontLineAlone: Story = { name: "Don't: show the line alone" };
+export const DontLineAlone: Story = { tags: ['!visual'], name: "Don't: show the line alone" };

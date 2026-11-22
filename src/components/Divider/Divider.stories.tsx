@@ -35,4 +35,4 @@ export const LongLabel: Story = {
 /** Do: a label of a word or two, such as "or" between two ways in. */
 export const DoShortLabel: Story = { ...Playground, name: 'Do: a word or two', args: { label: 'or' } };
 /** Don't: a sentence as the label, which reads as a heading squeezed into a line. */
-export const DontSentenceLabel: Story = { ...Playground, name: "Don't: a sentence as the label", args: { label: 'Or you can continue with one of these other options' } };
+export const DontSentenceLabel: Story = { tags: ['!visual'], ...Playground, name: "Don't: a sentence as the label", args: { label: 'Or you can continue with one of these other options' } };

@@ -39,4 +39,4 @@ export const OverflowNarrow: Story = {
 /** Do: a label that says which time it is. */
 export const DoSayWhichTime: Story = { name: 'Do: say which time it is', render: () => <Field label="Start time"><TimePicker /></Field> };
 /** Don't: "Time", which doesn't say whether it's the start, the end or a reminder. */
-export const DontJustTime: Story = { name: "Don't: label it just \u201cTime\u201d", render: () => <Field label="Time"><TimePicker /></Field> };
+export const DontJustTime: Story = { tags: ['!visual'], name: "Don't: label it just \u201cTime\u201d", render: () => <Field label="Time"><TimePicker /></Field> };

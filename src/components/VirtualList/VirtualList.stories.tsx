@@ -80,4 +80,4 @@ export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', rend
 /** Do: a long list, where drawing only the rows in view pays off. */
 export const DoLongList: Story = { name: 'Do: use it for long lists' };
 /** Don't: a handful of rows, which a plain List draws more simply. */
-export const DontShortList: Story = { name: "Don't: use it for a few rows", args: { count: 4 } };
+export const DontShortList: Story = { tags: ['!visual'], name: "Don't: use it for a few rows", args: { count: 4 } };

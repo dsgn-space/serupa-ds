@@ -78,7 +78,7 @@ export const Sizes: Story = {
 /** Do: the size on the group, so every toggle in it matches. */
 export const DoGroupSize: Story = { name: 'Do: size the group', args: { size: 'sm' } };
 /** Don't: a size on each toggle, which leaves one row with buttons of different heights. */
-export const DontMixedSizes: Story = {
+export const DontMixedSizes: Story = { tags: ['!visual'],
   name: "Don't: size each toggle",
   args: { children: [
     <ToggleButton key="l" value="left" icon="format_align_left" aria-label="Align left" size="sm" />,

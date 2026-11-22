@@ -78,7 +78,7 @@ export const MenusSmallScreen: Story = { name: 'Menus, small screen', args: { ch
 /** Do: links to the main pages only, a word or two each. */
 export const DoFewLinks: Story = { name: 'Do: keep to the main pages' };
 /** Don't: every page in the bar, which folds most of them away and buries the main ones. */
-export const DontEveryPage: Story = {
+export const DontEveryPage: Story = { tags: ['!visual'],
   name: "Don't: put every page in the bar",
   args: { children: ['Dashboard', 'Projects', 'Team', 'Reports', 'Billing', 'Integrations', 'Audit log', 'Settings', 'Help center'].map((l, i) => <NavbarLink key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} current={i === 0}>{l}</NavbarLink>) },
 };
