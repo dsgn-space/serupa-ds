@@ -53,7 +53,7 @@ import { VirtualList, ListItem } from "@diki-stwn/serupa-ds";
 
 ### Do and don't
 
-- **Do:** Use it for long lists (hundreds of rows or more), where drawing only the rows in view pays off. (`DoLongList`)
+- **Do:** Use it for long lists (hundreds of rows or more), where drawing only the rows in view pays off. (`Default`)
 - **Don't:** Use it for a handful of rows: a plain [List](../List/README.md) is simpler and scrolls with the page. (`DontShortList`)
 
 ## Accessibility

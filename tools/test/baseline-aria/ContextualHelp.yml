@@ -5,13 +5,6 @@
   - heading "What is a workspace?" [level=3]
   - text: A workspace holds your team’s projects, members and billing. Most companies need only one.
 
-# DoShortHelp
-- text: Workspace
-- button "Help" [expanded]
-- dialog "What is a workspace?":
-  - heading "What is a workspace?" [level=3]
-  - text: A workspace holds your team’s projects, members and billing. Most companies need only one.
-
 # DontLongHelp
 - text: Workspace
 - button "Help" [expanded]

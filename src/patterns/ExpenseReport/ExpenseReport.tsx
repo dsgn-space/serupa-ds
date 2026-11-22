@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
+import { SplitButton } from '../../components/SplitButton/SplitButton';
+import { MenuItem } from '../../components/Menu/Menu';
 import { Alert } from '../../components/Alert/Alert';
 import { Badge } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
@@ -64,6 +66,8 @@ export interface ExpenseReportProps {
   today?: string | undefined;
   /** Sends the report. Reject when it can't be sent. */
   onSubmit?: ((expenses: Expense[]) => unknown) | undefined;
+  /** Keeps the report as a draft, from the menu beside Send for approval. Reject when it can't be saved. */
+  onSaveDraft?: ((expenses: Expense[]) => unknown) | undefined;
   /** The expenses are still loading: a placeholder in their place. Default: false. */
   loading?: boolean | undefined;
   /** The expenses failed to load: a "Couldn’t load your expenses" message with Try again, which calls onRetry. Default: false. */
@@ -108,7 +112,7 @@ export const missingReceipts = (expenses: readonly Expense[], receiptOver: numbe
 /** The add form's parts, in the order they show. */
 const PARTS = ['date', 'category', 'what', 'amount', 'receipt'] as const;
 
-export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, loading = false, loadFailed = false, onRetry, online }: ExpenseReportProps) {
+export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, onSaveDraft, loading = false, loadFailed = false, onRetry, online }: ExpenseReportProps) {
   const locale = useLocale();
   const blank: Draft = { date: today, category: '', what: '', amount: null, receipt: null };
   const [list, setList] = React.useState(expenses);
@@ -147,6 +151,12 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
     setList(next);
     announce(`Removed ${x.what}. Total ${money(next.reduce((s, y) => s + y.amount, 0))}.`);
     requestAnimationFrame(() => (after ? document.getElementById(`expense-remove-${after.id}`) : document.querySelector<HTMLElement>('#expense-date input, #expense-date select'))?.focus());
+  };
+  // Save as draft keeps the report as it is, sent nowhere yet; it's said once saved, or says it failed.
+  const [draftFailed, setDraftFailed] = React.useState(false);
+  const saveDraft = () => {
+    setDraftFailed(false);
+    void Promise.resolve().then(() => onSaveDraft?.(list)).then(() => announce('Draft saved'), () => setDraftFailed(true));
   };
   const send = () => {
     setFailed(false);
@@ -244,7 +254,9 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                 <div data-print="hide" className="flex flex-col items-start gap-3">
                   {reportProblem ? <Alert tone="danger">{reportProblem}</Alert> : null}
                   {failed ? <Alert tone="danger">Couldn’t send the report. Try again; nothing is lost.</Alert> : null}
-                  <Button loading={busy} onClick={send}>Send for approval</Button>
+                  {draftFailed ? <Alert tone="danger">Couldn’t save the draft. Try again; nothing is lost.</Alert> : null}
+                  <SplitButton loading={busy} onClick={send} menuLabel="More ways to save the report"
+                    menu={<MenuItem icon="draft" onSelect={saveDraft}>Save as draft</MenuItem>}>Send for approval</SplitButton>
                 </div>
               </>
             )}

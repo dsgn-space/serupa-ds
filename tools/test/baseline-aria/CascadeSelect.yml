@@ -5,28 +5,6 @@
 - combobox "Wilayah": Jawa Timur › Kota Surabaya › Gubeng
 - status: jatim / surabaya / gubeng
 
-# DoNameLevels
-- combobox "Wilayah" [expanded]: Jawa Barat › Kota Bandung › Coblong
-- dialog "Wilayah":
-  - text: Provinsi
-  - listbox "Provinsi":
-    - option "Jawa Barat" [selected]
-    - option "Jawa Tengah"
-    - option "Jawa Timur"
-    - option "Bali"
-    - option "Papua" [disabled]
-  - text: Kabupaten/Kota
-  - listbox "Kabupaten/Kota":
-    - option "Kota Bandung" [selected]
-    - option "Kabupaten Bogor"
-    - option "Kota Bekasi"
-  - text: Kecamatan
-  - listbox "Kecamatan":
-    - option "Coblong" [selected]
-    - option "Sukajadi"
-    - option "Cicendo"
-    - option "Lengkong" [disabled]
-
 # DontGenericLevels
 - combobox "Wilayah" [expanded]: Jawa Barat › Kota Bandung › Coblong
 - dialog "Wilayah":

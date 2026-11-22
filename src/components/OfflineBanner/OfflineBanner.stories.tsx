@@ -44,8 +44,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: one sentence on what happens to their changes. */
-export const DoOneSentence: Story = { name: 'Do: add one sentence', args: { children: "Changes are kept on this device and sent when you're back." } };
 /** Don't: a paragraph, which people won't read in a banner. */
 export const DontParagraph: Story = {
   name: "Don't: explain at length",

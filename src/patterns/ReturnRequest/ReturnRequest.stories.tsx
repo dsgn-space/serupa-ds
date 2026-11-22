@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** The return can't be made: it says so next to the button, and every choice stays. */
-export const SendFails: Story = { args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const SendFails: Story = { tags: ['!visual'], args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };

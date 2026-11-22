@@ -54,8 +54,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: a testimonial of two or three sentences, with who said it. */
-export const DoKeepItShort: Story = { name: 'Do: keep it short' };
 /** Don't: a whole paragraph, which people skip. */
 export const DontWholeParagraph: Story = {
   name: "Don't: quote a whole paragraph",

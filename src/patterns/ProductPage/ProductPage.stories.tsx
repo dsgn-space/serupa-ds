@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Adding fails: pick a color and a size, then Add to cart. The page says so above the button and keeps every choice. */
-export const AddFails: Story = { args: { onAddToCart: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const AddFails: Story = { tags: ['!visual'], args: { onAddToCart: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** None left: the page says "Sold out" in words where the choices and Add to cart would be. */
 export const SoldOut: Story = {

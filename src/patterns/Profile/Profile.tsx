@@ -18,6 +18,7 @@ import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
 import { Stack } from '../../components/Stack/Stack';
 import { TimeZonePicker } from '../../components/TimeZonePicker/TimeZonePicker';
+import { ImageCropper, type CropArea } from '../../components/ImageCropper/ImageCropper';
 
 /* Profile: what other people see of you (a photo, your name, a short bio, where you are, your time zone and a link), edited in one
    form and saved when you say so. For an app to copy. What it carries (WCAG 2.2):
@@ -30,7 +31,8 @@ import { TimeZonePicker } from '../../components/TimeZonePicker/TimeZonePicker';
    - 3.3.4: Discard changes is there only once something has changed, and puts back what was saved.
    - 2.4.6: the form's heading says whose profile it is, and its preview shows the result as others will see it.
    - 4.1.3, 3.3.1: while the profile loads, a placeholder named once; a failed load says so, with Try again.
-   Saving is the app's job: onSave gets the profile and the new photo, if any; reject its promise when it fails. */
+   Saving is the app's job: onSave gets the profile, the new photo, if any, and the part of it to keep, from the
+   ImageCropper under the upload (cropImage draws it); reject its promise when it fails. */
 
 export interface ProfileInfo {
   name: string;
@@ -51,8 +53,9 @@ export interface ProfileProps {
   profile?: ProfileInfo | undefined;
   /** The bio's limit, in characters. Default: 160. */
   bioLimit?: number | undefined;
-  /** Saves the profile. Return its promise: a rejection keeps the changes and offers Try again. */
-  onSave?: ((profile: ProfileInfo, photo: File | null) => unknown) | undefined;
+  /** Saves the profile. With a new photo, crop is the square of it to keep, in its own pixels (cropImage draws it).
+      Return its promise: a rejection keeps the changes and offers Try again. */
+  onSave?: ((profile: ProfileInfo, photo: File | null, crop: CropArea | null) => unknown) | undefined;
   /** The profile is on its way from the server: placeholders, named once ("Loading profile"). Default: false. */
   loading?: boolean | undefined;
   /** The profile failed to load: a message with Try again, which calls onRetry. Default: false. */
@@ -91,6 +94,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
   const [wasLoading, setWasLoading] = React.useState(loading);
   if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setSaved(start); setDraft(start); } }
   const [files, setFiles] = React.useState<File[]>([]);
+  const [crop, setCrop] = React.useState<CropArea | null>(null);
   const [problems, setProblems] = React.useState<ReturnType<typeof profileProblems>>({});
   const [tries, setTries] = React.useState(0);
   const [status, setStatus] = React.useState<SaveState>('idle');
@@ -115,7 +119,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
     if (PARTS.some((k) => found[k])) return;
     const sent = { ...draft, name: draft.name.trim(), location: draft.location.trim(), website: draft.website.trim() };
     setStatus('saving');
-    void Promise.resolve().then(() => onSave?.(sent, files[0] ?? null)).then(() => {
+    void Promise.resolve().then(() => onSave?.(sent, files[0] ?? null, files[0] ? crop : null)).then(() => {
       const next = { ...sent, photo: preview || sent.photo };
       setSaved(next);
       setDraft(next);
@@ -149,8 +153,13 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                       {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}
                     </div>
                     <Field label="Photo" hint="A square JPEG or PNG works best, up to 2 MB." optional>
-                      <FileUpload id="profile-photo" accept="image/png,image/jpeg,image/webp" maxSize={2 * 1024 * 1024} files={files} onFilesChange={(f) => { setFiles(f.slice(-1)); if (status !== 'saving') setStatus('idle'); }} />
+                      <FileUpload id="profile-photo" accept="image/png,image/jpeg,image/webp" maxSize={2 * 1024 * 1024} files={files} onFilesChange={(f) => { setFiles(f.slice(-1)); setCrop(null); if (status !== 'saving') setStatus('idle'); }} />
                     </Field>
+                    {preview ? (
+                      <Field label="Frame your photo" hint="Drag it, or use the arrow keys, to choose what shows in the circle; the slider zooms.">
+                        <ImageCropper key={preview} src={preview} aspect={1} shape="round" onCropChange={setCrop} />
+                      </Field>
+                    ) : null}
                     <Field label="Name" id="profile-name" error={problems.name} required>
                       <Input autoComplete="name" value={draft.name} onChange={(e) => edit({ name: e.target.value })} />
                     </Field>

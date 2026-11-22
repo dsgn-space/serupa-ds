@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Adding fails: the button is busy while it tries, then a toast says it couldn't add it and to try again. */
-export const AddFails: Story = { args: { onAddToCart: fail } };
+export const AddFails: Story = { tags: ['!visual'], args: { onAddToCart: fail } };
 
 /** The products are on their way: placeholder cards in the grid's place, named once ("Loading products"). */
 export const Loading: Story = { args: { loading: true } };

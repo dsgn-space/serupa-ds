@@ -70,7 +70,7 @@ type Task = { id: string; title: string };
 
 ### Do and don't
 
-- **Do:** Give each card a short, unique name with `getLabel` ("Fix login"): it's read on its buttons and in every announcement. (`DoNameCards`)
+- **Do:** Give each card a short, unique name with `getLabel` ("Fix login"): it's read on its buttons and in every announcement. (`Default`)
 - **Don't:** Give cards the same name ("Task"): screen reader users can't tell which one moved. (`DontVagueCards`)
 
 ## Accessibility

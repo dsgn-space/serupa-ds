@@ -47,8 +47,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: a sentence or two, and at most one link to more. */
-export const DoShortHelp: Story = { name: 'Do: keep it to a sentence or two', args: { defaultOpen: true } };
 /** Don't: a page of text in a 256px panel; link to a help page instead. */
 export const DontLongHelp: Story = {
   name: "Don't: put a page of text in it",

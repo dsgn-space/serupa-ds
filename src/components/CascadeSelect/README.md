@@ -68,7 +68,7 @@ Drawn from the `Open` story.
 
 ### Do and don't
 
-- **Do:** Name each column with `levels`: it labels the columns, and people learn the order. (`DoNameLevels`)
+- **Do:** Name each column with `levels`: it labels the columns, and people learn the order. (`Open`)
 - **Don't:** Give every column the same name ("Pilih"): people have to guess what each one holds. (`DontGenericLevels`)
 
 ## Accessibility

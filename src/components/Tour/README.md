@@ -51,7 +51,7 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 
 ### Do and don't
 
-- **Do:** Say what each part does for people, in a title and a sentence or two. (`DoSayWhatItDoes`)
+- **Do:** Say what each part does for people, in a title and a sentence or two. (`Default`)
 - **Don't:** Describe what the part is ("This is the search field"): they can already see that. (`DontSayWhatItIs`)
 
 ## Accessibility
