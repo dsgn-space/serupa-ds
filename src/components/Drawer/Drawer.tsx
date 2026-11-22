@@ -1,22 +1,19 @@
 'use client';
 import * as React from 'react';
-import { useControllable } from '../../internal/controllable';
-import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
-import { warnOnce } from '../../internal/warn';
+import { cn, domId, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { IconButton } from '../IconButton/IconButton';
 import { Discard } from '../Dialog/Dialog';
+import { useModalDialog } from '../../internal/useModalDialog';
 import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
-import { modalClosed, modalOpened, modalOpening, wasDismissal } from '../../internal/layers';
-import { listenForInput } from '../../internal/lastInput';
+import { wasDismissal } from '../../internal/layers';
 import * as icons from '../../material/builtin';
 import { useScrolls } from '../../internal/useScrolls';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
 import { useCloseWatcher } from '../../internal/closeWatcher';
-import { deepActive } from '../../internal/root';
 import { isRtl } from '../../internal/position';
-import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import type { OpenChangeDetails } from '../../internal/openChange';
 import { project, rubber, settleTime, speed, track, type Samples } from '../../internal/fling';
 import { useServerStyles } from '../../internal/serverStyles';
 import { reflow } from '../../internal/reflow';
@@ -83,8 +80,6 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const restyle = useServerStyles<HTMLDialogElement>();   // a sheet's height share, under a strict CSP
   const rest = omit(props, OWN);
   const base = domId('srp-drw', React.useId());
-  const el = React.useRef<HTMLDialogElement | null>(null);
-  const back = React.useRef<HTMLElement | null>(null);
   const side = oneOf(['end', 'start', 'top', 'bottom'] as const, props.placement, 'end');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const showClose = props.closeButton !== false;
@@ -95,79 +90,15 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const toSnap = (i: number) => { if (i === snapAt) return; if (props.snap === undefined) setOwnSnap(i); if (props.onSnapChange) props.onSnapChange(i); };
   const modal = props.modal !== false;
   const backdrop = modal && props.closeOnBackdrop !== false;
-  const ask = useLatest(props.onOpenChange);
-  const initial = useLatest(props.initialFocus);
-  const final = useLatest(props.finalFocus);
-  const isModal = useLatest(modal);
-  const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Drawer', 'open');
-  const open = !!openIn;
+  // Open and close, focus in and back, Escape and the browser asking to close, and "Discard changes?" (useModalDialog).
+  const { dialogRef, open, close, request, asking, setAsking, arrivedRef, unsavedRef, onCancel, onClose } = useModalDialog({
+    name: 'Drawer', open: props.open, defaultOpen: props.defaultOpen, onOpenChange: props.onOpenChange, initialFocus: props.initialFocus,
+    finalFocus: props.finalFocus, unsaved: props.unsaved, modal, onCancel: rest.onCancel, onClose: rest.onClose,
+  });
   // Uncontrolled, each opening starts at defaultSnap.
   const [wasOpen, setWasOpen] = React.useState(open);
   if (open !== wasOpen) { setWasOpen(open); if (open) setOwnSnap(props.defaultSnap ?? 0); }
-  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner, ask]);
-  // unsaved: a request to close asks "Discard changes?" first (Dialog's question), and remembers why it came.
-  const unsaved = useLatest(props.unsaved);
-  const [asking, setAsking] = React.useState<OpenChangeReason | null>(null);
-  // The app closing it while the question shows takes the question away too, so it can't come back stale (GR96).
-  if (!open && asking) setAsking(null);
-  const request = (reason: OpenChangeReason) => { if (unsaved.current) setAsking(reason); else close(reason); };
-  React.useEffect(() => {
-    if (!open || !props.unsaved) return;
-    const stay = (e: BeforeUnloadEvent) => { e.preventDefault(); };
-    window.addEventListener('beforeunload', stay);
-    return () => window.removeEventListener('beforeunload', stay);
-  }, [open, props.unsaved]);
   const has = (n: React.ReactNode) => n != null && n !== false && n !== '';
-  // Open on arrival: there from the first frame, so it doesn't slide in; it closes, and opens again, with motion.
-  const arrived = React.useRef(open); if (!open) arrived.current = false;
-
-  // Focus goes to finalFocus when it's still on the page, else back where it was. Unmounting keeps what's owed:
-  // StrictMode mounts it again, open.
-  const giveBack = (go: boolean, keep?: boolean) => {
-    if (!back.current) return;   // never opened, or already given back
-    const f = final.current && final.current.current, b = f && f.isConnected ? f : back.current;
-    if (!keep) back.current = null;
-    if (go && b && b.isConnected && typeof b.focus === 'function') b.focus();
-  };
-  // Bumped when the browser closed it while open was true: open again, unless the parent said false.
-  const [reopened, reopen] = React.useState(0);
-  useIsoLayoutEffect(listenForInput, []);   // a held Enter that opened it doesn't go on to press what focus lands on
-  useIsoLayoutEffect(() => {
-    const d = el.current;
-    if (!d) return;
-    if (open && !d.open) {
-      if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
-      // It renders where it's placed: inside a page <form>, its own form nests in that one (Enter reloads the page) and
-      // Enter in its field submits the page's form, as with Popover.
-      if (process.env.NODE_ENV !== 'production' && d.parentElement?.closest('form') && d.querySelector('form, textarea, input:not([type=checkbox], [type=radio], [type=hidden])')) warnOnce('overlay-in-form', "Drawer: it's inside a <form> and holds a form or a field, so Enter there submits the page's form, or reloads the page. Place the Drawer after the form.", 'Drawer:overlay-in-form');
-      // Non-modal: shown in place (not the top layer), so it isn't on the modal stack and the page stays usable.
-      if (!modal) { if (typeof d.show === 'function') d.show(); else d.setAttribute('open', ''); }
-      else {
-        modalOpening();
-        if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
-        modalOpened(d);
-      }
-      // A child's autoFocus ran while the dialog was still hidden, and showModal() then focused the first focusable
-      // (the ×). React doesn't write the autofocus attribute, so data-autofocus (or autofocus in plain HTML) marks it;
-      // initialFocus, when it points inside, wins over both.
-      const want = initial.current && initial.current.current;
-      const own = want && d.contains(want) ? want : d.querySelector<HTMLElement>('[data-autofocus], [autofocus]');
-      if (own && typeof own.focus === 'function') own.focus();
-    } else if (open) {
-      // Already open: StrictMode ran the unmount cleanup (which took it off the modal stack) and mounts it again.
-      if (modal) modalOpened(d);
-    } else {
-      // Non-modal, focus may have moved on to the page: it goes back only from inside the drawer.
-      const inside = modal || d.contains(deepActive());
-      if (d.open) { if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); }
-      modalClosed(d);
-      giveBack(inside);
-    }
-  }, [open, reopened]);
-  // Closed while unmounting: give focus back too, unless it's non-modal and focus had moved on to the page (focus
-  // that was inside it has fallen to <body> by now, the drawer gone from the page).
-  React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const a = deepActive(); giveBack(isModal.current || !a || a === document.body || !!d && d.contains(a), true); }; }, []);
-
   // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only
   // this dialog's own count, or Escape in a Dialog or Drawer opened from inside it would close this one too.
   // A non-modal dialog gets no cancel event from Escape: its own keydown does it, for focus anywhere inside.
@@ -181,27 +112,6 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   // close it as Escape inside it does. Escape on the page still leaves it open. No watcher while "Discard changes?"
   // is asked: Back then goes to the question.
   useCloseWatcher(open && !modal && !asking, () => request('escape'), true);
-  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); request('escape'); };
-  // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
-  // cancel, such as Chromium's second Escape with no click in between): if open is still true, ask to close. A
-  // parent that keeps open true gets it shown again, so open stays the truth.
-  const openNow = useLatest(open);
-  const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
-    if (rest.onClose) rest.onClose(e);
-    if (e.target !== e.currentTarget) return;
-    if (!e.currentTarget.open) modalClosed(e.currentTarget);
-    if (!openNow.current || e.currentTarget.open) return;
-    // unsaved: show it again now, so the question opens on top of it, and ask.
-    if (unsaved.current) {
-      const d = e.currentTarget;
-      if (!modal) { if (typeof d.show === 'function') d.show(); }
-      else { modalOpening(); if (typeof d.showModal === 'function') d.showModal(); modalOpened(d); }
-      setAsking('api');
-      return;
-    }
-    close('api');
-    reopen((n) => n + 1);
-  };
   // A press that starts on the panel (selecting text, say) and ends on the backdrop clicks the <dialog> too: only a
   // press that starts and ends on the backdrop counts.
   const downOnBackdrop = React.useRef(false);
@@ -229,7 +139,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   // A sheet (snapPoints) follows the finger by its height between its shortest and tallest stops, past the tallest
   // with growing resistance, and below the shortest it slides down instead, toward closing. Let go, it goes on to the
   // stop nearest where its momentum would take it; dragged below the shortest, a flick or a third of it closes it.
-  const sheetPx = (i: number) => snaps[i]! * (el.current ? el.current.clientHeight : window.innerHeight);
+  const sheetPx = (i: number) => snaps[i]! * (dialogRef.current ? dialogRef.current.clientHeight : window.innerHeight);
   const sheetMove = (p: HTMLElement, g: NonNullable<typeof drag.current>) => {
     const low = sheetPx(0), high = sheetPx(snaps.length - 1), h = sheetPx(snapAt) - g.d;
     g.at = h >= low ? 0 : swipe ? low - h : rubber(low - h, INWARD);   // without swipeToClose, it resists going down
@@ -269,7 +179,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
     }
     const done = () => {
       delete p.dataset.settling;
-      if (unsaved.current) { p.style.height = ''; p.style.translate = ''; request('swipe'); return; }
+      if (unsavedRef.current) { p.style.height = ''; p.style.translate = ''; request('swipe'); return; }
       close('swipe'); requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) { p.style.height = ''; p.style.translate = ''; } }));
     };
     const dist = p.offsetHeight - g.at;
@@ -329,7 +239,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
       delete p.dataset.inward;
       if (!out) { p.style.translate = ''; return; }
       // unsaved: it comes back, and asks.
-      if (unsaved.current) { p.style.translate = ''; request('swipe'); return; }
+      if (unsavedRef.current) { p.style.translate = ''; request('swipe'); return; }
       close('swipe');
       // Back in place once it's closed (two frames: the close renders first), so it opens from the edge next time.
       requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) p.style.translate = ''; }));
@@ -352,13 +262,13 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const named = rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined);
   const region = !scrolls ? {} : named ? { tabIndex: 0, role: 'region', 'aria-labelledby': named }
     : rest['aria-label'] ? { tabIndex: 0, role: 'region', 'aria-label': rest['aria-label'] } : { tabIndex: 0 };
-  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); restyle(n); });
+  const mergedRef = useMergedRef(ref, (n) => { dialogRef.current = n; nameRef(n); restyle(n); });
   return (
     <dialog {...rest} ref={mergedRef}
       aria-modal={modal ? 'true' : undefined}
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
-      className={cn('srp-drawer', 'srp-drawer--' + side, 'srp-drawer--' + size, !modal && 'srp-drawer--nonmodal', snaps.length > 0 && 'srp-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived.current ? '' : undefined}
+      className={cn('srp-drawer', 'srp-drawer--' + side, 'srp-drawer--' + size, !modal && 'srp-drawer--nonmodal', snaps.length > 0 && 'srp-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrivedRef.current ? '' : undefined}
       onKeyDown={onKeyDown} onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
       <div ref={panel} className="srp-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--srp-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
         {snaps.length > 1 ? (
