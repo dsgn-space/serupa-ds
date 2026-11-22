@@ -62,7 +62,7 @@ Drawn from the `LongLabel` story.
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | Across the full width, or the height of the row it's in |
 | `label` | node | none | Text in the middle of a horizontal line. A vertical divider has no label |
 | `decorative` | boolean | `false` | Leaves it out of the accessibility tree |
-| `onMedia` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: a white line and label for dark media, black for light |
+| `surface` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: a white line and label for dark media, black for light (`onMedia` is its deprecated old name, removed in 18.0.0) |
 
 Without a label, a horizontal divider is an `<hr>`; otherwise a `<div>`. It has no margins: space it with the layout around it. `className`, `style`, `ref` and everything else go to the element, which has `data-component="divider"`.
 
@@ -75,8 +75,8 @@ Each is an optional override: set it on the page, a container or one element. Th
 | --- | --- | --- |
 | `--divider-color` | `border` | The line. |
 | `--divider-label-color` | `text-muted` | A label in the line (4.5:1 on surface). |
-| `--divider-on-dark` | `white` | onMedia="dark": the label, and the line at half strength, over dark media. |
-| `--divider-on-light` | `black` | onMedia="light": the label, and the line at half strength, over light media. |
+| `--divider-on-dark` | `white` | surface="dark": the label, and the line at half strength, over dark media. |
+| `--divider-on-light` | `black` | surface="light": the label, and the line at half strength, over light media. |
 | `--divider-width` | `border-width-1` | The line's thickness (1px). |
 | `--divider-label-gap` | `spacing-3` | Space on each side of a label (12px). |
 <!-- token-table:end -->

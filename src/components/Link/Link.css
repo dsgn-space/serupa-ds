@@ -15,7 +15,7 @@
 :where(td, th) .srp-link { overflow-wrap: break-word; }
 @media (hover: hover) { .srp-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 .srp-link--neutral { color: inherit; }
-/* onMedia: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
+/* surface: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
 .srp-link--on-dark { --srp-link-ink: var(--link-on-dark, var(--white)); }
 .srp-link--on-light { --srp-link-ink: var(--link-on-light, var(--black)); }
 .srp-link--on-dark, .srp-link--on-light { --link-text: var(--srp-link-ink); --link-text-hover: var(--srp-link-ink); --link-focus-ring: var(--srp-link-ink); }

@@ -25,7 +25,7 @@
       "on-dark": {
         "$type": "color",
         "$value": "{color.white}",
-        "$description": "onMedia=\"dark\": the label, and the line at half strength, over dark media.",
+        "$description": "surface=\"dark\": the label, and the line at half strength, over dark media.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--divider-on-dark"
@@ -35,7 +35,7 @@
       "on-light": {
         "$type": "color",
         "$value": "{color.black}",
-        "$description": "onMedia=\"light\": the label, and the line at half strength, over light media.",
+        "$description": "surface=\"light\": the label, and the line at half strength, over light media.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--divider-on-light"

@@ -10,7 +10,7 @@ const meta = {
   title: 'Components/Feedback/Toast',
   component: Toaster,
   args: { placement: 'bottom-end' },
-  argTypes: { placement: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom-center', 'top-start', 'top-center', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
+  argTypes: { placement: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom', 'top-start', 'top', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
   render: (args) => (
     <div className="flex flex-wrap gap-2">
       <Toaster {...args} />
@@ -55,11 +55,11 @@ export const TopStart: Story = {
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const BottomCenter: Story = {
-  args: { placement: 'bottom-center' },
+  args: { placement: 'bottom' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const TopCenter: Story = {
-  args: { placement: 'top-center' },
+  args: { placement: 'top' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
 };
 /** A burst: the same error three times is one toast with a count, and past the limit (3) the rest wait under "+2 more". */

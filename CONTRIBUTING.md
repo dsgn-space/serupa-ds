@@ -186,6 +186,8 @@ One idea has one name in every component. A new prop takes the name in the first
 | Data or children | children for parts people compose (RadioGroup, Tabs, Timeline); an array prop (`options` of `{ value, label }`, `items` of `{ id, label }`) for data the component lays out itself (SegmentedControl, Stepper, TagGroup) | mixing both for one job |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
+| What shows when there is nothing to list | `emptyText` | `empty`, `emptyMessage` |
+| The lightness of the media under a control | `surface`: `'dark' \| 'light'` | `onX`, which is only ever an event handler (`onMedia`) |
 | Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |
 | The wait before an overlay opens or closes | `openDelay`, `closeDelay` (ms) | `delay`, `showDelay` |
 | Turning a part off | `hideX` (a part on by default may also take `x={false}`) | `noX`, `xHidden`, `disableX` |

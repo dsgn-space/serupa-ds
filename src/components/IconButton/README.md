@@ -62,7 +62,7 @@ import { IconButton } from '@diki-stwn/serupa-ds';
 | `shape` | `'square'` \| `'round'` | `'square'` | The Button's corners, or a circle |
 | `hideTitle` | boolean | `false` | Leaves out the tooltip, when visible text beside it already shows the label (a Tooltip of your own replaces it by itself). |
 | `variant` | as Button | `'ghost'` | Ghost by default, the usual look for an icon on its own |
-| `onMedia` | as Button | none | Over a photo or a colored panel: white for dark media, black for light |
+| `surface` | as Button | none | Over a photo or a colored panel: white for dark media, black for light |
 
 Every other Button prop works the same: `size` (24, 32 or 44px square; on a touch screen each takes a press 44px across, as a Button does), `destructive`, `loading`, `disabled`, `href`, `onClick`, `ref`. A given `title` shows instead of the tooltip.
 
