@@ -19,6 +19,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Timesheet: a week's hours by project and day, the totals as you type, and sending it for approval. For an app to
    copy. What it carries (WCAG 2.2):
@@ -164,79 +166,81 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#timesheets">Timesheets</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your hours stay here. Sending the timesheet needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Timesheets', href: '#timesheets' }, { label: range }]} title={`Week of ${range}`}
-          description={`${hoursWords(expected)} a week are expected. A day holds at most 24.`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your timesheet" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your timesheet" /></Card> : (<>
-        {sent ? (
-          <section aria-labelledby="ts-sent" className="flex flex-col items-start gap-3 pt-6">
-            <h2 id="ts-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent to {approver} for approval</h2>
-            <p className="m-0">{hoursWords(totals.week)} on {rows.length === 1 ? '1 project' : `${num(rows.length)} projects`}. We’ll email you once it’s approved, or if anything needs a change.</p>
-            <Link href="#timesheets">Back to your timesheets</Link>
-          </section>
-        ) : (
-          <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-4 pt-6">
-            <ErrorSummary key={tries} errors={errors} />
-            <div className="flex flex-wrap items-end gap-3">
-              <Field label="Add a project" className="min-w-56">
-                <Select id="ts-add" placeholder={left.length ? 'Choose one' : 'All added'} disabled={!left.length}
-                  options={left.map((p) => ({ value: p.id, label: p.name }))} value={adding} onChange={(e) => setAdding(e.target.value)} />
-              </Field>
-              <Button variant="secondary" onClick={add} disabled={!adding}>Add</Button>
-              <Button variant="ghost" onClick={copy}>Copy last week</Button>
-            </div>
-            <Table caption={`Hours by project and day, ${range}, with the totals`} hideCaption size="sm" pinStart>
-              <TableHead><TableRow>
-                <TableHeaderCell>Project</TableHeaderCell>
-                {dates.map((d, i) => (
-                  <TableHeaderCell key={i} align="end">
-                    <abbr title={dayLong[i]} className="no-underline">{d.toLocaleDateString(locale, { weekday: 'short' })}</abbr>
-                    <span className="block font-normal text-text-muted">{d.toLocaleDateString(locale, { day: 'numeric', month: 'short' })}</span>
-                  </TableHeaderCell>
-                ))}
-                <TableHeaderCell align="end">Total</TableHeaderCell>
-                <TableHeaderCell><span className="sr-only">Remove</span></TableHeaderCell>
-              </TableRow></TableHead>
-              <TableBody>
-                {rows.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableHeaderCell scope="row" className="wrap-break-word">{p.name}</TableHeaderCell>
-                    {hours[p.id]!.map((h, i) => (
-                      <TableCell key={i} align="end">
-                        <NumberInput id={`ts-${p.id}-${i}`} aria-label={`${p.name}, ${dayLong[i]}`} size="sm" steppers={false} min={0} max={24} step={0.25}
-                          invalid={!!problems[`day-${i}`]} value={h} onValueChange={(v) => set(p.id, i, v)} className="w-20" />
-                      </TableCell>
-                    ))}
-                    <TableCell align="end" className="font-semibold">{num(hours[p.id]!.reduce<number>((a, b) => a + (b ?? 0), 0))}</TableCell>
-                    <TableCell><Button id={`ts-remove-${p.id}`} size="sm" variant="ghost" onClick={() => remove(p.id)} aria-label={`Remove: ${p.name}`}>Remove</Button></TableCell>
+      <Container as="main" size="xl" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your hours stay here. Sending the timesheet needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Timesheets', href: '#timesheets' }, { label: range }]} title={`Week of ${range}`}
+            description={`${hoursWords(expected)} a week are expected. A day holds at most 24.`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your timesheet" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your timesheet" /></Card> : (<>
+          {sent ? (
+            <section aria-labelledby="ts-sent" className="flex flex-col items-start gap-3 pt-6">
+              <h2 id="ts-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent to {approver} for approval</h2>
+              <p className="m-0">{hoursWords(totals.week)} on {rows.length === 1 ? '1 project' : `${num(rows.length)} projects`}. We’ll email you once it’s approved, or if anything needs a change.</p>
+              <Link href="#timesheets">Back to your timesheets</Link>
+            </section>
+          ) : (
+            <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-4 pt-6">
+              <ErrorSummary key={tries} errors={errors} />
+              <div className="flex flex-wrap items-end gap-3">
+                <Field label="Add a project" className="min-w-56">
+                  <Select id="ts-add" placeholder={left.length ? 'Choose one' : 'All added'} disabled={!left.length}
+                    options={left.map((p) => ({ value: p.id, label: p.name }))} value={adding} onChange={(e) => setAdding(e.target.value)} />
+                </Field>
+                <Button variant="secondary" onClick={add} disabled={!adding}>Add</Button>
+                <Button variant="ghost" onClick={copy}>Copy last week</Button>
+              </div>
+              <Table caption={`Hours by project and day, ${range}, with the totals`} hideCaption size="sm" pinStart>
+                <TableHead><TableRow>
+                  <TableHeaderCell>Project</TableHeaderCell>
+                  {dates.map((d, i) => (
+                    <TableHeaderCell key={i} align="end">
+                      <abbr title={dayLong[i]} className="no-underline">{d.toLocaleDateString(locale, { weekday: 'short' })}</abbr>
+                      <span className="block font-normal text-text-muted">{d.toLocaleDateString(locale, { day: 'numeric', month: 'short' })}</span>
+                    </TableHeaderCell>
+                  ))}
+                  <TableHeaderCell align="end">Total</TableHeaderCell>
+                  <TableHeaderCell><span className="sr-only">Remove</span></TableHeaderCell>
+                </TableRow></TableHead>
+                <TableBody>
+                  {rows.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableHeaderCell scope="row" className="wrap-break-word">{p.name}</TableHeaderCell>
+                      {hours[p.id]!.map((h, i) => (
+                        <TableCell key={i} align="end">
+                          <NumberInput id={`ts-${p.id}-${i}`} aria-label={`${p.name}, ${dayLong[i]}`} size="sm" steppers={false} min={0} max={24} step={0.25}
+                            invalid={!!problems[`day-${i}`]} value={h} onValueChange={(v) => set(p.id, i, v)} className="w-20" />
+                        </TableCell>
+                      ))}
+                      <TableCell align="end" className="font-semibold">{num(hours[p.id]!.reduce<number>((a, b) => a + (b ?? 0), 0))}</TableCell>
+                      <TableCell><Button id={`ts-remove-${p.id}`} size="sm" variant="ghost" onClick={() => remove(p.id)} aria-label={`Remove: ${p.name}`}>Remove</Button></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFoot>
+                  <TableRow>
+                    <TableHeaderCell scope="row">Total</TableHeaderCell>
+                    {totals.days.map((h, i) => <TableCell key={i} align="end" className="font-semibold">{num(h)}</TableCell>)}
+                    <TableCell align="end" className="font-semibold">{num(totals.week)}</TableCell>
+                    <TableCell />
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFoot>
-                <TableRow>
-                  <TableHeaderCell scope="row">Total</TableHeaderCell>
-                  {totals.days.map((h, i) => <TableCell key={i} align="end" className="font-semibold">{num(h)}</TableCell>)}
-                  <TableCell align="end" className="font-semibold">{num(totals.week)}</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableFoot>
-            </Table>
-            <p className="m-0" id="ts-total">
-              {hoursWords(totals.week)} this week{totals.week < expected ? `, ${hoursWords(expected - totals.week)} under the ${num(expected)} expected.` : '.'}
-            </p>
-            <Field label="Note for your approver" id="ts-note" hint="Anything they should know, like time off or overtime." optional>
-              <Textarea rows={3} value={note} onChange={(e) => { setNote(e.target.value); setFailed(false); }} />
-            </Field>
-            <div className="flex flex-col items-start gap-3">
-              {failed ? <Alert tone="danger">Couldn’t send your timesheet. Try again; every hour is still here.</Alert> : null}
-              <Button type="submit" loading={busy}>Send for approval</Button>
-            </div>
-          </form>
-        )}
-        </>)}
-      </main>
+                </TableFoot>
+              </Table>
+              <p className="m-0" id="ts-total">
+                {hoursWords(totals.week)} this week{totals.week < expected ? `, ${hoursWords(expected - totals.week)} under the ${num(expected)} expected.` : '.'}
+              </p>
+              <Field label="Note for your approver" id="ts-note" hint="Anything they should know, like time off or overtime." optional>
+                <Textarea rows={3} value={note} onChange={(e) => { setNote(e.target.value); setFailed(false); }} />
+              </Field>
+              <div className="flex flex-col items-start gap-3">
+                {failed ? <Alert tone="danger">Couldn’t send your timesheet. Try again; every hour is still here.</Alert> : null}
+                <Button type="submit" loading={busy}>Send for approval</Button>
+              </div>
+            </form>
+          )}
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

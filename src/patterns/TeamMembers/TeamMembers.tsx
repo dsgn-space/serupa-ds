@@ -19,6 +19,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Team members: who is on the team, what each may do, inviting more people, and removing someone. For an app to copy.
    What it carries (WCAG 2.2):
@@ -162,83 +164,85 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the members loaded before you went offline. Inviting and changing roles need a connection.</OfflineBanner>
-        <PageHeader title="Team" description="Who can see and change this workspace."
-          primary={{ label: 'Invite people', onSelect: () => ask(true) }} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the members loaded before you went offline. Inviting and changing roles need a connection.</OfflineBanner>
+          <PageHeader title="Team" description="Who can see and change this workspace."
+            primary={{ label: 'Invite people', onSelect: () => ask(true) }} />
 
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your team" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your team" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
+            <Card className="flex flex-col gap-4">
+              <Heading level={2} size="lg">Members</Heading>
+              <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
+                {/* One name for all of them: the first row is named, the others are only pictures. */}
+                {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
+              </ul>
+            </Card>
+          ) : <>
           <Card className="flex flex-col gap-4">
-            <Heading level={2} size="lg">Members</Heading>
-            <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
-              {/* One name for all of them: the first row is named, the others are only pictures. */}
-              {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
+            <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({formatNumber(shown.length, locale)})</Heading>
+            <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
+              {shown.map((m) => {
+                const r = m.role === 'owner' ? 'owner' : roles[m.id] ?? m.role;
+                return (
+                  <li key={m.id} className="flex flex-wrap items-center gap-3 py-3">
+                    <Avatar size="sm" name={m.name} src={m.avatar} alt="" />
+                    <div className="flex min-w-0 grow basis-40 flex-col">
+                      <span className="font-medium">{m.name}{m.you ? <Badge className="ms-2">You</Badge> : null}</span>
+                      <span className="text-sm wrap-break-word text-text-muted">{m.email}</span>
+                    </div>
+                    {r === 'owner' ? (
+                      <span className="text-sm text-text-muted">Owner, can’t be removed</span>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <Select size="sm" aria-label={`Role for ${m.name}`} value={r} options={options}
+                          onChange={(e) => change(m, e.target.value as TeamRole)} className="w-32" />
+                        <Button id={`remove-${m.id}`} size="sm" variant="ghost" aria-label={`Remove ${m.name}`} onClick={() => remove(m)}>Remove</Button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </Card>
-        ) : <>
-        <Card className="flex flex-col gap-4">
-          <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({formatNumber(shown.length, locale)})</Heading>
-          <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
-            {shown.map((m) => {
-              const r = m.role === 'owner' ? 'owner' : roles[m.id] ?? m.role;
-              return (
-                <li key={m.id} className="flex flex-wrap items-center gap-3 py-3">
-                  <Avatar size="sm" name={m.name} src={m.avatar} alt="" />
-                  <div className="flex min-w-0 grow basis-40 flex-col">
-                    <span className="font-medium">{m.name}{m.you ? <Badge className="ms-2">You</Badge> : null}</span>
-                    <span className="text-sm wrap-break-word text-text-muted">{m.email}</span>
-                  </div>
-                  {r === 'owner' ? (
-                    <span className="text-sm text-text-muted">Owner, can’t be removed</span>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      <Select size="sm" aria-label={`Role for ${m.name}`} value={r} options={options}
-                        onChange={(e) => change(m, e.target.value as TeamRole)} className="w-32" />
-                      <Button id={`remove-${m.id}`} size="sm" variant="ghost" aria-label={`Remove ${m.name}`} onClick={() => remove(m)}>Remove</Button>
+
+          <Card className="flex flex-col gap-4">
+            <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">{invitesFailed ? 'Invites' : `Invites (${formatNumber(open.length, locale)})`}</Heading>
+            {invitesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the invites" description="The members above are up to date." onRetry={() => onRetry?.()} />
+            : open.length ? (
+              <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
+                {open.map((i) => (
+                  <li key={i.email} className="flex flex-wrap items-center gap-3 py-3">
+                    <div className="flex min-w-0 grow basis-40 flex-col">
+                      <span className="wrap-break-word">{i.email}</span>
+                      <span className="text-sm text-text-muted">Invited as {roleName(i.role)}, not joined yet</span>
                     </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </Card>
+                    <div className="flex items-center gap-3">
+                      <Button size="sm" variant="outline" aria-label={`Resend the invite to ${i.email}`} onClick={() => resend(i)}>Resend</Button>
+                      <Button id={`revoke-${i.email}`} size="sm" variant="ghost" aria-label={`Revoke the invite to ${i.email}`} onClick={() => revoke(i)}>Revoke</Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="m-0 text-text-muted">No invites waiting.</p>}
+          </Card>
 
-        <Card className="flex flex-col gap-4">
-          <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">{invitesFailed ? 'Invites' : `Invites (${formatNumber(open.length, locale)})`}</Heading>
-          {invitesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load the invites" description="The members above are up to date." onRetry={() => onRetry?.()} />
-          : open.length ? (
-            <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
-              {open.map((i) => (
-                <li key={i.email} className="flex flex-wrap items-center gap-3 py-3">
-                  <div className="flex min-w-0 grow basis-40 flex-col">
-                    <span className="wrap-break-word">{i.email}</span>
-                    <span className="text-sm text-text-muted">Invited as {roleName(i.role)}, not joined yet</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Button size="sm" variant="outline" aria-label={`Resend the invite to ${i.email}`} onClick={() => resend(i)}>Resend</Button>
-                    <Button id={`revoke-${i.email}`} size="sm" variant="ghost" aria-label={`Revoke the invite to ${i.email}`} onClick={() => revoke(i)}>Revoke</Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : <p className="m-0 text-text-muted">No invites waiting.</p>}
-        </Card>
+          </>}
 
-        </>}
-
-        <Dialog open={inviting} onOpenChange={ask} title="Invite people" description="They get an email with a link to join. It works for 7 days.">
-          <form onSubmit={send} noValidate className="flex flex-col gap-4">
-            {failed ? <Alert tone="danger">Couldn’t send the invites. Try again.</Alert> : null}
-            <Field label="Email addresses" id="invite-emails" hint="Separate them with commas or new lines." error={problem ?? undefined}>
-              <Textarea rows={3} value={text} onChange={(e) => { setText(e.target.value); if (problem) setProblem(null); }} autoComplete="off" />
-            </Field>
-            <Field label="Role" id="invite-role" hint={ROLES.find((x) => x.value === role)!.hint.replace(/^./, (c) => c.toUpperCase()) + '.'}>
-              <Select value={role} options={options} onChange={(e) => setRole(e.target.value as TeamRole)} />
-            </Field>
-            <Button type="submit" className="self-start" loading={busy}>Send invites</Button>
-          </form>
-        </Dialog>
-      </main>
+          <Dialog open={inviting} onOpenChange={ask} title="Invite people" description="They get an email with a link to join. It works for 7 days.">
+            <form onSubmit={send} noValidate className="flex flex-col gap-4">
+              {failed ? <Alert tone="danger">Couldn’t send the invites. Try again.</Alert> : null}
+              <Field label="Email addresses" id="invite-emails" hint="Separate them with commas or new lines." error={problem ?? undefined}>
+                <Textarea rows={3} value={text} onChange={(e) => { setText(e.target.value); if (problem) setProblem(null); }} autoComplete="off" />
+              </Field>
+              <Field label="Role" id="invite-role" hint={ROLES.find((x) => x.value === role)!.hint.replace(/^./, (c) => c.toUpperCase()) + '.'}>
+                <Select value={role} options={options} onChange={(e) => setRole(e.target.value as TeamRole)} />
+              </Field>
+              <Button type="submit" className="self-start" loading={busy}>Send invites</Button>
+            </form>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

@@ -8,6 +8,8 @@ import { Link } from '../../components/Link/Link';
 import { Switch } from '../../components/Switch/Switch';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Email preferences: the page an email's "Manage emails" or "Unsubscribe" link opens, with no sign-in. Which emails
    come, each one a switch that says what it is and how often, and one button to stop them all. For an app to copy.
@@ -111,39 +113,41 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#shop">Go to the shop</Link>
       </header>
-      <main ref={page} id="main" className="mx-auto flex max-w-xl flex-col px-4 py-10 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Saving them needs a connection.</OfflineBanner>
-        <PageHeader title="Emails from Acme" description={`Choose what comes to ${email}. Changes take effect within a day.`} />
-        <Card padding="lg" className="mt-6">
-          {stopped ? (
-            <section aria-labelledby="stopped" className="flex flex-col items-start gap-3">
-              <h2 id="stopped" ref={answer} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">You won’t get these emails any more</h2>
-              <p className="m-0">We’ll still send receipts, delivery updates and security alerts, as they’re about orders and your account.</p>
-              {failed ? <Alert tone="danger">Couldn’t turn them back on. Try again.</Alert> : null}
-              <Button variant="secondary" loading={busy} onClick={turnBack}>Turn them back on</Button>
-            </section>
-          ) : (
-            <form onSubmit={submit} aria-labelledby="choose" className="flex flex-col gap-4">
-              <h2 id="choose" className="m-0 text-lg font-semibold">What we send</h2>
-              <div className="flex flex-col gap-4">
-                {topics.map((t) => (
-                  <Switch key={t.id} checked={!!choices[t.id]} description={t.about}
-                    onCheckedChange={(on) => { setChoices((c) => ({ ...c, [t.id]: on })); setSaid(''); setFailed(false); }}>
-                    {t.label}
-                  </Switch>
-                ))}
-              </div>
-              <p className="m-0 text-sm text-text-muted">Receipts, delivery updates and security alerts always come, as they’re about your orders and your account.</p>
-              {failed ? <Alert tone="danger">Couldn’t save your choices. Try again; they’re still set as you left them.</Alert> : null}
-              <div className="flex flex-wrap gap-x-2 gap-y-3">
-                <Button type="submit" loading={busy}>Save choices</Button>
-                <Button variant="secondary" disabled={busy} onClick={stopAll}>Stop all emails</Button>
-                <p id="email-saved" role="status" className="m-0 self-center">{said ? `Saved. ${said}` : ''}</p>
-              </div>
-            </form>
-          )}
-        </Card>
-      </main>
+      <Container as="main" size="prose" className="py-10 outline-none" ref={page} id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your choices stay here. Saving them needs a connection.</OfflineBanner>
+          <PageHeader title="Emails from Acme" description={`Choose what comes to ${email}. Changes take effect within a day.`} />
+          <Card padding="lg" className="mt-6">
+            {stopped ? (
+              <section aria-labelledby="stopped" className="flex flex-col items-start gap-3">
+                <h2 id="stopped" ref={answer} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">You won’t get these emails any more</h2>
+                <p className="m-0">We’ll still send receipts, delivery updates and security alerts, as they’re about orders and your account.</p>
+                {failed ? <Alert tone="danger">Couldn’t turn them back on. Try again.</Alert> : null}
+                <Button variant="secondary" loading={busy} onClick={turnBack}>Turn them back on</Button>
+              </section>
+            ) : (
+              <form onSubmit={submit} aria-labelledby="choose" className="flex flex-col gap-4">
+                <h2 id="choose" className="m-0 text-lg font-semibold">What we send</h2>
+                <div className="flex flex-col gap-4">
+                  {topics.map((t) => (
+                    <Switch key={t.id} checked={!!choices[t.id]} description={t.about}
+                      onCheckedChange={(on) => { setChoices((c) => ({ ...c, [t.id]: on })); setSaid(''); setFailed(false); }}>
+                      {t.label}
+                    </Switch>
+                  ))}
+                </div>
+                <p className="m-0 text-sm text-text-muted">Receipts, delivery updates and security alerts always come, as they’re about your orders and your account.</p>
+                {failed ? <Alert tone="danger">Couldn’t save your choices. Try again; they’re still set as you left them.</Alert> : null}
+                <div className="flex flex-wrap gap-x-2 gap-y-3">
+                  <Button type="submit" loading={busy}>Save choices</Button>
+                  <Button variant="secondary" disabled={busy} onClick={stopAll}>Stop all emails</Button>
+                  <p id="email-saved" role="status" className="m-0 self-center">{said ? `Saved. ${said}` : ''}</p>
+                </div>
+              </form>
+            )}
+          </Card>
+        </Stack>
+      </Container>
     </div>
   );
 }

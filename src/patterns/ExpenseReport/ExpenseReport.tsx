@@ -22,6 +22,8 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Expense report: add what you spent, one expense at a time, see them in a table with the total, and send the report
    to be paid back. For an app to copy. What it carries (WCAG 2.2):
@@ -164,90 +166,92 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
         <p className="m-0 text-base font-semibold">Acme expenses</p>
         <Link underline="hover" href="#reports">Your reports</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your expenses stay here. Sending the report needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
-          description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading expenses" /></Card> : (<>
-        <div className="flex flex-col gap-8 pt-6">
-          {sent ? (
-            <section aria-labelledby="report-sent" className="flex flex-col items-start gap-3">
-              <h2 id="report-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent for approval</h2>
-              <p className="m-0">{list.length === 1 ? '1 expense' : `${formatNumber(list.length, locale)} expenses`}, {money(total)} in all. Once your manager approves it, it’s paid with your next salary; we’ll email you either way.</p>
-              <Link href="#reports">Back to your reports</Link>
-            </section>
-          ) : (
-            <>
-              <Card data-print="hide">
-                <form onSubmit={add} noValidate aria-labelledby="add-expense" className="flex flex-col gap-4">
-                  <h2 id="add-expense" className="m-0 text-lg font-semibold">Add an expense</h2>
-                  <ErrorSummary key={tries} errors={errors} headingLevel={3} />
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label="Date" error={problems.date}>
-                      <DateField id="expense-date" value={d.date} max={today} onValueChange={(v) => edit({ date: v })} />
-                    </Field>
-                    <Field label="What for" id="expense-category" error={problems.category}>
-                      <Select placeholder="Choose one" options={CATEGORIES} value={d.category} onChange={(e) => edit({ category: e.target.value })} />
-                    </Field>
-                    <Field label="What it was" id="expense-what" hint="As it says on the receipt." error={problems.what}>
-                      <Input value={d.what} onChange={(e) => edit({ what: e.target.value })} />
-                    </Field>
-                    <Field label="Amount" id="expense-amount" hint={`In ${currency}.`} error={problems.amount}>
-                      <NumberInput currency={currency} min={0} value={d.amount} onValueChange={(n) => edit({ amount: n })} className="max-w-48" />
-                    </Field>
-                  </div>
-                  <Field label="Receipt" error={problems.receipt} optional={!(d.amount !== null && d.amount > receiptOver)}>
-                    <FileUpload id="expense-receipt" accept="image/*,.pdf" maxSize={10 * 1024 * 1024} hint={`A photo or PDF. Needed over ${money(receiptOver)}.`}
-                      files={d.receipt ? [d.receipt] : []} onFilesChange={(f) => edit({ receipt: f.at(-1) ?? null })} />
-                  </Field>
-                  <Button type="submit" variant="secondary" className="self-start">Add expense</Button>
-                </form>
-              </Card>
-
-              <section aria-labelledby="expenses" className="flex flex-col gap-4">
-                <h2 id="expenses" className="m-0 text-lg font-semibold">Expenses</h2>
-                {list.length ? (
-                  <Table caption="Expenses in this report, with the total" hideCaption pinEnd>
-                    <TableHead><TableRow>
-                      <TableHeaderCell>Date</TableHeaderCell>
-                      <TableHeaderCell>What</TableHeaderCell>
-                      <TableHeaderCell align="end">Amount</TableHeaderCell>
-                      <TableHeaderCell>Receipt</TableHeaderCell>
-                      <TableHeaderCell data-print="hide"><span className="sr-only">Remove</span></TableHeaderCell>
-                    </TableRow></TableHead>
-                    <TableBody>
-                      {list.map((x) => (
-                        <TableRow key={x.id}>
-                          <TableCell className="whitespace-nowrap"><FormattedDate value={x.date} /></TableCell>
-                          <TableCell className="wrap-break-word">{x.what}<span className="block text-sm text-text-muted">{label(x.category)}</span></TableCell>
-                          <TableCell className="text-end tabular-nums">{money(x.amount)}</TableCell>
-                          <TableCell>{x.receipt ? <span className="wrap-anywhere">{x.receipt}</span> : x.amount > receiptOver ? <Badge tone="warning">Receipt needed</Badge> : <span className="text-text-muted">Not needed</span>}</TableCell>
-                          <TableCell data-print="hide"><Button id={`expense-remove-${x.id}`} size="sm" variant="ghost" onClick={() => remove(x)} aria-label={`Remove: ${x.what}`}>Remove</Button></TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFoot>
-                      <TableRow>
-                        <TableCell colSpan={2} className="font-semibold">Total</TableCell>
-                        <TableCell className="text-end font-semibold tabular-nums">{money(total)}</TableCell>
-                        <TableCell /><TableCell data-print="hide" />
-                      </TableRow>
-                    </TableFoot>
-                  </Table>
-                ) : <p className="m-0 text-text-muted">None yet. Each one you add shows here, with the total.</p>}
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your expenses stay here. Sending the report needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
+            description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading expenses" /></Card> : (<>
+          <div className="flex flex-col gap-8 pt-6">
+            {sent ? (
+              <section aria-labelledby="report-sent" className="flex flex-col items-start gap-3">
+                <h2 id="report-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent for approval</h2>
+                <p className="m-0">{list.length === 1 ? '1 expense' : `${formatNumber(list.length, locale)} expenses`}, {money(total)} in all. Once your manager approves it, it’s paid with your next salary; we’ll email you either way.</p>
+                <Link href="#reports">Back to your reports</Link>
               </section>
+            ) : (
+              <>
+                <Card data-print="hide">
+                  <form onSubmit={add} noValidate aria-labelledby="add-expense" className="flex flex-col gap-4">
+                    <h2 id="add-expense" className="m-0 text-lg font-semibold">Add an expense</h2>
+                    <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Field label="Date" error={problems.date}>
+                        <DateField id="expense-date" value={d.date} max={today} onValueChange={(v) => edit({ date: v })} />
+                      </Field>
+                      <Field label="What for" id="expense-category" error={problems.category}>
+                        <Select placeholder="Choose one" options={CATEGORIES} value={d.category} onChange={(e) => edit({ category: e.target.value })} />
+                      </Field>
+                      <Field label="What it was" id="expense-what" hint="As it says on the receipt." error={problems.what}>
+                        <Input value={d.what} onChange={(e) => edit({ what: e.target.value })} />
+                      </Field>
+                      <Field label="Amount" id="expense-amount" hint={`In ${currency}.`} error={problems.amount}>
+                        <NumberInput currency={currency} min={0} value={d.amount} onValueChange={(n) => edit({ amount: n })} className="max-w-48" />
+                      </Field>
+                    </div>
+                    <Field label="Receipt" error={problems.receipt} optional={!(d.amount !== null && d.amount > receiptOver)}>
+                      <FileUpload id="expense-receipt" accept="image/*,.pdf" maxSize={10 * 1024 * 1024} hint={`A photo or PDF. Needed over ${money(receiptOver)}.`}
+                        files={d.receipt ? [d.receipt] : []} onFilesChange={(f) => edit({ receipt: f.at(-1) ?? null })} />
+                    </Field>
+                    <Button type="submit" variant="secondary" className="self-start">Add expense</Button>
+                  </form>
+                </Card>
 
-              <div data-print="hide" className="flex flex-col items-start gap-3">
-                {reportProblem ? <Alert tone="danger">{reportProblem}</Alert> : null}
-                {failed ? <Alert tone="danger">Couldn’t send the report. Try again; nothing is lost.</Alert> : null}
-                <Button loading={busy} onClick={send}>Send for approval</Button>
-              </div>
-            </>
-          )}
-        </div>
-        </>)}
-      </main>
+                <section aria-labelledby="expenses" className="flex flex-col gap-4">
+                  <h2 id="expenses" className="m-0 text-lg font-semibold">Expenses</h2>
+                  {list.length ? (
+                    <Table caption="Expenses in this report, with the total" hideCaption pinEnd>
+                      <TableHead><TableRow>
+                        <TableHeaderCell>Date</TableHeaderCell>
+                        <TableHeaderCell>What</TableHeaderCell>
+                        <TableHeaderCell align="end">Amount</TableHeaderCell>
+                        <TableHeaderCell>Receipt</TableHeaderCell>
+                        <TableHeaderCell data-print="hide"><span className="sr-only">Remove</span></TableHeaderCell>
+                      </TableRow></TableHead>
+                      <TableBody>
+                        {list.map((x) => (
+                          <TableRow key={x.id}>
+                            <TableCell className="whitespace-nowrap"><FormattedDate value={x.date} /></TableCell>
+                            <TableCell className="wrap-break-word">{x.what}<span className="block text-sm text-text-muted">{label(x.category)}</span></TableCell>
+                            <TableCell className="text-end tabular-nums">{money(x.amount)}</TableCell>
+                            <TableCell>{x.receipt ? <span className="wrap-anywhere">{x.receipt}</span> : x.amount > receiptOver ? <Badge tone="warning">Receipt needed</Badge> : <span className="text-text-muted">Not needed</span>}</TableCell>
+                            <TableCell data-print="hide"><Button id={`expense-remove-${x.id}`} size="sm" variant="ghost" onClick={() => remove(x)} aria-label={`Remove: ${x.what}`}>Remove</Button></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                      <TableFoot>
+                        <TableRow>
+                          <TableCell colSpan={2} className="font-semibold">Total</TableCell>
+                          <TableCell className="text-end font-semibold tabular-nums">{money(total)}</TableCell>
+                          <TableCell /><TableCell data-print="hide" />
+                        </TableRow>
+                      </TableFoot>
+                    </Table>
+                  ) : <p className="m-0 text-text-muted">None yet. Each one you add shows here, with the total.</p>}
+                </section>
+
+                <div data-print="hide" className="flex flex-col items-start gap-3">
+                  {reportProblem ? <Alert tone="danger">{reportProblem}</Alert> : null}
+                  {failed ? <Alert tone="danger">Couldn’t send the report. Try again; nothing is lost.</Alert> : null}
+                  <Button loading={busy} onClick={send}>Send for approval</Button>
+                </div>
+              </>
+            )}
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

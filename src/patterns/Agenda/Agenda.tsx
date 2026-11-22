@@ -18,6 +18,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Conference agenda: the sessions of each day by time, filtered by track, saved to your own agenda, with clashes said.
    For an app to copy. What it carries (WCAG 2.2):
@@ -125,43 +127,45 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
         <p className="m-0 text-base font-semibold">Acme Design Days</p>
         <Link underline="hover" href="#tickets">Tickets</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is the agenda as it was when the page loaded. Saving a session needs a connection.</OfflineBanner>
-        <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card>
-          : !sessions.length ? <div className="pt-6"><EmptyState icon="event" title="The agenda isn’t out yet" headingLevel={2}
-              description="The sessions show here once the speakers are confirmed. Your ticket is all you need until then." /></div> : (<>
-        <div className="flex flex-wrap items-end justify-between gap-3 pt-6">
-          <Field label="Track">
-            <Select value={track} onChange={(e) => setTrack(e.target.value)} options={[{ value: '', label: 'Every track' }, ...tracks.map((t) => ({ value: t, label: t }))]} />
-          </Field>
-          <p role="status" id="agenda-count" className="m-0 text-sm text-text-muted">{track ? `${sessionsWords(shown.length)} in ${track}` : `${sessionsWords(shown.length)} in all`}</p>
-        </div>
-        <Tabs defaultValue={days[0]} className="pt-4">
-          <TabList aria-label="Days">
-            {days.map((d, i) => <Tab key={d} value={d}>Day {num(i + 1)}</Tab>)}
-            <Tab value="mine">Your agenda ({num(saved.length)})</Tab>
-          </TabList>
-          {days.map((d) => (
-            <TabPanel key={d} value={d} className="flex flex-col gap-6 pt-4">
-              <h2 className="m-0 text-xl font-semibold">{dayName(d)}</h2>
-              {list(shown.filter((s) => s.day === d), 'day')}
-              {!shown.some((s) => s.day === d) ? <p className="m-0 text-text-muted">No sessions in this track today.</p> : null}
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is the agenda as it was when the page loaded. Saving a session needs a connection.</OfflineBanner>
+          <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card>
+            : !sessions.length ? <div className="pt-6"><EmptyState icon="event" title="The agenda isn’t out yet" headingLevel={2}
+                description="The sessions show here once the speakers are confirmed. Your ticket is all you need until then." /></div> : (<>
+          <div className="flex flex-wrap items-end justify-between gap-3 pt-6">
+            <Field label="Track">
+              <Select value={track} onChange={(e) => setTrack(e.target.value)} options={[{ value: '', label: 'Every track' }, ...tracks.map((t) => ({ value: t, label: t }))]} />
+            </Field>
+            <p role="status" id="agenda-count" className="m-0 text-sm text-text-muted">{track ? `${sessionsWords(shown.length)} in ${track}` : `${sessionsWords(shown.length)} in all`}</p>
+          </div>
+          <Tabs defaultValue={days[0]} className="pt-4">
+            <TabList aria-label="Days">
+              {days.map((d, i) => <Tab key={d} value={d}>Day {num(i + 1)}</Tab>)}
+              <Tab value="mine">Your agenda ({num(saved.length)})</Tab>
+            </TabList>
+            {days.map((d) => (
+              <TabPanel key={d} value={d} className="flex flex-col gap-6 pt-4">
+                <h2 className="m-0 text-xl font-semibold">{dayName(d)}</h2>
+                {list(shown.filter((s) => s.day === d), 'day')}
+                {!shown.some((s) => s.day === d) ? <p className="m-0 text-text-muted">No sessions in this track today.</p> : null}
+              </TabPanel>
+            ))}
+            <TabPanel value="mine" className="flex flex-col gap-6 pt-4">
+              <h2 className="m-0 text-xl font-semibold">Your agenda</h2>
+              {mine.length ? days.filter((d) => mine.some((s) => s.day === d)).map((d) => (
+                <div key={d} className="flex flex-col gap-4">
+                  <p className="m-0 font-semibold">{dayName(d)}</p>
+                  {list(mine.filter((s) => s.day === d), 'mine')}
+                </div>
+              )) : <p className="m-0 text-text-muted">Nothing saved yet. Press Save on a session to add it here.</p>}
             </TabPanel>
-          ))}
-          <TabPanel value="mine" className="flex flex-col gap-6 pt-4">
-            <h2 className="m-0 text-xl font-semibold">Your agenda</h2>
-            {mine.length ? days.filter((d) => mine.some((s) => s.day === d)).map((d) => (
-              <div key={d} className="flex flex-col gap-4">
-                <p className="m-0 font-semibold">{dayName(d)}</p>
-                {list(mine.filter((s) => s.day === d), 'mine')}
-              </div>
-            )) : <p className="m-0 text-text-muted">Nothing saved yet. Press Save on a session to add it here.</p>}
-          </TabPanel>
-        </Tabs>
-        </>)}
-      </main>
+          </Tabs>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

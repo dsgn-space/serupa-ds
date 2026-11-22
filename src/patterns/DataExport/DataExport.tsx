@@ -17,6 +17,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Download your data: choose what to include and in which format, see how big it will be, ask for it, and download
    it once it's ready, before its link runs out. For an app to copy. What it carries (WCAG 2.2):
@@ -130,63 +132,65 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
         <p className="m-0 text-base font-semibold">Acme Projects</p>
         <Link underline="hover" href="#settings">Settings</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is what was loaded before you went offline. Requesting an export needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Download your data' }]} title="Download your data"
-          description="Get a copy of what you’ve put in Acme Projects. We’ll email you when it’s ready, and the link works for 7 days." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your exports" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your exports" /></Card> : (<>
-        <form onSubmit={request} noValidate aria-label="What to download" className="flex flex-col gap-4 pt-6">
-          <ErrorSummary key={tries} errors={errors} />
-          <Field label="What should it include?" group error={problem || undefined} required>
-            <CheckboxGroup id="export-parts" variant="card" value={chosen} onValueChange={(v: string[]) => { setChosen(v); setProblem(''); setFailed(false); }}>
-              <Checkbox selectAll>Everything</Checkbox>
-              {parts.map((p) => <Checkbox key={p.id} value={p.id} description={`${p.holds}. About ${size(p.bytes)}.`}>{p.label}</Checkbox>)}
-            </CheckboxGroup>
-          </Field>
-          <Field label="Format" group>
-            <RadioGroup name="export-format" value={format} onValueChange={(v: string) => setFormat(v as ExportFormat)}>
-              {FORMATS.map((f) => <Radio key={f.value} value={f.value} description={f.opens}>{f.label}</Radio>)}
-            </RadioGroup>
-          </Field>
-          <Card padding="sm" variant="filled">
-            <p className="m-0" aria-live="polite" id="export-size">
-              {chosen.length ? <>Your download will be about <strong>{size(total)}</strong>.</> : 'Choose what to include to see its size.'}
-            </p>
-          </Card>
-          <div className="flex flex-col items-start gap-3">
-            {failed ? <Alert tone="danger">Couldn’t ask for your data. Try again; your choices are still here.</Alert> : null}
-            <Button type="submit" loading={busy}>Ask for my data</Button>
-          </div>
-        </form>
-        <section aria-labelledby="export-list" className="flex flex-col gap-4 pt-6">
-          <h2 id="export-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">Your exports</h2>
-          {asked ? <p role="status" id="export-asked" className="m-0">We’re preparing your data. We’ll email you when it’s ready to download.</p> : null}
-          {list.length ? (
-            <ul className="m-0 flex list-none flex-col gap-3 p-0">
-              {list.map((x) => (
-                <li key={x.id}>
-                  <Card padding="sm" className="flex-row flex-wrap items-start justify-between gap-3">
-                    <div className="flex min-w-0 flex-col gap-1">
-                      <p className="m-0 font-semibold">Asked for on {day(x.asked)}</p>
-                      <p className="m-0 text-sm text-text-muted">{x.parts.map(labelOf).join(', ')}. {x.format.toUpperCase()}, about {size(x.bytes)}.</p>
-                      {x.state === 'ready' && x.expires ? <p className="m-0 text-sm">The link works until {day(x.expires)}.</p> : null}
-                      {x.state === 'expired' ? <p className="m-0 text-sm">Its link has run out. Ask again to get a new one.</p> : null}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <Badge tone={STATE[x.state].tone}>{STATE[x.state].word}</Badge>
-                      {x.state === 'ready' && x.href ? (
-                        <Button href={x.href} variant="outline" size="sm" aria-label={`Download export of ${day(x.asked)}, ${size(x.bytes)}`}>Download</Button>
-                      ) : null}
-                    </div>
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          ) : <p className="m-0 text-text-muted">You haven’t asked for your data yet.</p>}
-        </section>
-        </>)}
-      </main>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is what was loaded before you went offline. Requesting an export needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Download your data' }]} title="Download your data"
+            description="Get a copy of what you’ve put in Acme Projects. We’ll email you when it’s ready, and the link works for 7 days." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your exports" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your exports" /></Card> : (<>
+          <form onSubmit={request} noValidate aria-label="What to download" className="flex flex-col gap-4 pt-6">
+            <ErrorSummary key={tries} errors={errors} />
+            <Field label="What should it include?" group error={problem || undefined} required>
+              <CheckboxGroup id="export-parts" variant="card" value={chosen} onValueChange={(v: string[]) => { setChosen(v); setProblem(''); setFailed(false); }}>
+                <Checkbox selectAll>Everything</Checkbox>
+                {parts.map((p) => <Checkbox key={p.id} value={p.id} description={`${p.holds}. About ${size(p.bytes)}.`}>{p.label}</Checkbox>)}
+              </CheckboxGroup>
+            </Field>
+            <Field label="Format" group>
+              <RadioGroup name="export-format" value={format} onValueChange={(v: string) => setFormat(v as ExportFormat)}>
+                {FORMATS.map((f) => <Radio key={f.value} value={f.value} description={f.opens}>{f.label}</Radio>)}
+              </RadioGroup>
+            </Field>
+            <Card padding="sm" variant="filled">
+              <p className="m-0" aria-live="polite" id="export-size">
+                {chosen.length ? <>Your download will be about <strong>{size(total)}</strong>.</> : 'Choose what to include to see its size.'}
+              </p>
+            </Card>
+            <div className="flex flex-col items-start gap-3">
+              {failed ? <Alert tone="danger">Couldn’t ask for your data. Try again; your choices are still here.</Alert> : null}
+              <Button type="submit" loading={busy}>Ask for my data</Button>
+            </div>
+          </form>
+          <section aria-labelledby="export-list" className="flex flex-col gap-4 pt-6">
+            <h2 id="export-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">Your exports</h2>
+            {asked ? <p role="status" id="export-asked" className="m-0">We’re preparing your data. We’ll email you when it’s ready to download.</p> : null}
+            {list.length ? (
+              <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                {list.map((x) => (
+                  <li key={x.id}>
+                    <Card padding="sm" className="flex-row flex-wrap items-start justify-between gap-3">
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <p className="m-0 font-semibold">Asked for on {day(x.asked)}</p>
+                        <p className="m-0 text-sm text-text-muted">{x.parts.map(labelOf).join(', ')}. {x.format.toUpperCase()}, about {size(x.bytes)}.</p>
+                        {x.state === 'ready' && x.expires ? <p className="m-0 text-sm">The link works until {day(x.expires)}.</p> : null}
+                        {x.state === 'expired' ? <p className="m-0 text-sm">Its link has run out. Ask again to get a new one.</p> : null}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Badge tone={STATE[x.state].tone}>{STATE[x.state].word}</Badge>
+                        {x.state === 'ready' && x.href ? (
+                          <Button href={x.href} variant="outline" size="sm" aria-label={`Download export of ${day(x.asked)}, ${size(x.bytes)}`}>Download</Button>
+                        ) : null}
+                      </div>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="m-0 text-text-muted">You haven’t asked for your data yet.</p>}
+          </section>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

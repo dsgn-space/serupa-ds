@@ -15,6 +15,8 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Profile: what other people see of you (a photo, your name, a short bio, where you are and a link), edited in one
    form and saved when you say so. For an app to copy. What it carries (WCAG 2.2):
@@ -126,58 +128,60 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Profile' }]} title="Profile"
-          description="What other people see of you." />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Profile' }]} title="Profile"
+            description="What other people see of you." />
 
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your profile" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading profile" /></Card> : (
-              <div className="grid items-start gap-6 md:grid-cols-3">
-                <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-4 md:col-span-2">
-                  <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
-                  <ErrorSummary key={tries} errors={errors} headingLevel={3} />
-                  <div className="flex flex-wrap items-center gap-4">
-                    <Avatar size="xl" name={draft.name || saved.name} src={photo || undefined} alt={photo ? `Photo of ${draft.name || saved.name}` : undefined} />
-                    {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}
-                  </div>
-                  <Field label="Photo" hint="A square JPEG or PNG works best, up to 2 MB." optional>
-                    <FileUpload id="profile-photo" accept="image/png,image/jpeg,image/webp" maxSize={2 * 1024 * 1024} files={files} onFilesChange={(f) => { setFiles(f.slice(-1)); if (status !== 'saving') setStatus('idle'); }} />
-                  </Field>
-                  <Field label="Name" id="profile-name" error={problems.name} required>
-                    <Input autoComplete="name" value={draft.name} onChange={(e) => edit({ name: e.target.value })} />
-                  </Field>
-                  <Field label="Bio" id="profile-bio" hint={`Up to ${bioLimit} characters.`} error={problems.bio} optional>
-                    <Textarea rows={3} maxLength={bioLimit} showCount value={draft.bio} onChange={(e) => edit({ bio: e.target.value })} />
-                  </Field>
-                  <Field label="Location" optional>
-                    <Input autoComplete="address-level2" value={draft.location} onChange={(e) => edit({ location: e.target.value })} />
-                  </Field>
-                  <Field label="Website" id="profile-website" error={problems.website} optional>
-                    <Input type="url" autoComplete="url" inputMode="url" value={draft.website} onChange={(e) => edit({ website: e.target.value })} />
-                  </Field>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button type="submit" loading={status === 'saving'}>Save profile</Button>
-                    {dirty && status !== 'saving' ? <Button variant="outline" onClick={discard}>Discard changes</Button> : null}
-                    <SaveStatus status={status} savedAt={savedAt} onRetry={() => save()} />
-                  </div>
-                  {status === 'error' ? <Alert tone="danger">Couldn’t save your profile. Your changes are still here.</Alert> : null}
-                </form>
-                <Card>
-                  <section aria-labelledby="preview" className="flex flex-col items-start gap-4">
-                    <h2 id="preview" className="m-0 text-lg font-semibold">How others see it</h2>
-                    <Avatar size="lg" name={draft.name || saved.name} src={photo || undefined} alt="" />
-                    <p className="m-0 text-base font-semibold">{draft.name.trim() || 'Your name'}</p>
-                    {draft.bio ? <p className="m-0 wrap-break-word">{draft.bio}</p> : null}
-                    {draft.location.trim() ? <p className="m-0 text-sm text-text-muted">{draft.location.trim()}</p> : null}
-                    {draft.website.trim() && !profileProblems(draft, bioLimit).website ? <p className="m-0 text-sm wrap-break-word">{draft.website.trim().replace(/^https?:\/\//, '')}</p> : null}
-                  </section>
-                </Card>
-              </div>
-            )}
-        </div>
-      </main>
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load your profile" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading profile" /></Card> : (
+                <div className="grid items-start gap-6 md:grid-cols-3">
+                  <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-4 md:col-span-2">
+                    <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
+                    <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Avatar size="xl" name={draft.name || saved.name} src={photo || undefined} alt={photo ? `Photo of ${draft.name || saved.name}` : undefined} />
+                      {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}
+                    </div>
+                    <Field label="Photo" hint="A square JPEG or PNG works best, up to 2 MB." optional>
+                      <FileUpload id="profile-photo" accept="image/png,image/jpeg,image/webp" maxSize={2 * 1024 * 1024} files={files} onFilesChange={(f) => { setFiles(f.slice(-1)); if (status !== 'saving') setStatus('idle'); }} />
+                    </Field>
+                    <Field label="Name" id="profile-name" error={problems.name} required>
+                      <Input autoComplete="name" value={draft.name} onChange={(e) => edit({ name: e.target.value })} />
+                    </Field>
+                    <Field label="Bio" id="profile-bio" hint={`Up to ${bioLimit} characters.`} error={problems.bio} optional>
+                      <Textarea rows={3} maxLength={bioLimit} showCount value={draft.bio} onChange={(e) => edit({ bio: e.target.value })} />
+                    </Field>
+                    <Field label="Location" optional>
+                      <Input autoComplete="address-level2" value={draft.location} onChange={(e) => edit({ location: e.target.value })} />
+                    </Field>
+                    <Field label="Website" id="profile-website" error={problems.website} optional>
+                      <Input type="url" autoComplete="url" inputMode="url" value={draft.website} onChange={(e) => edit({ website: e.target.value })} />
+                    </Field>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button type="submit" loading={status === 'saving'}>Save profile</Button>
+                      {dirty && status !== 'saving' ? <Button variant="outline" onClick={discard}>Discard changes</Button> : null}
+                      <SaveStatus status={status} savedAt={savedAt} onRetry={() => save()} />
+                    </div>
+                    {status === 'error' ? <Alert tone="danger">Couldn’t save your profile. Your changes are still here.</Alert> : null}
+                  </form>
+                  <Card>
+                    <section aria-labelledby="preview" className="flex flex-col items-start gap-4">
+                      <h2 id="preview" className="m-0 text-lg font-semibold">How others see it</h2>
+                      <Avatar size="lg" name={draft.name || saved.name} src={photo || undefined} alt="" />
+                      <p className="m-0 text-base font-semibold">{draft.name.trim() || 'Your name'}</p>
+                      {draft.bio ? <p className="m-0 wrap-break-word">{draft.bio}</p> : null}
+                      {draft.location.trim() ? <p className="m-0 text-sm text-text-muted">{draft.location.trim()}</p> : null}
+                      {draft.website.trim() && !profileProblems(draft, bioLimit).website ? <p className="m-0 text-sm wrap-break-word">{draft.website.trim().replace(/^https?:\/\//, '')}</p> : null}
+                    </section>
+                  </Card>
+                </div>
+              )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

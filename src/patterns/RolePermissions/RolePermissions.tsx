@@ -14,6 +14,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Roles and permissions: what each role in a workspace can do, as a grid of checkboxes, where a permission that needs
    another brings it along, and nothing changes until Save. For an app to copy. What it carries (WCAG 2.2):
@@ -132,53 +134,55 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
         <p className="m-0 text-base font-semibold">Acme Projects</p>
         <Link underline="hover" href="#workspace">Workspace settings</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"
-          description="Choose what people in each role can do. Changes apply to everyone in the role once you save." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the roles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading roles" /></Card> : (<>
-        {locked.length ? <p className="m-0 pt-6">{locked.map((r) => r.name).join(', ')} can do everything, and that can’t be changed, so the workspace always has someone who can.</p> : null}
-        <div className="pt-4">
-          <Table caption="What each role can do" hideCaption pinStart>
-            <TableHead><TableRow>
-              <TableHeaderCell>Permission</TableHeaderCell>
-              {roles.map((r) => <TableHeaderCell key={r.id} align="center">{r.name}</TableHeaderCell>)}
-            </TableRow></TableHead>
-            <TableBody>
-              {permissions.map((p) => (
-                <TableRow key={p.id}>
-                  <TableHeaderCell scope="row" className="min-w-40 font-normal whitespace-normal">
-                    <span className="block font-semibold">{p.label}</span>
-                    <span className="block text-sm text-text-muted">{p.allows}{p.needs?.length ? `. Needs ${p.needs.map(label).join(' and ')}` : ''}.</span>
-                  </TableHeaderCell>
-                  {roles.map((r) => (
-                    <TableCell key={r.id} align="center">
-                      <Checkbox aria-label={`${r.name}: ${p.label}`} readOnly={r.locked}
-                        checked={r.locked ? true : (draft[r.id] ?? []).includes(p.id)}
-                        onCheckedChange={(on) => toggle(r, p.id, on)} />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        <p role="status" id="roles-also" className="m-0 min-h-6 pt-3 text-sm">{also}</p>
-        <div className="flex flex-col items-start gap-3 pt-4">
-          {failed ? <Alert tone="danger">Couldn’t save the roles. Try again; your changes are still here.</Alert> : null}
-          <p className="m-0 text-sm text-text-muted" id="roles-changes">
-            {changes ? `${changes === 1 ? '1 change' : `${formatNumber(changes, locale)} changes`} not saved yet.` : 'Everything is saved.'}
-          </p>
-          {changes ? (
-            <div className="flex flex-wrap gap-2">
-              <Button loading={busy} onClick={save}>{changes === 1 ? 'Save 1 change' : `Save ${formatNumber(changes, locale)} changes`}</Button>
-              <Button variant="outline" onClick={() => { setDraft(saved); setAlso(''); setFailed(false); announce('Changes discarded'); }}>Discard changes</Button>
-            </div>
-          ) : null}
-        </div>
-        </>)}
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your changes stay here. Saving them needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"
+            description="Choose what people in each role can do. Changes apply to everyone in the role once you save." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the roles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading roles" /></Card> : (<>
+          {locked.length ? <p className="m-0 pt-6">{locked.map((r) => r.name).join(', ')} can do everything, and that can’t be changed, so the workspace always has someone who can.</p> : null}
+          <div className="pt-4">
+            <Table caption="What each role can do" hideCaption pinStart>
+              <TableHead><TableRow>
+                <TableHeaderCell>Permission</TableHeaderCell>
+                {roles.map((r) => <TableHeaderCell key={r.id} align="center">{r.name}</TableHeaderCell>)}
+              </TableRow></TableHead>
+              <TableBody>
+                {permissions.map((p) => (
+                  <TableRow key={p.id}>
+                    <TableHeaderCell scope="row" className="min-w-40 font-normal whitespace-normal">
+                      <span className="block font-semibold">{p.label}</span>
+                      <span className="block text-sm text-text-muted">{p.allows}{p.needs?.length ? `. Needs ${p.needs.map(label).join(' and ')}` : ''}.</span>
+                    </TableHeaderCell>
+                    {roles.map((r) => (
+                      <TableCell key={r.id} align="center">
+                        <Checkbox aria-label={`${r.name}: ${p.label}`} readOnly={r.locked}
+                          checked={r.locked ? true : (draft[r.id] ?? []).includes(p.id)}
+                          onCheckedChange={(on) => toggle(r, p.id, on)} />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <p role="status" id="roles-also" className="m-0 min-h-6 pt-3 text-sm">{also}</p>
+          <div className="flex flex-col items-start gap-3 pt-4">
+            {failed ? <Alert tone="danger">Couldn’t save the roles. Try again; your changes are still here.</Alert> : null}
+            <p className="m-0 text-sm text-text-muted" id="roles-changes">
+              {changes ? `${changes === 1 ? '1 change' : `${formatNumber(changes, locale)} changes`} not saved yet.` : 'Everything is saved.'}
+            </p>
+            {changes ? (
+              <div className="flex flex-wrap gap-2">
+                <Button loading={busy} onClick={save}>{changes === 1 ? 'Save 1 change' : `Save ${formatNumber(changes, locale)} changes`}</Button>
+                <Button variant="outline" onClick={() => { setDraft(saved); setAlso(''); setFailed(false); announce('Changes discarded'); }}>Discard changes</Button>
+              </div>
+            ) : null}
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

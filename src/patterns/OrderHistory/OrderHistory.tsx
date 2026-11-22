@@ -19,6 +19,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Order history: every order you've placed, newest first, found by what was in it or by where it's got to, each with a
    way to see it and buy it again. For an app to copy. What it carries (WCAG 2.2):
@@ -132,58 +134,60 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main ref={mainRef} id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the orders loaded before you went offline. Buying again needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Orders' }]} title="Orders" description="Every order you’ve placed, newest first." />
-        <div className="flex flex-col gap-5 pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your orders" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading orders" /></Card>
-            : !orders.length ? <EmptyState icon="receipt_long" title="No orders yet" description="What you buy shows here, with where it’s got to." headingLevel={2}
-                actions={<Link href="#shop">Start shopping</Link>} />
-            : <>
-              <div role="search" aria-label="Orders" className="flex flex-wrap items-end gap-3">
-                <Field label="Search orders" hint="By order number or what was in it." className="min-w-0 flex-1">
-                  <SearchInput value={q} onChange={(e) => filter({ q: e.target.value })} onClear={() => filter({ q: '' })} />
-                </Field>
-                <Field label="Show">
-                  <Select value={state} onChange={(e) => filter({ state: e.target.value as OrderState | '' })}
-                    options={[{ value: '', label: 'All orders' }, ...(Object.keys(STATES) as OrderState[]).map((k) => ({ value: k, label: STATES[k].label }))]} />
-                </Field>
-              </div>
-              <p id="order-count" role="status" className="m-0 text-sm text-text-muted">
-                {found.length === orders.length ? `${n(orders.length)} orders` : `${n(found.length)} of ${n(orders.length)} orders`}
-              </p>
-              {!found.length ? (
-                <EmptyNoResults query={q.trim()} title={(text) => (text ? `No orders match “${text}”` : 'No orders match this filter')}
-                  description="Check the spelling, or clear the search to see every order." headingLevel={2} onClearFilters={() => filter({ q: '', state: '' })} />
-              ) : (
-                <ul className="m-0 flex list-none flex-col gap-3 p-0">
-                  {page.map((o) => (
-                    <li key={o.number}>
-                      <Card className="flex flex-col gap-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h2 data-order-heading tabIndex={-1} className="m-0 text-base font-semibold outline-none">Order {o.number}</h2>
-                          <Badge tone={STATES[o.state].tone}>{STATES[o.state].label}</Badge>
-                        </div>
-                        <p className="m-0 text-sm text-text-muted">
-                          Placed <FormattedDate value={o.placed} /> · <FormattedNumber value={o.total} format="currency" currency={currency} />
-                        </p>
-                        <p className="m-0 wrap-break-word">{itemWords(o.items, (k) => `${n(k)} more`)}</p>
-                        <div className="flex flex-wrap items-center gap-3">
-                          <Link href={o.href ?? '#'} aria-label={`View order ${o.number}`}>View order</Link>
-                          {o.state === 'cancelled' ? null : (
-                            <Button size="sm" variant="outline" loading={buying === o.number} aria-label={`Buy again: order ${o.number}`} onClick={() => buyAgain(o)}>Buy again</Button>
-                          )}
-                        </div>
-                      </Card>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {found.length ? <LoadMore onLoadMore={more} hasMore={page.length < found.length} count={page.length} total={found.length} label="Show more orders" /> : null}
-            </>}
-        </div>
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" ref={mainRef} id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the orders loaded before you went offline. Buying again needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Orders' }]} title="Orders" description="Every order you’ve placed, newest first." />
+          <div className="flex flex-col gap-5 pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load your orders" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading orders" /></Card>
+              : !orders.length ? <EmptyState icon="receipt_long" title="No orders yet" description="What you buy shows here, with where it’s got to." headingLevel={2}
+                  actions={<Link href="#shop">Start shopping</Link>} />
+              : <>
+                <div role="search" aria-label="Orders" className="flex flex-wrap items-end gap-3">
+                  <Field label="Search orders" hint="By order number or what was in it." className="min-w-0 flex-1">
+                    <SearchInput value={q} onChange={(e) => filter({ q: e.target.value })} onClear={() => filter({ q: '' })} />
+                  </Field>
+                  <Field label="Show">
+                    <Select value={state} onChange={(e) => filter({ state: e.target.value as OrderState | '' })}
+                      options={[{ value: '', label: 'All orders' }, ...(Object.keys(STATES) as OrderState[]).map((k) => ({ value: k, label: STATES[k].label }))]} />
+                  </Field>
+                </div>
+                <p id="order-count" role="status" className="m-0 text-sm text-text-muted">
+                  {found.length === orders.length ? `${n(orders.length)} orders` : `${n(found.length)} of ${n(orders.length)} orders`}
+                </p>
+                {!found.length ? (
+                  <EmptyNoResults query={q.trim()} title={(text) => (text ? `No orders match “${text}”` : 'No orders match this filter')}
+                    description="Check the spelling, or clear the search to see every order." headingLevel={2} onClearFilters={() => filter({ q: '', state: '' })} />
+                ) : (
+                  <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                    {page.map((o) => (
+                      <li key={o.number}>
+                        <Card className="flex flex-col gap-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <h2 data-order-heading tabIndex={-1} className="m-0 text-base font-semibold outline-none">Order {o.number}</h2>
+                            <Badge tone={STATES[o.state].tone}>{STATES[o.state].label}</Badge>
+                          </div>
+                          <p className="m-0 text-sm text-text-muted">
+                            Placed <FormattedDate value={o.placed} /> · <FormattedNumber value={o.total} format="currency" currency={currency} />
+                          </p>
+                          <p className="m-0 wrap-break-word">{itemWords(o.items, (k) => `${n(k)} more`)}</p>
+                          <div className="flex flex-wrap items-center gap-3">
+                            <Link href={o.href ?? '#'} aria-label={`View order ${o.number}`}>View order</Link>
+                            {o.state === 'cancelled' ? null : (
+                              <Button size="sm" variant="outline" loading={buying === o.number} aria-label={`Buy again: order ${o.number}`} onClick={() => buyAgain(o)}>Buy again</Button>
+                            )}
+                          </div>
+                        </Card>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {found.length ? <LoadMore onLoadMore={more} hasMore={page.length < found.length} count={page.length} total={found.length} label="Show more orders" /> : null}
+              </>}
+          </div>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

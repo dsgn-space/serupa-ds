@@ -14,6 +14,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Help center: the topics people come for, the common questions with a search, and a way to write to a person that
    says when they'll answer. For an app to copy. What it carries (WCAG 2.2):
@@ -115,54 +117,56 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">You can read the answers already loaded. Searching for more and sending a question need a connection.</OfflineBanner>
-        <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
-        {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">You can read the answers already loaded. Searching for more and sending a question need a connection.</OfflineBanner>
+          <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
+          {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>
 
-        <section aria-labelledby="help-topics" className="flex flex-col gap-4">
-          <Heading level={2} size="lg" id="help-topics">Topics</Heading>
-          <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
-            {topics.map((t) => (
-              <li key={t.id} className="flex">
-                <Card href={t.href} className="w-full">
-                  <CardHeader title={t.title} description={t.description} headingLevel={3} />
-                </Card>
-              </li>
-            ))}
-          </ul>
-        </section>
+          <section aria-labelledby="help-topics" className="flex flex-col gap-4">
+            <Heading level={2} size="lg" id="help-topics">Topics</Heading>
+            <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
+              {topics.map((t) => (
+                <li key={t.id} className="flex">
+                  <Card href={t.href} className="w-full">
+                    <CardHeader title={t.title} description={t.description} headingLevel={3} />
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <Faq groups={questions} headingLevel={2}
-          contact={<p className="m-0"><Link href="#contact">Write to us</Link>. We answer {replyTime}.</p>} />
+          <Faq groups={questions} headingLevel={2}
+            contact={<p className="m-0"><Link href="#contact">Write to us</Link>. We answer {replyTime}.</p>} />
 
-        <section id="contact" aria-labelledby="help-contact" className="flex flex-col gap-4">
-          {state === 'sent' ? (
-            <>
-              <Heading level={2} size="lg" id="help-contact" ref={sentHeading} tabIndex={-1} className="outline-none">We got your message</Heading>
-              <p className="m-0">We answer {replyTime}, by email to <strong>{email}</strong>. You don’t need to do anything else.</p>
-            </>
-          ) : (
-            <>
-              <Heading level={2} size="lg" id="help-contact">Write to us</Heading>
-              <p className="m-0 text-text-muted">A person reads every message and answers {replyTime}, by email to {email}.</p>
-              <form noValidate onSubmit={send} className="flex max-w-xl flex-col gap-4">
-                {state === 'failed' ? <Alert tone="danger">Couldn’t send your message. Try again: your words are still here.</Alert> : null}
-                <Field label="What is it about?" error={problem('topic')} required>
-                  <Select id="help-topic" placeholder="Choose one" value={value.topic} options={TOPICS.map((t) => ({ value: t, label: t }))}
-                    onChange={(e) => set({ topic: e.target.value })} />
-                </Field>
-                <Field label="Your message" hint="What happened, and what you expected. Add the page or project name if it helps." error={problem('message')} required>
-                  <Textarea id="help-message" rows={5} value={value.message} onChange={(e) => set({ message: e.target.value })} />
-                </Field>
-                <Button type="submit" className="self-start" loading={state === 'sending'}>Send</Button>
-              </form>
-            </>
-          )}
-        </section>
-        </>)}
-      </main>
+          <section id="contact" aria-labelledby="help-contact" className="flex flex-col gap-4">
+            {state === 'sent' ? (
+              <>
+                <Heading level={2} size="lg" id="help-contact" ref={sentHeading} tabIndex={-1} className="outline-none">We got your message</Heading>
+                <p className="m-0">We answer {replyTime}, by email to <strong>{email}</strong>. You don’t need to do anything else.</p>
+              </>
+            ) : (
+              <>
+                <Heading level={2} size="lg" id="help-contact">Write to us</Heading>
+                <p className="m-0 text-text-muted">A person reads every message and answers {replyTime}, by email to {email}.</p>
+                <form noValidate onSubmit={send} className="flex max-w-xl flex-col gap-4">
+                  {state === 'failed' ? <Alert tone="danger">Couldn’t send your message. Try again: your words are still here.</Alert> : null}
+                  <Field label="What is it about?" error={problem('topic')} required>
+                    <Select id="help-topic" placeholder="Choose one" value={value.topic} options={TOPICS.map((t) => ({ value: t, label: t }))}
+                      onChange={(e) => set({ topic: e.target.value })} />
+                  </Field>
+                  <Field label="Your message" hint="What happened, and what you expected. Add the page or project name if it helps." error={problem('message')} required>
+                    <Textarea id="help-message" rows={5} value={value.message} onChange={(e) => set({ message: e.target.value })} />
+                  </Field>
+                  <Button type="submit" className="self-start" loading={state === 'sending'}>Send</Button>
+                </form>
+              </>
+            )}
+          </section>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }

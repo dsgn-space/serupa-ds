@@ -20,6 +20,8 @@ import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Address book: the addresses you've saved for delivery, one of them the default, each edited, removed or made the
    default in place. For an app to copy. What it carries (WCAG 2.2):
@@ -153,87 +155,89 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are your saved addresses. Saving a change needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Addresses' }]} title="Addresses"
-          description="Where we deliver. The default one is chosen for you at checkout."
-          primary={loading || loadFailed ? undefined : { label: 'Add address', onSelect: () => open(blank) }} />
-        <section aria-labelledby="saved" className="flex flex-col gap-4 pt-6">
-          <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
-            : !shown.length ? <EmptyState icon="location_on" title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} />
-            : (
-              <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-2">
-                {shown.map((a) => {
-                  const isDef = a.id === def;
-                  return (
-                    <li key={a.id} className="flex">
-                      <Card className="flex w-full flex-col gap-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="m-0 text-base font-semibold">{a.label}</h3>
-                          {isDef ? <Badge tone="info">Default</Badge> : null}
-                        </div>
-                        <address className="not-italic">
-                          <div>{a.name}</div><div>{a.line1}</div>{a.line2 ? <div>{a.line2}</div> : null}
-                          <div>{a.city} {a.postalCode}</div><div>{a.country}</div>
-                          {a.phone ? <div>{a.phone}</div> : null}
-                        </address>
-                        {isDef && shown.length > 1 ? <p className="m-0 text-sm text-text-muted">To remove it, make another address the default first.</p> : null}
-                        <div className="mt-auto flex flex-wrap gap-2">
-                          <Button id={`edit-${a.id}`} size="sm" variant="outline" aria-label={`Edit ${a.label}`} onClick={() => open(a)}>Edit</Button>
-                          {isDef && shown.length > 1 ? null : <Button id={`remove-${a.id}`} size="sm" variant="ghost" aria-label={`Remove ${a.label}`} onClick={() => remove(a)}>Remove</Button>}
-                          {isDef ? null : <Button size="sm" variant="ghost" aria-label={`Make default: ${a.label}`} onClick={() => makeDef(a)}>Make default</Button>}
-                        </div>
-                      </Card>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-        </section>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are your saved addresses. Saving a change needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Addresses' }]} title="Addresses"
+            description="Where we deliver. The default one is chosen for you at checkout."
+            primary={loading || loadFailed ? undefined : { label: 'Add address', onSelect: () => open(blank) }} />
+          <section aria-labelledby="saved" className="flex flex-col gap-4 pt-6">
+            <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
+              : !shown.length ? <EmptyState icon="location_on" title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} />
+              : (
+                <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-2">
+                  {shown.map((a) => {
+                    const isDef = a.id === def;
+                    return (
+                      <li key={a.id} className="flex">
+                        <Card className="flex w-full flex-col gap-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="m-0 text-base font-semibold">{a.label}</h3>
+                            {isDef ? <Badge tone="info">Default</Badge> : null}
+                          </div>
+                          <address className="not-italic">
+                            <div>{a.name}</div><div>{a.line1}</div>{a.line2 ? <div>{a.line2}</div> : null}
+                            <div>{a.city} {a.postalCode}</div><div>{a.country}</div>
+                            {a.phone ? <div>{a.phone}</div> : null}
+                          </address>
+                          {isDef && shown.length > 1 ? <p className="m-0 text-sm text-text-muted">To remove it, make another address the default first.</p> : null}
+                          <div className="mt-auto flex flex-wrap gap-2">
+                            <Button id={`edit-${a.id}`} size="sm" variant="outline" aria-label={`Edit ${a.label}`} onClick={() => open(a)}>Edit</Button>
+                            {isDef && shown.length > 1 ? null : <Button id={`remove-${a.id}`} size="sm" variant="ghost" aria-label={`Remove ${a.label}`} onClick={() => remove(a)}>Remove</Button>}
+                            {isDef ? null : <Button size="sm" variant="ghost" aria-label={`Make default: ${a.label}`} onClick={() => makeDef(a)}>Make default</Button>}
+                          </div>
+                        </Card>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+          </section>
 
-        <Dialog open={!!draft} onOpenChange={(o) => { if (!o && !busy) setDraft(null); }} title={draft?.id ? `Edit ${draft.label || 'address'}` : 'Add an address'}
-          description="All fields are needed unless they say they’re optional.">
-          {draft ? (
-            <form onSubmit={save} noValidate className="flex flex-col gap-4">
-              <ErrorSummary key={tries} errors={errors} headingLevel={3} />
-              {failed ? <Alert tone="danger">Couldn’t save the address. Try again; everything you entered is still here.</Alert> : null}
-              <Field label="Name for this address" id="address-label" hint="Like Home or Office." error={problems.label} required>
-                <Input autoComplete="off" value={draft.label} onChange={(e) => edit({ label: e.target.value })} />
-              </Field>
-              <Field label="Full name" id="address-name" error={problems.name} required>
-                <Input autoComplete="shipping name" value={draft.name} onChange={(e) => edit({ name: e.target.value })} />
-              </Field>
-              <Field label="Street and number" id="address-line1" error={problems.line1} required>
-                <Input autoComplete="shipping address-line1" value={draft.line1} onChange={(e) => edit({ line1: e.target.value })} />
-              </Field>
-              <Field label="Apartment, floor or building" id="address-line2" optional>
-                <Input autoComplete="shipping address-line2" value={draft.line2 ?? ''} onChange={(e) => edit({ line2: e.target.value })} />
-              </Field>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Town or city" id="address-city" error={problems.city} required>
-                  <Input autoComplete="shipping address-level2" value={draft.city} onChange={(e) => edit({ city: e.target.value })} />
+          <Dialog open={!!draft} onOpenChange={(o) => { if (!o && !busy) setDraft(null); }} title={draft?.id ? `Edit ${draft.label || 'address'}` : 'Add an address'}
+            description="All fields are needed unless they say they’re optional.">
+            {draft ? (
+              <form onSubmit={save} noValidate className="flex flex-col gap-4">
+                <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                {failed ? <Alert tone="danger">Couldn’t save the address. Try again; everything you entered is still here.</Alert> : null}
+                <Field label="Name for this address" id="address-label" hint="Like Home or Office." error={problems.label} required>
+                  <Input autoComplete="off" value={draft.label} onChange={(e) => edit({ label: e.target.value })} />
                 </Field>
-                <Field label="Postal code" id="address-postalCode" error={problems.postalCode} required>
-                  <Input autoComplete="shipping postal-code" value={draft.postalCode} onChange={(e) => edit({ postalCode: e.target.value })} />
+                <Field label="Full name" id="address-name" error={problems.name} required>
+                  <Input autoComplete="shipping name" value={draft.name} onChange={(e) => edit({ name: e.target.value })} />
                 </Field>
-              </div>
-              <Field label="Country" id="address-country" error={problems.country} required>
-                <Select autoComplete="shipping country-name" placeholder="Choose a country" options={countries} value={draft.country} onChange={(e) => edit({ country: e.target.value })} />
-              </Field>
-              <Field label="Phone" id="address-phone" hint="For the courier, if they can’t find you." optional>
-                <Input type="tel" autoComplete="shipping tel" value={draft.phone ?? ''} onChange={(e) => edit({ phone: e.target.value })} />
-              </Field>
-              {draft.id === def || !shown.length ? null : <Checkbox checked={makeDefault} onCheckedChange={setMakeDefault}>Make this my default address</Checkbox>}
-              <div className="flex flex-wrap gap-3">
-                <Button type="submit" loading={busy}>Save address</Button>
-                <Button variant="ghost" onClick={() => setDraft(null)} disabled={busy}>Cancel</Button>
-              </div>
-            </form>
-          ) : null}
-        </Dialog>
-      </main>
+                <Field label="Street and number" id="address-line1" error={problems.line1} required>
+                  <Input autoComplete="shipping address-line1" value={draft.line1} onChange={(e) => edit({ line1: e.target.value })} />
+                </Field>
+                <Field label="Apartment, floor or building" id="address-line2" optional>
+                  <Input autoComplete="shipping address-line2" value={draft.line2 ?? ''} onChange={(e) => edit({ line2: e.target.value })} />
+                </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Town or city" id="address-city" error={problems.city} required>
+                    <Input autoComplete="shipping address-level2" value={draft.city} onChange={(e) => edit({ city: e.target.value })} />
+                  </Field>
+                  <Field label="Postal code" id="address-postalCode" error={problems.postalCode} required>
+                    <Input autoComplete="shipping postal-code" value={draft.postalCode} onChange={(e) => edit({ postalCode: e.target.value })} />
+                  </Field>
+                </div>
+                <Field label="Country" id="address-country" error={problems.country} required>
+                  <Select autoComplete="shipping country-name" placeholder="Choose a country" options={countries} value={draft.country} onChange={(e) => edit({ country: e.target.value })} />
+                </Field>
+                <Field label="Phone" id="address-phone" hint="For the courier, if they can’t find you." optional>
+                  <Input type="tel" autoComplete="shipping tel" value={draft.phone ?? ''} onChange={(e) => edit({ phone: e.target.value })} />
+                </Field>
+                {draft.id === def || !shown.length ? null : <Checkbox checked={makeDefault} onCheckedChange={setMakeDefault}>Make this my default address</Checkbox>}
+                <div className="flex flex-wrap gap-3">
+                  <Button type="submit" loading={busy}>Save address</Button>
+                  <Button variant="ghost" onClick={() => setDraft(null)} disabled={busy}>Cancel</Button>
+                </div>
+              </form>
+            ) : null}
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

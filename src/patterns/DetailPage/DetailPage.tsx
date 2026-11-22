@@ -19,6 +19,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Detail page: one thing (a project) with where it sits, its name and details editable in place, its parts in tabs,
    small removals that can be undone, and a delete that can't, behind typing its name. For an app to copy. What it
@@ -148,91 +150,93 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className={`mx-auto flex ${aside ? 'max-w-6xl' : 'max-w-4xl'} flex-col gap-6 px-4 py-8 outline-none`}>
-        <OfflineBanner online={online} placement="inline">This is the project as it was when the page loaded. Changes need a connection.</OfflineBanner>
-        {loadFailed || loading ? (
-          // The name isn't known yet, so the h1 says only what the page is; the way back stays.
-          <>
-            <Link href="#projects">Back to projects</Link>
-            <Heading level={1} className="sr-only">Project</Heading>
-            {loadFailed ? <EmptyLoadFailed title="Couldn’t load this project" onRetry={() => onRetry?.()} headingLevel={2} />
-              : <Card><Loader variant="skeleton" shape="text" lines={4} label="Loading project" /></Card>}
-          </>
-        ) : deleted ? (
-          <div className="flex flex-col gap-3">
-            <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">{name} was deleted</Heading>
-            <p className="m-0 text-text-muted">Its tasks and files are gone too.</p>
-            <Link href="#projects">Back to projects</Link>
-          </div>
-        ) : (
-          <>
-            <PageHeader breadcrumb={[{ label: 'Projects', href: '#projects' }, { label: name }]} title={name} description={description}
-              primary={{ label: 'Share', href: '#share' }} />
-
-            <div className={aside ? 'grid grid-cols-1 items-start gap-6 lg:grid-cols-3' : 'contents'}>
-            <Tabs defaultValue="overview" className={aside ? 'min-w-0 lg:col-span-2' : undefined}>
-              <TabList aria-label="Project">
-                <Tab value="overview">Overview</Tab>
-                <Tab value="tasks">Tasks</Tab>
-                <Tab value="settings">Settings</Tab>
-              </TabList>
-
-              <TabPanel value="overview" className="pt-4">
-                <Card>
-                  <DescriptionList>
-                    <DescriptionItem term="Name">
-                      <InlineEdit label="Project name" value={name} onValueChange={save('name', setName)}
-                        validate={(v) => (v.trim() ? null : 'Enter a name for the project.')} />
-                    </DescriptionItem>
-                    <DescriptionItem term="Description"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></DescriptionItem>
-                    <DescriptionItem term="Owner">{project.owner}</DescriptionItem>
-                    <DescriptionItem term="Created"><time dateTime={project.created}>{day(project.created, locale)}</time></DescriptionItem>
-                  </DescriptionList>
-                </Card>
-              </TabPanel>
-
-              <TabPanel value="tasks" className="pt-4">
-                <Card className="flex flex-col gap-4">
-                  <Heading level={2} size="lg" ref={tasksHeading} tabIndex={-1} className="outline-none">Tasks ({formatNumber(tasks.length, locale)})</Heading>
-                  {tasks.length ? (
-                    <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
-                      {tasks.map((t) => (
-                        <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 py-2">
-                          <span className="min-w-0">{t.title}</span>
-                          <Button id={`task-${t.id}`} size="sm" variant="ghost" aria-label={`Remove ${t.title}`} onClick={() => remove(t)}>Remove</Button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : <p className="m-0 text-text-muted">No tasks left.</p>}
-                </Card>
-              </TabPanel>
-
-              <TabPanel value="settings" className="pt-4">
-                <section aria-labelledby="danger" className="flex flex-col gap-4 rounded-lg border border-danger bg-surface p-4">
-                  <Heading level={2} size="lg" id="danger">Delete this project</Heading>
-                  <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can’t be undone.</p>
-                  <div><Button destructive variant="outline" onClick={() => ask(true)}>Delete project</Button></div>
-                </section>
-              </TabPanel>
-            </Tabs>
-            {aside ? (
-              <aside aria-labelledby="detail-aside" className="flex min-w-0 flex-col gap-3">
-                <Heading level={2} size="lg" id="detail-aside">{aside.title}</Heading>
-                {aside.content}
-              </aside>
-            ) : null}
+      <Container as="main" size={aside ? 'xl' : 'lg'} className="py-8 outline-none" id="main" aria-busy={loading && !loadFailed ? true : undefined}>
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">This is the project as it was when the page loaded. Changes need a connection.</OfflineBanner>
+          {loadFailed || loading ? (
+            // The name isn't known yet, so the h1 says only what the page is; the way back stays.
+            <>
+              <Link href="#projects">Back to projects</Link>
+              <Heading level={1} className="sr-only">Project</Heading>
+              {loadFailed ? <EmptyLoadFailed title="Couldn’t load this project" onRetry={() => onRetry?.()} headingLevel={2} />
+                : <Card><Loader variant="skeleton" shape="text" lines={4} label="Loading project" /></Card>}
+            </>
+          ) : deleted ? (
+            <div className="flex flex-col gap-3">
+              <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">{name} was deleted</Heading>
+              <p className="m-0 text-text-muted">Its tasks and files are gone too.</p>
+              <Link href="#projects">Back to projects</Link>
             </div>
+          ) : (
+            <>
+              <PageHeader breadcrumb={[{ label: 'Projects', href: '#projects' }, { label: name }]} title={name} description={description}
+                primary={{ label: 'Share', href: '#share' }} />
 
-            <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
-              description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
-              <div className="flex flex-col gap-4">
-                {failed ? <Alert tone="danger">Couldn’t delete {name}. Try again.</Alert> : null}
-                <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
+              <div className={aside ? 'grid grid-cols-1 items-start gap-6 lg:grid-cols-3' : 'contents'}>
+              <Tabs defaultValue="overview" className={aside ? 'min-w-0 lg:col-span-2' : undefined}>
+                <TabList aria-label="Project">
+                  <Tab value="overview">Overview</Tab>
+                  <Tab value="tasks">Tasks</Tab>
+                  <Tab value="settings">Settings</Tab>
+                </TabList>
+
+                <TabPanel value="overview" className="pt-4">
+                  <Card>
+                    <DescriptionList>
+                      <DescriptionItem term="Name">
+                        <InlineEdit label="Project name" value={name} onValueChange={save('name', setName)}
+                          validate={(v) => (v.trim() ? null : 'Enter a name for the project.')} />
+                      </DescriptionItem>
+                      <DescriptionItem term="Description"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></DescriptionItem>
+                      <DescriptionItem term="Owner">{project.owner}</DescriptionItem>
+                      <DescriptionItem term="Created"><time dateTime={project.created}>{day(project.created, locale)}</time></DescriptionItem>
+                    </DescriptionList>
+                  </Card>
+                </TabPanel>
+
+                <TabPanel value="tasks" className="pt-4">
+                  <Card className="flex flex-col gap-4">
+                    <Heading level={2} size="lg" ref={tasksHeading} tabIndex={-1} className="outline-none">Tasks ({formatNumber(tasks.length, locale)})</Heading>
+                    {tasks.length ? (
+                      <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
+                        {tasks.map((t) => (
+                          <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 py-2">
+                            <span className="min-w-0">{t.title}</span>
+                            <Button id={`task-${t.id}`} size="sm" variant="ghost" aria-label={`Remove ${t.title}`} onClick={() => remove(t)}>Remove</Button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : <p className="m-0 text-text-muted">No tasks left.</p>}
+                  </Card>
+                </TabPanel>
+
+                <TabPanel value="settings" className="pt-4">
+                  <section aria-labelledby="danger" className="flex flex-col gap-4 rounded-lg border border-danger bg-surface p-4">
+                    <Heading level={2} size="lg" id="danger">Delete this project</Heading>
+                    <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can’t be undone.</p>
+                    <div><Button destructive variant="outline" onClick={() => ask(true)}>Delete project</Button></div>
+                  </section>
+                </TabPanel>
+              </Tabs>
+              {aside ? (
+                <aside aria-labelledby="detail-aside" className="flex min-w-0 flex-col gap-3">
+                  <Heading level={2} size="lg" id="detail-aside">{aside.title}</Heading>
+                  {aside.content}
+                </aside>
+              ) : null}
               </div>
-            </Dialog>
-          </>
-        )}
-      </main>
+
+              <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
+                description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
+                <div className="flex flex-col gap-4">
+                  {failed ? <Alert tone="danger">Couldn’t delete {name}. Try again.</Alert> : null}
+                  <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
+                </div>
+              </Dialog>
+            </>
+          )}
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

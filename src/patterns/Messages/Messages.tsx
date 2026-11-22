@@ -15,6 +15,8 @@ import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Messages: one-to-one conversations, the list beside the open one, with a field to write in. For an app to copy.
    What it carries (WCAG 2.2):
@@ -179,19 +181,21 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the conversations loaded before you went offline. Sending needs a connection.</OfflineBanner>
-        <PageHeader title="Messages" />
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Loader variant="skeleton" shape="text" lines={6} label="Loading conversations" />
-            : !list.length ? <EmptyState icon="chat" title="No messages yet" headingLevel={2} description="When someone writes to you, the conversation shows here." />
-            : wide ? <div className="grid grid-cols-3 gap-6">{rows}{thread ?? (
-              <div className="col-span-2"><EmptyState icon="forum" title="Choose a conversation" headingLevel={2} description="Its messages show here, with a field to reply in." /></div>
-            )}</div>
-            : showing && thread ? thread : rows}
-        </div>
-      </main>
+      <Container as="main" size="xl" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the conversations loaded before you went offline. Sending needs a connection.</OfflineBanner>
+          <PageHeader title="Messages" />
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Loader variant="skeleton" shape="text" lines={6} label="Loading conversations" />
+              : !list.length ? <EmptyState icon="chat" title="No messages yet" headingLevel={2} description="When someone writes to you, the conversation shows here." />
+              : wide ? <div className="grid grid-cols-3 gap-6">{rows}{thread ?? (
+                <div className="col-span-2"><EmptyState icon="forum" title="Choose a conversation" headingLevel={2} description="Its messages show here, with a field to reply in." /></div>
+              )}</div>
+              : showing && thread ? thread : rows}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

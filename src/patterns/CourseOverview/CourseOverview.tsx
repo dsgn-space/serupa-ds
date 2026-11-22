@@ -16,6 +16,8 @@ import { Loader } from '../../components/Loader/Loader';
 import { Duration } from '../../components/Duration/Duration';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Course overview: a course's modules and lessons, how far you are, where to carry on, and marking lessons done.
    For an app to copy. What it carries (WCAG 2.2):
@@ -103,57 +105,59 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#courses">Your courses</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is your progress as it was when the page loaded. Lessons need a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the course" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the course" /></Card> : (<>
-        <div className="flex flex-col gap-6 pt-6">
-          <p className="m-0 flex flex-wrap items-center gap-2 text-text-muted">
-            <Avatar name={teacher} alt="" size="sm" />
-            <span>With {teacher} · {num(p.total)} lessons · {total} in all</span>
-          </p>
-          <Card className="flex flex-col gap-4">
-            <Progress label="Course progress" value={p.done} max={p.total} showValue tone={p.next ? 'primary' : 'success'}
-              formatValue={(v, m) => lessonsWords(v, m)} />
-            {p.next ? (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="m-0"><span className="block text-sm text-text-muted">Up next</span><span className="font-semibold">{p.next.title}</span></p>
-                <Button href={`#lesson-${p.next.id}`} aria-label={`Continue: ${p.next.title}`}>Continue</Button>
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="m-0 font-semibold">You’ve done every lesson. Well done!</p>
-                <Button href="#certificate">Get your certificate</Button>
-              </div>
-            )}
-          </Card>
-          <Accordion selectionMode="multiple" value={open} onValueChange={setOpen} headingLevel={2} variant="card">
-            {modules.map((m, mi) => {
-              const d = m.lessons.filter((l) => done.includes(l.id)).length;
-              return (
-                <AccordionItem key={m.id} value={m.id} title={<span className="flex flex-wrap items-baseline gap-x-3">
-                  <span>{num(mi + 1)}. {m.title}</span>
-                  <span className="text-sm font-normal text-text-muted">{d === m.lessons.length ? 'Done' : lessonsWords(d, m.lessons.length)}</span>
-                </span>}>
-                  <ol className="m-0 flex list-none flex-col gap-3 pt-2">
-                    {m.lessons.map((l) => (
-                      <li key={l.id} className="flex flex-wrap items-center justify-between gap-3">
-                        <span className="min-w-0">
-                          <Link href={`#lesson-${l.id}`}>{l.title}</Link>
-                          <span className="block text-sm text-text-muted"><Duration value={l.minutes} unit="minute" />{l.id === p.next?.id ? ' · Up next' : ''}</span>
-                        </span>
-                        <Checkbox aria-label={`Done: ${l.title}`} checked={done.includes(l.id)} onCheckedChange={(on) => mark(l.id, on)}>Done</Checkbox>
-                      </li>
-                    ))}
-                  </ol>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        </div>
-        </>)}
-      </main>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is your progress as it was when the page loaded. Lessons need a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the course" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the course" /></Card> : (<>
+          <div className="flex flex-col gap-6 pt-6">
+            <p className="m-0 flex flex-wrap items-center gap-2 text-text-muted">
+              <Avatar name={teacher} alt="" size="sm" />
+              <span>With {teacher} · {num(p.total)} lessons · {total} in all</span>
+            </p>
+            <Card className="flex flex-col gap-4">
+              <Progress label="Course progress" value={p.done} max={p.total} showValue tone={p.next ? 'primary' : 'success'}
+                formatValue={(v, m) => lessonsWords(v, m)} />
+              {p.next ? (
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="m-0"><span className="block text-sm text-text-muted">Up next</span><span className="font-semibold">{p.next.title}</span></p>
+                  <Button href={`#lesson-${p.next.id}`} aria-label={`Continue: ${p.next.title}`}>Continue</Button>
+                </div>
+              ) : (
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="m-0 font-semibold">You’ve done every lesson. Well done!</p>
+                  <Button href="#certificate">Get your certificate</Button>
+                </div>
+              )}
+            </Card>
+            <Accordion selectionMode="multiple" value={open} onValueChange={setOpen} headingLevel={2} variant="card">
+              {modules.map((m, mi) => {
+                const d = m.lessons.filter((l) => done.includes(l.id)).length;
+                return (
+                  <AccordionItem key={m.id} value={m.id} title={<span className="flex flex-wrap items-baseline gap-x-3">
+                    <span>{num(mi + 1)}. {m.title}</span>
+                    <span className="text-sm font-normal text-text-muted">{d === m.lessons.length ? 'Done' : lessonsWords(d, m.lessons.length)}</span>
+                  </span>}>
+                    <ol className="m-0 flex list-none flex-col gap-3 pt-2">
+                      {m.lessons.map((l) => (
+                        <li key={l.id} className="flex flex-wrap items-center justify-between gap-3">
+                          <span className="min-w-0">
+                            <Link href={`#lesson-${l.id}`}>{l.title}</Link>
+                            <span className="block text-sm text-text-muted"><Duration value={l.minutes} unit="minute" />{l.id === p.next?.id ? ' · Up next' : ''}</span>
+                          </span>
+                          <Checkbox aria-label={`Done: ${l.title}`} checked={done.includes(l.id)} onCheckedChange={(on) => mark(l.id, on)}>Done</Checkbox>
+                        </li>
+                      ))}
+                    </ol>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </div>
+          </>)}
+        </Stack>
+      </Container>
     </div>
   );
 }
