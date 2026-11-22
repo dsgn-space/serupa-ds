@@ -36,14 +36,13 @@ export function tokensCss(t = tokens()) {
 
 // A page with the tokens, bundle.css and (optionally) React + serupa.iife.js, written next to the
 // project so file:// URLs to fonts and libraries resolve.
-// extra: also load utilities-extra.css (the masks and gradients) after the bundle, as a page that uses them does.
-export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../dist/bundle.css', extra = false } = {}) {
+export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../dist/bundle.css' } = {}) {
   const dir = path.join(PROJECT, '.test-tmp');
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'tokens.test.css'), tokensCss().css);
   const libs = react ? ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/serupa.iife.js'].map((s) => `<script src="../${s}"></script>`).join('') : '';
   const attrs = htmlAttrs ?? `data-theme="${tokensCss().themes[0]}"`;
-  const head = (theme ? '<script src="../dist/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../dist/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">` + (extra ? '<link rel="stylesheet" href="../dist/utilities-extra.css">' : '');
+  const head = (theme ? '<script src="../dist/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../dist/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">`;
   const html = `<!doctype html><html ${attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${head}${libs}${extraHead}</head><body>${body}</body></html>`;
   const file = path.join(dir, name);
   fs.writeFileSync(file, html);
@@ -325,9 +324,31 @@ export function affectedComponents(files) {
 // that base (run.mjs --since: a pull request's, a queue group's) leaves them out; the nightly run checks main whole. They took
 // about 240 s of the checks group's 650 (13 Nov), and 24 of 80 pull requests on 15 and 16 Nov changed nothing they read.
 export const BUILT_CHECKS = ['tree-shake', 'purge-components', 'no-css', 'reproducible'];
-export const builtUnchanged = (files) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
-  && !/^(\.github\/actions|tools\/build)\//.test(f) && !/^tools\/test\/baseline-server\//.test(f)
-  && !new RegExp(`^tools/test/(lib|${BUILT_CHECKS.join('|')})\\.mjs$`).test(f));
+// The tools a script reads: the ones it imports, and the ones it runs as path.join(P, 'tools', …), followed through.
+// What the build reads this way (tools/utilities/, tools/tokens/, tools/lint/a11y-components.mjs, …) builds the package
+// too: a list of folders by hand left those out, so a change to the utility template skipped the built checks.
+export function toolsRead(entries) {
+  const seen = new Set();
+  const todo = [...entries];
+  while (todo.length) {
+    const f = todo.pop();
+    const abs = path.join(PROJECT, f);
+    if (seen.has(f) || !fs.existsSync(abs) || !fs.statSync(abs).isFile()) continue;
+    seen.add(f);
+    const code = fs.readFileSync(abs, 'utf8');
+    for (const m of code.matchAll(/(?:from|import\()\s*['"](\.\.?\/[^'"]+)['"]/g)) todo.push(path.posix.normalize(path.posix.join(path.posix.dirname(f), m[1])));
+    for (const m of code.matchAll(/path\.join\(\s*\w+\s*,\s*'tools'((?:\s*,\s*'[^']+')+)\s*\)/g)) todo.push(['tools', ...[...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])].join('/'));
+  }
+  return seen;
+}
+// A change to nothing but workflows and tools, none of which the given scripts read (the setup action and the server
+// baselines count as read: they set the Node and the packages, and the markup).
+const onlyToolsBesides = (files, read) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
+  && !/^\.github\/actions\//.test(f) && !/^tools\/test\/baseline-server\//.test(f) && !read.has(f));
+export const builtUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/build/build.mjs', ...BUILT_CHECKS.map((c) => `tools/test/${c}.mjs`)]));
+// The docs site check (site.mjs, 380 s of a checks shard, 13 Nov) builds the site from src/, docs/ and site/ with
+// tools/site/: a change to tools it doesn't read builds the very site its base did, which passed it (SERUPA_SITE_AS_BASE).
+export const siteUnchanged = (files) => onlyToolsBesides(files, toolsRead(['tools/test/site.mjs', 'tools/site/vite.config.mjs']));
 // The SERUPA_ONLY name a docs site page answers to: its component, block or pattern folder, or the page's own file.
 export const sitePageKey = (file) => /^src\/(?:components|blocks|patterns)\/(\w+)\//.exec(file)?.[1] ?? file;
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));

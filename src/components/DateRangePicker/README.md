@@ -88,7 +88,7 @@ Drawn from the `Disabled` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `value` / `defaultValue` | `{ start: Date \| string \| null; end: Date \| string \| null }` | | The range, controlled or not. Each end a Date or a plain `"yyyy-mm-dd"` string for that local day (`new Date("2026-10-24")` is UTC midnight, the day before west of Greenwich, and gets a console warning there). |
-| `onValueChange` | `(range: DateRange, iso: { start, end }) => void` | | Called whenever either end changes, so also after the first pick (with `end: null`). `iso` is the same range as `"yyyy-mm-dd"` strings, to store or pass back as `value`. |
+| `onValueChange` | `(range: DateRange, details: { iso: { start, end } }) => void` | | Called whenever either end changes, so also after the first pick (with `end: null`). `details.iso` is the same range as `"yyyy-mm-dd"` strings, to store or pass back as `value`. |
 | `onInvalidInput` | `(text, reason) => void` | | Called when text typed in either field is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max`, disabled, or an end before the start). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.srp-input-rejected`, read with it) until the text changes. |
 | `min`, `max` | `Date \| string` | | Days outside can't be either end. A Date or `"yyyy-mm-dd"`. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days that can't be an end. They can sit inside a range. |

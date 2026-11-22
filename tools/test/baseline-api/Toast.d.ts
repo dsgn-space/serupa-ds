@@ -43,7 +43,7 @@ declare const toast: typeof show & {
 };
 interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
     placement?: ToasterPosition | undefined;
-    label?: string | undefined;
+    "aria-label"?: string | undefined;
     dismissLabel?: string | undefined;
     limit?: number | undefined;
     duration?: number | undefined;

@@ -92,7 +92,7 @@ describe('PeriodPicker', () => {
     await userEvent.click(button());
     await until(() => focused() === 'March 2025');
     await userEvent.click(page.getByRole('button', { name: 'May 2025' }));
-    expect(changed).toHaveBeenCalledWith('2025-05', { start: new Date(2025, 4, 1), end: new Date(2025, 4, 31) });
+    expect(changed).toHaveBeenCalledWith('2025-05', { range: { start: new Date(2025, 4, 1), end: new Date(2025, 4, 31) } });
     expect([button().getAttribute('aria-expanded'), button().textContent, document.activeElement === button()]).toEqual(['false', 'May 2025', true]);
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('month')).toBe('2025-05');
   });
@@ -108,7 +108,7 @@ describe('PeriodPicker', () => {
     for (const [k, want] of seq) { await userEvent.keyboard(k); await until(() => focused() === want); }
     expect(panel().querySelector('h2')!.textContent).toBe('2026');
     await userEvent.keyboard('{Enter}');
-    expect(changed).toHaveBeenCalledWith('2026-01', { start: new Date(2026, 0, 1), end: new Date(2026, 0, 31) });
+    expect(changed).toHaveBeenCalledWith('2026-01', { range: { start: new Date(2026, 0, 1), end: new Date(2026, 0, 31) } });
   });
 
   test('right to left, ArrowLeft goes to the next month', async () => {
@@ -158,7 +158,7 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'Q1 2026');
     // Space chooses, as Enter does.
     await userEvent.keyboard(' ');
-    expect(changed).toHaveBeenCalledWith('2026-Q1', { start: new Date(2026, 0, 1), end: new Date(2026, 2, 31) });
+    expect(changed).toHaveBeenCalledWith('2026-Q1', { range: { start: new Date(2026, 0, 1), end: new Date(2026, 2, 31) } });
     expect(button().textContent).toBe('Q1 2026');
   });
 
@@ -170,7 +170,7 @@ describe('PeriodPicker', () => {
     await userEvent.click(page.getByRole('button', { name: 'Next 12 years' }));
     expect(panel().querySelector('h2')!.textContent).toBe('2028–2039');
     await userEvent.click(page.getByRole('button', { name: '2030' }));
-    expect(changed).toHaveBeenCalledWith('2030', { start: new Date(2030, 0, 1), end: new Date(2030, 11, 31) });
+    expect(changed).toHaveBeenCalledWith('2030', { range: { start: new Date(2030, 0, 1), end: new Date(2030, 11, 31) } });
   });
 
   test('min and max: periods outside are aria-disabled and do nothing, keys stop at them, and an arrow with nothing past it is disabled', async () => {

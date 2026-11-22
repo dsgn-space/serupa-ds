@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, languageTests, onlyComponents, withDependents, touchedComponents, builtUnchanged, BUILT_CHECKS } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, languageTests, onlyComponents, withDependents, touchedComponents, builtUnchanged, siteUnchanged, BUILT_CHECKS } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -77,6 +77,11 @@ if (arg('--since')) {
   if (diff.status === 0 && builtUnchanged(diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter(Boolean))) {
     process.env.SERUPA_BUILT_AS_BASE = '1';
     if (!arg('--group') || arg('--group') === 'checks') console.log(`Leaving out ${BUILT_CHECKS.join(', ')}: the change builds the same package as ${arg('--since')}`);
+  }
+  // And one that builds the same docs site leaves out the site check (siteUnchanged).
+  if (diff.status === 0 && siteUnchanged(diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter(Boolean))) {
+    process.env.SERUPA_SITE_AS_BASE = '1';
+    if (!arg('--group') || arg('--group') === 'checks') console.log(`Leaving out site: the change builds the same docs site as ${arg('--since')}`);
   }
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');

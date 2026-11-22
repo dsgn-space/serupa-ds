@@ -34,7 +34,7 @@ import { useControllable } from '../../internal/controllable';
 export type ComboboxOption<V extends string = string> = V | { value: V; label: string; description?: React.ReactNode; disabled?: boolean };
 /** Options under a heading, as Select's optgroup: { label, options }. disabled turns off every option in it. */
 export interface ComboboxOptionGroup<V extends string = string> { label: string; options: readonly ComboboxOption<V>[]; disabled?: boolean }
-interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'rightIcon' | 'onChange'> {
+interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'endIcon' | 'onChange'> {
   /** The choices: strings, or { value, label, description, disabled }. The label is what's typed to find it and shown once picked.
       Groups { label, options } put options under a heading; a group with no match left hides its heading.
       With loadOptions, the ones shown before anything has loaded (or leave it out). */
@@ -176,7 +176,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, startIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
   const multi = props.multiple === true;
   const free = !multi && props.freeText === true, inline = free && !!props.inlineComplete;
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
@@ -573,7 +573,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
     select.current = null;
     if (r && el && el.value.length >= r[1]) el.setSelectionRange(r[0], r[1]);
   });
-  const left = asIcon(props.leftIcon);
+  const left = asIcon(props.startIcon);
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
   const listId = base + '-list';
   // Stable handlers for the memoised rows, reading the latest state through a ref.
@@ -625,7 +625,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   return (
     <span ref={box} className={cn('srp-input srp-combobox', multi && 'srp-combobox--multiple', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="combobox" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={pressFocuses(input)}>
-      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--left" aria-hidden>{left}</span> : null}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {multi ? <span className="srp-combobox__values">
         {values.length ? <span className="srp-combobox__tags" onMouseDown={keep}>
           {values.map((v) => <Badge key={v} className="srp-combobox__tag" removeLabel={sds.labels.remove}

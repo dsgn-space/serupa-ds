@@ -176,8 +176,14 @@ One idea has one name in every component. A new prop takes the name in the first
 | A composite's value | `value`, `defaultValue`, `onValueChange(value, details?)` | `onChange` (only a native wrapper keeps it), `onSelect` for a value |
 | An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
 | Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
-| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
-| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
+| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'`; a side panel's edge is `start` or `end`, which follow the reading | `position`, `side`, or a name that ends in them (`labelPosition`); `left`, `right` for an edge |
+| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color; `default` for neutral |
+| The current page or item | `current` (it sets `aria-current`) | `active`, `selected` for a page |
+| An icon at the start or end of a label | `startIcon`, `endIcon` (they mirror in right-to-left text) | `leftIcon`, `rightIcon` |
+| A callback's second argument | a details object: `{ iso }`, `{ event }`, `{ reason }`, `{ page }` | a bare event, string or number |
+| One item or many | `selectionMode`: `'single' \| 'multiple'` (and `'none'` where nothing is picked), with `selected`, `onSelectedChange` for picked rows or `value` for a composite's value | `type`, `multiple` (Combobox keeps `multiple`, as the native `<select multiple>` does) |
+| A landmark's or a group's name for screen readers | `aria-label` (or `aria-labelledby`) | `label`, which is shown text |
+| Data or children | children for parts people compose (RadioGroup, Tabs, Timeline); an array prop (`options` of `{ value, label }`, `items` of `{ id, label }`) for data the component lays out itself (SegmentedControl, Stepper, TagGroup) | mixing both for one job |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
 | Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |
@@ -186,9 +192,11 @@ One idea has one name in every component. A new prop takes the name in the first
 | Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
 | Size of a control | `size`: `'sm' \| 'md' \| 'lg'` | `small`, `compact` |
 
+**Button is the one exception to the tone and variant rows** (Diki, 21 Nov 2026): it keeps `variant="primary" | "secondary" | "outline" | "ghost" | "link"` and `destructive`, as SplitButton does, because every app writes them and no button would look different.
+
 A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
 
-`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words, delay, current-page and icon rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
 
 ### Token names
 
@@ -199,8 +207,8 @@ A component token names the part, then the property, then the state: `--<compone
 Breaking changes come together, on a schedule, so a project upgrades once rather than every few days (GR247).
 
 - **Minors and patches go out every day.** At 00:00 UTC (07:00 in Jakarta) the Daily release workflow merges the open `Release: <version>` pull request, which has gathered every changeset merged since the last release, once its checks pass; merging it tags the version and makes the GitHub release (see AGENTS.md). A project pinned to a tag is never more than a day behind `main`. A day with nothing pending has no release.
-- **One scheduled major.** Every breaking changeset (`"@diki-stwn/serupa-ds": major`) waits for the next scheduled major, 15.0.0, and adds its section to [docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md) in the same pull request. Fixes and new features keep shipping as minors and patches in the meantime.
-- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may. **Suspended for now:** while the API is still being adjusted, `"deprecationWindow": false` in `tools/release-policy.json` turns this check off, so a major may remove a name right after deprecating it. It still needs its migration note in the changeset and, where a script can make the change, its `serupa-migrate` transform. Set it back to `true` to bring the window back.
+- **One scheduled major, then a pause.** Every breaking changeset (`"@diki-stwn/serupa-ds": major`) waits for the next scheduled major and adds its section to that major's RFC in `docs/rfcs/` in the same pull request. 17.0.0 is the cleanup major (Diki, 21 Nov 2026): it gathers every breaking change the deep audit of 21 Nov accepted, after 16 majors in five weeks. After it, no major for at least three months: a breaking idea is deprecated in a minor and waits, and the next major is scheduled only once a quarter's worth has gathered. Fixes and new features keep shipping as minors and patches in the meantime.
+- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may. **Back after 17.0.0:** it was suspended from 14 Nov 2026 while the API was still being adjusted. `"suspendedThrough": "17.0.0"` in `tools/release-policy.json` keeps it off for 17.0.0 and turns it on for every major after it, with no change needed. (`"deprecationWindow": false` turns it off entirely.)
 - **The previous major gets fixes for four weeks.** For 28 days after a major ships, bug fixes and security fixes also go out as patches of the major before it (14.x after 15.0.0), from a `14.x` branch. New features go only into the new major. A fix for it is a pull request to `14.x` with its changeset and the version it makes (`node tools/version.mjs` in the branch, since the Release pull request is main's alone); CI tests it, and when it merges the Release workflow tags and releases that version without taking GitHub's "Latest" from the new major.
 - **Deprecate before you rename.** A renamed prop, class or token keeps its old name as a deprecated alias for at least those four weeks (see the [API naming table](#api-naming-table)). The major then only removes.
 

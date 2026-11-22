@@ -1,6 +1,6 @@
 // exports: Text, type TextProps, type TextSize, type TextTone, type TextWeight
 type TextSize = "base" | "lg" | "sm" | "xl" | "xs";
-type TextTone = "danger" | "default" | "muted" | "primary";
+type TextTone = "danger" | "muted" | "neutral" | "primary";
 type TextWeight = "bold" | "medium" | "normal" | "semibold";
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
     as?: "div" | "em" | "figcaption" | "label" | "li" | "p" | "small" | "span" | "strong" | undefined;

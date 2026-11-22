@@ -224,7 +224,7 @@ describe('DatePicker', () => {
     function Plain() {
       const [v, setV] = React.useState<string | null>('2026-10-24');
       return <DatePicker id="plain" aria-label="Due" locale="en-US" name="plain" value={v} min="2026-10-01" max="2026-10-31"
-        onValueChange={(d, iso) => { calls.push((d ? d.getHours() + ':' + d.getDate() : 'null') + ' ' + iso); setV(iso); }} />;
+        onValueChange={(d, { iso }) => { calls.push((d ? d.getHours() + ':' + d.getDate() : 'null') + ' ' + iso); setV(iso); }} />;
     }
     await render(<Plain />);
     const hid = () => document.querySelector<HTMLInputElement>('input[type=hidden][name=plain]')!.value;
@@ -400,7 +400,7 @@ describe('DatePicker: another calendar system (RX9)', () => {
   const gridTitle = () => { const g = document.querySelector('[role=dialog] [role=grid]:not([hidden])')!; return document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent; };
   test('calendar="persian": the popup shows the Persian month, and the typed date stays Gregorian so it reads back as the same day', async () => {
     const got: string[] = [];
-    await render(<DatePicker aria-label="Due" calendar="persian" locale="en-US" defaultValue="2026-11-15" onValueChange={(_, iso) => got.push(String(iso))} />);
+    await render(<DatePicker aria-label="Due" calendar="persian" locale="en-US" defaultValue="2026-11-15" onValueChange={(_, { iso }) => got.push(String(iso))} />);
     const input = page.getByRole('textbox', { name: 'Due' }).element() as HTMLInputElement;
     expect(input.value).toBe('11/15/2026');
     await userEvent.click(page.getByRole('button', { name: 'Choose a date' }));

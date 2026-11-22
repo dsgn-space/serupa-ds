@@ -265,7 +265,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
-      - name: tokens.css is generated from tokens.json
+      - name: tokens.css and brands/ are generated from tokens.json
         run: node tools/tokens/build.mjs --check
       - name: Build the package
         run: npm run build
@@ -392,11 +392,9 @@ jobs:
       options: --cpus 4
     # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
     # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
-    # to run again (16 Nov). The other groups take under 15 anywhere, but for a queue group's locale shards when the
-    # change edits the story-wide tests themselves (a rename that touches every file, #2240): those run in all four
-    # languages, and activity.test.tsx alone takes about 6 minutes a language, so its shard ran 30 minutes and more
-    # however many shards there were (21 Nov, twice). More shards can't split one file.
-    timeout-minutes: ${{ matrix.group == 'visual' && 40 || matrix.part == 'locale' && 50 || 30 }}
+    # to run again (16 Nov). The other groups take under 15 anywhere: the locale shards run only the tests a language can
+    # break and never the story-wide ones (languageTests, lib.mjs), 4 to 6 minutes each in the queue (22 Nov).
+    timeout-minutes: ${{ matrix.group == 'visual' && 40 || 30 }}
     strategy:
       # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
       fail-fast: ${{ github.event_name != 'push' }}
@@ -504,7 +502,7 @@ jobs:
           name: visual-review-${{ strategy.job-index }}
           path: .visual-review/
           include-hidden-files: true
-          retention-days: 14
+          retention-days: 7
           if-no-files-found: ignore
       - if: matrix.part == 'base'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -535,6 +533,8 @@ jobs:
             test-output.txt
             .test-tmp/
             .visual-main/**/*.actual.png
+          # A failure is looked at the day it happens; without this they were kept the repository's default 90 days.
+          retention-days: 7
           if-no-files-found: ignore
       # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
       # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on

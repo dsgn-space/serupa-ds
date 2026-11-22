@@ -29,8 +29,8 @@ export interface PeriodPickerProps extends Omit<React.ButtonHTMLAttributes<HTMLB
   value?: string | null | undefined;
   /** The chosen period at first (uncontrolled), written as value is. */
   defaultValue?: string | null | undefined;
-  /** Called with the period people pick, and its first and last days (local midnight). */
-  onValueChange?: ((value: string, range: { start: Date; end: Date }) => void) | undefined;
+  /** Called with the period people pick, and details (range: its first and last days, local midnight). */
+  onValueChange?: ((value: string, details: { range: { start: Date; end: Date } }) => void) | undefined;
   /** The earliest period that can be chosen, written as value is. */
   min?: string | undefined;
   /** The latest period that can be chosen, written as value is. */
@@ -149,7 +149,7 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const pick = (n: number) => {
     if (off(n)) return;
     if (!controlled) setOwn(n);
-    if (n !== value && props.onValueChange) props.onValueChange(periodValue(n, unit), rangeOf(n, unit));
+    if (n !== value && props.onValueChange) props.onValueChange(periodValue(n, unit), { range: rangeOf(n, unit) });
     close(true, 'select');
   };
   const move = (n: number) => { setFocus(clamp(n)); wantFocus.current = true; };

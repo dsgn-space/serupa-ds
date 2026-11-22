@@ -4,7 +4,7 @@ interface AccordionLabels {
     collapseAll: string;
 }
 interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
-    type?: "multiple" | "single" | undefined;
+    selectionMode?: "multiple" | "single" | undefined;
     value?: string[] | undefined;
     defaultValue?: string[] | undefined;
     onValueChange?: ((value: string[]) => void) | undefined;

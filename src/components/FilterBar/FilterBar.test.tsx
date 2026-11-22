@@ -114,6 +114,20 @@ describe('FilterBar', () => {
     await expect.poll(focused).toBe('Title contains “bug”');
   });
 
+  test('a date-range filter takes the days typed in its picker, as "yyyy-mm-dd"', async () => {
+    const log: FilterValues[] = [];
+    await render(<Bar log={log} />);
+    await userEvent.click(page.getByRole('button', { name: 'Add filter' }));
+    await userEvent.click(page.getByRole('menuitem', { name: 'Due' }));
+    const dialog = page.getByRole('dialog', { name: 'Due' });
+    await userEvent.fill(dialog.getByRole('textbox', { name: 'Start date' }), '11/02/2026');
+    await userEvent.keyboard('{Tab}');
+    await userEvent.fill(dialog.getByRole('textbox', { name: 'End date' }), '11/08/2026');
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => log.at(-1)).toEqual({ due: { start: '2026-11-02', end: '2026-11-08' } });
+    await expect.element(chip('Due is Nov 2 – 8, 2026')).toBeVisible();
+  });
+
   test('the Enter that confirms an input method\'s composition doesn\'t close a text filter (GR299)', async () => {
     const log: FilterValues[] = [];
     await render(<Bar log={log} />);

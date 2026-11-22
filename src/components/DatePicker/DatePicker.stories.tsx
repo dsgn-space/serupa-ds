@@ -66,7 +66,7 @@ export const DateAndTime: Story = {
       <form ref={form} noValidate onSubmit={(e) => { e.preventDefault(); check(); }} style={{ display: 'grid', gap: 'var(--spacing-4)', justifyItems: 'start' }}>
         <Field group label="Meeting starts" hint="In the time zone you choose" error={error}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-3)' }}>
-            <div style={{ width: 'var(--spacing-48)' }}><Field label="Date"><DatePicker value={day} onValueChange={(_, iso) => setDay(iso)} invalid={!!error && !day} /></Field></div>
+            <div style={{ width: 'var(--spacing-48)' }}><Field label="Date"><DatePicker value={day} onValueChange={(_, { iso }) => setDay(iso)} invalid={!!error && !day} /></Field></div>
             <div style={{ width: 'var(--spacing-32)' }}><Field label="Time"><TimePicker value={time} onValueChange={setTime} step={900} invalid={!!error && !time} /></Field></div>
             <div style={{ width: 'var(--spacing-60)' }}><Field label="Time zone"><TimeZonePicker value={zone} onValueChange={setZone} invalid={!!error && !zone} /></Field></div>
           </div>

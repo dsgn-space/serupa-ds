@@ -4,7 +4,7 @@ interface CopyButtonLabels {
     copyFailed: string;
     copyFailedShort: string;
 }
-interface CopyButtonProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" | "loading" | "loadingLabel" | "loadingText" | "onCopy" | "rightIcon" | "value"> {
+interface CopyButtonProps extends Omit<ButtonAsButtonProps, "endIcon" | "icon" | "loading" | "loadingLabel" | "loadingText" | "onCopy" | "startIcon" | "value"> {
     value: (() => Promise<string> | string) | string;
     children?: React.ReactNode | undefined;
     copiedLabel?: string | undefined;

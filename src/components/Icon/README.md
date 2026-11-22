@@ -1,6 +1,6 @@
 # Icon
 
-Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `leftIcon` or `rightIcon`, or IconButton's `icon`.
+Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `startIcon` or `endIcon`, or IconButton's `icon`.
 
 **Also called:** glyph, symbol.
 
@@ -10,7 +10,7 @@ import { Icon, Button, IconButton } from '@diki-stwn/serupa-ds';
 <Icon name="home" />                       // 24px, decorative
 <Icon name="warning" size={20} style={{ color: 'var(--warning)' }} />
 <Icon name="error" aria-label="Error" />   // meaningful: announced as "Error"
-<Button leftIcon="add">New project</Button>
+<Button startIcon="add">New project</Button>
 <IconButton icon="settings" label="Settings" />
 <Icon name="rocket_launch" />              // any of the ~3,800 Material Symbols works by name
 ```
@@ -34,18 +34,18 @@ Find icons in the Material Symbols catalog (Rounded style) at fonts.google.com/i
 - Use Material Symbols Rounded, filled, and custom icons drawn to the same rules. Don't mix in other icon sets or the Outlined/Sharp styles.
 - Before drawing a custom icon, check that Material Symbols doesn't already have one for that meaning.
 - One icon per meaning across the product: `delete`, not `delete` in one place and `remove` in another.
-- **Right to left:** arrows and chevrons that point along the line of reading (`arrow_forward`, `chevron_right`, `send`, `undo`…) flip by themselves in right-to-left text, so `<Button rightIcon="arrow_forward">Next</Button>` points the way an Arabic or Hebrew reader goes. Icons of things (a clock, a check, media controls) don't. Use `mirror` for your own arrows (`true`) or for an icon you already turn yourself (`false`).
+- **Right to left:** arrows and chevrons that point along the line of reading (`arrow_forward`, `chevron_right`, `send`, `undo`…) flip by themselves in right-to-left text, so `<Button endIcon="arrow_forward">Next</Button>` points the way an Arabic or Hebrew reader goes. Icons of things (a clock, a check, media controls) don't. Use `mirror` for your own arrows (`true`) or for an icon you already turn yourself (`false`).
 
 ### Setup: by name
 
 There's no font to load. Every icon is an SVG drawn in the page, so it shows at once and nothing flashes while a file loads.
 
-- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations › Icons page of the docs: search, then click to copy its name. A name loads the first time a page draws it, so it appears a moment later that first time: the icons the components use come from a small file (about 14 KB), and any other name from the part of the full set that holds it. The set is cut into 32 parts of about 86 KB each (9 to 20 KB gzipped), in name order, so a page downloads only the parts its names are in. Apps that draw no names never download any of it. Both are dynamic imports, so this needs a bundler that splits them into files of their own, as Vite, Next.js, webpack and Rollup do by default. A build that puts everything in one file (esbuild without `--splitting`, Rollup with `inlineDynamicImports`, a single-chunk webpack or IIFE build) puts the full set in it too, about 2.7 MB (510 KB gzipped). There, draw imported icons (`icon={Close}`) or `registerIcons` the ones you use by name, and keep names out of the bundle's reach.
+- **Every Material Symbol works by name** (`name="category"`, `startIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations › Icons page of the docs: search, then click to copy its name. A name loads the first time a page draws it, so it appears a moment later that first time: the icons the components use come from a small file (about 14 KB), and any other name from the part of the full set that holds it. The set is cut into 32 parts of about 86 KB each (9 to 20 KB gzipped), in name order, so a page downloads only the parts its names are in. Apps that draw no names never download any of it. Both are dynamic imports, so this needs a bundler that splits them into files of their own, as Vite, Next.js, webpack and Rollup do by default. A build that puts everything in one file (esbuild without `--splitting`, Rollup with `inlineDynamicImports`, a single-chunk webpack or IIFE build) puts the full set in it too, about 2.7 MB (510 KB gzipped). There, draw imported icons (`icon={Close}`) or `registerIcons` the ones you use by name, and keep names out of the bundle's reach.
 - **An imported icon works too** (`icon={Category}` with `import { Category } from "@diki-stwn/serupa-ds/icons"`), the same icon either way. It draws on the first render, and only the icons you import ship in your bundle, so prefer it for icons you know ahead of time.
 - **Outlined icons** come from `@diki-stwn/serupa-ds/icons/outlined`, under the same export names: `import { Home } from "@diki-stwn/serupa-ds/icons/outlined"`. Use them for the unselected state of something that shows a selected one filled, such as navigation and tabs (`icon={current ? HomeFilled : Home}`, with `import { Home as HomeFilled } from "@diki-stwn/serupa-ds/icons"`), or where a lighter set suits the page. Each outlined icon's `name` is the name and `:outlined` (`"home:outlined"`), so `registerIcons(Home)` draws it as `name="home:outlined"` without replacing the filled `home`. An icon with no outlined drawing (about a third, such as `add` or `close`) is the filled one, so any name can be imported from either. The names-only set the components draw is filled.
 - **The components' own icons** (Dialog's close, Checkbox's check, Select's chevron) are imported by each component, so they draw at once and on the server, and a bundle keeps only the icons of the components it uses.
 - **On a plain page** (`serupa.iife.js`), every name works. The components' own icons and the everyday ones are in `serupa.iife.js`; the full set (about 490 KiB gzipped) is `serupa-icons.iife.js`, which `serupa.iife.js` adds to the page from its own folder the first time an Icon names one outside that set, so keep the two files side by side. A page that names many icons can include `serupa-icons.iife.js` itself, after `serupa.iife.js`, so they draw on the first try.
-- **Server rendering:** the components' own icons and imported icons (`icon={Close}`) render on the server. A name (`name="close"`, `leftIcon="close"`) shows its empty box until the page loads in the browser. To draw it on the server, pass the imported icon instead, or register what you draw by name once before rendering: `registerIcons(Close, Add)`, or `registerIcons(await import("@diki-stwn/serupa-ds/icons"))` for every name.
+- **Server rendering:** the components' own icons and imported icons (`icon={Close}`) render on the server. A name (`name="close"`, `startIcon="close"`) shows its empty box until the page loads in the browser. To draw it on the server, pass the imported icon instead, or register what you draw by name once before rendering: `registerIcons(Close, Add)`, or `registerIcons(await import("@diki-stwn/serupa-ds/icons"))` for every name.
 - `registerIcons({ name, d })` adds an icon of your own in Material's shape (`d` on the 960-unit grid) under a name.
 
 A name that isn't a Material Symbol or one of your icons draws an empty 1em box and logs a console warning. Names are snake_case (`arrow_forward`); for a name in another spelling, such as the export name `Home` or `arrow-forward`, the warning says which name to use.
@@ -56,7 +56,7 @@ For what Material Symbols doesn't have, add your own SVG icons. They work everyw
 
 ```jsx
 <Icon name="serupa-sparkle" />
-<Button leftIcon="serupa-sparkle">Generate</Button>
+<Button startIcon="serupa-sparkle">Generate</Button>
 ```
 
 **Draw** each icon so it sits with Material Symbols Rounded:
@@ -147,7 +147,7 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 
 `className`, `style`, `ref` and other `<span>` props go to the outer `<span>`, which has `data-icon` with the icon's name.
 
-Also exported: `registerIcons(...icons)` adds icons that work by name, `getIcon(name)` returns the Material Symbol (or registered icon) for a name, and the `MaterialIconName` type lists every name. Every icon prop in the system (Button's `leftIcon`, `rightIcon` and `icon`, IconButton and Fab's `icon`, Input's icons, and the rest) takes a name, an imported icon or any element (`IconSource`).
+Also exported: `registerIcons(...icons)` adds icons that work by name, `getIcon(name)` returns the Material Symbol (or registered icon) for a name, and the `MaterialIconName` type lists every name. Every icon prop in the system (Button's `startIcon`, `endIcon` and `icon`, IconButton and Fab's `icon`, Input's icons, and the rest) takes a name, an imported icon or any element (`IconSource`).
 
 ## Component tokens
 

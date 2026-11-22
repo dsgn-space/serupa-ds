@@ -10,7 +10,7 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
     menuLabel?: string | undefined;
 }
 interface NavbarLinkOwnProps {
-    active?: boolean | undefined;
+    current?: boolean | undefined;
 }
 type NavbarLinkProps<C extends React.ElementType = "a"> = NavbarLinkOwnProps & {
     as?: C | undefined;
@@ -18,14 +18,14 @@ type NavbarLinkProps<C extends React.ElementType = "a"> = NavbarLinkOwnProps & {
 interface NavbarMenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
     label: React.ReactNode;
     children?: React.ReactNode | undefined;
-    active?: boolean | undefined;
+    current?: boolean | undefined;
 }
 interface NavbarMenuGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
     title: React.ReactNode;
     children?: React.ReactNode | undefined;
 }
 interface NavbarMenuLinkOwnProps {
-    active?: boolean | undefined;
+    current?: boolean | undefined;
     description?: React.ReactNode | undefined;
 }
 type NavbarMenuLinkProps<C extends React.ElementType = "a"> = NavbarMenuLinkOwnProps & {

@@ -1,0 +1,68 @@
+/* Serupa — the red brand, generated from tokens.json. Load it after tokens.css. */
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.tokens {
+[data-theme="red-light"] {
+  --primary: var(--red-700);
+  --primary-hover: var(--red-800);
+  --primary-pressed: var(--red-900);
+  --primary-subtle: var(--red-50);
+  --primary-subtle-pressed: var(--red-100);
+  --on-primary: var(--white);
+  --field-action: var(--red-700);
+  --focus-ring: var(--red-500);
+  --link-visited: var(--violet-700);
+  --srp-more-primary: var(--red-900);
+  --srp-more-primary-hover: var(--red-950);
+  --srp-more-primary-pressed: var(--red-950);
+  --srp-more-field-action: var(--red-900);
+  --srp-more-focus-ring: var(--red-700);
+}
+[data-theme="red-dark"] {
+  --primary: var(--red-400);
+  --primary-hover: var(--red-300);
+  --primary-pressed: var(--red-200);
+  --primary-subtle: var(--red-950);
+  --primary-subtle-pressed: var(--red-900);
+  --on-primary: var(--red-950);
+  --field-action: var(--red-400);
+  --focus-ring: var(--red-400);
+  --link-visited: var(--violet-300);
+  --srp-more-primary: var(--red-300);
+  --srp-more-primary-hover: var(--red-200);
+  --srp-more-primary-pressed: var(--red-100);
+  --srp-more-field-action: var(--red-300);
+  --srp-more-focus-ring: var(--red-300);
+}
+:root[data-brand="red"]:not([data-theme]), [data-brand="red"]:not([data-theme]) {
+  --primary: light-dark(var(--red-700), var(--red-400));
+  --primary-hover: light-dark(var(--red-800), var(--red-300));
+  --primary-pressed: light-dark(var(--red-900), var(--red-200));
+  --primary-subtle: light-dark(var(--red-50), var(--red-950));
+  --primary-subtle-pressed: light-dark(var(--red-100), var(--red-900));
+  --on-primary: light-dark(var(--white), var(--red-950));
+  --field-action: light-dark(var(--red-700), var(--red-400));
+  --focus-ring: light-dark(var(--red-500), var(--red-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--red-900), var(--red-300));
+  --srp-more-primary-hover: light-dark(var(--red-950), var(--red-200));
+  --srp-more-primary-pressed: light-dark(var(--red-950), var(--red-100));
+  --srp-more-field-action: light-dark(var(--red-900), var(--red-300));
+  --srp-more-focus-ring: light-dark(var(--red-700), var(--red-300));
+}
+:is([data-theme^="red-"], [data-brand="red"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--red-700), var(--red-400));
+  --primary-hover: light-dark(var(--red-800), var(--red-300));
+  --primary-pressed: light-dark(var(--red-900), var(--red-200));
+  --primary-subtle: light-dark(var(--red-50), var(--red-950));
+  --primary-subtle-pressed: light-dark(var(--red-100), var(--red-900));
+  --on-primary: light-dark(var(--white), var(--red-950));
+  --field-action: light-dark(var(--red-700), var(--red-400));
+  --focus-ring: light-dark(var(--red-500), var(--red-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--red-900), var(--red-300));
+  --srp-more-primary-hover: light-dark(var(--red-950), var(--red-200));
+  --srp-more-primary-pressed: light-dark(var(--red-950), var(--red-100));
+  --srp-more-field-action: light-dark(var(--red-900), var(--red-300));
+  --srp-more-focus-ring: light-dark(var(--red-700), var(--red-300));
+}
+}

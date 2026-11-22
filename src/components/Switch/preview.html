@@ -16,7 +16,7 @@
     Row('Sizes', [h(T.Switch, { key: 1, size: 'sm', defaultChecked: true }, 'Small'), h(T.Switch, { key: 2, defaultChecked: true }, 'Medium'), h(T.Switch, { key: 3, size: 'lg', defaultChecked: true }, 'Large')]),
     Row('States', [h(T.Switch, { key: 1, 'data-visual-target': '' }, 'Off'), h(T.Switch, { key: 2, defaultChecked: true }, 'On')]),
     Row('Description', h(T.Switch, { defaultChecked: true, description: 'Pause notifications from 10 pm to 7 am.' }, 'Quiet hours')),
-    Row('Label first', h(T.Switch, { labelPosition: 'start' }, 'Autoplay videos')),
+    Row('Label first', h(T.Switch, { labelPlacement: 'start' }, 'Autoplay videos')),
     Row('Invalid', h(T.Switch, { invalid: true }, 'Two-step sign-in')),
     Row('Disabled', [h(T.Switch, { key: 1, disabled: true }, 'Off'), h(T.Switch, { key: 2, disabled: true, defaultChecked: true }, 'On')])
   ));

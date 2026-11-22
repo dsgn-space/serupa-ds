@@ -13,7 +13,7 @@ const day = (iso: string) => document.querySelector<HTMLButtonElement>(`[data-da
 const status = () => document.querySelector('[data-component="range-calendar"] > p[aria-live]')!.textContent;
 type Got = { start: Date; end: Date };
 function Stay({ log = [] as [Got, { start: string; end: string }][], ...rest }: { log?: [Got, { start: string; end: string }][] } & Partial<React.ComponentProps<typeof RangeCalendar>>) {
-  return <SerupaProvider locale="en-US"><RangeCalendar defaultMonth={nov} onValueChange={(r, iso) => log.push([r, iso])} {...rest} /></SerupaProvider>;
+  return <SerupaProvider locale="en-US"><RangeCalendar defaultMonth={nov} onValueChange={(r, { iso }) => log.push([r, iso])} {...rest} /></SerupaProvider>;
 }
 
 let errors: MockInstance<typeof console.error>;
@@ -93,7 +93,7 @@ describe('RangeCalendar', () => {
 
   test('the rest of the keys: Tab reaches the start day, Up a week back, Home and End the week’s ends, Page Down and Page Up a month on and back, Space picks', async () => {
     const log: [Got, { start: string; end: string }][] = [];
-    await render(<SerupaProvider locale="en-US"><button type="button">Before</button><RangeCalendar defaultMonth={nov} weekStartsOn={0} defaultValue={{ start: '2026-11-11', end: '2026-11-12' }} onValueChange={(r, iso) => log.push([r, iso])} /></SerupaProvider>);
+    await render(<SerupaProvider locale="en-US"><button type="button">Before</button><RangeCalendar defaultMonth={nov} weekStartsOn={0} defaultValue={{ start: '2026-11-11', end: '2026-11-12' }} onValueChange={(r, { iso }) => log.push([r, iso])} /></SerupaProvider>);
     page.getByRole('button', { name: 'Before' }).element().focus();
     // Previous month, the heading (it opens the months), Next month, then the days.
     await userEvent.keyboard('{Tab}{Tab}{Tab}{Tab}');
@@ -226,7 +226,7 @@ describe('RangeCalendar', () => {
 describe('RangeCalendar: another calendar system (RX9)', () => {
   test('calendar="persian" with two months: Aban and Azar side by side, and the range said in the Persian calendar', async () => {
     const got: string[] = [];
-    await render(<RangeCalendar calendar="persian" months={2} locale="en-US" defaultMonth={new Date(2026, 10, 15)} onValueChange={(_, iso) => got.push(iso.start + '/' + iso.end)} />);
+    await render(<RangeCalendar calendar="persian" months={2} locale="en-US" defaultMonth={new Date(2026, 10, 15)} onValueChange={(_, { iso }) => got.push(iso.start + '/' + iso.end)} />);
     const titles = [...document.querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
     const fmt = (d: Date) => new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(d);
     expect(titles).toEqual([fmt(new Date(2026, 10, 1)), fmt(new Date(2026, 11, 1))]);

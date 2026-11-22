@@ -15,7 +15,7 @@ import { ToggleGroup, ToggleButton } from "@diki-stwn/serupa-ds";
 </ToggleGroup>
 
 // any number
-<ToggleGroup aria-label="Text style" type="multiple" defaultValue={["bold"]}>
+<ToggleGroup aria-label="Text style" selectionMode="multiple" defaultValue={["bold"]}>
   <ToggleButton value="bold" icon="format_bold" aria-label="Bold" />
   <ToggleButton value="italic" icon="format_italic" aria-label="Italic" />
 </ToggleGroup>
@@ -34,7 +34,7 @@ import { ToggleGroup, ToggleButton } from "@diki-stwn/serupa-ds";
 ## Usage
 
 - Give each ToggleButton a `value`. Children without one, such as a Divider, render as they are.
-- `type="single"` (the default) turns the others off when one turns on. Pressing the one that's on turns it off, unless `required`.
+- `selectionMode="single"` (the default) turns the others off when one turns on. Pressing the one that's on turns it off, unless `required`.
 - `size`, `variant` and `disabled` on the group reach the buttons that don't set their own.
 - `attached` and `orientation` work as on ButtonGroup: an attached row wider than its container wraps as separate toggles (with `data-wrapped` on the group) and joins again once there's room.
 - Put it in a [Toolbar](../Toolbar/README.md) to give a row of groups one Tab stop with arrow keys.
@@ -56,11 +56,11 @@ import { ToggleGroup, ToggleButton } from "@diki-stwn/serupa-ds";
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div role="group">`. |
-| `type` | `'single'` \| `'multiple'` | `'single'` | One on at a time, or any number. |
+| `selectionMode` | `'single'` \| `'multiple'` | `'single'` | One on at a time, or any number. |
 | `value` | `string[]` | | The values of the buttons that are on (controlled). |
 | `defaultValue` | `string[]` | `[]` | The values on at first. |
 | `onValueChange` | `(value: string[]) => void` | | Called when a button is pressed. |
-| `required` | boolean | `false` | With `type="single"`, one stays on. |
+| `required` | boolean | `false` | With `selectionMode="single"`, one stays on. |
 | `disabled` | boolean | `false` | Turns every button off and out of use. |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | | For buttons that don't set their own. |
 | `variant` | `'outline'` \| `'ghost'` | | For buttons that don't set their own. |

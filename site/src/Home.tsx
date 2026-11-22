@@ -66,7 +66,7 @@ export function Home() {
           <Heading level={1} className="site-hero__title">One system for every project.</Heading>
           <p className="site-hero__lead">Design tokens, {tokens.color.themes.length} themes and {pages.filter((p) => p.component).length} accessible React components, each with a guide. Designed and built by Diki, and everything on this site is made with it.</p>
           <div className="flex flex-wrap gap-3">
-            <Button href="/getting-started" size="lg" rightIcon="arrow_forward">Get started</Button>
+            <Button href="/getting-started" size="lg" endIcon="arrow_forward">Get started</Button>
             <Button href="/showcase" size="lg" variant="outline">See it in use</Button>
           </div>
         </div>
@@ -89,12 +89,12 @@ export function Home() {
       </dl>
 
       <Section id="home-themes" eyebrow="Theming" title={`${tokens.color.themes.length} themes, one attribute`} lead={`${BRANDS.length} brand colors, each light and dark. A theme changes the brand color and nothing else, so every component follows without a line of its own.`}
-        action={<Button href="/themes" variant="outline" rightIcon="arrow_forward">Compare the themes</Button>}>
+        action={<Button href="/themes" variant="outline" endIcon="arrow_forward">Compare the themes</Button>}>
         <ul className="site-tiles" role="list">{tokens.color.themes.map((t) => <ThemeTile key={t.id} id={t.id} name={t.name} />)}</ul>
       </Section>
 
       <Section id="home-principles" eyebrow="Principles" title="What every decision is held to" lead="When two of them pull apart, accessibility comes first."
-        action={<Button href="/about" variant="outline" rightIcon="arrow_forward">Read the story</Button>}>
+        action={<Button href="/about" variant="outline" endIcon="arrow_forward">Read the story</Button>}>
         <ol className="site-principles" role="list">
           {PRINCIPLES.map((p, i) => <li key={p.name} className="site-principle">
             <span className="site-principle__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
@@ -105,7 +105,7 @@ export function Home() {
       </Section>
 
       <Section id="home-showcase" eyebrow="Showcase" title="Whole screens, from the same parts" lead="A dashboard, a checkout, a sign-in: each pattern is a real screen with its loading, empty and error states, at any width."
-        action={<Button href="/showcase" variant="outline" rightIcon="arrow_forward">Open the showcase</Button>}>
+        action={<Button href="/showcase" variant="outline" endIcon="arrow_forward">Open the showcase</Button>}>
         <Screen story="patterns-dashboard--default" device={device} title="Dashboard, an example screen" address="northwind.example/dashboard" />
       </Section>
 

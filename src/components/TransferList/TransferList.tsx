@@ -139,9 +139,9 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
       className={cn('srp-transfer-list', off && 'srp-transfer-list--disabled', className)} data-component="transfer-list">
       {side('left', left, checkedLeft, setCheckedLeft)}
       {readOnly ? null : <div className="srp-transfer-list__moves">
-        <Button variant="secondary" size="sm" rightIcon="arrow_forward" disabled={off || !canAdd} disabledReason={off ? undefined : sds.labels.transferAddReason}
+        <Button variant="secondary" size="sm" endIcon="arrow_forward" disabled={off || !canAdd} disabledReason={off ? undefined : sds.labels.transferAddReason}
           onClick={() => move('right')}>{sds.labels.transferAdd}</Button>
-        <Button variant="secondary" size="sm" leftIcon="arrow_back" disabled={off || !canRemove} disabledReason={off ? undefined : sds.labels.transferRemoveReason}
+        <Button variant="secondary" size="sm" startIcon="arrow_back" disabled={off || !canRemove} disabledReason={off ? undefined : sds.labels.transferRemoveReason}
           onClick={() => move('left')}>{sds.labels.transferRemove}</Button>
       </div>}
       {side('right', right, checkedRight, setCheckedRight)}

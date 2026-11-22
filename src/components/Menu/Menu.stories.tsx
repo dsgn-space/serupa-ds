@@ -10,7 +10,7 @@ const frame = (style: React.CSSProperties) => function Frame(Story: React.Compon
 const meta = {
   title: 'Components/Overlays/Menu',
   component: Menu,
-  args: { placement: 'bottom-start', open: true, trigger: <Button variant="secondary" rightIcon="expand_more">Actions</Button>, children: null },
+  args: { placement: 'bottom-start', open: true, trigger: <Button variant="secondary" endIcon="expand_more">Actions</Button>, children: null },
   argTypes: { placement: { control: 'select', options: ['bottom-start', 'bottom-end', 'top-start', 'top-end', 'right-start'] }, trigger: { control: false }, children: { control: false } },
   decorators: [frame({})],
   // A story with open: true shows its menu open in its own canvas, where the Storybook test checks it in all six
@@ -86,7 +86,7 @@ export const LeftEnd: Story = {
 export const WithoutIcons: Story = {
   name: 'Without icons',
   args: {
-    trigger: <Button variant="outline" rightIcon="expand_more">Sort by</Button>,
+    trigger: <Button variant="outline" endIcon="expand_more">Sort by</Button>,
     children: <>
       <MenuItem>Name</MenuItem>
       <MenuItem>Date modified</MenuItem>
@@ -98,7 +98,7 @@ export const WithoutIcons: Story = {
 export const Shortcuts: Story = {
   name: 'With shortcuts',
   args: {
-    trigger: <Button variant="secondary" rightIcon="expand_more">Edit</Button>,
+    trigger: <Button variant="secondary" endIcon="expand_more">Edit</Button>,
     children: <>
       <MenuItem icon="undo" shortcut={['mod', 'Z']}>Undo</MenuItem>
       <MenuItem icon="redo" shortcut={['mod', 'shift', 'Z']}>Redo</MenuItem>
@@ -127,7 +127,7 @@ export const DisabledItems: Story = {
 export const Groups: Story = {
   name: 'Groups and separators',
   args: {
-    trigger: <Button variant="secondary" leftIcon="person" rightIcon="expand_more">Account</Button>,
+    trigger: <Button variant="secondary" startIcon="person" endIcon="expand_more">Account</Button>,
     children: <>
       <MenuGroup label="ana@example.com">
         <MenuItem icon="person">Profile</MenuItem>
@@ -149,7 +149,7 @@ export const Checkable: Story = {
   name: 'Checkable items',
   render: function Render() {
     const [grid, setGrid] = React.useState(true), [rulers, setRulers] = React.useState(false), [sort, setSort] = React.useState('name');
-    return <Menu defaultOpen trigger={<Button variant="secondary" rightIcon="expand_more">View</Button>}>
+    return <Menu defaultOpen trigger={<Button variant="secondary" endIcon="expand_more">View</Button>}>
       <MenuGroup label="Show">
         <MenuCheckboxItem checked={grid} onCheckedChange={setGrid} shortcut={['mod', "'"]}>Grid</MenuCheckboxItem>
         <MenuCheckboxItem checked={rulers} onCheckedChange={setRulers} shortcut={['alt', 'R']}>Rulers</MenuCheckboxItem>
@@ -166,7 +166,7 @@ export const Checkable: Story = {
 };
 export const Links: Story = {
   args: {
-    trigger: <Button variant="secondary" leftIcon="help" rightIcon="expand_more">Help</Button>,
+    trigger: <Button variant="secondary" startIcon="help" endIcon="expand_more">Help</Button>,
     children: <>
       <MenuItem icon="article" href="#docs">Documentation</MenuItem>
       <MenuItem icon="support_agent" href="#support">Contact support</MenuItem>
@@ -188,7 +188,7 @@ export const LongLabels: Story = {
 };
 export const Submenus: Story = {
   args: {
-    trigger: <Button variant="secondary" rightIcon="expand_more">File</Button>,
+    trigger: <Button variant="secondary" endIcon="expand_more">File</Button>,
     children: <>
       <MenuItem icon="add" shortcut={['alt', 'N']}>New</MenuItem>
       <MenuSub icon="share" label="Share">

@@ -104,7 +104,7 @@ export const SelectableRows: Story = {
     const toggle = (n: string) => setPicked(picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n]);
     return <Table {...args}>
       <TableHead><TableRow>
-        <TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : people.map((p) => p.name))} />
+        <TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : people.map((p) => p.name))} />
         <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell align="end">Calls</TableHeaderCell>
       </TableRow></TableHead>
       <TableBody>{people.map((p) => <TableRow key={p.name} selected={picked.includes(p.name)}>
@@ -129,7 +129,7 @@ export const ActionBar: Story = {
       </TableActionBar>
       <Table {...args}>
         <TableHead><TableRow>
-          <TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : people.map((p) => p.name))} />
+          <TableSelectCell inHeader label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : people.map((p) => p.name))} />
           <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell>
         </TableRow></TableHead>
         <TableBody>{people.map((p) => <TableRow key={p.name} selected={picked.includes(p.name)}>
@@ -157,7 +157,7 @@ export const SelectAcrossPages: Story = {
       </TableActionBar>
       <Table {...args}>
         <TableHead><TableRow>
-          <TableSelectCell header label="Select all rows on this page" checked={all} indeterminate={!all && picked.length > 0} onChange={() => (all ? clear() : setPicked(people.map((p) => p.name)))} />
+          <TableSelectCell inHeader label="Select all rows on this page" checked={all} indeterminate={!all && picked.length > 0} onChange={() => (all ? clear() : setPicked(people.map((p) => p.name)))} />
           <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell>
         </TableRow></TableHead>
         <TableBody>{people.map((p) => <TableRow key={p.name} selected={everyPage || picked.includes(p.name)}>
@@ -250,7 +250,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
       <Table {...args} caption="Orders" hideCaption layout="fixed" pinEnd containerProps={{ style: { width: '100%' } }}>
         <TableHead>
           <TableRow>
-            <TableExpandCell header />
+            <TableExpandCell inHeader />
             <TableHeaderCell resizable width={180}>Customer</TableHeaderCell>
             {cols.map((c) => <TableHeaderCell key={c.id} resizable width={c.id === 'status' ? 120 : 140} align={c.id === 'items' || c.id === 'total' ? 'end' : 'start'}>{c.label}</TableHeaderCell>)}
             <TableHeaderCell width={96}><VisuallyHidden>Actions</VisuallyHidden></TableHeaderCell>

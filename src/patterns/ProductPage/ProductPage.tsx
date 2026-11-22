@@ -211,7 +211,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     </div>
   ) : (<>
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <Carousel label={`Pictures of ${product.name}`}>
+      <Carousel aria-label={`Pictures of ${product.name}`}>
         {product.pictures.map((p, i) => <Image key={p.src} src={p.src} alt={p.alt} ratio="square" viewable priority={i === 0} />)}
       </Carousel>
 
@@ -247,7 +247,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
               <NumberInput name="quantity" value={quantity} onValueChange={setQuantity} min={1} max={max} steppers />
             </Field>
             {failed ? <Alert tone="danger">Couldn’t add it to your cart. Try again.</Alert> : null}
-            <div><Button type="submit" size="lg" leftIcon="shopping_cart" loading={busy}>Add to cart</Button></div>
+            <div><Button type="submit" size="lg" startIcon="shopping_cart" loading={busy}>Add to cart</Button></div>
           </form>
         )}
       </div>
@@ -255,7 +255,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
 
     <section aria-labelledby="about" className="flex flex-col gap-4">
       <h2 id="about" className="m-0 text-xl font-semibold">About this product</h2>
-      <Accordion type="multiple" defaultValue={['details']} headingLevel={3}>
+      <Accordion selectionMode="multiple" defaultValue={['details']} headingLevel={3}>
         <AccordionItem value="details" title="Details">
           <DescriptionList layout="inline">
             {product.details.map((d) => <DescriptionItem key={d.term} term={d.term}>{d.value}</DescriptionItem>)}

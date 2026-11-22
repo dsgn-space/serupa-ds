@@ -12,8 +12,8 @@ import { useSettings } from '../../internal/provider';
 /** Any Material Symbol's name, a custom icon's name, or a name you registered with registerIcons. */
 export type IconName = CustomIconName | MaterialIconName | (string & {});
 
-/** What icon props (Button's leftIcon, IconButton's icon…) take: an icon name, an icon from serupa-ds/icons
- * (`leftIcon={Add}`), or any element. */
+/** What icon props (Button's startIcon, IconButton's icon…) take: an icon name, an icon from serupa-ds/icons
+ * (`startIcon={Add}`), or any element. */
 export type IconSource = IconName | IconData | React.ReactNode;
 
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {

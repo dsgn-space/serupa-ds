@@ -52,8 +52,8 @@ export function Showcase() {
             <p className="site-showcase__summary">{state?.description || page.summary}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" leftIcon="arrow_back" onClick={() => step(-1)}>Previous</Button>
-            <Button variant="outline" size="sm" rightIcon="arrow_forward" onClick={() => step(1)}>Next</Button>
+            <Button variant="outline" size="sm" startIcon="arrow_back" onClick={() => step(-1)}>Previous</Button>
+            <Button variant="outline" size="sm" endIcon="arrow_forward" onClick={() => step(1)}>Next</Button>
             <Button variant="ghost" size="sm" href={page.path}>Read its guide</Button>
           </div>
         </div>

@@ -3,7 +3,7 @@ interface PasswordInputLabels {
     showPassword: string;
     capsLockOn: string;
 }
-interface PasswordInputProps extends Omit<InputProps, "actions" | "prefix" | "rightIcon" | "showCount" | "suffix" | "type"> {
+interface PasswordInputProps extends Omit<InputProps, "actions" | "endIcon" | "prefix" | "showCount" | "suffix" | "type"> {
     revealed?: boolean | undefined;
     defaultRevealed?: boolean | undefined;
     onRevealedChange?: ((revealed: boolean) => void) | undefined;

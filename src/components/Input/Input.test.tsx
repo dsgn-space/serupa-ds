@@ -68,8 +68,8 @@ describe('Input', () => {
 
   test('a press anywhere on the box (icons, side padding, the count) focuses the field with the caret at the end; a press on a disabled box does nothing (GE1)', async () => {
     await render(<div style={{ width: '300px' }}>
-      <Input id="bx" size="lg" leftIcon="search" rightIcon="mail" defaultValue="hello" aria-label="Find" />
-      <Input id="bx-off" size="lg" leftIcon="search" disabled aria-label="Off" />
+      <Input id="bx" size="lg" startIcon="search" endIcon="mail" defaultValue="hello" aria-label="Find" />
+      <Input id="bx-off" size="lg" startIcon="search" disabled aria-label="Off" />
       <button id="bx-away">away</button>
     </div>);
     const b = box('bx').getBoundingClientRect(), y = b.height / 2;
@@ -218,7 +218,7 @@ describe('Input', () => {
   });
 
   test('icons: decorative, 16px at md, before and after the field, and they don\'t take clicks', async () => {
-    await render(<Input id="ic" leftIcon="search" rightIcon="mail" aria-label="Icons" />);
+    await render(<Input id="ic" startIcon="search" endIcon="mail" aria-label="Icons" />);
     const w = box('ic'), l = w.querySelector(':scope > span:first-child')!, r = w.querySelector(':scope > span:last-child')!;
     expect([...w.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-input__icon', 'srp-input__field', 'srp-input__icon']);
     expect(w.firstElementChild).toBe(l);
@@ -241,9 +241,9 @@ describe('Input', () => {
   });
 
   test('showCount: "2 / 5" at the end of the field, linked by aria-describedby after the field\'s own; stops at maxLength and turns text-colored', async () => {
-    await render(<><span id="hint">Up to 5</span><Input id="cnt" showCount maxLength={5} defaultValue="ab" aria-describedby="hint" aria-label="Code" rightIcon={<b>i</b>} /></>, { wrapper: EnUS });
+    await render(<><span id="hint">Up to 5</span><Input id="cnt" showCount maxLength={5} defaultValue="ab" aria-describedby="hint" aria-label="Code" endIcon={<b>i</b>} /></>, { wrapper: EnUS });
     const c0 = count('cnt'), col0 = css(c0).color;
-    expect([c0.textContent, field('cnt').getAttribute('aria-describedby'), c0.nextElementSibling!.className, field('cnt').hasAttribute('maxlength')]).toEqual(['2 / 5', 'hint ' + c0.id, 'srp-input__icon srp-input__icon--right', false]);
+    expect([c0.textContent, field('cnt').getAttribute('aria-describedby'), c0.nextElementSibling!.className, field('cnt').hasAttribute('maxlength')]).toEqual(['2 / 5', 'hint ' + c0.id, 'srp-input__icon srp-input__icon--end', false]);
     await userEvent.type(field('cnt'), 'cdefg');
     expect([field('cnt').value, count('cnt').textContent, count('cnt').classList.contains('srp-input__count--full')]).toEqual(['abcde', '5 / 5', true]);
     expect(css(count('cnt')).color).not.toBe(col0);
@@ -510,7 +510,7 @@ describe('Input actions (RU15)', () => {
 
   test('actions sit at the end of the box, after the field and its right icon, as buttons that never send a form', async () => {
     let sent = 0;
-    await render(<form onSubmit={(e) => { e.preventDefault(); sent++; }}><Input id="cp" aria-label="Coupon code" rightIcon={<b>i</b>} actions={<InputAction label="Apply" />} /></form>);
+    await render(<form onSubmit={(e) => { e.preventDefault(); sent++; }}><Input id="cp" aria-label="Coupon code" endIcon={<b>i</b>} actions={<InputAction label="Apply" />} /></form>);
     const b = actions('cp')[0]!;
     expect([box('cp').lastElementChild!.className, b.previousElementSibling, b.type, b.textContent]).toEqual(['srp-input__actions', null, 'button', 'Apply']);
     await userEvent.click(b);

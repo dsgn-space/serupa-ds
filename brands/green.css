@@ -1,0 +1,68 @@
+/* Serupa — the green brand, generated from tokens.json. Load it after tokens.css. */
+@layer srp.tokens, srp.base, srp.components, srp.utilities;
+@layer srp.tokens {
+[data-theme="green-light"] {
+  --primary: var(--green-700);
+  --primary-hover: var(--green-800);
+  --primary-pressed: var(--green-900);
+  --primary-subtle: var(--green-50);
+  --primary-subtle-pressed: var(--green-100);
+  --on-primary: var(--white);
+  --field-action: var(--green-700);
+  --focus-ring: var(--green-600);
+  --link-visited: var(--violet-700);
+  --srp-more-primary: var(--green-900);
+  --srp-more-primary-hover: var(--green-950);
+  --srp-more-primary-pressed: var(--green-950);
+  --srp-more-field-action: var(--green-900);
+  --srp-more-focus-ring: var(--green-700);
+}
+[data-theme="green-dark"] {
+  --primary: var(--green-400);
+  --primary-hover: var(--green-300);
+  --primary-pressed: var(--green-200);
+  --primary-subtle: var(--green-950);
+  --primary-subtle-pressed: var(--green-900);
+  --on-primary: var(--green-950);
+  --field-action: var(--green-400);
+  --focus-ring: var(--green-400);
+  --link-visited: var(--violet-300);
+  --srp-more-primary: var(--green-300);
+  --srp-more-primary-hover: var(--green-200);
+  --srp-more-primary-pressed: var(--green-100);
+  --srp-more-field-action: var(--green-300);
+  --srp-more-focus-ring: var(--green-300);
+}
+:root[data-brand="green"]:not([data-theme]), [data-brand="green"]:not([data-theme]) {
+  --primary: light-dark(var(--green-700), var(--green-400));
+  --primary-hover: light-dark(var(--green-800), var(--green-300));
+  --primary-pressed: light-dark(var(--green-900), var(--green-200));
+  --primary-subtle: light-dark(var(--green-50), var(--green-950));
+  --primary-subtle-pressed: light-dark(var(--green-100), var(--green-900));
+  --on-primary: light-dark(var(--white), var(--green-950));
+  --field-action: light-dark(var(--green-700), var(--green-400));
+  --focus-ring: light-dark(var(--green-600), var(--green-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--green-900), var(--green-300));
+  --srp-more-primary-hover: light-dark(var(--green-950), var(--green-200));
+  --srp-more-primary-pressed: light-dark(var(--green-950), var(--green-100));
+  --srp-more-field-action: light-dark(var(--green-900), var(--green-300));
+  --srp-more-focus-ring: light-dark(var(--green-700), var(--green-300));
+}
+:is([data-theme^="green-"], [data-brand="green"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--green-700), var(--green-400));
+  --primary-hover: light-dark(var(--green-800), var(--green-300));
+  --primary-pressed: light-dark(var(--green-900), var(--green-200));
+  --primary-subtle: light-dark(var(--green-50), var(--green-950));
+  --primary-subtle-pressed: light-dark(var(--green-100), var(--green-900));
+  --on-primary: light-dark(var(--white), var(--green-950));
+  --field-action: light-dark(var(--green-700), var(--green-400));
+  --focus-ring: light-dark(var(--green-600), var(--green-400));
+  --link-visited: light-dark(var(--violet-700), var(--violet-300));
+  --srp-more-primary: light-dark(var(--green-900), var(--green-300));
+  --srp-more-primary-hover: light-dark(var(--green-950), var(--green-200));
+  --srp-more-primary-pressed: light-dark(var(--green-950), var(--green-100));
+  --srp-more-field-action: light-dark(var(--green-900), var(--green-300));
+  --srp-more-focus-ring: light-dark(var(--green-700), var(--green-300));
+}
+}

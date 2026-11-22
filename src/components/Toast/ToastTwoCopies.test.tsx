@@ -23,7 +23,7 @@ describe('Toast with two copies of the package on the page (G2)', () => {
 
   test('the other copy\'s Toaster, mounted last, takes this copy\'s toasts over', async () => {
     const other = await copy();
-    const shown = await render(<><Toaster /><other.Toaster label="Theirs" /></>);
+    const shown = await render(<><Toaster /><other.Toaster aria-label="Theirs" /></>);
     React.act(() => { toast('Copied'); });
     await expect.poll(() => titles(document.querySelector<HTMLElement>('section[aria-label="Theirs"]')!)).toEqual(['Copied']);
     React.act(() => toast.dismiss());
