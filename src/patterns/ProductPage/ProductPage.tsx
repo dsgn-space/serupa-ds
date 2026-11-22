@@ -293,7 +293,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#cart" tone="neutral">Cart, {countItems(inCart, formatNumber(inCart, locale))}</Link>
+        <Link underline="hover" href="#cart">Cart, {countItems(inCart, formatNumber(inCart, locale))}</Link>
       </header>
       <Container as="main" size="lg" className="py-8 outline-none" id="main">
         <Stack gap={6}>

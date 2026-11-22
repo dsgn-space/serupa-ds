@@ -146,7 +146,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
               {noLocation ? <Alert tone="warning">Couldn’t get your location. Your browser may have been asked not to share it; search by town or postcode instead.</Alert> : null}
               <Switch checked={openOnly} onCheckedChange={setOpenOnly}>Open now only</Switch>
             </div>
-            <p id="store-count" role="status" className="m-0 text-text-muted">
+            <p id="store-count" role="status" className="m-0 text-sm text-text-muted">
               {shown.length === 1 ? '1 shop' : `${formatNumber(shown.length, locale)} shops`}{here && shown.length ? ', nearest first' : ''}
             </p>
             {shown.length ? (

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Button } from '../../components/Button/Button';
+import { Container } from '../../components/Container/Container';
 import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
@@ -75,7 +76,8 @@ export function Footer({ groups, languages = [], language, onLanguageChange, the
   const changeLanguage = (e: React.FormEvent) => { e.preventDefault(); if (picked !== language) onLanguageChange?.(picked); };
   return (
     <footer className="border-t border-border bg-surface text-text">
-      <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10">
+      {/* The same width and side padding as a PageSection size="lg" above it, so their content lines up. */}
+      <Container size="lg" className="flex flex-col gap-8 py-10">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           {groups.map((g, i) => (
             <nav key={g.title} aria-labelledby={`${id}-${i}`} className="flex flex-col gap-3">
@@ -106,7 +108,7 @@ export function Footer({ groups, languages = [], language, onLanguageChange, the
           </div>
         ) : null}
         <div className="border-t border-border pt-6 text-sm text-text-muted">{legal}</div>
-      </div>
+      </Container>
     </footer>
   );
 }

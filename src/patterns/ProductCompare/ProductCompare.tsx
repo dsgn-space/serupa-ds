@@ -147,7 +147,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
             </div>
             {list.length ? (
               <>
-                <p id="compare-rows" role="status" className="m-0 text-text-muted">
+                <p id="compare-rows" role="status" className="m-0 text-sm text-text-muted">
                   {onlyDiff ? `${formatNumber(rows.length, locale)} of ${formatNumber(features.length, locale)} features differ` : `All ${formatNumber(features.length, locale)} features`}
                 </p>
                 <Table caption="The products side by side, a feature in each row" hideCaption layout="fixed" pinStart>
@@ -159,7 +159,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
                           <span className="flex flex-col gap-2 font-normal">
                             <Image src={p.image} alt="" ratio="square" rounded />
                             <Link href={p.href} className="font-semibold">{p.name}</Link>
-                            <span className="text-lg font-semibold">{money(p.price)}</span>
+                            <span className="text-lg font-semibold text-text">{money(p.price)}</span>
                           </span>
                         </TableHeaderCell>
                       ))}

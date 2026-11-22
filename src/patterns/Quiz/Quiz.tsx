@@ -138,7 +138,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
                 </div>
               </section>
             ) : (
-              <p id="quiz-progress" role="status" className="m-0 text-text-muted">{n(answered)} of {n(questions.length)} answered</p>
+              <p id="quiz-progress" role="status" className="m-0 text-sm text-text-muted">{n(answered)} of {n(questions.length)} answered</p>
             )}
             <form ref={top} onSubmit={check} noValidate aria-label="Quiz" className="flex flex-col gap-6">
               <ErrorSummary key={tries} errors={errors} />
