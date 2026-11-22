@@ -11,13 +11,13 @@
 .srp-field--group > .srp-field__label + * { clear: both; }
 .srp-field__required { margin-inline-start: var(--spacing-0\.5); color: var(--field-required-color, var(--danger-text)); }
 .srp-field__optional { unicode-bidi: isolate; margin-inline-start: var(--spacing-1); color: var(--field-hint-color, var(--text-muted)); font-weight: var(--font-normal); }
-.srp-field__hint { color: var(--field-hint-color, var(--text-muted)); overflow-wrap: anywhere; }
+.srp-field__hint { color: var(--field-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
 .srp-field__control { display: flex; flex-direction: column; gap: var(--spacing-2); min-width: var(--spacing-0); }
-.srp-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); overflow-wrap: anywhere; }
-.srp-field__warning, .srp-field__checking { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); overflow-wrap: anywhere; }
+.srp-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
+.srp-field__warning, .srp-field__checking { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
 .srp-field__warning { color: var(--field-warning-color, var(--warning-text)); }
 .srp-field__checking { color: var(--field-checking-color, var(--text-muted)); }
-:is(.srp-field__error, .srp-field__warning, .srp-field__checking) .srp-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }   /* centered on the first line */
+:is(.srp-field__error, .srp-field__warning, .srp-field__checking) .srp-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-3\.5)); height: var(--text-xs--line-height); line-height: var(--text-xs--line-height); }   /* centered on the first line */
 /* Horizontal: the label in a column of its own on the control's first line (baselines aligned), the control, hint and
    error stacked beside it; once the field is narrower than both columns, the body wraps under the label. */
 .srp-field--horizontal { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: var(--field-column-gap, var(--spacing-4)); }

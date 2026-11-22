@@ -130,8 +130,8 @@
     "sizing": {
       "error-icon-size": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
-        "$description": "Error icon (16px)",
+        "$value": "{spacing.spacing-3.5}",
+        "$description": "The icon of an error, a warning or \"checking…\" (14px), on the 12px message's first line",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--field-error-icon-size"
