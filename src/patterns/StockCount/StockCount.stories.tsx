@@ -26,7 +26,7 @@ export const Partial: Story = { args: { items: [
 export const SaveFails: Story = { tags: ['!visual'], args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** While the stock loads: placeholder rows in the grid. */
-export const Loading: Story = { args: { loading: true } };
+export const Loading: Story = { args: { loading: true, items: [] } };
 
 /** Couldn't load: it says so, with Try again. */
 export const LoadFailed: Story = { args: { loadFailed: true } };

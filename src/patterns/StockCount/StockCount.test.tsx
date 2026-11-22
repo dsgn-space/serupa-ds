@@ -64,4 +64,13 @@ describe('Patterns/StockCount', () => {
     await dialog.getByRole('button', { name: 'Done' }).click();
     await expect.poll(headers).toEqual(['SKU', 'Product', 'On record', 'Counted', 'Difference']);
   });
+  test('loading shows placeholder rows and says so; with no products it says there is nothing to count, and no Save', async () => {
+    const { rerender } = await render(<StockCount items={[]} loading />);
+    expect(status()).toBe('Loading the stock…');
+    await expect.poll(() => document.querySelector('[role="grid"]')?.getAttribute('aria-busy')).toBe('true');
+    await rerender(<StockCount items={[]} />);
+    await expect.poll(status).toBe('No products to count yet.');
+    expect(document.body.textContent).toContain('Nothing to count here');
+    expect(page.getByRole('button', { name: 'Save counts' }).elements()).toHaveLength(0);
+  });
 });

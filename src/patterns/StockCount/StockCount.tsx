@@ -147,7 +147,7 @@ export function StockCount({ items: initial = demo, place = 'Main Street shop', 
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the stock" onRetry={() => onRetry?.()} headingLevel={2} /> : (<>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p role="status" id="sc-progress" className="m-0">
-                {loading ? 'Loading the stock…'
+                {loading ? 'Loading the stock…' : !items.length ? 'No products to count yet.'
                   : `Counted ${num(progress.counted)} of ${num(items.length)} products. ${progress.differ === 1 ? '1 differs' : `${num(progress.differ)} differ`} from the record.`}
               </p>
               <Toolbar aria-label="Count view" size="sm">
