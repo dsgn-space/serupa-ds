@@ -73,6 +73,19 @@ describe('Patterns/Sign-up', () => {
     expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, not yet']);
   });
 
+  test('a rule not yet met shows an empty ring, a met one a filled check: the ring\'s middle is a hole, not a solid dot', async () => {
+    await render(<SignUp initial={{ email: 'ana@example.com' }} />);
+    // Is the middle of each rule's icon drawn? Asked of the path itself, at the center of its viewBox (480, -480).
+    const middle = () => [...document.querySelectorAll('ul[aria-label="Your password needs"] li svg path')].map((p) => {
+      const c = document.createElement('canvas').getContext('2d')!;
+      return c.isPointInPath(new Path2D(p.getAttribute('d')!), 480, -480);
+    });
+    await expect.poll(middle).toEqual([false, false]);
+    await userEvent.click(input('sign-up-password'));
+    await userEvent.keyboard('blue whales sing');
+    await expect.poll(middle).toEqual([true, true]);   // check_circle: its middle is the filled disc around the check
+  });
+
   test('Create account with problems: a summary that takes focus and links to each field, and nothing sent', async () => {
     const onSubmit = vi.fn();
     const screen = await render(<SignUp onSubmit={onSubmit} />);

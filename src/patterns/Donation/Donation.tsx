@@ -127,6 +127,7 @@ export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee
           ) : (
             <form onSubmit={give} noValidate aria-label="Your gift" className="flex flex-col gap-4 pt-6">
               <ErrorSummary key={tries} errors={errors} />
+              <p className="m-0 text-text-muted">Fields marked * are required.</p>
               <Field label="How often?" group>
                 <RadioGroup name="donate-often" orientation="horizontal" value={d.monthly} onValueChange={(v: string) => edit({ monthly: v })}>
                   <Radio value="once">Once</Radio>

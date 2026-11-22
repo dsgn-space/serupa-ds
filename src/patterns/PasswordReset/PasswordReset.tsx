@@ -170,7 +170,7 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
                     <ul aria-label="Your password needs" className="m-0 flex list-none flex-col gap-1 p-0">
                       {rules.map((r) => (
                         <li key={r.text} className={`flex items-center gap-2 ${r.met ? 'text-text' : 'text-text-muted'}`}>
-                          <Icon name={r.met ? 'check_circle' : 'radio_button_unchecked'} size="sm" />
+                          <Icon name={r.met ? 'check_circle' : 'trip_origin'} size="sm" />
                           <span>{r.text}<span className="sr-only">{r.met ? ', done' : ', not yet'}</span></span>
                         </li>
                       ))}

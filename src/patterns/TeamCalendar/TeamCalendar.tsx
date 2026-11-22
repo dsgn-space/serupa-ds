@@ -210,6 +210,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
             {draft ? (
               <form onSubmit={add} noValidate className="flex flex-col gap-4">
                 {addFailed ? <Alert tone="danger">Couldn’t add the event. Try again.</Alert> : null}
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Title" id="event-title" error={problems.title} required>
                   <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
                 </Field>

@@ -152,6 +152,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
                 <p className="m-0 text-text-muted">A person reads every message and answers {replyTime}, by email to {email}.</p>
                 <form noValidate onSubmit={send} className="flex max-w-xl flex-col gap-4">
                   {state === 'failed' ? <Alert tone="danger">Couldn’t send your message. Try again: your words are still here.</Alert> : null}
+                  <p className="m-0 text-text-muted">Fields marked * are required.</p>
                   <Field label="What is it about?" error={problem('topic')} required>
                     <Select id="help-topic" placeholder="Choose one" value={value.topic} options={TOPICS.map((t) => ({ value: t, label: t }))}
                       onChange={(e) => set({ topic: e.target.value })} />

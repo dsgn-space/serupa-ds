@@ -8,6 +8,7 @@ import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Card } from '../Card/Card';
+import { Avatar } from '../Avatar/Avatar';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -151,6 +152,17 @@ describe('Table', () => {
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
+  });
+
+  test('an Avatar in a shaded row steps its fill up to secondary-hover, so it stays apart from the shade (the same zinc-100 as secondary in light themes); a plain row keeps secondary', async () => {
+    await render(<Table aria-label="People"><TableBody>
+      <TableRow data-i="p"><TableCell><Avatar id="avp" name="Ada Lovelace" size="sm" /></TableCell></TableRow>
+      <TableRow data-i="s" selected><TableCell><Avatar id="avs" name="Grace Hopper" size="sm" /></TableCell></TableRow>
+    </TableBody></Table>);
+    const fill = (i: string) => css(q(`#av${i}`).firstElementChild).backgroundColor;   // the Avatar's frame
+    await expect.poll(() => css(q('[data-i="s"]')).backgroundColor).toBe(bg('var(--surface-hover)'));
+    expect([fill('p'), fill('s')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect(fill('s')).not.toBe(css(q('[data-i="s"]')).backgroundColor);
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {

@@ -52,6 +52,16 @@
           }
         }
       },
+      "avatar-bg-shaded": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--list-avatar-bg-shaded"
+          }
+        }
+      },
       "bg-hover": {
         "$type": "color",
         "$value": "{color.surface-hover}",

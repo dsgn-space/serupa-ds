@@ -184,6 +184,7 @@ export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, 
           <Dialog open={adding} onOpenChange={ask} title="New task">
             <form onSubmit={add} noValidate className="flex flex-col gap-4">
               {addFailed ? <Alert tone="danger">Couldn’t add the task. Try again.</Alert> : null}
+              <p className="m-0 text-text-muted">Fields marked * are required.</p>
               <Field label="Title" id="task-title" hint="A few words that say what’s to be done." error={titleError ?? undefined} required>
                 <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => { setDraft({ ...draft, title: e.target.value }); if (titleError) setTitleError(null); }} />
               </Field>

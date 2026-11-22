@@ -189,7 +189,8 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen, onlin
             ) : (
               <form onSubmit={send} noValidate aria-labelledby="reply-heading" className="flex flex-col gap-4">
                 <h2 id="reply-heading" className="m-0 text-lg font-semibold">Reply</h2>
-                <Field label="Your reply" id="ticket-reply" hint="We reply within 1 working day." error={problem ?? undefined}>
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
+                <Field label="Your reply" id="ticket-reply" hint="We reply within 1 working day." error={problem ?? undefined} required>
                   <Textarea ref={reply} rows={5} maxLength={LIMIT} value={body} onChange={(e) => { setBody(e.target.value); setProblem(null); setFailed(false); }} />
                 </Field>
                 <Field label="Files" optional>

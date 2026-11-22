@@ -153,7 +153,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
   const set = <K extends keyof Application>(k: K) => (v: Application[K]) => setA((o) => ({ ...o, [k]: v }));
   const fieldError = (step: number, k: string) => errors[step]?.find((e) => e.field === k)?.message;
   const text = (step: number, k: keyof Application, label: string, autoComplete: string, more: Partial<React.ComponentProps<typeof Input>> = {}, hint?: string, optional?: boolean) => (
-    <Field label={label} hint={hint} optional={optional} error={fieldError(step, id(k))}>
+    <Field label={label} hint={hint} required={!optional} optional={optional} error={fieldError(step, id(k))}>
       <Input id={id(k)} name={k} autoComplete={autoComplete} value={String(a[k])} onChange={(e) => set(k)(e.target.value)} {...more} />
     </Field>
   );
@@ -185,7 +185,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
       <Container as="main" size="md" className="py-8 outline-none" id="main">
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">Your answers stay here. Sending them needs a connection.</OfflineBanner>
-          <PageHeader title="Open a business account" />
+          <PageHeader title="Open a business account" description={sent ? undefined : 'Fields marked * are required.'} />
           <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
           {sent ? (
             <Card className="flex flex-col gap-4">
@@ -206,7 +206,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                   {h2(0)}
                   {summary(0)}
                   {text(0, 'business', 'Business name', 'organization', {}, 'As it’s registered, or your own name for a sole trader.')}
-                  <Field label="Type of business" group error={fieldError(0, 'apply-type-sole')}>
+                  <Field label="Type of business" group required error={fieldError(0, 'apply-type-sole')}>
                     <RadioGroup name="type" value={a.type} onValueChange={(v) => set('type')(v)} invalid={!!fieldError(0, 'apply-type-sole')}>
                       <Radio id="apply-type-sole" value="sole" description="One person runs it and is the business.">{TYPES.sole}</Radio>
                       <Radio value="company" description="Registered with its own registration number.">{TYPES.company}</Radio>
@@ -221,7 +221,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                     {text(0, 'city', 'Town or city', 'address-level2')}
                     {text(0, 'postcode', 'Postcode', 'postal-code', { className: 'max-w-48' })}
                   </div>
-                  <Field label="Country" error={fieldError(0, id('country'))}>
+                  <Field label="Country" required error={fieldError(0, id('country'))}>
                     <Select id={id('country')} name="country" autoComplete="country" value={a.country} onChange={(e) => set('country')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
                   </Field>
                 </section>
@@ -247,7 +247,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                         {text(1, 'cardCity', 'Town or city', 'shipping address-level2')}
                         {text(1, 'cardPostcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
                       </div>
-                      <Field label="Country" error={fieldError(1, id('cardCountry'))}>
+                      <Field label="Country" required error={fieldError(1, id('cardCountry'))}>
                         <Select id={id('cardCountry')} name="cardCountry" autoComplete="shipping country" value={a.cardCountry} onChange={(e) => set('cardCountry')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
                       </Field>
                     </>
@@ -260,14 +260,14 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                   <Field label="Currency" hint="The account holds money in this currency. You can add others once it’s open.">
                     <Select id={id('currency')} name="currency" value={a.currency} onChange={(e) => set('currency')(e.target.value)} options={CURRENCIES} />
                   </Field>
-                  <Field label="About how many payments will the business make?" group error={fieldError(2, 'apply-payments-few')}>
+                  <Field label="About how many payments will the business make?" group required error={fieldError(2, 'apply-payments-few')}>
                     <RadioGroup name="payments" value={a.payments} onValueChange={(v) => set('payments')(v)} invalid={!!fieldError(2, 'apply-payments-few')}>
                       <Radio id="apply-payments-few" value="few">{PAYMENTS.few}</Radio>
                       <Radio value="some">{PAYMENTS.some}</Radio>
                       <Radio value="many">{PAYMENTS.many}</Radio>
                     </RadioGroup>
                   </Field>
-                  <Field label="Debit cards" hint="One for each person who pays for things, up to 20." error={fieldError(2, id('cards'))}>
+                  <Field label="Debit cards" hint="One for each person who pays for things, up to 20." required error={fieldError(2, id('cards'))}>
                     <NumberInput id={id('cards')} name="cards" min={1} max={20} value={a.cards} onValueChange={(v) => set('cards')(v ?? 0)} className="max-w-40" />
                   </Field>
                 </section>

@@ -3,7 +3,8 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
 import { Badge } from '../../components/Badge/Badge';
-import { List, ListItem } from '../../components/List/List';
+import { ListItem } from '../../components/List/List';
+import { VirtualList } from '../../components/VirtualList/VirtualList';
 import { Navbar, NavbarLink } from '../../components/Navbar/Navbar';
 import { NotificationCenter, type NotificationItem } from '../../components/NotificationCenter/NotificationCenter';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
@@ -141,16 +142,18 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
               description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
               actions={<Button variant="outline" startIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
           ) : shown.length ? (
-            <List variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}>
-              {shown.map((n) => (
-                <ListItem key={n.id}
+            // A VirtualList: a year of notifications draws only the rows in view, in a box that scrolls by keyboard, and
+            // each row still says where it is ("5 of 1,200").
+            <VirtualList variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}
+              count={shown.length} itemKey={(i) => shown[i]!.id} estimatedItemHeight={72}
+              renderItem={(i) => { const n = shown[i]!; return (
+                <ListItem
                   // The drawer's unread dot before the title (and room for it on read ones, so the titles line up); the
                   // description starts under the title, not under the dot, as in the drawer.
                   title={<span className="flex items-baseline gap-2"><span className={'srp-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
                   description={<span className="block ps-4">{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</span>}
                   trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
-              ))}
-            </List>
+              ); }} />
           ) : (
             <p className="m-0 rounded-lg border border-border bg-surface p-6 text-center text-text-muted">No unread notifications. You’re all caught up.</p>
           )}

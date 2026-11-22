@@ -264,7 +264,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
               <Link href="#home">Go to the home page</Link>
             </div>
           ) : <>
-          <PageHeader title="Security" headingRef={titleRef} />
+          <PageHeader title="Security" description="Fields marked * are required." headingRef={titleRef} />
           {scheduled ? (
             <Alert tone="warning" role="status" className="mt-6" title={<span id="deletion-scheduled">Your account will be deleted on {when}</span>}
               actions={<Button ref={keepButton} variant="outline" loading={keeping} aria-describedby="deletion-scheduled" onClick={keepAccount}>Keep my account</Button>}>

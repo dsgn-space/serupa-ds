@@ -7,6 +7,8 @@ import { DataGrid, type DataGridCellChange, type DataGridColumn } from '../../co
 import { Dialog } from '../../components/Dialog/Dialog';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Link } from '../../components/Link/Link';
+import { MenuItem } from '../../components/Menu/Menu';
+import { Menubar, MenubarMenu } from '../../components/Menubar/Menubar';
 import { ToggleButton } from '../../components/ToggleButton/ToggleButton';
 import { ToggleGroup } from '../../components/ToggleGroup/ToggleGroup';
 import { Toolbar } from '../../components/Toolbar/Toolbar';
@@ -27,6 +29,8 @@ import { Stack } from '../../components/Stack/Stack';
    - 1.4.1: a difference is a signed number in its own column, never a color alone.
    - 2.1.1: the view's controls are one toolbar (one tab stop, arrows between them): the row size, and Columns, a
      dialog that moves columns between hidden and shown with buttons as well as a list.
+   - 2.1.1, 4.1.2: what the whole count can do is a Menubar, as in a spreadsheet: File (download, print), Edit (clear
+     every count, which asks first) and View (columns). Arrows move between its menus and through each.
    - 3.3.1: a save that fails says so where Save is, and every count stays.
    Fetching the products and saving the counts are the app's job: pass them, and onSave. */
 
@@ -51,6 +55,8 @@ export interface StockCountProps {
   place?: string | undefined;
   /** Saves the counts. Return a promise: Save shows it's working until it settles, and a rejection says it failed. */
   onSave?: ((items: StockItem[]) => void | Promise<unknown>) | undefined;
+  /** File, Download as CSV was picked: the counts so far, for a spreadsheet. */
+  onDownload?: ((items: StockItem[]) => void) | undefined;
   /** Still loading: placeholder rows show in the grid. Default: false. */
   loading?: boolean | undefined;
   /** Loading failed: a "Couldn’t load the stock" message with Try again, which calls onRetry. Default: false. */
@@ -100,7 +106,7 @@ export function countProgress(items: StockItem[]) {
 }
 
 /** The page: a skip link, a header, then main with the h1, the count's progress, the view toolbar, the grid and Save. */
-export function StockCount({ items: initial = demo, place = 'Main Street shop', onSave, loading = false, loadFailed = false, onRetry, online }: StockCountProps) {
+export function StockCount({ items: initial = demo, place = 'Main Street shop', onSave, onDownload, loading = false, loadFailed = false, onRetry, online }: StockCountProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [items, setItems] = React.useState(initial);
@@ -109,6 +115,8 @@ export function StockCount({ items: initial = demo, place = 'Main Street shop', 
   const [choosing, setChoosing] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [result, setResult] = React.useState<'saved' | 'failed' | null>(null);
+  const [clearing, setClearing] = React.useState(false);
+  const keep = React.useRef<HTMLButtonElement>(null);
   const has = (k: Optional) => shown.includes(k);
   const progress = countProgress(items);
 
@@ -145,6 +153,18 @@ export function StockCount({ items: initial = demo, place = 'Main Street shop', 
           <PageHeader breadcrumb={[{ label: 'All counts', href: '#counts' }, { label: place }]} title={`Stock count: ${place}`}
             description="Type each count in Counted. Arrows move between cells, Enter edits one, and you can paste a column from a spreadsheet." />
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the stock" onRetry={() => onRetry?.()} headingLevel={2} /> : (<>
+            <Menubar aria-label="Stock count" className="self-start">
+              <MenubarMenu label="File">
+                <MenuItem icon="download" onSelect={() => onDownload?.(items)}>Download as CSV</MenuItem>
+                <MenuItem icon="print" onSelect={() => window.print()}>Print</MenuItem>
+              </MenubarMenu>
+              <MenubarMenu label="Edit">
+                <MenuItem icon="restart_alt" disabled={!progress.counted} onSelect={() => setClearing(true)}>Clear all counts…</MenuItem>
+              </MenubarMenu>
+              <MenubarMenu label="View">
+                <MenuItem icon="view_column" onSelect={() => setChoosing(true)}>Columns…</MenuItem>
+              </MenubarMenu>
+            </Menubar>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p role="status" id="sc-progress" className="m-0">
                 {loading ? 'Loading the stock…' : !items.length ? 'No products to count yet.'
@@ -174,6 +194,11 @@ export function StockCount({ items: initial = demo, place = 'Main Street shop', 
           </>)}
         </Stack>
       </Container>
+      <Dialog alert initialFocus={keep} open={clearing} onOpenChange={setClearing} title="Clear all counts?" description={`The ${num(progress.counted)} counts typed so far go, and every product is to count again.`}
+        footer={<>
+          <Button ref={keep} variant="outline" onClick={() => setClearing(false)}>Keep them</Button>
+          <Button destructive onClick={() => { setItems((now) => now.map((it) => ({ ...it, counted: null }))); setResult(null); setClearing(false); }}>Clear counts</Button>
+        </>} />
       <Dialog open={choosing} onOpenChange={setChoosing} title="Columns" description="Product and Counted always show."
         footer={<Button onClick={() => setChoosing(false)}>Done</Button>}>
         <TransferList aria-label="Columns" options={OPTIONAL} value={shown} onValueChange={setShown} availableLabel="Hidden" chosenLabel="Shown" />

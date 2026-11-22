@@ -141,6 +141,7 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
             : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading your exports" /></Card> : (<>
           <form onSubmit={request} noValidate aria-label="What to download" className="flex flex-col gap-4 pt-6">
             <ErrorSummary key={tries} errors={errors} />
+            <p className="m-0 text-text-muted">Fields marked * are required.</p>
             <Field label="What should it include?" group error={problem || undefined} required>
               <CheckboxGroup id="export-parts" variant="card" value={chosen} onValueChange={(v: string[]) => { setChosen(v); setProblem(''); setFailed(false); }}>
                 <Checkbox selectAll>Everything</Checkbox>
