@@ -66,6 +66,8 @@ describe('SortableList', () => {
     await userEvent.keyboard(' ');
     expect(handle('Gemini').getAttribute('aria-pressed')).toBe('true');
     await said('Picked up Gemini, position 2 of 4.');
+    // Alt with an arrow is the browser's Back or Forward, not a move.
+    await userEvent.keyboard('{Alt>}{ArrowUp}{/Alt}');
     await userEvent.keyboard('{ArrowDown}');
     await said('Gemini, position 3 of 4.');
     await userEvent.keyboard('{ArrowDown}{ArrowDown}');

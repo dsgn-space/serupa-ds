@@ -11,6 +11,7 @@ import { useServerStyles } from '../../internal/serverStyles';
 import { Button } from '../Button/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export type ChartType = 'line' | 'bar' | 'area' | 'donut' | 'heatmap';
 export type ChartScale = 'sequential' | 'diverging';
@@ -234,7 +235,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
     const measure = () => {
       const w = Math.round(el.getBoundingClientRect().width);
       if (w > 0) setWidth(w);
-      setRtl(getComputedStyle(el).direction === 'rtl');
+      setRtl(isRtl(el));
     };
     measure();
     if (typeof ResizeObserver === 'undefined') return;

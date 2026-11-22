@@ -58,6 +58,16 @@ export const LongLabels: Story = {
   render: (args) => <div style={{ width: 240 }}><ToggleGroup {...args} /></div>,
 };
 
+/** Variants: outline (default) where the group stands alone, ghost inside a toolbar that already has an edge. */
+export const Variants: Story = {
+  render: (args) => <div className="flex flex-col gap-3 items-start">
+    {(['outline', 'ghost'] as const).map((v) => <ToggleGroup key={v} {...args} variant={v} aria-label={`Text alignment, ${v}`} />)}
+  </div>,
+};
+
+/** Vertical: stacked, for a side panel; the arrow keys move up and down. */
+export const Vertical: Story = { args: { orientation: 'vertical' } };
+
 export const Sizes: Story = {
   render: (args) => <div className="flex flex-col gap-3 items-start">
     {(['sm', 'md', 'lg'] as const).map((size) => <ToggleGroup key={size} {...args} size={size} aria-label={`Text alignment, ${size}`} />)}

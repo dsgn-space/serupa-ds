@@ -75,7 +75,8 @@ export function cropImage(src: string, area: CropArea, options: { width?: number
   if (typeof document === 'undefined') return Promise.resolve(null);
   return new Promise((resolve) => {
     const img = new Image();
-    if (options.crossOrigin !== undefined) img.crossOrigin = options.crossOrigin;
+    // '' is 'anonymous' in HTML; TypeScript's next DOM types take only the two keywords there.
+    if (options.crossOrigin !== undefined) img.crossOrigin = options.crossOrigin || 'anonymous';
     img.onload = () => {
       const w = Math.max(1, Math.round(options.width || area.width)), h = Math.max(1, Math.round(w * area.height / area.width));
       const c = document.createElement('canvas');

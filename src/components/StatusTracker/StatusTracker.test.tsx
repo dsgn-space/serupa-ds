@@ -62,6 +62,9 @@ describe('StatusTracker', () => {
     expect(document.activeElement).toBe(bar(89));
     await userEvent.keyboard('{ArrowLeft}');
     expect(document.activeElement).toBe(bar(88));
+    // Alt with an arrow is the browser's Back or Forward, not a move.
+    await userEvent.keyboard('{Alt>}{ArrowLeft}{/Alt}');
+    expect(document.activeElement).toBe(bar(88));
     await userEvent.keyboard('{Home}');
     expect(document.activeElement).toBe(bar(0));
     await userEvent.keyboard('{End}{ArrowRight}');

@@ -130,7 +130,7 @@ Each is an optional override: set it on the page, a container or one DataGrid. T
 | `--data-grid-header-weight` | `font-medium` | The header text's weight (500). |
 | `--data-grid-font-size-lg` | `text-base` | The cells' text with size lg (16px). |
 | `--data-grid-padding-x` | `spacing-3` | Space at a cell's sides (12px). |
-| `--data-grid-padding-y` | `spacing-2` | Space above and below a cell's text (8px). |
+| `--data-grid-padding-y` | `space-item` | Space above and below a cell's text: 8px, 4px in the compact density. |
 | `--data-grid-padding-y-sm` | `spacing-1` | The same with size sm (4px). |
 | `--data-grid-padding-x-lg` | `spacing-4` | A cell's inline padding with size lg (16px). |
 | `--data-grid-padding-y-lg` | `spacing-2.5` | A cell's block padding with size lg (10px): with 16px text, a row at least 44px tall. |

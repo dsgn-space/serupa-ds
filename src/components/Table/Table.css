@@ -14,9 +14,9 @@
 .srp-card--padding-none > .srp-table { border: var(--spacing-0); border-radius: var(--srp-card-inner-radius); }
 .srp-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
-.srp-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
-.srp-table__cell { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; font-variant-numeric: tabular-nums; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
-.srp-table--sm .srp-table__cell { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
+.srp-table__caption { padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
+.srp-table__cell { padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; font-variant-numeric: tabular-nums; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
+.srp-table--sm .srp-table__cell { padding-block: var(--table-padding-y-sm, var(--space-item)); }
 .srp-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .srp-table__cell, .srp-table__body .srp-table__row:last-child .srp-table__cell, .srp-table__foot .srp-table__row:last-child .srp-table__cell { border-bottom: var(--spacing-0); }
 .srp-table__foot .srp-table__row:first-child .srp-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
 .srp-table__body:has(+ .srp-table__foot) .srp-table__row:last-child .srp-table__cell { border-bottom: var(--spacing-0); }
@@ -71,10 +71,10 @@
 .srp-table__header--sortable { padding: var(--spacing-0); }
 .srp-table__sort {
   box-sizing: border-box; display: inline-flex; align-items: center; gap: var(--spacing-1); width: var(--sizing-full);
-  padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3));
+  padding: var(--table-padding-y, var(--space-row)) var(--table-padding-x, var(--spacing-3));
   border: var(--spacing-0); background: transparent; color: inherit; font: inherit; text-align: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.srp-table--sm .srp-table__sort { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
+.srp-table--sm .srp-table__sort { padding-block: var(--table-padding-y-sm, var(--space-item)); }
 .srp-table__cell--center .srp-table__sort { justify-content: center; }
 .srp-table__cell--end .srp-table__sort { justify-content: flex-end; }
 @media (hover: hover) { .srp-table__sort:hover { color: var(--table-text, var(--text)); } }

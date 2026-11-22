@@ -245,6 +245,14 @@ describe('ImageCropper', () => {
     expect(await cropImage('data:image/png;base64,broken', { x: 0, y: 0, width: 1, height: 1 })).toBe(null);
   });
 
+  test('cropImage asks for the picture as "anonymous" when crossOrigin is empty, as HTML reads it', async () => {
+    const own = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'crossOrigin')!;
+    const set: (string | null)[] = [];
+    Object.defineProperty(HTMLImageElement.prototype, 'crossOrigin', { ...own, set(v: string | null) { set.push(v); own.set!.call(this, v); } });
+    try { await cropImage(WIDE, { x: 0, y: 0, width: 10, height: 10 }, { crossOrigin: '' }); } finally { Object.defineProperty(HTMLImageElement.prototype, 'crossOrigin', own); }
+    expect(set).toEqual(['anonymous']);
+  });
+
   test('the failure text reads 4.5:1 on the frame in every theme', async () => {
     await render(<ImageCropper aria-label="Photo" src="data:image/png;base64,broken" />);
     await expect.element(page.getByText('The picture couldn’t be loaded.')).toBeVisible();
