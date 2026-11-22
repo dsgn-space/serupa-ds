@@ -56,9 +56,9 @@ Drawn from the `LongLabel` story.
 
 | State | Look |
 | --- | --- |
-| Off | A `border-control` track, the thumb in `field` at the start |
+| Off | A `track` track (the light gray Apple uses), the thumb with a `border-control` edge, the thumb in `field` at the start |
 | On | A `primary` track, the thumb in `on-primary` at the end |
-| Hover | `border-control-hover` off, `primary-hover` on |
+| Hover | the off thumb's edge turns `border-control-hover`, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
@@ -111,13 +111,15 @@ Each is an optional override: set it on the page, a container or one switch. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--switch-track` | `border-control` | The track while off |
-| `--switch-track-hover` | `border-control-hover` | The track while off, on hover |
-| `--switch-track-pressed` | `border-control-pressed` | The off track while held down, one step past track-hover. |
+| `--switch-track` | `track` | The track while off: Apple's light gray. The thumb's edge on it carries the 3:1. |
+| `--switch-track-hover` | `border-strong` | The track while off, on hover: a step darker than track, and the thumb's edge darkens too. |
+| `--switch-track-pressed` | `border-control` | The off track while held down, one step past track-hover. |
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
 | `--switch-thumb` | `field` | The thumb while off |
+| `--switch-thumb-border` | `border-control` | The off thumb's 1px edge, which carries the 3:1 on the light track |
+| `--switch-thumb-border-hover` | `border-control-hover` | The off thumb's edge on hover |
 | `--switch-thumb-checked` | `on-primary` | The thumb while on |
 | `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |

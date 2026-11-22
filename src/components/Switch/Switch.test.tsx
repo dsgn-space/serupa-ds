@@ -57,10 +57,11 @@ describe('Switch', () => {
     expect(calls).toEqual(['change', 'true change', 'change', 'false change']);
   });
 
-  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in border-control, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in track (the light gray Apple uses), a 16px thumb in field with a border-control edge 2px from the start, centered on the label\'s first line', async () => {
     await setup();
     const s = still(), md = box('md');
-    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--border-control)'), 16, color('var(--field)'), 2, '14px']);
+    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--track)'), 16, color('var(--field)'), 2, '14px']);
+    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toBe(color('var(--border-control)') + ' 0px 0px 0px 1px inset');
     expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
     expect(md.vGap).toBeLessThan(0.5);
     expect(md.mid).toBeLessThan(1);
@@ -129,10 +130,12 @@ describe('Switch', () => {
     expect(i.checked).toBe(true);
   });
 
-  test('hover: border-control-hover while off, primary-hover while on', async () => {
+  test('hover: off, the thumb\'s edge darkens to border-control-hover and the track takes border-strong; on, primary-hover', async () => {
     await setup();
     await userEvent.hover(el('bad'));
-    await expect.poll(() => box('bad').bg).toBe(color('var(--border-control-hover)'));
+    const edge = () => css(el('bad').closest('label')!.querySelector('input + span')).boxShadow;
+    await expect.poll(edge).toBe(color('var(--border-control-hover)') + ' 0px 0px 0px 1px inset');
+    expect(box('bad').bg).toBe(color('var(--border-strong)'));
     await away();
     await userEvent.hover(el('lg'));
     await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
@@ -152,7 +155,7 @@ describe('Switch', () => {
 
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
-    await expect.poll(() => box('inv').bg).toBe(color('var(--border-control)'));
+    await expect.poll(() => box('inv').bg).toBe(color('var(--track)'));
     expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
@@ -285,7 +288,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--border-control)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--border-control)', 3], ['off thumb, hover', 'var(--field)', 'var(--border-control-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off thumb edge', 'var(--border-control)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb edge on its track', 'var(--border-control)', 'var(--track)', 3], ['off thumb edge, hover', 'var(--border-control-hover)', 'var(--border-strong)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);
@@ -300,12 +303,12 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control-pressed; on: primary-pressed), and the thumb stays full size; not when disabled (ED1)', async () => {
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control; on: primary-pressed), and the thumb stays full size; not when disabled (ED1)', async () => {
     await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
     const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
     const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1')];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control-pressed)'), '1']);
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control)'), '1']);
     expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1']);
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });

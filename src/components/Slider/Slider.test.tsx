@@ -347,10 +347,10 @@ describe('Slider', () => {
     expect(now('rtl')).toBe(90);
   });
 
-  test('the track is Meter\'s and Progress\'s: a light gray fill inside the basic border, not a dark bar', async () => {
+  test('the track is Switch\'s, Meter\'s and Progress\'s: the shared light gray track, with no edge, not a dark bar', async () => {
     await setup();
     const t = css(el('one').querySelector(':scope > div'));
-    expect([t.backgroundColor, t.boxShadow]).toEqual([color('var(--surface-muted)'), color('var(--border)') + ' 0px 0px 0px 1px inset']);
+    expect([t.backgroundColor, t.boxShadow]).toEqual([color('var(--track)'), 'none']);
   });
 
   test('marks on the light track: a tick on the fill is a cut in the field\'s color, one past it a line in border-strong', async () => {

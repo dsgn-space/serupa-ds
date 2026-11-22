@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   Meter: a full-width bar (4, 8 or 12px thick, rounded ends) filled to the value on a track outlined in border-control, in primary,
+   Meter: a full-width bar (4, 8 or 12px thick, rounded ends) filled to the value on the shared light gray track, in primary,
    or with low/high zones in success (best), warning or danger (worst). An optional label row above it: the label,
    and the value at the end. The fill moves to a new value over 300ms.
    --------------------------------------------------------------- */
@@ -18,10 +18,10 @@
 .srp-meter__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
 .srp-meter__label { font-weight: var(--meter-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-meter__value { margin-inline-start: auto; color: var(--meter-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
-/* The track is the page's surface inside a border-control edge (WCAG 1.4.11): the edge marks the whole scale at 3:1, and every
-   fill color is 3:1 against the page. A secondary track was 1.1:1 against the page, and some fills under 3:1 on it. */
-.srp-meter__track { position: relative; overflow: hidden; height: var(--srp-meter-h); border-radius: var(--meter-radius, var(--radius-pill)); background: var(--meter-track, var(--surface-muted));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--meter-track-border, var(--border)); }
+/* The track is the shared light gray track, the level Apple's controls use. Every fill color is 3:1 against the page;
+   on the track, success, warning and danger fills can be under 3:1, a choice made for the lighter look. */
+.srp-meter__track { position: relative; overflow: hidden; height: var(--srp-meter-h); border-radius: var(--meter-radius, var(--radius-pill)); background: var(--meter-track, var(--track));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--meter-track-border, var(--track)); }
 .srp-meter__fill { height: var(--sizing-full); border-radius: inherit; background: var(--srp-meter-fill); transition: translate var(--meter-duration, var(--motion-change-lg)) var(--ease-settle); }
 /* The fill is the track's full length, slid back by the part not filled (the track clips it): a new value moves it on
    the compositor, and its rounded end keeps its shape at any value (FB1). Right to left, it slides the other way. */

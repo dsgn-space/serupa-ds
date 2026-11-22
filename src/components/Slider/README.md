@@ -121,8 +121,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--slider-track` | `surface-muted` | The track: a light gray fill, as Meter's and Progress's. The fill and the thumb's ring carry the 3:1. |
-| `--slider-track-border` | `border` | The track's edge, inside it: the basic border, as Meter's. |
+| `--slider-track` | `track` | The track: the light gray Apple uses, as Switch's, Meter's and Progress's. The fill and the thumb's ring carry the 3:1. |
 | `--slider-fill` | `primary` | The selected part of the track. |
 | `--slider-thumb-bg` | `field` | The thumb's inside. |
 | `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |

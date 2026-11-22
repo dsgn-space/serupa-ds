@@ -1724,6 +1724,20 @@
         }
       }
     },
+    "track": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. The empty part of a track: Switch off, Slider, Meter and Progress, at the level Apple's controls use (zinc-200 in light, zinc-700 in dark). The thumb, fill or edge on it carries the 3:1.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-700}",
+          "contrastMore": {
+            "light": "{zinc-500}",
+            "dark": "{zinc-400}"
+          }
+        }
+      }
+    },
     "border-overlay": {
       "$type": "color",
       "$value": "{color.zinc-200}",

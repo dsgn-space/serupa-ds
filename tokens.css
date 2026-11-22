@@ -48,6 +48,7 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
+  --track: var(--zinc-200);
   --border-overlay: var(--zinc-200);
   --focus-ring: var(--blue-500);
   --success: var(--green-600);
@@ -415,6 +416,7 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
+  --track: var(--zinc-200);
   --border-overlay: var(--zinc-200);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -510,6 +512,7 @@
   --text-inverse: var(--zinc-900);
   --border: var(--zinc-800);
   --border-strong: var(--zinc-600);
+  --track: var(--zinc-700);
   --border-overlay: var(--zinc-600);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -627,6 +630,7 @@
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
+  --track: light-dark(var(--zinc-200), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --success: light-dark(var(--green-600), var(--green-500));
@@ -1224,6 +1228,7 @@
   --text-muted-shaded: light-dark(var(--zinc-700), var(--zinc-300));
   --border: light-dark(var(--zinc-500), var(--zinc-400));
   --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+  --track: light-dark(var(--zinc-500), var(--zinc-400));
   --success: light-dark(var(--green-700), var(--green-300));
   --success-text: light-dark(var(--green-900), var(--green-200));
   --on-success: light-dark(var(--white), var(--green-950));
@@ -1259,6 +1264,7 @@
   --text-muted-shaded: light-dark(var(--zinc-700), var(--zinc-300));
   --border: light-dark(var(--zinc-500), var(--zinc-400));
   --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+  --track: light-dark(var(--zinc-500), var(--zinc-400));
   --success: light-dark(var(--green-700), var(--green-300));
   --success-text: light-dark(var(--green-900), var(--green-200));
   --on-success: light-dark(var(--white), var(--green-950));
