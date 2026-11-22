@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, sizeBudgets, sharedRaise, raiseTag, sitePageKey, builtUnchanged, report, done } from './lib.mjs';
+import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, sizeBudgets, sharedRaise, raiseTag, sitePageKey, builtUnchanged, siteUnchanged, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -11,10 +11,14 @@ const raised = sizeBudgets([['Meter.json', { alone: 3.0, share: 0.5, css: 1.0 }]
 t('a size budget is the highest of the component\'s file and its raise files', JSON.stringify(raised) === '{"Meter":{"alone":3.2,"share":0.5,"css":1.2}}', JSON.stringify(raised));
 t('a raise file is named by its branch, and a detached checkout by "local"', raiseTag('claude/fix-x') === 'claude-fix-x' && raiseTag('HEAD') === 'local' && raiseTag('') === 'local', [raiseTag('claude/fix-x'), raiseTag('HEAD')].join(' '));
 t('a change to workflows and tools alone builds the same package', builtUnchanged(['.github/workflows/ci.yml', 'tools/runner-watch.mjs', 'tools/test/site.mjs', 'tools/README.md']));
-for (const f of ['src/components/Meter/Meter.tsx', 'tools/build/build.mjs', '.github/actions/setup/action.yml', 'tools/test/tree-shake.mjs', 'tools/test/lib.mjs', 'tools/test/baseline-server/Meter.html', 'docs/Upgrading.mdx', 'package.json', '.changeset/x.md']) {
+for (const f of ['src/components/Meter/Meter.tsx', 'tools/build/build.mjs', 'tools/utilities/template.mjs', 'tools/tokens/build.mjs', 'tools/typescript/api.mjs', 'tools/lint/a11y-components.mjs', '.github/actions/setup/action.yml', 'tools/test/tree-shake.mjs', 'tools/test/lib.mjs', 'tools/test/baseline-server/Meter.html', 'docs/Upgrading.mdx', 'package.json', '.changeset/x.md']) {
   t(`a change to ${f} runs the built package's checks`, !builtUnchanged(['.github/workflows/ci.yml', f]));
 }
 t('no change at all runs them', !builtUnchanged([]));
+t('a change to workflows and tools the docs site doesn\'t read builds the same site', siteUnchanged(['.github/workflows/ci.yml', 'tools/runner-watch.mjs', 'tools/test/size.mjs', 'tools/build/build.mjs']));
+for (const f of ['tools/test/site.mjs', 'tools/site/head.mjs', 'tools/health.mjs', 'tools/utilities/template.mjs', 'tools/build/registry.mjs', 'tools/test/lib.mjs', 'site/src/blocks.tsx', 'docs/Upgrading.mdx', 'src/components/Meter/Meter.mdx', '.github/actions/setup/action.yml']) {
+  t(`a change to ${f} runs the site check`, !siteUnchanged(['.github/workflows/ci.yml', f]));
+}
 t('a site page answers to its folder\'s name, a docs page to its file', sitePageKey('src/patterns/StoreLocator/StoreLocator.mdx') === 'StoreLocator' && sitePageKey('docs/Upgrading.mdx') === 'docs/Upgrading.mdx', sitePageKey('src/patterns/StoreLocator/StoreLocator.mdx'));
 t('a change to the site check itself opens every page', affectedComponents(['tools/test/site.mjs']) === null, list(affectedComponents(['tools/test/site.mjs'])));
 t('the shared raise files add up, and a line no file names gets nothing', sharedRaise([{ STARTER: [0.1, 'a'] }, { STARTER: [0.2, 'b'], LABELS: [0.1, 'c'] }, {}], 'STARTER') === 0.3 && sharedRaise([{ STARTER: [0.1, 'a'] }], 'LABELS') === 0, String(sharedRaise([{ STARTER: [0.1, 'a'] }, { STARTER: [0.2, 'b'] }], 'STARTER')));
