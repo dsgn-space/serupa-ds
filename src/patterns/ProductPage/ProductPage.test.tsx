@@ -36,13 +36,29 @@ describe('Patterns/Product page', () => {
     const screen = await render(<ProductPage product={mug} />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Mug']);
     expect(screen.getByRole('heading', { level: 2 }).elements().map((h) => h.textContent)).toEqual(['About this product', 'Reviews']);
-    expect([...document.querySelectorAll('main img')].map((i) => i.getAttribute('alt'))).toEqual(['The mug from the side', 'The mug from above']);
+    expect([...document.querySelectorAll('main img')].filter((i) => !i.closest('dialog')).map((i) => i.getAttribute('alt'))).toEqual(['The mug from the side', 'The mug from above']);
     await expect.element(screen.getByRole('region', { name: 'Pictures of Mug' })).toBeVisible();
     expect(document.body.textContent).toContain('Was ');
     expect(document.body.textContent).toContain('25% off');
     expect(document.body.textContent).toMatch(/Only .+ left\./);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
+  });
+
+  test('View full size opens the pictures at the one showing; moving there moves the Carousel, and Escape gives focus back', async () => {
+    const screen = await render(<ProductPage product={mug} />);
+    const viewer = () => document.querySelector<HTMLDialogElement>('dialog');
+    const title = () => document.getElementById(viewer()!.getAttribute('aria-labelledby') || '')?.textContent;
+    const view = screen.getByRole('button', { name: 'View full size' });
+    await view.click();
+    await expect.poll(() => viewer()?.open).toBe(true);
+    expect(title()).toBe('The mug from the side');
+    await screen.getByRole('button', { name: 'Next image' }).click();
+    await expect.poll(title).toBe('The mug from above');
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => viewer()?.open ?? false).toBe(false);
+    expect(active().textContent).toBe('View full size');
+    expect(screen.getByRole('region', { name: 'Pictures of Mug' }).element().querySelector('button[aria-current="true"]')?.getAttribute('aria-label')).toMatch(/2/);
   });
 
   test('each choice is a named group of radios, and a sold-out one says so and can\'t be picked', async () => {

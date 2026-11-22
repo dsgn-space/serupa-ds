@@ -15,6 +15,7 @@ import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/Acti
 import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { FabMenu } from '../../components/FabMenu/FabMenu';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
@@ -68,6 +69,10 @@ export interface DashboardProps {
   name?: string | undefined;
   /** "New project" was pressed: in the header, or the first-run state. */
   onCreateProject?: (() => void) | undefined;
+  /** "Invite someone" was picked in the Create button, on a phone. */
+  onInvite?: (() => void) | undefined;
+  /** "Upload a file" was picked in the Create button, on a phone. */
+  onUpload?: (() => void) | undefined;
   /** Loads more activity. Return its promise, so the button shows it's busy. Without it, the demo pages through `data`. */
   onLoadMoreActivity?: (() => PromiseLike<unknown>) | undefined;
   /** With `onLoadMoreActivity`: false after the last page. */
@@ -120,7 +125,7 @@ const PAGE = 4;
 const gb = (n: number, locale: string) => `${n.toLocaleString(locale, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
-export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false, activityFailed = false, online }: DashboardProps) {
+export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onInvite, onUpload, onLoadMoreActivity, hasMoreActivity = false, activityFailed = false, online }: DashboardProps) {
   const locale = useLocale();
   const [shown, setShown] = React.useState(PAGE);
   const firstRun = !loading && !loadFailed && data.projects.length === 0;
@@ -138,6 +143,15 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">These numbers are from when the page loaded. They update when you’re back.</OfflineBanner>
           <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
+          {/* On a phone, Create sits under the thumb: a FabMenu with what people start from here. From md up, New project
+              is in the header and the rest are on their own pages, so it hides. */}
+          {firstRun || loading || loadFailed ? null : (
+            <FabMenu label="Create" icon="add" extended className="md:hidden" actions={[
+              { label: 'New project', icon: 'create_new_folder', onSelect: () => onCreateProject?.() },
+              { label: 'Invite someone', icon: 'person_add', onSelect: () => onInvite?.() },
+              { label: 'Upload a file', icon: 'upload', onSelect: () => onUpload?.() },
+            ]} />
+          )}
 
           {loadFailed ? (
             <Card>

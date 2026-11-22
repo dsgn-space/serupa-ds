@@ -81,4 +81,32 @@ describe('Patterns/StockCount', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledOnce();
   });
+
+  test('the Menubar: File, Download as CSV gives the counts; Edit, Clear all counts asks first, with Keep them focused', async () => {
+    const onDownload = vi.fn();
+    const screen = await render(<StockCount onDownload={onDownload} />);
+    await expect.element(screen.getByRole('menubar', { name: 'Stock count' })).toBeVisible();
+    await screen.getByRole('menuitem', { name: 'File' }).click();
+    await screen.getByRole('menuitem', { name: 'Download as CSV' }).click();
+    expect((onDownload.mock.calls[0]![0] as StockItem[]).filter((i) => i.counted != null)).toHaveLength(3);
+    const print = vi.spyOn(window, 'print').mockImplementation(() => {});
+    await screen.getByRole('menuitem', { name: 'File' }).click();
+    await screen.getByRole('menuitem', { name: 'Print' }).click();
+    expect(print).toHaveBeenCalledOnce();
+    print.mockRestore();
+    await screen.getByRole('menuitem', { name: 'View' }).click();
+    await screen.getByRole('menuitem', { name: 'Columns…' }).click();
+    await expect.element(screen.getByRole('dialog', { name: 'Columns' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Done' }).click();
+    await screen.getByRole('menuitem', { name: 'Edit' }).click();
+    await screen.getByRole('menuitem', { name: 'Clear all counts…' }).click();
+    await expect.poll(() => active().textContent).toBe('Keep them');
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(status).toMatch(/^Counted 3 of 6/);
+    await screen.getByRole('menuitem', { name: 'Edit' }).click();
+    await screen.getByRole('menuitem', { name: 'Clear all counts…' }).click();
+    await expect.poll(() => active().textContent).toBe('Keep them');
+    await screen.getByRole('button', { name: 'Clear counts' }).click();
+    await expect.poll(status).toBe('Counted 0 of 6 products. 0 differ from the record.');
+  });
 });
