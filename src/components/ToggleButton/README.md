@@ -43,7 +43,7 @@ import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 
 - `aria-pressed` tells screen readers it's on or off. Keep the label the same either way ("Bold", not "Make bold" / "Remove bold"), since the state is announced separately.
 - An icon-only toggle needs an `aria-label`.
-- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in all six themes (`ToggleButton.test.tsx`). In Windows high-contrast mode it uses the system highlight colors.
+- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in the six themes the tests draw (blue, yellow and violet, light and dark) (`ToggleButton.test.tsx`). In Windows high-contrast mode it uses the system highlight colors.
 
 ### Keyboard
 

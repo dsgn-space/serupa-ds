@@ -258,7 +258,7 @@ function Cards({ items }: { items: { id: string; title: string }[] }) {
 
 Every utility class works on its own, with no framework or build step, and every class whose value is on a scale reads it from its token: `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)`. Change a token on a page and its classes follow. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (they write the token's shape out so a color class can recolor it), and `rounded-full` (9999px). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
 
-The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and 33 alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
+The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
 
 ## Components
 
@@ -464,11 +464,11 @@ The system follows [Semantic Versioning](https://semver.org): the version is in 
 
 From 16.0.0, the classes of a component's inner parts (`.srp-btn__label`, `.srp-card__header`, any `srp-<block>__<part>`) are private too: they may change in any release. The styling API that keeps the major-only promise is the component tokens, `data-component`, `data-state` and the ARIA states, and the block and modifier classes (`.srp-btn`, `.srp-btn--primary`); `npx serupa-migrate` lists the lines that select an inner class.
 
-From 15.0.0, the palette and effect primitives that no component or theme reads (208 of the 635 typed tokens) are a tier of their own: they may change in a minor release, and they stay out of the Figma and native exports. Read the semantic tokens instead, which keep the major-only promise with every component token.
+From 15.0.0, the palette and effect primitives that no component or theme reads are a tier of their own: they may change in a minor release, and they stay out of the Figma and native exports. Read the semantic tokens instead, which keep the major-only promise with every component token.
 
 Each component is **stable** unless it says otherwise. A component marked **beta** is ready to use, but its API may still change in a minor release, and that release's changeset says how. It becomes stable once it has shipped, its bug bash has nothing left open, and its API has gone four weeks without a breaking change ([CONTRIBUTING](CONTRIBUTING.md)); an **alpha** one is still taking shape and may change in any release. A **deprecated** one keeps working until the next major removes it. The status is in the doc comment on the component's export (`@beta`, `@alpha` or `@deprecated`), so your editor shows it on hover, and it also appears above the component's guide in Storybook and after its name in the index below.
 
-Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major, which says how to move off them (`npx serupa-migrate` makes the renames). The four-week wait between deprecating a name and removing it is suspended for now, while the API is still being adjusted. Breaking changes are held for one scheduled major at a time (the next is 16.0.0, proposed in [docs/rfcs/16.0.0.md](docs/rfcs/16.0.0.md)), and the previous major gets bug and security fixes for four weeks after a new one ships. [CONTRIBUTING.md](CONTRIBUTING.md#release-cadence-and-support) has the details. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
+Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major, which says how to move off them (`npx serupa-migrate` makes the renames). A name is deprecated at least four weeks before a major removes it (the wait was suspended through 17.0.0, while the API was still being adjusted). Breaking changes are held for one scheduled major at a time, each proposed in [docs/rfcs/](docs/rfcs/), and the previous major gets bug and security fixes for four weeks after a new one ships. [CONTRIBUTING.md](CONTRIBUTING.md#release-cadence-and-support) has the details. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
 
 ## Design tokens for design tools
 
@@ -477,9 +477,9 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | File | Holds |
 | --- | --- |
 | `serupa.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
-| `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
+| `themes/<theme>.tokens.json` | The alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
-| `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
+| `components/<component>.tokens.json` | A component's own tokens (Button's `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 | `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
 
 Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from the token source, `tokens/serupa.tokens.json` in the repository, through `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.

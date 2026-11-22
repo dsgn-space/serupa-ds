@@ -6,12 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 A block is a section of a page, built from Serupa's components only: a page header, a row of stats, a table's toolbar. Where a [pattern](?path=/docs/patterns-introduction--docs) is a whole screen, a block goes inside a screen you already have, next to your own content.
 
-Blocks don't ship in the package. They're for copying.
+Blocks are source for your app to own and change, not components to import.
 
-## How to copy one
+## How to add one
 
 1. Open the block's story and its guide. The guide says when to use it, what each part is for, and what stays your app's job.
-2. Copy `src/blocks/<Name>/<Name>.tsx` into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`. Keep its first line, `"use client";`, where it has one: it uses state or handlers, so a Next.js App Router page needs it to build.
+2. Run `npx serupa-add PageHeader` (`npx serupa-add` alone lists them all). It writes `src/serupa/PageHeader.tsx`, with the blocks it builds on and its imports pointed at `@diki-stwn/serupa-ds`, from the release your app installed. By hand instead: copy `src/blocks/<Name>/<Name>.tsx` and change the imports from `../../components/<Component>/<Component>` to `@diki-stwn/serupa-ds`. Keep its first line, `"use client";`, where it has one: it uses state or handlers, so a Next.js App Router page needs it to build.
 3. Pass your own words and data, or change the markup to fit: it's your code now.
 4. Keep the test: copy `<Name>.test.tsx` too, and run it against your copy, so a later change that breaks the block is caught.
 

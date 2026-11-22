@@ -6,12 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 A pattern is a whole screen built from Serupa's components only: a page shell, a sign-in, a list with filters. Some of what WCAG 2.2 asks lives in the flow between components, not in any one of them: a sign-in that a password manager can fill (3.3.8), a form that keeps every answer when you go back (3.3.7), focus that lands on the right place after each step. A pattern shows one way to meet it, with tests that prove it.
 
-Patterns don't ship in the package. They're for copying.
+Patterns are source for your app to own and change, not components to import.
 
-## How to copy one
+## How to add one
 
 1. Open the pattern's story and its guide. The guide says when to use it, what each part is for, and what stays your app's job.
-2. Copy `src/patterns/<Name>/<Name>.tsx` (or the story's `render`, for a pattern that is all markup) into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`. Keep its first line, `"use client";`, where it has one: it uses state or handlers, so a Next.js App Router page needs it to build.
+2. Run `npx serupa-add Dashboard` (`npx serupa-add` alone lists them all). It writes `src/serupa/Dashboard.tsx`, with the blocks it builds on and its imports pointed at `@diki-stwn/serupa-ds`, from the release your app installed. By hand instead: copy `src/patterns/<Name>/<Name>.tsx` and change the imports from `../../components/<Component>/<Component>` to `@diki-stwn/serupa-ds`. Keep its first line, `"use client";`, where it has one: it uses state or handlers, so a Next.js App Router page needs it to build.
 3. Replace the demo parts the guide names, such as the stand-in for your server's checks, with your own.
 4. Keep the test: copy `<Name>.test.tsx` too, and run it against your copy, so a later change that breaks the flow is caught.
 
