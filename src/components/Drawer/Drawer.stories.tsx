@@ -111,7 +111,7 @@ function OpenDrawer(props: DrawerProps & { docs: boolean }) {
   return <><Button onClick={() => setOpen(true)}>Open filters</Button><Drawer {...args} open={open} onOpenChange={setOpen} /></>;
 }
 const filters = <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}><Field label="Name"><Input placeholder="Search projects" /></Field><Checkbox>Only mine</Checkbox></div>;
-/** Do: the actions in \`footer\`, where they stay in view, with the main action last. */
+/** Do: the actions in `footer`, where they stay in view, with the main action last. */
 export const DoFooterActions: Story = {
   name: 'Do: put the actions in the footer',
   render: (args, ctx) => <OpenDrawer {...args} docs={ctx.viewMode === 'docs'} footer={<><Button variant="secondary">Reset</Button><Button>Apply</Button></>}>{filters}</OpenDrawer>,

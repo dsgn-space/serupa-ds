@@ -128,7 +128,7 @@ export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', rend
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 const REVENUE = { type: 'bar', title: 'Revenue', categories: ['Jan', 'Feb', 'Mar'], hideLegend: true, series: [{ name: 'Revenue', values: [1250000, 1830000, 1610000] }] } as const;
-/** Do: \`formatValue\` for money, so the axis, tooltip, table and what's read out all say "$1.8M". */
+/** Do: `formatValue` for money, so the axis, tooltip, table and what's read out all say "$1.8M". */
 export const DoFormatMoney: Story = {
   name: 'Do: format money as money',
   render: function Render() {
