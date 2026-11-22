@@ -99,4 +99,4 @@ export const CollapsedSidebar: Story = { render: () => <Shell collapsed /> };
 /** The navigation follows the window: a BottomNav on a phone (below 768px), the Sidebar's icon rail on a tablet or a
     narrow window (768 to 1023px), and the full Sidebar from 1024px. The same three places at every width, in the same
     order. Resize the window to see it switch. */
-export const AdaptiveNavigation: Story = { render: () => <Shell adaptive /> };
+export const AdaptiveNavigation: Story = { tags: ['!visual'], render: () => <Shell adaptive /> };

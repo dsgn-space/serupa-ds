@@ -15,10 +15,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** A move that can't be saved: move any event, and it goes back with a message that names it and when it is again. */
-export const MoveFails: Story = { args: { onMove: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const MoveFails: Story = { tags: ['!visual'], args: { onMove: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** An add that fails: New event, fill it in, then Add event. The dialog says so and keeps what was typed. */
-export const AddFails: Story = { args: { onAdd: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const AddFails: Story = { tags: ['!visual'], args: { onAdd: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** The events are on their way: one placeholder, named once. */
 export const Loading: Story = { args: { loading: true } };

@@ -43,8 +43,6 @@ export const LongLabels: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: the current page marked with the tab line. */
-export const DoTabLine: Story = { name: 'Do: the tab line' };
 /** Don't: a row of plain links, with only a bolder weight on the current one. */
 export const DontPlainLinks: Story = {
   name: "Don't: plain links",

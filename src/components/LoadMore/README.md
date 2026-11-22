@@ -36,8 +36,8 @@ Drawn from the `LongText` story.
 
 ### Do and don't
 
-- **Do:** Pass `count` and `total` when you know them, so people see "Showing 20 of 134". (`DoShowTotal`)
-- **Don't:** Leave them out when you know them: people can't tell how far they are through. (`DontNoTotal`)
+- **Do:** Pass `count` and `total` when you know them, so people see "Showing 20 of 134". (`Default`)
+- **Don't:** Leave them out when you know them: people can't tell how far they are through. (`WithoutTotal`)
 
 ## Accessibility
 

@@ -51,7 +51,7 @@ Drawn from the `Large` story.
 
 ### Do and don't
 
-- **Do:** Keep a testimonial to two or three sentences, with who said it. (`DoKeepItShort`)
+- **Do:** Keep a testimonial to two or three sentences, with who said it. (`Default`)
 - **Don't:** Quote a whole paragraph: people skip it. (`DontWholeParagraph`)
 
 ## Accessibility

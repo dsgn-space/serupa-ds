@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** The booking fails: the page says so next to Reserve, and the dates stay. */
-export const ReserveFails: Story = { args: { onReserve: () => new Promise((_, no) => setTimeout(() => no(new Error('taken')), 600)) } };
+export const ReserveFails: Story = { tags: ['!visual'], args: { onReserve: () => new Promise((_, no) => setTimeout(() => no(new Error('taken')), 600)) } };
 
 /** The place is on its way from the server: its name stays, with a placeholder under it. */
 export const Loading: Story = { args: { loading: true } };

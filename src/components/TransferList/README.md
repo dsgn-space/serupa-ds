@@ -44,7 +44,7 @@ Drawn from the `NothingChosen` story.
 
 ### Do and don't
 
-- **Do:** A list people pick some of and leave the rest, such as the columns a table shows. (`DoLongList`)
+- **Do:** A list people pick some of and leave the rest, such as the columns a table shows. (`Default`)
 - **Don't:** A handful of options: a [CheckboxGroup](../Checkbox/README.md) shows them at once, with one box each and no moving. (`DontFewOptions`)
 
 ## Behavior

@@ -47,7 +47,7 @@ Drawn from the `WithMoreWords` story.
 
 ### Do and don't
 
-- **Do:** Add one sentence after "You're offline": what still works, or what happens to their changes. (`DoOneSentence`)
+- **Do:** Add one sentence after "You're offline": what still works, or what happens to their changes. (`WithMoreWords`)
 - **Don't:** Explain at length: people don't read a paragraph in a banner. (`DontParagraph`)
 
 ## Accessibility

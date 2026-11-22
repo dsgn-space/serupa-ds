@@ -43,7 +43,7 @@ Drawn from the `LongLabel` story.
 
 ### Do and don't
 
-- **Do:** Keep a label to a word or two, such as "or". (`DoShortLabel`)
+- **Do:** Keep a label to a word or two, such as "or". (`WithLabel`)
 - **Don't:** Write a sentence as the label: it reads as a heading squeezed into a line. (`DontSentenceLabel`)
 
 ## Accessibility

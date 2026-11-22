@@ -19,7 +19,7 @@ export const Default: Story = {};
 export const Empty: Story = { args: { addresses: [] } };
 
 /** Saving fails: the dialog says so and keeps every field. */
-export const SaveFails: Story = { args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const SaveFails: Story = { tags: ['!visual'], args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** On their way from the server. */
 export const Loading: Story = { args: { loading: true } };

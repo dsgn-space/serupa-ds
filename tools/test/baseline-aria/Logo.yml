@@ -10,12 +10,6 @@
 # Default
 - img "Acme"
 
-# DoDarkVersion
-- img "Acme"
-
-# DontNoDarkVersion
-- img "Acme"
-
 # InALink
 - link "Acme home":
   - /url: "#home"

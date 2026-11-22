@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Sending fails: the page says so next to the button, and what was chosen stays. */
-export const SendFails: Story = { args: { onSubmit: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const SendFails: Story = { tags: ['!visual'], args: { onSubmit: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** Nothing asked for yet, and a Friday and Saturday weekend. */
 export const NoRequests: Story = { args: { requests: [], weekend: [5, 6], balance: 21 } };

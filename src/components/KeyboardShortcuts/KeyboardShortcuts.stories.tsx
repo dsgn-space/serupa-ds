@@ -46,11 +46,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: shortcuts in groups, under headings people scan by. */
-export const DoGroupShortcuts: Story = {
-  name: 'Do: group the shortcuts',
-  args: { defaultOpen: true, shortcuts: [{ keys: ['mod', 'B'], description: 'Bold', group: 'Editor' }, { keys: ['mod', 'I'], description: 'Italic', group: 'Editor' }] },
-};
 /** Don't: shortcuts with no group, which pile up in one long list. */
 export const DontUngrouped: Story = {
   name: "Don't: leave them ungrouped",
