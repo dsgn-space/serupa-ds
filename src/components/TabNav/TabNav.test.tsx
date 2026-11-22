@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, seen, withMotion } from '../../../tools/test/vitest/helpers';
 import { Tab, TabList, Tabs } from '../Tabs/Tabs';
 import { TabNav, TabNavLink } from './TabNav';
 
@@ -63,7 +63,7 @@ describe('TabNav', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const un = el('c').querySelector<HTMLElement>('a:not([aria-current])')!, on = current('c'), pill = current('cp');
-      const checks: Array<[string, string, string, number]> = [['link', css(un).color, 'var(--surface)', 4.5], ['current', css(on).color, 'var(--surface)', 4.5], ['line', getComputedStyle(on, '::after').backgroundColor, 'var(--surface)', 3], ['pill', css(pill).color, getComputedStyle(pill, '::before').backgroundColor, 4.5], ['pill fill', getComputedStyle(pill, '::before').backgroundColor, 'var(--surface)', 3]];
+      const checks: Array<[string, string, string, number]> = [['link', css(un).color, 'var(--surface)', 4.5], ['current', css(on).color, 'var(--surface)', 4.5], ['line', getComputedStyle(on, '::after').backgroundColor, 'var(--surface)', 3], ['pill', css(pill).color, getComputedStyle(pill, '::before').backgroundColor, 4.5], ['pill fill', seen(pill, '::before'), 'var(--surface)', 3]];
       for (const [k, a, c, min] of checks) { const r = contrast(a, c); n++; if (r < min) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     still.remove();
