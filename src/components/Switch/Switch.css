@@ -33,7 +33,7 @@
 }
 @media (hover: hover) {
   .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); }
-  .srp-switch:not(.srp-switch--pending, .srp-switch--readonly, :has(.srp-switch__input:disabled)):hover { --srp-switch-edge: var(--switch-thumb-border-hover, var(--border-control-hover)); }
+  .srp-switch:not(.srp-switch--pending, .srp-switch--readonly, :has(.srp-switch__input:disabled)):hover { --srp-switch-edge: var(--switch-thumb-border-hover, var(--border-strong)); }
   .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly], :checked) { --srp-switch-track: var(--switch-track-hover, var(--border-strong)); }
 }
 .srp-switch__input:checked { background: var(--srp-switch-on); }
@@ -41,11 +41,11 @@
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
   width: var(--srp-switch-thumb); height: var(--srp-switch-thumb); margin-block: auto;
   border-radius: var(--rounded-full); background: var(--switch-thumb, var(--field));
-  box-shadow: inset 0 0 0 var(--border-width-1) var(--srp-switch-edge, var(--switch-thumb-border, var(--border-control)));   /* off: Apple's light track, so the thumb's own edge carries the 3:1 */
+  box-shadow: inset 0 0 0 var(--border-width-1) var(--srp-switch-edge, var(--switch-thumb-border, var(--border))), var(--switch-thumb-shadow, var(--elevation-part));   /* off: a basic edge and a small shadow, as Apple's thumb */
   pointer-events: none;
   transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
-.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--on-primary)); box-shadow: none; }
+.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--on-primary)); box-shadow: var(--switch-thumb-shadow, var(--elevation-part)); }
 /* On, the thumb moves to the end by translate, which the compositor runs without laying out the row each frame
    (EG1); right to left, the end is on the left. */
 .srp-switch__input:checked + .srp-switch__thumb { translate: calc(var(--srp-switch-w) - var(--srp-switch-thumb) - var(--srp-switch-pad) - var(--srp-switch-pad)) var(--spacing-0); }
@@ -87,7 +87,7 @@
 .srp-switch:has(.srp-switch__input:disabled) .srp-switch__description { color: var(--switch-text-disabled, var(--disabled-text)); }
 /* Neutral, not faded (foundations.md, States): on or off, a disabled-surface track in a disabled-border edge, with a disabled-text thumb. */
 .srp-switch__input:disabled { --srp-switch-track: var(--switch-fill-disabled, var(--disabled-surface)); --srp-switch-on: var(--switch-fill-disabled, var(--disabled-surface)); box-shadow: inset 0 0 0 var(--border-width-1) var(--switch-border-disabled, var(--disabled-border)); }
-.srp-switch__input:disabled + .srp-switch__thumb { background: var(--switch-text-disabled, var(--disabled-text)); }
+.srp-switch__input:disabled + .srp-switch__thumb { background: var(--switch-text-disabled, var(--disabled-text)); box-shadow: none; }
 .srp-switch__input:disabled + .srp-switch__thumb > .srp-switch__check { color: var(--switch-fill-disabled, var(--disabled-surface)); }
 @media (prefers-reduced-motion: reduce) { .srp-switch__input, .srp-switch__thumb { transition: none; } .srp-switch:active .srp-switch__thumb { scale: none; } .srp-switch__spinner { animation: srp-switch-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; } }
 @media (forced-colors: active) {

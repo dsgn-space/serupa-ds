@@ -56,9 +56,9 @@ Drawn from the `LongLabel` story.
 
 | State | Look |
 | --- | --- |
-| Off | A `track` track (the light gray Apple uses), the thumb with a `border-control` edge, the thumb in `field` at the start |
+| Off | A `track` track (the light gray Apple uses), the thumb in `field` at the start, with a `border` edge and the `elevation-part` shadow |
 | On | A `primary` track, the thumb in `on-primary` at the end |
-| Hover | the off thumb's edge turns `border-control-hover`, `primary-hover` on |
+| Hover | the off track turns `border-strong` and the thumb's edge too, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
@@ -118,8 +118,8 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
 | `--switch-thumb` | `field` | The thumb while off |
-| `--switch-thumb-border` | `border-control` | The off thumb's 1px edge, which carries the 3:1 on the light track |
-| `--switch-thumb-border-hover` | `border-control-hover` | The off thumb's edge on hover |
+| `--switch-thumb-border` | `border` | The off thumb's 1px edge, in the basic border |
+| `--switch-thumb-border-hover` | `border-strong` | The off thumb's edge on hover |
 | `--switch-thumb-checked` | `on-primary` | The thumb while on |
 | `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
@@ -130,6 +130,12 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--switch-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--switch-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--switch-thumb-shadow` | `elevation-part` | The thumb's shadow, on or off. |
 
 **Sizing**
 

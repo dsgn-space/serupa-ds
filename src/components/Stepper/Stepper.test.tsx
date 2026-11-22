@@ -232,6 +232,14 @@ describe('Stepper', () => {
     expect([look('tok'), look('tok-err')]).toEqual(['rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(7, 8, 9) / rgb(4, 5, 6)']);
     expect(look('tok-old')).not.toContain('rgb(1, 2, 3)');
   });
+  test('centered in a narrow box (a centered grid, as the guide\'s examples), a horizontal stepper takes the whole width: its circles never overlap, and the lines between them show', async () => {
+    const steps = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing', description: 'Card or invoice' }, { title: 'Review' }];
+    await render(<EnUS><div style={{ width: '440px', display: 'grid', placeItems: 'center' }}><Stepper id="cg" steps={steps} current={1} /></div></EnUS>);
+    await expect.poll(() => el('cg').className).toMatch(/srp-stepper--compact/);
+    const rects = [...el('cg').querySelectorAll(inStep(IND))].map((c) => c.getBoundingClientRect());
+    const gaps = rects.slice(1).map((r, i) => Math.round(r.left - rects[i]!.right));
+    expect([Math.round(el('cg').getBoundingClientRect().width), gaps.every((g) => g >= 24)]).toEqual([440, true]);
+  });
   test('a long single word in a title wraps, in the line under the circles and in a vertical stepper, so 320px never scrolls sideways (RF1, WCAG 1.4.10)', async () => {
     const long = [{ title: 'Account' }, { title: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', optional: true }, { title: 'Review' }];
     await render(<div style={{ width: '320px' }}><Stepper id="lh" steps={long} current={1} /><Stepper id="lv" orientation="vertical" steps={long} current={1} /></div>);

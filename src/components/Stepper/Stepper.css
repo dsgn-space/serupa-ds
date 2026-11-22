@@ -15,6 +15,9 @@
   min-inline-size: var(--spacing-0);
   color: var(--stepper-title-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
+/* Horizontal, it spans the box it's in, even where that box centers its content (a centered grid): sized to
+   its content, compact mode left it as wide as the one line under the circles, and the circles overlapped. */
+.srp-stepper--horizontal { justify-self: stretch; }
 .srp-stepper--size-sm { --srp-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-stepper__list { display: flex; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .srp-stepper--vertical .srp-stepper__list { flex-direction: column; }
@@ -87,6 +90,7 @@ button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--st
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0);
   overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
 }
+.srp-stepper--compact:not(.srp-stepper--measure) .srp-stepper__step { min-width: auto; }   /* never narrower than its circle */
 .srp-stepper--compact:not(.srp-stepper--measure) .srp-stepper__connector { min-width: var(--spacing-1); margin-inline: var(--spacing-0\.5); }
 /* Many steps: the lines shrink to 4px and the circles still don't fit, so they take the sm size (GN2). */
 .srp-stepper--tight:not(.srp-stepper--measure) { --srp-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); }

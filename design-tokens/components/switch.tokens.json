@@ -74,8 +74,8 @@
       },
       "thumb-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The off thumb's 1px edge, which carries the 3:1 on the light track",
+        "$value": "{color.border}",
+        "$description": "The off thumb's 1px edge, in the basic border",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-border"
@@ -84,7 +84,7 @@
       },
       "thumb-border-hover": {
         "$type": "color",
-        "$value": "{color.border-control-hover}",
+        "$value": "{color.border-strong}",
         "$description": "The off thumb's edge on hover",
         "$extensions": {
           "com.serupa": {
@@ -189,6 +189,18 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-text-disabled"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "thumb-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-part}",
+        "$description": "The thumb's shadow, on or off.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-thumb-shadow"
           }
         }
       }
