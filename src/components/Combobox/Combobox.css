@@ -5,18 +5,10 @@
    highlight with a 2px primary bar at its start, and the selected one has a primary check. Empty and loading messages are muted.
    --------------------------------------------------------------- */
 @layer srp.components {
-.srp-combobox { padding-inline-end: var(--spacing-1); }
-.srp-combobox__button {
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--spacing-1);
-  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent;
-  color: var(--combobox-chevron, var(--text-muted)); cursor: var(--cursor-interactive); touch-action: manipulation;
-  transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
-}
-.srp-combobox__button .srp-icon { font-size: var(--srp-input-icon); transition: rotate var(--motion-change-sm) var(--ease-move); }
-@media (hover: hover) { .srp-combobox__button:hover:not(:disabled) { background: var(--combobox-chevron-bg-hover, var(--field-hover)); color: var(--combobox-chevron-hover, var(--text)); } }
-.srp-combobox__button:active:not(:disabled) { background: var(--combobox-chevron-bg-pressed, var(--field-pressed)); color: var(--combobox-chevron-hover, var(--text)); }
-.srp-combobox__button:disabled { cursor: var(--cursor-disabled); }
-.srp-input--readonly .srp-combobox__button:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
+/* The × and the chevron are InputActions (Input's buttons inside the box); the chevron's tokens still set their colors,
+   and they sit 4px from the box's edge. The chevron turns while the list is open. */
+.srp-combobox { --input-actions-inset: var(--spacing-1); --input-action: var(--combobox-chevron, var(--text-muted)); --input-action-hover: var(--combobox-chevron-hover, var(--text)); --input-action-bg-hover: var(--combobox-chevron-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--combobox-chevron-bg-pressed, var(--field-pressed)); }
+.srp-combobox__toggle .srp-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
 .srp-combobox[data-state="open"] .srp-combobox__toggle .srp-icon { --srp-combobox-turn: 180deg; rotate: var(--srp-combobox-turn); }
 /* An option's corners nest in the list's: its radius less the padding and border between them (8 - 4 - 1 = 3px). */
 .srp-combobox__popup {
@@ -91,13 +83,10 @@
 .srp-combobox__values { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); padding-block: var(--spacing-0\.5); }
 .srp-combobox__tags { display: contents; }
 .srp-combobox--multiple .srp-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
-@media (prefers-reduced-motion: reduce) { .srp-combobox__button, .srp-combobox__button .srp-icon { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .srp-combobox__toggle .srp-icon { transition: none; } }
 @media (forced-colors: active) { .srp-combobox__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
-/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
-   off it doesn't land in the text and open the keyboard. */
+/* Touch: 44px options. */
 @media (pointer: coarse) {
   .srp-combobox__option { min-height: max(var(--combobox-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
-  .srp-combobox__button { position: relative; isolation: isolate; }
-  .srp-combobox__button::after { content: ""; position: absolute; --srp-under: calc(var(--z-10) * -1); z-index: var(--srp-under); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--srp-input-h)) / 2)); --srp-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--srp-reach-block); inset-inline: var(--srp-reach-text) var(--spacing-0); }
 }
 }

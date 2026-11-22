@@ -329,7 +329,7 @@
       "actions-inset": {
         "$type": "dimension",
         "$value": "{spacing.spacing-0_5}",
-        "$description": "Space between the actions and the box's edge (2px), so an action is the field's height less 6px.",
+        "$description": "Space between the actions and the box's edge (2px), so a text action is the field's height less 6px.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--input-actions-inset"
@@ -343,6 +343,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--input-action-padding-x"
+          }
+        }
+      },
+      "action-icon-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space around an icon action's icon (4px): 22, 24 or 28px by size, as the buttons in SearchInput, PasswordInput, Combobox, DatePicker and TimePicker, which are InputActions.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-icon-padding"
           }
         }
       }

@@ -6,7 +6,7 @@ import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { Icon } from '../Icon/Icon';
 import { Loader } from '../Loader/Loader';
-import type { InputProps } from '../Input/Input';
+import { InputAction, type InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { isComposing } from '../../internal/ime';
@@ -71,10 +71,10 @@ function SearchInputRender({ ref, ...props }: SearchInputProps & React.RefAttrib
       <input {...rest} ref={mergedRef}
         type="search" enterKeyHint={rest.enterKeyHint || 'search'} className="srp-input__field" onChange={onChange} onKeyDown={onKeyDown} />
       {text !== '' && !locked ? (
-        <button type="button" className="srp-search-input__clear" aria-label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}
-          onClick={clear} onMouseDown={(e) => e.preventDefault()}>
-          <Icon icon={icons.Close} />
-        </button>
+        <span className="srp-input__actions">
+          <InputAction className="srp-search-input__clear" icon={icons.Close} label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}
+            onClick={clear} onMouseDown={(e) => e.preventDefault()} />
+        </span>
       ) : null}
     </span>
   );

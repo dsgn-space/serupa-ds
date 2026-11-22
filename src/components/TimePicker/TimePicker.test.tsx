@@ -23,7 +23,7 @@ const readsLeftToRight = (root: Element, text: string) => {
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const announcerA = () => document.querySelector<HTMLElement>('[data-srp-announcer-assertive]');
 const listOf = (id: string) => document.getElementById(el(id).getAttribute('aria-controls')!) as HTMLUListElement;
-const button = (id: string) => document.querySelector(`#${id} ~ button`) as HTMLButtonElement;
+const button = (id: string) => document.querySelector(`#${id} ~ span button`) as HTMLButtonElement;
 const time = (o: Element | undefined | null) => (o ? o.querySelector('span')!.textContent : undefined);
 const st = (id: string) => {
   const i = el(id), l = listOf(id), act = i.getAttribute('aria-activedescendant');
@@ -251,7 +251,7 @@ describe('TimePicker', () => {
       document.documentElement.setAttribute('data-theme', th);
       const l = listOf('ctl'), bg = getComputedStyle(l).backgroundColor, act = document.getElementById(el('ctl').getAttribute('aria-activedescendant')!)!, opt = [...l.querySelectorAll('[role=option]')].find((o) => o !== act)!, chk = l.querySelector('[aria-selected=true] [data-icon]')!, btn = button('ctl');
       const chkBg = getComputedStyle(chk.parentElement!).backgroundColor;
-      const pairs: Array<[string, string, string, number]> = [['time', getComputedStyle(opt).color, bg, 4.5], ['highlighted time', getComputedStyle(act).color, getComputedStyle(act).backgroundColor, 4.5], ['check', getComputedStyle(chk).color, chkBg === 'rgba(0, 0, 0, 0)' ? bg : chkBg, 3], ['clock icon', getComputedStyle(btn).color, getComputedStyle(btn.parentElement!).backgroundColor, 3]];
+      const pairs: Array<[string, string, string, number]> = [['time', getComputedStyle(opt).color, bg, 4.5], ['highlighted time', getComputedStyle(act).color, getComputedStyle(act).backgroundColor, 4.5], ['check', getComputedStyle(chk).color, chkBg === 'rgba(0, 0, 0, 0)' ? bg : chkBg, 3], ['clock icon', getComputedStyle(btn).color, getComputedStyle(btn.closest('[data-component=time-picker]')!).backgroundColor, 3]];
       for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     still.remove();

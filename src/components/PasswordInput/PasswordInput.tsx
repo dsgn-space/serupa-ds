@@ -5,9 +5,8 @@ import { useControlSize } from '../../internal/controlSize';
 import { announce } from '../../internal/announce';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import type { InputProps } from '../Input/Input';
+import { InputAction, type InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { pressFocuses } from '../../internal/affix';
@@ -124,10 +123,10 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       <input {...rest} ref={fieldRef} type={shown ? 'text' : 'password'} className="srp-input__field" spellCheck={false} autoCapitalize="off" autoCorrect="off" />
       {caps ? <span className="srp-password-input__caps" id={capsId}>{sds.labels.capsLockOn}</span> : null}
-      <button type="button" className="srp-password-input__toggle" aria-label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
-        aria-controls={rest.id} disabled={rest.disabled} onClick={toggle} onMouseDown={(e) => { e.preventDefault(); capture(); pressed.current = performance.now(); }}>
-        <Icon icon={shown ? icons.VisibilityOff : icons.Visibility} />
-      </button>
+      <span className="srp-input__actions">
+        <InputAction className="srp-password-input__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
+          aria-controls={rest.id} disabled={!!rest.disabled} onClick={toggle} onMouseDown={(e) => { e.preventDefault(); capture(); pressed.current = performance.now(); }} />
+      </span>
     </span>
   );
 }

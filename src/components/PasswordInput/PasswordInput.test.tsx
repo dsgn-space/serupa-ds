@@ -14,7 +14,7 @@ const reach = (b: HTMLElement) => {
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
-const toggle = (id: string) => field(id).nextElementSibling as HTMLButtonElement;
+const toggle = (id: string) => box(id).querySelector('button') as HTMLButtonElement;
 const eye = (id: string) => (toggle(id).querySelector<HTMLElement>('[data-icon]'))?.dataset.icon;
 // Transitions still running (a theme change can cancel one and start another, so poll rather than await .finished).
 const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
@@ -163,7 +163,7 @@ describe('PasswordInput', () => {
     field('cl').focus();
     key('cl', 'keydown', true);
     await expect.poll(() => hint('cl')?.textContent).toBe('Caps Lock is on');
-    expect([field('cl').getAttribute('aria-describedby'), hint('cl')!.nextElementSibling!.className === 'srp-password-input__toggle']).toEqual([hint('cl')!.id, true]);
+    expect([field('cl').getAttribute('aria-describedby'), hint('cl')!.nextElementSibling!.contains(toggle('cl'))]).toEqual([hint('cl')!.id, true]);
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent).toMatch(/Caps Lock is on\.?$/);
     key('cl', 'keyup', true);
     key('cl', 'keydown', false);
@@ -199,7 +199,7 @@ describe('PasswordInput', () => {
     host.attachShadow({ mode: 'open' }).append(inner);
     try {
       await render(<PasswordInput id="psd" aria-label="Password" defaultValue="secret" />, { container: inner });
-      const f = host.shadowRoot!.getElementById('psd') as HTMLInputElement, b = f.nextElementSibling as HTMLButtonElement;
+      const f = host.shadowRoot!.getElementById('psd') as HTMLInputElement, b = f.parentElement!.querySelector('button')!;
       f.focus();
       f.setSelectionRange(1, 4, 'backward');
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));

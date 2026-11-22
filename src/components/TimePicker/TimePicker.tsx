@@ -9,6 +9,7 @@ import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Icon } from '../Icon/Icon';
+import { InputAction } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
@@ -190,10 +191,10 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
           setText(e.target.value); setRejected('');
           if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
-      <button type="button" tabIndex={-1} className="srp-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
-        onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false, 'trigger'); else show(); if (field.current) field.current.focus(); }}>
-        <Icon icon={CLOCK} />
-      </button>
+      <span className="srp-input__actions">
+        <InputAction tabIndex={-1} className="srp-time-picker__button" icon={CLOCK} label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
+          onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false, 'trigger'); else show(); if (field.current) field.current.focus(); }} />
+      </span>
       {/* The format to type, read after the field's name (a placeholder is gone once something is typed). */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(timePattern(locale, h12))}</span>
       {name ? <input type="hidden" name={name} form={rest.form} value={value == null ? '' : toHHmm(value)} disabled={disabled} /> : null}

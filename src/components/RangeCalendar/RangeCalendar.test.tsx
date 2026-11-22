@@ -56,16 +56,19 @@ describe('RangeCalendar', () => {
     await expect.element(page.getByRole('group', { name: 'Annual leave' })).toBeVisible();
   });
 
-  test('two presses pick a range in either order; the days between preview under the pointer; the value changes only when both are picked', async () => {
+  test('the first press is the start, a day before it moves it, the next on or after it is the end; the days between preview under the pointer; the value changes only when both are picked', async () => {
     const log: [Got, { start: string; end: string }][] = [];
     await render(<Stay log={log} />);
     expect(status()).toBe('Choose the start date');
     await userEvent.click(day('2026-11-10'));
     expect(status()).toBe('Choose the end date');
+    await userEvent.hover(day('2026-11-13'));
+    expect(day('2026-11-12').classList.contains('srp-calendar__day--in-range')).toBe(true);
     await userEvent.hover(day('2026-11-07'));
-    expect(day('2026-11-08').classList.contains('srp-calendar__day--in-range')).toBe(true);
-    expect(log).toEqual([]);
+    expect(day('2026-11-08').classList.contains('srp-calendar__day--in-range')).toBe(false);
     await userEvent.click(day('2026-11-07'));
+    expect([log, status()]).toEqual([[], 'Choose the end date']);
+    await userEvent.click(day('2026-11-10'));
     expect(log.map(([, iso]) => iso)).toEqual([{ start: '2026-11-07', end: '2026-11-10' }]);
     expect(log[0]![0].start).toEqual(new Date(2026, 10, 7));
     expect(status()).toBe('Selected range: Nov 7 – 10, 2026');
