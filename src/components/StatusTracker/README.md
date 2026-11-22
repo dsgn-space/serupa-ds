@@ -52,7 +52,7 @@ Drawn from the `Playground` story.
 
 - **Role and name:** the strip is a list named by `label`; each day is an item named with its date, its state in words and its note. State is shown by shape too, not by color alone (WCAG 1.4.1).
 - **Keyboard:** the strip is one tab stop, on the latest day; see the table.
-- **Contrast:** the bars keep 3:1 against the page, the caption 4.5:1, the summary and legend 4.5:1, in every theme (`StatusTracker.test.tsx`). In forced-colors mode the bars are drawn in the system's text color, the stripes kept.
+- **Contrast:** the up, degraded and down bars keep 3:1 against the page (a day without data is outlined in the light `border-strong`, as a tag is), the caption 4.5:1, the summary and legend 4.5:1, in every theme (`StatusTracker.test.tsx`). In forced-colors mode the bars are drawn in the system's text color, the stripes kept.
 - **What's still yours:** a `label` that says what is tracked, and notes that say what happened.
 
 ### Keyboard
@@ -86,7 +86,7 @@ Each is an optional override: set it on the page, a container or one StatusTrack
 | `--status-tracker-up` | `success` | An up day's bar (3:1 on the page). |
 | `--status-tracker-degraded` | `warning` | A degraded day's stripes and outline (3:1). |
 | `--status-tracker-down` | `danger` | A down day's bar (3:1). |
-| `--status-tracker-none` | `border-control` | A day without data: its outline (3:1). |
+| `--status-tracker-none` | `border-strong` | A day without data: its outline, the light one a tag and an outline Badge have (the legend and the day's name say it, so it needn't be 3:1). |
 | `--status-tracker-text` | `text` | The caption (4.5:1). |
 | `--status-tracker-muted` | `text-muted` | The summary and legend (4.5:1). |
 | `--status-tracker-focus-ring` | `focus-ring` | The ring around the focused day. |

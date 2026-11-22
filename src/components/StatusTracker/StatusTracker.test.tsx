@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { css, lowContrast, ringCut } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, ringCut } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { StatusTracker, type StatusDay, type StatusState } from './StatusTracker';
@@ -99,6 +99,8 @@ describe('StatusTracker', () => {
     expect(h(47)).toBeCloseTo(h(89) / 2, 0);
     expect(css(bar(20)).backgroundImage).toContain('repeating-linear-gradient');
     expect([css(bar(0)).borderTopWidth, css(bar(0)).backgroundColor]).toEqual(['1px', 'rgba(0, 0, 0, 0)']);
+    // A day without data is outlined in the light border-strong a tag and an outline Badge have: the legend and its name say it.
+    expect(css(bar(0)).borderTopColor).toBe(color('var(--border-strong)'));
   });
 
   test('more days than fit: the strip scrolls in its own box, starting at the latest day, and the page doesn\'t', async () => {
@@ -133,7 +135,6 @@ describe('StatusTracker', () => {
       ['up', 'var(--success)', 'var(--surface)', 3],
       ['degraded', 'var(--warning)', 'var(--surface)', 3],
       ['down', 'var(--danger)', 'var(--surface)', 3],
-      ['no data', 'var(--border-control)', 'var(--surface)', 3],
       ['caption', 'var(--text)', 'var(--surface)', 4.5],
       ['summary', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
