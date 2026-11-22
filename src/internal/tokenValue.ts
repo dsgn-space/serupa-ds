@@ -6,7 +6,7 @@ import { mediaList } from './mediaList';
    color of an email preview. Components never use it: they read tokens in CSS. */
 
 /** The attributes that change what the tokens resolve to, on <html> or on any section. */
-const THEME_ATTRS = ['data-theme', 'data-brand', 'data-mode', 'data-contrast', 'data-radius', 'data-density'];
+const THEME_ATTRS = ['data-theme', 'data-brand', 'data-mode', 'data-contrast', 'data-radius', 'data-density', 'data-shadow', 'data-type-scale'];
 /** The system settings tokens follow by themselves. */
 const THEME_MEDIA = ['(prefers-color-scheme: dark)', '(prefers-contrast: more)', '(forced-colors: active)'];
 

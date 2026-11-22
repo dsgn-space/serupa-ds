@@ -11,7 +11,6 @@
   --on-primary: var(--white);
   --primary-text: var(--indigo-600);
   --primary-text-hover: var(--indigo-700);
-  --field-action: var(--indigo-600);
   --focus-ring: var(--indigo-500);
   --link-visited: var(--fuchsia-700);
   --srp-more-primary: var(--indigo-700);
@@ -20,7 +19,6 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--indigo-700);
   --srp-more-primary-text-hover: var(--indigo-800);
-  --srp-more-field-action: var(--indigo-700);
   --srp-more-focus-ring: var(--indigo-600);
 }
 [data-theme="indigo-dark"] {
@@ -33,7 +31,6 @@
   --on-primary: var(--white);
   --primary-text: var(--indigo-400);
   --primary-text-hover: var(--indigo-300);
-  --field-action: var(--indigo-400);
   --focus-ring: var(--indigo-400);
   --link-visited: var(--fuchsia-300);
   --srp-more-primary: var(--indigo-300);
@@ -42,7 +39,6 @@
   --srp-more-on-primary: var(--indigo-950);
   --srp-more-primary-text: var(--indigo-300);
   --srp-more-primary-text-hover: var(--indigo-200);
-  --srp-more-field-action: var(--indigo-300);
   --srp-more-focus-ring: var(--indigo-300);
 }
 :root[data-brand="indigo"]:not([data-theme]), [data-brand="indigo"]:not([data-theme]) {
@@ -55,7 +51,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--indigo-600), var(--indigo-400));
   --primary-text-hover: light-dark(var(--indigo-700), var(--indigo-300));
-  --field-action: light-dark(var(--indigo-600), var(--indigo-400));
   --focus-ring: light-dark(var(--indigo-500), var(--indigo-400));
   --link-visited: light-dark(var(--fuchsia-700), var(--fuchsia-300));
   --srp-more-primary: light-dark(var(--indigo-700), var(--indigo-300));
@@ -64,7 +59,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--indigo-950));
   --srp-more-primary-text: light-dark(var(--indigo-700), var(--indigo-300));
   --srp-more-primary-text-hover: light-dark(var(--indigo-800), var(--indigo-200));
-  --srp-more-field-action: light-dark(var(--indigo-700), var(--indigo-300));
   --srp-more-focus-ring: light-dark(var(--indigo-600), var(--indigo-300));
 }
 :is([data-theme^="indigo-"], [data-brand="indigo"]) [data-mode]:not([data-theme], [data-brand]) {
@@ -77,7 +71,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--indigo-600), var(--indigo-400));
   --primary-text-hover: light-dark(var(--indigo-700), var(--indigo-300));
-  --field-action: light-dark(var(--indigo-600), var(--indigo-400));
   --focus-ring: light-dark(var(--indigo-500), var(--indigo-400));
   --link-visited: light-dark(var(--fuchsia-700), var(--fuchsia-300));
   --srp-more-primary: light-dark(var(--indigo-700), var(--indigo-300));
@@ -86,7 +79,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--indigo-950));
   --srp-more-primary-text: light-dark(var(--indigo-700), var(--indigo-300));
   --srp-more-primary-text-hover: light-dark(var(--indigo-800), var(--indigo-200));
-  --srp-more-field-action: light-dark(var(--indigo-700), var(--indigo-300));
   --srp-more-focus-ring: light-dark(var(--indigo-600), var(--indigo-300));
 }
 }

@@ -20,7 +20,7 @@
 //  11. One version everywhere (tools/release.mjs --check).
 //  12. Every stylesheet puts its rules in the srp.* cascade layers, declared in one order.
 //  13. Every width in a media query in src/ (CSS and matchMedia) is a screen-* value (max-width may be value - 0.02px or - 1px).
-//  14. One brand list: theme.js, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
+//  14. One brand list: theme.js, debug.js's Theme panel, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
 //  15. Hover styles only inside @media (hover: hover).
 //  16. Floating layers don't print; background-only states have a forced-colors fallback.
 //  17. Every srp-* class a component stylesheet styles is one the code can produce.
@@ -344,6 +344,8 @@ const jsDoc = /data-brand\s+([a-z0-9 |]+?)\s+\(default: ([a-z0-9]+)\)/.exec(them
 if (!jsDoc || !same(jsDoc[1].split('|').map((s) => s.trim()), BRANDS) || jsDoc[2] !== BRANDS[0]) brandIssues.push(`src/theme.js: the header should read "data-brand  ${BRANDS.join(' | ')}  (default: ${BRANDS[0]})"`);
 const jsDefault = /pick\(root\.getAttribute\(["']data-brand["']\), BRANDS, ["']([^"']+)["']\)/.exec(themeJs);
 if (!jsDefault || jsDefault[1] !== BRANDS[0]) brandIssues.push(`src/theme.js: the default brand should be "${BRANDS[0]}" (the first theme's brand)`);
+const dbgBrands = /brand: \[([^\]]*)\]/.exec(read('src/debug.js'));
+if (!dbgBrands || !same(listOf(dbgBrands[1]), BRANDS)) brandIssues.push(`src/debug.js: the Theme panel's brand list should be [${BRANDS.join(', ')}]`);
 const tsType = /export type ThemeBrand\s*=\s*([^;]+);/.exec(read('src/theme-types.ts'));
 if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');
 else if (!same(listOf(tsType[1]), BRANDS)) brandIssues.push(`src/theme-types.ts: ThemeBrand is ${listOf(tsType[1]).join(' | ')}, tokens.json gives ${BRANDS.map((b) => `'${b}'`).join(' | ')}`);
@@ -363,7 +365,7 @@ for (const f of testFiles(path.join('tools', 'test'))) {
 // The themes with pictures (tools/design-qa.mjs) are some of them, in their order, the default first.
 const shown = SHOWN_THEMES.filter((id) => THEME_IDS.includes(id));
 if (shown.length !== SHOWN_THEMES.length || SHOWN_THEMES[0] !== THEME_IDS[0] || !same([...SHOWN_THEMES].sort((x, y) => THEME_IDS.indexOf(x) - THEME_IDS.indexOf(y)), SHOWN_THEMES)) brandIssues.push(`tools/design-qa.mjs: THEMES [${SHOWN_THEMES.join(', ')}] must be themes of tokens.json, in its order, starting with ${THEME_IDS[0]}`);
-check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
+check(`one brand list: theme.js, debug.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
 // 15. hover only where there is hover: on a touch screen the browser keeps :hover on the last element tapped, so a
 // hover color would stick ("still selected"). Every :hover rule sits inside @media (hover: hover); :active still

@@ -258,7 +258,7 @@ function Cards({ items }: { items: { id: string; title: string }[] }) {
 
 Every utility class works on its own, with no framework or build step, and every class whose value is on a scale reads it from its token: `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)`. Change a token on a page and its classes follow. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (they write the token's shape out so a color class can recolor it), and `rounded-full` (9999px). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
 
-The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
+The palette has 19 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
 
 ## Components
 

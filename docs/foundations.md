@@ -6,7 +6,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 | Group | Families | Character |
 | --- | --- | --- |
-| Neutrals | `slate`, `gray`, `zinc`, `neutral`, `stone` | Cool (slate) through pure (neutral) to warm (stone) greys. Pick **one** per product; the aliases use `zinc`. |
+| Neutrals | `zinc`, `slate` | `zinc` is the neutral every alias uses; `slate` is a cooler grey for your own CSS. 18.0.0 removed `gray`, `neutral` and `stone`, which nothing used. |
 | Warm | `red`, `orange`, `amber`, `yellow` | Errors, warnings, highlights. |
 | Greens | `lime`, `green`, `emerald`, `teal` | Success, positive states. |
 | Blues | `cyan`, `sky`, `blue`, `indigo` | Links, primary actions, info. |
@@ -29,7 +29,7 @@ Every token's usage note gives its contrast against white or black text. Rules o
 
 Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the two are the same pair):
 
-- **500+**: the neutrals: `slate`, `gray`, `zinc`, `neutral`, `stone`.
+- **500+**: the neutrals: `zinc` and `slate`.
 - **600+**: `red`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`.
 - **700+**: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`.
 - On a `-50` / `-100` tint, set text in the same family at **700–900**.
@@ -189,7 +189,6 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `field-hover` | `zinc-100` | `zinc-700` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
 | `field-pressed` | `zinc-200` | `zinc-600` | The same button held down. |
 | `field-border-invalid` | `red-600` | `red-600` | An invalid field's border: `danger`, 3:1+ on `field`. |
-| `field-action` | `‹brand›-600` | `‹brand›-400` | A text action inside a field (Input's "Apply"): `primary`, 4.5:1+ on the field (a generated brand takes a lighter shade if its primary falls short). |
 | `placeholder` | `zinc-500` | `zinc-400` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
 | `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
 | `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |
@@ -219,12 +218,10 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 `serupa-brand` comes with the package and makes a light and a dark theme from one color:
 
 ```sh
-npx serupa-brand acme "#0f766e" -o src/acme-theme.css          # corners as they are
-npx serupa-brand acme "#0f766e" --corners round -o src/acme-theme.css   # or sharp
-npx serupa-brand acme "#0f766e" --motion brisk -o src/acme-theme.css   # or calm
+npx serupa-brand acme "#0f766e" -o src/acme-theme.css
 ```
 
-Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
+A theme is its colors: corners are their own setting (`data-radius`), and motion its own tokens. Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
 It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary-text` on the page at 4.5:1, the dark fill 3:1 on a raised card, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
@@ -464,7 +461,7 @@ The corner radius scale. `rounded-sm` is 4px; the 2px step is `rounded-xs`.
 | --- | --- | --- |
 | `rounded-none` | 0 | Square |
 | `rounded-xs` | 2px | Tags, small chips |
-| `rounded-sm` / `rounded` | 4px | Inputs, small buttons, checkboxes |
+| `rounded-sm` | 4px | Inputs, small buttons, checkboxes |
 | `rounded-md` | 6px | Buttons |
 | `rounded-lg` | 8px | Cards, menus |
 | `rounded-xl` | 12px | Panels |
@@ -930,7 +927,6 @@ Transition and animation tokens are in one `transitions` group (`var(--duration-
 | `motion-loop-placeholder` | `duration-1000` | One pass of a loading placeholder's pulse (Image while it loads). |
 | `motion-loop-blink` | `duration-1000` | One blink of a text caret (PinInput). |
 | `motion-loop-progress` | `duration-1200` | One pass of an indeterminate progress bar. |
-| `motion-ripple` / `motion-ripple-fade` | `duration-500` / `300` | Kept for your own press ripples; no component uses them since Button and Badge dropped theirs. |
 | `motion-stagger` | `delay-50` | The gap between items of a group arriving one after another: list rows, toasts, grid cards. |
 | `motion-stagger-limit` | `delay-300` | The longest any staggered item waits, so a long list still arrives within a moment. |
 | `motion-sequence` | `delay-50` | The offset between the steps of one entrance: a dialog's or drawer's backdrop starts, then its panel. Exits don't sequence. |

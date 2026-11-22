@@ -40,7 +40,6 @@
   --field-pressed: var(--zinc-200);
   --field-raised: var(--white);
   --field-border-invalid: var(--red-600);
-  --field-action: var(--blue-600);
   --placeholder: var(--zinc-500);
   --overlay: #18181b80;
   --picture-edge: #0000001a;
@@ -120,17 +119,6 @@
   --slate-800: #1e293b;
   --slate-900: #0f172a;
   --slate-950: #020617;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --gray-950: #030712;
   --zinc-50: #fafafa;
   --zinc-100: #f4f4f5;
   --zinc-200: #e4e4e7;
@@ -142,28 +130,6 @@
   --zinc-800: #27272a;
   --zinc-900: #18181b;
   --zinc-950: #09090b;
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a3a3a3;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-700: #404040;
-  --neutral-800: #262626;
-  --neutral-900: #171717;
-  --neutral-950: #0a0a0a;
-  --stone-50: #fafaf9;
-  --stone-100: #f5f5f4;
-  --stone-200: #e7e5e4;
-  --stone-300: #d6d3d1;
-  --stone-400: #a8a29e;
-  --stone-500: #78716c;
-  --stone-600: #57534e;
-  --stone-700: #44403c;
-  --stone-800: #292524;
-  --stone-900: #1c1917;
-  --stone-950: #0c0a09;
   --red-50: #fef2f2;
   --red-100: #fee2e2;
   --red-200: #fecaca;
@@ -379,7 +345,6 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--blue-800);
   --srp-more-primary-text-hover: var(--blue-900);
-  --srp-more-field-action: var(--blue-800);
   --srp-more-focus-ring: var(--blue-700);
 }
 [data-theme$="-light"] {
@@ -584,7 +549,6 @@
   --on-primary: var(--white);
   --primary-text: var(--blue-400);
   --primary-text-hover: var(--blue-300);
-  --field-action: var(--blue-400);
   --focus-ring: var(--blue-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--blue-300);
@@ -593,7 +557,6 @@
   --srp-more-on-primary: var(--blue-950);
   --srp-more-primary-text: var(--blue-300);
   --srp-more-primary-text-hover: var(--blue-200);
-  --srp-more-field-action: var(--blue-300);
   --srp-more-focus-ring: var(--blue-300);
 }
 :where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
@@ -634,7 +597,6 @@
   --field-hover: light-dark(var(--zinc-100), var(--zinc-700));
   --field-pressed: light-dark(var(--zinc-200), var(--zinc-600));
   --field-raised: light-dark(var(--white), #333338);
-  --field-action: light-dark(var(--blue-600), var(--blue-400));
   --placeholder: light-dark(var(--zinc-500), var(--zinc-400));
   --overlay: light-dark(#18181b80, #09090bb3);
   --picture-edge: light-dark(#0000001a, #ffffff1a);
@@ -697,7 +659,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
   --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
-  --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :root[data-brand="blue"]:not([data-theme]), [data-brand="blue"]:not([data-theme]) {
@@ -710,7 +671,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--blue-600), var(--blue-400));
   --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
-  --field-action: light-dark(var(--blue-600), var(--blue-400));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--blue-800), var(--blue-300));
@@ -719,7 +679,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
   --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
-  --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
@@ -732,7 +691,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--blue-600), var(--blue-400));
   --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
-  --field-action: light-dark(var(--blue-600), var(--blue-400));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--blue-800), var(--blue-300));
@@ -741,7 +699,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
   --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
-  --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :root[data-mode="auto"]:not([data-theme]), [data-mode="auto"]:not([data-theme]) { color-scheme: light dark; }
@@ -796,7 +753,6 @@
   --rounded-none: 0px;
   --rounded-xs: 0.125rem;
   --rounded-sm: 0.25rem;
-  --rounded: 0.25rem;
   --rounded-md: 0.375rem;
   --rounded-lg: 0.5rem;
   --rounded-xl: 0.75rem;
@@ -1162,8 +1118,6 @@
   --motion-loop-placeholder: var(--duration-1000);
   --motion-loop-blink: var(--duration-1000);
   --motion-loop-progress: var(--duration-1200);
-  --motion-ripple: var(--duration-500);
-  --motion-ripple-fade: var(--duration-300);
   --motion-stagger: var(--delay-50);
   --motion-stagger-limit: var(--delay-300);
   --motion-sequence: var(--delay-50);
@@ -1280,7 +1234,6 @@
   --on-primary: var(--srp-more-on-primary);
   --primary-text: var(--srp-more-primary-text);
   --primary-text-hover: var(--srp-more-primary-text-hover);
-  --field-action: var(--srp-more-field-action);
   --focus-ring: var(--srp-more-focus-ring);
 }
 @media (prefers-contrast: more) {
@@ -1319,7 +1272,6 @@
   --on-primary: var(--srp-more-on-primary);
   --primary-text: var(--srp-more-primary-text);
   --primary-text-hover: var(--srp-more-primary-text-hover);
-  --field-action: var(--srp-more-field-action);
   --focus-ring: var(--srp-more-focus-ring);
 }
 }

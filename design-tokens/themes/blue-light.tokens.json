@@ -389,16 +389,6 @@
         }
       }
     },
-    "field-action": {
-      "$type": "color",
-      "$value": "{color.blue-600}",
-      "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary`, which keeps 4.5:1 on the field. Its own alias so a brand whose primary falls short on the field can take a lighter shade.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--field-action"
-        }
-      }
-    },
     "placeholder": {
       "$type": "color",
       "$value": "{color.zinc-500}",

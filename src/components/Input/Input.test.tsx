@@ -572,8 +572,8 @@ describe('Input actions (RU15)', () => {
 
   test('contrast in every theme: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
     expect(lowContrast([
-      ['text action', 'var(--field-action)', 'var(--field)', 4.5],
-      ['text action on hover', 'var(--field-action)', 'var(--primary-subtle)', 4.5],
+      ['text action', 'var(--primary-text)', 'var(--field)', 4.5],
+      ['text action on hover', 'var(--primary-text)', 'var(--primary-subtle)', 4.5],
       ['icon action', 'var(--text-muted)', 'var(--field)', 3],
       ['icon action on hover', 'var(--text)', 'var(--field-hover)', 3],
       ['focus ring', 'var(--focus-ring)', 'var(--field)', 3],

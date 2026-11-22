@@ -391,11 +391,11 @@ describe('Density axis', () => {
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
     // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
     // hue so a visited link isn't the primary; a dark fill written as a color is held to its light shade by tools/test/brand.mjs.
     const offHue: string[] = [];
-    for (const [, t] of varied) if (['field-action', 'focus-ring', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
+    for (const [, t] of varied) if (['focus-ring', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
       const ramp = /^\{([a-z]+)-\d+\}$/.exec(v)?.[1];
       if (ramp && !/^(zinc|slate|gray|neutral|stone)$/.test(ramp) && ramp !== th.replace(/-(light|dark)$/, '')) offHue.push(`${t.name} ${th}: ${v}`);
     }

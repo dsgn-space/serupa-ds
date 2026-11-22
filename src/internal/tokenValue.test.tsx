@@ -56,6 +56,21 @@ describe('useTokenValue', () => {
     expect(p()).toBe(resolved(html, 'surface'));
   });
 
+  test('follows the shadow and type-scale settings too', async () => {
+    function Read() { return <p id="sh">{useTokenValue('shadow-md')}|{useTokenValue('text-3xl')}</p>; }
+    await render(<Read />);
+    const p = () => document.getElementById('sh')!.textContent;
+    const before = p();
+    try {
+      html.setAttribute('data-shadow', 'brand');
+      html.setAttribute('data-type-scale', 'fluid');
+      await expect.poll(p).not.toBe(before);
+      const [shadow, size] = p().split('|');
+      expect([shadow, size]).toEqual([tokenValue('shadow-md'), tokenValue('text-3xl')]);
+      expect([shadow === before.split('|')[0], size === before.split('|')[1]]).toEqual([false, false]);
+    } finally { html.removeAttribute('data-shadow'); html.removeAttribute('data-type-scale'); }
+  });
+
   test('with a ref, the value where that element sits, and its section\'s own switch', async () => {
     function Panel({ mode }: { mode: 'light' | 'dark' }) {
       const ref = React.useRef<HTMLDivElement>(null);

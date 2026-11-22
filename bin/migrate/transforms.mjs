@@ -567,6 +567,23 @@ export const TRANSFORMS = [
       return { text: b.text, count: a.count + b.count, notes: [] };
     },
   },
+  {
+    version: '18.0.0', id: 'tokens-removed', exts: ALL,
+    title: 'Tokens merged or removed: `--field-action` is `--primary-text`, `--rounded` is `--rounded-sm`, `--motion-ripple(-fade)` is `--duration-500` (`-300`), and the `gray`, `neutral` and `stone` ramps are gone',
+    run(src) {
+      let count = 0;
+      let text = src.replace(/(?<![\w-])--rounded(?![\w-])/g, () => { count++; return '--rounded-sm'; })
+        .replace(/(?<![\w-])--motion-ripple(-fade)?(?![\w-])/g, (_, fade) => { count++; return fade ? '--duration-300' : '--duration-500'; })
+        .replace(/(?<![\w-])--field-action(?![\w-])/g, () => { count++; return '--primary-text'; });
+      // the class, in a written class list: class="rounded p-2", className='rounded'
+      text = text.replace(/(\bclass(?:Name)?=)(["'])([^"'\n]*)\2/g, (m, attr, q, list) => {
+        const next = list.replace(/(?<![\w-])rounded(?![\w-])/g, () => { count++; return 'rounded-sm'; })
+          .replace(/(?<![\w-])([a-z-]+)-field-action(?![\w-])/g, (_, kind) => { count++; return kind + '-primary-text'; });
+        return attr + q + next + q;
+      });
+      return { text, count, notes: notesFor(text, /--(gray|neutral|stone)-\d+/g, 'The gray, neutral and stone ramps are removed in 18.0.0: use --zinc-* (the neutral every alias uses) or --slate-* (cooler)') };
+    },
+  },
   // 18.0.0 removes the names 17.x deprecated for it: a prop named on… reads as an event handler, empty is emptyText
   // as on Combobox, and a Placement spells the middle top and bottom.
   propsRename('18.0.0', 'surface-not-on-media', '`onMedia` is `surface`, the same values', ['Button', 'IconButton', 'Link', 'Divider', 'CopyButton', 'ToggleButton', 'Fab', 'FabMenu'], [['onMedia', 'surface']]),

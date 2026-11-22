@@ -213,6 +213,10 @@ t('18.0.0: a text color set from --primary or --primary-hover takes --primary-te
 one('18.0.0: the text-primary classes are text-primary-text, with their variants; bg-primary, text-primary-text and the name in a code span are left', '<a className="text-primary hover:text-primary-hover bg-primary text-primary-text" /> `text-primary`', '<a className="text-primary-text hover:text-primary-text-hover bg-primary text-primary-text" /> `text-primary`');
 const b18 = fix('[data-theme="acme-dark"] {\n  --primary: var(--acme-400);\n  --on-primary: var(--acme-950);\n}', 'acme.css', '17.1.0');
 t('18.0.0: a theme that sets --primary and not --primary-text is listed once, to make again; one that sets both is left', b18.notes.length === 1 && b18.notes[0].id === 'primary-text' && b18.notes[0].line === 2 && /serupa-brand/.test(b18.notes[0].message) && !fix(':root { --primary: #123456; --primary-text: #123456; }', 'acme.css', '17.1.0').notes.length, JSON.stringify(b18.notes));
+const fa17 = fix('<span className="text-field-action">Apply</span>\n.apply { color: var(--field-action); }', 'a.tsx', '17.1.0');
+t('18.0.0: field-action is primary-text, in a class and a token', fa17.text === '<span className="text-primary-text">Apply</span>\n.apply { color: var(--primary-text); }', JSON.stringify(fa17));
+const tr17 = fix('<div className="rounded p-2" style={{ borderRadius: "var(--rounded)", transition: "opacity var(--motion-ripple-fade)" }}><Image rounded={false} /></div>\n.x { color: var(--stone-500); }', 'a.tsx', '17.1.0');
+t('18.0.0: --rounded and the rounded class are rounded-sm, the ripple tokens their durations, a stone shade is listed', tr17.text === '<div className="rounded-sm p-2" style={{ borderRadius: "var(--rounded-sm)", transition: "opacity var(--duration-300)" }}><Image rounded={false} /></div>\n.x { color: var(--stone-500); }' && tr17.notes.some((n) => /stone ramps/.test(n.message)), JSON.stringify(tr17));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 

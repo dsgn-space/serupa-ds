@@ -74,7 +74,7 @@ export const PAIRS = [
   ['focus-ring', 'field', 3, 'The focus ring on a field'],
   ['field-border-invalid', 'field', 3, 'An invalid field border'],
   ['field-border-invalid', 'surface', 3, 'An invalid field border on the page'],
-  ['field-action', 'field', 4.5, 'A text action in a field (Input)'],
+  ['primary-text', 'field', 4.5, 'A text action in a field (Input)'],
   ['text', 'field-hover', 4.5, 'Text or an icon on a button in a field under the pointer'],
   ['text', 'field-pressed', 4.5, 'Text or an icon on a button in a field held down'],
   ['border-control', 'surface', 3, 'A control edge (Slider and Switch track, Meter and Progress track edge, Carousel dot, Stepper ring)'],

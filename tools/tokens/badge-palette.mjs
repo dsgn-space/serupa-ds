@@ -19,7 +19,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 export const CSS = path.join(ROOT, 'src', 'components', 'Badge', 'Badge.css');
 const START = '/* badge-palette:start (made from tokens.json by npm run tokens: edit tools/tokens/badge-palette.mjs) */';
 const END = '/* badge-palette:end */';
-const GRAYS = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone']);
+const GRAYS = new Set(['slate', 'zinc']);
 // The status tones, by the family each reads (their colors come from the status roles, not these families).
 export const STATUS = { success: 'green', warning: 'amber', danger: 'red', info: 'sky' };
 
