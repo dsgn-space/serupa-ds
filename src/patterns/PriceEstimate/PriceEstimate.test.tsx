@@ -55,6 +55,14 @@ describe('Patterns/Price estimate', () => {
     expect(new URLSearchParams(href.split('?')[1]).toString()).toBe('plan=business&seats=40&billing=monthly&extras=storage%2Csupport');
   });
 
+  test('Talk to sales sits on the trial button\'s middle line, not at the top of the row', async () => {
+    const screen = await render(<PriceEstimate />);
+    // The words' own box: a stretched link's box shares the button's middle while its text sits at the top.
+    const mid = (el: Element) => { const g = document.createRange(); g.selectNodeContents(el); const r = g.getClientRects()[0]!; return r.top + r.height / 2; };
+    const trial = screen.getByRole('link', { name: 'Start a 14-day trial' }).element(), sales = screen.getByRole('link', { name: 'Talk to sales' }).element();
+    expect(Math.abs(mid(trial) - mid(sales))).toBeLessThan(1);
+  });
+
   test('counts follow the locale’s digits', async () => {
     const team = { id: 't', name: 'Team', perSeat: 10, minSeats: 1, maxSeats: 50, about: '' };
     expect(estimate(team, 12, [], false, 0, 'ar-EG').lines[0]!.name).toBe('Team, ١٢ people');

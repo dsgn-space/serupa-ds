@@ -134,7 +134,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
                 <p className="m-0" id="estimate-total" aria-live="polite">
                   {yearly ? `${money(e.monthly)} a month, billed as ${money(e.yearlyTotal)} once a year. You save ${money(e.off * 12)} a year.` : `${money(e.monthly)} a month, billed monthly.`}
                 </p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button href={`${trialHref}?${query.toString()}`}>Start a 14-day trial</Button>
                   <Link href="#sales">Talk to sales</Link>
                 </div>
