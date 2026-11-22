@@ -49,7 +49,7 @@ Drawn from the `Default` story.
 
 ### Loading and failed
 
-- **Loading:** show the terms, which you already know, and a skeleton [Loader](../Loader/README.md) in each item's details, with `aria-busy` on the list. Pick the Loader's `size` by the list's text size (`sm` for `text-xs`, `md` for `text-sm`, `lg` for `text-base`): each skeleton line is as tall as a line of that text, so the rows don't move when the details arrive. Give the first Loader a `label` ("Loading order") and the others `label=""`: a screen reader hears the wait once, after the loader's delay, and a quick load says nothing.
+- **Loading:** show the terms, which you already know, and a [Skeleton](../Skeleton/README.md) in each item's details, with `aria-busy` on the list. Pick the Skeleton's `size` by the list's text size (`sm` for `text-xs`, `md` for `text-sm`, `lg` for `text-base`): each skeleton line is as tall as a line of that text, so the rows don't move when the details arrive. Give the first Skeleton a `label` ("Loading order") and the others `label=""`: a screen reader hears the wait once, after the skeleton's delay, and a quick load says nothing.
 - **Failed:** in place of the list, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
@@ -57,7 +57,7 @@ Drawn from the `Default` story.
   : <DescriptionList aria-busy={state === 'loading' || undefined}>
       {FIELDS.map((f, i) => (
         <DescriptionItem key={f.key} term={f.term}>
-          {state === 'loading' ? <Loader variant="skeleton" size="md" label={i === 0 ? 'Loading order' : ''} /> : order[f.key]}
+          {state === 'loading' ? <Skeleton size="md" label={i === 0 ? 'Loading order' : ''} /> : order[f.key]}
         </DescriptionItem>
       ))}
     </DescriptionList>}

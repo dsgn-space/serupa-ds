@@ -10,7 +10,7 @@ import { Field } from '../../components/Field/Field';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { Alert } from '../../components/Alert/Alert';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -164,7 +164,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your integrations" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
             <ul role="list" aria-busy="true" className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
               {/* One name for all of them: the first card is named, the others are only pictures. */}
-              {[0, 1, 2, 3].map((i) => <li key={i}><Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading integrations' : ''} /></Card></li>)}
+              {[0, 1, 2, 3].map((i) => <li key={i}><Card><Skeleton shape="text" lines={3} label={i === 0 ? 'Loading integrations' : ''} /></Card></li>)}
             </ul>
           ) : <>
             <Field label="Search integrations" className="max-w-md">

@@ -5,7 +5,7 @@ import { Center } from '../../components/Center/Center';
 import { Stack } from '../../components/Stack/Stack';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
@@ -134,7 +134,7 @@ function Loading({ failed, onRetry, online }: { failed: boolean; onRetry: Settin
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <Stack as="section" key={t} aria-labelledby={'settings-loading-' + i} gap={4}>
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
-            <Loader variant="skeleton" shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
+            <Skeleton shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
           </Stack>
         ))}
         </Stack>

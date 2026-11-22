@@ -48,7 +48,7 @@
 .srp-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
 .srp-kanban--moving .srp-kanban__handle { cursor: var(--cursor-grabbing); }
 .srp-kanban__menu { flex: none; }
-.srp-kanban__loading > .srp-loader { flex: auto; }
+.srp-kanban__loading > .srp-skeleton { flex: auto; }
 .srp-kanban__empty { padding: var(--spacing-3); color: var(--kanban-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-align: center; }
 /* Forced colors drop the fills and shadow: the target column, the card being moved and its picked-up handle keep a Highlight outline. */
 @media (forced-colors: active) {

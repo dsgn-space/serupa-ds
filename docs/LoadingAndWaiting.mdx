@@ -10,7 +10,7 @@ People wait best when they can see that something is happening and, where you kn
 
 | The wait is… | Use |
 | --- | --- |
-| Content arriving whose layout you know, such as a list, a card or a profile | [Loader](?path=/docs/components-feedback-loader--docs) `variant="skeleton"`, shaped like what's coming |
+| Content arriving whose layout you know, such as a list, a card or a profile | [Skeleton](?path=/docs/components-feedback-skeleton--docs), shaped like what's coming |
 | A result whose length you can't tell, such as a search | [Loader](?path=/docs/components-feedback-loader--docs) (a ring or dots) where the result will appear |
 | Something you can measure, such as an upload, an import or an export | [Progress](?path=/docs/components-feedback-progress--docs), with the value |
 | An action someone just clicked, such as Save or Send | The [Button](?path=/docs/components-actions-button--docs)'s own `loading` |
@@ -27,7 +27,7 @@ People wait best when they can see that something is happening and, where you kn
 
 ## For screen readers
 
-- A Loader with a `label` is announced as busy ("Loading orders"). On a page with several skeletons, name one and leave the rest decorative (`label=""`), so the wait is said once.
+- A Loader or Skeleton with a `label` is announced as busy ("Loading orders"). On a page with several skeletons, name one and leave the rest decorative (`label=""`), so the wait is said once.
 - Mark the region that's being replaced with `aria-busy="true"` while it loads, and take it off when it's done.
 - Progress says its value; give it a label that says what is loading ("Uploading report.pdf").
 

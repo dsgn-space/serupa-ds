@@ -1,0 +1,101 @@
+{
+  "skeleton": {
+    "$description": "Skeleton's component tokens. Each one is an optional override: set the CSS variable (--skeleton-<name>) on the page, a container or one Skeleton, and every Skeleton inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "Color with `tone=\"inverse\"`",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-inverse"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The circle at size sm (16px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The circle at size md (24px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "The circle at size lg (40px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-size-lg"
+          }
+        }
+      },
+      "rect-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "Height of the rect when no class sets one (96px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-rect-height"
+          }
+        }
+      }
+    },
+    "shape": {
+      "fill": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "Strength of the fill (the text color)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-fill"
+          }
+        }
+      },
+      "shine": {
+        "$type": "number",
+        "$value": "{opacity.opacity-5}",
+        "$description": "Strength of the band that sweeps through it",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-shine"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "Corners of the rect (6px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-radius"
+          }
+        }
+      },
+      "text-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "Corners of the text lines (4px)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--skeleton-text-radius"
+          }
+        }
+      }
+    }
+  }
+}

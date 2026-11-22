@@ -52,7 +52,7 @@ Drawn from the `Alternate` story.
 
 ### Loading and failed
 
-- **Loading:** show three or so events with a skeleton [Loader](../Loader/README.md) for each title (`size="lg"`, half the width) and time (`size="md"`, `w-24`), and `aria-busy` on the list. Each skeleton line is as tall as a line of its text, so the events keep their height when the history arrives. Give the first Loader a `label` ("Loading history") and the others `label=""`: a screen reader hears the wait once, after the loader's delay, and a quick load says nothing.
+- **Loading:** show three or so events with a [Skeleton](../Skeleton/README.md) for each title (`size="lg"`, half the width) and time (`size="md"`, `w-24`), and `aria-busy` on the list. Each skeleton line is as tall as a line of its text, so the events keep their height when the history arrives. Give the first Skeleton a `label` ("Loading history") and the others `label=""`: a screen reader hears the wait once, after the skeleton's delay, and a quick load says nothing.
 - **Failed:** in place of the list, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
@@ -61,8 +61,8 @@ Drawn from the `Alternate` story.
     <Timeline aria-label="Order history" aria-busy>
       {[0, 1, 2].map((i) => (
         <TimelineItem key={i}
-          title={<Loader variant="skeleton" size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />}
-          time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />
+          title={<Skeleton size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />}
+          time={<Skeleton size="md" className="w-24" label="" />} />
       ))}
     </Timeline>
   ) : <Timeline aria-label="Order history">{events.map(…)}</Timeline>}
