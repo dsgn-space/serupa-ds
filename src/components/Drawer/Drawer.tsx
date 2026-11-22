@@ -166,7 +166,6 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   }, [open, reopened]);
   // Closed while unmounting: give focus back too, unless it's non-modal and focus had moved on to the page (focus
   // that was inside it has fallen to <body> by now, the drawer gone from the page).
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- on unmount only: giveBack reads nothing but refs
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const a = deepActive(); giveBack(isModal.current || !a || a === document.body || !!d && d.contains(a), true); }; }, []);
 
   // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only

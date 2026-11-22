@@ -129,7 +129,6 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
     }
   }, [open, reopened]);
   // Closed while unmounting: give focus back too.
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- on unmount only: giveBack reads nothing but refs
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); giveBack(true); }; }, []);
 
   // Escape fires "cancel": ask instead of closing, so open stays the truth.

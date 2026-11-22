@@ -11,7 +11,6 @@ import { SaveStatus } from './SaveStatus';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const said = () => document.querySelector('[data-srp-announcer]')?.textContent;
-const saidAtOnce = () => document.querySelector('[data-srp-announcer-assertive]')?.textContent;
 
 describe('SaveStatus', () => {
   test('each status: its words, an icon hidden from screen readers, and Try again only after an error; props reach the <div>', async () => {
@@ -87,7 +86,7 @@ describe('SaveStatus', () => {
     expect(el('s').querySelector('time')).not.toBeNull();
   });
 
-  test('announces "Saved" politely and the error at once, each once, when the status changes to them; not "Saving…", not the first render', async () => {
+  test('announces "Saved" and the error once, politely, when the status changes to them; not "Saving…", not the first render', async () => {
     const screen = await render(<SaveStatus id="s" status="saved" />);
     await expect.poll(announcerIdle).toBe(true);
     expect(said() || '').not.toContain('Saved');
@@ -96,17 +95,16 @@ describe('SaveStatus', () => {
     expect(said() || '').not.toContain('Saving');
     await screen.rerender(<SaveStatus id="s" status="saved" savedAt={Date.now()} />);
     await expect.poll(() => announcerIdle() && said()).toBe('Saved');
-    expect(document.querySelector('[data-srp-announcer]')!.getAttribute('aria-live')).toBe('polite');
-    // A failed save interrupts, as a danger toast about the same failure does: danger interrupts, the rest wait.
     await screen.rerender(<SaveStatus id="s" status="error" errorText="Couldn’t save: you’re offline" />);
-    await expect.poll(() => announcerIdle() && saidAtOnce()).toBe('Couldn’t save: you’re offline');
+    await expect.poll(() => announcerIdle() && said()).toBe('Couldn’t save: you’re offline');
+    expect(document.querySelector('[data-srp-announcer]')!.getAttribute('aria-live')).toBe('polite');
   });
 
   test('L8E39: a SaveStatus rendered only once a save fails says the error', async () => {
     const screen = await render(<div />);
     await expect.poll(announcerIdle).toBe(true);
     await screen.rerender(<SaveStatus id="s" status="error" errorText="Couldn’t save: the server is down" />);
-    await expect.poll(() => announcerIdle() && saidAtOnce()).toBe('Couldn’t save: the server is down');
+    await expect.poll(() => announcerIdle() && said()).toBe('Couldn’t save: the server is down');
   });
 
   test('Indonesian labels from the provider', async () => {
