@@ -14,7 +14,7 @@
       },
       "icon-info": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.info-text}",
         "$description": "The icon and the border tint of a info alert (3:1 on its background).",
         "$extensions": {
           "com.serupa": {

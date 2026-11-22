@@ -86,7 +86,7 @@ Each is an optional override: set it on the page, a container or one alert. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--alert-bg-info` | `info-subtle` | The background of a info alert. |
-| `--alert-icon-info` | `info` | The icon and the border tint of a info alert (3:1 on its background). |
+| `--alert-icon-info` | `info-text` | The icon and the border tint of a info alert (3:1 on its background). |
 | `--alert-bg-success` | `success-subtle` | The background of a success alert. |
 | `--alert-icon-success` | `success` | The icon and the border tint of a success alert (3:1 on its background). |
 | `--alert-bg-warning` | `warning-subtle` | The background of a warning alert. |

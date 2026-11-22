@@ -569,8 +569,8 @@
     },
     "success": {
       "$type": "color",
-      "$value": "{color.green-500}",
-      "$description": "Alias. Success icons and fills (3:1). For success text use `success-text`.",
+      "$value": "{color.green-600}",
+      "$description": "Alias. Success icons and fills (3:1), green-600 in light and dark themes alike, as `primary` is the light theme's shade in dark (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--success"
@@ -599,7 +599,7 @@
     },
     "success-hover": {
       "$type": "color",
-      "$value": "{color.green-400}",
+      "$value": "{color.green-500}",
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -639,8 +639,8 @@
     },
     "warning": {
       "$type": "color",
-      "$value": "{color.amber-500}",
-      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`.",
+      "$value": "{color.amber-600}",
+      "$description": "Alias. Warning icons and fills, amber-600 in light and dark themes alike; put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning"
@@ -669,7 +669,7 @@
     },
     "warning-hover": {
       "$type": "color",
-      "$value": "{color.amber-400}",
+      "$value": "{color.amber-500}",
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -789,8 +789,16 @@
     },
     "info": {
       "$type": "color",
-      "$value": "{color.sky-400}",
-      "$description": "Alias. Informational icons and text.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1176,
+          0.4667,
+          0.6902
+        ],
+        "hex": "#1e77b0"
+      },
+      "$description": "Alias. Informational icons and fills (3:1), with white `on-info` text: sky-700 in light, the same shade lightened only as far as 3:1 on a raised dark card in dark (#1e77b0). For info text use `info-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--info"
@@ -819,7 +827,15 @@
     },
     "info-hover": {
       "$type": "color",
-      "$value": "{color.sky-300}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1137,
+          0.4,
+          0.5765
+        ],
+        "hex": "#1d6693"
+      },
       "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -829,7 +845,7 @@
     },
     "on-info": {
       "$type": "color",
-      "$value": "{color.sky-950}",
+      "$value": "{color.white}",
       "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {

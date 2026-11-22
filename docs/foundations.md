@@ -148,17 +148,17 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `border-raised` | `zinc-200` | `zinc-800` | Deprecated: the same as `border`, which a raised card uses now. Removed in 15.0.0; `serupa-migrate` renames it. |
 | `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
-| `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
+| `success` | `green-600` | `green-600` | Success icons and fills (3:1), the same shade in both modes. Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
 | `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
-| `success-hover` | `green-500` | `green-400` | Hover / pressed state of `success` fills. |
+| `success-hover` | `green-500` | `green-500` | Hover / pressed state of `success` fills. |
 | `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
 | `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
 | `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
-| `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. Not for text: use `warning-text`. |
+| `warning` | `amber-600` | `amber-600` | Warning icons and fills, the same shade in both modes; put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
 | `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
-| `warning-hover` | `amber-500` | `amber-400` | Hover / pressed state of `warning` fills. |
+| `warning-hover` | `amber-500` | `amber-500` | Hover / pressed state of `warning` fills. |
 | `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
 | `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
 | `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
@@ -169,11 +169,11 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `danger-text` | `red-700` | `red-300` | Destructive text and icons on `surface` and danger tints. |
 | `danger-subtle-hover` | `red-100` | `red-900` | Hover fill for destructive secondary, outline and ghost buttons. |
 | `danger-border` | `red-300` | `red-800` | Border of a destructive outline button. |
-| `info` | `sky-700` | `sky-400` | Informational icons and text. |
+| `info` | `sky-700` | `#1e77b0` | Informational icons and fills (3:1): in dark, `sky-700` lightened only as far as 3:1 on a raised card. Not for text: use `info-text`. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
 | `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
-| `info-hover` | `sky-800` | `sky-300` | Hover / pressed state of `info` fills. |
-| `on-info` | `white` | `sky-950` | Text and icons on `info` fills (4.5:1+). |
+| `info-hover` | `sky-800` | `#1d6693` | Hover / pressed state of `info` fills. |
+| `on-info` | `white` | `white` | Text and icons on `info` fills (4.5:1+). |
 | `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
 | `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |

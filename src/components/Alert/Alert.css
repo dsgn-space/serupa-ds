@@ -8,7 +8,7 @@
 @layer srp.components {
 .srp-alert {
   --srp-alert-bg: var(--alert-bg-info, var(--info-subtle));
-  --srp-alert-icon: var(--alert-icon-info, var(--info));
+  --srp-alert-icon: var(--alert-icon-info, var(--info-text));
   display: flex;
   align-items: flex-start;
   gap: var(--alert-gap, var(--spacing-3));

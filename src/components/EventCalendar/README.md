@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-event-bg` | `primary-subtle` | A primary event's fill (other tones use their own subtle color). |
 | `--event-calendar-event-text` | `text` | An event's time and title (4.5:1 on each tone's fill). |
 | `--event-calendar-event-tone` | `primary-text` | The bar at the start of an event with no tone. |
-| `--event-calendar-info-tone` | `info` | The bar at the start of a tone="info" event. |
+| `--event-calendar-info-tone` | `info-text` | The bar at the start of a tone="info" event. |
 | `--event-calendar-info-bg` | `info-subtle` | The fill of a tone="info" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-success-tone` | `success` | The bar at the start of a tone="success" event. |
 | `--event-calendar-success-bg` | `success-subtle` | The fill of a tone="success" event (its text stays event-text, 4.5:1 on it). |

@@ -2022,10 +2022,10 @@
     "success": {
       "$type": "color",
       "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1). For success text use `success-text`.",
+      "$description": "Alias. Success icons and fills (3:1), green-600 in light and dark themes alike, as `primary` is the light theme's shade in dark (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-500}",
+          "dark": "{green-600}",
           "contrastMore": {
             "light": "{green-700}",
             "dark": "{green-300}"
@@ -2063,7 +2063,7 @@
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-400}"
+          "dark": "{green-500}"
         }
       }
     },
@@ -2104,10 +2104,10 @@
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`.",
+      "$description": "Alias. Warning icons and fills, amber-600 in light and dark themes alike; put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-500}",
+          "dark": "{amber-600}",
           "contrastMore": {
             "light": "{amber-700}",
             "dark": "{amber-300}"
@@ -2145,7 +2145,7 @@
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-400}"
+          "dark": "{amber-500}"
         }
       }
     },
@@ -2270,10 +2270,10 @@
     "info": {
       "$type": "color",
       "$value": "{color.sky-700}",
-      "$description": "Alias. Informational icons and text.",
+      "$description": "Alias. Informational icons and fills (3:1), with white `on-info` text: sky-700 in light, the same shade lightened only as far as 3:1 on a raised dark card in dark (#1e77b0). For info text use `info-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-400}",
+          "dark": "#1e77b0",
           "contrastMore": {
             "light": "{sky-800}",
             "dark": "{sky-300}"
@@ -2311,7 +2311,7 @@
       "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-300}"
+          "dark": "#1d6693"
         }
       }
     },
@@ -2321,7 +2321,7 @@
       "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-950}"
+          "dark": "{white}"
         }
       }
     },

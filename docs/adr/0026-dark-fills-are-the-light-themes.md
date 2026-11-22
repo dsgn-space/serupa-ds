@@ -32,4 +32,4 @@ Apple's system colors move a few points between modes (systemBlue #007AFF to #0A
 
 - A primary button, a Switch that's on and a Progress bar are the same color in light and dark. Links, the line under a tab and outline buttons in dark look as they did.
 - Text set from `--primary` in a project's own CSS is 3.6:1 on a dark card, and a theme file made before 18.0.0 has no `--primary-text`. `serupa-migrate` rewrites the first and lists the second.
-- The status fills (`info`, `success`, `warning`) and Badge's palette still take a lighter shade in dark. They can follow the same rule in a later release without a new token, since each already has its `-text`.
+- The status fills follow the same rule in 18.0.0: `success` and `warning` are `green-600` and `amber-600` in both modes (each is over 3:1 on a raised dark card as it is), and `info` is `sky-700` lightened to #1e77b0 under white. Badge's palette solids are the light step, 600 or 700 under white, in both modes. Each already had its `-text` for text, so no token was added; Alert's info icon and EventCalendar's info bar, which sit on a tint, read `info-text`.

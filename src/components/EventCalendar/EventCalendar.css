@@ -37,7 +37,7 @@
   background: var(--srp-evc-fill); color: var(--event-calendar-event-text, var(--text)); font: inherit; font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   text-align: start; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-.srp-event-calendar__event--info { --srp-evc-tone: var(--event-calendar-info-tone, var(--info)); --srp-evc-fill: var(--event-calendar-info-bg, var(--info-subtle)); }
+.srp-event-calendar__event--info { --srp-evc-tone: var(--event-calendar-info-tone, var(--info-text)); --srp-evc-fill: var(--event-calendar-info-bg, var(--info-subtle)); }
 .srp-event-calendar__event--success { --srp-evc-tone: var(--event-calendar-success-tone, var(--success)); --srp-evc-fill: var(--event-calendar-success-bg, var(--success-subtle)); }
 .srp-event-calendar__event--warning { --srp-evc-tone: var(--event-calendar-warning-tone, var(--warning)); --srp-evc-fill: var(--event-calendar-warning-bg, var(--warning-subtle)); }
 .srp-event-calendar__event--danger { --srp-evc-tone: var(--event-calendar-danger-tone, var(--danger)); --srp-evc-fill: var(--event-calendar-danger-bg, var(--danger-subtle)); }
