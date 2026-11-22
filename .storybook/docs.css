@@ -107,14 +107,6 @@ html, body { background-color: var(--surface-page); }
 .sb-wide--scrolls > table { margin-block: 0; }
 .sbdocs-content .sb-copy-guide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); color: var(--text-muted); }
 
-/* At any width, a guide table with a long token name, type or path in a cell narrows to the page rather than pushing it
-   wider (Attachment, DataGrid, FileUpload, Form, NumberInput, CommandPalette and the Changelog did at 1280px): such a
-   cell, or a line of text, may break inside its code. A table that fits keeps its columns, since the break only applies once it doesn't. */
-.sbdocs-content :is(td, th):not([role="region"] *, .docblock-argstable th) { overflow-wrap: anywhere; }
-.sbdocs-content td > code:not([role="region"] *) { white-space: normal; overflow-wrap: anywhere; }
-/* In running text a code chip moves to the next line whole, as before; only one longer than a line breaks inside. */
-.sbdocs-content :is(li, p) > code:not([role="region"] *) { display: inline-block; max-inline-size: 100%; white-space: normal; overflow-wrap: anywhere; }
-
 /* Reflow (WCAG 1.4.10 on the docs themselves): at 320px, which is a 1280px screen at 400% zoom, a page scrolls
    only up and down. On a narrow screen inline code wraps and breaks anywhere it must (token names, signatures and
    paths have no spaces), and so do table cells (the props table's headings aside), so a table narrows to the page instead of
