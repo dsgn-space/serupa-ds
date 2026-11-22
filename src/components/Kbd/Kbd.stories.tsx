@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Kbd } from './Kbd';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'Components/Content/Kbd',
@@ -13,7 +14,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const Single: Story = { args: { keys: undefined, children: 'Esc' } };
-export const InText: Story = { render: () => <p style={{ margin: 0 }}>Press <Kbd>/</Kbd> to search, or <Kbd keys={['mod', 'shift', 'P']} size="sm" /> for commands.</p> };
+export const InText: Story = { render: () => <p style={{ margin: 0 }}>Press <Kbd>/</Kbd> to search, or <Kbd keys={['mod', 'shift', 'P']} /> for commands.</p> };
+/** size="sm" inside a control: 16px quiet keys with no +, so they don't crowd the button's edges. */
+export const InControl: Story = {
+  render: () => <div style={{ display: 'flex', gap: 'var(--spacing-3)', alignItems: 'center' }}>
+    <Button variant="outline" size="sm" startIcon="search">Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
+    <Button variant="outline" startIcon="search">Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
+  </div>,
+};
 export const NamedKeys: Story = {
   render: () => <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-3)' }}>
     {['mod', 'ctrl', 'alt', 'shift', 'enter', 'backspace', 'tab', 'esc', 'space', 'up', 'down', 'left', 'right'].map((k) => <Kbd key={k} keys={[k]} />)}

@@ -48,7 +48,7 @@
     color: var(--prose-quote-text, var(--text-muted));
   }
   :scope :where(hr) { margin-block: var(--prose-flow-heading, var(--spacing-8)); }
-  :scope :where(code, kbd, samp) { font-family: var(--font-mono); font-size: var(--text-sm); }
+  :scope :where(code, kbd:not(.srp-kbd, .srp-kbd__key), samp) { font-family: var(--font-mono); font-size: var(--text-sm); }
   :scope :where(:not(pre) > code) {
     padding: var(--spacing-0\.5) var(--spacing-1); border-radius: var(--prose-code-radius, var(--radius-inner));
     background: var(--prose-code-bg, var(--surface-muted));

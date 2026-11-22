@@ -203,7 +203,7 @@ function KeyboardShortcutsRender({ ref, ...props }: KeyboardShortcutsProps & Rea
           {groups.size > 1 ? <h3 className="srp-keyboard-shortcuts__heading">{name}</h3> : null}
           <DescriptionList layout="split" className="srp-keyboard-shortcuts__list">
             {items.map((s, i) => (
-              <DescriptionItem key={i} className="srp-keyboard-shortcuts__row" term={s.description}><Kbd keys={s.keys} size="sm" /></DescriptionItem>
+              <DescriptionItem key={i} className="srp-keyboard-shortcuts__row" term={s.description}><Kbd keys={s.keys} /></DescriptionItem>
             ))}
           </DescriptionList>
         </section>

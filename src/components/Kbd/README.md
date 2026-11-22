@@ -9,7 +9,7 @@ import { Kbd } from "@diki-stwn/serupa-ds";
 
 <p>Press <Kbd>/</Kbd> to search.</p>
 <Kbd keys={["mod", "K"]} />        // ⌘ K on a Mac, Ctrl + K elsewhere
-<Kbd keys={["shift", "enter"]} size="sm" />
+<Button startIcon="search">Search <Kbd keys={["mod", "K"]} size="sm" /></Button>  // inside a control
 ```
 
 ## When to use
@@ -60,7 +60,9 @@ Use `mod` for shortcuts that follow the platform. Any other text shows as it is,
 ## Behavior
 
 - Inside a `SerupaProvider` with `platform` set (`"apple"` or `"other"`, worked out on the server from the User-Agent or `Sec-CH-UA-Platform`), the right keys show from the first render, the server's too. Without it, the platform is read in the browser after the page loads, so server-rendered pages show the words first.
-- It sits with the text, so it can go inline in a sentence.
+- It sits with the text, so it can go inline in a sentence. Every Kbd is 20px tall, so it fits inside any line of 14px text or larger without stretching it, and looks the same in a sentence, a tooltip, Prose, a list of shortcuts and a command's row.
+- A one-character key (K, ⌘, ↑) is square, so the keys of a combination line up; a word (Esc, Ctrl) gets 6px each side.
+- Inside a control, such as a search button, use `size="sm"`: 16px keys with a thin, light outline and no + between them, so they don't crowd the control's edges.
 
 ### Do and don't
 
@@ -79,7 +81,7 @@ Use `mod` for shortcuts that follow the platform. Any other text shows as it is,
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<kbd>`. |
 | `keys` | `string[]` | | A combination, one key each. Or pass a single key as children. |
-| `size` | `'sm' \| 'md'` | `'md'` | 20 or 24px keycaps. |
+| `size` | `'sm' \| 'md'` | `'md'` | `md`: 20px keys, wherever text is around them. `sm`: 16px quiet keys with no +, inside a control such as a search button. |
 
 `className`, `ref` and other props go to the outer `<kbd>`.
 
@@ -94,9 +96,13 @@ Each is an optional override: set it on the page, a container or one key. The li
 | `--kbd-border` | `border-control` | A key's outline, thicker at the bottom like a keycap. |
 | `--kbd-text` | `text` | The key's label (4.5:1 on bg). |
 | `--kbd-separator` | `text-muted` | The + between keys in a combination. |
+| `--kbd-border-sm` | `border` | size="sm"'s outline, quieter, for a key inside a control such as a search button. |
 | `--kbd-radius` | `radius-inner` | A key's corners (4px). |
-| `--kbd-height-sm` | `spacing-5` | size="sm" (20px). |
-| `--kbd-height-md` | `spacing-6` | size="md", the default (24px). |
-| `--kbd-padding-x` | `spacing-1.5` | Space on each side of a key's label (6px). |
+| `--kbd-height-sm` | `spacing-4` | size="sm" (16px), for a key inside a control such as a search button. |
+| `--kbd-height-md` | `spacing-5` | size="md", the default (20px): the one height wherever text is around the key. |
+| `--kbd-padding-x` | `spacing-1.5` | Space on each side of a word such as Esc (6px). A one-character key is square instead. |
 | `--kbd-gap` | `spacing-1` | Space between keys and the + in a combination (4px). |
+| `--kbd-padding-x-sm` | `spacing-1` | size="sm"'s space on each side of a word (4px). |
+| `--kbd-gap-sm` | `spacing-0.5` | size="sm"'s space between keys, which has no + (2px). |
+| `--kbd-border-bottom-width` | `border-width-2` | A key's bottom edge, thicker like a keycap's (2px; sm uses 1px all round). |
 <!-- token-table:end -->
