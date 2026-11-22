@@ -66,7 +66,7 @@ describe('Field', () => {
     expect(el('mail').parentElement?.className).toMatch(/srp-input--invalid/);
     expect(el('mail').getAttribute('aria-required')).toBe('true');
     expect(f.querySelector('label > span[aria-hidden]')?.getAttribute('aria-hidden')).toBe('true');
-    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__hint', 'srp-field__control', 'srp-field__error']);
+    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__control', 'srp-field__hint', 'srp-field__error']);   // the hint under the box, then the error
     expect((f.querySelector<HTMLElement>('[data-icon] + span[id]')?.previousElementSibling as HTMLElement | null)?.dataset.icon).toBe('error');
 
     await screen.getByRole('button', { name: 'Clear' }).click();
@@ -159,8 +159,10 @@ describe('Field', () => {
     expect((fs.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)?.textContent)).toEqual(['Pick one.', 'Choose a plan.']);
     expect(el('r1').id).toBe('r1');
     expect(css(fs).borderTopWidth).toBe('0px');
-    // The hint is the first thing the fieldset's aria-describedby names.
-    expect(document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0]!)!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
+    // The hint is the first thing the fieldset's aria-describedby names, and it sits under the choices, above the error.
+    const hint = document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0]!)!;
+    expect([...fs.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__control', 'srp-field__hint', 'srp-field__error']);
+    expect(hint.getBoundingClientRect().top).toBeGreaterThanOrEqual(el('r2').getBoundingClientRect().bottom);
     expect(el('c1').matches(':disabled')).toBe(true);
   });
 

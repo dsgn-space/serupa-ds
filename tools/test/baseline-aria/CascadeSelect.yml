@@ -50,9 +50,9 @@
     - option "Lengkong" [disabled]
 
 # InAField
-- text: Alamat Provinsi, kabupaten atau kota, lalu kecamatan.
+- text: Alamat
 - combobox "Alamat" [invalid]: Pilih wilayah
-- text: Pilih kecamatan.
+- text: Provinsi, kabupaten atau kota, lalu kecamatan. Pilih kecamatan.
 
 # Loading
 - combobox "Wilayah": Pilih wilayah

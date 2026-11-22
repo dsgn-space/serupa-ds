@@ -1736,7 +1736,7 @@
   - text: ", shown as +62 812-3456-7890"
 
 # DoSayWhy
-- text: Mobile number We'll text you a code
+- text: Mobile number
 - combobox "Country":
   - option "Afghanistan (⁦+93⁩)"
   - option "Åland Islands (⁦+358⁩)"
@@ -1983,6 +1983,7 @@
   - option "Zambia (⁦+260⁩)"
   - option "Zimbabwe (⁦+263⁩)"
 - textbox "Mobile number"
+- text: We'll text you a code
 
 # DontNoReason
 - text: Phone
@@ -2234,7 +2235,7 @@
 - textbox "Phone"
 
 # InAField
-- text: Mobile number We'll text you a code
+- text: Mobile number
 - combobox "Country":
   - option "Afghanistan (⁦+93⁩)"
   - option "Åland Islands (⁦+358⁩)"
@@ -2481,6 +2482,7 @@
   - option "Zambia (⁦+260⁩)"
   - option "Zimbabwe (⁦+263⁩)"
 - textbox "Mobile number"
+- text: We'll text you a code
 
 # LongValue
 - combobox "Country":

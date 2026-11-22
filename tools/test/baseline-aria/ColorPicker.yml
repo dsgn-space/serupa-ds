@@ -1,5 +1,5 @@
 # ContrastCheck
-- text: Text color Checked for 7:1 (AAA) against the white card it goes on
+- text: Text color
 - radiogroup "Text color":
   - radio "Blue"
   - radio "Violet"
@@ -11,7 +11,7 @@
   - radio "White"
 - textbox "Custom color": "#b45309"
 - textbox "Hex code": b45309
-- text: Contrast 5.0:1, below 7.0:1, which can be hard to read
+- text: Contrast 5.0:1, below 7.0:1, which can be hard to read Checked for 7:1 (AAA) against the white card it goes on
 - paragraph: The quick brown fox
 
 # Disabled

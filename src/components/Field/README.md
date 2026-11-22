@@ -77,7 +77,7 @@ When the server answers a submit with errors by field name, wrap the form in `Fo
 
 ### Layout
 
-Label, hint, control and error stack with 6px between them (`--field-gap`). With `orientation="horizontal"`, the label takes a 192px column (`--field-label-width`) 16px from the control (`--field-column-gap`). Its text sits on the control's first line (baselines aligned), and the hint and error go under the control. Once the control column would be narrower than 256px (`--field-control-min-width`), it wraps under the label, so the field is stacked again. The label is `text-sm` in `font-medium`; hint and error are `text-sm`. The error's 16px icon sits centered on its first line. A group's legend lays out exactly like a label.
+Label, control, hint and error stack with 6px between them (`--field-gap`): the hint sits under the box, and the error under the hint. With `orientation="horizontal"`, the label takes a 192px column (`--field-label-width`) 16px from the control (`--field-column-gap`). Its text sits on the control's first line (baselines aligned), and the hint and error go under the control. Once the control column would be narrower than 256px (`--field-control-min-width`), it wraps under the label, so the field is stacked again. The label is `text-sm` in `font-medium`; hint and error are `text-sm`. The error's 16px icon sits centered on its first line. A group's legend lays out exactly like a label.
 
 ## Accessibility
 
@@ -98,7 +98,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `label` | text or element | | A `<label>` linked to the control; with `group`, the fieldset's `<legend>` |
-| `hint` | text or element | | Help under the label, before the control, in `text-muted`; added to the control's `aria-describedby` |
+| `hint` | text or element | | Help under the control (with `group`, under the choices), above the error, in `text-muted`; added to the control's `aria-describedby` |
 | `warning` | text or element | | Advice under the control, in `warning-text` with an icon, that doesn't block sending: the control stays valid. Added to its `aria-describedby` and said politely. An error takes its place |
 | `checking` | text or element | | While the answer is being checked: the words ("Checking the address…") with a small spinner, under the control; `aria-busy` on the Field. Added to the description and said politely. Takes a warning's place; an error takes its place |
 | `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |

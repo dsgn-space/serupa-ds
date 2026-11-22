@@ -43,7 +43,7 @@
 # WithHint
 - text: To confirm, type
 - strong: acme/web
-- text: This deletes its issues, pull requests and releases. It can’t be undone.
 - textbox "To confirm, type acme/web"
+- text: This deletes its issues, pull requests and releases. It can’t be undone.
 - button "Delete this repository" [disabled]
 

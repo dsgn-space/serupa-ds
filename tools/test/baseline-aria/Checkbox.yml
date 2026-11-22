@@ -45,7 +45,7 @@
 
 # Group
 - group "Teams to notify":
-  - text: Teams to notify 1 picked
+  - text: Teams to notify
   - group:
     - checkbox "All teams" [checked=mixed]
     - text: All teams
@@ -55,6 +55,7 @@
     - text: Engineering
     - checkbox "Legal (always notified)" [disabled]
     - text: Legal (always notified)
+  - text: 1 picked
 
 # GroupHorizontal
 - group "Days":

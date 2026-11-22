@@ -18,9 +18,9 @@
 - textbox "Verification code": "492"
 
 # InAField
-- text: Verification code We sent a 6-digit code to your phone.
+- text: Verification code
 - textbox "Verification code" [invalid]: "381904"
-- text: That code has expired.
+- text: We sent a 6-digit code to your phone. That code has expired.
 
 # Masked
 - textbox "PIN": "27"
