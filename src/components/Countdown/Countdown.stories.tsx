@@ -37,7 +37,5 @@ export const LongText: Story = {
   args: { seconds: 2 * 86400 + 3 * 3600 + 4 * 60 + 5, format: 'words', label: 'Registration closes in' },
   render: (args) => <p className="m-0 w-40">Registration closes in <Countdown {...args} /></p>,
 };
-/** Do: say what it counts down to, in the words beside it. */
-export const DoSayWhatEnds: Story = { name: 'Do: say what ends' };
 /** Don't: the clock alone, which reads as a time of day. */
 export const DontBareClock: Story = { tags: ['!visual'], name: "Don't: the clock alone", render: (args) => <p className="m-0"><Countdown {...args} /></p> };

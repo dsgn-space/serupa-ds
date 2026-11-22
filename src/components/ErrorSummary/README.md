@@ -49,7 +49,7 @@ Drawn from the `WithDescription` story.
 
 ### Do and don't
 
-- **Do:** Say what's wrong and how to fix it, in the field's own words: "Enter your full name". (`DoSayHowToFix`)
+- **Do:** Say what's wrong and how to fix it, in the field's own words: "Enter your full name". (`Default`)
 - **Don't:** Write "Invalid" or "Error": people know something is wrong but not what to do. (`DontJustInvalid`)
 
 ## Accessibility

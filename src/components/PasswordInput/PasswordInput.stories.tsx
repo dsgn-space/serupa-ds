@@ -52,11 +52,6 @@ export const LongValue: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: the rules in the hint, before people type. */
-export const DoRulesUpFront: Story = {
-  name: 'Do: rules in the hint',
-  render: () => <div style={{ maxWidth: 320 }}><Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field></div>,
-};
 /** Don't: the rules only in an error, after people have tried. */
 export const DontRulesOnlyInError: Story = { tags: ['!visual'],
   name: "Don't: rules only in an error",

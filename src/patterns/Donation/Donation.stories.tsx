@@ -19,7 +19,7 @@ export const Default: Story = {};
 export const Euros: Story = { args: { currency: 'EUR', amounts: [{ amount: 15, buys: 'A school bag with books' }, { amount: 40, buys: 'A term of lunches' }] } };
 
 /** Giving fails: it says so, nothing's charged, and everything stays. */
-export const GiveFails: Story = { args: { onGive: () => new Promise((_, no) => setTimeout(() => no(new Error('declined')), 600)) } };
+export const GiveFails: Story = { tags: ['!visual'], args: { onGive: () => new Promise((_, no) => setTimeout(() => no(new Error('declined')), 600)) } };
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };

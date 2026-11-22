@@ -55,8 +55,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: a short card: a name, a picture, a line or two and a link. */
-export const DoShortCard: Story = { name: 'Do: keep the card short', args: { open: true }, decorators: [centered], parameters: { centered: true } };
 /** Don't: a page of content, which hides what it was hovering over; link to the full page instead. */
 export const DontLongCard: Story = { tags: ['!visual'],
   name: "Don't: fill the card",

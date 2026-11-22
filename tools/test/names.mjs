@@ -16,7 +16,6 @@ const DEMO = /Sizes|States|Shapes|Locales|Tones|Variants|Destructive|Disabled|Lo
 const KNOWN = {
   'ErrorSummary/DontJustInvalid': 'the Don\'t draws two "Invalid" links on purpose, to show why each one must name its field',
   'NotificationCenter/Open': 'each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940), which the snapshot doesn\'t show',
-  'NotificationCenter/DoSayWhatHappened': 'the same list as Open: each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940)',
   'NotificationCenter/DontVagueTitles': 'the same list as Open, described by row titles that are all "Update" on purpose, to show why titles must say what happened',
   'Kanban/DontVagueCards': 'the Don\'t names every card "Task" on purpose, to show why each card needs its own name',
   'NotificationCenter/WithSettings': 'the same list as Open: each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940)',

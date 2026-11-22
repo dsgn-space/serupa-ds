@@ -67,8 +67,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: say what the part does for people. */
-export const DoSayWhatItDoes: Story = { name: 'Do: say what it does for them', args: { open: true } };
 /** Don't: say what the part is, which they can already see. */
 export const DontSayWhatItIs: Story = { tags: ['!visual'],
   name: "Don't: describe what they can see",

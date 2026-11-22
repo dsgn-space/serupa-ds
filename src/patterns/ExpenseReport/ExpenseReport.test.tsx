@@ -97,6 +97,20 @@ describe('Patterns/Expense report', () => {
     expect(onSubmit).toHaveBeenLastCalledWith([expenses[0]]);
   });
 
+  test('Save as draft, from the menu beside Send, keeps the report and says so; a draft that fails says so', async () => {
+    const onSaveDraft = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
+    const screen = await render(<ExpenseReport expenses={[expenses[0]!]} today={today} onSaveDraft={onSaveDraft} />);
+    const more = screen.getByRole('button', { name: 'More ways to save the report' });
+    await more.click();
+    await screen.getByRole('menuitem', { name: 'Save as draft' }).click();
+    await expect.poll(alertText).toContain('Couldn’t save the draft.');
+    await more.click();
+    await screen.getByRole('menuitem', { name: 'Save as draft' }).click();
+    await expect.poll(() => document.body.textContent).toContain('Draft saved');
+    expect(alertText()).not.toContain('Couldn’t save the draft.');
+    expect(onSaveDraft).toHaveBeenLastCalledWith([expenses[0]]);
+  });
+
   test('while loading, one placeholder; a failed load says so, with Try again', async () => {
     const onRetry = vi.fn();
     const screen = await render(<ExpenseReport loading />);

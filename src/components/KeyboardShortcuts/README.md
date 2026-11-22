@@ -60,7 +60,7 @@ Drawn from the `WithListedShortcuts` story.
 
 ### Do and don't
 
-- **Do:** Give each shortcut a `description` and a `group`, so the list has headings to scan by. (`DoGroupShortcuts`)
+- **Do:** Give each shortcut a `description` and a `group`, so the list has headings to scan by. (`WithListedShortcuts`)
 - **Don't:** Leave shortcuts without a group: they pile up in one long list. (`DontUngrouped`)
 
 ## Accessibility
