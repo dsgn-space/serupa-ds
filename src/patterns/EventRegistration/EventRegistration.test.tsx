@@ -48,8 +48,9 @@ describe('Patterns/Event registration', () => {
     expect(screen.getByRole('link', { name: /^Enter|^Choose/ }).elements().map((e) => e.getAttribute('href'))).toEqual(['#event-ticket', '#event-name', '#event-email']);
     await screen.getByRole('link', { name: 'Choose a ticket.' }).click();
     await expect.poll(() => active().getAttribute('type')).toBe('radio');
-    await screen.getByRole('radio', { name: /^Student/ }).click();
     const total = () => document.getElementById('event-total')?.textContent;
+    expect(total()).toBe('Choose a ticket to see your total.');   // never an empty line, as in Donation
+    await screen.getByRole('radio', { name: /^Student/ }).click();
     await expect.poll(total).toMatch(/^Total: /);
     const one = total();
     await screen.getByRole('spinbutton', { name: /^How many tickets/ }).click();

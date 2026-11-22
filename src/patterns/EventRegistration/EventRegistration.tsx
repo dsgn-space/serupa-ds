@@ -197,7 +197,9 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister, 
                     <Field label="How many tickets?" id="event-count" hint={`Up to ${formatNumber(Math.min(MOST, left), locale)}.`} error={problems.count} required>
                       <NumberInput min={1} max={Math.min(MOST, left)} value={r.count} onValueChange={(n) => edit({ count: n ?? 0 })} className="max-w-36" />
                     </Field>
-                    <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : null}</p>
+                    <Card padding="sm" variant="filled">
+                      <p id="event-total" className="m-0" aria-live="polite">{ticket && r.count > 0 ? <>Total: <strong>{money(ticket.price * r.count)}</strong></> : 'Choose a ticket to see your total.'}</p>
+                    </Card>
                   </>
                 )}
                 <Field label="Your name" id="event-name" error={problems.name} required>
