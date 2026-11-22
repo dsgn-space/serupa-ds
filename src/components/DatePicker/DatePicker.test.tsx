@@ -274,7 +274,7 @@ describe('DatePicker', () => {
       // A plain day: the third week is always in the month shown; not the picked day, not today.
       const day = pop.querySelector<HTMLElement>('tbody tr:nth-child(3) td:not([aria-selected=true]) > button:not([aria-current])')!;
       const sel = cs('.srp-calendar__day--selected');
-      const pairs: Array<[string, string, string, number]> = [['title', cs('.srp-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.srp-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', seen(pop.querySelector('.srp-calendar__day--selected')!), bg, 3]];
+      const pairs: Array<[string, string, string, number]> = [['title', cs('.srp-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.srp-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', seen(pop.querySelector('td[aria-selected="true"] > button')!), bg, 3]];
       day.style.background = 'var(--calendar-day-bg-hover, var(--surface-muted))';
       pairs.push(['day on hover', getComputedStyle(day).color, getComputedStyle(day).backgroundColor, 4.5]);
       day.style.background = '';
