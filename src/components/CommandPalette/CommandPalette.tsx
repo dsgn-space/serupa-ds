@@ -2,7 +2,7 @@
 import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
@@ -117,12 +117,12 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   // What's typed goes to onQueryChange: at once when the app holds the query, else once it has changed here (the
   // clearing of a new opening included).
   const told = React.useRef(query);
-  const onQuery = React.useRef(props.onQueryChange); onQuery.current = props.onQueryChange;
+  const onQuery = useLatest(props.onQueryChange);
   React.useEffect(() => {
     if (told.current === query) return;
     told.current = query;
     if (!queryControlled && onQuery.current) onQuery.current(query);
-  }, [query, queryControlled]);
+  }, [query, queryControlled, onQuery]);
   const setQuery = (v: string) => {
     if (!queryControlled) { setOwnQuery(v); return; }
     told.current = v;
@@ -173,7 +173,7 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   // page (behind the open modal the page is inert) and its href leaves from the page as it was (GR97). An app that
   // keeps a controlled palette open gets it run at once.
   const [chosen, setChosen] = React.useState<{ c: Command } | null>(null);
-  const done = React.useRef(props.onSelect); done.current = props.onSelect;
+  const done = useLatest(props.onSelect);
   React.useEffect(() => {
     if (!chosen) return;
     setChosen(null);
@@ -181,7 +181,7 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
     if (c.onSelect) c.onSelect();
     else if (c.href && typeof window !== 'undefined') go(c.href);
     if (done.current) done.current(c);
-  }, [chosen]);
+  }, [chosen, done]);
   const choose = (r: Row | null) => {
     if (!r || r.c.disabled) return;
     change(false, { reason: 'select' });

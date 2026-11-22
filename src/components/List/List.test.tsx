@@ -348,6 +348,9 @@ describe('List with selectionMode', () => {
     expect(at()).toBe(row('Budget.xlsx'));
     await userEvent.keyboard('{ArrowDown}');
     expect(at()).toBe(row('Notes.md'));
+    // Alt with an arrow is the browser's Back or Forward, not a move.
+    await userEvent.keyboard('{Alt>}{ArrowDown}{ArrowRight}{/Alt}');
+    expect(at()).toBe(row('Notes.md'));
     await userEvent.keyboard('{ArrowRight}');
     expect(at()).toBe(box('Notes.md'));
     await userEvent.keyboard('{ArrowRight}');

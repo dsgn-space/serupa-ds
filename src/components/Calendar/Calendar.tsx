@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useLatest } from '../../internal/cn';
 import { addDays, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, startOfWeek, toDay } from '../../internal/dates';
 import { calendarOf, type Cal, type CalendarSystem } from '../../internal/calendars';
 export type { CalendarSystem } from '../../internal/calendars';
@@ -14,6 +14,7 @@ import { dayPresets, PresetList, type PresetItem } from '../../internal/datePres
 import { en as calendarWords } from './labels';
 import { en as periodWords } from '../PeriodPicker/labels';
 import { isComposing } from '../../internal/ime';
+import { isRtl } from '../../internal/position';
 // module state: Calendar's words and PeriodPicker's ("Previous year", "Choose a month"), for the month and year grids.
 const words = /* @__PURE__ */ Object.assign({}, calendarWords, periodWords);
 
@@ -298,7 +299,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
     if (view === 'days' || isComposing(e)) return;
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); back(); return; }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl', rowStart = pFocus - ((pFocus - pPage) % 3);
+    const rtl = isRtl(e.currentTarget), rowStart = pFocus - ((pFocus - pPage) % 3);
     let n: number;
     switch (e.key) {
       case 'ArrowLeft': n = pFocus + (rtl ? 1 : -1); break;
@@ -327,7 +328,7 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const onKeyDown = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = isRtl(e.currentTarget);
     let n: Date | null = null;
     switch (e.key) {
       case 'ArrowLeft': n = addDays(focus, rtl ? 1 : -1); break;
@@ -361,8 +362,8 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
     : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
   // The days read the latest handlers through this, so Weeks' props stay the same while nothing they draw changes.
   const handlers = { pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover };
-  const live = React.useRef(handlers); live.current = handlers;
-  const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), []);
+  const live = useLatest(handlers);
+  const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), [live]);
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
     <div {...rest} ref={ref} className={cn('srp-calendar', presets && 'srp-calendar--presets', props.weekNumbers && 'srp-calendar--weeks', props.pairedNav && 'srp-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">

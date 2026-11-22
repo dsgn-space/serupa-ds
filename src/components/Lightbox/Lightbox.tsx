@@ -13,6 +13,7 @@ import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 /** One picture in a Lightbox. */
 export interface LightboxItem {
@@ -108,7 +109,7 @@ function LightboxRender({ ref, ...props }: LightboxProps & React.RefAttributes<H
     }
   }, [open, index, items, item, count, loop]);
 
-  const rtl = () => !!root.current && getComputedStyle(root.current).direction === 'rtl';
+  const rtl = () => !!root.current && isRtl(root.current);
   const [dir, setDir] = React.useState<'ltr' | 'rtl'>('ltr');
   // every render: an ancestor's dir can change without a render of ours; reading it is a style lookup, not a layout.
   useIsoLayoutEffect(() => { const d = rtl() ? 'rtl' : 'ltr'; if (d !== dir) setDir(d); });
