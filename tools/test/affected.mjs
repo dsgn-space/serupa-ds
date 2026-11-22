@@ -50,7 +50,7 @@ t('a change to no component folder edits none', touchedComponents(['docs/Loading
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
-t('a component nothing uses brings only itself', list(withDependents(new Set(['SignaturePad']))) === 'SignaturePad', list(withDependents(new Set(['SignaturePad']))));
+t('a component nothing uses brings only itself', list(withDependents(new Set(['FabMenu']))) === 'FabMenu', list(withDependents(new Set(['FabMenu']))));
 t('a pattern that shows a component comes with it (Meter: Billing and Dashboard, and Chat whose stories show one)', ['Billing', 'Chat', 'Dashboard', 'Meter'].every((n) => withDependents(new Set(['Meter'])).has(n)), list(withDependents(new Set(['Meter']))));
 const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-aria/Checkout.yml', 'src/blocks/StatsRow/StatsRow.tsx']);
 t('a block or pattern folder covers that block or pattern, and its Introduction page that page', list(pattern) === 'Checkout, Introduction.mdx, StatsRow', list(pattern));
