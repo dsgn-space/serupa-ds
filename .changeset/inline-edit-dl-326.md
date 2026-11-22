@@ -7,3 +7,5 @@ Fixed (InlineEdit): as a value in a DescriptionList (not `layout="split"`), its 
 Changed (Patterns): Appointment's calendar keeps its own width, as in Booking and Leave request, instead of stretching across the column with its days 96px apart.
 
 Changed (Patterns): Event registration's total reads "Choose a ticket to see your total." until a ticket is chosen, in a filled Card as in Donation. Before, an empty line left a double gap under "How many tickets?".
+
+Fixed (Table, List): an Avatar in a hovered, striped or selected row now steps its fill up to `secondary-hover`. In light themes its usual `secondary` fill is the same zinc-100 as the row's shade, so the circle disappeared and its initials floated on the row (as on Leaderboard's "You" row). New component tokens `--table-avatar-bg-shaded` and `--list-avatar-bg-shaded` set it.
