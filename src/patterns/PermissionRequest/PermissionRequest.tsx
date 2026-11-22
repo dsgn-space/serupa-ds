@@ -8,6 +8,7 @@ import { Alert } from '../../components/Alert/Alert';
 import { Icon } from '../../components/Icon/Icon';
 import { announce } from '../../internal/announce';
 import { useLocale } from '../../internal/provider';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Permission request: asks for the camera only when someone chooses to use it, says why first, and has a way on
    when the answer is no. For an app to copy. What it carries:
@@ -32,6 +33,9 @@ export interface PermissionRequestProps {
   request?: (() => Promise<PermissionAnswer>) | undefined;
   /** Called with each answer. */
   onAnswer?: ((answer: PermissionAnswer) => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 /* The call's time, in the reader's own clock (3:00 – 3:30 PM, 15:00–15:30): a fixed "15.00" read as neither. */
@@ -48,7 +52,7 @@ const SAID: Record<PermissionAnswer, string> = {
 };
 
 /** A "join a call" page that asks for the camera only when it's wanted, explains why first, and copes with a no. */
-export function PermissionRequest({ initial = 'before', request = demo, onAnswer }: PermissionRequestProps) {
+export function PermissionRequest({ initial = 'before', request = demo, onAnswer, online }: PermissionRequestProps) {
   const locale = useLocale();
   const [step, setStep] = React.useState<PermissionStep>(initial);
   const [joined, setJoined] = React.useState(false);
@@ -71,6 +75,7 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
         <p className="m-0 text-base font-semibold">Acme Meet</p>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Asking the browser works offline. What it lets the app do may need a connection.</OfflineBanner>
         <div className="flex flex-col gap-2">
           <Heading level={1}>Weekly design review</Heading>
           <p className="m-0 text-text-muted">Today, {callTime(locale)} · 6 people invited</p>
@@ -94,7 +99,7 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
             <>
               <p className="m-0 text-sm">Turn on your camera so others in the call can see you. Your browser will ask first, and you can turn it off at any time during the call.</p>
               <div>
-                <Button leftIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
+                <Button startIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
               </div>
             </>
           )}

@@ -86,7 +86,7 @@ function App({ linkRef }: { linkRef?: React.Ref<HTMLAnchorElement> }) {
     <Button href="#bad" id="dlink" disabled onClick={() => log.push('BAD-disabledlink')}>Off</Button>
     <Button id="dis" disabled variant="outline" size="lg" destructive onClick={() => log.push('BAD-dis')}>Dis</Button>
     <ButtonBase id="icononly" icon="settings" aria-label="Settings" loading={loading} />
-    <Button id="left" leftIcon="save" loading={loading}>Save file</Button>
+    <Button id="left" startIcon="save" loading={loading}>Save file</Button>
     <Button id="attrs" type="submit" form="other" formAction="/x" formMethod="post" formEncType="multipart/form-data" formNoValidate formTarget="_blank" name="intent" value="save">All</Button>
     <Button id="pbtn" popoverTarget="pop" popoverTargetAction="toggle">Pop</Button>
     <Button id="cbtn" commandfor="dlg" command="show-modal">Cmd</Button>
@@ -380,8 +380,8 @@ describe('Button', () => {
 
   test('the text side gets the extra 4px in both directions: after a left icon on the right in LTR, on the left in RTL (and the reverse for a right icon)', async () => {
     await render(<>
-      <div dir="ltr"><Button id="l-ltr" leftIcon="save">Save</Button><Button id="r-ltr" rightIcon="arrow_forward">Next</Button></div>
-      <div dir="rtl"><Button id="l-rtl" leftIcon="save">Save</Button><Button id="r-rtl" rightIcon="arrow_forward">Next</Button></div>
+      <div dir="ltr"><Button id="l-ltr" startIcon="save">Save</Button><Button id="r-ltr" endIcon="arrow_forward">Next</Button></div>
+      <div dir="rtl"><Button id="l-rtl" startIcon="save">Save</Button><Button id="r-rtl" endIcon="arrow_forward">Next</Button></div>
     </>);
     const pad = (id: string) => { const cs = getComputedStyle(el(id)); return [cs.paddingLeft, cs.paddingRight]; };
     expect(pad('l-ltr')).toEqual(['12px', '16px']);
@@ -469,17 +469,17 @@ function Motion() {
   const nudge = vars({ '--button-icon-nudge': 'var(--spacing-0\\.5)' });
   return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
     <Button id="press" variant="secondary" onClick={() => log.push('click')}>Press me</Button>
-    <div style={nudge}><Button id="next" rightIcon="arrow_forward">Continue</Button></div>
-    <Button id="plainright" rightIcon="expand_more">Options</Button>
-    <Button id="back" leftIcon="arrow_back" variant="outline">Back</Button>
-    <div dir="rtl" style={nudge}><Button id="rtl" rightIcon="arrow_forward">RTL</Button></div>
+    <div style={nudge}><Button id="next" endIcon="arrow_forward">Continue</Button></div>
+    <Button id="plainright" endIcon="expand_more">Options</Button>
+    <Button id="back" startIcon="arrow_back" variant="outline">Back</Button>
+    <div dir="rtl" style={nudge}><Button id="rtl" endIcon="arrow_forward">RTL</Button></div>
     <Button id="lnk" variant="link">Link style</Button>
     <Button id="dis" disabled>Disabled</Button>
-    <Button id="busy" loading={busy} leftIcon="save">Save</Button>
+    <Button id="busy" loading={busy} startIcon="save">Save</Button>
     <Button id="big" size="lg" style={{ width: '240px' }}>Wide</Button>
     <Button id="nopress" style={vars({ '--button-press-scale': '1' })}>No press</Button>
     <Button id="shrink" variant="secondary" style={vars({ '--button-press-scale': 'var(--scale-97)' })}>Shrink</Button>
-    <div style={nudge}><div style={vars({ '--button-icon-nudge': '0px' })}><Button id="nonudge" rightIcon="arrow_forward">No nudge</Button></div></div>
+    <div style={nudge}><div style={vars({ '--button-icon-nudge': '0px' })}><Button id="nonudge" endIcon="arrow_forward">No nudge</Button></div></div>
     <Button id="mine" onPointerDown={() => log.push('mine-down')} onKeyDown={() => log.push('mine-key')} onKeyUp={() => log.push('mine-up')}>Mine</Button>
   </div>;
 }
@@ -601,14 +601,14 @@ describe('Button micro-interactions', () => {
   test('nudge: off by default; --button-icon-nudge: var(--spacing-0.5) slides a right icon 2px forward on hover (the other way in right-to-left text), never a left icon; 0 turns it off again inside an area that turned it on; back in place after hover', async () => {
     await render(<Motion />);
     const hovered = async (id: string, sel: string) => { await userEvent.hover(el(id)); await eased(el(id)); return translate(sel); };
-    expect(await hovered('next', '#next .srp-btn__icon--right')).toBe('2px');
-    expect(home).toContain(await hovered('back', '#back .srp-btn__icon--left'));
-    expect(await hovered('rtl', '#rtl .srp-btn__icon--right')).toBe('-2px');
-    expect(home).toContain(await hovered('plainright', '#plainright .srp-btn__icon--right'));
-    expect(home).toContain(await hovered('nonudge', '#nonudge .srp-btn__icon--right'));
+    expect(await hovered('next', '#next .srp-btn__icon--end')).toBe('2px');
+    expect(home).toContain(await hovered('back', '#back .srp-btn__icon--start'));
+    expect(await hovered('rtl', '#rtl .srp-btn__icon--end')).toBe('-2px');
+    expect(home).toContain(await hovered('plainright', '#plainright .srp-btn__icon--end'));
+    expect(home).toContain(await hovered('nonudge', '#nonudge .srp-btn__icon--end'));
     await userEvent.unhover(el('nonudge'));
     await eased(el('next'));
-    expect(home).toContain(translate('#next .srp-btn__icon--right'));
+    expect(home).toContain(translate('#next .srp-btn__icon--end'));
   });
 
   test('loading: the label fades and blurs out instead of vanishing while the spinner fades, sharpens and grows in; once faded, label and icon are hidden; the content fades back when done', async () => {
@@ -673,7 +673,7 @@ describe('Button micro-interactions', () => {
       expect(still).toContain(await hold(el('press'), () => scale('press'), { ms: 300 }));
       await userEvent.hover(el('next'));
       await eased(el('next'));
-      expect(home).toContain(translate('#next .srp-btn__icon--right'));
+      expect(home).toContain(translate('#next .srp-btn__icon--end'));
       setBusy(true);
       await expect.poll(() => document.querySelector('#busy > [aria-hidden] > [data-component="loader"]')).toBeTruthy();
       const ld = q('#busy .srp-btn__loader'), a = ld.getAnimations().find((x) => (x as CSSAnimation).animationName === 'srp-btn-loader-in');

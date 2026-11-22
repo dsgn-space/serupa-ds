@@ -16,6 +16,7 @@ import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
    a phone. For an app to copy. What it carries (WCAG 2.2):
@@ -51,6 +52,9 @@ export interface ListDetailProps {
   onRetry?: (() => void | Promise<unknown>) | undefined;
   /** The messages are on their way: the list's pane with placeholder rows, named once ("Loading messages"). Default: false. */
   loading?: boolean | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Message[] = [
@@ -74,7 +78,7 @@ const subscribe = (f: () => void) => { const m = matchMedia(WIDE); m.addEventLis
 function useWide() { return React.useSyncExternalStore(subscribe, () => matchMedia(WIDE).matches, () => true); }
 
 /** The list-and-detail page: a skip link, a header, then main with the list and the open message. */
-export function ListDetail({ messages = demo, defaultSelected, onSelect, loading = false, loadFailed = false, onRetry }: ListDetailProps) {
+export function ListDetail({ messages = demo, defaultSelected, onSelect, loading = false, loadFailed = false, onRetry, online }: ListDetailProps) {
   const locale = useLocale();
   const wide = useWide();
   const [picked, setPicked] = React.useState<string | undefined>(defaultSelected);
@@ -136,7 +140,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
   const detail = open ? (
     <section aria-labelledby="message-title" className="flex min-w-0 flex-col gap-3 p-4">
       {/* Pulled back by a ghost button's padding, so its arrow lines up with the heading under it. */}
-      {wide ? null : <div className="-ms-3"><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
+      {wide ? null : <div className="-ms-3"><Button variant="ghost" startIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
       <Heading level={2} size="lg" id="message-title" ref={heading} tabIndex={-1} className="outline-none">{subject(open.id, open.subject)}</Heading>
       <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{day(open.date, locale, 'long')}</time></p>
       <p className="m-0 max-w-prose">{open.body}</p>
@@ -149,6 +153,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
     </header>}>
       <Center maxWidth="container-6xl" padded={false}>
         <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the messages loaded before you went offline. New ones show when you’re back.</OfflineBanner>
         <PageHeader title="Inbox" />
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />

@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Select: a native <select> styled like Input, at the control heights (24, 32, 44px). The <select> fills the box,
    so a click anywhere opens it; the icons sit over it and don't take clicks. Structure: .srp-select (the box) >
-   .srp-select__icon--left, .srp-select__field (the native <select>), .srp-select__icon--chevron. Every value goes
+   .srp-select__icon--start, .srp-select__field (the native <select>), .srp-select__icon--chevron. Every value goes
    through --select-* tokens.
    --------------------------------------------------------------- */
 @layer srp.components {
@@ -39,7 +39,7 @@
    people edit the text or focus the field, whose ring is the mark then. */
 .srp-select:has(.srp-select__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--select-border-width, var(--border-width-1)) var(--srp-select-bd); }
 .srp-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
-.srp-select__icon--left { inset-inline-start: var(--srp-select-px); }
+.srp-select__icon--start { inset-inline-start: var(--srp-select-px); }
 /* The chevron sits 8px inside the end edge at every size, where Combobox, DatePicker and the other fields put
    theirs, so the chevrons of a column of fields line up. */
 .srp-select__icon--chevron { inset-inline-end: var(--spacing-2); }

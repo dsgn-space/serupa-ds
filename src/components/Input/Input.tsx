@@ -27,9 +27,9 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
   invalid?: boolean | undefined;
   /** A decorative icon inside the field, before the text: an icon name or an element. */
-  leftIcon?: IconSource | undefined;
+  startIcon?: IconSource | undefined;
   /** A decorative icon inside the field, after the text. */
-  rightIcon?: IconSource | undefined;
+  endIcon?: IconSource | undefined;
   /** Text inside the field, before what's typed, such as "https://" or "@". It's added to the field's description, so it's heard too. */
   prefix?: React.ReactNode | undefined;
   /** Text inside the field, after what's typed, such as "kg" or ".com". It's added to the field's description too. */
@@ -98,7 +98,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
 function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
-  let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
+  let rest = omit(props, { size: 1, invalid: 1, startIcon: 1, endIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
@@ -127,19 +127,19 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
   };
   return (
     <span className={cn('srp-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
-      {icon(props.leftIcon, 'left')}
+      {icon(props.startIcon, 'start')}
       {affix.prefix}
       <input {...rest} ref={setRefs} className="srp-input__field" key="field" />
       {affix.suffix}
       {props.showCount ? <span className={cn('srp-input__count', max != null && length >= max && 'srp-input__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
-      {icon(props.rightIcon, 'right')}
+      {icon(props.endIcon, 'end')}
       {props.actions != null && props.actions !== false ? <span className="srp-input__actions" key="actions"><InputBox.Provider value={{ disabled: !!rest.disabled }}>{props.actions}</InputBox.Provider></span> : null}
     </span>
   );
 }
 
 /* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
-   Button); invalid (a danger border and aria-invalid); leftIcon / rightIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
+   Button); invalid (a danger border and aria-invalid); startIcon / endIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
    showCount (a character count at the end, "12 / 50" with maxLength); maxLength (in characters as people see them,
    applied by Input). Email, URL, username and one-time-code fields get autocapitalize, autocorrect and spellcheck off.
    Renders <span class="srp-input"> around a native <input>: className and style go to the wrapper, every other

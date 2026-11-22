@@ -18,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Data import: a CSV file of customers, its columns matched to the app's fields, every row checked and shown before
    anything is saved, then what happened in words. For an app to copy. What it carries (WCAG 2.2):
@@ -57,6 +58,9 @@ export interface DataImportProps {
   existing?: string[] | undefined;
   /** Saves the rows. A rejected promise keeps the check step, with "Couldn't import" and Try again. */
   onImport?: ((rows: ImportRow[]) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 /** The rows of a CSV file: commas between cells, a line break between rows, "quoted" cells holding commas, line
@@ -137,7 +141,7 @@ const STEPS = [{ title: 'Choose a file' }, { title: 'Match columns' }, { title: 
 const ORDER: DataImportStep[] = ['upload', 'match', 'check', 'done'];
 
 /** The import page: a skip link, then main with the Stepper and the step's form. */
-export function DataImport({ start = 'upload', file: given, existing = DEMO_EXISTING, onImport }: DataImportProps) {
+export function DataImport({ start = 'upload', file: given, existing = DEMO_EXISTING, onImport, online }: DataImportProps) {
   const locale = useLocale();
   const plural = (n: number, one: string, many: string) => `${formatNumber(n, locale)} ${n === 1 ? one : many}`;
   const [step, setStep] = React.useState<DataImportStep>(given ? start : 'upload');
@@ -200,6 +204,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Your file and columns stay here. Importing needs a connection.</OfflineBanner>
         <PageHeader title="Import customers" />
         <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
         <Card className="flex flex-col gap-4" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>

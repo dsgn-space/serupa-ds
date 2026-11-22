@@ -41,7 +41,7 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 /** NavbarLink's own props, beside those of the element it renders. */
 export interface NavbarLinkOwnProps {
   /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
 }
 
 /** NavbarLink's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
@@ -58,7 +58,7 @@ export interface NavbarMenuProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** NavbarMenuGroups, each a titled list of links, or NavbarMenuLinks on their own. */
   children?: React.ReactNode | undefined;
   /** The current page is one of its links: the button is shaded and barred as the current page's link is, with aria-current="true". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
 }
 /** NavbarMenuGroup's own props, beside a <div>'s. */
 export interface NavbarMenuGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -70,7 +70,7 @@ export interface NavbarMenuGroupProps extends Omit<React.HTMLAttributes<HTMLDivE
 /** NavbarMenuLink's own props, beside those of the element it renders. */
 export interface NavbarMenuLinkOwnProps {
   /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
   /** A line under the link's text saying what's there; read after its name, as its description. */
   description?: React.ReactNode | undefined;
 }
@@ -242,17 +242,17 @@ export const Navbar = /* @__PURE__ */ named('Navbar', NavbarRender);
 
 function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
-  const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
+  const rest = omit(props, { current: 1, as: 1, className: 1, onClick: 1 });
   const Tag = (props.as || config.link);   // JSX, not createElement, which the React Compiler skips with a ref
-  return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
-    className={cn('srp-navbar__link', props.active && 'srp-navbar__link--active', props.className)}
+  return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
+    className={cn('srp-navbar__link', props.current && 'srp-navbar__link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }} />;
 }
 
-/** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. */
+/** A main page link in a Navbar. current marks the current page; following one closes the small-screen menu. */
 const NavbarLinkBase = /* @__PURE__ */ named('NavbarLink', NavbarLinkBaseRender);
 
-/** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. `as` renders your router's link, typed with its props. */
+/** A main page link in a Navbar. current marks the current page; following one closes the small-screen menu. `as` renders your router's link, typed with its props. */
 export const NavbarLink = NavbarLinkBase as {
   <C extends React.ElementType = 'a'>(props: NavbarLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
@@ -260,7 +260,7 @@ export const NavbarLink = NavbarLinkBase as {
 
 function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = React.useContext(NavbarContext);
-  const rest = omit(props, { label: 1, children: 1, active: 1, className: 1 });
+  const rest = omit(props, { label: 1, children: 1, current: 1, className: 1 });
   const id = domId('srp-navbar-menu', React.useId());
   const [own, setOwn] = React.useState(false);
   const open = ctx ? ctx.menu === id : own;
@@ -301,9 +301,9 @@ function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttribut
   const mergedRef2 = useMergedRef(ref, (n) => { root.current = n; });
   return (
     <div {...rest} ref={mergedRef2} data-state={open ? 'open' : 'closed'} className={cn('srp-navbar__menu', props.className)}>
-      <button ref={button} type="button" className={cn('srp-navbar__link srp-navbar__menu-button', props.active && 'srp-navbar__link--active')}
-        // active: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
-        aria-current={props.active ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
+      <button ref={button} type="button" className={cn('srp-navbar__link srp-navbar__menu-button', props.current && 'srp-navbar__link--active')}
+        // current: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
+        aria-current={props.current ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
         {props.label}<Icon icon={icons.ExpandMore} className="srp-navbar__chevron" />
       </button>
       <div id={id} className="srp-navbar__menu-panel" hidden={!open}>
@@ -337,13 +337,13 @@ export const NavbarMenuGroup = /* @__PURE__ */ named('NavbarMenuGroup', NavbarMe
 
 function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
-  const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1, description: 1, children: 1 });
+  const rest = omit(props, { current: 1, as: 1, className: 1, onClick: 1, description: 1, children: 1 });
   const id = domId('srp-navbar-link', React.useId());
   const has = props.description != null && props.description !== false && props.description !== '';
   const Tag = (props.as || config.link);   // JSX, as NavbarLink
-  return <Tag {...rest} ref={ref} aria-current={props.active ? 'page' : undefined}
+  return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
     aria-labelledby={has ? id + '-name' : undefined} aria-describedby={has ? id + '-desc' : undefined}
-    className={cn('srp-navbar__menu-link', props.active && 'srp-navbar__menu-link--active', props.className)}
+    className={cn('srp-navbar__menu-link', props.current && 'srp-navbar__menu-link--active', props.className)}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }}>
     <span id={id + '-name'} className="srp-navbar__menu-name">{props.children}</span>
     {has ? <span id={id + '-desc'} className="srp-navbar__menu-desc">{props.description}</span> : null}

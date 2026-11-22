@@ -179,8 +179,8 @@ describe('Combobox', () => {
 
   test('a press on the box (left icon, side padding, past the chevron) focuses the field with the caret at the end; a disabled box stays put (GG2)', async () => {
     await render(<div style={{ width: '320px' }}>
-      <Combobox id="bx" size="lg" leftIcon="search" options={COUNTRIES} defaultValue="Canada" aria-label="Country" />
-      <Combobox id="bx-off" size="lg" leftIcon="search" options={COUNTRIES} disabled aria-label="Off" />
+      <Combobox id="bx" size="lg" startIcon="search" options={COUNTRIES} defaultValue="Canada" aria-label="Country" />
+      <Combobox id="bx-off" size="lg" startIcon="search" options={COUNTRIES} disabled aria-label="Off" />
       <button id="bx-away">away</button>
     </div>);
     const box = (id: string) => el(id).closest('[data-component=combobox]') as HTMLElement;

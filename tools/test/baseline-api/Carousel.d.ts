@@ -9,7 +9,6 @@ interface CarouselLabels {
 }
 interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
     children?: React.ReactNode | undefined;
-    label?: string | undefined;
     index?: number | undefined;
     defaultIndex?: number | undefined;
     onIndexChange?: ((index: number) => void) | undefined;

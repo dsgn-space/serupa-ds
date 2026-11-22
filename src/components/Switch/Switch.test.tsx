@@ -31,7 +31,7 @@ function App(props: { iref?: React.Ref<HTMLInputElement> }) {
     {/* @ts-expect-error: an unknown size, as plain JavaScript could pass */}
     <Switch id="bad" size="xl">Bad size</Switch>
     <Switch id="desc" description="Pause notifications at night.">Quiet hours</Switch>
-    <Switch id="start" labelPosition="start">Autoplay</Switch>
+    <Switch id="start" labelPlacement="start">Autoplay</Switch>
     <Switch id="bare" aria-label="Enable row" />
     <Switch id="inv" invalid>Two-step sign-in</Switch>
     <Switch id="dis" disabled>Disabled</Switch>
@@ -45,7 +45,7 @@ describe('Switch', () => {
   test('onCheckedChange gets the new state and the event after onChange; not while read-only or pending', async () => {
     const calls: string[] = [];
     await render(<div>
-      <Switch id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, e) => calls.push(v + ' ' + e.type)}>Wi-Fi</Switch>
+      <Switch id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, { event: e }) => calls.push(v + ' ' + e.type)}>Wi-Fi</Switch>
       <Switch id="ocr" readOnly onCheckedChange={(v) => calls.push('ro ' + v)}>Locked</Switch>
       <Switch id="ocp" loading onCheckedChange={(v) => calls.push('busy ' + v)}>Saving</Switch>
     </div>);
@@ -113,7 +113,7 @@ describe('Switch', () => {
     expect([i.getAttribute('aria-describedby'), css(d).color]).toEqual([d.id, color('var(--text-muted)')]);
   });
 
-  test('labelPosition="start" puts the label before the track; without a label, just the track (20px tall)', async () => {
+  test('labelPlacement="start" puts the label before the track; without a label, just the track (20px tall)', async () => {
     await setup();
     const st = box('start'), bare = box('bare');
     expect([st.labelLeft, box('md').labelLeft]).toEqual([true, false]);

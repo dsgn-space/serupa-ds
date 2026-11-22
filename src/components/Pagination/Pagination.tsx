@@ -53,8 +53,8 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   pageSize?: number | undefined;
   /** The page sizes to offer, as a select labelled "Items per page" after the summary: [10, 25, 50]. Needs pageSize (the one picked). */
   pageSizeOptions?: number[] | undefined;
-  /** Called with the size picked in the select, and the page that keeps the first item shown in view (page 5 at 10 a page starts with item 41, which is on page 2 at 25 a page). Set pageSize, and page when controlled; uncontrolled, the page moves by itself. */
-  onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
+  /** Called with the size picked in the select, and details (page: the page that keeps the first item shown in view (page 5 at 10 a page starts with item 41, which is on page 2 at 25 a page)). Set pageSize, and page when controlled; uncontrolled, the page moves by itself. */
+  onPageSizeChange?: ((pageSize: number, details: { page: number }) => void) | undefined;
   /** A "Go to page" number field after the pages, for long lists where the numbers shown are no help: Enter goes to
    *  the page typed (one out of range goes to the nearest end), and the page is said. With getHref and no
    *  onPageChange, it follows the page's link. Default: false. */
@@ -147,7 +147,7 @@ function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttribut
   const resize = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const next = int(Number(e.currentTarget.value), 1, per), to = Math.floor(((page - 1) * per) / next) + 1;
     if (!controlled) setOwn(to);
-    if (props.onPageSizeChange) props.onPageSizeChange(next, to);
+    if (props.onPageSizeChange) props.onPageSizeChange(next, { page: to });
   };
   // The jump field: Enter goes to the page typed, clamped to the pages there are, and says where it went, since focus
   // stays in the field and nothing else would.

@@ -15,7 +15,7 @@ const meta = {
   component: Popover,
   args: {
     title: 'Share',
-    trigger: <Button variant="outline" leftIcon="share">Share</Button>,
+    trigger: <Button variant="outline" startIcon="share">Share</Button>,
     children: ((close: () => void) => (
       <form className="flex flex-col gap-3" onSubmit={(e) => { e.preventDefault(); close(); }}>
         <Field label="Email"><Input type="email" placeholder="name@example.com" /></Field>
@@ -72,7 +72,7 @@ export const Filters: Story = {
   name: 'With checkboxes and actions',
   args: {
     open: true, title: 'Filter projects', placement: 'bottom-start',
-    trigger: <Button variant="secondary" leftIcon="filter_list">Filters</Button>,
+    trigger: <Button variant="secondary" startIcon="filter_list">Filters</Button>,
     children: (close: () => void) => (
       <div className="flex flex-col gap-3">
         <Checkbox defaultChecked>Active</Checkbox>
@@ -88,7 +88,7 @@ export const LongContent: Story = {
   name: 'Long content',
   args: {
     open: true, title: 'What changes on the new plan', placement: 'bottom-start', initialFocus: 'panel',
-    trigger: <Button variant="outline" leftIcon="info">Plan details</Button>,
+    trigger: <Button variant="outline" startIcon="info">Plan details</Button>,
     children: <>
       <p>Your workspace moves to the Team plan on the 1st of next month. Every member keeps their projects, files and comments, and nothing needs to be exported or set up again.</p>
       <p style={{ marginTop: 'var(--spacing-2)' }}>Storage goes from 10 GB to 100 GB, guests can comment on any project they’re invited to, and owners get a log of who changed what. You can switch back at any time from Billing.</p>
@@ -104,7 +104,7 @@ export const DoKeepSmall: Story = { name: 'Do: keep it small', args: { open: tru
 export const DontLongForm: Story = {
   name: "Don't: a long form",
   args: {
-    open: true, title: 'Edit profile', trigger: <Button variant="outline" leftIcon="edit">Edit profile</Button>,
+    open: true, title: 'Edit profile', trigger: <Button variant="outline" startIcon="edit">Edit profile</Button>,
     children: <div className="flex flex-col gap-3">
       {['First name', 'Last name', 'Email', 'Phone', 'Company', 'Job title', 'City', 'Country'].map((l) => <Field key={l} label={l}><Input /></Field>)}
     </div>,

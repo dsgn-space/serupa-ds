@@ -26,9 +26,11 @@ interface DateRangePreset {
 interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "defaultValue" | "onChange"> {
     value?: DateRangeInput | undefined;
     defaultValue?: DateRangeInput | undefined;
-    onValueChange?: ((value: DateRange, iso: {
-        start: null | string;
-        end: null | string;
+    onValueChange?: ((value: DateRange, details: {
+        iso: {
+            start: null | string;
+            end: null | string;
+        };
     }) => void) | undefined;
     onInvalidInput?: ((text: string, reason: "unavailable" | "unreadable") => void) | undefined;
     min?: Date | string | undefined;

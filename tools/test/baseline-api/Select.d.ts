@@ -12,7 +12,7 @@ interface SelectOptionGroup {
 interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "multiple" | "size"> {
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
-    leftIcon?: IconSource | undefined;
+    startIcon?: IconSource | undefined;
     placeholder?: string | undefined;
     options?: Array<SelectOption | SelectOptionGroup> | undefined;
     readOnly?: boolean | undefined;

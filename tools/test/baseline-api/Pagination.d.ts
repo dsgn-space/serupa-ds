@@ -27,7 +27,9 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     total?: number | undefined;
     pageSize?: number | undefined;
     pageSizeOptions?: number[] | undefined;
-    onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
+    onPageSizeChange?: ((pageSize: number, details: {
+        page: number;
+    }) => void) | undefined;
     jump?: boolean | undefined;
 }
 declare const Pagination: React.FC<PaginationProps & React.RefAttributes<HTMLElement>>;

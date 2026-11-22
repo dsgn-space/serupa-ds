@@ -7,10 +7,10 @@ import type { ButtonSize, ButtonVariant } from './Button';
 export const BUTTON_VARIANTS: readonly ButtonVariant[] = ['primary', 'secondary', 'outline', 'ghost', 'link'];
 
 /** The button's class names, for styling any other element as a button. iconPosition adds the optical padding for one icon beside a label; wrap lets the label take more than one line. */
-export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: boolean; size?: ButtonSize; iconOnly?: boolean; iconPosition?: 'left' | 'right'; wrap?: boolean; className?: string }): string {
+export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: boolean; size?: ButtonSize; iconOnly?: boolean; iconPosition?: 'start' | 'end'; wrap?: boolean; className?: string }): string {
   opts = opts || {};
   const v = oneOf(BUTTON_VARIANTS, opts.variant, 'primary');
   const s = oneOf(SIZES, opts.size, 'md');
   const iconOnly = !!opts.iconOnly, pos = opts.iconPosition;
-  return cn('srp-btn', 'srp-btn--' + v, opts.destructive && 'srp-btn--destructive', 'srp-btn--size-' + s, iconOnly && 'srp-btn--icon-only', !iconOnly && (pos === 'left' || pos === 'right') && 'srp-btn--icon-' + pos, !iconOnly && opts.wrap && 'srp-btn--wrap', opts.className);
+  return cn('srp-btn', 'srp-btn--' + v, opts.destructive && 'srp-btn--destructive', 'srp-btn--size-' + s, iconOnly && 'srp-btn--icon-only', !iconOnly && (pos === 'start' || pos === 'end') && 'srp-btn--icon-' + pos, !iconOnly && opts.wrap && 'srp-btn--wrap', opts.className);
 }

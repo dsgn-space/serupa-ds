@@ -92,7 +92,9 @@ describe('Patterns/Session time-out', () => {
 
   test('typing keeps the session: no warning mid-sentence, and the server is told at most once per activityEvery', async () => {
     const onExtend = vi.fn();
-    const screen = await render(<SessionTimeout duration={3} warnBefore={1} activityEvery={1} onExtend={onExtend} />);
+    // The warning comes 3 seconds after each refresh: room for a slow runner between two keys, which come 0.7s apart and
+    // refresh at most once a second (with 2 seconds, a Thai run on a busy runner saw the warning first).
+    const screen = await render(<SessionTimeout duration={4} warnBefore={1} activityEvery={1} onExtend={onExtend} />);
     await screen.getByLabelText('Message').click();
     for (let i = 0; i < 6; i++) {
       await userEvent.keyboard('a');
@@ -105,7 +107,7 @@ describe('Patterns/Session time-out', () => {
     await screen.unmount();
     // When the server refuses, typing doesn't hide the end: the warning still comes.
     const refused = vi.fn(() => Promise.reject(new Error('offline')));
-    const again = await render(<SessionTimeout duration={3} warnBefore={1} activityEvery={1} onExtend={refused} />);
+    const again = await render(<SessionTimeout duration={4} warnBefore={1} activityEvery={1} onExtend={refused} />);
     await again.getByLabelText('Message').click();
     await new Promise((r) => setTimeout(r, 1100));
     await userEvent.keyboard('a');

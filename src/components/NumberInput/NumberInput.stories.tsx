@@ -14,7 +14,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
-export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, leftIcon: 'attach_money' } };
+export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, startIcon: 'attach_money' } };
 export const Locales: Story = {
   render: () => <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
     <Field label="Harga (id-ID, rupiah)"><NumberInput locale="id-ID" defaultValue={1500000} step={500} min={0} formatOptions={{ style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }} /></Field>

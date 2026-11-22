@@ -16,6 +16,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Event registration: what, when and where an event is, how many places are left, and a short form to get tickets,
    or to join the waiting list once it's full. For an app to copy. What it carries (WCAG 2.2):
@@ -67,6 +68,9 @@ export interface EventRegistrationProps {
   currency?: string | undefined;
   /** Registers. Reject when it can't be sent. */
   onRegister?: ((registration: Registration) => unknown) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: EventDetails = {
@@ -110,7 +114,7 @@ export function icsFor(e: EventDetails): string {
 }
 
 /** The event's page: a skip link, a header, then main with the h1, when and where, places left, and the form, or the answer. */
-export function EventRegistration({ event = demo, currency = 'USD', onRegister }: EventRegistrationProps) {
+export function EventRegistration({ event = demo, currency = 'USD', onRegister, online }: EventRegistrationProps) {
   const locale = useLocale();
   const left = Math.max(0, event.capacity - event.taken);
   const full = left === 0;
@@ -150,6 +154,7 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister }
         <Link underline="hover" href="#events">All events</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your details stay here. Registering needs a connection, and the places left may have changed.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Events', href: '#events' }, { label: event.title }]} title={event.title}
           description="An evening of short talks on design systems, then dinner. Talks are in English, with live captions on the screen." />
         <div className="flex flex-col gap-8 pt-6">

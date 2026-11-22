@@ -6,7 +6,7 @@ import { Text, type TextSize, type TextTone, type TextWeight } from './Text';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const SIZES: TextSize[] = ['xs', 'sm', 'base', 'lg', 'xl'];
-const TONES: TextTone[] = ['default', 'muted', 'primary', 'danger'];
+const TONES: TextTone[] = ['neutral', 'muted', 'primary', 'danger'];
 const WEIGHTS: TextWeight[] = ['normal', 'medium', 'semibold', 'bold'];
 
 describe('Text', () => {

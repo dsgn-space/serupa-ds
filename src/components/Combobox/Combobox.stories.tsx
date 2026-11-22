@@ -28,7 +28,7 @@ function Reviewers({ people }: { people: Option[] }) {
 }
 function Owner({ people }: { people: Option[] }) {
   const [owner, setOwner] = React.useState<string | null>(people[1]?.value ?? people[0]?.value ?? null);
-  return <Field label="Owner"><Combobox options={people} value={owner} onValueChange={setOwner} clearable leftIcon="person" emptyText={people.length ? undefined : 'No team members yet'} /></Field>;
+  return <Field label="Owner"><Combobox options={people} value={owner} onValueChange={setOwner} clearable startIcon="person" emptyText={people.length ? undefined : 'No team members yet'} /></Field>;
 }
 
 export const Playground: Story = {};
@@ -70,7 +70,7 @@ export const SearchWithRecent: Story = {
     const search = (q: string) => { if (q.trim()) setRecent((r) => [q.trim(), ...r.filter((x) => x !== q.trim())].slice(0, 5)); };
     return <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 360 }}>
       <Field label="Search help articles">
-        <Combobox freeText leftIcon="search" filter={false} placeholder="Search help" value={text} onValueChange={setText} options={options}
+        <Combobox freeText startIcon="search" filter={false} placeholder="Search help" value={text} onValueChange={setText} options={options}
           emptyText={typed ? 'No suggestions' : 'No recent searches'}
           onKeyDown={(e) => { if (e.key === 'Enter') search(e.currentTarget.value); }} />
       </Field>
@@ -125,7 +125,7 @@ export const States: Story = {
   render: () => <Col>
     <Combobox aria-label="Empty" options={COUNTRIES} placeholder="Choose a country" />
     <Combobox aria-label="Chosen, clearable" options={COUNTRIES} defaultValue="Japan" clearable />
-    <Combobox aria-label="With an icon" options={COUNTRIES} defaultValue="Peru" leftIcon="public" />
+    <Combobox aria-label="With an icon" options={COUNTRIES} defaultValue="Peru" startIcon="public" />
     <Combobox aria-label="Invalid" options={COUNTRIES} defaultValue="Norway" invalid />
     <Combobox aria-label="Disabled" options={COUNTRIES} defaultValue="Egypt" disabled />
     <Combobox aria-label="Read-only" options={COUNTRIES} defaultValue="Canada" readOnly />

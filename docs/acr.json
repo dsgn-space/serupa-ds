@@ -15,7 +15,7 @@
       "name": "Non-text Content",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Icons inside controls are hidden from screen readers and the control carries the name: IconButton needs a `label`, Image needs `alt` (empty for decoration), Avatar is named by `name`. The app writes the alternative text."
+      "remarks": "Icons inside controls are hidden from screen readers and the control carries the name: IconButton needs a `label`, Image needs `alt` (empty for decoration), Avatar is named by `name`. Chart is named by its `title` or an `aria-label`, describes itself in a summary and names every point by its series, category and value; Sparkline and QRCode take a required name and are `role=\"img\"`; Illustration and IconTile are decorative unless given a `label`; Logo takes `alt`. The app writes the alternative text."
     },
     {
       "id": "1.2.1",
@@ -57,7 +57,7 @@
       "name": "Info and Relationships",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Components render native elements or the ARIA role their pattern needs; Field ties a control to its label, hint and error; Table marks headers with `scope`. The roles, names and structure of every story are compared with `tools/test/baseline-aria/` on each change."
+      "remarks": "Components render native elements or the ARIA role their pattern needs; Field ties a control to its label, hint and error; Table and DataGrid mark headers with `scope` and the grid roles; DescriptionList is a `<dl>`. The roles, names and structure of every story are compared with `tools/test/baseline-aria/` on each change."
     },
     {
       "id": "1.3.2",
@@ -85,14 +85,14 @@
       "name": "Identify Input Purpose",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Input and the fields built on it pass `autoComplete` to the native field, and PhoneInput sets `tel`, so autofill brings the saved number with its country code. The app sets the purpose of each field about the user."
+      "remarks": "Input and the fields built on it pass `autoComplete` to the native field, and PhoneInput sets `tel`, so autofill brings the saved number with its country code. The app sets the purpose of each field about the user; the Checkout, SignUp and Profile patterns show it, and Checkout's test checks every field about the person has its token."
     },
     {
       "id": "1.4.1",
       "name": "Use of Color",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "States are shown by more than color: check marks, icons, bars, underlines and words. The app's own content (charts, status dots, links in text) needs a second cue too."
+      "remarks": "States are shown by more than color: check marks, icons, bars, underlines and words, and in forced colors every selected, checked, pressed or current part still looks different from one that isn't (`src/internal/forcedColorStates.test.tsx`, every story). Chart gives each series its own marker shape or bar pattern, in the legend too. The app's own content (status dots, links in text) needs a second cue too."
     },
     {
       "id": "1.4.2",
@@ -106,7 +106,7 @@
       "name": "Contrast (Minimum)",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Text and placeholder colors meet 4.5:1 in every theme; the foundation check measures every pair, and axe runs on every story in every theme."
+      "remarks": "Text and placeholder colors meet 4.5:1 in every theme: the foundation check measures every pair in all 34 themes, brand text on its tint and on the status tints included, and axe runs on every story in the six themes with pictures and with more contrast on each change. For 17.0.0 axe also ran on every story added since 12.0.0 in all 34 themes; it found brand text on a tint at 4.3:1 to 4.4:1 in the Red, Fuchsia and Rose light themes, fixed by moving their `primary` to the 700 shade."
     },
     {
       "id": "1.4.4",
@@ -148,42 +148,42 @@
       "name": "Content on Hover or Focus",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Tooltip and HoverCard close with Escape, stay while the pointer moves onto them, and stay until the pointer or focus leaves."
+      "remarks": "Tooltip and HoverCard close with Escape, stay while the pointer moves onto them, and stay until the pointer or focus leaves; HoverCard's tests also cancel an open with Escape during its delay. ContextualHelp opens on a press, not on hover."
     },
     {
       "id": "2.1.1",
       "name": "Keyboard",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Every component works from the keyboard, as its ARIA Authoring Practices pattern expects; each guide has a Keyboard table and the tests drive it. Anything that can be dragged has a keyboard and click alternative."
+      "remarks": "Every component works from the keyboard, as its ARIA Authoring Practices pattern expects; each guide has a Keyboard table (`tools/test/keyboard-tables.mjs` checks every one has its keys) and the tests drive it. Anything that can be dragged has a keyboard and click alternative: Kanban's \"Move to…\", EventCalendar's Shift and the arrow keys, DataGrid's cell keys, TransferList's buttons."
     },
     {
       "id": "2.1.2",
       "name": "No Keyboard Trap",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Focus leaves every component with Tab. Dialog and Drawer keep focus inside while open, as a modal must, and close with Escape."
+      "remarks": "Focus leaves every component with Tab. Dialog, Drawer, Lightbox, CommandPalette and Tour keep focus inside while open, as a modal must, and close with Escape."
     },
     {
       "id": "2.1.4",
       "name": "Character Key Shortcuts",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "KeyboardShortcuts opens its help dialog on \"?\" by default, and useShortcut can set up other single character keys. The help dialog has a \"Single-key shortcuts\" switch that turns all of them off, kept for every page; shortcuts with a modifier and named keys such as F2 keep working. No other component reacts to a single character key on the page: type-ahead in menus, lists and trees works only while focus is in them."
+      "remarks": "KeyboardShortcuts opens its help dialog on \"?\" by default, and useShortcut can set up other single character keys. The help dialog has a \"Single-key shortcuts\" switch that turns all of them off, kept for every page; shortcuts with a modifier and named keys such as F2 keep working. CommandPalette opens with Ctrl or Command and K. No other component reacts to a single character key on the page: type-ahead in menus, lists and trees, and MentionInput's \"@\", work only while focus is inside them."
     },
     {
       "id": "2.2.1",
       "name": "Timing Adjustable",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "A toast's time stops while it's hovered or focused and while the window is in the background, and `autoDismiss: false` keeps one until it's closed. Session time-outs are the app's."
+      "remarks": "A toast's time stops while it's hovered or focused and while the window is in the background, and `autoDismiss: false` keeps one until it's closed. Session time-outs are the app's; the Session time-out pattern shows one that warns two minutes ahead, keeps the session while someone types, extends it from the warning, and keeps the draft when it ends anyway."
     },
     {
       "id": "2.2.2",
       "name": "Pause, Stop, Hide",
       "level": "A",
       "conformance": "Partially Supports",
-      "remarks": "Only what shows that work is under way or input is awaited moves on its own: Loader, an indeterminate Progress (bar or circle), a loading Switch's spinner, Image's sweep while it loads and PinInput's blinking caret, plus a Badge with `ping`. None has a pause control of its own, and each stops when the wait ends. Under reduced motion Image's sweep and PinInput's caret stop, Progress stands still, and Loader and Switch's spinner stand still or slowly breathe. RelativeTime updates its text by itself every 15 seconds and doesn't announce it. Keep `ping` for live states only."
+      "remarks": "Only what shows that work is under way or input is awaited moves on its own: Loader, an indeterminate Progress (bar or circle), a loading Switch's spinner, Image's sweep while it loads and PinInput's blinking caret, plus a Badge with `ping`. None has a pause control of its own, and each stops when the wait ends. Under reduced motion Image's sweep and PinInput's caret stop, Progress stands still, and Loader and Switch's spinner stand still or slowly breathe. RelativeTime updates its text by itself every 15 seconds and doesn't announce it. Keep `ping` for live states only. Countdown shows the time left changing each second, with no pause of its own; it's information that keeps changing while it shows, so the app shows one only where the deadline is the point (an offer or a session), or passes `seconds` to change it less often."
     },
     {
       "id": "2.3.1",
@@ -197,7 +197,7 @@
       "name": "Bypass Blocks",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "SkipLink gives a \"Skip to content\" link, and Navbar and Sidebar render navigation landmarks. The app places the skip link and the `main` landmark."
+      "remarks": "SkipLink gives a \"Skip to content\" link, and Navbar, Sidebar, BottomNav and TabNav render navigation landmarks; AppShell lays out the header, navigation and `main`. The app places the skip link and the `main` landmark; the patterns show it, with one `main`, one h1 and the skip link first, as their tests check."
     },
     {
       "id": "2.4.2",
@@ -211,7 +211,7 @@
       "name": "Focus Order",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Focus moves in reading order; Dialog, Drawer and Menu move focus in when they open and back to their trigger when they close."
+      "remarks": "Focus moves in reading order; Dialog, Drawer, Menu, Lightbox, CommandPalette and Tour move focus in when they open and back to their trigger when they close."
     },
     {
       "id": "2.4.4",
@@ -246,14 +246,14 @@
       "name": "Focus Not Obscured (Minimum)",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "A sticky Table header keeps the focused row in view (tested). The app's own sticky headers need `scroll-padding-top`."
+      "remarks": "A sticky Table, DataGrid or EventCalendar header keeps the focused row, cell or event in view below it (tested). While BottomNav, a bottom Toaster, OfflineBanner or a Fab shows, the page gets scroll padding at that edge, so focus scrolls clear of them. The app's own sticky headers need `scroll-padding-top`."
     },
     {
       "id": "2.5.1",
       "name": "Pointer Gestures",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Swiping a Carousel also works with its buttons and dots; no component needs a path or multipoint gesture."
+      "remarks": "Swiping a Carousel also works with its buttons and dots; SignaturePad, the one component that takes a drawn path, has a Type tab to sign by typing the name instead. No component needs a multipoint gesture."
     },
     {
       "id": "2.5.2",
@@ -281,14 +281,14 @@
       "name": "Dragging Movements",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Slider, Splitter, SortableList, Carousel and FileUpload all work without dragging; `tools/test/drag-alternatives.mjs` checks each draggable part has one."
+      "remarks": "Everything that can be dragged also works without dragging, by a press, a tap or the keys: Slider, Splitter, SortableList, Carousel, FileUpload, Kanban, EventCalendar, ImageCropper, SignaturePad, Table's column resize and the rest. `tools/test/drag-alternatives.mjs` finds every part that listens for a drag and names the test that shows its alternative."
     },
     {
       "id": "2.5.8",
       "name": "Target Size (Minimum)",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating's stars are 24px apart at every size, each taking presses over the whole step to its neighbours, and with `allowHalf` a star is still one target: where the press lands picks the half. A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
+      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating's stars are 24px apart at every size, each taking presses over the whole step to its neighbours, and with `allowHalf` a star is still one target: where the press lands picks the half. A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows. Every story is measured for it (`src/internal/targetSize.test.tsx`)."
     },
     {
       "id": "3.1.1",
@@ -386,14 +386,14 @@
       "name": "Name, Role, Value",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "Every control has a name, a role and states kept in step (`aria-expanded`, `aria-selected`, `aria-checked`, `aria-invalid`…), checked by the component tests and the ARIA baselines."
+      "remarks": "Every control has a name, a role and states kept in step (`aria-expanded`, `aria-selected`, `aria-checked`, `aria-invalid`…), checked by the component tests, the ARIA baselines and a name check over every story (`src/internal/nameCheck.test.tsx`)."
     },
     {
       "id": "4.1.3",
       "name": "Status Messages",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Loading, saving, toasts, counts and result changes are announced through live regions, which work inside an open Dialog too."
+      "remarks": "Loading, saving, toasts, counts and result changes are announced through live regions, which work inside an open Dialog too. OfflineBanner says when the connection drops and comes back, Countdown says the time left at a few steps (not every second), and TransferList, TagGroup, FieldList and Kanban say what moved or was removed."
     }
   ]
 }

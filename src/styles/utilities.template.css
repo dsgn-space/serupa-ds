@@ -10,101 +10,20 @@
 /* Registered custom properties stay outside the layer: @property rules apply page-wide either way. */
 @property --srp-duration { syntax: '*'; inherits: false; }
 @property --srp-ease { syntax: '*'; inherits: false; }
-@property --srp-gradient-position { syntax: '*'; inherits: false; }
-@property --srp-gradient-from { syntax: '<color>'; inherits: false; initial-value: #0000; }
-@property --srp-gradient-via { syntax: '<color>'; inherits: false; initial-value: #0000; }
-@property --srp-gradient-to { syntax: '<color>'; inherits: false; initial-value: #0000; }
-@property --srp-gradient-stops { syntax: '*'; inherits: false; }
-@property --srp-gradient-via-stops { syntax: '*'; inherits: false; }
-@property --srp-gradient-from-position { syntax: '<length-percentage>'; inherits: false; initial-value: 0%; }
-@property --srp-gradient-via-position { syntax: '<length-percentage>'; inherits: false; initial-value: 50%; }
-@property --srp-gradient-to-position { syntax: '<length-percentage>'; inherits: false; initial-value: 100%; }
-@property --srp-blur { syntax: '*'; inherits: false; }
-@property --srp-brightness { syntax: '*'; inherits: false; }
-@property --srp-contrast { syntax: '*'; inherits: false; }
-@property --srp-grayscale { syntax: '*'; inherits: false; }
-@property --srp-hue-rotate { syntax: '*'; inherits: false; }
-@property --srp-invert { syntax: '*'; inherits: false; }
-@property --srp-saturate { syntax: '*'; inherits: false; }
-@property --srp-sepia { syntax: '*'; inherits: false; }
-@property --srp-drop-shadow { syntax: '*'; inherits: false; }
-@property --srp-drop-shadow-color { syntax: '*'; inherits: false; }
-@property --srp-drop-shadow-size { syntax: '*'; inherits: false; }
-@property --srp-backdrop-blur { syntax: '*'; inherits: false; }
-@property --srp-backdrop-brightness { syntax: '*'; inherits: false; }
-@property --srp-backdrop-contrast { syntax: '*'; inherits: false; }
-@property --srp-backdrop-grayscale { syntax: '*'; inherits: false; }
-@property --srp-backdrop-hue-rotate { syntax: '*'; inherits: false; }
-@property --srp-backdrop-invert { syntax: '*'; inherits: false; }
-@property --srp-backdrop-opacity { syntax: '*'; inherits: false; }
-@property --srp-backdrop-saturate { syntax: '*'; inherits: false; }
-@property --srp-backdrop-sepia { syntax: '*'; inherits: false; }
 @property --srp-border-spacing-x { syntax: '<length>'; inherits: false; initial-value: 0; }
 @property --srp-border-spacing-y { syntax: '<length>'; inherits: false; initial-value: 0; }
-@property --srp-rotate-x { syntax: '*'; inherits: false; }
-@property --srp-rotate-y { syntax: '*'; inherits: false; }
-@property --srp-rotate-z { syntax: '*'; inherits: false; }
-@property --srp-skew-x { syntax: '*'; inherits: false; }
-@property --srp-skew-y { syntax: '*'; inherits: false; }
-@property --srp-scale-x { syntax: '*'; inherits: false; initial-value: 1; }
-@property --srp-scale-y { syntax: '*'; inherits: false; initial-value: 1; }
-@property --srp-scale-z { syntax: '*'; inherits: false; initial-value: 1; }
 @property --srp-translate-x { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-translate-y { syntax: '*'; inherits: false; initial-value: 0; }
-@property --srp-translate-z { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
 @property --srp-shadow-color { syntax: '*'; inherits: false; }
 @property --srp-inset-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
-@property --srp-inset-shadow-color { syntax: '*'; inherits: false; }
 @property --srp-ring-color { syntax: '*'; inherits: false; }
 @property --srp-ring-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
-@property --srp-inset-ring-color { syntax: '*'; inherits: false; }
 @property --srp-inset-ring-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
 @property --srp-ring-inset { syntax: '*'; inherits: false; }
 @property --srp-ring-offset-color { syntax: '*'; inherits: false; initial-value: #fff; }
 @property --srp-ring-offset-shadow { syntax: '*'; inherits: false; initial-value: 0 0 #0000; }
-@property --srp-text-shadow-color { syntax: '*'; inherits: false; }
 @property --srp-ring-offset-width { syntax: '<length>'; inherits: false; initial-value: 0px; }
-@property --srp-mask-linear { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-radial { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-conic { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-top { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-right { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-bottom { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-left { syntax: '*'; inherits: false; initial-value: linear-gradient(#fff, #fff); }
-@property --srp-mask-t-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-t-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-t-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-t-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-r-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-r-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-r-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-r-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-b-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-b-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-b-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-b-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-l-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-l-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-l-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-l-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-linear-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-linear-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-linear-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-linear-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-radial-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-radial-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-radial-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-radial-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-conic-from-p { syntax: '*'; inherits: false; initial-value: 0%; }
-@property --srp-mask-conic-to-p { syntax: '*'; inherits: false; initial-value: 100%; }
-@property --srp-mask-conic-from-c { syntax: '*'; inherits: false; initial-value: black; }
-@property --srp-mask-conic-to-c { syntax: '*'; inherits: false; initial-value: transparent; }
-@property --srp-mask-linear-position { syntax: '*'; inherits: false; initial-value: 0deg; }
-@property --srp-mask-conic-position { syntax: '*'; inherits: false; initial-value: 0deg; }
-@property --srp-mask-radial-shape { syntax: '*'; inherits: false; initial-value: ellipse; }
-@property --srp-mask-radial-size { syntax: '*'; inherits: false; initial-value: farthest-corner; }
-@property --srp-mask-radial-position { syntax: '*'; inherits: false; initial-value: center; }
 @property --srp-pan-x { syntax: '*'; inherits: false; }
 @property --srp-pan-y { syntax: '*'; inherits: false; }
 @property --srp-pinch-zoom { syntax: '*'; inherits: false; }
@@ -123,13 +42,10 @@
 @property --srp-divide-x-reverse { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-divide-y-reverse { syntax: '*'; inherits: false; initial-value: 0; }
 @property --srp-tracking { syntax: '*'; inherits: false }
-@property --srp-shadow-alpha { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
-@property --srp-inset-shadow-alpha { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
 @property --srp-contain-size { syntax: '*'; inherits: false }
 @property --srp-contain-layout { syntax: '*'; inherits: false }
 @property --srp-contain-paint { syntax: '*'; inherits: false }
 @property --srp-contain-style { syntax: '*'; inherits: false }
-@property --srp-text-shadow-alpha { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
 
 @layer srp.utilities {
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -256,32 +172,6 @@
   .aspect-{k} { aspect-ratio: var(--{t}); }
 }
 
-/* Columns (count and width) */
-.columns-1 { columns: 1; }
-.columns-2 { columns: 2; }
-.columns-3 { columns: 3; }
-.columns-4 { columns: 4; }
-.columns-5 { columns: 5; }
-.columns-6 { columns: 6; }
-.columns-7 { columns: 7; }
-.columns-8 { columns: 8; }
-.columns-9 { columns: 9; }
-.columns-10 { columns: 10; }
-.columns-11 { columns: 11; }
-.columns-12 { columns: 12; }
-.columns-3xs { columns: var(--columns-3xs); }
-.columns-2xs { columns: var(--columns-2xs); }
-.columns-xs { columns: var(--columns-xs); }
-.columns-sm { columns: var(--columns-sm); }
-.columns-md { columns: var(--columns-md); }
-.columns-lg { columns: var(--columns-lg); }
-.columns-xl { columns: var(--columns-xl); }
-.columns-2xl { columns: var(--columns-2xl); }
-.columns-3xl { columns: var(--columns-3xl); }
-.columns-4xl { columns: var(--columns-4xl); }
-.columns-5xl { columns: var(--columns-5xl); }
-.columns-6xl { columns: var(--columns-6xl); }
-.columns-7xl { columns: var(--columns-7xl); }
 
 /* Overflow and overscroll */
 .overflow-auto { overflow: auto; }
@@ -716,7 +606,6 @@
 @each spacing- not(0) {
   .-ml-{k} { margin-left: calc(var(--{t}) * -1); }
 }
-/* Space between children: margin on every child except the last  */
 
 /* ---------------------------------------------------------------
    Flexbox and grid utilities.
@@ -1221,7 +1110,7 @@
 .text-justify { text-align: justify; }
 .text-start { text-align: start; }
 .text-end { text-align: end; }
-/* color (palette and aliases) */
+/* color (the role colors, white and black) */
 .text-inherit { color: inherit; }
 .text-current { color: currentColor; }
 .text-transparent { color: transparent; }
@@ -1277,11 +1166,6 @@
   .indent-{k} { text-indent: var(--{t}); }
   .-indent-{k} { text-indent: calc(var(--{t}) * -1); }
 }
-/* tab-size */
-.tab-0 { tab-size: 0; }
-@each tab- {
-  .tab-{k} { tab-size: var(--{t}); }
-}
 /* vertical-align */
 .align-baseline { vertical-align: baseline; }
 .align-top { vertical-align: top; }
@@ -1315,7 +1199,7 @@
 
 /* ---------------------------------------------------------------
    Backgrounds: Background utilities.
-   Colors come from the palette and alias tokens; gradients use from-/via-/to- stops.
+   Colors are the role colors (bg-surface, bg-primary), white and black.
    --------------------------------------------------------------- */
 
 /* background-attachment */
@@ -1354,127 +1238,8 @@
 .bg-surface { --srp-row-hover: var(--surface-hover); }
 .bg-surface-raised { --srp-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
 .bg-surface-overlay { --srp-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
-/* background-image: none and gradients */
+/* background-image: none */
 .bg-none { background-image: none; }
-.bg-linear-to-t { --srp-gradient-position: to top in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-tr { --srp-gradient-position: to top right in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-r { --srp-gradient-position: to right in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-br { --srp-gradient-position: to bottom right in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-b { --srp-gradient-position: to bottom in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-bl { --srp-gradient-position: to bottom left in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-l { --srp-gradient-position: to left in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-to-tl { --srp-gradient-position: to top left in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-0 { --srp-gradient-position: 0deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-0 { --srp-gradient-position: -0deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-45 { --srp-gradient-position: 45deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-45 { --srp-gradient-position: -45deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-90 { --srp-gradient-position: 90deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-90 { --srp-gradient-position: -90deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-135 { --srp-gradient-position: 135deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-135 { --srp-gradient-position: -135deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-180 { --srp-gradient-position: 180deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-180 { --srp-gradient-position: -180deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-225 { --srp-gradient-position: 225deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-225 { --srp-gradient-position: -225deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-270 { --srp-gradient-position: 270deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-270 { --srp-gradient-position: -270deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-315 { --srp-gradient-position: 315deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-315 { --srp-gradient-position: -315deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-radial { --srp-gradient-position: in oklab; background-image: radial-gradient(var(--srp-gradient-stops)); }
-.bg-conic { --srp-gradient-position: in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-0 { --srp-gradient-position: from 0deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-45 { --srp-gradient-position: from 45deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-90 { --srp-gradient-position: from 90deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-135 { --srp-gradient-position: from 135deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-180 { --srp-gradient-position: from 180deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-225 { --srp-gradient-position: from 225deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-270 { --srp-gradient-position: from 270deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-315 { --srp-gradient-position: from 315deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-/* gradient color stops: a via- color adds a middle stop */
-[class^="from-"], [class*=" from-"], [class^="via-"], [class*=" via-"], [class^="to-"], [class*=" to-"] { --srp-gradient-stops: var(--srp-gradient-via-stops, var(--srp-gradient-position), var(--srp-gradient-from) var(--srp-gradient-from-position), var(--srp-gradient-to) var(--srp-gradient-to-position)); }
-[class^="via-"], [class*=" via-"] { --srp-gradient-via-stops: var(--srp-gradient-position), var(--srp-gradient-from) var(--srp-gradient-from-position), var(--srp-gradient-via) var(--srp-gradient-via-position), var(--srp-gradient-to) var(--srp-gradient-to-position); }
-.from-inherit { --srp-gradient-from: inherit; }
-.from-current { --srp-gradient-from: currentColor; }
-.from-transparent { --srp-gradient-from: transparent; }
-@each color {
-  .from-{k} { --srp-gradient-from: var(--{t}); }
-}
-.via-inherit { --srp-gradient-via: inherit; }
-.via-current { --srp-gradient-via: currentColor; }
-.via-transparent { --srp-gradient-via: transparent; }
-@each color {
-  .via-{k} { --srp-gradient-via: var(--{t}); }
-}
-.to-inherit { --srp-gradient-to: inherit; }
-.to-current { --srp-gradient-to: currentColor; }
-.to-transparent { --srp-gradient-to: transparent; }
-@each color {
-  .to-{k} { --srp-gradient-to: var(--{t}); }
-}
-/* gradient stop positions */
-.from-0\% { --srp-gradient-from-position: 0%; }
-.from-5\% { --srp-gradient-from-position: 5%; }
-.from-10\% { --srp-gradient-from-position: 10%; }
-.from-15\% { --srp-gradient-from-position: 15%; }
-.from-20\% { --srp-gradient-from-position: 20%; }
-.from-25\% { --srp-gradient-from-position: 25%; }
-.from-30\% { --srp-gradient-from-position: 30%; }
-.from-35\% { --srp-gradient-from-position: 35%; }
-.from-40\% { --srp-gradient-from-position: 40%; }
-.from-45\% { --srp-gradient-from-position: 45%; }
-.from-50\% { --srp-gradient-from-position: 50%; }
-.from-55\% { --srp-gradient-from-position: 55%; }
-.from-60\% { --srp-gradient-from-position: 60%; }
-.from-65\% { --srp-gradient-from-position: 65%; }
-.from-70\% { --srp-gradient-from-position: 70%; }
-.from-75\% { --srp-gradient-from-position: 75%; }
-.from-80\% { --srp-gradient-from-position: 80%; }
-.from-85\% { --srp-gradient-from-position: 85%; }
-.from-90\% { --srp-gradient-from-position: 90%; }
-.from-95\% { --srp-gradient-from-position: 95%; }
-.from-100\% { --srp-gradient-from-position: 100%; }
-.via-0\% { --srp-gradient-via-position: 0%; }
-.via-5\% { --srp-gradient-via-position: 5%; }
-.via-10\% { --srp-gradient-via-position: 10%; }
-.via-15\% { --srp-gradient-via-position: 15%; }
-.via-20\% { --srp-gradient-via-position: 20%; }
-.via-25\% { --srp-gradient-via-position: 25%; }
-.via-30\% { --srp-gradient-via-position: 30%; }
-.via-35\% { --srp-gradient-via-position: 35%; }
-.via-40\% { --srp-gradient-via-position: 40%; }
-.via-45\% { --srp-gradient-via-position: 45%; }
-.via-50\% { --srp-gradient-via-position: 50%; }
-.via-55\% { --srp-gradient-via-position: 55%; }
-.via-60\% { --srp-gradient-via-position: 60%; }
-.via-65\% { --srp-gradient-via-position: 65%; }
-.via-70\% { --srp-gradient-via-position: 70%; }
-.via-75\% { --srp-gradient-via-position: 75%; }
-.via-80\% { --srp-gradient-via-position: 80%; }
-.via-85\% { --srp-gradient-via-position: 85%; }
-.via-90\% { --srp-gradient-via-position: 90%; }
-.via-95\% { --srp-gradient-via-position: 95%; }
-.via-100\% { --srp-gradient-via-position: 100%; }
-.to-0\% { --srp-gradient-to-position: 0%; }
-.to-5\% { --srp-gradient-to-position: 5%; }
-.to-10\% { --srp-gradient-to-position: 10%; }
-.to-15\% { --srp-gradient-to-position: 15%; }
-.to-20\% { --srp-gradient-to-position: 20%; }
-.to-25\% { --srp-gradient-to-position: 25%; }
-.to-30\% { --srp-gradient-to-position: 30%; }
-.to-35\% { --srp-gradient-to-position: 35%; }
-.to-40\% { --srp-gradient-to-position: 40%; }
-.to-45\% { --srp-gradient-to-position: 45%; }
-.to-50\% { --srp-gradient-to-position: 50%; }
-.to-55\% { --srp-gradient-to-position: 55%; }
-.to-60\% { --srp-gradient-to-position: 60%; }
-.to-65\% { --srp-gradient-to-position: 65%; }
-.to-70\% { --srp-gradient-to-position: 70%; }
-.to-75\% { --srp-gradient-to-position: 75%; }
-.to-80\% { --srp-gradient-to-position: 80%; }
-.to-85\% { --srp-gradient-to-position: 85%; }
-.to-90\% { --srp-gradient-to-position: 90%; }
-.to-95\% { --srp-gradient-to-position: 95%; }
-.to-100\% { --srp-gradient-to-position: 100%; }
 /* background-origin */
 .bg-origin-border { background-origin: border-box; }
 .bg-origin-padding { background-origin: padding-box; }
@@ -1613,72 +1378,12 @@
   .border-l-{k} { border-left-style: var(--srp-border-style, solid); border-left-width: var(--{t}); }
 }
 /* divide widths: see "Spacing between children and dividers" further down */
-/* border-color: every palette color and alias, on every side */
+/* border-color: every role color, white and black, on every side */
 .border-inherit { border-color: inherit; }
 .border-current { border-color: currentColor; }
 .border-transparent { border-color: transparent; }
 @each color {
   .border-{k} { border-color: var(--{t}); }
-}
-.border-x-inherit { border-inline-color: inherit; }
-.border-x-current { border-inline-color: currentColor; }
-.border-x-transparent { border-inline-color: transparent; }
-@each color {
-  .border-x-{k} { border-inline-color: var(--{t}); }
-}
-.border-y-inherit { border-block-color: inherit; }
-.border-y-current { border-block-color: currentColor; }
-.border-y-transparent { border-block-color: transparent; }
-@each color {
-  .border-y-{k} { border-block-color: var(--{t}); }
-}
-.border-s-inherit { border-inline-start-color: inherit; }
-.border-s-current { border-inline-start-color: currentColor; }
-.border-s-transparent { border-inline-start-color: transparent; }
-@each color {
-  .border-s-{k} { border-inline-start-color: var(--{t}); }
-}
-.border-e-inherit { border-inline-end-color: inherit; }
-.border-e-current { border-inline-end-color: currentColor; }
-.border-e-transparent { border-inline-end-color: transparent; }
-@each color {
-  .border-e-{k} { border-inline-end-color: var(--{t}); }
-}
-.border-bs-inherit { border-block-start-color: inherit; }
-.border-bs-current { border-block-start-color: currentColor; }
-.border-bs-transparent { border-block-start-color: transparent; }
-@each color {
-  .border-bs-{k} { border-block-start-color: var(--{t}); }
-}
-.border-be-inherit { border-block-end-color: inherit; }
-.border-be-current { border-block-end-color: currentColor; }
-.border-be-transparent { border-block-end-color: transparent; }
-@each color {
-  .border-be-{k} { border-block-end-color: var(--{t}); }
-}
-.border-t-inherit { border-top-color: inherit; }
-.border-t-current { border-top-color: currentColor; }
-.border-t-transparent { border-top-color: transparent; }
-@each color {
-  .border-t-{k} { border-top-color: var(--{t}); }
-}
-.border-r-inherit { border-right-color: inherit; }
-.border-r-current { border-right-color: currentColor; }
-.border-r-transparent { border-right-color: transparent; }
-@each color {
-  .border-r-{k} { border-right-color: var(--{t}); }
-}
-.border-b-inherit { border-bottom-color: inherit; }
-.border-b-current { border-bottom-color: currentColor; }
-.border-b-transparent { border-bottom-color: transparent; }
-@each color {
-  .border-b-{k} { border-bottom-color: var(--{t}); }
-}
-.border-l-inherit { border-left-color: inherit; }
-.border-l-current { border-left-color: currentColor; }
-.border-l-transparent { border-left-color: transparent; }
-@each color {
-  .border-l-{k} { border-left-color: var(--{t}); }
 }
 .divide-inherit > :not(:last-child) { border-color: inherit; }
 .divide-current > :not(:last-child) { border-color: currentColor; }
@@ -1727,139 +1432,6 @@
   .-outline-offset-{k} { outline-offset: calc(var(--{t}) * -1); }
 }
 /* ---------------------------------------------------------------
-   Filters: Filter and backdrop-filter utilities.
-   Tokens: blur-*, drop-shadow-*, brightness-*, contrast-*, saturate-*, hue-rotate-*, opacity-*.
-   Classes combine: "blur-sm grayscale" applies both. Each part lives in its own
-   --srp-* variable, registered so it doesn't inherit into children.
-   --------------------------------------------------------------- */
-
-/* blur */
-@each blur- {
-  .blur-{k} { --srp-blur: blur(var(--{t})); }
-}
-.blur-none { --srp-blur: initial; }
-/* brightness */
-@each brightness- {
-  .brightness-{k} { --srp-brightness: brightness(var(--{t})); }
-}
-/* contrast */
-@each contrast- {
-  .contrast-{k} { --srp-contrast: contrast(var(--{t})); }
-}
-/* grayscale */
-.grayscale { --srp-grayscale: grayscale(100%); }
-.grayscale-0 { --srp-grayscale: grayscale(0%); }
-.grayscale-25 { --srp-grayscale: grayscale(25%); }
-.grayscale-50 { --srp-grayscale: grayscale(50%); }
-.grayscale-75 { --srp-grayscale: grayscale(75%); }
-.grayscale-100 { --srp-grayscale: grayscale(100%); }
-/* invert */
-.invert { --srp-invert: invert(100%); }
-.invert-0 { --srp-invert: invert(0%); }
-.invert-25 { --srp-invert: invert(25%); }
-.invert-50 { --srp-invert: invert(50%); }
-.invert-75 { --srp-invert: invert(75%); }
-.invert-100 { --srp-invert: invert(100%); }
-/* sepia */
-.sepia { --srp-sepia: sepia(100%); }
-.sepia-0 { --srp-sepia: sepia(0%); }
-.sepia-25 { --srp-sepia: sepia(25%); }
-.sepia-50 { --srp-sepia: sepia(50%); }
-.sepia-75 { --srp-sepia: sepia(75%); }
-.sepia-100 { --srp-sepia: sepia(100%); }
-/* hue-rotate */
-.hue-rotate-0 { --srp-hue-rotate: hue-rotate(var(--hue-rotate-0)); }
-@each hue- not(rotate-0) {
-  .hue-{k} { --srp-hue-rotate: hue-rotate(var(--{t})); }
-  .-hue-{k} { --srp-hue-rotate: hue-rotate(calc(var(--{t}) * -1)); }
-}
-/* saturate */
-@each saturate- {
-  .saturate-{k} { --srp-saturate: saturate(var(--{t})); }
-}
-/* drop-shadow (default values match the drop-shadow-* tokens; a color class swaps the black for a color) */
-.drop-shadow-xs { --srp-drop-shadow-size: drop-shadow(0 1px 1px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.05))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-sm { --srp-drop-shadow-size: drop-shadow(0 1px 2px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.15))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-md { --srp-drop-shadow-size: drop-shadow(0 3px 3px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.12))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-lg { --srp-drop-shadow-size: drop-shadow(0 4px 4px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.15))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-xl { --srp-drop-shadow-size: drop-shadow(0 9px 7px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.1))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-2xl { --srp-drop-shadow-size: drop-shadow(0 25px 25px var(--srp-drop-shadow-color, rgb(0 0 0 / 0.15))); --srp-drop-shadow: var(--srp-drop-shadow-size); }
-.drop-shadow-none { --srp-drop-shadow: initial; }
-/* drop-shadow color */
-.drop-shadow-inherit { --srp-drop-shadow-color: inherit; }
-.drop-shadow-current { --srp-drop-shadow-color: currentColor; }
-.drop-shadow-transparent { --srp-drop-shadow-color: transparent; }
-@each color {
-  .drop-shadow-{k} { --srp-drop-shadow-color: var(--{t}); }
-}
-/* backdrop-blur */
-@each blur- {
-  .backdrop-blur-{k} { --srp-backdrop-blur: blur(var(--{t})); }
-}
-.backdrop-blur-none { --srp-backdrop-blur: initial; }
-/* backdrop-brightness */
-@each brightness- {
-  .backdrop-brightness-{k} { --srp-backdrop-brightness: brightness(var(--{t})); }
-}
-/* backdrop-contrast */
-@each contrast- {
-  .backdrop-contrast-{k} { --srp-backdrop-contrast: contrast(var(--{t})); }
-}
-/* backdrop-grayscale */
-.backdrop-grayscale { --srp-backdrop-grayscale: grayscale(100%); }
-.backdrop-grayscale-0 { --srp-backdrop-grayscale: grayscale(0%); }
-.backdrop-grayscale-25 { --srp-backdrop-grayscale: grayscale(25%); }
-.backdrop-grayscale-50 { --srp-backdrop-grayscale: grayscale(50%); }
-.backdrop-grayscale-75 { --srp-backdrop-grayscale: grayscale(75%); }
-.backdrop-grayscale-100 { --srp-backdrop-grayscale: grayscale(100%); }
-/* backdrop-invert */
-.backdrop-invert { --srp-backdrop-invert: invert(100%); }
-.backdrop-invert-0 { --srp-backdrop-invert: invert(0%); }
-.backdrop-invert-25 { --srp-backdrop-invert: invert(25%); }
-.backdrop-invert-50 { --srp-backdrop-invert: invert(50%); }
-.backdrop-invert-75 { --srp-backdrop-invert: invert(75%); }
-.backdrop-invert-100 { --srp-backdrop-invert: invert(100%); }
-/* backdrop-sepia */
-.backdrop-sepia { --srp-backdrop-sepia: sepia(100%); }
-.backdrop-sepia-0 { --srp-backdrop-sepia: sepia(0%); }
-.backdrop-sepia-25 { --srp-backdrop-sepia: sepia(25%); }
-.backdrop-sepia-50 { --srp-backdrop-sepia: sepia(50%); }
-.backdrop-sepia-75 { --srp-backdrop-sepia: sepia(75%); }
-.backdrop-sepia-100 { --srp-backdrop-sepia: sepia(100%); }
-/* backdrop-hue-rotate */
-.backdrop-hue-rotate-0 { --srp-backdrop-hue-rotate: hue-rotate(var(--hue-rotate-0)); }
-@each hue- not(rotate-0) {
-  .backdrop-hue-{k} { --srp-backdrop-hue-rotate: hue-rotate(var(--{t})); }
-  .-backdrop-hue-{k} { --srp-backdrop-hue-rotate: hue-rotate(calc(var(--{t}) * -1)); }
-}
-/* backdrop-saturate */
-@each saturate- {
-  .backdrop-saturate-{k} { --srp-backdrop-saturate: saturate(var(--{t})); }
-}
-/* backdrop-opacity */
-.backdrop-opacity-0 { --srp-backdrop-opacity: opacity(var(--opacity-0)); }
-.backdrop-opacity-5 { --srp-backdrop-opacity: opacity(var(--opacity-5)); }
-.backdrop-opacity-10 { --srp-backdrop-opacity: opacity(var(--opacity-10)); }
-.backdrop-opacity-15 { --srp-backdrop-opacity: opacity(var(--opacity-15)); }
-.backdrop-opacity-20 { --srp-backdrop-opacity: opacity(var(--opacity-20)); }
-.backdrop-opacity-25 { --srp-backdrop-opacity: opacity(var(--opacity-25)); }
-.backdrop-opacity-30 { --srp-backdrop-opacity: opacity(var(--opacity-30)); }
-.backdrop-opacity-40 { --srp-backdrop-opacity: opacity(var(--opacity-40)); }
-.backdrop-opacity-50 { --srp-backdrop-opacity: opacity(var(--opacity-50)); }
-.backdrop-opacity-60 { --srp-backdrop-opacity: opacity(var(--opacity-60)); }
-.backdrop-opacity-70 { --srp-backdrop-opacity: opacity(var(--opacity-70)); }
-.backdrop-opacity-75 { --srp-backdrop-opacity: opacity(var(--opacity-75)); }
-.backdrop-opacity-80 { --srp-backdrop-opacity: opacity(var(--opacity-80)); }
-.backdrop-opacity-90 { --srp-backdrop-opacity: opacity(var(--opacity-90)); }
-.backdrop-opacity-95 { --srp-backdrop-opacity: opacity(var(--opacity-95)); }
-.backdrop-opacity-100 { --srp-backdrop-opacity: opacity(var(--opacity-100)); }
-/* Each class above sets one --srp-* part; these rules assemble the parts. */
-.blur-xs, .blur-sm, .blur-md, .blur-lg, .blur-xl, .blur-2xl, .blur-3xl, .blur-none, .brightness-0, .brightness-50, .brightness-75, .brightness-90, .brightness-95, .brightness-100, .brightness-105, .brightness-110, .brightness-125, .brightness-150, .brightness-200, .contrast-0, .contrast-50, .contrast-75, .contrast-100, .contrast-125, .contrast-150, .contrast-200, .grayscale, .grayscale-0, .grayscale-25, .grayscale-50, .grayscale-75, .grayscale-100, .invert, .invert-0, .invert-25, .invert-50, .invert-75, .invert-100, .sepia, .sepia-0, .sepia-25, .sepia-50, .sepia-75, .sepia-100, .hue-rotate-0, .hue-rotate-15, .-hue-rotate-15, .hue-rotate-30, .-hue-rotate-30, .hue-rotate-60, .-hue-rotate-60, .hue-rotate-90, .-hue-rotate-90, .hue-rotate-180, .-hue-rotate-180, .saturate-0, .saturate-50, .saturate-100, .saturate-150, .saturate-200, .drop-shadow-xs, .drop-shadow-sm, .drop-shadow-md, .drop-shadow-lg, .drop-shadow-xl, .drop-shadow-2xl, .drop-shadow-none { filter: var(--srp-blur, ) var(--srp-brightness, ) var(--srp-contrast, ) var(--srp-grayscale, ) var(--srp-hue-rotate, ) var(--srp-invert, ) var(--srp-saturate, ) var(--srp-sepia, ) var(--srp-drop-shadow, ); }
-.backdrop-blur-xs, .backdrop-blur-sm, .backdrop-blur-md, .backdrop-blur-lg, .backdrop-blur-xl, .backdrop-blur-2xl, .backdrop-blur-3xl, .backdrop-blur-none, .backdrop-brightness-0, .backdrop-brightness-50, .backdrop-brightness-75, .backdrop-brightness-90, .backdrop-brightness-95, .backdrop-brightness-100, .backdrop-brightness-105, .backdrop-brightness-110, .backdrop-brightness-125, .backdrop-brightness-150, .backdrop-brightness-200, .backdrop-contrast-0, .backdrop-contrast-50, .backdrop-contrast-75, .backdrop-contrast-100, .backdrop-contrast-125, .backdrop-contrast-150, .backdrop-contrast-200, .backdrop-grayscale, .backdrop-grayscale-0, .backdrop-grayscale-25, .backdrop-grayscale-50, .backdrop-grayscale-75, .backdrop-grayscale-100, .backdrop-invert, .backdrop-invert-0, .backdrop-invert-25, .backdrop-invert-50, .backdrop-invert-75, .backdrop-invert-100, .backdrop-sepia, .backdrop-sepia-0, .backdrop-sepia-25, .backdrop-sepia-50, .backdrop-sepia-75, .backdrop-sepia-100, .backdrop-hue-rotate-0, .backdrop-hue-rotate-15, .-backdrop-hue-rotate-15, .backdrop-hue-rotate-30, .-backdrop-hue-rotate-30, .backdrop-hue-rotate-60, .-backdrop-hue-rotate-60, .backdrop-hue-rotate-90, .-backdrop-hue-rotate-90, .backdrop-hue-rotate-180, .-backdrop-hue-rotate-180, .backdrop-saturate-0, .backdrop-saturate-50, .backdrop-saturate-100, .backdrop-saturate-150, .backdrop-saturate-200, .backdrop-opacity-0, .backdrop-opacity-5, .backdrop-opacity-10, .backdrop-opacity-15, .backdrop-opacity-20, .backdrop-opacity-25, .backdrop-opacity-30, .backdrop-opacity-40, .backdrop-opacity-50, .backdrop-opacity-85, .backdrop-opacity-65, .backdrop-opacity-55, .backdrop-opacity-45, .backdrop-opacity-35, .backdrop-opacity-60, .backdrop-opacity-70, .backdrop-opacity-75, .backdrop-opacity-80, .backdrop-opacity-90, .backdrop-opacity-95, .backdrop-opacity-100 { -webkit-backdrop-filter: var(--srp-backdrop-blur, ) var(--srp-backdrop-brightness, ) var(--srp-backdrop-contrast, ) var(--srp-backdrop-grayscale, ) var(--srp-backdrop-hue-rotate, ) var(--srp-backdrop-invert, ) var(--srp-backdrop-opacity, ) var(--srp-backdrop-saturate, ) var(--srp-backdrop-sepia, ); backdrop-filter: var(--srp-backdrop-blur, ) var(--srp-backdrop-brightness, ) var(--srp-backdrop-contrast, ) var(--srp-backdrop-grayscale, ) var(--srp-backdrop-hue-rotate, ) var(--srp-backdrop-invert, ) var(--srp-backdrop-opacity, ) var(--srp-backdrop-saturate, ) var(--srp-backdrop-sepia, ); }
-/* Turn every filter off (after the rules above, so they win) */
-.filter-none { filter: none; }
-.backdrop-filter-none { -webkit-backdrop-filter: none; backdrop-filter: none; }
-/* ---------------------------------------------------------------
    Tables: Table utilities.
    border-spacing uses the spacing tokens (spacing-*); the rest are keywords.
    --------------------------------------------------------------- */
@@ -1886,521 +1458,181 @@
 .caption-top { caption-side: top; }
 .caption-bottom { caption-side: bottom; }
 /* ---------------------------------------------------------------
-   Transforms: Transform utilities.
-   Tokens: perspective-*, rotate-*, scale-*, skew-*, zoom-*; translate uses spacing-*.
-   rotate, scale and translate use the individual CSS properties, so they combine
-   with each other and with rotate-x/y/z and skew (which build "transform").
+   Transforms: translate only (17.0.0 dropped rotate, scale, skew, perspective and zoom: nothing
+   used them; write those in the app's own CSS). translate uses spacing-*.
    --------------------------------------------------------------- */
-
-/* backface-visibility */
-.backface-visible { backface-visibility: visible; }
-.backface-hidden { backface-visibility: hidden; }
-/* perspective */
-@each perspective- {
-  .perspective-{k} { perspective: var(--{t}); }
-}
-.perspective-none { perspective: none; }
-/* perspective-origin */
-.perspective-origin-center { perspective-origin: center; }
-.perspective-origin-top { perspective-origin: top; }
-.perspective-origin-top-right { perspective-origin: top right; }
-.perspective-origin-right { perspective-origin: right; }
-.perspective-origin-bottom-right { perspective-origin: bottom right; }
-.perspective-origin-bottom { perspective-origin: bottom; }
-.perspective-origin-bottom-left { perspective-origin: bottom left; }
-.perspective-origin-left { perspective-origin: left; }
-.perspective-origin-top-left { perspective-origin: top left; }
-/* rotate */
-.rotate-none { rotate: none; }
-.rotate-0 { rotate: var(--rotate-0); }
-@each rotate- not(0) {
-  .rotate-{k} { rotate: var(--{t}); }
-  .-rotate-{k} { rotate: calc(var(--{t}) * -1); }
-}
-/* rotate-x / rotate-y / rotate-z (3D; pair with perspective-*) */
-.rotate-x-0 { --srp-rotate-x: rotateX(var(--rotate-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-@each rotate- not(0) {
-  .rotate-x-{k} { --srp-rotate-x: rotateX(var(--{t})); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-  .-rotate-x-{k} { --srp-rotate-x: rotateX(calc(var(--{t}) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-}
-.rotate-y-0 { --srp-rotate-y: rotateY(var(--rotate-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-@each rotate- not(0) {
-  .rotate-y-{k} { --srp-rotate-y: rotateY(var(--{t})); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-  .-rotate-y-{k} { --srp-rotate-y: rotateY(calc(var(--{t}) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-}
-.rotate-z-0 { --srp-rotate-z: rotateZ(var(--rotate-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-@each rotate- not(0) {
-  .rotate-z-{k} { --srp-rotate-z: rotateZ(var(--{t})); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-  .-rotate-z-{k} { --srp-rotate-z: rotateZ(calc(var(--{t}) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-}
-/* scale (negative values mirror: -scale-x-100 flips horizontally) */
-.scale-none { scale: none; }
-.scale-3d { scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-0 { --srp-scale-x: var(--scale-0); --srp-scale-y: var(--scale-0); --srp-scale-z: var(--scale-0); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-0 { --srp-scale-x: var(--scale-0); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-0 { --srp-scale-y: var(--scale-0); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-0 { --srp-scale-z: var(--scale-0); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-50 { --srp-scale-x: var(--scale-50); --srp-scale-y: var(--scale-50); --srp-scale-z: var(--scale-50); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-50 { --srp-scale-x: var(--scale-50); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-50 { --srp-scale-y: var(--scale-50); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-50 { --srp-scale-z: var(--scale-50); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-50 { --srp-scale-x: calc(var(--scale-50) * -1); --srp-scale-y: calc(var(--scale-50) * -1); --srp-scale-z: calc(var(--scale-50) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-50 { --srp-scale-x: calc(var(--scale-50) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-50 { --srp-scale-y: calc(var(--scale-50) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-50 { --srp-scale-z: calc(var(--scale-50) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-75 { --srp-scale-x: var(--scale-75); --srp-scale-y: var(--scale-75); --srp-scale-z: var(--scale-75); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-75 { --srp-scale-x: var(--scale-75); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-75 { --srp-scale-y: var(--scale-75); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-75 { --srp-scale-z: var(--scale-75); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-75 { --srp-scale-x: calc(var(--scale-75) * -1); --srp-scale-y: calc(var(--scale-75) * -1); --srp-scale-z: calc(var(--scale-75) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-75 { --srp-scale-x: calc(var(--scale-75) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-75 { --srp-scale-y: calc(var(--scale-75) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-75 { --srp-scale-z: calc(var(--scale-75) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-90 { --srp-scale-x: var(--scale-90); --srp-scale-y: var(--scale-90); --srp-scale-z: var(--scale-90); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-90 { --srp-scale-x: var(--scale-90); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-90 { --srp-scale-y: var(--scale-90); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-90 { --srp-scale-z: var(--scale-90); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-90 { --srp-scale-x: calc(var(--scale-90) * -1); --srp-scale-y: calc(var(--scale-90) * -1); --srp-scale-z: calc(var(--scale-90) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-90 { --srp-scale-x: calc(var(--scale-90) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-90 { --srp-scale-y: calc(var(--scale-90) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-90 { --srp-scale-z: calc(var(--scale-90) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-95 { --srp-scale-x: var(--scale-95); --srp-scale-y: var(--scale-95); --srp-scale-z: var(--scale-95); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-95 { --srp-scale-x: var(--scale-95); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-95 { --srp-scale-y: var(--scale-95); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-95 { --srp-scale-z: var(--scale-95); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-95 { --srp-scale-x: calc(var(--scale-95) * -1); --srp-scale-y: calc(var(--scale-95) * -1); --srp-scale-z: calc(var(--scale-95) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-95 { --srp-scale-x: calc(var(--scale-95) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-95 { --srp-scale-y: calc(var(--scale-95) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-95 { --srp-scale-z: calc(var(--scale-95) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-97 { --srp-scale-x: var(--scale-97); --srp-scale-y: var(--scale-97); --srp-scale-z: var(--scale-97); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-97 { --srp-scale-x: var(--scale-97); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-97 { --srp-scale-y: var(--scale-97); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-97 { --srp-scale-z: var(--scale-97); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-97 { --srp-scale-x: calc(var(--scale-97) * -1); --srp-scale-y: calc(var(--scale-97) * -1); --srp-scale-z: calc(var(--scale-97) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-97 { --srp-scale-x: calc(var(--scale-97) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-97 { --srp-scale-y: calc(var(--scale-97) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-97 { --srp-scale-z: calc(var(--scale-97) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-100 { --srp-scale-x: var(--scale-100); --srp-scale-y: var(--scale-100); --srp-scale-z: var(--scale-100); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-100 { --srp-scale-x: var(--scale-100); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-100 { --srp-scale-y: var(--scale-100); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-100 { --srp-scale-z: var(--scale-100); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-100 { --srp-scale-x: calc(var(--scale-100) * -1); --srp-scale-y: calc(var(--scale-100) * -1); --srp-scale-z: calc(var(--scale-100) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-100 { --srp-scale-x: calc(var(--scale-100) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-100 { --srp-scale-y: calc(var(--scale-100) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-100 { --srp-scale-z: calc(var(--scale-100) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-105 { --srp-scale-x: var(--scale-105); --srp-scale-y: var(--scale-105); --srp-scale-z: var(--scale-105); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-105 { --srp-scale-x: var(--scale-105); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-105 { --srp-scale-y: var(--scale-105); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-105 { --srp-scale-z: var(--scale-105); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-105 { --srp-scale-x: calc(var(--scale-105) * -1); --srp-scale-y: calc(var(--scale-105) * -1); --srp-scale-z: calc(var(--scale-105) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-105 { --srp-scale-x: calc(var(--scale-105) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-105 { --srp-scale-y: calc(var(--scale-105) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-105 { --srp-scale-z: calc(var(--scale-105) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-110 { --srp-scale-x: var(--scale-110); --srp-scale-y: var(--scale-110); --srp-scale-z: var(--scale-110); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-110 { --srp-scale-x: var(--scale-110); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-110 { --srp-scale-y: var(--scale-110); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-110 { --srp-scale-z: var(--scale-110); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-110 { --srp-scale-x: calc(var(--scale-110) * -1); --srp-scale-y: calc(var(--scale-110) * -1); --srp-scale-z: calc(var(--scale-110) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-110 { --srp-scale-x: calc(var(--scale-110) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-110 { --srp-scale-y: calc(var(--scale-110) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-110 { --srp-scale-z: calc(var(--scale-110) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-125 { --srp-scale-x: var(--scale-125); --srp-scale-y: var(--scale-125); --srp-scale-z: var(--scale-125); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-125 { --srp-scale-x: var(--scale-125); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-125 { --srp-scale-y: var(--scale-125); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-125 { --srp-scale-z: var(--scale-125); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-125 { --srp-scale-x: calc(var(--scale-125) * -1); --srp-scale-y: calc(var(--scale-125) * -1); --srp-scale-z: calc(var(--scale-125) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-125 { --srp-scale-x: calc(var(--scale-125) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-125 { --srp-scale-y: calc(var(--scale-125) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-125 { --srp-scale-z: calc(var(--scale-125) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.scale-150 { --srp-scale-x: var(--scale-150); --srp-scale-y: var(--scale-150); --srp-scale-z: var(--scale-150); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-150 { --srp-scale-x: var(--scale-150); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-150 { --srp-scale-y: var(--scale-150); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-150 { --srp-scale-z: var(--scale-150); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-150 { --srp-scale-x: calc(var(--scale-150) * -1); --srp-scale-y: calc(var(--scale-150) * -1); --srp-scale-z: calc(var(--scale-150) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-150 { --srp-scale-x: calc(var(--scale-150) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-150 { --srp-scale-y: calc(var(--scale-150) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-z-150 { --srp-scale-z: calc(var(--scale-150) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-/* skew */
-.skew-0 { --srp-skew-x: skewX(var(--skew-0)); --srp-skew-y: skewY(var(--skew-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-0 { --srp-skew-x: skewX(var(--skew-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-0 { --srp-skew-y: skewY(var(--skew-0)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-1 { --srp-skew-x: skewX(var(--skew-1)); --srp-skew-y: skewY(var(--skew-1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-1 { --srp-skew-x: skewX(var(--skew-1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-1 { --srp-skew-y: skewY(var(--skew-1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-1 { --srp-skew-x: skewX(calc(var(--skew-1) * -1)); --srp-skew-y: skewY(calc(var(--skew-1) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-1 { --srp-skew-x: skewX(calc(var(--skew-1) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-1 { --srp-skew-y: skewY(calc(var(--skew-1) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-2 { --srp-skew-x: skewX(var(--skew-2)); --srp-skew-y: skewY(var(--skew-2)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-2 { --srp-skew-x: skewX(var(--skew-2)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-2 { --srp-skew-y: skewY(var(--skew-2)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-2 { --srp-skew-x: skewX(calc(var(--skew-2) * -1)); --srp-skew-y: skewY(calc(var(--skew-2) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-2 { --srp-skew-x: skewX(calc(var(--skew-2) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-2 { --srp-skew-y: skewY(calc(var(--skew-2) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-3 { --srp-skew-x: skewX(var(--skew-3)); --srp-skew-y: skewY(var(--skew-3)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-3 { --srp-skew-x: skewX(var(--skew-3)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-3 { --srp-skew-y: skewY(var(--skew-3)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-3 { --srp-skew-x: skewX(calc(var(--skew-3) * -1)); --srp-skew-y: skewY(calc(var(--skew-3) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-3 { --srp-skew-x: skewX(calc(var(--skew-3) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-3 { --srp-skew-y: skewY(calc(var(--skew-3) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-6 { --srp-skew-x: skewX(var(--skew-6)); --srp-skew-y: skewY(var(--skew-6)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-6 { --srp-skew-x: skewX(var(--skew-6)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-6 { --srp-skew-y: skewY(var(--skew-6)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-6 { --srp-skew-x: skewX(calc(var(--skew-6) * -1)); --srp-skew-y: skewY(calc(var(--skew-6) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-6 { --srp-skew-x: skewX(calc(var(--skew-6) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-6 { --srp-skew-y: skewY(calc(var(--skew-6) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-12 { --srp-skew-x: skewX(var(--skew-12)); --srp-skew-y: skewY(var(--skew-12)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-x-12 { --srp-skew-x: skewX(var(--skew-12)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.skew-y-12 { --srp-skew-y: skewY(var(--skew-12)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-12 { --srp-skew-x: skewX(calc(var(--skew-12) * -1)); --srp-skew-y: skewY(calc(var(--skew-12) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-12 { --srp-skew-x: skewX(calc(var(--skew-12) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-12 { --srp-skew-y: skewY(calc(var(--skew-12) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-/* transform */
-.transform-none { transform: none; }
-.transform-gpu { transform: translateZ(0) var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.transform-cpu { transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-/* transform-origin */
-.origin-center { transform-origin: center; }
-.origin-top { transform-origin: top; }
-.origin-top-right { transform-origin: top right; }
-.origin-right { transform-origin: right; }
-.origin-bottom-right { transform-origin: bottom right; }
-.origin-bottom { transform-origin: bottom; }
-.origin-bottom-left { transform-origin: bottom left; }
-.origin-left { transform-origin: left; }
-.origin-top-left { transform-origin: top left; }
-/* transform-style */
-.transform-3d { transform-style: preserve-3d; }
-.transform-flat { transform-style: flat; }
 /* translate (spacing scale, fractions of the element, full) */
 .translate-none { translate: none; }
-.translate-3d { translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-0 { --srp-translate-x: var(--spacing-0); --srp-translate-y: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-0 { --srp-translate-x: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-0 { --srp-translate-y: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-0 { --srp-translate-z: var(--spacing-0); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-px { --srp-translate-x: var(--spacing-px); --srp-translate-y: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-px { --srp-translate-x: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-px { --srp-translate-y: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-px { --srp-translate-z: var(--spacing-px); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-px { --srp-translate-x: calc(var(--spacing-px) * -1); --srp-translate-y: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-px { --srp-translate-x: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-px { --srp-translate-y: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-px { --srp-translate-z: calc(var(--spacing-px) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-0\.5 { --srp-translate-x: var(--spacing-0\.5); --srp-translate-y: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-0\.5 { --srp-translate-x: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-0\.5 { --srp-translate-y: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-0\.5 { --srp-translate-z: var(--spacing-0\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-0\.5 { --srp-translate-x: calc(var(--spacing-0\.5) * -1); --srp-translate-y: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-0\.5 { --srp-translate-x: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-0\.5 { --srp-translate-y: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-0\.5 { --srp-translate-z: calc(var(--spacing-0\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1 { --srp-translate-x: var(--spacing-1); --srp-translate-y: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1 { --srp-translate-x: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1 { --srp-translate-y: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-1 { --srp-translate-z: var(--spacing-1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-1 { --srp-translate-x: calc(var(--spacing-1) * -1); --srp-translate-y: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1 { --srp-translate-x: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1 { --srp-translate-y: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-1 { --srp-translate-z: calc(var(--spacing-1) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1\.5 { --srp-translate-x: var(--spacing-1\.5); --srp-translate-y: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\.5 { --srp-translate-x: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\.5 { --srp-translate-y: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-1\.5 { --srp-translate-z: var(--spacing-1\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-1\.5 { --srp-translate-x: calc(var(--spacing-1\.5) * -1); --srp-translate-y: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\.5 { --srp-translate-x: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\.5 { --srp-translate-y: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-1\.5 { --srp-translate-z: calc(var(--spacing-1\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-2 { --srp-translate-x: var(--spacing-2); --srp-translate-y: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2 { --srp-translate-x: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2 { --srp-translate-y: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-2 { --srp-translate-z: var(--spacing-2); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-2 { --srp-translate-x: calc(var(--spacing-2) * -1); --srp-translate-y: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2 { --srp-translate-x: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2 { --srp-translate-y: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-2 { --srp-translate-z: calc(var(--spacing-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-2\.5 { --srp-translate-x: var(--spacing-2\.5); --srp-translate-y: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\.5 { --srp-translate-x: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\.5 { --srp-translate-y: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-2\.5 { --srp-translate-z: var(--spacing-2\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-2\.5 { --srp-translate-x: calc(var(--spacing-2\.5) * -1); --srp-translate-y: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\.5 { --srp-translate-x: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\.5 { --srp-translate-y: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-2\.5 { --srp-translate-z: calc(var(--spacing-2\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-3 { --srp-translate-x: var(--spacing-3); --srp-translate-y: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3 { --srp-translate-x: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3 { --srp-translate-y: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-3 { --srp-translate-z: var(--spacing-3); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-3 { --srp-translate-x: calc(var(--spacing-3) * -1); --srp-translate-y: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3 { --srp-translate-x: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3 { --srp-translate-y: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-3 { --srp-translate-z: calc(var(--spacing-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-3\.5 { --srp-translate-x: var(--spacing-3\.5); --srp-translate-y: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3\.5 { --srp-translate-x: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3\.5 { --srp-translate-y: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-3\.5 { --srp-translate-z: var(--spacing-3\.5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-3\.5 { --srp-translate-x: calc(var(--spacing-3\.5) * -1); --srp-translate-y: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3\.5 { --srp-translate-x: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3\.5 { --srp-translate-y: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-3\.5 { --srp-translate-z: calc(var(--spacing-3\.5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-4 { --srp-translate-x: var(--spacing-4); --srp-translate-y: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-4 { --srp-translate-x: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-4 { --srp-translate-y: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-4 { --srp-translate-z: var(--spacing-4); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-4 { --srp-translate-x: calc(var(--spacing-4) * -1); --srp-translate-y: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-4 { --srp-translate-x: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-4 { --srp-translate-y: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-4 { --srp-translate-z: calc(var(--spacing-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-5 { --srp-translate-x: var(--spacing-5); --srp-translate-y: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-5 { --srp-translate-x: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-5 { --srp-translate-y: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-5 { --srp-translate-z: var(--spacing-5); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-5 { --srp-translate-x: calc(var(--spacing-5) * -1); --srp-translate-y: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-5 { --srp-translate-x: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-5 { --srp-translate-y: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-5 { --srp-translate-z: calc(var(--spacing-5) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-6 { --srp-translate-x: var(--spacing-6); --srp-translate-y: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-6 { --srp-translate-x: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-6 { --srp-translate-y: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-6 { --srp-translate-z: var(--spacing-6); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-6 { --srp-translate-x: calc(var(--spacing-6) * -1); --srp-translate-y: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-6 { --srp-translate-x: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-6 { --srp-translate-y: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-6 { --srp-translate-z: calc(var(--spacing-6) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-7 { --srp-translate-x: var(--spacing-7); --srp-translate-y: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-7 { --srp-translate-x: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-7 { --srp-translate-y: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-7 { --srp-translate-z: var(--spacing-7); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-7 { --srp-translate-x: calc(var(--spacing-7) * -1); --srp-translate-y: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-7 { --srp-translate-x: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-7 { --srp-translate-y: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-7 { --srp-translate-z: calc(var(--spacing-7) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-8 { --srp-translate-x: var(--spacing-8); --srp-translate-y: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-8 { --srp-translate-x: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-8 { --srp-translate-y: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-8 { --srp-translate-z: var(--spacing-8); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-8 { --srp-translate-x: calc(var(--spacing-8) * -1); --srp-translate-y: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-8 { --srp-translate-x: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-8 { --srp-translate-y: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-8 { --srp-translate-z: calc(var(--spacing-8) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-9 { --srp-translate-x: var(--spacing-9); --srp-translate-y: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-9 { --srp-translate-x: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-9 { --srp-translate-y: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-9 { --srp-translate-z: var(--spacing-9); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-9 { --srp-translate-x: calc(var(--spacing-9) * -1); --srp-translate-y: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-9 { --srp-translate-x: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-9 { --srp-translate-y: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-9 { --srp-translate-z: calc(var(--spacing-9) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-10 { --srp-translate-x: var(--spacing-10); --srp-translate-y: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-10 { --srp-translate-x: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-10 { --srp-translate-y: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-10 { --srp-translate-z: var(--spacing-10); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-10 { --srp-translate-x: calc(var(--spacing-10) * -1); --srp-translate-y: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-10 { --srp-translate-x: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-10 { --srp-translate-y: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-10 { --srp-translate-z: calc(var(--spacing-10) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-11 { --srp-translate-x: var(--spacing-11); --srp-translate-y: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-11 { --srp-translate-x: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-11 { --srp-translate-y: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-11 { --srp-translate-z: var(--spacing-11); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-11 { --srp-translate-x: calc(var(--spacing-11) * -1); --srp-translate-y: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-11 { --srp-translate-x: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-11 { --srp-translate-y: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-11 { --srp-translate-z: calc(var(--spacing-11) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-12 { --srp-translate-x: var(--spacing-12); --srp-translate-y: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-12 { --srp-translate-x: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-12 { --srp-translate-y: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-12 { --srp-translate-z: var(--spacing-12); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-12 { --srp-translate-x: calc(var(--spacing-12) * -1); --srp-translate-y: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-12 { --srp-translate-x: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-12 { --srp-translate-y: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-12 { --srp-translate-z: calc(var(--spacing-12) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-14 { --srp-translate-x: var(--spacing-14); --srp-translate-y: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-14 { --srp-translate-x: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-14 { --srp-translate-y: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-14 { --srp-translate-z: var(--spacing-14); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-14 { --srp-translate-x: calc(var(--spacing-14) * -1); --srp-translate-y: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-14 { --srp-translate-x: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-14 { --srp-translate-y: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-14 { --srp-translate-z: calc(var(--spacing-14) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-16 { --srp-translate-x: var(--spacing-16); --srp-translate-y: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-16 { --srp-translate-x: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-16 { --srp-translate-y: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-16 { --srp-translate-z: var(--spacing-16); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-16 { --srp-translate-x: calc(var(--spacing-16) * -1); --srp-translate-y: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-16 { --srp-translate-x: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-16 { --srp-translate-y: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-16 { --srp-translate-z: calc(var(--spacing-16) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-20 { --srp-translate-x: var(--spacing-20); --srp-translate-y: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-20 { --srp-translate-x: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-20 { --srp-translate-y: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-20 { --srp-translate-z: var(--spacing-20); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-20 { --srp-translate-x: calc(var(--spacing-20) * -1); --srp-translate-y: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-20 { --srp-translate-x: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-20 { --srp-translate-y: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-20 { --srp-translate-z: calc(var(--spacing-20) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-24 { --srp-translate-x: var(--spacing-24); --srp-translate-y: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-24 { --srp-translate-x: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-24 { --srp-translate-y: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-24 { --srp-translate-z: var(--spacing-24); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-24 { --srp-translate-x: calc(var(--spacing-24) * -1); --srp-translate-y: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-24 { --srp-translate-x: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-24 { --srp-translate-y: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-24 { --srp-translate-z: calc(var(--spacing-24) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-28 { --srp-translate-x: var(--spacing-28); --srp-translate-y: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-28 { --srp-translate-x: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-28 { --srp-translate-y: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-28 { --srp-translate-z: var(--spacing-28); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-28 { --srp-translate-x: calc(var(--spacing-28) * -1); --srp-translate-y: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-28 { --srp-translate-x: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-28 { --srp-translate-y: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-28 { --srp-translate-z: calc(var(--spacing-28) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-32 { --srp-translate-x: var(--spacing-32); --srp-translate-y: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-32 { --srp-translate-x: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-32 { --srp-translate-y: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-32 { --srp-translate-z: var(--spacing-32); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-32 { --srp-translate-x: calc(var(--spacing-32) * -1); --srp-translate-y: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-32 { --srp-translate-x: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-32 { --srp-translate-y: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-32 { --srp-translate-z: calc(var(--spacing-32) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-36 { --srp-translate-x: var(--spacing-36); --srp-translate-y: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-36 { --srp-translate-x: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-36 { --srp-translate-y: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-36 { --srp-translate-z: var(--spacing-36); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-36 { --srp-translate-x: calc(var(--spacing-36) * -1); --srp-translate-y: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-36 { --srp-translate-x: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-36 { --srp-translate-y: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-36 { --srp-translate-z: calc(var(--spacing-36) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-40 { --srp-translate-x: var(--spacing-40); --srp-translate-y: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-40 { --srp-translate-x: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-40 { --srp-translate-y: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-40 { --srp-translate-z: var(--spacing-40); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-40 { --srp-translate-x: calc(var(--spacing-40) * -1); --srp-translate-y: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-40 { --srp-translate-x: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-40 { --srp-translate-y: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-40 { --srp-translate-z: calc(var(--spacing-40) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-44 { --srp-translate-x: var(--spacing-44); --srp-translate-y: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-44 { --srp-translate-x: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-44 { --srp-translate-y: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-44 { --srp-translate-z: var(--spacing-44); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-44 { --srp-translate-x: calc(var(--spacing-44) * -1); --srp-translate-y: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-44 { --srp-translate-x: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-44 { --srp-translate-y: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-44 { --srp-translate-z: calc(var(--spacing-44) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-48 { --srp-translate-x: var(--spacing-48); --srp-translate-y: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-48 { --srp-translate-x: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-48 { --srp-translate-y: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-48 { --srp-translate-z: var(--spacing-48); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-48 { --srp-translate-x: calc(var(--spacing-48) * -1); --srp-translate-y: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-48 { --srp-translate-x: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-48 { --srp-translate-y: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-48 { --srp-translate-z: calc(var(--spacing-48) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-52 { --srp-translate-x: var(--spacing-52); --srp-translate-y: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-52 { --srp-translate-x: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-52 { --srp-translate-y: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-52 { --srp-translate-z: var(--spacing-52); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-52 { --srp-translate-x: calc(var(--spacing-52) * -1); --srp-translate-y: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-52 { --srp-translate-x: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-52 { --srp-translate-y: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-52 { --srp-translate-z: calc(var(--spacing-52) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-56 { --srp-translate-x: var(--spacing-56); --srp-translate-y: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-56 { --srp-translate-x: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-56 { --srp-translate-y: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-56 { --srp-translate-z: var(--spacing-56); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-56 { --srp-translate-x: calc(var(--spacing-56) * -1); --srp-translate-y: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-56 { --srp-translate-x: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-56 { --srp-translate-y: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-56 { --srp-translate-z: calc(var(--spacing-56) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-60 { --srp-translate-x: var(--spacing-60); --srp-translate-y: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-60 { --srp-translate-x: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-60 { --srp-translate-y: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-60 { --srp-translate-z: var(--spacing-60); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-60 { --srp-translate-x: calc(var(--spacing-60) * -1); --srp-translate-y: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-60 { --srp-translate-x: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-60 { --srp-translate-y: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-60 { --srp-translate-z: calc(var(--spacing-60) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-64 { --srp-translate-x: var(--spacing-64); --srp-translate-y: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-64 { --srp-translate-x: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-64 { --srp-translate-y: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-64 { --srp-translate-z: var(--spacing-64); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-64 { --srp-translate-x: calc(var(--spacing-64) * -1); --srp-translate-y: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-64 { --srp-translate-x: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-64 { --srp-translate-y: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-64 { --srp-translate-z: calc(var(--spacing-64) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-72 { --srp-translate-x: var(--spacing-72); --srp-translate-y: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-72 { --srp-translate-x: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-72 { --srp-translate-y: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-72 { --srp-translate-z: var(--spacing-72); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-72 { --srp-translate-x: calc(var(--spacing-72) * -1); --srp-translate-y: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-72 { --srp-translate-x: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-72 { --srp-translate-y: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-72 { --srp-translate-z: calc(var(--spacing-72) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-80 { --srp-translate-x: var(--spacing-80); --srp-translate-y: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-80 { --srp-translate-x: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-80 { --srp-translate-y: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-80 { --srp-translate-z: var(--spacing-80); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-80 { --srp-translate-x: calc(var(--spacing-80) * -1); --srp-translate-y: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-80 { --srp-translate-x: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-80 { --srp-translate-y: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-80 { --srp-translate-z: calc(var(--spacing-80) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-96 { --srp-translate-x: var(--spacing-96); --srp-translate-y: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-96 { --srp-translate-x: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-96 { --srp-translate-y: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-z-96 { --srp-translate-z: var(--spacing-96); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-translate-96 { --srp-translate-x: calc(var(--spacing-96) * -1); --srp-translate-y: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-96 { --srp-translate-x: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-96 { --srp-translate-y: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-96 { --srp-translate-z: calc(var(--spacing-96) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.translate-1\/2 { --srp-translate-x: var(--sizing-1-2); --srp-translate-y: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/2 { --srp-translate-x: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/2 { --srp-translate-y: var(--sizing-1-2); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/2 { --srp-translate-x: calc(var(--sizing-1-2) * -1); --srp-translate-y: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/2 { --srp-translate-x: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/2 { --srp-translate-y: calc(var(--sizing-1-2) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/3 { --srp-translate-x: var(--sizing-1-3); --srp-translate-y: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/3 { --srp-translate-x: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/3 { --srp-translate-y: var(--sizing-1-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/3 { --srp-translate-x: calc(var(--sizing-1-3) * -1); --srp-translate-y: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/3 { --srp-translate-x: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/3 { --srp-translate-y: calc(var(--sizing-1-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/3 { --srp-translate-x: var(--sizing-2-3); --srp-translate-y: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\/3 { --srp-translate-x: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\/3 { --srp-translate-y: var(--sizing-2-3); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/3 { --srp-translate-x: calc(var(--sizing-2-3) * -1); --srp-translate-y: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\/3 { --srp-translate-x: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\/3 { --srp-translate-y: calc(var(--sizing-2-3) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/4 { --srp-translate-x: var(--sizing-1-4); --srp-translate-y: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-1\/4 { --srp-translate-x: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-1\/4 { --srp-translate-y: var(--sizing-1-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/4 { --srp-translate-x: calc(var(--sizing-1-4) * -1); --srp-translate-y: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/4 { --srp-translate-x: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-1\/4 { --srp-translate-y: calc(var(--sizing-1-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/4 { --srp-translate-x: var(--sizing-2-4); --srp-translate-y: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-2\/4 { --srp-translate-x: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-2\/4 { --srp-translate-y: var(--sizing-2-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/4 { --srp-translate-x: calc(var(--sizing-2-4) * -1); --srp-translate-y: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-2\/4 { --srp-translate-x: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-2\/4 { --srp-translate-y: calc(var(--sizing-2-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/4 { --srp-translate-x: var(--sizing-3-4); --srp-translate-y: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-3\/4 { --srp-translate-x: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-3\/4 { --srp-translate-y: var(--sizing-3-4); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/4 { --srp-translate-x: calc(var(--sizing-3-4) * -1); --srp-translate-y: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-3\/4 { --srp-translate-x: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-3\/4 { --srp-translate-y: calc(var(--sizing-3-4) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-full { --srp-translate-x: var(--sizing-full); --srp-translate-y: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-x-full { --srp-translate-x: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-full { --srp-translate-y: var(--sizing-full); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-full { --srp-translate-x: calc(var(--sizing-full) * -1); --srp-translate-y: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-full { --srp-translate-x: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-y-full { --srp-translate-y: calc(var(--sizing-full) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-/* zoom (changes layout size too, unlike scale) */
-@each zoom- not(95, 105) {
-  .zoom-{k} { zoom: var(--{t}); }
-}
 /* ---------------------------------------------------------------
-   Effects: box-shadow, ring, text-shadow, opacity, blend-mode and
-   mask utilities (current version).
-   Tokens: shadow-*, inset-shadow-*, text-shadow-* (shadow group), opacity-*.
-   Shadows, inner shadows and rings stack on one element; a color class swaps
+   Effects: box-shadow, ring and opacity utilities.
+   Tokens: shadow-* (shadow group), opacity-*.
+   Shadows and rings stack on one element; a color class swaps
    the default black (or the text color, for rings) for that color.
    --------------------------------------------------------------- */
 
@@ -2413,41 +1645,24 @@
 .shadow-xl { --srp-shadow: 0 20px 25px -5px var(--srp-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--srp-shadow-color, rgb(0 0 0 / 0.1)); }
 .shadow-2xl { --srp-shadow: 0 25px 50px -12px var(--srp-shadow-color, rgb(0 0 0 / 0.25)); }
 .shadow-none { --srp-shadow: 0 0 #0000; }
-/* inset-shadow (sizes) */
-.inset-shadow-2xs { --srp-inset-shadow: inset 0 1px var(--srp-inset-shadow-color, rgb(0 0 0 / 0.05)); }
-.inset-shadow-xs { --srp-inset-shadow: inset 0 1px 1px var(--srp-inset-shadow-color, rgb(0 0 0 / 0.05)); }
-.inset-shadow-sm { --srp-inset-shadow: inset 0 2px 4px var(--srp-inset-shadow-color, rgb(0 0 0 / 0.05)); }
-.inset-shadow-none { --srp-inset-shadow: inset 0 0 #0000; }
 /* ring (a solid outline drawn with box-shadow; does not affect layout) */
 .ring { --srp-ring-shadow: var(--srp-ring-inset, ) 0 0 0 calc(var(--outline-width-1) + var(--srp-ring-offset-width)) var(--srp-ring-color, currentcolor); }
 @each outline-width- {
   .ring-{k} { --srp-ring-shadow: var(--srp-ring-inset, ) 0 0 0 calc(var(--{t}) + var(--srp-ring-offset-width)) var(--srp-ring-color, currentcolor); }
 }
 .ring-inset { --srp-ring-inset: inset; }
-/* inset-ring */
-.inset-ring { --srp-inset-ring-shadow: inset 0 0 0 var(--outline-width-1) var(--srp-inset-ring-color, currentcolor); }
-@each outline-width- {
-  .inset-ring-{k} { --srp-inset-ring-shadow: inset 0 0 0 var(--{t}) var(--srp-inset-ring-color, currentcolor); }
-}
 /* ring-offset (a gap between element and ring; color it with ring-offset-<color>) */
 @each outline-offset- {
   .ring-offset-{k} { --srp-ring-offset-width: var(--{t}); --srp-ring-offset-shadow: var(--srp-ring-inset, ) 0 0 0 var(--srp-ring-offset-width) var(--srp-ring-offset-color); }
 }
 /* Each class above sets one layer; this rule stacks them. */
-.shadow-2xs, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-none, .inset-shadow-2xs, .inset-shadow-xs, .inset-shadow-sm, .inset-shadow-none, .ring, .ring-0, .ring-1, .ring-2, .ring-4, .ring-8, .inset-ring, .inset-ring-0, .inset-ring-1, .inset-ring-2, .inset-ring-4, .inset-ring-8 { box-shadow: var(--srp-inset-shadow), var(--srp-inset-ring-shadow), var(--srp-ring-offset-shadow), var(--srp-ring-shadow), var(--srp-shadow); }
+.shadow-2xs, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-none, .ring, .ring-0, .ring-1, .ring-2, .ring-4, .ring-8 { box-shadow: var(--srp-inset-shadow), var(--srp-inset-ring-shadow), var(--srp-ring-offset-shadow), var(--srp-ring-shadow), var(--srp-shadow); }
 /* shadow color */
 .shadow-inherit { --srp-shadow-color: inherit; }
 .shadow-current { --srp-shadow-color: currentColor; }
 .shadow-transparent { --srp-shadow-color: transparent; }
 @each color {
   .shadow-{k} { --srp-shadow-color: var(--{t}); }
-}
-/* inset-shadow color */
-.inset-shadow-inherit { --srp-inset-shadow-color: inherit; }
-.inset-shadow-current { --srp-inset-shadow-color: currentColor; }
-.inset-shadow-transparent { --srp-inset-shadow-color: transparent; }
-@each color {
-  .inset-shadow-{k} { --srp-inset-shadow-color: var(--{t}); }
 }
 /* ring color */
 .ring-inherit { --srp-ring-color: inherit; }
@@ -2456,13 +1671,6 @@
 @each color {
   .ring-{k} { --srp-ring-color: var(--{t}); }
 }
-/* inset-ring color */
-.inset-ring-inherit { --srp-inset-ring-color: inherit; }
-.inset-ring-current { --srp-inset-ring-color: currentColor; }
-.inset-ring-transparent { --srp-inset-ring-color: transparent; }
-@each color {
-  .inset-ring-{k} { --srp-inset-ring-color: var(--{t}); }
-}
 /* ring-offset color */
 .ring-offset-inherit { --srp-ring-offset-color: inherit; }
 .ring-offset-current { --srp-ring-offset-color: currentColor; }
@@ -2470,20 +1678,6 @@
 @each color {
   .ring-offset-{k} { --srp-ring-offset-color: var(--{t}); }
 }
-/* text-shadow color */
-.text-shadow-inherit { --srp-text-shadow-color: inherit; }
-.text-shadow-current { --srp-text-shadow-color: currentColor; }
-.text-shadow-transparent { --srp-text-shadow-color: transparent; }
-@each color {
-  .text-shadow-{k} { --srp-text-shadow-color: var(--{t}); }
-}
-/* text-shadow (sizes) */
-.text-shadow-2xs { text-shadow: 0px 1px 0px var(--srp-text-shadow-color, rgb(0 0 0 / 0.15)); }
-.text-shadow-xs { text-shadow: 0px 1px 1px var(--srp-text-shadow-color, rgb(0 0 0 / 0.2)); }
-.text-shadow-sm { text-shadow: 0px 1px 0px var(--srp-text-shadow-color, rgb(0 0 0 / 0.075)), 0px 1px 1px var(--srp-text-shadow-color, rgb(0 0 0 / 0.075)), 0px 2px 2px var(--srp-text-shadow-color, rgb(0 0 0 / 0.075)); }
-.text-shadow-md { text-shadow: 0px 1px 1px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)), 0px 1px 2px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)), 0px 2px 4px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)); }
-.text-shadow-lg { text-shadow: 0px 1px 2px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)), 0px 3px 2px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)), 0px 4px 8px var(--srp-text-shadow-color, rgb(0 0 0 / 0.1)); }
-.text-shadow-none { text-shadow: none; }
 /* opacity */
 .opacity-0 { opacity: var(--opacity-0); }
 .opacity-5 { opacity: var(--opacity-5); }
@@ -2501,532 +1695,10 @@
 .opacity-90 { opacity: var(--opacity-90); }
 .opacity-95 { opacity: var(--opacity-95); }
 .opacity-100 { opacity: var(--opacity-100); }
-/* mix-blend-mode */
-.mix-blend-normal { mix-blend-mode: normal; }
-.mix-blend-multiply { mix-blend-mode: multiply; }
-.mix-blend-screen { mix-blend-mode: screen; }
-.mix-blend-overlay { mix-blend-mode: overlay; }
-.mix-blend-darken { mix-blend-mode: darken; }
-.mix-blend-lighten { mix-blend-mode: lighten; }
-.mix-blend-color-dodge { mix-blend-mode: color-dodge; }
-.mix-blend-color-burn { mix-blend-mode: color-burn; }
-.mix-blend-hard-light { mix-blend-mode: hard-light; }
-.mix-blend-soft-light { mix-blend-mode: soft-light; }
-.mix-blend-difference { mix-blend-mode: difference; }
-.mix-blend-exclusion { mix-blend-mode: exclusion; }
-.mix-blend-hue { mix-blend-mode: hue; }
-.mix-blend-saturation { mix-blend-mode: saturation; }
-.mix-blend-color { mix-blend-mode: color; }
-.mix-blend-luminosity { mix-blend-mode: luminosity; }
-.mix-blend-plus-darker { mix-blend-mode: plus-darker; }
-.mix-blend-plus-lighter { mix-blend-mode: plus-lighter; }
-/* background-blend-mode */
-.bg-blend-normal { background-blend-mode: normal; }
-.bg-blend-multiply { background-blend-mode: multiply; }
-.bg-blend-screen { background-blend-mode: screen; }
-.bg-blend-overlay { background-blend-mode: overlay; }
-.bg-blend-darken { background-blend-mode: darken; }
-.bg-blend-lighten { background-blend-mode: lighten; }
-.bg-blend-color-dodge { background-blend-mode: color-dodge; }
-.bg-blend-color-burn { background-blend-mode: color-burn; }
-.bg-blend-hard-light { background-blend-mode: hard-light; }
-.bg-blend-soft-light { background-blend-mode: soft-light; }
-.bg-blend-difference { background-blend-mode: difference; }
-.bg-blend-exclusion { background-blend-mode: exclusion; }
-.bg-blend-hue { background-blend-mode: hue; }
-.bg-blend-saturation { background-blend-mode: saturation; }
-.bg-blend-color { background-blend-mode: color; }
-.bg-blend-luminosity { background-blend-mode: luminosity; }
-/* mask-clip */
-.mask-clip-border { mask-clip: border-box; }
-.mask-clip-padding { mask-clip: padding-box; }
-.mask-clip-content { mask-clip: content-box; }
-.mask-clip-fill { mask-clip: fill-box; }
-.mask-clip-stroke { mask-clip: stroke-box; }
-.mask-clip-view { mask-clip: view-box; }
-.mask-no-clip { mask-clip: no-clip; }
-/* mask-composite */
-.mask-add { mask-composite: add; }
-.mask-subtract { mask-composite: subtract; }
-.mask-intersect { mask-composite: intersect; }
-.mask-exclude { mask-composite: exclude; }
 
-/* mask-image: none */
-.mask-none { mask-image: none; }
-/* mask-image, edges: mask-t-, -r-, -b-, -l-, -x-, -y- with -from-<%> (fully shown until) and -to-<%> (fully hidden from), measured from that edge */
-[class^="mask-t-"], [class*=" mask-t-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-top: linear-gradient(to top, var(--srp-mask-t-from-c) var(--srp-mask-t-from-p), var(--srp-mask-t-to-c) var(--srp-mask-t-to-p)); }
-[class^="mask-r-"], [class*=" mask-r-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-right: linear-gradient(to right, var(--srp-mask-r-from-c) var(--srp-mask-r-from-p), var(--srp-mask-r-to-c) var(--srp-mask-r-to-p)); }
-[class^="mask-b-"], [class*=" mask-b-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-bottom: linear-gradient(to bottom, var(--srp-mask-b-from-c) var(--srp-mask-b-from-p), var(--srp-mask-b-to-c) var(--srp-mask-b-to-p)); }
-[class^="mask-l-"], [class*=" mask-l-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-left: linear-gradient(to left, var(--srp-mask-l-from-c) var(--srp-mask-l-from-p), var(--srp-mask-l-to-c) var(--srp-mask-l-to-p)); }
-[class^="mask-x-"], [class*=" mask-x-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-left: linear-gradient(to left, var(--srp-mask-l-from-c) var(--srp-mask-l-from-p), var(--srp-mask-l-to-c) var(--srp-mask-l-to-p)); --srp-mask-right: linear-gradient(to right, var(--srp-mask-r-from-c) var(--srp-mask-r-from-p), var(--srp-mask-r-to-c) var(--srp-mask-r-to-p)); }
-[class^="mask-y-"], [class*=" mask-y-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: var(--srp-mask-left), var(--srp-mask-right), var(--srp-mask-bottom), var(--srp-mask-top); --srp-mask-top: linear-gradient(to top, var(--srp-mask-t-from-c) var(--srp-mask-t-from-p), var(--srp-mask-t-to-c) var(--srp-mask-t-to-p)); --srp-mask-bottom: linear-gradient(to bottom, var(--srp-mask-b-from-c) var(--srp-mask-b-from-p), var(--srp-mask-b-to-c) var(--srp-mask-b-to-p)); }
-.mask-t-from-0\% { --srp-mask-t-from-p: 0%; }
-.mask-t-from-5\% { --srp-mask-t-from-p: 5%; }
-.mask-t-from-10\% { --srp-mask-t-from-p: 10%; }
-.mask-t-from-15\% { --srp-mask-t-from-p: 15%; }
-.mask-t-from-20\% { --srp-mask-t-from-p: 20%; }
-.mask-t-from-25\% { --srp-mask-t-from-p: 25%; }
-.mask-t-from-30\% { --srp-mask-t-from-p: 30%; }
-.mask-t-from-35\% { --srp-mask-t-from-p: 35%; }
-.mask-t-from-40\% { --srp-mask-t-from-p: 40%; }
-.mask-t-from-45\% { --srp-mask-t-from-p: 45%; }
-.mask-t-from-50\% { --srp-mask-t-from-p: 50%; }
-.mask-t-from-55\% { --srp-mask-t-from-p: 55%; }
-.mask-t-from-60\% { --srp-mask-t-from-p: 60%; }
-.mask-t-from-65\% { --srp-mask-t-from-p: 65%; }
-.mask-t-from-70\% { --srp-mask-t-from-p: 70%; }
-.mask-t-from-75\% { --srp-mask-t-from-p: 75%; }
-.mask-t-from-80\% { --srp-mask-t-from-p: 80%; }
-.mask-t-from-85\% { --srp-mask-t-from-p: 85%; }
-.mask-t-from-90\% { --srp-mask-t-from-p: 90%; }
-.mask-t-from-95\% { --srp-mask-t-from-p: 95%; }
-.mask-t-from-100\% { --srp-mask-t-from-p: 100%; }
-.mask-t-to-0\% { --srp-mask-t-to-p: 0%; }
-.mask-t-to-5\% { --srp-mask-t-to-p: 5%; }
-.mask-t-to-10\% { --srp-mask-t-to-p: 10%; }
-.mask-t-to-15\% { --srp-mask-t-to-p: 15%; }
-.mask-t-to-20\% { --srp-mask-t-to-p: 20%; }
-.mask-t-to-25\% { --srp-mask-t-to-p: 25%; }
-.mask-t-to-30\% { --srp-mask-t-to-p: 30%; }
-.mask-t-to-35\% { --srp-mask-t-to-p: 35%; }
-.mask-t-to-40\% { --srp-mask-t-to-p: 40%; }
-.mask-t-to-45\% { --srp-mask-t-to-p: 45%; }
-.mask-t-to-50\% { --srp-mask-t-to-p: 50%; }
-.mask-t-to-55\% { --srp-mask-t-to-p: 55%; }
-.mask-t-to-60\% { --srp-mask-t-to-p: 60%; }
-.mask-t-to-65\% { --srp-mask-t-to-p: 65%; }
-.mask-t-to-70\% { --srp-mask-t-to-p: 70%; }
-.mask-t-to-75\% { --srp-mask-t-to-p: 75%; }
-.mask-t-to-80\% { --srp-mask-t-to-p: 80%; }
-.mask-t-to-85\% { --srp-mask-t-to-p: 85%; }
-.mask-t-to-90\% { --srp-mask-t-to-p: 90%; }
-.mask-t-to-95\% { --srp-mask-t-to-p: 95%; }
-.mask-t-to-100\% { --srp-mask-t-to-p: 100%; }
-.mask-r-from-0\% { --srp-mask-r-from-p: 0%; }
-.mask-r-from-5\% { --srp-mask-r-from-p: 5%; }
-.mask-r-from-10\% { --srp-mask-r-from-p: 10%; }
-.mask-r-from-15\% { --srp-mask-r-from-p: 15%; }
-.mask-r-from-20\% { --srp-mask-r-from-p: 20%; }
-.mask-r-from-25\% { --srp-mask-r-from-p: 25%; }
-.mask-r-from-30\% { --srp-mask-r-from-p: 30%; }
-.mask-r-from-35\% { --srp-mask-r-from-p: 35%; }
-.mask-r-from-40\% { --srp-mask-r-from-p: 40%; }
-.mask-r-from-45\% { --srp-mask-r-from-p: 45%; }
-.mask-r-from-50\% { --srp-mask-r-from-p: 50%; }
-.mask-r-from-55\% { --srp-mask-r-from-p: 55%; }
-.mask-r-from-60\% { --srp-mask-r-from-p: 60%; }
-.mask-r-from-65\% { --srp-mask-r-from-p: 65%; }
-.mask-r-from-70\% { --srp-mask-r-from-p: 70%; }
-.mask-r-from-75\% { --srp-mask-r-from-p: 75%; }
-.mask-r-from-80\% { --srp-mask-r-from-p: 80%; }
-.mask-r-from-85\% { --srp-mask-r-from-p: 85%; }
-.mask-r-from-90\% { --srp-mask-r-from-p: 90%; }
-.mask-r-from-95\% { --srp-mask-r-from-p: 95%; }
-.mask-r-from-100\% { --srp-mask-r-from-p: 100%; }
-.mask-r-to-0\% { --srp-mask-r-to-p: 0%; }
-.mask-r-to-5\% { --srp-mask-r-to-p: 5%; }
-.mask-r-to-10\% { --srp-mask-r-to-p: 10%; }
-.mask-r-to-15\% { --srp-mask-r-to-p: 15%; }
-.mask-r-to-20\% { --srp-mask-r-to-p: 20%; }
-.mask-r-to-25\% { --srp-mask-r-to-p: 25%; }
-.mask-r-to-30\% { --srp-mask-r-to-p: 30%; }
-.mask-r-to-35\% { --srp-mask-r-to-p: 35%; }
-.mask-r-to-40\% { --srp-mask-r-to-p: 40%; }
-.mask-r-to-45\% { --srp-mask-r-to-p: 45%; }
-.mask-r-to-50\% { --srp-mask-r-to-p: 50%; }
-.mask-r-to-55\% { --srp-mask-r-to-p: 55%; }
-.mask-r-to-60\% { --srp-mask-r-to-p: 60%; }
-.mask-r-to-65\% { --srp-mask-r-to-p: 65%; }
-.mask-r-to-70\% { --srp-mask-r-to-p: 70%; }
-.mask-r-to-75\% { --srp-mask-r-to-p: 75%; }
-.mask-r-to-80\% { --srp-mask-r-to-p: 80%; }
-.mask-r-to-85\% { --srp-mask-r-to-p: 85%; }
-.mask-r-to-90\% { --srp-mask-r-to-p: 90%; }
-.mask-r-to-95\% { --srp-mask-r-to-p: 95%; }
-.mask-r-to-100\% { --srp-mask-r-to-p: 100%; }
-.mask-b-from-0\% { --srp-mask-b-from-p: 0%; }
-.mask-b-from-5\% { --srp-mask-b-from-p: 5%; }
-.mask-b-from-10\% { --srp-mask-b-from-p: 10%; }
-.mask-b-from-15\% { --srp-mask-b-from-p: 15%; }
-.mask-b-from-20\% { --srp-mask-b-from-p: 20%; }
-.mask-b-from-25\% { --srp-mask-b-from-p: 25%; }
-.mask-b-from-30\% { --srp-mask-b-from-p: 30%; }
-.mask-b-from-35\% { --srp-mask-b-from-p: 35%; }
-.mask-b-from-40\% { --srp-mask-b-from-p: 40%; }
-.mask-b-from-45\% { --srp-mask-b-from-p: 45%; }
-.mask-b-from-50\% { --srp-mask-b-from-p: 50%; }
-.mask-b-from-55\% { --srp-mask-b-from-p: 55%; }
-.mask-b-from-60\% { --srp-mask-b-from-p: 60%; }
-.mask-b-from-65\% { --srp-mask-b-from-p: 65%; }
-.mask-b-from-70\% { --srp-mask-b-from-p: 70%; }
-.mask-b-from-75\% { --srp-mask-b-from-p: 75%; }
-.mask-b-from-80\% { --srp-mask-b-from-p: 80%; }
-.mask-b-from-85\% { --srp-mask-b-from-p: 85%; }
-.mask-b-from-90\% { --srp-mask-b-from-p: 90%; }
-.mask-b-from-95\% { --srp-mask-b-from-p: 95%; }
-.mask-b-from-100\% { --srp-mask-b-from-p: 100%; }
-.mask-b-to-0\% { --srp-mask-b-to-p: 0%; }
-.mask-b-to-5\% { --srp-mask-b-to-p: 5%; }
-.mask-b-to-10\% { --srp-mask-b-to-p: 10%; }
-.mask-b-to-15\% { --srp-mask-b-to-p: 15%; }
-.mask-b-to-20\% { --srp-mask-b-to-p: 20%; }
-.mask-b-to-25\% { --srp-mask-b-to-p: 25%; }
-.mask-b-to-30\% { --srp-mask-b-to-p: 30%; }
-.mask-b-to-35\% { --srp-mask-b-to-p: 35%; }
-.mask-b-to-40\% { --srp-mask-b-to-p: 40%; }
-.mask-b-to-45\% { --srp-mask-b-to-p: 45%; }
-.mask-b-to-50\% { --srp-mask-b-to-p: 50%; }
-.mask-b-to-55\% { --srp-mask-b-to-p: 55%; }
-.mask-b-to-60\% { --srp-mask-b-to-p: 60%; }
-.mask-b-to-65\% { --srp-mask-b-to-p: 65%; }
-.mask-b-to-70\% { --srp-mask-b-to-p: 70%; }
-.mask-b-to-75\% { --srp-mask-b-to-p: 75%; }
-.mask-b-to-80\% { --srp-mask-b-to-p: 80%; }
-.mask-b-to-85\% { --srp-mask-b-to-p: 85%; }
-.mask-b-to-90\% { --srp-mask-b-to-p: 90%; }
-.mask-b-to-95\% { --srp-mask-b-to-p: 95%; }
-.mask-b-to-100\% { --srp-mask-b-to-p: 100%; }
-.mask-l-from-0\% { --srp-mask-l-from-p: 0%; }
-.mask-l-from-5\% { --srp-mask-l-from-p: 5%; }
-.mask-l-from-10\% { --srp-mask-l-from-p: 10%; }
-.mask-l-from-15\% { --srp-mask-l-from-p: 15%; }
-.mask-l-from-20\% { --srp-mask-l-from-p: 20%; }
-.mask-l-from-25\% { --srp-mask-l-from-p: 25%; }
-.mask-l-from-30\% { --srp-mask-l-from-p: 30%; }
-.mask-l-from-35\% { --srp-mask-l-from-p: 35%; }
-.mask-l-from-40\% { --srp-mask-l-from-p: 40%; }
-.mask-l-from-45\% { --srp-mask-l-from-p: 45%; }
-.mask-l-from-50\% { --srp-mask-l-from-p: 50%; }
-.mask-l-from-55\% { --srp-mask-l-from-p: 55%; }
-.mask-l-from-60\% { --srp-mask-l-from-p: 60%; }
-.mask-l-from-65\% { --srp-mask-l-from-p: 65%; }
-.mask-l-from-70\% { --srp-mask-l-from-p: 70%; }
-.mask-l-from-75\% { --srp-mask-l-from-p: 75%; }
-.mask-l-from-80\% { --srp-mask-l-from-p: 80%; }
-.mask-l-from-85\% { --srp-mask-l-from-p: 85%; }
-.mask-l-from-90\% { --srp-mask-l-from-p: 90%; }
-.mask-l-from-95\% { --srp-mask-l-from-p: 95%; }
-.mask-l-from-100\% { --srp-mask-l-from-p: 100%; }
-.mask-l-to-0\% { --srp-mask-l-to-p: 0%; }
-.mask-l-to-5\% { --srp-mask-l-to-p: 5%; }
-.mask-l-to-10\% { --srp-mask-l-to-p: 10%; }
-.mask-l-to-15\% { --srp-mask-l-to-p: 15%; }
-.mask-l-to-20\% { --srp-mask-l-to-p: 20%; }
-.mask-l-to-25\% { --srp-mask-l-to-p: 25%; }
-.mask-l-to-30\% { --srp-mask-l-to-p: 30%; }
-.mask-l-to-35\% { --srp-mask-l-to-p: 35%; }
-.mask-l-to-40\% { --srp-mask-l-to-p: 40%; }
-.mask-l-to-45\% { --srp-mask-l-to-p: 45%; }
-.mask-l-to-50\% { --srp-mask-l-to-p: 50%; }
-.mask-l-to-55\% { --srp-mask-l-to-p: 55%; }
-.mask-l-to-60\% { --srp-mask-l-to-p: 60%; }
-.mask-l-to-65\% { --srp-mask-l-to-p: 65%; }
-.mask-l-to-70\% { --srp-mask-l-to-p: 70%; }
-.mask-l-to-75\% { --srp-mask-l-to-p: 75%; }
-.mask-l-to-80\% { --srp-mask-l-to-p: 80%; }
-.mask-l-to-85\% { --srp-mask-l-to-p: 85%; }
-.mask-l-to-90\% { --srp-mask-l-to-p: 90%; }
-.mask-l-to-95\% { --srp-mask-l-to-p: 95%; }
-.mask-l-to-100\% { --srp-mask-l-to-p: 100%; }
-.mask-x-from-0\% { --srp-mask-l-from-p: 0%; --srp-mask-r-from-p: 0%; }
-.mask-x-from-5\% { --srp-mask-l-from-p: 5%; --srp-mask-r-from-p: 5%; }
-.mask-x-from-10\% { --srp-mask-l-from-p: 10%; --srp-mask-r-from-p: 10%; }
-.mask-x-from-15\% { --srp-mask-l-from-p: 15%; --srp-mask-r-from-p: 15%; }
-.mask-x-from-20\% { --srp-mask-l-from-p: 20%; --srp-mask-r-from-p: 20%; }
-.mask-x-from-25\% { --srp-mask-l-from-p: 25%; --srp-mask-r-from-p: 25%; }
-.mask-x-from-30\% { --srp-mask-l-from-p: 30%; --srp-mask-r-from-p: 30%; }
-.mask-x-from-35\% { --srp-mask-l-from-p: 35%; --srp-mask-r-from-p: 35%; }
-.mask-x-from-40\% { --srp-mask-l-from-p: 40%; --srp-mask-r-from-p: 40%; }
-.mask-x-from-45\% { --srp-mask-l-from-p: 45%; --srp-mask-r-from-p: 45%; }
-.mask-x-from-50\% { --srp-mask-l-from-p: 50%; --srp-mask-r-from-p: 50%; }
-.mask-x-from-55\% { --srp-mask-l-from-p: 55%; --srp-mask-r-from-p: 55%; }
-.mask-x-from-60\% { --srp-mask-l-from-p: 60%; --srp-mask-r-from-p: 60%; }
-.mask-x-from-65\% { --srp-mask-l-from-p: 65%; --srp-mask-r-from-p: 65%; }
-.mask-x-from-70\% { --srp-mask-l-from-p: 70%; --srp-mask-r-from-p: 70%; }
-.mask-x-from-75\% { --srp-mask-l-from-p: 75%; --srp-mask-r-from-p: 75%; }
-.mask-x-from-80\% { --srp-mask-l-from-p: 80%; --srp-mask-r-from-p: 80%; }
-.mask-x-from-85\% { --srp-mask-l-from-p: 85%; --srp-mask-r-from-p: 85%; }
-.mask-x-from-90\% { --srp-mask-l-from-p: 90%; --srp-mask-r-from-p: 90%; }
-.mask-x-from-95\% { --srp-mask-l-from-p: 95%; --srp-mask-r-from-p: 95%; }
-.mask-x-from-100\% { --srp-mask-l-from-p: 100%; --srp-mask-r-from-p: 100%; }
-.mask-x-to-0\% { --srp-mask-l-to-p: 0%; --srp-mask-r-to-p: 0%; }
-.mask-x-to-5\% { --srp-mask-l-to-p: 5%; --srp-mask-r-to-p: 5%; }
-.mask-x-to-10\% { --srp-mask-l-to-p: 10%; --srp-mask-r-to-p: 10%; }
-.mask-x-to-15\% { --srp-mask-l-to-p: 15%; --srp-mask-r-to-p: 15%; }
-.mask-x-to-20\% { --srp-mask-l-to-p: 20%; --srp-mask-r-to-p: 20%; }
-.mask-x-to-25\% { --srp-mask-l-to-p: 25%; --srp-mask-r-to-p: 25%; }
-.mask-x-to-30\% { --srp-mask-l-to-p: 30%; --srp-mask-r-to-p: 30%; }
-.mask-x-to-35\% { --srp-mask-l-to-p: 35%; --srp-mask-r-to-p: 35%; }
-.mask-x-to-40\% { --srp-mask-l-to-p: 40%; --srp-mask-r-to-p: 40%; }
-.mask-x-to-45\% { --srp-mask-l-to-p: 45%; --srp-mask-r-to-p: 45%; }
-.mask-x-to-50\% { --srp-mask-l-to-p: 50%; --srp-mask-r-to-p: 50%; }
-.mask-x-to-55\% { --srp-mask-l-to-p: 55%; --srp-mask-r-to-p: 55%; }
-.mask-x-to-60\% { --srp-mask-l-to-p: 60%; --srp-mask-r-to-p: 60%; }
-.mask-x-to-65\% { --srp-mask-l-to-p: 65%; --srp-mask-r-to-p: 65%; }
-.mask-x-to-70\% { --srp-mask-l-to-p: 70%; --srp-mask-r-to-p: 70%; }
-.mask-x-to-75\% { --srp-mask-l-to-p: 75%; --srp-mask-r-to-p: 75%; }
-.mask-x-to-80\% { --srp-mask-l-to-p: 80%; --srp-mask-r-to-p: 80%; }
-.mask-x-to-85\% { --srp-mask-l-to-p: 85%; --srp-mask-r-to-p: 85%; }
-.mask-x-to-90\% { --srp-mask-l-to-p: 90%; --srp-mask-r-to-p: 90%; }
-.mask-x-to-95\% { --srp-mask-l-to-p: 95%; --srp-mask-r-to-p: 95%; }
-.mask-x-to-100\% { --srp-mask-l-to-p: 100%; --srp-mask-r-to-p: 100%; }
-.mask-y-from-0\% { --srp-mask-t-from-p: 0%; --srp-mask-b-from-p: 0%; }
-.mask-y-from-5\% { --srp-mask-t-from-p: 5%; --srp-mask-b-from-p: 5%; }
-.mask-y-from-10\% { --srp-mask-t-from-p: 10%; --srp-mask-b-from-p: 10%; }
-.mask-y-from-15\% { --srp-mask-t-from-p: 15%; --srp-mask-b-from-p: 15%; }
-.mask-y-from-20\% { --srp-mask-t-from-p: 20%; --srp-mask-b-from-p: 20%; }
-.mask-y-from-25\% { --srp-mask-t-from-p: 25%; --srp-mask-b-from-p: 25%; }
-.mask-y-from-30\% { --srp-mask-t-from-p: 30%; --srp-mask-b-from-p: 30%; }
-.mask-y-from-35\% { --srp-mask-t-from-p: 35%; --srp-mask-b-from-p: 35%; }
-.mask-y-from-40\% { --srp-mask-t-from-p: 40%; --srp-mask-b-from-p: 40%; }
-.mask-y-from-45\% { --srp-mask-t-from-p: 45%; --srp-mask-b-from-p: 45%; }
-.mask-y-from-50\% { --srp-mask-t-from-p: 50%; --srp-mask-b-from-p: 50%; }
-.mask-y-from-55\% { --srp-mask-t-from-p: 55%; --srp-mask-b-from-p: 55%; }
-.mask-y-from-60\% { --srp-mask-t-from-p: 60%; --srp-mask-b-from-p: 60%; }
-.mask-y-from-65\% { --srp-mask-t-from-p: 65%; --srp-mask-b-from-p: 65%; }
-.mask-y-from-70\% { --srp-mask-t-from-p: 70%; --srp-mask-b-from-p: 70%; }
-.mask-y-from-75\% { --srp-mask-t-from-p: 75%; --srp-mask-b-from-p: 75%; }
-.mask-y-from-80\% { --srp-mask-t-from-p: 80%; --srp-mask-b-from-p: 80%; }
-.mask-y-from-85\% { --srp-mask-t-from-p: 85%; --srp-mask-b-from-p: 85%; }
-.mask-y-from-90\% { --srp-mask-t-from-p: 90%; --srp-mask-b-from-p: 90%; }
-.mask-y-from-95\% { --srp-mask-t-from-p: 95%; --srp-mask-b-from-p: 95%; }
-.mask-y-from-100\% { --srp-mask-t-from-p: 100%; --srp-mask-b-from-p: 100%; }
-.mask-y-to-0\% { --srp-mask-t-to-p: 0%; --srp-mask-b-to-p: 0%; }
-.mask-y-to-5\% { --srp-mask-t-to-p: 5%; --srp-mask-b-to-p: 5%; }
-.mask-y-to-10\% { --srp-mask-t-to-p: 10%; --srp-mask-b-to-p: 10%; }
-.mask-y-to-15\% { --srp-mask-t-to-p: 15%; --srp-mask-b-to-p: 15%; }
-.mask-y-to-20\% { --srp-mask-t-to-p: 20%; --srp-mask-b-to-p: 20%; }
-.mask-y-to-25\% { --srp-mask-t-to-p: 25%; --srp-mask-b-to-p: 25%; }
-.mask-y-to-30\% { --srp-mask-t-to-p: 30%; --srp-mask-b-to-p: 30%; }
-.mask-y-to-35\% { --srp-mask-t-to-p: 35%; --srp-mask-b-to-p: 35%; }
-.mask-y-to-40\% { --srp-mask-t-to-p: 40%; --srp-mask-b-to-p: 40%; }
-.mask-y-to-45\% { --srp-mask-t-to-p: 45%; --srp-mask-b-to-p: 45%; }
-.mask-y-to-50\% { --srp-mask-t-to-p: 50%; --srp-mask-b-to-p: 50%; }
-.mask-y-to-55\% { --srp-mask-t-to-p: 55%; --srp-mask-b-to-p: 55%; }
-.mask-y-to-60\% { --srp-mask-t-to-p: 60%; --srp-mask-b-to-p: 60%; }
-.mask-y-to-65\% { --srp-mask-t-to-p: 65%; --srp-mask-b-to-p: 65%; }
-.mask-y-to-70\% { --srp-mask-t-to-p: 70%; --srp-mask-b-to-p: 70%; }
-.mask-y-to-75\% { --srp-mask-t-to-p: 75%; --srp-mask-b-to-p: 75%; }
-.mask-y-to-80\% { --srp-mask-t-to-p: 80%; --srp-mask-b-to-p: 80%; }
-.mask-y-to-85\% { --srp-mask-t-to-p: 85%; --srp-mask-b-to-p: 85%; }
-.mask-y-to-90\% { --srp-mask-t-to-p: 90%; --srp-mask-b-to-p: 90%; }
-.mask-y-to-95\% { --srp-mask-t-to-p: 95%; --srp-mask-b-to-p: 95%; }
-.mask-y-to-100\% { --srp-mask-t-to-p: 100%; --srp-mask-b-to-p: 100%; }
-/* mask-image, linear: mask-linear-<angle>, mask-linear-from-<%>, mask-linear-to-<%> */
-.mask-linear-0 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 0deg; }
-.mask-linear-45 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 45deg; }
-.-mask-linear-45 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -45deg; }
-.mask-linear-90 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 90deg; }
-.-mask-linear-90 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -90deg; }
-.mask-linear-135 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 135deg; }
-.-mask-linear-135 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -135deg; }
-.mask-linear-180 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 180deg; }
-.-mask-linear-180 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -180deg; }
-.mask-linear-225 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 225deg; }
-.-mask-linear-225 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -225deg; }
-.mask-linear-270 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 270deg; }
-.-mask-linear-270 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -270deg; }
-.mask-linear-315 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 315deg; }
-.-mask-linear-315 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -315deg; }
-[class^="mask-linear-from-"], [class*=" mask-linear-from-"], [class^="mask-linear-to-"], [class*=" mask-linear-to-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear-stops: var(--srp-mask-linear-position), var(--srp-mask-linear-from-c) var(--srp-mask-linear-from-p), var(--srp-mask-linear-to-c) var(--srp-mask-linear-to-p); --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops)); }
-.mask-linear-from-0\% { --srp-mask-linear-from-p: 0%; }
-.mask-linear-from-5\% { --srp-mask-linear-from-p: 5%; }
-.mask-linear-from-10\% { --srp-mask-linear-from-p: 10%; }
-.mask-linear-from-15\% { --srp-mask-linear-from-p: 15%; }
-.mask-linear-from-20\% { --srp-mask-linear-from-p: 20%; }
-.mask-linear-from-25\% { --srp-mask-linear-from-p: 25%; }
-.mask-linear-from-30\% { --srp-mask-linear-from-p: 30%; }
-.mask-linear-from-35\% { --srp-mask-linear-from-p: 35%; }
-.mask-linear-from-40\% { --srp-mask-linear-from-p: 40%; }
-.mask-linear-from-45\% { --srp-mask-linear-from-p: 45%; }
-.mask-linear-from-50\% { --srp-mask-linear-from-p: 50%; }
-.mask-linear-from-55\% { --srp-mask-linear-from-p: 55%; }
-.mask-linear-from-60\% { --srp-mask-linear-from-p: 60%; }
-.mask-linear-from-65\% { --srp-mask-linear-from-p: 65%; }
-.mask-linear-from-70\% { --srp-mask-linear-from-p: 70%; }
-.mask-linear-from-75\% { --srp-mask-linear-from-p: 75%; }
-.mask-linear-from-80\% { --srp-mask-linear-from-p: 80%; }
-.mask-linear-from-85\% { --srp-mask-linear-from-p: 85%; }
-.mask-linear-from-90\% { --srp-mask-linear-from-p: 90%; }
-.mask-linear-from-95\% { --srp-mask-linear-from-p: 95%; }
-.mask-linear-from-100\% { --srp-mask-linear-from-p: 100%; }
-.mask-linear-to-0\% { --srp-mask-linear-to-p: 0%; }
-.mask-linear-to-5\% { --srp-mask-linear-to-p: 5%; }
-.mask-linear-to-10\% { --srp-mask-linear-to-p: 10%; }
-.mask-linear-to-15\% { --srp-mask-linear-to-p: 15%; }
-.mask-linear-to-20\% { --srp-mask-linear-to-p: 20%; }
-.mask-linear-to-25\% { --srp-mask-linear-to-p: 25%; }
-.mask-linear-to-30\% { --srp-mask-linear-to-p: 30%; }
-.mask-linear-to-35\% { --srp-mask-linear-to-p: 35%; }
-.mask-linear-to-40\% { --srp-mask-linear-to-p: 40%; }
-.mask-linear-to-45\% { --srp-mask-linear-to-p: 45%; }
-.mask-linear-to-50\% { --srp-mask-linear-to-p: 50%; }
-.mask-linear-to-55\% { --srp-mask-linear-to-p: 55%; }
-.mask-linear-to-60\% { --srp-mask-linear-to-p: 60%; }
-.mask-linear-to-65\% { --srp-mask-linear-to-p: 65%; }
-.mask-linear-to-70\% { --srp-mask-linear-to-p: 70%; }
-.mask-linear-to-75\% { --srp-mask-linear-to-p: 75%; }
-.mask-linear-to-80\% { --srp-mask-linear-to-p: 80%; }
-.mask-linear-to-85\% { --srp-mask-linear-to-p: 85%; }
-.mask-linear-to-90\% { --srp-mask-linear-to-p: 90%; }
-.mask-linear-to-95\% { --srp-mask-linear-to-p: 95%; }
-.mask-linear-to-100\% { --srp-mask-linear-to-p: 100%; }
-/* mask-image, radial: mask-radial-from-<%>, -to-<%>; shape mask-circle / mask-ellipse; size mask-radial-closest-side…; position mask-radial-at-<side> */
-[class^="mask-radial-from-"], [class*=" mask-radial-from-"], [class^="mask-radial-to-"], [class*=" mask-radial-to-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-radial-stops: var(--srp-mask-radial-shape) var(--srp-mask-radial-size) at var(--srp-mask-radial-position), var(--srp-mask-radial-from-c) var(--srp-mask-radial-from-p), var(--srp-mask-radial-to-c) var(--srp-mask-radial-to-p); --srp-mask-radial: radial-gradient(var(--srp-mask-radial-stops)); }
-.mask-radial-from-0\% { --srp-mask-radial-from-p: 0%; }
-.mask-radial-from-5\% { --srp-mask-radial-from-p: 5%; }
-.mask-radial-from-10\% { --srp-mask-radial-from-p: 10%; }
-.mask-radial-from-15\% { --srp-mask-radial-from-p: 15%; }
-.mask-radial-from-20\% { --srp-mask-radial-from-p: 20%; }
-.mask-radial-from-25\% { --srp-mask-radial-from-p: 25%; }
-.mask-radial-from-30\% { --srp-mask-radial-from-p: 30%; }
-.mask-radial-from-35\% { --srp-mask-radial-from-p: 35%; }
-.mask-radial-from-40\% { --srp-mask-radial-from-p: 40%; }
-.mask-radial-from-45\% { --srp-mask-radial-from-p: 45%; }
-.mask-radial-from-50\% { --srp-mask-radial-from-p: 50%; }
-.mask-radial-from-55\% { --srp-mask-radial-from-p: 55%; }
-.mask-radial-from-60\% { --srp-mask-radial-from-p: 60%; }
-.mask-radial-from-65\% { --srp-mask-radial-from-p: 65%; }
-.mask-radial-from-70\% { --srp-mask-radial-from-p: 70%; }
-.mask-radial-from-75\% { --srp-mask-radial-from-p: 75%; }
-.mask-radial-from-80\% { --srp-mask-radial-from-p: 80%; }
-.mask-radial-from-85\% { --srp-mask-radial-from-p: 85%; }
-.mask-radial-from-90\% { --srp-mask-radial-from-p: 90%; }
-.mask-radial-from-95\% { --srp-mask-radial-from-p: 95%; }
-.mask-radial-from-100\% { --srp-mask-radial-from-p: 100%; }
-.mask-radial-to-0\% { --srp-mask-radial-to-p: 0%; }
-.mask-radial-to-5\% { --srp-mask-radial-to-p: 5%; }
-.mask-radial-to-10\% { --srp-mask-radial-to-p: 10%; }
-.mask-radial-to-15\% { --srp-mask-radial-to-p: 15%; }
-.mask-radial-to-20\% { --srp-mask-radial-to-p: 20%; }
-.mask-radial-to-25\% { --srp-mask-radial-to-p: 25%; }
-.mask-radial-to-30\% { --srp-mask-radial-to-p: 30%; }
-.mask-radial-to-35\% { --srp-mask-radial-to-p: 35%; }
-.mask-radial-to-40\% { --srp-mask-radial-to-p: 40%; }
-.mask-radial-to-45\% { --srp-mask-radial-to-p: 45%; }
-.mask-radial-to-50\% { --srp-mask-radial-to-p: 50%; }
-.mask-radial-to-55\% { --srp-mask-radial-to-p: 55%; }
-.mask-radial-to-60\% { --srp-mask-radial-to-p: 60%; }
-.mask-radial-to-65\% { --srp-mask-radial-to-p: 65%; }
-.mask-radial-to-70\% { --srp-mask-radial-to-p: 70%; }
-.mask-radial-to-75\% { --srp-mask-radial-to-p: 75%; }
-.mask-radial-to-80\% { --srp-mask-radial-to-p: 80%; }
-.mask-radial-to-85\% { --srp-mask-radial-to-p: 85%; }
-.mask-radial-to-90\% { --srp-mask-radial-to-p: 90%; }
-.mask-radial-to-95\% { --srp-mask-radial-to-p: 95%; }
-.mask-radial-to-100\% { --srp-mask-radial-to-p: 100%; }
-.mask-circle { --srp-mask-radial-shape: circle; }
-.mask-ellipse { --srp-mask-radial-shape: ellipse; }
-.mask-radial-closest-corner { --srp-mask-radial-size: closest-corner; }
-.mask-radial-closest-side { --srp-mask-radial-size: closest-side; }
-.mask-radial-farthest-corner { --srp-mask-radial-size: farthest-corner; }
-.mask-radial-farthest-side { --srp-mask-radial-size: farthest-side; }
-.mask-radial-at-top-left { --srp-mask-radial-position: top left; }
-.mask-radial-at-top { --srp-mask-radial-position: top; }
-.mask-radial-at-top-right { --srp-mask-radial-position: top right; }
-.mask-radial-at-left { --srp-mask-radial-position: left; }
-.mask-radial-at-center { --srp-mask-radial-position: center; }
-.mask-radial-at-right { --srp-mask-radial-position: right; }
-.mask-radial-at-bottom-left { --srp-mask-radial-position: bottom left; }
-.mask-radial-at-bottom { --srp-mask-radial-position: bottom; }
-.mask-radial-at-bottom-right { --srp-mask-radial-position: bottom right; }
-/* mask-image, conic: mask-conic-<angle>, mask-conic-from-<%>, -to-<%> */
-.mask-conic-0 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 0deg; }
-.mask-conic-45 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 45deg; }
-.-mask-conic-45 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -45deg; }
-.mask-conic-90 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 90deg; }
-.-mask-conic-90 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -90deg; }
-.mask-conic-135 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 135deg; }
-.-mask-conic-135 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -135deg; }
-.mask-conic-180 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 180deg; }
-.-mask-conic-180 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -180deg; }
-.mask-conic-225 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 225deg; }
-.-mask-conic-225 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -225deg; }
-.mask-conic-270 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 270deg; }
-.-mask-conic-270 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -270deg; }
-.mask-conic-315 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 315deg; }
-.-mask-conic-315 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -315deg; }
-[class^="mask-conic-from-"], [class*=" mask-conic-from-"], [class^="mask-conic-to-"], [class*=" mask-conic-to-"] { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic-stops: from var(--srp-mask-conic-position), var(--srp-mask-conic-from-c) var(--srp-mask-conic-from-p), var(--srp-mask-conic-to-c) var(--srp-mask-conic-to-p); --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops)); }
-.mask-conic-from-0\% { --srp-mask-conic-from-p: 0%; }
-.mask-conic-from-5\% { --srp-mask-conic-from-p: 5%; }
-.mask-conic-from-10\% { --srp-mask-conic-from-p: 10%; }
-.mask-conic-from-15\% { --srp-mask-conic-from-p: 15%; }
-.mask-conic-from-20\% { --srp-mask-conic-from-p: 20%; }
-.mask-conic-from-25\% { --srp-mask-conic-from-p: 25%; }
-.mask-conic-from-30\% { --srp-mask-conic-from-p: 30%; }
-.mask-conic-from-35\% { --srp-mask-conic-from-p: 35%; }
-.mask-conic-from-40\% { --srp-mask-conic-from-p: 40%; }
-.mask-conic-from-45\% { --srp-mask-conic-from-p: 45%; }
-.mask-conic-from-50\% { --srp-mask-conic-from-p: 50%; }
-.mask-conic-from-55\% { --srp-mask-conic-from-p: 55%; }
-.mask-conic-from-60\% { --srp-mask-conic-from-p: 60%; }
-.mask-conic-from-65\% { --srp-mask-conic-from-p: 65%; }
-.mask-conic-from-70\% { --srp-mask-conic-from-p: 70%; }
-.mask-conic-from-75\% { --srp-mask-conic-from-p: 75%; }
-.mask-conic-from-80\% { --srp-mask-conic-from-p: 80%; }
-.mask-conic-from-85\% { --srp-mask-conic-from-p: 85%; }
-.mask-conic-from-90\% { --srp-mask-conic-from-p: 90%; }
-.mask-conic-from-95\% { --srp-mask-conic-from-p: 95%; }
-.mask-conic-from-100\% { --srp-mask-conic-from-p: 100%; }
-.mask-conic-to-0\% { --srp-mask-conic-to-p: 0%; }
-.mask-conic-to-5\% { --srp-mask-conic-to-p: 5%; }
-.mask-conic-to-10\% { --srp-mask-conic-to-p: 10%; }
-.mask-conic-to-15\% { --srp-mask-conic-to-p: 15%; }
-.mask-conic-to-20\% { --srp-mask-conic-to-p: 20%; }
-.mask-conic-to-25\% { --srp-mask-conic-to-p: 25%; }
-.mask-conic-to-30\% { --srp-mask-conic-to-p: 30%; }
-.mask-conic-to-35\% { --srp-mask-conic-to-p: 35%; }
-.mask-conic-to-40\% { --srp-mask-conic-to-p: 40%; }
-.mask-conic-to-45\% { --srp-mask-conic-to-p: 45%; }
-.mask-conic-to-50\% { --srp-mask-conic-to-p: 50%; }
-.mask-conic-to-55\% { --srp-mask-conic-to-p: 55%; }
-.mask-conic-to-60\% { --srp-mask-conic-to-p: 60%; }
-.mask-conic-to-65\% { --srp-mask-conic-to-p: 65%; }
-.mask-conic-to-70\% { --srp-mask-conic-to-p: 70%; }
-.mask-conic-to-75\% { --srp-mask-conic-to-p: 75%; }
-.mask-conic-to-80\% { --srp-mask-conic-to-p: 80%; }
-.mask-conic-to-85\% { --srp-mask-conic-to-p: 85%; }
-.mask-conic-to-90\% { --srp-mask-conic-to-p: 90%; }
-.mask-conic-to-95\% { --srp-mask-conic-to-p: 95%; }
-.mask-conic-to-100\% { --srp-mask-conic-to-p: 100%; }
-/* mask-mode */
-.mask-alpha { mask-mode: alpha; }
-.mask-luminance { mask-mode: luminance; }
-.mask-match { mask-mode: match-source; }
-/* mask-origin */
-.mask-origin-border { mask-origin: border-box; }
-.mask-origin-padding { mask-origin: padding-box; }
-.mask-origin-content { mask-origin: content-box; }
-.mask-origin-fill { mask-origin: fill-box; }
-.mask-origin-stroke { mask-origin: stroke-box; }
-.mask-origin-view { mask-origin: view-box; }
-/* mask-position */
-.mask-top-left { mask-position: left top; }
-.mask-top { mask-position: top; }
-.mask-top-right { mask-position: right top; }
-.mask-left { mask-position: left; }
-.mask-center { mask-position: center; }
-.mask-right { mask-position: right; }
-.mask-bottom-left { mask-position: left bottom; }
-.mask-bottom { mask-position: bottom; }
-.mask-bottom-right { mask-position: right bottom; }
-/* mask-repeat */
-.mask-repeat { mask-repeat: repeat; }
-.mask-no-repeat { mask-repeat: no-repeat; }
-.mask-repeat-x { mask-repeat: repeat-x; }
-.mask-repeat-y { mask-repeat: repeat-y; }
-.mask-repeat-space { mask-repeat: space; }
-.mask-repeat-round { mask-repeat: round; }
-/* mask-size */
-.mask-auto { mask-size: auto; }
-.mask-cover { mask-size: cover; }
-.mask-contain { mask-size: contain; }
-/* mask-type (on SVG <mask> elements) */
-.mask-type-alpha { mask-type: alpha; }
-.mask-type-luminance { mask-type: luminance; }
 /* ---------------------------------------------------------------
    Interactivity: Interactivity utilities.
-   Colors come from the palette and alias tokens; scroll-m-* and scroll-p-*
+   Colors are the role colors; scroll-m-* and scroll-p-*
    use the spacing tokens; everything else is a keyword.
    --------------------------------------------------------------- */
 
@@ -3146,57 +1818,22 @@
 .scroll-m-0 { scroll-margin: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-m-{k} { scroll-margin: var(--{t}); }
-  .-scroll-m-{k} { scroll-margin: calc(var(--{t}) * -1); }
 }
 .scroll-mx-0 { scroll-margin-inline: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-mx-{k} { scroll-margin-inline: var(--{t}); }
-  .-scroll-mx-{k} { scroll-margin-inline: calc(var(--{t}) * -1); }
-}
-.scroll-my-0 { scroll-margin-block: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-my-{k} { scroll-margin-block: var(--{t}); }
-  .-scroll-my-{k} { scroll-margin-block: calc(var(--{t}) * -1); }
 }
 .scroll-ms-0 { scroll-margin-inline-start: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-ms-{k} { scroll-margin-inline-start: var(--{t}); }
-  .-scroll-ms-{k} { scroll-margin-inline-start: calc(var(--{t}) * -1); }
 }
 .scroll-me-0 { scroll-margin-inline-end: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-me-{k} { scroll-margin-inline-end: var(--{t}); }
-  .-scroll-me-{k} { scroll-margin-inline-end: calc(var(--{t}) * -1); }
-}
-.scroll-mbs-0 { scroll-margin-block-start: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mbs-{k} { scroll-margin-block-start: var(--{t}); }
-  .-scroll-mbs-{k} { scroll-margin-block-start: calc(var(--{t}) * -1); }
-}
-.scroll-mbe-0 { scroll-margin-block-end: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mbe-{k} { scroll-margin-block-end: var(--{t}); }
-  .-scroll-mbe-{k} { scroll-margin-block-end: calc(var(--{t}) * -1); }
 }
 .scroll-mt-0 { scroll-margin-top: var(--spacing-0); }
 @each spacing- not(0) {
   .scroll-mt-{k} { scroll-margin-top: var(--{t}); }
-  .-scroll-mt-{k} { scroll-margin-top: calc(var(--{t}) * -1); }
-}
-.scroll-mr-0 { scroll-margin-right: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mr-{k} { scroll-margin-right: var(--{t}); }
-  .-scroll-mr-{k} { scroll-margin-right: calc(var(--{t}) * -1); }
-}
-.scroll-mb-0 { scroll-margin-bottom: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-mb-{k} { scroll-margin-bottom: var(--{t}); }
-  .-scroll-mb-{k} { scroll-margin-bottom: calc(var(--{t}) * -1); }
-}
-.scroll-ml-0 { scroll-margin-left: var(--spacing-0); }
-@each spacing- not(0) {
-  .scroll-ml-{k} { scroll-margin-left: var(--{t}); }
-  .-scroll-ml-{k} { scroll-margin-left: calc(var(--{t}) * -1); }
 }
 /* scroll-padding (spacing scale) */
 @each spacing- {
@@ -3206,31 +1843,13 @@
   .scroll-px-{k} { scroll-padding-inline: var(--{t}); }
 }
 @each spacing- {
-  .scroll-py-{k} { scroll-padding-block: var(--{t}); }
-}
-@each spacing- {
   .scroll-ps-{k} { scroll-padding-inline-start: var(--{t}); }
 }
 @each spacing- {
   .scroll-pe-{k} { scroll-padding-inline-end: var(--{t}); }
 }
 @each spacing- {
-  .scroll-pbs-{k} { scroll-padding-block-start: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pbe-{k} { scroll-padding-block-end: var(--{t}); }
-}
-@each spacing- {
   .scroll-pt-{k} { scroll-padding-top: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pr-{k} { scroll-padding-right: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pb-{k} { scroll-padding-bottom: var(--{t}); }
-}
-@each spacing- {
-  .scroll-pl-{k} { scroll-padding-left: var(--{t}); }
 }
 /* scroll-snap-align */
 .snap-start { scroll-snap-align: start; }
@@ -3270,7 +1889,7 @@
 .will-change-transform { will-change: transform; }
 /* ---------------------------------------------------------------
    SVG: Fill, stroke and stroke-width utilities.
-   Colors come from the palette and alias tokens; widths are stroke-width-* tokens.
+   Colors are the role colors; widths are stroke-width-* tokens.
    Material Symbols are font glyphs: color them with text-*, not fill-*.
    --------------------------------------------------------------- */
 /* fill */
@@ -4688,7 +3307,6 @@
 .left-auto { left: auto; }
 .left-full { left: var(--sizing-full); }
 .left-px { left: var(--spacing-px); }
-.inset-shadow-initial { --srp-inset-shadow-color: initial; }
 /* Layout: display */
 .inline-table { display: inline-table; }
 .list-item { display: list-item; }
@@ -4702,27 +3320,6 @@
 .table-row { display: table-row; }
 .table-row-group { display: table-row-group; }
 /* Layout: columns and breaks */
-.columns-auto { columns: auto; }
-.break-before-all { break-before: all; }
-.break-before-auto { break-before: auto; }
-.break-before-avoid { break-before: avoid; }
-.break-before-avoid-page { break-before: avoid-page; }
-.break-before-column { break-before: column; }
-.break-before-left { break-before: left; }
-.break-before-page { break-before: page; }
-.break-before-right { break-before: right; }
-.break-inside-auto { break-inside: auto; }
-.break-inside-avoid { break-inside: avoid; }
-.break-inside-avoid-column { break-inside: avoid-column; }
-.break-inside-avoid-page { break-inside: avoid-page; }
-.break-after-all { break-after: all; }
-.break-after-auto { break-after: auto; }
-.break-after-avoid { break-after: avoid; }
-.break-after-avoid-page { break-after: avoid-page; }
-.break-after-column { break-after: column; }
-.break-after-left { break-after: left; }
-.break-after-page { break-after: page; }
-.break-after-right { break-after: right; }
 .box-decoration-clone { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .box-decoration-slice { -webkit-box-decoration-break: slice; box-decoration-break: slice; }
 /* Layout: float and clear */
@@ -4848,81 +3445,27 @@
 .font-stretch-150\% { font-stretch: 150%; }
 .font-stretch-200\% { font-stretch: 200%; }
 .-underline-offset-0 { text-underline-offset: calc(var(--underline-offset-0) * -1); }
-@each amber- {
-  .placeholder-amber-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-black::placeholder { color: var(--black); }
-@each blue- {
-  .placeholder-blue-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-border::placeholder { color: var(--border); }
 .placeholder-border-strong::placeholder { color: var(--border-strong); }
 .placeholder-current::placeholder { color: currentColor; }
-@each cyan- {
-  .placeholder-cyan-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-danger::placeholder { color: var(--danger); }
 .placeholder-danger-border::placeholder { color: var(--danger-border); }
 @each danger- not(text, border) {
   .placeholder-danger-{k}::placeholder { color: var(--{t}); }
 }
 .placeholder-danger-text::placeholder { color: var(--danger-text); }
-@each emerald- {
-  .placeholder-emerald-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-focus-ring::placeholder { color: var(--focus-ring); }
-@each fuchsia- {
-  .placeholder-fuchsia-{k}::placeholder { color: var(--{t}); }
-}
-@each gray- {
-  .placeholder-gray-{k}::placeholder { color: var(--{t}); }
-}
-@each green- {
-  .placeholder-green-{k}::placeholder { color: var(--{t}); }
-}
-@each indigo- {
-  .placeholder-indigo-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-info::placeholder { color: var(--info); }
 .placeholder-info-subtle::placeholder { color: var(--info-subtle); }
 .placeholder-inherit::placeholder { color: inherit; }
-@each lime- {
-  .placeholder-lime-{k}::placeholder { color: var(--{t}); }
-}
-@each neutral- {
-  .placeholder-neutral-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-on-danger::placeholder { color: var(--on-danger); }
 .placeholder-on-primary::placeholder { color: var(--on-primary); }
-@each orange- {
-  .placeholder-orange-{k}::placeholder { color: var(--{t}); }
-}
-@each pink- {
-  .placeholder-pink-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-primary::placeholder { color: var(--primary); }
 .placeholder-primary-hover::placeholder { color: var(--primary-hover); }
 .placeholder-primary-subtle::placeholder { color: var(--primary-subtle); }
-@each purple- {
-  .placeholder-purple-{k}::placeholder { color: var(--{t}); }
-}
-@each red- {
-  .placeholder-red-{k}::placeholder { color: var(--{t}); }
-}
-@each rose- {
-  .placeholder-rose-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-secondary::placeholder { color: var(--secondary); }
 .placeholder-secondary-hover::placeholder { color: var(--secondary-hover); }
-@each sky- {
-  .placeholder-sky-{k}::placeholder { color: var(--{t}); }
-}
-@each slate- {
-  .placeholder-slate-{k}::placeholder { color: var(--{t}); }
-}
-@each stone- {
-  .placeholder-stone-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-success::placeholder { color: var(--success); }
 .placeholder-success-subtle::placeholder { color: var(--success-subtle); }
 .placeholder-surface::placeholder { color: var(--surface); }
@@ -4933,25 +3476,13 @@
 .placeholder-field-border-hover::placeholder { color: var(--field-border-hover); }
 .placeholder-placeholder::placeholder { color: var(--placeholder); }
 .placeholder-overlay::placeholder { color: var(--overlay); }
-@each teal- {
-  .placeholder-teal-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-text::placeholder { color: var(--text); }
 .placeholder-text-inverse::placeholder { color: var(--text-inverse); }
 .placeholder-text-muted::placeholder { color: var(--text-muted); }
 .placeholder-transparent::placeholder { color: #0000; }
-@each violet- {
-  .placeholder-violet-{k}::placeholder { color: var(--{t}); }
-}
 .placeholder-warning::placeholder { color: var(--warning); }
 .placeholder-warning-subtle::placeholder { color: var(--warning-subtle); }
 .placeholder-white::placeholder { color: var(--white); }
-@each yellow- {
-  .placeholder-yellow-{k}::placeholder { color: var(--{t}); }
-}
-@each zinc- {
-  .placeholder-zinc-{k}::placeholder { color: var(--{t}); }
-}
 /* Spacing (negative zero aliases) */
 .-m-0 { margin: var(--spacing-0); }
 .-mx-0 { margin-inline: var(--spacing-0); }
@@ -4975,51 +3506,7 @@
 .shadow-inner { --srp-shadow: inset 0 2px 4px 0 var(--srp-shadow-color, #0000000d); box-shadow: var(--srp-inset-shadow), var(--srp-inset-ring-shadow), var(--srp-ring-offset-shadow), var(--srp-ring-shadow), var(--srp-shadow); }
 .shadow-initial { --srp-shadow-color: initial; }
 .-outline-offset-0 { outline-offset: calc(var(--outline-offset-0) * -1); }
-.text-shadow-initial { --srp-text-shadow-color: initial; }
-/* Backgrounds */
-.via-none { --srp-gradient-via-stops: initial; }
 /* Transforms */
-.-translate-0 { --srp-translate-x: calc(var(--spacing-0) * -1); --srp-translate-y: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/5 { --srp-translate-x: calc(calc(1 / 5 * 100%) * -1); --srp-translate-y: calc(calc(1 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/6 { --srp-translate-x: calc(calc(1 / 6 * 100%) * -1); --srp-translate-y: calc(calc(1 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-1\/12 { --srp-translate-x: calc(calc(1 / 12 * 100%) * -1); --srp-translate-y: calc(calc(1 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/5 { --srp-translate-x: calc(calc(2 / 5 * 100%) * -1); --srp-translate-y: calc(calc(2 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/6 { --srp-translate-x: calc(calc(2 / 6 * 100%) * -1); --srp-translate-y: calc(calc(2 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-2\/12 { --srp-translate-x: calc(calc(2 / 12 * 100%) * -1); --srp-translate-y: calc(calc(2 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/5 { --srp-translate-x: calc(calc(3 / 5 * 100%) * -1); --srp-translate-y: calc(calc(3 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/6 { --srp-translate-x: calc(calc(3 / 6 * 100%) * -1); --srp-translate-y: calc(calc(3 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-3\/12 { --srp-translate-x: calc(calc(3 / 12 * 100%) * -1); --srp-translate-y: calc(calc(3 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/5 { --srp-translate-x: calc(calc(4 / 5 * 100%) * -1); --srp-translate-y: calc(calc(4 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/6 { --srp-translate-x: calc(calc(4 / 6 * 100%) * -1); --srp-translate-y: calc(calc(4 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-4\/12 { --srp-translate-x: calc(calc(4 / 12 * 100%) * -1); --srp-translate-y: calc(calc(4 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-5\/6 { --srp-translate-x: calc(calc(5 / 6 * 100%) * -1); --srp-translate-y: calc(calc(5 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-5\/12 { --srp-translate-x: calc(calc(5 / 12 * 100%) * -1); --srp-translate-y: calc(calc(5 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-6\/12 { --srp-translate-x: calc(calc(6 / 12 * 100%) * -1); --srp-translate-y: calc(calc(6 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-7\/12 { --srp-translate-x: calc(calc(7 / 12 * 100%) * -1); --srp-translate-y: calc(calc(7 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-8\/12 { --srp-translate-x: calc(calc(8 / 12 * 100%) * -1); --srp-translate-y: calc(calc(8 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-9\/12 { --srp-translate-x: calc(calc(9 / 12 * 100%) * -1); --srp-translate-y: calc(calc(9 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-10\/12 { --srp-translate-x: calc(calc(10 / 12 * 100%) * -1); --srp-translate-y: calc(calc(10 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-11\/12 { --srp-translate-x: calc(calc(11 / 12 * 100%) * -1); --srp-translate-y: calc(calc(11 / 12 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/5 { --srp-translate-x: calc(1 / 5 * 100%); --srp-translate-y: calc(1 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/6 { --srp-translate-x: calc(1 / 6 * 100%); --srp-translate-y: calc(1 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-1\/12 { --srp-translate-x: calc(1 / 12 * 100%); --srp-translate-y: calc(1 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/5 { --srp-translate-x: calc(2 / 5 * 100%); --srp-translate-y: calc(2 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/6 { --srp-translate-x: calc(2 / 6 * 100%); --srp-translate-y: calc(2 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-2\/12 { --srp-translate-x: calc(2 / 12 * 100%); --srp-translate-y: calc(2 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/5 { --srp-translate-x: calc(3 / 5 * 100%); --srp-translate-y: calc(3 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/6 { --srp-translate-x: calc(3 / 6 * 100%); --srp-translate-y: calc(3 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-3\/12 { --srp-translate-x: calc(3 / 12 * 100%); --srp-translate-y: calc(3 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/5 { --srp-translate-x: calc(4 / 5 * 100%); --srp-translate-y: calc(4 / 5 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/6 { --srp-translate-x: calc(4 / 6 * 100%); --srp-translate-y: calc(4 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-4\/12 { --srp-translate-x: calc(4 / 12 * 100%); --srp-translate-y: calc(4 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-5\/6 { --srp-translate-x: calc(5 / 6 * 100%); --srp-translate-y: calc(5 / 6 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-5\/12 { --srp-translate-x: calc(5 / 12 * 100%); --srp-translate-y: calc(5 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-6\/12 { --srp-translate-x: calc(6 / 12 * 100%); --srp-translate-y: calc(6 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-7\/12 { --srp-translate-x: calc(7 / 12 * 100%); --srp-translate-y: calc(7 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-8\/12 { --srp-translate-x: calc(8 / 12 * 100%); --srp-translate-y: calc(8 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-9\/12 { --srp-translate-x: calc(9 / 12 * 100%); --srp-translate-y: calc(9 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-10\/12 { --srp-translate-x: calc(10 / 12 * 100%); --srp-translate-y: calc(10 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.translate-11\/12 { --srp-translate-x: calc(11 / 12 * 100%); --srp-translate-y: calc(11 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-0 { --srp-translate-x: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/5 { --srp-translate-x: calc(calc(1 / 5 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .-translate-x-1\/6 { --srp-translate-x: calc(calc(1 / 6 * 100%) * -1); translate: var(--srp-translate-x) var(--srp-translate-y); }
@@ -5102,279 +3589,12 @@
 .translate-y-9\/12 { --srp-translate-y: calc(9 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-10\/12 { --srp-translate-y: calc(10 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
 .translate-y-11\/12 { --srp-translate-y: calc(11 / 12 * 100%); translate: var(--srp-translate-x) var(--srp-translate-y); }
-.-translate-z-0 { --srp-translate-z: calc(var(--spacing-0) * -1); translate: var(--srp-translate-x) var(--srp-translate-y) var(--srp-translate-z); }
-.-rotate-0 { rotate: calc(var(--rotate-0) * -1); }
-.-rotate-x-0 { --srp-rotate-x: rotateX(calc(0deg * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-rotate-y-0 { --srp-rotate-y: rotateY(calc(0deg * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-rotate-z-0 { --srp-rotate-z: rotateZ(calc(0deg * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-0 { --srp-skew-x: skewX(calc(var(--skew-0) * -1)); --srp-skew-y: skewY(calc(var(--skew-0) * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-x-0 { --srp-skew-x: skewX(calc(0deg * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.-skew-y-0 { --srp-skew-y: skewY(calc(0deg * -1)); transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.transform { transform: var(--srp-rotate-x, ) var(--srp-rotate-y, ) var(--srp-rotate-z, ) var(--srp-skew-x, ) var(--srp-skew-y, ); }
-.transform-border { transform-box: border-box; }
-.transform-content { transform-box: content-box; }
-.transform-fill { transform-box: fill-box; }
-.transform-stroke { transform-box: stroke-box; }
-.transform-view { transform-box: view-box; }
-/* Interactivity */
-.-scroll-m-0 { scroll-margin: var(--spacing-0); }
-.-scroll-mx-0 { scroll-margin-inline: var(--spacing-0); }
-.-scroll-my-0 { scroll-margin-block: var(--spacing-0); }
-.-scroll-ms-0 { scroll-margin-inline-start: var(--spacing-0); }
-.-scroll-me-0 { scroll-margin-inline-end: var(--spacing-0); }
-.-scroll-mbs-0 { scroll-margin-block-start: var(--spacing-0); }
-.-scroll-mbe-0 { scroll-margin-block-end: var(--spacing-0); }
-.-scroll-mt-0 { scroll-margin-top: var(--spacing-0); }
-.-scroll-mr-0 { scroll-margin-right: var(--spacing-0); }
-.-scroll-mb-0 { scroll-margin-bottom: var(--spacing-0); }
-.-scroll-ml-0 { scroll-margin-left: var(--spacing-0); }
-/* Backgrounds and masks: more gradient angles, scale, zoom and opacity steps */
-.bg-linear-30 { --srp-gradient-position: 30deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-30 { --srp-gradient-position: -30deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-60 { --srp-gradient-position: 60deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-60 { --srp-gradient-position: -60deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-120 { --srp-gradient-position: 120deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-120 { --srp-gradient-position: -120deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-150 { --srp-gradient-position: 150deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-150 { --srp-gradient-position: -150deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-210 { --srp-gradient-position: 210deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-210 { --srp-gradient-position: -210deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-240 { --srp-gradient-position: 240deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-240 { --srp-gradient-position: -240deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-300 { --srp-gradient-position: 300deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-300 { --srp-gradient-position: -300deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-linear-330 { --srp-gradient-position: 330deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.-bg-linear-330 { --srp-gradient-position: -330deg in oklab; background-image: linear-gradient(var(--srp-gradient-stops)); }
-.bg-conic-30 { --srp-gradient-position: from 30deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-60 { --srp-gradient-position: from 60deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-120 { --srp-gradient-position: from 120deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-150 { --srp-gradient-position: from 150deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-210 { --srp-gradient-position: from 210deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-240 { --srp-gradient-position: from 240deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-300 { --srp-gradient-position: from 300deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.bg-conic-330 { --srp-gradient-position: from 330deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-0 { --srp-gradient-position: from -0deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-30 { --srp-gradient-position: from -30deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-60 { --srp-gradient-position: from -60deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-90 { --srp-gradient-position: from -90deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-120 { --srp-gradient-position: from -120deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-150 { --srp-gradient-position: from -150deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-180 { --srp-gradient-position: from -180deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-210 { --srp-gradient-position: from -210deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-240 { --srp-gradient-position: from -240deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-270 { --srp-gradient-position: from -270deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-300 { --srp-gradient-position: from -300deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.-bg-conic-330 { --srp-gradient-position: from -330deg in oklab; background-image: conic-gradient(var(--srp-gradient-stops)); }
-.mask-linear-1 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 1deg; }
-.mask-linear-2 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 2deg; }
-.mask-linear-3 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 3deg; }
-.mask-linear-6 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 6deg; }
-.mask-linear-12 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: 12deg; }
-.-mask-linear-0 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -0deg; }
-.-mask-linear-1 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -1deg; }
-.-mask-linear-2 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -2deg; }
-.-mask-linear-3 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -3deg; }
-.-mask-linear-6 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -6deg; }
-.-mask-linear-12 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-linear: linear-gradient(var(--srp-mask-linear-stops, var(--srp-mask-linear-position))); --srp-mask-linear-position: -12deg; }
-.mask-conic-1 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 1deg; }
-.mask-conic-2 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 2deg; }
-.mask-conic-3 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 3deg; }
-.mask-conic-6 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 6deg; }
-.mask-conic-12 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: 12deg; }
-.-mask-conic-0 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -0deg; }
-.-mask-conic-1 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -1deg; }
-.-mask-conic-2 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -2deg; }
-.-mask-conic-3 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -3deg; }
-.-mask-conic-6 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -6deg; }
-.-mask-conic-12 { mask-image: var(--srp-mask-linear), var(--srp-mask-radial), var(--srp-mask-conic); mask-composite: intersect; --srp-mask-conic: conic-gradient(var(--srp-mask-conic-stops, var(--srp-mask-conic-position))); --srp-mask-conic-position: -12deg; }
-.scale-200 { --srp-scale-x: var(--scale-200); --srp-scale-y: var(--scale-200); --srp-scale-z: var(--scale-200); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-200 { --srp-scale-x: calc(var(--scale-200) * -1); --srp-scale-y: calc(var(--scale-200) * -1); --srp-scale-z: calc(var(--scale-200) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-0 { --srp-scale-x: calc(var(--scale-0) * -1); --srp-scale-y: calc(var(--scale-0) * -1); --srp-scale-z: calc(var(--scale-0) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-x-200 { --srp-scale-x: var(--scale-200); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-200 { --srp-scale-x: calc(var(--scale-200) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-x-0 { --srp-scale-x: calc(var(--scale-0) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-y-200 { --srp-scale-y: var(--scale-200); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-200 { --srp-scale-y: calc(var(--scale-200) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.-scale-y-0 { --srp-scale-y: calc(var(--scale-0) * -1); scale: var(--srp-scale-x) var(--srp-scale-y); }
-.scale-z-200 { --srp-scale-z: var(--scale-200); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-z-200 { --srp-scale-z: calc(var(--scale-200) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.-scale-z-0 { --srp-scale-z: calc(var(--scale-0) * -1); scale: var(--srp-scale-x) var(--srp-scale-y) var(--srp-scale-z); }
-.zoom-95 { zoom: var(--zoom-95); }
-.zoom-105 { zoom: var(--zoom-105); }
+/* More opacity steps */
 .opacity-35 { opacity: var(--opacity-35); }
-.backdrop-opacity-35 { --srp-backdrop-opacity: opacity(var(--opacity-35)); }
 .opacity-45 { opacity: var(--opacity-45); }
-.backdrop-opacity-45 { --srp-backdrop-opacity: opacity(var(--opacity-45)); }
 .opacity-55 { opacity: var(--opacity-55); }
-.backdrop-opacity-55 { --srp-backdrop-opacity: opacity(var(--opacity-55)); }
 .opacity-65 { opacity: var(--opacity-65); }
-.backdrop-opacity-65 { --srp-backdrop-opacity: opacity(var(--opacity-65)); }
 .opacity-85 { opacity: var(--opacity-85); }
-.backdrop-opacity-85 { --srp-backdrop-opacity: opacity(var(--opacity-85)); }
-/* mask-image: -from-/-to- at spacing steps */
-@each spacing- not(px) {
-  .mask-t-from-{k} { --srp-mask-t-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-t-to-{k} { --srp-mask-t-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-r-from-{k} { --srp-mask-r-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-r-to-{k} { --srp-mask-r-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-b-from-{k} { --srp-mask-b-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-b-to-{k} { --srp-mask-b-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-l-from-{k} { --srp-mask-l-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-l-to-{k} { --srp-mask-l-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-x-from-{k} { --srp-mask-l-from-p: var(--{t}); --srp-mask-r-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-x-to-{k} { --srp-mask-l-to-p: var(--{t}); --srp-mask-r-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-y-from-{k} { --srp-mask-t-from-p: var(--{t}); --srp-mask-b-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-y-to-{k} { --srp-mask-t-to-p: var(--{t}); --srp-mask-b-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-linear-from-{k} { --srp-mask-linear-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-linear-to-{k} { --srp-mask-linear-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-radial-from-{k} { --srp-mask-radial-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-radial-to-{k} { --srp-mask-radial-to-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-conic-from-{k} { --srp-mask-conic-from-p: var(--{t}); }
-}
-@each spacing- not(px) {
-  .mask-conic-to-{k} { --srp-mask-conic-to-p: var(--{t}); }
-}
-/* mask-image: -from-/-to- colors */
-.mask-t-from-inherit { --srp-mask-t-from-c: inherit; }
-.mask-t-from-current { --srp-mask-t-from-c: currentcolor; }
-.mask-t-from-transparent { --srp-mask-t-from-c: transparent; }
-@each color {
-  .mask-t-from-{k} { --srp-mask-t-from-c: var(--{t}); }
-}
-.mask-t-to-inherit { --srp-mask-t-to-c: inherit; }
-.mask-t-to-current { --srp-mask-t-to-c: currentcolor; }
-.mask-t-to-transparent { --srp-mask-t-to-c: transparent; }
-@each color {
-  .mask-t-to-{k} { --srp-mask-t-to-c: var(--{t}); }
-}
-.mask-r-from-inherit { --srp-mask-r-from-c: inherit; }
-.mask-r-from-current { --srp-mask-r-from-c: currentcolor; }
-.mask-r-from-transparent { --srp-mask-r-from-c: transparent; }
-@each color {
-  .mask-r-from-{k} { --srp-mask-r-from-c: var(--{t}); }
-}
-.mask-r-to-inherit { --srp-mask-r-to-c: inherit; }
-.mask-r-to-current { --srp-mask-r-to-c: currentcolor; }
-.mask-r-to-transparent { --srp-mask-r-to-c: transparent; }
-@each color {
-  .mask-r-to-{k} { --srp-mask-r-to-c: var(--{t}); }
-}
-.mask-b-from-inherit { --srp-mask-b-from-c: inherit; }
-.mask-b-from-current { --srp-mask-b-from-c: currentcolor; }
-.mask-b-from-transparent { --srp-mask-b-from-c: transparent; }
-@each color {
-  .mask-b-from-{k} { --srp-mask-b-from-c: var(--{t}); }
-}
-.mask-b-to-inherit { --srp-mask-b-to-c: inherit; }
-.mask-b-to-current { --srp-mask-b-to-c: currentcolor; }
-.mask-b-to-transparent { --srp-mask-b-to-c: transparent; }
-@each color {
-  .mask-b-to-{k} { --srp-mask-b-to-c: var(--{t}); }
-}
-.mask-l-from-inherit { --srp-mask-l-from-c: inherit; }
-.mask-l-from-current { --srp-mask-l-from-c: currentcolor; }
-.mask-l-from-transparent { --srp-mask-l-from-c: transparent; }
-@each color {
-  .mask-l-from-{k} { --srp-mask-l-from-c: var(--{t}); }
-}
-.mask-l-to-inherit { --srp-mask-l-to-c: inherit; }
-.mask-l-to-current { --srp-mask-l-to-c: currentcolor; }
-.mask-l-to-transparent { --srp-mask-l-to-c: transparent; }
-@each color {
-  .mask-l-to-{k} { --srp-mask-l-to-c: var(--{t}); }
-}
-.mask-x-from-inherit { --srp-mask-l-from-c: inherit; --srp-mask-r-from-c: inherit; }
-.mask-x-from-current { --srp-mask-l-from-c: currentcolor; --srp-mask-r-from-c: currentcolor; }
-.mask-x-from-transparent { --srp-mask-l-from-c: transparent; --srp-mask-r-from-c: transparent; }
-@each color {
-  .mask-x-from-{k} { --srp-mask-l-from-c: var(--{t}); --srp-mask-r-from-c: var(--{t}); }
-}
-.mask-x-to-inherit { --srp-mask-l-to-c: inherit; --srp-mask-r-to-c: inherit; }
-.mask-x-to-current { --srp-mask-l-to-c: currentcolor; --srp-mask-r-to-c: currentcolor; }
-.mask-x-to-transparent { --srp-mask-l-to-c: transparent; --srp-mask-r-to-c: transparent; }
-@each color {
-  .mask-x-to-{k} { --srp-mask-l-to-c: var(--{t}); --srp-mask-r-to-c: var(--{t}); }
-}
-.mask-y-from-inherit { --srp-mask-t-from-c: inherit; --srp-mask-b-from-c: inherit; }
-.mask-y-from-current { --srp-mask-t-from-c: currentcolor; --srp-mask-b-from-c: currentcolor; }
-.mask-y-from-transparent { --srp-mask-t-from-c: transparent; --srp-mask-b-from-c: transparent; }
-@each color {
-  .mask-y-from-{k} { --srp-mask-t-from-c: var(--{t}); --srp-mask-b-from-c: var(--{t}); }
-}
-.mask-y-to-inherit { --srp-mask-t-to-c: inherit; --srp-mask-b-to-c: inherit; }
-.mask-y-to-current { --srp-mask-t-to-c: currentcolor; --srp-mask-b-to-c: currentcolor; }
-.mask-y-to-transparent { --srp-mask-t-to-c: transparent; --srp-mask-b-to-c: transparent; }
-@each color {
-  .mask-y-to-{k} { --srp-mask-t-to-c: var(--{t}); --srp-mask-b-to-c: var(--{t}); }
-}
-.mask-linear-from-inherit { --srp-mask-linear-from-c: inherit; }
-.mask-linear-from-current { --srp-mask-linear-from-c: currentcolor; }
-.mask-linear-from-transparent { --srp-mask-linear-from-c: transparent; }
-@each color {
-  .mask-linear-from-{k} { --srp-mask-linear-from-c: var(--{t}); }
-}
-.mask-linear-to-inherit { --srp-mask-linear-to-c: inherit; }
-.mask-linear-to-current { --srp-mask-linear-to-c: currentcolor; }
-.mask-linear-to-transparent { --srp-mask-linear-to-c: transparent; }
-@each color {
-  .mask-linear-to-{k} { --srp-mask-linear-to-c: var(--{t}); }
-}
-.mask-radial-from-inherit { --srp-mask-radial-from-c: inherit; }
-.mask-radial-from-current { --srp-mask-radial-from-c: currentcolor; }
-.mask-radial-from-transparent { --srp-mask-radial-from-c: transparent; }
-@each color {
-  .mask-radial-from-{k} { --srp-mask-radial-from-c: var(--{t}); }
-}
-.mask-radial-to-inherit { --srp-mask-radial-to-c: inherit; }
-.mask-radial-to-current { --srp-mask-radial-to-c: currentcolor; }
-.mask-radial-to-transparent { --srp-mask-radial-to-c: transparent; }
-@each color {
-  .mask-radial-to-{k} { --srp-mask-radial-to-c: var(--{t}); }
-}
-.mask-conic-from-inherit { --srp-mask-conic-from-c: inherit; }
-.mask-conic-from-current { --srp-mask-conic-from-c: currentcolor; }
-.mask-conic-from-transparent { --srp-mask-conic-from-c: transparent; }
-@each color {
-  .mask-conic-from-{k} { --srp-mask-conic-from-c: var(--{t}); }
-}
-.mask-conic-to-inherit { --srp-mask-conic-to-c: inherit; }
-.mask-conic-to-current { --srp-mask-conic-to-c: currentcolor; }
-.mask-conic-to-transparent { --srp-mask-conic-to-c: transparent; }
-@each color {
-  .mask-conic-to-{k} { --srp-mask-conic-to-c: var(--{t}); }
-}
 
 /* ---------------------------------------------------------------
    Responsive variants: sm: md: lg: xl: 2xl: versions of the classes that shape a layout

@@ -14,6 +14,7 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Messages: one-to-one conversations, the list beside the open one, with a field to write in. For an app to copy.
    What it carries (WCAG 2.2):
@@ -63,6 +64,9 @@ export interface MessagesProps {
   loadFailed?: boolean | undefined;
   /** Loads the conversations again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Conversation[] = [
@@ -92,7 +96,7 @@ const subscribe = (f: () => void) => { const m = matchMedia(WIDE); m.addEventLis
 function useWide() { return React.useSyncExternalStore(subscribe, () => matchMedia(WIDE).matches, () => true); }
 
 /** The messages page: a skip link, a header, then main with the conversations beside the open one. */
-export function Messages({ conversations: start = demo, defaultOpen, onOpen, onSend, loading = false, loadFailed = false, onRetry }: MessagesProps) {
+export function Messages({ conversations: start = demo, defaultOpen, onOpen, onSend, loading = false, loadFailed = false, onRetry, online }: MessagesProps) {
   const locale = useLocale(undefined);
   const wide = useWide();
   const [list, setList] = React.useState<readonly Conversation[]>(() => (defaultOpen ? start.map((c) => (c.id === defaultOpen ? { ...c, unread: 0 } : c)) : start));
@@ -157,7 +161,7 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
   const thread = open ? (
     <section aria-labelledby="thread-title" className="flex min-h-0 min-w-0 flex-col gap-3 md:col-span-2">
       {/* Pulled back by a ghost button's padding, so its arrow lines up with the name under it. */}
-      {wide ? null : <div className="-ms-3"><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to conversations</Button></div>}
+      {wide ? null : <div className="-ms-3"><Button variant="ghost" startIcon="arrow_back" onClick={back}>Back to conversations</Button></div>}
       <Heading level={2} size="lg" id="thread-title" ref={heading} tabIndex={-1} className="outline-none">{open.name}</Heading>
       <Chat aria-labelledby="thread-title" className="min-h-64 flex-1">
         {open.messages.map((m) => (
@@ -176,6 +180,7 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These are the conversations loaded before you went offline. Sending needs a connection.</OfflineBanner>
         <PageHeader title="Messages" />
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />

@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   Text: body text in the system's type. Size (xs to xl, with each step's line height), tone (default, muted,
+   Text: body text in the system's type. Size (xs to xl, with each step's line height), tone (neutral, muted,
    primary, danger: each 4.5:1 on surface) and weight are set only when given, so anything unset follows the
    parent. A long word or URL breaks rather than widen a flex or grid parent; truncate keeps it on one line with an
    ellipsis; lines shows at most that many lines, the last cut with an ellipsis; measure caps a line at about 65 characters (container-prose). Margins are left to the layout (none by
@@ -15,7 +15,7 @@
 .srp-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .srp-text--lg { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
 .srp-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
-.srp-text--default { color: var(--text-color, var(--text)); }
+.srp-text--neutral { color: var(--text-color, var(--text)); }
 .srp-text--muted { color: var(--text-color-muted, var(--text-muted)); }
 .srp-text--primary { color: var(--text-color-primary, var(--primary)); }
 .srp-text--danger { color: var(--text-color-danger, var(--danger-text)); }

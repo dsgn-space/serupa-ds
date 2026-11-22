@@ -14,6 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Poll: one question, a few answers, a vote, then the results so far, with yours marked, and a way to change it while
    it's open. For an app to copy. What it carries (WCAG 2.2):
@@ -40,6 +41,9 @@ export interface PollProps {
   closed?: boolean | undefined;
   /** Sends the vote; resolves with the new counts, or rejects when it can't be sent. Default: counts it here. */
   onVote?: ((id: string, previous: string | undefined) => Promise<Record<string, number>> | Record<string, number>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoOptions: PollOption[] = [
@@ -73,7 +77,7 @@ export function recount(counts: Record<string, number>, id: string, previous?: s
 
 /** The poll page: a skip link, a header, then main with the h1, and the answers or the results. */
 export function Poll({ question = 'Where should the summer party be?', options = demoOptions, counts: startCounts = demoCounts,
-  defaultVote, closes = '2026-06-20', closed = false, onVote }: PollProps) {
+  defaultVote, closes = '2026-06-20', closed = false, onVote, online }: PollProps) {
   const locale = useLocale();
   const [counts, setCounts] = React.useState(startCounts);
   const [vote, setVote] = React.useState(defaultVote);
@@ -110,6 +114,7 @@ export function Poll({ question = 'Where should the summer party be?', options =
         <Link underline="hover" href="#polls">Polls</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">These results are from when the page loaded. Voting needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Polls', href: '#polls' }, { label: question }]} title={question}
           description={closed ? 'This poll has closed.' : `Open until ${closeDay}. Others see the totals, not who voted for what.`} />
         <div className="flex flex-col gap-6 pt-6">

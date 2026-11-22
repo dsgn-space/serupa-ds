@@ -5,7 +5,7 @@ import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from '..
 import { named } from '../../internal/component';
 import { Tooltip } from '../Tooltip/Tooltip';
 
-type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'aria-label'> : never;
+type Without<T> = T extends unknown ? Omit<T, 'icon' | 'startIcon' | 'endIcon' | 'children' | 'aria-label'> : never;
 
 interface IconButtonOwnProps {
   /** The icon: a custom or Material Symbols name ("more_vert") or any element. */

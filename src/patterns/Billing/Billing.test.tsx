@@ -167,4 +167,14 @@ describe('Billing on a phone', () => {
       for (const a of document.querySelectorAll('td a')) { expect(linesOf(a), a.textContent ?? '').toBe(1); expect(a.getBoundingClientRect().right).toBeLessThanOrEqual(frame.right + 1); }
     } finally { await page.viewport(900, 700); }
   });
+
+  test('partly loaded: the plan shows, and the Invoices section alone says it failed, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Billing invoicesFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 3, name: 'Couldn’t load your invoices' })).toBeVisible();
+    expect(document.querySelector('table')).toBeNull();
+    expect(screen.getByText(/^No invoices yet/).elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
 });

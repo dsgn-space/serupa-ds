@@ -13,7 +13,7 @@ interface SidebarSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
 interface SidebarItemOwnProps {
     label: React.ReactNode;
     icon?: IconSource | undefined;
-    active?: boolean | undefined;
+    current?: boolean | undefined;
     badge?: React.ReactNode | undefined;
     children?: React.ReactNode | undefined;
     defaultOpen?: boolean | undefined;

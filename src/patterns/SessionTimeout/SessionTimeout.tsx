@@ -13,6 +13,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
    typed if it ends anyway. For an app to copy. What it carries (WCAG 2.2):
@@ -49,6 +50,9 @@ export interface SessionTimeoutProps {
   saveKey?: string | undefined;
   /** Send the message. Once it resolves, the kept draft is cleared; a rejected promise keeps it. */
   onSend?: ((draft: { subject: string; message: string }) => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 interface Draft { subject: string; message: string }
@@ -85,7 +89,7 @@ function save(key: string | undefined, draft: Draft) {
 }
 
 /** A page with a form, a warning Dialog before the session ends, and a signed-out page that keeps what was typed. */
-export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, onSend, saveKey }: SessionTimeoutProps) {
+export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, onSend, saveKey, online }: SessionTimeoutProps) {
   const locale = useLocale();
   const [deadline, setDeadline] = React.useState(() => Date.now() + duration * 1000);
   const [left, setLeft] = React.useState(duration);
@@ -195,6 +199,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Your work stays here. Staying signed in needs a connection.</OfflineBanner>
         {expired ? (
           <div className="flex flex-col gap-3">
             <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? 'You’ve signed out' : 'You’ve been signed out'}</Heading>

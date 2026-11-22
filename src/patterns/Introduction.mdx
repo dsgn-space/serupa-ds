@@ -19,6 +19,21 @@ Patterns don't ship in the package. They're for copying.
 
 Each folder in `src/patterns/` holds the stories, a test and a guide (`tools/test/contract.mjs` checks this). Their stories run the page rules in `tools/test/storybook.mjs` in every theme: one main landmark, everything inside a landmark, one h1 and no skipped heading level, no id twice, and a first Tab stop that is a skip link into main.
 
+## Every state, not just the happy path
+
+A copied screen meets every state it can be in, so each pattern has a story for each one, and the copy brings them all:
+
+| State | Story | What the screen does |
+| --- | --- | --- |
+| Loading | `Loading` | Placeholders in the shape of what's coming, named once ("Loading activity"), and main is busy. |
+| Load failed | `LoadFailed` | "Couldn't load …" in the content's place, with Try again (`onRetry`). |
+| Empty | `Empty`, or a name of its own (`NoOrders`, `FirstRun`) | What will be here, and the one action that fills it. Never an empty table, a "0 items" count or filters for nothing. |
+| Partly loaded | `Partial` | The parts that loaded show as usual; the part that didn't says so in its own place, with Try again. |
+| Offline | `Offline` | "You're offline" first in main, then what still works and what needs a connection. The page keeps what it loaded. |
+| Sending fails | `SendFails`, or a name of its own (`SaveFails`, `OrderFails`) | Everything entered stays, and it says what didn't go. |
+
+A screen that loads data has the first five; a screen that sends something has the last two. Every pattern takes `online`: left out, it follows the browser, so a copied page says it's offline the moment the connection drops. `src/internal/patternStates.test.tsx` fails when a pattern is missing a state, and lists the states a screen can't be in with why (a quiz always has its questions).
+
 ## The patterns
 
 | Pattern | What it carries | Status |

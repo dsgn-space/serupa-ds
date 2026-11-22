@@ -126,7 +126,7 @@ function ChatRender({ ref, ...props }: ChatProps & React.RefAttributes<HTMLDivEl
         {props.children}
       </div>
       {unread ? (
-        <Button className="srp-chat__jump" variant="secondary" size="sm" rightIcon={<Icon icon={icons.ArrowDownward} />} onClick={jump}>
+        <Button className="srp-chat__jump" variant="secondary" size="sm" endIcon={<Icon icon={icons.ArrowDownward} />} onClick={jump}>
           {L.chatNewMessages(unread, displayNumber(unread, locale))}
         </Button>
       ) : null}

@@ -16,6 +16,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Billing: the plan with what it costs and when it renews, how much of it is used, how it's paid (a card, a direct
    debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
@@ -78,6 +79,11 @@ export interface BillingProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** The plan and card loaded but the invoices didn't: the Invoices section says so, with Try again, which calls onRetry. Default: false. */
+  invoicesFailed?: boolean | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoPlan: BillingPlan = { name: 'Team', price: 24, currency: 'USD', interval: 'month', renews: '2026-12-01' };
@@ -112,7 +118,7 @@ const STATUS = { paid: ['Paid', 'success'], due: ['Due', 'warning'], failed: ['P
 
 /** The billing page: a skip link, a header, then main with the h1, the plan, usage, the card and the invoices. */
 export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, paymentMethod, invoices = demoInvoices, onCancel, onResume,
-  changePlanHref = '#plans', updateCardHref = '#card', loading = false, loadFailed = false, onRetry }: BillingProps) {
+  changePlanHref = '#plans', updateCardHref = '#card', loading = false, loadFailed = false, onRetry, invoicesFailed = false, online }: BillingProps) {
   const locale = useLocale();
   const [cancelled, setCancelled] = React.useState(!!plan.cancelled);
   const [asking, setAsking] = React.useState(false);
@@ -150,6 +156,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">This is your plan as it was when the page loaded. Changes and payments need a connection.</OfflineBanner>
         <PageHeader title="Billing" description="Your plan, what it costs, and what you’ve paid." />
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load billing" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
           ['Plan', 'Usage', 'Invoices'].map((t, i) => (
@@ -212,7 +219,8 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
 
           <section aria-labelledby="billing-invoices" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-invoices">Invoices</Heading>
-            {invoices.length ? (
+            {invoicesFailed ? <EmptyLoadFailed size="sm" headingLevel={3} title="Couldn’t load your invoices" description="Your plan and payment method above are up to date." onRetry={() => onRetry?.()} />
+            : invoices.length ? (
               <Table caption="Invoices" hideCaption pinEnd>
                 <TableHead><TableRow>
                   <TableHeaderCell>Date</TableHeaderCell><TableHeaderCell align="end">Amount</TableHeaderCell>

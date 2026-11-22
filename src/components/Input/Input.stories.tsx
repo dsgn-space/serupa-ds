@@ -9,7 +9,7 @@ const meta = {
   title: 'Components/Forms/Input',
   component: Input,
   args: { placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: iconArg, rightIcon: iconArg },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, startIcon: iconArg, endIcon: iconArg },
 } satisfies Meta<typeof Input>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -28,8 +28,8 @@ export const Sizes: Story = {
 
 export const Icons: Story = {
   render: () => <Col>
-    <Input leftIcon="search" aria-label="Search" placeholder="Search" />
-    <Input type="url" rightIcon="link" aria-label="Website" placeholder="https://" />
+    <Input startIcon="search" aria-label="Search" placeholder="Search" />
+    <Input type="url" endIcon="link" aria-label="Website" placeholder="https://" />
     <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
   </Col>,
 };
@@ -99,7 +99,7 @@ export const InDisabledFieldset: Story = {
 export const LongValue: Story = {
   render: (args) => (
     <div style={{ width: 200, display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Input {...args} defaultValue="grace.brewster.murray.hopper@navy.example.com" leftIcon="mail" />
+      <Input {...args} defaultValue="grace.brewster.murray.hopper@navy.example.com" startIcon="mail" />
       <Input {...args} placeholder="A placeholder far longer than the input is wide" />
     </div>
   ),

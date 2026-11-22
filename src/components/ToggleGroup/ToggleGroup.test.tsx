@@ -73,7 +73,7 @@ describe('ToggleGroup', () => {
 
   test('multiple: each turns on and off by itself, and the group reports them together', async () => {
     const onValueChange = vi.fn();
-    await render(<Align type="multiple" defaultValue={['left']} onValueChange={onValueChange} />);
+    await render(<Align selectionMode="multiple" defaultValue={['left']} onValueChange={onValueChange} />);
     expect(el('g').dataset.type).toBe('multiple');
     await btn('Right').click();
     expect([pressed(), onValueChange.mock.calls.at(-1)![0]]).toEqual(['left,right', ['left', 'right']]);
@@ -100,7 +100,7 @@ describe('ToggleGroup', () => {
   test('size, variant and disabled reach buttons that don\'t set their own; a button\'s own onPressedChange still runs', async () => {
     const own = vi.fn();
     await render(
-      <ToggleGroup id="g" aria-label="View" size="sm" variant="ghost" type="multiple">
+      <ToggleGroup id="g" aria-label="View" size="sm" variant="ghost" selectionMode="multiple">
         <ToggleButton value="day" onPressedChange={own}>Day</ToggleButton>
         <ToggleButton value="week" size="lg" variant="outline">Week</ToggleButton>
         <span id="note">plain</span>

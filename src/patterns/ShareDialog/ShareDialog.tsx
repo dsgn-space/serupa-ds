@@ -15,6 +15,7 @@ import { Alert } from '../../components/Alert/Alert';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Share dialog: who can open one document, what each may do, and the link to it. For an app to copy.
    What it carries (WCAG 2.2):
@@ -57,6 +58,9 @@ export interface ShareDialogProps {
   onLinkAccessChange?: ((access: ShareLinkAccess) => void) | undefined;
   /** Opens the device's share sheet. Default: navigator.share where the browser has it. null leaves "Share via…" out. */
   nativeShare?: ((data: { title: string; url: string }) => unknown) | null | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoPeople: SharePerson[] = [
@@ -94,7 +98,7 @@ export function sharedWith(count: number, locale = 'en-US'): string {
 
 /** A document page with Share in its header, and the dialog it opens: add people, change or remove access, and the link. */
 export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3-plan', people = demoPeople, linkAccess = 'restricted', defaultOpen = false,
-  onInvite, onAccessChange, onRemove, onLinkAccessChange, nativeShare }: ShareDialogProps) {
+  onInvite, onAccessChange, onRemove, onLinkAccessChange, nativeShare, online }: ShareDialogProps) {
   const locale = useLocale();
   const [open, setOpen] = React.useState(defaultOpen);
   const [list, setList] = React.useState<readonly SharePerson[]>(people);
@@ -164,13 +168,14 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
       <header className="flex flex-wrap items-center gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 flex-1 text-base font-semibold">Acme Docs</p>
         {others.length ? (
-          <AvatarGroup size="sm" max={3} label={sharedWith(others.length, locale)}>
+          <AvatarGroup size="sm" max={3} aria-label={sharedWith(others.length, locale)}>
             {others.map((p) => <Avatar key={p.id} name={p.name} src={p.avatar} />)}
           </AvatarGroup>
         ) : null}
-        <Button leftIcon="share" onClick={() => close(true)}>Share</Button>
+        <Button startIcon="share" onClick={() => close(true)}>Share</Button>
       </header>
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline">Sharing and changing who has access need a connection.</OfflineBanner>
         <Heading level={1}>{name}</Heading>
         <p className="m-0 text-sm text-text-muted">{sharedWith(others.length, locale)} · {LINK[link]}</p>
         <p className="m-0">Goals for the quarter, who owns each, and what we’ll stop doing to make room.</p>

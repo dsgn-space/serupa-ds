@@ -28,7 +28,7 @@ afterEach(async () => {
 
 function Main({ r, lr }: { r?: React.Ref<HTMLElement>; lr?: React.Ref<HTMLAnchorElement> }) {
   return <Navbar id="nav" ref={r} className="extra" data-x="y" brand={<a href="#home" id="brand">Serupa</a>} actions={<Button size="sm" id="act">Sign in</Button>}>
-    <NavbarLink href="#dash" active ref={lr}>Dashboard</NavbarLink>
+    <NavbarLink href="#dash" current ref={lr}>Dashboard</NavbarLink>
     <NavbarLink href="#projects" id="lp">Projects</NavbarLink>
     <NavbarLink as={RouterLink} to="/team" id="lr">Team</NavbarLink>
   </Navbar>;
@@ -48,7 +48,7 @@ describe('Navbar', () => {
     const a = React.createRef<HTMLAnchorElement>(), r = React.createRef<HTMLAnchorElement>(), b = React.createRef<HTMLButtonElement>(), wrong = React.createRef<HTMLAnchorElement>();
     await render(<Navbar id="nav-t">
       <NavbarLink id="nt-a" href="#a" ref={a}>A</NavbarLink>
-      <NavbarLink id="nt-r" as={RouterLink} to="/r" ref={r} active>Router</NavbarLink>
+      <NavbarLink id="nt-r" as={RouterLink} to="/r" ref={r} current>Router</NavbarLink>
       <NavbarLink id="nt-b" as="button" type="button" ref={b}>Button</NavbarLink>
       {/* @ts-expect-error RouterLink needs to */}
       <NavbarLink id="nt-x" as={RouterLink}>No to</NavbarLink>
@@ -559,7 +559,7 @@ describe('NavbarMenu (RU14)', () => {
       <NavbarMenu label="Products">
         <NavbarMenuGroup title="Analytics">
           <NavbarMenuLink href="#dashboards" description="Charts and reports for your team">Dashboards</NavbarMenuLink>
-          <NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink>
+          <NavbarMenuLink href="#alerts" current>Alerts</NavbarMenuLink>
         </NavbarMenuGroup>
         <NavbarMenuGroup title="Payments">
           <NavbarMenuLink href="#billing" description="Invoices and plans">Billing</NavbarMenuLink>
@@ -576,7 +576,7 @@ describe('NavbarMenu (RU14)', () => {
 
   test('active: the menu button says it holds the current page, with aria-current="true" (GR297)', async () => {
     await render(<><Navbar brand={<a href="#home">Serupa</a>}>
-      <NavbarMenu label="Products" active><NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink></NavbarMenu>
+      <NavbarMenu label="Products" current><NavbarMenuLink href="#alerts" current>Alerts</NavbarMenuLink></NavbarMenu>
       <NavbarMenu label="Resources"><NavbarMenuLink href="#docs">Docs</NavbarMenuLink></NavbarMenu>
     </Navbar></>);
     expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);

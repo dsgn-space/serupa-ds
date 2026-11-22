@@ -1,13 +1,13 @@
 // exports: BottomNav, BottomNavLink, type BottomNavLinkOwnProps, type BottomNavLinkProps, type BottomNavProps
 interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
-    label: string;
+    "aria-label": string;
     hideFrom?: "lg" | "md" | "sm" | false | undefined;
     children?: React.ReactNode;
 }
 declare const BottomNav: React.FC<BottomNavProps & React.RefAttributes<HTMLElement>>;
 interface BottomNavLinkOwnProps {
     icon: IconSource;
-    active?: boolean | undefined;
+    current?: boolean | undefined;
     children: React.ReactNode;
     badge?: React.ReactNode | undefined;
 }

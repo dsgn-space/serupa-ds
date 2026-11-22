@@ -16,6 +16,7 @@ import { EventCalendar, type CalendarEvent, type CalendarSlot } from '../../comp
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Team calendar: a team's events by month, week, day or as a list, with a way to add one, open one, move one and
    delete one. For an app to copy. What it carries (WCAG 2.2):
@@ -60,6 +61,9 @@ export interface TeamCalendarProps {
   loadFailed?: boolean | undefined;
   /** Loads the events again, after a failed load. */
   onRetry?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: CalendarEvent[] = [
@@ -110,7 +114,7 @@ export function whenWords(e: Pick<CalendarEvent, 'start' | 'end' | 'allDay'>, lo
 }
 
 /** The team calendar: a skip link, a header, then main with the calendar's h1, New event and the calendar. */
-export function TeamCalendar({ title = 'Team calendar', events: start = demo, defaultMonth = new Date(2025, 2, 1), onAdd, onMove, onDelete, loading = false, loadFailed = false, onRetry }: TeamCalendarProps) {
+export function TeamCalendar({ title = 'Team calendar', events: start = demo, defaultMonth = new Date(2025, 2, 1), onAdd, onMove, onDelete, loading = false, loadFailed = false, onRetry, online }: TeamCalendarProps) {
   const locale = useLocale(undefined);
   const [events, setEvents] = React.useState<readonly CalendarEvent[]>(start);
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
@@ -188,6 +192,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is the calendar as it was when the page loaded. Adding or moving events needs a connection.</OfflineBanner>
         <PageHeader title={title}
           primary={{ label: 'New event', icon: 'add', onSelect: () => { newButton.current = document.activeElement as HTMLElement | null; ask(); }, disabled: loading || loadFailed }} />
         <div className="pt-6">
@@ -206,7 +211,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
                 <Input name="title" value={draft.title} autoComplete="off" onChange={(e) => edit({ title: e.target.value })} />
               </Field>
               <Field label="Day" id="event-day" error={problems.day} required>
-                <DatePicker name="day" value={draft.day || null} onValueChange={(_, iso) => edit({ day: iso ?? '' })} />
+                <DatePicker name="day" value={draft.day || null} onValueChange={(_, { iso }) => edit({ day: iso ?? '' })} />
               </Field>
               <Switch checked={draft.allDay} onCheckedChange={(on) => edit({ allDay: on })}>All day</Switch>
               {draft.allDay ? null : (
@@ -231,7 +236,7 @@ export function TeamCalendar({ title = 'Team calendar', events: start = demo, de
           description={open ? whenWords(open, locale) + (open.repeating ? '. Repeats.' : '') : undefined}>
           {open ? (
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" destructive leftIcon="delete" onClick={() => remove(open)}>Delete event</Button>
+              <Button variant="outline" destructive startIcon="delete" onClick={() => remove(open)}>Delete event</Button>
             </div>
           ) : null}
         </Dialog>

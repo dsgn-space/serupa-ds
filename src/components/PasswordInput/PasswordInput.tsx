@@ -15,7 +15,7 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 
-export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'rightIcon'> {
+export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'endIcon'> {
   /** Shows the password as text (controlled). Use with onRevealedChange. */
   revealed?: boolean | undefined;
   /** Shows it as text at first (uncontrolled). Default: false. */
@@ -40,14 +40,14 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
   const nameRef = useNameCheck('PasswordInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, startIcon: 1, className: 1, style: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = 'current-password';
   const [revealed, setOwn, controlled] = useControllable(props.revealed, !!props.defaultRevealed, 'PasswordInput', 'revealed');
   const shown = !!revealed;
-  const left = asIcon(props.leftIcon);
+  const left = asIcon(props.startIcon);
   // Caps Lock, read from the key events while the field has focus (there's no event for the key itself).
   const [caps, setCaps] = React.useState(false);
   const capsId = domId('srp-pw-caps', React.useId());
@@ -120,7 +120,7 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
   return (
     <span className={cn('srp-input srp-password-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="password-input" data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
-      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--left" aria-hidden>{left}</span> : null}
+      {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       <input {...rest} ref={fieldRef} type={shown ? 'text' : 'password'} className="srp-input__field" spellCheck={false} autoCapitalize="off" autoCorrect="off" />
       {caps ? <span className="srp-password-input__caps" id={capsId}>{sds.labels.capsLockOn}</span> : null}
       <span className="srp-input__actions">

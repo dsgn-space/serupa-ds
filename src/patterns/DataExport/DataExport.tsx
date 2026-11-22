@@ -16,6 +16,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Download your data: choose what to include and in which format, see how big it will be, ask for it, and download
    it once it's ready, before its link runs out. For an app to copy. What it carries (WCAG 2.2):
@@ -49,6 +50,9 @@ export interface DataExportProps {
   loadFailed?: boolean | undefined;
   /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demoParts: DataPart[] = [
@@ -82,7 +86,7 @@ export function sizeWords(bytes: number, locale?: string) {
 }
 
 /** The page: a skip link, a header, then main with the h1, the choices, and the exports asked for before. */
-export function DataExport({ parts = demoParts, exports = demoExports, today, onRequest, loading = false, loadFailed = false, onRetry }: DataExportProps) {
+export function DataExport({ parts = demoParts, exports = demoExports, today, onRequest, loading = false, loadFailed = false, onRetry, online }: DataExportProps) {
   const locale = useLocale();
   const day = (iso: string) => formatDate(iso, locale, { dateStyle: 'long' });
   const size = (b: number) => sizeWords(b, locale);
@@ -127,6 +131,7 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
         <Link underline="hover" href="#settings">Settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">This is what was loaded before you went offline. Requesting an export needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Download your data' }]} title="Download your data"
           description="Get a copy of what you’ve put in Acme Projects. We’ll email you when it’s ready, and the link works for 7 days." />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your exports" onRetry={() => onRetry?.()} headingLevel={2} /></div>

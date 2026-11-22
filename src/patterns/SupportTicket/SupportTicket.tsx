@@ -14,6 +14,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 
 /* Support ticket: one request to a support team, as the person who asked sees it. Where it's got to, the
    conversation so far, and a reply box; or a way to reopen it once solved. For an app to copy. What it carries
@@ -62,6 +63,9 @@ export interface SupportTicketProps {
   onSolve?: (() => void) | undefined;
   /** Reopens it. */
   onReopen?: (() => void) | undefined;
+  /** Whether the app can reach its server. Left out, it follows the browser; false shows “You’re offline” at the top of
+      the page, with what still works. */
+  online?: boolean | undefined;
 }
 
 const demo: Ticket = {
@@ -86,7 +90,7 @@ export function replyProblem(body: string, files: readonly File[]): string | nul
 }
 
 /** The ticket's page: a skip link, a header, then main with the h1, where it's got to, the conversation and the reply box. */
-export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: SupportTicketProps) {
+export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen, online }: SupportTicketProps) {
   const [state, setState] = React.useState<TicketState>(ticket.state);
   const [messages, setMessages] = React.useState(ticket.messages);
   const [body, setBody] = React.useState('');
@@ -129,6 +133,7 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
         <Link underline="hover" href="#tickets">Your requests</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
+        <OfflineBanner online={online} placement="inline" className="mb-6">Your reply stays here. Sending it needs a connection.</OfflineBanner>
         <PageHeader breadcrumb={[{ label: 'Your requests', href: '#tickets' }, { label: ticket.reference }]} title={ticket.subject} />
         <div className="flex flex-col gap-8 pt-6">
           <Card>

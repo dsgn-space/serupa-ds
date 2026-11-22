@@ -57,23 +57,6 @@
   - paragraph: "Owner: Dewi Lestari. 12 people, 48 tasks, 9 open."
   - button "Open project"
 
-# Left
-- button "Menu"
-- dialog "Menu":
-  - heading "Menu" [level=2]
-  - button "Close"
-  - navigation "Main":
-    - list:
-      - listitem:
-        - link "Home":
-          - /url: "#home"
-      - listitem:
-        - link "Projects":
-          - /url: "#projects"
-      - listitem:
-        - link "Settings":
-          - /url: "#settings"
-
 # LongText
 - button "Release notes"
 - dialog "Release notes":
@@ -138,6 +121,23 @@
   - text: Include archived
   - button "Reset"
   - button "Apply"
+
+# Start
+- button "Menu"
+- dialog "Menu":
+  - heading "Menu" [level=2]
+  - button "Close"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: "#home"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+      - listitem:
+        - link "Settings":
+          - /url: "#settings"
 
 # StaysOpenOnBackdropPress
 - button "Open filters"

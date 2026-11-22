@@ -22,7 +22,7 @@ const [q, setQ] = React.useState("");
 ## When not to use
 
 - Picking one value from a known list: use [Combobox](../Combobox/README.md).
-- A search that suggests as people type, or shows their recent searches before they type: use [Combobox](../Combobox/README.md) with `freeText` and `leftIcon="search"`, its `SearchWithRecent` story shows how (recent searches when it opens empty, suggestions while typing, Clear recent searches beside it).
+- A search that suggests as people type, or shows their recent searches before they type: use [Combobox](../Combobox/README.md) with `freeText` and `startIcon="search"`, its `SearchWithRecent` story shows how (recent searches when it opens empty, suggestions while typing, Clear recent searches beside it).
 - A one-line answer in a form that isn't a search: use [Input](../Input/README.md).
 
 ## Anatomy
@@ -80,7 +80,7 @@ Drawn from the `Invalid` story.
 
 ## Props
 
-Every Input prop works (`size`, `invalid`, `value`, `defaultValue`, `onChange`, `placeholder`, `disabled`…), except `type`, `leftIcon` and `rightIcon`.
+Every Input prop works (`size`, `invalid`, `value`, `defaultValue`, `onChange`, `placeholder`, `disabled`…), except `type`, `startIcon` and `endIcon`.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |

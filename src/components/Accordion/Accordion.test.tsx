@@ -20,7 +20,7 @@ const focused = () => (document.activeElement!.matches('button[aria-expanded]') 
 
 function Faq({ r, ir }: { r?: React.Ref<HTMLDivElement>; ir?: React.Ref<HTMLDivElement> }) {
   return <div style={{ width: '480px' }}>
-    <Accordion id="adef" type="single" ref={r} className="extra" data-x="y">
+    <Accordion id="adef" selectionMode="single" ref={r} className="extra" data-x="y">
       <AccordionItem title="Shipping" ref={ir}><p style={{ margin: 0 }}>We ship in 2 days. <a href="#x" id="inner">Rates</a></p></AccordionItem>
       <AccordionItem title="Returns">Within 30 days.</AccordionItem>
       <AccordionItem title="Locked" disabled>Never</AccordionItem>
@@ -49,7 +49,7 @@ describe('Accordion', () => {
     expect(document.activeElement?.id).not.toBe('inner');
   });
 
-  test('find-in-page: a match in a closed item (beforematch) opens it, and in type="single" closes the open one; closing hides it again once the animation ends; disabled items aren\'t searchable', () => withMotion(async () => {
+  test('find-in-page: a match in a closed item (beforematch) opens it, and in selectionMode="single" closes the open one; closing hides it again once the animation ends; disabled items aren\'t searchable', () => withMotion(async () => {
     await render(<Faq />);
     const content = (n: number) => contentOf('adef', n);
     await userEvent.click(trigger('adef', 2));
@@ -69,16 +69,16 @@ describe('Accordion', () => {
     await expect.poll(() => state('adef')).toBe('0001');
   }));
 
-  test('showExpandAll (type="multiple"): "Expand all" opens every enabled item and becomes "Collapse all", which closes them; controlled gets the values; Indonesian words from the provider; not shown in type="single"', async () => {
+  test('showExpandAll (selectionMode="multiple"): "Expand all" opens every enabled item and becomes "Collapse all", which closes them; controlled gets the values; Indonesian words from the provider; not shown in selectionMode="single"', async () => {
     const onChange = vi.fn();
     await render(<div style={{ width: '480px' }}>
-      <Accordion id="aall" type="multiple" showExpandAll onValueChange={onChange}>
+      <Accordion id="aall" selectionMode="multiple" showExpandAll onValueChange={onChange}>
         <AccordionItem title="A" value="a">1</AccordionItem>
         <AccordionItem title="B" value="b" disabled>2</AccordionItem>
         <AccordionItem title="C">3</AccordionItem>
       </Accordion>
-      <SerupaProvider labels={idLabels}><Accordion id="aid" type="multiple" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion></SerupaProvider>
-      <Accordion id="asingle" type="single" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion>
+      <SerupaProvider labels={idLabels}><Accordion id="aid" selectionMode="multiple" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion></SerupaProvider>
+      <Accordion id="asingle" selectionMode="single" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion>
     </div>);
     const all = (id: string) => [...el(id).querySelectorAll('button')].find((b) => !b.closest('h1, h2, h3, h4, h5, h6')) ?? null;   // the one button outside the headings
     expect([all('aall')!.textContent, all('aall')!.type, all('aid')!.textContent, all('asingle')]).toEqual(['Expand all', 'button', 'Buka semua', null]);
@@ -166,7 +166,7 @@ describe('Accordion', () => {
     expect(time(h(2))[0]).toBe(150);
   }));
 
-  test('type="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and is drawn in disabled-text', async () => {
+  test('selectionMode="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and is drawn in disabled-text', async () => {
     await render(<Faq />);
     await userEvent.click(trigger('adef', 1));
     await userEvent.click(trigger('adef', 2));
@@ -211,8 +211,8 @@ describe('Accordion', () => {
     expect(document.activeElement!.id).toBe('inner');
   });
 
-  test('type="multiple" with defaultValue, headingLevel 2, variant card (frame, 8px corners, 16px side padding, no double line); items open and close independently', async () => {
-    await render(<Accordion id="amulti" type="multiple" defaultValue={['x', 'y']} headingLevel={2} variant="card">
+  test('selectionMode="multiple" with defaultValue, headingLevel 2, variant card (frame, 8px corners, 16px side padding, no double line); items open and close independently', async () => {
+    await render(<Accordion id="amulti" selectionMode="multiple" defaultValue={['x', 'y']} headingLevel={2} variant="card">
       <AccordionItem value="x" title="X">x</AccordionItem><AccordionItem value="y" title="Y">y</AccordionItem><AccordionItem value="z" title="Z">z</AccordionItem>
     </Accordion>);
     const a = el('amulti'), s = css(a);
@@ -225,7 +225,7 @@ describe('Accordion', () => {
   });
 
   test('single with a two-item defaultValue opens only the first; collapsible={false}: the open item stays open (aria-disabled), and opening another replaces it', async () => {
-    await render(<Accordion id="afixed" type="single" collapsible={false} defaultValue={['p', 'q']}><AccordionItem value="p" title="P">p</AccordionItem><AccordionItem value="q" title="Q">q</AccordionItem></Accordion>);
+    await render(<Accordion id="afixed" selectionMode="single" collapsible={false} defaultValue={['p', 'q']}><AccordionItem value="p" title="P">p</AccordionItem><AccordionItem value="q" title="Q">q</AccordionItem></Accordion>);
     expect(state('afixed')).toBe('10');
     await userEvent.click(trigger('afixed', 1), { force: true });
     expect([state('afixed'), trigger('afixed', 1).getAttribute('aria-disabled')]).toEqual(['10', 'true']);
@@ -237,7 +237,7 @@ describe('Accordion', () => {
     const calls: string[] = [];
     function Controlled() {
       const [v, setV] = React.useState(['b']);
-      return <Accordion id="actl" type="multiple" value={v} onValueChange={(x) => { calls.push(x.join('+')); setV(x); }}>
+      return <Accordion id="actl" selectionMode="multiple" value={v} onValueChange={(x) => { calls.push(x.join('+')); setV(x); }}>
         <AccordionItem value="a" title="A">a</AccordionItem><AccordionItem value="b" title="B">b</AccordionItem>
       </Accordion>;
     }
@@ -295,7 +295,7 @@ describe('Accordion', () => {
       React.useEffect(() => { mounts.push(name); }, [name]);
       return <button type="button" id={'count-' + name} onClick={() => setN(n + 1)}>{n}</button>;
     }
-    await render(<Accordion id="akeep" type="multiple">
+    await render(<Accordion id="akeep" selectionMode="multiple">
       <AccordionItem title="Chart" keepMounted={false}><Heavy name="chart" /></AccordionItem>
       <AccordionItem title="Form"><Heavy name="form" /></AccordionItem>
     </Accordion>);
@@ -317,17 +317,17 @@ describe('Accordion', () => {
     expect([count('chart')?.textContent, mounts]).toEqual(['0', ['form', 'chart', 'chart']]);
   }));
 
-  test('only open panels are region landmarks; past six items with type="multiple" none are; a controlled value of several under type="single" warns (DP1)', async () => {
+  test('only open panels are region landmarks; past six items with selectionMode="multiple" none are; a controlled value of several under selectionMode="single" warns (DP1)', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const many = (n: number) => Array.from({ length: n }, (_, i) => <AccordionItem key={i} value={'v' + i} title={'Item ' + i}>Body {i}</AccordionItem>);
     await render(<>
-      <Accordion id="dp-few" type="multiple" defaultValue={['v0', 'v2']}>{many(6)}</Accordion>
-      <Accordion id="dp-many" type="multiple" defaultValue={['v0', 'v2']}>{many(8)}</Accordion>
-      <Accordion id="dp-one" type="single" value={['v0', 'v1']}>{many(3)}</Accordion>
+      <Accordion id="dp-few" selectionMode="multiple" defaultValue={['v0', 'v2']}>{many(6)}</Accordion>
+      <Accordion id="dp-many" selectionMode="multiple" defaultValue={['v0', 'v2']}>{many(8)}</Accordion>
+      <Accordion id="dp-one" selectionMode="single" value={['v0', 'v1']}>{many(3)}</Accordion>
     </>);
     const regions = (id: string) => el(id).querySelectorAll('[role="region"]').length;
     expect([regions('dp-few'), regions('dp-many')]).toEqual([2, 0]);
-    expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.startsWith('Accordion: value has 2 items with type="single"'))).toHaveLength(1);
+    expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.startsWith('Accordion: value has 2 items with selectionMode="single"'))).toHaveLength(1);
     warn.mockRestore();
   });
 

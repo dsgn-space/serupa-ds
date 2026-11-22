@@ -1,8 +1,8 @@
 /* ---------------------------------------------------------------
    Input: a single-line text field. Sizes sm, md, lg at the control heights (24, 32, 44px, like Button), with
    text-xs, text-sm and text-base. Field colors come from the alias tokens (field, field-border, placeholder),
-   so it keeps 4.5:1 text and a 3:1 border in every theme. Structure: .srp-input (the box) > .srp-input__icon--left,
-   .srp-input__field (the native <input>), .srp-input__count, .srp-input__icon--right. Every value goes through --input-* tokens.
+   so it keeps 4.5:1 text and a 3:1 border in every theme. Structure: .srp-input (the box) > .srp-input__icon--start,
+   .srp-input__field (the native <input>), .srp-input__count, .srp-input__icon--end. Every value goes through --input-* tokens.
    --------------------------------------------------------------- */
 @layer srp.components {
 /* Under DatePicker, DateRangePicker, TimePicker or NumberInput when typed text was put back (GR232): why, in the

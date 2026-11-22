@@ -17,11 +17,12 @@ A form asks people for something, tells them clearly when an answer won't do, an
 
 ## Required and optional
 
-Mark the smaller set. When most fields are required, mark the few that aren't with `optional` ("(optional)"). When most can be left empty, mark the required ones with `required` (a `*`, and `aria-required` for screen readers). Don't mark both on one form. When you use the `*`, say once before the form what it means ("Fields marked * are required."), since a sign alone isn't self-explanatory.
+Mark both. Put `required` on every field that must be filled (a `*`, and `aria-required` for screen readers) and `optional` on every field that can be left empty ("(optional)"), even when most fields are one kind. People skim past the line that explains a convention, so a form that marks only one kind leaves them guessing about the rest, and the words on each field help most those who find forms hard. Say once before the form what the `*` means ("Fields marked * are required."), since a sign alone isn't self-explanatory. A sign-in form, or a form of one field, needs neither.
 
 ## When to check
 
 - Check a field when someone leaves it or submits the form, never on every keystroke: an error that appears while people are still typing tells them off for something they haven't finished.
+- A field someone tabs past without typing isn't an error yet: leave it alone until they submit. An empty required field flagged on the way through tells them off for a field they haven't reached.
 - Once a field shows an error, check it again as they type, so the error goes as soon as the answer is right.
 - Say what's wrong and how to fix it: "Enter a date in the future", not "Invalid date". The same words go in the field's error and in the summary.
 
@@ -126,3 +127,4 @@ The submit Button shows `loading` by itself while a form `action` runs. Whicheve
 | "Enter your full name" | "Name is invalid" |
 | `inputMode="numeric"` for a card number | `type="number"`, whose arrows and scroll wheel change the number |
 | Keep the answers when the submit fails, and focus the summary | Clear the form, or leave focus on the button with nothing said |
+| `*` on required fields and "(optional)" on the rest | Only "All fields are required unless marked" at the top |

@@ -29,3 +29,6 @@ export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} }
 
 /** No projects at all: a first visit, with New project, not a search that missed. */
 export const NoProjects: Story = { args: { projects: [] } };
+
+/** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
+export const Offline: Story = { args: { online: false } };

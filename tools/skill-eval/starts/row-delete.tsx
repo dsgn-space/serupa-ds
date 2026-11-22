@@ -23,7 +23,7 @@ export function DocumentTable({ docs, onEdit, onDuplicate }: {
             <td>{doc.title}</td>
             <td>{doc.updated}</td>
             <td>
-              <Menu trigger={<Button variant="ghost" size="sm" rightIcon="expand_more">Actions</Button>}>
+              <Menu trigger={<Button variant="ghost" size="sm" endIcon="expand_more">Actions</Button>}>
                 <MenuItem icon="edit" onSelect={() => onEdit(doc.id)}>Edit</MenuItem>
                 <MenuItem icon="content_copy" onSelect={() => onDuplicate(doc.id)}>Duplicate</MenuItem>
               </Menu>

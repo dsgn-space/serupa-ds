@@ -1,5 +1,5 @@
 // exports: IconButton, type IconButtonProps
-type Without<T> = T extends unknown ? Omit<T, "aria-label" | "children" | "icon" | "leftIcon" | "rightIcon"> : never;
+type Without<T> = T extends unknown ? Omit<T, "aria-label" | "children" | "endIcon" | "icon" | "startIcon"> : never;
 interface IconButtonOwnProps {
     icon: IconSource;
     label: string;

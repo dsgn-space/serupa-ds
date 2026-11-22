@@ -3,7 +3,9 @@ interface RadioGroupProps<V extends number | string = number | string> extends O
     name?: string | undefined;
     value?: null | undefined | V;
     defaultValue?: undefined | V;
-    onValueChange?: ((value: V, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+    onValueChange?: ((value: V, details: {
+        event: React.ChangeEvent<HTMLInputElement>;
+    }) => void) | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     variant?: "card" | "plain" | undefined;
