@@ -24,6 +24,15 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); vi.useFakeTimers({ toFak
 afterEach(() => { vi.useRealTimers(); expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('PeriodPicker', () => {
+  test('a second click on the button closes the popup without a change', async () => {
+    const changes: string[] = [];
+    await render(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2026-11" onValueChange={(v) => changes.push(v)} /></EnUS>);
+    await userEvent.click(button());
+    await expect.poll(() => button().getAttribute('aria-expanded')).toBe('true');
+    await userEvent.click(button());
+    await expect.poll(() => button().getAttribute('aria-expanded')).toBe('false');
+    expect([panel().hidden, changes]).toEqual([true, []]);
+  });
   test('a period cut short in a narrow field shows whole on hover', async () => {
     await render(<EnUS><div style={{ width: 100 }}><PeriodPicker aria-label="Report month" defaultValue="2025-09" /></div></EnUS>);
     const t = document.querySelector<HTMLElement>('[role=combobox] [data-component="truncated-text"]')!;
