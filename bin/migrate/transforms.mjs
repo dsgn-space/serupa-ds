@@ -567,6 +567,31 @@ export const TRANSFORMS = [
       return { text: b.text, count: a.count + b.count, notes: [] };
     },
   },
+  {
+    // 18.0.0 splits the brand color by job: `primary` is the fill (the same shade in light and dark, under white
+    // text) and `primary-text` is the brand as text, a line or an icon (brand 400 in dark, as `primary` was). Text set
+    // straight from `--primary` would be about 3.6:1 on a dark page, so it takes the text token.
+    version: '18.0.0', id: 'primary-text', exts: ALL,
+    title: 'Brand text is `primary-text`: `color: var(--primary)` and the `text-primary` class take `--primary-text` and `text-primary-text`; `primary` is the fill, the same in light and dark',
+    run(src, file) {
+      let count = 0;
+      // A text color set straight from the token; a fallback inside another var() is a component token's default, left.
+      let text = src.replace(/(?<![\w-])((?:color|text-decoration-color|caret-color)\s*:\s*var\(--primary)(-hover)?\)/g, (m, head, hover = '', at, all) => {
+        // A class named for the token itself (.text-primary { color: var(--primary) }) says what it sets: left.
+        if (/-primary(?:-hover)?(?:::?[\w-]+)*\s*\{[^{}]*$/.test(all.slice(all.lastIndexOf('\n', at) + 1, at))) return m;
+        count++; return `${head}-text${hover})`;
+      });
+      // The utility classes, with their variants (hover:, md:); a name that is a whole code span is prose, left.
+      text = text.replace(/(?<![\w$./-])((?:[a-z0-9@[\]-]+:)*(?:text|decoration|caret|placeholder)-primary)(-hover)?(?![\w/-])/g, (m, head, hover = '', at, all) => {
+        if (all[at - 1] === '`' && all[at + m.length] === '`') return m;
+        if (/\.(?:css|scss|sass|less)$/i.test(file)) return m;
+        count++; return `${head}-text${hover}`;
+      });
+      // A theme of the project's own that sets the fill and not the text: serupa-brand makes both.
+      const notes = /--primary-text\s*:/.test(text) ? [] : notesFor(text, /(?<![\w-])--primary\s*:/g, 'this sets `--primary` and not `--primary-text`, so brand text here stays blue: make the theme again with `npx serupa-brand`, or set `--primary-text` and `--primary-text-hover` (what `--primary` and `--primary-hover` were) and give `--primary` the light theme\'s shade in dark too, with `--on-primary: var(--white)`').slice(0, 1);
+      return { text, count, notes };
+    },
+  },
 ];
 
 // The brands 17.0.0 moved out of tokens.css, as a page names them: data-brand="violet", data-theme="violet-dark", or

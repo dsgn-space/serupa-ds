@@ -276,10 +276,10 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-primary-text` | `on-primary` | Primary text and icons. |
 | `--button-secondary-bg` | `surface-raised` | Secondary background. |
 | `--button-secondary-bg-hover` | `primary-subtle` | Secondary background on hover. |
-| `--button-secondary-text` | `primary` | Secondary text and icons. |
-| `--button-secondary-text-hover` | `primary-hover` | Secondary text and icons on hover. |
-| `--button-secondary-border` | `primary` | Secondary border. |
-| `--button-secondary-border-hover` | `primary-hover` | Secondary border on hover. |
+| `--button-secondary-text` | `primary-text` | Secondary text and icons. |
+| `--button-secondary-text-hover` | `primary-text-hover` | Secondary text and icons on hover. |
+| `--button-secondary-border` | `primary-text` | Secondary border. |
+| `--button-secondary-border-hover` | `primary-text-hover` | Secondary border on hover. |
 | `--button-secondary-bg-pressed` | `primary-subtle-pressed` | Secondary background while held down, one step past hover. |
 | `--button-outline-bg` | `surface-raised` | Outline background. |
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
@@ -290,7 +290,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
 | `--button-ghost-bg-pressed` | `secondary-hover` | Ghost background while held down, one step past hover. |
 | `--button-ghost-text` | `text` | Ghost text and icons. |
-| `--button-link-text` | `primary` | Link text. |
+| `--button-link-text` | `primary-text` | Link text. |
 | `--button-destructive-primary-bg` | `danger` | Destructive primary background. |
 | `--button-destructive-primary-bg-hover` | `danger-hover` | Destructive primary background on hover. |
 | `--button-destructive-primary-bg-pressed` | `danger-pressed` | Destructive primary background while held down, one step past hover. |

@@ -131,7 +131,7 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-panel-border` | `border-overlay` | The popup's outline. |
 | `--period-picker-period-bg-hover` | `secondary` | A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed. |
 | `--period-picker-period-bg-pressed` | `pressed` | A period while pressed. |
-| `--period-picker-current` | `primary` | This month, quarter or year (4.5:1 on panel-bg). |
+| `--period-picker-current` | `primary-text` | This month, quarter or year (4.5:1 on panel-bg). |
 | `--period-picker-bg-selected` | `primary` | The chosen period's fill. |
 | `--period-picker-text-selected` | `on-primary` | The chosen period's text (4.5:1 on selected-bg). |
 | `--period-picker-border-disabled` | `disabled-border` | Disabled: the edge. |

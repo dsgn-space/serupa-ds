@@ -261,7 +261,7 @@ describe('PeriodPicker', () => {
       ['period', 'var(--text)', 'var(--surface-overlay)', 4.5],
       ['hovered', 'var(--text)', 'var(--surface-muted)', 4.5],
       ['selected', 'var(--on-primary)', 'var(--primary)', 4.5],
-      ['current', 'var(--primary)', 'var(--surface-overlay)', 4.5],
+      ['current', 'var(--primary-text)', 'var(--surface-overlay)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
     ])).toEqual([]);
   });

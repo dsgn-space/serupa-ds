@@ -94,7 +94,7 @@
       },
       "check": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The check by the chosen time (3:1 on surface).",
         "$extensions": {
           "com.serupa": {

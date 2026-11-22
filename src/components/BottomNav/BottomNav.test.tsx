@@ -137,10 +137,10 @@ describe('BottomNav held state', () => {
     const look = (a: HTMLElement) => [css(a).color, css(a.firstElementChild).backgroundColor];
     await userEvent.hover(current);
     expect(current.matches(':hover')).toBe(true);
-    expect(look(current)).toEqual([color('var(--primary)'), color('var(--primary-subtle)')]);
+    expect(look(current)).toEqual([color('var(--primary-text)'), color('var(--primary-subtle)')]);
     await userEvent.hover(other);
     expect(look(other)).toEqual([color('var(--text)'), color('var(--secondary)')]);
-    expect(look(current)).toEqual([color('var(--primary)'), color('var(--primary-subtle)')]);
+    expect(look(current)).toEqual([color('var(--primary-text)'), color('var(--primary-subtle)')]);
     await userEvent.unhover(other);
   });
 });

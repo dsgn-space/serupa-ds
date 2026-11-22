@@ -79,7 +79,7 @@
 }
 .srp-radio--card .srp-radio__label { font-weight: var(--radio-card-label-weight, var(--font-medium)); }
 @media (hover: hover) { .srp-radio--card:hover:not(.srp-radio--readonly, :has(.srp-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
-.srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--srp-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--srp-radio-card-on); }
+.srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: var(--radio-card-border-checked, var(--primary-text)); border-color: var(--srp-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--srp-radio-card-on); }
 .srp-radio--card:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-radio--card .srp-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
 .srp-radio--card.srp-radio--invalid:not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }

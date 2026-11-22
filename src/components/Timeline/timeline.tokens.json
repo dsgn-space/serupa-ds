@@ -84,7 +84,7 @@
       },
       "icon-primary": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The icon of a primary event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {

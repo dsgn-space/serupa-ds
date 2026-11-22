@@ -114,7 +114,7 @@
       },
       "today-color": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Today's number (4.5:1 on surface).",
         "$extensions": {
           "com.serupa": {

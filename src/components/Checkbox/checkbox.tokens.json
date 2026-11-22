@@ -174,7 +174,7 @@
       },
       "card-border-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A checked card's border, 2px.",
         "$extensions": {
           "com.serupa": {

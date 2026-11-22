@@ -202,6 +202,12 @@ t('17.0.0: an Accordion with no type gets selectionMode="single", one with a typ
   && a17.notes.length === 1 && a17.notes[0].line === 6, JSON.stringify(a17));
 const n17 = fix('<Accordion>\n<Accordion selectionMode="single">', 'a.tsx');
 t('17.0.0: with no --from (the code may be 17.0.0\'s already), an Accordion with no type is listed, not changed', n17.text === '<Accordion>\n<Accordion selectionMode="single">' && n17.notes.length === 1 && n17.notes[0].line === 1, JSON.stringify(n17));
+// 18.0.0: brand text is primary-text.
+const p18 = fix('.a { color: var(--primary); background: var(--primary); border-color: var(--primary); }\n.a:hover { color: var(--primary-hover); accent-color: var(--primary); }\n.b { color: var(--my-link, var(--primary)); }\n.text-primary { color: var(--primary); }', 'a.css', '17.1.0');
+t('18.0.0: a text color set from --primary or --primary-hover takes --primary-text; a fill, a border, accent-color, a fallback in another var() and a class named for the token are left', p18.text === '.a { color: var(--primary-text); background: var(--primary); border-color: var(--primary); }\n.a:hover { color: var(--primary-text-hover); accent-color: var(--primary); }\n.b { color: var(--my-link, var(--primary)); }\n.text-primary { color: var(--primary); }' && p18.counts['primary-text'] === 2, JSON.stringify(p18));
+one('18.0.0: the text-primary classes are text-primary-text, with their variants; bg-primary, text-primary-text and the name in a code span are left', '<a className="text-primary hover:text-primary-hover bg-primary text-primary-text" /> `text-primary`', '<a className="text-primary-text hover:text-primary-text-hover bg-primary text-primary-text" /> `text-primary`');
+const b18 = fix('[data-theme="acme-dark"] {\n  --primary: var(--acme-400);\n  --on-primary: var(--acme-950);\n}', 'acme.css', '17.1.0');
+t('18.0.0: a theme that sets --primary and not --primary-text is listed once, to make again; one that sets both is left', b18.notes.length === 1 && b18.notes[0].id === 'primary-text' && b18.notes[0].line === 2 && /serupa-brand/.test(b18.notes[0].message) && !fix(':root { --primary: #123456; --primary-text: #123456; }', 'acme.css', '17.1.0').notes.length, JSON.stringify(b18.notes));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 

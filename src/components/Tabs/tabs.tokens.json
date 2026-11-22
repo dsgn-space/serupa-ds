@@ -34,7 +34,7 @@
       },
       "indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The line under the selected tab (3:1 on surface).",
         "$extensions": {
           "com.serupa": {

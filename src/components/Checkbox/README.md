@@ -176,7 +176,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-card-bg` | `surface` | A card checkbox's background. |
 | `--checkbox-card-border` | `border` | A card's border. |
 | `--checkbox-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
-| `--checkbox-card-border-checked` | `primary` | A checked card's border, 2px. |
+| `--checkbox-card-border-checked` | `primary-text` | A checked card's border, 2px. |
 | `--checkbox-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--checkbox-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--checkbox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

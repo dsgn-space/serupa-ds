@@ -85,7 +85,7 @@
 }
 .srp-checkbox--card .srp-checkbox__label { font-weight: var(--checkbox-card-label-weight, var(--font-medium)); }
 @media (hover: hover) { .srp-checkbox--card:hover:not(.srp-checkbox--readonly, :has(.srp-checkbox__input:disabled)) { border-color: var(--checkbox-card-border-hover, var(--field-border-hover)); } }
-.srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary)); border-color: var(--srp-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--srp-checkbox-card-on); }
+.srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary-text)); border-color: var(--srp-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--srp-checkbox-card-on); }
 .srp-checkbox--card:has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--checkbox-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-checkbox--card .srp-checkbox__input:is(:focus-visible, [data-key-focus]) { outline: none; }
 .srp-checkbox--card.srp-checkbox--invalid:not(:has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }

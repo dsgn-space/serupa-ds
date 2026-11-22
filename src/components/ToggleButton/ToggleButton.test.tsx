@@ -40,7 +40,7 @@ describe('ToggleButton', () => {
     await userEvent.click(el('tbold'));
     const s = getComputedStyle(el('tbold')), on = [s.backgroundColor, s.color, s.borderTopColor];
     expect(pressed('tbold')).toBe('true');
-    expect(on).toEqual([color('var(--primary-subtle)'), color('var(--primary)'), color('var(--primary)')]);
+    expect(on).toEqual([color('var(--primary-subtle)'), color('var(--primary-text)'), color('var(--primary-text)')]);
     await userEvent.hover(el('tbold'));
     expect(getComputedStyle(el('tbold')).backgroundColor).toBe(on[0]);
     el('tbold').focus();

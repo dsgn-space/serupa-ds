@@ -102,8 +102,8 @@
 .srp-table__header--resizable { position: relative; }
 .srp-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
 .srp-table__resize::after { content: ""; position: absolute; inset-block: var(--spacing-2); inset-inline-end: var(--spacing-0); width: var(--border-width-2); background: var(--table-border, var(--border)); }
-@media (hover: hover) { .srp-table__resize:hover::after { background: var(--table-resize-active, var(--primary)); } }
-.srp-table__resize:active::after, .srp-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary)); }
+@media (hover: hover) { .srp-table__resize:hover::after { background: var(--table-resize-active, var(--primary-text)); } }
+.srp-table__resize:active::after, .srp-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary-text)); }
 .srp-table__resize:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media (forced-colors: active) { .srp-table__resize::after { background: CanvasText; } }
 /* pinStart and pinEnd: the first or last cell of each row stays put while the rest scroll under it, on the row's own

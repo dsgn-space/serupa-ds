@@ -2,8 +2,16 @@
   "color": {
     "primary": {
       "$type": "color",
-      "$value": "{color.red-400}",
-      "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text on it and for it on the tints (`primary-subtle` and the status ones), with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8196,
+          0.2196,
+          0.1961
+        ],
+        "hex": "#d13832"
+      },
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -12,8 +20,16 @@
     },
     "primary-hover": {
       "$type": "color",
-      "$value": "{color.red-300}",
-      "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). More contrast: brand 900 / brand 200.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6902,
+          0.2039,
+          0.1843
+        ],
+        "hex": "#b0342f"
+      },
+      "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary-hover"
@@ -22,8 +38,16 @@
     },
     "primary-pressed": {
       "$type": "color",
-      "$value": "{color.red-200}",
-      "$description": "Alias. Pressed state of `primary`: one step past `primary-hover` (darker in light themes, lighter in dark), so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5843,
+          0.1961,
+          0.1843
+        ],
+        "hex": "#95322f"
+      },
+      "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary-pressed"
@@ -52,11 +76,31 @@
     },
     "on-primary": {
       "$type": "color",
-      "$value": "{color.red-950}",
-      "$description": "Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark).",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes (brand 950 in dark with more contrast, where the fill is brand 300).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--on-primary"
+        }
+      }
+    },
+    "primary-text": {
+      "$type": "color",
+      "$value": "{color.red-400}",
+      "$description": "Alias. Brand text, links, icons, lines and borders: what `primary` is as a fill, 4.5:1 as text on `surface`, `surface-muted` and the tints. Light themes: the same shade as `primary`; dark themes: brand 400, which a dark page needs for text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-text"
+        }
+      }
+    },
+    "primary-text-hover": {
+      "$type": "color",
+      "$value": "{color.red-300}",
+      "$description": "Alias. `primary-text` on hover: a link or a secondary button's text under the pointer. One step past `primary-text` (darker in light themes, lighter in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-text-hover"
         }
       }
     },

@@ -134,7 +134,7 @@
       },
       "current": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "This month, quarter or year (4.5:1 on panel-bg).",
         "$extensions": {
           "com.serupa": {

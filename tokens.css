@@ -8,6 +8,8 @@
   --primary-subtle: var(--blue-50);
   --primary-subtle-pressed: var(--blue-100);
   --on-primary: var(--white);
+  --primary-text: var(--blue-600);
+  --primary-text-hover: var(--blue-700);
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
   --secondary-pressed: var(--zinc-300);
@@ -372,10 +374,14 @@
   --srp-more-primary: var(--blue-800);
   --srp-more-primary-hover: var(--blue-900);
   --srp-more-primary-pressed: var(--blue-950);
+  --srp-more-on-primary: var(--white);
+  --srp-more-primary-text: var(--blue-800);
+  --srp-more-primary-text-hover: var(--blue-900);
   --srp-more-field-action: var(--blue-800);
   --srp-more-focus-ring: var(--blue-700);
 }
 [data-theme$="-light"] {
+  --on-primary: var(--white);
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
   --secondary-pressed: var(--zinc-300);
@@ -471,6 +477,7 @@
   --chart-gap: var(--white);
 }
 [data-theme$="-dark"] {
+  --on-primary: var(--white);
   --secondary: var(--zinc-700);
   --secondary-hover: var(--zinc-600);
   --secondary-pressed: var(--zinc-500);
@@ -566,29 +573,34 @@
   --chart-gap: var(--zinc-900);
 }
 [data-theme="blue-dark"] {
-  --primary: var(--blue-400);
-  --primary-hover: var(--blue-300);
-  --primary-pressed: var(--blue-200);
+  --primary: #2968f0;
+  --primary-hover: #2153dd;
+  --primary-pressed: #2144b4;
   --primary-subtle: var(--blue-950);
   --primary-subtle-pressed: var(--blue-900);
-  --on-primary: var(--blue-950);
+  --primary-text: var(--blue-400);
+  --primary-text-hover: var(--blue-300);
   --field-action: var(--blue-400);
   --focus-ring: var(--blue-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--blue-300);
   --srp-more-primary-hover: var(--blue-200);
   --srp-more-primary-pressed: var(--blue-100);
+  --srp-more-on-primary: var(--blue-950);
+  --srp-more-primary-text: var(--blue-300);
+  --srp-more-primary-text-hover: var(--blue-200);
   --srp-more-field-action: var(--blue-300);
   --srp-more-focus-ring: var(--blue-300);
 }
 :where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
-  --primary: light-dark(var(--blue-600), var(--blue-400));
-  --primary-hover: light-dark(var(--blue-700), var(--blue-300));
-  --primary-pressed: light-dark(var(--blue-800), var(--blue-200));
+  --primary: light-dark(var(--blue-600), #2968f0);
+  --primary-hover: light-dark(var(--blue-700), #2153dd);
+  --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
-  --on-primary: light-dark(var(--white), var(--blue-950));
+  --primary-text: light-dark(var(--blue-600), var(--blue-400));
+  --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --secondary: light-dark(var(--zinc-100), var(--zinc-700));
   --secondary-hover: light-dark(var(--zinc-200), var(--zinc-600));
   --secondary-pressed: light-dark(var(--zinc-300), var(--zinc-500));
@@ -676,38 +688,49 @@
   --srp-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-primary-pressed: light-dark(var(--blue-950), var(--blue-100));
+  --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
+  --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
+  --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :root[data-brand="blue"]:not([data-theme]), [data-brand="blue"]:not([data-theme]) {
-  --primary: light-dark(var(--blue-600), var(--blue-400));
-  --primary-hover: light-dark(var(--blue-700), var(--blue-300));
-  --primary-pressed: light-dark(var(--blue-800), var(--blue-200));
+  --primary: light-dark(var(--blue-600), #2968f0);
+  --primary-hover: light-dark(var(--blue-700), #2153dd);
+  --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
-  --on-primary: light-dark(var(--white), var(--blue-950));
+  --primary-text: light-dark(var(--blue-600), var(--blue-400));
+  --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-primary-pressed: light-dark(var(--blue-950), var(--blue-100));
+  --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
+  --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
+  --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
 :is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--blue-600), var(--blue-400));
-  --primary-hover: light-dark(var(--blue-700), var(--blue-300));
-  --primary-pressed: light-dark(var(--blue-800), var(--blue-200));
+  --primary: light-dark(var(--blue-600), #2968f0);
+  --primary-hover: light-dark(var(--blue-700), #2153dd);
+  --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
-  --on-primary: light-dark(var(--white), var(--blue-950));
+  --primary-text: light-dark(var(--blue-600), var(--blue-400));
+  --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-primary-pressed: light-dark(var(--blue-950), var(--blue-100));
+  --srp-more-on-primary: light-dark(var(--white), var(--blue-950));
+  --srp-more-primary-text: light-dark(var(--blue-800), var(--blue-300));
+  --srp-more-primary-text-hover: light-dark(var(--blue-900), var(--blue-200));
   --srp-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --srp-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
 }
@@ -1243,6 +1266,9 @@
   --primary: var(--srp-more-primary);
   --primary-hover: var(--srp-more-primary-hover);
   --primary-pressed: var(--srp-more-primary-pressed);
+  --on-primary: var(--srp-more-on-primary);
+  --primary-text: var(--srp-more-primary-text);
+  --primary-text-hover: var(--srp-more-primary-text-hover);
   --field-action: var(--srp-more-field-action);
   --focus-ring: var(--srp-more-focus-ring);
 }
@@ -1278,6 +1304,9 @@
   --primary: var(--srp-more-primary);
   --primary-hover: var(--srp-more-primary-hover);
   --primary-pressed: var(--srp-more-primary-pressed);
+  --on-primary: var(--srp-more-on-primary);
+  --primary-text: var(--srp-more-primary-text);
+  --primary-text-hover: var(--srp-more-primary-text-hover);
   --field-action: var(--srp-more-field-action);
   --focus-ring: var(--srp-more-focus-ring);
 }

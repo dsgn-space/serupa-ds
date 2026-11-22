@@ -114,7 +114,7 @@
       },
       "check": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The check next to the selected option.",
         "$extensions": {
           "com.serupa": {

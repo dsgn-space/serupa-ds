@@ -19,7 +19,7 @@
 .srp-loader--size-lg { --srp-loader-size: var(--loader-size-lg, var(--spacing-10)); gap: var(--spacing-3); }
 /* Tones: primary and muted color the ring, spokes, dots or pixel grid (the text variant stays in the text color, which keeps its
    contrast); inverse makes everything white, for dark scrims, overlays and media that stay dark in every theme. */
-.srp-loader--primary > .srp-loader__art { color: var(--loader-primary, var(--primary)); }
+.srp-loader--primary > .srp-loader__art { color: var(--loader-primary, var(--primary-text)); }
 .srp-loader--muted > .srp-loader__art { color: var(--loader-muted, var(--text-muted)); }
 .srp-loader--inverse { color: var(--loader-inverse, var(--white)); }
 .srp-loader--waiting { visibility: hidden; animation: none; }   /* during the show-after delay: keeps its space, shows nothing */

@@ -54,7 +54,7 @@
       },
       "zone-border-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Its outline then.",
         "$extensions": {
           "com.serupa": {

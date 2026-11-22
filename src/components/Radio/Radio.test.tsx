@@ -289,7 +289,7 @@ describe('Radio', () => {
     expect(page.getByRole('radiogroup').element().className).toMatch(/srp-radio-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary-text)'));
     expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
     expect(css(card(a!)).backgroundColor).toBe(css(card(b!)).backgroundColor);
     expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
@@ -312,7 +312,7 @@ describe('Radio', () => {
 
   test('variant card: a checked card\'s border 3:1 on the card and the page, in every theme', () => {
     expect(lowContrast([
-      ['checked card border', 'var(--primary)', 'var(--surface)', 3],
+      ['checked card border', 'var(--primary-text)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 

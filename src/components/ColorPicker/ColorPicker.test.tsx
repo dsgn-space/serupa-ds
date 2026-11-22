@@ -344,7 +344,7 @@ describe('ColorPicker', () => {
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
     await userEvent.hover(swatch('Blue'));
-    expect(ring(swatch('Blue'))[2]).toBe(color('var(--primary)'));
+    expect(ring(swatch('Blue'))[2]).toBe(color('var(--primary-text)'));
     await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 

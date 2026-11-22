@@ -54,7 +54,7 @@
       },
       "card-border-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The border of the card being moved, as in SortableList.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "target-border": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The outline of the column a moving card would land in (3:1).",
         "$extensions": {
           "com.serupa": {

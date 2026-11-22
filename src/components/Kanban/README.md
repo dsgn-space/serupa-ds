@@ -122,8 +122,8 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-column-bg` | `surface-muted` | A column's background. |
 | `--kanban-card-bg` | `surface` | A card's background. |
 | `--kanban-card-border` | `border` | A card's outline. |
-| `--kanban-card-border-active` | `primary` | The border of the card being moved, as in SortableList. |
-| `--kanban-target-border` | `primary` | The outline of the column a moving card would land in (3:1). |
+| `--kanban-card-border-active` | `primary-text` | The border of the card being moved, as in SortableList. |
+| `--kanban-target-border` | `primary-text` | The outline of the column a moving card would land in (3:1). |
 | `--kanban-over` | `danger-text` | A count over its column's limit (4.5:1 on the column). |
 | `--kanban-handle-active` | `primary-subtle` | A picked-up card's handle. |
 | `--kanban-handle-bg-hover` | `secondary` | The drag handle's background on hover, as SortableList's. |

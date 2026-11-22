@@ -24,7 +24,7 @@
       },
       "color-primary": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "tone=\"primary\".",
         "$extensions": {
           "com.serupa": {

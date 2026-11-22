@@ -294,7 +294,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
   const show = (t: Token) => {
     const v = `var(--${t.name.replace(/[\\.]/g, '\\$&')})`;   // --spacing-0\.5: a dot in a custom property's name is escaped in CSS
     if (preview === 'space') return <div style={{ height: 12, width: v, background: 'var(--primary)', borderRadius: 2 }} />;
-    if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--primary)', borderRadius: v }} />;
+    if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--primary-text)', borderRadius: v }} />;
     // The tile sits in a muted well with room around it, so its shadow shows (and isn't clipped by the cell) on
     // every row, not only on the striped ones.
     if (preview === 'shadow') return <div style={{ display: 'inline-block', padding: 16, borderRadius: 8, background: 'var(--surface-muted)' }}><div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div></div>;

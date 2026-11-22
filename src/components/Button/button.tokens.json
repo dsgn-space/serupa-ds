@@ -64,7 +64,7 @@
       },
       "secondary-text": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Secondary text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "secondary-text-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.primary-text-hover}",
         "$description": "Secondary text and icons on hover.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "secondary-border": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Secondary border.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "secondary-border-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.primary-text-hover}",
         "$description": "Secondary border on hover.",
         "$extensions": {
           "com.serupa": {
@@ -213,7 +213,7 @@
       },
       "link-text": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Link text.",
         "$extensions": {
           "com.serupa": {

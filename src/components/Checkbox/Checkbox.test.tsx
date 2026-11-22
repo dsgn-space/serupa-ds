@@ -385,7 +385,7 @@ describe('CheckboxGroup', () => {
     expect(page.getByRole('group').element().className).toMatch(/srp-checkbox-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary-text)'));
     expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
     expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
     await userEvent.click(page.getByText('A printed note', { exact: true }));
@@ -400,7 +400,7 @@ describe('CheckboxGroup', () => {
     b!.blur();
     expect([b!.hasAttribute('data-key-focus'), css(card(b!)).outlineStyle]).toEqual([false, 'none']);
     await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
-    expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
+    expect(lowContrast([['checked card border', 'var(--primary-text)', 'var(--surface)', 3]])).toEqual([]);
   });
 
   test('a card clicked in Safari, where the label passes the click on to its box with detail 0 as a key would, shows no keyboard ring', async () => {

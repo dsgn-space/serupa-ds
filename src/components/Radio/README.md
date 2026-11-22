@@ -155,7 +155,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-card-bg` | `surface` | A card radio's background. |
 | `--radio-card-border` | `border` | A card's border. |
 | `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
-| `--radio-card-border-checked` | `primary` | A checked card's border, 2px. |
+| `--radio-card-border-checked` | `primary-text` | A checked card's border, 2px. |
 | `--radio-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--radio-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--radio-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

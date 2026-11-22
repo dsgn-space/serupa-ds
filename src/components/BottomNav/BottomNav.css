@@ -49,7 +49,7 @@
 .srp-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }
 .srp-bottom-nav__link:not(.srp-bottom-nav__link--active):active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .srp-bottom-nav__link, .srp-bottom-nav__icon { transition: none; } }
-.srp-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary)); }
+.srp-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary-text)); }
 .srp-bottom-nav__link--active .srp-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
 .srp-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media print { .srp-bottom-nav, .srp-bottom-nav__spacer { display: none; } }

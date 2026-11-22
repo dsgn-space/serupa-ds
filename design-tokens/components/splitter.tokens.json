@@ -14,7 +14,7 @@
       },
       "line-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The line on hover, while dragged and on focus.",
         "$extensions": {
           "com.serupa": {

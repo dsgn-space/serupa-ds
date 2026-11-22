@@ -38,31 +38,33 @@ Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the
 
 Every theme shares **one set of foundations**: the same palette, type, spacing scale and components. A theme is a brand color and a mode, and nothing else: it only changes where the brand colors point, so every corner, shadow, border, surface, space, chart color and motion is the same in all of them. There is a theme for each accent color of the palette, light and dark, 34 in all. Blue is the default.
 
-| Brand | `primary` in light | `primary` in dark |
-| --- | --- | --- |
-| `blue` *(default)* | `blue-600` | `blue-400` |
-| `red` | `red-700` | `red-400` |
-| `orange` | `orange-700` | `orange-400` |
-| `amber` | `amber-700` | `amber-400` |
-| `yellow` | `yellow-700` | `yellow-400` |
-| `lime` | `lime-700` | `lime-400` |
-| `green` | `green-700` | `green-400` |
-| `emerald` | `emerald-700` | `emerald-400` |
-| `teal` | `teal-700` | `teal-400` |
-| `cyan` | `cyan-700` | `cyan-400` |
-| `sky` | `sky-700` | `sky-400` |
-| `indigo` | `indigo-600` | `indigo-400` |
-| `violet` | `violet-600` | `violet-400` |
-| `purple` | `purple-600` | `purple-400` |
-| `fuchsia` | `fuchsia-700` | `fuchsia-400` |
-| `pink` | `pink-700` | `pink-400` |
-| `rose` | `rose-700` | `rose-400` |
+| Brand | `primary` in light | `primary` in dark | `primary-text` in dark |
+| --- | --- | --- | --- |
+| `blue` *(default)* | `blue-600` | `#2968f0` | `blue-400` |
+| `red` | `red-700` | `#d13832` | `red-400` |
+| `orange` | `orange-700` | `#c74614` | `orange-400` |
+| `amber` | `amber-700` | `#b7550e` | `amber-400` |
+| `yellow` | `yellow-700` | `#a26308` | `yellow-400` |
+| `lime` | `lime-700` | `#4e7e12` | `lime-400` |
+| `green` | `green-700` | `#18823e` | `green-400` |
+| `emerald` | `emerald-700` | `#18815f` | `emerald-400` |
+| `teal` | `teal-700` | `#1e7e76` | `teal-400` |
+| `cyan` | `cyan-700` | `#1b7b97` | `cyan-400` |
+| `sky` | `sky-700` | `#1e77b0` | `sky-400` |
+| `indigo` | `indigo-600` | `#5d5afa` | `indigo-400` |
+| `violet` | `violet-600` | `#8648fa` | `violet-400` |
+| `purple` | `purple-600` | `#9a3cf2` | `purple-400` |
+| `fuchsia` | `fuchsia-700` | `#b636c3` | `fuchsia-400` |
+| `pink` | `pink-700` | `#d02f6b` | `pink-400` |
+| `rose` | `rose-700` | `#d4304d` | `rose-400` |
 
 A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
 ### The brand shade
 
-`primary` is a fill with text on it and a text color of its own (links, ghost and outline buttons), so in light themes it is the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. In dark themes every brand is step 400 with its own 950 as the text on it. `data-contrast="more"` steps each brand up within its own ramp, to 7:1.
+`primary` is a fill with white text on it: a primary button, a checked box, the selected day. `primary-text` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
+
+**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened only as far as 3:1 on a raised dark card asks: `blue-600` (#2563eb) becomes #2968f0, and no brand moves more than a few points of lightness. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
@@ -116,10 +118,13 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 
 | Alias | Light themes | Dark themes | Use |
 | --- | --- | --- | --- |
-| `primary` | `‹brand›-600` | `‹brand›-400` | Brand color: primary buttons, links, selected states. |
-| `primary-hover` | `‹brand›-700` | `‹brand›-300` | Hover / pressed state of `primary`. |
+| `primary` | `‹brand›-600` | `‹brand›-600`, a little lighter | Brand fill: primary buttons, checked boxes, selected days, with `on-primary` on it. |
+| `primary-hover` | `‹brand›-700` | `‹brand›-700`, as much lighter | `primary` under the pointer. |
+| `primary-pressed` | `‹brand›-800` | `‹brand›-800`, as much lighter | `primary` held down. |
+| `primary-text` | `‹brand›-600` | `‹brand›-400` | Brand text, links, icons, lines and borders. |
+| `primary-text-hover` | `‹brand›-700` | `‹brand›-300` | `primary-text` under the pointer. |
 | `primary-subtle` | `‹brand›-50` | `‹brand›-950` | Brand tint for selected rows and badges. |
-| `on-primary` | `white` | `‹brand›-950` | Text and icons on `primary` fills. |
+| `on-primary` | `white` | `white` | Text and icons on `primary` fills. |
 | `secondary` | `zinc-100` | `zinc-700` | Secondary button fill; hover fill for outline and ghost buttons. |
 | `secondary-hover` | `zinc-200` | `zinc-600` | Hover state of `secondary`. |
 | `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
@@ -190,10 +195,10 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 
 ### Contrast, checked in every theme
 
-- `on-primary` on `primary`: 5.2–7.9:1. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
+- `on-primary` on `primary`: 4.8–6.5:1. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
 - `focus-ring` on `surface`: 3.7:1 or more.
 - **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 fill) is about 1.5:1 in light and 1.4:1 to 1.9:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its fill in dark, the stronger border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-control)`. The checks hold the border to 1.3:1 so it never fades out entirely. Every other control's edge, `border-control`, keeps 3:1.
-- Dark themes use a light `primary` (brand 400) with dark text (brand 950), because white text on a mid-tone fill fails in dark mode.
+- Dark themes fill with the light theme's `primary` under white text, a little lighter where 3:1 on a raised card asks it; brand text there is `primary-text` (brand 400), since the fill's shade is 3.4:1 as text on a dark card.
 
 ### Naming
 
@@ -220,13 +225,13 @@ npx serupa-brand acme "#0f766e" --motion brisk -o src/acme-theme.css   # or calm
 
 Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
-It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
+It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary-text` on the page at 4.5:1, the dark fill 3:1 on a raised card, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
 ### Adding a theme
 
 1. Pick a brand hue from the palette.
 2. Give each alias a target in the new theme: copy a Light or Dark column and swap the brand hue.
-3. Check `on-primary` on `primary` (4.5:1) and `focus-ring` on `surface` (3:1). Step the brand one shade darker (light) or lighter (dark) if either fails.
+3. Check `on-primary` on `primary` (4.5:1), `primary-text` on `surface` (4.5:1) and `focus-ring` on `surface` (3:1). Step the brand one shade darker in light if one fails; `node tools/test/brand.mjs` says what the dark fills must be.
 4. Nothing else changes: palette, type, spacing, radius, shadows and components are shared.
 
 ## Typography
@@ -320,7 +325,7 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 | line-height | `leading-none`, `-tight`, `-snug`, `-normal`, `-relaxed`, `-loose`, and `leading-<spacing>` |
 | list-style-image / position / type | `list-image-none`; `list-inside`, `list-outside`; `list-disc`, `list-decimal`, `list-none` |
 | text-align | `text-left`, `-center`, `-right`, `-justify`, `-start`, `-end` |
-| color | `text-<color>` for every role (`text-primary`, `text-text-muted`), `text-white`, `text-black`, `text-inherit`, `text-current`, `text-transparent` |
+| color | `text-<color>` for every role (`text-primary-text`, `text-text-muted`), `text-white`, `text-black`, `text-inherit`, `text-current`, `text-transparent` |
 | text-decoration-line | `underline`, `overline`, `line-through`, `no-underline` |
 | placeholder color | `placeholder-<color>` for every role, white and black, `placeholder-inherit`, `placeholder-current`, `placeholder-transparent` (use `placeholder-text-muted`) |
 | text-decoration-color | `decoration-<color>`, `decoration-current`, `decoration-inherit`, `decoration-transparent` |
@@ -340,7 +345,7 @@ Every typography property has classes in `bundle.css`. The values that form a sc
 
 Text rules of thumb:
 
-- Set text color with aliases (`text-text`, `text-text-muted`, `text-primary`), not palette colors, so it follows the theme.
+- Set text color with aliases (`text-text`, `text-text-muted`, `text-primary-text`), not palette colors, so it follows the theme.
 - Headings: `text-balance`; paragraphs: `text-pretty`. Numbers in tables: `tabular-nums`.
 - Japanese: with `base.css`, a heading inside `lang="ja"` breaks between phrases (`word-break: auto-phrase`), so a word isn't split across lines. Chrome and Edge 119 and later do this; other browsers break as before.
 - Truncate single lines with `truncate`; clamp previews with `line-clamp-2` or `-3`, and make the full text reachable.
