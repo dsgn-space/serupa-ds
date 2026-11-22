@@ -44,6 +44,19 @@ describe('Patterns/Onboarding', () => {
     expect(latin(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuetext'))).toBe('0 of 4 steps done');
   });
 
+  test('Take a quick tour walks the page: the checklist, the projects, then an end; Done puts focus back on the button', async () => {
+    const screen = await render(<Onboarding />);
+    const start = screen.getByRole('button', { name: 'Take a quick tour' });
+    await start.click();
+    await expect.element(screen.getByRole('dialog', { name: 'Your setup checklist' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Next' }).click();
+    await expect.element(screen.getByRole('dialog', { name: 'Your projects' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Next' }).click();
+    await screen.getByRole('button', { name: 'Done' }).click();
+    await expect.poll(() => document.activeElement).toBe(start.element());
+    expect(screen.getByRole('dialog').elements()).toHaveLength(0);
+  });
+
   test('every step links to where it is done', async () => {
     const screen = await render(<Onboarding steps={steps} />);
     await expect.element(screen.getByRole('link', { name: 'Edit your profile' })).toHaveAttribute('href', '/profile');
