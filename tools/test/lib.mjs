@@ -76,7 +76,7 @@ export async function browser(args) {
   try { return await pw[ENGINE].launch(opts); } catch (e) { fail(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); }
 }
 
-// The browser build this Playwright installs and the baselines are drawn with (in CI, npx playwright install). A
+// The browser build this Playwright installs and the pictures are drawn with (in CI, npx playwright install). A
 // browser from another build draws text differently: a container whose Chromium 153 stood in for Playwright's 156
 // drew Inter's medium weight as regular, and every picture failed. '' when Playwright doesn't say.
 export function expectedVersion() {
@@ -219,7 +219,7 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
-  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
+  String.raw`tools/test/(?!(lib|run|visual|visual-base|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
   // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
   // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
@@ -230,7 +230,7 @@ const NEUTRAL = new RegExp('^(' + [
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
-// tokens, tooling, Storybook's setup) could change any of them. Their tests, visual baselines, API baseline,
+// tokens, tooling, Storybook's setup) could change any of them. Their tests, API baseline,
 // server-render case and size budgets count as theirs; the NEUTRAL files touch none. A block or pattern
 // (src/blocks/<Name>/, src/patterns/<Name>/) counts as one too: nothing in the package imports it, so only its own
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
@@ -293,7 +293,6 @@ export const sharedRaise = (raises, line) => +raises.reduce((t, r) => t + (Numbe
 export const raiseTag = (branch) => String(branch === 'HEAD' ? '' : branch || '').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'local';
 // The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
 const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-  || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
   || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
   || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
 // The components, blocks and patterns a change edits itself, whatever else it changes: unlike affectedComponents,
@@ -307,7 +306,6 @@ export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
-      || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
       || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
     // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).

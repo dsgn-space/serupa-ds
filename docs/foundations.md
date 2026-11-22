@@ -356,7 +356,37 @@ Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`s
 - **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.
 - **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.
 - **Meaning:** icons are decorative by default. Add an `aria-label` only when the icon carries meaning alone, and give icon-only buttons an `aria-label`.
-- **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another).
+- **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another). The components already use these, so an app that uses them too matches:
+
+  | Meaning | Icon | Not |
+  | --- | --- | --- |
+  | Add, create | `add` | `add_circle`, `add_box` (except a large empty-state call to action) |
+  | Edit | `edit` | `edit_note`, `create` |
+  | Delete | `delete` | `delete_forever`, `remove`, `close` |
+  | Close, dismiss, clear | `close` | `cancel`, `clear` |
+  | Done, selected | `check` | `done` |
+  | Search | `search` | `manage_search` |
+  | Filter | `filter_list` | `filter_alt`, `tune` (keep `tune` for settings of a view) |
+  | More actions on a row, an item or a card | `more_vert` | `more_horiz` |
+  | More actions at the end of a bar (Toolbar, PageHeader) | `more_horiz` | `more_vert` |
+  | Expand, open a list | `expand_more` | `keyboard_arrow_down`, `arrow_drop_down` |
+  | Forward, next, drill in | `chevron_right` (`chevron_left` back), mirrored in right-to-left | `navigate_next`, `arrow_forward_ios` |
+  | Opens elsewhere | `open_in_new` | `launch` |
+  | Copy | `content_copy` | `file_copy` |
+  | Download, upload | `download`, `upload` (`upload_file` in a drop zone) | `file_download`, `cloud_upload` |
+  | Load again | `refresh` | `sync` (keep `sync` for syncing with another place) |
+  | A date | `calendar_today` (`date_range` for a range) | `event` |
+  | A calendar view | `calendar_month` | `calendar_today` |
+  | A time, a schedule | `schedule` | `access_time` |
+  | A person, an account | `person` | `account_circle` |
+  | Settings | `settings` | `build`, `tune` |
+  | A text document | `description` (`article` for a help or docs page) | `draft` |
+  | Code | `code` | `draft` |
+  | A file of another kind | `draft` | `insert_drive_file` |
+  | A folder | `folder` (`folder_open` when open) | `topic` |
+  | Error, warning, information, success | `error`, `warning`, `info`, `check_circle` | `report`, `warning_amber`, `info_outline`, `task_alt` |
+
+  The one exception is inside a marker too small for its usual icon: Stepper's error step shows `priority_high` in its circle, because `error` is itself a circle.
 
 **Custom icons.** For what Material Symbols doesn't have, draw your own on the same 24×24 grid, in one color, and put the SVGs in `assets/Icons/` (`serupa-sparkle.svg`). `node tools/icons/build.mjs` cleans them and builds them into the components, so `<Icon name="serupa-sparkle" />` and `startIcon="serupa-sparkle"` work with the same sizes, colors and accessibility as Material Symbols. The build refuses anything unsafe or off-system with the reason. Drawing rules and details are in the Icon guidelines.
 

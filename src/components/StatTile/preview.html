@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>StatTile — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root" style="max-width: 320px"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.StatTile, { label: 'Revenue', value: '€48,200', change: { amount: '12%', direction: 'up' }, period: 'vs last month', trend: [38, 40, 39, 43, 42, 45, 46, 48] }));
+</script>
+</body>
+</html>

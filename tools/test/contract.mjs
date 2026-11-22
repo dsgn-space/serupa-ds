@@ -2,14 +2,12 @@
 // component can't pass CI with something missing. No browser needed.
 //   node tools/test/contract.mjs
 // Each component needs: <Name>.tsx, index.ts (what the package exports from it), <Name>.css, <name>.tokens.json,
-// <Name>.stories.tsx, <Name>.mdx, README.md, preview.html, a test next to it (<Name>.test.tsx, Vitest), visual
-// baselines of its stories in every theme, and a stress story (G14): one exported as Long…, Stress… or Overflow…
-// that fills it with long words, long labels and more items than fit, so the visual baselines show how it wraps,
-// truncates or scrolls.
+// <Name>.stories.tsx, <Name>.mdx, README.md, preview.html, a test next to it (<Name>.test.tsx, Vitest), and a
+// stress story (G14): one exported as Long…, Stress… or Overflow… that fills it with long words, long labels and
+// more items than fit, so Visual's pictures show how it wraps, truncates or scrolls.
 import fs from 'node:fs';
-import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import path from 'node:path';
-import { HERE, PROJECT, kebab, report, done } from './lib.mjs';
+import { PROJECT, kebab, report, done } from './lib.mjs';
 import { componentIndex } from '../build/registry.mjs';
 
 const SKIP = [];
@@ -24,16 +22,12 @@ const EXEMPT = {
   TimeZonePicker: { tokens: 'a Combobox: its tokens set its look, and it adds no visual values of its own' },
   TabNav: { tokens: 'drawn with Tabs\' classes and --tabs-* tokens, so it matches Tabs and adds no visual values of its own' },
   ToggleGroup: { tokens: 'a ButtonGroup of ToggleButtons: their tokens set its look, and it adds no visual values of its own' },
-  VisuallyHidden: { tokens: 'no visual values', preview: 'nothing to see', visual: 'nothing to see', stress: 'nothing to see' },
+  VisuallyHidden: { tokens: 'no visual values', preview: 'nothing to see', stress: 'nothing to see' },
 };
 // Known gaps, to be fixed. The check fails when one is fixed, so the entry gets removed and can't come back.
 const GAPS = {};
 const COMP = path.join(PROJECT, 'src', 'components');
 const comps = fs.readdirSync(COMP).filter((c) => fs.statSync(path.join(COMP, c)).isDirectory() && !SKIP.includes(c)).sort();
-// The themes with pictures: three brands that stand for all of them (tools/design-qa.mjs).
-const themes = SHOWN_THEMES;
-// baseline-visual/<Name>/<Story>-<theme>-<state>.png (tools/test/visual.mjs).
-const baselines = (c) => { const d = path.join(HERE, 'baseline-visual', c); return fs.existsSync(d) ? fs.readdirSync(d) : []; };
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -50,7 +44,6 @@ for (const c of comps) {
     guide: has('README.md'),
     preview: has('preview.html'),
     test: has(`${c}.test.tsx`),
-    visual: themes.every((th) => baselines(c).some((f) => f.endsWith(`-${th}-rest.png`))),
     stress: has(`${c}.stories.tsx`) && /^export const (Long|Stress|Overflow)\w*\b/m.test(fs.readFileSync(path.join(COMP, c, `${c}.stories.tsx`), 'utf8')),
   };
   const missing = [], fixed = [];
@@ -59,7 +52,7 @@ for (const c of comps) {
     if (GAPS[c]?.[part]) { if (ok) fixed.push(part); continue; }
     if (!ok) missing.push(part);
   }
-  const what = { code: `${c}.tsx`, index: 'index.ts (its public exports)', css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes with pictures (add the "update-visual-baselines" label)`, stress: 'a stress story (export const LongText, LongLabels, Overflow…): long words, long labels, more items than fit' };
+  const what = { code: `${c}.tsx`, index: 'index.ts (its public exports)', css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, stress: 'a stress story (export const LongText, LongLabels, Overflow…): long words, long labels, more items than fit' };
   t(`${c} has everything a component ships with`, !missing.length && !fixed.length,
     [missing.length && `missing: ${missing.map((p) => what[p]).join(', ')}`, fixed.length && `known gap now fixed, remove it from GAPS in contract.mjs: ${fixed.join(', ')}`].filter(Boolean).join('; '));
 }

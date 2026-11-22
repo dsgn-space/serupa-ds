@@ -31,6 +31,8 @@ jobs:
     outputs:
       current: ${{ steps.head.outputs.current }}
       tarball: ${{ steps.release.outputs.tarball }}
+      tag: ${{ steps.release.outputs.tag }}
+      prev: ${{ steps.release.outputs.prev }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -66,6 +68,77 @@ jobs:
           name: release-tarball
           path: ${{ steps.release.outputs.tarball }}
           retention-days: 1
+
+  # The stories that look different since the last release, before and after, under the release's notes (94). No
+  # picture is committed (ADR-0016), so this draws them: each story at rest in the first theme, at the previous
+  # release's commit and at this one (the prebuilt tags' parents), the way a pull request's Visual draws main's and its
+  # own. It has a read-only token: the pictures go to notes, which runs none of the branch's code.
+  screenshots:
+    needs: release
+    if: needs.release.outputs.tarball != '' && needs.release.outputs.prev != ''
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      options: --cpus 4
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /github/home/.cache/ms-playwright
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release.outputs.tag }}
+          persist-credentials: false
+          fetch-depth: 0
+      # The tag is the prebuilt commit; its parent is main's, with the scripts that build Storybook.
+      - shell: bash
+        env:
+          TAG: ${{ needs.release.outputs.tag }}
+        run: |
+          git config --global --add safe.directory "$PWD"
+          git checkout --quiet --detach "$TAG^"
+      - uses: ./.github/actions/setup
+      - name: Draw the pictures
+        shell: bash
+        env:
+          PREV: ${{ needs.release.outputs.prev }}
+        run: |
+          npm run build && npm run build-storybook
+          SERUPA_VISUAL_REF="$PREV^" SERUPA_VISUAL_REST=1 node tools/test/run.mjs --group visual
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-screenshots
+          path: .visual-review/
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: ignore
+
+  # Attaches the pictures to the release and adds the table to its notes: main's own script, no dependencies.
+  notes:
+    needs: [release, screenshots]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write   # the release's files and notes
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tools/release-screenshots.mjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-screenshots
+          path: shots
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release.outputs.tag }}
+          PREV: ${{ needs.release.outputs.prev }}
+        run: node tools/release-screenshots.mjs "$TAG" "$PREV" shots
 
   # Main only. On a maintenance branch (14.x) a fix's pull request runs `node tools/version.mjs` itself, so the
   # release job above tags it when it merges: the action names its branch after the workflow's ref, which is

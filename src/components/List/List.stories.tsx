@@ -21,7 +21,7 @@ function Members({ links, ...args }: ListProps & { links?: boolean }) {
     <List {...args}>
       {people.map((p, i) => links
         ? <ListItem key={p.name} href="#" selected={i === 0} leading={<Avatar name={p.name} alt="" size="sm" />} title={p.name} description={p.email}
-            trailing={<IconButton icon="more_horiz" label={`More for ${p.name}`} size="sm" />} />
+            trailing={<IconButton icon="more_vert" label={`More for ${p.name}`} size="sm" />} />
         : <ListItem key={p.name} leading={<Avatar name={p.name} alt="" size="sm" />} title={p.name} description={p.email} trailing={p.role ? <Badge>{p.role}</Badge> : undefined} />)}
     </List>
   );

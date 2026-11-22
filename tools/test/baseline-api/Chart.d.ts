@@ -1,6 +1,6 @@
-// exports: Chart, type ChartProps, type ChartSeries, type ChartType, type ChartView
+// exports: Chart, type ChartProps, type ChartScale, type ChartSeries, type ChartType, type ChartView
 interface ChartLabels {
-    chartKind: (type: "area" | "bar" | "donut" | "line") => string;
+    chartKind: (type: "area" | "bar" | "donut" | "heatmap" | "line") => string;
     chartSummary: (kind: string, series: number, points: number, first: string, last: string) => string;
     chartRange: (series: string, low: string, lowAt: string, high: string, highAt: string) => string;
     chartPoint: (series: null | string, category: string, value: string) => string;
@@ -12,7 +12,8 @@ interface ChartLabels {
     chartShowTable: string;
     chartShowChart: string;
 }
-type ChartType = "area" | "bar" | "donut" | "line";
+type ChartType = "area" | "bar" | "donut" | "heatmap" | "line";
+type ChartScale = "diverging" | "sequential";
 type ChartView = "chart" | "table";
 interface ChartSeries {
     name: string;
@@ -20,6 +21,8 @@ interface ChartSeries {
 }
 interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, "children" | "title"> {
     type?: ChartType | undefined;
+    scale?: ChartScale | undefined;
+    midpoint?: number | undefined;
     stacked?: boolean | undefined;
     title?: React.ReactNode | undefined;
     categories: ReadonlyArray<string>;
