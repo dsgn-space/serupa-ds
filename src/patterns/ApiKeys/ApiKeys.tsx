@@ -11,6 +11,7 @@ import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { CopyButton } from '../../components/CopyButton/CopyButton';
+import { CodeBlock } from '../../components/CodeBlock/CodeBlock';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
@@ -222,6 +223,8 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
                 <CopyButton id="key-copy" value={secret} copiedLabel="Copied" aria-describedby="key-secret" size="md">Copy the key</CopyButton>
                 <Button variant="outline" onClick={() => openCreate(false)}>Done</Button>
               </div>
+              <CodeBlock title="Try it" language="bash" wrap
+                code={`curl https://api.example.com/v1/projects \\\n  -H "Authorization: Bearer ${secret}"`} />
             </div>
           ) : (
             <form onSubmit={create} noValidate className="flex flex-col gap-4">

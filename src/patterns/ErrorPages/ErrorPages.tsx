@@ -5,6 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
+import { Illustration } from '../../components/Illustration/Illustration';
 
 /* Error pages: not found, offline, server error and no access, built from the components only, for an app to copy.
    What they carry (WCAG 2.2):
@@ -61,25 +62,25 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
 
   const body = {
     'not-found': {
-      icon: 'search_off',
+      picture: 'search' as const,
       what: 'Check the address, or start again from the home page',
       why: 'The page may have moved, or the link you followed may have a typo in it.',
       actions: <>{toHome}<Button variant="secondary" onClick={() => window.history.back()}>Go back</Button></>,
     },
     offline: {
-      icon: 'wifi_off',
+      picture: 'offline' as const,
       what: 'Check your connection, then try again',
       why: 'This page needs the internet to load. Once you are back online, try again.',
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     server: {
-      icon: 'error',
+      picture: 'error' as const,
       what: 'Try again in a moment',
       why: <>It isn’t something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     'no-access': {
-      icon: 'lock',
+      picture: 'no-access' as const,
       what: 'Ask for access, or sign in with another account',
       why: 'This page belongs to a team or a person you aren’t signed in as. Whoever shared the link can give you access.',
       actions: <>{toHome}<Button href="#sign-in" variant="secondary">Sign in as someone else</Button></>,
@@ -94,7 +95,7 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
       </header>
       <main id="main" className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-12 outline-none">
         <Heading level={1} className="text-center">{title}</Heading>
-        <EmptyState icon={body.icon} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
+        <EmptyState icon={<Illustration name={body.picture} size="lg" />} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
         {kind === 'offline' ? (
           // Always there, so a screen reader is listening before the connection comes back.
           <div role="status" className="text-center text-sm">{online ? 'You’re back online. Try again to load the page.' : null}</div>

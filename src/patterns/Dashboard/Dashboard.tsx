@@ -8,6 +8,7 @@ import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
 import { Meter } from '../../components/Meter/Meter';
 import { Progress } from '../../components/Progress/Progress';
+import { Chart } from '../../components/Chart/Chart';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
 import { StatsRow, type Stat } from '../../blocks/StatsRow/StatsRow';
 import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/ActivityFeed';
@@ -40,6 +41,8 @@ export interface RecentProject {
 export interface DashboardData {
   /** The key numbers, two to four (StatsRow). */
   stats: readonly Stat[];
+  /** Tasks opened and done each week, oldest first, for the chart. Leave it out and the chart isn't shown. */
+  weekly?: { weeks: readonly string[]; opened: readonly (number | null)[]; done: readonly (number | null)[] } | undefined;
   /** Storage used and the plan's limit, in GB. */
   storage: { used: number; limit: number };
   /** A goal for the period: "Launch checklist", 3 of 5 done. */
@@ -83,6 +86,7 @@ const demo: DashboardData = {
     { label: 'Open issues', value: '23', change: { amount: '3%', direction: 'down', good: true } },
     { label: 'Spend', value: '$3,240', change: { amount: '8%', direction: 'up', good: false } },
   ],
+  weekly: { weeks: ['Oct 5', 'Oct 12', 'Oct 19', 'Oct 26', 'Nov 2', 'Nov 9'], opened: [30, 34, 28, 36, 31, 38], done: [24, 29, 31, 30, 35, 40] },
   storage: { used: 8.6, limit: 10 },
   goal: { label: 'Launch checklist', done: 3, total: 5 },
   projects: [
@@ -145,6 +149,17 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
         ) : (
           <>
             <StatsRow title="This month" period="vs last month" stats={data.stats} loading={loading} />
+
+            {data.weekly || loading ? (
+              <section aria-labelledby="dash-weekly" className="flex min-w-0 flex-col gap-4">
+                <Heading level={2} size="lg" id="dash-weekly">Tasks each week</Heading>
+                <Card>
+                  <Chart aria-label="Tasks each week" type="bar" height={200} categoryLabel="Week" loading={loading} loadingLabel="Loading: Tasks each week"
+                    categories={loading ? [] : [...(data.weekly?.weeks ?? [])]}
+                    series={loading ? [] : [{ name: 'Opened', values: [...(data.weekly?.opened ?? [])] }, { name: 'Done', values: [...(data.weekly?.done ?? [])] }]} />
+                </Card>
+              </section>
+            ) : null}
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <section aria-labelledby="dash-projects" className="flex min-w-0 flex-col gap-4 lg:col-span-2">

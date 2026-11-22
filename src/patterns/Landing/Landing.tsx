@@ -9,6 +9,9 @@ import { IconTile } from '../../components/IconTile/IconTile';
 import { PageSection } from '../../components/PageSection/PageSection';
 import { Grid } from '../../components/Grid/Grid';
 import { Stack } from '../../components/Stack/Stack';
+import { Logo, type LogoProps } from '../../components/Logo/Logo';
+import { Quote } from '../../components/Quote/Quote';
+import { Avatar } from '../../components/Avatar/Avatar';
 import { Pricing, type PricingPeriod, type PricingPlan } from '../../blocks/Pricing/Pricing';
 import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
 import { Footer, type FooterLinkGroup } from '../../blocks/Footer/Footer';
@@ -35,9 +38,21 @@ export interface LandingFeature {
   icon: React.ComponentProps<typeof IconTile>['icon'];
 }
 
+// The made-up brand's logo, drawn for light and dark backgrounds: swap in your own files.
+const drawn = (w: number, body: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="32" viewBox="0 0 ${w} 32">${body}</svg>`);
+const mark = (bg: string, fg: string) => `<rect width="32" height="32" rx="8" fill="${bg}"/><path d="M9 23 16 8l7 15h-4l-3-7-3 7z" fill="${fg}"/>`;
+const word = (fill: string) => `<text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="${fill}">Acme</text>`;
+const acmeLogo = { src: drawn(104, mark('#1d4ed8', '#fff') + word('#0f172a')), darkSrc: drawn(104, mark('#60a5fa', '#0f172a') + word('#f8fafc')),
+  markSrc: drawn(32, mark('#1d4ed8', '#fff')), markDarkSrc: drawn(32, mark('#60a5fa', '#0f172a')) };
+
+export interface LandingQuote { id: string; text: string; author: string; source: string }
+
 export interface LandingProps {
   /** The product's name, in the header and the footer. Default: "Acme". */
   product?: string | undefined;
+  /** The product's logo in the header (a Logo's sources), its small mark on a phone. null shows the name as text.
+      Default: Acme's. */
+  logo?: Pick<LogoProps, 'src' | 'darkSrc' | 'markSrc' | 'markDarkSrc'> | null | undefined;
   /** The h1: what the product does for the person, in their words. */
   headline?: string | undefined;
   /** The line under it: who it's for and what changes. */
@@ -51,6 +66,8 @@ export interface LandingProps {
   /** An ISO 4217 code for the plans' prices. Default: "USD". */
   currency?: string | undefined;
   questions?: readonly FaqGroup[] | undefined;
+  /** What customers say, two or three: their words, name and role. An empty list leaves the section out. */
+  quotes?: readonly LandingQuote[] | undefined;
   footer?: readonly FooterLinkGroup[] | undefined;
   /** The call to action was pressed (in the hero, the header or the last section). */
   onStart?: (() => void) | undefined;
@@ -69,6 +86,11 @@ const demoPlans: PricingPlan[] = [
   { id: 'team', name: 'Team', description: 'For a team that ships every week.', monthly: 12, yearly: 120, features: ['Unlimited projects', 'Up to 20 people', 'Email help within a day'], recommended: true },
   { id: 'business', name: 'Business', description: 'For a company with rules to follow.', monthly: 30, yearly: 300, features: ['Everything in Team', 'Sign-in with your company account', 'An audit log'] },
 ];
+const demoQuotes: LandingQuote[] = [
+  { id: 'q1', text: 'We stopped asking “where is this at?” in meetings. The board answers it.', author: 'Dewi Lestari', source: 'Head of Product, Kopi Co' },
+  { id: 'q2', text: 'Set up on a Monday, the whole team was in it by Wednesday. Nobody needed training.', author: 'Chen Wei', source: 'Engineering Manager, Orbit Labs' },
+];
+
 const demoQuestions: FaqGroup[] = [
   { id: 'landing-faq', questions: [
     { id: 'trial', question: 'What happens when the trial ends?', answer: 'You choose a plan, or stay on Free. Nothing is charged without you choosing, and nothing you made is deleted.' },
@@ -81,15 +103,17 @@ const demoFooter: FooterLinkGroup[] = [
   { title: 'Company', links: [{ label: 'About', href: '#about' }, { label: 'Blog', href: '#blog' }, { label: 'Contact', href: '#contact' }] },
 ];
 
-/** A product's landing page: header, hero, features, pricing, questions, a last call to action and the footer. */
-export function Landing({ product = 'Acme', headline = 'Plan the work, and see it get done', lead = 'One place for your team’s projects, from the first idea to the release. No setup, no training.',
+/** A product's landing page: header, hero, features, pricing, what customers say, questions, a last call to action and the footer. */
+export function Landing({ product = 'Acme', logo = acmeLogo, headline = 'Plan the work, and see it get done', lead = 'One place for your team’s projects, from the first idea to the release. No setup, no training.',
   action = 'Start free trial', actionNote = '14 days free. No card needed.', features = demoFeatures, plans = demoPlans, currency = 'USD',
-  questions = demoQuestions, footer = demoFooter, onStart, onChoose }: LandingProps) {
+  questions = demoQuestions, quotes = demoQuotes, footer = demoFooter, onStart, onChoose }: LandingProps) {
   const start = <Button onClick={onStart}>{action}</Button>;
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
-      <Navbar brand={<a href="#top" className="text-base font-semibold text-text no-underline">{product}</a>} actions={<>
+      <Navbar brand={<a href="#top" aria-label={logo ? product : undefined} className="text-base font-semibold text-text no-underline">
+        {logo ? <Logo {...logo} alt="" variant="auto" /> : product}
+      </a>} actions={<>
         <Button variant="ghost" href="#sign-in">Sign in</Button>
         {start}
       </>}>
@@ -134,6 +158,15 @@ export function Landing({ product = 'Acme', headline = 'Plan the work, and see i
           </Stack>
           <Pricing plans={plans} currency={currency} headingLevel={3} onChoose={(id, period) => onChoose?.(id, period)} />
         </PageSection>
+
+        {quotes.length ? (
+          <PageSection tone="muted" divider size="lg" aria-labelledby="landing-quotes">
+            <Heading level={2} size="2xl" id="landing-quotes">What teams say</Heading>
+            <Grid columns={{ base: 1, md: 2 }} gap={8}>
+              {quotes.map((q) => <Quote key={q.id} author={q.author} source={q.source} avatar={<Avatar name={q.author} alt="" />}>{q.text}</Quote>)}
+            </Grid>
+          </PageSection>
+        ) : null}
 
         <PageSection as="div" id="questions" divider size="md" className="scroll-mt-16">
           <Faq groups={questions} headingLevel={2} searchable={false} labels={{ title: 'Questions' }}
