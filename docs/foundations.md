@@ -1293,7 +1293,7 @@ How values read on a screen: numbers, money, dates, values that are missing and 
 - A value that isn't there shows an em dash (`—`), never an empty cell: an empty cell reads as "still loading" or "nothing went wrong", and a screen reader says nothing at all. Give it words for screen readers ("Not set", "No data"), with `VisuallyHidden` beside a dash that has `aria-hidden`.
 - Zero is a value. Write "0", not a dash.
 - Say why when the reason matters: "Not set" (nobody entered it), "Not applicable", "No access". A dash can't tell them apart.
-- While a value loads, show a skeleton in its place (`Loader variant="skeleton"`), not a dash that later turns into a number.
+- While a value loads, show a skeleton in its place (`<Skeleton>`), not a dash that later turns into a number.
 
 **Hidden and partly hidden values**
 

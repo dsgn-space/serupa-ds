@@ -33,6 +33,7 @@ import { NumberInput } from '../components/NumberInput/NumberInput';
 import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
+import { Skeleton } from '../components/Skeleton/Skeleton';
 import { Pagination } from '../components/Pagination/Pagination';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { Kanban } from '../components/Kanban/Kanban';
@@ -68,6 +69,9 @@ const SITES: Record<string, Site> = {
   'Loader: its label when it shows': {
     ui: (s) => (s ? <Loader label="Loading results" delay={0} /> : <span />),
     act: (next) => next(), says: /Loading results/ },
+  'Skeleton: its label when it shows': {
+    ui: (s) => (s ? <Skeleton label="Loading profile" delay={0} /> : <span />),
+    act: (next) => next(), says: /Loading profile/ },
   'Toast: a toast': {
     ui: () => <span />,
     act: async () => { React.act(() => { toast({ title: 'Link copied', duration: 0 }); }); }, says: /Link copied/ },

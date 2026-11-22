@@ -9,7 +9,7 @@ import { NotificationCenter, type NotificationItem } from '../../components/Noti
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -134,7 +134,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
           ) : loading ? (
             // Placeholder rows the shape of a notification; the status above says it's loading, so they're pictures only.
             <ul role="list" aria-busy="true" aria-label="All notifications" className="m-0 flex list-none flex-col gap-4 rounded-lg border border-border bg-surface p-4">
-              {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}
+              {[0, 1, 2].map((i) => <li key={i}><Skeleton shape="text" size="sm" lines={2} label="" /></li>)}
             </ul>
           ) : !items.length ? (
             <EmptyState icon="notifications" title="No notifications yet" headingLevel={2}

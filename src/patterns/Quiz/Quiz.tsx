@@ -5,7 +5,7 @@ import { Button } from '../../components/Button/Button';
 import { Alert } from '../../components/Alert/Alert';
 import { Link } from '../../components/Link/Link';
 import { Card } from '../../components/Card/Card';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Field } from '../../components/Field/Field';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { CheckboxGroup, Checkbox } from '../../components/Checkbox/Checkbox';
@@ -124,7 +124,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
           <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
             description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like. Questions marked * need an answer.`} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading the quiz" /></Card> : (
           <div className="flex flex-col gap-6 pt-6">
             {checked ? (
               <section aria-labelledby="quiz-score" className="flex flex-col items-start gap-3">

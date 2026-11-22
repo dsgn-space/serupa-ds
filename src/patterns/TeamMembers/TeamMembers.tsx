@@ -12,7 +12,7 @@ import { Select } from '../../components/Select/Select';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -175,7 +175,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
               <Heading level={2} size="lg">Members</Heading>
               <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
                 {/* One name for all of them: the first row is named, the others are only pictures. */}
-                {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
+                {[0, 1, 2].map((i) => <li key={i}><Skeleton shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
               </ul>
             </Card>
           ) : <>

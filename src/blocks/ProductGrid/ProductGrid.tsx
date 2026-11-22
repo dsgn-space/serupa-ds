@@ -6,7 +6,7 @@ import { Card } from '../../components/Card/Card';
 import { Heading } from '../../components/Heading/Heading';
 import { Image } from '../../components/Image/Image';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Rating } from '../../components/Rating/Rating';
 import { toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -154,8 +154,8 @@ export function ProductGrid({ products, loading = false, loadingCount = 4, loadF
         ? Array.from({ length: loadingCount }, (_, i) => (
           // One name for all of them: the first card's lines are named, the rest are only pictures.
           <Card as="li" key={i} padding="md" className="flex flex-col gap-3">
-            <Loader variant="skeleton" shape="rect" label="" className="aspect-square h-auto" />
-            <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? l.loading : ''} />
+            <Skeleton shape="rect" label="" className="aspect-square h-auto" />
+            <Skeleton shape="text" lines={3} label={i === 0 ? l.loading : ''} />
           </Card>
         ))
         : products.map((p) => <ProductCard key={p.id} product={p} {...card} />)}
