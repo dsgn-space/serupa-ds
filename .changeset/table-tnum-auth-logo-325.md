@@ -9,3 +9,5 @@ Changed (Patterns):
 - Product page: the header's Cart link is link blue and underlined on hover, as on the other shop screens.
 - Product compare: prices in the header row are in text color, not the header's muted color.
 - Quiz, Saved items, Store locator and Product compare: the result count is 14px, as on the other screens.
+
+Changed (Footer block): the content sits in a Container size "lg", the same width and side padding as a PageSection size "lg", so its links line up with the sections above it. On wide screens it used to start 16px further in.
