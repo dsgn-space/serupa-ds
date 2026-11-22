@@ -15,7 +15,7 @@ export interface LinkOwnProps {
   /** Over a photo or a colored panel: 'dark' draws the link in white for dark media, 'light' in black for light media,
       the same in every theme. */
   surface?: 'dark' | 'light' | undefined;
-  /** @deprecated Use surface, the same values; removed in 18.0.0. Read when surface isn't given. */
+  /** @deprecated Use surface, the same values; removed in 19.0.0. Read when surface isn't given. */
   onMedia?: 'dark' | 'light' | undefined;
   /** 'always' (default): underlined, so it's a link without relying on color. 'hover': only on hover and focus, for links whose place already says they're links (a nav bar, a footer); inside a paragraph it stays underlined. */
   underline?: 'always' | 'hover' | undefined;
@@ -34,7 +34,7 @@ function LinkBaseRender({ ref, ...props }: LinkProps & React.RefAttributes<HTMLA
   const rest = omit(props, { tone: 1, surface: 1, onMedia: 1, underline: 1, external: 1, as: 1, className: 1, children: 1, autoFocus: 1 });
   const tone = oneOf(['primary', 'neutral'] as const, props.tone, 'primary');
   const underline = oneOf(['always', 'hover'] as const, props.underline, 'always');
-  if (process.env.NODE_ENV !== 'production' && props.onMedia !== undefined) warnOnce('deprecated-prop', 'Link: `onMedia` is deprecated and removed in 18.0.0. Use `surface`, the same values: a prop named on… reads as an event handler.', 'deprecated-prop:Link:onMedia');
+  if (process.env.NODE_ENV !== 'production' && props.onMedia !== undefined) warnOnce('deprecated-prop', 'Link: `onMedia` is deprecated and removed in 19.0.0. Use `surface`, the same values: a prop named on… reads as an event handler.', 'deprecated-prop:Link:onMedia');
   const surface = props.surface ?? props.onMedia;
   // In the text's color with no underline at rest, nothing marks it as a link until it's hovered (WCAG 1.4.1).
   if (process.env.NODE_ENV !== 'production' && tone === 'neutral' && underline === 'hover') warnOnce('link-neutral-hover', 'Link: tone="neutral" with underline="hover" looks like plain text until it is hovered. Keep the underline, or use tone="primary" in a place that already says it holds links.');

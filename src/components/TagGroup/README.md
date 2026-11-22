@@ -81,7 +81,7 @@ Past `max`, a Show more button follows the tags; with none, the `emptyText` word
 | `selected` / `defaultSelected` | `string[]` | | The picked ids |
 | `onSelectedChange` | `(ids) => void` | | Called with the picked ids |
 | `max` | `number` | all | Show this many, and "Show more" for the rest |
-| `emptyText` | `ReactNode` | | Shown when there are no tags (`empty` is its deprecated old name, removed in 18.0.0) |
+| `emptyText` | `ReactNode` | | Shown when there are no tags (`empty` is its deprecated old name, removed in 19.0.0) |
 
 `className`, `ref` and other props go to the outer `<div>`.
 

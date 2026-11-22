@@ -53,7 +53,7 @@ export interface NotificationCenterProps extends DrawerProps {
   onClear?: (() => void) | undefined;
   /** What shows with no notifications. Default: "No notifications yet" (labels.noNotifications). */
   emptyText?: React.ReactNode | undefined;
-  /** @deprecated Use emptyText; removed in 18.0.0. Read when emptyText isn't given. */
+  /** @deprecated Use emptyText; removed in 19.0.0. Read when emptyText isn't given. */
   empty?: React.ReactNode | undefined;
   /** Where people choose which notifications they get. Given, the footer starts with a "Notification settings" link
    *  (labels.notificationSettings) to it, so someone who gets too many can turn some off from here. */
@@ -102,7 +102,7 @@ function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & R
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
   const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, emptyText: 1, empty: 1, settingsHref: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
     placement: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1 } as const);
-  if (process.env.NODE_ENV !== 'production' && props.empty !== undefined) warnOnce('deprecated-prop', 'NotificationCenter: `empty` is deprecated and removed in 18.0.0. Use `emptyText`, the name Combobox and CommandPalette give it.', 'deprecated-prop:NotificationCenter:empty');
+  if (process.env.NODE_ENV !== 'production' && props.empty !== undefined) warnOnce('deprecated-prop', 'NotificationCenter: `empty` is deprecated and removed in 19.0.0. Use `emptyText`, the name Combobox and CommandPalette give it.', 'deprecated-prop:NotificationCenter:empty');
   const emptyText = props.emptyText ?? props.empty;
   const { items, onMarkRead, onMarkAllRead, onClear } = props;
   // Each footer button only while it has something to do: "Mark all as read" while one is unread, "Clear all" while

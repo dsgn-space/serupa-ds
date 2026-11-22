@@ -1,4 +1,4 @@
-# ADR-0025: A dark theme fills with its light theme's brand shade, and brand text is its own token
+# ADR-0026: A dark theme fills with its light theme's brand shade, and brand text is its own token
 
 **Status:** Accepted
 **Deciders:** Diki, 22 November 2026: asked for light and dark colors that aren't too different, as Apple's system colors are, and agreed to the fill keeping its shade in both modes with a lighter one for text. Ships in 18.0.0.

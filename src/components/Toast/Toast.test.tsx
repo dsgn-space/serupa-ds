@@ -959,7 +959,7 @@ describe('Toaster inside a shadow root (GR60)', () => {
 });
 
 
-describe("Toaster: the deprecated 'top-center' and 'bottom-center' (removed in 18.0.0)", () => {
+describe("Toaster: the deprecated 'top-center' and 'bottom-center' (removed in 19.0.0)", () => {
   test("still center the toasts, as 'top' and 'bottom' do, with one warning each naming the new value", async () => {
     resetWarnings();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

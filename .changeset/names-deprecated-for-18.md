@@ -2,7 +2,7 @@
 "@diki-stwn/serupa-ds": minor
 ---
 
-Four leftover names take the shared ones. Each old name still works, warns once in development, and is removed in 18.0.0.
+Four leftover names take the shared ones. Each old name still works, warns once in development, and is removed in 19.0.0.
 
 - **Added:** `surface` on Button, IconButton, Link, Divider and everything built on Button (CopyButton, ToggleButton, Fab, FabMenu). `surface="dark"` draws the control in white for dark media, and `surface="light"` draws it in black for light media.
 - **Deprecated:** `onMedia`, which `surface` replaces with the same values. A prop named `on…` reads as an event handler, and lint rules and codemods treat it as one.

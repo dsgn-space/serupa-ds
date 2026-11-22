@@ -38,7 +38,7 @@ interface ButtonOwnProps {
       light media, the same in every theme. Put a scrim on the media so the button keeps its contrast at the media's
       lightest (or darkest) point. */
   surface?: 'dark' | 'light' | undefined;
-  /** @deprecated Use surface, the same values; removed in 18.0.0. Read when surface isn't given. */
+  /** @deprecated Use surface, the same values; removed in 19.0.0. Read when surface isn't given. */
   onMedia?: 'dark' | 'light' | undefined;
   /** Height: sm 24px, md 32px, lg 44px (the control-height tokens). Default: 'md'. */
   size?: ButtonSize | undefined;
@@ -112,7 +112,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   const groupSize = React.useContext(ControlSize);   // a ButtonGroup's size, for a button with none of its own
   const size = oneOf(SIZES, props.size ?? groupSize, 'md');
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, wrap: props.wrap, className: props.className });
-  if (process.env.NODE_ENV !== 'production' && props.onMedia !== undefined) warnOnce('deprecated-prop', 'Button: `onMedia` is deprecated and removed in 18.0.0. Use `surface`, the same values: a prop named on… reads as an event handler.', 'deprecated-prop:Button:onMedia');
+  if (process.env.NODE_ENV !== 'production' && props.onMedia !== undefined) warnOnce('deprecated-prop', 'Button: `onMedia` is deprecated and removed in 19.0.0. Use `surface`, the same values: a prop named on… reads as an event handler.', 'deprecated-prop:Button:onMedia');
   const surface = props.surface ?? props.onMedia;
   if (surface === 'dark' || surface === 'light') classes += ' srp-btn--on-' + surface;
   if (process.env.NODE_ENV !== 'production' && iconOnly && !rest['aria-label'] && !rest['aria-labelledby'] && !rest.title) {

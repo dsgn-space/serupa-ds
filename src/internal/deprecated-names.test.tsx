@@ -18,7 +18,7 @@ const deprecations = (warn: { mock: { calls: unknown[][] } }) => warn.mock.calls
 const el = (id: string) => document.getElementById(id)!;
 
 // One idea, one name (CONTRIBUTING.md, API naming table). The new names work with no warning; the old ones were
-// removed in 17.0.0, or (below) still work, warn once naming the new one, and go in 18.0.0.
+// removed in 17.0.0, or (below) still work, warn once naming the new one, and go in 19.0.0.
 describe('TimelineItem: tone, the name every component gives what a color means', () => {
   test('tone colors the marker, with no warning', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -64,7 +64,7 @@ describe('MaskedValue: defaultRevealed, as every controlled state has a default'
   });
 });
 
-describe('surface, not onMedia: a prop named on… reads as an event handler (removed in 18.0.0)', () => {
+describe('surface, not onMedia: a prop named on… reads as an event handler (removed in 19.0.0)', () => {
   test('Button, Link and Divider draw for dark or light media from surface with no warning, and from onMedia the same, with one warning each', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<>
@@ -81,7 +81,7 @@ describe('surface, not onMedia: a prop named on… reads as an event handler (re
   });
 });
 
-describe('emptyText, not empty: the name Combobox and CommandPalette give it (removed in 18.0.0)', () => {
+describe('emptyText, not empty: the name Combobox and CommandPalette give it (removed in 19.0.0)', () => {
   test('TagGroup and NotificationCenter show emptyText with no warning, and empty the same, with one warning each', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<TagGroup id="g1" label="Labels" items={[]} emptyText="No labels yet" />);
@@ -99,7 +99,7 @@ describe('emptyText, not empty: the name Combobox and CommandPalette give it (re
   });
 });
 
-describe("Toaster: 'top' and 'bottom', as a Placement spells the middle (removed in 18.0.0: 'top-center', 'bottom-center')", () => {
+describe("Toaster: 'top' and 'bottom', as a Placement spells the middle (removed in 19.0.0: 'top-center', 'bottom-center')", () => {
   test("'bottom' centers the toasts with no warning; 'top-center' still centers them, with one warning naming 'top'", async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const screen = await render(<Toaster id="tz" placement="bottom" />);

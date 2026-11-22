@@ -200,7 +200,7 @@ describe('Contrast axis', () => {
     }
   });
 
-  test('a dark theme fills with its light theme\'s brand shade under white text, and brand text is lighter (ADR-0025)', () => {
+  test('a dark theme fills with its light theme\'s brand shade under white text, and brand text is lighter (ADR-0026)', () => {
     const color = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
     const rgb = (c: string) => c.match(/[\d.]+/g)!.slice(0, 3).map(Number);
     for (const brand of ['blue', 'violet']) {
@@ -378,7 +378,7 @@ describe('Density axis', () => {
     const varied = groups.flatMap(([g, grp]) => grp.tokens!.filter((t) => new Set(Object.values(per(t) ?? {})).size > 1).map((t) => [g, t] as const));
     expect(varied.filter(([g]) => g !== 'color').map(([, t]) => t.name)).toEqual([]);
     const hue = (v: string) => /^\{(?!zinc|slate|gray|neutral|stone)[a-z]+-\d+\}$/.test(v);
-    // A dark theme's fills are its light theme's shades, a little lighter: colors between two palette steps (ADR-0025).
+    // A dark theme's fills are its light theme's shades, a little lighter: colors between two palette steps (ADR-0026).
     const darkFill = (t: Tok, mode: string, v: string) => mode === 'dark' && ['primary', 'primary-hover', 'primary-pressed'].includes(t.name) && /^#[0-9a-f]{6}$/.test(v);
     // primary-edge is transparent but where a fill needs it; Yellow Light's hover is between yellow 500 and 600, where dark text still has 4.5:1.
     const edge = (t: Tok, v: string) => t.name === 'primary-edge' && v === '#00000000';
