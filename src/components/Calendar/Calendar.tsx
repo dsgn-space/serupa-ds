@@ -14,7 +14,7 @@ import { dayPresets, PresetList, type PresetItem } from '../../internal/datePres
 import { en as calendarWords } from './labels';
 import { en as periodWords } from '../PeriodPicker/labels';
 import { isComposing } from '../../internal/ime';
-import { isRtl } from '../../internal/position';
+import { dayCell, gridKey, periodCell } from '../../internal/gridKeys';
 // module state: Calendar's words and PeriodPicker's ("Previous year", "Choose a month"), for the month and year grids.
 const words = /* @__PURE__ */ Object.assign({}, calendarWords, periodWords);
 
@@ -299,22 +299,11 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
     if (view === 'days' || isComposing(e)) return;
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); back(); return; }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = isRtl(e.currentTarget), rowStart = pFocus - ((pFocus - pPage) % 3);
-    let n: number;
-    switch (e.key) {
-      case 'ArrowLeft': n = pFocus + (rtl ? 1 : -1); break;
-      case 'ArrowRight': n = pFocus + (rtl ? -1 : 1); break;
-      case 'ArrowUp': n = pFocus - 3; break;
-      case 'ArrowDown': n = pFocus + 3; break;
-      case 'Home': n = rowStart; break;
-      case 'End': n = rowStart + 2; break;
-      case 'PageUp': n = pFocus - 12; break;
-      case 'PageDown': n = pFocus + 12; break;
-      case 'Enter': case ' ': e.preventDefault(); pickPeriod(pFocus); return;
-      default: return;
-    }
+    const k = gridKey(e);
+    if (!k) return;
     e.preventDefault();
-    setPFocus(clampN(view, n)); wantPeriod.current = 'grid';
+    if (k === 'pick') { pickPeriod(pFocus); return; }
+    setPFocus(clampN(view, periodCell(k, pFocus, pPage, 3, 12))); wantPeriod.current = 'grid';
   };
   // every render: a view change or a key asks for focus, and what takes it is there only after the render.
   React.useEffect(() => {
@@ -328,21 +317,11 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   const onKeyDown = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = isRtl(e.currentTarget);
-    let n: Date | null = null;
-    switch (e.key) {
-      case 'ArrowLeft': n = addDays(focus, rtl ? 1 : -1); break;
-      case 'ArrowRight': n = addDays(focus, rtl ? -1 : 1); break;
-      case 'ArrowUp': n = addDays(focus, -7); break;
-      case 'ArrowDown': n = addDays(focus, 7); break;
-      case 'Home': n = startOfWeek(focus, ws); break;
-      case 'End': n = addDays(startOfWeek(focus, ws), 6); break;
-      case 'PageUp': n = cal.add(focus, e.shiftKey ? -12 : -1); break;
-      case 'PageDown': n = cal.add(focus, e.shiftKey ? 12 : 1); break;
-      case 'Enter': case ' ': e.preventDefault(); pick(focus); return;
-      default: return;
-    }
+    const k = gridKey(e);
+    if (!k) return;
     e.preventDefault();
+    if (k === 'pick') { pick(focus); return; }
+    let n = dayCell(k, focus, ws) ?? cal.add(focus, (k === 'pageUp' ? -1 : 1) * (e.shiftKey ? 12 : 1));
     // Keys stop at min and max, as the native date field does, so a PageDown near the end doesn't leave focus on a
     // day that can't be picked in a month the next button won't show.
     if (min && compare(n, min) < 0) n = day(min);
