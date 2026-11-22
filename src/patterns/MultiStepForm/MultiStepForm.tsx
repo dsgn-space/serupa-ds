@@ -18,6 +18,8 @@ import { DescriptionList, DescriptionItem } from '../../components/DescriptionLi
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Multi-step form: an application for a business account in three steps of questions and a step that shows every
    answer before it's sent, then what happens next. For an app to copy. What it carries (WCAG 2.2):
@@ -180,135 +182,137 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Your answers stay here. Sending them needs a connection.</OfflineBanner>
-        <PageHeader title="Open a business account" />
-        <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
-        {sent ? (
-          <Card className="flex flex-col gap-4">
-            <Heading level={2} size="xl" ref={done} tabIndex={-1} className="outline-none">Application sent</Heading>
-            <p className="m-0 wrap-anywhere">We’ve emailed a copy to <bdi dir="ltr">{a.email}</bdi>. Your reference is <strong>BA-20418</strong>.</p>
-            <Heading level={3} size="base">What happens next</Heading>
-            <ol className="m-0 flex list-decimal flex-col gap-1 ps-5">
-              <li>We check the details, usually within 2 working days. We call {a.name || 'you'} if anything is missing.</li>
-              <li>Once it’s open, we email the account number and how to sign in.</li>
-              <li>The {a.cards === 1 ? 'card arrives' : 'cards arrive'} by post within 7 working days.</li>
-            </ol>
-            <Link href="#home">Go to the home page</Link>
-          </Card>
-        ) : (
-          <form noValidate onSubmit={submit}>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your answers stay here. Sending them needs a connection.</OfflineBanner>
+          <PageHeader title="Open a business account" />
+          <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
+          {sent ? (
             <Card className="flex flex-col gap-4">
-              <section {...s.panelProps(0)} className="flex flex-col gap-4">
-                {h2(0)}
-                {summary(0)}
-                {text(0, 'business', 'Business name', 'organization', {}, 'As it’s registered, or your own name for a sole trader.')}
-                <Field label="Type of business" group error={fieldError(0, 'apply-type-sole')}>
-                  <RadioGroup name="type" value={a.type} onValueChange={(v) => set('type')(v)} invalid={!!fieldError(0, 'apply-type-sole')}>
-                    <Radio id="apply-type-sole" value="sole" description="One person runs it and is the business.">{TYPES.sole}</Radio>
-                    <Radio value="company" description="Registered with its own registration number.">{TYPES.company}</Radio>
-                    <Radio value="partnership" description="Two or more people run it together.">{TYPES.partnership}</Radio>
-                  </RadioGroup>
-                </Field>
-                {a.type === 'company' ? text(0, 'registration', 'Company registration number', 'off', { spellCheck: false, autoCapitalize: 'characters', className: 'max-w-64' }, 'On the certificate of registration, like 8120001234567.') : null}
-                <Heading level={3} size="base">Business address</Heading>
-                {text(0, 'line1', 'Address line 1', 'address-line1')}
-                {text(0, 'line2', 'Address line 2', 'address-line2', {}, undefined, true)}
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {text(0, 'city', 'Town or city', 'address-level2')}
-                  {text(0, 'postcode', 'Postcode', 'postal-code', { className: 'max-w-48' })}
-                </div>
-                <Field label="Country" error={fieldError(0, id('country'))}>
-                  <Select id={id('country')} name="country" autoComplete="country" value={a.country} onChange={(e) => set('country')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
-                </Field>
-              </section>
-
-              <section {...s.panelProps(1)} className="flex flex-col gap-4">
-                {h2(1)}
-                {summary(1)}
-                <p className="m-0">The person we contact about the account. They can sign in once it’s open.</p>
-                {text(1, 'name', 'Full name', 'name')}
-                {text(1, 'role', 'Role in the business', 'organization-title', {}, 'Such as owner, director or finance manager.', true)}
-                {text(1, 'email', 'Email', 'email', { type: 'email', spellCheck: false, autoCapitalize: 'none' }, 'We send the account details here.')}
-                {text(1, 'phone', 'Phone', 'tel', { type: 'tel', className: 'max-w-64' }, 'Only for when we need to check something quickly.')}
-                <Heading level={3} size="base">Where to post the cards</Heading>
-                <Checkbox id={id('sameAddress')} checked={a.sameAddress} onCheckedChange={set('sameAddress')}
-                  description={a.line1 ? [a.line1, a.city].filter((p) => p.trim()).join(', ') : undefined}>
-                  Post the cards to the business address
-                </Checkbox>
-                {a.sameAddress ? null : (
-                  <>
-                    {text(1, 'cardLine1', 'Address line 1', 'shipping address-line1')}
-                    {text(1, 'cardLine2', 'Address line 2', 'shipping address-line2', {}, undefined, true)}
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {text(1, 'cardCity', 'Town or city', 'shipping address-level2')}
-                      {text(1, 'cardPostcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
-                    </div>
-                    <Field label="Country" error={fieldError(1, id('cardCountry'))}>
-                      <Select id={id('cardCountry')} name="cardCountry" autoComplete="shipping country" value={a.cardCountry} onChange={(e) => set('cardCountry')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
-                    </Field>
-                  </>
-                )}
-              </section>
-
-              <section {...s.panelProps(2)} className="flex flex-col gap-4">
-                {h2(2)}
-                {summary(2)}
-                <Field label="Currency" hint="The account holds money in this currency. You can add others once it’s open.">
-                  <Select id={id('currency')} name="currency" value={a.currency} onChange={(e) => set('currency')(e.target.value)} options={CURRENCIES} />
-                </Field>
-                <Field label="About how many payments will the business make?" group error={fieldError(2, 'apply-payments-few')}>
-                  <RadioGroup name="payments" value={a.payments} onValueChange={(v) => set('payments')(v)} invalid={!!fieldError(2, 'apply-payments-few')}>
-                    <Radio id="apply-payments-few" value="few">{PAYMENTS.few}</Radio>
-                    <Radio value="some">{PAYMENTS.some}</Radio>
-                    <Radio value="many">{PAYMENTS.many}</Radio>
-                  </RadioGroup>
-                </Field>
-                <Field label="Debit cards" hint="One for each person who pays for things, up to 20." error={fieldError(2, id('cards'))}>
-                  <NumberInput id={id('cards')} name="cards" min={1} max={20} value={a.cards} onValueChange={(v) => set('cards')(v ?? 0)} className="max-w-40" />
-                </Field>
-              </section>
-
-              <section {...s.panelProps(REVIEW)} className="flex flex-col gap-4">
-                {h2(REVIEW)}
-                <p className="m-0">Nothing is sent until you send the application.</p>
-                {failed ? <Alert tone="danger" title="Your application wasn’t sent">Nothing you entered is lost. Check your connection and send it again.</Alert> : null}
-                {([
-                  { step: 0, title: 'Your business', what: 'your business’s details', items: [
-                    ['Business name', a.business], ['Type of business', a.type ? TYPES[a.type] : ''],
-                    ...(a.type === 'company' ? [['Registration number', a.registration] as const] : []),
-                    ['Address', address(a.line1, a.line2, a.city, a.postcode, country(a.country))],
-                  ] },
-                  { step: 1, title: 'Contact person', what: 'the contact person', items: [
-                    ['Name', a.role ? `${a.name}, ${a.role}` : a.name], ['Email', <bdi dir="ltr">{a.email}</bdi>], ['Phone', <bdi dir="ltr" className="whitespace-nowrap">{a.phone}</bdi>],
-                    ['Cards posted to', a.sameAddress ? 'The business address' : address(a.cardLine1, a.cardLine2, a.cardCity, a.cardPostcode, country(a.cardCountry))],
-                  ] },
-                  { step: 2, title: 'The account', what: 'the account', items: [
-                    ['Currency', CURRENCIES.find((c) => c.value === a.currency)?.label || a.currency],
-                    ['Payments', a.payments ? PAYMENTS[a.payments] : ''], ['Debit cards', String(a.cards)],
-                  ] },
-                ] satisfies Part[]).map((part) => (
-                  <div key={part.step} className="flex flex-col gap-2 border-t border-border pt-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <Heading level={3} size="base">{part.title}</Heading>
-                      {change(part.step, part.what)}
-                    </div>
-                    <DescriptionList className="text-sm">
-                      {part.items.map(([term, value]) => <DescriptionItem key={term} term={term}><span className="whitespace-pre-line wrap-anywhere">{value}</span></DescriptionItem>)}
-                    </DescriptionList>
-                  </div>
-                ))}
-              </section>
-              {nav}
+              <Heading level={2} size="xl" ref={done} tabIndex={-1} className="outline-none">Application sent</Heading>
+              <p className="m-0 wrap-anywhere">We’ve emailed a copy to <bdi dir="ltr">{a.email}</bdi>. Your reference is <strong>BA-20418</strong>.</p>
+              <Heading level={3} size="base">What happens next</Heading>
+              <ol className="m-0 flex list-decimal flex-col gap-1 ps-5">
+                <li>We check the details, usually within 2 working days. We call {a.name || 'you'} if anything is missing.</li>
+                <li>Once it’s open, we email the account number and how to sign in.</li>
+                <li>The {a.cards === 1 ? 'card arrives' : 'cards arrive'} by post within 7 working days.</li>
+              </ol>
+              <Link href="#home">Go to the home page</Link>
             </Card>
-          </form>
-        )}
-        {/* The same help, in the same place, on every step (3.2.6). */}
-        <aside aria-labelledby="apply-help" className="flex flex-col gap-1 text-sm">
-          <Heading level={2} id="apply-help" size="base">Need help?</Heading>
-          <p className="m-0">Call <Link href="tel:+62215550100">+62 21 555 0100</Link>, Monday to Friday, 8 am to 6 pm, or <Link href="#chat">chat with us</Link>.</p>
-        </aside>
-      </main>
+          ) : (
+            <form noValidate onSubmit={submit}>
+              <Card className="flex flex-col gap-4">
+                <section {...s.panelProps(0)} className="flex flex-col gap-4">
+                  {h2(0)}
+                  {summary(0)}
+                  {text(0, 'business', 'Business name', 'organization', {}, 'As it’s registered, or your own name for a sole trader.')}
+                  <Field label="Type of business" group error={fieldError(0, 'apply-type-sole')}>
+                    <RadioGroup name="type" value={a.type} onValueChange={(v) => set('type')(v)} invalid={!!fieldError(0, 'apply-type-sole')}>
+                      <Radio id="apply-type-sole" value="sole" description="One person runs it and is the business.">{TYPES.sole}</Radio>
+                      <Radio value="company" description="Registered with its own registration number.">{TYPES.company}</Radio>
+                      <Radio value="partnership" description="Two or more people run it together.">{TYPES.partnership}</Radio>
+                    </RadioGroup>
+                  </Field>
+                  {a.type === 'company' ? text(0, 'registration', 'Company registration number', 'off', { spellCheck: false, autoCapitalize: 'characters', className: 'max-w-64' }, 'On the certificate of registration, like 8120001234567.') : null}
+                  <Heading level={3} size="base">Business address</Heading>
+                  {text(0, 'line1', 'Address line 1', 'address-line1')}
+                  {text(0, 'line2', 'Address line 2', 'address-line2', {}, undefined, true)}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {text(0, 'city', 'Town or city', 'address-level2')}
+                    {text(0, 'postcode', 'Postcode', 'postal-code', { className: 'max-w-48' })}
+                  </div>
+                  <Field label="Country" error={fieldError(0, id('country'))}>
+                    <Select id={id('country')} name="country" autoComplete="country" value={a.country} onChange={(e) => set('country')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
+                  </Field>
+                </section>
+
+                <section {...s.panelProps(1)} className="flex flex-col gap-4">
+                  {h2(1)}
+                  {summary(1)}
+                  <p className="m-0">The person we contact about the account. They can sign in once it’s open.</p>
+                  {text(1, 'name', 'Full name', 'name')}
+                  {text(1, 'role', 'Role in the business', 'organization-title', {}, 'Such as owner, director or finance manager.', true)}
+                  {text(1, 'email', 'Email', 'email', { type: 'email', spellCheck: false, autoCapitalize: 'none' }, 'We send the account details here.')}
+                  {text(1, 'phone', 'Phone', 'tel', { type: 'tel', className: 'max-w-64' }, 'Only for when we need to check something quickly.')}
+                  <Heading level={3} size="base">Where to post the cards</Heading>
+                  <Checkbox id={id('sameAddress')} checked={a.sameAddress} onCheckedChange={set('sameAddress')}
+                    description={a.line1 ? [a.line1, a.city].filter((p) => p.trim()).join(', ') : undefined}>
+                    Post the cards to the business address
+                  </Checkbox>
+                  {a.sameAddress ? null : (
+                    <>
+                      {text(1, 'cardLine1', 'Address line 1', 'shipping address-line1')}
+                      {text(1, 'cardLine2', 'Address line 2', 'shipping address-line2', {}, undefined, true)}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {text(1, 'cardCity', 'Town or city', 'shipping address-level2')}
+                        {text(1, 'cardPostcode', 'Postcode', 'shipping postal-code', { className: 'max-w-48' })}
+                      </div>
+                      <Field label="Country" error={fieldError(1, id('cardCountry'))}>
+                        <Select id={id('cardCountry')} name="cardCountry" autoComplete="shipping country" value={a.cardCountry} onChange={(e) => set('cardCountry')(e.target.value)} placeholder="Choose a country" options={COUNTRIES} />
+                      </Field>
+                    </>
+                  )}
+                </section>
+
+                <section {...s.panelProps(2)} className="flex flex-col gap-4">
+                  {h2(2)}
+                  {summary(2)}
+                  <Field label="Currency" hint="The account holds money in this currency. You can add others once it’s open.">
+                    <Select id={id('currency')} name="currency" value={a.currency} onChange={(e) => set('currency')(e.target.value)} options={CURRENCIES} />
+                  </Field>
+                  <Field label="About how many payments will the business make?" group error={fieldError(2, 'apply-payments-few')}>
+                    <RadioGroup name="payments" value={a.payments} onValueChange={(v) => set('payments')(v)} invalid={!!fieldError(2, 'apply-payments-few')}>
+                      <Radio id="apply-payments-few" value="few">{PAYMENTS.few}</Radio>
+                      <Radio value="some">{PAYMENTS.some}</Radio>
+                      <Radio value="many">{PAYMENTS.many}</Radio>
+                    </RadioGroup>
+                  </Field>
+                  <Field label="Debit cards" hint="One for each person who pays for things, up to 20." error={fieldError(2, id('cards'))}>
+                    <NumberInput id={id('cards')} name="cards" min={1} max={20} value={a.cards} onValueChange={(v) => set('cards')(v ?? 0)} className="max-w-40" />
+                  </Field>
+                </section>
+
+                <section {...s.panelProps(REVIEW)} className="flex flex-col gap-4">
+                  {h2(REVIEW)}
+                  <p className="m-0">Nothing is sent until you send the application.</p>
+                  {failed ? <Alert tone="danger" title="Your application wasn’t sent">Nothing you entered is lost. Check your connection and send it again.</Alert> : null}
+                  {([
+                    { step: 0, title: 'Your business', what: 'your business’s details', items: [
+                      ['Business name', a.business], ['Type of business', a.type ? TYPES[a.type] : ''],
+                      ...(a.type === 'company' ? [['Registration number', a.registration] as const] : []),
+                      ['Address', address(a.line1, a.line2, a.city, a.postcode, country(a.country))],
+                    ] },
+                    { step: 1, title: 'Contact person', what: 'the contact person', items: [
+                      ['Name', a.role ? `${a.name}, ${a.role}` : a.name], ['Email', <bdi dir="ltr">{a.email}</bdi>], ['Phone', <bdi dir="ltr" className="whitespace-nowrap">{a.phone}</bdi>],
+                      ['Cards posted to', a.sameAddress ? 'The business address' : address(a.cardLine1, a.cardLine2, a.cardCity, a.cardPostcode, country(a.cardCountry))],
+                    ] },
+                    { step: 2, title: 'The account', what: 'the account', items: [
+                      ['Currency', CURRENCIES.find((c) => c.value === a.currency)?.label || a.currency],
+                      ['Payments', a.payments ? PAYMENTS[a.payments] : ''], ['Debit cards', String(a.cards)],
+                    ] },
+                  ] satisfies Part[]).map((part) => (
+                    <div key={part.step} className="flex flex-col gap-2 border-t border-border pt-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <Heading level={3} size="base">{part.title}</Heading>
+                        {change(part.step, part.what)}
+                      </div>
+                      <DescriptionList className="text-sm">
+                        {part.items.map(([term, value]) => <DescriptionItem key={term} term={term}><span className="whitespace-pre-line wrap-anywhere">{value}</span></DescriptionItem>)}
+                      </DescriptionList>
+                    </div>
+                  ))}
+                </section>
+                {nav}
+              </Card>
+            </form>
+          )}
+          {/* The same help, in the same place, on every step (3.2.6). */}
+          <aside aria-labelledby="apply-help" className="flex flex-col gap-1 text-sm">
+            <Heading level={2} id="apply-help" size="base">Need help?</Heading>
+            <p className="m-0">Call <Link href="tel:+62215550100">+62 21 555 0100</Link>, Monday to Friday, 8 am to 6 pm, or <Link href="#chat">chat with us</Link>.</p>
+          </aside>
+        </Stack>
+      </Container>
     </div>
   );
 }

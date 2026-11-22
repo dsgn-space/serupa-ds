@@ -6,7 +6,8 @@
 // tools/test/foundation.mjs checks the shipped themes with:
 //
 //   light  primary          the color itself when it passes, else the lightest of 500 to 800: white text at 4.5:1,
-//                           4.5:1 on the surface and on surface-muted, and a hover one step darker that passes too (and 4.5:1 on
+//                           4.5:1 on the surface, on surface-muted and on the tints (primary-subtle and the status
+//                           ones, where it's a Badge's or an Alert link's text), and a hover one step darker that passes too (and 4.5:1 on
 //                           primary-subtle, brand 50); held down, primary steps once more (primary-pressed) and
 //                           primary-subtle to brand 100 (primary-subtle-pressed), where the hover text keeps 4.5:1
 //          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on primary-subtle
@@ -22,7 +23,7 @@
 /** @type {[string, string, number][]} */
 const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
-  ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
+  ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5], ['primary', 'primary-subtle', 4.5],
   ['on-primary', 'primary-pressed', 4.5], ['primary-hover', 'primary-subtle-pressed', 4.5], ['on-primary', 'more:primary-pressed', 4.5],
   ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
   ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3], ['focus-ring', 'field', 3], ['field-action', 'field', 4.5],
@@ -160,7 +161,10 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     // Held down, a step past hover, stopping at the end of the scale.
     const held = (s) => next(s) ?? s;
     // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
-    const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3;
+    // It's text on the tints too: its own (a primary Badge, a selected tag) and the status ones (a link in an Alert).
+    const tints = [subtle, ...['info-subtle', 'success-subtle', 'warning-subtle', 'danger-subtle'].map((n) => hexAt(b[n], b))];
+    const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3
+      && tints.every((x) => contrast(S(s), x) >= 4.5);
     const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && contrast(on, S(held(next(s)))) >= 4.5;
     // The color itself when it passes, so the buttons are the brand's own; else the shade nearest the page's end.
     const cands = order(light ? '500' : '200', light ? '800' : '500');

@@ -230,8 +230,8 @@
       },
       "item-padding-y": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "An item's top and bottom padding (8px).",
+        "$value": "{spacing.space-item}",
+        "$description": "An item's top and bottom padding: 8px, 4px in the compact density.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sidebar-item-padding-y"

@@ -15,13 +15,14 @@ const many = '[data-testid=many]';
 const rootOf = (id: string) => document.getElementById(id)!.closest('[data-component=file-upload]') as HTMLElement;
 // The chosen files are the items of the named list; rejections are the alert.
 // The drop zone is the presentational box: its icon, the title (its first p), the choose button and the hint (the p
-// with an id). A chosen file is an item: its icon, then a span with the name (which carries the full name as its
-// title) and the size.
-const ZONE = '[role=presentation]', TITLE = `${ZONE} > p:first-of-type`, HINT = `${ZONE} > p[id]`, NAME = 'span[dir="auto"]:has(> [aria-hidden])', SIZE = `${NAME} + span`;
+// with an id). A chosen file is an item holding an Attachment: its icon, the name (the element whose parts are hidden
+// from screen readers), and the name's description (an id ending -meta): the kind, the size, then "Complete" once done.
+const ZONE = '[role=presentation]', TITLE = `${ZONE} > p:first-of-type`, HINT = `${ZONE} > p[id]`, NAME = 'span[dir="auto"]:has(> [aria-hidden])', SIZE = '[id$="-meta"] > :nth-child(2)', DONE = '[id$="-meta"] > :nth-child(3)';
 const items = (root: Element) => [...root.querySelectorAll<HTMLElement>('ul[aria-label] > li')];
+const row = (li: Element) => li.firstElementChild as HTMLElement;
 // The whole name: the name's last part, the one screen readers read (the others are hidden from them).
 const whole = (n: Element) => n.lastElementChild!.textContent;
-const list = (root: Element) => items(root).map((li) => whole(li.querySelector(NAME)!) + ' ' + li.querySelector(SIZE)!.textContent + ' ' + li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon);
+const list = (root: Element) => items(root).map((li) => whole(li.querySelector(NAME)!) + ' ' + li.querySelector(SIZE)!.textContent + ' ' + row(li).querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon);
 const errs = (root: Element) => { const e = root.querySelector('[role=alert]'); return e ? e.getAttribute('role') + ': ' + [...e.querySelectorAll(':scope > p')].map((x) => x.textContent.replace(/^error/, '')).join(' / ') : null; };
 const names = (root: Element) => [...root.querySelectorAll(NAME)].map(whole).join();
 const input = (root: Element) => root.querySelector('input[type=file]') as HTMLInputElement;
@@ -138,7 +139,7 @@ describe('FileUpload', () => {
     await render(<FileUpload data-testid="kinds" multiple />);
     const el = q('[data-testid=kinds]');
     await userEvent.upload(input(el), [file('Q3.xlsx', '', 10), file('notes.txt', 'text/plain', 10), file('app.tsx', '', 10), file('deck.pptx', '', 10), file('data.bin', '', 10)]);
-    expect(items(el).map((li) => li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon)).toEqual(['table_chart', 'description', 'code', 'slideshow', 'draft']);
+    expect(items(el).map((li) => row(li).querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon)).toEqual(['table_chart', 'description', 'code', 'slideshow', 'draft']);
   });
 
   test('N9: pasting files with focus on the choose button adds them, checked like dropped ones; a paste with no files, or read-only, adds nothing', async () => {
@@ -375,7 +376,7 @@ describe('FileUpload', () => {
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(el.querySelector('ul[aria-label] > li')!).backgroundColor;
+      const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(row(items(el)[0]!)).backgroundColor;
       const c = (sel: string) => getComputedStyle(el.querySelector(sel)!).color;
       const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
       zone.classList.add('srp-file-upload__zone--over');
@@ -570,8 +571,8 @@ describe('FileUpload as a grid or flex item (GR30)', () => {
 });
 
 describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
-  // Each row's size: the dir="auto" span that isn't the name (the name has parts hidden from screen readers).
-  const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>('li [dir=auto]:not(:has(> [aria-hidden]))')].map((x) => [x.textContent, x.dir]);
+  // Each row's size, in the name's description (whose direction follows its words).
+  const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>(`li ${SIZE}`)].map((x) => [x.textContent, x.parentElement!.dir]);
   test.each([
     ['en-US', ['1.5 MB', '2 kB'], 'larger than 1 kB'],
     ['id-ID', ['1,5 MB', '2 kB'], 'lebih besar dari 1 kB'],
@@ -628,7 +629,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const el = rootOf('up');
     await expect.element(screen.getByRole('progressbar', { name: 'a.png' })).toHaveAttribute('aria-valuenow', '40');
     await expect.element(screen.getByRole('progressbar', { name: 'b.pdf' })).not.toHaveAttribute('aria-valuenow');
-    expect([items(el)[2]!.querySelector(`${SIZE} > span`)!.textContent, items(el)[0]!.querySelector(`${SIZE} > span`)]).toEqual(['Complete', null]);
+    expect([items(el)[2]!.querySelector(DONE)!.textContent, items(el)[0]!.querySelector(DONE)]).toEqual(['Complete', null]);
     await screen.rerender(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'error' }], [b, { state: 'error', message: 'The server is busy.' }]])} />);
     expect(screen.container.querySelectorAll('[role=progressbar]').length).toBe(0);
     const retry = screen.getByRole('button', { name: 'Try again b.pdf' });
@@ -636,7 +637,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     await expect.element(screen.getByRole('button', { name: 'Try again a.png' })).toHaveAccessibleDescription('Couldn’t upload');
     await userEvent.click(retry);
     expect(retried).toEqual(['b.pdf']);
-    expect(items(el).map((li) => li.className.includes('--error'))).toEqual([true, true, false]);
+    expect(items(el).map((li) => row(li).className.includes('--error'))).toEqual([true, true, false]);
   });
 
   test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
@@ -691,7 +692,9 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const photo = new File([PNG], 'photo.png', { type: 'image/png' }), heic = new File([new Uint8Array(8)], 'phone.heic', { type: 'image/heic' });
     const screen = await render(<FileUpload id="th" multiple thumbnails files={[photo, b, heic]} />);
     const el = rootOf('th');
-    await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['CANVAS false', 'SPAN true', 'SPAN true']);
+    // What stands first in each row: the picture (a canvas) or a kind icon.
+    const first = (li: Element) => { const f = row(li).firstElementChild!; return f.hasAttribute('data-icon') || f.querySelector(':scope > [data-icon]') ? 'icon' : f.querySelector(':scope > canvas') ? 'canvas' : f.tagName; };
+    await expect.poll(() => items(el).map(first)).toEqual(['canvas', 'icon', 'icon']);
     const pic = items(el)[0]!.querySelector('canvas')!;
     expect([pic.getAttribute('aria-hidden'), Math.round(pic.getBoundingClientRect().width), Math.round(pic.getBoundingClientRect().height)]).toEqual(['true', 40, 40]);
     await expect.poll(() => pic.width).toBeGreaterThanOrEqual(40);   // drawn, at the screen's pixel ratio
@@ -706,8 +709,8 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const [ok, bad] = items(el), bg = css(ok!).backgroundColor;
-      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(`${SIZE} > span`)).color, 4.5], ['failed', css(bad!.querySelector(`${NAME} ~ span:last-child`)).color, 4.5], ['failed outline', css(bad!).borderTopColor, 3]];
+      const [ok, bad] = items(el).map(row), bg = css(ok!).backgroundColor;
+      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(DONE)).color, 4.5], ['failed', css(bad!.querySelector('[id$="-error"]')).color, 4.5], ['failed outline', css(bad!).borderTopColor, 3]];
       for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();

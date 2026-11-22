@@ -15,6 +15,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
@@ -116,41 +118,43 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
       </Navbar>
       <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the notifications loaded before you went offline. New ones show when you’re back.</OfflineBanner>
-        <PageHeader title="Notifications" headingRef={heading}
-          primary={{ label: 'Mark all as read', disabled: loading || loadFailed || !unread, onSelect: () => markAll(true) }}
-          secondary={[{ label: 'Notification settings', icon: 'settings', href: settingsHref }]} />
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
-            options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
-          <p role="status" className="m-0 text-sm text-text-muted">{loadFailed ? '' : loading ? 'Loading notifications' : unread ? `${formatNumber(unread, locale)} unread` : 'All caught up'}</p>
-        </div>
-        {loadFailed ? (
-          <EmptyLoadFailed title="Couldn’t load your notifications" onRetry={() => onRetry?.()} headingLevel={2} />
-        ) : loading ? (
-          // Placeholder rows the shape of a notification; the status above says it's loading, so they're pictures only.
-          <ul role="list" aria-busy="true" aria-label="All notifications" className="m-0 flex list-none flex-col gap-4 rounded-lg border border-border bg-surface p-4">
-            {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}
-          </ul>
-        ) : !items.length ? (
-          <EmptyState icon="notifications" title="No notifications yet" headingLevel={2}
-            description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
-            actions={<Button variant="outline" startIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
-        ) : shown.length ? (
-          <List variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}>
-            {shown.map((n) => (
-              <ListItem key={n.id}
-                // The drawer's unread dot before the title (and room for it on read ones, so the titles line up).
-                title={<span className="flex items-baseline gap-2"><span className={'srp-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
-                description={<>{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</>}
-                trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
-            ))}
-          </List>
-        ) : (
-          <p className="m-0 rounded-lg border border-border bg-surface p-6 text-center text-text-muted">No unread notifications. You’re all caught up.</p>
-        )}
-      </main>
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the notifications loaded before you went offline. New ones show when you’re back.</OfflineBanner>
+          <PageHeader title="Notifications" headingRef={heading}
+            primary={{ label: 'Mark all as read', disabled: loading || loadFailed || !unread, onSelect: () => markAll(true) }}
+            secondary={[{ label: 'Notification settings', icon: 'settings', href: settingsHref }]} />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
+              options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
+            <p role="status" className="m-0 text-sm text-text-muted">{loadFailed ? '' : loading ? 'Loading notifications' : unread ? `${formatNumber(unread, locale)} unread` : 'All caught up'}</p>
+          </div>
+          {loadFailed ? (
+            <EmptyLoadFailed title="Couldn’t load your notifications" onRetry={() => onRetry?.()} headingLevel={2} />
+          ) : loading ? (
+            // Placeholder rows the shape of a notification; the status above says it's loading, so they're pictures only.
+            <ul role="list" aria-busy="true" aria-label="All notifications" className="m-0 flex list-none flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+              {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}
+            </ul>
+          ) : !items.length ? (
+            <EmptyState icon="notifications" title="No notifications yet" headingLevel={2}
+              description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
+              actions={<Button variant="outline" startIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
+          ) : shown.length ? (
+            <List variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}>
+              {shown.map((n) => (
+                <ListItem key={n.id}
+                  // The drawer's unread dot before the title (and room for it on read ones, so the titles line up).
+                  title={<span className="flex items-baseline gap-2"><span className={'srp-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
+                  description={<>{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</>}
+                  trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
+              ))}
+            </List>
+          ) : (
+            <p className="m-0 rounded-lg border border-border bg-surface p-6 text-center text-text-muted">No unread notifications. You’re all caught up.</p>
+          )}
+        </Stack>
+      </Container>
     </div>
   );
 }

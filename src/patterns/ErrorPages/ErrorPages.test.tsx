@@ -78,4 +78,15 @@ describe('Patterns/Error pages', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     await expect.poll(() => document.querySelector('h1')?.textContent).toBe('Dashboard');
   });
+
+  test('each page has the Illustration that matches it, hidden from screen readers', async () => {
+    const pictures: Record<string, string> = {};
+    const screen = await render(<ErrorPage kind="not-found" />);
+    for (const kind of ['not-found', 'offline', 'server', 'no-access'] as ErrorPageKind[]) {
+      await screen.rerender(<ErrorPage kind={kind} />);
+      const svg = document.querySelector('main [data-component="illustration"]');
+      pictures[kind] = (svg?.getAttribute('data-name') ?? '') + (svg?.closest('[aria-hidden="true"]') ? ' hidden' : '');
+    }
+    expect(pictures).toEqual({ 'not-found': 'search hidden', offline: 'offline hidden', server: 'error hidden', 'no-access': 'no-access hidden' });
+  });
 });

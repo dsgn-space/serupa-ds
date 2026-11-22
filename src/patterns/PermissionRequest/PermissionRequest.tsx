@@ -9,6 +9,8 @@ import { Icon } from '../../components/Icon/Icon';
 import { announce } from '../../internal/announce';
 import { useLocale } from '../../internal/provider';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Permission request: asks for the camera only when someone chooses to use it, says why first, and has a way on
    when the answer is no. For an app to copy. What it carries:
@@ -74,43 +76,45 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Meet</p>
       </header>
-      <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Asking the browser works offline. What it lets the app do may need a connection.</OfflineBanner>
-        <div className="flex flex-col gap-2">
-          <Heading level={1}>Weekly design review</Heading>
-          <p className="m-0 text-text-muted">Today, {callTime(locale)} · 6 people invited</p>
-        </div>
-        <Card as="section" aria-labelledby="camera-title" className="flex flex-col gap-4">
-          <Heading level={2} size="lg" id="camera-title">Camera</Heading>
-          {step === 'granted' ? (
-            <div className="flex min-h-40 items-center justify-center gap-2 rounded-md bg-surface-muted text-text-muted">
-              <Icon name="videocam" /> <span>Your camera is on. Others see you when you join.</span>
-            </div>
-          ) : step === 'denied' ? (
-            <Alert tone="warning" title="Your browser is blocking the camera"
-              actions={<Button variant="secondary" onClick={ask}>Try again</Button>}>
-              To use it, allow the camera for this site in your browser’s site settings (the icon beside the address), then try again. You can still join with audio only.
-            </Alert>
-          ) : step === 'unsupported' ? (
-            <Alert tone="info" title="No camera in this browser">
-              This browser can’t share a camera. You can still join with audio only, or open the call on another device.
-            </Alert>
-          ) : (
-            <>
-              <p className="m-0 text-sm">Turn on your camera so others in the call can see you. Your browser will ask first, and you can turn it off at any time during the call.</p>
-              <div>
-                <Button startIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main" tabIndex={-1}>
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Asking the browser works offline. What it lets the app do may need a connection.</OfflineBanner>
+          <div className="flex flex-col gap-2">
+            <Heading level={1}>Weekly design review</Heading>
+            <p className="m-0 text-text-muted">Today, {callTime(locale)} · 6 people invited</p>
+          </div>
+          <Card as="section" aria-labelledby="camera-title" className="flex flex-col gap-4">
+            <Heading level={2} size="lg" id="camera-title">Camera</Heading>
+            {step === 'granted' ? (
+              <div className="flex min-h-40 items-center justify-center gap-2 rounded-md bg-surface-muted text-text-muted">
+                <Icon name="videocam" /> <span>Your camera is on. Others see you when you join.</span>
               </div>
-            </>
-          )}
-        </Card>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button ref={join} variant={step === 'granted' ? 'primary' : 'secondary'} onClick={() => { setJoined(true); announce('You joined the call.'); }} disabled={joined}>
-            {step === 'granted' ? 'Join call' : 'Join with audio only'}
-          </Button>
-          {joined ? <span className="text-sm text-text-muted">You’re in the call.</span> : null}
-        </div>
-      </main>
+            ) : step === 'denied' ? (
+              <Alert tone="warning" title="Your browser is blocking the camera"
+                actions={<Button variant="secondary" onClick={ask}>Try again</Button>}>
+                To use it, allow the camera for this site in your browser’s site settings (the icon beside the address), then try again. You can still join with audio only.
+              </Alert>
+            ) : step === 'unsupported' ? (
+              <Alert tone="info" title="No camera in this browser">
+                This browser can’t share a camera. You can still join with audio only, or open the call on another device.
+              </Alert>
+            ) : (
+              <>
+                <p className="m-0 text-sm">Turn on your camera so others in the call can see you. Your browser will ask first, and you can turn it off at any time during the call.</p>
+                <div>
+                  <Button startIcon="videocam" onClick={ask} loading={step === 'asking'} loadingLabel="Waiting for your browser…">Turn on camera</Button>
+                </div>
+              </>
+            )}
+          </Card>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button ref={join} variant={step === 'granted' ? 'primary' : 'secondary'} onClick={() => { setJoined(true); announce('You joined the call.'); }} disabled={joined}>
+              {step === 'granted' ? 'Join call' : 'Join with audio only'}
+            </Button>
+            {joined ? <span className="text-sm text-text-muted">You’re in the call.</span> : null}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

@@ -10,7 +10,8 @@ interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "child
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
     "aria-label"?: string | undefined;
     sheet?: "mobile" | boolean | undefined;
-    initialFocus?: "first" | "panel" | undefined;
+    initialFocus?: "first" | "panel" | React.RefObject<HTMLElement | null> | undefined;
+    finalFocus?: React.RefObject<HTMLElement | null> | undefined;
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }

@@ -18,6 +18,7 @@ import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useControllable } from '../../internal/controllable';
 import { useRequired } from '../../internal/required';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
+import { isRtl } from '../../internal/position';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
 export type PeriodUnit = 'month' | 'quarter' | 'year';
@@ -158,7 +159,7 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     if (e.key === 'Escape') return escape(e);
     if (e.altKey || e.ctrlKey || e.metaKey || isComposing(e)) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl', at = focus - page, rowStart = focus - (at % cols);
+    const rtl = isRtl(e.currentTarget), at = focus - page, rowStart = focus - (at % cols);
     switch (e.key) {
       case 'ArrowLeft': move(focus + (rtl ? 1 : -1)); break;
       case 'ArrowRight': move(focus + (rtl ? -1 : 1)); break;

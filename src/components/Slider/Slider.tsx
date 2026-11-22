@@ -16,6 +16,7 @@ import { displayNumber } from '../../internal/numbers';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { NumberInput } from '../NumberInput/NumberInput';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
 
 export type SliderValue = number | [number, number];
 /** A mark on a Slider's track: a value, and optional text shown under it. */
@@ -202,7 +203,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     const r = root.current!.querySelector('.srp-slider__track')!.getBoundingClientRect();
     let share = r.width ? (x - r.left) / r.width : 0;
     if (vertical) share = r.height ? (r.bottom - y) / r.height : 0;
-    else if (getComputedStyle(root.current!).direction === 'rtl') share = 1 - share;
+    else if (isRtl(root.current!)) share = 1 - share;
     return min + Math.min(1, Math.max(0, share)) * (max - min);
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -232,7 +233,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLInputElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (disabled || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = !vertical && getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = !vertical && isRtl(e.currentTarget);
     const by = (e.shiftKey ? large : 1) * step, v = at(latestRef.current, i);
     let n: number;
     switch (e.key) {

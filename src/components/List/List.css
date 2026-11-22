@@ -16,7 +16,7 @@
 .srp-list__item { position: relative; display: flex; align-items: center; gap: var(--list-gap, var(--spacing-3)); padding-inline-end: var(--srp-list-px); transition: background-color var(--motion-hover) var(--ease-move); }
 .srp-list__main {
   box-sizing: border-box; display: flex; align-items: center; gap: var(--list-gap, var(--spacing-3)); flex: auto; min-width: var(--spacing-0);
-  padding-block: var(--list-padding-y, var(--spacing-3)); padding-inline: var(--srp-list-px) var(--spacing-0);
+  padding-block: var(--list-padding-y, var(--space-row)); padding-inline: var(--srp-list-px) var(--spacing-0);
   border: var(--spacing-0); background: transparent; color: inherit; font: inherit; text-align: start; text-decoration: none;
 }
 .srp-list__item:not(:has(.srp-list__trailing)) .srp-list__main { margin-inline-end: calc(var(--spacing-0) - var(--srp-list-px)); padding-inline-end: var(--srp-list-px); }

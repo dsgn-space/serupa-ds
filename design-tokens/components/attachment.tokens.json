@@ -101,6 +101,16 @@
             "cssVar": "--attachment-focus-ring"
           }
         }
+      },
+      "done": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "\"Complete\" and its check once an upload is done (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-done"
+          }
+        }
       }
     },
     "radius": {

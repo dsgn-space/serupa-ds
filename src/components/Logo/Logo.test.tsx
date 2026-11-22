@@ -33,6 +33,13 @@ describe('Logo', () => {
     }
   });
 
+  test('in a dark theme a logo with a dark version sits where a light one does, in a column with a gap', async () => {
+    document.documentElement.setAttribute('data-theme', 'blue-dark');
+    await render(<div id="col" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}><Logo id="g" src={logo} darkSrc={logoDark} alt="Acme" /></div>);
+    await loaded(el('g'));
+    expect(el('g').getBoundingClientRect().top).toBe(document.getElementById('col')!.getBoundingClientRect().top);
+  });
+
   test('a dark theme shows the dark version, and a light one the light, again when the theme changes', async () => {
     document.documentElement.setAttribute('data-theme', 'blue-dark');
     await render(<Logo id="d" src={logo} darkSrc={logoDark} alt="Acme" />);

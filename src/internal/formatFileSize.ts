@@ -1,6 +1,6 @@
 // In its own module, without "use client", so a Server Component can call it (a function from a client module is
-// only a reference there). FileUpload.tsx re-exports it.
-import { formatNumber } from '../FormattedNumber/formatNumber';
+// only a reference there). FileUpload re-exports it.
+import { formatNumber } from '../components/FormattedNumber/formatNumber';
 
 /** A file size for people: 1.5 MB, 820 kB, 12 bytes, in steps of 1000 (1 MB is 1,000,000 bytes, as macOS, iOS and
  *  Android count, so a maxSize of 5_000_000 is "5 MB"), with the names Intl gives every locale. In that locale's digits and units, en-US without one, the same as

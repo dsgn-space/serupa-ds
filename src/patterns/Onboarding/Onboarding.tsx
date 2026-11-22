@@ -14,6 +14,8 @@ import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
@@ -133,68 +135,70 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Your progress is kept on this device. Some steps need a connection.</OfflineBanner>
-        <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
+      <Container as="main" size="md" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">Your progress is kept on this device. Some steps need a connection.</OfflineBanner>
+          <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
 
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />
-          : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading your setup checklist" /></Card> : (
-        <section aria-labelledby="setup-title" className="flex flex-col gap-4">
-          {state.hidden ? (
-            <Card padding="sm" className="flex flex-row flex-wrap items-center justify-between gap-3">
-              <Heading level={2} size="base" id="setup-title">Set up your workspace: {count(state.done.length)}</Heading>
-              <Button ref={showButton} variant="secondary" size="sm" onClick={() => setHidden(false)}>Show the checklist</Button>
-            </Card>
-          ) : (
-            <>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <Heading level={2} size="lg" id="setup-title" ref={heading} tabIndex={-1} className="outline-none">Set up your workspace</Heading>
-                <Button variant="ghost" size="sm" onClick={() => setHidden(true)}>Hide the checklist</Button>
-              </div>
-              <Progress label="Setup progress" value={state.done.length} max={steps.length} showValue tone={finished ? 'success' : 'primary'}
-                formatValue={(v) => count(v)} />
-              {finished ? (
-                <Card>
-                  <EmptyState icon="check_circle" size="sm" headingLevel={3} title="You’re all set"
-                    description="Your workspace is ready. Everything here stays where you left it."
-                    actions={<Button href={dashboardHref}>Go to your dashboard</Button>} />
-                </Card>
-              ) : null}
-              <ol role="list" className="m-0 flex list-none flex-col gap-3 p-0">
-                {steps.map((s, i) => {
-                  const done = state.done.includes(s.id);
-                  return (
-                    <Card as="li" key={s.id} padding="md" className="flex min-w-0 flex-col gap-3 wrap-anywhere" aria-labelledby={`step-${s.id}`}>
-                      <div className="flex flex-col gap-1">
-                        <Heading level={3} size="base" id={`step-${s.id}`}>
-                          <span className="text-text-muted">{formatNumber(i + 1, locale)}. </span>{s.title}
-                        </Heading>
-                        <p className="m-0 text-sm text-text-muted">{s.description}</p>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                        <Button href={s.action.href} variant={done ? 'secondary' : 'primary'} size="sm">{s.action.label}</Button>
-                        <Checkbox checked={done} onCheckedChange={(on) => tick(s.id, on)} description={done ? 'Done' : 'To do'}>
-                          Mark “{s.title}” as done
-                        </Checkbox>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </ol>
-            </>
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />
+            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading your setup checklist" /></Card> : (
+          <section aria-labelledby="setup-title" className="flex flex-col gap-4">
+            {state.hidden ? (
+              <Card padding="sm" className="flex flex-row flex-wrap items-center justify-between gap-3">
+                <Heading level={2} size="base" id="setup-title">Set up your workspace: {count(state.done.length)}</Heading>
+                <Button ref={showButton} variant="secondary" size="sm" onClick={() => setHidden(false)}>Show the checklist</Button>
+              </Card>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <Heading level={2} size="lg" id="setup-title" ref={heading} tabIndex={-1} className="outline-none">Set up your workspace</Heading>
+                  <Button variant="ghost" size="sm" onClick={() => setHidden(true)}>Hide the checklist</Button>
+                </div>
+                <Progress label="Setup progress" value={state.done.length} max={steps.length} showValue tone={finished ? 'success' : 'primary'}
+                  formatValue={(v) => count(v)} />
+                {finished ? (
+                  <Card>
+                    <EmptyState icon="check_circle" size="sm" headingLevel={3} title="You’re all set"
+                      description="Your workspace is ready. Everything here stays where you left it."
+                      actions={<Button href={dashboardHref}>Go to your dashboard</Button>} />
+                  </Card>
+                ) : null}
+                <ol role="list" className="m-0 flex list-none flex-col gap-3 p-0">
+                  {steps.map((s, i) => {
+                    const done = state.done.includes(s.id);
+                    return (
+                      <Card as="li" key={s.id} padding="md" className="flex min-w-0 flex-col gap-3 wrap-anywhere" aria-labelledby={`step-${s.id}`}>
+                        <div className="flex flex-col gap-1">
+                          <Heading level={3} size="base" id={`step-${s.id}`}>
+                            <span className="text-text-muted">{formatNumber(i + 1, locale)}. </span>{s.title}
+                          </Heading>
+                          <p className="m-0 text-sm text-text-muted">{s.description}</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                          <Button href={s.action.href} variant={done ? 'secondary' : 'primary'} size="sm">{s.action.label}</Button>
+                          <Checkbox checked={done} onCheckedChange={(on) => tick(s.id, on)} description={done ? 'Done' : 'To do'}>
+                            Mark “{s.title}” as done
+                          </Checkbox>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </ol>
+              </>
+            )}
+          </section>
           )}
-        </section>
-        )}
 
-        <section aria-labelledby="projects-title" className="flex flex-col gap-4">
-          <Heading level={2} size="lg" id="projects-title">Your projects</Heading>
-          <Card variant="filled">
-            <EmptyState icon="folder_open" size="sm" headingLevel={3} title="No projects yet"
-              description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you’re doing now."
-              actions={<Button href="#new-project">Create a project</Button>} />
-          </Card>
-        </section>
-      </main>
+          <section aria-labelledby="projects-title" className="flex flex-col gap-4">
+            <Heading level={2} size="lg" id="projects-title">Your projects</Heading>
+            <Card variant="filled">
+              <EmptyState icon="folder_open" size="sm" headingLevel={3} title="No projects yet"
+                description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you’re doing now."
+                actions={<Button href="#new-project">Create a project</Button>} />
+            </Card>
+          </section>
+        </Stack>
+      </Container>
     </div>
   );
 }

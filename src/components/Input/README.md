@@ -46,7 +46,7 @@ Drawn from the `Icons` story.
 1. **Field** (`.srp-input__field`): where the text is typed.
 2. **Leading icon** (`.srp-input__icon--start`): an optional picture of what goes in, such as a search glass.
 3. **Trailing icon** (`.srp-input__icon--end`): an optional picture or status at the end.
-4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box, each the field's height less 6px (26px at md).
+4. **Actions** (`.srp-input__actions`): InputAction buttons at the very end of the box: a text action is the field's height less 6px (26px at md), an icon action its icon with 4px round it (24px at md).
 
 ## Usage
 
@@ -123,7 +123,7 @@ Drawn from the `Icons` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `label` | string | required | The action's name: the words on a text action, the accessible name of an icon action |
-| `icon` | icon name or element | | Makes it an icon action: the icon, at the field's icon size, in `text-muted` |
+| `icon` | icon name or element | | Makes it an icon action: the icon, at the field's icon size, in `text-muted`, with 4px round it. SearchInput's clear button, PasswordInput's eye and the buttons of Combobox, DatePicker, DateRangePicker and TimePicker are icon actions, so they all look and behave the same |
 | `disabled` | boolean | the Input's | Disabled on its own, drawn in `disabled-text` as a disabled Button is; a disabled Input disables it anyway |
 
 Every other button attribute (`onClick`, `aria-*`) and `ref` go to the `<button>`, which has `data-component="input-action"`.
@@ -181,8 +181,9 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--input-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
 | `--input-gap` | `spacing-2` | Gap between an icon and the text (8px) |
-| `--input-actions-inset` | `spacing-0.5` | Space between the actions and the box's edge (2px), so an action is the field's height less 6px. |
+| `--input-actions-inset` | `spacing-0.5` | Space between the actions and the box's edge (2px), so a text action is the field's height less 6px. |
 | `--input-action-padding-x` | `spacing-2` | Space at a text action's sides (8px). |
+| `--input-action-icon-padding` | `spacing-1` | Space around an icon action's icon (4px): 22, 24 or 28px by size, as the buttons in SearchInput, PasswordInput, Combobox, DatePicker and TimePicker, which are InputActions. |
 
 **Border**
 

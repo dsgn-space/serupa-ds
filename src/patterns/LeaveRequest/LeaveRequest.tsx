@@ -17,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Leave request: time off asked for on a calendar, with the working days counted, weekends and holidays shown and
    left out of the count, and the balance that's left. For an app to copy. What it carries (WCAG 2.2):
@@ -186,81 +188,83 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme People</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your request stays here. Sending it needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Time off', href: '#time-off' }, { label: 'Request leave' }]} title="Request leave" />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your request stays here. Sending it needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Time off', href: '#time-off' }, { label: 'Request leave' }]} title="Request leave" />
 
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your leave" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading leave" /></Card> : (
-              <div className="grid items-start gap-6 md:grid-cols-3">
-                <div className="flex flex-col gap-8 md:col-span-2">
-                  <Field label="Kind of leave" group>
-                    <RadioGroup name={kindName} value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
-                      {KINDS.map((k) => <Radio key={k.value} value={k.value} description={k.hint}>{k.label}</Radio>)}
-                    </RadioGroup>
-                  </Field>
-                  <section aria-labelledby="dates" className="flex flex-col gap-4">
-                    <h2 id="dates" className={h2}>Dates</h2>
-                    <p className="m-0 text-sm text-text-muted">Choose your first day away, then your last. Weekends and holidays are struck through and aren’t counted.</p>
-                    <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'leave-problem' : undefined} months={2}
-                      month={month} onMonthChange={setMonth} min={today} isDateDisabled={closed} value={range}
-                      onValueChange={(_, { iso }) => { setFailed(false); setRange(iso); }} />
-                    {range ? (
-                      <p className="m-0 font-semibold">
-                        {formatNumber(days, locale)} working {days === 1 ? 'day' : 'days'}{inside.length ? <span className="font-normal">, without {inside.map((h) => `${h.name} (${dayWords(locale, h.date)})`).join(', ')}</span> : null}
-                      </p>
-                    ) : null}
-                    {shownProblem ? <Alert id="leave-problem" tone="danger">{shownProblem}</Alert> : null}
-                    {inView.length ? (
-                      <div className="flex flex-col gap-1">
-                        <h3 id="holidays" className="m-0 text-base font-semibold">Holidays</h3>
-                        <ul aria-labelledby="holidays" className="m-0 flex flex-col gap-1 ps-5">
-                          {inView.map((h) => <li key={h.date}><time dateTime={h.date}>{dayWords(locale, h.date, undefined, true)}</time>: {h.name}</li>)}
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load your leave" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading leave" /></Card> : (
+                <div className="grid items-start gap-6 md:grid-cols-3">
+                  <div className="flex flex-col gap-8 md:col-span-2">
+                    <Field label="Kind of leave" group>
+                      <RadioGroup name={kindName} value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
+                        {KINDS.map((k) => <Radio key={k.value} value={k.value} description={k.hint}>{k.label}</Radio>)}
+                      </RadioGroup>
+                    </Field>
+                    <section aria-labelledby="dates" className="flex flex-col gap-4">
+                      <h2 id="dates" className={h2}>Dates</h2>
+                      <p className="m-0 text-sm text-text-muted">Choose your first day away, then your last. Weekends and holidays are struck through and aren’t counted.</p>
+                      <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'leave-problem' : undefined} months={2}
+                        month={month} onMonthChange={setMonth} min={today} isDateDisabled={closed} value={range}
+                        onValueChange={(_, { iso }) => { setFailed(false); setRange(iso); }} />
+                      {range ? (
+                        <p className="m-0 font-semibold">
+                          {formatNumber(days, locale)} working {days === 1 ? 'day' : 'days'}{inside.length ? <span className="font-normal">, without {inside.map((h) => `${h.name} (${dayWords(locale, h.date)})`).join(', ')}</span> : null}
+                        </p>
+                      ) : null}
+                      {shownProblem ? <Alert id="leave-problem" tone="danger">{shownProblem}</Alert> : null}
+                      {inView.length ? (
+                        <div className="flex flex-col gap-1">
+                          <h3 id="holidays" className="m-0 text-base font-semibold">Holidays</h3>
+                          <ul aria-labelledby="holidays" className="m-0 flex flex-col gap-1 ps-5">
+                            {inView.map((h) => <li key={h.date}><time dateTime={h.date}>{dayWords(locale, h.date, undefined, true)}</time>: {h.name}</li>)}
+                          </ul>
+                        </div>
+                      ) : null}
+                    </section>
+                    <Field label="Note for your manager" optional>
+                      <Textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
+                    </Field>
+                    <div className="flex flex-col items-start gap-3">
+                      {failed ? <Alert tone="danger">Couldn’t send the request. Try again.</Alert> : null}
+                      <Button loading={busy} onClick={send}>Send request</Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-6">
+                    <Card>
+                      <section aria-labelledby="balance" className="flex flex-col gap-4">
+                        <h2 id="balance" className={h2}>Annual leave</h2>
+                        <DescriptionList layout="split">
+                          <DescriptionItem term="You have">{count(balance)}</DescriptionItem>
+                          <DescriptionItem term="Waiting for approval">{count(waiting)}</DescriptionItem>
+                          <DescriptionItem term="Left after those" emphasis>{count(left)}</DescriptionItem>
+                        </DescriptionList>
+                      </section>
+                    </Card>
+                    <section aria-labelledby="mine" className="flex flex-col gap-4">
+                      <h2 id="mine" className={h2}>Your requests</h2>
+                      {requests.length ? (
+                        <ul ref={list} aria-labelledby="mine" className="m-0 flex list-none flex-col gap-2 p-0">
+                          {requests.map((r) => (
+                            <li key={r.id} tabIndex={-1} className="flex flex-col gap-1 rounded-md border border-border p-3">
+                              <span className="flex flex-wrap items-center justify-between gap-2">
+                                <span className="font-medium">{dayWords(locale, r.start, r.end)}</span>
+                                <Badge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</Badge>
+                              </span>
+                              <span className="text-sm text-text-muted">{KINDS.find((k) => k.value === r.kind)!.label}, {count(r.days)}</span>
+                            </li>
+                          ))}
                         </ul>
-                      </div>
-                    ) : null}
-                  </section>
-                  <Field label="Note for your manager" optional>
-                    <Textarea rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
-                  </Field>
-                  <div className="flex flex-col items-start gap-3">
-                    {failed ? <Alert tone="danger">Couldn’t send the request. Try again.</Alert> : null}
-                    <Button loading={busy} onClick={send}>Send request</Button>
+                      ) : <p className="m-0 text-text-muted">No requests yet.</p>}
+                    </section>
                   </div>
                 </div>
-                <div className="flex flex-col gap-6">
-                  <Card>
-                    <section aria-labelledby="balance" className="flex flex-col gap-4">
-                      <h2 id="balance" className={h2}>Annual leave</h2>
-                      <DescriptionList layout="split">
-                        <DescriptionItem term="You have">{count(balance)}</DescriptionItem>
-                        <DescriptionItem term="Waiting for approval">{count(waiting)}</DescriptionItem>
-                        <DescriptionItem term="Left after those" emphasis>{count(left)}</DescriptionItem>
-                      </DescriptionList>
-                    </section>
-                  </Card>
-                  <section aria-labelledby="mine" className="flex flex-col gap-4">
-                    <h2 id="mine" className={h2}>Your requests</h2>
-                    {requests.length ? (
-                      <ul ref={list} aria-labelledby="mine" className="m-0 flex list-none flex-col gap-2 p-0">
-                        {requests.map((r) => (
-                          <li key={r.id} tabIndex={-1} className="flex flex-col gap-1 rounded-md border border-border p-3">
-                            <span className="flex flex-wrap items-center justify-between gap-2">
-                              <span className="font-medium">{dayWords(locale, r.start, r.end)}</span>
-                              <Badge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</Badge>
-                            </span>
-                            <span className="text-sm text-text-muted">{KINDS.find((k) => k.value === r.kind)!.label}, {count(r.days)}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : <p className="m-0 text-text-muted">No requests yet.</p>}
-                  </section>
-                </div>
-              </div>
-            )}
-        </div>
-      </main>
+              )}
+          </div>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

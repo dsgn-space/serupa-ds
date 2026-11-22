@@ -2,8 +2,8 @@
    FileUpload: a drop area (surface-control, a dashed field-border outline, as a field has, 8px corners, 24px inside) with an upload
    icon, a title, an outline button and a muted hint, centered. While files are dragged over it, it turns
    primary-subtle with a primary outline (a Highlight one in forced colors). Under it: messages about files that weren't added (danger), and the
-   chosen files as rows (surface, outline, 6px corners) with a type icon, the name, the size and a remove
-   button. With fileStatus, a row shows its upload: a small bar under the name, "Uploaded" with a success check
+   chosen files as Attachment rows, the list's full width, with a type icon, the name, the kind and size and a remove
+   button. With fileStatus, a row shows its upload: a small bar under the name, "Complete" with a success check
    after the size, or a danger outline and message with a retry button. With thumbnails, an image file shows a
    40px picture in place of its type icon. Disabled: faded. Invalid: a solid danger outline. Read-only: the files are listed without remove buttons.
    --------------------------------------------------------------- */
@@ -31,41 +31,16 @@
 .srp-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1); margin: var(--spacing-0); color: var(--file-upload-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size */
 .srp-file-upload__error .srp-icon { flex: none; font-size: var(--spacing-3\.5); height: var(--text-xs--line-height); }   /* centered on the first line */
 .srp-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+/* Each file is an Attachment, as wide as the list; this component's own tokens still set its row's colors, corners
+   and padding. */
 .srp-file-upload__item {
-  display: grid; grid-template-columns: auto minmax(var(--spacing-0), 1fr); align-items: center; column-gap: var(--spacing-3); padding: var(--file-upload-item-padding, var(--spacing-2)); padding-inline-start: var(--spacing-3);
-  border: var(--border-width-1) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--radius-control)); background: var(--file-upload-item-bg, var(--surface)); --surface-behind: var(--file-upload-item-bg, var(--surface));
+  display: flex; --srp-attachment-width: var(--sizing-full); --attachment-max-width: var(--sizing-full);
+  --attachment-bg: var(--file-upload-item-bg, var(--surface)); --attachment-border: var(--file-upload-item-border, var(--border)); --attachment-radius: var(--file-upload-item-radius, var(--radius-control));
+  --attachment-padding: var(--file-upload-item-padding, var(--spacing-2)); --attachment-gap: var(--spacing-3); --attachment-icon: var(--file-upload-icon-color, var(--text-muted));
+  --attachment-muted: var(--file-upload-hint-color, var(--text-muted)); --attachment-error: var(--file-upload-error-color, var(--danger-text)); --attachment-border-error: var(--file-upload-zone-border-invalid, var(--danger));
+  --attachment-done: var(--file-upload-done-color, var(--success-text)); --attachment-focus-ring: var(--file-upload-focus-ring, var(--focus-ring));
 }
-.srp-file-upload__file-icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-5); }
-/* As Attachment: the icon and the buttons centre on the name and its size, and the file's lines join the row's grid,
-   so a failure message runs from the name's edge to the row's, under the buttons, instead of being squeezed into a
-   column beside them. */
-.srp-file-upload__item { grid-template-areas: "icon name" "icon size" ". progress" ". error"; }
-.srp-file-upload__item:has(> .srp-icon-btn) { grid-template: "icon name remove" "icon size remove" ". progress ." ". error error" / auto minmax(var(--spacing-0), 1fr) auto; }
-.srp-file-upload__item:has(> .srp-file-upload__retry) { grid-template: "icon name retry" "icon size retry" ". progress ." ". error error" / auto minmax(var(--spacing-0), 1fr) auto; }
-.srp-file-upload__item:has(> .srp-file-upload__retry):has(> .srp-icon-btn) { grid-template: "icon name retry remove" "icon size retry remove" ". progress . ." ". error error error" / auto minmax(var(--spacing-0), 1fr) auto auto; }
-.srp-file-upload__item > :first-child { grid-area: icon; }
-.srp-file-upload__file { display: contents; }
-.srp-file-upload__name { grid-area: name; }
-.srp-file-upload__size { grid-area: size; }
-.srp-file-upload__progress { grid-area: progress; }
-.srp-file-upload__failed { grid-area: error; margin-block-start: var(--spacing-0\.5); }
-.srp-file-upload__retry { grid-area: retry; }
-.srp-file-upload__item > .srp-icon-btn { grid-area: remove; }
-.srp-file-upload__name { display: flex; min-width: var(--spacing-0); white-space: pre; }
-/* Cut, the name takes a tab stop of its own, so the keyboard can show it in full: the ring sits inside its edge, which clips. */
-.srp-file-upload__name:focus-visible { outline: var(--focus-ring-width) solid var(--file-upload-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
-.srp-file-upload__name-start { overflow: hidden; text-overflow: ellipsis; min-width: var(--spacing-0); }
-.srp-file-upload__name-end { flex: none; }
-.srp-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
-.srp-file-upload__item--error { border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
 .srp-file-upload__thumbnail { flex: none; inline-size: var(--spacing-10); block-size: var(--spacing-10); border-radius: var(--radius-inner); }
-/* The retry button keeps its words whole beside a long failure message: the message wraps instead (it was cut to "Try …"). */
-.srp-file-upload__retry { flex: none; }
-.srp-file-upload__progress { margin-block-start: var(--spacing-1); }
-.srp-file-upload__done, .srp-file-upload__failed { display: inline-flex; align-items: center; gap: var(--spacing-1); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.srp-file-upload__done { margin-inline-start: var(--spacing-2); color: var(--file-upload-done-color, var(--success-text)); }
-.srp-file-upload__failed { align-items: flex-start; color: var(--file-upload-error-color, var(--danger-text)); }
-.srp-file-upload__done .srp-icon, .srp-file-upload__failed .srp-icon { font-size: var(--spacing-4); }
 .srp-file-upload--disabled .srp-file-upload__zone, .srp-file-upload--disabled .srp-file-upload__zone * { border-color: var(--file-upload-border-disabled, var(--disabled-border)); color: var(--file-upload-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 /* The area's fade covers the button in it: the disabled Button's own fade on top took it to a quarter. */
 .srp-file-upload--disabled .srp-file-upload__zone .srp-btn { opacity: var(--opacity-100); }

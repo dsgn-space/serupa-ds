@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v17.0.0
+npm install github:dsgn-space/serupa-ds#v17.1.0
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -43,7 +43,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 1. **Reuse before you build, in this order.** Stop at the first step that does the job:
    1. A ready-made screen or section: `npx serupa-add` lists the patterns (Dashboard, Sign in, Settings form, Team members, …) and blocks (Page header, Pricing, Stats row, …), and `npx serupa-add <Name>` writes one into `src/serupa/` as source to change. For a whole screen, start from one of these.
    2. A Serupa component from the list below. Don't rebuild a button, field, dialog, menu or table out of `div`s.
-   3. Serupa components put together: a settings page is `Stack`, `Card`, `Field` and `Switch`, not a new widget.
+   3. Serupa components put together: a settings page is `Card`, `Field` and `Switch` in a column, not a new widget.
    4. A native element (`<details>`, `<progress>`, `<dl>`) styled with the utility classes and tokens.
    5. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
@@ -59,7 +59,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 
 The components meet their part of WCAG 2.2 AA. The page meets the rest only if you also do these, in every answer, however short:
 
-- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and start it with `<SkipLink />`, the "Skip to content" link, which moves focus to the main content (`id="main"`).
+- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<main id="main">`, or `<Container as="main" id="main">`) and start it with `<SkipLink />`, the "Skip to content" link, which moves focus to the main content (`id="main"`).
 - **Headings:** one `h1` per page and no skipped levels. Heading's `level` sets the element, and its look can differ.
 - **Names:**
   - Wrap every form control in `<Field label="…">`. A placeholder is not a label.
@@ -171,6 +171,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **FieldList** (beta): Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. Also called: repeater, dynamic fields, form list.
 - **FileUpload**: A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. Also called: dropzone, file input, file uploader.
 - **FilterBar** (beta): The filters on a list or a table, as a row of chips. Also called: filters, filter chips, faceted search.
+- **Form** (beta): A `<form>` checked against one schema. Also called: form validation, schema form, form wrapper.
 - **ImageCropper** (beta): A picture in a frame of a fixed shape, which people move and zoom to choose the part to keep: a profile photo, a team logo, a cover. Also called: image crop, avatar editor, photo cropper.
 - **InlineEdit**: Text people can change where it is: a project name, a card title, a slug. Also called: click to edit, editable text.
 - **Input**: A single-line text field: a native `<input>` in a box that can hold icons. Also called: text input, text field.

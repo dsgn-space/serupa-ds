@@ -17,6 +17,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Appointment: a time with someone, picked by day and then by time, with your details and a confirmation. For an
    app to copy. What it carries (WCAG 2.2):
@@ -173,75 +175,77 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Clinic</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These times are from when the page loaded and may have gone. Booking needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Services', href: '#services' }, { label: service.name }]} title={`Book an ${service.name.toLowerCase()}`}
-          description={`${formatNumber(service.minutes, locale)} minutes with ${service.with}`} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These times are from when the page loaded and may have gone. Booking needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Services', href: '#services' }, { label: service.name }]} title={`Book an ${service.name.toLowerCase()}`}
+            description={`${formatNumber(service.minutes, locale)} minutes with ${service.with}`} />
 
-        <div className="pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
-            : !first && !booked ? <EmptyState icon="event_busy" title="No free times" headingLevel={2}
-                description={`${service.with} has no free times in the weeks ahead. New times open every Monday.`} />
-            : booked ? (
-              <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
-                <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked for {slotWords(booked.day, booked.time, locale)}</h2>
-                <p className="m-0">We’ve sent the details to {booked.email}. To change the time, use the link in that email.</p>
-                <Button variant="outline" onClick={() => { setBooked(null); setPicked(null); setTime(null); }}>Book another time</Button>
-              </section>
-            ) : (
-              <form onSubmit={book} noValidate className="grid items-start gap-6 md:grid-cols-3">
-                <div className="flex flex-col gap-8 md:col-span-2">
-                  <section aria-labelledby="day" className="flex flex-col gap-4">
-                    <h2 id="day" className={h2}>Day</h2>
-                    <p className="m-0 text-sm text-text-muted">Days with no free times are struck through.</p>
-                    <Calendar ref={calendar} aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
-                      defaultMonth={day(first ?? today)} isDateDisabled={closed} />
-                    {picked ? <p id="free-times" className="m-0" role="status">{freeCount === 1 ? '1 time free' : `${formatNumber(freeCount, locale)} times free`} on {dayName(picked)}.</p> : null}
-                  </section>
-                  {picked ? (
-                    <Field label={`Times on ${dayName(picked)}`} group required>
-                      <RadioGroup ref={times} name="appointment-time" value={time} orientation="horizontal" variant="card"
-                        onValueChange={(v: string) => { setTime(v); setPickProblem(null); setFailed(false); }}>
-                        {daySlots.map((s) => (
-                          <Radio key={s.time} value={s.time} disabled={!s.free} aria-label={s.free ? undefined : `${timeWords(s.time, locale)}, taken`}>
-                            {s.free ? timeWords(s.time, locale) : <span className="line-through">{timeWords(s.time, locale)}</span>}
-                          </Radio>
-                        ))}
-                      </RadioGroup>
-                    </Field>
-                  ) : null}
-                  {pickProblem ? <Alert tone="danger">{pickProblem}</Alert> : null}
-                  <section aria-labelledby="you" className="flex flex-col gap-4">
-                    <h2 id="you" className={h2}>Your details</h2>
-                    <Field label="Name" id="appointment-name" error={problems.name} required>
-                      <Input autoComplete="name" value={details.name} onChange={(e) => edit({ name: e.target.value })} />
-                    </Field>
-                    <Field label="Email" id="appointment-email" hint="We send the details and a reminder here." error={problems.email} required>
-                      <Input type="email" autoComplete="email" value={details.email} onChange={(e) => edit({ email: e.target.value })} />
-                    </Field>
-                    <Field label="Anything we should know?" optional>
-                      <Textarea rows={3} value={details.note} onChange={(e) => edit({ note: e.target.value })} />
-                    </Field>
-                  </section>
-                </div>
-                <Card>
-                  <section aria-labelledby="summary" className="flex flex-col gap-4">
-                    <h2 id="summary" className={h2}>Your appointment</h2>
-                    <DescriptionList>
-                      <DescriptionItem term="What">{service.name}, {formatNumber(service.minutes, locale)} minutes</DescriptionItem>
-                      <DescriptionItem term="With">{service.with}</DescriptionItem>
-                      <DescriptionItem term="When">{picked && time ? slotWords(picked, time, locale) : picked ? `${dayName(picked)}, time to choose` : 'Choose a day and a time'}</DescriptionItem>
-                      <DescriptionItem term="Where">{service.where}</DescriptionItem>
-                    </DescriptionList>
-                    {failed ? <Alert tone="danger">Couldn’t book this time. Try again, or choose another.</Alert> : null}
-                    <Button type="submit" loading={busy}>Book</Button>
-                  </section>
-                </Card>
-              </form>
-            )}
-        </div>
-      </main>
+          <div className="pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
+              : !first && !booked ? <EmptyState icon="event_busy" title="No free times" headingLevel={2}
+                  description={`${service.with} has no free times in the weeks ahead. New times open every Monday.`} />
+              : booked ? (
+                <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
+                  <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked for {slotWords(booked.day, booked.time, locale)}</h2>
+                  <p className="m-0">We’ve sent the details to {booked.email}. To change the time, use the link in that email.</p>
+                  <Button variant="outline" onClick={() => { setBooked(null); setPicked(null); setTime(null); }}>Book another time</Button>
+                </section>
+              ) : (
+                <form onSubmit={book} noValidate className="grid items-start gap-6 md:grid-cols-3">
+                  <div className="flex flex-col gap-8 md:col-span-2">
+                    <section aria-labelledby="day" className="flex flex-col gap-4">
+                      <h2 id="day" className={h2}>Day</h2>
+                      <p className="m-0 text-sm text-text-muted">Days with no free times are struck through.</p>
+                      <Calendar ref={calendar} aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
+                        defaultMonth={day(first ?? today)} isDateDisabled={closed} />
+                      {picked ? <p id="free-times" className="m-0" role="status">{freeCount === 1 ? '1 time free' : `${formatNumber(freeCount, locale)} times free`} on {dayName(picked)}.</p> : null}
+                    </section>
+                    {picked ? (
+                      <Field label={`Times on ${dayName(picked)}`} group required>
+                        <RadioGroup ref={times} name="appointment-time" value={time} orientation="horizontal" variant="card"
+                          onValueChange={(v: string) => { setTime(v); setPickProblem(null); setFailed(false); }}>
+                          {daySlots.map((s) => (
+                            <Radio key={s.time} value={s.time} disabled={!s.free} aria-label={s.free ? undefined : `${timeWords(s.time, locale)}, taken`}>
+                              {s.free ? timeWords(s.time, locale) : <span className="line-through">{timeWords(s.time, locale)}</span>}
+                            </Radio>
+                          ))}
+                        </RadioGroup>
+                      </Field>
+                    ) : null}
+                    {pickProblem ? <Alert tone="danger">{pickProblem}</Alert> : null}
+                    <section aria-labelledby="you" className="flex flex-col gap-4">
+                      <h2 id="you" className={h2}>Your details</h2>
+                      <Field label="Name" id="appointment-name" error={problems.name} required>
+                        <Input autoComplete="name" value={details.name} onChange={(e) => edit({ name: e.target.value })} />
+                      </Field>
+                      <Field label="Email" id="appointment-email" hint="We send the details and a reminder here." error={problems.email} required>
+                        <Input type="email" autoComplete="email" value={details.email} onChange={(e) => edit({ email: e.target.value })} />
+                      </Field>
+                      <Field label="Anything we should know?" optional>
+                        <Textarea rows={3} value={details.note} onChange={(e) => edit({ note: e.target.value })} />
+                      </Field>
+                    </section>
+                  </div>
+                  <Card>
+                    <section aria-labelledby="summary" className="flex flex-col gap-4">
+                      <h2 id="summary" className={h2}>Your appointment</h2>
+                      <DescriptionList>
+                        <DescriptionItem term="What">{service.name}, {formatNumber(service.minutes, locale)} minutes</DescriptionItem>
+                        <DescriptionItem term="With">{service.with}</DescriptionItem>
+                        <DescriptionItem term="When">{picked && time ? slotWords(picked, time, locale) : picked ? `${dayName(picked)}, time to choose` : 'Choose a day and a time'}</DescriptionItem>
+                        <DescriptionItem term="Where">{service.where}</DescriptionItem>
+                      </DescriptionList>
+                      {failed ? <Alert tone="danger">Couldn’t book this time. Try again, or choose another.</Alert> : null}
+                      <Button type="submit" loading={busy}>Book</Button>
+                    </section>
+                  </Card>
+                </form>
+              )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

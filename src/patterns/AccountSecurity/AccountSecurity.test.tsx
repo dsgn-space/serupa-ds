@@ -19,6 +19,9 @@ const next = () => page.getByLabelText(/^New password/);
 
 // Account security: password fields a manager can fill with the rules first, two-step setup without a camera and with
 // recovery codes, a confirm before turning it off, and named Sign out buttons that keep focus in the list.
+/** The dialog's own alerts: the shared assertive announcer is an alert region too. */
+const failure = () => page.getByRole('alertdialog').getByRole('alert').elements().filter((e) => !e.closest('[data-srp-announcer-assertive]'));
+
 describe('Patterns/Account security', () => {
   test('the password rules, in the order of the fields', () => {
     expect(passwordProblems('', 'short').map((e) => e.message)).toEqual(['Enter your current password', 'Make the new password at least 12 characters']);
@@ -61,6 +64,13 @@ describe('Patterns/Account security', () => {
     await expect.element(next()).toHaveValue('another long phrase');
   });
 
+  test('two-step setup: a QR code of the key to scan, the key as text beside it', async () => {
+    const screen = await render(<AccountSecurity setupKey="ABCD EFGH" />);
+    await screen.getByRole('button', { name: 'Turn on' }).click();
+    const dialog = screen.getByRole('dialog', { name: 'Turn on two-step verification' });
+    await expect.element(dialog.getByRole('img', { name: 'Code to scan with your authenticator app' })).toBeVisible();
+    await expect.element(dialog.getByText('ABCD EFGH')).toBeVisible();
+  });
   test('two-step setup: the key as text with Copy, a wrong code says what to check, a right one shows the recovery codes once', async () => {
     const onEnableTwoStep = vi.fn((code: string) => (code === '123456' ? Promise.resolve() : Promise.reject(new Error('no'))));
     const screen = await render(<AccountSecurity onEnableTwoStep={onEnableTwoStep} setupKey="ABCD EFGH" recoveryCodes={['aaaa-1111', 'bbbb-2222']} />);
@@ -147,7 +157,7 @@ describe('Patterns/Account security', () => {
     await expect.element(dialog.getByRole('button', { name: 'Delete my account' })).toHaveAttribute('aria-disabled', 'true');
     await dialog.getByRole('textbox').fill('ana@example.com');
     await dialog.getByRole('button', { name: 'Delete my account' }).click();
-    await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete your account. Try again.');
+    await expect.poll(() => failure().map((e) => e.textContent)).toEqual(['Couldn’t delete your account. Try again.']);
     fail = false;
     await dialog.getByRole('button', { name: 'Delete my account' }).click();
     await expect.poll(() => latin(active().textContent)).toBe('Your account is deleted');
@@ -220,10 +230,10 @@ describe('Patterns/Account security', () => {
     await screen.getByRole('button', { name: 'Delete account' }).click();
     await screen.getByRole('alertdialog').getByRole('textbox').fill('ana@example.com');
     await screen.getByRole('alertdialog').getByRole('button', { name: 'Delete my account' }).click();
-    await expect.element(screen.getByRole('alertdialog').getByRole('alert')).toBeVisible();
+    await expect.poll(() => failure().length).toBe(1);
     await userEvent.keyboard('{Escape}');
     await screen.getByRole('button', { name: 'Delete account' }).click();
-    expect(screen.getByRole('alertdialog').getByRole('alert').elements()).toHaveLength(0);
+    expect(failure()).toHaveLength(0);
   });
 
   test('counts follow the locale’s digits', async () => {

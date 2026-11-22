@@ -19,6 +19,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
+/** Sizes: sm for a dense toolbar or table row, md by default, lg beside large fields. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <ButtonGroup key={s} aria-label={'Clipboard, ' + s} size={s}>{args.children}</ButtonGroup>)}
+  </div>,
+};
+
 export const Spaced: Story = { args: { attached: false, 'aria-label': undefined, children: [<Button key="c" variant="outline">Cancel</Button>, <Button key="s">Save</Button>] } };
 
 export const Vertical: Story = {

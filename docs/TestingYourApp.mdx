@@ -45,7 +45,7 @@ test('ships an order to Canada next week', async () => {
 
 ## Screenshots in every theme
 
-Serupa checks its components in all six themes. `forEachTheme()` gives your own screens the same check in Playwright: it draws the page in each theme in turn, with transitions off and the color scheme to match, and calls you back to take the picture.
+Serupa checks its components in six themes (three brands, light and dark), and every theme's color pairs for contrast. `forEachTheme()` gives your own screens the same check in Playwright: it draws the page in each theme in turn, with transitions off and the color scheme to match, and calls you back to take the picture.
 
 ```ts
 import { test, expect } from '@playwright/test';

@@ -12,6 +12,8 @@ const PUBLIC = {
   'internal/provider': { from: PKG, names: ['useLocale', 'SerupaProvider', 'useSerupa'] },
   'internal/announce': { from: PKG, names: ['announce', 'announcePage'] },
   'internal/viewTransition': { from: PKG, names: ['withViewTransition'] },
+  'internal/formatFileSize': { from: PKG, names: ['formatFileSize'] },
+  'internal/fileKind': { from: PKG, names: ['attachmentKind'] },
 };
 const KINDS = { patterns: 'pattern', blocks: 'block' };
 

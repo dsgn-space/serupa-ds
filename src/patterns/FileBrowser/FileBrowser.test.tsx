@@ -15,7 +15,7 @@ const files: BrowserFile[] = [
   { id: 'b', name: 'Guide.pdf', kind: 'pdf', bytes: 4_820_000, modified: 0 },
   { id: 'c', name: 'Notes.docx', kind: 'doc', bytes: 24_000, modified: 0 },
 ];
-const folders = [{ id: 'x', name: 'Archive' }, { id: 'y', name: 'Marketing' }];
+const folders = [{ id: 'x', name: 'Archive' }, { id: 'y', name: 'Marketing', children: [{ id: 'z', name: 'Campaigns' }] }];
 const rowNames = () => [...document.querySelectorAll('#file-list [role="row"]')].map((r) => r.getAttribute('aria-label') ?? r.textContent);
 
 // File browser: files picked from a list to move or delete several at once, with Undo, and rename, move and delete
@@ -80,16 +80,31 @@ describe('Patterns/File browser', () => {
     await dialog.getByRole('button', { name: 'Move' }).click();
     await expect.element(dialog.getByText('Choose a folder.')).toBeVisible();
     expect(onMove).not.toHaveBeenCalled();
-    await dialog.getByRole('radio', { name: 'Marketing' }).click();
+    await dialog.getByRole('treeitem', { name: 'Marketing' }).click();
     await dialog.getByRole('button', { name: 'Move' }).click();
     await expect.element(dialog.getByRole('alert').filter({ hasText: /Couldn’t move [2٢] files\. Try again\./ })).toBeVisible();
-    await expect.element(dialog.getByRole('radio', { name: 'Marketing' })).toBeChecked();
+    await expect.element(dialog.getByRole('treeitem', { name: 'Marketing' })).toHaveAttribute('aria-selected', 'true');
     fail = false;
     await dialog.getByRole('button', { name: 'Move' }).click();
     await expect.poll(() => toasted('Moved 2 files to Marketing')).toBe(true);
     expect(onMove.mock.calls).toEqual([[['a', 'b'], 'y'], [['a', 'b'], 'y']]);
     await expect.poll(() => rowNames().length).toBe(1);
     await expect.poll(() => active().closest('#file-list') != null).toBe(true);
+  });
+
+  test('Move: the folders are a tree, and a folder inside another can be chosen from the keyboard', async () => {
+    const onMove = vi.fn((_ids: string[], _to: string) => Promise.resolve());
+    const screen = await render(<FileBrowser files={files} folders={folders} onMove={onMove} defaultSelected={['a']} />);
+    await screen.getByRole('group', { name: /selected$/ }).getByRole('button', { name: 'Move' }).click();
+    const dialog = screen.getByRole('dialog');
+    const tree = dialog.getByRole('tree', { name: 'Folders' });
+    await expect.element(tree).toBeVisible();
+    expect(dialog.getByRole('treeitem', { name: 'Campaigns' }).elements()).toHaveLength(0);
+    (tree.getByRole('treeitem', { name: 'Archive' }).element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowRight}{ArrowDown}{Enter}');
+    await expect.element(dialog.getByRole('treeitem', { name: 'Campaigns' })).toHaveAttribute('aria-selected', 'true');
+    await dialog.getByRole('button', { name: 'Move' }).click();
+    await expect.poll(() => onMove.mock.calls).toEqual([[['a'], 'z']]);
   });
 
   test('Rename checks the name next to the field, sends a good one, shows it in the row, and returns focus to the file\'s More button', async () => {

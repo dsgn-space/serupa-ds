@@ -116,6 +116,41 @@
 - textbox "Custom color": "#1d4ed8"
 - textbox "Hex code": 1d4ed8
 
+# Sizes
+- radiogroup "Label color, sm":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+- radiogroup "Label color, md":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+- radiogroup "Label color, lg":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+
 # SwatchesOnly
 - radiogroup "Label color":
   - radio "Blue" [checked]

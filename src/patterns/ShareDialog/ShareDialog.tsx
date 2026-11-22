@@ -16,6 +16,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Share dialog: who can open one document, what each may do, and the link to it. For an app to copy.
    What it carries (WCAG 2.2):
@@ -174,12 +176,14 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
         ) : null}
         <Button startIcon="share" onClick={() => close(true)}>Share</Button>
       </header>
-      <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">Sharing and changing who has access need a connection.</OfflineBanner>
-        <Heading level={1}>{name}</Heading>
-        <p className="m-0 text-sm text-text-muted">{sharedWith(others.length, locale)} · {LINK[link]}</p>
-        <p className="m-0">Goals for the quarter, who owns each, and what we’ll stop doing to make room.</p>
-      </main>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main" tabIndex={-1}>
+        <Stack gap={4}>
+          <OfflineBanner online={online} placement="inline">Sharing and changing who has access need a connection.</OfflineBanner>
+          <Heading level={1}>{name}</Heading>
+          <p className="m-0 text-sm text-text-muted">{sharedWith(others.length, locale)} · {LINK[link]}</p>
+          <p className="m-0">Goals for the quarter, who owns each, and what we’ll stop doing to make room.</p>
+        </Stack>
+      </Container>
 
       <Dialog open={open} onOpenChange={close} title={`Share “${name}”`}
         footer={<>

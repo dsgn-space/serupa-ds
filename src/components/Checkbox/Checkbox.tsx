@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
-import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { Icon } from '../Icon/Icon';
 import { named } from '../../internal/component';
@@ -139,7 +139,7 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
   // The values as the caller gave them and the boxes hold them (numbers stay numbers), looked up by their text, which is what an <input> holds.
   const typed = React.useRef(new Map<string, string | number>()).current;
   for (const v of raw) typed.set(String(v), v);
-  const latest = React.useRef(raw); latest.current = raw;
+  const latest = useLatest(raw);
   const emit = function (next: Set<string>, e: React.ChangeEvent<HTMLInputElement>) {
     const order = [...boxes.keys()].filter((k) => next.has(k)).concat([...next].filter((k) => !boxes.has(k)));
     const out = order.map((k) => (typed.has(k) ? typed.get(k)! : k));
@@ -160,7 +160,7 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
       emit(next, e);
     },
   };
-  const live = React.useRef(api); live.current = api;
+  const live = useLatest(api);
   // One store for the group's life: the boxes read the state it holds and draw again only when their part of it
   // changes. The first render's state is there from the start; each later one is published once committed.
   const store = React.useRef<{ ctx: GroupContextValue; state: GroupState; listeners: Set<() => void> } | null>(null);

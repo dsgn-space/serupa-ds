@@ -56,8 +56,8 @@ Drawn from the `LongLabel` story.
 
 | State | Look |
 | --- | --- |
-| Off | A `track` track (the light gray Apple uses), the thumb in `field` at the start, with the `elevation-part` shadow and no edge, as Apple's |
-| On | A `primary` track, the thumb in `on-primary` at the end |
+| Off | A `track` track (the light gray Apple uses), a white thumb at the start, with the `elevation-part` shadow and no edge, as Apple's, in every theme |
+| On | A `primary` track, the white thumb at the end |
 | Hover | `border-strong` off, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
@@ -117,8 +117,9 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
-| `--switch-thumb` | `field` | The thumb while off |
-| `--switch-thumb-checked` | `on-primary` | The thumb while on |
+| `--switch-thumb` | `white` | The thumb while off: white in every theme, as Apple's. |
+| `--switch-thumb-checked` | `white` | The thumb while on: white in every theme, as Apple's. |
+| `--switch-thumb-ink-dark` | `on-primary` | In a dark theme, the pending ring and the check on the white thumb (the theme's darkest blue, 3:1 or more on white). |
 | `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |

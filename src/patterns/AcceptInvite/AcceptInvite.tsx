@@ -12,6 +12,8 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { useLocale } from '../../internal/provider';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Accept invite: the page a workspace invite links to. Who invited you, to what, as what, and Join or Decline; or
    why it can't be used any more and what to do. For an app to copy. What it carries (WCAG 2.2):
@@ -98,61 +100,63 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#help">Help</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-lg flex-col px-4 py-12 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">You can read the invitation; joining needs a connection.</OfflineBanner>
-        <Card padding="lg" className="flex flex-col gap-4">
-          {done ? (
-            <section aria-labelledby="invite-answer" className="flex flex-col items-start gap-3">
-              <h1 id="invite-answer" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">
-                {done === 'joined' ? `You’ve joined ${invite.workspace}` : 'Invite declined'}
-              </h1>
-              <p className="m-0">{done === 'joined' ? `Your role is ${invite.role}. ${invite.from} can see you’ve joined.` : `${invite.from} won’t be told. If you change your mind, ask them for a new invite.`}</p>
-              <Link href={done === 'joined' ? '#workspace' : '#home'}>{done === 'joined' ? `Open ${invite.workspace}` : 'Go to your home page'}</Link>
-            </section>
-          ) : state !== 'open' ? (
-            <>
-              <h1 className="m-0 text-2xl font-semibold">{state === 'used' ? 'This invite has been used' : 'This invite has ended'}</h1>
-              <p className="m-0">
-                {state === 'used' ? `Someone has already joined ${invite.workspace} with it. If that was you, sign in to open it.` : <>Invites last 7 days, and this one ended on {ends}.</>}
-                {' '}Ask {invite.from} for a new one if you still need to join.
-              </p>
-              {state === 'used' ? <Link href="#sign-in">Sign in</Link> : null}
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-3">
-                <Avatar name={invite.from} size="lg" />
-                <h1 className="m-0 text-2xl font-semibold">{invite.from} invited you to join {invite.workspace}</h1>
-              </div>
-              <DescriptionList>
-                <DescriptionItem term="Your role">{invite.role}: {invite.roleCan}</DescriptionItem>
-                <DescriptionItem term="Members">
-                  <span className="flex flex-wrap items-center gap-2">
-                    <AvatarGroup size="sm" max={4} total={invite.members.length} aria-label={`Members of ${invite.workspace}`}>
-                      {shown.map((m) => <Avatar key={m} name={m} />)}
-                    </AvatarGroup>
-                    <span>{formatNumber(invite.members.length, locale)} people</span>
-                  </span>
-                </DescriptionItem>
-                <DescriptionItem term="Invite ends">{ends}</DescriptionItem>
-              </DescriptionList>
-              {other ? (
-                <Alert tone="warning" title="You’re signed in with another account">
-                  The invite went to {invite.email}, and you’re signed in as {signedInAs}. Joining adds {signedInAs}.
-                </Alert>
-              ) : null}
-              <p className="m-0 text-sm text-text-muted">
-                Joining as <strong className="wrap-anywhere">{signedInAs}</strong>. <Link href="#switch">Use another account</Link>
-              </p>
-              {failed ? <Alert tone="danger">Couldn’t join {invite.workspace}. Nothing has changed; try again.</Alert> : null}
-              <div className="flex flex-wrap gap-2">
-                <Button loading={busy} onClick={join}>Join {invite.workspace}</Button>
-                <Button variant="secondary" disabled={busy} onClick={decline}>Decline</Button>
-              </div>
-            </>
-          )}
-        </Card>
-      </main>
+      <Container as="main" size="prose" className="py-12 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">You can read the invitation; joining needs a connection.</OfflineBanner>
+          <Card padding="lg" className="flex flex-col gap-4">
+            {done ? (
+              <section aria-labelledby="invite-answer" className="flex flex-col items-start gap-3">
+                <h1 id="invite-answer" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">
+                  {done === 'joined' ? `You’ve joined ${invite.workspace}` : 'Invite declined'}
+                </h1>
+                <p className="m-0">{done === 'joined' ? `Your role is ${invite.role}. ${invite.from} can see you’ve joined.` : `${invite.from} won’t be told. If you change your mind, ask them for a new invite.`}</p>
+                <Link href={done === 'joined' ? '#workspace' : '#home'}>{done === 'joined' ? `Open ${invite.workspace}` : 'Go to your home page'}</Link>
+              </section>
+            ) : state !== 'open' ? (
+              <>
+                <h1 className="m-0 text-2xl font-semibold">{state === 'used' ? 'This invite has been used' : 'This invite has ended'}</h1>
+                <p className="m-0">
+                  {state === 'used' ? `Someone has already joined ${invite.workspace} with it. If that was you, sign in to open it.` : <>Invites last 7 days, and this one ended on {ends}.</>}
+                  {' '}Ask {invite.from} for a new one if you still need to join.
+                </p>
+                {state === 'used' ? <Link href="#sign-in">Sign in</Link> : null}
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-3">
+                  <Avatar name={invite.from} size="lg" />
+                  <h1 className="m-0 text-2xl font-semibold">{invite.from} invited you to join {invite.workspace}</h1>
+                </div>
+                <DescriptionList>
+                  <DescriptionItem term="Your role">{invite.role}: {invite.roleCan}</DescriptionItem>
+                  <DescriptionItem term="Members">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <AvatarGroup size="sm" max={4} total={invite.members.length} aria-label={`Members of ${invite.workspace}`}>
+                        {shown.map((m) => <Avatar key={m} name={m} />)}
+                      </AvatarGroup>
+                      <span>{formatNumber(invite.members.length, locale)} people</span>
+                    </span>
+                  </DescriptionItem>
+                  <DescriptionItem term="Invite ends">{ends}</DescriptionItem>
+                </DescriptionList>
+                {other ? (
+                  <Alert tone="warning" title="You’re signed in with another account">
+                    The invite went to {invite.email}, and you’re signed in as {signedInAs}. Joining adds {signedInAs}.
+                  </Alert>
+                ) : null}
+                <p className="m-0 text-sm text-text-muted">
+                  Joining as <strong className="wrap-anywhere">{signedInAs}</strong>. <Link href="#switch">Use another account</Link>
+                </p>
+                {failed ? <Alert tone="danger">Couldn’t join {invite.workspace}. Nothing has changed; try again.</Alert> : null}
+                <div className="flex flex-wrap gap-2">
+                  <Button loading={busy} onClick={join}>Join {invite.workspace}</Button>
+                  <Button variant="secondary" disabled={busy} onClick={decline}>Decline</Button>
+                </div>
+              </>
+            )}
+          </Card>
+        </Stack>
+      </Container>
     </div>
   );
 }

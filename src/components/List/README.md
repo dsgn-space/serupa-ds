@@ -192,7 +192,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-description-size` | `text-sm` | Descriptions (14px). |
 | `--list-padding-x` | `spacing-3` | An item's side padding (12px; variant="card": padding-x-card). |
 | `--list-padding-x-card` | `spacing-4` | An item's side padding in variant="card" (16px). |
-| `--list-padding-y` | `spacing-3` | An item's top and bottom padding (12px). |
+| `--list-padding-y` | `space-row` | An item's top and bottom padding: 12px, 6px in the compact density. |
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
 | `--list-border-width` | `border-width-1` | Lines and frame (1px). |
 | `--list-indicator-width` | `highlight-indicator-width` | The width of the selected item's bar: none by default, 2px with more contrast. |

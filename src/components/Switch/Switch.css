@@ -39,12 +39,12 @@
 .srp-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
   width: calc(var(--srp-switch-thumb) + var(--srp-switch-stretch, var(--spacing-0))); height: var(--srp-switch-thumb); margin-block: auto;
-  border-radius: var(--rounded-full); background: var(--switch-thumb, var(--field));
+  border-radius: var(--rounded-full); background: var(--switch-thumb, var(--white));
   box-shadow: var(--switch-thumb-shadow, var(--elevation-part));   /* no edge, a small shadow, as Apple's thumb */
   pointer-events: none;
   transition: translate var(--motion-press) var(--ease-move), width var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
-.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--on-primary)); }
+.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--white)); }
 /* On, the thumb moves to the end by translate, which the compositor runs without laying out the row each frame
    (EG1); right to left, the end is on the left. */
 .srp-switch__input:checked + .srp-switch__thumb { translate: calc(var(--srp-switch-w) - var(--srp-switch-thumb) - var(--srp-switch-stretch, var(--spacing-0)) - var(--srp-switch-pad) - var(--srp-switch-pad)) var(--spacing-0); }
@@ -70,15 +70,20 @@
    it stands still and breathes. */
 .srp-switch--pending { cursor: progress; }
 .srp-switch__thumb { display: inline-flex; align-items: center; justify-content: center; }
+/* The thumb is white in every theme, as Apple's, so what sits on it (the pending ring, the check) takes the light
+   theme's primary there: color-scheme light resolves the light-dark() tokens of an auto theme to their light side, and
+   a fixed dark theme's primary is too light on white, so it takes on-primary (its darkest blue), 3:1 or more. */
+.srp-switch__thumb { color-scheme: light; }
+[data-theme$="-dark"] .srp-switch__thumb { --srp-switch-ink: var(--switch-thumb-ink-dark, var(--on-primary)); }
 .srp-switch__spinner {
   --srp-switch-spin: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2);
   box-sizing: border-box; width: var(--srp-switch-spin); height: var(--srp-switch-spin);
-  color: var(--switch-pending, var(--primary));
+  color: var(--switch-pending, var(--srp-switch-ink, var(--primary)));
   border: var(--border-width-2) solid color-mix(in srgb, currentColor var(--opacity-20), transparent); border-block-start-color: currentColor; border-radius: var(--rounded-full);
   animation: spin var(--motion-loop-spinner) var(--ease-linear) infinite;
 }
 /* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
-.srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--primary)); }
+.srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--srp-switch-ink, var(--primary))); }
 .srp-switch__input:checked + .srp-switch__thumb > .srp-switch__check { display: block; }
 @keyframes srp-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */

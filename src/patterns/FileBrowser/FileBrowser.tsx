@@ -6,7 +6,7 @@ import { IconButton } from '../../components/IconButton/IconButton';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
-import { RadioGroup, Radio } from '../../components/Radio/Radio';
+import { TreeView, type TreeViewItem } from '../../components/TreeView/TreeView';
 import { Alert } from '../../components/Alert/Alert';
 import { Menu, MenuItem } from '../../components/Menu/Menu';
 import { Toaster, toast } from '../../components/Toast/Toast';
@@ -14,12 +14,14 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { List, ListItem, ListSelectAll, ListLoadingItems } from '../../components/List/List';
 import { TableActionBar } from '../../components/Table/Table';
-import { formatFileSize } from '../../components/FileUpload/formatFileSize';
+import { formatFileSize } from '../../internal/formatFileSize';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* File browser: one folder's files as a list people pick from, to move or delete several at once, with rename, move
    and delete on each row too. For an app to copy. What it carries (WCAG 2.2):
@@ -57,6 +59,8 @@ export interface BrowserFile {
 export interface BrowserFolder {
   id: string;
   name: string;
+  /** The folders inside it, shown under it in the move dialog's tree. */
+  children?: readonly BrowserFolder[] | undefined;
 }
 
 export interface FileBrowserProps {
@@ -99,7 +103,14 @@ const demoFiles: BrowserFile[] = [
   { id: 'f5', name: 'Press release.docx', kind: 'doc', bytes: 24_000, modified: now - 20 * DAY },
   { id: 'f6', name: 'Budget 2026.xlsx', kind: 'sheet', bytes: 88_000, modified: now - 41 * DAY },
 ];
-const demoFolders: BrowserFolder[] = [{ id: 'd1', name: 'Archive' }, { id: 'd2', name: 'Marketing' }, { id: 'd3', name: 'Shared with clients' }];
+const demoFolders: BrowserFolder[] = [{ id: 'd1', name: 'Archive' },
+  { id: 'd2', name: 'Marketing', children: [{ id: 'd4', name: 'Campaigns' }, { id: 'd5', name: 'Social' }] }, { id: 'd3', name: 'Shared with clients' }];
+/** The folders as the tree's items, and every folder by id at any depth. */
+const toItems = (list: readonly BrowserFolder[]): TreeViewItem[] => list.map((d) => ({ id: d.id, label: d.name, icon: 'folder', ...(d.children?.length ? { children: toItems(d.children) } : null) }));
+const findFolder = (list: readonly BrowserFolder[], id: string): BrowserFolder | undefined => {
+  for (const d of list) { const hit = d.id === id ? d : d.children && findFolder(d.children, id); if (hit) return hit; }
+  return undefined;
+};
 const ICON: Record<FileKind, string> = { folder: 'folder', image: 'image', pdf: 'picture_as_pdf', doc: 'description', sheet: 'table_chart', other: 'draft' };
 
 /** "1 file" or "3 files": English's rule, since the words are English; an app translating them uses its own. */
@@ -149,7 +160,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
     });
   };
 
-  // Moving: a dialog with the folders, one to choose.
+  // Moving: a dialog with the folders as a tree, one to choose.
   const [moving, setMoving] = React.useState<string[] | null>(null);
   const [target, setTarget] = React.useState('');
   const [moveError, setMoveError] = React.useState<string | null>(null);
@@ -160,7 +171,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
     e.preventDefault();
     const ids = moving ?? [];
     if (!target) { setMoveError('Choose a folder.'); return; }
-    const to = folders.find((d) => d.id === target)?.name ?? '';
+    const to = findFolder(folders, target)?.name ?? '';
     const what = said(ids);
     setMoveFailed(false);
     setBusy(true);
@@ -207,72 +218,73 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These are the files loaded before you went offline. Opening, moving or uploading needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[...path, { label: folder }]} title={folder} headingRef={title} primary={upload}
-          description={loading || loadFailed ? undefined : countFiles(files.length, locale)} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These are the files loaded before you went offline. Opening, moving or uploading needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[...path, { label: folder }]} title={folder} headingRef={title} primary={upload}
+            description={loading || loadFailed ? undefined : countFiles(files.length, locale)} />
 
-        <div className="flex flex-col gap-3 pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the files" onRetry={() => onRetry?.()} headingLevel={2} />
-            : !loading && !files.length ? (
-              <EmptyState icon="folder_open" title="This folder is empty" headingLevel={2} description="Upload files to keep them here, or move some in from another folder."
-                actions={<Button startIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
-            ) : <>
-              {loading ? null : (
-                <div className="flex min-h-10 flex-wrap items-center gap-3">
-                  <ListSelectAll values={files.map((f) => f.id)} selected={chosen} onSelectedChange={setPicked} />
-                  <TableActionBar count={chosen.length} onClear={() => setPicked([])} className="flex-1">
-                    <Button size="sm" variant="outline" startIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
-                    <Button size="sm" variant="outline" destructive startIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
-                  </TableActionBar>
-                </div>
-              )}
-              <List id="file-list" aria-label={`Files in ${folder}`} variant="card" loading={loading} selectionMode={loading ? 'none' : 'multiple'}
-                selected={chosen} onSelectedChange={setPicked}>
-                {loading ? <ListLoadingItems rows={5} showDescription leading="icon" label="Loading files" /> : files.map((f) => (
-                  <ListItem key={f.id} value={f.id} href={f.href} leading={ICON[f.kind ?? 'other']} title={f.name}
-                    description={<>{f.kind === 'folder' ? 'Folder' : f.bytes != null ? formatFileSize(f.bytes, locale) : null}{f.kind === 'folder' || f.bytes != null ? ', ' : null}<span className="whitespace-nowrap">changed <RelativeTime date={f.modified} /></span></>}
-                    trailing={(
-                      <Menu placement="bottom-end" trigger={<IconButton id={`more-${f.id}`} icon="more_vert" label={`More for ${f.name}`} size="sm" variant="ghost" hideTitle />}>
-                        <MenuItem icon="edit" onSelect={() => askRename(f)}>Rename</MenuItem>
-                        <MenuItem icon="drive_file_move" onSelect={() => askMove([f.id])}>Move</MenuItem>
-                        <MenuItem icon="delete" destructive onSelect={() => remove([f.id])}>Delete</MenuItem>
-                      </Menu>
-                    )} />
-                ))}
-              </List>
-            </>}
-        </div>
+          <div className="flex flex-col gap-3 pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the files" onRetry={() => onRetry?.()} headingLevel={2} />
+              : !loading && !files.length ? (
+                <EmptyState icon="folder_open" title="This folder is empty" headingLevel={2} description="Upload files to keep them here, or move some in from another folder."
+                  actions={<Button startIcon="upload" onClick={() => onUpload?.()}>Upload files</Button>} />
+              ) : <>
+                {loading ? null : (
+                  <div className="flex min-h-10 flex-wrap items-center gap-3">
+                    <ListSelectAll values={files.map((f) => f.id)} selected={chosen} onSelectedChange={setPicked} />
+                    <TableActionBar count={chosen.length} onClear={() => setPicked([])} className="flex-1">
+                      <Button size="sm" variant="outline" startIcon="drive_file_move" onClick={() => askMove(chosen)}>Move</Button>
+                      <Button size="sm" variant="outline" destructive startIcon="delete" onClick={() => remove(chosen)}>Delete</Button>
+                    </TableActionBar>
+                  </div>
+                )}
+                <List id="file-list" aria-label={`Files in ${folder}`} variant="card" loading={loading} selectionMode={loading ? 'none' : 'multiple'}
+                  selected={chosen} onSelectedChange={setPicked}>
+                  {loading ? <ListLoadingItems rows={5} showDescription leading="icon" label="Loading files" /> : files.map((f) => (
+                    <ListItem key={f.id} value={f.id} href={f.href} leading={ICON[f.kind ?? 'other']} title={f.name}
+                      description={<>{f.kind === 'folder' ? 'Folder' : f.bytes != null ? formatFileSize(f.bytes, locale) : null}{f.kind === 'folder' || f.bytes != null ? ', ' : null}<span className="whitespace-nowrap">changed <RelativeTime date={f.modified} /></span></>}
+                      trailing={(
+                        <Menu placement="bottom-end" trigger={<IconButton id={`more-${f.id}`} icon="more_vert" label={`More for ${f.name}`} size="sm" variant="ghost" hideTitle />}>
+                          <MenuItem icon="edit" onSelect={() => askRename(f)}>Rename</MenuItem>
+                          <MenuItem icon="drive_file_move" onSelect={() => askMove([f.id])}>Move</MenuItem>
+                          <MenuItem icon="delete" destructive onSelect={() => remove([f.id])}>Delete</MenuItem>
+                        </Menu>
+                      )} />
+                  ))}
+                </List>
+              </>}
+          </div>
 
-        <Dialog open={moving != null} onOpenChange={(o) => { if (!o) setMoving(null); }} title={`Move ${moving ? said(moving) : ''}`}
-          description="Choose the folder to move to.">
-          <form onSubmit={move} noValidate className="flex flex-col gap-4">
-            {moveFailed ? <Alert tone="danger">Couldn’t move {moving ? said(moving) : ''}. Try again.</Alert> : null}
-            <Field group label="Folder" error={moveError ?? undefined} required>
-              <RadioGroup name="folder" value={target} onValueChange={(v: string) => { setTarget(v); setMoveError(null); }}>
-                {folders.map((d) => <Radio key={d.id} value={d.id}>{d.name}</Radio>)}
-              </RadioGroup>
-            </Field>
-            <div className="flex flex-wrap gap-2">
-              <Button type="submit" loading={busy}>Move</Button>
-              <Button variant="outline" onClick={() => setMoving(null)}>Cancel</Button>
-            </div>
-          </form>
-        </Dialog>
+          <Dialog open={moving != null} onOpenChange={(o) => { if (!o) setMoving(null); }} title={`Move ${moving ? said(moving) : ''}`}
+            description="Choose the folder to move to.">
+            <form onSubmit={move} noValidate className="flex flex-col gap-4">
+              {moveFailed ? <Alert tone="danger">Couldn’t move {moving ? said(moving) : ''}. Try again.</Alert> : null}
+              <Field group label="Folder" error={moveError ?? undefined} required>
+                <TreeView aria-label="Folders" items={toItems(folders)} selectionMode="single" value={target ? [target] : []}
+                  onValueChange={(v) => { setTarget(v[0] ?? ''); setMoveError(null); }} />
+              </Field>
+              <div className="flex flex-wrap gap-2">
+                <Button type="submit" loading={busy}>Move</Button>
+                <Button variant="outline" onClick={() => setMoving(null)}>Cancel</Button>
+              </div>
+            </form>
+          </Dialog>
 
-        <Dialog open={renaming != null} onOpenChange={(o) => { if (!o) setRenaming(null); }} title="Rename" finalFocus={moreButton}>
-          <form onSubmit={rename} noValidate className="flex flex-col gap-4">
-            {renameFailed ? <Alert tone="danger">Couldn’t rename “{renaming?.name}”. Try again.</Alert> : null}
-            <Field label="Name" id="file-name" error={nameError ?? undefined} required>
-              <Input name="name" value={name} autoComplete="off" onChange={(e) => { setName(e.target.value); if (nameError) setNameError(null); }} />
-            </Field>
-            <div className="flex flex-wrap gap-2">
-              <Button type="submit" loading={busy}>Rename</Button>
-              <Button variant="outline" onClick={() => setRenaming(null)}>Cancel</Button>
-            </div>
-          </form>
-        </Dialog>
-      </main>
+          <Dialog open={renaming != null} onOpenChange={(o) => { if (!o) setRenaming(null); }} title="Rename" finalFocus={moreButton}>
+            <form onSubmit={rename} noValidate className="flex flex-col gap-4">
+              {renameFailed ? <Alert tone="danger">Couldn’t rename “{renaming?.name}”. Try again.</Alert> : null}
+              <Field label="Name" id="file-name" error={nameError ?? undefined} required>
+                <Input name="name" value={name} autoComplete="off" onChange={(e) => { setName(e.target.value); if (nameError) setNameError(null); }} />
+              </Field>
+              <div className="flex flex-wrap gap-2">
+                <Button type="submit" loading={busy}>Rename</Button>
+                <Button variant="outline" onClick={() => setRenaming(null)}>Cancel</Button>
+              </div>
+            </form>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

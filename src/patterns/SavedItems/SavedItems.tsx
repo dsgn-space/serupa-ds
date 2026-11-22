@@ -16,6 +16,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Saved items: things kept for later, with what changed since (a lower price, few left, sold out), and a way to move
    each to the cart or let it go. For an app to copy. What it carries (WCAG 2.2):
@@ -146,56 +148,58 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#cart">Cart</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Moving items to your bag needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Saved items' }]} title="Saved items"
-          description="Kept for later. We’ll show here when a price drops or few are left." />
-        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your saved items" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading saved items" /></Card> : (<>
-        <section aria-labelledby="saved-list" className="flex flex-col gap-4 pt-6">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 id="saved-list" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Your list</h2>
-            {shown.length > 1 ? (
-              <Field label="Sort" id="saved-sort" orientation="horizontal">
-                <Select options={SORTS} value={sort} onChange={(e) => setSort(e.target.value as SavedSort)} />
-              </Field>
-            ) : null}
-          </div>
-          <p id="saved-count" role="status" className="m-0 text-text-muted">
-            {shown.length === 1 ? '1 item' : `${formatNumber(shown.length, locale)} items`}{shown.length > 1 ? `, ${SORTS.find((s) => s.value === sort)!.label.toLowerCase()}` : ''}
-          </p>
-          {shown.length ? (
-            <ul role="list" className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
-              {shown.map((item) => {
-                const change = savedChange(item);
-                const out = item.left === 0;
-                return (
-                  <Card as="li" key={item.id} padding="md" aria-labelledby={`saved-${item.id}`} className="flex min-w-0 flex-col gap-3 wrap-anywhere">
-                    <Image src={item.image} alt="" ratio="square" rounded />
-                    <h3 id={`saved-${item.id}`} className="m-0 text-base font-semibold"><Link href={item.href}>{item.name}</Link></h3>
-                    <p className="m-0 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      <span className="text-lg font-semibold">{money(item.price)}</span>
-                      {item.price < item.savedPrice ? <span className="text-sm text-text-muted">Was <del>{money(item.savedPrice)}</del></span> : null}
-                      {change ? <Badge tone={change.tone}>{change.label}</Badge> : null}
-                    </p>
-                    <div className="mt-auto flex flex-wrap gap-2">
-                      {out ? null : (
-                        <Button variant="secondary" size="sm" loading={busy === item.id} onClick={() => move(item)} aria-label={`Move to cart: ${item.name}`}>Move to cart</Button>
-                      )}
-                      <Button id={`remove-${item.id}`} variant="ghost" size="sm" onClick={() => remove(item)} aria-label={`Remove: ${item.name}`}>Remove</Button>
-                    </div>
-                  </Card>
-                );
-              })}
-            </ul>
-          ) : (
-            <EmptyState icon="favorite" headingLevel={3} title="Nothing saved yet"
-              description="Choose Save on any product to keep it here, with its price as it was."
-              actions={<Link href="#shop">Browse the shop</Link>} />
-          )}
-        </section>
-        </>)}
-      </main>
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">These prices are from when the page loaded. Moving items to your bag needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Saved items' }]} title="Saved items"
+            description="Kept for later. We’ll show here when a price drops or few are left." />
+          {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your saved items" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading saved items" /></Card> : (<>
+          <section aria-labelledby="saved-list" className="flex flex-col gap-4 pt-6">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <h2 id="saved-list" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Your list</h2>
+              {shown.length > 1 ? (
+                <Field label="Sort" id="saved-sort" orientation="horizontal">
+                  <Select options={SORTS} value={sort} onChange={(e) => setSort(e.target.value as SavedSort)} />
+                </Field>
+              ) : null}
+            </div>
+            <p id="saved-count" role="status" className="m-0 text-text-muted">
+              {shown.length === 1 ? '1 item' : `${formatNumber(shown.length, locale)} items`}{shown.length > 1 ? `, ${SORTS.find((s) => s.value === sort)!.label.toLowerCase()}` : ''}
+            </p>
+            {shown.length ? (
+              <ul role="list" className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+                {shown.map((item) => {
+                  const change = savedChange(item);
+                  const out = item.left === 0;
+                  return (
+                    <Card as="li" key={item.id} padding="md" aria-labelledby={`saved-${item.id}`} className="flex min-w-0 flex-col gap-3 wrap-anywhere">
+                      <Image src={item.image} alt="" ratio="square" rounded />
+                      <h3 id={`saved-${item.id}`} className="m-0 text-base font-semibold"><Link href={item.href}>{item.name}</Link></h3>
+                      <p className="m-0 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <span className="text-lg font-semibold">{money(item.price)}</span>
+                        {item.price < item.savedPrice ? <span className="text-sm text-text-muted">Was <del>{money(item.savedPrice)}</del></span> : null}
+                        {change ? <Badge tone={change.tone}>{change.label}</Badge> : null}
+                      </p>
+                      <div className="mt-auto flex flex-wrap gap-2">
+                        {out ? null : (
+                          <Button variant="secondary" size="sm" loading={busy === item.id} onClick={() => move(item)} aria-label={`Move to cart: ${item.name}`}>Move to cart</Button>
+                        )}
+                        <Button id={`remove-${item.id}`} variant="ghost" size="sm" onClick={() => remove(item)} aria-label={`Remove: ${item.name}`}>Remove</Button>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </ul>
+            ) : (
+              <EmptyState icon="favorite" headingLevel={3} title="Nothing saved yet"
+                description="Choose Save on any product to keep it here, with its price as it was."
+                actions={<Link href="#shop">Browse the shop</Link>} />
+            )}
+          </section>
+          </>)}
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

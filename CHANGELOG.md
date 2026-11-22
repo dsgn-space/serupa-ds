@@ -4,6 +4,40 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [17.1.0] - 2026-11-22
+
+### Added
+
+- Compact density reaches rows and padding, not only control heights. Under `data-density="compact"`, table and list rows take 6px of padding instead of 12px, small tables, DataGrid cells and Sidebar items 4px instead of 8px, Card 12px instead of 20px, Accordion and Popover 12px instead of 16px, and Dialog, Drawer and large cards 16px instead of 24px. Nothing changes at the default density.
+  - **New tokens:** `space-card`, `space-row` and `space-item`, spacing roles the components read, like `space-surface`. `space-content` and `space-surface` now have compact values too.
+  - **Changed:** `--table-padding-y`, `--table-padding-y-sm`, `--list-padding-y`, `--data-grid-padding-y`, `--sidebar-item-padding-y`, `--accordion-padding-y` and `--card-padding-md` default to those roles instead of a fixed step. Their default values are the same; a project that sets one of them keeps its own value at every density.
+  - **To keep the old compact look,** put `data-density="comfortable"` on the region, or set the component token.
+- `Form`, a form checked against one schema, with `FormSteps`, `useForm` and `useFormValue`.
+  - **One schema, no wiring:** pass a Zod, Valibot or ArkType schema (any [Standard Schema](https://standardschema.dev); Serupa depends on none of them). Each Field finds its message by its control's `name` (`email`, `address.city`, a FieldList row's `people[1].email`), and `onSubmit` gets the schema's output, typed.
+  - **When it checks:** a field when it's left, again as it changes once it has shown a message, everything on submit. A failed submit shows an ErrorSummary at the top that links to each field and takes focus, and the page's title starts with "Error:".
+  - **The server's answer:** return `{ errors, message }` from `onSubmit`, or pass `errors`, and each message shows on its field and in the summary.
+  - **Patterns:** `FormSteps` (steps with a progress bar; Next checks only the step's fields), `checks` (async checks such as "That username is taken", with "Checking…"), `draft` (answers kept in the browser, never passwords or card numbers), `warnUnsaved` and `onUnsavedChanges` (ask before leaving with changes), `useFormValue` (fields that depend on others), and FieldList rows as arrays.
+  - A submit Button inside a Form shows loading while `onSubmit` runs. New words `formErrorTitle`, `formChecking`, `formNext` and `formBack` in every label pack.
+  - New guide: Guides/Build a form, with sign-up, checkout and settings start to finish.
+- Popover takes the same focus props as Dialog and Drawer. `initialFocus` also takes a ref to an element inside, which gets focus when it opens. The new `finalFocus` is a ref to where focus goes when Escape or `close()` closes it, while that element is still on the page; otherwise focus goes back to the trigger. `'first'` and `'panel'` work as before.
+- DateRangePicker's popup is now a RangeCalendar, and the buttons inside fields are all InputActions.
+  - **One way to pick a range:** the first pick is the start, a day before it moves the start, and the next day on or after it is the end. DateRangePicker already worked this way. RangeCalendar (beta) used to take the two picks in either order and now follows the same rule.
+  - **Fixed:** in DateRangePicker's popup, the ends and the days between are now named in words ("Start date", "in the range", "End date") as well as by color, and with two months only the outer arrows show, as in RangeCalendar.
+  - **One button inside a field:** SearchInput's clear button, PasswordInput's eye, and the buttons of Combobox, DatePicker, DateRangePicker and TimePicker are now `InputAction`s. Each keeps its own tokens (`--search-input-clear`, `--combobox-chevron`, `--date-picker-button`, …) and its class names. An icon `InputAction` is now its icon with 4px round it (22, 24 or 28px by size), the same size those buttons always were, where it used to fill the field's height. Its padding is the new `--input-action-icon-padding` token.
+  - The months in DateRangePicker's popup are inside `.srp-date-range-picker__calendar` (a RangeCalendar); `.srp-date-range-picker__months` and `.srp-date-range-picker__status` are gone. `--date-range-picker-months-gap` and `--date-range-picker-status-color` still set the gap and the status color.
+
+### Changed
+
+- Patterns: six components no screen used are now in one. Sign in and Landing show the product's Logo (Landing's in the header link, its small mark on a phone; `logo={null}` keeps the name as text). The error pages show the Illustration that matches each. Dashboard charts tasks opened and done each week (`data.weekly`; leave it out and there's no chart). Landing has a "What teams say" section of Quotes (`quotes`). Article sets Read next off with a Divider. API keys shows a new key in a curl request to try it with (CodeBlock).
+
+### Fixed
+
+- Alt, Ctrl or Meta with an arrow key is left to the browser in TagGroup, List, StatusTracker, Kanban and SortableList, as Tabs, Menu, Radio and TreeView already did: Alt+Left goes Back instead of moving focus or a picked-up card.
+- Brand text on a tint keeps 4.5:1 in the Red, Fuchsia and Rose light themes. A primary Badge, a selected TagGroup tag, a pressed outline ToggleButton and a link in an Alert measured 4.3:1 to 4.4:1 there. Those three brands' `primary` (and `field-action`) is now their 700 shade, as it already was for Pink, Orange and the other lighter ramps, with hover, pressed and more contrast one step darker too.
+- Serupa-brand: a brand it makes keeps its primary at 4.5:1 on its own tint and on the status tints too, choosing a darker shade where it has to.
+- CropImage sets an empty crossOrigin as "anonymous", which HTML reads it as, so the package type-checks with TypeScript's next DOM types too.
+- Logo: a logo with a dark version no longer moves down by its parent's gap in a dark theme, when it sits in a flex or grid container.
+
 ## [17.0.0] - 2026-11-22
 
 ### Added
@@ -3026,7 +3060,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v17.0.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v17.1.0...HEAD
+[17.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.0.0...v17.1.0
 [17.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v16.1.0...v17.0.0
 [16.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v16.0.0...v16.1.0
 [16.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v15.1.0...v16.0.0

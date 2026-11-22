@@ -64,8 +64,8 @@
       },
       "thumb": {
         "$type": "color",
-        "$value": "{color.field}",
-        "$description": "The thumb while off",
+        "$value": "{color.white}",
+        "$description": "The thumb while off: white in every theme, as Apple's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb"
@@ -74,11 +74,21 @@
       },
       "thumb-checked": {
         "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "The thumb while on",
+        "$value": "{color.white}",
+        "$description": "The thumb while on: white in every theme, as Apple's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-checked"
+          }
+        }
+      },
+      "thumb-ink-dark": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "In a dark theme, the pending ring and the check on the white thumb (the theme's darkest blue, 3:1 or more on white).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-thumb-ink-dark"
           }
         }
       },

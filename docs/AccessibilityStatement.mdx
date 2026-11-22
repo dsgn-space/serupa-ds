@@ -23,11 +23,11 @@ On every pull request that changes a component:
 - component tests in Chromium for the keyboard, focus, names, states and announcements, and the roles, names and structure of each story against a saved snapshot;
 - screenshots of every story in every theme, once more right to left with more contrast and compact density, and in forced colors for the components whose states could disappear there.
 
-Every night the component tests also run in Firefox and WebKit (Safari's engine). No screen reader runs in these checks: the tests check what one is given (names, roles, states, descriptions and live announcements). Automated checks find only part of what people meet, so try a flow with a screen reader too.
+Every night the component tests also run in Firefox and WebKit (Safari's engine). Every night VoiceOver and NVDA also read a set of components; the rest of the tests check what a screen reader is given (names, roles, states, descriptions and live announcements). Automated checks find only part of what people meet, so try a flow with a screen reader too.
 
 ## Cognitive accessibility
 
-Reviewed against the eight objectives of the W3C's [Making Content Usable for People with Cognitive and Learning Disabilities](https://www.w3.org/TR/coga-usable/) (21). What the components do, and what's left to the app:
+Reviewed against the eight objectives of the W3C's [Making Content Usable for People with Cognitive and Learning Disabilities](https://www.w3.org/TR/coga-usable/). What the components do, and what's left to the app:
 
 | Objective | What the components do | What the app does |
 | --- | --- | --- |
@@ -46,6 +46,6 @@ If something in a component keeps you from using a page, or you find a place whe
 
 ## Conformance report
 
-The Accessibility Conformance Report in the shape of VPAT 2.5 (WCAG edition), kept in `docs/acr.json` and reviewed for each major version (18). "Not Applicable" means the criterion is about something the package doesn't make (media, page titles, navigation across pages), so it rests on the app.
+The Accessibility Conformance Report in the shape of VPAT 2.5 (WCAG edition), kept in `docs/acr.json` and reviewed for each major version. "Not Applicable" means the criterion is about something the package doesn't make (media, page titles, navigation across pages), so it rests on the app.
 
 <ConformanceReport />

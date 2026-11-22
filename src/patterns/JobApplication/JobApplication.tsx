@@ -15,6 +15,8 @@ import { FileUpload } from '../../components/FileUpload/FileUpload';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Job application: what the job is, then one short form to apply, and what happens next. For an app to copy. What it
    carries (WCAG 2.2):
@@ -114,72 +116,74 @@ export function JobApplication({ job = demoJob, onApply, online }: JobApplicatio
         <p className="m-0 text-base font-semibold">Acme careers</p>
         <Link underline="hover" href="#jobs">All jobs</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending the application needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Jobs', href: '#jobs' }, { label: job.title }]} title={job.title}
-          description="Applying takes about 5 minutes. All fields are needed unless they say they’re optional." />
-        <div className="flex flex-col gap-8 pt-6">
-          <Card>
-            <section aria-labelledby="about-job" className="flex flex-col gap-4">
-              <h2 id="about-job" className="m-0 text-lg font-semibold">About the job</h2>
-              <DescriptionList>
-                <DescriptionItem term="Team">{job.team}</DescriptionItem>
-                <DescriptionItem term="Where">{job.place}</DescriptionItem>
-                <DescriptionItem term="Hours">{job.hours}</DescriptionItem>
-                <DescriptionItem term="Pay">{job.pay}</DescriptionItem>
-              </DescriptionList>
-            </section>
-          </Card>
-          {sent ? (
-            <section aria-labelledby="applied" className="flex flex-col items-start gap-3">
-              <h2 id="applied" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Application sent</h2>
-              <p className="m-0">Thank you, {a.name.trim()}. We’ve sent a copy to {a.email.trim()}. What happens next:</p>
-              <ol className="m-0 flex flex-col gap-1 ps-6">
-                <li>Someone from the {job.team} team reads it within 10 working days.</li>
-                <li>If it’s a match, we email you to book a 30-minute call.</li>
-                <li>If it isn’t, we email you too, so you’re never left waiting.</li>
-              </ol>
-              <Link href="#jobs">See other jobs</Link>
-            </section>
-          ) : (
-            <form onSubmit={apply} noValidate aria-labelledby="apply" className="flex flex-col gap-4">
-              <h2 id="apply" className="m-0 text-lg font-semibold">Apply</h2>
-              <ErrorSummary key={tries} errors={errors} />
-              <Field label="Full name" id="job-name" error={problems.name} required>
-                <Input autoComplete="name" value={a.name} onChange={(e) => edit({ name: e.target.value })} />
-              </Field>
-              <Field label="Email" id="job-email" error={problems.email} required>
-                <Input type="email" autoComplete="email" spellCheck={false} value={a.email} onChange={(e) => edit({ email: e.target.value })} />
-              </Field>
-              <Field label="Phone" id="job-phone" hint="Only to book a call, if email doesn’t reach you." error={problems.phone} optional>
-                <Input type="tel" autoComplete="tel" value={a.phone} onChange={(e) => edit({ phone: e.target.value })} className="max-w-64" />
-              </Field>
-              <Field label="CV" error={problems.cv} required>
-                <FileUpload id="job-cv" accept=".pdf,.doc,.docx,application/pdf" maxSize={5 * MB} hint="PDF or Word, up to 5 MB"
-                  files={a.cv ? [a.cv] : []} onFilesChange={(f) => edit({ cv: f.at(-1) ?? null })} />
-              </Field>
-              <Field label="Why this job?" id="job-letter" hint={`A few lines are plenty. Up to ${LETTER} characters.`} error={problems.letter} optional>
-                <Textarea rows={5} maxLength={LETTER} showCount value={a.letter} onChange={(e) => edit({ letter: e.target.value })} />
-              </Field>
-              <Field label="Are you allowed to work where the job is?" hint={job.place} error={problems.rightToWork} group required>
-                <RadioGroup id="job-rightToWork" name="job-right-to-work" value={a.rightToWork} onValueChange={(v: string) => edit({ rightToWork: v })}>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no" description="We can sometimes help with a visa: say so in “Why this job?”.">Not yet</Radio>
-                </RadioGroup>
-              </Field>
-              <Field error={problems.consent}>
-                <Checkbox id="job-consent" checked={a.consent} onCheckedChange={(on) => edit({ consent: on })} invalid={!!problems.consent}>
-                  Keep my application for 6 months, as the <Link href="#privacy">privacy notice</Link> says
-                </Checkbox>
-              </Field>
-              <div className="flex flex-col items-start gap-3">
-                {failed ? <Alert tone="danger">Couldn’t send your application. Try again; everything, your CV too, is still here.</Alert> : null}
-                <Button type="submit" loading={busy}>Send application</Button>
-              </div>
-            </form>
-          )}
-        </div>
-      </main>
+      <Container as="main" size="prose" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">Your answers stay here. Sending the application needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Jobs', href: '#jobs' }, { label: job.title }]} title={job.title}
+            description="Applying takes about 5 minutes. All fields are needed unless they say they’re optional." />
+          <div className="flex flex-col gap-8 pt-6">
+            <Card>
+              <section aria-labelledby="about-job" className="flex flex-col gap-4">
+                <h2 id="about-job" className="m-0 text-lg font-semibold">About the job</h2>
+                <DescriptionList>
+                  <DescriptionItem term="Team">{job.team}</DescriptionItem>
+                  <DescriptionItem term="Where">{job.place}</DescriptionItem>
+                  <DescriptionItem term="Hours">{job.hours}</DescriptionItem>
+                  <DescriptionItem term="Pay">{job.pay}</DescriptionItem>
+                </DescriptionList>
+              </section>
+            </Card>
+            {sent ? (
+              <section aria-labelledby="applied" className="flex flex-col items-start gap-3">
+                <h2 id="applied" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Application sent</h2>
+                <p className="m-0">Thank you, {a.name.trim()}. We’ve sent a copy to {a.email.trim()}. What happens next:</p>
+                <ol className="m-0 flex flex-col gap-1 ps-6">
+                  <li>Someone from the {job.team} team reads it within 10 working days.</li>
+                  <li>If it’s a match, we email you to book a 30-minute call.</li>
+                  <li>If it isn’t, we email you too, so you’re never left waiting.</li>
+                </ol>
+                <Link href="#jobs">See other jobs</Link>
+              </section>
+            ) : (
+              <form onSubmit={apply} noValidate aria-labelledby="apply" className="flex flex-col gap-4">
+                <h2 id="apply" className="m-0 text-lg font-semibold">Apply</h2>
+                <ErrorSummary key={tries} errors={errors} />
+                <Field label="Full name" id="job-name" error={problems.name} required>
+                  <Input autoComplete="name" value={a.name} onChange={(e) => edit({ name: e.target.value })} />
+                </Field>
+                <Field label="Email" id="job-email" error={problems.email} required>
+                  <Input type="email" autoComplete="email" spellCheck={false} value={a.email} onChange={(e) => edit({ email: e.target.value })} />
+                </Field>
+                <Field label="Phone" id="job-phone" hint="Only to book a call, if email doesn’t reach you." error={problems.phone} optional>
+                  <Input type="tel" autoComplete="tel" value={a.phone} onChange={(e) => edit({ phone: e.target.value })} className="max-w-64" />
+                </Field>
+                <Field label="CV" error={problems.cv} required>
+                  <FileUpload id="job-cv" accept=".pdf,.doc,.docx,application/pdf" maxSize={5 * MB} hint="PDF or Word, up to 5 MB"
+                    files={a.cv ? [a.cv] : []} onFilesChange={(f) => edit({ cv: f.at(-1) ?? null })} />
+                </Field>
+                <Field label="Why this job?" id="job-letter" hint={`A few lines are plenty. Up to ${LETTER} characters.`} error={problems.letter} optional>
+                  <Textarea rows={5} maxLength={LETTER} showCount value={a.letter} onChange={(e) => edit({ letter: e.target.value })} />
+                </Field>
+                <Field label="Are you allowed to work where the job is?" hint={job.place} error={problems.rightToWork} group required>
+                  <RadioGroup id="job-rightToWork" name="job-right-to-work" value={a.rightToWork} onValueChange={(v: string) => edit({ rightToWork: v })}>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no" description="We can sometimes help with a visa: say so in “Why this job?”.">Not yet</Radio>
+                  </RadioGroup>
+                </Field>
+                <Field error={problems.consent}>
+                  <Checkbox id="job-consent" checked={a.consent} onCheckedChange={(on) => edit({ consent: on })} invalid={!!problems.consent}>
+                    Keep my application for 6 months, as the <Link href="#privacy">privacy notice</Link> says
+                  </Checkbox>
+                </Field>
+                <div className="flex flex-col items-start gap-3">
+                  {failed ? <Alert tone="danger">Couldn’t send your application. Try again; everything, your CV too, is still here.</Alert> : null}
+                  <Button type="submit" loading={busy}>Send application</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Stack>
+      </Container>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-// In its own module, without "use client", so a Server Component can call it. Attachment.tsx re-exports it.
+// In its own module, without "use client", so a Server Component can call it. Attachment re-exports it.
 
 /** The kinds of file Attachment draws its own icon and word for. */
 export type AttachmentKind = 'pdf' | 'image' | 'sheet' | 'doc' | 'slides' | 'archive' | 'code' | 'audio' | 'video' | 'other';

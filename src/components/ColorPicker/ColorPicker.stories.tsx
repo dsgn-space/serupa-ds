@@ -18,6 +18,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm in a toolbar, md by default, lg as a form's main choice. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <ColorPicker key={s} {...args} aria-label={'Label color, ' + s} size={s} />)}
+  </div>,
+};
 export const ContrastCheck: Story = {
   name: 'Contrast check',
   render: function Render() {

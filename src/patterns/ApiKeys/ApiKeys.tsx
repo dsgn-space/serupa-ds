@@ -11,6 +11,7 @@ import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { CopyButton } from '../../components/CopyButton/CopyButton';
+import { CodeBlock } from '../../components/CodeBlock/CodeBlock';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
@@ -21,6 +22,10 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
+import { MaskedValue } from '../../components/MaskedValue/MaskedValue';
+import { ContextualHelp } from '../../components/ContextualHelp/ContextualHelp';
 
 /* API keys: the keys a workspace's scripts and tools use, making one, and revoking one. For an app to copy. What it
    carries (WCAG 2.2):
@@ -91,6 +96,8 @@ const ACCESS: { value: ApiKeyAccess; label: string; hint: string }[] = [
   { value: 'read', label: 'Read only', hint: 'Can look at projects and data, not change them.' },
   { value: 'write', label: 'Read and write', hint: 'Can also change and delete projects and data.' },
 ];
+/** Stands in for the part of a key that is never shown again, so only its last four characters are. */
+const HIDDEN = 'x'.repeat(8);
 const EXPIRY = [{ value: '30', label: 'In 30 days' }, { value: '90', label: 'In 90 days' }, { value: '365', label: 'In a year' }, { value: 'never', label: 'Never' }];
 
 /** What's wrong with a new key's name, in words, or null when it's good. Names are compared without case. */
@@ -162,7 +169,11 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
   const accessLabel = (a: ApiKeyAccess) => ACCESS.find((x) => x.value === a)!.label;
   const head = (
     <TableHead><TableRow>
-      <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Key</TableHeaderCell><TableHeaderCell>Access</TableHeaderCell>
+      <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Key</TableHeaderCell><TableHeaderCell>
+        <span className="inline-flex items-center gap-1">Access
+          <ContextualHelp label="About access" title="Access">{ACCESS.map((a) => <p key={a.value} className="m-0"><strong>{a.label}:</strong> {a.hint}</p>)}</ContextualHelp>
+        </span>
+      </TableHeaderCell>
       <TableHeaderCell>Created</TableHeaderCell><TableHeaderCell>Last used</TableHeaderCell><TableHeaderCell>Expires</TableHeaderCell>
       <TableHeaderCell><span className="sr-only">Actions</span></TableHeaderCell>
     </TableRow></TableHead>
@@ -174,86 +185,90 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline">These are the keys loaded before you went offline. Creating or revoking one needs a connection.</OfflineBanner>
-        <PageHeader title="API keys" description="Keys let your scripts and tools use this workspace. Keep each one secret, like a password."
-          primary={loadFailed ? undefined : { label: 'Create key', onSelect: () => openCreate(true) }} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={6}>
+          <OfflineBanner online={online} placement="inline">These are the keys loaded before you went offline. Creating or revoking one needs a connection.</OfflineBanner>
+          <PageHeader title="API keys" description="Keys let your scripts and tools use this workspace. Keep each one secret, like a password."
+            primary={loadFailed ? undefined : { label: 'Create key', onSelect: () => openCreate(true) }} />
 
-        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your API keys" onRetry={() => onRetry?.()} headingLevel={2} /> : (
-          <Card className="flex flex-col gap-4">
-            <Heading level={2} size="lg" ref={listHeading} tabIndex={-1} className="outline-none">
-              {loading ? 'Keys' : `Keys (${formatNumber(shown.length, locale)})`}
-            </Heading>
-            {loading ? (
-              <Table caption="API keys" hideCaption loading>{head}<TableLoadingRows columns={7} rows={3} label="Loading API keys" /></Table>
-            ) : !shown.length ? (
-              <EmptyState icon="key" size="sm" title="No API keys yet" headingLevel={3}
-                description="Create a key when a script or tool needs to use this workspace." />
+          {loadFailed ? <EmptyLoadFailed title="Couldn’t load your API keys" onRetry={() => onRetry?.()} headingLevel={2} /> : (
+            <Card className="flex flex-col gap-4">
+              <Heading level={2} size="lg" ref={listHeading} tabIndex={-1} className="outline-none">
+                {loading ? 'Keys' : `Keys (${formatNumber(shown.length, locale)})`}
+              </Heading>
+              {loading ? (
+                <Table caption="API keys" hideCaption loading>{head}<TableLoadingRows columns={7} rows={3} label="Loading API keys" /></Table>
+              ) : !shown.length ? (
+                <EmptyState icon="key" size="sm" title="No API keys yet" headingLevel={3}
+                  description="Create a key when a script or tool needs to use this workspace." />
+              ) : (
+                <Table caption="API keys" hideCaption pinEnd>
+                  {head}
+                  <TableBody>{shown.map((k) => (
+                    <TableRow key={k.id}>
+                      <TableCell className="font-medium">{k.name}</TableCell>
+                      <TableCell className="whitespace-nowrap font-mono"><MaskedValue value={HIDDEN + k.ends} label={`${k.name} key`} /></TableCell>
+                      <TableCell><Badge>{accessLabel(k.access)}</Badge></TableCell>
+                      <TableCell className="whitespace-nowrap">{date(k.created)}</TableCell>
+                      <TableCell className="whitespace-nowrap">{k.lastUsed == null ? 'Never' : date(k.lastUsed)}</TableCell>
+                      <TableCell className="whitespace-nowrap">{k.expires == null ? 'Never' : date(k.expires)}</TableCell>
+                      <TableCell>
+                        <Button id={`revoke-${k.id}`} size="sm" variant="ghost" destructive aria-label={`Revoke ${k.name}`} onClick={() => askRevoke(k)}>Revoke</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}</TableBody>
+                </Table>
+              )}
+            </Card>
+          )}
+
+          <Dialog open={creating} onOpenChange={openCreate}
+            title={secret ? 'Copy your new key' : 'Create an API key'}
+            description={secret
+              ? 'This is the only time it’s shown. Store it where your script reads its secrets, or in a password manager.'
+              : 'Give it only the access it needs. You can revoke it at any time.'}>
+            {secret ? (
+              <div className="flex flex-col gap-4">
+                <code id="key-secret" className="rounded-md border border-border bg-surface-muted p-3 font-mono text-sm break-all">{secret}</code>
+                <div className="flex flex-wrap gap-2">
+                  <CopyButton id="key-copy" value={secret} copiedLabel="Copied" aria-describedby="key-secret" size="md">Copy the key</CopyButton>
+                  <Button variant="outline" onClick={() => openCreate(false)}>Done</Button>
+                </div>
+                <CodeBlock title="Try it" language="bash" wrap
+                  code={`curl https://api.example.com/v1/projects \\\n  -H "Authorization: Bearer ${secret}"`} />
+              </div>
             ) : (
-              <Table caption="API keys" hideCaption pinEnd>
-                {head}
-                <TableBody>{shown.map((k) => (
-                  <TableRow key={k.id}>
-                    <TableCell className="font-medium">{k.name}</TableCell>
-                    <TableCell className="whitespace-nowrap font-mono">…{k.ends}</TableCell>
-                    <TableCell><Badge>{accessLabel(k.access)}</Badge></TableCell>
-                    <TableCell className="whitespace-nowrap">{date(k.created)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{k.lastUsed == null ? 'Never' : date(k.lastUsed)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{k.expires == null ? 'Never' : date(k.expires)}</TableCell>
-                    <TableCell>
-                      <Button id={`revoke-${k.id}`} size="sm" variant="ghost" destructive aria-label={`Revoke ${k.name}`} onClick={() => askRevoke(k)}>Revoke</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}</TableBody>
-              </Table>
+              <form onSubmit={create} noValidate className="flex flex-col gap-4">
+                {createFailed ? <Alert tone="danger">Couldn’t create the key. Try again.</Alert> : null}
+                <Field label="Name" id="key-name" hint="What uses it, like “Deploy bot”." error={nameProblem ?? undefined} required>
+                  <Input value={draft.name} autoComplete="off" onChange={(e) => { setDraft({ ...draft, name: e.target.value }); if (nameProblem) setNameProblem(null); }} />
+                </Field>
+                <Field label="Access" group>
+                  <RadioGroup name="key-access" value={draft.access} onValueChange={(v) => setDraft({ ...draft, access: v })}>
+                    {ACCESS.map((a) => <Radio key={a.value} value={a.value} description={a.hint}>{a.label}</Radio>)}
+                  </RadioGroup>
+                </Field>
+                <Field label="Stops working" id="key-expiry" hint="A key that ends limits the harm if it leaks.">
+                  <Select value={draft.expiry} options={EXPIRY} onChange={(e) => setDraft({ ...draft, expiry: e.target.value })} />
+                </Field>
+                <Button type="submit" className="self-start" loading={busy}>Create key</Button>
+              </form>
             )}
-          </Card>
-        )}
+          </Dialog>
 
-        <Dialog open={creating} onOpenChange={openCreate}
-          title={secret ? 'Copy your new key' : 'Create an API key'}
-          description={secret
-            ? 'This is the only time it’s shown. Store it where your script reads its secrets, or in a password manager.'
-            : 'Give it only the access it needs. You can revoke it at any time.'}>
-          {secret ? (
+          <Dialog alert open={!!revoking} onOpenChange={(o) => { if (!o) askRevoke(null); }} finalFocus={afterRevoke}
+            title={revoking ? `Revoke ${revoking.name}?` : 'Revoke this key?'}
+            description="Anything using this key stops working at once. You can’t undo this, but you can create a new key.">
             <div className="flex flex-col gap-4">
-              <code id="key-secret" className="rounded-md border border-border bg-surface-muted p-3 font-mono text-sm break-all">{secret}</code>
+              {revokeFailed ? <Alert tone="danger">Couldn’t revoke the key. It still works. Try again.</Alert> : null}
               <div className="flex flex-wrap gap-2">
-                <CopyButton id="key-copy" value={secret} copiedLabel="Copied" aria-describedby="key-secret" size="md">Copy the key</CopyButton>
-                <Button variant="outline" onClick={() => openCreate(false)}>Done</Button>
+                <Button variant="outline" onClick={() => askRevoke(null)}>Keep it</Button>
+                <Button variant="outline" destructive loading={revokeBusy} onClick={revoke}>Revoke key</Button>
               </div>
             </div>
-          ) : (
-            <form onSubmit={create} noValidate className="flex flex-col gap-4">
-              {createFailed ? <Alert tone="danger">Couldn’t create the key. Try again.</Alert> : null}
-              <Field label="Name" id="key-name" hint="What uses it, like “Deploy bot”." error={nameProblem ?? undefined} required>
-                <Input value={draft.name} autoComplete="off" onChange={(e) => { setDraft({ ...draft, name: e.target.value }); if (nameProblem) setNameProblem(null); }} />
-              </Field>
-              <Field label="Access" group>
-                <RadioGroup name="key-access" value={draft.access} onValueChange={(v) => setDraft({ ...draft, access: v })}>
-                  {ACCESS.map((a) => <Radio key={a.value} value={a.value} description={a.hint}>{a.label}</Radio>)}
-                </RadioGroup>
-              </Field>
-              <Field label="Stops working" id="key-expiry" hint="A key that ends limits the harm if it leaks.">
-                <Select value={draft.expiry} options={EXPIRY} onChange={(e) => setDraft({ ...draft, expiry: e.target.value })} />
-              </Field>
-              <Button type="submit" className="self-start" loading={busy}>Create key</Button>
-            </form>
-          )}
-        </Dialog>
-
-        <Dialog alert open={!!revoking} onOpenChange={(o) => { if (!o) askRevoke(null); }} finalFocus={afterRevoke}
-          title={revoking ? `Revoke ${revoking.name}?` : 'Revoke this key?'}
-          description="Anything using this key stops working at once. You can’t undo this, but you can create a new key.">
-          <div className="flex flex-col gap-4">
-            {revokeFailed ? <Alert tone="danger">Couldn’t revoke the key. It still works. Try again.</Alert> : null}
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => askRevoke(null)}>Keep it</Button>
-              <Button variant="outline" destructive loading={revokeBusy} onClick={revoke}>Revoke key</Button>
-            </div>
-          </div>
-        </Dialog>
-      </main>
+          </Dialog>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

@@ -17,6 +17,8 @@ import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Invoice: one bill, as the person paying it reads it: whether it's due, paid or overdue in words, who it's from and
    to, its lines as a table, the totals, and a way to pay or keep a copy. For an app to copy. What it carries (WCAG 2.2):
@@ -148,78 +150,80 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
-        <OfflineBanner online={online} placement="inline" className="mb-6">This is the invoice as it was when the page loaded. Paying needs a connection.</OfflineBanner>
-        <PageHeader breadcrumb={[{ label: 'Invoices', href: '#invoices' }, { label: inv.number }]} title={name} headingRef={heading} />
+      <Container as="main" size="lg" className="py-8 outline-none" id="main">
+        <Stack gap={0}>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is the invoice as it was when the page loaded. Paying needs a connection.</OfflineBanner>
+          <PageHeader breadcrumb={[{ label: 'Invoices', href: '#invoices' }, { label: inv.number }]} title={name} headingRef={heading} />
 
-        <div className="flex flex-col gap-8 pt-6">
-          {loadFailed ? <EmptyLoadFailed title="Couldn’t load the invoice" onRetry={() => onRetry?.()} headingLevel={2} />
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading invoice" /></Card> : <>
-              <section aria-labelledby="standing" className="flex flex-col items-start gap-3">
-                <h2 id="standing" className="m-0 flex flex-wrap items-center gap-3 text-2xl font-semibold">
-                  {money(sums.total)} {inv.paid ? 'paid' : 'to pay'}
-                  <Badge tone={BADGE[where.state].tone}>{BADGE[where.state].label}</Badge>
-                </h2>
-                <p className="m-0 text-text-muted">{sentence}</p>
-                <div data-print="hide" className="flex flex-wrap items-center gap-3">
-                  {onPay && !inv.paid ? <Button loading={busy} onClick={pay}>Pay {money(sums.total)}</Button> : null}
-                  <Link href={inv.pdf} download>Download PDF<VisuallyHidden> of invoice {inv.number}</VisuallyHidden></Link>
+          <div className="flex flex-col gap-8 pt-6">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load the invoice" onRetry={() => onRetry?.()} headingLevel={2} />
+              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading invoice" /></Card> : <>
+                <section aria-labelledby="standing" className="flex flex-col items-start gap-3">
+                  <h2 id="standing" className="m-0 flex flex-wrap items-center gap-3 text-2xl font-semibold">
+                    {money(sums.total)} {inv.paid ? 'paid' : 'to pay'}
+                    <Badge tone={BADGE[where.state].tone}>{BADGE[where.state].label}</Badge>
+                  </h2>
+                  <p className="m-0 text-text-muted">{sentence}</p>
+                  <div data-print="hide" className="flex flex-wrap items-center gap-3">
+                    {onPay && !inv.paid ? <Button loading={busy} onClick={pay}>Pay {money(sums.total)}</Button> : null}
+                    <Link href={inv.pdf} download>Download PDF<VisuallyHidden> of invoice {inv.number}</VisuallyHidden></Link>
+                  </div>
+                  {failed ? <Alert tone="danger">The payment didn’t go through. Nothing was taken; try again, or use another card.</Alert> : null}
+                </section>
+
+                <div className="grid gap-6 md:grid-cols-3">
+                  <section aria-labelledby="from">
+                    <h2 id="from" className="m-0 text-sm font-semibold text-text-muted">From</h2>
+                    <address className="not-italic">{inv.from.map((l) => <div key={l}>{l}</div>)}</address>
+                  </section>
+                  <section aria-labelledby="to">
+                    <h2 id="to" className="m-0 text-sm font-semibold text-text-muted">To</h2>
+                    <address className="not-italic">{inv.to.map((l) => <div key={l}>{l}</div>)}</address>
+                  </section>
+                  <section aria-labelledby="dates">
+                    <h2 id="dates" className="m-0 text-sm font-semibold text-text-muted">Dates</h2>
+                    <DescriptionList>
+                      <DescriptionItem term="Issued"><time dateTime={inv.issued}>{date(inv.issued)}</time></DescriptionItem>
+                      <DescriptionItem term="Due"><time dateTime={inv.due}>{date(inv.due)}</time></DescriptionItem>
+                    </DescriptionList>
+                  </section>
                 </div>
-                {failed ? <Alert tone="danger">The payment didn’t go through. Nothing was taken; try again, or use another card.</Alert> : null}
-              </section>
 
-              <div className="grid gap-6 md:grid-cols-3">
-                <section aria-labelledby="from">
-                  <h2 id="from" className="m-0 text-sm font-semibold text-text-muted">From</h2>
-                  <address className="not-italic">{inv.from.map((l) => <div key={l}>{l}</div>)}</address>
+                <section aria-labelledby="lines" className="flex flex-col gap-4">
+                  <h2 id="lines" className={h2}>What it’s for</h2>
+                  <Table caption={`Lines of invoice ${inv.number}`} hideCaption>
+                    <TableHead><TableRow>
+                      <TableHeaderCell>Description</TableHeaderCell>
+                      <TableHeaderCell align="end">Quantity</TableHeaderCell>
+                      <TableHeaderCell align="end">Price</TableHeaderCell>
+                      <TableHeaderCell align="end">Amount</TableHeaderCell>
+                    </TableRow></TableHead>
+                    <TableBody>{inv.lines.map((l) => (
+                      <TableRow key={l.id}>
+                        <TableCell>{l.description}</TableCell>
+                        <TableCell align="end">{formatNumber(l.quantity, locale)}</TableCell>
+                        <TableCell align="end">{money(l.price)}</TableCell>
+                        <TableCell align="end">{money(l.price * l.quantity)}</TableCell>
+                      </TableRow>
+                    ))}</TableBody>
+                  </Table>
+                  {/* The totals are in the table's text size, and their figures end where the Amount column's do: in by
+                      the table's cell padding (pe-3) and its 1px frame (me-px). Classes, not a style attribute, so a
+                      strict CSP lays it out the same. */}
+                  <div className="flex justify-end pe-3">
+                    <DescriptionList layout="split" className="w-full max-w-sm me-px text-sm">
+                      <DescriptionItem term="Subtotal">{money(sums.subtotal)}</DescriptionItem>
+                      <DescriptionItem term={`Tax (${formatNumber(inv.taxRate, locale, { style: 'percent', maximumFractionDigits: 2 })})`}>{money(sums.tax)}</DescriptionItem>
+                      <DescriptionItem term="Total">{money(sums.total)}</DescriptionItem>
+                      <DescriptionItem term="Paid">{money(inv.paid ? sums.total : 0)}</DescriptionItem>
+                      <DescriptionItem term="Amount due" emphasis>{money(inv.paid ? 0 : sums.total)}</DescriptionItem>
+                    </DescriptionList>
+                  </div>
                 </section>
-                <section aria-labelledby="to">
-                  <h2 id="to" className="m-0 text-sm font-semibold text-text-muted">To</h2>
-                  <address className="not-italic">{inv.to.map((l) => <div key={l}>{l}</div>)}</address>
-                </section>
-                <section aria-labelledby="dates">
-                  <h2 id="dates" className="m-0 text-sm font-semibold text-text-muted">Dates</h2>
-                  <DescriptionList>
-                    <DescriptionItem term="Issued"><time dateTime={inv.issued}>{date(inv.issued)}</time></DescriptionItem>
-                    <DescriptionItem term="Due"><time dateTime={inv.due}>{date(inv.due)}</time></DescriptionItem>
-                  </DescriptionList>
-                </section>
-              </div>
-
-              <section aria-labelledby="lines" className="flex flex-col gap-4">
-                <h2 id="lines" className={h2}>What it’s for</h2>
-                <Table caption={`Lines of invoice ${inv.number}`} hideCaption>
-                  <TableHead><TableRow>
-                    <TableHeaderCell>Description</TableHeaderCell>
-                    <TableHeaderCell align="end">Quantity</TableHeaderCell>
-                    <TableHeaderCell align="end">Price</TableHeaderCell>
-                    <TableHeaderCell align="end">Amount</TableHeaderCell>
-                  </TableRow></TableHead>
-                  <TableBody>{inv.lines.map((l) => (
-                    <TableRow key={l.id}>
-                      <TableCell>{l.description}</TableCell>
-                      <TableCell align="end">{formatNumber(l.quantity, locale)}</TableCell>
-                      <TableCell align="end">{money(l.price)}</TableCell>
-                      <TableCell align="end">{money(l.price * l.quantity)}</TableCell>
-                    </TableRow>
-                  ))}</TableBody>
-                </Table>
-                {/* The totals are in the table's text size, and their figures end where the Amount column's do: in by
-                    the table's cell padding (pe-3) and its 1px frame (me-px). Classes, not a style attribute, so a
-                    strict CSP lays it out the same. */}
-                <div className="flex justify-end pe-3">
-                  <DescriptionList layout="split" className="w-full max-w-sm me-px text-sm">
-                    <DescriptionItem term="Subtotal">{money(sums.subtotal)}</DescriptionItem>
-                    <DescriptionItem term={`Tax (${formatNumber(inv.taxRate, locale, { style: 'percent', maximumFractionDigits: 2 })})`}>{money(sums.tax)}</DescriptionItem>
-                    <DescriptionItem term="Total">{money(sums.total)}</DescriptionItem>
-                    <DescriptionItem term="Paid">{money(inv.paid ? sums.total : 0)}</DescriptionItem>
-                    <DescriptionItem term="Amount due" emphasis>{money(inv.paid ? 0 : sums.total)}</DescriptionItem>
-                  </DescriptionList>
-                </div>
-              </section>
-            </>}
-        </div>
-      </main>
+              </>}
+          </div>
+        </Stack>
+      </Container>
       <Toaster />
     </div>
   );

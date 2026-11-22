@@ -12,6 +12,8 @@ const empty: DashboardData = { stats: [], storage: { used: 0, limit: 10 }, goal:
 
 // Dashboard: each part a named region, numbers and levels said in words, one skeleton name per part while loading,
 // a first run that offers the first step, and activity that loads more without losing focus.
+const latin = (s: string) => s.replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+
 describe('Patterns/Dashboard', () => {
   test('one main and one h1, the skip link first, and each part a region named by its h2', async () => {
     await render(<Dashboard />);
@@ -19,7 +21,7 @@ describe('Patterns/Dashboard', () => {
     // The page's title is set off from what's under it by the page header's line, as on the other app pages.
     const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
     expect(ruled(document.querySelector('h1'))).toBe(true);
-    expect(regions()).toEqual(['This month', 'Recent projects', 'Usage', 'Activity']);
+    expect(regions()).toEqual(['This month', 'Tasks each week', 'Recent projects', 'Usage', 'Activity']);
     const levels = [...document.querySelectorAll('main h1, main h2, main h3')].map((h) => Number(h.tagName[1]));
     levels.forEach((l, i) => { if (i > 0) expect(l - (levels[i - 1] ?? 1)).toBeLessThanOrEqual(1); });
     await userEvent.tab();
@@ -81,7 +83,24 @@ describe('Patterns/Dashboard', () => {
     const names = () => [...document.querySelectorAll('main [aria-label^="Loading"]')].map((e) => e.getAttribute('aria-label'));
     await expect.poll(names).toEqual(['Loading: This month', 'Loading: Recent projects', 'Loading: Usage', 'Loading: Activity']);
     expect(screen.getByRole('table').elements()).toHaveLength(0);
-    expect(regions()).toEqual(['This month', 'Recent projects', 'Usage', 'Activity']);
+    expect(regions()).toEqual(['This month', 'Tasks each week', 'Recent projects', 'Usage', 'Activity']);
+  });
+
+  test('the week chart: bars of tasks opened and done, named, with the numbers as a table one press away', async () => {
+    const screen = await render(<Dashboard />);
+    const chart = screen.getByRole('figure', { name: 'Tasks each week' });
+    await expect.element(chart).toBeVisible();
+    await chart.getByRole('button', { name: /table/i }).click();
+    const rows = [...chart.element().querySelectorAll('tbody tr')].map((r) => [...r.children].map((c) => latin(c.textContent ?? '')));
+    // The counts follow the locale's digits; read them back as Latin to compare.
+    expect([rows.length, rows[5]]).toEqual([6, ['Nov 9', '38', '40']]);
+  });
+
+  test('no weekly numbers: no chart, and the other parts as they were', async () => {
+    const data: DashboardData = { ...empty, projects: [{ name: 'Website redesign', href: '#w', status: 'Active', updated: '2026-11-06' }] };
+    const screen = await render(<Dashboard data={data} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Recent projects' })).toBeVisible();
+    expect([screen.getByRole('figure').elements().length, regions()]).toEqual([0, ['This month', 'Recent projects', 'Usage', 'Activity']]);
   });
 
   test('first run: says what a project is and offers the one button that starts one', async () => {

@@ -8,7 +8,7 @@ import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } f
 import { Icon } from '../Icon/Icon';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { asIcon } from '../Icon/asIcon';
-import type { InputProps } from '../Input/Input';
+import { InputAction, type InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { pressFocuses } from '../../internal/affix';
@@ -130,10 +130,10 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
           <Icon icon={icons.KeyboardCapslock} /><VisuallyHidden>{sds.labels.capsLockOn}</VisuallyHidden>
         </span>
       ) : null}
-      <button type="button" className="srp-password-input__toggle" aria-label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
-        aria-controls={rest.id} disabled={rest.disabled} onClick={toggle} onMouseDown={(e) => { e.preventDefault(); capture(); pressed.current = performance.now(); }}>
-        <Icon icon={shown ? icons.VisibilityOff : icons.Visibility} />
-      </button>
+      <span className="srp-input__actions">
+        <InputAction className="srp-password-input__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
+          aria-controls={rest.id} disabled={!!rest.disabled} onClick={toggle} onMouseDown={(e) => { e.preventDefault(); capture(); pressed.current = performance.now(); }} />
+      </span>
     </span>
   );
 }

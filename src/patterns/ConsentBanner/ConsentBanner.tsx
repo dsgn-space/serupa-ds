@@ -8,6 +8,8 @@ import { Card } from '../../components/Card/Card';
 import { Field } from '../../components/Field/Field';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { announce } from '../../internal/announce';
+import { Container } from '../../components/Container/Container';
+import { Stack } from '../../components/Stack/Stack';
 
 /* Consent banner: asks once whether optional cookies may be set, and lets the answer be changed at any time.
    For an app to copy. What it carries (WCAG 2.2):
@@ -99,25 +101,27 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" tabIndex={-1} className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
-        <div className="flex flex-col gap-2">
-          <Heading level={1}>Garden tools that last</Heading>
-          <p className="m-0 text-text-muted">Spades, forks and shears made to be mended, not thrown away. <Link href="#shop">Shop the range</Link> or <Link href="#repairs">book a repair</Link>.</p>
-        </div>
-        <Card as="section" aria-labelledby={`${SETTINGS}-title`} id={SETTINGS} className="flex flex-col gap-4">
-          <Heading level={2} size="lg" id={`${SETTINGS}-title`}>Cookie settings</Heading>
-          <p className="m-0 text-sm">Essential cookies keep you signed in and remember what’s in your basket. They’re always on, because the site doesn’t work without them.</p>
-          <form onSubmit={saveSettings} className="flex flex-col gap-4">
-            <Field label="Use analytics cookies?" hint="They tell us which pages are visited and for how long. Nothing that names you." group>
-              <RadioGroup name="analytics" value={draft} onValueChange={(v) => setDraft(v)}>
-                <Radio value="accepted">Yes, use analytics cookies</Radio>
-                <Radio value="rejected">No, don’t use analytics cookies</Radio>
-              </RadioGroup>
-            </Field>
-            <div><Button type="submit">Save cookie settings</Button></div>
-          </form>
-        </Card>
-      </main>
+      <Container as="main" size="md" className="py-8 outline-none" id="main" tabIndex={-1}>
+        <Stack gap={6}>
+          <div className="flex flex-col gap-2">
+            <Heading level={1}>Garden tools that last</Heading>
+            <p className="m-0 text-text-muted">Spades, forks and shears made to be mended, not thrown away. <Link href="#shop">Shop the range</Link> or <Link href="#repairs">book a repair</Link>.</p>
+          </div>
+          <Card as="section" aria-labelledby={`${SETTINGS}-title`} id={SETTINGS} className="flex flex-col gap-4">
+            <Heading level={2} size="lg" id={`${SETTINGS}-title`}>Cookie settings</Heading>
+            <p className="m-0 text-sm">Essential cookies keep you signed in and remember what’s in your basket. They’re always on, because the site doesn’t work without them.</p>
+            <form onSubmit={saveSettings} className="flex flex-col gap-4">
+              <Field label="Use analytics cookies?" hint="They tell us which pages are visited and for how long. Nothing that names you." group>
+                <RadioGroup name="analytics" value={draft} onValueChange={(v) => setDraft(v)}>
+                  <Radio value="accepted">Yes, use analytics cookies</Radio>
+                  <Radio value="rejected">No, don’t use analytics cookies</Radio>
+                </RadioGroup>
+              </Field>
+              <div><Button type="submit">Save cookie settings</Button></div>
+            </form>
+          </Card>
+        </Stack>
+      </Container>
       <footer className="border-t border-border bg-surface px-4 py-4 text-sm">
         <div className="mx-auto flex max-w-3xl flex-wrap gap-x-6 gap-y-2">
           <span>© 2026 Acme</span>

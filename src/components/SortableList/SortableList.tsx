@@ -10,6 +10,8 @@ import { useSettings } from '../../internal/provider';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { isRtl } from '../../internal/position';
+import { modified } from '../../internal/roving';
 
 export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children' | 'onChange'> {
   /** The items, in order. Controlled: pass the new order back from onReorder. */
@@ -51,7 +53,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const row = props.orientation === 'horizontal';
   // Where a box starts and how long it is along the axis.
   const lead = (b: DOMRect) => row ? b.left : b.top, span = (b: DOMRect) => row ? b.width : b.height;
-  const rtl = () => row && !!list.current && getComputedStyle(list.current).direction === 'rtl';
+  const rtl = () => row && !!list.current && isRtl(list.current);
   useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>('.srp-sortable-list__handle'));
   const total = items.length;
   const from = drag ? items.findIndex((it) => getKey(it) === drag.key) : -1;
@@ -84,7 +86,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
     else { setDrag({ key, from: index, to: index, pointer: false }); announce(sds.labels.reorderGrabbed(label(items[index]), index + 1, total)); }
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!drag || drag.pointer || isComposing(e)) return;
+    if (!drag || drag.pointer || isComposing(e) || modified(e)) return;
     const k = e.key;
     let to = drag.to;
     const back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';
