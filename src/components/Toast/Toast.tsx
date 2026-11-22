@@ -218,7 +218,7 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom-center', 'top-start', 'top-center' or 'top-end'. Start and end follow the text direction. */
   placement?: ToasterPosition | undefined;
   /** The region's name for screen readers. Default: 'Notifications'. */
-  label?: string | undefined;
+  'aria-label'?: string | undefined;
   /** The close button's name. Default: 'Dismiss'. */
   dismissLabel?: string | undefined;
   /** The most toasts shown at once; the newest show, and older ones wait under a "+2 more" line until there's room. Default: 3. */
@@ -238,7 +238,7 @@ const typing = (e: Element | null) => e instanceof HTMLElement && (e.isContentEd
 
 function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTMLElement>): React.ReactElement {
   const sds = useSettings(ownWords);
-  const { placement, label, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
+  const { placement, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
   // Empty at first, as on a server, where a toast() from another request could be in the queue; the effect reads it.
   const [list, setList] = React.useState<Item[]>([]);
   const self = React.useRef<HTMLElement | null>(null);
@@ -456,7 +456,7 @@ function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTM
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
   const region = (
-    <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('srp-toaster', 'srp-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
+    <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={rest['aria-label'] || sds.labels.notifications} className={cn('srp-toaster', 'srp-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="srp-toaster__list" role="list">
         {pos.startsWith('top') ? null : more}
         {rows.map((r) => <ToastView key={r.item.id} item={r.item} leaving={r.leaving} clocks={clocks} instant={early.has(r.item.id)} onGone={done} dismissLabel={dismissLabel || sds.labels.dismiss} time={(r.item.autoDismiss ?? autoDismiss ?? true) ? Math.max(0, r.item.duration ?? duration ?? 5000) : 0} />)}

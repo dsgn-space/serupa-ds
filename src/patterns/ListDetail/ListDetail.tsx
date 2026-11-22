@@ -136,7 +136,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
   const detail = open ? (
     <section aria-labelledby="message-title" className="flex min-w-0 flex-col gap-3 p-4">
       {/* Pulled back by a ghost button's padding, so its arrow lines up with the heading under it. */}
-      {wide ? null : <div className="-ms-3"><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
+      {wide ? null : <div className="-ms-3"><Button variant="ghost" startIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
       <Heading level={2} size="lg" id="message-title" ref={heading} tabIndex={-1} className="outline-none">{subject(open.id, open.subject)}</Heading>
       <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{day(open.date, locale, 'long')}</time></p>
       <p className="m-0 max-w-prose">{open.body}</p>

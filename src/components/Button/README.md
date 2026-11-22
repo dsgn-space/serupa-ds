@@ -11,12 +11,12 @@ import { Button, IconButton, buttonClass } from '@diki-stwn/serupa-ds';
 <Button variant="outline">Cancel</Button>
 <Button destructive>Delete project</Button>
 <Button variant="outline" destructive>Delete</Button>
-<Button leftIcon="add">New project</Button>
-<Button variant="outline" rightIcon="arrow_forward">Continue</Button>
+<Button startIcon="add">New project</Button>
+<Button variant="outline" endIcon="arrow_forward">Continue</Button>
 <IconButton icon="settings" label="Settings" />
-<Button loading={saving} leftIcon="save">Save changes</Button>
+<Button loading={saving} startIcon="save">Save changes</Button>
 <IconButton size="sm" destructive icon="delete" label="Remove" />
-<Button href="/signup" rightIcon="arrow_forward">Get started</Button>
+<Button href="/signup" endIcon="arrow_forward">Get started</Button>
 <Button href="https://example.com" target="_blank" variant="link">Help</Button>
 <label className={buttonClass({ variant: 'outline' })}>Upload <input type="file" hidden /></label>
 ```
@@ -39,7 +39,7 @@ import { Button, IconButton, buttonClass } from '@diki-stwn/serupa-ds';
 
 Drawn from the `States` story.
 
-1. **Icon** (`.srp-btn__icon`): an optional picture before the label (`leftIcon`) or after it (`rightIcon`), or the whole of an icon-only button.
+1. **Icon** (`.srp-btn__icon`): an optional picture before the label (`startIcon`) or after it (`endIcon`), or the whole of an icon-only button.
 2. **Label** (`.srp-btn__label`): what the button does, in words.
 3. **Loader** (`.srp-btn__loader`): the spinner while `loading`, over the label, which keeps the button's width.
 
@@ -107,8 +107,8 @@ A button holds a label, an icon beside a label, or an icon alone:
 | Content | Props | Looks |
 | --- | --- | --- |
 | Label only | `children` | Text |
-| Left icon | `leftIcon` + `children` | Icon, then text |
-| Right icon | `rightIcon` + `children` | Text, then icon |
+| Left icon | `startIcon` + `children` | Icon, then text |
+| Right icon | `endIcon` + `children` | Text, then icon |
 | Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button has no `icon` of its own since 15.0.0 |
 
 **Optical balance.** An icon reads lighter than text, so a button with one icon adds 4px of padding on the text side:
@@ -119,9 +119,9 @@ A button holds a label, an icon beside a label, or an icon alone:
 | `md` | 12 / 12px | 12 / 16px | 16 / 12px |
 | `lg` | 20 / 20px | 20 / 24px | 24 / 20px |
 
-Button applies this automatically. With `buttonClass`, pass `iconPosition: 'left'` or `'right'`.
+Button applies this automatically. With `buttonClass`, pass `iconPosition: 'start'` or `'end'`.
 
-Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `@diki-stwn/serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. For an icon on its own, use IconButton: its `label` is required by the types.
+Pass any Material Symbols name (see the Icon guidelines) as a string (`startIcon="add"`), or an icon imported from `@diki-stwn/serupa-ds/icons` (`startIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. For an icon on its own, use IconButton: its `label` is required by the types.
 
 ### Links
 
@@ -170,7 +170,7 @@ function SaveForm() {
   return (
     <form onSubmit={onSubmit}>
       <input name="title" />
-      <Button type="submit" loading={saving} leftIcon="save">Save changes</Button>
+      <Button type="submit" loading={saving} startIcon="save">Save changes</Button>
     </form>
   );
 }
@@ -241,7 +241,7 @@ Button's behavior follows web standards; its look comes only from this design sy
 
 ## Props
 
-Button's own props are `variant` (`primary`), `destructive`, `onMedia` (`dark` or `light`: white or black over a photo, in every theme), `size` (`md`), `leftIcon`, `rightIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
+Button's own props are `variant` (`primary`), `destructive`, `onMedia` (`dark` or `light`: white or black over a photo, in every theme), `size` (`md`), `startIcon`, `endIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
 
 `buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 

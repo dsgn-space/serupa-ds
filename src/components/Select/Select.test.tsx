@@ -127,7 +127,7 @@ describe('Select', () => {
   });
 
   test('groups, plain options and <option> children together; the left icon and chevron are decorative and don\'t take clicks; the text starts after the icon', async () => {
-    await render(<Grid><Select id="grp" leftIcon="schedule" aria-label="Groups" options={[{ label: 'Europe', options: ['London', 'Paris'] }, 'Tokyo']}><option value="kid">Child</option></Select></Grid>);
+    await render(<Grid><Select id="grp" startIcon="schedule" aria-label="Groups" options={[{ label: 'Europe', options: ['London', 'Paris'] }, 'Tokyo']}><option value="kid">Child</option></Select></Grid>);
     const i = field('grp');
     expect([...i.querySelectorAll('optgroup')].map((g) => g.label + '=' + [...g.children].map((o) => (o as HTMLOptionElement).value).join('/')).join()).toBe('Europe=London/Paris');
     expect([...i.options].map((o) => o.value).join()).toBe('London,Paris,Tokyo,kid');

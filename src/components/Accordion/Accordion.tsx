@@ -16,20 +16,20 @@ import { en as words } from './labels';
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
   /** 'multiple' (default): any number can be open, so people can compare them. 'single': opening one closes the others. */
-  type?: 'single' | 'multiple' | undefined;
+  selectionMode?: 'single' | 'multiple' | undefined;
   /** The open items' values (controlled). Use with onValueChange. */
   value?: string[] | undefined;
   /** The items open at first (uncontrolled). Default: none. */
   defaultValue?: string[] | undefined;
   /** Called with the open items' values when one opens or closes. */
   onValueChange?: ((value: string[]) => void) | undefined;
-  /** With type="single": lets the open item close again, leaving none open. Default: true. */
+  /** With selectionMode="single": lets the open item close again, leaving none open. Default: true. */
   collapsible?: boolean | undefined;
   /** 'plain' (default): lines between items. 'card': a bordered, rounded frame. */
   variant?: 'plain' | 'card' | undefined;
   /** The heading level of the titles, to fit the page's outline. Default: 3. */
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
-  /** With type="multiple": an "Expand all" button above the items, which becomes "Collapse all" once every item
+  /** With selectionMode="multiple": an "Expand all" button above the items, which becomes "Collapse all" once every item
       is open. Disabled items stay as they are. Default: false. */
   showExpandAll?: boolean | undefined;
 }
@@ -51,7 +51,7 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
-// The time a closing panel's height takes when another opens as it closes (type="single"): the opening one's, so both
+// The time a closing panel's height takes when another opens as it closes (selectionMode="single"): the opening one's, so both
 // move together. 0 when it closes on its own.
 const swapTime = (panel: HTMLElement, swapping: boolean) => {
   if (!swapping) return 0;
@@ -60,11 +60,11 @@ const swapTime = (panel: HTMLElement, swapping: boolean) => {
 };
 
 function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes<HTMLDivElement>) {
-  const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
+  const rest = omit(props, { selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
   const labels = useSettings(words).labels;
-  const single = props.type === 'single';
+  const single = props.selectionMode === 'single';
   const [open, setInner, controlled] = useControllable<string[]>(props.value, (props.defaultValue || []).slice(0, single ? 1 : undefined), 'Accordion', 'value');
-  if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
+  if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with selectionMode="single", so ${open.length} items show open; pass one value, or selectionMode="multiple".`);
   const collapsible = props.collapsible !== false;
   const onChange = useLatest(props.onValueChange);
   const change = React.useCallback((next: string[]) => {
@@ -144,7 +144,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
   const keep = props.keepMounted !== false;
   const [mounted, setMounted] = React.useState(open || keep);
   if ((open || keep) && !mounted) setMounted(true);
-  // One item closing as another opens (type="single"): both heights move over the opening one's time and curve, so
+  // One item closing as another opens (selectionMode="single"): both heights move over the opening one's time and curve, so
   // their sum goes straight from the old height to the new. On their own curves (the closing one slow to start, the
   // opening one fast) the two were briefly taller together than either, and what's below dipped and came back.
   const swapping = useLatest(!!ctx && ctx.single && !open && ctx.open.length > 0);

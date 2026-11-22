@@ -3,7 +3,7 @@ interface DrawerLabels {
     drawerExpand: string;
     drawerCollapse: string;
 }
-type DrawerPlacement = "bottom" | "end" | "left" | "right" | "start" | "top";
+type DrawerPlacement = "bottom" | "end" | "start" | "top";
 interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
     open?: boolean | undefined;
     defaultOpen?: boolean | undefined;

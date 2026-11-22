@@ -112,7 +112,7 @@ Focus stays in the field the whole time.
 
 ## Props
 
-Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`, `readOnly`…), except `type`, `value`, `defaultValue`, `rightIcon` and `onChange`.
+Every Input prop works (`size`, `invalid`, `startIcon`, `placeholder`, `disabled`, `readOnly`…), except `type`, `value`, `defaultValue`, `endIcon` and `onChange`.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |

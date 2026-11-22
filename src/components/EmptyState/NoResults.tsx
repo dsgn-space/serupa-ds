@@ -23,7 +23,7 @@ export function Suggestions(props: { items: string[]; pick?: (suggestion: string
 export function ClearFilters(props: { action: () => void; small: boolean }) {
   const labels = useSettings(words).labels;
   return (
-    <button type="button" className={buttonClass({ variant: 'outline', size: props.small ? 'sm' : 'md', iconPosition: 'left' })} onClick={props.action}>
+    <button type="button" className={buttonClass({ variant: 'outline', size: props.small ? 'sm' : 'md', iconPosition: 'start' })} onClick={props.action}>
       {asIcon('filter_alt_off')}{labels.clearFilters}
     </button>
   );

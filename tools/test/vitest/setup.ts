@@ -1,5 +1,7 @@
 // Loaded before every component test: the tokens, page defaults and component styles, as a project loads them.
 import '../../../tokens.css';
+// Every brand: the tests draw the components in brands other than the default (an app loads only its own).
+import '../../../brands/all.css';
 import '../../../src/styles/base.css';
 import '../../../src/styles/index.css';
 import { afterEach, beforeEach, vi } from 'vitest';

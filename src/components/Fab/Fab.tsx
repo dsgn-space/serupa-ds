@@ -8,7 +8,7 @@ import { named } from '../../internal/component';
 
 export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
 
-export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
+export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'startIcon' | 'endIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
   /** The icon: a custom or Material Symbols name ("add") or any element. */
   icon: IconSource;
   /** What the button does. Shown next to the icon when extended; otherwise its aria-label, and a Tooltip on hover and keyboard focus. */
@@ -57,7 +57,7 @@ function FabRender({ ref, ...props }: FabProps & React.RefAttributes<HTMLButtonE
   const look = { variant: 'primary', size: sm ? 'sm' : 'md', 'data-position': pos,
     className: cn('srp-fab', sm && 'srp-fab--sm', extended && 'srp-fab--extended', auto && 'srp-fab--auto', shrunk && 'srp-fab--shrunk', pos !== 'static' && 'srp-fab--' + pos, className) } as const;
   const button = extended
-    ? <ButtonBase {...(auto ? { 'aria-label': label } : null)} {...rest} {...look} ref={ref} leftIcon={icon}>{auto ? <span className="srp-fab__label">{label}</span> : label}</ButtonBase>
+    ? <ButtonBase {...(auto ? { 'aria-label': label } : null)} {...rest} {...look} ref={ref} startIcon={icon}>{auto ? <span className="srp-fab__label">{label}</span> : label}</ButtonBase>
     : <ButtonBase {...rest} {...look} ref={ref} icon={icon} aria-label={label} />;
   // Its icon alone (or shrunk to it, with extended="auto"): the label shows in a Tooltip on hover and on keyboard focus,
   // as IconButton's does, which a native title never does. None while the label shows, or when a Tooltip or a title of

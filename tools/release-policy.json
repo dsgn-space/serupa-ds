@@ -1,3 +1,4 @@
 {
-  "deprecationWindow": false
+  "deprecationWindow": true,
+  "suspendedThrough": "17.0.0"
 }

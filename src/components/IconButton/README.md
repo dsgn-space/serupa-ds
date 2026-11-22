@@ -21,7 +21,7 @@ import { IconButton } from '@diki-stwn/serupa-ds';
 
 ## When not to use
 
-- An action whose icon isn't widely understood: use a [Button](../Button/README.md) with a label and a `leftIcon`.
+- An action whose icon isn't widely understood: use a [Button](../Button/README.md) with a label and a `startIcon`.
 - A setting that stays on or off, such as bold or mute: use [ToggleButton](../ToggleButton/README.md) with `icon` and `aria-label`.
 - The one main action of a screen that must stay in reach while people scroll: use [Fab](../Fab/README.md).
 
@@ -36,7 +36,7 @@ import { IconButton } from '@diki-stwn/serupa-ds';
 ### Do and don't
 
 - **Do:** Use icons people know at a glance, such as search, settings and close. (`DoKnownIcons`)
-- **Don't:** Leave people to guess a newer action from its icon: give it words, as a [Button](../Button/README.md) with a `leftIcon`. (`DontGuessIcon`)
+- **Don't:** Leave people to guess a newer action from its icon: give it words, as a [Button](../Button/README.md) with a `startIcon`. (`DontGuessIcon`)
 
 ## Accessibility
 

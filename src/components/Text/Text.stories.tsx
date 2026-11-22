@@ -10,7 +10,7 @@ const meta = {
   argTypes: {
     as: { control: 'select', options: ['p', 'span', 'div', 'label', 'strong', 'em', 'small', 'li', 'figcaption'] },
     size: { control: 'select', options: [undefined, 'xs', 'sm', 'base', 'lg', 'xl'] },
-    tone: { control: 'select', options: [undefined, 'default', 'muted', 'primary', 'danger'] },
+    tone: { control: 'select', options: [undefined, 'neutral', 'muted', 'primary', 'danger'] },
     weight: { control: 'select', options: [undefined, 'normal', 'medium', 'semibold', 'bold'] },
   },
 } satisfies Meta<typeof Text>;
@@ -24,7 +24,7 @@ export const Sizes: Story = {
 };
 
 export const Tones: Story = {
-  render: () => <div className="flex flex-col gap-2">{(['default', 'muted', 'primary', 'danger'] as const).map((t) => <Text key={t} tone={t}>{t}: The quick brown fox</Text>)}</div>,
+  render: () => <div className="flex flex-col gap-2">{(['neutral', 'muted', 'primary', 'danger'] as const).map((t) => <Text key={t} tone={t}>{t}: The quick brown fox</Text>)}</div>,
 };
 
 export const Weights: Story = {

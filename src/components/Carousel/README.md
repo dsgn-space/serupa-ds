@@ -7,11 +7,11 @@ One slide at a time, with previous and next buttons, a dot per slide and swipe. 
 ```tsx
 import { Carousel, Image } from "@diki-stwn/serupa-ds";
 
-<Carousel label="Product photos">
+<Carousel aria-label="Product photos">
   {photos.map((p) => <Image key={p.id} src={p.url} alt={p.alt} ratio="4:3" rounded={false} />)}
 </Carousel>
 
-<Carousel label="Featured" index={i} onIndexChange={setI} loop dots={false}>
+<Carousel aria-label="Featured" index={i} onIndexChange={setI} loop dots={false}>
   <Card>…</Card>
   <Card>…</Card>
 </Carousel>
@@ -87,7 +87,7 @@ Drawn from the `Controlled` story.
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<section>`. |
 | `children` | `ReactNode` | | One slide per child. |
-| `label` | `string` | | What the carousel shows; it names the region. Required unless you give `aria-label`, or `aria-labelledby` pointing at a visible heading. |
+| `aria-label` | `string` | | What the carousel shows; it names the region. Required unless you give `aria-labelledby` pointing at a visible heading. |
 | `index` | `number` | | The slide shown (from 0), when you control it. |
 | `defaultIndex` | `number` | `0` | The first slide shown when you don't. |
 | `onIndexChange` | `(index) => void` | | Called with the new slide's index. |

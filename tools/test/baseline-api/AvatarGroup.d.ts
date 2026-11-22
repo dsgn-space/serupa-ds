@@ -8,7 +8,6 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     total?: number | undefined;
     size?: AvatarSize | undefined;
     moreLabel?: ((count: number, formatted: string) => string) | undefined;
-    label?: string | undefined;
     showMore?: boolean | undefined;
     onMore?: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
 }

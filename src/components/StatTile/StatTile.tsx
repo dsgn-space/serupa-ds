@@ -60,7 +60,7 @@ function StatTileRender({ ref, ...props }: StatTileProps & React.RefAttributes<H
         <p className="srp-stat-tile__value">{props.value}</p>
         {c ? (
           <p className="srp-stat-tile__change">
-            <Badge tone={tone} leftIcon={ARROW[direction]}>{direction === 'up' ? sds.labels.statTileUp(c.amount) : direction === 'down' ? sds.labels.statTileDown(c.amount) : sds.labels.statTileFlat}</Badge>
+            <Badge tone={tone} startIcon={ARROW[direction]}>{direction === 'up' ? sds.labels.statTileUp(c.amount) : direction === 'down' ? sds.labels.statTileDown(c.amount) : sds.labels.statTileFlat}</Badge>
             {props.period ? <span>{props.period}</span> : null}
           </p>
         ) : null}

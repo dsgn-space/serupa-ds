@@ -104,7 +104,7 @@ Drawn from the `Disabled` story.
 | `id` | string | none | Goes to the root `<div role="radiogroup">`. A `<label htmlFor>` can't name it; inside a Field, the Field's label names it through this id. |
 | `value` | string \| number \| null | | The picked radio's value (controlled). `null` picks none |
 | `defaultValue` | string \| number | | The value picked at first (uncontrolled) |
-| `onValueChange` | `(value, event) => void` | | Called with the picked radio's value and the change event, like SegmentedControl's and Tabs' |
+| `onValueChange` | `(value, details: { event }) => void` | | Called with the picked radio's value and details (`event`: the change event), like SegmentedControl's and Tabs' |
 | `name` | string | generated | The radios' name, for forms |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | A stack 8px apart, or a wrapping row 16px apart |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Every radio's size, unless one sets its own |

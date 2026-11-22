@@ -79,7 +79,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Members didn't load.</Alert>
   : state === 'loaded' && !members.length ? <EmptyState size="sm" title="No members yet" />
   : <List aria-label="Members" loading={state === 'loading'}>
-      {state === 'loading' ? <ListLoadingItems rows={4} description leading="sm" label="Loading members" />
+      {state === 'loading' ? <ListLoadingItems rows={4} showDescription leading="sm" label="Loading members" />
         : members.map((m) => <ListItem key={m.id} title={m.name} description={m.email} leading={<Avatar name={m.name} size="sm" />} />)}
     </List>}
 ```
@@ -166,7 +166,7 @@ Placeholder rows, inside a List, while its rows load.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `rows` | number | `3` | How many placeholder rows (1 to 50) |
-| `description` | boolean | `false` | Each row gets a second, shorter line, for rows with a description |
+| `showDescription` | boolean | `false` | Each row gets a second, shorter line, for rows with a description |
 | `leading` | `'icon'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | none | A circle before the text: a 20px icon's, or an Avatar's of that size |
 | `label` | string | `"Loading"` | Said once as the rows appear, after the loader's delay |
 

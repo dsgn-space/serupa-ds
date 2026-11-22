@@ -217,7 +217,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
             onClick={readOnly ? (e) => e.preventDefault() : undefined} onKeyDown={readOnly ? (e) => { if (e.key === 'Enter' || e.key === ' ') e.preventDefault(); } : undefined}
             onChange={(e) => choose(e.target.value, false, false)} />
           <Input size={size === 'lg' ? 'lg' : 'sm'} className="srp-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
-            leftIcon={<span className="srp-color-picker__hash">#</span>} aria-invalid={bad || undefined}
+            startIcon={<span className="srp-color-picker__hash">#</span>} aria-invalid={bad || undefined}
             onFocus={() => { typing.current = true; }}
             onChange={(e) => { const t = e.target.value.replace(/^#/, ''); setText(t); setTried(false); const v = normalizeHex(t); if (v && t.length === 6) choose(v, false, false); }}
             // A copied code often comes with a space or a newline, which maxLength would cut before it's trimmed.

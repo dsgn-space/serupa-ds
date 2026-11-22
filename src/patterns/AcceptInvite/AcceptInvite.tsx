@@ -123,7 +123,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
                 <DescriptionItem term="Your role">{invite.role}: {invite.roleCan}</DescriptionItem>
                 <DescriptionItem term="Members">
                   <span className="flex flex-wrap items-center gap-2">
-                    <AvatarGroup size="sm" max={4} total={invite.members.length} label={`Members of ${invite.workspace}`}>
+                    <AvatarGroup size="sm" max={4} total={invite.members.length} aria-label={`Members of ${invite.workspace}`}>
                       {shown.map((m) => <Avatar key={m} name={m} />)}
                     </AvatarGroup>
                     <span>{formatNumber(invite.members.length, locale)} people</span>

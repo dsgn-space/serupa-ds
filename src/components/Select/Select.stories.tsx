@@ -9,7 +9,7 @@ const meta = {
   title: 'Components/Forms/Select',
   component: Select,
   args: { 'aria-label': 'Country', placeholder: 'Choose a country', options: ['Indonesia', 'Malaysia', 'Singapore', 'Thailand'], size: 'md' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: iconArg },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, startIcon: iconArg },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 } satisfies Meta<typeof Select>;
 export default meta;
@@ -25,7 +25,7 @@ export const Groups: Story = {
   },
 };
 
-export const WithIcon: Story = { name: 'With an icon', args: { leftIcon: 'public' } };
+export const WithIcon: Story = { name: 'With an icon', args: { startIcon: 'public' } };
 export const ReadOnly: Story = { args: { readOnly: true, defaultValue: 'Indonesia' } };
 
 export const States: Story = {

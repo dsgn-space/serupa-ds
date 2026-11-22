@@ -49,7 +49,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 ```tsx
 <Field group label="Publish at" hint="Your time zone, Asia/Jakarta" error={error}>
   <div className="flex flex-wrap gap-3">
-    <Field label="Date"><DatePicker value={day} onValueChange={(_, iso) => setDay(iso)} min={today} invalid={!!error && !day} /></Field>
+    <Field label="Date"><DatePicker value={day} onValueChange={(_, { iso }) => setDay(iso)} min={today} invalid={!!error && !day} /></Field>
     <Field label="Time"><TimePicker value={time} onValueChange={setTime} step={900} invalid={!!error && !time} /></Field>
   </div>
 </Field>
@@ -110,7 +110,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The chosen day, controlled or not: a Date, or a plain `"yyyy-mm-dd"` string. |
-| `onValueChange` | `(date: Date \| null, iso: string \| null) => void` | | Called with the new day (local midnight) and the same day as `"yyyy-mm-dd"`, or `null` twice when the field is cleared. |
+| `onValueChange` | `(date: Date \| null, details: { iso: string \| null }) => void` | | Called with the new day (local midnight) and details: `iso` is the same day as `"yyyy-mm-dd"`. Both are `null` when the field is cleared. |
 | `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.srp-input-rejected`, read with it) until the text changes. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. `min` and `max` take a Date or `"yyyy-mm-dd"`. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |

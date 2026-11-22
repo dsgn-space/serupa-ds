@@ -23,7 +23,7 @@ import { reflow } from '../../internal/reflow';
 import { en as words } from './labels';
 
 /** Where a Drawer sits: a physical edge, or the edge the reading starts or ends at. */
-export type DrawerPlacement = 'right' | 'left' | 'top' | 'bottom' | 'start' | 'end';
+export type DrawerPlacement = 'start' | 'end' | 'top' | 'bottom';
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -32,8 +32,8 @@ export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
   defaultOpen?: boolean | undefined;
   /** Called with false when people ask to close it, and why: { reason: 'escape' | 'close' (the ×) | 'outside' (the backdrop) | 'swipe' | 'api' (the browser closed it) }. */
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
-  /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom', or 'start' and 'end', the edges
-      the reading starts and ends at ('start' is the left in a left-to-right page and the right in a right-to-left one). */
+  /** The edge it slides in from: 'end' (default), 'start', 'top' or 'bottom'. Start and end are the edges the reading
+      starts and ends at: 'end' is the right in a left-to-right page and the left in a right-to-left one. */
   placement?: DrawerPlacement | undefined;
   /** The width of a left or right drawer: 'sm' 320px, 'md' 384px (default) or 'lg' 512px, at most the screen. Top and bottom drawers fit their content. */
   size?: 'sm' | 'md' | 'lg' | undefined;
@@ -85,7 +85,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const base = domId('srp-drw', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
-  const side = oneOf(['right', 'left', 'top', 'bottom', 'start', 'end'] as const, props.placement, 'right');
+  const side = oneOf(['end', 'start', 'top', 'bottom'] as const, props.placement, 'end');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const showClose = props.closeButton !== false;
   // snapPoints: the heights a bottom sheet stops at, shares of the screen from the shortest; none for other sides.
@@ -223,7 +223,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
     // swipeToClose={false} turns off closing by a drag, not a sheet's drag between its stops.
     if ((!swipe && !snaps.length) || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
     if (!horiz && t.closest('.srp-drawer__body')) return;
-    const away = side === 'start' || side === 'end' ? ((side === 'end') !== isRtl(e.currentTarget) ? 1 : -1) : side === 'right' || side === 'bottom' ? 1 : -1;
+    const away = side === 'start' || side === 'end' ? ((side === 'end') !== isRtl(e.currentTarget) ? 1 : -1) : side === 'bottom' ? 1 : -1;
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }], away };
   };
   // A sheet (snapPoints) follows the finger by its height between its shortest and tallest stops, past the tallest

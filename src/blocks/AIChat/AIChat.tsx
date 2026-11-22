@@ -122,7 +122,7 @@ export function AIChat({ messages, suggestions = [], onSend, onStop, onRegenerat
                     <span className="flex flex-wrap gap-1">
                       <CopyButton size="sm" variant="ghost" value={m.text} disabled={!whole || !m.text}>{l.copy}</CopyButton>
                       {newest && onRegenerate ? (
-                        <Button size="sm" variant="ghost" leftIcon="refresh" disabled={!whole} onClick={again}>{l.regenerate}</Button>
+                        <Button size="sm" variant="ghost" startIcon="refresh" disabled={!whole} onClick={again}>{l.regenerate}</Button>
                       ) : null}
                     </span>
                   </span>

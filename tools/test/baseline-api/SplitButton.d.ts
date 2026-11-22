@@ -7,7 +7,7 @@ interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     variant?: "outline" | "primary" | "secondary" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     destructive?: boolean | undefined;
-    leftIcon?: IconSource | undefined;
+    startIcon?: IconSource | undefined;
     disabled?: boolean | undefined;
     loading?: boolean | undefined;
     placement?: Placement | undefined;

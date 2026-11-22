@@ -178,7 +178,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
                     <p className="m-0 text-sm text-text-muted">Choose the day you arrive, then the day you leave. Stays are {formatNumber(place.minNights, locale)} nights at least.</p>
                     <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'stay-problem' : undefined} months={2}
                       defaultMonth={day(today)} min={today} isDateDisabled={closed} value={stay}
-                      onValueChange={(_, iso) => { setFailed(false); setStay(iso); }} />
+                      onValueChange={(_, { iso }) => { setFailed(false); setStay(iso); }} />
                     {shownProblem ? <Alert id="stay-problem" tone="danger">{shownProblem}</Alert> : null}
                     {place.taken.length ? (
                       <div className="flex flex-col gap-1">

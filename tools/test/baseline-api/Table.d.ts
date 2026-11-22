@@ -35,7 +35,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 }
 interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size" | "variant"> {
     label: string;
-    header?: boolean | undefined;
+    inHeader?: boolean | undefined;
     cellProps?: React.TdHTMLAttributes<HTMLTableCellElement> | undefined;
 }
 type SortDirection = "ascending" | "descending" | "none";
@@ -104,7 +104,7 @@ interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellEleme
     onExpandedChange?: ((expanded: boolean) => void) | undefined;
     label?: string | undefined;
     controls?: string | undefined;
-    header?: boolean | undefined;
+    inHeader?: boolean | undefined;
 }
 declare const TableExpandCell: React.FC<TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>>;
 interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> {

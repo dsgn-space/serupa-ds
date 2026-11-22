@@ -44,7 +44,7 @@ export interface SidebarItemOwnProps {
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
   icon?: IconSource | undefined;
   /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
-  active?: boolean | undefined;
+  current?: boolean | undefined;
   /** Something at the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read it. */
   badge?: React.ReactNode | undefined;
   /** Nested SidebarItems: the item becomes a button that shows and hides them. */
@@ -164,11 +164,11 @@ function SidebarSectionRender({ ref, ...props }: SidebarSectionProps & React.Ref
 /** A group of items in a Sidebar, with an optional small heading. */
 export const SidebarSection = /* @__PURE__ */ named('SidebarSection', SidebarSectionRender);
 
-const ITEM_OWN = { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, open: 1, onOpenChange: 1, as: 1, className: 1 } as const;
+const ITEM_OWN = { label: 1, icon: 1, current: 1, badge: 1, children: 1, defaultOpen: 1, open: 1, onOpenChange: 1, as: 1, className: 1 } as const;
 type ItemElement = React.ReactElement<ItemProps>;
 const itemsOf = (children: React.ReactNode) => flattenChildren(children).filter(React.isValidElement) as ItemElement[];
 /** The item is the current page, or one of its items is, at any depth: a group opens and shows active for a grandchild too. */
-const activeWithin = (k: ItemElement): boolean => !!k.props.active || itemsOf(k.props.children).some(activeWithin);
+const activeWithin = (k: ItemElement): boolean => !!k.props.current || itemsOf(k.props.children).some(activeWithin);
 
 /* The rail's Menu for a group: each item keeps its link component (as), its other link attributes and the current
    page, and a nested group is a submenu of its own items, so they can still be reached (L8E68). */
@@ -239,7 +239,7 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
   // An item with children is a button, not a link: its other attributes and handlers go to the button. Its events and
   // ref are typed for HTMLElement, which both the link and the button are.
   const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 });
-  const cls = cn('srp-sidebar__item', ctx.depth > 0 && 'srp-sidebar__item--nested', (props.active || (group && childActive)) && 'srp-sidebar__item--active', props.className);
+  const cls = cn('srp-sidebar__item', ctx.depth > 0 && 'srp-sidebar__item--nested', (props.current || (group && childActive)) && 'srp-sidebar__item--active', props.className);
 
   if (group && rail) {
     return (
@@ -265,7 +265,7 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
     );
   }
   const Tag = props.as || config.link;
-  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.active ? 'page' : undefined}>{inner(false)}</Tag>;
+  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.current ? 'page' : undefined}>{inner(false)}</Tag>;
   return (
     <li className="srp-sidebar__li">
       {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}

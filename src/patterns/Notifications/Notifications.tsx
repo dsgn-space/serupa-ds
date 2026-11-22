@@ -102,13 +102,13 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
     <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
       <Navbar brand="Acme" actions={
-        <Button variant="ghost" leftIcon="notifications" aria-label={bellName} onClick={() => setOpen(true)}>
+        <Button variant="ghost" startIcon="notifications" aria-label={bellName} onClick={() => setOpen(true)}>
           {unread ? <Badge count={unread} /> : null}
         </Button>
       }>
         <NavbarLink href="#dashboard">Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
-        <NavbarLink href="#notifications" active>Notifications</NavbarLink>
+        <NavbarLink href="#notifications" current>Notifications</NavbarLink>
       </Navbar>
       <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
@@ -131,7 +131,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
         ) : !items.length ? (
           <EmptyState icon="notifications" title="No notifications yet" headingLevel={2}
             description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
-            actions={<Button variant="outline" leftIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
+            actions={<Button variant="outline" startIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
         ) : shown.length ? (
           <List variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}>
             {shown.map((n) => (
