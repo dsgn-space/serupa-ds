@@ -41,7 +41,7 @@ Every theme shares **one set of foundations**: the same palette, type, spacing s
 | Brand | `primary` in light | `primary` in dark |
 | --- | --- | --- |
 | `blue` *(default)* | `blue-600` | `blue-400` |
-| `red` | `red-600` | `red-400` |
+| `red` | `red-700` | `red-400` |
 | `orange` | `orange-700` | `orange-400` |
 | `amber` | `amber-700` | `amber-400` |
 | `yellow` | `yellow-700` | `yellow-400` |
@@ -54,15 +54,15 @@ Every theme shares **one set of foundations**: the same palette, type, spacing s
 | `indigo` | `indigo-600` | `indigo-400` |
 | `violet` | `violet-600` | `violet-400` |
 | `purple` | `purple-600` | `purple-400` |
-| `fuchsia` | `fuchsia-600` | `fuchsia-400` |
+| `fuchsia` | `fuchsia-700` | `fuchsia-400` |
 | `pink` | `pink-700` | `pink-400` |
-| `rose` | `rose-600` | `rose-400` |
+| `rose` | `rose-700` | `rose-400` |
 
 A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
 ### The brand shade
 
-`primary` is a fill with text on it and a text color of its own (links, ghost and outline buttons), so in light themes it is the first step of the brand ramp that reaches 4.5:1 both ways: under white text and on a white page. That is step 600 for `blue`, `red`, `indigo`, `violet`, `purple`, `fuchsia` and `rose`, and step 700 for the lighter ramps: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky` and `pink`. So Yellow Light is a deep, golden yellow rather than a bright one. In dark themes every brand is step 400 with its own 950 as the text on it. `data-contrast="more"` steps each brand up within its own ramp, to 7:1.
+`primary` is a fill with text on it and a text color of its own (links, ghost and outline buttons), so in light themes it is the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. In dark themes every brand is step 400 with its own 950 as the text on it. `data-contrast="more"` steps each brand up within its own ramp, to 7:1.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 

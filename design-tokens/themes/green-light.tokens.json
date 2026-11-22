@@ -3,7 +3,7 @@
     "primary": {
       "$type": "color",
       "$value": "{color.green-700}",
-      "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text on it and for it on the tints (`primary-subtle` and the status ones), with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
