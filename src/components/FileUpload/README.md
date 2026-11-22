@@ -78,7 +78,7 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 - Each upload bar is a `progressbar` named by its file. A file that was uploading is said politely when it finishes or fails: "report.pdf: complete", "report.pdf: Couldn’t upload" (`progressComplete`, `fileError`); one that arrives done, such as a restored draft, isn't. A retry button is named by its text and the file ("Try again report.pdf", `tryAgain`) and described by the failure message. Thumbnails are decorative (`aria-hidden`): the name next to them says what the file is.
 - Submitted without a required file, FileUpload doesn't let the browser point its bubble at the hidden input: it shows "Choose a file." (`fileMissing`) in the same alert area, makes the button invalid and described by it, and focuses the button when it's the first invalid field. Choosing a file clears it.
 - In a [Field](../Field/README.md), the button is named by the label and its own text ("Due date, Choose a file") and described by the Field's hint and error, then the `hint`. `aria-describedby` goes to the button too. A button supports none of `aria-invalid`, `aria-errormessage` and `aria-required`, so the button is described by the Field's `error` (or your own `aria-errormessage`), and with `required` by "Required" first (`labels.required`). `aria-invalid` goes on the native input.
-- Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in every theme (`FileUpload.test.tsx`).
+- Text keeps 4.5:1 (also while dragging), and the icons 3:1, in every theme; the dashed outline is a field's border (`field-border`, darker under the pointer), since its words and the Choose button mark it (`FileUpload.test.tsx`).
 - In forced colors (Windows High Contrast), the drag-over area turns its border solid and `Highlight`, so the state still shows without the primary fill.
 - **Keyboard:** Tab reaches the choose button, where Enter or Space opens the file picker, then each failed file's retry button and each chosen file's remove button. Dropping files needs a pointer, so the button is the keyboard's way in; Ctrl+V (⌘V) there pastes copied files. Read-only, the choose button stays focusable but opens nothing.
 
@@ -120,7 +120,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--file-upload-zone-bg` | `surface-control` | The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press. |
-| `--file-upload-zone-border` | `border-control` | The drop area's dashed outline (3:1 on the surface). |
+| `--file-upload-zone-border` | `field-border` | The drop area's dashed outline: a field's border, which darkens under the pointer (zone-border-hover). Its words and the Choose button mark it, as a field's label does. |
 | `--file-upload-zone-border-hover` | `field-border-hover` | The drop area's outline while the pointer is over it (a click there browses for files). |
 | `--file-upload-zone-bg-pressed` | `field-hover` | The drop area's fill while pressed (a click there browses for files), as a field's buttons fill. |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |

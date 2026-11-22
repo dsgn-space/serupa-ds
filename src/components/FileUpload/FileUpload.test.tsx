@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 import { formatNumber } from '../FormattedNumber/formatNumber';
@@ -180,7 +180,7 @@ describe('FileUpload', () => {
     await expect.poll(() => names(el)).toBe('shot.png');
   });
 
-  test('an error under it is a Field error\'s size, 14px, with the icon centred on the first line (GR392)', async () => {
+  test('an error under it is a Field error\'s size, 12px, with the icon centred on the first line (GR392)', async () => {
     await render(<><Field label="Contract" error="Add the signed contract"><FileUpload id="gr392f" /></Field><FileUpload id="gr392" accept="image/*" /></>);
     const fieldError = document.querySelector('[data-icon="error"]')!.parentElement!;   // the only error until the upload
     await userEvent.upload(input(rootOf('gr392')), [file('notes.txt', 'text/plain', 10)]);
@@ -188,7 +188,7 @@ describe('FileUpload', () => {
     const look = (text: Element, icon: Element) => [css(text).fontSize, css(text).lineHeight, css(text).gap, Math.round(icon.getBoundingClientRect().height)];
     const own = rootOf('gr392').querySelector('[role=alert] > p')!;
     expect(look(own, own.querySelector('[data-icon]')!)).toEqual(look(fieldError, fieldError.querySelector('[data-icon]')!));
-    expect(css(own).fontSize).toBe('14px');
+    expect(css(own).fontSize).toBe('12px');
   });
 
   test('L8E110: files that are all refused (a duplicate, a wrong type) call no onFilesChange; the list is as it was', async () => {
@@ -233,6 +233,21 @@ describe('FileUpload', () => {
     zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: dt }));
     await expect.poll(() => zone.className).not.toMatch(/zone--over/);
     expect(names(q(many))).toBe('drop.gif');
+  });
+
+  test('the drop area is outlined as a field is: field-border at rest, field-border-hover under the pointer, in every theme', async () => {
+    await render(<Many />);
+    const zone = q(`${many} > ${ZONE}`);
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      await userEvent.unhover(zone);
+      await expect.poll(() => zone.matches(':hover')).toBe(false);
+      expect([th, css(zone).borderTopColor]).toEqual([th, color('var(--field-border)')]);
+      await userEvent.hover(zone, { position: { x: 8, y: 8 } });
+      expect([th, css(zone).borderTopColor]).toEqual([th, color('var(--field-border-hover)')]);
+    }
+    still.remove(); document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
   test('forced colors: the drag-over area keeps a Highlight border, unlike the resting one', async () => {
@@ -362,7 +377,7 @@ describe('FileUpload', () => {
       document.documentElement.setAttribute('data-theme', th);
       const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(el.querySelector('ul[aria-label] > li')!).backgroundColor;
       const c = (sel: string) => getComputedStyle(el.querySelector(sel)!).color;
-      const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['zone outline', zs.borderTopColor, pg, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
+      const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
       zone.classList.add('srp-file-upload__zone--over');
       const zo = getComputedStyle(zone).backgroundColor;
       pairs.push(['hint while dragging', c(HINT), zo, 4.5], ['title while dragging', c(TITLE), zo, 4.5]);
@@ -374,7 +389,7 @@ describe('FileUpload', () => {
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove(); document.body.style.background = prevBg;
     expect(low).toEqual([]);
-    expect(n).toBe(60);
+    expect(n).toBe(54);
   });
 
   test('--file-upload-zone-bg overrides one upload', async () => {
