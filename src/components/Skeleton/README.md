@@ -1,8 +1,8 @@
 # Skeleton
 
-Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Lines stand in for text, a circle for an avatar, a rectangle for an image or a card.
+Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Lines stand in for text, a circle for an avatar, a rectangle for an image or a card. It replaces `<Loader variant="skeleton">`, which is deprecated and leaves in the next major.
 
-**Also called:** placeholder, shimmer, loading placeholder. `<Loader variant="skeleton">` draws the same, and is deprecated: the next major removes it.
+**Also called:** placeholder, shimmer, loading placeholder.
 
 ```tsx
 import { Skeleton } from "@diki-stwn/serupa-ds";
