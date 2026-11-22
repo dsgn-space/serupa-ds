@@ -274,7 +274,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
             <tr>
               <td aria-hidden className="srp-event-calendar__zone">{zone}</td>
               {span.map((d) => (
-                <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'srp-event-calendar__head--today')} data-today={(marked && sameDay(d, marked)) ? '' : undefined}>
+                <th key={d.getTime()} scope="col" className={cn('srp-event-calendar__head', marked && sameDay(d, marked) && 'srp-event-calendar__head--today')} data-today={(marked && sameDay(d, marked)) ? '' : undefined}>
                   <span aria-hidden>{fmt.short.format(d)} <span className="srp-event-calendar__head-date">{d.getDate()}</span></span>
                   <span className="srp-visually-hidden">{fmt.full.format(d)}</span>
                 </th>
