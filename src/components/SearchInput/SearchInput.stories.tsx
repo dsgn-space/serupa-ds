@@ -13,6 +13,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Sizes: sm in a table's toolbar, md by default, lg as a page's main search. */
+export const Sizes: Story = {
+  render: (args) => <div style={{ display: 'grid', gap: 16 }}>
+    {(['sm', 'md', 'lg'] as const).map((s) => <SearchInput key={s} {...args} aria-label={'Search projects, ' + s} size={s} />)}
+  </div>,
+};
 export const WithText: Story = { args: { defaultValue: 'Atlas' } };
 export const Loading: Story = { args: { defaultValue: 'Atl', loading: true } };
 export const Invalid: Story = { args: { defaultValue: 'Atlas!!', invalid: true } };

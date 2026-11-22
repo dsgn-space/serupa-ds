@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, attachmentKind, type AttachmentKind, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, formatFileSize, getIcon, type IconData, idLabels, type LanguagePack, localeDir, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, attachmentKind, type AttachmentKind, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, formatFileSize, getIcon, type IconData, idLabels, type LanguagePack, localeDir, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type StandardSchemaV1, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "amber" | "blue" | "cyan" | "emerald" | "fuchsia" | "green" | "indigo" | "lime" | "orange" | "pink" | "purple" | "red" | "rose" | "sky" | "teal" | "violet" | "yellow" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -143,6 +143,32 @@ type AttachmentKind = "archive" | "audio" | "code" | "doc" | "image" | "other" |
 declare function attachmentKind(name: string, type?: string): AttachmentKind;
 type CalendarSystem = "buddhist" | "gregory" | "indian" | "islamic-civil" | "islamic-tbla" | "islamic-umalqura" | "japanese" | "persian" | "roc";
 declare function formatFileSize(bytes: number, locale?: string): string;
+interface StandardSchemaV1<Input = unknown, Output = Input> {
+    readonly "~standard": StandardSchemaProps<Input, Output>;
+}
+interface StandardSchemaProps<Input = unknown, Output = Input> {
+    readonly version: 1;
+    readonly vendor: string;
+    readonly validate: (value: unknown) => Promise<StandardSchemaResult<Output>> | StandardSchemaResult<Output>;
+    readonly types?: {
+        readonly input: Input;
+        readonly output: Output;
+    } | undefined;
+}
+type StandardSchemaResult<Output> = {
+    readonly issues: ReadonlyArray<StandardSchemaIssue>;
+} | {
+    readonly value: Output;
+    readonly issues?: undefined;
+};
+interface StandardSchemaIssue {
+    readonly message: string;
+    readonly path?: ReadonlyArray<{
+        readonly key: PropertyKey;
+    } | PropertyKey> | undefined;
+}
+type InferInput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["input"];
+type InferOutput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["output"];
 type Entry = "end-ellipsis" | "start-ellipsis" | number;
 declare const version: string;
 type ThemeApi = SerupaTheme;

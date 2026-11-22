@@ -19,7 +19,12 @@
 
 # VariantsAndSizes
 - button "Copy, primary"
+- button "Copy, secondary"
+- button "Copy, outline"
+- button "Copy, ghost"
 - button "Copy, link"
+- button "Copy, sm"
+- button "Copy, md"
 - button "Copy, lg"
 
 # WithAField
