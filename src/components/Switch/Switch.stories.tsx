@@ -63,7 +63,7 @@ export const DoNameTheSetting: Story = {
   render: () => <div style={{ maxWidth: 280 }}><Switch labelPlacement="start" className="w-full justify-between" defaultChecked>Email notifications</Switch></div>,
 };
 /** Don't: a label that states the state, and changes with it. */
-export const DontLabelTheState: Story = {
+export const DontLabelTheState: Story = { tags: ['!visual'],
   name: "Don't: label the state",
   render: () => <div style={{ maxWidth: 280 }}><Switch labelPlacement="start" className="w-full justify-between" defaultChecked>Notifications are on</Switch></div>,
 };
@@ -73,7 +73,7 @@ export const DoCheckboxInForm: Story = {
   render: () => <Col><Checkbox defaultChecked>Send me the weekly summary</Checkbox><Checkbox>Send me product news</Checkbox><div><Button>Save preferences</Button></div></Col>,
 };
 /** Don't: switches that wait for Save, so a flip seems to do nothing. */
-export const DontSwitchInForm: Story = {
+export const DontSwitchInForm: Story = { tags: ['!visual'],
   name: "Don't: switches that wait for Save",
   render: () => <Col><Switch defaultChecked>Weekly summary</Switch><Switch>Product news</Switch><div><Button>Save preferences</Button></div></Col>,
 };

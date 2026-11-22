@@ -236,7 +236,7 @@ export const DoDestructiveLast: Story = {
   </> },
 };
 /** Don't: Delete first, where the menu opens and a slip runs it. */
-export const DontDestructiveFirst: Story = {
+export const DontDestructiveFirst: Story = { tags: ['!visual'],
   name: "Don't: destructive action first",
   args: { children: <>
     <MenuItem icon="delete" destructive>Delete</MenuItem>

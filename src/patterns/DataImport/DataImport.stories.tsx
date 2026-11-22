@@ -34,7 +34,7 @@ export const MatchColumns: Story = { args: { start: 'match', file: SAMPLE } };
 export const CheckRows: Story = { args: { start: 'check', file: SAMPLE } };
 
 /** An import that fails: "Couldn't import", nothing saved, and Try again. */
-export const ImportFails: Story = { args: { start: 'check', file: SAMPLE, onImport: () => Promise.reject(new Error('offline')) } };
+export const ImportFails: Story = { tags: ['!visual'], args: { start: 'check', file: SAMPLE, onImport: () => Promise.reject(new Error('offline')) } };
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };

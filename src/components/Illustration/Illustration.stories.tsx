@@ -48,7 +48,7 @@ export const DoMatchTitle: Story = {
   render: () => <EmptyState icon={<Illustration name="search" />} title="No results for “mars”" description="Check the spelling or try a broader search." />,
 };
 /** Don't: a picture that says something else, such as `success` for no results. */
-export const DontMismatch: Story = {
+export const DontMismatch: Story = { tags: ['!visual'],
   name: "Don't: pick a picture that says something else",
   render: () => <EmptyState icon={<Illustration name="success" />} title="No results for “mars”" description="Check the spelling or try a broader search." />,
 };

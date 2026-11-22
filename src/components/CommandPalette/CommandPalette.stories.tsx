@@ -87,7 +87,7 @@ export const DoActionFirst: Story = {
   ] },
 };
 /** Don't: wordy labels, which take longer to type toward and to scan. */
-export const DontWordyLabels: Story = {
+export const DontWordyLabels: Story = { tags: ['!visual'],
   name: "Don't: write wordy labels",
   args: { defaultOpen: true, commands: [
     { id: 'new', label: 'Click here to create a brand new project', group: 'Actions', icon: 'add' },

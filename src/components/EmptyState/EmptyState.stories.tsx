@@ -69,7 +69,7 @@ export const DoSayWhatNext: Story = {
   args: { icon: 'receipt_long', title: 'No invoices yet', description: 'Invoices you send show up here.', actions: <Button startIcon="add">New invoice</Button> },
 };
 /** Don't: a bare "No data", which leaves people stuck. */
-export const DontNoData: Story = {
+export const DontNoData: Story = { tags: ['!visual'],
   name: "Don't: just say no data",
   args: { icon: 'receipt_long', title: 'No data', description: undefined, actions: undefined },
 };

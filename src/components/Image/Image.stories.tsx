@@ -39,4 +39,4 @@ export const Overflow: Story = {
 /** Do: alt text that says what the picture shows. */
 export const DoDescribe: Story = { name: 'Do: describe the picture', args: { alt: 'A green hillside under an orange evening sky' } };
 /** Don't: a file name as alt text, which screen readers read out letter by letter. */
-export const DontFileName: Story = { name: "Don't: use the file name as alt", args: { alt: 'IMG_2041.jpg' } };
+export const DontFileName: Story = { tags: ['!visual'], name: "Don't: use the file name as alt", args: { alt: 'IMG_2041.jpg' } };

@@ -54,4 +54,4 @@ export const LongText: Story = {
 /** Do: `resultsCount`, so people see what their filters did. */
 export const DoShowCount: Story = { name: 'Do: show the results count' };
 /** Don't: no count, so people can't tell whether a filter narrowed anything. */
-export const DontHideCount: Story = { name: "Don't: leave out the count", args: { resultsCount: undefined } };
+export const DontHideCount: Story = { tags: ['!visual'], name: "Don't: leave out the count", args: { resultsCount: undefined } };

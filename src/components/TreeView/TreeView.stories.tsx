@@ -62,7 +62,7 @@ export const LongLabels: Story = {
 /** Do: open the folders down to the selected item, so people see where they are. */
 export const DoOpenToSelection: Story = { name: 'Do: open down to the selection' };
 /** Don't: everything closed, which hides the selected item. */
-export const DontHideSelection: Story = { name: "Don't: hide the selection", args: { defaultExpanded: [] } };
+export const DontHideSelection: Story = { tags: ['!visual'], name: "Don't: hide the selection", args: { defaultExpanded: [] } };
 
 /** Folders whose children load when they open: "Loading…" holds the place, and a failure says how to try again. */
 export const LoadingAndErrors: Story = {

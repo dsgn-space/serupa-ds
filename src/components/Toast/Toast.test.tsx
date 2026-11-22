@@ -8,7 +8,7 @@ import { Dialog } from '../Dialog/Dialog';
 import { Drawer } from '../Drawer/Drawer';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 import { isApple } from '../../internal/keys';
-import { toast, Toaster, type ToasterPosition } from './Toast';
+import { toast, Toaster, type ToasterPlacement } from './Toast';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 import { resetWarnings } from '../../internal/warn';
@@ -22,9 +22,9 @@ const away = () => userEvent.hover(document.body, { position: { x: 5, y: 5 } });
 // Toasts slide in for 200ms: measure once that has finished.
 const landed = () => settled();
 
-let setPos: (p: ToasterPosition) => void = () => {};
+let setPos: (p: ToasterPlacement) => void = () => {};
 function App() {
-  const [pos, set] = React.useState<ToasterPosition>('bottom-end'); setPos = set;
+  const [pos, set] = React.useState<ToasterPlacement>('bottom-end'); setPos = set;
   return <Toaster placement={pos} className="extra" />;
 }
 beforeEach(() => { React.act(() => toast.dismiss()); });
@@ -361,9 +361,9 @@ describe('Toast', () => {
     await expect.poll(() => titles().length).toBe(0);
   });
 
-  test('top-center: 16px from the top, centered, newest on top; bottom-start: 16px from the start edge', async () => {
+  test('top: 16px from the top, centered, newest on top; bottom-start: 16px from the start edge', async () => {
     await render(<App />);
-    React.act(() => { setPos('top-center'); toast({ title: 'First', duration: 0 }); toast({ title: 'Second', duration: 0 }); });
+    React.act(() => { setPos('top'); toast({ title: 'First', duration: 0 }); toast({ title: 'Second', duration: 0 }); });
     await landed();
     const s = q('.srp-toaster').getBoundingClientRect();
     expect([Math.round(s.top), Math.round(s.left + s.width / 2), titles().join()]).toEqual([16, Math.round(innerWidth / 2), 'Second,First']);
@@ -417,7 +417,7 @@ describe('Toast', () => {
     await userEvent.click(toasts()[2]!.querySelector('button[aria-label="Dismiss"]')!);
     await expect.poll(titles).toEqual(['Upload 9 failed', 'Upload 10 failed', 'Upload 11 failed']);
     expect(q('.srp-toaster__more').textContent).toBe('+8 more');
-    setPos('top-center');
+    setPos('top');
     await expect.poll(() => q('.srp-toaster__list').lastElementChild!.className).toBe('srp-toaster__more');
     expect(titles()[0]).toBe('Upload 11 failed');
   });
@@ -579,10 +579,10 @@ describe('Toast: motion (DZ1)', () => {
   });
 
   const frames = async (each: () => void) => { do { each(); await new Promise(requestAnimationFrame); } while (document.getAnimations().length); each(); };
-  test('top-center, a fourth toast: the oldest folds toward "+1 more" where it was, and the ones left only ever move down to their place, never fading in again (FO1)', async () => {
+  test('top, a fourth toast: the oldest folds toward "+1 more" where it was, and the ones left only ever move down to their place, never fading in again (FO1)', async () => {
     await withMotion(async () => {
       await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
-      setPos('top-center');
+      setPos('top');
       React.act(() => { toast({ title: 'Moved to trash', action: { label: 'Undo', onClick: () => {} } }); });
       React.act(() => { toast({ title: 'Upload failed', tone: 'danger', duration: 0 }); });
       React.act(() => { toast({ title: 'Storage almost full', tone: 'warning', duration: 0 }); });
@@ -947,14 +947,29 @@ describe('Toaster inside a shadow root (GR60)', () => {
     } finally { React.act(() => { toast.dismiss(); }); host.remove(); }
   });
   test('GR123: a Toaster on the same edge as a shown OfflineBanner stacks above the bar, not on it; back in its place when the bar goes', async () => {
-    const screen = await render(<><Toaster placement="bottom-center" /><OfflineBanner online={false} /></>);
+    const screen = await render(<><Toaster placement="bottom" /><OfflineBanner online={false} /></>);
     toast('Saved');
     await expect.poll(() => toasts().length).toBe(1);
     const bar = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
     await expect.poll(() => toasts()[0]!.getBoundingClientRect().bottom <= bar.getBoundingClientRect().top).toBe(true);
-    await screen.rerender(<><Toaster placement="bottom-center" /><OfflineBanner online /></>);
+    await screen.rerender(<><Toaster placement="bottom" /><OfflineBanner online /></>);
     await expect.poll(() => document.querySelector('[data-component=offline-banner]'), { timeout: 5000 }).toBe(null);
     await expect.poll(() => Math.round(window.innerHeight - toasts()[0]!.getBoundingClientRect().bottom)).toBe(16);
   });
 });
 
+
+describe("Toaster: the deprecated 'top-center' and 'bottom-center' (removed in 18.0.0)", () => {
+  test("still center the toasts, as 'top' and 'bottom' do, with one warning each naming the new value", async () => {
+    resetWarnings();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const screen = await render(<Toaster id="tc" placement="top-center" />);
+    const at = () => document.getElementById('tc')!.getAttribute('data-position');
+    const first = at();
+    await screen.rerender(<Toaster id="tc" placement="bottom-center" />);
+    expect([first, at()]).toEqual(['top-center', 'bottom-center']);
+    const said = warn.mock.calls.map((c) => String(c[0]));
+    expect([said.some((m) => m.includes('placement="top-center" is deprecated') && m.includes('placement="top"')), said.some((m) => m.includes('placement="bottom-center" is deprecated') && m.includes('placement="bottom"'))]).toEqual([true, true]);
+    warn.mockRestore();
+  });
+});

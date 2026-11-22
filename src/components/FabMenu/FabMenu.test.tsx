@@ -74,20 +74,20 @@ describe('FabMenu', () => {
       expect(Math.round(start ? m.left - f.left : f.right - m.right), placement).toBe(0);
     }
   });
-  test('size and onMedia reach the Fab: 40px with size="sm", 56px with "md", and the same colors as a Fab on a light or dark picture', async () => {
+  test('size and surface reach the Fab: 40px with size="sm", 56px with "md", and the same colors as a Fab on a light or dark picture', async () => {
     for (const [size, px] of [['sm', 40], ['md', 56]] as const) {
       const { unmount } = await render(<FabMenu icon="add" label="Create" size={size} placement="static" actions={ACTIONS} />);
       expect(Math.round(fab().getBoundingClientRect().height), size).toBe(px);
       await unmount();
     }
-    for (const onMedia of ['light', 'dark'] as const) {
+    for (const surface of ['light', 'dark'] as const) {
       const { unmount } = await render(<div style={{ background: 'black' }}>
-        <FabMenu icon="add" label="Create" onMedia={onMedia} placement="static" actions={ACTIONS} />
-        <Fab icon="add" label="Plain" onMedia={onMedia} placement="static" />
+        <FabMenu icon="add" label="Create" surface={surface} placement="static" actions={ACTIONS} />
+        <Fab icon="add" label="Plain" surface={surface} placement="static" />
       </div>);
       const plain = page.getByRole('button', { name: 'Plain' }).element();
       const look = (e: Element) => { const c = getComputedStyle(e); return [c.backgroundColor, c.color, c.borderColor]; };
-      expect(look(fab()), onMedia).toEqual(look(plain));
+      expect(look(fab()), surface).toEqual(look(plain));
       await unmount();
     }
   });

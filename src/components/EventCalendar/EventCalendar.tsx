@@ -19,6 +19,7 @@ import { en as CalendarWords } from '../Calendar/labels';
 import { en as EventCalendarWords } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { isRtl } from '../../internal/position';
+import { dayCell, gridKey } from '../../internal/gridKeys';
 // Its own words and the month buttons' names it shares with Calendar.
 const words = /* @__PURE__ */ Object.assign({}, EventCalendarWords, CalendarWords);
 
@@ -513,23 +514,14 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
       return;
     }
     if (target.tagName !== 'TD') return;
-    let n: Date | null = null;
-    switch (e.key) {
-      case 'ArrowLeft': n = addDays(focus, rtl ? 1 : -1); break;
-      case 'ArrowRight': n = addDays(focus, rtl ? -1 : 1); break;
-      case 'ArrowUp': n = addDays(focus, -7); break;
-      case 'ArrowDown': n = addDays(focus, 7); break;
-      case 'Home': n = startOfWeek(focus, ws); break;
-      case 'End': n = addDays(startOfWeek(focus, ws), 6); break;
-      // A page is the view's: a month, or in the week and day views a week or a day.
-      case 'PageUp': n = hours ? addDays(focus, -step) : addMonths(focus, -1); break;
-      case 'PageDown': n = hours ? addDays(focus, step) : addMonths(focus, 1); break;
-      // Enter or Space on a day chooses it whole, for a new event.
-      case 'Enter': case ' ': if (!props.onSlotSelect) return; e.preventDefault(); props.onSlotSelect({ start: focus, end: focus, allDay: true }); return;
-      default: return;
-    }
+    const k = gridKey(e);
+    if (!k) return;
+    // Enter or Space on a day chooses it whole, for a new event.
+    if (k === 'pick') { if (props.onSlotSelect) { e.preventDefault(); props.onSlotSelect({ start: focus, end: focus, allDay: true }); } return; }
     e.preventDefault();
-    move(n);
+    // A page is the view's: a month, or in the week and day views a week or a day.
+    const dir = k === 'pageUp' ? -1 : 1;
+    move(dayCell(k, focus, ws) ?? (hours ? addDays(focus, dir * step) : addMonths(focus, dir)));
   };
 
   const fmt = React.useMemo(() => formatsFor(locale), [locale]);

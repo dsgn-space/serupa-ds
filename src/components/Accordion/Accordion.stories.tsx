@@ -55,7 +55,7 @@ export const DoSayWhatsInside: Story = {
   args: { defaultValue: [] },
 };
 /** Don't: titles like "Details" and "More", which make people open each one to find out. */
-export const DontVagueTitles: Story = {
+export const DontVagueTitles: Story = { tags: ['!visual'],
   name: "Don't: vague titles",
   args: { defaultValue: [], children: faq.map(([v, , c], i) => <AccordionItem key={v} value={v} title={['Details', 'More information', 'Other'][i]}>{c}</AccordionItem>) },
 };

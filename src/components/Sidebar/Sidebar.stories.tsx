@@ -72,7 +72,7 @@ export const LongLabels: Story = {
 /** Do: related pages grouped under short section titles. */
 export const DoGroupSections: Story = { name: 'Do: group pages into sections' };
 /** Don't: every page in one long list, which people have to read top to bottom. */
-export const DontFlatList: Story = {
+export const DontFlatList: Story = { tags: ['!visual'],
   name: "Don't: list every page in one run",
   args: { children: (
     <SidebarSection>

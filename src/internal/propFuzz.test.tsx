@@ -104,15 +104,15 @@ function combination(r: () => number, args: Args, { options, booleans }: Shape):
 const frames = (n: number) => new Promise<void>((res) => { const f = () => (n-- > 0 ? requestAnimationFrame(f) : res()); f(); });
 
 // Draws one combination and returns what went wrong with it.
-// onMedia="dark" or "light" draws for media of that lightness, the same in every theme, so it's tried over a backdrop
+// surface="dark" or "light" draws for media of that lightness, the same in every theme, so it's tried over a backdrop
 // like that (black or white) with the text around it in the matching ink, as an app puts it over a photo with a scrim.
 const BACKDROP: Record<string, [string, string]> = { dark: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'], light: ['rgb(255, 255, 255)', 'rgb(0, 0, 0)'] };
-async function attempt(el: React.ReactElement, rtl: boolean, theme: string, onMedia?: unknown): Promise<string[]> {
+async function attempt(el: React.ReactElement, rtl: boolean, theme: string, surface?: unknown): Promise<string[]> {
   const problems: string[] = [];
   const error = vi.spyOn(console, 'error').mockImplementation((...a: unknown[]) => { problems.push(`console.error: ${a.map(String).join(' ').slice(0, 200)}`); });
   const host = document.createElement('div');
   if (rtl) host.dir = 'rtl';
-  const media = typeof onMedia === 'string' ? BACKDROP[onMedia] : undefined;
+  const media = typeof surface === 'string' ? BACKDROP[surface] : undefined;
   if (media) { host.style.background = media[0]; host.style.setProperty('--text', media[1]); host.style.color = media[1]; }
   document.documentElement.setAttribute('data-theme', theme);
   document.body.appendChild(host);
@@ -170,7 +170,7 @@ describe(`random prop combinations draw without a throw, a console.error or an a
       const bad: string[] = [];
       for (let i = 0; i < COMBOS; i++) {
         const c = combination(r, from.args, s);
-        const problems = await attempt(storyElement(from.meta, from.story, c.args), c.rtl, c.theme, c.args.onMedia);
+        const problems = await attempt(storyElement(from.meta, from.story, c.args), c.rtl, c.theme, c.args.surface ?? c.args.onMedia);
         const known = (p: string) => KNOWN.has(name) || [...KNOWN].some((k) => k.startsWith(`${name}: `) && p.startsWith(k.slice(name.length + 2)));
         for (const p of problems.filter((p) => !known(p))) bad.push(`${p}\n    with ${c.changed.join(' ') || 'the story as it is'}${c.rtl ? ', dir="rtl"' : ''}, ${c.theme}`);
       }

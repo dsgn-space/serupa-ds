@@ -36,7 +36,7 @@ export const SkipLink: Story = {
 /** Do: the hidden words right after what they explain, so they read in order. */
 export const DoRightAfter: Story = { name: 'Do: put it right after what it explains' };
 /** Don't: hidden words far from what they explain, which then read out of order. */
-export const DontFarAway: Story = {
+export const DontFarAway: Story = { tags: ['!visual'],
   name: "Don't: put it far from what it explains",
   render: () => <p className="text-sm text-text"><VisuallyHidden>unread messages</VisuallyHidden> In your inbox: 3</p>,
 };

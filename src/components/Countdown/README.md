@@ -33,7 +33,7 @@ import { Countdown } from "@diki-stwn/serupa-ds";
 
 ### Do and don't
 
-- **Do:** Say what it counts down to, in the words beside it: "Offer ends in 4:59". (`DoSayWhatEnds`)
+- **Do:** Say what it counts down to, in the words beside it: "Offer ends in 4:59". (`Default`)
 - **Don't:** The clock alone: "4:59" reads as a time of day, and nobody knows what ends. (`DontBareClock`)
 
 ## Behavior

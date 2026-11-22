@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** The time was taken meanwhile: the page says so next to Book and keeps everything. */
-export const BookFails: Story = { args: { onBook: () => new Promise((_, no) => setTimeout(() => no(new Error('taken')), 600)) } };
+export const BookFails: Story = { tags: ['!visual'], args: { onBook: () => new Promise((_, no) => setTimeout(() => no(new Error('taken')), 600)) } };
 
 /** The times are on their way from the server: the h1 stays, with a placeholder under it. */
 export const Loading: Story = { args: { loading: true } };

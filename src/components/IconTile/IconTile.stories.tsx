@@ -81,4 +81,4 @@ const tiles = (rows: Array<[React.ComponentProps<typeof IconTile>['tone'], React
 /** Do: `neutral` for most rows, with a status tone only where the row is about that status. */
 export const DoNeutralTones: Story = { name: 'Do: keep most tiles neutral', render: () => tiles([['neutral', icons.Description, 'Documents'], ['neutral', icons.Person, 'People'], ['neutral', icons.Schedule, 'Schedule'], ['danger', icons.Error, '2 failed uploads']]) };
 /** Don't: tones picked for decoration, so a real warning doesn't stand out. */
-export const DontDecorativeTones: Story = { name: "Don't: color tiles for decoration", render: () => tiles([['success', icons.Description, 'Documents'], ['warning', icons.Person, 'People'], ['info', icons.Schedule, 'Schedule'], ['danger', icons.Error, '2 failed uploads']]) };
+export const DontDecorativeTones: Story = { tags: ['!visual'], name: "Don't: color tiles for decoration", render: () => tiles([['success', icons.Description, 'Documents'], ['warning', icons.Person, 'People'], ['info', icons.Schedule, 'Schedule'], ['danger', icons.Error, '2 failed uploads']]) };

@@ -125,9 +125,9 @@ describe('IconButton', () => {
   });
 });
 
-describe('IconButton onMedia', () => {
-  test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
-    await render(<div><IconButton id="om-dark" icon="share" label="Share" onMedia="dark" /><IconButton id="om-light" icon="share" label="Share" onMedia="light" /></div>);
+describe('IconButton surface', () => {
+  test('takes Button\'s surface: white over dark media, black over light, in its fill or its text', async () => {
+    await render(<div><IconButton id="om-dark" icon="share" label="Share" surface="dark" /><IconButton id="om-light" icon="share" label="Share" surface="light" /></div>);
     const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
     expect(document.getElementById('om-dark')!.className).toContain('srp-btn--on-dark');
     expect(inks('om-dark')).toContain('rgb(255, 255, 255)');

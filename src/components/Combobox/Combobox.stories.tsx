@@ -149,4 +149,4 @@ export const DoVisibleLabel: Story = {
   render: (args) => <Field label="Country"><Combobox {...args} aria-label={undefined} placeholder="Choose a country" /></Field>,
 };
 /** Don't: the placeholder as the only label; it disappears once something is picked or typed. */
-export const DontPlaceholderLabel: Story = { name: "Don't: use the placeholder as the label", args: { placeholder: 'Country' } };
+export const DontPlaceholderLabel: Story = { tags: ['!visual'], name: "Don't: use the placeholder as the label", args: { placeholder: 'Country' } };

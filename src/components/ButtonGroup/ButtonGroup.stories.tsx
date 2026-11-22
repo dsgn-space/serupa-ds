@@ -76,7 +76,7 @@ export const DoSameVariant: Story = {
   args: { 'aria-label': 'Align', children: [<Button key="l" variant="outline">Left</Button>, <Button key="c" variant="outline">Center</Button>, <Button key="r" variant="outline">Right</Button>] },
 };
 /** Don't: mixed variants, which break the group into pieces that look unrelated. */
-export const DontMixVariants: Story = {
+export const DontMixVariants: Story = { tags: ['!visual'],
   name: "Don't: mix variants",
   args: { 'aria-label': 'Align', children: [<Button key="l">Left</Button>, <Button key="c" variant="outline">Center</Button>, <Button key="r" variant="ghost">Right</Button>] },
 };

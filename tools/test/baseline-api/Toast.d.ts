@@ -1,4 +1,4 @@
-// exports: toast, Toaster, type ToasterPosition, type ToasterProps, type ToastMessage, type ToastOptions, type ToastPromiseMessages, type ToastTone, type ToastUndoOptions
+// exports: toast, Toaster, type ToasterPlacement, type ToasterPosition, type ToasterProps, type ToastMessage, type ToastOptions, type ToastPromiseMessages, type ToastTone, type ToastUndoOptions
 interface ToastLabels {
     notifications: string;
     toastShortcut: (key: string) => string;
@@ -7,6 +7,7 @@ interface ToastLabels {
     undo: string;
 }
 type ToastTone = "danger" | "info" | "neutral" | "success" | "warning";
+type ToasterPlacement = "bottom-center" | "bottom-end" | "bottom-start" | "bottom" | "top-center" | "top-end" | "top-start" | "top";
 type ToasterPosition = "bottom-center" | "bottom-end" | "bottom-start" | "top-center" | "top-end" | "top-start";
 interface ToastOptions {
     title: React.ReactNode;
@@ -42,7 +43,7 @@ declare const toast: typeof show & {
     undo: typeof undo;
 };
 interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
-    placement?: ToasterPosition | undefined;
+    placement?: ToasterPlacement | undefined;
     "aria-label"?: string | undefined;
     dismissLabel?: string | undefined;
     limit?: number | undefined;

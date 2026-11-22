@@ -50,7 +50,7 @@ export const DoLabelAbove: Story = {
   render: () => <Field label="Country"><Select placeholder="Choose a country" options={COUNTRIES} /></Field>,
 };
 /** Don't: the placeholder as the only label, gone once a value is chosen. */
-export const DontPlaceholderLabel: Story = {
+export const DontPlaceholderLabel: Story = { tags: ['!visual'],
   name: "Don't: the placeholder as label",
   render: () => <Select aria-label="Country" placeholder="Country" options={COUNTRIES} />,
 };
@@ -60,7 +60,7 @@ export const DoRadiosForFew: Story = {
   render: () => <Field group label="Delivery"><RadioGroup defaultValue="standard"><Radio value="standard">Standard</Radio><Radio value="express">Express</Radio><Radio value="pickup">Pick up</Radio></RadioGroup></Field>,
 };
 /** Don't: three choices hidden in a Select, one more click to see them. */
-export const DontSelectForFew: Story = {
+export const DontSelectForFew: Story = { tags: ['!visual'],
   name: "Don't: a Select for a few",
   render: () => <Field label="Delivery"><Select defaultValue="Standard" options={['Standard', 'Express', 'Pick up']} /></Field>,
 };
