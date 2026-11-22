@@ -502,7 +502,7 @@ jobs:
           name: visual-review-${{ strategy.job-index }}
           path: .visual-review/
           include-hidden-files: true
-          retention-days: 14
+          retention-days: 7
           if-no-files-found: ignore
       - if: matrix.part == 'base'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -533,6 +533,8 @@ jobs:
             test-output.txt
             .test-tmp/
             .visual-main/**/*.actual.png
+          # A failure is looked at the day it happens; without this they were kept the repository's default 90 days.
+          retention-days: 7
           if-no-files-found: ignore
       # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
       # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on
