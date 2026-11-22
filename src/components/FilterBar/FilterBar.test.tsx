@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, ringCut } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { FilterBar, type FilterField, type FilterValues } from './FilterBar';
@@ -199,6 +199,20 @@ describe('FilterBar', () => {
     // The × before it has a tooltip of its own, naming it.
     await expect.poll(() => tip()?.textContent).toBe('Remove filter: Owner');
   });
+  test('in an editor\'s list of choices, a focused checkbox or radio shows its whole focus ring: the scrolling list doesn\'t cut it', async () => {
+    await render(<Bar start={{ status: ['open'], owner: 'Ana' }} />);
+    for (const [name, role] of [['Status is Open', 'checkbox'], ['Owner is Ana', 'radio']] as const) {
+      await userEvent.click(chip(name));
+      await expect.element(page.getByRole(role).first()).toBeVisible();
+      await expect.poll(() => document.activeElement?.getAttribute('type')).toBe(role);
+      await userEvent.keyboard('{Tab}'); await userEvent.keyboard('{Shift>}{Tab}{/Shift}');   // reached by the keyboard, so it rings
+      const first = document.activeElement as HTMLElement;
+      const ringed = css(first).outlineStyle !== 'none' ? first : first.closest('label')!;
+      expect([name, ringCut(ringed)]).toEqual([name, 0]);
+      await userEvent.keyboard('{Escape}');
+    }
+  });
+
   test('a chip answers as a button does: border-strong as a tag; under the pointer a gray fill, not an underline; open, a pressed fill with its text unchanged', async () => {
     await render(<Bar start={{ owner: 'Ana' }} />);
     const edit = chip('Owner is Ana').element() as HTMLElement, li = edit.closest('li')!;
