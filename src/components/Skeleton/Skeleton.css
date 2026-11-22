@@ -44,7 +44,7 @@
   inset-inline-end: var(--spacing-0);
   width: calc(var(--sizing-full) + var(--sizing-full) + var(--sizing-full));
   background-image: linear-gradient(to right, var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-glint), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill), var(--srp-skeleton-fill));   /* evenly spaced stops: a band about half the bone wide */
-  animation: srp-skeleton-sweep calc(var(--duration-1000) + var(--duration-1000)) var(--ease-move) infinite;
+  animation: srp-skeleton-sweep calc(var(--motion-loop-placeholder) + var(--motion-loop-placeholder)) var(--ease-move) infinite;   /* two placeholder beats: 2s, as Loader's sweep */
 }
 .srp-skeleton__bone:dir(rtl)::after { --srp-skeleton-sweep: calc(var(--sizing-full) * -2 / 3); }
 @keyframes srp-skeleton-sweep { to { translate: var(--srp-skeleton-sweep) 0; } }
