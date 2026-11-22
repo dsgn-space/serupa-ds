@@ -232,9 +232,10 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     const el = field.current, m = marks.current;
     if (!el || !m) return;
     const place = () => {
+      m.hidden = false;
       const cs = getComputedStyle(el);
       for (const k of COPIED) if (k !== 'width' && !k.startsWith('border')) m.style[k] = cs[k];
-      Object.assign(m.style, { left: el.offsetLeft + el.clientLeft + 'px', top: el.offsetTop + el.clientTop + 'px', width: el.clientWidth + 'px', height: el.clientHeight + 'px', visibility: 'visible' });
+      Object.assign(m.style, { left: el.offsetLeft + el.clientLeft + 'px', top: el.offsetTop + el.clientTop + 'px', width: el.clientWidth + 'px', height: el.clientHeight + 'px' });
       m.scrollTop = el.scrollTop;
       m.scrollLeft = el.scrollLeft;
     };
@@ -272,7 +273,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   return (
     <span ref={wrap} className={cn('srp-mention-input', className)} style={style} data-component="mention-input" data-state={open ? 'open' : 'closed'}>
       {hasMarks ? (
-        <div ref={marks} className="srp-mention-input__marks" aria-hidden="true">
+        <div ref={marks} className="srp-mention-input__marks" aria-hidden="true" hidden>
           {spans.map((m, i) => [text.slice(i ? spans[i - 1]!.end : 0, m.start), <mark key={m.start} className="srp-mention-input__mention">{text.slice(m.start, m.end)}</mark>])}
           {text.slice(spans[spans.length - 1]!.end)}{'\u200b'}
         </div>

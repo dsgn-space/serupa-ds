@@ -47,7 +47,7 @@ describe('hover fills in fields and popups show in every theme', () => {
     };
     await check('date button', dateButton());
     await check('clock button', document.querySelector<HTMLElement>('button[aria-controls][tabindex="-1"]')!);
-    await check('country', document.querySelector<HTMLElement>('.srp-phone-input__country')!);
+    await check('country', document.querySelector<HTMLElement>('button[aria-haspopup="listbox"]')!);
     await userEvent.click(dateButton());
     await expect.poll(() => document.querySelector('[role="grid"]')).not.toBeNull();
     const days = [...document.querySelectorAll<HTMLElement>('[role="grid"] button')];

@@ -236,7 +236,7 @@ describe('MentionInput', () => {
 
   test('each mention has a brand tint behind it, lined up with its text, that keeps the text 4.5:1 in every theme', async () => {
     await render(<Box defaultValue="Hi @Ayu Lestari and @Nobody, see @Budi Santoso" />);
-    const marks = [...document.querySelectorAll('.srp-mention-input__mention')] as HTMLElement[];
+    const marks = [...document.querySelectorAll('[aria-hidden="true"] > mark')] as HTMLElement[];
     expect(marks.map((m) => m.textContent)).toEqual(['@Ayu Lestari', '@Budi Santoso']);
     expect(marks[0]!.closest('[aria-hidden="true"]')).not.toBeNull();   // a picture only: the text is the textarea's
     expect(css(marks[0]!).backgroundColor).toBe(color('var(--primary-subtle)'));
@@ -260,7 +260,7 @@ describe('MentionInput', () => {
     // Typing keeps it: a mention typed whole gets its tint, and one broken stops having it.
     await userEvent.click(el);
     await userEvent.keyboard('{Control>}{End}{/Control} @Budi Santoso');
-    await expect.poll(() => document.querySelectorAll('.srp-mention-input__mention').length).toBe(3);
+    await expect.poll(() => document.querySelectorAll('[aria-hidden="true"] > mark').length).toBe(3);
   });
 
   test('the tint scrolls with the text in a scrolled field', async () => {
@@ -268,7 +268,7 @@ describe('MentionInput', () => {
     const el = box();
     el.scrollTop = el.scrollHeight;
     el.dispatchEvent(new Event('scroll'));
-    const mark = document.querySelector('.srp-mention-input__mention') as HTMLElement;
+    const mark = document.querySelector('[aria-hidden="true"] > mark') as HTMLElement;
     await expect.poll(() => { const r = mark.getBoundingClientRect(), f = el.getBoundingClientRect(); return r.top >= f.top && r.bottom <= f.bottom + 0.5; }).toBe(true);
   });
 });

@@ -81,7 +81,7 @@ Drawn from the `ByArea` story.
 | --- | --- |
 | Tab | The country menu, then the number field. In the open list, closes it and goes on to the number |
 | Enter / Space / Down / Up | On the country menu, opens the list on the picked country, focus in its search field |
-| A letter or digit | On the country menu, opens the list searching for it |
+| A letter | On the country menu, opens the list searching for it; a digit does too, to find a calling code |
 | Down / Up | In the list, move through the countries, wrapping at the ends |
 | Enter | In the list, picks the highlighted country and puts focus in the number |
 | Escape | Closes the list, nothing picked, focus back on the menu |

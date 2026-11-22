@@ -35,6 +35,7 @@ import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
 import { Pagination } from '../components/Pagination/Pagination';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
+import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { Kanban } from '../components/Kanban/Kanban';
 import { TagGroup } from '../components/TagGroup/TagGroup';
 import { SortableList } from '../components/SortableList/SortableList';
@@ -140,6 +141,9 @@ const SITES: Record<string, Site> = {
   'PasswordInput: Caps Lock turning on': {
     ui: () => <PasswordInput aria-label="Password" />,
     act: async () => { const f = $('input'); f.focus(); f.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, modifierCapsLock: true })); }, says: /Caps Lock is on/ },
+  'PhoneInput: how many countries match once typing stops in the country list': {
+    ui: () => <PhoneInput aria-label="Phone" defaultCountry="ID" />,
+    act: async () => { await userEvent.click($('button[aria-haspopup="listbox"]')); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('Indo'); }, says: /[0-9٠-٩]+ result/ },
   'Progress: announceComplete when the value reaches max': {
     ui: (s) => <Progress label="Upload" value={s ? 100 : 60} announceComplete />,
     act: (next) => next(), says: /Upload: complete/ },

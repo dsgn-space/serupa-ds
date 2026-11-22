@@ -342,7 +342,7 @@ describe('Chart', () => {
     await withMotion(async () => {
       const line = css(document.querySelector('svg[aria-describedby] g[role="group"] > path[aria-hidden]'));
       const bar = css(document.querySelector('figure[data-type="bar"] g[role="group"] > [role="img"]'));
-      const marker = css(document.querySelector('.srp-chart__marker'));
+      const marker = css(document.querySelector('figure:not([data-type="bar"]) g[role="group"] > path[role="img"]'));
       expect([line.animationDuration, bar.animationDuration, marker.animationDelay]).toEqual(['0.7s', '0.7s', '0.42s']);
     });
   });

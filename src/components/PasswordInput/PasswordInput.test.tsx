@@ -182,8 +182,8 @@ describe('PasswordInput', () => {
     await render(<PasswordInput id="cli" aria-label="Password" />);
     field('cli').focus();
     field('cli').dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, modifierCapsLock: true }));
-    await expect.poll(() => box('cli').querySelector('.srp-password-input__caps')).not.toBeNull();
-    const hint = box('cli').querySelector<HTMLElement>('.srp-password-input__caps')!;
+    await expect.poll(() => box('cli').querySelector('[title="Caps Lock is on"]')).not.toBeNull();
+    const hint = box('cli').querySelector<HTMLElement>('[title="Caps Lock is on"]')!;
     expect(hint.querySelector('svg')).not.toBeNull();
     expect(hint.getAttribute('title')).toBe('Caps Lock is on');
     expect(hint.textContent).toBe('Caps Lock is on');

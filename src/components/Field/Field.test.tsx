@@ -153,7 +153,7 @@ describe('Field', () => {
     const box = (id: string) => el(id).closest('[data-component="field"]')!, at = (id: string, sel: string) => css(box(id).querySelector(sel));
     expect([at('sz', '.srp-field__label').fontSize, at('sz', '.srp-field__hint').fontSize, at('sz', '.srp-field__hint').lineHeight, at('sz', '.srp-field__error').fontSize, at('sw', '.srp-field__warning').fontSize])
       .toEqual(['14px', '12px', '16px', '12px', '12px']);
-    const icon = box('sz').querySelector('.srp-field__error-icon')!.getBoundingClientRect(), line = box('sz').querySelector('.srp-field__error')!.getBoundingClientRect();
+    const icon = box('sz').querySelector('[data-icon="error"]')!.getBoundingClientRect(), line = box('sz').querySelector('[data-icon="error"]')!.parentElement!.getBoundingClientRect();
     expect([Math.round(icon.width), Math.round(icon.top + icon.height / 2 - line.top)]).toEqual([14, 8]);
   });
 

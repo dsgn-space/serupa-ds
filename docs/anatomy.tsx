@@ -77,7 +77,7 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         if ([...o.querySelectorAll('img')].some((i) => !i.complete) || o.querySelector('[data-state="loading"]')) continue;
         copied.add(o);
         // One copy a panel: a component may draw its panel anew as it opens (Tour's), which left two copies side by side.
-        if ([...box.children].some((x) => x.className === o.className && x.textContent === o.textContent)) continue;
+        const dup = [...box.children].some((x) => x.className === o.className && x.textContent === o.textContent);
         const c = o.cloneNode(true) as HTMLElement;
         c.removeAttribute('popover');
         c.removeAttribute('hidden');
@@ -85,7 +85,7 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         if (c.dataset.state === 'closed') c.dataset.state = 'open';
         for (const x of [c, ...c.querySelectorAll('[id]')]) x.removeAttribute('id');
         if (c instanceof HTMLDialogElement) c.setAttribute('open', '');
-        box.append(c);
+        if (!dup) box.append(c);
         // The copy is what's numbered, so the live one closes: a menu or popover a story opens on arrival would
         // otherwise stay over the docs page.
         if (o instanceof HTMLDialogElement) { if (o.open) o.close(); }

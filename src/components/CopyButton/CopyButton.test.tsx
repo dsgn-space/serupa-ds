@@ -79,7 +79,7 @@ describe('CopyButton', () => {
   test('the label changes with the icon: both cross-fade over the same time, so the check never shows beside "Copy"', async () => {
     await withMotion(async () => {
       await render(<CopyButton id="sync" value="k" />);
-      const b = el('sync'), [copy] = labels(b) as HTMLElement[], glyph = b.querySelector<HTMLElement>('.srp-copy-btn__icon--copy')!;
+      const b = el('sync'), [copy] = labels(b) as HTMLElement[], glyph = b.querySelector<HTMLElement>('[data-icon="content_copy"]')!;
       const fade = (e: HTMLElement) => { const st = css(e), i = st.transitionProperty.split(', ').indexOf('opacity'); return i < 0 ? 'none' : st.transitionDuration.split(', ')[i]; };
       expect(fade(copy!)).toBe(fade(glyph));
     });

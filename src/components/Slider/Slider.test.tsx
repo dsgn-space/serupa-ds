@@ -355,7 +355,7 @@ describe('Slider', () => {
 
   test('marks on the light track: a tick on the fill is a cut in the field\'s color, one past it a line in border-strong', async () => {
     await render(<Slider id="mk" aria-label="Marks" defaultValue={50} step={25} marks />);
-    const ticks = [...el('mk').querySelectorAll<HTMLElement>('.srp-slider__tick')].map((t) => css(t).backgroundColor);
+    const ticks = [...el('mk').querySelectorAll<HTMLElement>('[aria-hidden="true"][style] > span')].map((t) => css(t).backgroundColor);
     expect(ticks).toEqual([color('var(--field)'), color('var(--field)'), color('var(--border-strong)')]);
   });
 

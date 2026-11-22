@@ -270,7 +270,7 @@ describe('Switch', () => {
   test('the thumb slides in 100ms (motion-press: feedback for a toggle is 100ms or less, FI1), a press on it springs back over motion-release, and nothing animates with reduced motion', async () => {
     await setup();
     const dur = () => withMotion(() => css(document.querySelector('input + span')).transitionDuration + '|' + css(document.querySelector('[role=switch]')).transitionDuration);
-    expect(dur()).toBe('0.1s, 0.1s, 0.1s, 0.3s|0.1s');
+    expect(dur()).toBe('0.1s, 0.1s, 0.3s|0.1s');
     if (server.browser === 'chromium') {
       const session = cdp() as unknown as { send: (method: string, params: object) => Promise<unknown> };
       await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });

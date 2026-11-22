@@ -469,7 +469,7 @@ describe('ChatComposer', () => {
 
   test('one line of the field is exactly as tall as Send, and they share top and bottom edges', async () => {
     await render(<div style={{ width: 480 }}><ChatComposer id="cc" onSend={() => {}} /></div>);
-    const cc = document.getElementById('cc')!, box = (cc.querySelector('.srp-textarea') as HTMLElement).getBoundingClientRect(), send = cc.querySelector('button[type="submit"]')!.getBoundingClientRect();
+    const cc = document.getElementById('cc')!, box = cc.querySelector('textarea')!.parentElement!.getBoundingClientRect(), send = cc.querySelector('button[type="submit"]')!.getBoundingClientRect();
     expect([box.height, box.top, box.bottom]).toEqual([send.height, send.top, send.bottom]);
   });
 

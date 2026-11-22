@@ -48,7 +48,7 @@ describe('Fab', () => {
     </div>);
     const out: unknown[] = [];
     for (const [id, size] of [['fl', 24], ['fls', 24]] as const) {
-      const b = el(id), ring = b.querySelector<HTMLElement>('.srp-loader__art')!, r = ring.querySelector('svg')!.getBoundingClientRect(), o = b.getBoundingClientRect();
+      const b = el(id), ring = b.querySelector<HTMLElement>('[data-component="loader"] svg')!.parentElement!, r = ring.querySelector('svg')!.getBoundingClientRect(), o = b.getBoundingClientRect();
       const off = Math.max(Math.abs(r.left + r.width / 2 - (o.left + o.width / 2)), Math.abs(r.top + r.height / 2 - (o.top + o.height / 2)));
       out.push([id, Math.round(r.width), Math.round(r.height), off <= 0.5, css(ring).color === css(b).color]);
       expect(out.at(-1)).toEqual([id, size, size, true, true]);

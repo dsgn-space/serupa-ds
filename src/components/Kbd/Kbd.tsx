@@ -80,7 +80,7 @@ function KbdRender({ ref, ...props }: KbdProps & React.RefAttributes<HTMLElement
     <kbd {...rest} ref={ref} className={cn(cls, keys.length === 1 && 'srp-kbd--single')} data-component="kbd" data-size={size}>
       {keys.map((k, i) => (
         <React.Fragment key={i}>
-          {i > 0 ? <span className="srp-kbd__plus" aria-hidden>+</span> : null}
+          {i > 0 && size === 'md' ? <span className="srp-kbd__plus" aria-hidden>+</span> : null}
           <Key k={k} apple={apple} say={say} />
         </React.Fragment>
       ))}

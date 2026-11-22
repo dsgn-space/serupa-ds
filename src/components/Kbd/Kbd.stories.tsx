@@ -18,7 +18,7 @@ export const InText: Story = { render: () => <p style={{ margin: 0 }}>Press <Kbd
 /** size="sm" inside a control: 16px quiet keys with no +, so they don't crowd the button's edges. */
 export const InControl: Story = {
   render: () => <div style={{ display: 'flex', gap: 'var(--spacing-3)', alignItems: 'center' }}>
-    <Button variant="outline" size="sm" startIcon="search">Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
+    <Button variant="outline" size="sm" startIcon="search">Find <Kbd keys={['mod', 'K']} size="sm" /></Button>
     <Button variant="outline" startIcon="search">Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
   </div>,
 };

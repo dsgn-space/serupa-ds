@@ -174,7 +174,7 @@ describe('SignaturePad', () => {
 
   test('the drawing box has the field\'s border, as a Textarea has, not the stronger control one', async () => {
     await render(<SignaturePad aria-label="Signature" />);
-    const box = document.querySelector<HTMLElement>('.srp-signature-pad__box')!;
+    const box = document.querySelector<HTMLElement>('svg[role="img"]')!.parentElement!;
     expect(css(box).borderTopColor).toBe(color('var(--field-border)'));
   });
 

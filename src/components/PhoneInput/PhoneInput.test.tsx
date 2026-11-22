@@ -11,10 +11,10 @@ import { PHONE_COUNTRIES, formatNational, formatPhone, parsePhone, phoneCountry 
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
-const menu = (id: string) => box(id).querySelector('.srp-phone-input__country') as HTMLButtonElement;
+const menu = (id: string) => box(id).querySelector('button[aria-haspopup="listbox"]') as HTMLButtonElement;
 const code = (id: string) => menu(id).dataset.value;
 const list = () => document.querySelector<HTMLElement>('[role="listbox"]');
-const search = () => document.querySelector('.srp-phone-input__search') as HTMLInputElement;
+const search = () => document.querySelector('[popover] input[role="combobox"]') as HTMLInputElement;
 // Opens the country list (a press on the menu) and gives its options.
 const options = async (id: string) => {
   if (menu(id).getAttribute('aria-expanded') !== 'true') await userEvent.click(menu(id));
@@ -71,7 +71,7 @@ describe('PhoneInput', () => {
     const prefix = menu('prtl').firstElementChild!;   // first in the country part: "+" and the code
     const left = (n: Node) => { const r = document.createRange(); r.selectNodeContents(n); return r.getBoundingClientRect().left; };
     expect([prefix.textContent, left(prefix.firstChild!) < left(prefix.lastChild!)]).toEqual(['+20', true]);
-    const eg = (await options('prtl')).find((o) => o.dataset.value === 'EG')!.querySelector('.srp-phone-input__code')!;
+    const eg = (await options('prtl')).find((o) => o.dataset.value === 'EG')!.querySelector(':scope > span:nth-of-type(2)')!;
     expect([eg.textContent, css(eg).direction, css(eg).unicodeBidi]).toEqual(['+20', 'ltr', 'isolate']);
   });
 
@@ -120,6 +120,14 @@ describe('PhoneInput', () => {
     expect(at()).toBe('CA');
     await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
     expect([list(), code('kp'), document.activeElement === field('kp'), field('kp').value]).toEqual([null, 'CA', true, '(201) 555-0123']);
+    // Space opens it too; a digit on the menu searches for a calling code.
+    menu('kp').focus();
+    await userEvent.keyboard('{Space}');
+    await expect.poll(() => document.activeElement).toBe(search());
+    await userEvent.keyboard('{Escape}');
+    await userEvent.keyboard('6');
+    await expect.poll(() => search()?.value).toBe('6');
+    await userEvent.keyboard('{Escape}');
     // A calling code finds its countries too.
     menu('kp').focus();
     await userEvent.keyboard('{ArrowDown}');
@@ -213,9 +221,9 @@ describe('PhoneInput', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const act = list()!.querySelector<HTMLElement>('.srp-phone-input__option--active')!, other = list()!.querySelector<HTMLElement>('[role="option"]:not(.srp-phone-input__option--active)')!;
-      const bg = css(document.querySelector('.srp-phone-input__popup')).backgroundColor;
-      for (const [n, fg, b] of [['name', css(other).color, bg], ['code', css(other.querySelector('.srp-phone-input__code')).color, bg], ['active code', css(act.querySelector('.srp-phone-input__code')).color, css(act).backgroundColor]] as const) {
+      const act = document.getElementById(search().getAttribute('aria-activedescendant')!)!, other = [...list()!.querySelectorAll<HTMLElement>('[role="option"]')].find((o) => o !== act)!;
+      const bg = css(list()!.closest('[popover]')).backgroundColor;
+      for (const [n, fg, b] of [['name', css(other).color, bg], ['code', css(other.querySelector(':scope > span:nth-of-type(2)')).color, bg], ['active code', css(act.querySelector(':scope > span:nth-of-type(2)')).color, css(act).backgroundColor]] as const) {
         const r = contrast(fg, b);
         if (r < 4.5) low.push(`${th} ${n} ${r.toFixed(2)}`);
       }
@@ -234,7 +242,7 @@ describe('PhoneInput', () => {
     // Nothing matches: the list says so, and so does the announcer after a pause; Enter then picks nothing.
     await options('cl');
     await userEvent.fill(search(), 'zzz');
-    expect([list()!.children.length, document.querySelector('.srp-phone-input__message')!.textContent]).toEqual([0, 'No results. Try other words.']);
+    expect([list()!.children.length, list()!.nextElementSibling!.textContent]).toEqual([0, 'No results. Try other words.']);
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(/No results/);
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect([code('cl'), !!list()]).toEqual(['MY', true]);

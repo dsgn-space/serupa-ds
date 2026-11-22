@@ -312,7 +312,7 @@ describe('InlineEdit', () => {
     expect(low).toEqual([]);
   });
 
-  test('its error is a Field error\'s size, 14px, with the icon centred on the first line, at every size (GR392)', async () => {
+  test('its error is a Field error\'s size, 12px, with the icon centered on the first line, at every size (GR392)', async () => {
     await render(<><Field label="Name" error="Name is required"><Input /></Field>
       {(['sm', 'md', 'lg'] as const).map((sz) => <InlineEdit key={sz} id={'gr392-' + sz} size={sz} label="Slug" defaultValue="apollo" validate={() => 'Use letters only'} />)}</>);
     const look = (e: Element) => [css(e).fontSize, css(e).lineHeight, css(e).gap, Math.round(e.querySelector('[data-icon]')!.getBoundingClientRect().height)];
@@ -325,7 +325,7 @@ describe('InlineEdit', () => {
       if (JSON.stringify(look(e)) !== JSON.stringify(want)) got.push(sz + ' ' + look(e).join(' '));
       await userEvent.keyboard('{Escape}');
     }
-    expect([want[0], got]).toEqual(['14px', []]);
+    expect([want[0], got]).toEqual(['12px', []]);
   });
 
   test('an error with one long word stays inside the field (GR392)', async () => {

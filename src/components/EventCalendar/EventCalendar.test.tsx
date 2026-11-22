@@ -270,8 +270,8 @@ describe('EventCalendar', () => {
 
   test('month: today\'s number is in the weight of the other days, marked by an underline as well as its colour', async () => {
     await render(<EventCalendar events={[]} view="month" />);
-    const today = document.querySelector<HTMLElement>('[aria-current="date"] .srp-event-calendar__date')!;
-    const other = [...document.querySelectorAll<HTMLElement>('.srp-event-calendar__date')].find((d) => d !== today && !d.closest('[class*="--outside"]'))!;
+    const today = document.querySelector<HTMLElement>('[aria-current="date"] > span[aria-hidden]')!;
+    const other = [...document.querySelectorAll<HTMLElement>('[role="gridcell"] > span[aria-hidden]')].find((d) => d !== today && !d.closest('[class*="--outside"]'))!;
     expect([css(today).fontWeight, css(today).textDecorationLine]).toEqual([css(other).fontWeight, 'underline']);
     expect(css(other).textDecorationLine).toBe('none');
   });

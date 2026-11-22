@@ -38,10 +38,10 @@ describe('TagGroup', () => {
       <TagGroup id="tw" label="Labels" items={[{ id: 'a', label: 'Bug' }, { id: 'b', label: 'A label long enough to wrap' }]} />
       <Button size="sm" id="tb">Bug</Button>
     </div>);
-    const [one, two] = [...document.querySelectorAll<HTMLElement>('#tw [role="row"]')], text = one!.querySelector<HTMLElement>('.srp-tag-group__text')!;
+    const [one, two] = [...document.querySelectorAll<HTMLElement>('#tw [role="row"]')], text = one!.querySelector<HTMLElement>('[role="gridcell"]')!;
     const b = getComputedStyle(document.getElementById('tb')!);
     expect([getComputedStyle(one!).fontSize, getComputedStyle(one!).lineHeight, Math.round(one!.getBoundingClientRect().height)]).toEqual([b.fontSize, b.lineHeight, 24]);
-    const inset = (r: HTMLElement) => Math.round(r.querySelector<HTMLElement>('.srp-tag-group__text')!.getBoundingClientRect().top - r.getBoundingClientRect().top);
+    const inset = (r: HTMLElement) => Math.round(r.querySelector<HTMLElement>('[role="gridcell"]')!.getBoundingClientRect().top - r.getBoundingClientRect().top);
     expect([inset(one!), inset(two!), two!.getBoundingClientRect().height > 24]).toEqual([4, 4, true]);   // 1px border and 3px above the line
     expect(text.textContent).toBe('Bug');
   });

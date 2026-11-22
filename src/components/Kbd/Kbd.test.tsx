@@ -141,8 +141,8 @@ describe('Kbd', () => {
   test('sm, for inside a control such as a search button: 16px, a 1px outline all round in the quiet border, no + between keys', async () => {
     windows();
     await render(<Kbd id="q" size="sm" keys={['mod', 'K']} />);
-    const k = caps('q')[0]!, plus = el('q').querySelector<HTMLElement>(':scope > span')!;
-    expect([css(k).borderTopWidth, css(k).borderBottomWidth, css(plus).display]).toEqual(['1px', '1px', 'none']);
+    const k = caps('q')[0]!;
+    expect([css(k).borderTopWidth, css(k).borderBottomWidth, el('q').textContent?.includes('+')]).toEqual(['1px', '1px', false]);
     expect(spoken('q')).toBe('Control + K');
   });
 

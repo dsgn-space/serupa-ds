@@ -28,5 +28,4 @@
 .srp-kbd--size-sm .srp-kbd__key { padding-inline: var(--kbd-padding-x-sm, var(--spacing-1)); border-color: var(--kbd-border-sm, var(--border)); border-bottom-width: var(--border-width-1); }
 .srp-kbd--size-sm .srp-kbd__key--char { padding-inline: var(--spacing-0); }
 .srp-kbd__plus { color: var(--kbd-separator, var(--text-muted)); }
-.srp-kbd--size-sm .srp-kbd__plus { display: none; }   /* already hidden from screen readers */
 }

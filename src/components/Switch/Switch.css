@@ -42,7 +42,7 @@
   border-radius: var(--rounded-full); background: var(--switch-thumb, var(--white));
   box-shadow: var(--switch-thumb-shadow, var(--elevation-part));   /* no edge, a small shadow, as Apple's thumb */
   pointer-events: none;
-  transition: translate var(--motion-press) var(--ease-move), width var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-release) var(--ease-spring);
+  transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
 .srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--white)); }
 /* On, the thumb moves to the end by translate, which the compositor runs without laying out the row each frame
@@ -61,10 +61,10 @@
 /* Read-only: no pointer cursor or hover, since a click won't flip it. */
 .srp-switch--readonly { cursor: default; }
 /* Pressed: while the row is held (pointer, or Space on the switch) the track takes its held color, a step past
-   hover. The thumb grows 4px wider toward the middle (--switch-press-stretch), as Apple's; --switch-press-scale opts in to a smaller one. Not when read-only, pending
+   hover. The thumb grows 4px wider toward the middle (--switch-press-stretch), as Apple's, at once (a width transition would lay the page out every frame); --switch-press-scale opts in to a smaller one. Not when read-only, pending
    or disabled. */
 .srp-switch:not(.srp-switch--readonly, .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
-.srp-switch:active:not(.srp-switch--readonly, .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { --srp-switch-stretch: var(--switch-press-stretch, var(--spacing-1)); scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), width var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+.srp-switch:active:not(.srp-switch--readonly, .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { --srp-switch-stretch: var(--switch-press-stretch, var(--spacing-1)); scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
 /* Pending: Loader's ring on the thumb (EE1): a quarter arc in primary (3:1 on the off thumb's field, and on the
    on thumb's on-primary) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */

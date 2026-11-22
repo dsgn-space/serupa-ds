@@ -163,7 +163,7 @@ describe('Calendar', () => {
   test('today is in the same weight as the other days, set apart by its color and a dot under its number', async () => {
     await render(<Calendar data-testid="tw" />);
     const t = q('[data-testid=tw] [aria-current=date]');
-    const other = [...document.querySelectorAll<HTMLElement>('[data-testid=tw] .srp-calendar__day')].find((d) => d !== t && !/outside|selected/.test(d.className))!;
+    const other = [...document.querySelectorAll<HTMLElement>('[data-testid=tw] button[data-date]')].find((d) => d !== t && !/outside|selected/.test(d.className))!;
     expect(getComputedStyle(t).fontWeight).toBe(getComputedStyle(other).fontWeight);
     expect(getComputedStyle(t).color).not.toBe(getComputedStyle(other).color);
     // More than color (1.4.1): a dot under the number, in the number's color, which the other days don't have.
