@@ -514,7 +514,10 @@ describe('Slider at 320px (GM2)', () => {
   // its ResizeObserver). Under some locales (ja) a font is still arriving just after render, and the swap moves a label
   // by a fraction of a pixel; the slider refits on its own, which the second test checks, but a measure taken before
   // that frame saw the old nudge.
-  const fontsIn = async () => { await document.fonts.ready; await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))); };
+  // A frame first, so the new text has asked for its web font (fonts.ready resolves at once while none is loading yet,
+  // and the labels then widen after the measure); then two, for the refit a resize sets for the next frame.
+  const frame = () => new Promise((ok) => requestAnimationFrame(ok));
+  const fontsIn = async () => { await frame(); await document.fonts.ready; await frame(); await frame(); };
   test('the value chip and the end labels stay inside the slider: nothing widens the page, in either direction, shown or hidden', async () => {
     const money = (v: number) => 'IDR ' + (v * 10000).toLocaleString('en-US') + ' per month';
     const marks = [{ value: 0, label: 'Nothing at all' }, { value: 50, label: 'Half' }, { value: 100, label: 'Everything there is' }];
