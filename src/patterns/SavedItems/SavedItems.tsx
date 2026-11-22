@@ -164,7 +164,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
                 </Field>
               ) : null}
             </div>
-            <p id="saved-count" role="status" className="m-0 text-text-muted">
+            <p id="saved-count" role="status" className="m-0 text-sm text-text-muted">
               {shown.length === 1 ? '1 item' : `${formatNumber(shown.length, locale)} items`}{shown.length > 1 ? `, ${SORTS.find((s) => s.value === sort)!.label.toLowerCase()}` : ''}
             </p>
             {shown.length ? (
