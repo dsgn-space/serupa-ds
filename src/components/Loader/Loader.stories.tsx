@@ -33,7 +33,7 @@ export const Tones: Story = {
     <Loader delay={0} />
     <Loader tone="primary" delay={0} />
     <Loader tone="muted" delay={0} />
-    <span className="p-3 rounded-md" style={{ background: 'var(--surface-inverse)' }}><Loader tone="inverse" delay={0} /></span>
+    <span className="p-3 rounded-md" style={{ background: 'var(--zinc-950)' }}><Loader tone="inverse" delay={0} /></span>   {/* inverse is white: on media that stays dark in every theme */}
   </Row>,
 };
 

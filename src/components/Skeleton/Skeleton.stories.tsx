@@ -36,8 +36,9 @@ export const Shapes: Story = {
   </div>,
 };
 
+/** Inverse: white bones on media or a scrim that stays dark in every theme (a photo, a video), not on surface-inverse, which turns light in dark mode. */
 export const Inverse: Story = {
-  render: () => <div className="p-4 rounded-md" style={{ background: 'var(--surface-inverse)', maxWidth: 360 }}><Skeleton tone="inverse" lines={2} delay={0} label="" /></div>,
+  render: () => <div className="p-4 rounded-md" style={{ background: 'var(--zinc-950)', maxWidth: 360 }}><Skeleton tone="inverse" lines={2} delay={0} label="" /></div>,
 };
 
 // The stress story (G14): many lines in a narrow column.

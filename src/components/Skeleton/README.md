@@ -44,7 +44,7 @@ Drawn from the `Profile` story.
 - **rect**: full width and 96px tall (`--skeleton-rect-height`), `radius-control` corners. Set the size with classes (`h-40`, `w-48 h-32`); for a ratio, `h-auto aspect-video`.
 - Lines and rects stretch to their container and shrink beside an avatar in a row, while the circle keeps its size.
 - Match the real layout closely and keep it short: a few rows, not a screenful.
-- On a dark scrim, photo or video, `tone="inverse"` makes it white.
+- On a dark scrim, photo or video, `tone="inverse"` makes it white. Not on `surface-inverse`, which turns light in dark themes: there, leave the tone as `neutral` and it takes `text-inverse` from its parent.
 - If loading fails, replace it with an error message and a way to retry.
 
 The fill is the text color at 10% (`--skeleton-fill`), so it fits any surface and theme. A lighter band (the text color at 5%) sweeps through it from left to right every 2 seconds, easing in and out.
