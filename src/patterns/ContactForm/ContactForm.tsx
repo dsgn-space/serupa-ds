@@ -119,6 +119,7 @@ export function ContactForm({ onSend, replyTime = 'within 2 working days', onlin
             ) : (
               <form onSubmit={send} noValidate aria-label="Contact us" className="flex flex-col gap-4">
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Name" id="contact-name" error={problems.name} required>
                   <Input autoComplete="name" value={m.name} onChange={(e) => edit({ name: e.target.value })} />
                 </Field>

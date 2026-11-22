@@ -187,6 +187,7 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister, 
                 <h2 id="register" className="m-0 text-lg font-semibold">{full ? 'Join the waiting list' : 'Get tickets'}</h2>
                 {full ? <p className="m-0">It’s full. Leave your name, and we’ll email you if a place comes free.</p> : null}
                 <ErrorSummary key={tries} errors={errors} />
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 {full ? null : (
                   <>
                     <Field label="Ticket" error={problems.ticket} group required>

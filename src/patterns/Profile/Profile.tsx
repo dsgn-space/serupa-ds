@@ -148,6 +148,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                   <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-4 md:col-span-2">
                     <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
                     <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                    <p className="m-0 text-text-muted">Fields marked * are required.</p>
                     <div className="flex flex-wrap items-center gap-4">
                       <Avatar size="xl" name={draft.name || saved.name} src={photo || undefined} alt={photo ? `Photo of ${draft.name || saved.name}` : undefined} />
                       {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}

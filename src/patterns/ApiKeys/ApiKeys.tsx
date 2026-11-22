@@ -240,6 +240,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
             ) : (
               <form onSubmit={create} noValidate className="flex flex-col gap-4">
                 {createFailed ? <Alert tone="danger">Couldn’t create the key. Try again.</Alert> : null}
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
                 <Field label="Name" id="key-name" hint="What uses it, like “Deploy bot”." error={nameProblem ?? undefined} required>
                   <Input value={draft.name} autoComplete="off" onChange={(e) => { setDraft({ ...draft, name: e.target.value }); if (nameProblem) setNameProblem(null); }} />
                 </Field>
