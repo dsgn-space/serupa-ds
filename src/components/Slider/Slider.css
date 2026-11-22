@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   Slider: a rounded track (border-control, 3:1 on the surface) with the selected part in primary, and one or two
+   Slider: a rounded track (surface-muted inside the basic border, as Meter's) with the selected part in primary, and one or two
    round thumbs (field inside, a 2px primary ring, shadow-sm) centered on their values. sm: 4px track, 16px
    thumb; md: 6px, 20px; lg: 8px, 24px. The whole thumb-high strip takes presses. marks: 2px ticks cut into the track (none at its ends), and
    muted text-xs labels under it, centered on their values, with room made below. showValue: the value in a small inverse
@@ -25,7 +25,8 @@
 .srp-slider__input { flex: none; inline-size: var(--slider-input-width, var(--spacing-20)); cursor: auto; touch-action: auto; -webkit-user-select: auto; user-select: auto; }
 .srp-slider--size-sm { --srp-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --srp-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
 .srp-slider--size-lg { --srp-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --srp-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
-.srp-slider__track { position: relative; flex: auto; block-size: var(--srp-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); }
+.srp-slider__track { position: relative; flex: auto; block-size: var(--srp-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--surface-muted));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-track-border, var(--border)); }   /* Meter's and Progress's track: the fill and the thumb carry the 3:1 */
 .srp-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
 .srp-slider__thumb {
   position: absolute; inset-block-start: var(--srp-slider-thumb-top); box-sizing: border-box; inline-size: var(--srp-slider-thumb); block-size: var(--srp-slider-thumb);
@@ -52,6 +53,8 @@
 /* Each mark is a zero-wide point on the track; its tick and label center on it in either direction. */
 .srp-slider__mark { position: absolute; inset-block: var(--spacing-0); inline-size: var(--spacing-0); display: flex; justify-content: center; }
 .srp-slider__tick { flex: none; inline-size: var(--border-width-2); background: var(--slider-mark, var(--field)); }
+/* Past the fill, on the light track, a cut in the field's color would barely show: the tick is a line in border-strong there. */
+.srp-slider__tick--off { background: var(--slider-mark-off, var(--border-strong)); }
 .srp-slider__mark-label {
   --srp-slider-under: calc(var(--sizing-full) + var(--srp-slider-half) - var(--srp-slider-track) / 2 + var(--spacing-1));
   position: absolute; inset-block-start: var(--srp-slider-under);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, drag, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Slider } from './Slider';
@@ -347,16 +347,28 @@ describe('Slider', () => {
     expect(now('rtl')).toBe(90);
   });
 
-  test('contrast: the track, fill and thumb ring keep 3:1 on the page in every theme', async () => {
+  test('the track is Meter\'s and Progress\'s: a light gray fill inside the basic border, not a dark bar', async () => {
+    await setup();
+    const t = css(el('one').querySelector(':scope > div'));
+    expect([t.backgroundColor, t.boxShadow]).toEqual([color('var(--surface-muted)'), color('var(--border)') + ' 0px 0px 0px 1px inset']);
+  });
+
+  test('marks on the light track: a tick on the fill is a cut in the field\'s color, one past it a line in border-strong', async () => {
+    await render(<Slider id="mk" aria-label="Marks" defaultValue={50} step={25} marks />);
+    const ticks = [...el('mk').querySelectorAll<HTMLElement>('.srp-slider__tick')].map((t) => css(t).backgroundColor);
+    expect(ticks).toEqual([color('var(--field)'), color('var(--field)'), color('var(--border-strong)')]);
+  });
+
+  test('contrast: the fill and the thumb ring keep 3:1 on the page in every theme', async () => {
     await setup();
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
-      const parts = { track: q(':scope > div').backgroundColor, fill: q(':scope > div > div').backgroundColor, thumb: q('input[type=range]').borderTopColor };
+      const parts = { fill: q(':scope > div > div').backgroundColor, thumb: q('input[type=range]').borderTopColor };
       for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
-    expect([low, n]).toEqual([[], 18]);
+    expect([low, n]).toEqual([[], 12]);
   });
 
   test('--slider-fill overrides one slider', async () => {

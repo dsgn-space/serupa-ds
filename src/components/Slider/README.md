@@ -63,7 +63,7 @@ Drawn from the `Marks` story.
 
 - The slider takes a press over at least 24px of height (WCAG 2.5.8), past the 20px thumb, without taking more room, and 44px on a touch screen, as Apple and Material ask.
 - Each thumb is a native `<input type="range">` (role `slider`) over the drawn one, unseen, with its value, `min`, `max`, `step` and `aria-orientation`. Screen readers' adjust gestures (VoiceOver's swipe up and down, TalkBack's volume keys) work reliably only on a native range, and they move the thumb by `step` and call `onValueCommit` as a key does. A range's thumbs limit each other, and the pair is a named `group`.
-- The track, the fill and the thumb's ring keep 3:1 on the page in every theme, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
+- The fill and the thumb's ring keep 3:1 on the page in every theme, so the control and its value can be seen (`Slider.test.tsx`). The track is a light gray fill inside the basic border, as Meter's and Progress's. In forced-colors mode it uses system colors.
 - In a [Field](../Field/README.md), the label names the thumb (a range's group) through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
 - `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in every theme). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
 - `readOnly` keeps the thumbs in the Tab order with `aria-readonly`, so people can still hear the value, but keys and presses don't change it. With `name`, the value is still sent with the form, which `disabled` doesn't do.
@@ -121,13 +121,15 @@ Each is an optional override: set it on the page, a container or one slider. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--slider-track` | `border-control` | The track (3:1 on the surface, so the control can be seen). |
+| `--slider-track` | `surface-muted` | The track: a light gray fill, as Meter's and Progress's. The fill and the thumb's ring carry the 3:1. |
+| `--slider-track-border` | `border` | The track's edge, inside it: the basic border, as Meter's. |
 | `--slider-fill` | `primary` | The selected part of the track. |
 | `--slider-thumb-bg` | `field` | The thumb's inside. |
 | `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |
 | `--slider-focus-ring` | `focus-ring` | The thumb's keyboard focus ring. |
 | `--slider-invalid` | `danger` | The fill and the thumb's ring when invalid. |
 | `--slider-mark` | `field` | The marks' ticks, cut into the track. |
+| `--slider-mark-off` | `border-strong` | A mark's tick past the fill, on the light track. |
 | `--slider-mark-label` | `text-muted` | The marks' text under the track (4.5:1 on the surface). |
 | `--slider-value-bg` | `surface-inverse` | showValue's chip over the thumb. |
 | `--slider-value-text` | `text-inverse` | showValue's text (4.5:1 on value-bg). |

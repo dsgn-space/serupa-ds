@@ -4,11 +4,21 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The track (3:1 on the surface, so the control can be seen).",
+        "$value": "{color.surface-muted}",
+        "$description": "The track: a light gray fill, as Meter's and Progress's. The fill and the thumb's ring carry the 3:1.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-track"
+          }
+        }
+      },
+      "track-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The track's edge, inside it: the basic border, as Meter's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-track-border"
           }
         }
       },
@@ -69,6 +79,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-mark"
+          }
+        }
+      },
+      "mark-off": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "A mark's tick past the fill, on the light track.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-mark-off"
           }
         }
       },
