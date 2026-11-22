@@ -58,16 +58,19 @@
     }
   }
 }
-/* The count sits under the box, at its end, 4px below it, in text-xs text-muted like a Field hint, with tabular
-   digits; it turns text-colored at maxLength. Inside the box it crowded the resize handle. The box keeps room under
-   it for the count, so what follows doesn't run into it. */
-.srp-textarea:has(> .srp-textarea__count) { position: relative; margin-block-end: calc(var(--textarea-count-gap, var(--spacing-1)) + var(--text-xs--line-height)); }
-.srp-textarea > .srp-textarea__count {
-  position: absolute; inset-block-start: calc(var(--sizing-full) + var(--textarea-border-width, var(--border-width-1)) + var(--textarea-count-gap, var(--spacing-1)));
-  inset-inline-end: calc(var(--spacing-0) - var(--textarea-border-width, var(--border-width-1))); white-space: nowrap;
+/* The resize grip (Chrome, Edge, Safari): two short diagonal lines in the count's muted color, in place of the
+   browser's gray hatching, so the corner reads as one quiet mark beside the count. Firefox draws its own. */
+.srp-textarea__field::-webkit-resizer {
+  --srp-ta-grip: var(--textarea-resize-grip, var(--text-muted));
+  background: linear-gradient(to top left,
+    transparent var(--sizing-1-4), var(--srp-ta-grip) var(--sizing-1-4), var(--srp-ta-grip) calc(var(--sizing-1-4) + var(--border-width-1)), transparent calc(var(--sizing-1-4) + var(--border-width-1)),
+    transparent var(--sizing-1-2), var(--srp-ta-grip) var(--sizing-1-2), var(--srp-ta-grip) calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1)));
+  background-repeat: no-repeat; background-position: top left; background-size: var(--sizing-3-4) var(--sizing-3-4);   /* in from the box's corner */
 }
+/* The count sits under the text, at the end, in text-xs text-muted like a Field hint, with tabular digits; it turns
+   text-colored at maxLength. */
 .srp-textarea__count {
-  padding: var(--spacing-0);
+  align-self: flex-end; padding: var(--spacing-0) var(--srp-ta-px) var(--srp-ta-py);
   color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }

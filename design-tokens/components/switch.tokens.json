@@ -5,7 +5,7 @@
       "track": {
         "$type": "color",
         "$value": "{color.track}",
-        "$description": "The track while off: Apple's light gray. The thumb's edge on it carries the 3:1.",
+        "$description": "The track while off: Apple's light gray.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track"
@@ -15,7 +15,7 @@
       "track-hover": {
         "$type": "color",
         "$value": "{color.border-strong}",
-        "$description": "The track while off, on hover: a step darker than track, and the thumb's edge darkens too.",
+        "$description": "The track while off, on hover: a step darker than track.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-hover"
@@ -69,26 +69,6 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb"
-          }
-        }
-      },
-      "thumb-border": {
-        "$type": "color",
-        "$value": "{color.border}",
-        "$description": "The off thumb's 1px edge, in the basic border",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--switch-thumb-border"
-          }
-        }
-      },
-      "thumb-border-hover": {
-        "$type": "color",
-        "$value": "{color.border-strong}",
-        "$description": "The off thumb's edge on hover",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--switch-thumb-border-hover"
           }
         }
       },

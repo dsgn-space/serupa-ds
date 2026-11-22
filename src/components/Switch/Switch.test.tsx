@@ -57,11 +57,11 @@ describe('Switch', () => {
     expect(calls).toEqual(['change', 'true change', 'change', 'false change']);
   });
 
-  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in track (the light gray Apple uses), a 16px thumb in field with a border edge and a small shadow, 2px from the start, centered on the label\'s first line', async () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in track (the light gray Apple uses), a 16px thumb in field with a small shadow and no edge, 2px from the start, centered on the label\'s first line', async () => {
     await setup();
     const s = still(), md = box('md');
     expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--track)'), 16, color('var(--field)'), 2, '14px']);
-    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toMatch(new RegExp('^' + color('var(--border)').replace(/[()]/g, '\\$&') + ' 0px 0px 0px 1px inset, rgba\\(0, 0, 0, [0-9.]+\\) 0px 1px'));
+    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toMatch(/^rgba\(0, 0, 0, [0-9.]+\) 0px 1px/);
     expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
     expect(md.vGap).toBeLessThan(0.5);
     expect(md.mid).toBeLessThan(1);
@@ -130,11 +130,10 @@ describe('Switch', () => {
     expect(i.checked).toBe(true);
   });
 
-  test('hover: off, the thumb\'s edge darkens to border-strong and the track takes border-strong; on, primary-hover', async () => {
+  test('hover: off, the track takes border-strong; on, primary-hover', async () => {
     await setup();
     await userEvent.hover(el('bad'));
-    const edge = () => css(el('bad').closest('label')!.querySelector('input + span')).boxShadow;
-    await expect.poll(edge).toMatch(new RegExp('^' + color('var(--border-strong)').replace(/[()]/g, '\\$&') + ' 0px 0px 0px 1px inset, '));
+    await expect.poll(() => box('bad').bg).toBe(color('var(--border-strong)'));
     expect(box('bad').bg).toBe(color('var(--border-strong)'));
     await away();
     await userEvent.hover(el('lg'));

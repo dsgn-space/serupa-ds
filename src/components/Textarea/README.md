@@ -121,10 +121,11 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-placeholder` | `placeholder` | Placeholder text |
 | `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
-| `--textarea-count` | `text-muted` | The character count under the box, as a Field hint. |
+| `--textarea-count` | `text-muted` | The character count under the text, as a Field hint. |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
 | `--textarea-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--textarea-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--textarea-resize-grip` | `text-muted` | The two lines of the resize grip in the corner (Chrome, Edge and Safari). |
 
 **Spacing**
 
@@ -138,7 +139,6 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px), counting the border: one row is as tall as an Input of the same size. |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
-| `--textarea-count-gap` | `spacing-1` | The space between the box and the count under it (4px). |
 
 **Border**
 
