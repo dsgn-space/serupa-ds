@@ -178,6 +178,27 @@ describe('PasswordInput', () => {
     expect(hint('nocl')).toBe(null);
   });
 
+  test('Caps Lock on shows a caps-lock icon, not words: the words stay for screen readers (describing the field) and as a tooltip', async () => {
+    await render(<PasswordInput id="cli" aria-label="Password" />);
+    field('cli').focus();
+    field('cli').dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, modifierCapsLock: true }));
+    await expect.poll(() => box('cli').querySelector('.srp-password-input__caps')).not.toBeNull();
+    const hint = box('cli').querySelector<HTMLElement>('.srp-password-input__caps')!;
+    expect(hint.querySelector('svg')).not.toBeNull();
+    expect(hint.getAttribute('title')).toBe('Caps Lock is on');
+    expect(hint.textContent).toBe('Caps Lock is on');
+    // The words take no room: only the icon shows.
+    const words = [...hint.querySelectorAll('span')].find((n) => n.textContent === 'Caps Lock is on')!;
+    expect(words.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    expect(hint.getBoundingClientRect().width).toBeLessThan(24);
+    // The icon reads 3:1 on the field in every theme.
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect(contrast(css(hint).color, css(box('cli')).backgroundColor), th).toBeGreaterThanOrEqual(3);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+
   test('showing and hiding keeps the caret and the selection where they were, so typing goes on there (BW1)', async () => {
     await render(<PasswordInput id="pcar" aria-label="Password" />);
     await userEvent.click(field('pcar'));

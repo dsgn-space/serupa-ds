@@ -50,7 +50,7 @@ Drawn from the `CapsLockOn` story.
 | Rest | `field` background, 1px `field-border`, the eye button in `text-muted` |
 | Hover | `field-border-hover`; the eye under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
-| Caps Lock on | While it has focus, "Caps Lock is on" shows before the eye |
+| Caps Lock on | While it has focus, a caps-lock icon shows before the eye |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the eye still shows and hides the password |
 | Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the eye is off |
@@ -62,7 +62,7 @@ Drawn from the `CapsLockOn` story.
 - Clicking it keeps focus in the field, so typing carries on. It's also reachable with Tab, and Enter or Space press it.
 - Spell check and auto-capitalization are off, so a shown password isn't underlined or changed.
 - Showing or hiding the password keeps the caret and any selection where they were (changing the field's type would put the caret at the start), so typing goes on where it stopped. In a long password the field also stays scrolled to the caret, rather than jumping back to the start.
-- While Caps Lock is on and the field has focus, "Caps Lock is on" shows before the eye, joins the field's description and is read out once (the `capsLockOn` label). It goes away when Caps Lock is turned off or focus leaves. `capsLockHint={false}` turns it off.
+- While Caps Lock is on and the field has focus, a caps-lock icon shows before the eye. Its words, "Caps Lock is on", are its tooltip, join the field's description and are read out once (the `capsLockOn` label). It goes away when Caps Lock is turned off or focus leaves. `capsLockHint={false}` turns it off.
 - Pasting is never blocked, so a password manager or a copied password can fill the field (WCAG 3.3.8, accessible authentication). Don't add an `onPaste` that prevents it.
 - The text keeps 4.5:1 and the eye icon 3:1 on the field in every theme (`PasswordInput.test.tsx`).
 
@@ -72,7 +72,7 @@ Drawn from the `CapsLockOn` story.
 | --- | --- |
 | Tab | To the field, then to the show and hide button |
 | Enter, Space | On the button: show or hide the password; focus stays on the button |
-| Caps Lock | While the field has focus: shows and reads out "Caps Lock is on" |
+| Caps Lock | While the field has focus: shows a caps-lock icon and reads out "Caps Lock is on" |
 
 ## Props
 
@@ -86,7 +86,7 @@ Drawn from the `CapsLockOn` story.
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Input |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid` |
 | `startIcon` | an icon name or element | none | A decorative icon before the text |
-| `capsLockHint` | boolean | `true` | Shows and reads out "Caps Lock is on" while it is |
+| `capsLockHint` | boolean | `true` | Shows a caps-lock icon and reads out "Caps Lock is on" while it is |
 
 `autoComplete` defaults to `"current-password"`; use `"new-password"` when creating one. `ref`, `value`, `onChange` and every other input attribute go to the `<input>`; `className` and `style` go to the box, which has `data-component="password-input"`.
 
@@ -102,7 +102,7 @@ The field uses Input's tokens. These style the show/hide button; each is an opti
 | `--password-input-toggle-bg-hover` | `field-hover` | The button's background on hover. |
 | `--password-input-toggle-bg-pressed` | `field-pressed` | The show/hide button's background while it's held down, one step past hover. |
 | `--password-input-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
-| `--password-input-caps` | `placeholder` | The Caps Lock hint (4.5:1 on the field). |
+| `--password-input-caps` | `placeholder` | The Caps Lock icon (3:1 or more on the field). |
 | `--password-input-toggle-radius` | `radius-inner` | The button's corners (4px). |
 | `--password-input-toggle-padding` | `spacing-1` | Space around the button's icon (4px). |
 <!-- token-table:end -->

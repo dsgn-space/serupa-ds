@@ -6,6 +6,7 @@ import { announce } from '../../internal/announce';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { asIcon } from '../Icon/asIcon';
 import type { InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
@@ -25,7 +26,7 @@ export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' 
   onRevealedChange?: ((revealed: boolean) => void) | undefined;
   /** The show/hide button's name. Default: "Show password" (its aria-pressed says whether it's shown). */
   toggleLabel?: string | undefined;
-  /** While Caps Lock is on and the field has focus, "Caps Lock is on" shows at the end of the field and is read out once. Default: true. */
+  /** While Caps Lock is on and the field has focus, a caps-lock icon shows at the end of the field, and "Caps Lock is on" is read out once. Default: true. */
   capsLockHint?: boolean | undefined;
 }
 
@@ -123,7 +124,12 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
       style={props.style} data-component="password-input" data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       <input {...rest} ref={fieldRef} type={shown ? 'text' : 'password'} className="srp-input__field" spellCheck={false} autoCapitalize="off" autoCorrect="off" />
-      {caps ? <span className="srp-password-input__caps" id={capsId}>{sds.labels.capsLockOn}</span> : null}
+      {caps ? (
+        // An icon, with the words for screen readers (they describe the field) and as a tooltip for the pointer.
+        <span className="srp-password-input__caps" id={capsId} title={sds.labels.capsLockOn}>
+          <Icon icon={icons.KeyboardCapslock} /><VisuallyHidden>{sds.labels.capsLockOn}</VisuallyHidden>
+        </span>
+      ) : null}
       <button type="button" className="srp-password-input__toggle" aria-label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
         aria-controls={rest.id} disabled={rest.disabled} onClick={toggle} onMouseDown={(e) => { e.preventDefault(); capture(); pressed.current = performance.now(); }}>
         <Icon icon={shown ? icons.VisibilityOff : icons.Visibility} />
@@ -134,7 +140,7 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
 
 /* PasswordInput: an Input for passwords with a button at the end that shows and hides what was typed. It uses
    Input's box and tokens. autoComplete defaults to "current-password"; use "new-password" on sign-up forms.
-   While Caps Lock is on, a "Caps Lock is on" hint shows in the field and is read out (capsLockHint={false} turns it
+   While Caps Lock is on, a caps-lock icon ("Caps Lock is on" to screen readers and as its tooltip) shows in the field and is read out (capsLockHint={false} turns it
    off). Pasting is never blocked, so password managers and pasted passwords work (WCAG 3.3.8).
    className and style go to the box; ref and every other prop to the <input>. */
 /** A password field with a button that shows and hides what was typed. */
