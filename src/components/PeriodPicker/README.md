@@ -137,6 +137,7 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--period-picker-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--period-picker-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--period-picker-edge-selected` | `primary-edge` | The selected period's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Radius**
 

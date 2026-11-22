@@ -231,6 +231,16 @@
             "cssVar": "--timeline-focus-ring"
           }
         }
+      },
+      "dot-edge": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--timeline-dot-edge"
+          }
+        }
       }
     },
     "border": {

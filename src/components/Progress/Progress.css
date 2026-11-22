@@ -11,7 +11,7 @@
 @layer srp.components {
 .srp-progress {
   --srp-progress-fill: var(--progress-fill, var(--primary));
-  --srp-progress-edge: var(--primary-edge);   /* the primary fill's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere, and for the other tones */
+  --srp-progress-edge: var(--progress-fill-edge, var(--primary-edge));   /* the primary fill's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere, and for the other tones */
   --srp-progress-h: var(--progress-height-md, var(--spacing-2));
   --srp-progress-ring: var(--progress-circle-md, var(--spacing-10));
   color: var(--progress-label-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
@@ -49,7 +49,8 @@
 .srp-progress__ring { display: block; overflow: visible; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }   /* overflow: the arc's edge reaches half a unit past the box */
 .srp-progress__ring .srp-progress__track, .srp-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
 .srp-progress__ring .srp-progress__track { stroke: var(--progress-ring-track, var(--secondary)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
-/* The arc's edge: the same arc a third wider, drawn under it. */
+/* The arc's edge: the same arc a third wider, drawn under it. The ring scales with its viewBox, so the edge is a share of the stroke, not a border width. */
+/* stylelint-disable-next-line serupa/no-raw-value -- 4 / 3: a third wider, in the ring's own units */
 .srp-progress__arc--edge { stroke: var(--srp-progress-edge); stroke-width: calc(var(--progress-stroke-width, var(--stroke-width-3)) * 4 / 3); }
 .srp-progress__arc:not(.srp-progress__arc--edge) { stroke: var(--srp-progress-fill); }
 .srp-progress__arc { stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }

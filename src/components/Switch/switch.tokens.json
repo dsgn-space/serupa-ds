@@ -181,6 +181,16 @@
             "cssVar": "--switch-text-disabled"
           }
         }
+      },
+      "track-edge-checked": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-track-edge-checked"
+          }
+        }
       }
     },
     "sizing": {

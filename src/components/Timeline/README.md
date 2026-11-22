@@ -147,6 +147,7 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-icon-info` | `info-text` | The icon of a info event (3:1 on its circle). |
 | `--timeline-icon-bg-info` | `info-subtle` | The circle behind a info event's icon. |
 | `--timeline-focus-ring` | `focus-ring` | The ring around a horizontal timeline's scrolling box when the keyboard is in it. |
+| `--timeline-dot-edge` | `primary-edge` | A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Border**
 

@@ -180,6 +180,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--checkbox-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--checkbox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--checkbox-edge-checked` | `primary-edge` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

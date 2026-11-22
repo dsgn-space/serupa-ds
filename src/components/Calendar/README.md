@@ -137,6 +137,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
 | `--calendar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--calendar-edge-selected` | `primary-edge` | The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

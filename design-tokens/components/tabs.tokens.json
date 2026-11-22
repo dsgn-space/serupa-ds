@@ -141,6 +141,16 @@
             "cssVar": "--tabs-close-bg-pressed"
           }
         }
+      },
+      "pill-edge-selected": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-pill-edge-selected"
+          }
+        }
       }
     },
     "sizing": {

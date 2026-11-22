@@ -128,6 +128,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tabs-close-bg-hover` | `secondary` | A closable tab's × under the pointer. |
 | `--tabs-close-bg-pressed` | `pressed` | A closable tab's × while it's pressed, one step past hover. |
+| `--tabs-pill-edge-selected` | `primary-edge` | The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

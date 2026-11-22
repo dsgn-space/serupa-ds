@@ -211,6 +211,16 @@
             "cssVar": "--radio-text-disabled"
           }
         }
+      },
+      "edge-checked": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "A checked circle's edge (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-edge-checked"
+          }
+        }
       }
     },
     "sizing": {

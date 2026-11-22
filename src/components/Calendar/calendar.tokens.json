@@ -191,6 +191,16 @@
             "cssVar": "--calendar-text-disabled"
           }
         }
+      },
+      "edge-selected": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-edge-selected"
+          }
+        }
       }
     },
     "sizing": {

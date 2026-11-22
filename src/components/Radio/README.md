@@ -159,6 +159,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--radio-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--radio-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--radio-edge-checked` | `primary-edge` | A checked circle's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

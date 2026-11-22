@@ -158,6 +158,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | `--stepper-connector` | `border-control` | The line to an upcoming step. |
 | `--stepper-connector-complete` | `primary` | The line after a completed step. |
 | `--stepper-focus-ring` | `focus-ring` | A clickable step's keyboard focus ring. |
+| `--stepper-edge-active` | `primary-edge` | The current and complete steps' edge and the complete connector's, inside their fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

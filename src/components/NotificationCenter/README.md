@@ -126,6 +126,7 @@ Each is an optional override: set it on the page, a container or one Notificatio
 | `--notification-center-icon-warning` | `warning` | The warning tone's icon. |
 | `--notification-center-icon-danger` | `danger` | The danger tone's icon. |
 | `--notification-center-focus-ring` | `focus-ring` | The ring around a notification (or the empty line) focused after "Mark as read". |
+| `--notification-center-unread-edge` | `primary-edge` | The unread dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--notification-center-row-padding` | `spacing-3` | Space above and below each notification (12px). |
 | `--notification-center-unread-weight` | `font-semibold` | An unread notification's title. |
 <!-- token-table:end -->

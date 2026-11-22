@@ -34,7 +34,7 @@
 @media (hover: hover) { .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-hover, var(--border-control-hover)); --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
 .srp-switch__input:checked { background: var(--srp-switch-on); }
 /* The on track's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. :where keeps the invalid and disabled edges over it. */
-.srp-switch__input:where(:checked) { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--primary-edge); }
+.srp-switch__input:where(:checked) { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--switch-track-edge-checked, var(--primary-edge)); }
 .srp-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
   width: var(--srp-switch-thumb); height: var(--srp-switch-thumb); margin-block: auto;

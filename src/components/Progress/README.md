@@ -88,6 +88,8 @@ Every other prop, `className` and `ref` go to the outer `<div>`. It has `data-co
 Each is an optional override: set it on the page, a container or one progress indicator. The list lives in `src/components/Progress/progress.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from progress.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--progress-track` | `surface` | The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11). |
@@ -99,15 +101,41 @@ Each is an optional override: set it on the page, a container or one progress in
 | `--progress-fill-danger` | `danger` | The done part, tone="danger". |
 | `--progress-label-color` | `text` | The label above the bar. |
 | `--progress-value-color` | `text-muted` | The value (45%) next to the label or inside the ring (4.5:1 on surface). |
+| `--progress-fill-edge` | `primary-edge` | The bar's and the ring's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--progress-height-sm` | `spacing-1` | The bar's thickness, size="sm" (4px). |
 | `--progress-height-md` | `spacing-2` | The bar's thickness, size="md", the default (8px). |
 | `--progress-height-lg` | `spacing-3` | The bar's thickness, size="lg" (12px). |
 | `--progress-circle-sm` | `spacing-6` | The ring, size="sm" (24px). |
 | `--progress-circle-md` | `spacing-10` | The ring, size="md" (40px). |
 | `--progress-circle-lg` | `spacing-16` | The ring, size="lg" (64px). |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--progress-radius` | `radius-pill` | The bar's ends. |
 | `--progress-stroke-width` | `stroke-width-3` | The ring's thickness, in 24ths of its size (3: 3px at 24px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--progress-gap` | `spacing-1.5` | Space between the label row and the bar (6px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--progress-label-weight` | `font-medium` | The label's weight (500). |
+
+**Motion**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--progress-duration` | `motion-change-lg` | How long the fill takes to move to a new value. |
 <!-- token-table:end -->
