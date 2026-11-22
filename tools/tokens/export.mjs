@@ -5,8 +5,10 @@
 //
 // Writes
 //   design-tokens/serupa.tokens.json            palette and every scale (the theme-independent tokens)
-//   design-tokens/themes/<theme>.tokens.json  the alias colors for one theme, as references into the palette
-//                                             ("{color.blue-600}"); layer one theme file over serupa.tokens.json
+//   design-tokens/themes/<mode>.tokens.json     the alias colors in light and in dark (the default brand's), as
+//                                               references into the palette ("{color.blue-600}")
+//   design-tokens/brands/<theme>.tokens.json    a brand's overlay: the aliases it sets apart from its mode's file.
+//                                               A theme is serupa.tokens.json, then its mode's file, then its overlay
 //   design-tokens/components/<name>.tokens.json  component tokens (Button's --button-*), referencing the tokens above
 //   design-tokens/css-values.json             tokens the format has no type for yet (degrees, em, %, viewport
 //                                             units, keywords, CSS shorthands), as plain CSS values
@@ -137,9 +139,14 @@ export function exportTokens(t, componentFiles) {
     [BASE_FILE]: base,
     'css-values.json': { $description: 'Tokens the W3C Design Tokens format (2025.10) has no type for yet: degrees, em, percentages of a box, viewport units, keywords, CSS shorthands, and text shadows (the shadow type in the format always has a spread, which CSS text-shadow does not allow). Use the CSS value as-is.', ...cssOnly },
   };
+  // A theme is a mode's aliases (themes/light, themes/dark: the default brand's, blue) and its brand's overlay
+  // (brands/<theme>): only the aliases the brand sets differently, 7 to 9 of the 101. Load the mode, then the overlay.
+  const alias = (x, th) => ({ $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) });
+  const BASE_OF = { light: THEMES[0].replace(/-dark$/, '-light'), dark: THEMES[0].replace(/-light$/, '-dark') };
+  for (const [mode, th] of Object.entries(BASE_OF)) files[`themes/${mode}.tokens.json`] = { color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), alias(x, th)])) };
   for (const th of THEMES) {
-    const file = { color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), { $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) }])) };
-    files[`themes/${th}.tokens.json`] = file;
+    const own = BASE_OF[th.endsWith('-dark') ? 'dark' : 'light'];
+    files[`brands/${th}.tokens.json`] = { color: Object.fromEntries(ALIAS.filter((x) => x.value[th] !== x.value[own]).map((x) => [pathName(x.name), alias(x, th)])) };
   }
   // component tokens (src/components/<Name>/<name>.tokens.json) are already in the format: published as they are
   for (const [name, data] of componentFiles) files['components/' + name] = data;
@@ -153,14 +160,18 @@ export function componentTokenFiles(root = P) {
 }
 
 const dump = (d) => JSON.stringify(d, null, 2) + '\n';
+// The files the export writes now: in themes/, brands/ and components/, and the two at the top.
+const written = () => ['themes', 'brands', 'components'].flatMap((d) => (fs.existsSync(path.join(OUT, d)) ? fs.readdirSync(path.join(OUT, d)).filter((f) => f.endsWith('.json')).map((f) => `${d}/${f}`) : []));
 
 if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const { files, counts } = exportTokens(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')), componentTokenFiles());
   if (process.argv.includes('--check')) {
-    const stale = Object.entries(files).filter(([f, d]) => !fs.existsSync(path.join(OUT, f)) || fs.readFileSync(path.join(OUT, f), 'utf8') !== dump(d)).map(([f]) => f);
+    const stale = Object.entries(files).filter(([f, d]) => !fs.existsSync(path.join(OUT, f)) || fs.readFileSync(path.join(OUT, f), 'utf8') !== dump(d)).map(([f]) => f)
+      .concat(written().filter((f) => !(f in files)));
     if (stale.length) { console.log('design-tokens/ is out of date: run npm run tokens (' + stale.join(', ') + ')'); process.exit(1); }
     console.log('design-tokens/ matches tokens.json'); process.exit(0);
   }
+  for (const f of written()) if (!(f in files)) fs.rmSync(path.join(OUT, f));   // a file the export no longer makes
   for (const [f, d] of Object.entries(files)) {
     fs.mkdirSync(path.dirname(path.join(OUT, f)), { recursive: true });
     fs.writeFileSync(path.join(OUT, f), dump(d));

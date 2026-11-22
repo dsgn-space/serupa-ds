@@ -480,7 +480,8 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | File | Holds |
 | --- | --- |
 | `serupa.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
-| `themes/<theme>.tokens.json` | The alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
+| `themes/light.tokens.json`, `themes/dark.tokens.json` | The alias colors in light and in dark, as references into the palette (`"{color.blue-600}"`): the default brand's |
+| `brands/<theme>.tokens.json` | A brand's overlay: the aliases it sets apart from its mode's file. A theme is `serupa.tokens.json`, then its mode's file, then its overlay (`brands/violet-dark.tokens.json` over `themes/dark.tokens.json`) |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 | `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
