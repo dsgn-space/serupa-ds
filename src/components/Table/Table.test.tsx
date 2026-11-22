@@ -155,7 +155,7 @@ describe('Table', () => {
   });
 
   test('an Avatar in a shaded row steps its fill up to secondary-hover, so it stays apart from the shade (the same zinc-100 as secondary in light themes); a plain row keeps secondary', async () => {
-    render(<Table aria-label="People"><TableBody>
+    await render(<Table aria-label="People"><TableBody>
       <TableRow data-i="p"><TableCell><Avatar id="avp" name="Ada Lovelace" size="sm" /></TableCell></TableRow>
       <TableRow data-i="s" selected><TableCell><Avatar id="avs" name="Grace Hopper" size="sm" /></TableCell></TableRow>
     </TableBody></Table>);
