@@ -305,7 +305,8 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       const moved = new Set<string>();
       flat.forEach((v, k) => { if (!prev.has(k) || !same(prev.get(k), v)) moved.add(k); });
       prev.forEach((_, k) => { if (!flat.has(k)) moved.add(k); });
-      if (!L.read) { L.read = true; L.baseline = stamp(flat); }
+      const first = !L.read;
+      if (first) { L.read = true; L.baseline = stamp(flat); }
       if (!moved.size) return;
       L.nested = toNested(flat);
       L.listeners.forEach((f) => { f(); });
@@ -321,7 +322,8 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       // A field showing a message is checked again as it changes, and so is every other one showing one: "Confirm
       // password" stops saying they don't match once the password is changed to match it.
       if (L.eager.size) void recheck(Array.from(L.eager), CHECK_WAIT);
-      saveDraft();
+      // The first read is the form as it came, not an answer: a form nobody has typed in keeps no draft.
+      if (!first) saveDraft();
     });
   }, [patch, recheck, latest, saveDraft]);
 
