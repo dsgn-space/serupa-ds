@@ -87,15 +87,15 @@ describe('Textarea', () => {
     expect([el('kb-ta').value, document.activeElement?.id]).toEqual(['a\nb', 'kb-after']);
   });
 
-  test('a press on the box outside the field (the count row, its side) focuses the field with the caret at the end; a disabled one does nothing (GE1)', async () => {
+  test('a press on the box outside the field (its actions row, between the count and the buttons) focuses the field with the caret at the end; a disabled one does nothing (GE1)', async () => {
     await render(<div style={{ width: '300px' }}>
-      <Textarea id="tp" aria-label="Bio" showCount maxLength={50} defaultValue="hello" />
+      <Textarea id="tp" aria-label="Bio" showCount maxLength={50} defaultValue="hello" actions={<button type="button">Send</button>} />
       <Textarea id="tp-off" aria-label="Off" showCount disabled />
       <button id="tp-away">away</button>
     </div>, { wrapper: EnUS });
     const b = el('tp').parentElement!, f = el('tp').getBoundingClientRect(), r = b.getBoundingClientRect();
     const below = f.bottom - r.top + (r.bottom - f.bottom) / 2;
-    for (const x of [8, r.width / 2, r.width - 8]) {
+    for (const x of [r.width / 2, r.width / 2 + 30]) {
       el('tp-away').focus();
       await userEvent.click(b, { position: { x, y: below } });
       expect([x, document.activeElement === el('tp'), el('tp').selectionStart]).toEqual([x, true, 5]);
@@ -181,6 +181,12 @@ describe('Textarea', () => {
     expect([count('car').textContent, count('cfa').textContent]).toEqual(['١٢ / ٢٠٠', '۳']);
   });
 
+  test('showCount: the count sits under the box, at its end, in 12px text-muted like a hint, so it never crowds the resize handle; the box keeps room for it', async () => {
+    await render(<div style={{ width: '300px' }}><Textarea id="out" aria-label="Bio" showCount maxLength={280} defaultValue="Hello" /><p id="next" style={{ margin: 0 }}>Next</p></div>, { wrapper: EnUS });
+    const box = el('out').parentElement!.getBoundingClientRect(), c = count('out'), r = c.getBoundingClientRect(), next = el('next').getBoundingClientRect();
+    expect([Math.round(r.top - box.bottom), Math.round(box.right - r.right), css(c).fontSize, css(c).color, next.top >= r.bottom]).toEqual([4, 0, '12px', color('var(--text-muted)'), true]);
+  });
+
   test('showCount: "2 / 5" under the text, linked by aria-describedby after the field\'s own; counts typing, stops at maxLength and turns text-colored', async () => {
     await setup();
     const c0 = count('cnt'), col0 = css(c0).color;
@@ -257,7 +263,7 @@ describe('Textarea', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['text', 'var(--text)', 'var(--field)', 4.5], ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5], ['count', 'var(--placeholder)', 'var(--field)', 4.5], ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3], ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3], ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['text', 'var(--text)', 'var(--field)', 4.5], ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5], ['count, under the box', 'var(--text-muted)', 'var(--surface)', 4.5], ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3], ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3], ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);

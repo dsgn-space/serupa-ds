@@ -150,6 +150,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-thumb-size-sm` | `spacing-3` | Thumb size, sm (12px). |
 | `--switch-thumb-size-md` | `spacing-4` | Thumb size, md (16px). |
 | `--switch-thumb-size-lg` | `spacing-5` | Thumb size, lg (20px). |
+| `--switch-press-stretch` | `spacing-1` | How much wider the thumb grows while it's held down (4px), toward the middle of the track, as Apple's. |
 
 **Spacing**
 

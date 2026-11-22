@@ -21,11 +21,11 @@ const meta = {
   render: function Render(args: CommandPaletteProps) {
     const [open, setOpen] = React.useState(!!args.defaultOpen);
     const [ran, setRan] = React.useState('Nothing yet.');
-    return <>
-      <p>Press <Kbd keys={['mod', 'K']} /> anywhere, or the button. Last chosen: {ran}</p>
+    return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
+      <p style={{ margin: 0 }}>Press <Kbd keys={['mod', 'K']} /> anywhere, or the button. Last chosen: {ran}</p>
       <Button variant="outline" onClick={() => setOpen(true)}>Search commands</Button>
       <CommandPalette {...args} open={open} onOpenChange={setOpen} onSelect={(c) => setRan(c.label)} />
-    </>;
+    </div>;
   },
 } satisfies Meta<typeof CommandPalette>;
 export default meta;

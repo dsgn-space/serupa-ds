@@ -84,8 +84,8 @@
       },
       "count": {
         "$type": "color",
-        "$value": "{color.placeholder}",
-        "$description": "The character count",
+        "$value": "{color.text-muted}",
+        "$description": "The character count under the box, as a Field hint.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-count"
@@ -201,6 +201,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-actions-padding"
+          }
+        }
+      },
+      "count-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The space between the box and the count under it (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-count-gap"
           }
         }
       }

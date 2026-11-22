@@ -184,7 +184,7 @@ const STATUS_TEXT = {
 } as const;
 /** A component's status above its guide, when it isn't stable. */
 export function ComponentStatus({ status }: { status: keyof typeof STATUS_TEXT }) {
-  return <p role="note" className="sb-unstyled" style={{ display: 'flex', gap: 8, alignItems: 'baseline', padding: '8px 12px', border: '1px solid var(--border-strong)', borderRadius: 6, font: '14px/20px var(--font-sans)' }}>
+  return <p role="note" className="sb-unstyled" style={{ display: 'flex', gap: 8, alignItems: 'baseline', margin: '16px 0 0', padding: '8px 12px', border: '1px solid var(--border-strong)', borderRadius: 6, font: '14px/20px var(--font-sans)' }}>
     <strong style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: '0.04em' }}>{status}</strong>
     <span>{STATUS_TEXT[status]}</span>
   </p>;

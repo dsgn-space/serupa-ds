@@ -269,7 +269,7 @@ describe('Switch', () => {
   test('the thumb slides in 100ms (motion-press: feedback for a toggle is 100ms or less, FI1), a press on it springs back over motion-release, and nothing animates with reduced motion', async () => {
     await setup();
     const dur = () => withMotion(() => css(document.querySelector('input + span')).transitionDuration + '|' + css(document.querySelector('[role=switch]')).transitionDuration);
-    expect(dur()).toBe('0.1s, 0.1s, 0.3s|0.1s');
+    expect(dur()).toBe('0.1s, 0.1s, 0.1s, 0.3s|0.1s');
     if (server.browser === 'chromium') {
       const session = cdp() as unknown as { send: (method: string, params: object) => Promise<unknown> };
       await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
@@ -303,13 +303,14 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control; on: primary-pressed), and the thumb stays full size; not when disabled (ED1)', async () => {
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control; on: primary-pressed), and the thumb grows 4px wider toward the middle (its far edge stays put); not when disabled (ED1)', async () => {
     await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
     const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
-    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1')];
+    const edges = (id: string) => { const t = thumb(id).getBoundingClientRect(), k = el(id).getBoundingClientRect(); return [Math.round(t.left - k.left), Math.round(k.right - t.right)]; };
+    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, ...edges(id)];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control)'), '1']);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1']);
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control)'), '1', '20px', 2, 14]);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '20px', 14, 2]);
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 });

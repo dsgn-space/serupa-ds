@@ -295,6 +295,16 @@
             "cssVar": "--switch-thumb-size-lg"
           }
         }
+      },
+      "press-stretch": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "How much wider the thumb grows while it's held down (4px), toward the middle of the track, as Apple's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-press-stretch"
+          }
+        }
       }
     },
     "spacing": {

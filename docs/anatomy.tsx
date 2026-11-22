@@ -38,6 +38,14 @@ function drawnBox(e: Element): { left: number; top: number; right: number; botto
   return { left: Math.min(...rs.map((r) => r.left)), top: Math.min(...rs.map((r) => r.top)), right: Math.max(...rs.map((r) => r.right)), bottom: Math.max(...rs.map((r) => r.bottom)) };
 }
 
+// Nothing in an anatomy picture scrolls the page: it is a picture, opened on arrival. A Tour scrolls its step's element
+// into view and focuses its panel, which brought the page down to the anatomy as it loaded.
+if (typeof window !== 'undefined') {
+  const proto = window.HTMLElement.prototype, into = proto.scrollIntoView, focus = proto.focus;
+  proto.scrollIntoView = function (this: HTMLElement, ...args: Parameters<typeof into>) { if (!this.closest('.sb-anatomy__stage')) into.apply(this, args); };
+  proto.focus = function (this: HTMLElement, options?: FocusOptions) { focus.call(this, this.closest('.sb-anatomy__stage') ? { ...options, preventScroll: true } : options); };
+}
+
 /** The story with each part outlined and numbered. An overlay (a dialog, a popover) is drawn from a still copy of it
  * set open in the page's flow, under the story, so its parts can be pointed at without opening anything. */
 export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
@@ -68,6 +76,8 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         // as its arrival changes the markup and measures again.
         if ([...o.querySelectorAll('img')].some((i) => !i.complete) || o.querySelector('[data-state="loading"]')) continue;
         copied.add(o);
+        // One copy a panel: a component may draw its panel anew as it opens (Tour's), which left two copies side by side.
+        if ([...box.children].some((x) => x.className === o.className && x.textContent === o.textContent)) continue;
         const c = o.cloneNode(true) as HTMLElement;
         c.removeAttribute('popover');
         c.removeAttribute('hidden');
@@ -87,19 +97,25 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
     };
     // "opened": a menu or popover that only has content while open is opened once the story is there, copied, and
     // the page put back as it was (scroll and focus), so reading the page doesn't jump to it.
-    let open: ReturnType<typeof setTimeout> | undefined;
+    let open: ReturnType<typeof setTimeout> | undefined, release: ReturnType<typeof setTimeout> | undefined, unstay = () => {};
     const openOnce = () => {
       const trigger = opened && open === undefined ? el.querySelector<HTMLElement>('[aria-haspopup][aria-expanded="false"]') : null;
       if (!trigger) return;
       const { scrollX, scrollY } = window, had = document.activeElement as HTMLElement | null;
+      // The page stays where it is while the story opens and closes again: a Tour scrolls its step's element into
+      // view, and closing hands focus back to its button, which scrolled the page down to the anatomy on arrival.
+      const stay = () => window.scrollTo({ left: scrollX, top: scrollY, behavior: 'instant' });
+      window.addEventListener('scroll', stay);
       trigger.click();
       open = setTimeout(() => {
         freeze();
         if (trigger.getAttribute('aria-expanded') === 'true') trigger.click();   // closed again: the copy stays
-        window.scrollTo(scrollX, scrollY);
+        stay();
         had?.focus?.({ preventScroll: true });
         measure();
+        release = setTimeout(() => window.removeEventListener('scroll', stay), 600);
       }, 150);
+      unstay = () => window.removeEventListener('scroll', stay);
     };
     const measure = () => {
       freeze();
@@ -126,7 +142,7 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
     mo.observe(el, { subtree: true, childList: true, attributes: true });
     const t = setTimeout(measure, 300);   // after the story's fonts and its own first layout
     later();
-    return () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(frame); clearTimeout(t); clearTimeout(open); };
+    return () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(frame); clearTimeout(t); clearTimeout(open); clearTimeout(release); unstay(); };
   }, [parts, chosen?.id, opened]);
   // Each number outside its outline's top-left corner; one that would sit on an earlier number (parts nested or side
   // by side: an alert's icon and title, an accordion's header and title) moves along the top edge until it's clear.
