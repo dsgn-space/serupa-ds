@@ -173,7 +173,7 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
                           </p>
                           <p className="m-0 wrap-break-word">{itemWords(o.items, (k) => `${n(k)} more`)}</p>
                           <div className="flex flex-wrap items-center gap-3">
-                            <Link href={o.href ?? '#'} aria-label={`View order ${o.number}`}>View order</Link>
+                            <Button href={o.href ?? '#'} size="sm" variant="outline" aria-label={`View order ${o.number}`}>View order</Button>
                             {o.state === 'cancelled' ? null : (
                               <Button size="sm" variant="outline" loading={buying === o.number} aria-label={`Buy again: order ${o.number}`} onClick={() => buyAgain(o)}>Buy again</Button>
                             )}
