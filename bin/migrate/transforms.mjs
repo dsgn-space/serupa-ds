@@ -567,6 +567,29 @@ export const TRANSFORMS = [
       return { text: b.text, count: a.count + b.count, notes: [] };
     },
   },
+  // 18.0.0 removes the names 17.x deprecated for it: a prop named on… reads as an event handler, empty is emptyText
+  // as on Combobox, and a Placement spells the middle top and bottom.
+  propsRename('18.0.0', 'surface-not-on-media', '`onMedia` is `surface`, the same values', ['Button', 'IconButton', 'Link', 'Divider', 'CopyButton', 'ToggleButton', 'Fab', 'FabMenu'], [['onMedia', 'surface']]),
+  propsRename('18.0.0', 'empty-text', 'TagGroup and NotificationCenter: `empty` is `emptyText`', ['TagGroup', 'NotificationCenter'], [['empty', 'emptyText']], { leftovers: false }),
+  {
+    version: '18.0.0', id: 'toaster-top-bottom', exts: CODE,
+    title: 'Toaster: `placement="top-center"` is `"top"` and `"bottom-center"` is `"bottom"`',
+    run(src) {
+      if (!/\bToaster\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const a = renameValue(src, 'Toaster', 'placement', 'top-center', 'top');
+      const b = renameValue(a.text, 'Toaster', 'placement', 'bottom-center', 'bottom');
+      return { text: b.text, count: a.count + b.count, notes: [] };
+    },
+  },
+  {
+    version: '18.0.0', id: 'placement-types', exts: CODE,
+    title: '`ToasterPosition` is `ToasterPlacement` and `FabPosition` is `FabPlacement`, named after the prop they type',
+    run(src) {
+      let count = 0;
+      const text = src.replace(/\b(Toaster|Fab)Position\b/g, (m, c) => { count++; return `${c}Placement`; });
+      return { text, count, notes: [] };
+    },
+  },
   {
     // 18.0.0 splits the brand color by job: `primary` is the fill (the same shade in light and dark, under white
     // text) and `primary-text` is the brand as text, a line or an icon (brand 400 in dark, as `primary` was). Text set

@@ -18,7 +18,7 @@ const deprecations = (warn: { mock: { calls: unknown[][] } }) => warn.mock.calls
 const el = (id: string) => document.getElementById(id)!;
 
 // One idea, one name (CONTRIBUTING.md, API naming table). The new names work with no warning; the old ones were
-// removed in 17.0.0, or (below) still work, warn once naming the new one, and go in 19.0.0.
+// removed in 17.0.0 or 18.0.0.
 describe('TimelineItem: tone, the name every component gives what a color means', () => {
   test('tone colors the marker, with no warning', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -64,49 +64,39 @@ describe('MaskedValue: defaultRevealed, as every controlled state has a default'
   });
 });
 
-describe('surface, not onMedia: a prop named on… reads as an event handler (removed in 19.0.0)', () => {
-  test('Button, Link and Divider draw for dark or light media from surface with no warning, and from onMedia the same, with one warning each', async () => {
+describe('surface, not onMedia: a prop named on… reads as an event handler (onMedia removed in 18.0.0)', () => {
+  test('Button, Link and Divider draw for dark or light media from surface, and the old onMedia does nothing', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const old = { onMedia: 'dark' } as object;
     await render(<>
       <Button id="b1" surface="dark">Book</Button><Link id="l1" href="#a" surface="light">Read</Link><Divider id="d1" surface="dark" />
+      <Button id="b2" {...old}>Book</Button><Link id="l2" href="#b" {...old}>Read</Link><Divider id="d2" {...old} />
     </>);
-    expect(['b1', 'l1', 'd1'].map((id) => el(id).className.match(/srp-\w+--on-\w+/)?.[0])).toEqual(['srp-btn--on-dark', 'srp-link--on-light', 'srp-divider--on-dark']);
+    expect(['b1', 'l1', 'd1', 'b2', 'l2', 'd2'].map((id) => el(id).className.match(/srp-\w+--on-\w+/)?.[0])).toEqual(['srp-btn--on-dark', 'srp-link--on-light', 'srp-divider--on-dark', undefined, undefined, undefined]);
     expect(deprecations(warn)).toEqual([]);
-    await render(<>
-      <Button id="b2" onMedia="dark">Book</Button><Link id="l2" href="#b" onMedia="light">Read</Link><Divider id="d2" onMedia="dark" />
-    </>);
-    expect(['b2', 'l2', 'd2'].map((id) => el(id).className.match(/srp-\w+--on-\w+/)?.[0])).toEqual(['srp-btn--on-dark', 'srp-link--on-light', 'srp-divider--on-dark']);
-    const said = deprecations(warn);
-    expect(['Button', 'Link', 'Divider'].map((c) => said.filter((m) => m.includes(c + ': `onMedia` is deprecated') && m.includes('`surface`')).length)).toEqual([1, 1, 1]);
   });
 });
 
-describe('emptyText, not empty: the name Combobox and CommandPalette give it (removed in 19.0.0)', () => {
-  test('TagGroup and NotificationCenter show emptyText with no warning, and empty the same, with one warning each', async () => {
+describe('emptyText, not empty: the name Combobox and CommandPalette give it (empty removed in 18.0.0)', () => {
+  test('TagGroup and NotificationCenter show emptyText, and the old empty shows nothing', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const old = { empty: 'Nothing tagged' } as object;
     await render(<TagGroup id="g1" label="Labels" items={[]} emptyText="No labels yet" />);
-    expect(el('g1').textContent).toContain('No labels yet');
+    await render(<TagGroup id="g2" label="Labels" items={[]} {...old} />);
+    expect([el('g1').textContent.includes('No labels yet'), el('g2').textContent.includes('Nothing tagged')]).toEqual([true, false]);
+    await render(<NotificationCenter open items={[]} emptyText="All caught up" />);
+    expect(document.body.textContent.includes('All caught up')).toBe(true);
     expect(deprecations(warn)).toEqual([]);
-    await render(<TagGroup id="g2" label="Labels" items={[]} empty="Nothing tagged" />);
-    expect(el('g2').textContent).toContain('Nothing tagged');
-    await render(<>
-      <NotificationCenter open items={[]} emptyText="All caught up" />
-      <NotificationCenter open items={[]} empty="Inbox zero" />
-    </>);
-    expect(['All caught up', 'Inbox zero'].map((t) => document.body.textContent.includes(t))).toEqual([true, true]);
-    const said = deprecations(warn);
-    expect(['TagGroup', 'NotificationCenter'].map((c) => said.filter((m) => m.includes(c + ': `empty` is deprecated') && m.includes('`emptyText`')).length)).toEqual([1, 1]);
   });
 });
 
-describe("Toaster: 'top' and 'bottom', as a Placement spells the middle (removed in 19.0.0: 'top-center', 'bottom-center')", () => {
-  test("'bottom' centers the toasts with no warning; 'top-center' still centers them, with one warning naming 'top'", async () => {
+describe("Toaster: 'top' and 'bottom', as a Placement spells the middle ('top-center' and 'bottom-center' removed in 18.0.0)", () => {
+  test("'bottom' centers the toasts; the old 'top-center' is an unknown value, so the toasts take the default corner", async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const screen = await render(<Toaster id="tz" placement="bottom" />);
     expect(el('tz').classList.contains('srp-toaster--bottom-center')).toBe(true);
+    await screen.rerender(<Toaster id="tz" {...({ placement: 'top-center' } as object)} />);
+    expect(el('tz').classList.contains('srp-toaster--bottom-end')).toBe(true);
     expect(deprecations(warn)).toEqual([]);
-    await screen.rerender(<Toaster id="tz" placement="top-center" />);
-    expect(el('tz').classList.contains('srp-toaster--top-center')).toBe(true);
-    expect(deprecations(warn).filter((m) => m.includes('placement="top-center" is deprecated') && m.includes('placement="top"')).length).toBe(1);
   });
 });

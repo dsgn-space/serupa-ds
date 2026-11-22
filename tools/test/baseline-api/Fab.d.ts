@@ -1,6 +1,5 @@
-// exports: Fab, type FabPlacement, type FabPosition, type FabProps
+// exports: Fab, type FabPlacement, type FabProps
 type FabPlacement = "bottom-end" | "bottom-start" | "static" | "top-end" | "top-start";
-type FabPosition = "bottom-end" | "bottom-start" | "static" | "top-end" | "top-start";
 interface FabProps extends Omit<ButtonAsButtonProps, "aria-label" | "children" | "endIcon" | "icon" | "size" | "startIcon" | "variant"> {
     icon: IconSource;
     label: string;

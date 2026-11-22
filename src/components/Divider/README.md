@@ -62,7 +62,7 @@ Drawn from the `LongLabel` story.
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | Across the full width, or the height of the row it's in |
 | `label` | node | none | Text in the middle of a horizontal line. A vertical divider has no label |
 | `decorative` | boolean | `false` | Leaves it out of the accessibility tree |
-| `surface` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: a white line and label for dark media, black for light (`onMedia` is its deprecated old name, removed in 19.0.0) |
+| `surface` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: a white line and label for dark media, black for light |
 
 Without a label, a horizontal divider is an `<hr>`; otherwise a `<div>`. It has no margins: space it with the layout around it. `className`, `style`, `ref` and everything else go to the element, which has `data-component="divider"`.
 

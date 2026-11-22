@@ -957,19 +957,3 @@ describe('Toaster inside a shadow root (GR60)', () => {
     await expect.poll(() => Math.round(window.innerHeight - toasts()[0]!.getBoundingClientRect().bottom)).toBe(16);
   });
 });
-
-
-describe("Toaster: the deprecated 'top-center' and 'bottom-center' (removed in 19.0.0)", () => {
-  test("still center the toasts, as 'top' and 'bottom' do, with one warning each naming the new value", async () => {
-    resetWarnings();
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const screen = await render(<Toaster id="tc" placement="top-center" />);
-    const at = () => document.getElementById('tc')!.getAttribute('data-position');
-    const first = at();
-    await screen.rerender(<Toaster id="tc" placement="bottom-center" />);
-    expect([first, at()]).toEqual(['top-center', 'bottom-center']);
-    const said = warn.mock.calls.map((c) => String(c[0]));
-    expect([said.some((m) => m.includes('placement="top-center" is deprecated') && m.includes('placement="top"')), said.some((m) => m.includes('placement="bottom-center" is deprecated') && m.includes('placement="bottom"'))]).toEqual([true, true]);
-    warn.mockRestore();
-  });
-});

@@ -7,8 +7,6 @@ import { Tooltip } from '../Tooltip/Tooltip';
 import { named } from '../../internal/component';
 
 export type FabPlacement = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
-/** @deprecated Use FabPlacement, the name of the prop it types; removed in 19.0.0. */
-export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
 
 export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'startIcon' | 'endIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
   /** The icon: a custom or Material Symbols name ("add") or any element. */
