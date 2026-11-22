@@ -14,7 +14,7 @@
 .srp-card--padding-none > .srp-data-grid { border: var(--spacing-0); border-radius: var(--srp-card-inner-radius); }
 .srp-data-grid__table { width: var(--sizing-full); border-collapse: collapse; color: var(--data-grid-text, var(--text)); font-family: var(--font-sans); font-size: var(--data-grid-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .srp-data-grid__header, .srp-data-grid__cell {
-  position: relative; padding: var(--data-grid-padding-y, var(--spacing-2)) var(--data-grid-padding-x, var(--spacing-3)); text-align: start; white-space: nowrap;
+  position: relative; padding: var(--data-grid-padding-y, var(--space-item)) var(--data-grid-padding-x, var(--spacing-3)); text-align: start; white-space: nowrap;
   border: var(--data-grid-border-width, var(--border-width-1)) solid var(--data-grid-line, var(--border));
 }
 .srp-data-grid--sm :is(.srp-data-grid__header, .srp-data-grid__cell) { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
@@ -43,7 +43,7 @@
 .srp-data-grid__cell--editing { padding: var(--spacing-0); }
 .srp-data-grid__input {
   box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-16); margin: var(--spacing-0); border: var(--spacing-0); outline: none;
-  padding: var(--data-grid-padding-y, var(--spacing-2)) var(--data-grid-padding-x, var(--spacing-3)); font: inherit; text-align: inherit;
+  padding: var(--data-grid-padding-y, var(--space-item)) var(--data-grid-padding-x, var(--spacing-3)); font: inherit; text-align: inherit;
   background: var(--data-grid-input-bg, var(--field)); color: var(--data-grid-text, var(--text));
 }
 .srp-data-grid--sm .srp-data-grid__input { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }

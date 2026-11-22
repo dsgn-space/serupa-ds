@@ -7156,12 +7156,52 @@
     "space-content": {
       "$type": "dimension",
       "$value": "{spacing.spacing-4}",
-      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover, HoverCard and Tour read it for their padding. 16px."
+      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover, HoverCard, Tour and Accordion read it for their padding. 16px; 12px in the compact density.",
+      "$extensions": {
+        "com.serupa": {
+          "compact": "0.75rem"
+        }
+      }
+    },
+    "space-card": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-5}",
+      "$description": "The padding of a card at its default size (Card padding md). 20px; 12px in the compact density.",
+      "$extensions": {
+        "com.serupa": {
+          "compact": "0.75rem"
+        }
+      }
+    },
+    "space-row": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-3}",
+      "$description": "The block padding of a row in a table or a list (Table, List). 12px; 6px in the compact density.",
+      "$extensions": {
+        "com.serupa": {
+          "compact": "0.375rem"
+        }
+      }
+    },
+    "space-item": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-2}",
+      "$description": "The block padding of a denser row: a data grid's cell, a small table's row, a sidebar's item. 8px; 4px in the compact density.",
+      "$extensions": {
+        "com.serupa": {
+          "compact": "0.25rem"
+        }
+      }
     },
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px."
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs. 24px; 16px in the compact density.",
+      "$extensions": {
+        "com.serupa": {
+          "compact": "1rem"
+        }
+      }
     },
     "space-section": {
       "$type": "dimension",

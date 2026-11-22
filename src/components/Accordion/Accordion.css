@@ -15,7 +15,7 @@
 .srp-accordion__heading { margin: var(--spacing-0); font: inherit; }
 .srp-accordion__trigger {
   box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); width: var(--sizing-full);
-  padding: var(--accordion-padding-y, var(--spacing-4)) var(--spacing-0); border: var(--spacing-0); background: transparent; cursor: var(--cursor-interactive); touch-action: manipulation;
+  padding: var(--accordion-padding-y, var(--space-content)) var(--spacing-0); border: var(--spacing-0); background: transparent; cursor: var(--cursor-interactive); touch-action: manipulation;
   color: var(--accordion-title-color, var(--text)); font-family: inherit; font-size: var(--accordion-title-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--accordion-title-weight, var(--font-medium)); text-align: start;
   border-radius: var(--radius-inner);
 }
@@ -57,7 +57,7 @@
 .srp-accordion__panel:where(.srp-accordion__item:not(.srp-accordion__item--open) > *):has(> .srp-accordion__clip > .srp-accordion__content[hidden="until-found"]) { visibility: visible; content-visibility: visible; transition: none; }
 .srp-accordion__content[hidden="until-found"] { padding-block: var(--spacing-0); }
 .srp-accordion__clip { min-height: var(--spacing-0); overflow: hidden; }
-.srp-accordion__content { overflow-wrap: anywhere; padding-bottom: var(--accordion-padding-y, var(--spacing-4)); color: var(--accordion-content-color, var(--text-muted)); font-size: var(--accordion-content-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.srp-accordion__content { overflow-wrap: anywhere; padding-bottom: var(--accordion-padding-y, var(--space-content)); color: var(--accordion-content-color, var(--text-muted)); font-size: var(--accordion-content-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .srp-accordion--card .srp-accordion__content { padding-inline: var(--accordion-padding-x, var(--spacing-4)); }
 @media (prefers-reduced-motion: reduce) { .srp-accordion__icon.srp-icon { transition: none; } }
 }

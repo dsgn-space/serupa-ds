@@ -6,6 +6,8 @@ import { commands, page } from 'vitest/browser';
 import { Button } from '../components/Button/Button';
 import { Card } from '../components/Card/Card';
 import { Input } from '../components/Input/Input';
+import { List, ListItem } from '../components/List/List';
+import { Table, TableBody, TableRow, TableCell } from '../components/Table/Table';
 import { Switch } from '../components/Switch/Switch';
 import { contrast, lowContrast, withMotion } from '../../tools/test/vitest/helpers';
 
@@ -245,6 +247,25 @@ describe('Density axis', () => {
     const h = (id: string) => document.getElementById(id)!.getBoundingClientRect().height;
     expect([h('b-sm'), h('b-md'), h('b-lg'), h('b-back')]).toEqual([24, 28, 36, 32]);
     expect(document.getElementById('i-md')!.closest('[data-component="input"]')!.getBoundingClientRect().height).toBe(28);
+  });
+  test('data-density="compact": table and list rows and cards take less padding; comfortable puts it back', async () => {
+    const section = (density?: string) => (
+      <div data-density={density}>
+        <Table caption="T"><TableBody><TableRow><TableCell>Cell</TableCell></TableRow></TableBody></Table>
+        <Table caption="S" size="sm"><TableBody><TableRow><TableCell>Small</TableCell></TableRow></TableBody></Table>
+        <List aria-label="L"><ListItem title="Item" /></List>
+        <Card>Card</Card>
+        <Card padding="lg">Large card</Card>
+      </div>
+    );
+    const pads = (scope: Element) => [...scope.querySelectorAll('td'), scope.querySelector('li [class*="list__main"]'), ...scope.querySelectorAll('[data-component="card"]')]
+      .map((e) => getComputedStyle(e as Element).paddingTop);
+    const screen = await render(<>{section('compact')}{section('comfortable')}{section()}</>);
+    const [compact, comfortable, normal] = [...screen.container.children];
+    expect(pads(normal!)).toEqual(['12px', '8px', '12px', '20px', '24px']);
+    expect(pads(compact!)).toEqual(['6px', '4px', '6px', '12px', '16px']);
+    root.setAttribute('data-density', 'compact');
+    expect(pads(comfortable!)).toEqual(['12px', '8px', '12px', '20px', '24px']);
   });
   test('data-radius: sharp and round reshape every radius role on any brand, and default puts the theme\'s back in a section', async () => {
     root.setAttribute('data-theme', 'violet-light');
