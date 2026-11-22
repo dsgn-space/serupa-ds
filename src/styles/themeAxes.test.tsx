@@ -203,7 +203,7 @@ describe('Contrast axis', () => {
   test('a dark theme fills with its light theme\'s brand shade under white text, and brand text is lighter (ADR-0025)', () => {
     const color = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
     const rgb = (c: string) => c.match(/[\d.]+/g)!.slice(0, 3).map(Number);
-    for (const brand of ['blue', 'yellow', 'violet']) {
+    for (const brand of ['blue', 'violet']) {
       axes(brand, 'light');
       const light = { fill: color('primary'), on: color('on-primary'), text: color('primary-text') };
       axes(brand, 'dark');
@@ -218,6 +218,9 @@ describe('Contrast axis', () => {
     }
     axes('blue', 'dark');
     expect(color('primary')).toBe('rgb(41, 104, 240)');
+    // Yellow Dark is the exception: the bright yellow 400 under yellow-950 text, since a yellow that takes white reads as brown.
+    axes('yellow', 'dark');
+    expect([color('primary'), color('on-primary')]).toEqual([color('yellow-400'), color('yellow-950')]);
   });
 
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
@@ -380,12 +383,12 @@ describe('Density axis', () => {
     const wrong: string[] = [];
     for (const [, t] of varied) for (const mode of ['light', 'dark']) {
       const v = Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x);
-      if (new Set(v).size > 1 && !v.every((x) => hue(x) || darkFill(t, mode, x))) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
+      if (new Set(v).size > 1 && !v.every((x) => hue(x) || darkFill(t, mode, x) || (t.name === 'on-primary' && x === '{white}'))) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
     }
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
     // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
     // hue so a visited link isn't the primary; a dark fill written as a color is held to its light shade by tools/test/brand.mjs.
     const offHue: string[] = [];

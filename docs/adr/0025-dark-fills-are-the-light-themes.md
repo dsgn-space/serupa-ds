@@ -17,6 +17,7 @@ Apple's system colors move a few points between modes (systemBlue #007AFF to #0A
 - **Hover and held down are the light theme's too,** lightened by the same amount: darker than the fill in both modes.
 - **`primary-text` is the brand as text, a line, a border or an icon,** with `primary-text-hover`. In light themes it is `primary`'s shade; in dark, brand 400 and 300, what `primary` was. It keeps 4.5:1 on every surface and tint.
 - **The dark fills are written as colors, not palette steps,** since they sit between two steps. `darkFillShift` in `bin/brand/generate.mjs` is the rule; `serupa-brand` uses it for a new brand, and `tools/test/brand.mjs` fails a shipped theme whose dark fill isn't what it gives.
+- **Yellow Dark keeps its bright fill** (Diki, 22 November 2026): `yellow-400` under `yellow-950` text, hover and held down a step lighter, as before. A yellow dark enough for white text (`yellow-700`) reads as brown, and on a dark page the bright one passes every pair.
 - **More contrast is unchanged in dark:** brand 300 under brand-950 text, since 7:1 as text and a fill that stands out need the light shade there.
 - **Which token a component takes:** a fill that carries `on-primary` content or is a solid mark on a surface (Button, Checkbox, Radio, Switch, Slider, Progress, Meter, the selected day, the current page, a Stepper circle) takes `primary`. Text, icons, checks, 1px or 2px lines and borders, and anything drawn on `primary-subtle` take `primary-text`.
 

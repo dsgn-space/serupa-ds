@@ -44,7 +44,7 @@ Every theme shares **one set of foundations**: the same palette, type, spacing s
 | `red` | `red-700` | `#d13832` | `red-400` |
 | `orange` | `orange-700` | `#c74614` | `orange-400` |
 | `amber` | `amber-700` | `#b7550e` | `amber-400` |
-| `yellow` | `yellow-700` | `#a26308` | `yellow-400` |
+| `yellow` | `yellow-700` | `yellow-400`, under `yellow-950` text | `yellow-400` |
 | `lime` | `lime-700` | `#4e7e12` | `lime-400` |
 | `green` | `green-700` | `#18823e` | `green-400` |
 | `emerald` | `emerald-700` | `#18815f` | `emerald-400` |
@@ -64,7 +64,7 @@ A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-
 
 `primary` is a fill with white text on it: a primary button, a checked box, the selected day. `primary-text` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
 
-**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened only as far as 3:1 on a raised dark card asks: `blue-600` (#2563eb) becomes #2968f0, and no brand moves more than a few points of lightness. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
+**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened only as far as 3:1 on a raised dark card asks: `blue-600` (#2563eb) becomes #2968f0, and no brand moves more than a few points of lightness. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow Dark is the one exception: it keeps the bright `yellow-400` under `yellow-950` text, with hover and held down a step lighter, since a yellow dark enough for white text reads as brown. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
@@ -124,7 +124,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `primary-text` | `‹brand›-600` | `‹brand›-400` | Brand text, links, icons, lines and borders. |
 | `primary-text-hover` | `‹brand›-700` | `‹brand›-300` | `primary-text` under the pointer. |
 | `primary-subtle` | `‹brand›-50` | `‹brand›-950` | Brand tint for selected rows and badges. |
-| `on-primary` | `white` | `white` | Text and icons on `primary` fills. |
+| `on-primary` | `white` | `white` (`yellow-950` in Yellow Dark) | Text and icons on `primary` fills. |
 | `secondary` | `zinc-100` | `zinc-700` | Secondary button fill; hover fill for outline and ghost buttons. |
 | `secondary-hover` | `zinc-200` | `zinc-600` | Hover state of `secondary`. |
 | `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
@@ -195,7 +195,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 
 ### Contrast, checked in every theme
 
-- `on-primary` on `primary`: 4.8–6.5:1. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
+- `on-primary` on `primary`: 4.8–6.5:1, and 9.5:1 in Yellow Dark. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
 - `focus-ring` on `surface`: 3.7:1 or more.
 - **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 fill) is about 1.5:1 in light and 1.4:1 to 1.9:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its fill in dark, the stronger border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-control)`. The checks hold the border to 1.3:1 so it never fades out entirely. Every other control's edge, `border-control`, keeps 3:1.
 - Dark themes fill with the light theme's `primary` under white text, a little lighter where 3:1 on a raised card asks it; brand text there is `primary-text` (brand 400), since the fill's shade is 3.4:1 as text on a dark card.

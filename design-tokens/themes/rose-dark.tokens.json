@@ -11,7 +11,7 @@
         ],
         "hex": "#d4304d"
       },
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow Dark is the exception: it keeps the bright yellow 400 under yellow-950 text, since a yellow dark enough for white text reads as brown. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -77,7 +77,7 @@
     "on-primary": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes (brand 950 in dark with more contrast, where the fill is brand 300).",
+      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes. Yellow Dark, whose fill is the bright yellow 400, takes yellow 950; so does every dark theme with more contrast, where the fill is brand 300.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--on-primary"

@@ -26,7 +26,15 @@ const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
   const val = (name) => tokens.color.tokens.find((x) => x.name === name).value;
   const hexOf = (v) => { const r = /^\{(.+)\}$/.exec(v)?.[1]; return r ? palette.get(r) : v; };
   const off = [], near = [];
-  for (const { id } of tokens.color.themes.filter((th) => th.id.endsWith('-dark'))) {
+  // Yellow Dark keeps the bright yellow 400 under yellow-950 text (Diki, 22 November 2026): a yellow dark enough for
+  // white text reads as brown. Its text on the fill still passes 4.5:1.
+  const BRIGHT = { 'yellow-dark': ['{yellow-400}', '{yellow-300}', '{yellow-200}'] };
+  for (const [id, want] of Object.entries(BRIGHT)) {
+    const got = ['primary', 'primary-hover', 'primary-pressed'].map((n) => val(n)[id]);
+    const low = got.map((v) => contrast(hexOf(val('on-primary')[id]), hexOf(v))).filter((r) => r < 4.5);
+    t(`${id} keeps its bright fill (${want.join(', ')}) under dark text at 4.5:1`, got.join() === want.join() && !low.length, `${got.join(', ')}; ${low.map((r) => r.toFixed(2)).join(', ')}`);
+  }
+  for (const { id } of tokens.color.themes.filter((th) => th.id.endsWith('-dark') && !(th.id in BRIGHT))) {
     const lightId = id.replace(/-dark$/, '-light');
     const d = darkFillShift(hexOf(val('primary')[lightId]), hexOf(val('surface-raised')[id]));
     for (const n of ['primary', 'primary-hover', 'primary-pressed']) {
@@ -36,7 +44,7 @@ const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
     }
     near.push(d);
   }
-  t("every shipped dark theme's primary, hover and held-down fills are its light theme's, lightened only as far as 3:1 on a raised card asks, under white text", !off.length && near.length > 0, off.join('; '));
+  t("every other shipped dark theme's primary, hover and held-down fills are its light theme's, lightened only as far as 3:1 on a raised card asks, under white text", !off.length && near.length > 0, off.join('; '));
   t('no shipped dark fill is more than 0.07 lighter (OKLCH L) than its light theme\'s: the two read as one color', near.every((d) => d <= 0.07), near.join(' '));
 }
 

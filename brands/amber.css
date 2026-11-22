@@ -7,6 +7,7 @@
   --primary-pressed: var(--amber-900);
   --primary-subtle: var(--amber-50);
   --primary-subtle-pressed: var(--amber-100);
+  --on-primary: var(--white);
   --primary-text: var(--amber-700);
   --primary-text-hover: var(--amber-800);
   --field-action: var(--amber-700);
@@ -27,6 +28,7 @@
   --primary-pressed: #7a3712;
   --primary-subtle: var(--amber-950);
   --primary-subtle-pressed: var(--amber-900);
+  --on-primary: var(--white);
   --primary-text: var(--amber-400);
   --primary-text-hover: var(--amber-300);
   --field-action: var(--amber-400);
@@ -47,6 +49,7 @@
   --primary-pressed: light-dark(var(--amber-900), #7a3712);
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));
+  --on-primary: var(--white);
   --primary-text: light-dark(var(--amber-700), var(--amber-400));
   --primary-text-hover: light-dark(var(--amber-800), var(--amber-300));
   --field-action: light-dark(var(--amber-700), var(--amber-400));
@@ -67,6 +70,7 @@
   --primary-pressed: light-dark(var(--amber-900), #7a3712);
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));
+  --on-primary: var(--white);
   --primary-text: light-dark(var(--amber-700), var(--amber-400));
   --primary-text-hover: light-dark(var(--amber-800), var(--amber-300));
   --field-action: light-dark(var(--amber-700), var(--amber-400));

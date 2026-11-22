@@ -381,7 +381,6 @@
   --srp-more-focus-ring: var(--blue-700);
 }
 [data-theme$="-light"] {
-  --on-primary: var(--white);
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
   --secondary-pressed: var(--zinc-300);
@@ -477,7 +476,6 @@
   --chart-gap: var(--white);
 }
 [data-theme$="-dark"] {
-  --on-primary: var(--white);
   --secondary: var(--zinc-700);
   --secondary-hover: var(--zinc-600);
   --secondary-pressed: var(--zinc-500);
@@ -578,6 +576,7 @@
   --primary-pressed: #2144b4;
   --primary-subtle: var(--blue-950);
   --primary-subtle-pressed: var(--blue-900);
+  --on-primary: var(--white);
   --primary-text: var(--blue-400);
   --primary-text-hover: var(--blue-300);
   --field-action: var(--blue-400);
@@ -599,6 +598,7 @@
   --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
+  --on-primary: var(--white);
   --primary-text: light-dark(var(--blue-600), var(--blue-400));
   --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --secondary: light-dark(var(--zinc-100), var(--zinc-700));
@@ -700,6 +700,7 @@
   --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
+  --on-primary: var(--white);
   --primary-text: light-dark(var(--blue-600), var(--blue-400));
   --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --field-action: light-dark(var(--blue-600), var(--blue-400));
@@ -720,6 +721,7 @@
   --primary-pressed: light-dark(var(--blue-800), #2144b4);
   --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
   --primary-subtle-pressed: light-dark(var(--blue-100), var(--blue-900));
+  --on-primary: var(--white);
   --primary-text: light-dark(var(--blue-600), var(--blue-400));
   --primary-text-hover: light-dark(var(--blue-700), var(--blue-300));
   --field-action: light-dark(var(--blue-600), var(--blue-400));

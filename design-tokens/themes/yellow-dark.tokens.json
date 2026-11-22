@@ -2,16 +2,8 @@
   "color": {
     "primary": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6353,
-          0.3882,
-          0.0314
-        ],
-        "hex": "#a26308"
-      },
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$value": "{color.yellow-400}",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened only as far as 3:1 on a raised dark card asks (blue-600 #2563eb becomes #2968f0), so a button is the same color in both modes. Yellow Dark is the exception: it keeps the bright yellow 400 under yellow-950 text, since a yellow dark enough for white text reads as brown. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--primary"
@@ -20,15 +12,7 @@
     },
     "primary-hover": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.5255,
-          0.3059,
-          0.0588
-        ],
-        "hex": "#864e0f"
-      },
+      "$value": "{color.yellow-300}",
       "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
         "com.serupa": {
@@ -38,15 +22,7 @@
     },
     "primary-pressed": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.4471,
-          0.251,
-          0.0745
-        ],
-        "hex": "#724013"
-      },
+      "$value": "{color.yellow-200}",
       "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {
         "com.serupa": {
@@ -76,8 +52,8 @@
     },
     "on-primary": {
       "$type": "color",
-      "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes (brand 950 in dark with more contrast, where the fill is brand 300).",
+      "$value": "{color.yellow-950}",
+      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes. Yellow Dark, whose fill is the bright yellow 400, takes yellow 950; so does every dark theme with more contrast, where the fill is brand 300.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--on-primary"
