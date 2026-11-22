@@ -4,8 +4,8 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface}",
-        "$description": "The background.",
+        "$value": "{color.danger-subtle}",
+        "$description": "The background: the danger tint a danger Alert has.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--error-summary-bg"

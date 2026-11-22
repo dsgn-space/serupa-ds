@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Radio, RadioGroup } from '../Radio/Radio';
@@ -145,11 +145,12 @@ describe('ErrorSummary', () => {
     seen.disconnect();
   });
 
-  test('its text and links read 4.5:1 on its background in every theme', async () => {
+  test('a danger tint behind it, as a danger Alert has; its text and links read 4.5:1 on it in every theme', async () => {
     await render(<ErrorSummary id="c" autoFocus={false} errors={ERRORS} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(el('c')).backgroundColor;
+      expect([th, bg]).toEqual([th, color('var(--danger-subtle)')]);
       expect(contrast(css(el('c')).color, bg), th).toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(el('c').querySelector('a')).color, bg), th + ' link').toBeGreaterThanOrEqual(4.5);
     }
