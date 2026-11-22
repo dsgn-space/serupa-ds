@@ -64,7 +64,7 @@ Drawn from the `Open` story.
 
 ### Do and don't
 
-- **Do:** Write titles that say what happened ("Payment failed", "Invoice sent"). (`DoSayWhatHappened`)
+- **Do:** Write titles that say what happened ("Payment failed", "Invoice sent"). (`Open`)
 - **Don't:** Write titles like "Update": people have to open each one to learn what it's about. (`DontVagueTitles`)
 
 ## Accessibility

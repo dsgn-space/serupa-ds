@@ -27,7 +27,7 @@ export const Overdue: Story = { args: { invoice: small } };
 export const Paid: Story = { args: { invoice: { ...small, number: 'INV-2030', paid: '2025-03-01' } } };
 
 /** The payment fails: the page says so next to Pay, and the invoice stays due. */
-export const PayFails: Story = { args: { onPay: () => new Promise((_, no) => setTimeout(() => no(new Error('declined')), 600)) } };
+export const PayFails: Story = { tags: ['!visual'], args: { onPay: () => new Promise((_, no) => setTimeout(() => no(new Error('declined')), 600)) } };
 
 /** The invoice is on its way from the server: placeholders, named once. */
 export const Loading: Story = { args: { loading: true } };

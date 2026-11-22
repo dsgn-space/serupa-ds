@@ -33,7 +33,7 @@ import { ScrollArea } from "@diki-stwn/serupa-ds";
 
 ### Do and don't
 
-- **Do:** Give it a size: a `maxHeight` (or `height`) for the default vertical scroll. (`DoGiveSize`)
+- **Do:** Give it a size: a `maxHeight` (or `height`) for the default vertical scroll. (`Vertical`)
 - **Don't:** Leave out the size: it never scrolls, and pushes the rest of the page down. (`DontNoSize`)
 
 ## Accessibility

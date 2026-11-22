@@ -39,7 +39,7 @@ Drawn from the `Area` story.
 ### Do and don't
 
 - **Do:** Show the latest number as text beside it: the sparkline is the shape of the trend. (`DoShowLatest`)
-- **Don't:** Show the line alone: people can't read a value off its shape. (`DontLineAlone`)
+- **Don't:** Show the line alone: people can't read a value off its shape. (`Default`)
 
 ## Accessibility
 

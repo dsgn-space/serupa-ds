@@ -73,8 +73,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: titles that say what happened ("Payment failed"). */
-export const DoSayWhatHappened: Story = { name: 'Do: say what happened', args: { defaultOpen: true } };
 /** Don't: titles like "Update", which make people open each one to find out. */
 export const DontVagueTitles: Story = {
   name: "Don't: write vague titles",

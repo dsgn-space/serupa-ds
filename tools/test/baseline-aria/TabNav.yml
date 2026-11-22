@@ -14,22 +14,6 @@
       - link "Settings":
         - /url: "#settings"
 
-# DoTabLine
-- navigation "Project":
-  - list:
-    - listitem:
-      - link "Overview":
-        - /url: "#overview"
-    - listitem:
-      - link "Activity":
-        - /url: "#activity"
-    - listitem:
-      - link "Members":
-        - /url: "#members"
-    - listitem:
-      - link "Settings":
-        - /url: "#settings"
-
 # DontPlainLinks
 - navigation "Project":
   - list:

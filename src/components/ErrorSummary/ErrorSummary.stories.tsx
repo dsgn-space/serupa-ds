@@ -66,8 +66,6 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: each error says what's wrong and how to fix it. */
-export const DoSayHowToFix: Story = { name: 'Do: say how to fix it' };
 /** Don't: "Invalid", which says something is wrong but not what to do. */
 export const DontJustInvalid: Story = {
   name: "Don't: just say invalid",

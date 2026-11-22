@@ -49,7 +49,5 @@ export const LongText: Story = {
     defaultValue: ['p1', 'p2'],
   },
 };
-/** Do: a longer list, where people pick some and leave the rest. */
-export const DoLongList: Story = { name: 'Do: a list to pick from' };
 /** Don't: a handful of options, which a CheckboxGroup shows at once with one box each. */
 export const DontFewOptions: Story = { name: "Don't: a handful of options", args: { options: columns.slice(0, 3), defaultValue: ['name'] } };

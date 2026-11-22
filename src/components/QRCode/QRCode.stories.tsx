@@ -41,8 +41,6 @@ export const LongText: Story = {
     <QRCode {...args} size="sm" status="expired" onRefresh={() => {}} label="Expired code" />
   </div>,
 };
-/** Do: a short URL, which makes big modules that scan fast. */
-export const DoShortValue: Story = { name: 'Do: a short URL' };
 /** Don't: a long text in the code, which packs it too dense to scan from a phone screen. */
 export const DontLongValue: Story = {
   name: "Don't: a long text",

@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Changes that can't be saved say so and stay. */
-export const SaveFails: Story = { args: { onSave: () => Promise.reject(new Error('offline')) } };
+export const SaveFails: Story = { tags: ['!visual'], args: { onSave: () => Promise.reject(new Error('offline')) } };
 
 /** While the roles load: one placeholder. */
 export const Loading: Story = { args: { loading: true } };

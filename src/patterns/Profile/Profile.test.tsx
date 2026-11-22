@@ -18,7 +18,7 @@ describe('Patterns/Profile', () => {
     expect(profileProblems({ ...me, name: ' ', website: 'ana.example' })).toEqual({ name: 'Enter your name.', website: 'Enter a link that starts with https://, like https://example.com.' });
     expect(profileProblems({ ...me, website: '' })).toEqual({});
     expect(profileProblems({ ...me, bio: 'x'.repeat(11) }, 10)).toEqual({ bio: 'Shorten your bio to 10 characters.' });
-    expect([profileChanged(me, { ...me }), profileChanged(me, { ...me, bio: 'Hi' }), profileChanged(me, { ...me, photo: 'a.png' })]).toEqual([false, true, true]);
+    expect([profileChanged(me, { ...me }), profileChanged(me, { ...me, bio: 'Hi' }), profileChanged(me, { ...me, photo: 'a.png' }), profileChanged(me, { ...me, timeZone: 'Asia/Tokyo' })]).toEqual([false, true, true, true]);
   });
 
   test('one main and h1, the skip link first, the form named by whose profile it is, fields with autofill, and the avatar named', async () => {
@@ -62,7 +62,7 @@ describe('Patterns/Profile', () => {
   });
 
   test('Save sends the trimmed profile and the new photo, says Saved, and the new photo shows with its name', async () => {
-    const onSave = vi.fn((_p: ProfileInfo, _f: File | null) => Promise.resolve());
+    const onSave = vi.fn((_p: ProfileInfo, _f: File | null, _c?: unknown) => Promise.resolve());
     const screen = await render(<Profile profile={me} onSave={onSave} />);
     await userEvent.upload(document.getElementById('profile-photo') as HTMLInputElement, [png()]);
     await expect.poll(() => document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
@@ -71,9 +71,32 @@ describe('Patterns/Profile', () => {
     await expect.poll(() => onSave.mock.calls.length).toBe(1);
     expect(onSave.mock.calls[0]![0]).toEqual({ ...me, location: 'Jakarta' });
     expect(onSave.mock.calls[0]![1]?.name).toBe('me.png');
+    // The photo comes with the square of it to keep, from the cropper under the upload: here all of a 1×1 picture.
+    expect(onSave.mock.calls[0]![2]).toEqual({ x: 0, y: 0, width: 1, height: 1 });
     await expect.poll(() => document.body.textContent).toContain('Saved');
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
     expect(document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
+  });
+
+  test('a new photo can be framed: a cropper under the upload, named by its field, with a zoom slider; none without one', async () => {
+    const screen = await render(<Profile profile={me} />);
+    expect(screen.getByRole('group', { name: 'Frame your photo' }).elements()).toHaveLength(0);
+    await userEvent.upload(document.getElementById('profile-photo') as HTMLInputElement, [png()]);
+    const frame = screen.getByRole('group', { name: 'Frame your photo' });
+    await expect.element(frame).toBeVisible();
+    await expect.element(frame.getByRole('slider')).toBeVisible();
+    await expect.poll(() => frame.element().querySelector('[role="application"]') != null).toBe(true);
+  });
+
+  test('a time zone is picked from the list by city, and saved with the profile', async () => {
+    const onSave = vi.fn((_p: ProfileInfo, _f: File | null, _c?: unknown) => Promise.resolve());
+    const screen = await render(<Profile profile={me} onSave={onSave} />);
+    const zone = screen.getByRole('combobox', { name: /^Time zone/ });
+    await zone.fill('Tokyo');
+    await screen.getByRole('option', { name: /^Tokyo/ }).click();
+    await screen.getByRole('button', { name: 'Save profile' }).click();
+    await expect.poll(() => onSave.mock.calls.length).toBe(1);
+    expect(onSave.mock.calls[0]![0]).toEqual({ ...me, timeZone: 'Asia/Tokyo' });
   });
 
   test('a photo can be removed, and a save that fails says so, keeps the changes and saves again from Try again', async () => {

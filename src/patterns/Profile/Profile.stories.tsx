@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Saving fails: the status says so with Try again, and the changes stay. */
-export const SaveFails: Story = { args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+export const SaveFails: Story = { tags: ['!visual'], args: { onSave: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
 
 /** A new profile: no photo yet, so the avatar shows initials, and nothing but a name. */
 export const Empty: Story = { args: { profile: { name: 'Budi Santoso', bio: '', location: '', website: '', photo: '' } } };

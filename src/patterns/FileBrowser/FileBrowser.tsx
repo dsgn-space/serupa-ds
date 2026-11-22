@@ -6,7 +6,7 @@ import { IconButton } from '../../components/IconButton/IconButton';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
-import { RadioGroup, Radio } from '../../components/Radio/Radio';
+import { TreeView, type TreeViewItem } from '../../components/TreeView/TreeView';
 import { Alert } from '../../components/Alert/Alert';
 import { Menu, MenuItem } from '../../components/Menu/Menu';
 import { Toaster, toast } from '../../components/Toast/Toast';
@@ -59,6 +59,8 @@ export interface BrowserFile {
 export interface BrowserFolder {
   id: string;
   name: string;
+  /** The folders inside it, shown under it in the move dialog's tree. */
+  children?: readonly BrowserFolder[] | undefined;
 }
 
 export interface FileBrowserProps {
@@ -101,7 +103,14 @@ const demoFiles: BrowserFile[] = [
   { id: 'f5', name: 'Press release.docx', kind: 'doc', bytes: 24_000, modified: now - 20 * DAY },
   { id: 'f6', name: 'Budget 2026.xlsx', kind: 'sheet', bytes: 88_000, modified: now - 41 * DAY },
 ];
-const demoFolders: BrowserFolder[] = [{ id: 'd1', name: 'Archive' }, { id: 'd2', name: 'Marketing' }, { id: 'd3', name: 'Shared with clients' }];
+const demoFolders: BrowserFolder[] = [{ id: 'd1', name: 'Archive' },
+  { id: 'd2', name: 'Marketing', children: [{ id: 'd4', name: 'Campaigns' }, { id: 'd5', name: 'Social' }] }, { id: 'd3', name: 'Shared with clients' }];
+/** The folders as the tree's items, and every folder by id at any depth. */
+const toItems = (list: readonly BrowserFolder[]): TreeViewItem[] => list.map((d) => ({ id: d.id, label: d.name, icon: 'folder', ...(d.children?.length ? { children: toItems(d.children) } : null) }));
+const findFolder = (list: readonly BrowserFolder[], id: string): BrowserFolder | undefined => {
+  for (const d of list) { const hit = d.id === id ? d : d.children && findFolder(d.children, id); if (hit) return hit; }
+  return undefined;
+};
 const ICON: Record<FileKind, string> = { folder: 'folder', image: 'image', pdf: 'picture_as_pdf', doc: 'description', sheet: 'table_chart', other: 'draft' };
 
 /** "1 file" or "3 files": English's rule, since the words are English; an app translating them uses its own. */
@@ -151,7 +160,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
     });
   };
 
-  // Moving: a dialog with the folders, one to choose.
+  // Moving: a dialog with the folders as a tree, one to choose.
   const [moving, setMoving] = React.useState<string[] | null>(null);
   const [target, setTarget] = React.useState('');
   const [moveError, setMoveError] = React.useState<string | null>(null);
@@ -162,7 +171,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
     e.preventDefault();
     const ids = moving ?? [];
     if (!target) { setMoveError('Choose a folder.'); return; }
-    const to = folders.find((d) => d.id === target)?.name ?? '';
+    const to = findFolder(folders, target)?.name ?? '';
     const what = said(ids);
     setMoveFailed(false);
     setBusy(true);
@@ -252,9 +261,8 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
             <form onSubmit={move} noValidate className="flex flex-col gap-4">
               {moveFailed ? <Alert tone="danger">Couldn’t move {moving ? said(moving) : ''}. Try again.</Alert> : null}
               <Field group label="Folder" error={moveError ?? undefined} required>
-                <RadioGroup name="folder" value={target} onValueChange={(v: string) => { setTarget(v); setMoveError(null); }}>
-                  {folders.map((d) => <Radio key={d.id} value={d.id}>{d.name}</Radio>)}
-                </RadioGroup>
+                <TreeView aria-label="Folders" items={toItems(folders)} selectionMode="single" value={target ? [target] : []}
+                  onValueChange={(v) => { setTarget(v[0] ?? ''); setMoveError(null); }} />
               </Field>
               <div className="flex flex-wrap gap-2">
                 <Button type="submit" loading={busy}>Move</Button>
