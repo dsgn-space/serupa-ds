@@ -12,12 +12,21 @@ import { DateRangePicker } from '../components/DateRangePicker/DateRangePicker';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
 import { Input } from '../components/Input/Input';
 import { NumberInput } from '../components/NumberInput/NumberInput';
+import { MenuItem } from '../components/Menu/Menu';
+import { Pagination } from '../components/Pagination/Pagination';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
 import { Select } from '../components/Select/Select';
 import { TimePicker } from '../components/TimePicker/TimePicker';
+import { CascadeSelect } from '../components/CascadeSelect/CascadeSelect';
+import { CopyButton } from '../components/CopyButton/CopyButton';
+import { DateField } from '../components/DateField/DateField';
+import { IconButton } from '../components/IconButton/IconButton';
+import { SplitButton } from '../components/SplitButton/SplitButton';
+import { TimeZonePicker } from '../components/TimeZonePicker/TimeZonePicker';
+import { ToggleButton } from '../components/ToggleButton/ToggleButton';
 import { Checkbox, CheckboxGroup } from '../components/Checkbox/Checkbox';
 import { Radio, RadioGroup } from '../components/Radio/Radio';
 import { Switch } from '../components/Switch/Switch';
@@ -41,6 +50,13 @@ const CONTROLS: [string, (size: Size) => React.ReactElement][] = [
   ['SearchInput', (size) => <SearchInput size={size} aria-label="Name" />],
   ['InlineEdit (editing)', (size) => <InlineEdit size={size} label="Name" defaultValue="Ada" defaultEditing />],
   ['SegmentedControl', (size) => <SegmentedControl size={size} aria-label="View" options={OPTIONS} />],
+  ['IconButton', (size) => <IconButton size={size} icon="settings" label="Settings" />],
+  ['ToggleButton', (size) => <ToggleButton size={size}>Bold</ToggleButton>],
+  ['CopyButton', (size) => <CopyButton size={size} value="sk_live_51H8xQ2" />],
+  ['SplitButton', (size) => <SplitButton size={size} menuLabel="More" menu={<MenuItem>Save as draft</MenuItem>}>Publish</SplitButton>],
+  ['CascadeSelect', (size) => <CascadeSelect size={size} aria-label="Region" options={[{ value: 'a', label: 'A', children: [{ value: 'b', label: 'B' }] }]} />],
+  ['DateField', (size) => <DateField size={size} aria-label="Date" />],
+  ['TimeZonePicker', (size) => <TimeZonePicker size={size} aria-label="Time zone" />],
 ];
 
 const token = (name: string, within: Element) => {
@@ -82,6 +98,9 @@ describe('size from a SerupaProvider', () => {
     const screen = await render(<SerupaProvider size="sm"><div id="small">{CONTROLS.map(([name, make]) => <div key={name} data-name={name}>{make(undefined as unknown as Size)}</div>)}</div><Input id="own" size="lg" aria-label="Own" /></SerupaProvider>);
     const off = [...screen.container.querySelectorAll<HTMLElement>('#small > div')].filter((d) => Math.round(box(d).getBoundingClientRect().height) !== 24).map((d) => d.dataset.name);
     expect(off).toEqual([]);
+    // Pagination's page buttons are control-height too, so a dense screen's pager matches its fields.
+    const pager = await render(<SerupaProvider size="sm"><Pagination count={5} aria-label="Pages" /></SerupaProvider>);
+    expect(Math.round(pager.container.querySelector('.srp-pagination button')!.getBoundingClientRect().height)).toBe(24);
     expect(Math.round(box(document.getElementById('own')!.parentElement!).getBoundingClientRect().height)).toBe(44);
   });
 
