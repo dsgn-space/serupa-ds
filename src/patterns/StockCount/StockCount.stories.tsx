@@ -4,7 +4,7 @@ import { StockCount } from './StockCount';
 /* StockCount: a shop's stock counted into a grid, what differs from the record, the row size and the columns to show.
    StockCount.mdx says why each part is there and what stays the app's job. */
 const meta = {
-  title: 'Patterns/StockCount',
+  title: 'Patterns/Stock count',
   component: StockCount,
   parameters: { layout: 'fullscreen' },
   args: { onSave: () => new Promise((ok) => setTimeout(ok, 600)) },
