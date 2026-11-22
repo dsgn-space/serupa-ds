@@ -200,7 +200,6 @@ fonts/InterVariable-Italic-latin-ext.woff2
 fonts/InterVariable-Italic-latin.woff2
 fonts/InterVariable-Italic-symbols.woff2
 fonts/InterVariable-Italic-vietnamese.woff2
-fonts/InterVariable-Italic.woff2
 fonts/InterVariable-cyrillic-ext.woff2
 fonts/InterVariable-cyrillic.woff2
 fonts/InterVariable-greek-ext.woff2
@@ -209,7 +208,6 @@ fonts/InterVariable-latin-ext.woff2
 fonts/InterVariable-latin.woff2
 fonts/InterVariable-symbols.woff2
 fonts/InterVariable-vietnamese.woff2
-fonts/InterVariable.woff2
 licenses/Inter-OFL-1.1.txt
 licenses/MaterialSymbols-Apache-2.0.txt
 licenses/React-MIT.txt

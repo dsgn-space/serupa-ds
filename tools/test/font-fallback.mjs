@@ -31,7 +31,7 @@ t('tokens.css writes each one with its size-adjust and overrides', fallbacks.eve
 t('--font-sans lists Inter Fallback right after Inter', /--font-sans: Inter, "Inter Fallback",/.test(css), (/--font-sans:[^;]*/.exec(css) || [''])[0]);
 
 const pages = servePages('fallback');
-const inter = fallbacks.map((f) => `@font-face{font-family:I;src:url("${pages.at(f.style === 'italic' ? 'fonts/InterVariable-Italic.woff2' : 'fonts/InterVariable.woff2')}");font-weight:100 900;font-style:${f.style}}`);
+const inter = fallbacks.map((f) => `@font-face{font-family:I;src:url("${pages.at(f.style === 'italic' ? 'tools/fonts/source/InterVariable-Italic.woff2' : 'tools/fonts/source/InterVariable.woff2')}");font-weight:100 900;font-style:${f.style}}`);
 const fall = fallbacks.map((f) => `@font-face{font-family:F;src:${f.local.map((n) => `local("${n}")`).join(',')};font-weight:${f.weight};font-style:${f.style};size-adjust:${f.sizeAdjust};ascent-override:${f.ascentOverride};descent-override:${f.descentOverride};line-gap-override:${f.lineGapOverride}}`);
 const TEXT = 'Your changes are saved. Invite people to this project by email, then choose what each of them can see and edit.';
 const PARA = 'Invite people to this project by email. Each of them gets a link that works for seven days, and you choose what they can see and edit before they join. You can change it later in Settings, under Members.';
