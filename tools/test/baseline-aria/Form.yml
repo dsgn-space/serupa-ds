@@ -1,0 +1,157 @@
+# AsyncCheck
+- form "Create an account":
+  - text: Username Lowercase letters, numbers and _
+  - textbox "Username"
+  - button "Save"
+
+# Default
+- form "Create an account":
+  - text: Full name
+  - textbox "Full name"
+  - text: Email Like name@example.com
+  - textbox "Email"
+  - text: Password 12 characters or more
+  - textbox "Password"
+  - button "Show password"
+  - text: Confirm password
+  - textbox "Confirm password"
+  - button "Show confirmed password"
+  - checkbox "I agree to the terms"
+  - text: I agree to the terms
+  - button "Create account"
+
+# DependentFields
+- form "Create an account":
+  - text: Country
+  - combobox "Country":
+    - option "Indonesia" [selected]
+    - option "Singapore"
+  - text: Province
+  - combobox "Province":
+    - option "Bali"
+    - option "Jawa Barat"
+    - option "Jawa Tengah"
+    - option "DKI Jakarta"
+  - text: Postal code(optional)
+  - textbox "Postal code(optional)"
+  - button "Save address"
+
+# Draft
+- form "Create an account":
+  - text: Full name
+  - textbox "Full name"
+  - text: Why do you want to join?
+  - textbox "Why do you want to join?"
+  - button "Send application"
+
+# LongText
+- form "Create an account":
+  - heading "There is a problem" [level=2]
+  - list:
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column":
+        - /url: "#srp-f_id1_-control"
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer
+  - textbox "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer" [invalid]
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column
+  - button "Save"
+
+# MultiStep
+- form "Create an account":
+  - navigation "Progress":
+    - list:
+      - listitem: Business
+      - listitem: Address
+      - listitem: Plan You can change it later
+  - region "Business":
+    - heading "Business" [level=2]
+    - text: Business name
+    - textbox "Business name"
+    - text: Work email
+    - textbox "Work email"
+  - region "Address"
+  - region "Plan"
+  - button "Next"
+
+# Playground
+- form "Create an account":
+  - text: Full name
+  - textbox "Full name"
+  - text: Email Like name@example.com
+  - textbox "Email"
+  - text: Password 12 characters or more
+  - textbox "Password"
+  - button "Show password"
+  - text: Confirm password
+  - textbox "Confirm password"
+  - button "Show confirmed password"
+  - checkbox "I agree to the terms"
+  - text: I agree to the terms
+  - button "Create account"
+
+# RepeatableGroups
+- form "Create an account":
+  - text: Team name
+  - textbox "Team name": Design
+  - group "People to invite":
+    - text: People to invite Up to 5
+    - list:
+      - listitem:
+        - group "Person 1":
+          - text: Email of person 1
+          - textbox "Email of person 1": ani@example.com
+    - button "Add another person"
+  - button "Send invitations"
+
+# ServerErrors
+- form "Create an account":
+  - alert: Nothing was sent. Check the problems below.
+  - heading "There is a problem" [level=2]
+  - list:
+    - listitem:
+      - link "That email already has an account. Sign in instead":
+        - /url: "#srp-f_id1_-control"
+  - text: Full name
+  - textbox "Full name": Ani Wijaya
+  - text: Email Like name@example.com
+  - textbox "Email" [invalid]: ani@example.com
+  - text: That email already has an account. Sign in instead Password 12 characters or more
+  - textbox "Password"
+  - button "Show password"
+  - text: Confirm password
+  - textbox "Confirm password"
+  - button "Show confirmed password"
+  - checkbox "I agree to the terms"
+  - text: I agree to the terms
+  - button "Create account"
+
+# SubmitFailed
+- form "Create an account":
+  - heading "There are 3 problems" [level=2]
+  - list:
+    - listitem:
+      - link "Enter your full name":
+        - /url: "#srp-f_id1_-control"
+    - listitem:
+      - link "Enter an email address like name@example.com":
+        - /url: "#srp-f_id2_-control"
+    - listitem:
+      - link "Agree to the terms to create an account":
+        - /url: "#srp-f_id3_-control"
+  - text: Full name
+  - textbox "Full name" [invalid]
+  - text: Enter your full name Email Like name@example.com
+  - textbox "Email" [invalid]
+  - text: Enter an email address like name@example.com Password 12 characters or more
+  - textbox "Password"
+  - button "Show password"
+  - text: Confirm password
+  - textbox "Confirm password"
+  - button "Show confirmed password"
+  - checkbox "I agree to the terms" [invalid]
+  - text: I agree to the terms Agree to the terms to create an account
+  - button "Create account"
+
+# UnsavedChanges
+- button "Edit profile"
+
