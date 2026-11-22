@@ -94,6 +94,10 @@ describe('Patterns/StockCount', () => {
     await screen.getByRole('menuitem', { name: 'Print' }).click();
     expect(print).toHaveBeenCalledOnce();
     print.mockRestore();
+    await screen.getByRole('menuitem', { name: 'View' }).click();
+    await screen.getByRole('menuitem', { name: 'Columns…' }).click();
+    await expect.element(screen.getByRole('dialog', { name: 'Columns' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Done' }).click();
     await screen.getByRole('menuitem', { name: 'Edit' }).click();
     await screen.getByRole('menuitem', { name: 'Clear all counts…' }).click();
     await expect.poll(() => active().textContent).toBe('Keep them');
