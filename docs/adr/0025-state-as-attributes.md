@@ -16,11 +16,11 @@ A state that can be on with another (disabled and invalid, selected and today) d
 - **ARIA and native state stay the source for assistive tech.** The attributes are for styling and tests. Where an element already carries the state for a screen reader (`aria-expanded` on a Table's expand button, `aria-pressed` on a ToggleButton that is on; `data-pressed` stays what Button sets while a key holds it down), the stylesheet may select that instead.
 - **The components' own stylesheets put the attribute in `:where()`** (`.srp-calendar__day:where([data-outside])`), so a state weighs what its modifier class did and every rule wins or loses as before. Written straight on the part, `[data-outside]` would weigh one class more and beat rules it used to lose to: an outside day's muted text took over the range fill and failed contrast. `tools/test/state-hooks.mjs` fails on a state attribute written that way. App CSS is outside this rule: `.srp-input[data-invalid]` weighing more than a component's own state rule is what an override wants.
 - **The components' own stylesheets select states on these attributes,** never on a `--state` class. `tools/test/state-hooks.mjs` holds them to it, and checks that each element still writing a deprecated class writes its attribute too.
-- **`--` modifier classes are for variant and size only.** The `--state` classes are still written in 17.x, deprecated, and removed in 18.0.0.
+- **`--` modifier classes are for variant and size only.** The `--state` classes are still written in 17.x and 18.x, deprecated, and removed in 19.0.0.
 
 ## Consequences
 
-- App CSS selects `.srp-input[data-invalid]` where it selected `.srp-input--invalid`. Customizing lists the attributes, and `STATE_CLASSES` in `tools/test/state-hooks.mjs` maps every deprecated class to its attribute, for a codemod to flag them in 18.0.0.
+- App CSS selects `.srp-input[data-invalid]` where it selected `.srp-input--invalid`. Customizing lists the attributes, and `STATE_CLASSES` in `tools/test/state-hooks.mjs` maps every deprecated class to its attribute, for a codemod to flag them in 19.0.0.
 - A selector moved from a class to a class and an attribute is one step more specific. Inside the components' own layer that changes nothing an app sees, since app CSS outside the layers wins whatever its specificity.
-- Adding a state attribute is a minor. Removing the deprecated classes is part of 18.0.0, with a migration note.
+- Adding a state attribute is a minor. Removing the deprecated classes is part of 19.0.0, with a migration note.
 - A new component writes its state as an attribute from the start, and never adds a `--state` class.

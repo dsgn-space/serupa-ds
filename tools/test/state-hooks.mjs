@@ -1,6 +1,6 @@
 // State is an attribute, not a class (ADR-0025): the components' stylesheets select a state on the attribute the element
 // carries (data-disabled, data-selected, data-current, aria-expanded, data-state…), and the --state modifier classes
-// they still write are deprecated, removed in 18.0.0, so app CSS moves off them first. This fails when a stylesheet
+// they still write are deprecated, removed in 19.0.0, so app CSS moves off them first. This fails when a stylesheet
 // under src/ selects one of them again, and when a component writes one of the classes without the attribute that
 // replaces it, so an app selecting on the attribute never misses an element, and when a stylesheet puts a replacing
 // attribute straight on its part (.srp-calendar__day[data-outside]) rather than in :where(): the attribute would weigh
