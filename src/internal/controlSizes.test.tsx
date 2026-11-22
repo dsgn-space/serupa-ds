@@ -100,7 +100,7 @@ describe('size from a SerupaProvider', () => {
     expect(off).toEqual([]);
     // Pagination's page buttons are control-height too, so a dense screen's pager matches its fields.
     const pager = await render(<SerupaProvider size="sm"><Pagination count={5} aria-label="Pages" /></SerupaProvider>);
-    expect(Math.round(pager.container.querySelector('.srp-pagination button')!.getBoundingClientRect().height)).toBe(24);
+    expect(Math.round(pager.getByRole('button', { name: /^Page 1/ }).element().getBoundingClientRect().height)).toBe(24);
     expect(Math.round(box(document.getElementById('own')!.parentElement!).getBoundingClientRect().height)).toBe(44);
   });
 
