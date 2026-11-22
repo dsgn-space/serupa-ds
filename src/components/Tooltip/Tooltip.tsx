@@ -5,6 +5,7 @@ import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { named } from '../../internal/component';
+import { useHoverIntent } from '../../internal/useHoverIntent';
 import { isComposing } from '../../internal/ime';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { hoverIntent, hoverLeave, hoverWarm } from '../../internal/timing';
@@ -62,12 +63,12 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const open = !props.disabled && !!held;
   const tipRef = React.useRef<HTMLDivElement | null>(null);
   const anchorRef = React.useRef<HTMLElement | null>(null);
-  const timer = React.useRef<number | undefined>(undefined);
   const onOpenChange = useLatest(props.onOpenChange);
   // What it shows, and whether it may show: a press, a blur or the pointer leaving while it's hidden (or one of them
   // while disabled) asked onOpenChange to hide it, or to show it, when nothing was to change (L8E106).
   const shown = useLatest(open);
   const off = useLatest(props.disabled);
+  const timer = React.useRef<number | undefined>(undefined);
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
     window.clearTimeout(timer.current);
     if (v === shown.current || (v && off.current)) return;
@@ -75,35 +76,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     if (onOpenChange.current) onOpenChange.current(v, { reason });
   }, [controlled, setInner, off, onOpenChange, shown]);
   // Escape while a hover is waiting out the delay cancels the show (GR89): it was dismissed before it appeared.
-  // Nothing is on screen yet, so that Escape goes on to whatever else handles it.
-  const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);
-  const unarm = () => { if (armed.current) document.removeEventListener('keydown', armed.current, true); armed.current = null; };
-  const later = (v: boolean, ms: number) => {
-    window.clearTimeout(timer.current); unarm();
-    timer.current = window.setTimeout(() => { unarm(); set(v, 'hover'); }, ms);
-    if (!v || shown.current) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { window.clearTimeout(timer.current); unarm(); } };
-    armed.current = esc;
-    document.addEventListener('keydown', esc, true);
-  };
-  React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
-  // Interest invokers (174): the element points at the tooltip with interestfor, so where the browser has them, a
-  // long press on a touch screen shows it (Chrome on Android), as a hover does with a mouse. The browser's own showing
-  // is cancelled and the tooltip shows itself; an interest while the pointer is over the element or it has keyboard
-  // focus is one this component already handles (with its delay, its warm-up and Escape cancelling a waiting hover),
-  // so it's left alone.
-  const hovered = React.useRef(false), focused = React.useRef(false);
-  const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, 'hover'); } };
-  const interest = useLatest(fromInterest);
-  React.useEffect(() => {
-    const tip = tipRef.current;
-    if (!tip) return;
-    const on = (e: Event) => { e.preventDefault(); interest.current(); };
-    const lose = (e: Event) => { e.preventDefault(); };
-    tip.addEventListener('interest', on);
-    tip.addEventListener('loseinterest', lose);
-    return () => { tip.removeEventListener('interest', on); tip.removeEventListener('loseinterest', lose); };
-  }, [interest]);
+  const { later, stay, hoveredRef, focusedRef } = useHoverIntent(timer, set, shown, tipRef, () => { setInstant(true); set(true, 'hover'); });
   // The open tooltip is the warm one: opening another closes it, and closing it keeps others warm for hoverWarm.
   const self = React.useRef({});
   // Opened warm: no fade, so moving along a toolbar swaps one tooltip for the next without a flicker. One open on
@@ -184,10 +157,10 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the
     // tooltip opened 400ms after a tap and stayed. A touch pointer doesn't hover; focus still shows it from the keyboard.
-    onPointerEnter: chain('onPointerEnter', (e) => { if (!touch(e)) { hovered.current = true; const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, 'hover'); else later(true, delay); } }),
-    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hovered.current = false; later(false, hoverLeave); } }),
-    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(':focus-visible')) { focused.current = true; setInstant(!!warm.owner || Date.now() < warm.until); set(true, 'focus'); } }),
-    onBlur: chain('onBlur', () => { focused.current = false; set(false, 'blur'); }),
+    onPointerEnter: chain('onPointerEnter', (e) => { if (!touch(e)) { hoveredRef.current = true; const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, 'hover'); else later(true, delay); } }),
+    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hoveredRef.current = false; later(false, hoverLeave); } }),
+    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(':focus-visible')) { focusedRef.current = true; setInstant(!!warm.owner || Date.now() < warm.until); set(true, 'focus'); } }),
+    onBlur: chain('onBlur', () => { focusedRef.current = false; set(false, 'blur'); }),
     onPointerDown: chain('onPointerDown', () => set(false, 'trigger')),
   });
   // The cut line's full text (visual) is drawn only while there is something to show: its text shouldn't carry a
@@ -201,7 +174,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
       {trigger}
       <Tip ref={tipRef} id={id} role={props.visual ? undefined : 'tooltip'} aria-hidden={props.visual || undefined} {...{ popover: 'manual' }} hidden={!open || undefined}
         className={cn('srp-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
-        onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
+        onMouseEnter={stay} onMouseLeave={() => later(false, hoverLeave)}>
         {full && props.role !== 'label' ? <span data-full="" aria-hidden="true">{full}</span> : null}
         {props.content}
       </Tip>

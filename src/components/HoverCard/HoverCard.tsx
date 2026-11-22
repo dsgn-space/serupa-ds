@@ -6,6 +6,7 @@ import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { named } from '../../internal/component';
+import { useHoverIntent } from '../../internal/useHoverIntent';
 import { isComposing } from '../../internal/ime';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { cardIntent, cardLeave } from '../../internal/timing';
@@ -52,9 +53,10 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   const open = !props.disabled && !!shown;
   const cardRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
-  const timer = React.useRef<number | undefined>(undefined);
   const ask = useLatest(props.onOpenChange);
   const openRef = useLatest(open);
+  const off = useLatest(props.disabled);
+  const timer = React.useRef<number | undefined>(undefined);
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
     window.clearTimeout(timer.current);
     if (v === openRef.current) return;
@@ -62,23 +64,8 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
     if (ask.current) ask.current(v, { reason });
   }, [controlled, setInner, ask, openRef]);
   // Escape during the open delay cancels the open, and the card stays shut until the pointer or focus leaves the
-  // trigger and comes back (GR88): it was dismissed before it showed. Nothing is on screen yet, so that Escape
-  // goes on to whatever else handles it.
-  const muted = React.useRef(false);
-  const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);
-  const unarm = () => { if (armed.current) document.removeEventListener('keydown', armed.current, true); armed.current = null; };
-  const later = (v: boolean, ms: number, reason: OpenChangeReason) => {
-    window.clearTimeout(timer.current); unarm();
-    if (v && muted.current) return;
-    timer.current = window.setTimeout(() => { unarm(); set(v, reason); }, ms);
-    if (!v || openRef.current) return;
-    const esc = (e: KeyboardEvent) => { if (e.key !== 'Escape' || isComposing(e)) return; window.clearTimeout(timer.current); unarm(); muted.current = true; };
-    armed.current = esc;
-    document.addEventListener('keydown', esc, true);
-  };
-  const unmute = () => { muted.current = false; };
-  const stay = () => window.clearTimeout(timer.current);
-  React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
+  // trigger and comes back (GR88): it was dismissed before it showed.
+  const { later, unmute, stay, hoveredRef, focusedRef } = useHoverIntent(timer, set, openRef, cardRef, () => { if (!off.current) set(true, 'hover'); }, true);
   const openDelay = props.openDelay == null ? cardIntent : props.openDelay;
   const closeDelay = props.closeDelay == null ? cardLeave : props.closeDelay;
 
@@ -105,23 +92,6 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   const within = (to: EventTarget | null) => !!to && ((!!cardRef.current && cardRef.current.contains(to as Node)) || (!!triggerRef.current && triggerRef.current.contains(to as Node)));
   const blurred = (e: React.SyntheticEvent) => { if (!within((e as React.FocusEvent).relatedTarget)) { unmute(); later(false, closeDelay, 'blur'); } };
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && (e as React.PointerEvent).pointerType === 'touch';
-  // Interest invokers (174): the trigger points at the card with interestfor, so where the browser has them, a long
-  // press on a touch screen opens it at once (Chrome on Android), as a resting pointer does with a mouse. The
-  // browser's own showing and hiding are cancelled and the card opens itself; a tap outside or Escape closes it. An
-  // interest while the pointer is over the trigger or it has keyboard focus is one this component already handles
-  // (with its delay and Escape cancelling a waiting open), so it's left alone.
-  const hovered = React.useRef(false), focused = React.useRef(false);
-  const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, 'hover'); };
-  const interest = useLatest(fromInterest);
-  React.useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    const on = (e: Event) => { e.preventDefault(); interest.current(); };
-    const lose = (e: Event) => { e.preventDefault(); };
-    card.addEventListener('interest', on);
-    card.addEventListener('loseinterest', lose);
-    return () => { card.removeEventListener('interest', on); card.removeEventListener('loseinterest', lose); };
-  }, [interest]);
 
   const child = oneElement<TriggerProps>(props.trigger, 'HoverCard', 'trigger');
   useTriggerRef(triggerRef, 'HoverCard');
@@ -133,11 +103,11 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
     ref: triggerRefs,
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter and never a mouseleave. A touch pointer doesn't hover.
-    onPointerEnter: chain('onPointerEnter', (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); }),
-    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, 'hover'); } }),
+    onPointerEnter: chain('onPointerEnter', (e) => { if (touch(e)) return; hoveredRef.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); }),
+    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hoveredRef.current = false; unmute(); later(false, closeDelay, 'hover'); } }),
     // Keyboard focus only (focus-visible): a click on the link is on its way to the page it opens.
-    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } }),
-    onBlur: chain('onBlur', (e) => { focused.current = false; blurred(e); }),
+    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focusedRef.current = true; later(true, openDelay, 'focus'); } }),
+    onBlur: chain('onBlur', (e) => { focusedRef.current = false; blurred(e); }),
   });
   const mergedRef = useMergedRef(ref, (n) => { cardRef.current = n; });
   return (
