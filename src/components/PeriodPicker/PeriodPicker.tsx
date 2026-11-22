@@ -10,6 +10,7 @@ import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { useFocusHandover } from '../../internal/focus';
 import { isComposing } from '../../internal/ime';
+import { PickerButton, PickerValidity } from '../../internal/pickerButton';
 import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
@@ -195,17 +196,12 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
     <div className={cn('srp-period-picker', 'srp-period-picker--size-' + size, (invalid || missing) && 'srp-period-picker--invalid', disabled && 'srp-period-picker--disabled', readOnly && 'srp-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
-      <button {...rest} ref={mergedRef} type="button" role="combobox" className="srp-period-picker__button" lang={rest.lang ?? lang}
-        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
-        onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
-        onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
+      <PickerButton {...rest} block="srp-period-picker" buttonRef={mergedRef} lang={rest.lang ?? lang} open={open} panelId={base + '-panel'} invalid={invalid || missing} required={required} readOnly={readOnly} disabled={disabled} onOpen={show} onClose={() => close(false, 'trigger')}>
         <TruncatedText className={cn('srp-period-picker__value', value == null && 'srp-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
         <Icon icon={icons.CalendarToday} className="srp-period-picker__icon" />
-      </button>
+      </PickerButton>
       <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value == null ? '' : periodValue(value, unit)} disabled={disabled || !props.name} />
-      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
-      {required ? <input key={value != null ? 'filled' : 'empty'} className="srp-period-picker__validity" tabIndex={-1} aria-hidden required defaultValue={value != null ? 'filled' : ''}
-        disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
+      <PickerValidity block="srp-period-picker" required={required} filled={value != null} disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} />
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={L.periodPlaceholder(unit)} lang={lang}
         {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-period-picker__panel">
         {open || exit.leaving ? <>
