@@ -47,7 +47,7 @@ Drawn from the `MonthYearPicker` story.
 ## Behavior
 
 - Always six weeks tall, so the layout doesn't jump between months. Days of the months before and after are muted and can be picked.
-- Today is in primary and semibold. The selected day is filled in primary. The weeks are 4px apart (`--calendar-row-gap`).
+- Today is in primary, in the same weight as the other days. The selected day is filled in primary. The weeks are 4px apart (`--calendar-row-gap`).
 - In a range (RangeCalendar, DateRangePicker), the days between the ends are one square band per week, and each end is rounded only on its outer side, where it joins the band.
 - With `presets`, a group of shortcut buttons named "Shortcuts" follows the days: beside them, or under them below 640px. The one the value matches is pressed (`aria-pressed`), and one whose day can't be picked is disabled.
 - The heading ("March 2025") is a button: it opens the year's months, three by four, and their heading ("2025") opens twelve years. Pick a year for its months, and a month for its days: a date of birth in 1990 is four clicks from today. The previous and next buttons turn a year, or twelve years, there. Focus keeps its day of the month (the 17th in August to the 17th in the month picked). The months and years keep the days' size, so the calendar doesn't jump. Not in DateRangePicker's two months side by side, which turn together, nor with `monthYearPicker`.
@@ -130,7 +130,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-day-bg-hover` | `secondary` | A day or preset under the pointer, as Pagination's pages. |
 | `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
-| `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold. |
+| `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. |
 | `--calendar-bg-selected` | `primary` | The selected day. |
 | `--calendar-color-selected` | `on-primary` | Its number. |
 | `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
@@ -163,5 +163,5 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-title-weight` | `font-semibold` | The month and year (600). |
-| `--calendar-today-weight` | `font-semibold` | Today's number (600). |
+| `--calendar-today-weight` | `font-normal` | Today's number: the weight of every day (400); its color sets it apart. |
 <!-- token-table:end -->

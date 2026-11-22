@@ -160,6 +160,14 @@ describe('Calendar', () => {
     expect([b.textContent, b.getAttribute('tabindex'), /today/.test(b.className)]).toEqual([String(new Date().getDate()), '0', true]);
   });
 
+  test('today is set apart by its color only, in the same weight as the other days', async () => {
+    await render(<Calendar data-testid="tw" />);
+    const t = q('[data-testid=tw] [aria-current=date]');
+    const other = [...document.querySelectorAll<HTMLElement>('[data-testid=tw] .srp-calendar__day')].find((d) => d !== t && !/outside|selected/.test(d.className))!;
+    expect(getComputedStyle(t).fontWeight).toBe(getComputedStyle(other).fontWeight);
+    expect(getComputedStyle(t).color).not.toBe(getComputedStyle(other).color);
+  });
+
   test('arrows move a day or week, Home/End to the week\'s ends, PageUp/PageDown a month, Shift+PageUp a year, stopping at min and max; moving past the month shows the next one and keeps focus on the day; onMonthChange gets the first of each month shown', async () => {
     const months: string[] = [];
     await render(<Cal months={months} />);
