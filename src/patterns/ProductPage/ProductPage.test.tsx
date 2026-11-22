@@ -58,7 +58,7 @@ describe('Patterns/Product page', () => {
     await userEvent.keyboard('{Escape}');
     await expect.poll(() => viewer()?.open ?? false).toBe(false);
     expect(active().textContent).toBe('View full size');
-    expect(document.querySelector('.srp-carousel__dot[aria-current="true"]')?.getAttribute('aria-label')).toMatch(/2/);
+    expect(screen.getByRole('region', { name: 'Pictures of Mug' }).element().querySelector('button[aria-current="true"]')?.getAttribute('aria-label')).toMatch(/2/);
   });
 
   test('each choice is a named group of radios, and a sold-out one says so and can\'t be picked', async () => {
