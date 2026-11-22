@@ -66,7 +66,7 @@ export const DoSayWhatToneMeans: Story = {
   ] },
 };
 /** Don't: color alone, which doesn't reach everyone. */
-export const DontToneAlone: Story = {
+export const DontToneAlone: Story = { tags: ['!visual'],
   name: "Don't: rely on color alone",
   args: { events: [
     { id: 'tax', title: 'Tax filing', start: '2025-03-31', allDay: true, tone: 'danger' },

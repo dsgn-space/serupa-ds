@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
+import { warnOnce } from '../../internal/warn';
 import { announce } from '../../internal/announce';
 import { useSettings } from '../../internal/provider';
 import { Icon, type IconSource } from '../Icon/Icon';
@@ -49,12 +50,16 @@ export interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   /** Shows the first this many, and a "Show more" button for the rest. Default: all of them. */
   max?: number | undefined;
   /** Shown in place of the tags when there are none, such as "No labels yet". Default: nothing. */
+  emptyText?: React.ReactNode;
+  /** @deprecated Use emptyText; removed in 18.0.0. Read when emptyText isn't given. */
   empty?: React.ReactNode;
 }
 
 function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(allWords).labels;
-  const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, empty: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
+  const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, emptyText: 1, empty: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
+  if (process.env.NODE_ENV !== 'production' && props.empty !== undefined) warnOnce('deprecated-prop', 'TagGroup: `empty` is deprecated and removed in 18.0.0. Use `emptyText`, the name Combobox and CommandPalette give it.', 'deprecated-prop:TagGroup:empty');
+  const emptyText = props.emptyText ?? props.empty;
   const id = React.useId(), labelId = `${id}-label`;
   const mode = props.selectionMode || 'none';
   const [picked, setOwn] = useControllable<readonly string[]>(props.selected, props.defaultSelected || [], 'TagGroup', 'selected');
@@ -121,7 +126,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
   return (
     <div {...rest} ref={ref} className={cn('srp-tag-group', props.className)} data-component="tag-group">
       {props.label != null ? <div className="srp-tag-group__label" id={labelId}>{props.label}</div> : null}
-      {props.items.length === 0 && props.empty != null ? <div className="srp-tag-group__empty" tabIndex={-1}>{props.empty}</div> : null}
+      {props.items.length === 0 && emptyText != null ? <div className="srp-tag-group__empty" tabIndex={-1}>{emptyText}</div> : null}
       <div ref={grid} role="grid" className="srp-tag-group__tags" tabIndex={shown.length ? undefined : -1}
         aria-labelledby={named} aria-label={named ? undefined : props['aria-label']}
         aria-multiselectable={mode === 'multiple' || undefined}>

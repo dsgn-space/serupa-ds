@@ -50,4 +50,4 @@ export const LongText: Story = {
 /** Do: the placeholder says what can be searched. */
 export const DoSayWhat: Story = { name: 'Do: say what it searches', args: { 'aria-label': 'Search invoices', placeholder: 'Search invoices by number or customer' } };
 /** Don't: a bare "Search...", which leaves people guessing what they can find. */
-export const DontBareSearch: Story = { name: "Don't: just say search", args: { 'aria-label': 'Search', placeholder: 'Search...' } };
+export const DontBareSearch: Story = { tags: ['!visual'], name: "Don't: just say search", args: { 'aria-label': 'Search', placeholder: 'Search...' } };

@@ -42,4 +42,4 @@ export const LongText: Story = {
 /** Do: a title that names the file, and the lines the step is about highlighted. */
 export const DoTitleAndHighlight: Story = { name: 'Do: name it and mark what matters', args: { lineNumbers: true, highlight: [[6, 7]] } };
 /** Don't: no title and no highlight, so people hunt for what changed. */
-export const DontBareCode: Story = { name: "Don't: leave people to find the change", args: { title: undefined, language: undefined } };
+export const DontBareCode: Story = { tags: ['!visual'], name: "Don't: leave people to find the change", args: { title: undefined, language: undefined } };

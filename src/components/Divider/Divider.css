@@ -7,7 +7,7 @@
 hr.srp-divider, .srp-divider:not(.srp-divider--vertical):not(.srp-divider--label) { width: var(--sizing-full); height: var(--spacing-0); border-top: var(--divider-width, var(--border-width-1)) solid var(--divider-color, var(--border)); }
 .srp-divider--vertical { align-self: stretch; width: var(--spacing-0); min-height: var(--spacing-4); border-inline-start: var(--divider-width, var(--border-width-1)) solid var(--divider-color, var(--border)); }
 .srp-divider--label { display: flex; align-items: center; gap: var(--divider-label-gap, var(--spacing-3)); width: var(--sizing-full); color: var(--divider-label-color, var(--text-muted)); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-/* onMedia: the line a translucent white (on dark media) or black (on light), the label solid, whatever the theme. */
+/* surface: the line a translucent white (on dark media) or black (on light), the label solid, whatever the theme. */
 .srp-divider--on-dark { --srp-divider-ink: var(--divider-on-dark, var(--white)); }
 .srp-divider--on-light { --srp-divider-ink: var(--divider-on-light, var(--black)); }
 .srp-divider--on-dark, .srp-divider--on-light { --divider-color: color-mix(in srgb, var(--srp-divider-ink) var(--opacity-50), transparent); --divider-label-color: var(--srp-divider-ink); }

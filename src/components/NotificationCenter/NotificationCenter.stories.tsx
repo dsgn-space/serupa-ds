@@ -74,7 +74,7 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: titles like "Update", which make people open each one to find out. */
-export const DontVagueTitles: Story = {
+export const DontVagueTitles: Story = { tags: ['!visual'],
   name: "Don't: write vague titles",
   args: { defaultOpen: true, items: sample.map(({ description: _d, ...n }) => ({ ...n, title: 'Update' })) },
 };

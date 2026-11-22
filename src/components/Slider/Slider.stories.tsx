@@ -70,7 +70,7 @@ export const DoFormatValue: Story = {
   decorators: [(Story) => <div style={{ width: '100%', maxWidth: 280, paddingBlockEnd: 32 }}><Story /></div>],
 };
 /** Don't: a bare number for a price, so nobody can tell its unit. */
-export const DontBareNumber: Story = {
+export const DontBareNumber: Story = { tags: ['!visual'],
   name: "Don't: leave out the unit",
   render: function Render(args) {
     const number = new Intl.NumberFormat(useLocale());

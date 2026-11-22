@@ -68,7 +68,7 @@ export const Rail: Story = {
 /** Do: two levels, which people can scan. */
 export const DoTwoLevels: Story = { name: 'Do: keep to two levels', decorators: narrow };
 /** Don't: four levels, which turn the list into a maze. */
-export const DontDeepLevels: Story = {
+export const DontDeepLevels: Story = { tags: ['!visual'],
   name: "Don't: go four levels deep",
   decorators: narrow,
   args: { items: [

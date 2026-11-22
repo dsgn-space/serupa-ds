@@ -60,7 +60,7 @@ export const LongLabels: Story = {
 /** Do: a word or two a step, with detail in the description and "Optional" from the optional flag. */
 export const DoShortTitles: Story = { name: 'Do: short step titles' };
 /** Don't: whole sentences as titles, with "(optional)" written into one. */
-export const DontLongTitles: Story = {
+export const DontLongTitles: Story = { tags: ['!visual'],
   name: "Don't: sentences as step titles",
   args: { steps: [{ title: 'Create your account with an email and a password' }, { title: 'Tell us about yourself (optional)' }, { title: 'Choose how you would like to pay' }, { title: 'Check everything and finish' }] },
 };

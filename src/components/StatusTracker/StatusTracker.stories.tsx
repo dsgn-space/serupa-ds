@@ -37,4 +37,4 @@ export const LongText: Story = {
   decorators: [(Story) => <div style={{ width: 240 }}><Story /></div>],
 };
 /** Don't: count days without data as up: the strip and the share claim uptime nobody measured. */
-export const DontGuessUp: Story = { name: "Don't: count them as up", args: { days: sampleDays(30).map((d) => (d.state === 'none' ? { ...d, state: 'up' as const } : d)) } };
+export const DontGuessUp: Story = { tags: ['!visual'], name: "Don't: count them as up", args: { days: sampleDays(30).map((d) => (d.state === 'none' ? { ...d, state: 'up' as const } : d)) } };

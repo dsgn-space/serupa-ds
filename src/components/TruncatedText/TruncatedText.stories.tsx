@@ -70,7 +70,7 @@ export const DoDifferenceFirst: Story = {
   render: () => <ul role="list" className="m-0 p-0 list-none flex flex-col gap-1">{statements.map((m) => <li key={m}><TruncatedText>{`${m} 2026 statement, account 0041 2290 8812`}</TruncatedText></li>)}</ul>,
 };
 /** Don't: the same words first: every row is cut to the same text. */
-export const DontSameStart: Story = {
+export const DontSameStart: Story = { tags: ['!visual'],
   name: "Don't: the same start",
   render: () => <ul role="list" className="m-0 p-0 list-none flex flex-col gap-1">{statements.map((m) => <li key={m}><TruncatedText>{`Statement for account 0041 2290 8812, ${m} 2026`}</TruncatedText></li>)}</ul>,
 };

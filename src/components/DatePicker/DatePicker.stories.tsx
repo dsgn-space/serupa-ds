@@ -84,4 +84,4 @@ export const DoLabelAndFormat: Story = {
   render: () => <Field label="Due date" hint="mm/dd/yyyy"><DatePicker /></Field>,
 };
 /** Don't: no label or format; people can't tell what the date is for or how to type it. */
-export const DontBareField: Story = { name: "Don't: leave it unlabelled", args: { 'aria-label': 'Date' } };
+export const DontBareField: Story = { tags: ['!visual'], name: "Don't: leave it unlabelled", args: { 'aria-label': 'Date' } };

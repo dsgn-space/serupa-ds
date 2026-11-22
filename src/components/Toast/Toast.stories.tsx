@@ -10,7 +10,7 @@ const meta = {
   title: 'Components/Feedback/Toast',
   component: Toaster,
   args: { placement: 'bottom-end' },
-  argTypes: { placement: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom-center', 'top-start', 'top-center', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
+  argTypes: { placement: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom', 'top-start', 'top', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
   render: (args) => (
     <div className="flex flex-wrap gap-2">
       <Toaster {...args} />
@@ -55,11 +55,11 @@ export const TopStart: Story = {
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const BottomCenter: Story = {
-  args: { placement: 'bottom-center' },
+  args: { placement: 'bottom' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const TopCenter: Story = {
-  args: { placement: 'top-center' },
+  args: { placement: 'top' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
 };
 /** A burst: the same error three times is one toast with a count, and past the limit (3) the rest wait under "+2 more". */
@@ -92,7 +92,7 @@ export const DoShortTitle: Story = {
   render: () => <Sketch success title="Changes saved" />,
 };
 /** Don't: a sentence to read before it goes. */
-export const DontWordyTitle: Story = {
+export const DontWordyTitle: Story = { tags: ['!visual'],
   name: "Don't: a sentence to read",
   render: () => <Sketch success title="Your changes have been saved successfully to your account." />,
 };
@@ -102,7 +102,7 @@ export const DoOneQuickAction: Story = {
   render: () => <Sketch title="Moved to trash" action="Undo" />,
 };
 /** Don't: something people must act on, which can go before they reach it. */
-export const DontMustAct: Story = {
+export const DontMustAct: Story = { tags: ['!visual'],
   name: "Don't: something people must act on",
   render: () => <Sketch title="Your card was declined" description="Update your card by Friday to keep your plan." action="Update card" />,
 };

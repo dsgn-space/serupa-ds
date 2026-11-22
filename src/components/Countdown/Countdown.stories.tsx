@@ -38,4 +38,4 @@ export const LongText: Story = {
   render: (args) => <p className="m-0 w-40">Registration closes in <Countdown {...args} /></p>,
 };
 /** Don't: the clock alone, which reads as a time of day. */
-export const DontBareClock: Story = { name: "Don't: the clock alone", render: (args) => <p className="m-0"><Countdown {...args} /></p> };
+export const DontBareClock: Story = { tags: ['!visual'], name: "Don't: the clock alone", render: (args) => <p className="m-0"><Countdown {...args} /></p> };

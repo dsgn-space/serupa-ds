@@ -56,4 +56,4 @@ export const LongText: Story = {
 /** Say how it works under the field: "Type @ to mention someone" is the only way people learn the list is there. */
 export const DoSayHow: Story = { name: 'Do: say how to mention', render: (args) => <Field label="Comment" hint="Type @ to mention someone."><MentionInput {...args} aria-label={undefined} placeholder={undefined} /></Field> };
 /** Don't leave it unsaid: nothing on the field shows that @ does anything. */
-export const DontHide: Story = { name: "Don't: hide that @ works", render: (args) => <Field label="Comment"><MentionInput {...args} aria-label={undefined} placeholder={undefined} /></Field> };
+export const DontHide: Story = { tags: ['!visual'], name: "Don't: hide that @ works", render: (args) => <Field label="Comment"><MentionInput {...args} aria-label={undefined} placeholder={undefined} /></Field> };

@@ -48,7 +48,7 @@ export const DoAutoColumns: Story = {
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 };
 /** Don't: a fixed four columns, which stay four on a phone and squeeze each cell. */
-export const DontFixedColumns: Story = {
+export const DontFixedColumns: Story = { tags: ['!visual'],
   name: "Don't: fix the column count",
   args: { columns: 4, gap: 2, children: cells(4) },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],

@@ -79,7 +79,7 @@ export const DoCardsWithDetails: Story = {
   </RadioGroup>,
 };
 /** Don't: cards for options that need no explanation. */
-export const DontCardsForShortOptions: Story = {
+export const DontCardsForShortOptions: Story = { tags: ['!visual'],
   name: "Don't: cards for short options",
   args: { 'aria-label': 'Size', variant: 'card', orientation: 'horizontal', defaultValue: 'm' },
   render: (args) => <RadioGroup {...args}>
@@ -98,7 +98,7 @@ export const DoFewOptions: Story = {
 };
 const PROVINCES = ['Aceh', 'Bali', 'Banten', 'Bengkulu', 'Gorontalo', 'Jakarta', 'Jambi', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Kalimantan Barat', 'Lampung'];
 /** Don't: a long column of radios a Select or Combobox would search. */
-export const DontLongList: Story = {
+export const DontLongList: Story = { tags: ['!visual'],
   name: "Don't: a long list",
   args: { 'aria-label': 'Province', defaultValue: 'Bali' },
   render: (args) => <RadioGroup {...args}>

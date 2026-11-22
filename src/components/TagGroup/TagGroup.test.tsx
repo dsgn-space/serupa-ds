@@ -11,7 +11,7 @@ import { Avatar } from '../Avatar/Avatar';
 const tags: TagItem[] = [{ id: 'design', label: 'Design' }, { id: 'bug', label: 'Bug' }, { id: 'checkout', label: 'Checkout' }, { id: 'mobile', label: 'Mobile' }];
 function Removable({ initial = tags, log = [] as string[], ...rest }: { initial?: TagItem[]; log?: string[] } & Partial<React.ComponentProps<typeof TagGroup>>) {
   const [items, setItems] = React.useState(initial);
-  return <SerupaProvider locale="en-US"><button type="button">Before</button><TagGroup label="Labels" empty="No labels yet" {...rest} items={items} onRemove={(id) => { log.push(id); setItems((t) => t.filter((x) => x.id !== id)); }} /></SerupaProvider>;
+  return <SerupaProvider locale="en-US"><button type="button">Before</button><TagGroup label="Labels" emptyText="No labels yet" {...rest} items={items} onRemove={(id) => { log.push(id); setItems((t) => t.filter((x) => x.id !== id)); }} /></SerupaProvider>;
 }
 const focused = () => (document.activeElement as HTMLElement | null)?.dataset.tagId;
 const row = (tid: string) => document.querySelector<HTMLElement>(`[data-tag-id="${tid}"]`)!;

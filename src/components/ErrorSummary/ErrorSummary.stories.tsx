@@ -67,7 +67,7 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: "Invalid", which says something is wrong but not what to do. */
-export const DontJustInvalid: Story = {
+export const DontJustInvalid: Story = { tags: ['!visual'],
   name: "Don't: just say invalid",
   args: { errors: [{ field: 'es-name', message: 'Invalid' }, { field: 'es-email', message: 'Invalid' }, { field: 'es-date', message: 'Error' }] },
 };

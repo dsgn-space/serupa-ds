@@ -69,11 +69,11 @@ describe('Divider', () => {
   });
 });
 
-describe('Divider onMedia', () => {
+describe('Divider surface', () => {
   test('a half-strength white line and a white label on dark media, black on light, in every theme', async () => {
     await render(<div id="dm">
-      <Divider id="dm-dark" onMedia="dark" />
-      <Divider id="dm-light" onMedia="light" label="or" />
+      <Divider id="dm-dark" surface="dark" />
+      <Divider id="dm-light" surface="light" label="or" />
     </div>);
     const seen = new Set<string>();
     for (const th of THEMES) {

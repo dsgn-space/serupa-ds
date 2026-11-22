@@ -10,6 +10,7 @@ import { useFormReset } from '../../internal/useFormReset';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { isComposing } from '../../internal/ime';
+import { PickerButton, PickerValidity } from '../../internal/pickerButton';
 import { typeahead, type Typed } from '../../internal/typeahead';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
@@ -246,17 +247,12 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
     <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} data-invalid={(invalid || missing) ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
-      <button {...rest} ref={mergedRef} type="button" role="combobox" className="srp-cascade-select__button"
-        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
-        onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
-        onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
+      <PickerButton {...rest} block="srp-cascade-select" buttonRef={mergedRef} open={open} panelId={base + '-panel'} invalid={invalid || missing} required={required} readOnly={readOnly} disabled={disabled} onOpen={show} onClose={() => close(false, 'trigger')}>
         <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} data-empty={empty ? '' : undefined} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
         <Icon icon={icons.ExpandMore} className="srp-cascade-select__chevron" />
-      </button>
+      </PickerButton>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}
-      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
-      {required ? <input key={value.length ? 'filled' : 'empty'} className="srp-cascade-select__validity" tabIndex={-1} aria-hidden required defaultValue={value.length ? 'filled' : ''}
-        disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
+      <PickerValidity block="srp-cascade-select" required={required} filled={value.length > 0} disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} />
       <span id={base + '-more'} hidden>{L.cascadeHasMore(open && openRtl)}</span>
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={dialogName}
         {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-cascade-select__panel">

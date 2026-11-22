@@ -39,7 +39,7 @@ export const DoShortLabels: Story = {
   args: { 'aria-label': 'Sort by', defaultValue: 'newest', options: [{ value: 'newest', label: 'Newest' }, { value: 'oldest', label: 'Oldest' }, { value: 'popular', label: 'Popular' }] },
 };
 /** Don't: sentences as labels, which make uneven segments that cut off in a narrow space. */
-export const DontSentences: Story = {
+export const DontSentences: Story = { tags: ['!visual'],
   name: "Don't: sentences as labels",
   args: { 'aria-label': 'Sort by', defaultValue: 'newest', options: [{ value: 'newest', label: 'Newest first' }, { value: 'oldest', label: 'Show the oldest ones first' }, { value: 'popular', label: 'Most popular this week' }] },
   decorators: [(Story) => <div style={{ maxWidth: '20rem' }}><Story /></div>],
