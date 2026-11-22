@@ -68,7 +68,7 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: say what the part is, which they can already see. */
-export const DontSayWhatItIs: Story = {
+export const DontSayWhatItIs: Story = { tags: ['!visual'],
   name: "Don't: describe what they can see",
   args: { open: true },
   render: view((p: Parts) => [{ target: p.search, title: 'Search field', content: 'This is the search field. It is a text box at the top of the page.' }]),

@@ -53,7 +53,7 @@ export const DoVariations: Story = {
   decorators: [(Story) => <div style={{ minHeight: 160 }}><Story /></div>],
 };
 /** Don't: unrelated actions in the menu, which nobody looks for behind Publish. */
-export const DontUnrelated: Story = {
+export const DontUnrelated: Story = { tags: ['!visual'],
   name: "Don't: unrelated actions",
   args: { defaultOpen: true, menu: <><MenuItem icon="edit">Rename</MenuItem><MenuItem icon="share">Share</MenuItem><MenuItem icon="delete">Delete</MenuItem></> },
   decorators: [(Story) => <div style={{ minHeight: 190 }}><Story /></div>],

@@ -44,7 +44,7 @@ export const DoSayWhere: Story = {
   render: () => <Text>Changed your mind? <Link href="#refunds">Read the refund policy</Link> before you send it back.</Text>,
 };
 /** Don't: "click here", which says nothing out of its sentence. */
-export const DontClickHere: Story = {
+export const DontClickHere: Story = { tags: ['!visual'],
   name: "Don't: click here",
   render: () => <Text>Changed your mind? To read the refund policy, <Link href="#refunds">click here</Link>.</Text>,
 };

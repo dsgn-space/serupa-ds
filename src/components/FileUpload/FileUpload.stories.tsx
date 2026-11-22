@@ -45,4 +45,4 @@ export const LongText: Story = {
 /** Do: a hint that names the allowed types and the largest size, matching `accept` and `maxSize`. */
 export const DoSayLimits: Story = { name: 'Do: say what it takes', args: { multiple: false, maxFiles: undefined, accept: 'image/png,image/jpeg', maxSize: 5_000_000, hint: 'PNG or JPG, up to 5 MB' } };
 /** Don't: limits that people only learn when a file is refused. */
-export const DontHideLimits: Story = { name: "Don't: hide the limits", args: { multiple: false, maxFiles: undefined, accept: 'image/png,image/jpeg', maxSize: 5_000_000, hint: undefined } };
+export const DontHideLimits: Story = { tags: ['!visual'], name: "Don't: hide the limits", args: { multiple: false, maxFiles: undefined, accept: 'image/png,image/jpeg', maxSize: 5_000_000, hint: undefined } };

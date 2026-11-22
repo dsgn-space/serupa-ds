@@ -70,7 +70,7 @@ export const DoHintForFormat: Story = {
   render: () => <div style={{ width: '100%', maxWidth: 280 }}><Field label="Date of birth" hint="For example, 31/12/1990"><Input inputMode="numeric" autoComplete="bday" /></Field></div>,
 };
 /** Don't: format help only in the placeholder, gone at the first keystroke. */
-export const DontPlaceholderFormat: Story = {
+export const DontPlaceholderFormat: Story = { tags: ['!visual'],
   name: "Don't: format help in the placeholder",
   render: () => <div style={{ width: '100%', maxWidth: 280 }}><Field label="Date of birth"><Input inputMode="numeric" autoComplete="bday" placeholder="DD/MM/YYYY" /></Field></div>,
 };

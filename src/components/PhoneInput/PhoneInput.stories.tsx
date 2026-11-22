@@ -69,4 +69,4 @@ export const LongValue: Story = {
 /** Do: a hint that says what the number is for. */
 export const DoSayWhy: Story = { name: 'Do: say what the number is for', render: () => <div style={{ maxWidth: 320 }}><Field label="Mobile number" hint="We'll text you a code"><PhoneInput defaultCountry="ID" /></Field></div> };
 /** Don't: no reason, so people wonder whether to give a real number. */
-export const DontNoReason: Story = { name: "Don't: ask without saying why", render: () => <div style={{ maxWidth: 320 }}><Field label="Phone"><PhoneInput defaultCountry="ID" /></Field></div> };
+export const DontNoReason: Story = { tags: ['!visual'], name: "Don't: ask without saying why", render: () => <div style={{ maxWidth: 320 }}><Field label="Phone"><PhoneInput defaultCountry="ID" /></Field></div> };

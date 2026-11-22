@@ -35,4 +35,4 @@ export const LongText: Story = { args: { children: 'Langsung ke konten utama: Do
 /** Do: words that say where it goes. */
 export const DoSayWhere: Story = { name: 'Do: say where it goes', args: { target: 'results', children: 'Skip to results' } };
 /** Don't: "Click here", which says nothing about where it goes. */
-export const DontClickHere: Story = { name: "Don't: write \u201cClick here\u201d", args: { children: 'Click here' } };
+export const DontClickHere: Story = { tags: ['!visual'], name: "Don't: write \u201cClick here\u201d", args: { children: 'Click here' } };

@@ -49,4 +49,4 @@ export const LongContent: Story = {
 /** Do: the default column, capped at about 65 characters a line. */
 export const DoReadingWidth: Story = { name: 'Do: keep the reading width' };
 /** Don't: text across the whole width, where lines get too long to follow. */
-export const DontFullWidth: Story = { name: "Don't: stretch text across the page", args: { className: 'max-w-none' } };
+export const DontFullWidth: Story = { tags: ['!visual'], name: "Don't: stretch text across the page", args: { className: 'max-w-none' } };

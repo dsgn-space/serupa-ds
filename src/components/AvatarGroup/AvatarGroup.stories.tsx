@@ -55,7 +55,7 @@ export const Overflow: Story = {
 /** Do: a small `max`, so the row still reads as people, with "+N" for the rest. */
 export const DoSmallMax: Story = { name: 'Do: keep max small' };
 /** Don't: every avatar in the row; past five or so it reads as texture, not people. */
-export const DontShowEveryone: Story = {
+export const DontShowEveryone: Story = { tags: ['!visual'],
   name: "Don't: show everyone",
   args: { max: undefined },
   render: function Render(args) { return <AvatarGroup {...args}>{avatars([...DEMO, 'Barbara Liskov', 'Dennis Ritchie', 'Frances Allen', 'Ken Thompson', 'Radia Perlman', 'Tim Berners-Lee'])}</AvatarGroup>; },

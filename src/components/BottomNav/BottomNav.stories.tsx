@@ -91,7 +91,7 @@ export const DoShortLabels: Story = {
   </BottomNav>,
 };
 /** Don't: long labels, which wrap and crowd the bar on a phone. */
-export const DontLongLabels: Story = {
+export const DontLongLabels: Story = { tags: ['!visual'],
   name: "Don't: write long labels",
   render: (args) => <BottomNav {...args}>
     <BottomNavLink href="#home" icon="home" current>Your home feed</BottomNavLink>

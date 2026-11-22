@@ -45,7 +45,7 @@ export const LongText: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: cards all called "Task", which screen readers can't tell apart as they move. */
-export const DontVagueCards: Story = {
+export const DontVagueCards: Story = { tags: ['!visual'],
   name: "Don't: give cards the same name",
   render: () => <Board columns={[
     { id: 'todo', title: 'To do', items: [{ id: 'v1', title: 'Task' }, { id: 'v2', title: 'Task' }] },

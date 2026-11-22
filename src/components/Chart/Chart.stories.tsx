@@ -137,7 +137,7 @@ export const DoFormatMoney: Story = {
   },
 };
 /** Don't: bare numbers for money, which people have to count the digits of. */
-export const DontRawNumbers: Story = {
+export const DontRawNumbers: Story = { tags: ['!visual'],
   name: "Don't: leave money as bare numbers",
   render: () => <Chart {...REVENUE} categories={[...REVENUE.categories]} series={[{ ...REVENUE.series[0], values: [...REVENUE.series[0].values] }]} />,
 };

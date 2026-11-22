@@ -72,7 +72,7 @@ export const DoMarkMatches: Story = {
   ),
 };
 /** Don't: a highlight for emphasis in running text; nothing was searched, so use `<strong>`. */
-export const DontEmphasis: Story = {
+export const DontEmphasis: Story = { tags: ['!visual'],
   name: "Don't: highlight for emphasis",
   render: () => <p style={{ margin: 0, maxWidth: 360 }}><Highlight query="free">Shipping is free on every order this week.</Highlight></p>,
 };

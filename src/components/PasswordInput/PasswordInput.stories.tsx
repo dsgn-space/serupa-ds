@@ -53,7 +53,7 @@ export const LongValue: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: the rules only in an error, after people have tried. */
-export const DontRulesOnlyInError: Story = {
+export const DontRulesOnlyInError: Story = { tags: ['!visual'],
   name: "Don't: rules only in an error",
   render: () => <div style={{ maxWidth: 320 }}><Field label="New password" error="Use at least 12 characters"><PasswordInput autoComplete="new-password" defaultValue="hunter2" /></Field></div>,
 };

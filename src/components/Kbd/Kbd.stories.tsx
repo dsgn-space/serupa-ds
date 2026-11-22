@@ -33,7 +33,7 @@ export const DoMod: Story = {
   render: () => <p style={{ margin: 0 }}>Press <Kbd keys={['mod', 'K']} /> to search.</p>,
 };
 /** Don't: Ctrl written in for a shortcut that is ⌘ on a Mac, so Mac users press the wrong keys. */
-export const DontHardcodeCtrl: Story = {
+export const DontHardcodeCtrl: Story = { tags: ['!visual'],
   name: "Don't: write Ctrl for everyone",
   render: () => <p style={{ margin: 0 }}>Press <Kbd keys={['ctrl', 'K']} /> to search.</p>,
 };

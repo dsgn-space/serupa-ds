@@ -51,4 +51,4 @@ export const LongText: Story = {
 /** Do: a Field label that says what signing means. */
 export const DoSayWhatItMeans: Story = { name: 'Do: say what signing means', render: () => <Field label="Sign to accept the terms"><SignaturePad /></Field> };
 /** Don't: a bare pad, so people don't know what they're agreeing to. */
-export const DontBarePad: Story = { name: "Don't: show a bare pad" };
+export const DontBarePad: Story = { tags: ['!visual'], name: "Don't: show a bare pad" };

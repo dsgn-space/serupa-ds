@@ -33,4 +33,4 @@ export const LongLabel: Story = {
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Don't: a sentence as the label, which reads as a heading squeezed into a line. */
-export const DontSentenceLabel: Story = { ...Playground, name: "Don't: a sentence as the label", args: { label: 'Or you can continue with one of these other options' } };
+export const DontSentenceLabel: Story = { tags: ['!visual'], ...Playground, name: "Don't: a sentence as the label", args: { label: 'Or you can continue with one of these other options' } };
