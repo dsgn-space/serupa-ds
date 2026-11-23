@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Toolbar/labels.ts"],
+  "sourcesContent": ["// Toolbar's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface ToolbarLabels {\n  /** Toolbar with overflow: the button at the end that opens the controls with no room. */\n  toolbarMore: string;\n}\nexport const en: ToolbarLabels = {\n  toolbarMore: 'More',\n};\nexport const id: ToolbarLabels = {\n  toolbarMore: 'Lainnya',\n};\n"],
+  "mappings": ";AAMO,IAAM,KAAoB;AAAA,EAC/B,aAAa;AACf;AACO,IAAM,KAAoB;AAAA,EAC/B,aAAa;AACf;",
+  "names": []
+}

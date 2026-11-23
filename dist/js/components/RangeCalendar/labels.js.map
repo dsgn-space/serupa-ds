@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/RangeCalendar/labels.ts"],
+  "sourcesContent": ["// RangeCalendar's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface RangeCalendarLabels {\n  /** RangeCalendar: added to the name of a day between the start and the end (\"Wednesday, November 4, 2026, in the range\"). */\n  inRange: string;\n  /** RangeCalendar: said once both ends are picked, with the range as the locale writes it (\"Nov 3 \u2013 8, 2026\"). */\n  rangeSelected: (range: string) => string;\n}\nexport const en: RangeCalendarLabels = {\n  inRange: 'in the range',\n  rangeSelected: (range) => 'Selected range: ' + range,\n};\nexport const id: RangeCalendarLabels = {\n  inRange: 'dalam rentang',\n  rangeSelected: (range) => 'Rentang terpilih: ' + range,\n};\n"],
+  "mappings": ";AAQO,IAAM,KAA0B;AAAA,EACrC,SAAS;AAAA,EACT,eAAe,CAAC,UAAU,qBAAqB;AACjD;AACO,IAAM,KAA0B;AAAA,EACrC,SAAS;AAAA,EACT,eAAe,CAAC,UAAU,uBAAuB;AACnD;",
+  "names": []
+}

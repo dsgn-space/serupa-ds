@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/hash.ts"],
+  "sourcesContent": ["/* The page's #fragment as text (\"#caf%C3%A9\" is \"caf\u00E9\"), or '' when there is none. A fragment that isn't valid\n   percent-encoding (\"#%\", \"#%E0%A4%A\") is read as written: decodeURIComponent throws on it, and a link anyone can\n   make must not take the page down. */\nexport function pageHash(): string {\n  const raw = window.location.hash.slice(1);\n  try { return decodeURIComponent(raw); } catch { return raw; }\n}\n"],
+  "mappings": ";AAGO,SAAS,WAAmB;AACjC,QAAM,MAAM,OAAO,SAAS,KAAK,MAAM,CAAC;AACxC,MAAI;AAAE,WAAO,mBAAmB,GAAG;AAAA,EAAG,QAAQ;AAAE,WAAO;AAAA,EAAK;AAC9D;",
+  "names": []
+}

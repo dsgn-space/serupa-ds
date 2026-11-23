@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/List/labels.ts"],
+  "sourcesContent": ["// List's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface ListLabels {\n  /** ListSelectAll's label, the box that picks every row of a List with selectionMode. */\n  listSelectAll: string;\n}\nexport const en: ListLabels = { listSelectAll: 'Select all' };\nexport const id: ListLabels = { listSelectAll: 'Pilih semua' };\n"],
+  "mappings": ";AAMO,IAAM,KAAiB,EAAE,eAAe,aAAa;AACrD,IAAM,KAAiB,EAAE,eAAe,cAAc;",
+  "names": []
+}

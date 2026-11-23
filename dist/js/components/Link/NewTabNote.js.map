@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Link/NewTabNote.tsx"],
+  "sourcesContent": ["'use client';\nimport * as React from 'react';\nimport { useSettings } from '../../internal/provider';\nimport { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';\nimport { en as words } from './labels';\n\n/* What an external Link says after its text (\"(opens in a new tab)\"), in the provider's words. It's a client\n   module of its own, so Link stays a Server Component. */\nexport function NewTabNote() {\n  return <VisuallyHidden> {useSettings(words).labels.opensInNewTab}</VisuallyHidden>;\n}\n"],
+  "mappings": ";;;AAAa,SAAAA,KAAAC,UAAA;AACb,YAAYC,WAAW;AACvB,SAASC,mBAAmB;AAC5B,SAASC,sBAAsB;AAC/B,SAASC,MAAMC,aAAa;AAIrB,SAAAC,aAAA;AAAA,QAAAC,IAAAP,GAAA,CAAA;AACoB,QAAAQ,KAAAN,YAAYG,KAAK;AAAC,MAAAI;AAAA,MAAAF,EAAA,CAAA,MAAAC,GAAAE,OAAAC,eAAA;AAApCF,SAAA,oCAAC,sBAAe,KAAED,GAAkBE,OAAOC,aAAe;AAAiBJ,MAAA,CAAA,IAAAC,GAAAE,OAAAC;AAAAJ,MAAA,CAAA,IAAAE;EAAA,OAAA;AAAAA,SAAAF,EAAA,CAAA;EAAA;AAAA,SAA3EE;AAA2E;",
+  "names": ["c", "_c", "React", "useSettings", "VisuallyHidden", "en", "words", "NewTabNote", "$", "t0", "t1", "labels", "opensInNewTab"]
+}
