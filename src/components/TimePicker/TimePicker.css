@@ -48,9 +48,9 @@
 }
 .srp-time-picker__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .srp-time-picker__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
+.srp-time-picker__option:where([data-active]) { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
 .srp-time-picker__check { color: var(--time-picker-check, var(--primary-text)); font-size: var(--spacing-4); }
-@media (forced-colors: active) { .srp-time-picker__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .srp-time-picker__list { border-color: CanvasText; } }
+@media (forced-colors: active) { .srp-time-picker__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .srp-time-picker__list { border-color: CanvasText; } }
 /* Touch: 44px options. */
 @media (pointer: coarse) {
   .srp-time-picker__option { min-height: max(var(--time-picker-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */

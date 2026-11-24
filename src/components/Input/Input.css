@@ -52,21 +52,21 @@
   font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
 .srp-input__count--full { color: var(--input-count-full, var(--text)); }
-@media (hover: hover) { .srp-input:hover:not(.srp-input--disabled, :has(.srp-input__field:disabled), .srp-input--readonly, :focus-within) { --srp-input-bd: var(--input-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .srp-input:hover:not([data-disabled], :has(.srp-input__field:disabled), [data-readonly], :focus-within) { --srp-input-bd: var(--input-border-hover, var(--field-border-hover)); } }
 /* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that
    forced-colors mode draws, since box-shadow rings disappear there. The ring shows at once (it fades only on the
    way out), so focus is never late, and a field a popup focuses as it opens doesn't animate on its first frame. */
 .srp-input:focus-within { transition-duration: var(--duration-0); --srp-input-bd: var(--srp-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--srp-input-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.srp-input--invalid { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); --srp-input-ring: var(--input-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-input--invalid:hover:not(.srp-input--disabled, :has(.srp-input__field:disabled), .srp-input--readonly, :focus-within) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
+.srp-input:where([data-invalid]) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); --srp-input-ring: var(--input-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-input:where([data-invalid]):hover:not([data-disabled], :has(.srp-input__field:disabled), [data-readonly], :focus-within) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
 /* A native constraint (required, type="email", pattern, min…) that fails after people edit the field or try to send the
    form takes the invalid look too (:user-invalid, never on first paint). Separate rules, so a browser without it skips only these. */
 .srp-input:has(.srp-input__field:user-invalid) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); --srp-input-ring: var(--input-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-input:has(.srp-input__field:user-invalid):hover:not(:focus-within) { --srp-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
-.srp-input--readonly { background: var(--input-bg-readonly, var(--field-readonly)); }
+.srp-input:where([data-readonly]) { background: var(--input-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.srp-input--disabled, .srp-input:where(:has(.srp-input__field:disabled)) { --srp-input-bd: var(--input-border-disabled, var(--disabled-border)); background: var(--input-bg-readonly, var(--field-readonly)); color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.srp-input--disabled .srp-input__field, .srp-input__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-input:where([data-disabled]), .srp-input:where(:has(.srp-input__field:disabled)) { --srp-input-bd: var(--input-border-disabled, var(--disabled-border)); background: var(--input-bg-readonly, var(--field-readonly)); color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-input:where([data-disabled]) .srp-input__field, .srp-input__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .srp-input:not(.srp-input--size-lg) .srp-input__field { font-size: var(--text-base); } }
@@ -102,8 +102,8 @@
 /* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
    field the whole box is dimmed already, so the action isn't dimmed twice. */
 .srp-input-action:disabled { color: var(--input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.srp-input--readonly .srp-input-action:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
-.srp-input--disabled .srp-input-action:disabled, .srp-input:where(:has(.srp-input__field:disabled)) .srp-input-action:disabled { opacity: var(--opacity-100); }
+.srp-input:where([data-readonly]) .srp-input-action:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
+.srp-input:where([data-disabled]) .srp-input-action:disabled, .srp-input:where(:has(.srp-input__field:disabled)) .srp-input-action:disabled { opacity: var(--opacity-100); }
 .srp-input-action::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 @media (prefers-reduced-motion: reduce) { .srp-input-action { transition: none; } }
 /* Touch: an icon action takes a press up the field's whole height and 10px toward the text, so a finger a little off

@@ -40,9 +40,9 @@
 @media (hover: hover) {
   .srp-table:not(.srp-table--striped) .srp-table__body .srp-table__row:hover { --srp-table-row: var(--table-row-bg-hover, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
 }
-.srp-table__row--selected, .srp-table .srp-table__body .srp-table__row--selected, .srp-table .srp-table__body .srp-table__row:has(> .srp-table__select :checked) { --srp-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
-.srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
-.srp-table__row--selected:dir(rtl) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.srp-table__row:where([data-selected]), .srp-table .srp-table__body .srp-table__row:where([data-selected]), .srp-table .srp-table__body .srp-table__row:has(> .srp-table__select :checked) { --srp-table-row: var(--table-row-bg-selected, var(--surface-hover)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); background: var(--srp-table-row); }
+.srp-table__row:where([data-selected]) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.srp-table__row:where([data-selected]):dir(rtl) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
 .srp-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
 /* Next to a sortable header, whose button fills its cell, the select-all checkbox keeps a gap, so each has a 24px
    target that doesn't touch the other (WCAG 2.5.8). */
@@ -98,7 +98,7 @@
 /* Held down, a linked row shades a step past its hover, as a List row does; its own buttons and checkboxes press on their own. */
 .srp-table .srp-table__body .srp-table__row--link:has(.srp-table__row-link:active) { --srp-table-row: var(--table-row-bg-pressed, var(--pressed)); --text-muted: var(--table-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--table-avatar-bg-shaded, var(--secondary-hover)); }
 .srp-table__row--link:has(.srp-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (forced-colors: active) { .srp-table__row--selected > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
+@media (forced-colors: active) { .srp-table__row:where([data-selected]) > :first-child, .srp-table__body .srp-table__row:has(> .srp-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
 .srp-table__header--resizable { position: relative; }
 .srp-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
@@ -132,7 +132,7 @@
 .srp-table__expand { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
 .srp-table__expand-button .srp-icon { --srp-table-turn: 90deg; transition: rotate var(--motion-change-sm) var(--ease-move); }
 .srp-table__expand-button:dir(rtl) .srp-icon { --srp-table-turn: -90deg; }
-.srp-table__expand-button--open .srp-icon { rotate: var(--srp-table-turn); }
+.srp-table__expand-button:where([aria-expanded="true"]) .srp-icon { rotate: var(--srp-table-turn); }
 .srp-table__detail-cell { padding-block: var(--table-padding-x, var(--spacing-3)); }
 /* TableColumnsMenu: one checkbox per column, in a column. */
 .srp-table-columns { display: flex; flex-direction: column; gap: var(--spacing-2); }

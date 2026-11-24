@@ -101,7 +101,7 @@ interface KanbanCardProps {
 const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanCardProps) {
   const { itemKey: key, name, api, labels: L } = props;
   return (
-    <li data-key={String(key)} className={cn('srp-kanban__card', props.dragging && 'srp-kanban__card--dragging')} data-state={props.dragging ? 'dragging' : undefined}>
+    <li data-key={String(key)} className={cn('srp-kanban__card', props.dragging && 'srp-kanban__card--dragging')} data-dragging={props.dragging ? '' : undefined} data-state={props.dragging ? 'dragging' : undefined}>
       {props.disabled ? null : (
         <button type="button" className="srp-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={props.hint} aria-pressed={props.pressed}
           ref={(n) => api.current.handle(key, n)}
@@ -315,7 +315,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
           <section key={col.id} className={cn('srp-kanban__column', drag && drag.to.column === c && 'srp-kanban__column--target', over && 'srp-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
             <div className="srp-kanban__header">
               <H className="srp-kanban__title" id={titleId}>{col.title}</H>
-              <span className={cn('srp-kanban__count', over && 'srp-kanban__count--over')}>
+              <span className={cn('srp-kanban__count', over && 'srp-kanban__count--over')} data-over={over ? '' : undefined}>
                 {over ? <Icon icon={icons.Warning} /> : null}
                 {loading != null ? null : col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
                 {over ? <span className="srp-kanban__over">{L.kanbanOverLimit}</span> : null}

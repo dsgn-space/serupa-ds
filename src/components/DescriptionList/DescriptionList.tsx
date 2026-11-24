@@ -18,7 +18,8 @@ export interface DescriptionListProps extends React.HTMLAttributes<HTMLDListElem
 }
 
 function DescriptionListRender({ ref, ...props }: DescriptionListProps & React.RefAttributes<HTMLDListElement>) {
-  const { className, layout = 'inline', dividers, ...rest } = props;
+  const { className, layout: layoutProp, dividers, ...rest } = props;
+  const layout = layoutProp === undefined ? 'inline' : layoutProp;
   return (
     <dl {...rest} ref={ref} data-component="description-list"
       className={cn('srp-description-list', `srp-description-list--${layout}`, dividers && 'srp-description-list--dividers', className)} />

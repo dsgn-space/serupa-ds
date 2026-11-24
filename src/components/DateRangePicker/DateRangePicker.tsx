@@ -213,7 +213,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   return (
     <>
     <span {...rest} ref={mergedRef} role="group"
-      className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-range-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)}
+      className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-range-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} data-invalid={invalid ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined}
       data-component="date-range-picker" data-state={open ? 'open' : 'closed'} data-size={size}>
       {field('start')}
       <span className="srp-date-range-picker__dash" aria-hidden>–</span>

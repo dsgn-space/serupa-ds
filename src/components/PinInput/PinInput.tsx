@@ -70,13 +70,13 @@ function PinInputRender({ ref, ...props }: PinInputProps & React.RefAttributes<H
   const boxes: React.ReactNode[] = [];
   for (let i = 0; i < length; i++) {
     const ch = code.charAt(i);
-    boxes.push(<span key={i} className={cn('srp-pin-input__box', ch && 'srp-pin-input__box--filled', focused && i === active && 'srp-pin-input__box--active', focused && i === active && !ch && 'srp-pin-input__box--caret')}>
+    boxes.push(<span key={i} className={cn('srp-pin-input__box', ch && 'srp-pin-input__box--filled', focused && i === active && 'srp-pin-input__box--active', focused && i === active && !ch && 'srp-pin-input__box--caret')} data-active={(focused && i === active) ? '' : undefined}>
       {ch ? (props.mask ? '•' : ch) : null}
     </span>);
   }
   const mergedRef = useMergedRef(ref, (n) => { input.current = n; nameRef(n); });
   return (
-    <span className={cn('srp-pin-input', 'srp-pin-input--size-' + size, invalid && 'srp-pin-input--invalid', rest.disabled && 'srp-pin-input--disabled', rest.readOnly && 'srp-pin-input--readonly', props.className)}
+    <span className={cn('srp-pin-input', 'srp-pin-input--size-' + size, invalid && 'srp-pin-input--invalid', rest.disabled && 'srp-pin-input--disabled', rest.readOnly && 'srp-pin-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="pin-input" data-size={size}>
       <span className="srp-pin-input__boxes" aria-hidden>{boxes}</span>
       <input autoComplete="one-time-code" pattern={type === 'numeric' ? '[0-9]{' + length + '}' : '[0-9A-Za-z]{' + length + '}'}

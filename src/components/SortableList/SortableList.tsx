@@ -225,7 +225,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const mergedRef = useMergedRef(ref, (n) => { list.current = n; });
   return (<>
     <ul role="list" {...rest} ref={mergedRef}
-      className={cn('srp-sortable-list', drag && 'srp-sortable-list--sorting', props.disabled && 'srp-sortable-list--disabled', props.className)} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
+      className={cn('srp-sortable-list', drag && 'srp-sortable-list--sorting', props.disabled && 'srp-sortable-list--disabled', props.className)} data-disabled={props.disabled ? '' : undefined} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
       {shown.map((it, index) => {
         const key = getKey(it), dragging = !!drag && drag.key === key;
         return <SortableRow key={key} item={it} itemKey={key} name={name + ' ' + label(it)} index={index} dragging={dragging}
@@ -261,7 +261,7 @@ const SortableRow = /* @__PURE__ */ React.memo(function SortableRow(props: {
 }) {
   const { itemKey: key, index, dragging, api } = props;
   return (
-    <li data-key={String(key)} className={cn('srp-sortable-list__item', dragging && 'srp-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
+    <li data-key={String(key)} className={cn('srp-sortable-list__item', dragging && 'srp-sortable-list__item--dragging')} data-dragging={dragging ? '' : undefined} data-state={dragging ? 'dragging' : undefined}>
       {props.disabled ? null : (
         <button type="button" className="srp-sortable-list__handle" aria-label={props.name} aria-describedby={props.hint} aria-pressed={props.pressed}
           ref={(n) => api.current.handle(key, n)}

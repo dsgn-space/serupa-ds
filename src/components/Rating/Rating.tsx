@@ -100,7 +100,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   if (readOnly) {
     const said = value == null ? 0 : Math.round(value * 10) / 10;
     return <div {...rest} ref={ref2} role="img" aria-label={rest['aria-label'] ? rest['aria-label'] + ', ' + sds.labels.ratingValue(said, max, displayNumber(said, locale), displayNumber(max, locale)) : sds.labels.ratingValue(said, max, displayNumber(said, locale), displayNumber(max, locale))}
-      className={classes} data-component="rating" data-size={size}>{stars.map((s) => box(null, s.i, s.fill))}</div>;
+      className={classes} data-readonly={readOnly ? '' : undefined} data-disabled={off ? '' : undefined} data-component="rating" data-size={size}>{stars.map((s) => box(null, s.i, s.fill))}</div>;
   }
   // With allowHalf the whole star's radio takes the presses (the half's is for keys and screen readers, Rating.css):
   // a press in the star's start half picks the half. A click from a key (Space, an arrow) has no pointer (detail 0).
@@ -129,7 +129,7 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   // A Field's required arrives as aria-required (L8E88): it was dropped, since the group's own attribute came after rest.
   return (
     <div {...rest} ref={ref2} role="radiogroup" aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)}
-      aria-invalid={invalid || undefined} aria-disabled={off || undefined} aria-required={required || rest['aria-required'] === true || rest['aria-required'] === 'true' || undefined} className={classes}
+      aria-invalid={invalid || undefined} aria-disabled={off || undefined} aria-required={required || rest['aria-required'] === true || rest['aria-required'] === 'true' || undefined} className={classes} data-readonly={readOnly ? '' : undefined} data-disabled={off ? '' : undefined}
       data-component="rating" data-size={size}
       onPointerLeave={(e) => { if (onPointerLeave) onPointerLeave(e); setHover(null); }}
       onKeyDown={(e) => {

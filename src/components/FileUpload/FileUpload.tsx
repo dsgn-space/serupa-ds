@@ -312,10 +312,10 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   useClipboardHandOn(root);
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, choose); });
   return (
-    <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('srp-file-upload', disabled && 'srp-file-upload--disabled', readOnly && 'srp-file-upload--readonly', (invalid || missing) && 'srp-file-upload--invalid', props.className)} data-component="file-upload">
+    <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('srp-file-upload', disabled && 'srp-file-upload--disabled', readOnly && 'srp-file-upload--readonly', (invalid || missing) && 'srp-file-upload--invalid', props.className)} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={(invalid || missing) ? '' : undefined} data-component="file-upload">
       {/* A click anywhere on the area (its padding, icon, title and hint) opens the picker too, as its hover and press say, for the pointer only (the button opens it itself): the choose button is how the
           keyboard and screen readers reach it, so the area is presentational and carries no state (TF1b); a disabled upload says so on the whole of it. */}
-      <div className={cn('srp-file-upload__zone', over && 'srp-file-upload__zone--over')} data-dragging={over ? '' : undefined} role="presentation" {...drag}
+      <div className={cn('srp-file-upload__zone', over && 'srp-file-upload__zone--over')} data-over={over ? '' : undefined} data-dragging={over ? '' : undefined} role="presentation" {...drag}
         onClick={(e) => { if (!still && input.current && !(e.target instanceof Element && e.target.closest('button, input'))) input.current.click(); }}>
         <Icon icon={icons.UploadFile} className="srp-file-upload__icon" />
         <p className="srp-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>

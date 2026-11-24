@@ -109,7 +109,7 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   const acts = props.actions != null && props.actions !== false;
   const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
   return (
-    <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
+    <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
       <textarea {...rest} aria-invalid={invalid || rest['aria-invalid']} aria-describedby={describedBy} onChange={onChange} ref={setRefs} rows={rows} className="srp-textarea__field" key="field"
         style={{ '--srp-ta-rows': rows, '--srp-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
       {props.showCount && !acts ? count : null}

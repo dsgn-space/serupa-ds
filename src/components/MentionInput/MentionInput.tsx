@@ -244,7 +244,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
           aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
           {open ? shown.map((o, i) => (
             <div key={o.id} id={base + '-opt-' + i} role="option" aria-selected={i === current} aria-disabled={o.disabled || undefined}
-              className={cn('srp-mention-input__option', i === current && 'srp-mention-input__option--active')}
+              className={cn('srp-mention-input__option', i === current && 'srp-mention-input__option--active')} data-active={(i === current) ? '' : undefined}
               onMouseMove={() => { if (!o.disabled && i !== current) setActive(i); }} onClick={() => pick(o)}>
               <Avatar size="xs" name={o.label} src={o.avatar} alt="" />
               <span className="srp-mention-input__text">

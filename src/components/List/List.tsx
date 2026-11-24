@@ -203,7 +203,7 @@ function ListItemBaseRender({ ref, ...props }: ListItemProps<React.ElementType> 
   // In a List with selectionMode: a grid row named by its title, with a cell for the checkbox, the main area and the actions.
   const row = pick ? { role: 'row', 'data-list-value': value, 'aria-selected': on, 'aria-disabled': props.disabled || undefined, 'aria-labelledby': titleId } : null;
   return (
-    <li {...rest} {...row} ref={ref} className={cn('srp-list__item', interactive && 'srp-list__item--interactive', pick && !interactive && 'srp-list__item--pickable', (props.selected || on) && 'srp-list__item--selected', props.disabled && 'srp-list__item--disabled', props.className)}>
+    <li {...rest} {...row} ref={ref} className={cn('srp-list__item', interactive && 'srp-list__item--interactive', pick && !interactive && 'srp-list__item--pickable', (props.selected || on) && 'srp-list__item--selected', props.disabled && 'srp-list__item--disabled', props.className)} data-selected={(props.selected || on) ? '' : undefined} data-disabled={props.disabled ? '' : undefined}>
       {pick && pick.mode === 'multiple' ? (
         <span role="gridcell" className="srp-list__select">
           <Checkbox tabIndex={-1} aria-labelledby={titleId} checked={on} disabled={props.disabled} onChange={noop} />

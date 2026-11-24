@@ -78,7 +78,7 @@ function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttribut
   const name = <MiddleCutName name={props.name} id={base + '-name'} cls={NAME} />;
   const removeLabel = props.removeLabel || ((n: string) => L.remove + ' ' + n);
   return (
-    <div {...rest} ref={ref} className={cn('srp-attachment', failed && 'srp-attachment--error', uploading && 'srp-attachment--uploading', disabled && 'srp-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
+    <div {...rest} ref={ref} className={cn('srp-attachment', failed && 'srp-attachment--error', uploading && 'srp-attachment--uploading', disabled && 'srp-attachment--disabled', props.className)} data-error={failed ? '' : undefined} data-component="attachment" data-kind={kind}>
       {props.thumbnail != null ? <span className="srp-attachment__thumbnail">{props.thumbnail}</span> : <Icon icon={ICONS[kind]} className="srp-attachment__icon" />}
       <span className="srp-attachment__body">
         {props.href && !disabled ? (

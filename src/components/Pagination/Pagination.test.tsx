@@ -34,6 +34,13 @@ afterEach(() => {
 beforeEach(() => { errors = vi.spyOn(console, 'error'); });
 
 describe('Pagination', () => {
+  test('only the current page is marked current: the arrows look like the other pages, not like the page you are on', async () => {
+    await render(<Pagination id="pc" count={12} page={6} onPageChange={() => {}} />);
+    const marked = [...el('pc').querySelectorAll('[data-current]')];
+    expect(marked.map((e) => e.getAttribute('aria-current'))).toEqual(['page']);
+    const next = el('pc').querySelector('li:last-child > button')!;   // the next arrow
+    expect(css(next).backgroundColor).not.toBe(css(marked[0]!).backgroundColor);
+  });
   test('jump: a "Go to page" field after the pages; Enter goes to the page typed, one past the end to the last, and says it; focus stays in the field', async () => {
     const seen: number[] = [];
     await render(<EnUS><Pagination id="pj" count={400} jump onPageChange={(n) => seen.push(n)} /></EnUS>);

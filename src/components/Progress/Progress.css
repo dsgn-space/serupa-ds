@@ -39,11 +39,11 @@
    the compositor, and its rounded end keeps its shape at any value (FB1). Right to left, it slides the other way. */
 .srp-progress__fill[style] { inline-size: var(--sizing-full); translate: calc(var(--spacing-0) - var(--srp-progress-rest)) var(--spacing-0); }
 .srp-progress__fill[style]:dir(rtl) { translate: var(--srp-progress-rest) var(--spacing-0); }
-.srp-progress--indeterminate .srp-progress__fill {
+.srp-progress:where([data-state="indeterminate"]) .srp-progress__fill {
   --srp-progress-segment: 40%; --srp-progress-still: 30%; --srp-progress-from: -100%; --srp-progress-to: 250%;
   inline-size: var(--srp-progress-segment); animation: srp-progress-slide var(--motion-loop-progress) var(--ease-move) infinite;
 }
-.srp-progress--indeterminate .srp-progress__fill:dir(rtl) { --srp-progress-from: 100%; --srp-progress-to: -250%; }
+.srp-progress:where([data-state="indeterminate"]) .srp-progress__fill:dir(rtl) { --srp-progress-from: 100%; --srp-progress-to: -250%; }
 @keyframes srp-progress-slide { from { translate: var(--srp-progress-from) 0; } to { translate: var(--srp-progress-to) 0; } }
 .srp-progress--circle { --srp-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--srp-progress-ring); height: var(--srp-progress-ring); flex-shrink: 0; vertical-align: middle; }
 .srp-progress__ring { display: block; overflow: visible; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }   /* overflow: the arc's edge reaches half a unit past the box */
@@ -56,15 +56,15 @@
 .srp-progress__arc { stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
 .srp-progress--circle .srp-progress__value { position: absolute; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--progress-label-color, var(--text)); font-weight: var(--progress-label-weight, var(--font-medium)); }
 .srp-progress--circle.srp-progress--size-lg .srp-progress__value { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
-.srp-progress--circle.srp-progress--indeterminate .srp-progress__ring { --srp-progress-turn: 270deg; animation: srp-progress-turn var(--motion-loop-spinner) var(--ease-linear) infinite; }
+.srp-progress--circle.srp-progress:where([data-state="indeterminate"]) .srp-progress__ring { --srp-progress-turn: 270deg; animation: srp-progress-turn var(--motion-loop-spinner) var(--ease-linear) infinite; }
 @keyframes srp-progress-turn { to { rotate: var(--srp-progress-turn); } }
 @keyframes srp-progress-breathe { 50% { opacity: var(--opacity-50); } }
 @media (prefers-reduced-motion: reduce) {
   .srp-progress__fill, .srp-progress__arc, .srp-progress__ring .srp-progress__track { transition: none; }
-  .srp-progress--indeterminate .srp-progress__fill { animation: none; }
+  .srp-progress:where([data-state="indeterminate"]) .srp-progress__fill { animation: none; }
   /* The circle stands still and breathes, as Loader's ring does (EE1). */
-  .srp-progress--circle.srp-progress--indeterminate .srp-progress__ring { animation: srp-progress-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
-  .srp-progress--indeterminate .srp-progress__fill { margin-inline-start: var(--srp-progress-still); }
+  .srp-progress--circle.srp-progress:where([data-state="indeterminate"]) .srp-progress__ring { animation: srp-progress-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
+  .srp-progress:where([data-state="indeterminate"]) .srp-progress__fill { margin-inline-start: var(--srp-progress-still); }
 }
 @media (forced-colors: active) {
   .srp-progress--bar .srp-progress__track { border: var(--border-width-1) solid CanvasText; }

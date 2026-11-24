@@ -55,7 +55,7 @@ function BreadcrumbItemBaseRender({ ref, ...props }: BreadcrumbItemProps & React
   const content = <>{props.icon ? <span className="srp-breadcrumb__icon">{asIcon(props.icon)}</span> : null}{props.children}</>;
   if (props.current) {
     delete rest.href;
-    return <span {...rest} ref={ref} aria-current="page" className={cn('srp-breadcrumb__item srp-breadcrumb__item--current', props.className)}>{content}</span>;
+    return <span {...rest} ref={ref} aria-current="page" data-current="" className={cn('srp-breadcrumb__item srp-breadcrumb__item--current', props.className)}>{content}</span>;
   }
   const Tag = props.as || config.link;
   return <Tag {...rest} ref={ref} className={cn('srp-breadcrumb__item srp-breadcrumb__link', props.className)}>{content}</Tag>;

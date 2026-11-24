@@ -244,7 +244,7 @@ const Option = /* @__PURE__ */ React.memo(function Option({ r, id, on, query, ac
     // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen reader can, is
     // chosen with Enter or Space.
     <div id={id} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined} aria-describedby={r.c.description ? `${id}-d` : undefined}
-      className={cn('srp-command-palette__option', on && 'srp-command-palette__option--active', r.c.disabled && 'srp-command-palette__option--disabled')}
+      className={cn('srp-command-palette__option', on && 'srp-command-palette__option--active', r.c.disabled && 'srp-command-palette__option--disabled')} data-active={on ? '' : undefined} data-disabled={r.c.disabled ? '' : undefined}
       onMouseDown={(e) => e.preventDefault()} onMouseMove={() => act.hover(r)} onClick={() => act.choose(r)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act.choose(r); } }}>
       {r.c.icon != null ? <span className="srp-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
