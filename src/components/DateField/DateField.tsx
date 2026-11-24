@@ -1,6 +1,7 @@
 'use client';
 import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
+import { useControlledSwitch } from '../../internal/controllable';
 import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -132,6 +133,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
   const own = dateOrder(locale).filter((k): k is DatePart => k === 'day' || k === 'month' || k === 'year');
   const order: readonly DatePart[] = props.order && ORDERS[props.order] ? ORDERS[props.order] : own.length === 3 ? own : ORDERS.dmy;
   const controlled = props.value !== undefined;
+  useControlledSwitch(controlled, 'DateField', 'value');
   const [parts, setParts] = React.useState<Parts>(() => partsOf(controlled ? props.value : props.defaultValue));
   const now = read(parts, props.min, props.max);
   // required: a form sent with all three boxes empty marks them, until something is typed.
