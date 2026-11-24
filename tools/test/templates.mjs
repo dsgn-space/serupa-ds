@@ -38,6 +38,8 @@ t('a block comes from the file next to it, and is needed', r.code.includes(`from
 t('something the package exports from src/internal/ comes from the package', r.code.includes(`import { useLocale } from '@diki-stwn/serupa-ds';`));
 t('something it doesn\'t export is named as missing', r.missing.join() === 'isComposing (internal/ime)', r.missing.join());
 t('a file of its own stays next to it', r.local.join() === 'payment' && r.code.includes(`from './payment';`));
+const side = rewrite(`import './x.css';\nimport { useLocale } from '../../internal/provider';`);
+t('an import after a side-effect import is rewritten on its own', side.code.includes(`import { useLocale } from '@diki-stwn/serupa-ds';`) && !side.missing.length, side.missing.join());
 
 // Every template offered compiles against the built package, its blocks with it.
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-add-'));

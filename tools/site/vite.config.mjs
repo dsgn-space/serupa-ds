@@ -144,7 +144,8 @@ function host() {
     configResolved(config) { base = config.base; mode = config.mode; ssr = !!config.build.ssr; },
     async writeBundle(options) {
       if (ssr) return;
-      writeHostFiles(/** @type {string} */ (options.dir), { base, siteUrl: process.env.SERUPA_SITE_URL || '', root: ROOT,
+      // Awaited, so the build ends once the pages, 404, _headers and sitemap are written, and fails if they can't be.
+      await writeHostFiles(/** @type {string} */ (options.dir), { base, siteUrl: process.env.SERUPA_SITE_URL || '', root: ROOT,
         draw: (paths) => drawPages(import.meta.filename, mode, paths) });
     },
   };
