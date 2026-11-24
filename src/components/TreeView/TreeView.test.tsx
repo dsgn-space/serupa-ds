@@ -520,5 +520,6 @@ describe('TreeView: cascade, a checkbox tree', () => {
       expect(contrast(css(off).borderTopColor, bg(off)), th + ' unchecked').toBeGreaterThanOrEqual(1.3);
       expect(contrast(css(on).color, css(on).backgroundColor), th + ' mark').toBeGreaterThanOrEqual(4.5);
     }
+    expect(css(row('a').lastElementChild as HTMLElement).userSelect).toBe('text');
   });
 });

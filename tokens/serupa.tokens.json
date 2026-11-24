@@ -146,13 +146,6 @@
         "fonts": [
           {
             "family": "Inter",
-            "file": "fonts/InterVariable-latin.woff2",
-            "weight": "100 900",
-            "style": "normal",
-            "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
-          },
-          {
-            "family": "Inter",
             "file": "fonts/InterVariable-latin-ext.woff2",
             "weight": "100 900",
             "style": "normal",
@@ -202,9 +195,9 @@
           },
           {
             "family": "Inter",
-            "file": "fonts/InterVariable-Italic-latin.woff2",
+            "file": "fonts/InterVariable-latin.woff2",
             "weight": "100 900",
-            "style": "italic",
+            "style": "normal",
             "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
           },
           {
@@ -255,6 +248,13 @@
             "weight": "100 900",
             "style": "italic",
             "unicodeRange": "U+02CD, U+02D8-02D9, U+02DB, U+0302, U+0306-0307, U+030A-031B, U+0326-0328, U+032C-036F, U+0E3F, U+1DC0-1DFF, U+2070-209C, U+20DB-2109, U+2117-2121, U+2126-2190, U+2192, U+2194-2211, U+221A-2298, U+2303-232B, U+2380-238B, U+23CE-23CF, U+2423-2468, U+24B6-24EA, U+25A0-26A0, U+2713-2788, U+27EF-27FA, U+2913, U+2A38, U+2B06-2B24, U+2E18, U+A92E, U+E000-E163, U+E1C3-E2DC, U+EE01-EEE1, U+F6C3, U+1F12F-1F16B, U+1F850-1F852"
+          },
+          {
+            "family": "Inter",
+            "file": "fonts/InterVariable-Italic-latin.woff2",
+            "weight": "100 900",
+            "style": "italic",
+            "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
           }
         ],
         "families": {
@@ -2116,7 +2116,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
+      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-600}",
@@ -10786,7 +10786,7 @@
     },
     "animate-spin": {
       "$value": "spin 1s linear infinite",
-      "$description": "`animate-spin`: loading spinners (Button uses it)."
+      "$description": "`animate-spin`: utility spin animation (Loader uses `motion-loop-spinner`)."
     },
     "animate-spin-reduced": {
       "$value": "spin 3s linear infinite",

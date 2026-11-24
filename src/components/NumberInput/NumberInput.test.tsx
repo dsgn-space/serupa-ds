@@ -53,6 +53,15 @@ describe('NumberInput', () => {
     expect([f.value, f.hasAttribute('aria-valuenow')]).toEqual(['', false]);
   });
 
+  test('non-finite step or largeStep falls back to 1 and 10 instead of locking the field', async () => {
+    await render(<NumberInput id="ninf" aria-label="Finite step" defaultValue={5} step={Infinity} largeStep={Infinity} />);
+    await userEvent.click(plus('ninf'));
+    expect(field('ninf').value).toBe('6');
+    field('ninf').focus();
+    await userEvent.keyboard('{PageUp}');
+    expect(field('ninf').value).toBe('16');
+  });
+
   test('NaN as the value or the default (Number() of an empty answer) is no number: an empty field, no valuenow, and the form sends nothing', async () => {
     await mount(<form data-testid="nan-form"><NumberInput aria-label="Own" name="own" defaultValue={NaN} /><NumberInput aria-label="Held" value={NaN} onValueChange={() => {}} /></form>);
     const [own, held] = [page.getByRole('spinbutton', { name: 'Own' }).element() as HTMLInputElement, page.getByRole('spinbutton', { name: 'Held' }).element() as HTMLInputElement];

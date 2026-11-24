@@ -58,7 +58,7 @@ function split(value: number, o: FormatDurationOptions): Array<[number, Unit]> {
  *  of 0 is "0" of the smallest unit. "" for a value that isn't a number.
  *  @beta New with Duration. */
 export function formatDuration(value: number, locale?: string, options: FormatDurationOptions = {}): string {
-  if (typeof value !== 'number' || isNaN(value)) return '';
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '';
   const l = locale ? canonicalLocale(locale) : undefined;
   const parts = split(value, options);
   const display = oneOf(['long', 'short', 'narrow', 'digital'] as const, options.display, 'short');
@@ -74,7 +74,7 @@ export function formatDuration(value: number, locale?: string, options: FormatDu
 
 /** The same duration for machines: an ISO 8601 duration, "PT1H30M", "P2DT3H", "PT0S". */
 export function isoDuration(value: number, options: Pick<FormatDurationOptions, 'unit' | 'smallest'> = {}): string {
-  if (typeof value !== 'number' || isNaN(value)) return '';
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '';
   const parts = split(value, { ...options, largest: 'day' }).filter(([n]) => n > 0);
   const days = parts.filter(([, u]) => u === 'day').map(([n]) => n + 'D').join('');
   const time = parts.filter(([, u]) => u !== 'day').map(([n, u]) => n + ISO[u]).join('');

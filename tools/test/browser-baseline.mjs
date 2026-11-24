@@ -21,7 +21,7 @@ import { floor } from '../browser-floor.mjs';
 
 const P = projectArg();
 // The README's floor: CSS anchor positioning (anchor(), position-area and position-try-fallbacks) needs Chrome and
-// Edge 129 and Firefox 147; @scope, which every component's styles sit inside, needs Safari 26.4.
+// Edge 129 and Firefox 147; @scope (used by Prose) is listed at Safari 26.4 in MDN compat data.
 // package.json's browserslist holds the numbers (tools/browser-floor.mjs).
 const BASELINE = floor(P);
 

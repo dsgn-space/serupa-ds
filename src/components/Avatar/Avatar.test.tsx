@@ -232,6 +232,10 @@ describe('Avatar', () => {
       expect(edge('emerald-dark')).toEqual(['solid', '1px', '-1px', 'rgba(255, 255, 255, 0.1)', '9999px']);
     } finally { document.documentElement.removeAttribute('data-theme'); }
   });
+
+  test('initials skips leading honorifics and trailing suffixes when other words remain', () => {
+    expect([initials('Dr. Martin Luther King Jr.'), initials('Prof. Ada Lovelace PhD'), initials('Dr.')]).toEqual(['MK', 'AL', 'D']);
+  });
 });
 
 describe('Avatar: a picture that is slow to arrive (GR410)', () => {

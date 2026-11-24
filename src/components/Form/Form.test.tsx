@@ -497,4 +497,14 @@ describe('FormSteps', () => {
     await expect.poll(() => panels()).toEqual([null, 'until-found', 'until-found']);
     await expect.poll(() => active()).toBe(el('email'));
   });
+
+  test('a thrown onSubmit surfaces the failure as a form message and clears submitting', async () => {
+    await render(<SerupaProvider locale="en"><Form onSubmit={async () => { throw new Error('Network offline'); }}>
+      <Field label="Email"><Input id="email" name="email" defaultValue="ani@example.com" /></Field>
+      <Button type="submit">Save</Button>
+    </Form></SerupaProvider>);
+    await userEvent.click(button('Save'));
+    await expect.poll(() => document.querySelector('[role="alert"]')?.textContent).toContain('Network offline');
+    expect(button('Save').disabled).toBe(false);
+  });
 });

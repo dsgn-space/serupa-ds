@@ -62,10 +62,21 @@ type Stroke = Point[];
 
 const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, required: 1, disabled: 1, readOnly: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
 const r1 = (n: number) => Math.round(n * 10) / 10;
-const pathOf = (s: Stroke) => s.length === 1 && s[0] ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
-// The strokes back from an SVG this pad made: each <path d="M x yLx y…"> is one stroke ("h0" ends a dot).
+const pathOf = (s: Stroke) => {
+  if (!s.length || !s[0]) return '';
+  if (s.length === 1) return `M${s[0][0]} ${s[0][1]}h0`;
+  if (s.length === 2 && s[1]) return `M${s[0][0]} ${s[0][1]}L${s[1][0]} ${s[1][1]}`;
+  let d = `M${s[0][0]} ${s[0][1]}`;
+  for (let i = 1; i < s.length - 1; i++) {
+    const a = s[i]!, b = s[i + 1]!;
+    d += `Q${a[0]} ${a[1]} ${r1((a[0] + b[0]) / 2)} ${r1((a[1] + b[1]) / 2)}`;
+  }
+  const end = s[s.length - 1]!;
+  return `${d}L${end[0]} ${end[1]}`;
+};
+// The strokes back from an SVG this pad made: each <path d="M x y…"> is one stroke ("h0" ends a dot; L or Q between points).
 const strokesOf = (svg: string): Stroke[] => [...svg.matchAll(/<path d="M([^"]+)"/g)].map(([, d = '']) =>
-  d.replace(/h0$/, '').split('L').map((p) => { const [x = NaN, y = NaN] = p.trim().split(/[\s,]+/).map(Number); return [x, y] as const; }).filter((p) => isFinite(p[0]) && isFinite(p[1])),
+  d.replace(/h0$/, '').split(/[LQ]/).map((p) => { const [x = NaN, y = NaN] = p.trim().split(/[\s,]+/).map(Number); return [x, y] as const; }).filter((p) => isFinite(p[0]) && isFinite(p[1])),
 ).filter((s) => s.length);
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const SVG = (w: number, h: number, body: string) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
@@ -113,12 +124,15 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   const [method, setMethod] = React.useState<SignatureMethod>(start ? (start.method === 'type' ? 'type' : 'draw') : first);
   const [strokes, setStrokes] = React.useState<Stroke[]>(() => (start && start.method !== 'type' ? strokesOf(start.svg) : []));
   const [typed, setTyped] = React.useState(start && start.method === 'type' ? start.name : '');
-  // The stroke being drawn: the handlers add to it in place, and each move hands a copy to the render.
+  // The stroke being drawn: the handlers add to it in place, and redraws batch to one frame via rAF.
   const liveRef = React.useRef<Stroke | null>(null);
+  const rafRef = React.useRef(0);
   const [drawing, setDrawing] = React.useState<Stroke | null>(null);
+  const cancelDraw = () => { if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = 0; } };
+  React.useEffect(() => cancelDraw, []);
   // Shows a given value: its method, and its strokes or name; null empties what's shown and keeps the method.
   const show = (v: SignatureValue | null | undefined, empty: SignatureMethod) => {
-    liveRef.current = null; setDrawing(null);
+    cancelDraw(); liveRef.current = null; setDrawing(null);
     if (!v) { setStrokes([]); setTyped(''); setMethod(empty); return; }
     const m: SignatureMethod = v.method === 'type' ? 'type' : 'draw';
     setMethod(m);
@@ -159,28 +173,42 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
     if (props.onValueChange) props.onValueChange(props.defaultValue ? valueOf(props.defaultValue.method === 'type' ? 'type' : 'draw', props.defaultValue.method === 'type' ? [] : strokesOf(props.defaultValue.svg), props.defaultValue.name, measure()) : null, { reason: 'reset' });
   }, props.form);
 
-  const at = (e: React.PointerEvent): Point => {
-    const b = e.currentTarget.getBoundingClientRect();
-    return [r1(Math.min(b.width, Math.max(0, e.clientX - b.left))), r1(Math.min(b.height, Math.max(0, e.clientY - b.top)))];
-  };
+  const pt = (e: { clientX: number; clientY: number }, b: DOMRect): Point => [
+    r1(Math.min(b.width, Math.max(0, e.clientX - b.left))),
+    r1(Math.min(b.height, Math.max(0, e.clientY - b.top))),
+  ];
   const onDown = (e: React.PointerEvent<SVGSVGElement>) => {
     if (disabled || readOnly || (e.pointerType === 'mouse' && e.button !== 0)) return;
     e.preventDefault();
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a synthetic pointer has no capture */ }
-    liveRef.current = [at(e)];
+    cancelDraw();
+    liveRef.current = [pt(e, e.currentTarget.getBoundingClientRect())];
     setDrawing(liveRef.current.slice());
   };
   const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const s = liveRef.current;
     if (!s) return;
-    const p = at(e), q = s[s.length - 1];
-    if (q && Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) < 1) return;
-    s.push(p);
-    setDrawing(s.slice());
+    const b = e.currentTarget.getBoundingClientRect();
+    const raw = typeof e.nativeEvent.getCoalescedEvents === 'function' ? e.nativeEvent.getCoalescedEvents() : [];
+    const list = raw.length ? raw : [e];
+    let added = false;
+    for (const ev of list) {
+      const p = pt(ev, b), q = s[s.length - 1];
+      if (q && Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) < 1) continue;
+      s.push(p);
+      added = true;
+    }
+    if (added && !rafRef.current) {
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = 0;
+        if (liveRef.current) setDrawing(liveRef.current.slice());
+      });
+    }
   };
   const onUp = () => {
     const s = liveRef.current;
     if (!s) return;
+    cancelDraw();
     liveRef.current = null; setDrawing(null);
     const next = [...strokes, s];
     setSize(measure());

@@ -210,7 +210,7 @@ function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAt
           <Icon icon={icons.ExpandMore} className="srp-accordion__icon" />
         </button>
       </H>
-      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="srp-accordion__panel">
+      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={open && !(ctx && ctx.many) ? id + '-t' : undefined} className="srp-accordion__panel">
         <div className="srp-accordion__clip"><div ref={content} className="srp-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
       </div>
     </div>
