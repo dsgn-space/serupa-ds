@@ -18,7 +18,8 @@ export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes<HTMLElement>) {
-  const { className, hideFrom = 'md', children, ...rest } = props;
+  const { className, hideFrom: hideFromProp, children, ...rest } = props;
+  const hideFrom = hideFromProp === undefined ? 'md' : hideFromProp;
   const hide = hideFrom ? `srp-bottom-nav--hide-${hideFrom}` : 'srp-bottom-nav--always';
   return (
     <>
