@@ -59,7 +59,8 @@ type Problems = Partial<Record<(typeof FIELDS)[number], string>>;
 /** The fee that covers the card's cut of a gift, so the charity gets all of it, rounded up to the cent. */
 export function coverFee(amount: number, fee: { rate: number; fixed: number }) {
   if (amount <= 0) return 0;
-  return Math.ceil(((amount + fee.fixed) / (1 - fee.rate) - amount) * 100) / 100;
+  // Rounded to a millionth of a cent before rounding up, so the arithmetic's last bit isn't a cent more (0.3 is 0.30).
+  return Math.ceil(Math.round(((amount + fee.fixed) / (1 - fee.rate) - amount) * 1e8) / 1e6) / 100;
 }
 
 /** What's wrong with a gift, by field, in the order of the form, or {} when it can be given. */

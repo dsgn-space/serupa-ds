@@ -234,6 +234,13 @@ describe('Blocks/Comment thread', () => {
     expect(onReply.mock.calls[0]![1].mentions.map((m) => m.id)).toEqual(['budi']);
   });
 
+  test('every mention is bold, each at its own place: "@Ayub" isn\'t Ayu, and Ayu named twice is bold twice', async () => {
+    const people = [{ id: 'ayu', label: 'Ayu' }];
+    await render(<CommentThread people={people} onReply={() => {}} comments={[{ id: 'x', author: { name: 'Budi' }, body: '@Ayub and @Ayu, then @Ayu.', date: ago(5) }]} />);
+    const strong = [...document.querySelectorAll('strong')].filter((e) => e.textContent?.startsWith('@'));
+    expect(strong.map((e) => [e.textContent, e.previousSibling?.textContent ?? ''])).toEqual([['@Ayu', '@Ayub and '], ['@Ayu', ', then ']]);
+  });
+
   test('editing with people: Escape closes the mention list first, and only the next Escape cancels the edit', async () => {
     const people = [{ id: 'ana', label: 'Ana Putri' }];
     const onEdit = vi.fn<(id: string, body: string, d: { mentions: { id: string }[] }) => void>();

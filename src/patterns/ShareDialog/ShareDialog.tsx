@@ -157,7 +157,11 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
     if (found) { later(focusId('share-emails')); return; }
     setBusy(true);
     void Promise.resolve().then(() => onInvite?.(emails, access)).then(() => {
-      setList((l) => [...l, ...emails.map((email) => ({ id: email, name: email, email, access }))]);
+      // Someone removed and invited again keeps their row, with the new access, rather than being removed on close.
+      const back = list.filter((p) => removed.has(p.id) && emails.includes(p.email.toLowerCase()));
+      const again = new Set(back.map((p) => p.email.toLowerCase())), ids = new Set(back.map((p) => p.id));
+      setRemoved((r) => new Set([...r].filter((id) => !ids.has(id))));
+      setList((l) => [...l.map((p) => (ids.has(p.id) ? { ...p, access } : p)), ...emails.filter((x) => !again.has(x)).map((email) => ({ id: email, name: email, email, access }))]);
       setText('');
       announce(emails.length === 1 ? `Added ${emails[0]}` : `Added ${formatNumber(emails.length, locale)} people`);
       later(focusId('share-emails'));

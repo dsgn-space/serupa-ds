@@ -285,6 +285,10 @@ describe('Patterns/Checkout: ways to pay', () => {
     await expect.element(exp).toHaveValue('08/');
     await exp.fill('08/2027');
     await expect.element(exp).toHaveValue('08/27');
+    // "1" then a slash is January: the typed slash ends the month.
+    await exp.fill('');
+    await userEvent.keyboard('1/27');
+    await expect.element(exp).toHaveValue('01/27');
   });
 
   test('a card past its month says it has expired, in the summary and at the field', async () => {

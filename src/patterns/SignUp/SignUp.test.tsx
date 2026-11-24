@@ -16,6 +16,8 @@ describe('Patterns/Sign-up', () => {
     expect(passwordRules('short', 'ana@example.com').map((r) => r.met)).toEqual([false, true]);
     expect(passwordRules('ana-and-the-sea', 'ana@example.com').map((r) => r.met)).toEqual([true, false]);
     expect(passwordRules('', '').map((r) => r.met)).toEqual([false, false]);
+    // The whole address is never a good password, however short its name part.
+    expect(passwordRules('Al@example.com', 'al@example.com')[1]!.met).toBe(false);
     expect(signUpProblems({ name: '', email: 'ana', phone: '', password: 'x', terms: false }).map((e) => e.field))
       .toEqual(['sign-up-name', 'sign-up-email', 'sign-up-password', 'sign-up-terms']);
     expect(signUpProblems({ name: '', email: '', phone: '', password: '', terms: false })[1]?.message).toBe('Enter your email address');

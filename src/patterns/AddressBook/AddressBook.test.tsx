@@ -129,6 +129,23 @@ describe('Patterns/Address book', () => {
     await expect.element(screen.getByRole('heading', { level: 3, name: 'No addresses yet' })).toBeVisible();
   });
 
+  test('the first address added after the only one was removed is the default', async () => {
+    const onDefaultChange = vi.fn();
+    const screen = await render(<AddressBook addresses={[{ id: 'a1', label: 'Home', name: 'Ana', line1: 'Jl. Braga 12', city: 'Bandung', postalCode: '40111', country: 'Indonesia' }]} onSave={() => Promise.resolve('a9')} onDefaultChange={onDefaultChange} />);
+    await screen.getByRole('button', { name: 'Remove Home' }).click();
+    await screen.getByRole('button', { name: 'Add address' }).click();
+    const dialog = screen.getByRole('dialog', { name: 'Add an address' });
+    await dialog.getByRole('textbox', { name: /^Name for this address/ }).fill('Studio');
+    await dialog.getByRole('textbox', { name: /^Full name/ }).fill('Ana Lima');
+    await dialog.getByRole('textbox', { name: /^Street and number/ }).fill('Jl. Dago 3');
+    await dialog.getByRole('textbox', { name: /^Town or city/ }).fill('Bandung');
+    await dialog.getByRole('textbox', { name: /^Postal code/ }).fill('40135');
+    await dialog.getByRole('combobox', { name: /^Country/ }).selectOptions('Indonesia');
+    await dialog.getByRole('button', { name: 'Save address' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements()).toHaveLength(0);
+    expect([card('Studio').textContent?.includes('Default'), onDefaultChange.mock.calls]).toEqual([true, [['a9']]]);
+  });
+
   test('counts follow the locale’s digits', async () => {
     await render(<SerupaProvider locale="ar-EG"><AddressBook /></SerupaProvider>);
     expect(document.body.textContent).toContain('Saved addresses (٢)');

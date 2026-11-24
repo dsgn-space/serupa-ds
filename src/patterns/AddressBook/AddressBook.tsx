@@ -132,7 +132,8 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
     void Promise.resolve().then(() => onSave?.(out)).then((id) => {
       const saved: SavedAddress = { ...out, id: out.id ?? (typeof id === 'string' ? id : `new-${Date.now()}`) };
       setList((l) => (out.id ? l.map((a) => (a.id === out.id ? saved : a)) : [...l, saved]));
-      if (makeDefault || !def) { setDef(saved.id); onDefaultChange?.(saved.id); }
+      // With no default shown (none yet, or the default was removed), the new address is it.
+      if (makeDefault || !shown.some((x) => x.id === def)) { setDef(saved.id); onDefaultChange?.(saved.id); }
       setDraft(null);
       toast({ title: out.id ? `Saved ${saved.label}` : `Added ${saved.label}`, tone: 'success' });
     }, () => setFailed(true)).finally(() => setBusy(false));

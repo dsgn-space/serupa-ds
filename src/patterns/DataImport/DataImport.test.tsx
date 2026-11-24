@@ -86,6 +86,13 @@ describe('Patterns/Data import', () => {
     expect([select('import-email').value, select('import-city').value]).toEqual(['-1', '0']);
   });
 
+  test('checking: each row is numbered by the line it starts on in the file, past empty lines and cells of two lines', async () => {
+    const text = 'Name,Email,Note\nBudi,budi@example.com,"one\ntwo"\n\nAna,ana@example.com,\nAni,BUDI@example.com,\n';
+    await render(<DataImport start="check" file={{ name: 'gaps.csv', text }} />);
+    const rows = page.getByRole('row').elements().slice(1).map((r) => [...r.querySelectorAll('td')].map((c) => latin(c.textContent)));
+    expect(rows.map((r) => [r[0], r[2]])).toEqual([['6', 'Same email as line 2'], ['2', ''], ['5', '']]);
+  });
+
   test('checking: rows with problems first, in words; importing them waits for "skip"; then what happened is listed', async () => {
     const onImport = vi.fn();
     await render(<DataImport start="check" file={FILE} existing={['ani@example.com']} onImport={onImport} />);

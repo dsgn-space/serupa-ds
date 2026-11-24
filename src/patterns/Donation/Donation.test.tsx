@@ -18,6 +18,8 @@ describe('Patterns/Donation', () => {
   test('the fee that covers the card\'s cut, and what\'s wrong with a gift', () => {
     expect(coverFee(50, { rate: 0.029, fixed: 0.3 })).toBe(1.81);
     expect(coverFee(0, { rate: 0.029, fixed: 0.3 })).toBe(0);
+    // A fee that comes out whole cents isn't a cent more for the rounding of the arithmetic.
+    expect(coverFee(10, { rate: 0, fixed: 0.3 })).toBe(0.3);
     expect(giftProblems(good, 2)).toEqual({});
     expect(Object.keys(giftProblems({ amount: '', other: null, name: '', email: '' }, 2))).toEqual(['amount', 'name', 'email']);
     expect(giftProblems({ ...good, amount: 'other', other: 1 }, 2).other).toBe('Enter an amount of 2 or more.');
