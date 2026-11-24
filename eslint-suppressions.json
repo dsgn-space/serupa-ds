@@ -225,7 +225,7 @@
       "count": 1
     },
     "jsx-a11y-x/no-static-element-interactions": {
-      "count": 3
+      "count": 2
     }
   },
   "src/components/RangeCalendar/RangeCalendar.tsx": {

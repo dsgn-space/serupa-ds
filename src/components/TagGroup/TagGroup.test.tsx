@@ -89,6 +89,25 @@ describe('TagGroup', () => {
     }
   });
 
+  test('an avatar\'s initials fit its 20px circle with wider text spacing, as a reader\'s style sheet sets it (WCAG 1.4.12)', async () => {
+    const style = document.head.appendChild(document.createElement('style'));
+    style.textContent = '#ws * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }';
+    try {
+      await render(<TagGroup id="ws" label="To" items={[{ id: 'g', label: 'Grace Hopper', avatar: <Avatar name="Grace Hopper" size="xs" /> }, { id: 'm', label: 'Mary Wong', avatar: <Avatar name="Mary Wong" size="xs" /> }]} />);
+      // Each run of initials against the circle around it: none reaches past an edge.
+      const cut = [...document.querySelectorAll<HTMLElement>('#ws [role="row"] [data-component="avatar"]')].flatMap((a) => {
+        const b = a.getBoundingClientRect(), walk = document.createTreeWalker(a, NodeFilter.SHOW_TEXT), out: string[] = [];
+        for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+          const r = document.createRange(); r.selectNodeContents(n);
+          const t = r.getBoundingClientRect();
+          if (t.width && (t.left < b.left - 1 || t.right > b.right + 1 || t.top < b.top - 1 || t.bottom > b.bottom + 1)) out.push(n.textContent ?? '');
+        }
+        return out;
+      });
+      expect(cut).toEqual([]);
+    } finally { style.remove(); }
+  });
+
   test('the × fades its fill on hover, as every control does, and changes at once when pressed', async () => {
     await render(<SerupaProvider locale="en-US"><TagGroup label="Labels" items={tags} onRemove={() => {}} /></SerupaProvider>);
     const x = page.getByRole('button', { name: 'Remove Design' }).element();

@@ -189,6 +189,17 @@ describe('Attachment', () => {
     expect([first.hasAttribute('data-icon'), first.querySelector('img') !== null, root('t').querySelectorAll('[data-icon]').length]).toEqual([false, true, 0]);
   });
 
+  test('error: the message sits under the box, as a Field\'s error under its control: 6px below the box, at its start edge, with the card\'s padding under it before the next one', async () => {
+    await render(<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}><Attachment id="ub" name="Pitch.pptx" bytes={13e6} error onRetry={() => {}} onRemove={() => {}} /><Attachment id="un" name="Notes.pdf" /></div>);
+    const r = root('ub').getBoundingClientRect(), box = getComputedStyle(root('ub'), '::before'), msg = part(root('ub'), 'error').getBoundingClientRect();
+    // The box: the danger outline is the drawn box's; the card's own border is clear, so nothing outlines the message.
+    const boxBottom = part(root('ub'), 'meta').getBoundingClientRect().bottom + 8 + 1;   // the card's 8px padding and 1px border
+    expect([css(root('ub')).borderTopColor, box.borderTopColor === 'rgba(0, 0, 0, 0)', Math.round(msg.top - boxBottom), Math.round(msg.left - r.left), Math.round(r.bottom - msg.bottom)])
+      .toEqual(['rgba(0, 0, 0, 0)', false, 6, 0, 9]);   // 8px padding and the clear 1px border under it
+    // The retry and remove buttons stay inside the box, beside the name.
+    for (const b of root('ub').querySelectorAll('button')) expect(b.getBoundingClientRect().bottom).toBeLessThanOrEqual(boxBottom);
+  });
+
   test('error={false} and error="" are not a failure', async () => {
     await render(<><Attachment id="e1" name="a.pdf" error={false} /><Attachment id="e2" name="a.pdf" error="" /></>);
     expect([root('e1').className, root('e2').className]).toEqual(['srp-attachment', 'srp-attachment']);
@@ -209,10 +220,10 @@ describe('Attachment', () => {
       expect(contrast(css(root('c')).color, bg), th + ' name').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(part(root('c'), 'meta')).color, bg), th + ' meta').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(root('cl').querySelector('a')).color, bg), th + ' link').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(part(root('ce'), 'error')).color, bg), th + ' error').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(part(root('ce'), 'error')).color, page), th + ' error').toBeGreaterThanOrEqual(4.5);   // under the box, on the page
       expect(contrast(css(part(root('cd'), 'meta').lastElementChild).color, bg), th + ' done').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(root('c').querySelector('[data-icon]')).color, bg), th + ' icon').toBeGreaterThanOrEqual(3);
-      expect(contrast(css(root('ce')).borderTopColor, page), th + ' error outline').toBeGreaterThanOrEqual(3);
+      expect(contrast(getComputedStyle(root('ce'), '::before').borderTopColor, page), th + ' error outline').toBeGreaterThanOrEqual(3);
     }
     document.documentElement.removeAttribute('data-theme');
   });

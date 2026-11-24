@@ -641,7 +641,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
   });
 
   test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
-    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const long = { state: 'error' as const, message: "The server didn't answer in time, so the file wasn't sent. Try again in a moment, or check your connection." };
     const screen = await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
     // The words' box inside the button is the one that cuts a label too long for it.
     const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('span[id$="-retry"]')!.parentElement!;
@@ -649,7 +649,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
   });
 
   test('a failure message that wraps keeps its icon on the first line, not centred on the whole message', async () => {
-    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const long = { state: 'error' as const, message: "The server didn't answer in time, so the file wasn't sent. Try again in a moment, or check your connection." };   // two lines under the box, which runs the row's width
     await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
     const failed = [...document.querySelectorAll('span')].find((s) => s.textContent === long.message)!, icon = failed.querySelector('svg')!.getBoundingClientRect();
     const range = document.createRange();
@@ -710,7 +710,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const [ok, bad] = items(el).map(row), bg = css(ok!).backgroundColor;
-      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(DONE)).color, 4.5], ['failed', css(bad!.querySelector('[id$="-error"]')).color, 4.5], ['failed outline', css(bad!).borderTopColor, 3]];
+      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(DONE)).color, 4.5], ['failed', css(bad!.querySelector('[id$="-error"]')).color, 4.5], ['failed outline', getComputedStyle(bad!, '::before').borderTopColor, 3]];
       for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();

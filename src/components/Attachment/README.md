@@ -33,7 +33,7 @@ Drawn from the `Upload` story.
 2. **Name** (`.srp-attachment__name`): the file name, a link with `href`; a long one is cut in the middle so its ending stays.
 3. **Kind and size** (`.srp-attachment__meta`): "PDF · 1.5 MB", in the locale's digits and units.
 4. **Bar** (`.srp-attachment__progress`): the upload, while `progress` is set.
-5. **Message** (`.srp-attachment__error`): why the upload failed.
+5. **Message** (`.srp-attachment__error`): why the upload failed, under the box as a Field's error is under its control.
 6. **Try again** (`.srp-attachment__retry`): starts the upload again, after an error with `onRetry`.
 7. **Remove** (`.srp-attachment__remove`): takes the file away, with `onRemove`.
 
@@ -42,7 +42,7 @@ Drawn from the `Upload` story.
 - Pass `type` when you have it (a `File`'s `type`, or the server's content type): it picks the icon before the extension does. `kind` overrides both, for a file whose name says nothing ("scan-0042").
 - `bytes` is shown in steps of 1000, as phones and macOS count: 1,482,000 is "1.5 MB". Leave it out when you don't know the size.
 - While uploading, set `progress` from 0 to 100, or `null` when you can't tell. Take it away when the upload is done, and set `done` to say "Complete" after the size.
-- A failed upload: set `error` to what went wrong ("Larger than 100 MB"), or `true` for "Couldn’t upload". Pass `onRetry` only when trying again can work.
+- A failed upload: set `error` to what went wrong ("Larger than 100 MB"), or `true` for "Couldn’t upload". The message shows under the box, which keeps its danger outline. Pass `onRetry` only when trying again can work.
 - Put several in a `<ul role="list">` with one per `<li>`, in a wrapping row or a column. Each grows to its content, up to 320px (`--attachment-max-width`), and never wider than its container.
 - `thumbnail` takes the icon's place, such as a 40px picture of an image file. FileUpload draws its files this way.
 - `attachmentKind(name, type)` returns the kind on its own, for a filter or your own icon. It runs in a Server Component too.
@@ -116,6 +116,7 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-link-hover` | `primary-hover` | A linked name under the pointer. |
 | `--attachment-border` | `border` | The outline. |
 | `--attachment-border-error` | `danger` | The outline of a failed upload (3:1 on the page). |
+| `--attachment-error-gap` | `spacing-1.5` | The space between a failed file's box and its message under it, a Field's gap between its control and its error (6px). |
 | `--attachment-error` | `danger-text` | A failed upload's message (4.5:1 on bg). |
 | `--attachment-focus-ring` | `focus-ring` | The ring around a focused link, or around a cut name that takes keyboard focus. |
 | `--attachment-done` | `success-text` | "Complete" and its check once an upload is done (4.5:1 on bg). |

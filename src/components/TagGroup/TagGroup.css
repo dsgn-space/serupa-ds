@@ -32,7 +32,7 @@
 /* stylelint-disable-next-line serupa/no-raw-value -- half the room the picture takes past the line, above and below */
 .srp-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-5)); block-size: var(--tag-group-avatar-size, var(--spacing-5)); margin-inline-start: calc(var(--border-width-1) - var(--spacing-2)); --srp-tag-avatar-pull: calc((var(--text-xs--line-height) - var(--tag-group-avatar-size, var(--spacing-5))) / 2); margin-block: var(--srp-tag-avatar-pull); border-radius: var(--radius-pill); overflow: hidden; }   /* 20px, inside the tag's border with 1px clear of it above, below and at the start, so the circle never breaks the line */
 /* Whatever picture is passed (an Avatar of any size, an <img>) is drawn at that size, so the tag keeps its height. */
-.srp-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
+.srp-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); font-size: var(--tag-group-avatar-text, var(--spacing-2)); }   /* 8px initials, which fit the 20px circle even with wider letter spacing */
 .srp-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
 .srp-tag-group__check { flex: none; }
 .srp-tag-group__cell { display: inline-flex; }

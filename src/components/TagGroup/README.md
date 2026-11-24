@@ -126,5 +126,6 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-gap` | `spacing-2` | The space between tags (8px). |
 | `--tag-group-label-gap` | `spacing-1.5` | The space between the label and the tags, as between a Field's label and its control (6px). |
 | `--tag-group-avatar-size` | `spacing-5` | The picture before a tag's words (20px), inside the tag's border with 1px clear of it, so the circle never breaks the line. |
+| `--tag-group-avatar-text` | `spacing-2` | The initials in a tag's 20px picture (8px), so two letters fit its circle even with wider letter spacing (WCAG 1.4.12). The person's name is in the tag beside it. |
 | `--tag-group-icon-size` | `spacing-3.5` | A tag's icon, the check of a selected tag and the × (14px), beside the 12px label, as in a small Button. |
 <!-- token-table:end -->

@@ -67,7 +67,7 @@ Drawn from the `ByArea` story.
 
 ## Accessibility
 
-- The country menu is a button showing the calling code, named "Country" with the country ("Country: Indonesia (+62)"). It opens a list of the countries, as Combobox's list looks, with a search field at its top: the field is a combobox for the listbox under it, and how many match is said after a pause. Each option has the country's name in the locale's words and its calling code; the picked one is selected and has a check.
+- The country menu is a button showing the calling code, named by its text, "Country" with the country and the code ("Country: Indonesia +62"), the visible code included so a voice command that says it works. It opens a list of the countries, as Combobox's list looks, with a search field at its top: the field is a combobox for the listbox under it, and how many match is said after a pause. Each option has the country's name in the locale's words and its calling code; the picked one is selected and has a check.
 - The search finds a country by its name, ignoring case and accents ("cote" finds Côte d'Ivoire), by its ISO code ("id") or by its calling code ("62" or "+62"). Names that start with what's typed come first.
 - In a right-to-left page the calling code still reads left to right, "+20", in the prefix and in each option.
 - One focus ring, on the box, for the menu and the number alike. The menu takes its hover fill while it has focus, so it's clear which part does.

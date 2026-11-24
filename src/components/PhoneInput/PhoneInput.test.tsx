@@ -22,7 +22,7 @@ const options = async (id: string) => {
   return [...list()!.querySelectorAll<HTMLElement>('[role="option"]')];
 };
 const part = (id: string) => box(id).firstElementChild as HTMLElement;
-const dial = (id: string) => box(id).firstElementChild!.firstElementChild!.textContent;
+const dial = (id: string) => box(id).firstElementChild!.children[1]!.textContent;
 const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
 const pick = async (button: HTMLButtonElement, value: string) => {
   const id = (button.closest('[data-component="phone-input"]')!.querySelector('input[type="tel"]') as HTMLInputElement).id;
@@ -57,7 +57,7 @@ describe('PhoneInput', () => {
     expect([i.type, i.inputMode, i.getAttribute('autocomplete'), ref.current === i]).toEqual(['tel', 'tel', 'tel', true]);
     expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['srp-input srp-phone-input srp-input--size-md extra', 'phone-input', '2px', 32]);
     // The menu is a button named by its label and the country, with the calling code showing.
-    expect([menu('p').getAttribute('aria-label'), menu('p').getAttribute('aria-haspopup'), menu('p').getAttribute('aria-expanded'), code('p'), dial('p')]).toEqual(['Country: Indonesia (+62)', 'listbox', 'false', 'ID', '+62']);
+    expect([menu('p').textContent, menu('p').getAttribute('aria-haspopup'), menu('p').getAttribute('aria-expanded'), code('p'), dial('p')]).toEqual(['Country: Indonesia +62', 'listbox', 'false', 'ID', '+62']);
     // Each option names the country in the locale's words, with its calling code, sorted by name; the picked one is selected.
     const opts = await options('p');
     const names = opts.map((o) => o.firstElementChild!.textContent);
@@ -68,7 +68,7 @@ describe('PhoneInput', () => {
 
   test('right to left (GR49): the calling code still reads "+20", the plus before the digits, and each option keeps its code in a left-to-right isolate', async () => {
     await render(<div dir="rtl"><SerupaProvider locale="ar-EG"><PhoneInput id="prtl" aria-label="Phone" defaultCountry="EG" /></SerupaProvider></div>);
-    const prefix = menu('prtl').firstElementChild!;   // first in the country part: "+" and the code
+    const prefix = [...menu('prtl').children].find((c) => c.textContent.startsWith('+'))!;   // the visible part of the country menu: "+" and the code
     const left = (n: Node) => { const r = document.createRange(); r.selectNodeContents(n); return r.getBoundingClientRect().left; };
     expect([prefix.textContent, left(prefix.firstChild!) < left(prefix.lastChild!)]).toEqual(['+20', true]);
     const eg = (await options('prtl')).find((o) => o.dataset.value === 'EG')!.querySelector(':scope > span:nth-of-type(2)')!;
@@ -359,7 +359,7 @@ describe('PhoneInput', () => {
     expect([field('fp').labels![0]!.textContent, (await options('fp')).map((o) => o.dataset.value).join(), code('fp')]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
     await userEvent.keyboard('{Escape}');
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('phone')).toBe('+6591234567');
-    expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara: Indonesia (+62)', 24]);
+    expect([menu('id').textContent, Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara: Indonesia +62', 24]);
     expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('srp-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
     // The calling code dims with the number, not left in full text color beside a dimmed field.
     const dial = [...box('dis').querySelectorAll('span')].find((n) => n.children.length === 0 && n.textContent.startsWith('+'))!;

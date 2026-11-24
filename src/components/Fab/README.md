@@ -25,10 +25,11 @@ import { Fab } from '@diki-stwn/serupa-ds';
 
 ## Anatomy
 
-Drawn from the `ExtendedAuto` story. It's a primary [Button](../Button/README.md), so its icon and label are Button's.
+Drawn from the `Extended` story. It's a primary [Button](../Button/README.md), so its icon and label are Button's.
 
 1. **Button** (`.srp-fab`): the round, raised primary button, fixed to a corner of the screen; extended, a pill with the label.
-2. **Label** (`.srp-fab__label`): with `extended="auto"`, the label's text in a box that folds to nothing while the page scrolls down and opens again on the way up.
+2. **Icon** (`.srp-btn__icon`): what the action does, the whole button when it isn't extended.
+3. **Label** (`.srp-btn__label`): the action in words beside the icon, when `extended`. With `extended="auto"` it folds to nothing while the page scrolls down and opens again on the way up.
 
 ## Usage
 

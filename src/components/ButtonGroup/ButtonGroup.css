@@ -30,8 +30,14 @@
 .srp-button-group--attached > .srp-btn:focus-visible { z-index: var(--z-30); }
 .srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn ~ .srp-btn { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
 .srp-button-group--attached:not(.srp-button-group--vertical) > .srp-btn:has(~ .srp-btn) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
-/* Two solid buttons side by side get an edge between them, in their text color, as a split button has. */
-.srp-button-group--attached:not(.srp-button-group--vertical) > :is(.srp-btn--primary, .srp-btn--primary + :not(.srp-btn)) + .srp-btn--primary { border-inline-start-color: color-mix(in srgb, currentColor var(--button-group-divider, var(--opacity-40)), transparent); }
+/* Two solid buttons side by side get an edge between them, in their text color, as a split button has: drawn over the
+   start of the clear border, top to bottom, since a colored start border would meet the clear top and bottom ones at an
+   angle and leave a notch at each end. */
+.srp-button-group--attached:not(.srp-button-group--vertical) > :is(.srp-btn--primary, .srp-btn--primary + :not(.srp-btn)) + .srp-btn--primary {
+  background-image: linear-gradient(color-mix(in srgb, currentColor var(--button-group-divider, var(--opacity-40)), transparent), color-mix(in srgb, currentColor var(--button-group-divider, var(--opacity-40)), transparent));
+  background-origin: border-box; background-repeat: no-repeat; background-size: var(--button-group-overlap, var(--border-width-1)) var(--sizing-full); background-position: left;
+}
+.srp-button-group--attached:not(.srp-button-group--vertical):where(:dir(rtl)) > :is(.srp-btn--primary, .srp-btn--primary + :not(.srp-btn)) + .srp-btn--primary { background-position: right; }
 .srp-button-group--attached.srp-button-group--vertical > .srp-btn ~ .srp-btn { margin-top: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-start-end-radius: var(--spacing-0); }
 .srp-button-group--attached.srp-button-group--vertical > .srp-btn:has(~ .srp-btn) { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 /* A small button is 24px across, the WCAG 2.2 minimum target (2.5.8). The buttons on either side overlap it by 1px (the

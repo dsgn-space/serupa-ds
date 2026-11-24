@@ -4,6 +4,7 @@ import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
 import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import type { InputProps } from '../Input/Input';
 import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
@@ -287,10 +288,11 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
     <span ref={boxRef} className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
       style={props.style} data-component="phone-input" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={(e) => pressFocuses(input)(e)}>
       <button ref={trigger} type="button" className="srp-phone-input__country" disabled={locked} data-value={country.code}
-        aria-label={label + ': ' + (here ? here.name : country.code) + ' (+' + country.dial + ')'} suppressHydrationWarning
         aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listId : undefined}
         onClick={() => (open ? close(null) : show(''))} onKeyDown={onTriggerKey}>
-        <span className="srp-phone-input__dial" aria-hidden>+{country.dial}</span>
+        {/* Named by its text, the visible code included, so what people see is what a voice command says (WCAG 2.5.3). */}
+        <VisuallyHidden suppressHydrationWarning>{label + ': ' + (here ? here.name : country.code) + ' '}</VisuallyHidden>
+        <span className="srp-phone-input__dial">+{country.dial}</span>
         <Icon icon={icons.ExpandMore} className="srp-phone-input__chevron" />
       </button>
       <input autoComplete="tel" {...rest} aria-invalid={invalid || rest['aria-invalid']} ref={setRef} type="tel" inputMode="tel" className="srp-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />

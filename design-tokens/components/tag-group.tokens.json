@@ -226,6 +226,16 @@
           }
         }
       },
+      "avatar-text": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The initials in a tag's 20px picture (8px), so two letters fit its circle even with wider letter spacing (WCAG 1.4.12). The person's name is in the tag beside it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-avatar-text"
+          }
+        }
+      },
       "icon-size": {
         "$type": "dimension",
         "$value": "{spacing.spacing-3_5}",

@@ -143,7 +143,7 @@ const SITES: Record<string, Site> = {
     act: async () => { const f = $('input'); f.focus(); f.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, modifierCapsLock: true })); }, says: /Caps Lock is on/ },
   'PhoneInput: how many countries match once typing stops in the country list': {
     ui: () => <PhoneInput aria-label="Phone" defaultCountry="ID" />,
-    act: async () => { await userEvent.click($('button[aria-haspopup="listbox"]')); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('Indo'); }, says: /[0-9٠-٩]+ result/ },
+    act: async () => { await userEvent.click($('button[aria-haspopup="listbox"]')); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('+62'); }, says: /[0-9٠-٩]+ result/ },
   'Progress: announceComplete when the value reaches max': {
     ui: (s) => <Progress label="Upload" value={s ? 100 : 60} announceComplete />,
     act: (next) => next(), says: /Upload: complete/ },

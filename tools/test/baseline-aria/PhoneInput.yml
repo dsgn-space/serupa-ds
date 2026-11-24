@@ -1,26 +1,26 @@
 # ByArea
 - text: Toronto
-- 'button "Country: Canada (+1)"'
+- 'button "Country: Canada +1"'
 - textbox "Toronto": (416) 555-0199
 - text: American Samoa
-- 'button "Country: American Samoa (+1)"'
+- 'button "Country: American Samoa +1"'
 - textbox "American Samoa": (684) 733-1234
 - text: Berlin
-- 'button "Country: Germany (+49)"'
+- 'button "Country: Germany +49"'
 - textbox "Berlin": 30 123456
 - text: German mobile
-- 'button "Country: Germany (+49)"'
+- 'button "Country: Germany +49"'
 - textbox "German mobile": 151 23456789
 - text: Tokyo
-- 'button "Country: Japan (+81)"'
+- 'button "Country: Japan +81"'
 - textbox "Tokyo": 3-1234-5678
 - text: Sri Lanka
-- 'button "Country: Sri Lanka (+94)"'
+- 'button "Country: Sri Lanka +94"'
 - textbox "Sri Lanka": 77 123 4567
 
 # Controlled
 - text: Phone number
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Phone number": 812-3456-7890
 - paragraph:
   - text: Saved as
@@ -29,51 +29,51 @@
 
 # DoSayWhy
 - text: Mobile number
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Mobile number"
 - text: We'll text you a code
 
 # DontNoReason
 - text: Phone
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Phone"
 
 # InAField
 - text: Mobile number
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Mobile number"
 - text: We'll text you a code
 
 # LongValue
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Phone number": 812-3456-78901234
 
 # OwnRows
-- 'button "Country: Singapore (+65)"'
+- 'button "Country: Singapore +65"'
 - textbox "Phone number": 91 23 45 67
 
 # Playground
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Phone number"
 
 # SomeCountries
-- 'button "Country: Singapore (+65)"'
+- 'button "Country: Singapore +65"'
 - textbox "Phone number": 9123 4567
 
 # States
 - text: Invalid
-- 'button "Country: Indonesia (+62)"'
+- 'button "Country: Indonesia +62"'
 - textbox "Invalid" [invalid]: "812"
 - text: Enter the whole number. Disabled
-- 'button "Country: United States (+1)" [disabled]'
+- 'button "Country: United States +1" [disabled]'
 - textbox "Disabled" [disabled]: (201) 555-0123
 - text: Read-only
-- 'button "Country: Singapore (+65)" [disabled]'
+- 'button "Country: Singapore +65" [disabled]'
 - textbox "Read-only": 9123 4567
 - text: Small
-- 'button "Country: United Kingdom (+44)"'
+- 'button "Country: United Kingdom +44"'
 - textbox "Small": 7400 123456
 - text: Large
-- 'button "Country: Japan (+81)"'
+- 'button "Country: Japan +81"'
 - textbox "Large": 90-1234-5678
 

@@ -171,7 +171,7 @@ describe('motion quality gate', () => {
         }
       }
       expect([...new Set(problems)]).toEqual([]);
-    });
+    }, 60_000);   // every story twice, waiting out each one's motion: Chart's 700ms draw-in, over 20 stories, passed 15s
   }
   // A transition that only runs when a value changes (a fill growing, an indicator moving to the picked segment)
   // runs in no story above, so every component stylesheet is read for it too (FA1).
