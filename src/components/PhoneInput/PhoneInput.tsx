@@ -232,7 +232,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   // page writes "مصر (+20)", not "(20+)" (GR49).
   const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? '' : 'server-') + c.code} value={c.code} suppressHydrationWarning>{name + ' (\u2066+' + c.dial + '\u2069)'}</option>), [list, hydrated]);
   return (
-    <span className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
+    <span className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="phone-input" data-size={size} onMouseDown={(e) => pressFocuses(input)(e)}>
       <span className="srp-phone-input__country">
         <span className="srp-phone-input__dial" aria-hidden>+{country.dial}</span>

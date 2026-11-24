@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v17.1.0
+npm install github:dsgn-space/serupa-ds#v18.0.0
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -154,7 +154,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **OfflineBanner** (beta): Says when the connection drops and when it comes back, on screen and to screen readers. Also called: connection banner, offline indicator.
 - **Progress**: Shows how far along a task is when you can tell: an upload, a setup, a quota. Also called: progress bar.
 - **SaveStatus**: A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. Also called: autosave indicator, sync status.
-- **Skeleton** (beta): Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Also called: placeholder, shimmer, loading placeholder. Before 17.0.0 it was `<Loader variant="skeleton">`.
+- **Skeleton** (beta): Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Also called: placeholder, shimmer, loading placeholder.
 - **Toast**: A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Also called: snackbar, notification.
 
 ### Forms

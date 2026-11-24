@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
@@ -127,14 +128,13 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const trigger = triggerIn ?? '@', filter = filterIn ?? true, maxOptions = maxIn ?? 8;
   const L = useSettings(words).labels, locale = useLocale();
   const field = React.useRef<HTMLTextAreaElement | null>(null);
-  const [own, setOwn] = React.useState(defaultValue || '');
-  const text = value !== undefined ? value : own;
+  const [text, setOwn, controlled] = useControllable<string>(value, defaultValue || '', 'MentionInput', 'value');
   const [query, setQuery] = React.useState<Query | null>(null);
   const [dismissed, setDismissed] = React.useState(-1);   // the mention Escape closed: stays closed until another
   const [active, setActive] = React.useState(0);
   const caret = React.useRef<number | null>(null);
   // The textarea's value comes from state, so a form reset puts the text back to defaultValue here.
-  useFormReset(field, () => { if (value === undefined) setOwn(defaultValue || ''); setQuery(null); }, rest.form);   // where to put the caret after a pick, once the text is rendered
+  useFormReset(field, () => { if (!controlled) setOwn(defaultValue || ''); setQuery(null); }, rest.form);   // where to put the caret after a pick, once the text is rendered
   const base = domId('srp-mention', React.useId()), listId = base + '-list';
   const fieldLabel = React.useContext(FieldContext)?.labelId;
 
@@ -172,7 +172,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     if (!next || (query && next.start !== query.start)) setActive(0);
     if (!next) setDismissed(-1);   // that mention is gone (its @ deleted, or the caret left it): a new @ there opens the list
   };
-  const change = (next: string) => { if (value === undefined) setOwn(next); if (onValueChange) onValueChange(next); };
+  const change = (next: string) => { if (!controlled) setOwn(next); if (onValueChange) onValueChange(next); };
 
   const pick = (o: MentionOption) => {
     const el = field.current;
@@ -244,7 +244,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
           aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
           {open ? shown.map((o, i) => (
             <div key={o.id} id={base + '-opt-' + i} role="option" aria-selected={i === current} aria-disabled={o.disabled || undefined}
-              className={cn('srp-mention-input__option', i === current && 'srp-mention-input__option--active')}
+              className={cn('srp-mention-input__option', i === current && 'srp-mention-input__option--active')} data-active={(i === current) ? '' : undefined}
               onMouseMove={() => { if (!o.disabled && i !== current) setActive(i); }} onClick={() => pick(o)}>
               <Avatar size="xs" name={o.label} src={o.avatar} alt="" />
               <span className="srp-mention-input__text">

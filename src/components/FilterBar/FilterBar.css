@@ -12,7 +12,7 @@
   gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--border-control));
   border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: var(--filter-bar-chip-bg, var(--surface)); --surface-behind: var(--filter-bar-chip-bg, var(--surface));
 }
-.srp-filter-bar__chip--empty { border-style: dashed; }
+.srp-filter-bar__chip:where([data-empty]) { border-style: dashed; }
 .srp-filter-bar__edit {
   min-inline-size: var(--spacing-0); min-block-size: var(--control-height-sm); margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2) var(--spacing-1);
   border: var(--spacing-0); border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: transparent; color: inherit; font: inherit; font-weight: var(--font-medium);

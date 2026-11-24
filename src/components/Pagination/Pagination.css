@@ -26,7 +26,7 @@
 .srp-pagination--sm .srp-pagination__item:not(.srp-pagination__arrow) { padding: var(--spacing-0) var(--pagination-padding-x-sm, var(--spacing-0\.5)); }
 .srp-pagination--sm .srp-pagination__arrow .srp-icon { font-size: var(--pagination-icon-size-sm, var(--spacing-3\.5)); }
 .srp-pagination--lg .srp-pagination__arrow .srp-icon { font-size: var(--pagination-icon-size-lg, var(--spacing-5)); }
-@media (hover: hover) { .srp-pagination__item:hover:not(:disabled, [aria-disabled="true"], .srp-pagination__item--current) { background: var(--pagination-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-pagination__item:hover:not(:disabled, [aria-disabled="true"], [data-current]) { background: var(--pagination-bg-hover, var(--secondary)); } }
 /* Touch: 44px high to press on a touch screen, with nothing moving; across, each page stops halfway into the gap to the next. */
 @media (pointer: coarse) {
   .srp-pagination__item { position: relative; }
@@ -36,9 +36,9 @@
     content: ""; position: absolute; inset-block: var(--srp-pagination-reach); inset-inline: max(var(--srp-pagination-reach), var(--srp-pagination-half-gap));
   }
 }
-.srp-pagination__item:active:not(:disabled, [aria-disabled="true"], .srp-pagination__item--current) { background: var(--pagination-bg-pressed, var(--pressed)); }
+.srp-pagination__item:active:not(:disabled, [aria-disabled="true"], [data-current]) { background: var(--pagination-bg-pressed, var(--pressed)); }
 .srp-pagination__item:focus-visible { outline: var(--focus-ring-width) solid var(--pagination-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-pagination__item--current { background: var(--pagination-bg-current, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--pagination-edge-current, var(--primary-edge)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
+.srp-pagination__item:where([data-current]) { background: var(--pagination-bg-current, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--pagination-edge-current, var(--primary-edge)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
 .srp-pagination__item:disabled, .srp-pagination__item[aria-disabled="true"] { color: var(--pagination-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-pagination__ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: var(--srp-pagination-size); height: var(--srp-pagination-size); color: var(--pagination-ellipsis, var(--text-muted)); -webkit-user-select: none; user-select: none; }
 /* With total and pageSize (O7): the summary, muted, then the pages at the end of the row. When both don't fit on
@@ -54,6 +54,6 @@
    past the start edge, where scrollWidth doesn't see them, so they were never cut down (GR56). An auto margin is
    0 when there's no room, so the overflow goes to the end, is measured, and the pages are cut to fit. */
 .srp-pagination--summary .srp-pagination__list > :first-child { margin-inline-start: auto; }
-@media (forced-colors: active) { .srp-pagination__item--current { outline: var(--outline-width-2) solid CanvasText; } }
+@media (forced-colors: active) { .srp-pagination__item:where([data-current]) { outline: var(--outline-width-2) solid CanvasText; } }
 @media (prefers-reduced-motion: reduce) { .srp-pagination__item { transition: none; } }
 }

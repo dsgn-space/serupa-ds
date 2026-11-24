@@ -5,12 +5,16 @@ import { Checkbox, CheckboxGroup } from '../components/Checkbox/Checkbox';
 import { ColorPicker } from '../components/ColorPicker/ColorPicker';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
 import { List, ListItem } from '../components/List/List';
+import { MentionInput } from '../components/MentionInput/MentionInput';
 import { NumberInput } from '../components/NumberInput/NumberInput';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { PinInput } from '../components/PinInput/PinInput';
 import { Radio, RadioGroup } from '../components/Radio/Radio';
 import { SearchInput } from '../components/SearchInput/SearchInput';
+import { Select } from '../components/Select/Select';
 import { TagGroup } from '../components/TagGroup/TagGroup';
+import { ToggleButton } from '../components/ToggleButton/ToggleButton';
+import { TransferList } from '../components/TransferList/TransferList';
 
 afterEach(() => { vi.restoreAllMocks(); });
 const switches = (warn: { mock: { calls: unknown[][] } }) => warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('controlled-switch'));
@@ -27,6 +31,11 @@ const CASES: Array<[string, unknown, (v: unknown) => React.ReactElement]> = [
   ['InlineEdit value', 'Atlas', (v) => <InlineEdit label="Project name" value={v as string | undefined} />],
   ['ColorPicker value', '#336699', (v) => <ColorPicker aria-label="Label color" swatches={['#336699', '#993366']} value={v as string | undefined} />],
   ['TagGroup selected', [], (v) => <TagGroup label="Labels" selectionMode="multiple" items={[{ id: 'a', label: 'Bug' }]} selected={v as string[] | undefined} />],
+  ['InlineEdit editing', false, (v) => <InlineEdit label="Project name" defaultValue="Atlas" editing={v as boolean | undefined} />],
+  ['MentionInput value', 'Hi', (v) => <MentionInput aria-label="Comment" options={[{ id: 'ada', label: 'Ada' }]} value={v as string | undefined} />],
+  ['Select value', 'b', (v) => <Select aria-label="Size" options={['a', 'b']} value={v as string | undefined} onChange={() => {}} />],
+  ['ToggleButton pressed', false, (v) => <ToggleButton pressed={v as boolean | undefined}>Bold</ToggleButton>],
+  ['TransferList value', [], (v) => <TransferList aria-label="Columns" name="columns" options={[{ value: 'a', label: 'Name' }]} value={v as string[] | undefined} />],
   ['List selected', [], (v) => <List aria-label="People" selectionMode="multiple" selected={v as string[] | undefined}><ListItem title="Ada" /></List>],
 ];
 

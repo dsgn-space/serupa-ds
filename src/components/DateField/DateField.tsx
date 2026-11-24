@@ -240,7 +240,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, firstBox); setRef(ref, n); nameRef(n); }} role="group"
       aria-labelledby={labelledBy} aria-describedby={cn(props['aria-describedby'], said && errorId) || undefined}
       onBlur={(e) => { if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) && (parts.day || parts.month || parts.year)) check(); }}
-      className={cn('srp-date-field', disabled && 'srp-date-field--disabled', props.className)} data-component="date-field">
+      className={cn('srp-date-field', disabled && 'srp-date-field--disabled', props.className)} data-disabled={disabled ? '' : undefined} data-component="date-field">
       <FieldContext.Provider value={null}>
         {order.map((k) => (
           <div key={k} className={cn('srp-date-field__part', 'srp-date-field__part--' + k)}>

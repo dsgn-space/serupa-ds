@@ -13,7 +13,7 @@
 }
 .srp-image-cropper__frame[data-dragging] { cursor: var(--cursor-grabbing); }
 .srp-image-cropper__frame:not([data-state="ready"]) { cursor: default; }   /* loading or failed: nothing to drag yet */
-.srp-image-cropper--disabled .srp-image-cropper__frame { cursor: var(--cursor-disabled); }   /* as a disabled Slider beside it */
+.srp-image-cropper:where([data-disabled]) .srp-image-cropper__frame { cursor: var(--cursor-disabled); }   /* as a disabled Slider beside it */
 .srp-image-cropper__frame:focus-visible { outline: var(--focus-ring-width) solid var(--image-cropper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-image-cropper__img { position: absolute; display: block; max-inline-size: none; pointer-events: none; -webkit-user-drag: none; }
 .srp-image-cropper__frame:not([data-state="ready"]) .srp-image-cropper__img { opacity: var(--opacity-0); }
@@ -48,7 +48,7 @@
 .srp-image-cropper__fallback .srp-icon { inline-size: var(--spacing-6); block-size: var(--spacing-6); }
 .srp-image-cropper__zoom { display: flex; align-items: center; gap: var(--image-cropper-zoom-gap, var(--spacing-1)); }
 .srp-image-cropper__slider { flex: auto; min-inline-size: var(--spacing-0); }
-.srp-image-cropper--disabled .srp-image-cropper__frame { opacity: var(--opacity-disabled); }
+.srp-image-cropper:where([data-disabled]) .srp-image-cropper__frame { opacity: var(--opacity-disabled); }
 @media (prefers-reduced-motion: reduce) { .srp-image-cropper__grid, .srp-image-cropper__frame[data-dragging] .srp-image-cropper__grid { transition: none; } }
 @media (forced-colors: active) {
   .srp-image-cropper__frame::after { outline-color: CanvasText; }

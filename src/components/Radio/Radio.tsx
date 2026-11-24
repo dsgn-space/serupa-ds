@@ -170,7 +170,7 @@ function RadioRender({ ref, ...props }: RadioProps & React.RefAttributes<HTMLInp
   if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;   // the description stays out of the name
   return (
-    <label className={cn('srp-radio', 'srp-radio--size-' + size, card && 'srp-radio--card', (invalid || (ctx && ctx.invalid)) && 'srp-radio--invalid', rest.disabled && 'srp-radio--disabled', readOnly && 'srp-radio--readonly', !hasLabel && !hasDesc && 'srp-radio--bare', props.className)} style={props.style} data-component="radio" data-size={size as string}>
+    <label className={cn('srp-radio', 'srp-radio--size-' + size, card && 'srp-radio--card', (invalid || (ctx && ctx.invalid)) && 'srp-radio--invalid', rest.disabled && 'srp-radio--disabled', readOnly && 'srp-radio--readonly', !hasLabel && !hasDesc && 'srp-radio--bare', props.className)} data-invalid={(invalid || (ctx && ctx.invalid)) ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="radio" data-size={size as string}>
       <span className="srp-radio__control" key="control">
         <input {...rest} ref={nameRef} type="radio" className="srp-radio__input" key="input" />
         <span className="srp-radio__dot" aria-hidden key="dot" />

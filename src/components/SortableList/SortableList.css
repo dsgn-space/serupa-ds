@@ -22,8 +22,8 @@
   transition: box-shadow var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move), translate var(--motion-change-sm) var(--ease-move);
 }
 .srp-sortable-list__item[data-flip] { transition: none; }   /* placed back where it was, to glide from there (SortableList.tsx) */
-.srp-sortable-list--disabled .srp-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
-.srp-sortable-list__item--dragging {
+.srp-sortable-list:where([data-disabled]) .srp-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
+.srp-sortable-list__item:where([data-dragging]) {
   z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary-text));
   box-shadow: var(--sortable-list-item-shadow-active, var(--elevation-raised));
 }
@@ -40,7 +40,7 @@
   .srp-sortable-list__handle { position: relative; isolation: isolate; }
   .srp-sortable-list__handle::after { --srp-under: calc(var(--z-10) * -1); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset-block: var(--srp-reach-block); inset-inline: var(--spacing-0); }
 }
-.srp-sortable-list__item--dragging .srp-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
+.srp-sortable-list__item:where([data-dragging]) .srp-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
 @media (hover: hover) { .srp-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .srp-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
@@ -50,5 +50,5 @@
 .srp-sortable-list--sorting { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
 .srp-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */
 @media (prefers-reduced-motion: reduce) { .srp-sortable-list__item { transition: none; } }
-@media (forced-colors: active) { .srp-sortable-list__item--dragging { outline: var(--outline-width-2) solid Highlight; } }
+@media (forced-colors: active) { .srp-sortable-list__item:where([data-dragging]) { outline: var(--outline-width-2) solid Highlight; } }
 }

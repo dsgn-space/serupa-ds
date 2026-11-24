@@ -130,7 +130,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
           const on = picked.includes(t.id);
           return (
             <div key={t.id} role="row" data-tag-id={t.id} tabIndex={t.id === current ? 0 : -1}
-              className={cn('srp-tag-group__tag', on && 'srp-tag-group__tag--selected')}
+              className={cn('srp-tag-group__tag', on && 'srp-tag-group__tag--selected')} data-selected={on ? '' : undefined}
               aria-selected={mode !== 'none' ? on : undefined} aria-disabled={t.disabled || undefined}
               onFocus={() => setActive(t.id)} onKeyDown={(e) => onKeyDown(e, t, i)} onClick={() => select(t)}>
               <span role="gridcell" className="srp-tag-group__text">

@@ -187,7 +187,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
   const low = ratio != null && ratio < min;
   useAutoFocus(props.autoFocus, () => root.current && root.current.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop]);
   return (
-    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('srp-color-picker', 'srp-color-picker--size-' + size, disabled && 'srp-color-picker--disabled', readOnly && 'srp-color-picker--readonly', props.className)}
+    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.srp-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('srp-color-picker', 'srp-color-picker--size-' + size, disabled && 'srp-color-picker--disabled', readOnly && 'srp-color-picker--readonly', props.className)} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined}
       data-component="color-picker" data-size={size}>
       {/* The description and states a Field hands the picker go on the radiogroup, the control screen readers reach.
           The id stays on the outer div, so a label click focuses the picked swatch through it. */}
@@ -202,7 +202,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
           return (
             <button key={s.value + i} type="button" role="radio" aria-checked={on} aria-label={s.label} title={s.named ? s.label : s.value} data-value={s.value}
               aria-describedby={why ? base + '-' + i : undefined} data-low-contrast={weak ? '' : undefined}
-              className={cn('srp-color-picker__swatch', on && 'srp-color-picker__swatch--checked', weak && 'srp-color-picker__swatch--low')} style={{ '--srp-swatch': s.value, '--srp-swatch-ink': ink(s.value) } as React.CSSProperties}
+              className={cn('srp-color-picker__swatch', on && 'srp-color-picker__swatch--checked', weak && 'srp-color-picker__swatch--low')} data-checked={on ? '' : undefined} style={{ '--srp-swatch': s.value, '--srp-swatch-ink': ink(s.value) } as React.CSSProperties}
               tabIndex={i === tabStop ? 0 : -1} disabled={disabled} onClick={() => choose(s.value)} onKeyDown={onKeyDown}>
               {on ? <Icon icon={icons.Check} className="srp-color-picker__check" /> : null}
               {why ? <span hidden id={base + '-' + i}>{why}</span> : null}

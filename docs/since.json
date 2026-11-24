@@ -44,9 +44,12 @@
  },
  "Attachment": {
   "added": "14.2.0",
-  "changed": "17.0.0",
-  "api": "0eba9adfc114",
-  "props": {},
+  "changed": "18.0.0",
+  "api": "0ec166ff0b4e",
+  "props": {
+   "done": "18.0.0",
+   "thumbnail": "18.0.0"
+  },
   "known": [
    "attachmentArchive",
    "attachmentAudio",
@@ -169,13 +172,14 @@
  },
  "Button": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "bca82761dc94",
+  "changed": "18.0.0",
+  "api": "30b7d542ad76",
   "props": {
    "loadingLabel": "14.7.0",
    "onMedia": "16.0.0",
    "endIcon": "17.0.0",
-   "startIcon": "17.0.0"
+   "startIcon": "17.0.0",
+   "surface": "18.0.0"
   },
   "known": [
    "className",
@@ -877,10 +881,11 @@
  },
  "Divider": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "d628eefe1d8d",
+  "changed": "18.0.0",
+  "api": "1be099cd788b",
   "props": {
-   "onMedia": "16.0.0"
+   "onMedia": "16.0.0",
+   "surface": "18.0.0"
   },
   "known": [
    "decorative",
@@ -1031,8 +1036,8 @@
  },
  "Fab": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "75d9942d2c5f",
+  "changed": "18.0.0",
+  "api": "1d11f6f38bbb",
   "props": {
    "placement": "14.3.0"
   },
@@ -1081,8 +1086,8 @@
  },
  "FileUpload": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "201d39da811d",
+  "changed": "18.0.0",
+  "api": "7fc4477ef41d",
   "props": {
    "fileError": "14.0.0",
    "fileStatus": "14.0.0",
@@ -1444,19 +1449,17 @@
  },
  "KeyboardShortcuts": {
   "added": "10.0.0",
-  "changed": "17.0.0",
-  "api": "bfa826bf8678",
+  "changed": "18.0.0",
+  "api": "e0a4e54bf52b",
   "props": {
    "singleKeyHint": "14.3.0",
    "singleKeyShortcuts": "14.3.0"
   },
   "known": [
    "description",
-   "enabled",
    "generalShortcuts",
    "group",
    "helpKeys",
-   "inInputs",
    "keyboardShortcuts",
    "keys",
    "shortcuts",
@@ -1490,10 +1493,11 @@
  },
  "Link": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "e933db8ec985",
+  "changed": "18.0.0",
+  "api": "bcefdff2cecf",
   "props": {
-   "onMedia": "16.0.0"
+   "onMedia": "16.0.0",
+   "surface": "18.0.0"
   },
   "known": [
    "as",
@@ -1719,22 +1723,22 @@
  },
  "NotificationCenter": {
   "added": "10.0.0",
-  "changed": "17.0.0",
-  "api": "d016307baed2",
+  "changed": "18.0.0",
+  "api": "8cb0e329d7cf",
   "props": {
    "unsaved": "13.0.0",
    "notificationsUnread": "14.2.0",
    "clearNotificationsConfirm": "14.3.0",
    "keepNotifications": "14.3.0",
    "notificationSettings": "14.5.0",
-   "settingsHref": "14.5.0"
+   "settingsHref": "14.5.0",
+   "emptyText": "18.0.0"
   },
   "known": [
    "children",
    "clear",
    "clearNotifications",
    "description",
-   "empty",
    "footer",
    "id",
    "items",
@@ -2259,6 +2263,12 @@
    "value"
   ]
  },
+ "Skeleton": {
+  "added": "18.0.0",
+  "changed": null,
+  "api": "53dd57460622",
+  "props": {}
+ },
  "SkipLink": {
   "added": "13.0.0",
   "changed": "17.0.0",
@@ -2620,16 +2630,16 @@
  },
  "TagGroup": {
   "added": "14.7.0",
-  "changed": "17.0.0",
-  "api": "fa8414a481b8",
+  "changed": "18.0.0",
+  "api": "4dae17d470a7",
   "props": {
    "avatar": "16.0.0",
-   "icon": "16.0.0"
+   "icon": "16.0.0",
+   "emptyText": "18.0.0"
   },
   "known": [
    "defaultSelected",
    "disabled",
-   "empty",
    "id",
    "items",
    "label",
@@ -2740,8 +2750,8 @@
  },
  "Toast": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "d3c06a8dbb0b",
+  "changed": "18.0.0",
+  "api": "c1556d2a94df",
   "props": {
    "placement": "14.3.0"
   },

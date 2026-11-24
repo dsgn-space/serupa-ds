@@ -158,7 +158,7 @@ const Row = /* @__PURE__ */ React.memo(function Row(p: { o: Opt; id: string; ind
     <div id={p.id} role="option" data-index={p.slot} style={p.top == null ? undefined : { position: 'absolute', insetInline: 0, top: p.top }}
       aria-selected={p.selected} aria-posinset={p.index + 1} aria-setsize={p.size} aria-disabled={o.disabled || undefined}
       aria-description={typeof o.description === 'string' && o.description ? o.description : undefined}
-      className={cn('srp-combobox__option', p.active && 'srp-combobox__option--active', p.selected && 'srp-combobox__option--selected')}
+      className={cn('srp-combobox__option', p.active && 'srp-combobox__option--active', p.selected && 'srp-combobox__option--selected')} data-active={p.active ? '' : undefined}
       onMouseMove={() => { if (!o.disabled && !p.active) p.onMove(o.i); }} onClick={() => p.onPick(o.i)}>
       <span className="srp-combobox__text">
         <span className="srp-combobox__label">{p.query ? <Highlight query={p.query}>{o.label}</Highlight> : o.label}</span>
@@ -623,7 +623,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show('selected'); }} />
   );
   return (
-    <span ref={box} className={cn('srp-input srp-combobox', multi && 'srp-combobox--multiple', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
+    <span ref={box} className={cn('srp-input srp-combobox', multi && 'srp-combobox--multiple', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="combobox" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={pressFocuses(input)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {multi ? <span className="srp-combobox__values">
