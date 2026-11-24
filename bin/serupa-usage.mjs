@@ -41,7 +41,8 @@ export function bindings(code) {
       if (m && !/^type\s/.test(part.trim())) named.set(m[2] ?? m[1], m[1]);
     }
   };
-  for (const m of code.matchAll(/import\s+(?!type\b)([^;]*?)\s+from\s*["'](?:@diki-stwn\/)?serupa-ds["']/g)) {
+  // What's imported never holds a quote or a ";", so without semicolons it stops at the import before it.
+  for (const m of code.matchAll(/import\s+(?!type\b)([^;'"]*?)\s+from\s*["'](?:@diki-stwn\/)?serupa-ds["']/g)) {
     const spec = m[1];
     const braces = spec.match(/\{([^}]*)\}/);
     if (braces) list(braces[1]);

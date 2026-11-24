@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done, inParallel } from './lib.mjs';
 
 const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
@@ -103,7 +104,10 @@ for (const c of noEffect) console.log('NO EFFECT .' + c);
 const ok = !changed.length && !missing.length;
 console.log(`\nUtilities (${ENGINE}): ${classes.length} classes, ${changed.length} changed, ${added.length} new, ${missing.length} missing${ok ? ' — all match the baseline' : ''}`);
 if (!ok) console.log('If the changes are intended, run with --update to accept them.');
+// A comment or a quote left open in a block is an unclosed brace, said at once, rather than a scan that never ends.
+const hang = spawnSync(process.execPath, ['--input-type=module', '-e', `import { expand } from './tools/utilities/template.mjs'; for (const t of ['@each a { /* oops }', "@each a { content: 'x }"]) { try { expand(t, { a: [] }); console.log('no error'); } catch (e) { console.log(e.message); } }`], { cwd: path.join(HERE, '..', '..'), encoding: 'utf8', timeout: 10000 });
 done(report('Utility classes', [
+  { name: 'a comment or quote left open in the template is an unclosed brace, not a hang', ok: hang.status === 0 && /^Unclosed brace at \d+\nUnclosed brace at \d+\n$/.test(hang.stdout), detail: `status ${hang.status}: ${hang.stdout}${hang.stderr}` },
   { name: `${classes.length} classes do what the baseline says`, ok: !changed.length, detail: 'changed: ' + changed.join(' ') + ' (run node tools/test/utilities.mjs --update if intended)' },
   { name: 'No class is gone (removing or renaming one is breaking)', ok: !missing.length, detail: 'missing: ' + missing.join(' ') },
 ]));

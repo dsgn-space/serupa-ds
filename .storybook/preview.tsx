@@ -100,7 +100,8 @@ const WithLanguage: Decorator = (Story, context) => {
   }, [language]);
   React.useEffect(() => {
     document.documentElement.lang = pack?.locale ?? 'en';
-    if (pack?.locale === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+    // Arabic reads right to left; any other language goes back to the toolbar's direction, rather than staying rtl.
+    document.documentElement.setAttribute('dir', pack?.locale === 'ar' || context.globals.dir === 'rtl' ? 'rtl' : 'ltr');
   }, [pack, context.globals.dir]);
   if (language === 'en') return <Story />;
   if (!pack || pack.language !== language) return <></>;   // the pack is on its way: nothing in English flashes first
