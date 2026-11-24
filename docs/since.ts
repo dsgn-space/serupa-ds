@@ -12,7 +12,8 @@ export function sinceText(entry: Since | undefined, releases = 3): string {
   if (entry.changed && entry.changed !== entry.added) parts.push(`API last changed in ${entry.changed}.`);
   const by = new Map<string, string[]>();
   for (const [prop, v] of Object.entries(entry.props)) by.set(v, [...(by.get(v) || []), prop]);
-  const order = (v: string) => v.split('.').map(Number).reduce((n, x) => n * 1000 + x, 0);
+  // By the release a prerelease leads to ("17.0.0-next.1" is 17.0.0's), so none sorts as NaN.
+  const order = (v: string) => v.split('-')[0]!.split('.').map(Number).reduce((n, x) => n * 1000 + x, 0);
   const newest = [...by.keys()].sort((a, b) => order(b) - order(a)).slice(0, releases);
   if (newest.length) parts.push(`New in ${newest.map((v) => `${v}: ${by.get(v)!.sort().map((p) => `\`${p}\``).join(', ')}`).join('; ')}.`);
   return parts.join(' ');

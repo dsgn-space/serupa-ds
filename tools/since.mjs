@@ -29,7 +29,8 @@ const hash = (s) => crypto.createHash('sha1').update(s).digest('hex').slice(0, 1
 /** One component's entry, moved on to a release: a new component is added in it; a changed API is changed in it,
  * and each prop it didn't have before arrives in it. */
 export function advance(entry, dts, version) {
-  if (!entry) return { added: version, changed: null, api: hash(dts), props: {} };
+  // known: the props it came with, so a later change gives the later release only to the props new then.
+  if (!entry) return { added: version, changed: null, api: hash(dts), props: {}, known: propsOf(dts) };
   if (entry.api === hash(dts)) return entry;
   const known = new Set([...(entry.known || []), ...Object.keys(entry.props)]);
   const props = { ...entry.props };

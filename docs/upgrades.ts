@@ -14,7 +14,7 @@ export function majorsIn(changelog: string): Major[] {
   const out: Major[] = [];
   let current: Major | null = null;
   for (const section of changelog.split(/\n(?=## )/)) {
-    const v = /^## \[?(\d+)\.(\d+)\.(\d+)\]?(?: - (\S+))?/.exec(section);
+    const v = /^## \[?(\d+)\.(\d+)\.(\d+)(?![-\w.])\]?(?: - (\S+))?/.exec(section);   // not a prerelease (11.0.0-beta.1)
     if (!v) continue;
     current = v[2] === '0' && v[3] === '0' ? { version: `${v[1]}.0.0`, date: v[4] || '', next: false, entries: [] } : null;
     if (!current) continue;
