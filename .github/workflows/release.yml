@@ -76,7 +76,8 @@ jobs:
   screenshots:
     needs: release
     if: needs.release.outputs.tarball != '' && needs.release.outputs.prev != ''
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    # GitHub's runners: a release must not wait on the project's machines, which are off between bursts.
+    runs-on: ubuntu-24.04
     container:
       image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4

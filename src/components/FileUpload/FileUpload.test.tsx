@@ -587,6 +587,7 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     const sizes = [512, 1, 0, 2e15, 999.6 * 1e12];
     expect(sizes.map((b) => formatFileSize(b))).toEqual(sizes.map((b) => formatNumber(b, 'en-US', { format: 'bytes' })));
     expect(sizes.map((b) => formatFileSize(b))).toEqual(['512 bytes', '1 byte', '0 bytes', '2 PB', '1 PB']);
+    expect([Infinity, -Infinity, NaN, -1].map((b) => formatFileSize(b))).toEqual(['', '', '', '']);
   });
   test('accept="image/*" falls back to known image extensions when File.type is empty (e.g. HEIC)', async () => {
     await render(<FileUpload id="heic" accept="image/*" multiple />);

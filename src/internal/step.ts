@@ -15,8 +15,13 @@ export const roundTo = (v: number, places: number) => Number(v.toFixed(Math.min(
 /** v on the nearest grid point of min and step, within min..max. When max isn't on the grid, the highest value is
     the last grid point below it, as for <input type="range">: min 0, max 10, step 3 stops at 9. */
 export function snap(v: number, min: number, max: number, step: number): number {
-  const places = gridPlaces(min, step);
-  const top = roundTo(Math.floor(roundTo((max - min) / step, 9)) * step + min, places);
-  const n = roundTo(Math.round((v - min) / step) * step + min, places);
-  return Math.min(top, Math.max(min, n));
+  const lo = Number.isFinite(min) ? min : 0;
+  const hi = Number.isFinite(max) ? max : lo;
+  const [a, b] = lo <= hi ? [lo, hi] : [hi, lo];
+  const s = Number.isFinite(step) && step > 0 ? step : 1;
+  const places = gridPlaces(a, s);
+  const top = roundTo(Math.floor(roundTo((b - a) / s, 9)) * s + a, places);
+  if (!Number.isFinite(v)) return v > 0 ? top : a;
+  const n = roundTo(Math.round((v - a) / s) * s + a, places);
+  return Math.min(top, Math.max(a, n));
 }

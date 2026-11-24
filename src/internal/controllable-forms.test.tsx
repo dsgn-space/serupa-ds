@@ -3,6 +3,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { Checkbox, CheckboxGroup } from '../components/Checkbox/Checkbox';
 import { ColorPicker } from '../components/ColorPicker/ColorPicker';
+import { DateField } from '../components/DateField/DateField';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
 import { List, ListItem } from '../components/List/List';
 import { MentionInput } from '../components/MentionInput/MentionInput';
@@ -31,6 +32,7 @@ const CASES: Array<[string, unknown, (v: unknown) => React.ReactElement]> = [
   ['InlineEdit value', 'Atlas', (v) => <InlineEdit label="Project name" value={v as string | undefined} />],
   ['ColorPicker value', '#336699', (v) => <ColorPicker aria-label="Label color" swatches={['#336699', '#993366']} value={v as string | undefined} />],
   ['TagGroup selected', [], (v) => <TagGroup label="Labels" selectionMode="multiple" items={[{ id: 'a', label: 'Bug' }]} selected={v as string[] | undefined} />],
+  ['DateField value', '2026-11-24', (v) => <DateField aria-label="Start date" value={v as string | undefined} />],
   ['InlineEdit editing', false, (v) => <InlineEdit label="Project name" defaultValue="Atlas" editing={v as boolean | undefined} />],
   ['MentionInput value', 'Hi', (v) => <MentionInput aria-label="Comment" options={[{ id: 'ada', label: 'Ada' }]} value={v as string | undefined} />],
   ['Select value', 'b', (v) => <Select aria-label="Size" options={['a', 'b']} value={v as string | undefined} onChange={() => {}} />],

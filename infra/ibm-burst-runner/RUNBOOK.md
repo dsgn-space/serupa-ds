@@ -6,7 +6,7 @@ The burst runner is one IBM Cloud VM (`serupa-burst-github`, Osaka, `bx3d-128x64
 
 ## After it comes back, run Runner ping
 
-CI, Nightly, Cross-browser and Update baselines send x86 jobs to these runners only while one of them has started a job in the last 100 minutes; otherwise the jobs go to GitHub's own runners (`tools/runner-watch.mjs --pick`). Runner ping runs every hour and starts one, so they stay in use while the VM is up. Fresh runners have started nothing, so after any bring-up below, run **Actions > Runner ping > Run workflow** once (or `gh workflow run runner-ping.yml -R dsgn-space/serupa-ds`). The next runs then use the VM.
+CI, Nightly, Cross-browser and Update baselines send x86 jobs to these runners only while one of them has started a job in the last 100 minutes; otherwise the jobs go to GitHub's own runners (`tools/runner-watch.mjs --pick`). Runner ping starts one. It runs only by hand: on a schedule it kept the VM from ever idling, so the VM ran day and night. Fresh runners have started nothing, so after any bring-up below, run **Actions > Runner ping > Run workflow** once (or `gh workflow run runner-ping.yml -R dsgn-space/serupa-ds`). The next runs then use the VM.
 
 ## When CI waits for it
 
@@ -87,7 +87,7 @@ Then re-run the failed jobs.
 
 - no job is running on it;
 - no workflow run of the repository is queued (it asks GitHub's public API, and counts no answer as busy);
-- nothing has run here for `IDLE_HOURS` (24 by default since 21 November, so the VM stays on through a quiet afternoon; it was 2 from 16 November, 4 before, and 1 before 14 November). `IDLE_HOURS=0 ./up.sh` installs no watchdog at all.
+- nothing has run here for `IDLE_HOURS` (2 by default: the hourly Runner ping and 24 hours from 21 to 23 November kept the VM on day and night). `IDLE_HOURS=0 ./up.sh` installs no watchdog at all.
 
 When the delete fails (a rotated `WATCHDOG_API_KEY`), the watchdog logs it and keeps the VM running. Before 21 November it powered the VM off instead: the runners showed Offline and the stopped VM kept its name, so `up.sh` failed with "instance name serupa-burst-github is already in use" until `down.sh` removed it.
 

@@ -109,8 +109,18 @@ if (packs.pseudo) {
   t('pseudo: a name or count a label is given stays as it was', P.fileRemoved('Report.pdf').includes('Report.pdf') && P.itemsOf('21', '30', '1,245').includes('1,245') && packs.pseudo.pseudo('Save') === '⟦Šááṽéé⟧',
     `${P.fileRemoved('Report.pdf')} · ${P.itemsOf('21', '30', '1,245')} · ${packs.pseudo.pseudo('Save')}`);
 }
+// Every pack honors the formatted value/max passed to ratingStars and ratingValue (instead of ignoring them and printing ASCII digits).
+const badRating = Object.entries(packs)
+  .filter(([l, mod]) => l !== 'pseudo' && (!mod.labels.ratingStars(2.5, '2,5').includes('2,5') || !mod.labels.ratingValue(4.5, 5, '4,5', '5').includes('4,5')))
+  .map(([l, mod]) => `${l}: ${mod.labels.ratingStars(2.5, '2,5')} / ${mod.labels.ratingValue(4.5, 5, '4,5', '5')}`);
+t('every pack honors formatted numbers in ratingStars and ratingValue', !badRating.length, badRating.join('; '));
 if (packs.ar) {
   const ar = packs.ar.labels;
+  t('ar: chatThoughtFor and statusSummary use Arabic CLDR plural forms (dual, few, many)',
+    ar.chatThoughtFor(2).includes('ثانيتان') && ar.chatThoughtFor(3).includes('ثوانٍ') && ar.chatThoughtFor(12).includes('ثانية')
+      && ar.statusSummary('99%', 2, 2).includes('يومان') && ar.statusSummary('99%', 2, 2).includes('حادثتان')
+      && ar.statusSummary('99%', 3, 3).includes('أيام') && ar.statusSummary('99%', 3, 3).includes('حوادث'),
+    `${ar.chatThoughtFor(2)} | ${ar.chatThoughtFor(3)} | ${ar.statusSummary('99%', 2, 2)}`);
   t('ar: Latin caller text is bidi-isolated with FSI…PDI',
     ar.fileTooLarge('report-v2.pdf', '10 MB').includes('\u2068report-v2.pdf\u2069')
       && ar.tagRemove('Design').includes('\u2068Design\u2069')

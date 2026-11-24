@@ -17,8 +17,17 @@ jobs:
     steps:
       - run: |
           pr=$(gh pr list --repo "$GITHUB_REPOSITORY" --head changeset-release/main --state open --json number --jq '.[0].number')
-          if [ -n "$pr" ]; then gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --auto --merge
-          else echo "No Release pull request is open: nothing to release today."; fi
+          if [ -z "$pr" ]; then
+            echo "No Release pull request is open: nothing to release today."
+            exit 0
+          fi
+          base_major=$(gh api "repos/$GITHUB_REPOSITORY/contents/package.json?ref=main" --jq '.content' | base64 -d | node -e "console.log(JSON.parse(require('fs').readFileSync(0,'utf8')).version.split('.')[0])")
+          head_major=$(gh api "repos/$GITHUB_REPOSITORY/contents/package.json?ref=changeset-release/main" --jq '.content' | base64 -d | node -e "console.log(JSON.parse(require('fs').readFileSync(0,'utf8')).version.split('.')[0])")
+          if [ "$head_major" != "$base_major" ]; then
+            echo "Release pull request #$pr bumps the major version ($base_major -> $head_major): waiting for a person to merge."
+            exit 0
+          fi
+          gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --auto --merge
         env:
           # BOT_TOKEN, so the merge starts CI on main and the Release workflow after it.
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}

@@ -510,7 +510,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
+      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"
