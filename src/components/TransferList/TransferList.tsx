@@ -75,7 +75,8 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   const sds = useSettings(words), locale = useLocale();
   const known = (vs: readonly string[] | undefined) => (vs || []).filter((v, i, a) => a.indexOf(v) === i && options.some((o) => o.value === v));
   const [held, setOwn, controlled] = useControllable<readonly string[]>(valueIn, known(defaultValue), 'TransferList', 'value');
-  const chosen = controlled ? known(held) : held;
+  // Only the values the options still hold: options can change under an uncontrolled list too.
+  const chosen = known(held);
   const [checkedLeft, setCheckedLeft] = React.useState<string[]>([]);
   const [checkedRight, setCheckedRight] = React.useState<string[]>([]);
   const root = React.useRef<HTMLDivElement | null>(null);

@@ -423,6 +423,17 @@ describe('Chart', () => {
     expect(tip.closest('figure')!.lastElementChild!.textContent).toBe('050');   // the scale: lowest, the steps, highest
   });
 
+  test('heatmap: the pointer near a cell\'s edge shows that cell, not the next column\'s', async () => {
+    await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);
+    const svg = page.getByRole('figure').element().querySelector('svg')!;
+    const tip = () => [...document.querySelectorAll('figure [aria-hidden] div')].map((e) => e.parentElement!.textContent).find((t) => /Morning/.test(t));
+    for (const [name, dx] of [['Morning, Mon: 0', -2], ['Morning, Tue: 10', 2], ['Morning, Wed: 20', -2]] as const) {
+      const r = page.getByRole('img', { name }).element().getBoundingClientRect();
+      svg.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: (dx < 0 ? r.right : r.left) + dx, clientY: r.top + r.height / 2 }));
+      await expect.poll(tip, { timeout: 1000 }).toBe(name.replace(/^Morning, (\w+): /, '$1Morning'));
+    }
+  });
+
   test('heatmap: rows past eight are kept, and the default height gives each row its room', async () => {
     const rows = Array.from({ length: 12 }, (_, k) => ({ name: 'Row ' + (k + 1), values: [k, k + 1] }));
     await render(<Chart type="heatmap" title="Grid" categories={['A', 'B']} series={rows} />);

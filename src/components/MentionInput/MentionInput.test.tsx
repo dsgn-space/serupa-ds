@@ -241,6 +241,8 @@ describe('MentionInput: rules no test covered', () => {
   test('mentionQuery: a trigger after the caret isn\'t the mention; the query may be 40 characters and no more, counted after the trigger', () => {
     const forty = 'a'.repeat(40);
     expect(mentionQuery('ab @c', 3)).toBeNull();
+    // A caret before the trigger, or inside a trigger of two characters, isn't after it.
+    expect([mentionQuery('@ayu', 0), mentionQuery('hi ::x', 4, '::')]).toEqual([null, null]);
     expect([mentionQuery('xx @' + forty, 44), mentionQuery('xx @' + forty + 'a', 45)]).toEqual([{ start: 3, text: forty }, null]);
     expect([mentionQuery('xx ::' + forty, 45, '::'), mentionQuery('xx ::' + forty + 'a', 46, '::')]).toEqual([{ start: 3, text: forty }, null]);
   });

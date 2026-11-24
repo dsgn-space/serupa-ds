@@ -115,7 +115,8 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
     if (o.isLeaf || !props.loadOptions) return null;
     return loaded.get(keyOf(at)) || null;
   };
-  const hasMore = (o: CascadeOption, at: string[]) => !o.isLeaf && (o.children ? o.children.length > 0 : !!props.loadOptions || (loaded.get(keyOf(at)) || []).length > 0);
+  // With loadOptions, more until its children have loaded as none: then it's a last step, as children={[]} is.
+  const hasMore = (o: CascadeOption, at: string[]) => { if (o.isLeaf) return false; if (o.children) return o.children.length > 0; const l = loaded.get(keyOf(at)); return !!props.loadOptions && (!Array.isArray(l) || l.length > 0); };
   // The columns for a path: the first column, then the children of each option on it.
   const columnsFor = (p: string[]) => {
     const cols: { options: CascadeOption[] | 'loading' | 'failed'; chosen: CascadeOption | null }[] = [];
@@ -126,6 +127,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
       cols.push({ options: list, chosen });
       if (!chosen) break;
       list = childrenOf(chosen, p.slice(0, i + 1));
+      if (Array.isArray(list) && !list.length) break;   // children that loaded as none: no empty column
     }
     return cols;
   };

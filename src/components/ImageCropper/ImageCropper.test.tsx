@@ -189,6 +189,16 @@ describe('ImageCropper', () => {
     await expect.element(page.getByRole('slider', { name: 'Zoom' })).toHaveAttribute('aria-valuetext', '100%');
   });
 
+  test('back to the first src before the second one loaded: it reads the first one again rather than wait for ever', async () => {
+    const calls: CropArea[] = [];
+    const screen = await render(<ImageCropper aria-label="Photo" src={WIDE} onCropChange={(a) => calls.push(a)} />);
+    await loaded(calls);
+    const root = () => document.querySelector<HTMLElement>('[data-state]')!;
+    await screen.rerender(<ImageCropper aria-label="Photo" src="/never-loads.png" onCropChange={(a) => calls.push(a)} />);
+    await screen.rerender(<ImageCropper aria-label="Photo" src={WIDE} onCropChange={(a) => calls.push(a)} />);
+    await expect.poll(() => root().getAttribute('data-state')).toBe('ready');
+  });
+
   test('a picture that can\'t be loaded says so in the frame; moving is off and the zoom row goes', async () => {
     await render(<ImageCropper aria-label="Photo" src="data:image/png;base64,broken" />);
     await expect.element(page.getByText('The picture couldn’t be loaded.')).toBeVisible();
