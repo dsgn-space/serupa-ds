@@ -85,12 +85,21 @@ const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, m
 // shows photo.jpeg too), so the check takes them as well (L8E12); image/jpg isn't a registered type but is often written.
 const SAME_EXT = [['.jpg', '.jpeg', '.jpe', '.jfif'], ['.tif', '.tiff'], ['.htm', '.html'], ['.mpg', '.mpeg'], ['.yml', '.yaml'], ['.mid', '.midi']];
 const SAME_TYPE: Record<string, string> = { 'image/jpg': 'image/jpeg', 'image/pjpeg': 'image/jpeg', 'audio/mp3': 'audio/mpeg', 'image/x-png': 'image/png' };
+// When the OS or browser leaves File.type empty (common for HEIC, AVIF, WebP, or local drops), fall back to the
+// filename extension for wildcard MIME groups like image/*, video/*, audio/*, and text/*.
+const WILD_EXT: Record<string, readonly string[]> = {
+  'image/': ['.png', '.jpg', '.jpeg', '.jpe', '.jfif', '.gif', '.webp', '.svg', '.avif', '.heic', '.heif', '.bmp', '.ico', '.tif', '.tiff'],
+  'video/': ['.mp4', '.m4v', '.mov', '.webm', '.ogv', '.mkv', '.avi', '.mpg', '.mpeg'],
+  'audio/': ['.mp3', '.wav', '.ogg', '.oga', '.m4a', '.aac', '.flac', '.opus', '.weba', '.mid', '.midi'],
+  'text/': ['.txt', '.csv', '.tsv', '.md', '.json', '.xml', '.htm', '.html', '.css', '.js', '.yml', '.yaml'],
+};
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
   const name = file.name.toLowerCase(), type = (file.type || '').toLowerCase(), real = SAME_TYPE[type] || type;
   return accept.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean).some((a) =>
     a.startsWith('.') ? (SAME_EXT.find((g) => g.includes(a)) || [a]).some((e) => name.endsWith(e))
-      : a.endsWith('/*') ? type.startsWith(a.slice(0, -1)) : real === (SAME_TYPE[a] || a));
+      : a.endsWith('/*') ? (type ? type.startsWith(a.slice(0, -1)) : (WILD_EXT[a.slice(0, -1)] ?? []).some((e) => name.endsWith(e)))
+        : real === (SAME_TYPE[a] || a));
 }
 // accept in short names, for the message on a refused file: "image/*,.pdf" is ["image", "PDF"] ("an image or PDF"),
 // ".png,.jpg,.jpeg" is ["PNG", "JPG"]. null when a type has no short name (application/vnd.ms-excel), so the message stays general.

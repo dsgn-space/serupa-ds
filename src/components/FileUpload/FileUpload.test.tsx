@@ -588,6 +588,13 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     expect(sizes.map((b) => formatFileSize(b))).toEqual(sizes.map((b) => formatNumber(b, 'en-US', { format: 'bytes' })));
     expect(sizes.map((b) => formatFileSize(b))).toEqual(['512 bytes', '1 byte', '0 bytes', '2 PB', '1 PB']);
   });
+  test('accept="image/*" falls back to known image extensions when File.type is empty (e.g. HEIC)', async () => {
+    await render(<FileUpload id="heic" accept="image/*" multiple />);
+    const root = rootOf('heic');
+    await userEvent.upload(input(root), [file('photo.heic', '', 128), file('bad.exe', '', 128)]);
+    expect(names(root)).toBe('photo.heic');
+    expect(errs(root)).toMatch(/bad\.exe/);
+  });
   test('GR119: the same refusal twice puts a new alert in, so a screen reader says it again', async () => {
     await render(<FileUpload id="fr" accept="image/png" />);
     await userEvent.upload(input(rootOf('fr')), [file('a.pdf', 'application/pdf', 10)]);

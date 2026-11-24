@@ -765,7 +765,8 @@ describe('TableVirtualBody (51)', () => {
     window.dispatchEvent(new Event('beforeprint'));
     // Drawn at once, before the browser lays the page out for print.
     const rows = [...body.querySelectorAll<HTMLElement>(':scope > tr')];
-    expect([rows.length, rows[0]!.getAttribute('aria-rowindex'), rows.at(-1)!.getAttribute('aria-rowindex'), body.querySelectorAll(':scope > tr[aria-hidden]').length]).toEqual([5000, '2', '5001', 0]);
+    expect([rows.length, rows[0]!.getAttribute('aria-rowindex'), rows[4999]!.getAttribute('aria-rowindex'), rows.at(-1)!.textContent, body.querySelectorAll(':scope > tr[aria-hidden]').length])
+      .toEqual([5001, '2', '5001', 'Showing 5,000 of 10,000', 0]);
     window.dispatchEvent(new Event('afterprint'));
     await frames(); await frames();
     expect([drawn().length < 40, drawn()[0]!.getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);

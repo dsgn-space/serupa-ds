@@ -109,4 +109,17 @@ if (packs.pseudo) {
   t('pseudo: a name or count a label is given stays as it was', P.fileRemoved('Report.pdf').includes('Report.pdf') && P.itemsOf('21', '30', '1,245').includes('1,245') && packs.pseudo.pseudo('Save') === '⟦Šááṽéé⟧',
     `${P.fileRemoved('Report.pdf')} · ${P.itemsOf('21', '30', '1,245')} · ${packs.pseudo.pseudo('Save')}`);
 }
+if (packs.ar) {
+  const ar = packs.ar.labels;
+  t('ar: Latin caller text is bidi-isolated with FSI…PDI',
+    ar.fileTooLarge('report-v2.pdf', '10 MB').includes('\u2068report-v2.pdf\u2069')
+      && ar.tagRemove('Design').includes('\u2068Design\u2069')
+      && !ar.tagRemove('تصميم').includes('\u2068'),
+    `${ar.fileTooLarge('report-v2.pdf', '10 MB')} | ${ar.tagRemove('Design')}`);
+  t('ar: counted nouns use CLDR dual/few/many forms',
+    ar.filterResults(2).includes('نتيجتان') && ar.charactersLeft(2).includes('حرفان')
+      && ar.notificationsUnread(2).includes('إشعاران') && ar.tableSelected(2).includes('عنصران')
+      && ar.dataGridCopied(2).includes('خليتين') && ar.dataGridPasted(3).includes('خلايا'),
+    `${ar.filterResults(2)} | ${ar.charactersLeft(2)} | ${ar.tableSelected(2)}`);
+}
 done(report('Label packs', R));
