@@ -65,8 +65,11 @@ describe('RelativeTime', () => {
       f(L(0, 5, 12), L(11, 20, 12)),         // the same year, 349 days before
       f(L(9, 27, 23), L(9, 26, 1)),          // 46 hours ahead, on the next calendar day
     ]).toEqual(['22 hours ago', '2 days ago', 'yesterday', '26 days ago', 'last month', '11 months ago', 'tomorrow']);
-    // numeric always keeps elapsed time.
+    // numeric always keeps elapsed time, and past moments under 45s keep the past sign.
     expect(f(L(9, 26, 1), L(9, 26, 23), 'always')).toBe('1 day ago');
+    expect(f(L(9, 26, 12, 0) - 30_000, L(9, 26, 12, 0), 'always')).toBe('0 seconds ago');
+    // 29 days across February (Jan 31 to Mar 1) is "last month", not "2 months ago".
+    expect(f(L(0, 31, 12), L(2, 1, 12))).toBe('last month');
   });
 
   test('the words follow the locale: Indonesian, Arabic digits, Japanese', async () => {

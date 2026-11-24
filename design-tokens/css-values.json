@@ -497,7 +497,7 @@
     },
     "animate-spin": {
       "css": "spin 1s linear infinite",
-      "description": "`animate-spin`: loading spinners (Button uses it)."
+      "description": "`animate-spin`: utility spin animation (Loader uses `motion-loop-spinner`)."
     },
     "animate-spin-reduced": {
       "css": "spin 3s linear infinite",

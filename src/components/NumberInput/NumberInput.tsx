@@ -92,8 +92,9 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   // NaN (Number() of an empty answer) and Infinity (a division by zero) are no number, as null is.
   const major = (n: number | null | undefined) => (n == null || !Number.isFinite(n) ? null : factor === 1 ? n : n / factor);
   // A percent's value is the fraction (0.15 shows 15%), so without a step it moves one percent, not 100% (GR175).
-  const step = Number(props.step) > 0 ? Number(props.step) / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
-  const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
+  const rawStep = Number(props.step), rawLarge = Number(props.largeStep);
+  const step = Number.isFinite(rawStep) && rawStep > 0 ? rawStep / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
+  const large = Number.isFinite(rawLarge) && rawLarge > 0 ? rawLarge : 10;
   const min = props.min != null && isFinite(props.min) ? (major(props.min) as number) : undefined;
   const max = props.max != null && isFinite(props.max) ? (major(props.max) as number) : undefined;
   // min above max: no value can be entered, and assistive tech hears a range that runs backwards (GR161).

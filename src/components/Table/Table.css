@@ -87,8 +87,6 @@
 .srp-table__sort:active { background: var(--table-sort-bg-pressed, var(--pressed)); }   /* held: the pressed fill, at once */
 .srp-table__sort:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-table__sort-icon.srp-icon { font-size: var(--spacing-4); }
-.srp-table__sort-icon--idle { opacity: var(--opacity-50); }
-@media (hover: hover) { .srp-table__sort:hover .srp-table__sort-icon--idle { opacity: var(--opacity-100); } }
 /* A row with href is one link: the <a> in its link cell stretches its ::after over the row, which shades on hover as
    any row does. Buttons, checkboxes and links in other cells sit above it, so they work on their own; the row shows
    the link's focus ring. */

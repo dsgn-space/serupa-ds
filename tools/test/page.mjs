@@ -313,6 +313,16 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const panel = await p.evaluate(() => document.getElementById('serupa-debug-panel')?.textContent || '');
   t('debug.js: the panel lists the pairs that fail on the component it points at, and not again the ones the console named', /low contrast/.test(panel) && /--on-primary on --primary/.test(panel) && !/--text-muted/.test(panel), panel);
   await p.evaluate(() => Serupa.debug.off());
+  const border = await p.evaluate(() => {
+    const host = document.createElement('div');
+    host.style.setProperty('--surface', '#ffffff');
+    host.style.setProperty('--text', 'rgb(115, 120, 116)');
+    document.body.append(host);
+    const hit = Serupa.debug.contrast(host).find((c) => c.foreground === '--text' && c.background === '--surface');
+    host.remove();
+    return hit;
+  });
+  t('debug.js: a ratio just under 4.5 (4.499:1) fails instead of rounding up to 4.5', !!border && !border.ok && border.ratio === 4.49, JSON.stringify(border));
   await p.close();
 }
 

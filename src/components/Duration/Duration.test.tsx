@@ -62,8 +62,9 @@ describe('Duration', () => {
     expect(el('d').matches(':dir(ltr)')).toBe(true);
   });
 
-  test('a negative value is written as its size; NaN is empty', async () => {
-    expect([plain(formatDuration(-90, 'en', { unit: 'minute' })), formatDuration(NaN, 'en'), isoDuration(NaN)]).toEqual(['1 hr, 30 min', '', '']);
+  test('a negative value is written as its size; NaN and Infinity are empty', async () => {
+    expect([plain(formatDuration(-90, 'en', { unit: 'minute' })), formatDuration(NaN, 'en'), isoDuration(NaN), formatDuration(Infinity, 'en'), formatDuration(-Infinity, 'en', { display: 'digital' }), isoDuration(Infinity)])
+      .toEqual(['1 hr, 30 min', '', '', '', '', '']);
     await render(<Duration id="n" value={NaN} />);
     expect([el('n').textContent, el('n').hasAttribute('datetime')]).toEqual(['', false]);
   });

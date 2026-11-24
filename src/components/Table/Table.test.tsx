@@ -228,10 +228,11 @@ describe('Table', () => {
     await away();
   });
 
-  test('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table', async () => {
+  test('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table; idle sort icon keeps full opacity and 3:1 contrast', async () => {
     await setup();
-    const th = el('hsort'), b = th.querySelector('button')!;
-    expect([th.getAttribute('aria-sort'), b.type, b.textContent, b.querySelector<HTMLElement>('[data-icon]')?.dataset.icon]).toEqual([null, 'button', 'Calls', 'unfold_more']);
+    const th = el('hsort'), b = th.querySelector('button')!, icon = b.querySelector<HTMLElement>('[data-icon]')!;
+    expect([th.getAttribute('aria-sort'), b.type, b.textContent, icon.dataset.icon, css(icon).opacity]).toEqual([null, 'button', 'Calls', 'unfold_more', '1']);
+    expect(contrast(css(icon).color, css(th).backgroundColor)).toBeGreaterThanOrEqual(3);
     expect(q('#tsort caption').getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
