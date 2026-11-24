@@ -34,7 +34,10 @@ export interface ContextualHelpProps extends Omit<React.HTMLAttributes<HTMLDivEl
 
 function ContextualHelpRender({ ref, ...props }: ContextualHelpProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
-  const { children, title, headingLevel = 3, variant = 'help', label, placement = 'bottom-start', className, ...rest } = props;
+  const { children, title, headingLevel: headingLevelProp, variant: variantProp, label, placement: placementProp, className, ...rest } = props;
+  const headingLevel = headingLevelProp === undefined ? 3 : headingLevelProp;
+  const variant = variantProp === undefined ? 'help' : variantProp;
+  const placement = placementProp === undefined ? 'bottom-start' : placementProp;
   const info = variant === 'info';
   const name = label || (info ? sds.labels.contextualInfo : sds.labels.contextualHelp);
   const trigger = (
