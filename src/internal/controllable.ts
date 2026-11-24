@@ -9,6 +9,13 @@ import { warnOnce } from './warn';
 export function useControllable<T>(value: T | undefined, initial: T, component: string, prop: string): [T, React.Dispatch<React.SetStateAction<T>>, boolean] {
   const [own, setOwn] = React.useState<T>(initial);
   const controlled = value !== undefined;
+  useControlledSwitch(controlled, component, prop);
+  return [controlled ? value : own, setOwn, controlled];
+}
+
+/** The development warning on its own, for a component that keeps its own state in another shape (DateField keeps the
+ *  three boxes' text, not the date). */
+export function useControlledSwitch(controlled: boolean, component: string, prop: string) {
   const was = React.useRef(controlled);
   // [controlled]: runs when the answer changes, after the render that changed it.
   React.useEffect(() => {
@@ -17,5 +24,4 @@ export function useControllable<T>(value: T | undefined, initial: T, component: 
     }
     was.current = controlled;
   }, [controlled, component, prop]);
-  return [controlled ? value : own, setOwn, controlled];
 }
