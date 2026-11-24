@@ -27,6 +27,7 @@ Each record says why Serupa is built the way it is: the context, the options wei
 | [0022](0022-motion-roles-and-reduced-motion.md) | Motion comes from named roles, and under reduced motion only fades remain | Accepted |
 | [0023](0023-every-pattern-shows-every-state.md) | Every pattern shows its loading, empty, failed, partial and offline states | Accepted |
 | [0024](0024-density-through-spacing-roles.md) | Density changes the spacing roles, and components read the roles | Accepted |
+| [0025](0025-state-as-attributes.md) | A state is an attribute, never a class: data-disabled, data-selected, data-current… beside data-state | Accepted |
 | [0026](0026-dark-fills-are-the-light-themes.md) | A dark theme fills with its light theme's brand shade, and brand text is its own token | Accepted |
 
 There is no 0008: that number was never used.

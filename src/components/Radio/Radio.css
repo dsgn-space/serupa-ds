@@ -23,7 +23,7 @@
 /* Pressed: while the row is held (pointer, or Space on it) the circle takes its held colors (below), a step past
    hover. Nothing shrinks by default; --radio-press-scale opts in to one. Not when read-only or disabled. */
 .srp-radio__control { transition: scale var(--motion-release) var(--ease-spring); }
-.srp-radio:active:not(.srp-radio--readonly, :has(.srp-radio__input:disabled)) .srp-radio__control { scale: var(--radio-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+.srp-radio:active:not([data-readonly], :has(.srp-radio__input:disabled)) .srp-radio__control { scale: var(--radio-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { .srp-radio__control { transition: none; } .srp-radio:active .srp-radio__control { scale: none; } }
 .srp-radio__input {
   --srp-radio-bd: var(--radio-border, var(--field-border));
@@ -40,7 +40,7 @@
 }
 @media (hover: hover) { .srp-radio:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --srp-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
 .srp-radio:active .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bg: var(--radio-bg-pressed, var(--secondary)); --srp-radio-fill: var(--radio-bg-checked-pressed, var(--primary-pressed)); }
-.srp-radio:not(.srp-radio--invalid):active .srp-radio__input:not(:disabled, [readonly], :user-invalid) { --srp-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
+.srp-radio:not([data-invalid]):active .srp-radio__input:not(:disabled, [readonly], :user-invalid) { --srp-radio-bd: var(--radio-border-pressed, var(--field-border-pressed)); }
 .srp-radio__input:checked { background: var(--srp-radio-fill); border-color: var(--radio-edge-checked, var(--primary-edge)); }   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge where the fill is under 3:1 on the page (Yellow Light) */
 .srp-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--srp-radio-dot); height: var(--srp-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .srp-radio__input:checked + .srp-radio__dot { visibility: visible; }
@@ -49,15 +49,15 @@
   outline: var(--focus-ring-width) solid var(--srp-radio-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
-.srp-radio--invalid .srp-radio__input { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-radio--invalid:hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
+.srp-radio:where([data-invalid]) .srp-radio__input { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-radio:where([data-invalid]):hover .srp-radio__input:not(:disabled, [readonly]) { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 /* A required group with nothing picked once people try to send the form: as Input (:user-invalid). */
 .srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-radio:hover .srp-radio__input:user-invalid { --srp-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --srp-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 .srp-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-radio__description { color: var(--radio-description-color, var(--text-muted)); }
 /* Read-only: a default cursor and no hover or press change, since a click does nothing. */
-.srp-radio--readonly { cursor: default; }
+.srp-radio:where([data-readonly]) { cursor: default; }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
 .srp-radio:has(.srp-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-radio:has(.srp-radio__input:disabled) .srp-radio__description { color: var(--radio-text-disabled, var(--disabled-text)); }
@@ -78,12 +78,12 @@
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
 .srp-radio--card .srp-radio__label { font-weight: var(--radio-card-label-weight, var(--font-medium)); }
-@media (hover: hover) { .srp-radio--card:hover:not(.srp-radio--readonly, :has(.srp-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .srp-radio--card:hover:not([data-readonly], :has(.srp-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
 .srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: var(--radio-card-border-checked, var(--primary-text)); border-color: var(--srp-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--srp-radio-card-on); }
 .srp-radio--card:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-radio--card .srp-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.srp-radio--card.srp-radio--invalid:not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
-.srp-radio--card.srp-radio--invalid:has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
+.srp-radio--card.srp-radio:where([data-invalid]):not(:has(.srp-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
+.srp-radio--card.srp-radio:where([data-invalid]):has(.srp-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .srp-radio--card:has(.srp-radio__input:checked) { --srp-radio-card-on: Highlight; } }
 @media (forced-colors: active) { .srp-radio__dot { background: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

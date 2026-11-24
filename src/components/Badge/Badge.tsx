@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef, type DataAttributes } from '../../internal/cn';
 import { useCut } from '../../internal/useCut';
 import { config } from '../../internal/config';
 import { displayNumber } from '../../internal/numbers';
@@ -156,6 +156,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   const spin = loading ? <span className="srp-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
   const classes = cn('srp-badge', 'srp-badge--' + variant, 'srp-badge--tone-' + tone, isCount && 'srp-badge--count', (icon || dot) && 'srp-badge--lead', dot && props.ping && 'srp-badge--ping', removable && 'srp-badge--removable', interactive && 'srp-badge--interactive', loading && 'srp-badge--loading', props.className);
   const content = <>{dot}{icon}<span className="srp-badge__label">{label}</span>{remove}{spin}</>;
+  if (loading) (rest as DataAttributes)['data-loading'] = '';
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
     rest.onKeyDown = chain(rest.onKeyDown, pressKey);

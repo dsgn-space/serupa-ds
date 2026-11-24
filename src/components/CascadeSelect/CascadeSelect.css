@@ -32,11 +32,11 @@
   --srp-cs-bd: var(--srp-cs-ring); transition-duration: var(--duration-0);
   box-shadow: 0 0 0 var(--border-width-1) var(--srp-cs-bd); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0);
 }
-.srp-cascade-select--invalid { --srp-cs-bd: var(--cascade-select-invalid, var(--field-border-invalid)); --srp-cs-ring: var(--cascade-select-invalid, var(--field-border-invalid)); }
-.srp-cascade-select--readonly .srp-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); cursor: default; }
-.srp-cascade-select--disabled .srp-cascade-select__button { --srp-cs-bd: var(--cascade-select-border-disabled, var(--disabled-border)); background: var(--cascade-select-bg-disabled, var(--field-readonly)); color: var(--cascade-select-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-cascade-select:where([data-invalid]) { --srp-cs-bd: var(--cascade-select-invalid, var(--field-border-invalid)); --srp-cs-ring: var(--cascade-select-invalid, var(--field-border-invalid)); }
+.srp-cascade-select:where([data-readonly]) .srp-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); cursor: default; }
+.srp-cascade-select:where([data-disabled]) .srp-cascade-select__button { --srp-cs-bd: var(--cascade-select-border-disabled, var(--disabled-border)); background: var(--cascade-select-bg-disabled, var(--field-readonly)); color: var(--cascade-select-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.srp-cascade-select__value--empty { color: var(--cascade-select-placeholder, var(--placeholder)); }
+.srp-cascade-select__value:where([data-empty]) { color: var(--cascade-select-placeholder, var(--placeholder)); }
 .srp-cascade-select__chevron { flex: none; color: var(--cascade-select-icon, var(--text-muted)); font-size: var(--srp-cs-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
 
 .srp-cascade-select__panel {

@@ -83,7 +83,7 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
   const empty = hasPh && (cur == null || cur === '');
   const left = asIcon(props.startIcon);
   return (
-    <span className={cn('srp-select', 'srp-select--size-' + size, invalid && 'srp-select--invalid', props.disabled && 'srp-select--disabled', readOnly && 'srp-select--readonly', empty && 'srp-select--empty', left != null && left !== false && 'srp-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
+    <span className={cn('srp-select', 'srp-select--size-' + size, invalid && 'srp-select--invalid', props.disabled && 'srp-select--disabled', readOnly && 'srp-select--readonly', empty && 'srp-select--empty', left != null && left !== false && 'srp-select--has-icon', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={props.disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-empty={empty ? '' : undefined} style={props.style} data-component="select" data-size={size}>
       {left == null || left === false ? null : <span className="srp-select__icon srp-select__icon--start" aria-hidden key="left">{left}</span>}
       <select {...rest} {...handlers} ref={setRefs} className="srp-select__field" key="field">
         {hasPh ? <option value="" disabled key="__placeholder" className="srp-select__placeholder">{props.placeholder}</option> : null}

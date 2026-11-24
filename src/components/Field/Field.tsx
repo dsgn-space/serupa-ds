@@ -168,7 +168,7 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   const busy = kind === 'checking' || undefined;
   if (group) {
     return (
-      <fieldset {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
+      <fieldset {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} data-disabled={props.disabled ? '' : undefined} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
         {label}
         {hint}
         <FieldContext.Provider value={null}>
@@ -186,9 +186,9 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="srp-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} data-disabled={props.disabled ? '' : undefined} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="srp-field__body">{body}{hint}{error}</div></div>;
   return (
-    <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field">
+    <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} data-disabled={props.disabled ? '' : undefined} aria-busy={busy} data-component="field">
       {label}
       {hint}
       {body}

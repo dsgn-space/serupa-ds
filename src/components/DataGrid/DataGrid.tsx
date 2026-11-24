@@ -278,7 +278,7 @@ const GridRow = /* @__PURE__ */ React.memo(function GridRow(p: { row: DataGridRo
         return (
           <td key={col.key} role="gridcell" aria-colindex={c + 1} tabIndex={active && !editing ? 0 : -1} data-cell={`${r}-${c}`}
             aria-selected={sel} aria-readonly={p.canEdit && !col.editable ? true : undefined}
-            className={cn('srp-data-grid__cell', col.align && col.align !== 'start' && 'srp-data-grid__cell--' + col.align, sel && 'srp-data-grid__cell--selected', editing && 'srp-data-grid__cell--editing')}
+            className={cn('srp-data-grid__cell', col.align && col.align !== 'start' && 'srp-data-grid__cell--' + col.align, sel && 'srp-data-grid__cell--selected', editing && 'srp-data-grid__cell--editing')} data-selected={sel ? '' : undefined}
             onClick={(e) => api.pick({ r, c }, e)} onDoubleClick={() => api.begin({ r, c }, textOf(col, row))}>
             {editing ? (
               <input className="srp-data-grid__input" aria-label={p.editLabel(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={editing.text}

@@ -245,7 +245,7 @@ function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttr
   const rest = omit(props, { current: 1, as: 1, className: 1, onClick: 1 });
   const Tag = (props.as || config.link);   // JSX, not createElement, which the React Compiler skips with a ref
   return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
-    className={cn('srp-navbar__link', props.current && 'srp-navbar__link--active', props.className)}
+    className={cn('srp-navbar__link', props.current && 'srp-navbar__link--active', props.className)} data-current={props.current ? '' : undefined}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }} />;
 }
 
@@ -301,7 +301,7 @@ function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttribut
   const mergedRef2 = useMergedRef(ref, (n) => { root.current = n; });
   return (
     <div {...rest} ref={mergedRef2} data-state={open ? 'open' : 'closed'} className={cn('srp-navbar__menu', props.className)}>
-      <button ref={button} type="button" className={cn('srp-navbar__link srp-navbar__menu-button', props.current && 'srp-navbar__link--active')}
+      <button ref={button} type="button" className={cn('srp-navbar__link srp-navbar__menu-button', props.current && 'srp-navbar__link--active')} data-current={props.current ? '' : undefined}
         // current: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
         aria-current={props.current ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
         {props.label}<Icon icon={icons.ExpandMore} className="srp-navbar__chevron" />
@@ -343,7 +343,7 @@ function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React
   const Tag = (props.as || config.link);   // JSX, as NavbarLink
   return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
     aria-labelledby={has ? id + '-name' : undefined} aria-describedby={has ? id + '-desc' : undefined}
-    className={cn('srp-navbar__menu-link', props.current && 'srp-navbar__menu-link--active', props.className)}
+    className={cn('srp-navbar__menu-link', props.current && 'srp-navbar__menu-link--active', props.className)} data-current={props.current ? '' : undefined}
     onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); }}>
     <span id={id + '-name'} className="srp-navbar__menu-name">{props.children}</span>
     {has ? <span id={id + '-desc'} className="srp-navbar__menu-desc">{props.description}</span> : null}
