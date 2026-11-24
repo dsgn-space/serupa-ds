@@ -94,7 +94,8 @@ describe('Patterns/Booking', () => {
   test('a place that sleeps one starts at one guest, and Reserve books one', async () => {
     const onReserve = vi.fn(() => Promise.resolve());
     const screen = await render(<Booking place={{ ...place, maxGuests: 1 }} onReserve={onReserve} />);
-    await expect.element(screen.getByRole('spinbutton', { name: /Guests/ })).toHaveValue('1');
+    // In the reader's digits: "1" or Arabic-Indic "١".
+    await expect.poll(() => (screen.getByRole('spinbutton', { name: /Guests/ }).element() as HTMLInputElement).value).toMatch(/^[1١]$/);
     await pick('2026-11-05', '2026-11-09');
     await screen.getByRole('button', { name: 'Reserve' }).click();
     await expect.poll(() => onReserve.mock.calls.length).toBe(1);
