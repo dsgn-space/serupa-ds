@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cn } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { fold } from '../../internal/fold';
+import { isolate } from '../../internal/bidi';
 import { useLocale, useSettings } from '../../internal/provider';
 import { localeDir } from '../../internal/locale';
 import { Combobox, type ComboboxSingleProps } from '../Combobox/Combobox';
@@ -65,8 +66,6 @@ export function allTimeZones(): string[] {
   const list = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone').map((z) => RENAMED[z] || z) : [];
   return [...new Set(list.includes('UTC') ? list : ['UTC', ...list])];
 }
-/** Text in a direction of its own, isolated from what's around it (U+2066 or U+2067 to U+2069): unchanged without one. */
-const isolate = (text: string, dir: 'ltr' | 'rtl' | undefined) => (dir ? (dir === 'rtl' ? '\u2067' : '\u2066') + text + '\u2069' : text);
 
 /** A zone's city, offset and name at a moment, in a locale, under its current name. null for a name the browser doesn't know. */
 // Each zone's two formatters, made once per zone and language: building some 800 of them was most of a mount's time,

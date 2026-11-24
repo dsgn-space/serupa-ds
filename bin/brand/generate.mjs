@@ -182,7 +182,12 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     const light = mode === 'light';
     // White on every fill. Only a dark theme with more contrast, whose fill is a light shade, takes brand 950.
     const on = palette.get('white'), onMore = light ? on : S('950');
-    const subtle = light ? S('50') : S('950'), subtleHeld = light ? S('100') : S('900');
+    // When a very bright saturated seed (like #ffff00) pins step 50, keep primary-subtle at a soft tint chroma
+    // rather than neon yellow so badges and selected rows remain readable and chroma-monotonic.
+    const [L50, C50, h50] = oklchOf(S('50')), [L100, C100, h100] = oklchOf(S('100'));
+    const subtleVal = light && C50 > 0.05 ? clip([L50, 0.03, h50]) : `{${name}-${light ? '50' : '950'}}`;
+    const subtleHeldVal = light && C100 > 0.08 ? clip([L100, 0.05, h100]) : `{${name}-${light ? '100' : '900'}}`;
+    const subtle = hexAt(subtleVal, b), subtleHeld = hexAt(subtleHeldVal, b);
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
@@ -194,10 +199,12 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     // In light the fill is the text shade too, so it carries white text; in dark the fill is worked out below.
     const okText = (s) => (!light || contrast(on, S(s)) >= 4.5) && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 4.5 && contrast(S(s), raised) >= 4.5
       && tints.every((x) => contrast(S(s), x) >= 4.5);
-    const passes = (s) => okText(s) && okText(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && (!light || contrast(on, S(held(next(s)))) >= 4.5);
-    // The color itself when it passes, so the buttons are the brand's own; else the shade nearest the page's end.
-    const cands = order(light ? '500' : '200', light ? '800' : '500');
-    const primary = cands.includes(seedStep) && passes(seedStep) ? seedStep : cands.find(passes);
+    const passes = (s) => !!s && !!next(s) && okText(s) && okText(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && (!light || contrast(on, S(held(next(s)))) >= 4.5);
+    // The color itself when it passes, so the buttons are the brand's own; for a near-black seed (950) use 900 in light
+    // mode so a black brand doesn't collapse to the same mid-grey 500 as #808080.
+    const cands = order(light ? '500' : '200', light ? '900' : '500');
+    const seedCand = light && seedStep === '950' ? '900' : seedStep;
+    const primary = cands.includes(seedCand) && passes(seedCand) ? seedCand : cands.find(passes);
     if (!primary) fail(mode, light ? 'white text at 4.5:1 and 4.5:1 on the white page, with a hover that passes too' : 'text at 4.5:1 on the dark page, with a hover that passes too');
     // A dark theme's fills: the light theme's, each lightened as far as 3:1 on a raised card asks of the first.
     const lp = picks.light?.primary;
@@ -222,7 +229,7 @@ export function brandTheme({ name, color, corners = 'default', motion = 'default
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus, ...(light ? {} : { fill: fills[0], fillFrom: lp }) };
     Object.assign(b, {
       primary: fills[0], 'primary-hover': fills[1], 'primary-pressed': fills[2],
-      'primary-subtle': `{${name}-${light ? '50' : '950'}}`, 'primary-subtle-pressed': `{${name}-${light ? '100' : '900'}}`,
+      'primary-subtle': subtleVal, 'primary-subtle-pressed': subtleHeldVal,
       'on-primary': '{white}', 'primary-text': `{${name}-${primary}}`, 'primary-text-hover': `{${name}-${next(primary)}}`,
       'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-action': `{${name}-${action}}`,
       'srp-more-primary': `{${name}-${more}}`, 'srp-more-primary-hover': `{${name}-${next(more)}}`, 'srp-more-primary-pressed': `{${name}-${held(next(more))}}`,

@@ -60,6 +60,18 @@ describe('typed dates', () => {
     expect([day('20011122', 'ja-JP'), day('٢٢١١٢٠٠١', 'ar-EG')]).toEqual([nov22, nov22]);
     expect([day('13452001', 'en-US'), day('1122001', 'en-US'), day('2211', 'de-DE'), day('112220011', 'en-US')]).toEqual([null, null, null, null]);
   });
+
+  test('native calendar dates (Buddhist, Persian, Japanese era, ROC) convert to Gregorian; unknown era letters are rejected', () => {
+    const iso = (t: string, locale: string) => { const d = parseDate(t, locale); return d ? isoDate(d) : null; };
+    expect([
+      iso('24/10/2569', 'th'),
+      iso('1405/08/02', 'fa-IR'),
+      iso('۱۴۰۵/۰۸/۰۲', 'fa-IR'),
+      iso('R8/10/24', 'ja-JP-u-ca-japanese'),
+      iso('115/10/24', 'zh-TW-u-ca-roc'),
+      iso('R8/10/24', 'en-US'),
+    ]).toEqual(['2026-10-24', '2026-10-24', '2026-10-24', '2026-10-24', '2026-10-24', null]);
+  });
 });
 
 describe('day arithmetic', () => {

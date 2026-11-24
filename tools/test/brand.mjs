@@ -67,6 +67,13 @@ for (const c of COLORS) {
   const L = Object.values(r.shades).map((h) => oklchOf(h)[0]);
   t(`${c}: the shades run from light (50) to dark (950), the color among them`, L.every((l, i) => !i || l < L[i - 1]) && Object.values(r.shades).includes(c.length === 4 ? c : c.toLowerCase()), Object.values(r.shades).join(' '));
 }
+{
+  const y = brandTheme({ name: 'acme', color: '#ffff00', tokens });
+  const blk = brandTheme({ name: 'acme', color: '#0a0a0a', tokens });
+  const gry = brandTheme({ name: 'acme', color: '#808080', tokens });
+  t('#ffff00: primary-subtle stays a soft tint (chroma <= 0.05) instead of neon yellow', oklchOf(y.themes['acme-light']['primary-subtle'])[1] <= 0.05, y.themes['acme-light']['primary-subtle']);
+  t('#0a0a0a keeps a darker light-mode primary than #808080 instead of collapsing to mid-grey', oklchOf(blk.themes['acme-light'].primary)[0] < oklchOf(gry.themes['acme-light'].primary)[0] - 0.15, `${blk.themes['acme-light'].primary} vs ${gry.themes['acme-light'].primary}`);
+}
 // Every alias of the shipped themes has a value in both, so a brand theme nested in another sets them all.
 const shippedAliases = tokens.color.tokens.filter((x) => typeof x.value === 'object' && Object.keys(x.value).length > 1).map((x) => x.name);
 const any = Object.values(made)[0];

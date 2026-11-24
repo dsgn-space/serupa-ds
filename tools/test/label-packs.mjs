@@ -121,5 +121,15 @@ if (packs.ar) {
       && ar.statusSummary('99%', 2, 2).includes('يومان') && ar.statusSummary('99%', 2, 2).includes('حادثتان')
       && ar.statusSummary('99%', 3, 3).includes('أيام') && ar.statusSummary('99%', 3, 3).includes('حوادث'),
     `${ar.chatThoughtFor(2)} | ${ar.chatThoughtFor(3)} | ${ar.statusSummary('99%', 2, 2)}`);
+  t('ar: Latin caller text is bidi-isolated with FSI…PDI',
+    ar.fileTooLarge('report-v2.pdf', '10 MB').includes('\u2068report-v2.pdf\u2069')
+      && ar.tagRemove('Design').includes('\u2068Design\u2069')
+      && !ar.tagRemove('تصميم').includes('\u2068'),
+    `${ar.fileTooLarge('report-v2.pdf', '10 MB')} | ${ar.tagRemove('Design')}`);
+  t('ar: counted nouns use CLDR dual/few/many forms',
+    ar.filterResults(2).includes('نتيجتان') && ar.charactersLeft(2).includes('حرفان')
+      && ar.notificationsUnread(2).includes('إشعاران') && ar.tableSelected(2).includes('عنصران')
+      && ar.dataGridCopied(2).includes('خليتين') && ar.dataGridPasted(3).includes('خلايا'),
+    `${ar.filterResults(2)} | ${ar.charactersLeft(2)} | ${ar.tableSelected(2)}`);
 }
 done(report('Label packs', R));
