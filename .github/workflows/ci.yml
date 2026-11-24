@@ -94,7 +94,7 @@ jobs:
           fi
       # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines) while a self-hosted runner has started a job
       # in the last 100 minutes, GitHub's runners otherwise, and for a fork's pull request or when the variable is unset.
-      # The burst VM deletes itself after a day with nothing to do, and a job sent to it then waits a day (tools/runner-watch.mjs
+      # The burst VM deletes itself after two hours with nothing to do, and a job sent to it then waits a day (tools/runner-watch.mjs
       # --pick; after bringing the machines up, run the Runner ping workflow once so they count).
       - id: runner
         shell: bash
@@ -107,8 +107,8 @@ jobs:
         run: |
           set -euo pipefail
           if ! runner=$(node tools/runner-watch.mjs --pick 100); then
-            runner="${X86:-\"ubuntu-24.04\"}"
-            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to $runner as set."
+            runner='"ubuntu-24.04"'
+            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to GitHub's runners rather than wait on machines that may be off."
           elif [ -n "$X86" ] && [ "$FORK" != true ] && [ "$runner" = '"ubuntu-24.04"' ]; then
             echo "::warning title=x86 runners look gone::No self-hosted runner has started a job in 100 minutes, so this run's x86 jobs go to GitHub's runners."
           fi
