@@ -98,6 +98,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
   };
   const turnBack = () => {
     const back = stopped!;
+    setFailed(false);
     setBusy(true);
     void save(back).then(() => { focusFirst.current = true; setSaved(back); setChoices(back); setStopped(null); setSaid(''); }, () => setFailed(true)).finally(() => setBusy(false));
   };

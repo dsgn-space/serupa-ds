@@ -76,6 +76,9 @@ describe('Patterns/Profile', () => {
     await expect.poll(() => document.body.textContent).toContain('Saved');
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
     expect(document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
+    // The saved photo's address still holds the picture: it isn't let go with the upload.
+    const saved = document.querySelector<HTMLImageElement>('[role="img"][aria-label="Photo of Ana Lima"] img')!.src;
+    expect(await fetch(saved).then((r) => r.ok, () => false)).toBe(true);
   });
 
   test('a new photo can be framed: a cropper under the upload, named by its field, with a zoom slider; none without one', async () => {

@@ -92,7 +92,9 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
   const months = monthsOf(transactions);
   const monthName = (m: string) => formatDate(`${m}-15`, locale, { options: { month: 'long', year: 'numeric' } });
   const day = (iso: string) => formatDate(iso, locale, { options: { day: 'numeric', month: 'short' } });
-  const [month, setMonth] = React.useState(months[0] ?? '');
+  const [picked, setMonth] = React.useState(months[0] ?? '');
+  // The month picked while it still has transactions, else the newest: they can arrive after the first render.
+  const month = months.includes(picked) ? picked : months[0] ?? '';
   const [query, setQuery] = React.useState('');
   const [category, setCategory] = React.useState('');
   const ofMonth = findTx(transactions, month, '', '');

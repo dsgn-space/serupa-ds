@@ -66,10 +66,11 @@ const MIN = 12;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** The password's rules, each met or not for this password and email. */
 export function passwordRules(password: string, email: string) {
-  const local = email.split('@')[0]?.toLowerCase() || '';
+  const local = email.split('@')[0]?.toLowerCase() || '', pw = password.toLowerCase(), whole = email.trim().toLowerCase();
   return [
     { text: `At least ${MIN} characters`, met: password.length >= MIN },
-    { text: 'Not your email address or its name part', met: password.length > 0 && !(local.length > 2 && password.toLowerCase().includes(local)) },
+    // A name part of one or two letters can be in a good password by chance; the whole address can't.
+    { text: 'Not your email address or its name part', met: password.length > 0 && !(local.length > 2 && pw.includes(local)) && !(whole.includes('@') && pw.includes(whole)) },
   ];
 }
 /** What's wrong with the answers, in the order of the fields. */
