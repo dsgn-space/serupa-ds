@@ -440,4 +440,12 @@ describe('Chart', () => {
     expect(page.getByRole('img', { name: 'Row 12, B: 12' }).elements()).toHaveLength(1);
     expect(Number(page.getByRole('group', { name: 'Heatmap' }).element().getAttribute('height'))).toBe(12 * 32 + 8 + 24);
   });
+
+  test('table view spans the full chart width and niceTicks stays distinct above 1e14', async () => {
+    await render(<div style={{ width: 640 }}><Chart title="Sales" defaultView="table" categories={['Jan', 'Feb']} series={[{ name: 'Revenue', values: [10, 20] }]} /></div>);
+    const fig = page.getByRole('figure').element();
+    const wrap = page.getByRole('table').element().parentElement!;
+    expect(Math.round(wrap.getBoundingClientRect().width)).toBe(Math.round(fig.getBoundingClientRect().width));
+    expect(niceTicks(1e15, 1e15 + 3, 4)).toEqual([1e15, 1e15 + 1, 1e15 + 2, 1e15 + 3]);
+  });
 });

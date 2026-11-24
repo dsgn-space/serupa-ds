@@ -28,3 +28,5 @@ site-static/
 .visual-main/
 .visual-review/
 .release-kits/
+
+tools/test/baseline-visual/

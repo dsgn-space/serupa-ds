@@ -373,6 +373,20 @@ describe('PhoneInput', () => {
     expect([parsePhone('0812'), parsePhone('+999 1')]).toEqual([undefined, undefined]);
     expect([formatPhone('+6281234567890'), formatPhone('+74951234567'), formatPhone('+999123')]).toEqual(['+62 812-3456-7890', '+7 495 123-45-67', '+999123']);
     expect(formatNational('81234567890123', phoneCountry('ID')!)).toBe('812-3456-7890123');
+    expect([
+      formatNational('1012345678', phoneCountry('CN')!),
+      formatNational('2112345678', phoneCountry('ID')!),
+      formatNational('212345678', phoneCountry('KR')!),
+      formatNational('12345678', phoneCountry('IE')!),
+      formatNational('212345678', phoneCountry('PH')!),
+    ]).toEqual(['10 1234 5678', '21-1234-5678', '2-1234-5678', '1 234 5678', '2 1234 5678']);
+    expect([
+      10 >= phoneCountry('CN')!.min,
+      8 >= phoneCountry('KR')!.min,
+      8 >= phoneCountry('IE')!.min,
+      9 >= phoneCountry('PH')!.min,
+      8 >= phoneCountry('ID')!.min,
+    ]).toEqual([true, true, true, true, true]);
   });
   test('GR128, GR129: a pasted tel: link reads as its number, and an extension is left off rather than joined onto it', async () => {
     const got: [string, boolean][] = [];

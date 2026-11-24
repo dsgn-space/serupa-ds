@@ -228,10 +228,11 @@ describe('Table', () => {
     await away();
   });
 
-  test('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table', async () => {
+  test('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table; idle sort icon keeps full opacity and 3:1 contrast', async () => {
     await setup();
-    const th = el('hsort'), b = th.querySelector('button')!;
-    expect([th.getAttribute('aria-sort'), b.type, b.textContent, b.querySelector<HTMLElement>('[data-icon]')?.dataset.icon]).toEqual([null, 'button', 'Calls', 'unfold_more']);
+    const th = el('hsort'), b = th.querySelector('button')!, icon = b.querySelector<HTMLElement>('[data-icon]')!;
+    expect([th.getAttribute('aria-sort'), b.type, b.textContent, icon.dataset.icon, css(icon).opacity]).toEqual([null, 'button', 'Calls', 'unfold_more', '1']);
+    expect(contrast(css(icon).color, css(th).backgroundColor)).toBeGreaterThanOrEqual(3);
     expect(q('#tsort caption').getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
@@ -765,7 +766,8 @@ describe('TableVirtualBody (51)', () => {
     window.dispatchEvent(new Event('beforeprint'));
     // Drawn at once, before the browser lays the page out for print.
     const rows = [...body.querySelectorAll<HTMLElement>(':scope > tr')];
-    expect([rows.length, rows[0]!.getAttribute('aria-rowindex'), rows.at(-1)!.getAttribute('aria-rowindex'), body.querySelectorAll(':scope > tr[aria-hidden]').length]).toEqual([5000, '2', '5001', 0]);
+    expect([rows.length, rows[0]!.getAttribute('aria-rowindex'), rows[4999]!.getAttribute('aria-rowindex'), rows.at(-1)!.textContent, body.querySelectorAll(':scope > tr[aria-hidden]').length])
+      .toEqual([5001, '2', '5001', `Showing ${(5000).toLocaleString()} of ${(10000).toLocaleString()}`, 0]);   // numbers in the browser's language
     window.dispatchEvent(new Event('afterprint'));
     await frames(); await frames();
     expect([drawn().length < 40, drawn()[0]!.getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);

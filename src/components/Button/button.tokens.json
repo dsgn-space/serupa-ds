@@ -15,7 +15,7 @@
       "primary-bg-hover": {
         "$type": "color",
         "$value": "{color.primary-hover}",
-        "$description": "Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker in light themes, lighter in dark.",
+        "$description": "Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-primary-bg-hover"
@@ -25,7 +25,7 @@
       "primary-bg-pressed": {
         "$type": "color",
         "$value": "{color.primary-pressed}",
-        "$description": "Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker in light themes, lighter in dark.",
+        "$description": "Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-primary-bg-pressed"

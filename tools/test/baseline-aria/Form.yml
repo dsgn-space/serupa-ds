@@ -46,11 +46,12 @@
 
 # LongText
 - form "Create an account":
-  - heading "There is a problem" [level=2]
-  - list:
-    - listitem:
-      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column":
-        - /url: "#srp-f_id1_-control"
+  - region "There is a problem":
+    - heading "There is a problem" [level=2]
+    - list:
+      - listitem:
+        - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column":
+          - /url: "#srp-f_id1_-control"
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer
   - textbox "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer" [invalid]
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a value long enough to wrap twice in a narrow column
@@ -106,11 +107,12 @@
 # ServerErrors
 - form "Create an account":
   - alert: Nothing was sent. Check the problems below.
-  - heading "There is a problem" [level=2]
-  - list:
-    - listitem:
-      - link "That email already has an account. Sign in instead":
-        - /url: "#srp-f_id1_-control"
+  - region "There is a problem":
+    - heading "There is a problem" [level=2]
+    - list:
+      - listitem:
+        - link "That email already has an account. Sign in instead":
+          - /url: "#srp-f_id1_-control"
   - text: Full name
   - textbox "Full name": Ani Wijaya
   - text: Email Like name@example.com
@@ -127,17 +129,18 @@
 
 # SubmitFailed
 - form "Create an account":
-  - heading "There are 3 problems" [level=2]
-  - list:
-    - listitem:
-      - link "Enter your full name":
-        - /url: "#srp-f_id1_-control"
-    - listitem:
-      - link "Enter an email address like name@example.com":
-        - /url: "#srp-f_id2_-control"
-    - listitem:
-      - link "Agree to the terms to create an account":
-        - /url: "#srp-f_id3_-control"
+  - region "There are 3 problems":
+    - heading "There are 3 problems" [level=2]
+    - list:
+      - listitem:
+        - link "Enter your full name":
+          - /url: "#srp-f_id1_-control"
+      - listitem:
+        - link "Enter an email address like name@example.com":
+          - /url: "#srp-f_id2_-control"
+      - listitem:
+        - link "Agree to the terms to create an account":
+          - /url: "#srp-f_id3_-control"
   - text: Full name
   - textbox "Full name" [invalid]
   - text: Enter your full name Email Like name@example.com

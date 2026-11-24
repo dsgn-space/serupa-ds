@@ -9,6 +9,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { problemText } from '../../internal/validity';
 import { byId } from '../../internal/root';
 import { en as inputWords } from '../Input/labels';
+import { en as errorWords } from '../ErrorBoundary/labels';
 import { Alert } from '../Alert/Alert';
 import { ErrorSummary } from '../ErrorSummary/ErrorSummary';
 import { en as words } from './labels';
@@ -150,14 +151,14 @@ export const FormInternals = /* @__PURE__ */ React.createContext<{ show: (keys: 
 
 function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, ...props }: FormProps<S> & React.RefAttributes<HTMLFormElement>) {
   const { schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onUnsavedChanges, onEdit, className, children, ...rest } = props;
-  const sds = useSettings(words), say = useSettings(inputWords).labels.invalidValue, locale = useLocale();
+  const sds = useSettings(words), say = useSettings(inputWords).labels.invalidValue, submitFailed = useSettings(errorWords).labels.errorTitle, locale = useLocale();
   // The server's answer it starts with (a form action's, rendered on the server) shows from the first render.
   const [st, setSt] = React.useState<State>(() => {
     const server = keyed(errors);
     return { ...START, server, failed: Object.keys(server).length > 0, message: shows(message) ? message : null };
   });
   const patch = React.useCallback((f: (s: State) => Partial<State> | null) => setSt((s) => { const p = f(s); return p ? { ...s, ...p } : s; }), []);
-  const latest = useLatest({ schema, onSubmit, checks, onEdit, say, locale, draft, summary });
+  const latest = useLatest({ schema, onSubmit, checks, onEdit, say, submitFailed, locale, draft, summary });
   const form = React.useRef<HTMLFormElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { form.current = n; });
 
@@ -263,7 +264,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   // A field was left or changed: validate, show its message, and run its check once the schema passes.
   const recheck = React.useCallback(async (keys: readonly string[], wait: number) => {
     const L = live.current, run = ++L.run, flat = L.flat;
-    await validate(flat);
+    try { await validate(flat); } catch { return; }
     if (run !== L.run) return;
     showFor(keys, flat);
     for (const k of keys) {
@@ -379,21 +380,26 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     L.flat = flat;
     patch((s) => ({ submitCount: s.submitCount + 1, message: null }));
     try {
-      const res = await everything(flat);
-      if (!res.ok) { fail(res.issues); return; }
-      patch(() => ({ shown: {}, server: {}, failed: false, submitting: true }));
-      const send = latest.current.onSubmit;
-      const answer = send ? await send(res.output as Out<S>, handleRef.current) : undefined;
-      if (answer && (shows(answer.message) || Object.keys(keyed(answer.errors)).length)) {
-        const server = keyed(answer.errors);
-        patch((s) => ({ server, failed: Object.keys(server).length > 0, version: s.version + 1, message: answer.message ?? null }));
-        return;
-      }
-      // Sent: this is how the form starts now, and the draft has done its job.
-      L.baseline = stamp(L.flat);
-      patch(() => ({ dirty: false, draftSavedAt: null }));
-      const key = latest.current.draft;
-      if (key) { window.clearTimeout(L.draftTimer); try { window.localStorage.removeItem(draftKey(key)); } catch { /* storage blocked: nothing saved */ } }
+      await (async () => {
+        const res = await everything(flat);
+        if (!res.ok) { fail(res.issues); return; }
+        patch(() => ({ shown: {}, server: {}, failed: false, submitting: true }));
+        const send = latest.current.onSubmit;
+        const answer = send ? await send(res.output as Out<S>, handleRef.current) : undefined;
+        if (answer && (shows(answer.message) || Object.keys(keyed(answer.errors)).length)) {
+          const server = keyed(answer.errors);
+          patch((s) => ({ server, failed: Object.keys(server).length > 0, version: s.version + 1, message: answer.message ?? null }));
+          return;
+        }
+        // Sent: this is how the form starts now, and the draft has done its job.
+        L.baseline = stamp(L.flat);
+        patch(() => ({ dirty: false, draftSavedAt: null }));
+        const key = latest.current.draft;
+        if (key) { window.clearTimeout(L.draftTimer); try { window.localStorage.removeItem(draftKey(key)); } catch { /* storage blocked: nothing saved */ } }
+      })().catch((err: unknown) => {
+        const msg = err instanceof Error && err.message ? err.message : submitFailed;
+        patch((s) => ({ failed: true, version: s.version + 1, message: msg }));
+      });
     } finally {
       L.submitting = false;
       patch((s) => (s.submitting ? { submitting: false } : null));

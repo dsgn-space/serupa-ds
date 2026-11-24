@@ -134,5 +134,7 @@ try {
   }
 } finally { await br.close(); }
 t(`in the browser each brand's email shows its light and dark colors, and fits 375px without scrolling sideways`, !seen.length, seen.join('; '));
+t('each brand email CSS and HTML includes Outlook.com [data-ogsc] and [data-ogsb] dark overrides',
+  html.every(([b, h]) => h.includes('[data-ogsc] .serupa-body') && h.includes('[data-ogsb] .serupa-body') && read(`${b}.css`).includes('[data-ogsc] .serupa-body')));
 
 done(report('Email kit', R));

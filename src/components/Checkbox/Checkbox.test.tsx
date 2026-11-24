@@ -465,4 +465,10 @@ describe('CheckboxGroup with many boxes', () => {
     await userEvent.click(input('m8'));
     expect([input('m7').checked, input('m8').checked, [...drawn].sort()]).toEqual([true, true, ['m7', 'm8', 'mall']]);
   });
+
+  test('description text stays selectable so policy or explanatory text can be copied', async () => {
+    await render(<Checkbox id="sel" description="Copy this policy text.">Accept</Checkbox>);
+    const desc = document.getElementById(input('sel').getAttribute('aria-describedby')!)!;
+    expect(getComputedStyle(desc).userSelect).toBe('text');
+  });
 });

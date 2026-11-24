@@ -57,7 +57,7 @@ function ErrorSummaryRender({ ref, ...props }: ErrorSummaryProps & React.RefAttr
   if (!list.length) return null;
   const level = [2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : (headingLevel as number);
   return (
-    <div tabIndex={-1} aria-labelledby={heading} {...rest} ref={mergedRef} className={cn('srp-error-summary', className)} data-component="error-summary">
+    <div role="region" tabIndex={-1} aria-labelledby={heading} {...rest} ref={mergedRef} className={cn('srp-error-summary', className)} data-component="error-summary">
       {React.createElement('h' + level, { id: heading, className: 'srp-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length, numberFormat(locale).format(list.length)))}
       {description != null ? <div className="srp-error-summary__description">{description}</div> : null}
       <ul className="srp-error-summary__list" role="list">

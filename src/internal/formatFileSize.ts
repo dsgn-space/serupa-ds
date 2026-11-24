@@ -6,7 +6,7 @@ import { formatNumber } from '../components/FormattedNumber/formatNumber';
  *  Android count, so a maxSize of 5_000_000 is "5 MB"), with the names Intl gives every locale. In that locale's digits and units, en-US without one, the same as
  *  FormattedNumber format="bytes": formatFileSize(1_500_000, "id-ID") is "1,5 MB" (GR20). */
 export function formatFileSize(bytes: number, locale?: string): string {
-  if (!(bytes >= 0)) return '';
+  if (!Number.isFinite(bytes) || bytes < 0) return '';
   // Only a string: sizes.map(formatFileSize) passes each index here. Without one, en-US, so it's written one way.
   return formatNumber(bytes, typeof locale === 'string' && locale ? locale : 'en-US', { format: 'bytes' });
 }

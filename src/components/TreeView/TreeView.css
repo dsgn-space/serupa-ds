@@ -31,6 +31,7 @@
   content-visibility: auto;
   contain-intrinsic-block-size: auto calc(var(--tree-view-item-height, var(--control-height-md)) - var(--spacing-2));   /* the padding, above and below */
 }
+.srp-tree-view__label { -webkit-user-select: text; user-select: text; }
 /* 44px to press on a touch screen, as Menu's items, and held at that height while out of view. */
 @media (pointer: coarse) { .srp-tree-view__row { min-height: max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)); contain-intrinsic-block-size: auto calc(max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)) - var(--spacing-2)); } }
 @media (hover: hover) { .srp-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
