@@ -591,8 +591,12 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
   test('accept="image/*" falls back to known image extensions when File.type is empty (e.g. HEIC)', async () => {
     await render(<FileUpload id="heic" accept="image/*" multiple />);
     const root = rootOf('heic');
-    await userEvent.upload(input(root), [file('photo.heic', '', 128), file('bad.exe', '', 128)]);
-    expect(names(root)).toBe('photo.heic');
+    // Pasted, not uploaded: a file input given these fills in the type from the name, so File.type wouldn't be empty.
+    const dt = new DataTransfer(); for (const f of [file('photo.heic', '', 128), file('bad.exe', '', 128)]) dt.items.add(f);
+    const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(e, 'clipboardData', { value: dt });
+    choose(root).focus(); choose(root).dispatchEvent(e);
+    await expect.poll(() => names(root)).toBe('photo.heic');
     expect(errs(root)).toMatch(/bad\.exe/);
   });
   test('GR119: the same refusal twice puts a new alert in, so a screen reader says it again', async () => {
