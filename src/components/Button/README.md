@@ -271,8 +271,8 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | Token | Default | Use |
 | --- | --- | --- |
 | `--button-primary-bg` | `primary` | Primary background. |
-| `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker in light themes, lighter in dark. |
-| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker in light themes, lighter in dark. |
+| `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker. |
+| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker. |
 | `--button-primary-text` | `on-primary` | Primary text and icons. |
 | `--button-secondary-bg` | `surface-raised` | Secondary background. |
 | `--button-secondary-bg-hover` | `primary-subtle` | Secondary background on hover. |

@@ -90,10 +90,17 @@ export function niceTicks(lo: number, hi: number, count: number): number[] {
   const raw = (hi - lo) / Math.max(1, count);
   const mag = 10 ** Math.floor(Math.log10(raw));
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw * (1 - 1e-9)) ?? 10 * mag;
+  const [, exp] = String(step).split('e');
+  const frac = (String(step).split('e')[0]!.split('.')[1] || '').length;
+  const places = Math.min(20, Math.max(0, frac - Number(exp || 0)));
+  const clean = (v: number) => Number(v.toFixed(places));
   const out: number[] = [];
-  for (let v = Math.floor(lo / step + 1e-9) * step; v < hi + step * (1 - 1e-9); v += step) out.push(+v.toPrecision(12));
-  const end = out[out.length - 1] ?? lo;
-  if (end < hi - 1e-9 * step) out.push(+(end + step).toPrecision(12));
+  for (let k = Math.floor(lo / step + 1e-9); ; k++) {
+    const v = clean(k * step);
+    if (out.length && v === out[out.length - 1]) break;
+    out.push(v);
+    if (v >= hi - 1e-9 * step) break;
+  }
   return out;
 }
 

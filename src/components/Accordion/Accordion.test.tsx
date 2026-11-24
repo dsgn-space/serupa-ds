@@ -13,7 +13,7 @@ const el = (id: string) => document.getElementById(id) as HTMLElement;
 const items = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > [data-state]')];
 const state = (id: string) => items(id).map((i) => (i.dataset.state === 'open' ? 1 : 0)).join('');
 const trigger = (id: string, n: number) => items(id)[n - 1]!.querySelector('button[aria-expanded]') as HTMLButtonElement;
-const panel = (id: string, n = 1) => items(id)[n - 1]!.querySelector('[aria-labelledby]') as HTMLElement;
+const panel = (id: string, n = 1) => items(id)[n - 1]!.lastElementChild as HTMLElement;
 const contentOf = (id: string, n = 1) => panel(id, n).firstElementChild!.firstElementChild as HTMLElement;
 const focused = () => (document.activeElement!.matches('button[aria-expanded]') ? document.activeElement!.textContent : undefined);
 // The open and close animation finished (the panel and the chevron).
@@ -35,8 +35,10 @@ describe('Accordion', () => {
     await render(<Faq r={r} ir={ir} />);
     const a = el('adef'), i = a.firstElementChild as HTMLElement, hd = i.firstElementChild!, b = hd.firstElementChild as HTMLButtonElement, pn = i.lastElementChild!;
     expect([a.className, a.dataset.component, r.current === a, ir.current === i, a.dataset.x]).toEqual(['srp-accordion extra', 'accordion', true, true, 'y']);
-    expect([hd.tagName, b.tagName, b.type, b.getAttribute('aria-expanded'), b.getAttribute('aria-controls') === pn.id, pn.getAttribute('role'), pn.getAttribute('aria-labelledby') === b.id])
-      .toEqual(['H3', 'BUTTON', 'button', 'false', true, null, true]);
+    expect([hd.tagName, b.tagName, b.type, b.getAttribute('aria-expanded'), b.getAttribute('aria-controls') === pn.id, pn.getAttribute('role'), pn.getAttribute('aria-labelledby')])
+      .toEqual(['H3', 'BUTTON', 'button', 'false', true, null, null]);
+    await userEvent.click(b);
+    expect([b.getAttribute('aria-expanded'), pn.getAttribute('role'), pn.getAttribute('aria-labelledby') === b.id]).toEqual(['true', 'region', true]);
   });
 
   test('uncontrolled with no defaultValue: everything closed; closed content is hidden="until-found" (no height, not rendered, out of the tab order) and a disabled item\'s is visibility hidden', async () => {

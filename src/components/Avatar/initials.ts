@@ -16,13 +16,21 @@ function initial(word: string): string {
   return g ? graphemes(g.toUpperCase())[0] ?? '' : '';
 }
 
+const HONORIFIC = /^(?:mr|mrs|ms|miss|mx|dr|prof|rev|sir|madam|lady|lord|capt|col|gen|lt|sgt)\.?$/i;
+const SUFFIX = /^(?:jr|sr|ii|iii|iv|v|phd|md|dds|esq)\.?$/i;
+
 /** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter.
-    Words with no letter, digit or pictograph ("—") are left out. In a joining script they're kept apart ("م‌ع"). */
+    Words with no letter, digit or pictograph ("—"), and leading titles or trailing suffixes when other words remain,
+    are left out. In a joining script they're kept apart ("م‌ع"). */
 export function initials(name?: string): string {
-  const found = (name || '').trim().split(/\s+/).map(initial).filter(Boolean);
-  if (!found.length) return '';
-  const first = found[0] ?? '', last = found[found.length - 1] ?? '';
-  if (found.length === 1) return first;
+  const words = (name || '').trim().split(/\s+/).filter((w) => initial(w));
+  if (!words.length) return '';
+  let start = 0, end = words.length;
+  while (end - start > 1 && HONORIFIC.test(words[start]!)) start++;
+  while (end - start > 1 && SUFFIX.test(words[end - 1]!)) end--;
+  const picked = words.slice(start, end);
+  const first = initial(picked[0]!), last = initial(picked[picked.length - 1]!);
+  if (picked.length === 1) return first;
   // In a script whose letters join (Arabic, Syriac, N'Ko, Mongolian…), two initials side by side join into what reads
   // as a word: "محمد عبد الله" would show "ما" ("what"). A zero-width non-joiner keeps them two letters (GR28).
   return first + (JOINING.test(first) && JOINING.test(last) ? '\u200c' : '') + last;

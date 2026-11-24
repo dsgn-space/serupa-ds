@@ -111,8 +111,9 @@
       var fg = computed.getPropertyValue('--' + p[0]).trim(), bg = computed.getPropertyValue('--' + p[1]).trim();
       if (!fg || !bg) return;
       var back = paint(bg), a = luminance(paint(fg, back)), b = luminance(back);
-      var ratio = Math.round((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) * 100) / 100;
-      out.push({ foreground: '--' + p[0], background: '--' + p[1], ratio: ratio, needs: p[2], what: p[3], ok: ratio >= p[2] });
+      var raw = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+      var ratio = Math.floor(raw * 100) / 100;
+      out.push({ foreground: '--' + p[0], background: '--' + p[1], ratio: ratio, needs: p[2], what: p[3], ok: raw >= p[2] });
     });
     return out;
   }
