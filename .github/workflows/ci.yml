@@ -249,7 +249,7 @@ jobs:
       actions: write
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 20
     steps:
@@ -302,7 +302,7 @@ jobs:
     if: needs.plan.outputs.hold != '1' && (needs.plan.outputs.full == '1' || github.event_name == 'pull_request')
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 20
     steps:
@@ -336,7 +336,7 @@ jobs:
     if: needs.plan.outputs.hold != '1' && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 20
     steps:
@@ -388,7 +388,7 @@ jobs:
       actions: write
     runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
     # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
@@ -563,7 +563,7 @@ jobs:
       actions: write
     runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 30
     # The build job checked the size budgets already, so the checks group doesn't build and measure them again.
@@ -586,7 +586,7 @@ jobs:
     if: needs.plan.outputs.tests == '1' && github.event_name != 'merge_group'
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 15
     steps:
@@ -655,7 +655,7 @@ jobs:
     if: needs.plan.outputs.full == '1'
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
       options: --cpus 4
     timeout-minutes: 20
     steps:
