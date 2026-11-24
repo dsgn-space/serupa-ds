@@ -95,8 +95,8 @@ try {
     ['no color', ['acme'], 'give a name and a color'],
     ['an unknown option', ['acme', '#0f766e', '--dark'], 'unknown option --dark'],
     ['-o with no file name', ['acme', '#0f766e', '-o'], '-o needs a file name'],
-    ['--corners, removed in 18.0.0', ['acme', '#0f766e', '--corners', 'round'], 'data-radius'],
-    ['--motion, removed in 18.0.0', ['acme', '#0f766e', '--motion', 'brisk'], '--motion-* tokens'],
+    ['--corners, removed in 19.0.0', ['acme', '#0f766e', '--corners', 'round'], 'data-radius'],
+    ['--motion, removed in 19.0.0', ['acme', '#0f766e', '--motion', 'brisk'], '--motion-* tokens'],
     ['a taken name', ['emerald', '#0f766e'], 'a theme Serupa ships'],
   ]) {
     const r = cli(...args);

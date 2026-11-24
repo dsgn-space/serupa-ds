@@ -27,8 +27,8 @@ export function main(argv) {
     const a = argv[i];
     if (a === '-o' || a === '--out') { out = argv[++i]; if (!out || out.startsWith('-')) stop(`${a} needs a file name`); }
     // A theme is its colors (17.0.0): corners and motion are set apart from the brand, for every brand at once.
-    else if (a === '--corners') stop('--corners was removed in 18.0.0: corners are their own setting, data-radius="sharp" or "round" on <html>');
-    else if (a === '--motion') stop('--motion was removed in 18.0.0: set the --motion-* tokens in your own CSS (docs/foundations.md, Motion)');
+    else if (a === '--corners') stop('--corners was removed in 19.0.0: corners are their own setting, data-radius="sharp" or "round" on <html>');
+    else if (a === '--motion') stop('--motion was removed in 19.0.0: set the --motion-* tokens in your own CSS (docs/foundations.md, Motion)');
     else if (a === '-h' || a === '--help') { console.log(USAGE); return 0; }
     else if (a.startsWith('-') && !/^-?#?[0-9a-f]{3,6}$/i.test(a)) stop(`unknown option ${a}`);
     else rest.push(a);
