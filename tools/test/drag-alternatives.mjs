@@ -9,7 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PROJECT, done, report } from './lib.mjs';
 
-const MOVES = /\bpointermove\b|\bonPointerMove\b|\btouchmove\b|\bonTouchMove\b|\bonDrag(Start|Over|Enter)?\b|\bdragover\b/;
+// useHandleDrag (src/internal/handleDrag.ts) listens for the moves on a component's behalf.
+const MOVES = /\bpointermove\b|\bonPointerMove\b|\btouchmove\b|\bonTouchMove\b|\bonDrag(Start|Over|Enter)?\b|\bdragover\b|\buseHandleDrag\b/;
 
 const DRAGS = {
   Slider: { drag: 'drag a thumb along the track', press: ['Slider.test.tsx', 'a press on the track jumps there'] },

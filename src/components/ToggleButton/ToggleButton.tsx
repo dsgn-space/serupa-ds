@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, oneOf } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import type { IconSource } from '../Icon/Icon';
@@ -20,9 +21,8 @@ export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' |
 
 function ToggleButtonRender({ ref, ...props }: ToggleButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const { pressed, defaultPressed, onPressedChange, variant, className, onClick, ...rest } = props;
-  const [own, setOwn] = React.useState(!!defaultPressed);
-  const controlled = pressed !== undefined;
-  const on = controlled ? !!pressed : own;
+  const [pressedIn, setOwn, controlled] = useControllable<boolean>(pressed, !!defaultPressed, 'ToggleButton', 'pressed');
+  const on = !!pressedIn;
   const v = oneOf(['outline', 'ghost'] as const, variant, 'outline');
   return (
     <ButtonBase {...rest} ref={ref} variant={v} aria-pressed={on}

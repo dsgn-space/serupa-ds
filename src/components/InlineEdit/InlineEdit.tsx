@@ -56,9 +56,9 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const sds = useSettings(words);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const [value, setOwn, controlled] = useControllable<string>(props.value, props.defaultValue ?? '', 'InlineEdit', 'value');
-  const [ownEditing, setOwnEditing] = React.useState(!!props.defaultEditing);
+  const [editingIn, setOwnEditing, editingControlled] = useControllable<boolean>(props.editing, !!props.defaultEditing, 'InlineEdit', 'editing');
   const locked = !!props.disabled || !!props.readOnly;
-  const editing = !locked && (props.editing ?? ownEditing);
+  const editing = !locked && !!editingIn;
   const [draft, setDraft] = React.useState(value);
   const [error, setError] = React.useState<React.ReactNode>(null);
   // Opened by the editing prop rather than open(): the field starts from the text as it is now, not from a draft left
@@ -81,7 +81,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   React.useEffect(() => { const t = errorText.current && errorText.current.textContent; if (tries && t) announce(t); }, [tries]);
 
   const setEditing = (on: boolean) => {
-    if (props.editing === undefined) setOwnEditing(on);
+    if (!editingControlled) setOwnEditing(on);
     if (props.onEditingChange) props.onEditingChange(on);
   };
   const open = () => { if (locked) return; closing.current = false; setDraft(value); setError(null); setEditing(true); };

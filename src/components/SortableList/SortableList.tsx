@@ -12,6 +12,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { isRtl } from '../../internal/position';
 import { modified } from '../../internal/roving';
+import { edgeScroll, useHandleDrag, type HandlePointer } from '../../internal/handleDrag';
 
 export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children' | 'onChange'> {
   /** The items, in order. Controlled: pass the new order back from onReorder. */
@@ -48,11 +49,12 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   const hintId = domId('srp-sl', React.useId()) + '-hint';
   const list = React.useRef<HTMLUListElement | null>(null);
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
-  // start and at are the pointer along the list's axis: clientY in a column, clientX in a row.
-  const pointer = React.useRef<{ id: number; key: string | number; start: number; at: number; grab: number; moved: boolean } | null>(null);
+  const { pointerRef, draggedRef, begin } = useHandleDrag();
   const row = props.orientation === 'horizontal';
   // Where a box starts and how long it is along the axis.
   const lead = (b: DOMRect) => row ? b.left : b.top, span = (b: DOMRect) => row ? b.width : b.height;
+  // The pointer, and where on its row it was taken, along the axis.
+  const along = (p: HandlePointer) => row ? p.x : p.y, grab = (p: HandlePointer) => row ? p.gx : p.gy;
   const rtl = () => row && !!list.current && isRtl(list.current);
   useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>('.srp-sortable-list__handle'));
   const total = items.length;
@@ -75,13 +77,12 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   // A click picks the item up or drops it: from the keyboard, a screen reader's virtual click, or a press that didn't
   // move (WCAG 2.5.7: a single pointer can reorder without dragging). With one picked up, a click on another row's
   // handle drops it in that row's place.
-  const dragged = React.useRef(false);
   // A press on another row's handle while one is picked up: its click drops there, so the blur it causes doesn't cancel.
   const dropping = React.useRef(false);
   const onClick = (key: string | number, index: number) => () => {
     dropping.current = false;
     if (props.disabled) return;
-    if (dragged.current) { dragged.current = false; return; }   // the click that ends a drag
+    if (draggedRef.current) { draggedRef.current = false; return; }   // the click that ends a drag
     if (drag && !drag.pointer) finish(key === drag.key ? drag : { ...drag, to: index }, true);
     else { setDrag({ key, from: index, to: index, pointer: false }); announce(sds.labels.reorderGrabbed(label(items[index]), index + 1, total)); }
   };
@@ -124,31 +125,26 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
     if (row && typeof row.scrollIntoView === 'function') row.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   });
 
-  // Pointer: press a handle and move more than a few pixels to drag; the row follows the pointer. The moves are
-  // followed on the window: the handle's row moves in the DOM as the order changes, which would drop a pointer capture.
+  // Pointer: press a handle and move more than a few pixels to drag; the row follows the pointer.
   const latest = useLatest({ items, getKey, finish });
-  const stop = React.useRef<(() => void) | null>(null);
-  React.useEffect(() => () => { if (stop.current) stop.current(); }, []);
   const onPointerDown = (key: string | number) => (e: React.PointerEvent<HTMLButtonElement>) => {
-    dragged.current = false;
+    draggedRef.current = false;
     if (drag && !drag.pointer && e.button === 0 && !props.disabled) {
       dropping.current = true;
       // Released off the handle, there's no click: then the blur counts after all.
       window.addEventListener('pointerup', () => setTimeout(() => { if (dropping.current) { dropping.current = false; onBlur(); } }), { once: true });
     }
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
-    const li = e.currentTarget.closest('li') as HTMLElement, c = row ? e.clientX : e.clientY;
-    pointer.current = { id: e.pointerId, key, start: c, at: c, grab: c - lead(li.getBoundingClientRect()), moved: false };
     // In a right-to-left row the first item is on the right, so "before" is further right.
     const flip = rtl();
-    const placeAt = (p: NonNullable<typeof pointer.current>): Drag | undefined => {
+    const placeAt = (p: HandlePointer): Drag | undefined => {
       const { items: all, getKey: keyOf } = latest.current;
       const at = all.findIndex((it) => keyOf(it) === p.key);
       if (at < 0) return undefined;
       // The new place: how many of the other rows have their middle before the dragged row's middle.
       const rows = list.current ? [...list.current.children] as HTMLElement[] : [];
       const self = rows.find((r) => r.dataset.key === String(p.key));
-      const middle = p.at - p.grab + (self ? span(self.getBoundingClientRect()) / 2 : 0);
+      const middle = along(p) - grab(p) + (self ? span(self.getBoundingClientRect()) / 2 : 0);
       let to = 0;
       for (const r of rows) {
         const b = r.getBoundingClientRect(), mid = lead(b) + span(b) / 2;
@@ -159,10 +155,10 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
       setDrag(next);
       return next;
     };
-    // Near the top or bottom edge (in a row, the left or right edge) of what scrolls (the list itself, as a row does, its scrolling container, or the page), it scrolls that way,
-    // faster the closer the pointer is, so a long list can be reordered past the screen. touch-action: none on the
-    // handle means the browser won't scroll for a touch drag on its own.
-    let frame = 0;
+    // Near the top or bottom edge (in a row, the left or right edge) of what scrolls (the list itself, as a row does,
+    // its scrolling container, or the page), it scrolls that way, faster the closer the pointer is, so a long list can
+    // be reordered past the screen. touch-action: none on the handle means the browser won't scroll for a touch drag
+    // on its own.
     const scroller = (): HTMLElement => {
       for (let n: HTMLElement | null = list.current; n && n !== document.body; n = n.parentElement) {
         const o = row ? getComputedStyle(n).overflowX : getComputedStyle(n).overflowY;
@@ -170,52 +166,16 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
       }
       return (document.scrollingElement || document.documentElement) as HTMLElement;
     };
-    const tick = () => {
-      frame = 0;
-      const p = pointer.current;
-      if (!p || !p.moved) return;
-      const box = scroller(), page = box === document.scrollingElement || box === document.documentElement;
-      const b = box.getBoundingClientRect();
-      const top = page ? 0 : lead(b), bottom = page ? (row ? window.innerWidth : window.innerHeight) : lead(b) + span(b);
-      const edge = Math.min(48, (bottom - top) / 4);
-      const by = p.at < top + edge ? -Math.ceil((top + edge - p.at) / edge * 16) : p.at > bottom - edge ? Math.ceil((p.at - bottom + edge) / edge * 16) : 0;
-      if (!by) return;
-      const before = row ? box.scrollLeft : box.scrollTop;
-      if (row) box.scrollLeft = before + by; else box.scrollTop = before + by;
-      if ((row ? box.scrollLeft : box.scrollTop) !== before) placeAt(p);
-      frame = requestAnimationFrame(tick);
-    };
-    const moveTo = (ev: PointerEvent) => {
-      const p = pointer.current;
-      if (!p || p.id !== ev.pointerId) return;
-      p.at = row ? ev.clientX : ev.clientY;
-      if (!p.moved && Math.abs(p.at - p.start) < 4) return;
-      p.moved = true;
-      dragged.current = true;
-      ev.preventDefault();
-      placeAt(p);
-      if (!frame) frame = requestAnimationFrame(tick);
-    };
-    const end = (cancel: boolean) => (ev: PointerEvent) => {
-      const p = pointer.current;
-      if (!p || p.id !== ev.pointerId) return;
-      off();
-      if (p.moved) setTimeout(() => { dragged.current = false; });   // no click came after it (let go off the handle)
-      // Placed where it's let go, not where the last render put it: a release right after a move comes before that
-      // move's render.
-      let d = current.current;
-      if (p.moved) { p.at = row ? ev.clientX : ev.clientY; d = placeAt(p) || d; }
-      if (p.moved && d && d.pointer) latest.current.finish(d, !cancel);
-    };
-    const up = end(false), cancel = end(true);
-    const off = () => {
-      pointer.current = null; stop.current = null;
-      if (frame) { cancelAnimationFrame(frame); frame = 0; }
-      window.removeEventListener('pointermove', moveTo); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', cancel);
-    };
-    if (stop.current) stop.current();
-    stop.current = off;
-    window.addEventListener('pointermove', moveTo); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
+    begin(key, e, e.currentTarget.closest('li') as HTMLElement, {
+      axis: row ? 'x' : 'y',
+      place: placeAt,
+      scroll: (p) => {
+        const box = scroller(), page = box === document.scrollingElement || box === document.documentElement;
+        const b = box.getBoundingClientRect();
+        return edgeScroll(box, row, along(p), page ? 0 : lead(b), page ? (row ? window.innerWidth : window.innerHeight) : lead(b) + span(b));
+      },
+      end: (p, cancel) => { const d = placeAt(p) || current.current; if (d && d.pointer) latest.current.finish(d, !cancel); },
+    });
   };
   const tops = React.useRef(new Map<string, number>());
   // The rows that change place glide there (FLIP): each starts where it showed (mid-way through an earlier move, or
@@ -224,7 +184,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   // every render: a move re-renders the rows; reads each row's offsetTop, and styles only the rows that moved.
   useIsoLayoutEffect(() => {
     const rows = list.current ? [...list.current.children] as HTMLElement[] : [];
-    const held = pointer.current && drag && drag.pointer ? String(drag.key) : null;
+    const held = pointerRef.current && drag && drag.pointer ? String(drag.key) : null;
     const next = new Map<string, number>(), moved: [HTMLElement, number][] = [];
     for (const r of rows) {
       const key = r.dataset.key || '', top = row ? r.offsetLeft : r.offsetTop, was = tops.current.get(key);
@@ -246,11 +206,11 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
   // The dragged row sits where the pointer is, between the others.
   // every render: each pointer move re-renders; outside a drag it only clears a transform left behind.
   useIsoLayoutEffect(() => {
-    const p = pointer.current, rows = list.current ? [...list.current.children] as HTMLElement[] : [];
+    const p = pointerRef.current, rows = list.current ? [...list.current.children] as HTMLElement[] : [];
     for (const r of rows) {
       if (p && drag && drag.pointer && r.dataset.key === String(drag.key)) {
         r.style.transform = '';
-        r.style.transform = (row ? 'translateX(' : 'translateY(') + Math.round(p.at - p.grab - lead(r.getBoundingClientRect())) + 'px)';
+        r.style.transform = (row ? 'translateX(' : 'translateY(') + Math.round(along(p) - grab(p) - lead(r.getBoundingClientRect())) + 'px)';
       } else if (r.style.transform) r.style.transform = '';
     }
   });
