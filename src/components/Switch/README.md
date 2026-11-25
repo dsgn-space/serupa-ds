@@ -120,7 +120,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-thumb` | `white` | The thumb while off: white in every theme, as Apple's. |
 | `--switch-thumb-checked` | `white` | The thumb while on: white in every theme, as Apple's. |
 | `--switch-thumb-ink-dark` | `text-inverse` | In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light). |
-| `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
+| `--switch-icon` | `primary-text` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |

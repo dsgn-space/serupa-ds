@@ -94,7 +94,7 @@
       },
       "icon": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The check on the thumb while on, with icon (3:1 on the thumb)",
         "$extensions": {
           "com.serupa": {
