@@ -1,5 +1,5 @@
 # Checked
-- text: Date of birth For example, 27 3 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Day
   - textbox "Day"
@@ -7,6 +7,7 @@
   - textbox "Month"
   - text: Year
   - textbox "Year"
+- text: For example, 27 3 2007
 - button "Continue"
 - paragraph: "Value: (none yet)"
 
@@ -20,7 +21,7 @@
   - textbox "Year" [disabled]: "1990"
 
 # DoExampleHint
-- text: Date of birth For example, 27 3 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Day
   - textbox "Day"
@@ -28,6 +29,7 @@
   - textbox "Month"
   - text: Year
   - textbox "Year"
+- text: For example, 27 3 2007
 
 # DontNoExample
 - text: Date of birth
@@ -40,7 +42,7 @@
   - textbox "Year"
 
 # InField
-- text: Date of birth For example, 27 3 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Day
   - textbox "Day"
@@ -48,9 +50,10 @@
   - textbox "Month"
   - text: Year
   - textbox "Year"
+- text: For example, 27 3 2007
 
 # Indonesian
-- text: "Tanggal lahir Contoh: 17 8 1945"
+- text: Tanggal lahir
 - group "Tanggal lahir":
   - text: Tanggal
   - textbox "Tanggal": "17"
@@ -58,9 +61,10 @@
   - textbox "Bulan": "8"
   - text: Tahun
   - textbox "Tahun": "1945"
+- text: "Contoh: 17 8 1945"
 
 # Invalid
-- text: Passport expiry date For example, 27 11 2031
+- text: Passport expiry date
 - group "Passport expiry date":
   - text: Day
   - textbox "Day" [invalid]
@@ -68,10 +72,10 @@
   - textbox "Month" [invalid]
   - text: Year
   - textbox "Year" [invalid]
-- text: The expiry date must include a year
+- text: For example, 27 11 2031 The expiry date must include a year
 
 # LongText
-- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung start date The date on the letter from the insurance office, which is usually at the top right
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung start date
 - group "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung start date":
   - text: Month
   - textbox "Month": "1"
@@ -79,9 +83,10 @@
   - textbox "Day": "31"
   - text: Year
   - textbox "Year": "2024"
+- text: The date on the letter from the insurance office, which is usually at the top right
 
 # MonthNames
-- text: Date of birth For example, 27 March 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Day
   - textbox "Day"
@@ -101,9 +106,10 @@
     - option "December"
   - text: Year
   - textbox "Year"
+- text: For example, 27 March 2007
 
 # Playground
-- text: Date of birth For example, 27 3 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Day
   - textbox "Day"
@@ -111,6 +117,7 @@
   - textbox "Month"
   - text: Year
   - textbox "Year"
+- text: For example, 27 3 2007
 
 # ReadOnly
 - group "Date of birth":
@@ -145,7 +152,7 @@
   - textbox "Year": "2031"
 
 # UnitedStates
-- text: Date of birth For example, 3 27 2007
+- text: Date of birth
 - group "Date of birth":
   - text: Month
   - textbox "Month": "3"
@@ -153,4 +160,5 @@
   - textbox "Day": "27"
   - text: Year
   - textbox "Year": "2007"
+- text: For example, 3 27 2007
 

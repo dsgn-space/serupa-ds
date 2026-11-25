@@ -184,4 +184,10 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-gap-size` | `spacing-2` | Space between the title, the plot and the legend (8px). |
+
+**Motion**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--chart-duration-enter` | `duration-700` | How long the line takes to draw, the bars to grow and the areas to fade in (700ms); the points come in at 60% of it, as the line reaches them. Still with reduced motion. |
 <!-- token-table:end -->

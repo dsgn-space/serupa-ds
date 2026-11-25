@@ -214,7 +214,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
         // The hex field is a second field of the picker, named "Hex code": not the control a Field labels.
         <FieldContext.Provider value={null}><div className="srp-color-picker__custom">
           <input ref={native} type="color" className="srp-color-picker__native" aria-label={sds.labels.customColor} value={value || '#000000'} disabled={disabled} data-empty={value ? undefined : ''}
-            // Read-only: a native color input has no readonly, so the click (or the key) that opens its picker is cancelled.
+            // Read-only: a native color input has no readonly, so the click (or the key) that opens its picker is canceled.
             onClick={readOnly ? (e) => e.preventDefault() : undefined} onKeyDown={readOnly ? (e) => { if (e.key === 'Enter' || e.key === ' ') e.preventDefault(); } : undefined}
             onChange={(e) => choose(e.target.value, false, false)} />
           <Input size={size === 'lg' ? 'lg' : 'sm'} className="srp-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"

@@ -24,14 +24,14 @@ describe('Textarea autoResize, measured in script', () => {
         <Textarea id="js" autoResize rows={2} maxRows={4} aria-label="Script" />
         <div id="js-narrow" style={{ width: '320px' }}><Textarea id="js-wrap" autoResize rows={1} defaultValue="one two three four five six seven eight nine ten eleven twelve" aria-label="Wrap" /></div>
       </div>);
-      expect([el('js').style.height !== '', height('js')]).toEqual([true, 2 * 20 + 12]);
+      expect([el('js').style.height !== '', height('js')]).toEqual([true, 2 * 20 + 10]);
       await userEvent.click(el('js'));
       await userEvent.keyboard('1{Enter}2{Enter}3');
-      await expect.poll(() => height('js')).toBe(3 * 20 + 12);
+      await expect.poll(() => height('js')).toBe(3 * 20 + 10);
       await userEvent.keyboard('{Enter}4{Enter}5{Enter}6');
-      await expect.poll(() => height('js')).toBe(4 * 20 + 12);
+      await expect.poll(() => height('js')).toBe(4 * 20 + 10);
       await userEvent.keyboard('{Control>}a{/Control}{Backspace}');
-      await expect.poll(() => height('js')).toBe(2 * 20 + 12);
+      await expect.poll(() => height('js')).toBe(2 * 20 + 10);
       const w1 = height('js-wrap');
       document.getElementById('js-narrow')!.style.width = '160px';
       await expect.poll(() => height('js-wrap')).toBeGreaterThan(w1);

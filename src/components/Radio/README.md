@@ -75,7 +75,7 @@ Drawn from the `Disabled` story.
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover or press change |
 | Disabled | Neutral colors at full opacity: a `disabled-border` circle with a `disabled-text` dot when chosen, and a `disabled-text` label; `not-allowed` cursor; also inside a disabled fieldset (`Field group disabled`) |
-| Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the dot shows it too); the focus ring goes round the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
+| Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the dot shows it too); the focus ring goes around the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
 

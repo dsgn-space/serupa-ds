@@ -11,7 +11,7 @@ interface DragHandlers {
   place: (p: HandlePointer) => void;
   /** Scrolls what's under the pointer near its edge, once a frame while dragging; true when anything scrolled. */
   scroll: (p: HandlePointer) => boolean;
-  /** Let go (or cancelled) after a drag, with the pointer where it was let go. */
+  /** Let go (or canceled) after a drag, with the pointer where it was let go. */
   end: (p: HandlePointer, cancel: boolean) => void;
 }
 
@@ -31,7 +31,7 @@ export function edgeScroll(box: Element, horizontal: boolean, at: number, lo: nu
 
 /* The pointer half of a reorderable list's drag handles (SortableList, Kanban): a press that moves a few pixels is a
    drag, followed on the window (the row moves in the DOM as the order changes, which would drop a pointer capture),
-   scrolling near an edge once a frame, until it's let go or cancelled. draggedRef is true from the first move until
+   scrolling near an edge once a frame, until it's let go or canceled. draggedRef is true from the first move until
    the click that ends it, so that click doesn't also pick the row up; pointerRef is the press while it lasts. */
 export function useHandleDrag() {
   const pointerRef = React.useRef<HandlePointer | null>(null);

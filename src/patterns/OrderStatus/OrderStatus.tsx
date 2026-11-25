@@ -30,7 +30,7 @@ import { Stack } from '../../components/Stack/Stack';
    - 4.1.3: a delay says so in a warning above the steps, with the reason and the new day.
    - 3.3.4, 3.3.6: cancelling asks first, in a dialog that names the order and says what happens to the money, and
      whose way out is "Keep order", not a second "Cancel". A cancel that fails says so in the dialog, which stays open.
-   - 2.4.3, 4.1.3: after a cancel the button is gone, so focus goes to the h1, the stage says "Cancelled", and a
+   - 2.4.3, 4.1.3: after a cancel the button is gone, so focus goes to the h1, the stage says "Canceled", and a
      toast says so too.
    - 3.2.4, 1.4.1: once the order has shipped there is no Cancel button, and a sentence says why and what to do.
    - 1.3.1: the items are a list, and the totals a description list, with the total in words ("Total").
@@ -59,7 +59,7 @@ export interface OrderInfo {
   /** What the shop calls it: "1042". */
   number: string;
   stage: OrderStage;
-  /** It was cancelled: the steps give way to a line that says so. */
+  /** It was canceled: the steps give way to a line that says so. */
   cancelled?: boolean | undefined;
   /** The day it's due, in words: "Tuesday, March 4". */
   arriving?: string | undefined;
@@ -117,7 +117,7 @@ const STEPS = [{ title: 'Placed' }, { title: 'Packed' }, { title: 'Shipped' }, {
 
 /** The stage as a sentence, and what comes next: { title: "On its way", detail: "Arriving Tuesday, March 4." }. */
 export function stageWords(order: Pick<OrderInfo, 'stage' | 'cancelled' | 'arriving'>): { title: string; detail: string } {
-  if (order.cancelled) return { title: 'Cancelled', detail: 'Anything you paid goes back to you within 5 working days.' };
+  if (order.cancelled) return { title: 'Canceled', detail: 'Anything you paid goes back to you within 5 working days.' };
   if (order.stage === 'delivered') return { title: 'Delivered', detail: 'It’s been handed over at the address below.' };
   const due = order.arriving ? ` Arriving ${order.arriving}.` : '';
   if (order.stage === 'shipped') return { title: 'On its way', detail: `The courier has it.${due}` };
@@ -125,7 +125,7 @@ export function stageWords(order: Pick<OrderInfo, 'stage' | 'cancelled' | 'arriv
   return { title: 'Order placed', detail: `We’re getting it ready.${due}` };
 }
 
-/** Whether the order can still be cancelled: only before it has shipped. */
+/** Whether the order can still be canceled: only before it has shipped. */
 export const canCancel = (order: Pick<OrderInfo, 'stage' | 'cancelled'>): boolean => !order.cancelled && (order.stage === 'placed' || order.stage === 'packed');
 
 /** What the items cost together, before delivery. */
@@ -144,7 +144,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
   const name = `Order ${order.number}`;
   const sum = subtotal(order.items);
 
-  // Cancelling: asked first, and done only once the server says so.
+  // Canceling: asked first, and done only once the server says so.
   const [asking, setAsking] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
@@ -153,9 +153,9 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
     setFailed(false);
     setBusy(true);
     void Promise.resolve().then(() => onCancel?.()).then(() => {
-      setOrder((o) => ({ ...o, cancelled: true, delay: undefined, events: [{ id: 'cancelled', at: new Date().toISOString(), title: 'Order cancelled' }, ...o.events] }));
+      setOrder((o) => ({ ...o, cancelled: true, delay: undefined, events: [{ id: 'cancelled', at: new Date().toISOString(), title: 'Order canceled' }, ...o.events] }));
       setAsking(false);
-      toast({ title: `${name} is cancelled`, tone: 'success' });
+      toast({ title: `${name} is canceled`, tone: 'success' });
     }, () => setFailed(true)).finally(() => setBusy(false));
   };
   // The Cancel button goes with the order, so focus goes to the page's h1.
@@ -172,7 +172,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
       </header>
       <Container as="main" size="md" className="py-8 outline-none" id="main">
         <Stack gap={0}>
-          <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Cancelling needs a connection.</OfflineBanner>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Canceling needs a connection.</OfflineBanner>
           <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: name }]} title={name} headingRef={heading} />
 
           <div className="flex flex-col gap-8 pt-6">
@@ -189,7 +189,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                     {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)} data-print="hide">Cancel order</Button> : null}
                   </div>
                   {!order.cancelled && !canCancel(order) && order.stage === 'shipped'
-                    ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be cancelled. You can send it back once it arrives.</p> : null}
+                    ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be canceled. You can send it back once it arrives.</p> : null}
                 </section>
 
                 <section aria-labelledby="happened" className={section}>

@@ -4,9 +4,10 @@
 - paragraph: "Saved: America/New_York"
 
 # Default
-- text: Time zone Meetings and reminders use it.
+- text: Time zone
 - combobox "Time zone": Jakarta
 - button "Show options"
+- text: Meetings and reminders use it.
 
 # DoSayWhose
 - text: Meeting time zone

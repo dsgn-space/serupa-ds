@@ -360,6 +360,18 @@
           }
         }
       }
+    },
+    "motion": {
+      "duration-enter": {
+        "$type": "duration",
+        "$value": "{transitions.duration-700}",
+        "$description": "How long the line takes to draw, the bars to grow and the areas to fade in (700ms); the points come in at 60% of it, as the line reaches them. Still with reduced motion.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-duration-enter"
+          }
+        }
+      }
     }
   }
 }

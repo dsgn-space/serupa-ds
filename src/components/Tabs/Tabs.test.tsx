@@ -48,6 +48,16 @@ const slidesOn = (t: HTMLElement, pseudo: string) => document.getAnimations().fi
 const insetL = (v: string) => { const [t = 0, r = t, , l = r] = (v.split(' round')[0]!.match(/-?[\d.]+/g) || []).map(Number); return l; };
 const propsOf = (a: Animation) => (a instanceof CSSTransition ? [a.transitionProperty] : Object.keys((a.effect as KeyframeEffect).getKeyframes()[0]!).filter((k) => !/^(offset|computedOffset|easing|composite)$/.test(k)).map((k) => (k === 'clipPath' ? 'clip-path' : k)));
 const runsOn = (t: HTMLElement) => [...slidesOn(t, '::after'), ...slidesOn(t, '::before')].flatMap(propsOf).filter((k) => /^(translate|scale|clip-path)$/.test(k)).length;
+// A driver's click can take seconds on a busy runner, longer than the slide (200ms), which has then ended before the
+// test reads it. The tests that read a slide stretch it to a minute, read it, then end it with land().
+const sliding = <T,>(fn: () => Promise<T>) => withMotion(async () => {
+  const slow = document.createElement('style');
+  // A move made at once (data-instant, from the keyboard) stays at once.
+  slow.textContent = '.srp-tabs__tab:not([data-instant])::after, .srp-tabs__tab:not([data-instant])::before { transition-duration: 60s !important; }';
+  document.head.append(slow);
+  try { return await fn(); } finally { slow.remove(); }
+});
+const land = (all: (Animation | undefined)[]) => Promise.all(all.filter((a): a is Animation => !!a).map((a) => { a.finish(); return a.finished.catch(() => {}); }));
 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
@@ -513,7 +523,7 @@ describe('Tabs on the server', () => {
   });
 
   test('the line and the pill fill slide from the tab selected before (EG1): the line starts where it was, on translate and scale; the pill fill is cut from its shape to the new one, round corners kept (GO1); both come to rest in place', async () => {
-    await withMotion(async () => {
+    await sliding(async () => {
       await setup();
       const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
       await userEvent.click(tabs[2]!);
@@ -523,7 +533,7 @@ describe('Tabs on the server', () => {
       // whether the click was taken for a key.
       const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2]!.style.getPropertyValue('--srp-tabs-from-shift') || getComputedStyle(tabs[2]!).getPropertyValue('--srp-tabs-from-shift'), now: getComputedStyle(tabs[2]!, '::after').translate, instant: tabs[2]!.hasAttribute('data-instant') });
       expect([moves.flatMap(propsOf).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0]!.offsetLeft - tabs[2]!.offsetLeft)]);
-      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
+      await land(moves);
       expect([getComputedStyle(tabs[2]!, '::after').translate, getComputedStyle(tabs[2]!, '::after').scale]).toEqual(['none', 'none']);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
@@ -534,14 +544,14 @@ describe('Tabs on the server', () => {
       const px = (c: string) => (c.match(/-?[\d.]+px/g) || []).slice(0, 4).map((n) => Math.round(parseFloat(n)));
       // Cut to the last tab: its start edge is where that tab starts, from this one's (the fill spans both).
       expect([cuts.flatMap(propsOf), px(first)[3], /round/.test(first), cuts.some((a) => propsOf(a).includes('scale'))]).toEqual([['clip-path'], Math.round(from!.offsetLeft - to!.offsetLeft), true, false]);
-      await Promise.all(cuts.map((a) => a.finished.catch(() => {})));
+      await land(cuts);
       const rest = getComputedStyle(to!, '::before'), r = to!.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
       expect([Math.round(box.w - box.cut[1]! - box.cut[3]!), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
     });
   });
 
   test('where the browser starts no slide for the line or the fill (Safari, on a pseudo-element), the script runs it: from the same start, then at rest in place', async () => {
-    await withMotion(async () => {
+    await sliding(async () => {
       await setup();
       // The CSS slide turned off, as Safari leaves it: the transition time is there, but nothing starts.
       const off = document.createElement('style');
@@ -553,13 +563,13 @@ describe('Tabs on the server', () => {
         await userEvent.click(tabs[2]!);
         const [line] = scripted(tabs[2]!, '::after'), start = (line?.effect as KeyframeEffect | undefined)?.getKeyframes()[0];
         expect([Math.round(parseFloat(String(start?.translate))), typeof start?.scale]).toEqual([Math.round(tabs[0]!.offsetLeft - tabs[2]!.offsetLeft), 'string']);
-        await line!.finished;
+        await land([line]);
         expect(getComputedStyle(tabs[2]!, '::after').translate).toBe('none');
         const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
         await userEvent.click(pills[0]!);
         const [cut] = scripted(pills[0]!, '::before'), first = String((cut?.effect as KeyframeEffect | undefined)?.getKeyframes()[0]!.clipPath ?? '');
         expect([Math.round(parseFloat((first.match(/-?[\d.]+px/g) || [])[3] ?? 'NaN')), /round/.test(first)]).toEqual([Math.round(pills[2]!.offsetLeft - pills[0]!.offsetLeft), true]);
-        await cut!.finished;
+        await land([cut]);
       } finally { off.remove(); }
     });
   });
@@ -593,7 +603,7 @@ describe('Tabs indicator from the keyboard (KW1)', () => {
 
 describe('Tabs indicator after a keyboard pick, moved from elsewhere (GR61)', () => {
   test('controlled: an arrow moves the line at once; then a mouse click on an outside Next button slides it, with no data-instant', async () => {
-    await withMotion(async () => {
+    await sliding(async () => {
       const order = ['a', 'b', 'c'];
       function App() {
         const [v, set] = React.useState('a');
@@ -625,7 +635,7 @@ describe('Tabs indicator when picking a tab moves the tabs', () => {
     </TabList><TabPanel value="one">1</TabPanel><TabPanel value="two">2</TabPanel></Tabs>;
   }
   test('the pill fill slides from where it stood, though the tabs moved as the pick widened the tab before', async () => {
-    await withMotion(async () => {
+    await sliding(async () => {
       await render(<Counted />);
       const [one, two] = [...el('cnt').querySelectorAll<HTMLElement>('[role="tab"]')] as [HTMLElement, HTMLElement];
       const was = one.offsetLeft, twoWas = two.offsetLeft;
@@ -645,7 +655,7 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
   const halfway = (all: Animation[]) => { for (const a of all) { a.pause(); a.currentTime = Number(a.effect!.getTiming().duration) / 2; } };
   const nums = (v: string) => (v.match(/-?[\d.]+/g) || []).map(Number);
   test('picking another tab while the line or the fill is still sliding starts the new slide from where it has got to, not from the last tab (EH1)', async () => {
-    await withMotion(async () => {
+    await sliding(async () => {
       await setup();
       const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
       await userEvent.click(tabs[2]!);

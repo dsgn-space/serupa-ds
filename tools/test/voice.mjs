@@ -20,7 +20,7 @@ const ALLOW = [];
 
 const DASH = /—| -- /g;
 // American spelling (Content and voice), as the tokens, props and CSS spell it.
-const SPELLING = /\b(?:colour(?:s|ed|ing|ful)?|organis(?:ation|ations|e|es|ed|ing)|centre(?:s|d)?|behaviour(?:s|al)?|neighbour(?:s|ing)?)\b/gi;
+const SPELLING = /\b(?:colour(?:s|ed|ing|ful)?|organis(?:ation|ations|e|es|ed|ing)|centre(?:s|d)?|behaviour(?:s|al)?|neighbour(?:s|ing)?|grey(?:s|ed|er|ish)?|(?:un)?labelled|cancel(?:led|ling)|emphasis(?:e|ed|es|ing))\b/gi;
 // "(GR95)", "(PT12)", "(FU1, GR151)", "(41)": letters and a number, or a two- or three-digit number, alone in brackets.
 const QUEUE_ID = / \((?:[A-Z]{1,4}\d+[a-z]?|\d{2,3})(?:, (?:[A-Z]{1,4}\d+[a-z]?|\d{2,3}))*\)/g;
 const PLEASE = /\b(?:please|sorry|mohon|maaf|silakan)\b/gi;
@@ -104,7 +104,7 @@ t('the dash check catches an em dash or " -- " joining words, and leaves a range
   ['**Sizes** — each size', 'never alone -- rings vanish'].every(dashed) && !['**50–200**: tinted', '| mask-type | `mask-type-alpha` | — |', 'npm run new -- <Name>'.replace(/npm.*/, '')].some(dashed));
 const misspelled = (s) => new RegExp(SPELLING.source, 'i').test(s);
 t('the spelling check catches "colour", "centred", "behaviour" and "organisation", and leaves "color", "centered" and "Colorado" alone',
-  ['its colour', 'centred on the text', 'the behaviour', 'an organisation'].every(misspelled) && !['its color', 'centered on it', 'Colorado', 'behavioral'].some(misspelled));
+  ['its colour', 'centred on the text', 'the behaviour', 'an organisation', 'greyed out', 'a cancelled drag', 'labelled by'].every(misspelled) && !['its color', 'centered on it', 'Colorado', 'behavioral'].some(misspelled));
 const queued = (s) => new RegExp(QUEUE_ID.source).test(s);
 t('the id check catches "(GR95)", "(PT12)", "(FU1, GR151)" and "(41)", and leaves "(WCAG 2.2)", "(320 px)" and "(1.4.10)" alone',
   ['Fix the bar (GR95).', 'Checkout (PT12):', 'lists (FU1, GR151).', 'the toast (41).'].every(queued) && !['AA (WCAG 2.2).', 'wraps (320 px).', 'reflow (1.4.10).', 'in 2026 (2026)'].some(queued));

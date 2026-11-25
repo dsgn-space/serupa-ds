@@ -114,7 +114,7 @@ const Boundary = /* @__PURE__ */ (() => class Boundary extends React.Component<B
     return (
       <div ref={this.box} tabIndex={-1} className={cn('srp-error-boundary', p.className)} data-component="error-boundary">
         <Alert tone="danger" title={p.title ?? p.labels.errorTitle}
-          actions={<Button size="sm" variant="outline" onClick={this.reset}>{p.labels.tryAgain}</Button>}>
+          actions={<Button size="sm" variant="secondary" onClick={this.reset}>{p.labels.tryAgain}</Button>}>
           {p.description ?? p.labels.errorDescription}
         </Alert>
       </div>

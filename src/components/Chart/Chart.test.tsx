@@ -337,6 +337,16 @@ describe('Chart', () => {
     expect(niceTicks(0.1, 0.9, 4)).toEqual([0, 0.2, 0.4, 0.6, 0.8, 1]);
   });
 
+  test('a chart comes in slowly enough to follow: the line draws, the bars grow and the areas fade over 700ms, and the points come in as the line reaches them', async () => {
+    await render(<><Chart title="L" categories={CATS} series={TWO} /><Chart type="bar" title="B" categories={CATS} series={TWO} /></>);
+    await withMotion(async () => {
+      const line = css(document.querySelector('svg[aria-describedby] g[role="group"] > path[aria-hidden]'));
+      const bar = css(document.querySelector('figure[data-type="bar"] g[role="group"] > [role="img"]'));
+      const marker = css(document.querySelector('figure:not([data-type="bar"]) g[role="group"] > path[role="img"]'));
+      expect([line.animationDuration, bar.animationDuration, marker.animationDelay]).toEqual(['0.7s', '0.7s', '0.42s']);
+    });
+  });
+
   test('the line draws in once and the bars grow, unless motion is reduced (CSS)', async () => {
     await render(<><Chart title="L" categories={CATS} series={TWO} /><Chart type="bar" title="B" categories={CATS} series={TWO} /></>);
     await withMotion(async () => {

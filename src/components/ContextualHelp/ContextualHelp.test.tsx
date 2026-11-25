@@ -22,6 +22,14 @@ describe('ContextualHelp', () => {
     expect(btn().getAttribute('aria-label')).toBe('Help: tax ID');
   });
 
+  test('the panel sits close to the small glyph: 8px or less from the "?" itself, not 8px from the 24px button around it', async () => {
+    await render(<div style={{ padding: 40 }}><ContextualHelp title="What is a workspace?">Holds your projects.</ContextualHelp></div>);
+    await userEvent.click(btn());
+    await tick();
+    const glyph = btn().querySelector('svg')!.getBoundingClientRect(), top = panel().getBoundingClientRect().top;
+    expect(Math.round(top - glyph.bottom)).toBeLessThanOrEqual(8);
+  });
+
   test('pressing it opens a non-modal dialog named by its title; pressing again closes it', async () => {
     await render(<><ContextualHelp title="What is a workspace?">Holds your projects.</ContextualHelp><button id="after">after</button></>);
     await userEvent.click(btn());

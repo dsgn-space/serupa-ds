@@ -55,7 +55,7 @@
       "indicator-active": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
-        "$description": "The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast.",
+        "$description": "The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--command-palette-indicator-active"

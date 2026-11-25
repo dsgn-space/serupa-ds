@@ -41,7 +41,8 @@
 - button "Choose a time"
 
 # WorkingHours
-- text: Start time Between 8 AM and 6 PM
+- text: Start time
 - combobox "Start time": 9:00 AM
 - button "Choose a time"
+- text: Between 8 AM and 6 PM
 

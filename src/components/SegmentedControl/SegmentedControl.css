@@ -12,7 +12,7 @@
   /* Segments share the width by content: each column grows from nothing to its label's width, the space handed out
      evenly, so when they don't all fit the short labels stay whole and the long ones give way (EU1). */
   position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--srp-seg-h); max-width: var(--sizing-full);
-  padding: var(--segmented-control-padding, var(--spacing-0\.5));
+  padding: var(--segmented-control-padding, var(--spacing-0\.5)); column-gap: var(--segmented-control-padding, var(--spacing-0\.5));   /* the segments as far apart as from the track's edge */
   border: var(--border-width-1) solid var(--segmented-control-border, var(--field-border));
   border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--surface-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;

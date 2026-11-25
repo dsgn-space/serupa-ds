@@ -21,7 +21,7 @@ export const Solved: Story = {
     ticket: {
       reference: 'SR-29977', subject: 'Can’t change my email address', state: 'solved', opened: '2026-01-28T08:00:00Z', priority: 'Normal',
       messages: [
-        { id: 'm1', from: 'you', body: 'The Save button stays grey when I enter a new email.', at: '2026-01-28T08:00:00Z' },
+        { id: 'm1', from: 'you', body: 'The Save button stays gray when I enter a new email.', at: '2026-01-28T08:00:00Z' },
         { id: 'm2', from: 'Rina Wijaya', body: 'Fixed on our side: it works now. Sorry for the trouble.', at: '2026-01-28T10:30:00Z' },
       ],
     },

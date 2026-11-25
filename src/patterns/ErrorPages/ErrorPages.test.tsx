@@ -23,16 +23,16 @@ describe('Patterns/Error pages', () => {
     expect(seen).toEqual([
       ['Page not found – Acme', 'Page not found'],
       ['You’re offline – Acme', 'You’re offline'],
-      ['Something went wrong on our side – Acme', 'Something went wrong on our side'],
+      ['We couldn’t load this page – Acme', 'We couldn’t load this page'],
       ['You don’t have access to this page – Acme', 'You don’t have access to this page'],
     ]);
   });
 
-  test('one main and one h1, then an h2 for what to do, and a way back on every page', async () => {
+  test('one main and one heading, the h1, then one description and a way back on every page', async () => {
     for (const kind of KINDS) {
       const r = await render(<ErrorPage kind={kind} home="/start" onRetry={() => {}} />);
       const main = document.querySelector('main')!;
-      expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length, main.querySelectorAll('h2').length]).toEqual([1, 1, 1]);
+      expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length, main.querySelectorAll('h2, h3, h4, h5, h6').length, main.querySelectorAll('p').length]).toEqual([1, 1, 0, 1]);
       const home = [...main.querySelectorAll('a')].find((a) => a.textContent === 'Go to the home page');
       expect(home?.getAttribute('href')).toBe('/start');
       await r.unmount();
@@ -73,7 +73,7 @@ describe('Patterns/Error pages', () => {
         <Page />
       </ErrorBoundary>,
     );
-    expect(document.querySelector('main')!.textContent).toContain('It isn’t something you did. If it keeps happening, contact support and give them this reference: ERR-1.');
+    expect(document.querySelector('main')!.textContent).toContain('It isn’t something you did. Try again in a moment, and if it keeps happening, contact support and give them this reference: ERR-1.');
     broken = false;
     await screen.getByRole('button', { name: 'Try again' }).click();
     await expect.poll(() => document.querySelector('h1')?.textContent).toBe('Dashboard');

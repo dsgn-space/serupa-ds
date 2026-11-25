@@ -22,6 +22,18 @@
           }
         }
       }
+    },
+    "spacing": {
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "The gap between the panel and the button (2px): the button is wider than its small glyph, so the panel sits about 7px from the glyph itself.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--contextual-help-offset"
+          }
+        }
+      }
     }
   }
 }

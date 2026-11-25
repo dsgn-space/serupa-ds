@@ -26,9 +26,9 @@
 .srp-drawer--sm { --srp-drawer-width: var(--drawer-width-sm, var(--container-xs)); }
 .srp-drawer--lg { --srp-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
 .srp-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
-:root:has(.srp-drawer[open]:not(.srp-drawer--nonmodal)) { overflow: hidden; }
+:root:has(.srp-drawer:modal) { overflow: hidden; }
 /* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-srp-gutter). */
-:root[data-srp-gutter]:has(.srp-drawer[open]:not(.srp-drawer--nonmodal)) { scrollbar-gutter: stable; }
+:root[data-srp-gutter]:has(.srp-drawer:modal) { scrollbar-gutter: stable; }
 /* Non-modal (modal={false}): shown in place, not in the top layer, so it sits over the page by z-index; the
    full-screen box lets presses through, and only the panel takes them. */
 .srp-drawer--nonmodal { z-index: var(--z-overlay); pointer-events: none; }

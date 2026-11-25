@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v19.0.0
+npm install github:dsgn-space/serupa-ds#v19.0.1
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -86,7 +86,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Actions
 
-- **Button**: Triggers an action: submitting a form, opening a dialog, confirming or cancelling. Also called: call to action, CTA.
+- **Button**: Triggers an action: submitting a form, opening a dialog, confirming or canceling. Also called: call to action, CTA.
 - **ButtonGroup**: Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. Also called: button bar, action group.
 - **CopyButton**: A button that copies text to the clipboard: an API key, an invite link, a command. Also called: copy to clipboard, clipboard button.
 - **Fab**: A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. Also called: floating action button.
@@ -163,7 +163,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Checkbox**: A native checkbox with its label, for turning one option on or off, or picking any number from a list. Also called: check box, tick box.
 - **ColorPicker**: Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. Also called: color input, swatch picker.
 - **Combobox**: A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Also called: autocomplete, autosuggest, typeahead.
-- **DateField** (beta): A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. Also called: date input, segmented date input.
+- **DateField** (beta): A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labeled boxes, in the locale's order. Also called: date input, segmented date input.
 - **DatePicker**: A date field: people type a date, or pick one from a calendar that opens under the field. Also called: date chooser, calendar input.
 - **DateRangePicker**: Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. Also called: range picker, date range input.
 - **ErrorSummary**: After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. Also called: error list, form error summary.

@@ -46,9 +46,9 @@ Drawn from the `Horizontal` story.
 
 ## Behavior
 
-- Pointer: press the handle and move more than 4px; the row follows the pointer and the others move out of its way. Letting go drops it. A press without moving picks the row up, as Space does; a press on another row's handle then drops it in that row's place, and a press on its own handle drops it where it is (WCAG 2.5.7: no drag needed). Held near the top or bottom edge of the list's scrolling container (or of the window), it scrolls that way, faster nearer the edge, so a row can be moved past the screen.
+- Pointer: press the handle and move more than 4px; the row follows the pointer and the others move out of its way. Letting go drops it. A press without moving picks the row up, as Space does; a press on another row's handle then drops it in that row's place, and a press on its own handle drops it where it is (WCAG 2.5.7: no drag needed). Picked up from the keyboard, it can still be dragged: dragging its handle carries it on with the pointer, and dragging another row's handle puts it back and drags that row instead. Held near the top or bottom edge of the list's scrolling container (or of the window), it scrolls that way, faster nearer the edge, so a row can be moved past the screen.
 - Keyboard: Space or Enter on a handle picks the row up. The arrow keys move it one place, Home and End to either end. Space or Enter drops it, and Escape, Tab or a click elsewhere puts it back where it was. Focus stays on its handle throughout.
-- Nothing is reported until the drop, so a cancelled move leaves your data alone.
+- Nothing is reported until the drop, so a canceled move leaves your data alone.
 - `disabled` shows the rows without handles.
 - `orientation="horizontal"` lays the items out in a row (a board's columns, a set of tabs) that scrolls sideways inside itself when it doesn't fit: a drag moves sideways and scrolls at the left and right edges, and Left and Right follow the reading direction, so in right-to-left ArrowLeft moves an item later. Up and Down still move it earlier and later.
 
@@ -62,7 +62,7 @@ Drawn from the `Horizontal` story.
 - A `<ul role="list">` of `<li>` rows (the role keeps it a list in Safari). Each handle is a button named "Reorder" and the item's name, described by the keyboard instructions, with `aria-pressed` while its row is picked up.
 - Screen readers hear each step in a polite live region: "Picked up Gemini, position 2 of 4.", "Gemini, position 3 of 4.", "Dropped Gemini at position 4 of 4." or "Canceled. Gemini is back at position 2 of 4." The words come from `SerupaProvider` labels (Indonesian in `idLabels`).
 - Screen reader users in browse mode activate the handle with Enter, which picks the row up the same way.
-- The handle is at least 24 by 24px, and it keeps 3:1 (the text 4.5:1) on the row in every theme (`SortableList.test.tsx`). In forced-colors mode the moving row gets a Highlight outline.
+- The handle is at least 24 by 24px, and it keeps 3:1 (the text 4.5:1) on the row in every theme (`SortableList.test.tsx`). The row being moved, from the keyboard or the pointer, carries the one focus ring, around the whole row, and its handle's own ring hides. In forced-colors mode the moving row gets a Highlight outline.
 
 ### Keyboard
 
@@ -100,7 +100,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-text` | `text` | The rows' text. |
 | `--sortable-list-item-bg` | `surface` | A row's background. |
 | `--sortable-list-item-border` | `border` | A row's border. |
-| `--sortable-list-item-border-active` | `primary-text` | The border of the row being moved. |
+| `--sortable-list-item-border-active` | `focus-ring` | The ring around the row being moved, from the keyboard or the pointer: the focus ring, which its handle's own ring gives way to. |
 | `--sortable-list-handle` | `text-muted` | The handle (3:1 on the row). |
 | `--sortable-list-handle-active` | `text` | The handle on hover and while its row moves. |
 | `--sortable-list-handle-bg-hover` | `secondary` | The handle's background on hover. |
@@ -112,6 +112,6 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-item-gap` | `spacing-2` | Space between the handle and the content (8px). |
 | `--sortable-list-item-padding-y` | `spacing-2` | Space above and below a row's content (8px). |
 | `--sortable-list-item-padding-x` | `spacing-3` | Space at a row's end, and its start without a handle (12px). |
-| `--sortable-list-item-padding-start` | `spacing-1` | Space before the handle (4px). |
+| `--sortable-list-item-padding-start` | `spacing-2` | Space before the handle (8px). |
 | `--sortable-list-handle-size` | `spacing-6` | The handle's smallest size, its target (24px). |
 <!-- token-table:end -->

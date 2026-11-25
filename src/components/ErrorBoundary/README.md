@@ -11,6 +11,11 @@ import { ErrorBoundary } from "@diki-stwn/serupa-ds";
   <SalesChart />
 </ErrorBoundary>
 
+// a whole page: the server error page from the Error pages pattern, with "Try again" as its reset
+<ErrorBoundary fallback={({ reset }) => <ErrorPage kind="server" onRetry={reset} />} onError={report}>
+  <Page />
+</ErrorBoundary>
+
 // your own words
 <ErrorBoundary title="Couldn't load the chart" description="The rest of the page still works.">…</ErrorBoundary>
 
@@ -22,7 +27,8 @@ import { ErrorBoundary } from "@diki-stwn/serupa-ds";
 
 ## When to use
 
-- Around a part of the page that can fail on its own (a chart, a feed, a third-party widget), so the rest keeps working.
+- Around a whole page, with the server error page from the Error pages pattern as its `fallback` (above): one heading that says what happened, a description, "Try again" and a way home. The default Alert is for a part of a page, not a whole one.
+- Around a part of the page that can fail on its own (a chart, a feed, a third-party widget), so the rest keeps working. The default Alert fits here.
 - Around each route's content in a single-page app, with `resetKeys` set to the route, so moving on clears the error.
 
 ## When not to use
@@ -37,7 +43,7 @@ import { ErrorBoundary } from "@diki-stwn/serupa-ds";
 - Say what failed and what still works in `title` and `description` when you know ("Couldn't load the chart"), instead of the general default.
 - "Try again" renders the children again. If they fail the same way, the fallback comes back.
 - `resetKeys` clears the error when any value in it changes, such as a route or the id being shown.
-- `fallback` replaces the default Alert: an element, or a function of `{ error, reset }`. Don't show `error.message` to people: it's written for developers.
+- `fallback` replaces the default Alert, such as with the error page for a whole page: an element, or a function of `{ error, reset }`. Don't show `error.message` to people: it's written for developers.
 
 ### Do and don't
 

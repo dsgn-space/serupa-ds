@@ -13,6 +13,9 @@ The page where an order is paid for: a delivery address, a delivery speed, an op
 
 - Someone is paying for something they've chosen, and it has to reach them.
 - Use it for a single order. A subscription sign-up has a plan choice first; a donation is one amount and a card.
+
+## When not to use it
+
 - Not for collecting card details to keep without a payment: say so on the page, and leave out the order summary.
 
 ## What each part is for
@@ -28,7 +31,7 @@ The page where an order is paid for: a delivery address, a delivery speed, an op
   - **Bank transfer:** the bank. Once the order is placed, the virtual account's number and the amount, each with a copy button, and the time left to pay.
   - **E-wallet:** which one, and the phone number its app asks to approve on. Once placed: which app to open, and the time left.
   - **QRIS:** once placed, the code to scan (`qrImage` from your provider; the demo draws a stand-in) and how long it works.
-  - When the time runs out, the page says the order is cancelled and nothing was charged, with "Choose another way to pay".
+  - When the time runs out, the page says the order is canceled and nothing was charged, with "Choose another way to pay".
 - **A promo code** in the order summary, above the total: "Add promo code" opens a field and focuses it. Apply is busy while `onApplyPromo` checks; a code that doesn't apply says why at the field; one that does shows as a badge with Remove and adds a discount line. Each change is said aloud.
 - **The order summary** beside the form (below it on a phone) with every line, the delivery, the tip and the total, updated as they change.
 - **A review step** before anything is charged: the address, the delivery and the card (only its last four digits), each with a "Change" button that goes back with every answer kept and focus on that part's first field (3.3.4, 3.3.7). "Place order" says the amount, and comes after the summary, so on a phone every line of the total is passed before the button that pays.

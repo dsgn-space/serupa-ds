@@ -1,16 +1,18 @@
 # Checking
-- text: Username Letters, numbers and dashes
+- text: Username
 - textbox "Username": ada-l
-- text: Checking the name…
+- text: Letters, numbers and dashes Checking the name…
 
 # Disabled
-- text: Email We'll send the receipt here.
+- text: Email
 - textbox "Email" [disabled]:
   - /placeholder: you@example.com
+- text: We'll send the receipt here.
 
 # DoHintForFormat
-- text: Date of birth For example, 31/12/1990
+- text: Date of birth
 - textbox "Date of birth"
+- text: For example, 31/12/1990
 
 # DontPlaceholderFormat
 - text: Date of birth
@@ -19,11 +21,11 @@
 
 # Group
 - group "Notifications":
-  - text: Notifications Choose any
+  - text: Notifications
   - checkbox "Email" [checked]
   - text: Email
   - checkbox "SMS"
-  - text: SMS
+  - text: SMS Choose any
 - group "Plan Required":
   - text: Plan Required
   - radiogroup [invalid]:
@@ -45,10 +47,10 @@
 - text: Keep it under 160 characters.
 
 # LongText
-- text: The email address we should send every receipt and invoice to We send one receipt per payment, plus a monthly summary for Donaudampfschifffahrtsgesellschaftskapitänskajüte.
+- text: The email address we should send every receipt and invoice to
 - textbox "The email address we should send every receipt and invoice to" [invalid]:
   - /placeholder: you@example.com
-- text: Enter an email address like name@example.com, without spaces before or after it
+- text: We send one receipt per payment, plus a monthly summary for Donaudampfschifffahrtsgesellschaftskapitänskajüte. Enter an email address like name@example.com, without spaces before or after it
 
 # Optional
 - text: Company(optional)
@@ -56,24 +58,25 @@
   - /placeholder: you@example.com
 
 # OtherControls
-- text: Message Up to 280 characters
+- text: Message
 - textbox "Message"
-- text: 0 / 280 Country
+- text: 0 / 280 Up to 280 characters Country
 - combobox "Country":
   - option "Indonesia"
   - option "Malaysia"
   - option "Singapore"
 
 # Playground
-- text: Email We'll send the receipt here.
+- text: Email
 - textbox "Email":
   - /placeholder: you@example.com
+- text: We'll send the receipt here.
 
 # WithError
-- text: Email We'll send the receipt here.
+- text: Email
 - textbox "Email" [invalid]:
   - /placeholder: you@example.com
-- text: Enter an email address like name@example.com
+- text: We'll send the receipt here. Enter an email address like name@example.com
 
 # WithWarning
 - text: Project name

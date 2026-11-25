@@ -12,7 +12,7 @@ export { isApple } from '../../internal/keys';
 export interface KbdProps extends React.HTMLAttributes<HTMLElement> {
   /** A combination, one key each: ['mod', 'K'], ['shift', 'enter']. Names below show as symbols on Apple devices. Or pass one key as children. */
   keys?: string[] | undefined;
-  /** 'sm' (20px) or 'md' (24px, default). */
+  /** 'md' (20px, default) wherever text is around it; 'sm' (16px, quieter, no +) inside a control such as a search button. */
   size?: 'sm' | 'md' | undefined;
 }
 
@@ -56,13 +56,16 @@ const NAMED: Record<string, [string, string, string, string]> = {
   fn: ['fn', 'Function', 'Fn', 'Function'],
 };
 
+// One character (K, ⌘, ↑) is a square key; a word (Esc, Ctrl) gets padding.
+const keyClass = (shown: string) => [...shown].length === 1 ? 'srp-kbd__key srp-kbd__key--char' : 'srp-kbd__key';
+
 function Key({ k, apple, say }: { k: string; apple: boolean; say: (name: string) => string }) {
   // "page_up", "Page Up" and "page-up" all find pageup.
   // " " is the space bar, as KeyboardEvent.key gives it.
   const n = NAMED[k === ' ' ? 'space' : k.length > 1 ? k.toLowerCase().replace(/[\s_-]/g, '') : k.toLowerCase()];
-  if (!n) return <kbd className="srp-kbd__key">{k.length === 1 ? k.toUpperCase() : k}</kbd>;
+  if (!n) return <kbd className={keyClass(k)}>{k.length === 1 ? k.toUpperCase() : k}</kbd>;
   const shown = apple ? n[0] : n[2], name = say(apple ? n[1] : n[3]);
-  return <kbd className="srp-kbd__key" title={shown === name ? undefined : name}>{shown === name ? shown : <><span aria-hidden>{shown}</span><VisuallyHidden>{name}</VisuallyHidden></>}</kbd>;
+  return <kbd className={keyClass(shown)} title={shown === name ? undefined : name}>{shown === name ? shown : <><span aria-hidden>{shown}</span><VisuallyHidden>{name}</VisuallyHidden></>}</kbd>;
 }
 
 function KbdRender({ ref, ...props }: KbdProps & React.RefAttributes<HTMLElement>) {
@@ -77,7 +80,7 @@ function KbdRender({ ref, ...props }: KbdProps & React.RefAttributes<HTMLElement
     <kbd {...rest} ref={ref} className={cn(cls, keys.length === 1 && 'srp-kbd--single')} data-component="kbd" data-size={size}>
       {keys.map((k, i) => (
         <React.Fragment key={i}>
-          {i > 0 ? <span className="srp-kbd__plus" aria-hidden>+</span> : null}
+          {i > 0 && size === 'md' ? <span className="srp-kbd__plus" aria-hidden>+</span> : null}
           <Key k={k} apple={apple} say={say} />
         </React.Fragment>
       ))}

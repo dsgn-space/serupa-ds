@@ -102,8 +102,9 @@ describe('ButtonGroup', () => {
 
   test('two attached primary buttons have an edge between them, in their text color, in every theme; outline buttons keep their shared border (EL1)', async () => {
     await render(<ButtonGroup id="gp"><Button id="p1">Save</Button><Button id="p2">Save as</Button><Button id="p3" variant="outline">Cancel</Button></ButtonGroup>);
-    const edge = (id: string) => getComputedStyle(el(id)).borderInlineStartColor;
-    expect([edge('p1'), edge('p2') === 'rgba(0, 0, 0, 0)']).toEqual(['rgba(0, 0, 0, 0)', false]);
+    // The edge is a 1px line drawn over the start of the second one's clear border (a colored border would notch its ends).
+    const edge = (id: string) => getComputedStyle(el(id)).backgroundImage;
+    expect([edge('p1'), edge('p2').startsWith('linear-gradient'), getComputedStyle(el('p2')).borderInlineStartColor]).toEqual(['none', true, 'rgba(0, 0, 0, 0)']);
     // The edge keeps 3:1 on the button's fill (lowest: violet-light, 3.67).
     const low: string[] = [];
     for (const t of THEMES) {
@@ -112,7 +113,7 @@ describe('ButtonGroup', () => {
       if (r < 3) low.push(`${t} ${r.toFixed(2)}`);
     }
     expect(low).toEqual([]);
-    expect(getComputedStyle(el('p3')).borderInlineStartColor).not.toBe(edge('p2'));
+    expect(getComputedStyle(el('p3')).borderInlineStartColor).not.toBe('rgba(0, 0, 0, 0)');
   });
 });
 

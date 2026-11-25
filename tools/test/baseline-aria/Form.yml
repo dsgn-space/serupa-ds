@@ -1,19 +1,20 @@
 # AsyncCheck
 - form "Create an account":
-  - text: Username Lowercase letters, numbers and _
+  - text: Username
   - textbox "Username"
+  - text: Lowercase letters, numbers and _
   - button "Save"
 
 # Default
 - form "Create an account":
   - text: Full name
   - textbox "Full name"
-  - text: Email Like name@example.com
+  - text: Email
   - textbox "Email"
-  - text: Password 12 characters or more
+  - text: Like name@example.com Password
   - textbox "Password"
   - button "Show password"
-  - text: Confirm password
+  - text: 12 characters or more Confirm password
   - textbox "Confirm password"
   - button "Show confirmed password"
   - checkbox "I agree to the terms"
@@ -78,12 +79,12 @@
 - form "Create an account":
   - text: Full name
   - textbox "Full name"
-  - text: Email Like name@example.com
+  - text: Email
   - textbox "Email"
-  - text: Password 12 characters or more
+  - text: Like name@example.com Password
   - textbox "Password"
   - button "Show password"
-  - text: Confirm password
+  - text: 12 characters or more Confirm password
   - textbox "Confirm password"
   - button "Show confirmed password"
   - checkbox "I agree to the terms"
@@ -115,12 +116,12 @@
           - /url: "#srp-f_id1_-control"
   - text: Full name
   - textbox "Full name": Ani Wijaya
-  - text: Email Like name@example.com
+  - text: Email
   - textbox "Email" [invalid]: ani@example.com
-  - text: That email already has an account. Sign in instead Password 12 characters or more
+  - text: Like name@example.com That email already has an account. Sign in instead Password
   - textbox "Password"
   - button "Show password"
-  - text: Confirm password
+  - text: 12 characters or more Confirm password
   - textbox "Confirm password"
   - button "Show confirmed password"
   - checkbox "I agree to the terms"
@@ -143,12 +144,12 @@
           - /url: "#srp-f_id3_-control"
   - text: Full name
   - textbox "Full name" [invalid]
-  - text: Enter your full name Email Like name@example.com
+  - text: Enter your full name Email
   - textbox "Email" [invalid]
-  - text: Enter an email address like name@example.com Password 12 characters or more
+  - text: Like name@example.com Enter an email address like name@example.com Password
   - textbox "Password"
   - button "Show password"
-  - text: Confirm password
+  - text: 12 characters or more Confirm password
   - textbox "Confirm password"
   - button "Show confirmed password"
   - checkbox "I agree to the terms" [invalid]

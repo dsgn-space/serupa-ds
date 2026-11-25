@@ -4,8 +4,8 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The track (3:1 on the surface, so the control can be seen).",
+        "$value": "{color.track}",
+        "$description": "The track: the light gray Apple uses, as Switch's, Meter's and Progress's. The fill and the thumb's ring carry the 3:1.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-track"
@@ -69,6 +69,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-mark"
+          }
+        }
+      },
+      "mark-off": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "A mark's tick past the fill, on the light track.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-mark-off"
           }
         }
       },

@@ -12,18 +12,21 @@ The plan with what it costs and the day it renews, how much of it is used, how i
 ## When to use it
 
 - A settings page for a paid plan: a workspace, an account or a team.
+
+## When not to use it
+
 - Not for choosing a plan for the first time: that's the Pricing block, and Checkout to pay.
 - Not for a shop's order history: orders have items and delivery, not renewals.
 
 ## What each part is for
 
 - **The plan says its price and the day it renews**, "Renews on 1 December 2026 for US$24.00", in the reader's locale, before anyone has to look for it (the Ethical design rule: say when a plan renews and what it costs).
-- **Cancelling takes one dialog.** Cancel plan sits next to Change plan, not behind a support form. The dialog says what changes and when: the plan stays active until the renewal day, there's no further charge, and nothing is deleted. Keep my plan and Cancel plan are side by side and the same size, with no guilt in the words.
-- **A cancelled plan says when it stops**, and Resume plan brings it back in one step. Both are confirmed in a toast (4.1.3).
-- **A cancel that fails says so.** The dialog stays open with an alert, "Couldn’t cancel Team. Try again.", so nobody leaves thinking they've cancelled when they haven't (3.3.1).
+- **Canceling takes one dialog.** Cancel plan sits next to Change plan, not behind a support form. The dialog says what changes and when: the plan stays active until the renewal day, there's no further charge, and nothing is deleted. Keep my plan and Cancel plan are side by side and the same size, with no guilt in the words.
+- **A canceled plan says when it stops**, and Resume plan brings it back in one step. Both are confirmed in a toast (4.1.3).
+- **A cancel that fails says so.** The dialog stays open with an alert, "Couldn’t cancel Team. Try again.", so nobody leaves thinking they've canceled when they haven't (3.3.1).
 - **Usage is in words**, "4 of 10 seats" and "8.6 GB of 10 GB, almost full", not only a bar that changes color (1.4.1).
 - **The way it's paid is said in words**: "Visa ending 4242, expires April 2028", "Direct debit from BCA, account ending 7781" or "GoPay, phone ending 4410". Pass `paymentMethod` for a bank account or an e-wallet; the link next to it says what it does, Update card for a card and Change payment method for the others.
-- **A card that runs out before the next payment says so**, with an "Expires soon" badge and the words "It runs out before the next payment on 1 December 2026", so the payment doesn't fail first (3.3.1). A cancelled plan has no next payment, so it doesn't say this. **With nothing on file** (`paymentMethod={null}`), it says so, by when to add one, and Add payment method.
+- **A card that runs out before the next payment says so**, with an "Expires soon" badge and the words "It runs out before the next payment on 1 December 2026", so the payment doesn't fail first (3.3.1). A canceled plan has no next payment, so it doesn't say this. **With nothing on file** (`paymentMethod={null}`), it says so, by when to add one, and Add payment method.
 - **A failed payment says so at the top**, with the way to fix it next to it (Update card, Change payment method or Add payment method), and its invoice's status says "Failed" in words (3.3.1).
 - **Invoices are a table** with a caption, and each Download link names its invoice, "Download the invoice of 1 October 2026", so a list of links isn't "Download, Download, Download" (2.4.4).
 - **While billing loads**, set `loading`: each part's heading stays, with one placeholder name, "Loading billing", and main is busy (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry` for "Couldn’t load billing" with Try again.
@@ -37,7 +40,7 @@ The plan with what it costs and the day it renews, how much of it is used, how i
 
 <Canvas of={Stories.NoPaymentMethod} />
 
-<Canvas of={Stories.Cancelled} />
+<Canvas of={Stories.Canceled} />
 
 <Canvas of={Stories.Loading} />
 

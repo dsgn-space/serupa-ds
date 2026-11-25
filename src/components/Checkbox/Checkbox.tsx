@@ -256,7 +256,7 @@ function CheckboxRender({ ref, ...props }: CheckboxProps & React.RefAttributes<H
     const before = rest.onChange;
     rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, { event: e }); };
   }
-  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
+  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is canceled, which
   // puts the box back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
   const readOnly = !!rest.readOnly;
   if (readOnly) {

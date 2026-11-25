@@ -38,7 +38,12 @@ function Showing(props: { placement?: React.ComponentProps<typeof Toaster>['plac
   return <Toaster placement={props.placement} limit={props.limit} />;
 }
 
+// The stories below open their toasts as they load: each draws in its own frame (fullscreen), so on the docs page
+// they show inside their example, when it scrolls into view, not all at once in the corner of the page.
+const own = { layout: 'fullscreen' } as const;
+
 export const Tones: Story = {
+  parameters: own,
   render: (args) => <Showing placement={args.placement} limit={5} toasts={[
     'Link copied',
     { title: 'New version available', description: 'Reload to update.', tone: 'info' },
@@ -48,22 +53,27 @@ export const Tones: Story = {
   ]} />,
 };
 export const WithAction: Story = {
+  parameters: own,
   render: (args) => <Showing placement={args.placement} toasts={[{ title: 'Moved to trash', description: 'Atlas and 3 files.', action: { label: 'Undo', onClick: () => {} } }]} />,
 };
 export const TopStart: Story = {
+  parameters: own,
   args: { placement: 'top-start' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const BottomCenter: Story = {
+  parameters: own,
   args: { placement: 'bottom' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const TopCenter: Story = {
+  parameters: own,
   args: { placement: 'top' },
   render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
 };
 /** A burst: the same error three times is one toast with a count, and past the limit (3) the rest wait under "+2 more". */
 export const Burst: Story = {
+  parameters: own,
   render: (args) => <Showing placement={args.placement} toasts={[
     'Photo 1 uploaded', 'Photo 2 uploaded', 'Photo 3 uploaded', 'Photo 4 uploaded',
     { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' },
@@ -71,6 +81,7 @@ export const Burst: Story = {
 };
 
 export const LongText: Story = {
+  parameters: own,
   render: (args) => <Showing placement={args.placement} toasts={[
     { title: 'Your export of every project, task and comment from the last year is ready', description: 'Download it within 7 days from Settings. Donaudampfschifffahrtsgesellschaftskapitänskajüte.', tone: 'success', action: { label: 'Download the export', onClick: () => {} } },
   ]} />,

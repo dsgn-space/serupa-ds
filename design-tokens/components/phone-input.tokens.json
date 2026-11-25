@@ -52,10 +52,70 @@
           }
         }
       },
+      "listbox-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The country list's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-listbox-bg"
+          }
+        }
+      },
+      "listbox-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The country list's outline, and the line under its search field.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-listbox-border"
+          }
+        }
+      },
+      "option-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A country's name, the search text, and the calling code of the highlighted country.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-option-color"
+          }
+        }
+      },
+      "option-bg-active": {
+        "$type": "color",
+        "$value": "{color.highlight}",
+        "$description": "The highlighted country (hover or arrow keys).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-option-bg-active"
+          }
+        }
+      },
+      "option-indicator": {
+        "$type": "color",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The 2px bar at the highlighted country's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-option-indicator"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A country's calling code in the list, the search icon and the no-match message.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-muted"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",
-        "$description": "The menu's keyboard focus ring.",
+        "$description": "The box's focus ring while the country button has keyboard focus (the field's own is Input's).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--phone-input-focus-ring"
@@ -71,6 +131,64 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--phone-input-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the box and the country list (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-offset"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "listbox-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The country list's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-listbox-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "listbox-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The country list's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-listbox-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "listbox-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-80}",
+        "$description": "The country list's height, search field included, before it scrolls (320px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-listbox-max-height"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-popover}",
+        "$description": "The country list's stacking order, where the top layer isn't available.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--phone-input-z-index"
           }
         }
       }

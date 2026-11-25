@@ -114,7 +114,16 @@ describe('Meter', () => {
     expect([thick('sm'), thick('lg'), thick('bad')]).toEqual([4, 12, 8]);
   });
 
-  test('contrast: every zone\'s fill keeps 3:1 on the page and on its track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in every theme', async () => {
+  test('the bar\'s track is the shared track gray (Apple\'s level), with no edge of another color, in every theme', async () => {
+    await render(<Meter id="tk" value={40} label="Storage" />);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const t = el('tk').querySelector('[role=meter]')!;
+      expect([th, css(t).backgroundColor, /rgba?\([^)]*\)/.exec(css(t).boxShadow)?.[0]]).toEqual([th, color('var(--track)'), color('var(--track)')]);
+    }
+  });
+
+  test('contrast: every zone\'s fill keeps 3:1 on the page (WCAG 1.4.11; on the light Apple-level track a colored fill may be lighter than that, by design choice) and the label and value 4.5:1, in every theme', async () => {
     await render(<Wrap>
       <Meter id="p" value={60} label="Storage" showValue />
       <Meter id="o" value={10} low={30} high={70} optimum={0} aria-label="o" />
@@ -126,15 +135,12 @@ describe('Meter', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const id of ['p', 'o', 's', 'x']) {
-        const track = el(id).querySelector<HTMLElement>('[role=meter]')!, bg = css(track).backgroundColor;
-        const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
-        const mark = seen(track.querySelector('div')!);   // the fill, or the edge a theme gives it (Yellow Light's primary)
-        for (const [what, r] of [['fill', contrast(mark, 'var(--surface)')], ['fill on its track', contrast(mark, bg)], ['track edge', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${id} ${what} ${r.toFixed(2)}`); }
+        const r = contrast(seen(el(id).querySelector<HTMLElement>('[role=meter] > div')!), 'var(--surface)'); n++; if (r < 3) low.push(`${th} ${id} fill ${r.toFixed(2)}`);   // the fill, or the edge a theme gives it (Yellow Light's primary)
       }
       for (const sel of ['#p .srp-meter__label', '#p .srp-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
-    expect([low, n]).toEqual([[], 84]);
+    expect([low, n]).toEqual([[], 36]);
   });
 
   test('--meter-fill-poor overrides one meter', async () => {

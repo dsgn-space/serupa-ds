@@ -34,8 +34,8 @@ export const CardExpiring: Story = { args: { paymentMethod: { kind: 'card', bran
 /** Nothing on file yet: the page says so, by when to add one, and Add payment method. */
 export const NoPaymentMethod: Story = { args: { paymentMethod: null } };
 
-/** A cancelled plan: it says when it stops and that nothing is deleted, with Resume plan. */
-export const Cancelled: Story = { args: { plan: { name: 'Team', price: 24, currency: 'USD', interval: 'month', renews: '2026-12-01', cancelled: true } } };
+/** A canceled plan: it says when it stops and that nothing is deleted, with Resume plan. */
+export const Canceled: Story = { args: { plan: { name: 'Team', price: 24, currency: 'USD', interval: 'month', renews: '2026-12-01', cancelled: true } } };
 
 /** Billing is on its way: each part's heading with a placeholder, named once ("Loading billing"). */
 export const Loading: Story = { args: { loading: true } };

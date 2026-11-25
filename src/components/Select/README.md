@@ -2,7 +2,7 @@
 
 A native `<select>` styled like Input: the same three heights (24, 32 and 44px), colors, focus ring and states, with a chevron and an optional left icon. It keeps everything the browser gives a select for free: the system picker on phones, type-to-find, and full keyboard and screen-reader support.
 
-Where the browser lets a page style the list (`appearance: base-select`, in Chromium-based browsers today), the open list is drawn like Combobox's: an overlay surface with the shared shadow and corners, rows at control height, the grey highlight fill on the option under the pointer or keyboard, and a tick on the chosen one. Everywhere else the browser draws its own list. Your code and the way it reads out are the same either way.
+Where the browser lets a page style the list (`appearance: base-select`, in Chromium-based browsers today), the open list is drawn like Combobox's: an overlay surface with the shared shadow and corners, rows at control height, the gray highlight fill on the option under the pointer or keyboard, and a tick on the chosen one. Everywhere else the browser draws its own list. Your code and the way it reads out are the same either way.
 
 **Also called:** dropdown, select input, picker.
 
@@ -132,7 +132,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-picker-bg` | `surface-overlay` | The list of options, where the browser draws it with the page's styles (appearance: base-select). |
 | `--select-picker-border` | `border-overlay` | The list's border. |
 | `--select-option-bg-active` | `highlight` | The option under the pointer or the keyboard, as Combobox's. |
-| `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
+| `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--select-check` | `primary-text` | The tick by the chosen option. |
 | `--select-group-label` | `text-muted` | A group's name over its options. |
 | `--select-border-disabled` | `disabled-border` | Disabled: the edge. |

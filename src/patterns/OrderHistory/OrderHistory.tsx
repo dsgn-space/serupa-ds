@@ -72,7 +72,7 @@ export const STATES: Record<OrderState, { label: string; tone: BadgeTone }> = {
   processing: { label: 'Being packed', tone: 'neutral' },
   shipped: { label: 'On the way', tone: 'info' },
   delivered: { label: 'Delivered', tone: 'success' },
-  cancelled: { label: 'Cancelled', tone: 'danger' },
+  cancelled: { label: 'Canceled', tone: 'danger' },
   returned: { label: 'Returned', tone: 'warning' },
 };
 const NAMES = ['Linen shirt', 'Canvas tote', 'Wool socks', 'Rain jacket', 'Clay mug', 'Desk lamp', 'Notebook', 'Tea towel'];

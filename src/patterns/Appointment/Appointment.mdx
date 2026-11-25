@@ -12,6 +12,9 @@ A time with someone, picked by day and then by time, with your details and a con
 ## When to use it
 
 - A visit, a call, a test drive or a haircut: one person's time, in slots, on some days.
+
+## When not to use it
+
 - Not for a stay over several nights: that's the Booking pattern.
 - Not for a team's own events: that's the Team calendar pattern.
 
@@ -36,4 +39,4 @@ A time with someone, picked by day and then by time, with your details and a con
 - **Booking.** `onBook` gets the day as "yyyy-mm-dd", the time as "HH:mm", and the details: return its promise, and reject it when the time was taken. Then load the times again, so it shows as taken.
 - **Time zones.** Times are shown as given: send them in the place's own zone, and say which when the reader may be elsewhere.
 - **Today.** Pass `today` as the visitor's date, so days before it are closed.
-- **Changing or cancelling**, from the link in the email that `onBook` sends.
+- **Changing or canceling**, from the link in the email that `onBook` sends.

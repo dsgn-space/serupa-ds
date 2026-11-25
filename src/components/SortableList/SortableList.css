@@ -16,17 +16,21 @@
 .srp-sortable-list__item {
   position: relative; display: flex; align-items: center; gap: var(--sortable-list-item-gap, var(--spacing-2));
   padding: var(--sortable-list-item-padding-y, var(--spacing-2)) var(--sortable-list-item-padding-x, var(--spacing-3));
-  padding-inline-start: var(--sortable-list-item-padding-start, var(--spacing-1));
+  padding-inline-start: var(--sortable-list-item-padding-start, var(--spacing-2));
   background: var(--sortable-list-item-bg, var(--surface)); --surface-behind: var(--sortable-list-item-bg, var(--surface));
   border: var(--border-width-1) solid var(--sortable-list-item-border, var(--border)); border-radius: var(--sortable-list-item-radius, var(--radius-control));
   transition: box-shadow var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move), translate var(--motion-change-sm) var(--ease-move);
 }
 .srp-sortable-list__item[data-flip] { transition: none; }   /* placed back where it was, to glide from there (SortableList.tsx) */
 .srp-sortable-list:where([data-disabled]) .srp-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
+/* The row being moved, from the keyboard or the pointer, carries the one focus ring, around the whole row; its
+   handle's own ring hides, so there are never two rings one inside the other. */
 .srp-sortable-list__item:where([data-dragging]) {
-  z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary-text));
+  z-index: var(--z-10);
+  outline: var(--focus-ring-width) solid var(--sortable-list-item-border-active, var(--focus-ring)); outline-offset: var(--focus-ring-offset);
   box-shadow: var(--sortable-list-item-shadow-active, var(--elevation-raised));
 }
+.srp-sortable-list__item:where([data-dragging]) .srp-sortable-list__handle:focus-visible { outline: none; }
 .srp-sortable-list__handle {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   min-width: var(--sortable-list-handle-size, var(--spacing-6)); min-height: var(--sortable-list-handle-size, var(--spacing-6));

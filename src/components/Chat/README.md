@@ -81,7 +81,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
   reasoning={reasoningText}
   reasoningTime={12}
   steps={[
-    { id: "search", label: "Searched the help centre", status: "done", detail: "3 articles" },
+    { id: "search", label: "Searched the help center", status: "done", detail: "3 articles" },
     { id: "order", label: "Looking up order 4417", status: "running" },
   ]}
   thinking={!replyText}

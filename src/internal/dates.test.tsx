@@ -72,6 +72,38 @@ describe('typed dates', () => {
       iso('R8/10/24', 'en-US'),
     ]).toEqual(['2026-10-24', '2026-10-24', '2026-10-24', '2026-10-24', '2026-10-24', null]);
   });
+
+  test('every Persian day from 2016 to 2030 reads as its own Gregorian day, the first of a month and 30 Esfand of a leap year too', () => {
+    const persian = new Intl.DateTimeFormat('en-u-ca-persian', { calendar: 'persian', numberingSystem: 'latn', year: 'numeric', month: 'numeric', day: 'numeric' });
+    const wrong: string[] = [];
+    for (let d = new Date(2016, 0, 1); d < new Date(2030, 0, 1); d = addDays(d, 1)) {
+      const p = persian.formatToParts(d), part = (t: string) => p.find((x) => x.type === t)?.value;
+      const text = `${part('year')}/${part('month')}/${part('day')}`, read = parseDate(text, 'fa-IR');
+      if (!read || isoDate(read) !== isoDate(d)) wrong.push(`${text} read as ${read ? isoDate(read) : null}, not ${isoDate(d)}`);
+    }
+    expect(wrong.slice(0, 5)).toEqual([]);
+  });
+
+  test('a Persian day its month or year doesn\'t have is no date', () => {
+    const iso = (t: string) => { const d = parseDate(t, 'fa-IR'); return d ? isoDate(d) : null; };
+    // Mehr has 30 days; 1402 isn't a leap year and 1403 is.
+    expect(['1403/07/31', '1402/12/30', '1403/13/01', '1403/00/10', '1403/01/32', '1403/01/00'].map(iso)).toEqual([null, null, null, null, null, null]);
+    expect(iso('1403/12/30')).toBe('2025-03-20');
+  });
+
+  test('a native calendar\'s years convert only in its own range; past it the year reads as Gregorian', () => {
+    const iso = (t: string, locale: string) => { const d = parseDate(t, locale); return d ? isoDate(d) : null; };
+    expect([iso('24/10/2400', 'th'), iso('24/10/2700', 'th'), iso('24/10/2399', 'th'), iso('24/10/2701', 'th')]).toEqual(['1857-10-24', '2157-10-24', '2399-10-24', '2701-10-24']);
+    const roc = 'zh-TW-u-ca-roc';
+    expect([iso('100/10/24', roc), iso('250/10/24', roc), iso('251/10/24', roc), iso('300/10/24', roc), iso('10/24/115', 'en-US')]).toEqual(['2011-10-24', '2161-10-24', '0251-10-24', '0300-10-24', '0115-10-24']);
+    expect([iso('1300/01/01', 'fa-IR'), iso('1500/01/01', 'fa-IR'), iso('1299/01/01', 'fa-IR'), iso('1501/01/01', 'fa-IR')]).toEqual(['1921-03-21', '2121-03-21', '1299-01-01', '1501-01-01']);
+  });
+
+  test('a month written as a word takes two numbers, and digits alone take the reading nearer now', () => {
+    expect(parseDate('12 May 2025 10', 'en-US')).toBeNull();
+    // 12.01.1220 in de-DE, or 1201-12-20 as ISO: 1220 is nearer.
+    expect(isoDate(parseDate('12011220', 'de-DE')!)).toBe('1220-01-12');
+  });
 });
 
 describe('day arithmetic', () => {

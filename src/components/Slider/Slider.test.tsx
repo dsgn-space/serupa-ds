@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, disabledLook, seen } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, drag, disabledLook, seen } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Slider } from './Slider';
@@ -347,16 +347,28 @@ describe('Slider', () => {
     expect(now('rtl')).toBe(90);
   });
 
-  test('contrast: the track, fill and thumb ring keep 3:1 on the page in every theme', async () => {
+  test('the track is Switch\'s, Meter\'s and Progress\'s: the shared light gray track, with no edge, not a dark bar', async () => {
+    await setup();
+    const t = css(el('one').querySelector(':scope > div'));
+    expect([t.backgroundColor, t.boxShadow]).toEqual([color('var(--track)'), 'none']);
+  });
+
+  test('marks on the light track: a tick on the fill is a cut in the field\'s color, one past it a line in border-strong', async () => {
+    await render(<Slider id="mk" aria-label="Marks" defaultValue={50} step={25} marks />);
+    const ticks = [...el('mk').querySelectorAll<HTMLElement>('[aria-hidden="true"][style] > span')].map((t) => css(t).backgroundColor);
+    expect(ticks).toEqual([color('var(--field)'), color('var(--field)'), color('var(--border-strong)')]);
+  });
+
+  test('contrast: the fill and the thumb ring keep 3:1 on the page in every theme', async () => {
     await setup();
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
-      const parts = { track: q(':scope > div').backgroundColor, fill: seen(el('one').querySelector(':scope > div > div')!), thumb: q('input[type=range]').borderTopColor };
+      const parts = { fill: seen(el('one').querySelector(':scope > div > div')!), thumb: q('input[type=range]').borderTopColor };
       for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
-    expect([low, n]).toEqual([[], 18]);
+    expect([low, n]).toEqual([[], 12]);
   });
 
   test('--slider-fill overrides one slider', async () => {
@@ -452,6 +464,12 @@ describe('Slider', () => {
     expect(rect(el('mk')).height).toBe(rect(thumb('mk')).height);
   });
 
+  test('marks: true on a long range still spreads its ticks over the whole track, at most 1,001 of them', async () => {
+    await render(<Slider id="mk" aria-label="Budget" min={0} max={100000} largeStep={10} marks />);
+    const at = [...el('mk').querySelectorAll<HTMLElement>(MARK)].map((m) => parseFloat(m.style.insetInlineStart));
+    expect([at.length <= 1001, Math.max(...at)]).toEqual([true, 100]);
+  });
+
   test('marks with labels: the text sits under the track, centered on its value in either direction, and the slider makes room for it', async () => {
     const marks = [{ value: 0, label: '0°' }, { value: 50, label: 'Half' }, { value: 100, label: '100°' }, { value: 120, label: 'Off the track' }];
     await render(<div style={{ width: '420px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -515,9 +533,16 @@ describe('Slider at 320px (GM2)', () => {
   // by a fraction of a pixel; the slider refits on its own, which the second test checks, but a measure taken before
   // that frame saw the old nudge.
   // A frame first, so the new text has asked for its web font (fonts.ready resolves at once while none is loading yet,
-  // and the labels then widen after the measure); then two, for the refit a resize sets for the next frame.
+  // and the labels then widen after the measure); then until the sliders and their labels stop moving. Two frames weren't
+  // always enough: the ResizeObserver's wrapping refit is a frame after the resize it sees, and a test's own frame()
+  // queued first resolves before it, so the long labels were measured still overlapping about one run in three (25 Nov).
   const frame = () => new Promise((ok) => requestAnimationFrame(ok));
-  const fontsIn = async () => { await frame(); await document.fonts.ready; await frame(); await frame(); };
+  const where = () => [...document.querySelectorAll<HTMLElement>('[data-component="slider"], [data-component="slider"] [aria-hidden] span')]
+    .map((p) => { const r = p.getBoundingClientRect(); return `${r.left},${r.top},${r.width},${r.height}`; }).join(' ');
+  const fontsIn = async () => {
+    await frame(); await document.fonts.ready;
+    for (let was = '', i = 0; i < 30; i++) { await frame(); await frame(); const now = where(); if (now === was) break; was = now; }
+  };
   test('the value chip and the end labels stay inside the slider: nothing widens the page, in either direction, shown or hidden', async () => {
     const money = (v: number) => 'IDR ' + (v * 10000).toLocaleString('en-US') + ' per month';
     const marks = [{ value: 0, label: 'Nothing at all' }, { value: 50, label: 'Half' }, { value: 100, label: 'Everything there is' }];

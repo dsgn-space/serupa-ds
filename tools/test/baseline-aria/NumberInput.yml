@@ -1,15 +1,16 @@
 # Controlled
-- text: Guests 2 guests
+- text: Guests
 - spinbutton "Guests": "2"
 - button "Decrease"
 - button "Increase"
+- text: 2 guests
 
 # Currency
-- text: Price (en-US, US dollars) Stored as 1999 cents
+- text: Price (en-US, US dollars)
 - spinbutton "Price (en-US, US dollars)": $19.99
 - button "Decrease"
 - button "Increase"
-- text: Preis (de-DE, euros)
+- text: Stored as 1999 cents Preis (de-DE, euros)
 - spinbutton "Preis (de-DE, euros)": 19,99 €
 - button "Decrease"
 - button "Increase"
@@ -44,11 +45,11 @@
 - spinbutton "Harga (id-ID, rupiah)": Rp 1.500.000
 - button "Decrease"
 - button "Increase"
-- text: Gewicht (de-DE) 9,5 or 9.5 both work
+- text: Gewicht (de-DE)
 - spinbutton "Gewicht (de-DE)": 9,5
 - button "Decrease"
 - button "Increase"
-- text: Rate (en-US, percent)
+- text: 9,5 or 9.5 both work Rate (en-US, percent)
 - spinbutton "Rate (en-US, percent)": 15%
 - button "Decrease"
 - button "Increase"

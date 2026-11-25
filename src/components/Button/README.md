@@ -1,6 +1,6 @@
 # Button
 
-Triggers an action: submitting a form, opening a dialog, confirming or cancelling. With `href` it becomes a link that looks like a button, for navigation. Every variant also has a destructive version; every value comes from this system's tokens.
+Triggers an action: submitting a form, opening a dialog, confirming or canceling. With `href` it becomes a link that looks like a button, for navigation. Every variant also has a destructive version; every value comes from this system's tokens.
 
 **Also called:** call to action, CTA.
 
@@ -23,7 +23,7 @@ import { Button, IconButton, buttonClass } from '@diki-stwn/serupa-ds';
 
 ## When to use
 
-- Someone starts an action on the page: submitting a form, saving, opening a dialog, confirming or cancelling.
+- Someone starts an action on the page: submitting a form, saving, opening a dialog, confirming or canceling.
 - A call to action that goes to another page and should stand out more than a text link, such as "Get started" (give it an `href`).
 - The confirming step of an action that deletes something or can't be undone (with `destructive`).
 
@@ -47,7 +47,7 @@ When an action succeeds (`success`), a check takes the loader's place for a mome
 
 ## Usage
 
-- A button is never wider than its container. A text label that doesn't fit ends in an ellipsis and shows in full as the button's `title` on hover (the same words as its name, so screen readers don't hear it twice). Keyboard focus and touch don't show a title, so where a label may not fit (a narrow column, a long translation, 400% zoom) pass `wrap`: the label takes as many lines as it needs and the button grows from its size's height. Short labels are still best. In a flex row the long-labelled button is the one that gives way: it shrinks to its ellipsis rather than pushing the buttons next to it out of the row, and icon-only buttons keep their square. In a grid, give the column `minmax(0, 1fr)` rather than `auto`, or the row widens the column instead.
+- A button is never wider than its container. A text label that doesn't fit ends in an ellipsis and shows in full as the button's `title` on hover (the same words as its name, so screen readers don't hear it twice). Keyboard focus and touch don't show a title, so where a label may not fit (a narrow column, a long translation, 400% zoom) pass `wrap`: the label takes as many lines as it needs and the button grows from its size's height. Short labels are still best. In a flex row the long-labeled button is the one that gives way: it shrinks to its ellipsis rather than pushing the buttons next to it out of the row, and icon-only buttons keep their square. In a grid, give the column `minmax(0, 1fr)` rather than `auto`, or the row widens the column instead.
 - One `primary` button per view or dialog; everything else is `secondary`, `outline` or `ghost`.
 - Label with a verb: "Save changes", not "OK".
 - Over a photo, a video or a brand-colored panel, set `surface="dark"` (white controls for dark media) or `surface="light"` (black for light media). They stay the same in every theme. Put a scrim on the media under the buttons, a dark or light wash, so they keep 4.5:1 at its lightest or darkest point. IconButton, Link and Divider take the same prop, and Loader's `tone="inverse"` is its white.
@@ -107,9 +107,9 @@ A button holds a label, an icon beside a label, or an icon alone:
 | Content | Props | Looks |
 | --- | --- | --- |
 | Label only | `children` | Text |
-| Left icon | `startIcon` + `children` | Icon, then text |
-| Right icon | `endIcon` + `children` | Text, then icon |
-| Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button has no `icon` of its own since 15.0.0 |
+| Start icon | `startIcon` + `children` | Icon, then text |
+| End icon | `endIcon` + `children` | Text, then icon |
+| Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button has no `icon` of its own |
 
 **Optical balance.** An icon reads lighter than text, so a button with one icon adds 4px of padding on the text side:
 
@@ -241,7 +241,7 @@ Button's behavior follows web standards; its look comes only from this design sy
 
 ## Props
 
-Button's own props are `variant` (`primary`), `destructive`, `surface` (`dark` or `light`: white or black over a photo, in every theme), `size` (`md`), `startIcon`, `endIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
+Button's own props are `variant` (`primary`), `destructive`, `surface` (`dark` or `light`: white or black over a photo, in every theme), `size` (`md`), `startIcon`, `endIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
 
 `buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 

@@ -1,6 +1,6 @@
 # DateAndTime
 - group "Meeting starts":
-  - text: Meeting starts In the time zone you choose Date
+  - text: Meeting starts Date
   - textbox "Date":
     - /placeholder: mm/dd/yyyy
   - button "Choose a date"
@@ -10,13 +10,15 @@
   - text: Time zone
   - combobox "Time zone": Jakarta
   - button "Show options"
+  - text: In the time zone you choose
 - button "Schedule"
 
 # DateOfBirth
-- text: Date of birth mm/dd/yyyy. In the calendar, click the month for the months and years.
+- text: Date of birth
 - textbox "Date of birth":
   - /placeholder: mm/dd/yyyy
 - button "Choose a date"
+- text: mm/dd/yyyy. In the calendar, click the month for the months and years.
 
 # Disabled
 - textbox "Date" [disabled]:
@@ -25,10 +27,11 @@
 - button "Choose a date" [disabled]
 
 # DoLabelAndFormat
-- text: Due date mm/dd/yyyy
+- text: Due date
 - textbox "Due date":
   - /placeholder: mm/dd/yyyy
 - button "Choose a date"
+- text: mm/dd/yyyy
 
 # DontBareField
 - textbox "Date":
@@ -42,10 +45,11 @@
 - button "Datum wählen"
 
 # InField
-- text: Due date mm/dd/yyyy, from today on
+- text: Due date
 - textbox "Due date":
   - /placeholder: mm/dd/yyyy
 - button "Choose a date"
+- text: mm/dd/yyyy, from today on
 
 # Invalid
 - textbox "Date" [invalid]:

@@ -34,8 +34,8 @@
       },
       "item-border-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
-        "$description": "The border of the row being moved.",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around the row being moved, from the keyboard or the pointer: the focus ring, which its handle's own ring gives way to.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sortable-list-item-border-active"
@@ -160,8 +160,8 @@
       },
       "item-padding-start": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-1}",
-        "$description": "Space before the handle (4px).",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space before the handle (8px).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sortable-list-item-padding-start"

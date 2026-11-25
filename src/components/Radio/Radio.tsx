@@ -154,7 +154,7 @@ function RadioRender({ ref, ...props }: RadioProps & React.RefAttributes<HTMLInp
     if (ctx.readOnly) rest.readOnly = true;
   }
   // Read-only (the group's, or its own): the native readonly does nothing on a radio, so a click (Space clicks too) is
-  // cancelled, which puts the check back, as Checkbox does. Your onClick still runs; onChange doesn't.
+  // canceled, which puts the check back, as Checkbox does. Your onClick still runs; onChange doesn't.
   const readOnly = !!rest.readOnly;
   if (readOnly) {
     delete rest.onChange;

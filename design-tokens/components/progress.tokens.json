@@ -4,8 +4,8 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.surface}",
-        "$description": "The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11).",
+        "$value": "{color.track}",
+        "$description": "The empty part of the bar: the shared `track` gray, Apple's level (zinc-200 in light, zinc-700 in dark), with no edge.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--progress-track"
@@ -14,8 +14,8 @@
       },
       "track-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The bar's edge, 3:1 against the page, which marks the whole scale (WCAG 1.4.11).",
+        "$value": "{color.track}",
+        "$description": "The bar's 1px edge: the track's own color by default, so no edge shows; set it to outline the bar.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--progress-track-border"

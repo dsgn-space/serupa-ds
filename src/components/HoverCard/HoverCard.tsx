@@ -107,9 +107,9 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && (e as React.PointerEvent).pointerType === 'touch';
   // Interest invokers (174): the trigger points at the card with interestfor, so where the browser has them, a long
   // press on a touch screen opens it at once (Chrome on Android), as a resting pointer does with a mouse. The
-  // browser's own showing and hiding are cancelled and the card opens itself; a tap outside or Escape closes it. An
+  // browser's own showing and hiding are canceled and the card opens itself; a tap outside or Escape closes it. An
   // interest while the pointer is over the trigger or it has keyboard focus is one this component already handles
-  // (with its delay and Escape cancelling a waiting open), so it's left alone.
+  // (with its delay and Escape canceling a waiting open), so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
   const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, 'hover'); };
   const interest = useLatest(fromInterest);

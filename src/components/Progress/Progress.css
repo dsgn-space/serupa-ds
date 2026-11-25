@@ -1,8 +1,7 @@
 /* ---------------------------------------------------------------
    Progress: a bar (full width, 4, 8 or 12px thick, rounded ends) or a ring (24, 40 or 64px), with the done part
-   in the tone's color. The bar's track is the page's surface inside a border-control edge (WCAG 1.4.11): the edge marks the
-   whole scale at 3:1 and every tone's fill is 3:1 against the page; a secondary track was 1.1:1 on the page, and the
-   warning fill 2.9:1 on it. The ring's track stays secondary and stops short of the arc at both ends, so the arc meets only the page. The bar can have a label row above it (the label, and the value at
+   in the tone's color. The bar's track is the shared light gray track, the level Apple's controls use. Every tone's fill is 3:1 against
+   the page; on the track, success, warning and danger fills can be under 3:1, a choice made for the lighter look. The ring's track stays secondary and stops short of the arc at both ends, so the arc meets only the page. The bar can have a label row above it (the label, and the value at
    the end); the ring can show the value inside. The fill moves to a new value over 300ms. Indeterminate: a
    segment slides across the bar, or a quarter arc turns; both stand still with reduced motion. A label word longer
    than the bar (a file name, a URL) breaks inside while the value keeps its width, so a 320px page doesn't scroll
@@ -28,8 +27,8 @@
 .srp-progress__header .srp-progress__value { flex-shrink: 0; margin-inline-start: auto; }
 .srp-progress--bar .srp-progress__track {
   position: relative; overflow: hidden; height: var(--srp-progress-h);
-  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border-control));
+  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--track));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--track));
 }
 .srp-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--srp-progress-fill); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--srp-progress-edge);

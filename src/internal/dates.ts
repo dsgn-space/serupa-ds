@@ -108,16 +108,20 @@ function persianToGregorian(y: number, m: number, d: number): Date | null {
     const p = persianFmt!.formatToParts(dt), get = (t: string) => +(p.find((x) => x.type === t)?.value ?? 'NaN');
     return [get('year'), get('month'), get('day')] as const;
   };
-  // Persian month 1 (Farvardin) begins around March 20–21; approximate then step exact days.
+  // The day of the Persian year: the first six months have 31 days, the next five 30, the last 29 or 30.
+  const ofYear = (mm: number, dd: number) => (mm <= 6 ? (mm - 1) * 31 : 186 + (mm - 7) * 30) + dd;
+  // Persian month 1 (Farvardin) begins around March 20–21; approximate, then step by the days still between. A day
+  // that isn't in its month (31 Mehr) is the next month's first by its day of the year, and is no date.
   let cur = new Date(y + 621, m + 1, Math.min(d, 28));
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 4; i++) {
     const [py, pm, pd] = parts(cur);
-    const diff = (y - py) * 365 + (m - pm) * 30 + (d - pd);
-    if (diff === 0) return cur;
-    cur = addDays(cur, diff);
+    if (py === y && pm === m && pd === d) return cur;
+    const diff = (y - py) * 365 + ofYear(m, d) - ofYear(pm, pd);
+    // Within the year a day of the year names one date; across it a leap year's 30 Esfand is a day short.
+    if (diff === 0 && py === y) return null;
+    cur = addDays(cur, diff || y - py);
   }
-  const [py, pm, pd] = parts(cur);
-  return py === y && pm === m && pd === d ? cur : null;
+  return null;
 }
 
 function localeCalendar(locale?: string): string {

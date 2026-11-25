@@ -42,12 +42,12 @@ export const InEmptyState: Story = {
 export const LongText: Story = { args: { size: 'sm', label: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung: nothing here yet, and a label long enough to wrap twice' } };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-/** Do: the picture that matches the title: \`search\` for no results. */
+/** Do: the picture that matches the title: `search` for no results. */
 export const DoMatchTitle: Story = {
   name: 'Do: match the picture to the title',
   render: () => <EmptyState icon={<Illustration name="search" />} title="No results for “mars”" description="Check the spelling or try a broader search." />,
 };
-/** Don't: a picture that says something else, such as \`success\` for no results. */
+/** Don't: a picture that says something else, such as `success` for no results. */
 export const DontMismatch: Story = { tags: ['!visual'],
   name: "Don't: pick a picture that says something else",
   render: () => <EmptyState icon={<Illustration name="success" />} title="No results for “mars”" description="Check the spelling or try a broader search." />,

@@ -41,6 +41,16 @@
             "cssVar": "--kbd-separator"
           }
         }
+      },
+      "border-sm": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "size=\"sm\"'s outline, quieter, for a key inside a control such as a search button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kbd-border-sm"
+          }
+        }
       }
     },
     "radius": {
@@ -58,8 +68,8 @@
     "sizing": {
       "height-sm": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-5}",
-        "$description": "size=\"sm\" (20px).",
+        "$value": "{spacing.spacing-4}",
+        "$description": "size=\"sm\" (16px), for a key inside a control such as a search button.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--kbd-height-sm"
@@ -68,8 +78,8 @@
       },
       "height-md": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-6}",
-        "$description": "size=\"md\", the default (24px).",
+        "$value": "{spacing.spacing-5}",
+        "$description": "size=\"md\", the default (20px): the one height wherever text is around the key.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--kbd-height-md"
@@ -81,7 +91,7 @@
       "padding-x": {
         "$type": "dimension",
         "$value": "{spacing.spacing-1_5}",
-        "$description": "Space on each side of a key's label (6px).",
+        "$description": "Space on each side of a word such as Esc (6px). A one-character key is square instead.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--kbd-padding-x"
@@ -95,6 +105,38 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--kbd-gap"
+          }
+        }
+      },
+      "padding-x-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "size=\"sm\"'s space on each side of a word (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kbd-padding-x-sm"
+          }
+        }
+      },
+      "gap-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "size=\"sm\"'s space between keys, which has no + (2px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kbd-gap-sm"
+          }
+        }
+      }
+    },
+    "border": {
+      "bottom-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "A key's bottom edge, thicker like a keycap's (2px; sm uses 1px all round).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kbd-border-bottom-width"
           }
         }
       }

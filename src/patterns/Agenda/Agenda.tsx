@@ -56,7 +56,7 @@ const demo: Session[] = [
   S('a2', '2026-05-14', '11:00', '11:45', 'Screen readers in the real world', 'Kofi Mensah, Lena Vogel', 'Room A', 'Accessibility'),
   S('b2', '2026-05-14', '11:15', '12:00', 'Shipping a component a week', 'Tomás Ruiz', 'Room B', 'Design systems'),
   S('k2', '2026-05-15', '09:00', '09:45', 'Keynote: What we got wrong', 'Ana Lima', 'Main hall', 'Keynote'),
-  S('a3', '2026-05-15', '10:00', '10:45', 'Colour for everyone', 'Eko Prasetyo', 'Room A', 'Accessibility'),
+  S('a3', '2026-05-15', '10:00', '10:45', 'Color for everyone', 'Eko Prasetyo', 'Room A', 'Accessibility'),
   S('b3', '2026-05-15', '10:00', '10:45', 'Docs people read', 'Maya Chen', 'Room B', 'Design systems'),
 ];
 

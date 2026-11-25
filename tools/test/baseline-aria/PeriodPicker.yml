@@ -79,9 +79,9 @@
           - button "December 2025"
 
 # InAField
-- text: Billing month The invoice covers the whole month.
+- text: Billing month
 - combobox "Billing month" [invalid]: Choose a month
-- text: Choose a month.
+- text: The invoice covers the whole month. Choose a month.
 
 # Locales
 - combobox "Bulan laporan": Agustus 2025

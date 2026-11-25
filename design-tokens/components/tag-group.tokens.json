@@ -24,8 +24,8 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "A tag's border (3:1 on the page, so the tag's edge is seen).",
+        "$value": "{color.border-strong}",
+        "$description": "A tag's border: the light one a field and an outline Badge have. Its words mark the tag, so the edge needn't be 3:1; a picked tag's border is.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-border"
@@ -218,18 +218,28 @@
       },
       "avatar-size": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-6}",
-        "$description": "The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag.",
+        "$value": "{spacing.spacing-5}",
+        "$description": "The picture before a tag's words (20px), inside the tag's border with 1px clear of it, so the circle never breaks the line.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-avatar-size"
           }
         }
       },
+      "avatar-text": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The initials in a tag's 20px picture (8px), so two letters fit its circle even with wider letter spacing (WCAG 1.4.12). The person's name is in the tag beside it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-avatar-text"
+          }
+        }
+      },
       "icon-size": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
-        "$description": "A tag's icon, the check of a selected tag and the × (16px), beside the 14px label.",
+        "$value": "{spacing.spacing-3_5}",
+        "$description": "A tag's icon, the check of a selected tag and the × (14px), beside the 12px label, as in a small Button.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-icon-size"

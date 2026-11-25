@@ -34,14 +34,14 @@ const Keys = () => <div style={{ display: 'flex', flexDirection: 'column', gap: 
 </div>;
 
 describe('Kbd', () => {
-  test('one key: a <kbd> holding a 24px keycap <kbd>, at least square, in the sans font, "Esc" read as "Escape"; ref and className reach the outer <kbd>', async () => {
+  test('one key: a <kbd> holding a 20px keycap <kbd>, at least square, in the sans font, "Esc" read as "Escape"; ref and className reach the outer <kbd>', async () => {
     windows();
     const r = React.createRef<HTMLElement>();
     await render(<><Kbd id="one" ref={r} className="extra">Esc</Kbd><Kbd id="k">k</Kbd></>);
     const e = el('one'), k = caps('one')[0]!;
     expect([e.tagName, k.tagName, e.textContent, spoken('one'), r.current === e, e.dataset.component]).toEqual(['KBD', 'KBD', 'EscEscape', 'Escape', true, 'kbd']);
     expect(e.className).toMatch(/extra/);
-    expect([k.offsetHeight, k.offsetWidth >= 24]).toEqual([24, true]);
+    expect([k.offsetHeight, k.offsetWidth >= 20]).toEqual([20, true]);
     expect(css(e).fontFamily).toMatch(/Inter/);
     expect(keys('k')).toBe('K');
   });
@@ -58,14 +58,14 @@ describe('Kbd', () => {
     expect([...el('combo').querySelectorAll(':scope > span')].map((x) => x.textContent + x.getAttribute('aria-hidden'))).toEqual(['+true', '+true']);
   });
 
-  test('elsewhere than Apple: mod is Ctrl, shift is Shift, alt is Alt; arrows and Enter show as symbols with their names read out; sm is 20px', async () => {
+  test('elsewhere than Apple: mod is Ctrl, shift is Shift, alt is Alt; arrows and Enter show as symbols with their names read out; sm is 16px', async () => {
     windows();
     await render(<Keys />);
     expect(keys('combo')).toBe('CtrlControl(Control) Shift P');
     expect(keys('sm')).toMatch(/^Alt/);
     expect(spoken('arrows')).toBe('Up arrow + Enter');
     expect(keys('arrows')).toMatch(/^↑/);
-    expect(caps('sm')[0]!.offsetHeight).toBe(20);
+    expect(caps('sm')[0]!.offsetHeight).toBe(16);
   });
 
   test('a SerupaProvider platform decides from the first render and wins over the device', async () => {
@@ -115,6 +115,35 @@ describe('Kbd', () => {
     await render(<Kbd id="ev" keys={['ArrowUp', 'arrow-down', 'ArrowLeft', 'ArrowRight', ' ']} />);
     expect(keys('ev')).toBe('↑Up arrow(Up arrow) ↓Down arrow(Down arrow) ←Left arrow(Left arrow) →Right arrow(Right arrow) Space');
     vi.restoreAllMocks();
+  });
+
+  test('one height for every Kbd: 20px in a sentence, a tooltip-sized line or Prose, and the label is always 12px sans', async () => {
+    windows();
+    await render(<div>
+      <p style={{ margin: 0, fontSize: 'var(--text-base)' }}>Press <Kbd id="h-base">Esc</Kbd></p>
+      <p style={{ margin: 0, fontSize: 'var(--text-xs)' }}>Press <Kbd id="h-xs" keys={['mod', 'K']} /></p>
+      <div className="srp-prose"><p>Press <Kbd id="h-prose" keys={['shift', 'P']} /></p></div>
+    </div>);
+    const all = ['h-base', 'h-xs', 'h-prose'].flatMap((id) => caps(id));
+    expect([...new Set(all.map((k) => k.offsetHeight))]).toEqual([20]);
+    expect([...new Set(all.map((k) => css(k).fontSize + ' ' + /Inter/.test(css(k).fontFamily)))]).toEqual(['12px true']);
+  });
+
+  test('single-character keys are square, so ⌘ and K are the same width; words get padding', async () => {
+    device('MacIntel', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
+    await render(<div><Kbd id="w-md" keys={['mod', 'K']} /><Kbd id="w-sm" size="sm" keys={['mod', 'K']} /><Kbd id="w-word">Esc</Kbd></div>);
+    await new Promise((r) => setTimeout(r, 20));
+    expect(caps('w-md').map((k) => [k.offsetWidth, k.offsetHeight])).toEqual([[20, 20], [20, 20]]);
+    expect(caps('w-sm').map((k) => [k.offsetWidth, k.offsetHeight])).toEqual([[16, 16], [16, 16]]);
+    expect(caps('w-word')[0]!.offsetWidth).toBeGreaterThan(20);
+  });
+
+  test('sm, for inside a control such as a search button: 16px, a 1px outline all round in the quiet border, no + between keys', async () => {
+    windows();
+    await render(<Kbd id="q" size="sm" keys={['mod', 'K']} />);
+    const k = caps('q')[0]!;
+    expect([css(k).borderTopWidth, css(k).borderBottomWidth, el('q').textContent?.includes('+')]).toEqual(['1px', '1px', false]);
+    expect(spoken('q')).toBe('Control + K');
   });
 
   test('inline in a sentence it sits with the text (centered within 3px of the words)', async () => {

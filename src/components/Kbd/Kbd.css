@@ -1,21 +1,31 @@
 /* ---------------------------------------------------------------
-   Kbd: keycaps for keys and shortcuts: 20 or 24px tall, at least square, text-xs in the sans font, on
-   surface-muted with an outline that's thicker at the bottom. A combination shows its keys with a muted +
+   Kbd: keycaps for keys and shortcuts. One height, 20px, wherever text is around the key (a sentence, a tooltip,
+   Prose, a list of shortcuts, a command's row): it fits inside a 20px line, so it never stretches one. A
+   one-character key is square, so ⌘ and K are the same width; a word gets 6px each side. Text-xs in the sans font,
+   on surface-muted with an outline that's thicker at the bottom. A combination shows its keys with a muted +
    between them. Sits on the text's baseline, so it can go inline in a sentence.
+   size="sm" is the quiet key for inside a control, such as a search button: 16px, a 1px outline all round in the
+   light border color, and no + between its keys.
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-kbd {
-  --srp-kbd-h: var(--kbd-height-md, var(--spacing-6));
+  --srp-kbd-h: var(--kbd-height-md, var(--spacing-5));
   display: inline-flex; align-items: center; gap: var(--kbd-gap, var(--spacing-1)); vertical-align: baseline;
   font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); white-space: nowrap;
 }
-.srp-kbd--size-sm { --srp-kbd-h: var(--kbd-height-sm, var(--spacing-5)); }
+.srp-kbd--size-sm {
+  --srp-kbd-h: var(--kbd-height-sm, var(--spacing-4));
+  gap: var(--kbd-gap-sm, var(--spacing-0\.5)); line-height: var(--leading-none);
+}
 .srp-kbd__key {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--srp-kbd-h); height: var(--srp-kbd-h);
   padding: var(--spacing-0) var(--kbd-padding-x, var(--spacing-1\.5));
-  border: var(--border-width-1) solid var(--kbd-border, var(--border-control)); border-bottom-width: var(--border-width-2);
+  border: var(--border-width-1) solid var(--kbd-border, var(--border-control)); border-bottom-width: var(--kbd-border-bottom-width, var(--border-width-2));
   border-radius: var(--kbd-radius, var(--radius-inner)); background: var(--kbd-bg, var(--surface-muted)); color: var(--kbd-text, var(--text));
   font: inherit;
 }
+.srp-kbd__key--char { padding-inline: var(--spacing-0); }   /* square: the min-width is the height */
+.srp-kbd--size-sm .srp-kbd__key { padding-inline: var(--kbd-padding-x-sm, var(--spacing-1)); border-color: var(--kbd-border-sm, var(--border)); border-bottom-width: var(--border-width-1); }
+.srp-kbd--size-sm .srp-kbd__key--char { padding-inline: var(--spacing-0); }
 .srp-kbd__plus { color: var(--kbd-separator, var(--text-muted)); }
 }

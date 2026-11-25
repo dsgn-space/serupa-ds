@@ -17,7 +17,7 @@ Patterns are source for your app to own and change, not components to import.
 
 ## What each one holds
 
-Each folder in `src/patterns/` holds the stories, a test and a guide (`tools/test/contract.mjs` checks this). Their stories run the page rules in `tools/test/storybook.mjs` in every theme: one main landmark, everything inside a landmark, one h1 and no skipped heading level, no id twice, and a first Tab stop that is a skip link into main.
+Each pattern comes with its stories, a test and a guide. Their stories run the page checks in every theme: one main landmark, everything inside a landmark, one h1 and no skipped heading level, no id twice, and a first Tab stop that is a skip link into main.
 
 ## Every state, not just the happy path
 
@@ -32,7 +32,7 @@ A copied screen meets every state it can be in, so each pattern has a story for 
 | Offline | `Offline` | "You're offline" first in main, then what still works and what needs a connection. The page keeps what it loaded. |
 | Sending fails | `SendFails`, or a name of its own (`SaveFails`, `OrderFails`) | Everything entered stays, and it says what didn't go. |
 
-A screen that loads data has the first five; a screen that sends something has the last two. Every pattern takes `online`: left out, it follows the browser, so a copied page says it's offline the moment the connection drops. `src/internal/patternStates.test.tsx` fails when a pattern is missing a state, and lists the states a screen can't be in with why (a quiz always has its questions).
+A screen that loads data has the first five; a screen that sends something has the last two. Every pattern takes `online`: left out, it follows the browser, so a copied page says it's offline the moment the connection drops. A check fails when a pattern is missing a state, apart from states a screen can't be in (a quiz always has its questions).
 
 ## The patterns
 
@@ -76,7 +76,7 @@ A screen that loads data has the first five; a screen that sends something has t
 | [Address book](?path=/docs/patterns-address-book--docs) | Each address an address element with buttons named by it, the default said in words and not removable, a dialog for autofill that says what's missing, removes with Undo (1.3.1, 2.4.6, 1.3.5, 3.3.1, 3.3.4) | Ready |
 | [Order history](?path=/docs/patterns-order-history--docs) | Orders as a list headed by their number, where each has got to in words, links and buttons named with the order, the count said as the search or filter changes, Show more that moves focus to the first new order (1.3.1, 1.4.1, 2.4.4, 4.1.3, 2.4.3) | Ready |
 | [Return request](?path=/docs/patterns-return-request--docs) | Items as a named group with the ones that can't go back saying why, a reason asked for each chosen item by its name, the refund worked out as you choose, next steps that take focus (1.3.1, 3.3.2, 3.3.1, 2.4.3) | Ready |
-| [Referral](?path=/docs/patterns-referral--docs) | The rules in a sentence, the invite link in a labelled field with Copy, bad or repeated addresses named before sending, invites as a table with where each is in words (1.3.1, 3.3.1, 1.4.1, 4.1.3) | Ready |
+| [Referral](?path=/docs/patterns-referral--docs) | The rules in a sentence, the invite link in a labeled field with Copy, bad or repeated addresses named before sending, invites as a table with where each is in words (1.3.1, 3.3.1, 1.4.1, 4.1.3) | Ready |
 | [Job application](?path=/docs/patterns-job-application--docs) | The job's facts as a list before the form, a CV that says what it takes, a summary of what's missing that takes focus, and what happens next in order (1.3.1, 3.3.2, 3.3.1, 2.4.3) | Ready |
 | [Event registration](?path=/docs/patterns-event-registration--docs) | The time in the event's own zone, places left as a meter with words, tickets with a total, a calendar file, and a waiting list once full (1.3.1, 1.4.1, 3.3.2, 2.4.3) | Ready |
 | [Saved items](?path=/docs/patterns-saved-items--docs) | What changed since saving in words, buttons named by their item, Remove with Undo that moves focus on, and the sort said in a status line (1.4.1, 2.5.3, 3.3.4, 4.1.3) | Ready |

@@ -55,7 +55,7 @@
       "text-muted-shaded": {
         "$type": "color",
         "$value": "{color.text-muted-shaded}",
-        "$description": "Grey text in a hovered, striped or selected row, where `text-muted` would fall under 4.5:1 on the shaded fill; it reaches muted text in your cells too.",
+        "$description": "Gray text in a hovered, striped or selected row, where `text-muted` would fall under 4.5:1 on the shaded fill; it reaches muted text in your cells too.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-text-muted-shaded"

@@ -4,6 +4,10 @@
 # DontHardcodeCtrl
 - paragraph: Press Control K to search.
 
+# InControl
+- button "Find Control K"
+- button "Search Control K"
+
 # InText
 - paragraph: Press / to search, or Control Shift P for commands.
 

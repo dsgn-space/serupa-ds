@@ -268,7 +268,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
 }
 
 /* DateField: a date people know by heart or copy from a document (a date of birth, a passport's expiry), as three
-   labelled boxes, Day, Month and Year, in the locale's order, under one name: GOV.UK's date input. Typing is free:
+   labeled boxes, Day, Month and Year, in the locale's order, under one name: GOV.UK's date input. Typing is free:
    nothing is blocked or moved on its own, so a mistake can be read and fixed. A separator (/ . - or a space) typed
    after a number moves to the next box, and a whole date pasted into any box fills all three. The root is a group
    named by the Field's label and described by its hint and error; the boxes are numeric text fields (not

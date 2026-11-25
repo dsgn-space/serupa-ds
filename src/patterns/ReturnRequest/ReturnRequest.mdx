@@ -12,13 +12,16 @@ Sending back some of an order: which items and why, how they go back, where the 
 ## When to use it
 
 - A page reached from an order, to return or exchange what was in it.
-- Not for cancelling an order that hasn't shipped: the Order status pattern does that in one step.
+
+## When not to use it
+
+- Not for canceling an order that hasn't shipped: the Order status pattern does that in one step.
 - Not for a problem that needs a person: that's the Contact form pattern.
 
 ## What each part is for
 
 - **The items are a named group of checkboxes.** One that can't be returned is disabled and says why next to it (1.3.1, 3.3.2).
-- **The reason is asked for only for an item you've chosen**, and labelled with its name: "Why are you returning the Linen shirt?" (3.3.2, 2.4.6).
+- **The reason is asked for only for an item you've chosen**, and labeled with its name: "Why are you returning the Linen shirt?" (3.3.2, 2.4.6).
 - **Sending with something missing shows a summary at the top that takes focus**, each problem a link to its item or reason, and each says its own problem too (3.3.1, 2.4.3).
 - **How it goes back and where the money goes are named radio groups**, and a cost is said in the choice's own words (1.3.1).
 - **The refund is worked out as you choose**, with a pickup's cost taken off by name, and none for an item that arrived damaged or wrong.

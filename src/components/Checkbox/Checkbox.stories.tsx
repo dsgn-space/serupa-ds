@@ -117,7 +117,7 @@ export const DoCardsWithDetails: Story = {
 /** Don't: cards for options that need no explanation. */
 export const DontCardsForShortOptions: Story = { tags: ['!visual'],
   name: "Don't: cards for short options",
-  render: () => <CheckboxGroup aria-label="Colour" variant="card" defaultValue={['red']}>
+  render: () => <CheckboxGroup aria-label="Color" variant="card" defaultValue={['red']}>
     {['Red', 'Green', 'Blue'].map((c) => <Checkbox key={c} value={c.toLowerCase()}>{c}</Checkbox>)}
   </CheckboxGroup>,
 };

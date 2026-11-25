@@ -9,6 +9,9 @@ import { Icon } from '../src/components/Icon/Icon';
 import { Button } from '../src/components/Button/Button';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { CopyButton } from '../src/components/CopyButton/CopyButton';
+import { Field } from '../src/components/Field/Field';
+import { Select } from '../src/components/Select/Select';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../src/components/Table/Table';
 import { customIcons, isIconData } from '../src/icons';
 import type { IconData } from '../src/material/types';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
@@ -196,7 +199,7 @@ const STATUS_TEXT = {
 } as const;
 /** A component's status above its guide, when it isn't stable. */
 export function ComponentStatus({ status }: { status: keyof typeof STATUS_TEXT }) {
-  return <p role="note" className="sb-unstyled" style={{ display: 'flex', gap: 8, alignItems: 'baseline', padding: '8px 12px', border: '1px solid var(--border-strong)', borderRadius: 6, font: '14px/20px var(--font-sans)' }}>
+  return <p role="note" className="sb-unstyled" style={{ display: 'flex', gap: 8, alignItems: 'baseline', margin: '16px 0 0', padding: '8px 12px', border: '1px solid var(--border-strong)', borderRadius: 6, font: '14px/20px var(--font-sans)' }}>
     <strong style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: '0.04em' }}>{status}</strong>
     <span>{STATUS_TEXT[status]}</span>
   </p>;
@@ -291,7 +294,6 @@ function Wide({ label, children }: { label: string; children: React.ReactNode })
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
 const cell: React.CSSProperties = { padding: '6px 10px', borderBottom: '1px solid var(--border)', verticalAlign: 'middle', textAlign: 'left' };
 // A row that runs to many lines (a token's value in 34 themes) starts each cell at its top, so its name isn't halfway down.
-const top: React.CSSProperties = { ...cell, verticalAlign: 'top' };
 // An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
 const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
@@ -510,7 +512,8 @@ export function ElevationLevels() {
 
 // The token explorer's index: every shared token in tokens.json and every component token (<name>.tokens.json),
 // with the components whose CSS reads it. Built once, when the page first draws.
-type Found = { css: string; group: string; values: { theme?: string; ref?: string; value: string }[]; usage: string; usedBy: string[] };
+type Themed = { value: Record<string, string>; contrastMore?: Record<string, string> };
+type Found = { css: string; group: string; category: string; value?: string; themed?: Themed; text: string; usage: string; usedBy: string[] };
 const COLOR = new Map(T.color.tokens.map((t) => [t.name, t.value]));
 // A color token's value in one theme, following references ({blue-600}) to the literal color.
 function resolve(value: Token['value'], theme: string, depth = 0): string {
@@ -518,63 +521,112 @@ function resolve(value: Token['value'], theme: string, depth = 0): string {
   const ref = /^\{([^}]+)\}$/.exec(v)?.[1];
   return ref && COLOR.has(ref) && depth < 8 ? resolve(COLOR.get(ref)!, theme, depth + 1) : v;
 }
+// A themed token in one theme, as the palette color it reads (ref) and the color that comes out; with more contrast,
+// its contrastMore value where it has one.
+function themedValue(t: Themed, theme: string, more: boolean) {
+  const raw = (more && t.contrastMore?.[theme]) || t.value[theme];
+  return { ref: String(raw).replace(/[{}]/g, ''), value: resolve(raw, theme) };
+}
 type Facts = Awaited<ReturnType<typeof loadFacts>>;
 let INDEX: Found[] | undefined;
+let COMPONENTS: string[] | undefined;
 function tokenIndex({ componentTokens, tokenUsers }: Facts): Found[] {
   if (INDEX) return INDEX;
   const users = (css: string, own?: string) => [...new Set([...(tokenUsers[css] ?? []), ...(own ? [own] : [])])].sort();
   const out: Found[] = [];
   for (const [group, g] of Object.entries(T)) {
     if (!g || typeof g !== 'object' || !Array.isArray((g as Group).tokens)) continue;
-    for (const t of (g as Group).tokens) {
+    for (const t of (g as Group & { tokens: (Token & { contrastMore?: Record<string, string> })[] }).tokens) {
       const css = `--${t.name}`;
-      const values = typeof t.value === 'object' && Object.keys(t.value).length > 1
-        ? T.color.themes.map((th) => ({ theme: th.name, ref: String((t.value as Record<string, string>)[th.id]).replace(/[{}]/g, ''), value: resolve(t.value, th.id) }))
-        : [{ value: group === 'color' ? resolve(t.value, T.color.themes[0].id) : val(t.value) }];
-      out.push({ css, group, values, usage: t.usage ?? '', usedBy: users(css) });
+      const themed = typeof t.value === 'object' && Object.keys(t.value).length > 1 ? { value: t.value, contrastMore: t.contrastMore } : undefined;
+      const value = themed ? undefined : group === 'color' ? resolve(t.value, T.color.themes[0].id) : val(t.value);
+      // Search reads every value it can show: each theme's, with and without more contrast.
+      const shown = themed ? T.color.themes.flatMap((th) => [false, true].flatMap((m) => Object.values(themedValue(themed, th.id, m)))) : [value!];
+      const usedBy = users(css);
+      out.push({ css, group, category: group, value, themed, text: [css, group, t.usage ?? '', ...usedBy, ...shown].join('\n').toLowerCase(), usage: t.usage ?? '', usedBy });
     }
   }
-  for (const t of componentTokens) out.push({ css: t.css, group: t.component, values: [{ value: t.value }], usage: t.usage, usedBy: users(t.css, t.component) });
+  for (const t of componentTokens) {
+    const usedBy = users(t.css, t.component);
+    out.push({ css: t.css, group: t.component, category: 'component', value: t.value, text: [t.css, t.component, t.usage, ...usedBy, t.value].join('\n').toLowerCase(), usage: t.usage, usedBy });
+  }
   return (INDEX = out);
 }
 // The text to paste into CSS: a dot (or a backslash) in a token name is escaped there (--spacing-1\.5), every one.
 const asVar = (css: string) => `var(${css.replace(/[\\.]/g, '\\$&')})`;
 const isColor = (v: string) => /^(#|rgb|hsl|oklch|oklab|color\(|transparent$)/.test(v);
+// The token groups of tokens.json, by the names the Foundations pages give them.
+const CATEGORY: Record<string, string> = {
+  color: 'Color', spacing: 'Spacing', radius: 'Corner radius', shadow: 'Shadow', borders: 'Borders', typography: 'Typography', fontSize: 'Font size',
+  layout: 'Layout', sizing: 'Sizing', flexGrid: 'Flex and grid', filters: 'Filters', transforms: 'Transforms', opacity: 'Opacity', transitions: 'Motion', component: 'Component tokens',
+};
+// Brands in the order tokens.json lists them (blue-light, blue-dark, red-light…), and each theme's brand and mode.
+const themeParts = (id: string) => { const i = id.lastIndexOf('-'); return { brand: id.slice(0, i), mode: id.slice(i + 1) }; };
+const BRANDS = [...new Map(T.color.themes.map((th) => [themeParts(th.id).brand, th.name.replace(/ (Light|Dark)$/, '')])).entries()];
+const MODES: [string, string][] = [['light', 'Light'], ['dark', 'Dark'], ['light-more', 'Light, more contrast'], ['dark-more', 'Dark, more contrast']];
 
-/** Every token, shared and component: search by name, value, use or component, see its value in each theme and
- * which components read it, and copy it as var(--name). */
+/* eslint-disable jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
+/** Every token, shared and component: search by name, value, use or component, narrow by brand, mode, category and
+ * component, see its value in each theme left and which components read it, and copy it as var(--name). */
 export function TokenExplorer() {
   const facts = useLoaded(loadFacts);
   const [q, setQ] = React.useState('');
+  const [brand, setBrand] = React.useState('');
+  const [mode, setMode] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [component, setComponent] = React.useState('');
   const [limit, setLimit] = React.useState(60);
   const term = q.trim().toLowerCase().replace(/^var\(|\)$/g, '');
-  React.useEffect(() => setLimit(60), [term]);
+  React.useEffect(() => setLimit(60), [term, brand, mode, category, component]);
   if (!facts) return null;
   const all = tokenIndex(facts);
-  const hits = term ? all.filter((t) => [t.css, t.group, t.usage, ...t.usedBy, ...t.values.flatMap((v) => [v.value, v.ref ?? ''])].some((s) => s.toLowerCase().includes(term))) : all;
+  const components = (COMPONENTS ??= [...new Set(all.flatMap((t) => t.usedBy))].sort());
+  const more = mode.endsWith('-more');
+  const themes = T.color.themes.filter((th) => { const p = themeParts(th.id); return (!brand || p.brand === brand) && (!mode || p.mode === mode.replace('-more', '')); });
+  const one = themes.length === 1;
+  const hits = all.filter((t) => (!term || t.text.includes(term)) && (!category || t.category === category) && (!component || t.usedBy.includes(component)));
+  const filtered = !!(term || brand || mode || category || component);
+  const clear = () => { setQ(''); setBrand(''); setMode(''); setCategory(''); setComponent(''); };
   const swatch = (v: string) => isColor(v) ? <span aria-hidden="true" style={{ display: 'inline-block', width: 14, height: 14, marginInlineEnd: 6, verticalAlign: 'middle', borderRadius: 3, border: '1px solid var(--border)', background: v }} /> : null;
+  const shown = (v: { ref?: string; value: string }) => <>{swatch(v.value)}{v.ref && v.ref !== v.value ? <><code>{v.ref}</code> </> : null}<code>{v.value}</code></>;
+  const select = (label: string, value: string, set: (v: string) => void, any: string, options: [string, string][]) => <Field label={label}>
+    <Select value={value} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => set(e.target.value)} options={[{ value: '', label: any }, ...options.map(([v, l]) => ({ value: v, label: l }))]} />
+  </Field>;
+  const atTop = { verticalAlign: 'top' } as const;
+  const valueHead = one ? `Value in ${themes[0].name}${more ? ', more contrast' : ''}` : 'Value';
   // sb-unstyled: keeps Storybook's docs styles off the controls.
-  return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-    <div style={{ maxWidth: 360 }}><SearchInput aria-label="Find a token" placeholder="Find a token, such as primary or Button" value={q} onChange={(e) => setQ(e.target.value)} /></div>
-    <p role="status" style={{ margin: 0, color: 'var(--text-muted)' }}>{hits.length === all.length ? `${all.length} tokens.` : `${hits.length} of ${all.length} tokens match.`}</p>
-    {/* eslint-disable-next-line jsx-a11y-x/no-noninteractive-tabindex -- a region that scrolls sideways must take focus so a keyboard can scroll it (WCAG 2.1.1) */}
-    {hits.length ? <div role="region" aria-label="Tokens found" tabIndex={0} style={{ overflowX: 'auto' }}>
-      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
-        <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th><th style={cell}>Used by</th><th style={cell}>Use</th></tr></thead>
-        <tbody>{hits.slice(0, limit).map((t) => <tr key={t.css}>
-          <td style={top}><div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}><code>{t.css}</code><CopyButton value={asVar(t.css)} iconOnly size="sm" variant="ghost">{`Copy ${asVar(t.css)}`}</CopyButton></div><div style={{ color: 'var(--text-muted)', fontSize: 12 }}>{t.group}</div></td>
-          <td style={top}>{t.values.map((v, i) => <div key={i} style={{ whiteSpace: 'nowrap' }}>
-            {v.theme && <span style={{ color: 'var(--text-muted)' }}>{v.theme}: </span>}
-            {swatch(v.value)}{v.ref && v.ref !== v.value ? <><code>{v.ref}</code> </> : null}<code>{v.value}</code>
-          </div>)}</td>
-          <td style={top}>{t.usedBy.length ? t.usedBy.map((n, i) => <React.Fragment key={n}>{i ? ', ' : ''}<a href={`?path=/docs/${docsId[n] || `components-${n.toLowerCase()}`}--docs`} target="_top">{n}</a></React.Fragment>) : <span style={{ color: 'var(--text-muted)' }}>No component</span>}</td>
-          <td style={top}>{code(t.usage)}</td>
-        </tr>)}</tbody>
-      </table>
-    </div> : <p style={{ margin: 0 }}>No token matches.</p>}
+  return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }} data-token-explorer>
+    <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 11rem), 1fr))', alignItems: 'end' }}>
+      <div style={{ gridColumn: '1 / -1', maxWidth: 360 }}><Field label="Find a token"><SearchInput placeholder="Such as primary or Button" value={q} onChange={(e) => setQ(e.target.value)} /></Field></div>
+      {select('Brand', brand, setBrand, 'All brands', BRANDS)}
+      {select('Mode', mode, setMode, 'All modes', MODES)}
+      {select('Category', category, setCategory, 'All categories', Object.entries(CATEGORY))}
+      {select('Component', component, setComponent, 'All components', components.map((n) => [n, n]))}
+    </div>
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
+      <p role="status" style={{ margin: 0, color: 'var(--text-muted)' }}>
+        {hits.length === all.length ? `${all.length} tokens.` : `${hits.length} of ${all.length} tokens match.`}
+        {one ? ` Colors show ${themes[0].name}${more ? ' with more contrast' : ''}.` : themes.length < T.color.themes.length ? ` Colors show ${themes.length} themes.` : ''}
+      </p>
+      {filtered ? <Button variant="secondary" size="sm" onClick={clear}>Clear filters</Button> : null}
+    </div>
+    {/* On a phone the rows stand as blocks (sb-doc-table--stack, site.css); the roles keep it a table to screen readers. */}
+    {hits.length ? <Table size="sm" caption="Design tokens" hideCaption className="sb-doc-table--stack" role="table">
+      <TableHead role="rowgroup"><TableRow role="row"><TableHeaderCell role="columnheader" style={{ minWidth: '15rem' }}>Token</TableHeaderCell><TableHeaderCell role="columnheader">{valueHead}</TableHeaderCell><TableHeaderCell role="columnheader" style={{ minWidth: '9rem' }}>Used by</TableHeaderCell><TableHeaderCell role="columnheader" style={{ minWidth: '14rem' }}>Use</TableHeaderCell></TableRow></TableHead>
+      <TableBody role="rowgroup">{hits.slice(0, limit).map((t) => <TableRow key={t.css} role="row">
+        <TableCell role="cell" style={atTop}><div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><code style={{ overflowWrap: 'break-word', minWidth: 0 }}>{t.css}</code><CopyButton value={asVar(t.css)} iconOnly size="sm" variant="ghost">{`Copy ${asVar(t.css)}`}</CopyButton></div><div style={{ color: 'var(--text-muted)', fontSize: 12 }}>{t.group}</div></TableCell>
+        <TableCell role="cell" data-label={valueHead} style={atTop}>{t.themed
+          ? one ? <div style={{ whiteSpace: 'nowrap' }}>{shown(themedValue(t.themed, themes[0].id, more))}</div>
+          : themes.map((th) => <div key={th.id} style={{ whiteSpace: 'nowrap' }}><span style={{ color: 'var(--text-muted)' }}>{th.name}: </span>{shown(themedValue(t.themed!, th.id, more))}</div>)
+          : <div style={{ overflowWrap: 'anywhere' }}>{shown({ value: t.value! })}</div>}</TableCell>
+        <TableCell role="cell" data-label="Used by" style={atTop}>{t.usedBy.length ? t.usedBy.map((n, i) => <React.Fragment key={n}>{i ? ', ' : ''}<a href={`?path=/docs/${docsId[n] || `components-${n.toLowerCase()}`}--docs`} target="_top">{n}</a></React.Fragment>) : <span style={{ color: 'var(--text-muted)' }}>No component</span>}</TableCell>
+        <TableCell role="cell" data-label="Use" style={atTop}>{code(t.usage)}</TableCell>
+      </TableRow>)}</TableBody>
+    </Table> : <p style={{ margin: 0 }}>No token matches.</p>}
     {hits.length > limit ? <div><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 200)}>Show more ({hits.length - limit} left)</Button></div> : null}
   </div>;
 }
+/* eslint-enable jsx-a11y-x/no-interactive-element-to-noninteractive-role */
 
 type Transform = { version: string; id: string; title: string };
 

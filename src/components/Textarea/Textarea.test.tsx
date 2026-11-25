@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { commands, userEvent } from 'vitest/browser';
+import { commands, server, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Textarea } from './Textarea';
@@ -52,18 +52,23 @@ describe('Textarea', () => {
     expect([notes!.getAttribute('rows'), grows!.getAttribute('style')?.includes('Infinity') ?? false]).toEqual(['3', false]);
   });
 
-  test('a native <textarea> in a .srp-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
+  test('a native <textarea> in a .srp-textarea box (data-component="textarea"); md text-sm, 12px side and 5px top padding (6px counting the border), 1px border, 6px corners, 3 rows by default', async () => {
     await setup();
     const md = box('md');
-    expect([el('md').tagName, md.comp, md.rows, md.fs, md.pl, md.pt, md.bw, md.r, md.fh]).toEqual(['TEXTAREA', 'textarea', 3, '14px', '12px', '6px', '1px', '6px', 3 * 20 + 12]);
+    expect([el('md').tagName, md.comp, md.rows, md.fs, md.pl, md.pt, md.bw, md.r, md.fh]).toEqual(['TEXTAREA', 'textarea', 3, '14px', '12px', '5px', '1px', '6px', 3 * 20 + 10]);
     expect(md.wrap).toMatch(/srp-textarea srp-textarea--size-md/);
   });
 
-  test('sizes: sm text-xs 8px/4px padding, lg text-base 16px/10px padding; rows sets the height; unknown size falls back to md and a bad rows to 3', async () => {
+  test('one row is as tall as an Input and a Button of its size, border included: 24, 32 and 44px', async () => {
+    await render(<div>{(['sm', 'md', 'lg'] as const).map((z) => <Textarea key={z} id={'one-' + z} aria-label={z} size={z} rows={1} />)}</div>);
+    expect((['sm', 'md', 'lg'] as const).map((z) => el('one-' + z).parentElement!.getBoundingClientRect().height)).toEqual([24, 32, 44]);
+  });
+
+  test('sizes: sm text-xs 8px/3px padding, lg text-base 16px/9px padding (4 and 10 counting the border); rows sets the height; unknown size falls back to md and a bad rows to 3', async () => {
     await setup();
     const sm = box('sm'), lg = box('lg'), bad = box('bad');
-    expect([sm.fs, sm.pl, sm.pt, sm.fh]).toEqual(['12px', '8px', '4px', 2 * 16 + 8]);
-    expect([lg.fs, lg.pl, lg.pt, lg.fh]).toEqual(['16px', '16px', '10px', 24 + 20]);
+    expect([sm.fs, sm.pl, sm.pt, sm.fh]).toEqual(['12px', '8px', '3px', 2 * 16 + 6]);
+    expect([lg.fs, lg.pl, lg.pt, lg.fh]).toEqual(['16px', '16px', '9px', 24 + 18]);
     expect([bad.size, bad.rows]).toEqual(['md', 3]);
   });
 
@@ -135,14 +140,14 @@ describe('Textarea', () => {
   test('autoResize: starts at rows (2 lines), grows a line at a time, stops at maxRows (4) and scrolls, shrinks back when emptied; no resize handle', async () => {
     await setup();
     const a0 = box('auto');
-    expect([a0.fh, a0.resize]).toEqual([2 * 20 + 12, 'none']);
+    expect([a0.fh, a0.resize]).toEqual([2 * 20 + 10, 'none']);
     await userEvent.click(el('auto'));
     await userEvent.keyboard('1{Enter}2{Enter}3');
-    await expect.poll(() => [box('auto').fh, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([3 * 20 + 12, false]);
+    await expect.poll(() => [box('auto').fh, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([3 * 20 + 10, false]);
     await userEvent.keyboard('{Enter}4{Enter}5{Enter}6');
-    await expect.poll(() => [box('auto').fh, box('auto').oy, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([4 * 20 + 12, 'auto', true]);
+    await expect.poll(() => [box('auto').fh, box('auto').oy, el('auto').scrollHeight > el('auto').clientHeight]).toEqual([4 * 20 + 10, 'auto', true]);
     await userEvent.keyboard('{Control>}a{/Control}{Backspace}');
-    await expect.poll(() => box('auto').fh).toBe(2 * 20 + 12);
+    await expect.poll(() => box('auto').fh).toBe(2 * 20 + 10);
   });
 
   test('autoResize: in CSS (field-sizing: content, no height set inline) where the browser has it, measured in script elsewhere; the page doesn\'t scroll as it grows', async () => {
@@ -151,7 +156,7 @@ describe('Textarea', () => {
     await userEvent.click(f);
     const y = scrollY;
     await userEvent.keyboard('1{Enter}2{Enter}3');
-    await expect.poll(() => box('auto').fh).toBe(3 * 20 + 12);
+    await expect.poll(() => box('auto').fh).toBe(3 * 20 + 10);
     expect([getComputedStyle(f).getPropertyValue('field-sizing') === 'content', f.style.height !== '', scrollY]).toEqual([css, !css, y]);
   });
 
@@ -174,6 +179,16 @@ describe('Textarea', () => {
       <SerupaProvider locale="fa"><Textarea id="cfa" showCount defaultValue="abc" /></SerupaProvider>
     </>);
     expect([count('car').textContent, count('cfa').textContent]).toEqual(['١٢ / ٢٠٠', '۳']);
+  });
+
+  test('showCount: the count sits inside the box at its end in 12px text-muted, like a hint; the resize grip is two thin lines in the same muted color, in from the corner', async () => {
+    await render(<div style={{ width: '300px' }}><Textarea id="out" aria-label="Bio" showCount maxLength={280} defaultValue="Hello" /></div>, { wrapper: EnUS });
+    const box = el('out').parentElement!.getBoundingClientRect(), c = count('out'), r = c.getBoundingClientRect();
+    expect([r.bottom <= box.bottom, r.right <= box.right, css(c).fontSize, css(c).color]).toEqual([true, true, '12px', color('var(--text-muted)')]);
+    if (server.browser !== 'firefox') {
+      const grip = getComputedStyle(el('out'), '::-webkit-resizer');
+      expect([grip.backgroundImage.includes(color('var(--text-muted)')), grip.backgroundRepeat]).toEqual([true, 'no-repeat']);
+    }
   });
 
   test('showCount: "2 / 5" under the text, linked by aria-describedby after the field\'s own; counts typing, stops at maxLength and turns text-colored', async () => {
@@ -252,7 +267,7 @@ describe('Textarea', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['text', 'var(--text)', 'var(--field)', 4.5], ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5], ['count', 'var(--placeholder)', 'var(--field)', 4.5], ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3], ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3], ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['text', 'var(--text)', 'var(--field)', 4.5], ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5], ['count', 'var(--text-muted)', 'var(--field)', 4.5], ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3], ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3], ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);

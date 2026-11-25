@@ -13,6 +13,7 @@
 }
 .srp-btn.srp-fab .srp-icon { font-size: var(--fab-icon-size, var(--spacing-6)); }
 .srp-btn.srp-fab svg { width: var(--fab-icon-size, var(--spacing-6)); height: var(--fab-icon-size, var(--spacing-6)); }
+.srp-btn.srp-fab .srp-loader { --srp-loader-size: var(--fab-icon-size, var(--spacing-6)); }   /* loading: the spinner takes the icon's place, at its size */
 .srp-btn.srp-fab--sm { height: var(--fab-size-sm, var(--spacing-10)); width: var(--fab-size-sm, var(--spacing-10)); }
 .srp-btn.srp-fab--extended { width: auto; padding: var(--spacing-0) var(--fab-padding-x, var(--spacing-5)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 /* extended="auto": the label folds away while the page scrolls down, leaving the round icon button, and opens again

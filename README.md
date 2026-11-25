@@ -14,7 +14,7 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v19.0.0
+npm install github:dsgn-space/serupa-ds#v19.0.1
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
@@ -32,14 +32,14 @@ npm install @diki-stwn/serupa-ds
 
 Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
 
-Always pin a tag (`#v19.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v19.0.1`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v19.0.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v19.0.1 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -272,7 +272,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
-| [Button](src/components/Button/README.md) | Triggers an action: submitting a form, opening a dialog, confirming or cancelling. |
+| [Button](src/components/Button/README.md) | Triggers an action: submitting a form, opening a dialog, confirming or canceling. |
 | [ButtonGroup](src/components/ButtonGroup/README.md) | Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. |
 | [CopyButton](src/components/CopyButton/README.md) | A button that copies text to the clipboard: an API key, an invite link, a command. |
 | [Fab](src/components/Fab/README.md) | A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. |
@@ -357,7 +357,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Checkbox](src/components/Checkbox/README.md) | A native checkbox with its label, for turning one option on or off, or picking any number from a list. |
 | [ColorPicker](src/components/ColorPicker/README.md) | Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. |
 | [Combobox](src/components/Combobox/README.md) | A text field with a list of options that narrows as you type: pick a country, an assignee, a project. |
-| [DateField](src/components/DateField/README.md) (beta) | A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. |
+| [DateField](src/components/DateField/README.md) (beta) | A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labeled boxes, in the locale's order. |
 | [DatePicker](src/components/DatePicker/README.md) | A date field: people type a date, or pick one from a calendar that opens under the field. |
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |

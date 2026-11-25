@@ -11,9 +11,9 @@ function Page(props: Omit<TourProps, 'steps'> & { steps?: (parts: Parts) => Tour
   const [open, setOpen] = React.useState(!!props.open);
   const { steps = basic, start, ...rest } = props;
   return (
-    <div style={{ minHeight: 420, padding: 24 }}>
+    <div data-room-for-overlay="" style={{ minHeight: 420, padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-        <div ref={search} style={{ flex: '1 1 200px' }}><SearchInput aria-label="Search projects" placeholder="Search projects" /></div>
+        <div ref={search} style={{ flex: '1 1 200px', borderRadius: 'var(--radius-control)' }}><SearchInput aria-label="Search projects" placeholder="Search projects" /></div>
         <Button ref={create} startIcon="add">New project</Button>
         <IconButton ref={help} icon="help" label="Help" />
       </div>

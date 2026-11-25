@@ -2,12 +2,15 @@
    CopyButton: a Button (outline, sm by default) with a copy icon and "Copy". Once it has copied, the icon is a check
    in the success color and the label reads "Copied", for 2 seconds; if the browser refused, an error icon in the
    danger color and "Couldn't copy", for as long. Both labels share one grid cell, so the
-   button keeps one width.
+   button keeps one width, and cross-fade with the icon.
    --------------------------------------------------------------- */
 @layer srp.components {
-.srp-copy-btn__labels { display: inline-grid; grid-template-areas: "label"; }
-.srp-copy-btn__label { grid-area: label; }
-.srp-copy-btn__label--off { visibility: hidden; }
+/* A long label ends with an ellipsis (the button's title then shows it in full on hover); each label starts at the
+   icon, so "Copied" sits beside its check. The labels cross-fade with the icons, over the same time, so the check
+   never shows beside "Copy" or the copy icon beside "Copied". */
+.srp-copy-btn__labels { display: grid; grid-template-areas: "label"; grid-template-columns: minmax(var(--spacing-0), auto); min-width: var(--spacing-0); }
+.srp-copy-btn__label { grid-area: label; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; transition: opacity var(--motion-change-sm) var(--ease-enter); }
+.srp-copy-btn__label--off { opacity: var(--opacity-0); }
 .srp-copy-btn__icon--done { color: var(--copy-button-done-color, var(--success-text)); }
 /* The copy icon and the check share one cell. The one going fades, shrinks a little and blurs; the one coming fades in,
    growing from 90% out of the same blur, over motion-change-sm, so it reads as one icon changing (KW18). Reduced

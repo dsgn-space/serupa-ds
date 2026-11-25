@@ -51,7 +51,7 @@ import { Tooltip, IconButton, Button } from '@diki-stwn/serupa-ds';
 ## Accessibility
 
 - It shows on keyboard focus as well as hover, and only for the focus ring (not after a click). A tap on a touch screen doesn't show it, and a press anywhere outside hides it.
-- The element points at the tooltip with `interestfor` (interest invokers), so where the browser has them (Chrome 142 and later, including on Android), a long press on a touch screen shows it at once. The browser's own showing is cancelled and the tooltip shows itself, so the delay, the warm-up and Escape stay the same with a mouse or the keyboard. Elsewhere the attribute does nothing. It works on a `<button>` or a link.
+- The element points at the tooltip with `interestfor` (interest invokers), so where the browser has them (Chrome 142 and later, including on Android), a long press on a touch screen shows it at once. The browser's own showing is canceled and the tooltip shows itself, so the delay, the warm-up and Escape stay the same with a mouse or the keyboard. Elsewhere the attribute does nothing. It works on a `<button>` or a link.
 - WCAG 1.4.13: Escape hides it from anywhere, the pointer can move onto it without it closing, and it stays until the pointer or focus leaves.
 - Don't put anything only in a tooltip that people need to do the task: touch screens have no hover, and few people know a long press shows it.
 - A disabled `<button>` can't take focus or hover events, so a tooltip on it never shows. For a Serupa [Button](../Button/README.md), pass `disabledReason` with `disabled`: it stays focusable, and a Tooltip with the same words shows on hover and focus. For other elements, use `aria-disabled` instead of `disabled`.

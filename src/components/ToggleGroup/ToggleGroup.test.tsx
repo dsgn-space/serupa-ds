@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ToggleGroup } from './ToggleGroup';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
+import { withMotion } from '../../../tools/test/vitest/helpers';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const pressed = () => [...document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]')].map((b) => b.getAttribute('aria-pressed') === 'true' ? b.value : '').filter(Boolean).join();
@@ -50,6 +51,18 @@ describe('ToggleGroup', () => {
       await userEvent.unhover(center!);
       await s.unmount();
     }
+  });
+
+  test('choosing another toggle: the shared line turns the newly on one\'s color at once, never gray for a moment (the fill still fades)', async () => {
+    await render(<Align defaultValue={['center']} />);
+    const left = btn('Left').element() as HTMLElement;
+    await withMotion(async () => {
+      await userEvent.click(left);
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+      const now = getComputedStyle(left).borderRightColor;
+      await new Promise((r) => setTimeout(r, 500));
+      expect(now).toBe(getComputedStyle(left).borderRightColor);
+    });
   });
 
   test('single: pressing one turns the others off, pressing it again turns it off; onValueChange hears each', async () => {

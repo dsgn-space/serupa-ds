@@ -1,6 +1,6 @@
 # DateField
 
-A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. The app gets `YYYY-MM-DD`, and is told what's wrong while it isn't a date, so it can word the error.
+A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labeled boxes, in the locale's order. The app gets `YYYY-MM-DD`, and is told what's wrong while it isn't a date, so it can word the error.
 
 **Also called:** date input, segmented date input.
 
@@ -101,4 +101,5 @@ Each is an optional override: set it on the page, a container or one DateField. 
 | `--date-field-label-gap` | `spacing-1` | Space between a label and its box (4px). |
 | `--date-field-short-width` | `spacing-16` | The day and month boxes' width, for two digits (64px). |
 | `--date-field-year-width` | `spacing-24` | The year box's width, for four digits (96px). |
+| `--date-field-error-icon-size` | `spacing-4` | The error icon beside the 14px message (16px). |
 <!-- token-table:end -->
