@@ -24,7 +24,7 @@ import { Stack } from '../../components/Stack/Stack';
    debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
    - The plan says what it costs and the day it renews, in the reader's locale, before anyone looks for it.
    - Cancelling takes no more steps than signing up: one button, then a dialog that says what changes and when, with
-     Keep my plan and Cancel plan side by side, the same size. Nothing is deleted, and a cancelled plan can be resumed.
+     Keep my plan and Cancel plan side by side, the same size. Nothing is deleted, and a canceled plan can be resumed.
    - 1.4.1: usage says how much in words ("4 of 10 seats"), and "almost full" in words too, not only in color.
    - 1.3.1: invoices are a table with a caption; each Download link names its invoice ("Download the invoice of
      1 October 2026").

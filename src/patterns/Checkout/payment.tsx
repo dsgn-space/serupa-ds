@@ -249,7 +249,7 @@ export function PayNext({ method, a, total, totalText, instructions, onExpired, 
   if (expiredNow) {
     return (
       <div className="flex flex-col items-start gap-3">
-        <p className="m-0 text-danger-text">The time to pay has run out, so the order is cancelled. Nothing was charged.</p>
+        <p className="m-0 text-danger-text">The time to pay has run out, so the order is canceled. Nothing was charged.</p>
         <Button onClick={onChooseAnother}>Choose another way to pay</Button>
       </div>
     );

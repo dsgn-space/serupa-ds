@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 /** Three plans billed monthly: the current one says so instead of offering a button, and the recommended one is marked in words. */
 export const Monthly: Story = {};
 
-/** Billed yearly: the price per month, what is paid once a year, the saving in the yearly option's name, and that plans renew every year until cancelled. */
+/** Billed yearly: the price per month, what is paid once a year, the saving in the yearly option's name, and that plans renew every year until canceled. */
 export const Yearly: Story = { args: { defaultPeriod: 'yearly' } };
 
 /** In Indonesian rupiah, with the words in Indonesian: money is written the locale's way. */

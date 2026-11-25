@@ -67,7 +67,7 @@ describe('Patterns/Billing', () => {
     expect(alert.element().textContent).toContain('Change your payment method to keep Team.');
   });
 
-  test('a card that runs out before the next payment says so in words, and a cancelled plan doesn\'t worry about it', async () => {
+  test('a card that runs out before the next payment says so in words, and a canceled plan doesn\'t worry about it', async () => {
     const card = { kind: 'card' as const, brand: 'Mastercard', last4: '5100', expires: '2026-11' };
     const screen = await render(<SerupaProvider locale="en-GB"><Billing paymentMethod={card} /></SerupaProvider>);
     const section = screen.getByRole('region', { name: 'Payment method' });
@@ -122,7 +122,7 @@ describe('Patterns/Billing', () => {
     await expect.poll(() => toasted('Resumed. Team renews on 1 December 2026.')).toBe(true);
   });
 
-  test('a plan that starts cancelled shows Resume, not Cancel; no invoices says when the first comes', async () => {
+  test('a plan that starts canceled shows Resume, not Cancel; no invoices says when the first comes', async () => {
     const screen = await render(<Billing plan={cancelled} invoices={[]} />);
     await expect.element(screen.getByRole('button', { name: 'Resume plan' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Cancel plan' }).elements()).toHaveLength(0);

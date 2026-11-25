@@ -153,9 +153,9 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
     setFailed(false);
     setBusy(true);
     void Promise.resolve().then(() => onCancel?.()).then(() => {
-      setOrder((o) => ({ ...o, cancelled: true, delay: undefined, events: [{ id: 'cancelled', at: new Date().toISOString(), title: 'Order cancelled' }, ...o.events] }));
+      setOrder((o) => ({ ...o, cancelled: true, delay: undefined, events: [{ id: 'cancelled', at: new Date().toISOString(), title: 'Order canceled' }, ...o.events] }));
       setAsking(false);
-      toast({ title: `${name} is cancelled`, tone: 'success' });
+      toast({ title: `${name} is canceled`, tone: 'success' });
     }, () => setFailed(true)).finally(() => setBusy(false));
   };
   // The Cancel button goes with the order, so focus goes to the page's h1.
@@ -189,7 +189,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                     {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)} data-print="hide">Cancel order</Button> : null}
                   </div>
                   {!order.cancelled && !canCancel(order) && order.stage === 'shipped'
-                    ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be cancelled. You can send it back once it arrives.</p> : null}
+                    ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be canceled. You can send it back once it arrives.</p> : null}
                 </section>
 
                 <section aria-labelledby="happened" className={section}>
