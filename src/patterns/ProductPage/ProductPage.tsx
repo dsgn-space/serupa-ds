@@ -268,7 +268,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     </div>
 
     <section aria-labelledby="about" className="flex flex-col gap-4">
-      <h2 id="about" className="m-0 text-xl font-semibold">About this product</h2>
+      <h2 id="about" className="m-0 text-lg font-semibold">About this product</h2>
       <Accordion selectionMode="multiple" defaultValue={['details']} headingLevel={3}>
         <AccordionItem value="details" title="Details">
           <DescriptionList layout="inline">
@@ -280,7 +280,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     </section>
 
     <section aria-labelledby="reviews" className="flex flex-col gap-4">
-      <h2 id="reviews" tabIndex={-1} className="m-0 text-xl font-semibold outline-none">Reviews</h2>
+      <h2 id="reviews" tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Reviews</h2>
       {product.reviews.length ? (
         <ul className="m-0 flex list-none flex-col gap-4 p-0" role="list">
           {product.reviews.map((r) => (

@@ -102,7 +102,7 @@ export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, reci
       .then(() => go('sent'), () => setFailed(true)).finally(() => setBusy(false));
   };
   React.useEffect(() => { if (moved.current) heading.current?.focus(); }, [step]);
-  const h2 = 'm-0 text-xl font-semibold outline-none';
+  const h2 = 'm-0 text-lg font-semibold outline-none';
 
   return (
     <div className="min-h-screen bg-surface text-text">
@@ -162,7 +162,7 @@ export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, reci
               </section>
             ) : (
               <section aria-labelledby="send-done" className="flex flex-col items-start gap-3">
-                <h2 id="send-done" ref={heading} tabIndex={-1} className={h2}>Sent to {who?.name}</h2>
+                <h2 id="send-done" ref={heading} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent to {who?.name}</h2>
                 <p className="m-0">{money(q.receives, who?.currency)} arrives {who?.arrives.toLowerCase()}. We’ve emailed you a receipt.</p>
                 <div className="flex flex-wrap gap-3">
                   <Link href="#accounts">Back to accounts</Link>
