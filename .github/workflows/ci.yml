@@ -220,7 +220,13 @@ jobs:
           fi
           x86any=$(echo "$x86" | jq -r 'if (.include | length) > 0 then 1 else "" end')
           visualrun=$(echo "$x86" | jq -r 'if any(.include[]; .group == "visual") then 1 else "" end')
-          portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
+          # The checks in three shards, or in one when a narrowed run leaves out both the built package's checks and the
+          # site's (a change to tools, tests or workflows): what is left took 36 to 96 s of tests a shard (25 Nov), and
+          # each shard paid about two minutes of container, checkout, setup and build around them.
+          nc=3
+          if [ -n "$since" ] && node tools/test/run.mjs --since "$since" --group checks --list | grep -q '^Leaving out tree-shake' \
+            && node tools/test/run.mjs --since "$since" --group checks --list | grep -q '^Leaving out site'; then nc=1; fi
+          portable='{"include":['"$(seq 1 "$nc" | sed "s|.*|{\"group\":\"checks\",\"shard\":\"&/$nc\"}|" | paste -sd,)"
           # Storybook in four shards: in three, a queue run that checks every page took up to 11 minutes in one (13 Nov),
           # the longest job of the run. They go on GitHub's runners, so a fourth costs no x86 runner.
           if [ -n "$storybook" ]; then for k in $(seq 1 "${ns:-4}"); do portable="$portable"',{"group":"storybook","shard":"'"$k/${ns:-4}"'"}'; done; fi
