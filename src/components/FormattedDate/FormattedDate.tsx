@@ -86,8 +86,8 @@ function keepTimeTogether<T extends { type: string; value: string }>(parts: T[])
 
 // A date with a time wraps between the two, never inside either: "Nov 12, 2026, / 8:00 AM", not "Nov 12, / 2026,
 // 8:00 AM". The words are the same (textContent and formatDate don't change): [first half, the words between, second half].
-// Each half is an inline-block (FormattedDate.css), so it moves to the next line whole, and only a half wider than the line itself
-// ("Wednesday, September 30, 2026" in 160px) wraps inside.
+// Each half keeps to one line (FormattedDate.css). Only short halves, as the short and medium styles write them: a
+// long one ("Wednesday, September 30, 2026") could be wider than a narrow line, so it wraps like a sentence.
 // module state: a fixed list of Intl part types, never written to, so every request reads the same one.
 const TIME = new Set(['hour', 'minute', 'second', 'fractionalSecond', 'dayPeriod', 'timeZoneName']);
 function halves(parts: { type: string; value: string }[]): string[] {
@@ -97,7 +97,8 @@ function halves(parts: { type: string; value: string }[]): string[] {
   let b = cut;
   while (parts[b - 1]!.type === 'literal') b--;
   const text = (x: typeof parts) => x.map((p) => p.value).join('');
-  return [text(parts.slice(0, b)), text(parts.slice(b, cut)), text(parts.slice(cut))];
+  const out = [text(parts.slice(0, b)), text(parts.slice(b, cut)), text(parts.slice(cut))];
+  return out[0]!.length > 20 || out[2]!.length > 20 ? [] : out;
 }
 
 type Piece = { text: string; source: 'startRange' | 'endRange' | 'shared' };

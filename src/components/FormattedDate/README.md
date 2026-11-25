@@ -33,7 +33,7 @@ formatDate("2026-11-20", "id", { dateStyle: "long" })                      // "2
 Drawn from the `WithTime` story.
 
 1. **Date** (`.srp-formatted-date`): the `<time>` holding the words, with the moment in its `datetime`.
-2. **Half** (`.srp-formatted-date__half`): the date, or the time, of a date with a time. The line wraps between the two halves, never inside one, unless a half is wider than the line itself.
+2. **Half** (`.srp-formatted-date__half`): the date, or the time, of a date with a time. The line wraps between the two halves, never inside one. Only short halves (the short and medium styles) are kept whole: a long one ("Wednesday, September 30, 2026") wraps like a sentence, as it could be wider than the line.
 
 ## Usage
 

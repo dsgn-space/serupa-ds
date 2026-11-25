@@ -124,7 +124,9 @@ describe('FormattedDate', () => {
     const lines = [...el('x').querySelectorAll('span')].map((s) => [plain(s.textContent), Math.round(s.getBoundingClientRect().top)] as const);
     expect(lines.map(([t]) => t)).toEqual(['Nov 12, 2026', '8:00 AM']);
     expect(lines[1]![1]).toBeGreaterThan(lines[0]![1]);
-    // a day alone, a time alone and a range stay one run, as before
+    // a long style wraps like a sentence (a half could be wider than the line); a day alone stays one run, as before
+    await render(<FormattedDate id="l" value="2026-09-30T14:45:00Z" timeZone="UTC" dateStyle="full" timeStyle="full" locale="en-US" />);
+    expect(el('l').querySelector('span')).toBeNull();
     await render(<FormattedDate id="d" value="2026-11-12" locale="en-US" />);
     expect(el('d').querySelector('span')).toBeNull();
   });
