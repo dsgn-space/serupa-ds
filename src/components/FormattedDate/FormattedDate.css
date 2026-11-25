@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------
+   FormattedDate: a date with a time is two halves, each an inline-block, so the line wraps between the date and
+   the time and a half moves down whole; one wider than the line itself still wraps inside.
+   --------------------------------------------------------------- */
+@layer srp.components {
+.srp-formatted-date__half { display: inline-block; }
+}
