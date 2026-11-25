@@ -192,7 +192,7 @@
     "surface-hover": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `highlight`; zinc-800 dark). Grey text on it reads `text-muted-shaded`.",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `highlight`; zinc-800 dark). Gray text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover"
@@ -202,7 +202,7 @@
     "surface-hover-raised": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1. Grey text on it reads `text-muted-shaded`.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1. Gray text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover-raised"
@@ -282,7 +282,7 @@
     "highlight-indicator": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the grey fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
+      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the gray fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--highlight-indicator"
@@ -500,7 +500,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
+      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"

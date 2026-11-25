@@ -164,7 +164,7 @@
 
 # Steps
 - list:
-  - listitem: Searched the help centre , Done 3 articles
+  - listitem: Searched the help center , Done 3 articles
   - listitem: Called the orders API , Failed Timed out after 10 seconds
   - listitem: Trying the orders API again , In progress
 

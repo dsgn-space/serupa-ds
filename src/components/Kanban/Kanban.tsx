@@ -342,7 +342,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
    picks it up, Up and Down move it within its column, Left and Right to the next column in reading order, Home and
    End to the top and bottom, Space or Enter drops it and Escape puts it back), or with its "Move to…" menu, the
    single-pointer way (WCAG 2.5.7). Each step is said ("Fix login, Done, position 2 of 5"). Nothing is reported until
-   a drop (onMove), so a cancelled move changes nothing. The board scrolls sideways in its own box, and a drag near an
+   a drop (onMove), so a canceled move changes nothing. The board scrolls sideways in its own box, and a drag near an
    edge scrolls the board or the column. */
 /** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */

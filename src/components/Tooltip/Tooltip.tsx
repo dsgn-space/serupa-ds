@@ -89,8 +89,8 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
   // Interest invokers (174): the element points at the tooltip with interestfor, so where the browser has them, a
   // long press on a touch screen shows it (Chrome on Android), as a hover does with a mouse. The browser's own showing
-  // is cancelled and the tooltip shows itself; an interest while the pointer is over the element or it has keyboard
-  // focus is one this component already handles (with its delay, its warm-up and Escape cancelling a waiting hover),
+  // is canceled and the tooltip shows itself; an interest while the pointer is over the element or it has keyboard
+  // focus is one this component already handles (with its delay, its warm-up and Escape canceling a waiting hover),
   // so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
   const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, 'hover'); } };

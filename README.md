@@ -272,7 +272,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
-| [Button](src/components/Button/README.md) | Triggers an action: submitting a form, opening a dialog, confirming or cancelling. |
+| [Button](src/components/Button/README.md) | Triggers an action: submitting a form, opening a dialog, confirming or canceling. |
 | [ButtonGroup](src/components/ButtonGroup/README.md) | Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. |
 | [CopyButton](src/components/CopyButton/README.md) | A button that copies text to the clipboard: an API key, an invite link, a command. |
 | [Fab](src/components/Fab/README.md) | A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. |
@@ -357,7 +357,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Checkbox](src/components/Checkbox/README.md) | A native checkbox with its label, for turning one option on or off, or picking any number from a list. |
 | [ColorPicker](src/components/ColorPicker/README.md) | Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. |
 | [Combobox](src/components/Combobox/README.md) | A text field with a list of options that narrows as you type: pick a country, an assignee, a project. |
-| [DateField](src/components/DateField/README.md) (beta) | A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. |
+| [DateField](src/components/DateField/README.md) (beta) | A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labeled boxes, in the locale's order. |
 | [DatePicker](src/components/DatePicker/README.md) | A date field: people type a date, or pick one from a calendar that opens under the field. |
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |

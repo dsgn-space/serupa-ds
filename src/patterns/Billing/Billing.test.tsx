@@ -115,7 +115,7 @@ describe('Patterns/Billing', () => {
     await dialog.getByRole('button', { name: 'Cancel plan' }).click();
     await expect.poll(() => screen.getByRole('alertdialog').elements()).toHaveLength(0);
     expect(main().textContent).toContain('Active until 1 December 2026, then it stops. Nothing is deleted.');
-    await expect.poll(() => toasted('Cancelled. Team stays active until 1 December 2026.')).toBe(true);
+    await expect.poll(() => toasted('Canceled. Team stays active until 1 December 2026.')).toBe(true);
     await screen.getByRole('button', { name: 'Resume plan' }).click();
     expect(onResume).toHaveBeenCalledOnce();
     expect(main().textContent).toContain('Renews on 1 December 2026');

@@ -71,7 +71,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const field = React.useRef<HTMLInputElement | null>(null);
   const view = React.useRef<HTMLButtonElement | null>(null);
   const refocus = React.useRef(false);   // a keyboard save or cancel puts focus back on the button
-  const closing = React.useRef(false);   // saved or cancelled: the blur from the field going away saves nothing
+  const closing = React.useRef(false);   // saved or canceled: the blur from the field going away saves nothing
   const errorId = domId('srp-ie', React.useId()) + '-error';
   // A failed save keeps focus in the field, and screen readers don't read a focused field's description again, so
   // the error is said (politely, as Field says its errors), on every failed try, even with the same words.

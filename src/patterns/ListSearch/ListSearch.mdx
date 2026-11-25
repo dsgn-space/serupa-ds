@@ -13,6 +13,9 @@ A page of rows to search, filter, sort, select and page through, with the view k
 
 - A list of things of one kind (projects, orders, people) long enough that people look for one, narrow it down, or act on several at once.
 - Use a Table when the rows have columns worth comparing. For a list without columns (messages, notifications), keep the search and filters and use a List.
+
+## When not to use it
+
 - Not for a search across the whole site: that's a results page, with the matches ranked rather than sorted.
 
 ## Choosing the layout
@@ -38,7 +41,7 @@ Opening one item, by how much it holds and how people work through the list:
 
 ## What each part is for
 
-- **The Table toolbar block**: a search landmark ("Search and filter projects") with the search field and a labelled Select for each filter, then the results count in a status region. "8 of 24 projects" is read out as the search or a filter changes, without moving focus (4.1.3).
+- **The Table toolbar block**: a search landmark ("Search and filter projects") with the search field and a labeled Select for each filter, then the results count in a status region. "8 of 24 projects" is read out as the search or a filter changes, without moving focus (4.1.3).
 - **"Clear filters"** while anything is set. It empties the search and every filter, and puts focus on the search field, since the button that was pressed goes away (2.4.3).
 - **Sort on the column headers.** Each sortable header is a button, and `aria-sort` says the order: press once for ascending, again for descending.
 - **Selection** with a checkbox per row, named after it ("Select Mobile app"), and one in the header for the whole page. While any are selected, the action bar says "3 selected", holds the bulk actions and offers "Clear selection". The selection is kept across pages; a search or filter lets go of the selected rows it hides, so the count never includes rows nobody can see.

@@ -6,7 +6,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 | Group | Families | Character |
 | --- | --- | --- |
-| Neutrals | `zinc`, `slate` | `zinc` is the neutral every alias uses; `slate` is a cooler grey for your own CSS. 18.0.0 removed `gray`, `neutral` and `stone`, which nothing used. |
+| Neutrals | `zinc`, `slate` | `zinc` is the neutral every alias uses; `slate` is a cooler gray for your own CSS. 18.0.0 removed `gray`, `neutral` and `stone`, which nothing used. |
 | Warm | `red`, `orange`, `amber`, `yellow` | Errors, warnings, highlights. |
 | Greens | `lime`, `green`, `emerald`, `teal` | Success, positive states. |
 | Blues | `cyan`, `sky`, `blue`, `indigo` | Links, primary actions, info. |
@@ -87,7 +87,7 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). `data-radius="default"` puts the default corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
 
-**Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
+**Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in gray. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
 **Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Their line heights follow at the same ratio, rounded up to the 4px grid, so a 21px heading on a phone sits on a 28px line rather than its desktop 36px. `data-type-scale="fixed"` puts the fixed sizes back for one section.
 
@@ -134,7 +134,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `surface` | `white` | `zinc-900` | Card, panel and bar background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
 | `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
-| `surface-hover` | `zinc-100` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: a step off `surface`, in light the same as `highlight`. Grey text in such a row reads `text-muted-shaded`. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
+| `surface-hover` | `zinc-100` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: a step off `surface`, in light the same as `highlight`. Gray text in such a row reads `text-muted-shaded`. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
 | `surface-hover-raised` | `zinc-100` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
@@ -144,8 +144,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `text-muted-shaded` | `zinc-600` | `zinc-400` | Secondary text in a hovered, selected or striped row, where `text-muted` on `zinc-100` would be 4.4:1. List, Table and InlineEdit set it on their shaded rows. |
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. In dark a quiet step off the `zinc-900` cards and bars it outlines. Never a control's boundary: fields use `field-border`, other controls `border-control`. |
-| `border-strong` | `zinc-300` | `zinc-600` | Emphasised dividers and outlines. Form fields use `field-border`. |
-| `border-raised` | `zinc-200` | `zinc-800` | Deprecated: the same as `border`, which a raised card uses now. Removed in 15.0.0; `serupa-migrate` renames it. |
+| `border-strong` | `zinc-300` | `zinc-600` | Emphasized dividers and outlines. Form fields use `field-border`. |
 | `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `#23a950` | Success icons and fills (3:1): in dark, `green-600` a touch lighter. Not for text: use `success-text`. |
@@ -410,7 +409,7 @@ Background utilities, as classes in `bundle.css`. Backgrounds have no scale of t
 | background-repeat | `bg-repeat`, `bg-repeat-x`, `bg-repeat-y`, `bg-repeat-space`, `bg-repeat-round`, `bg-no-repeat` |
 | background-size | `bg-auto`, `bg-cover`, `bg-contain` |
 
-There are no gradient classes (17.0.0): write a gradient in your own CSS from the role tokens, `background: linear-gradient(in oklab to right, var(--primary), var(--info))`. OKLab keeps blends between hues bright instead of grey.
+There are no gradient classes (17.0.0): write a gradient in your own CSS from the role tokens, `background: linear-gradient(in oklab to right, var(--primary), var(--info))`. OKLab keeps blends between hues bright instead of gray.
 
 Rules of thumb:
 
@@ -1230,10 +1229,10 @@ The Data formats page has the full rules, with money, missing values and masked 
 
 **The words the components say**
 
-Close buttons, loading text, pagination and the other built-in words come from one set, below. `<SerupaProvider labels>` replaces any of them for a subtree, and each component's own prop (`closeLabel`, `dismissLabel`, `loadingText`, …) still wins for one instance. `idLabels` is the full Indonesian set. `labels` and `icons` can be written inline (`labels={{ close: "Tutup" }}`): a re-render with the same contents doesn't re-render the components under the provider.
+Close buttons, loading text, pagination and the other built-in words come from one set, below. `<SerupaProvider labels>` replaces any of them for a subtree, and each component's own prop (`closeLabel`, `dismissLabel`, `loadingLabel`, …) still wins for one instance. `idLabels` is the full Indonesian set. `labels` and `icons` can be written inline (`labels={{ close: "Tutup" }}`): a re-render with the same contents doesn't re-render the components under the provider.
 
 - Overlays close with "Close" (Dialog, Drawer); notices go away with "Dismiss" (Alert, Toast).
-- Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
+- Loading is "Loading…" everywhere; give a specific one when you can: `loadingLabel="Saving…"`.
 - When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
 
 **In Indonesian**
@@ -1341,7 +1340,7 @@ A product built with the system asks for people's time, money and data honestly.
 
 **Leaving takes no more than joining**
 
-- Cancelling, unsubscribing, deleting an account or turning notifications off takes no more steps than signing up or turning them on, and happens in the product, not by phone or email.
+- Canceling, unsubscribing, deleting an account or turning notifications off takes no more steps than signing up or turning them on, and happens in the product, not by phone or email.
 - Say when a plan renews and what it will cost before someone chooses it, and how to cancel.
 - One confirmation is enough. No offer screens between the person and the button they asked for, and no "Contact us to cancel".
 

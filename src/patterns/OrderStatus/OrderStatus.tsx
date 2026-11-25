@@ -59,7 +59,7 @@ export interface OrderInfo {
   /** What the shop calls it: "1042". */
   number: string;
   stage: OrderStage;
-  /** It was cancelled: the steps give way to a line that says so. */
+  /** It was canceled: the steps give way to a line that says so. */
   cancelled?: boolean | undefined;
   /** The day it's due, in words: "Tuesday, March 4". */
   arriving?: string | undefined;
@@ -117,7 +117,7 @@ const STEPS = [{ title: 'Placed' }, { title: 'Packed' }, { title: 'Shipped' }, {
 
 /** The stage as a sentence, and what comes next: { title: "On its way", detail: "Arriving Tuesday, March 4." }. */
 export function stageWords(order: Pick<OrderInfo, 'stage' | 'cancelled' | 'arriving'>): { title: string; detail: string } {
-  if (order.cancelled) return { title: 'Cancelled', detail: 'Anything you paid goes back to you within 5 working days.' };
+  if (order.cancelled) return { title: 'Canceled', detail: 'Anything you paid goes back to you within 5 working days.' };
   if (order.stage === 'delivered') return { title: 'Delivered', detail: 'It’s been handed over at the address below.' };
   const due = order.arriving ? ` Arriving ${order.arriving}.` : '';
   if (order.stage === 'shipped') return { title: 'On its way', detail: `The courier has it.${due}` };
@@ -125,7 +125,7 @@ export function stageWords(order: Pick<OrderInfo, 'stage' | 'cancelled' | 'arriv
   return { title: 'Order placed', detail: `We’re getting it ready.${due}` };
 }
 
-/** Whether the order can still be cancelled: only before it has shipped. */
+/** Whether the order can still be canceled: only before it has shipped. */
 export const canCancel = (order: Pick<OrderInfo, 'stage' | 'cancelled'>): boolean => !order.cancelled && (order.stage === 'placed' || order.stage === 'packed');
 
 /** What the items cost together, before delivery. */
@@ -144,7 +144,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
   const name = `Order ${order.number}`;
   const sum = subtotal(order.items);
 
-  // Cancelling: asked first, and done only once the server says so.
+  // Canceling: asked first, and done only once the server says so.
   const [asking, setAsking] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
@@ -172,7 +172,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
       </header>
       <Container as="main" size="md" className="py-8 outline-none" id="main">
         <Stack gap={0}>
-          <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Cancelling needs a connection.</OfflineBanner>
+          <OfflineBanner online={online} placement="inline" className="mb-6">This is where your order was when the page loaded. Canceling needs a connection.</OfflineBanner>
           <PageHeader breadcrumb={[{ label: 'Orders', href: '#orders' }, { label: name }]} title={name} headingRef={heading} />
 
           <div className="flex flex-col gap-8 pt-6">

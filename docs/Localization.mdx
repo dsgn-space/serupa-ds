@@ -9,7 +9,7 @@ import * as Stories from '../src/internal/provider.stories';
 
 # Localization and app settings
 
-`<SerupaProvider>` gives every component inside it a locale, the words the components say on their own, and extra icons. It's React context, so it reaches client components from a server layout, differs between concurrent server requests, and can change for one part of a page (ADR-0010).
+`<SerupaProvider>` gives every component inside it a locale, the words the components say on their own, and extra icons. It's React context, so it reaches client components from a server layout, differs between concurrent server requests, and can change for one part of a page.
 
 ```tsx
 import { SerupaProvider, idLabels } from '@diki-stwn/serupa-ds';
@@ -43,7 +43,7 @@ import { labels, locale } from '@diki-stwn/serupa-ds/labels/id';
 <SerupaProvider locale={locale} labels={labels}>{children}</SerupaProvider>
 ```
 
-Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`, with `dir="rtl"` on the page), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`) and Malay (`ms`), plus the pseudo-locale (`pseudo`, below). `node tools/test/label-packs.mjs` checks each pack has every word, says something for each case (a count of one and of several, each reason a field can fail), and leaves nothing in English.
+Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`, with `dir="rtl"` on the page), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`) and Malay (`ms`), plus the pseudo-locale (`pseudo`, below). Each pack has every word, says something for each case (a count of one and of several, each reason a field can fail), and leaves nothing in English: a check fails the build when one doesn't.
 
 ## One locale for everything
 

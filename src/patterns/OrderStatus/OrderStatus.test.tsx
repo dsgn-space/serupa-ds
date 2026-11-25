@@ -22,7 +22,7 @@ describe('Patterns/Order status', () => {
     expect(stageWords({ stage: 'packed' })).toEqual({ title: 'Packed', detail: 'It’s waiting for the courier.' });
     expect(stageWords({ stage: 'shipped', arriving: 'Friday' }).title).toBe('On its way');
     expect(stageWords({ stage: 'delivered', arriving: 'Friday' }).detail).not.toContain('Arriving');
-    expect(stageWords({ stage: 'shipped', cancelled: true }).title).toBe('Cancelled');
+    expect(stageWords({ stage: 'shipped', cancelled: true }).title).toBe('Canceled');
     expect([canCancel({ stage: 'placed' }), canCancel({ stage: 'packed' }), canCancel({ stage: 'shipped' }), canCancel({ stage: 'delivered' }), canCancel({ stage: 'placed', cancelled: true })]).toEqual([true, true, false, false, false]);
     expect(subtotal(order().items)).toBe(42);
   });
@@ -74,7 +74,7 @@ describe('Patterns/Order status', () => {
     expect(document.body.textContent).toContain('It’s running late');
     await screen.getByRole('button', { name: 'Cancel order' }).click();
     await screen.getByRole('dialog').getByRole('button', { name: 'Cancel order' }).click();
-    await expect.poll(() => document.querySelector('h2')?.textContent).toBe('Cancelled');
+    await expect.poll(() => document.querySelector('h2')?.textContent).toBe('Canceled');
     expect(onCancel).toHaveBeenCalledTimes(1);
     await expect.poll(() => active().tagName).toBe('H1');
     await expect.poll(() => toasted('Order 77 is cancelled')).toBe(true);

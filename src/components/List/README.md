@@ -218,7 +218,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-bg` | `surface` | The background of variant="card". |
 | `--list-title-color` | `text` | An item's title. |
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
-| `--list-text-muted-shaded` | `text-muted-shaded` | Grey text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill. |
+| `--list-text-muted-shaded` | `text-muted-shaded` | Gray text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill. |
 | `--list-avatar-bg-shaded` | `secondary-hover` | An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade. |
 | `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |

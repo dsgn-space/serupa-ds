@@ -23,7 +23,7 @@ describe('Patterns/Error pages', () => {
     expect(seen).toEqual([
       ['Page not found – Acme', 'Page not found'],
       ['You’re offline – Acme', 'You’re offline'],
-      ['Something went wrong on our side – Acme', 'Something went wrong on our side'],
+      ['We couldn’t load this page – Acme', 'We couldn’t load this page'],
       ['You don’t have access to this page – Acme', 'You don’t have access to this page'],
     ]);
   });

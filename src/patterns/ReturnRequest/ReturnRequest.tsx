@@ -68,7 +68,7 @@ export interface ReturnRequestProps {
 const demo: ReturnItem[] = [
   { id: 'i1', name: 'Linen shirt', options: 'Sand, M', price: 48 },
   { id: 'i2', name: 'Canvas tote', options: 'Natural', price: 18 },
-  { id: 'i3', name: 'Wool socks', options: 'Grey, 39–42', price: 12, notReturnable: 'Socks can’t be returned once opened.' },
+  { id: 'i3', name: 'Wool socks', options: 'Gray, 39–42', price: 12, notReturnable: 'Socks can’t be returned once opened.' },
 ];
 const REASONS = [
   { value: 'size', label: 'It doesn’t fit' },

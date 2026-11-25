@@ -364,7 +364,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
     later.current = null;
     if (free) { commit(o.label); setText(o.label); setOpen(false, reason); setActive(-1); setTyped(false); return; }
     if (o.add != null) {
-      // The add row: the app adds the option, and the value it returns is picked, labelled with the text until the
+      // The add row: the app adds the option, and the value it returns is picked, labeled with the text until the
       // option arrives in options.
       const made = props.onCreate ? props.onCreate(o.add) : undefined;
       if (typeof made !== 'string') { hide(reason, !multi); if (multi) setText(''); return; }

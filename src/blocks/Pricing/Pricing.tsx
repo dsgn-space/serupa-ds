@@ -18,7 +18,7 @@ import { useLocale } from '../../internal/provider';
      sense out of context.
    - Monthly or yearly is a radio group (SegmentedControl, one choice); the yearly option says the saving in words.
    - 1.4.10: a long word, such as a German compound, wraps inside its card rather than running out of it (GR137).
-   - Ethical design: under the plans, a line says paid plans renew until cancelled and links to where to cancel, before
+   - Ethical design: under the plans, a line says paid plans renew until canceled and links to where to cancel, before
      anyone chooses ("Say when a plan renews and what it will cost before someone chooses it, and how to cancel").
    - Prices are written the way the reader's locale writes money. Each word is a label, English by default. */
 
@@ -58,9 +58,9 @@ export interface PricingLabels {
   included: (plan: string) => string;
   /** A plan's button. */
   choose: (plan: string) => string;
-  /** Under the plans: that paid plans renew, every month or every year, until cancelled. */
+  /** Under the plans: that paid plans renew, every month or every year, until canceled. */
   renews: (period: PricingPeriod) => string;
-  /** The link to where a plan is cancelled, after the renews line. */
+  /** The link to where a plan is canceled, after the renews line. */
   cancel: string;
 }
 
@@ -92,7 +92,7 @@ export interface PricingProps {
   /** Each plan's name. Default: 3, under the page's h2. */
   headingLevel?: 2 | 3 | 4 | undefined;
   labels?: Partial<PricingLabels> | undefined;
-  /** Where a plan is cancelled, linked under the plans. Default: "#settings-billing". */
+  /** Where a plan is canceled, linked under the plans. Default: "#settings-billing". */
   cancelHref?: string | undefined;
 }
 

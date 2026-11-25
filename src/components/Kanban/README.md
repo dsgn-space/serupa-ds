@@ -51,7 +51,7 @@ Drawn from the `Default` story.
 
 ## Behavior
 
-- **Pointer:** press the handle and move; the card follows the pointer, the column it would land in is outlined, and the other cards make room. Near the board's edge the board scrolls sideways, and near a column's top or bottom the column scrolls. Let go to drop, or let the drag be cancelled (a pointer cancel) to put it back.
+- **Pointer:** press the handle and move; the card follows the pointer, the column it would land in is outlined, and the other cards make room. Near the board's edge the board scrolls sideways, and near a column's top or bottom the column scrolls. Let go to drop, or let the drag be canceled (a pointer cancel) to put it back.
 - **Keyboard:** Tab to a handle, Space or Enter picks the card up. Up and Down move it within its column, Left and Right to the column before or after in reading order (mirrored right to left), Home and End to the top and bottom. Space or Enter drops it; Escape, Tab or a click elsewhere puts it back. Focus stays on the card's handle as it moves.
 - **Move to…:** each card's menu lists the other columns; picking one puts the card at the end of that column and keeps focus on it. It's the way to move a card with one tap or click (WCAG 2.5.7).
 - A narrow board scrolls sideways in its own box, so the page doesn't.

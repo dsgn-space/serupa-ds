@@ -43,7 +43,7 @@ Drawn from the `AnnounceComplete` story.
   "45 %" in French, "٤٥٪" in Egyptian Arabic, the same digits Calendar uses for its days. A `formatValue` of your
   own should do the same, for example with `Intl.NumberFormat(locale)`.
 - Keep `tone="primary"` for ordinary progress; switch to `warning` or `danger` when a quota is nearly full, and say so in the label or nearby text too.
-- Start without a `value` while the length is unknown, then pass one as soon as you know it (the files are counted, the size is known): a bar that shows how far along it is is easier to wait for.
+- Start without a `value` while the length is unknown, then pass one as soon as you know it (the files are counted, the size is known): a bar that shows progress is easier to wait for.
 - Keep the same shape for the whole task: don't swap a ring for a bar, or a [Loader](../Loader/README.md) for a Progress, halfway, or the page jumps and people lose track of it.
 - When stopping is safe, put a Cancel button by it. When stopping loses work, say so before it stops ("Stop the import? The 3 files done so far are kept.").
 - When the task finishes, replace the bar with the result or a confirmation, such as a [Toast](../Toast/README.md).

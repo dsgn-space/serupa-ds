@@ -147,7 +147,7 @@ export const Citations: Story = {
 // Steps on their own, outside a message: each in progress, done or failed, in words as well as by its icon.
 export const Steps: Story = {
   render: () => <div style={{ maxWidth: 420 }}><ChatSteps steps={[
-    { id: 'a', label: 'Searched the help centre', status: 'done', detail: '3 articles' },
+    { id: 'a', label: 'Searched the help center', status: 'done', detail: '3 articles' },
     { id: 'b', label: 'Called the orders API', status: 'failed', detail: 'Timed out after 10 seconds' },
     { id: 'c', label: 'Trying the orders API again', status: 'running' },
   ]} /></div>,

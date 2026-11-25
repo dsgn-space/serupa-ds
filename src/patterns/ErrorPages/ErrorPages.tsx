@@ -36,7 +36,7 @@ const SITE = 'Acme';
 const TITLES: Record<ErrorPageKind, string> = {
   'not-found': 'Page not found',
   offline: 'You’re offline',
-  server: 'Something went wrong on our side',
+  server: 'We couldn’t load this page',
   'no-access': 'You don’t have access to this page',
 };
 

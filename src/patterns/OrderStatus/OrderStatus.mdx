@@ -12,6 +12,9 @@ Where an order is after it's placed: its stage as a sentence, the steps it goes 
 ## When to use it
 
 - The page an order confirmation, an email or an order history links to, for anything that's sent: a parcel, a meal, a repair.
+
+## When not to use it
+
 - Not for placing the order: that's the Checkout pattern, whose confirmation links here.
 - Not for a subscription's plan and invoices: that's the Billing pattern.
 
@@ -22,26 +25,26 @@ Where an order is after it's placed: its stage as a sentence, the steps it goes 
 - **A delay says so above the steps**, in a warning with the reason and the new day (1.4.1). The stage's own sentence carries the new day too.
 - **What happened is an ordered list, newest first**, each event with a time a machine can read, written the way the reader's locale writes dates (1.3.1).
 - **The courier's page is a link that says where it goes**: "Track the parcel with JNE", marked as leaving the site (2.4.4). It shows once the parcel has shipped.
-- **Cancelling asks first.** The dialog names the order and says what happens to the money. Its buttons are "Cancel order" and "Keep order": a dialog whose way out is also called Cancel leaves people guessing which one cancels (3.3.4, 2.4.6).
+- **Canceling asks first.** The dialog names the order and says what happens to the money. Its buttons are "Cancel order" and "Keep order": a dialog whose way out is also called Cancel leaves people guessing which one cancels (3.3.4, 2.4.6).
 - **A cancel is shown only once it's done.** The button shows it's busy; a cancel that fails says so in the dialog, which stays open (3.3.1).
-- **After a cancel** the button is gone, so focus goes to the h1; the stage says "Cancelled" with what happens to the money, the steps go, and a toast says so (2.4.3, 4.1.3).
+- **After a cancel** the button is gone, so focus goes to the h1; the stage says "Canceled" with what happens to the money, the steps go, and a toast says so (2.4.3, 4.1.3).
 - **Once it has shipped there's no Cancel button**, and a sentence says why and what to do: send it back once it arrives. A button that's there one day and gone the next needs its reason on the page.
 - **The items are a list and the totals a description list**, with free delivery as the word "Free", not 0 (1.3.1).
 - **The h1 is the order**, "Order 1042", which is also how the breadcrumb and the dialog name it (2.4.6).
 - **While the order loads**, set `loading`: one placeholder, named "Loading order". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
 - **A skip link** first, into main, as on every page.
 
-An order that can still be cancelled:
+An order that can still be canceled:
 
 <Canvas of={Stories.CanCancel} />
 
 <Canvas of={Stories.Delayed} />
 
-<Canvas of={Stories.Cancelled} />
+<Canvas of={Stories.Canceled} />
 
 ## What stays your app's job
 
-- **Cancelling.** `onCancel` is called once the shopper confirms: return its promise, and reject it when the order can't be cancelled. Without `onCancel` there's no button.
+- **Canceling.** `onCancel` is called once the shopper confirms: return its promise, and reject it when the order can't be canceled. Without `onCancel` there's no button.
 - **News while the page is open.** When the stage changes, pass the new `order` on a new `key`, and say the change in a toast.
 - **The day it's due, in words.** `arriving` is shown as given: write it in the reader's language and time zone ("Tuesday, March 4").
 - **Returns and help.** Link to your returns page once the order is delivered, and to the Help center pattern.

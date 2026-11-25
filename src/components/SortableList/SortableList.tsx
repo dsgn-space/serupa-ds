@@ -242,7 +242,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
 /* SortableList: a list people reorder by dragging a handle, or from the keyboard: Space or Enter on a handle picks
    the item up, the arrow keys (Home, End) move it, Space or Enter drops it and Escape puts it back. Each step is
    announced ("Apollo, position 3 of 5"). A drag moves the other items out of the way as it goes and is only
-   reported on drop (onReorder), so a cancelled one changes nothing. A <ul> of <li>; className and props go to the <ul>. */
+   reported on drop (onReorder), so a canceled one changes nothing. A <ul> of <li>; className and props go to the <ul>. */
 /** A list people reorder by dragging a handle or with the keyboard, with every move announced. */
 export const SortableList = /* @__PURE__ */ named('SortableList', SortableListRender) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> | undefined }) => React.ReactElement;
 
