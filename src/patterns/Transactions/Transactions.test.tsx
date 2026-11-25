@@ -117,6 +117,7 @@ describe('Transactions printed', () => {
     document.body.style.padding = '0';
     try {
       await render(<Transactions />);
+      await document.fonts.ready; // measured in the real font, not the wider fallback it starts in
       const first = [...document.querySelectorAll('tbody tr')[0]!.children].filter((c) => c.checkVisibility()).map(said);
       expect(first).toEqual([expect.any(String), 'Corner CaféPendingEating out', expect.stringMatching(/6[.,]40/), '']);
       const frame = document.querySelector('[data-component="table"]')!;
