@@ -20,7 +20,7 @@ A bell in the Navbar that opens the latest notifications in a drawer, and a full
 - **The bell is named with its count**, "Notifications, 3 unread", so the number is heard as well as seen in its badge (4.1.2). With nothing unread it's just "Notifications".
 - **The drawer** (Notification center) shows the latest five, with the same Mark as read, for a quick look from any page.
 - **The inbox page** has every notification, newest first, with how long ago each happened.
-- **The list is a VirtualList**, so a year of notifications draws only the rows in view, in a box that scrolls by keyboard too. Each row still says where it is ("5 of 1,200"), and a row with focus stays drawn when it scrolls out of view (1.3.1, 2.1.1, 2.4.3).
+- **The list draws only the rows in view** (a List with `ListVirtualItems`), so a year of notifications draws only the rows in view, in a box that scrolls by keyboard too. Each row still says where it is ("5 of 1,200"), and a row with focus stays drawn when it scrolls out of view (1.3.1, 2.1.1, 2.4.3).
 - **Unread ones stand out at a glance**: a dot before the title and a bolder title, the same as in the drawer, so the page and the bell show a notification the same way. They also say "Unread" in words, so it isn't shown by a dot or weight alone (1.4.1).
 - **Notification settings** sits by the heading, so getting fewer notifications is one step away, no more than marking them read. Point `settingsHref` at the page where people choose what they hear about (the Settings form's Notifications section).
 - **The filter** (All or Unread) is a Segmented control, and the count beside it is a status, so a change is said politely (4.1.3).

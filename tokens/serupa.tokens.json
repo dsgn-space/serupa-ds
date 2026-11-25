@@ -8243,7 +8243,7 @@
     "stroke-width-1": {
       "$type": "number",
       "$value": 1,
-      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges, and the pixel Loader's dividers."
+      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges."
     },
     "stroke-width-2": {
       "$type": "number",
@@ -8258,7 +8258,7 @@
     "stroke-width-4": {
       "$type": "number",
       "$value": 4,
-      "$description": "`stroke-4`. The spokes Loader's spokes."
+      "$description": "`stroke-4`. The heaviest SVG stroke."
     }
   },
   "typography": {
@@ -10492,7 +10492,7 @@
         "value": 1200,
         "unit": "ms"
       },
-      "$description": "Long loops, such as the pixel loader (1.2s). Decorative only."
+      "$description": "Long loops (1.2s). Decorative only."
     },
     "delay-0": {
       "$type": "duration",
@@ -10516,7 +10516,7 @@
         "value": 75,
         "unit": "ms"
       },
-      "$description": "One step of the pixel Loader's wave (`--loader-pixel-stagger`)."
+      "$description": "A short offset between items that start one after another (75ms)."
     },
     "delay-100": {
       "$type": "duration",
@@ -10540,7 +10540,7 @@
         "value": 200,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader."
+      "$description": "An offset between items that start one after another."
     },
     "delay-300": {
       "$type": "duration",
@@ -10564,7 +10564,7 @@
         "value": 700,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader."
+      "$description": "An offset between items that start one after another."
     },
     "delay-1000": {
       "$type": "duration",
@@ -10572,7 +10572,7 @@
         "value": 1000,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader; the longest wait."
+      "$description": "An offset between items that start one after another; the longest wait (1s)."
     },
     "ease-linear": {
       "$type": "cubicBezier",

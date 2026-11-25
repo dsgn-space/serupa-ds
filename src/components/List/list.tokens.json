@@ -185,6 +185,16 @@
             "cssVar": "--list-gap"
           }
         }
+      },
+      "virtual-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-96}",
+        "$description": "With ListVirtualItems inside: the most the list grows to before it scrolls inside (384px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--list-virtual-height"
+          }
+        }
       }
     },
     "border": {

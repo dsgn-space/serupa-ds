@@ -120,7 +120,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Kanban** (beta): A board of columns of cards, such as a sprint or a sales pipeline, that people move by dragging a handle, by keyboard, or from each card's "Move to…" menu. Also called: board, task board, kanban board.
 - **Kbd**: Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. Also called: keycap, keyboard key.
 - **Lightbox**: A set of pictures shown full size, one at a time, over the page. Also called: image viewer, media viewer, photo gallery viewer, slideshow.
-- **List**: Rows of related things: people, files, notifications, settings. Also called: list view, item list.
+- **List**: Rows of related things: people, files, notifications, settings. Also called: list view, item list, virtualized list.
 - **Logo** (beta): The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. Also called: brand mark, logotype.
 - **MaskedValue** (beta): Shows a sensitive value with most of it hidden behind bullets, keeping just enough for its owner to recognize it: "•••• 1208" for a card, "a••••" for an email. Also called: masked text, redacted value, obfuscated value.
 - **QRCode** (beta): Draws a QR code from a value, such as a payment link, a sign-in link or an authenticator setup string, so a phone can pick it up from the screen. Also called: QR, barcode, 2D code, scan code.
@@ -130,7 +130,6 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **SortableList**: A list people put in their own order: tasks by priority, steps in a flow, columns in a table. Also called: reorderable list, drag and drop list.
 - **Table**: A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Also called: data table.
 - **TagGroup** (beta): Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. Also called: chip group, tag list.
-- **VirtualList** (beta): A List of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. Also called: virtualized list, windowed list, virtual scroller.
 
 ### Data display
 

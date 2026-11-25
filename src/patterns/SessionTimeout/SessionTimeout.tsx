@@ -132,7 +132,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
     const active = () => {
       if (asking.current || Date.now() - (deadline - duration * 1000) < activityEvery * 1000) return;
       asking.current = true;
-      Promise.resolve(onExtend?.()).then(restart, () => { /* the session runs out as warned */ }).finally(() => { asking.current = false; });
+      Promise.resolve(onExtend?.()).then(() => { if (Date.now() < deadline) restart(); }, () => { /* the session runs out as warned */ }).finally(() => { asking.current = false; });
     };
     document.addEventListener('keydown', active, true);
     document.addEventListener('pointerdown', active, true);
@@ -156,7 +156,9 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
     extendingNow.current = true;
     setExtending(true);
     setExtendFailed(false);
-    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch {
+    // An answer that comes after the session ran out is too late: onExpire was called, and it stays signed out.
+    const asked = deadline;
+    try { await onExtend?.(); if (Date.now() < asked) { restart(); announce('You’re still signed in.'); } } catch {
       setExtendFailed(true);
       announce('Couldn’t keep you signed in. Check your connection and try again.');
     } finally { extendingNow.current = false; setExtending(false); }

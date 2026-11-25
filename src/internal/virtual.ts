@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from './cn';
 
-/* useVirtual: the windowing behind VirtualList (and, later, any long list that draws only what's in view). Given the
+/* useVirtual: the windowing behind List's ListVirtualItems, Table's TableVirtualBody and Combobox's list. Given the
    scrolling element, how many rows there are and a guess at a row's height, it says which rows to draw (start to end,
    with a few overscan rows either side) and how much space stands in for the rows above and below them. Rows are
    measured once drawn (each drawn element with data-index), so rows of different heights are fine; the guess is used

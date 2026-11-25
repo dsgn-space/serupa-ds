@@ -13,6 +13,7 @@ import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { en as words } from './labels';
 import { isRtl } from '../../internal/position';
 import { modified } from '../../internal/roving';
+import { useVirtual } from '../../internal/virtual';
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -290,4 +291,80 @@ export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactEleme
     </li>,
   );
   return <>{out}</>;
+}
+
+export interface ListVirtualItemsProps {
+  /** How many rows there are. */
+  count: number;
+  /** Draws row `index`: a ListItem (or another element that passes its props and style on to an <li>). */
+  renderItem: (index: number) => React.ReactElement;
+  /** A stable key for row `index` (its id), so a row keeps its state when rows are added or removed. Default: the index. */
+  itemKey?: ((index: number) => React.Key) | undefined;
+  /** A guess at a row's height in px, for rows not drawn yet. Rows are measured once drawn. Default: 56. */
+  estimatedItemHeight?: number | undefined;
+  /** Rows drawn beyond each edge of the view, so a fast scroll doesn't show a gap. Default: 4. */
+  overscan?: number | undefined;
+}
+
+/* ListVirtualItems: the rows of a List of any length, drawing only those in view plus a few either side (useVirtual
+   in src/internal/virtual.ts, as Table's TableVirtualBody and Combobox do). The List it sits in becomes the scroller,
+   up to 384px tall (--list-virtual-height), and keyboard scrollable (tabIndex 0 unless the List sets one or picks
+   rows, none while there are no rows: an empty box isn't a stop); an empty <li> above and below the drawn rows
+   stands in for the rest. Each drawn row gets aria-posinset and aria-setsize, so screen readers still say "row 5,001
+   of 10,000". A row with focus stays drawn when it scrolls out of view, so focus is never lost. */
+/** The rows of a List of thousands that draws only the ones in view: put it inside a List, which then scrolls. */
+export function ListVirtualItems(props: ListVirtualItemsProps): React.ReactElement {
+  const count = Number.isFinite(props.count) ? Math.max(0, Math.floor(props.count)) : 0;
+  const estimate = props.estimatedItemHeight && props.estimatedItemHeight > 0 ? props.estimatedItemHeight : 56;
+  const r = useVirtual({ count, estimate, overscan: props.overscan != null && props.overscan >= 0 ? props.overscan : 4 });
+  // The row that has focus, kept drawn (in place, absolutely) while it's out of the window.
+  const [focused, setFocused] = React.useState<number | null>(null);
+  const lead = React.useRef<HTMLLIElement | null>(null);
+  const scrollTo = React.useRef(r.scrollToIndex);
+  useIsoLayoutEffect(() => { scrollTo.current = r.scrollToIndex; });   // every render: this render's rows and offsets
+  const attach = r.ref;
+  // The List's <ul> is the scroller: attached here, with its Tab stop and the focus listeners, as TableVirtualBody
+  // does with the Table's frame.
+  useIsoLayoutEffect(() => {
+    const list = lead.current && lead.current.parentElement;
+    if (!list) return undefined;
+    attach(list);
+    const indexOf = (t: EventTarget | null) => {
+      const li = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
+      return li && li.parentElement === list ? Number(li.dataset.index) : null;
+    };
+    // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed
+    // heights, and the rows measured on the way left the focused one below the view. scrollToIndex keeps it in view
+    // while they're measured; a row already in view doesn't move.
+    const onIn = (e: FocusEvent) => { const i = indexOf(e.target); setFocused(i); if (i != null) scrollTo.current(i); };
+    const onOut = (e: FocusEvent) => { if (!list.contains(e.relatedTarget as Node | null)) setFocused(null); };
+    list.addEventListener('focusin', onIn);
+    list.addEventListener('focusout', onOut);
+    return () => { list.removeEventListener('focusin', onIn); list.removeEventListener('focusout', onOut); };
+  }, [attach]);
+  // The Tab stop, only while there are rows, and only on a List that doesn't set its own or pick rows (its rows are the stop).
+  const any = count > 0;
+  useIsoLayoutEffect(() => {
+    const list = lead.current && lead.current.parentElement;
+    if (!list || !any || list.hasAttribute('tabindex') || list.classList.contains('srp-list--selectable')) return undefined;
+    list.tabIndex = 0;
+    return () => list.removeAttribute('tabindex');
+  }, [any]);
+
+  const { renderItem, itemKey } = props;
+  const row = (i: number, out: boolean) => {
+    const el = renderItem(i) as React.ReactElement<{ style?: React.CSSProperties }>;
+    const style = out ? { ...el.props.style, position: 'absolute' as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
+    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, 'data-index': i, 'aria-posinset': i + 1, 'aria-setsize': count, style } as React.Attributes);
+  };
+  const rows: React.ReactElement[] = [];
+  const keep = focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
+  if (keep != null && keep < r.start) rows.push(row(keep, true));
+  for (let i = r.start; i < r.end; i++) rows.push(row(i, false));
+  if (keep != null && keep >= r.end) rows.push(row(keep, true));
+  return <>
+    <li ref={lead} aria-hidden="true" className="srp-list__spacer" style={{ height: r.before }} />
+    {rows}
+    <li aria-hidden="true" className="srp-list__spacer" style={{ height: r.after }} />
+  </>;
 }

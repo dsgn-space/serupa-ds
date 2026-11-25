@@ -270,6 +270,12 @@ describe('Badge', () => {
     expect(m('zshow')[0]).toBe('0');
   });
 
+  test('max={0} is the lowest max there is, 1: a count of 5 shows "1+", not 5 under the default 99', async () => {
+    await render(<SerupaProvider locale="en-US"><Badge id="m0" count={5} max={0} /></SerupaProvider>);
+    const e = document.getElementById('m0')!;
+    expect((e.querySelector('[aria-hidden="true"]') || e).textContent).toBe('1+');
+  });
+
   test('count past max: "99+" shows, and screen readers and the tooltip get the real count (AW1); your title wins', async () => {
     await render(<><Badge id="big" count={150} /><Badge id="own" count={150} title="150 unread messages" /><Badge id="few" count={7} /></>, { wrapper: EnUS });
     const big = el('big');

@@ -43,7 +43,7 @@ const KNOWN = {
   'property overflow-clip-margin': { why: 'as overflow-clip-margin: content-box' },
   'overflow-clip-margin: content-box': { why: 'Select\'s styled field, inside @supports (appearance: base-select), which only Chromium passes today: a long value stops before the chevron; elsewhere the native select clips its own text' },
   ':open': { why: 'Select\'s styled list, inside @supports (appearance: base-select), which only newer browsers pass: the field keeps its ring and the chevron turns over while it is open' },
-  'property overflow-anchor': { why: 'VirtualList turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
+  'property overflow-anchor': { why: 'List with ListVirtualItems turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
   'overflow-anchor: none': { why: 'as overflow-anchor' },
   // Classes that do nothing in some browsers: the README's table lists them.
   'property field-sizing': { why: 'Textarea asks @supports first and measures in script elsewhere', readme: '`field-sizing-*`' },

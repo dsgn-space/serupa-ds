@@ -102,7 +102,7 @@ function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLEle
   let label: React.ReactNode = props.children;
   if (isCount) {
     const n = Math.max(0, Math.floor(Number(props.count)) || 0);
-    const max = Math.max(1, Math.floor(Number(props.max)) || 99);
+    const max = props.max != null && Number.isFinite(Number(props.max)) ? Math.max(1, Math.floor(Number(props.max))) : 99;   // 0 is 1, not the default
     if (n === 0 && !props.showZero) return null;   // nothing to count: no badge
     label = displayNumber(Math.min(n, max), locale, PLAIN) + (n > max ? '+' : '');   // the locale's digits, as Calendar's
     if (n > max) {

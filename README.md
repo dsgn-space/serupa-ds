@@ -318,7 +318,6 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
 | [Table](src/components/Table/README.md) | A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. |
 | [TagGroup](src/components/TagGroup/README.md) (beta) | Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. |
-| [VirtualList](src/components/VirtualList/README.md) (beta) | A [List](src/components/List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. |
 
 ### Data display
 

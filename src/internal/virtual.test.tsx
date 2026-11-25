@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { useVirtual, type VirtualRange } from './virtual';
 
-// useVirtual on its own: a plain scroller of fixed 20px rows, and scrollToIndex, which VirtualList doesn't use yet.
+// useVirtual on its own: a plain scroller of fixed 20px rows, and scrollToIndex, which ListVirtualItems uses for a row Tab reaches.
 function Rows(props: { count: number; out: { r?: VirtualRange } }) {
   const r = useVirtual({ count: props.count, estimate: 20, overscan: 0 });
   props.out.r = r;

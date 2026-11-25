@@ -140,6 +140,18 @@ describe('Patterns/Session time-out', () => {
     await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), { timeout: 10000 });
   });
 
+  test('"Stay signed in" answered only after the session ran out keeps it signed out: onExpire was already called', async () => {
+    let settle = () => {};
+    const onExpire = vi.fn();
+    const onExtend = vi.fn(() => new Promise<void>((ok) => { settle = ok; }));
+    const screen = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} onExpire={onExpire} />);
+    await screen.getByRole('button', { name: 'Stay signed in' }).click(WAIT);
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), WAIT);
+    settle();
+    await new Promise((r) => setTimeout(r, 1500));
+    expect([onExpire.mock.calls.length, !!screen.getByRole('heading', { name: 'You’ve been signed out' }).query()]).toEqual([1, true]);
+  });
+
   test('"Stay signed in" is busy while the server answers; when it can\'t, the warning stays open and says so, and trying again works', async () => {
     let fail = true, settle = () => {};
     const onExtend = vi.fn(() => new Promise<void>((ok, no) => { settle = () => (fail ? no(new Error('offline')) : ok()); }));
