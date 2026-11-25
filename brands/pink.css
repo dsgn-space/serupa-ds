@@ -11,7 +11,6 @@
   --on-primary: var(--white);
   --primary-text: var(--pink-700);
   --primary-text-hover: var(--pink-800);
-  --field-action: var(--pink-700);
   --focus-ring: var(--pink-500);
   --link-visited: var(--violet-700);
   --srp-more-primary: var(--pink-800);
@@ -20,7 +19,6 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--pink-800);
   --srp-more-primary-text-hover: var(--pink-900);
-  --srp-more-field-action: var(--pink-800);
   --srp-more-focus-ring: var(--pink-700);
 }
 [data-theme="pink-dark"] {
@@ -33,7 +31,6 @@
   --on-primary: var(--white);
   --primary-text: var(--pink-400);
   --primary-text-hover: var(--pink-300);
-  --field-action: var(--pink-400);
   --focus-ring: var(--pink-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--pink-300);
@@ -42,7 +39,6 @@
   --srp-more-on-primary: var(--pink-950);
   --srp-more-primary-text: var(--pink-300);
   --srp-more-primary-text-hover: var(--pink-200);
-  --srp-more-field-action: var(--pink-300);
   --srp-more-focus-ring: var(--pink-300);
 }
 :root[data-brand="pink"]:not([data-theme]), [data-brand="pink"]:not([data-theme]) {
@@ -55,7 +51,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--pink-700), var(--pink-400));
   --primary-text-hover: light-dark(var(--pink-800), var(--pink-300));
-  --field-action: light-dark(var(--pink-700), var(--pink-400));
   --focus-ring: light-dark(var(--pink-500), var(--pink-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--pink-800), var(--pink-300));
@@ -64,7 +59,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--pink-950));
   --srp-more-primary-text: light-dark(var(--pink-800), var(--pink-300));
   --srp-more-primary-text-hover: light-dark(var(--pink-900), var(--pink-200));
-  --srp-more-field-action: light-dark(var(--pink-800), var(--pink-300));
   --srp-more-focus-ring: light-dark(var(--pink-700), var(--pink-300));
 }
 :is([data-theme^="pink-"], [data-brand="pink"]) [data-mode]:not([data-theme], [data-brand]) {
@@ -77,7 +71,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--pink-700), var(--pink-400));
   --primary-text-hover: light-dark(var(--pink-800), var(--pink-300));
-  --field-action: light-dark(var(--pink-700), var(--pink-400));
   --focus-ring: light-dark(var(--pink-500), var(--pink-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--pink-800), var(--pink-300));
@@ -86,7 +79,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--pink-950));
   --srp-more-primary-text: light-dark(var(--pink-800), var(--pink-300));
   --srp-more-primary-text-hover: light-dark(var(--pink-900), var(--pink-200));
-  --srp-more-field-action: light-dark(var(--pink-800), var(--pink-300));
   --srp-more-focus-ring: light-dark(var(--pink-700), var(--pink-300));
 }
 }

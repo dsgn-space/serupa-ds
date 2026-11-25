@@ -243,8 +243,8 @@ function contrastAndDensity(all, line) {
 }
 
 // Roundness: data-radius="sharp" or "round" points each radius role at its roundness value (2 to 4px corners, or
-// 6 to 24px), on any brand; data-radius="default" puts the default back in a section. It beats a brand's own rules (a
-// serupa-brand theme made with --corners sets the roles), so it carries :not(#srp-radius), and it's set again on a nested
+// 6 to 24px), on any brand; data-radius="default" puts the default back in a section. It beats a brand's own rules (an
+// app's brand CSS that sets the roles), so it carries :not(#srp-radius), and it's set again on a nested
 // data-brand or data-theme section without a data-radius of its own. The pill stays round. A focus ring is an outline,
 // which follows the corner it's drawn around.
 function roundness(all, line) {

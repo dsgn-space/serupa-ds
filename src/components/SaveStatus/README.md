@@ -47,7 +47,7 @@ Drawn from the `Failed` story.
 
 ## Accessibility
 
-- **Announcements:** "Saved" and the error are said once, politely, when the status changes to them. "Saving…" isn't, since it comes and goes with every save, and neither is the time ticking ("2 minutes ago"). A SaveStatus that first renders with "saved" says nothing, but one that first renders with "error" (shown only once a save fails) says the error.
+- **Announcements:** "Saved" is said once, politely, and the error once, at once (danger interrupts, the rest wait, as in Toast and Alert), when the status changes to them. "Saving…" isn't, since it comes and goes with every save, and neither is the time ticking ("2 minutes ago"). A SaveStatus that first renders with "saved" says nothing, but one that first renders with "error" (shown only once a save fails) says the error.
 - **Keyboard:** Try again is a Tab stop when it shows. Nothing else is. Once Try again is pressed it goes with the error, and focus stays on the status line (not a Tab stop) instead of falling to the page, so Tab goes on from there.
 - **Contrast:** its text reads 4.5:1 on the page, the error too, in every theme (`SaveStatus.test.tsx`).
 - **What's still yours:** keep changes when a save fails, and don't move focus to SaveStatus.

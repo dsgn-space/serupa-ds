@@ -209,7 +209,7 @@ describe('Contrast axis', () => {
       axes(brand, 'dark');
       const dark = { fill: color('primary'), on: color('on-primary'), text: color('primary-text') };
       // In light one shade does both jobs. In dark the fill stays within a few points of it, channel by channel
-      // (blue-600 rgb(37, 99, 235) is rgb(41, 104, 240)); brand 400 was 60 or more away.
+      // (blue-600 rgb(37, 99, 235) is rgb(43, 106, 242)); brand 400 was 60 or more away.
       expect(light.text, brand).toBe(light.fill);
       expect(Math.max(...rgb(dark.fill).map((v, i) => Math.abs(v - rgb(light.fill)[i]!))), `${brand}: ${light.fill} and ${dark.fill}`).toBeLessThanOrEqual(16);
       expect([light.on, dark.on], brand).toEqual(['rgb(255, 255, 255)', 'rgb(255, 255, 255)']);
@@ -217,7 +217,7 @@ describe('Contrast axis', () => {
       expect(dark.text, brand).not.toBe(dark.fill);
     }
     axes('blue', 'dark');
-    expect(color('primary')).toBe('rgb(41, 104, 240)');
+    expect(color('primary')).toBe('rgb(43, 106, 242)');   // #2b6af2: blue-600, lifted as far as 3:1 on a raised card asks and by 0.02 at least
     // Yellow Dark is the exception: the bright yellow 400 under yellow-950 text, since a yellow that takes white reads as brown.
     axes('yellow', 'dark');
     expect([color('primary'), color('on-primary')]).toEqual([color('yellow-400'), color('yellow-950')]);
@@ -391,11 +391,11 @@ describe('Density axis', () => {
     expect(wrong).toEqual([]);
     // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
     const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
-    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-edge', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover']);
     // Each brand's own aliases read its own ramp (fuchsia's hover was violet): all but link-visited, which takes another
     // hue so a visited link isn't the primary; a dark fill written as a color is held to its light shade by tools/test/brand.mjs.
     const offHue: string[] = [];
-    for (const [, t] of varied) if (['field-action', 'focus-ring', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
+    for (const [, t] of varied) if (['focus-ring', 'primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'primary-text', 'primary-text-hover'].includes(t.name)) for (const [th, v] of Object.entries(per(t)!)) {
       const ramp = /^\{([a-z]+)-\d+\}$/.exec(v)?.[1];
       if (ramp && !/^(zinc|slate|gray|neutral|stone)$/.test(ramp) && ramp !== th.replace(/-(light|dark)$/, '')) offHue.push(`${t.name} ${th}: ${v}`);
     }

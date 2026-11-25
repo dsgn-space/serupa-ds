@@ -15,6 +15,7 @@
 // that's in the file but no longer in the tokens is left there, for a person to remove.
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadTheme } from './themeFiles.mjs';
 
 const P = path.resolve(import.meta.dirname, '..', '..');
 const NS = 'com.serupa';
@@ -60,7 +61,7 @@ export function figmaVariables(dir = path.join(P, 'design-tokens')) {
   const alias = new Map();
   for (const th of themes) {
     // A theme sets the alias colors only.
-    for (const [p, tok] of walk({ color: load(path.join('themes', th + '.tokens.json')).color })) {
+    for (const [p, tok] of walk({ color: loadTheme(dir, th).color })) {
       const name = p.join('/');
       if (!alias.has(name)) alias.set(name, { collection: COLLECTIONS.themes, name, type: 'COLOR', description: tok.$description || '', css: cssVar(tok, p), values: {} });
       const m = /^\{(.+)\}$/.exec(String(tok.$value));

@@ -180,7 +180,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await ctx.close();
 }
 {
-  // A choice saved by 4.x (as "diki-theme") is kept, and reset() forgets it for good.
+  // A saved choice is kept, and reset() forgets it for good.
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   // A reload straight after a storage write could start before the browser held the write, and read the old value
@@ -195,12 +195,11 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const stored = (key) => watch.evaluate((k) => localStorage.getItem(k), key);
   const held = (key, before) => watch.waitForFunction(([k, b]) => localStorage.getItem(k) !== b, [key, before]);
   await p.goto(web(writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' })));
-  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
-  await held('diki-theme', null);
-  await p.reload();
-  const moved = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join());
-  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', moved === 'violet-dark,,true', moved);
+  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('serupa-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
   await held('serupa-theme', null);
+  await p.reload();
+  const moved = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), !!localStorage.getItem('serupa-theme')].join());
+  t('theme.js: a saved theme ("serupa-theme") is used on the next visit', moved === 'violet-dark,true', moved);
   const before = await stored('serupa-theme');
   await p.evaluate(() => Serupa.theme.reset());
   await held('serupa-theme', before);

@@ -22,7 +22,7 @@ const STILL = '*,*::before,*::after{transition:none!important;animation:none!imp
 export async function forEachTheme(page, fn, options = {}) {
   const themes = options.themes || THEMES;
   const unknown = themes.filter((t) => !THEMES.includes(t));
-  if (unknown.length) throw new Error(`@diki-stwn/@diki-stwn/serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
+  if (unknown.length) throw new Error(`@diki-stwn/serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
   const still = options.still !== false;
   const emulate = typeof page.emulateMedia === 'function';
   // What to put back: the page's own data-theme (or none), and whether the style that stills it was added here.

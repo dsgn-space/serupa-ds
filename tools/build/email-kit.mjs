@@ -41,7 +41,7 @@ export function emailSizes(dir) {
     if (m && get(`${x.name}--line-height`) != null) text[m[1]] = [x.value, get(`${x.name}--line-height`)];
   }
   const pick = (prefix) => Object.fromEntries(scalar.filter((x) => x.kind === 'size' && x.name.startsWith(prefix) && !/[.]/.test(x.name)).map((x) => [x.name.slice(prefix.length) || 'default', x.value]));
-  return { text, spacing: pick('spacing-'), radius: { ...pick('rounded-'), default: get('rounded') } };
+  return { text, spacing: pick('spacing-'), radius: { ...pick('rounded-'), default: get('rounded-sm') } };
 }
 
 const TONES = ['info', 'success', 'warning', 'danger'];

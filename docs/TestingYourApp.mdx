@@ -45,7 +45,7 @@ test('ships an order to Canada next week', async () => {
 
 ## Screenshots in every theme
 
-Serupa checks its components in six themes (three brands, light and dark), and every theme's color pairs for contrast. `forEachTheme()` gives your own screens the same check in Playwright: it draws the page in each theme in turn, with transitions off and the color scheme to match, and calls you back to take the picture.
+`forEachTheme()` gives your own screens the check Serupa gives its components, in Playwright: it draws the page in each theme in turn, with transitions off and the color scheme to match, and calls you back to take the picture. By default that's all 34 themes (17 brands, light and dark), so the page needs `brands/all.css`; pass the ones your app offers to take fewer pictures: `forEachTheme(page, fn, { themes: ['blue-light', 'blue-dark'] })`.
 
 ```ts
 import { test, expect } from '@playwright/test';

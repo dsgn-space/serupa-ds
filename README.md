@@ -258,7 +258,7 @@ function Cards({ items }: { items: { id: string; title: string }[] }) {
 
 Every utility class works on its own, with no framework or build step, and every class whose value is on a scale reads it from its token: `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)`. Change a token on a page and its classes follow. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (they write the token's shape out so a color class can recolor it), and `rounded-full` (9999px). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
 
-The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
+The palette has 19 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
 
 ## Components
 
@@ -481,7 +481,8 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | File | Holds |
 | --- | --- |
 | `serupa.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
-| `themes/<theme>.tokens.json` | The alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
+| `themes/light.tokens.json`, `themes/dark.tokens.json` | The alias colors in light and in dark, as references into the palette (`"{color.blue-600}"`): the default brand's |
+| `brands/<theme>.tokens.json` | A brand's overlay: the aliases it sets apart from its mode's file. A theme is `serupa.tokens.json`, then its mode's file, then its overlay (`brands/violet-dark.tokens.json` over `themes/dark.tokens.json`) |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 | `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
@@ -608,6 +609,6 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | Work | Used for | License |
 | --- | --- | --- |
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT, `licenses/TailwindCSS-MIT.txt` |
-| Inter (Rasmus Andersson) | `font-sans`: `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2`, and the same split by script, `fonts/InterVariable-*.woff2` | SIL Open Font License 1.1, `licenses/Inter-OFL-1.1.txt` |
+| Inter (Rasmus Andersson) | `font-sans`: Inter's variable fonts split by script, `fonts/InterVariable-*.woff2` | SIL Open Font License 1.1, `licenses/Inter-OFL-1.1.txt` |
 | Material Symbols (Google) | Icons, as SVG in the components and `@diki-stwn/serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0, `licenses/MaterialSymbols-Apache-2.0.txt` |
 | React 19.3.1 (Meta) | Running the components on plain pages: `dist/lib/`, built from the `react` and `react-dom` packages by the build | MIT, `licenses/React-MIT.txt` |
