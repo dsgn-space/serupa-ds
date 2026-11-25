@@ -30,7 +30,7 @@
 }
 .srp-combobox__popup[hidden] { display: none; }
 /* The listbox scrolls, and only the rows in view are drawn (Combobox.tsx): an empty ::before and ::after, as tall as
-   the rows above and below, stand in for the rest, as in VirtualList. */
+   the rows above and below, stand in for the rest, as in List's ListVirtualItems. */
 .srp-combobox__listbox { position: relative; flex: auto; min-height: var(--spacing-0); overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; }
 .srp-combobox__listbox::before { content: ""; display: block; height: var(--srp-cbx-before, var(--spacing-0)); }
 .srp-combobox__listbox::after { content: ""; display: block; height: var(--srp-cbx-after, var(--spacing-0)); }

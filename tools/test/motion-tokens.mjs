@@ -18,7 +18,7 @@ const RAW_EASE = /(?<![\w-])(?:linear|ease|ease-in|ease-out|ease-in-out)(?![\w-]
 // with why; a KNOWN token no longer used fails too.
 const SCALE = /var\(--(duration-(?!0\))\d+)\)/g;
 const KNOWN = Object.fromEntries(Object.entries({
-  Loader: ['duration-1000', 'duration-500', 'duration-1200', 'duration-150', 'duration-300', 'duration-75', 'duration-200', 'duration-100', 'duration-700'],   // its own art and rhythms: each animation is a sum of scale steps, tuned per variant
+  Loader: ['duration-1000'],   // its own rhythms: the dots' pulse and the text's shine are steps of the scale
 }).flatMap(([c, ts]) => ts.map((t) => [`${c}:${t}`, 'its own art, tuned per variant'])));
 
 const dir = path.join(PROJECT, 'src', 'components');

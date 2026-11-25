@@ -12,7 +12,7 @@
 // story together takes a fifth longer, or when an answer takes half as long again (and two frames more). Mount
 // times are compared a component at a time, not a story at a time: on one machine, two such nights an hour apart
 // had 2 of 626 stories two or three times slower, each with another story of the same component that much faster
-// (VirtualList's Links and MixedHeights swapped 1.1 and 3.5 ms), while no component's total moved by more than 35%.
+// (VirtualList's Links and MixedHeights, now List's VirtualLinks and VirtualMixedHeights, swapped 1.1 and 3.5 ms), while no component's total moved by more than 35%.
 // Each story's change is still listed. Without a folder (the checks project) it tests the comparison itself.
 import fs from 'node:fs';
 import path from 'node:path';

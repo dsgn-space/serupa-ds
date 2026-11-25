@@ -27,7 +27,7 @@ export const SECONDS: Record<string, number> = {
   'src/internal/strictCsp.test.tsx': 41, 'src/internal/digitsStories.test.tsx': 39, 'src/internal/propFuzz.test.tsx': 35,
   'src/patterns/SessionTimeout/SessionTimeout.test.tsx': 25, 'src/components/Loader/Loader.test.tsx': 24,
   'src/components/Drawer/Drawer.test.tsx': 23, 'src/components/Combobox/Combobox.test.tsx': 21,
-  'src/components/Button/Button.test.tsx': 18, 'src/components/VirtualList/VirtualList.test.tsx': 18,
+  'src/components/Button/Button.test.tsx': 18, 'src/components/List/ListVirtualItems.test.tsx': 18,
   'src/components/Table/Table.test.tsx': 17, 'src/patterns/AccountSecurity/AccountSecurity.test.tsx': 17,
   'src/internal/announceContract.test.tsx': 16, 'src/components/SortableList/SortableList.test.tsx': 15,
   'src/components/FileUpload/FileUpload.test.tsx': 14, 'src/components/Kanban/Kanban.test.tsx': 14,

@@ -5598,7 +5598,7 @@
     "stroke-width-1": {
       "$type": "number",
       "$value": 1,
-      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges, and the pixel Loader's dividers.",
+      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-1"
@@ -5628,7 +5628,7 @@
     "stroke-width-4": {
       "$type": "number",
       "$value": 4,
-      "$description": "`stroke-4`. The spokes Loader's spokes.",
+      "$description": "`stroke-4`. The heaviest SVG stroke.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-4"
@@ -7998,7 +7998,7 @@
         "value": 1200,
         "unit": "ms"
       },
-      "$description": "Long loops, such as the pixel loader (1.2s). Decorative only.",
+      "$description": "Long loops (1.2s). Decorative only.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--duration-1200"
@@ -8037,7 +8037,7 @@
         "value": 75,
         "unit": "ms"
       },
-      "$description": "One step of the pixel Loader's wave (`--loader-pixel-stagger`).",
+      "$description": "A short offset between items that start one after another (75ms).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--delay-75"
@@ -8076,7 +8076,7 @@
         "value": 200,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader.",
+      "$description": "An offset between items that start one after another.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--delay-200"
@@ -8115,7 +8115,7 @@
         "value": 700,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader.",
+      "$description": "An offset between items that start one after another.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--delay-700"
@@ -8128,7 +8128,7 @@
         "value": 1000,
         "unit": "ms"
       },
-      "$description": "Offsets one square of the random pixel Loader; the longest wait.",
+      "$description": "An offset between items that start one after another; the longest wait (1s).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--delay-1000"

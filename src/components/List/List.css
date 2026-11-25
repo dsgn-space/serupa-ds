@@ -58,6 +58,11 @@
 .srp-list__leading--md .srp-skeleton { --srp-skeleton-size: var(--avatar-size-md, var(--spacing-10)); }
 .srp-list__leading--lg .srp-skeleton { --srp-skeleton-size: var(--avatar-size-lg, var(--spacing-12)); }
 .srp-list__leading--xl .srp-skeleton { --srp-skeleton-size: var(--avatar-size-xl, var(--spacing-16)); }
+/* With ListVirtualItems inside, the list is the scroller, up to 384px tall (--list-virtual-height): only the rows in
+   view are drawn, and an empty <li> above and below them, as tall as the rows not drawn, stands in for the rest. */
+.srp-list:has(> .srp-list__spacer) { position: relative; box-sizing: border-box; max-height: var(--list-virtual-height, var(--spacing-96)); overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; }
+.srp-list__spacer { display: block; padding: var(--spacing-0); }
+.srp-list:has(> .srp-list__spacer):focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (forced-colors: active) { .srp-list__item:where([data-selected]) { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 @media (prefers-reduced-motion: reduce) { .srp-list__item { transition: none; } }
 }
