@@ -3,6 +3,8 @@
 // It formats and checks lengths; it doesn't tell a mobile number from a landline. No "use client": these
 // helpers work on the server too.
 
+import { latinDigits } from '../../internal/digits';
+
 /** One country PhoneInput knows: its ISO 3166 code, calling code, trunk prefix, grouping and national lengths. */
 export interface PhoneCountry {
   /** ISO 3166-1 alpha-2, such as "ID". */
@@ -36,7 +38,7 @@ const ROWS = 'US 1 - (###)_###-#### 10 10|CA 1 - (###)_###-#### 10 10|GB 44 0 ##
   '|PK 92 0 ###_####### 8 10|BD 880 0 ####-###### 8 10|CN 86 0 ###_####_#### 10 11|HK 852 - ####_#### 8 8' +
   '|TW 886 0 ###_###_### 9 9|JP 81 0 ##-####-#### 9 10|KR 82 0 ##-####-#### 8 10|SG 65 - ####_#### 8 8' +
   '|MY 60 0 ##-###_#### 8 10|ID 62 0 ###-####-#### 8 12|PH 63 0 ###_###_#### 8 10|TH 66 0 ##_###_#### 8 9' +
-  '|VN 84 0 ###_###_### 9 10|MX 52 - ##_####_#### 10 10|BR 55 0 ##_#####-#### 10 11|AR 54 0 ##_####-#### 10 10' +
+  '|VN 84 0 ###_###_### 9 10|MX 52 - ##_####_#### 10 10|BR 55 0 ##_#####-#### 10 11|AR 54 0 ##_####-#### 10 11' +
   '|CL 56 - #_####_#### 9 9|CO 57 - ###_####### 10 10|PE 51 - ###_###_### 9 9' +
   // More countries with their usual grouping.
   '|LK 94 0 ##_###_#### 9 9|NP 977 0 ###-####### 8 10|KH 855 0 ##_###_### 8 9|LA 856 0 ##_##_###_### 8 10' +
@@ -97,6 +99,8 @@ const PATTERNS: Record<string, Record<string, string>> = /* @__PURE__ */ (() => 
   NG: by('1 2 9', '# ### ####'),
   PK: by('21 42 51', '## #### ####'),
   BD: by('2', '#-####-####'),
+  // A mobile written internationally keeps its 9 before the area code: +54 9 11 2345-6789.
+  AR: by('9', '# ## ####-####'),
 }))();
 
 /** Every country PhoneInput knows, one row per ISO code (main country first for a shared calling code). */
@@ -151,7 +155,8 @@ export function phoneOnly(value: string): string {
    a calling code, the number's area picks one (+1 416 is Canada, +1 684 American Samoa), else `prefer`, else the main one.
    `countries` replaces the built-in list (PhoneInput passes its own). Undefined when no calling code matches. */
 export function parsePhone(value: string, prefer?: string, countries: readonly PhoneCountry[] = PHONE_COUNTRIES): ParsedPhone | undefined {
-  const digits = phoneOnly(value).trim().replace(/^00/, '+').replace(/[^\d+]/g, '');
+  // Digits in any script (Arabic-Indic, Persian, full-width) read as ASCII, and a full-width plus as a plus.
+  const digits = latinDigits(phoneOnly(value)).replace(/＋/g, '+').trim().replace(/^00/, '+').replace(/[^\d+]/g, '');
   if (digits[0] !== '+') return undefined;
   const rest = digits.slice(1).replace(/\D/g, '');
   // The longest calling code wins (+1 against +12…).
