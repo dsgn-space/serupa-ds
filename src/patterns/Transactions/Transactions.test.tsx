@@ -6,7 +6,13 @@ import { Transactions, findTx, monthsOf, totals, type Transaction } from './Tran
 
 const active = () => document.activeElement as HTMLElement;
 const norm = (t: string | null | undefined) => (t ?? '').replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660)).replace(/٫/g, '.').replace(/٬/g, ',').replace(/[‎‏؜]/g, '');
-const said = (e: Element) => { const c = e.cloneNode(true) as Element; c.querySelectorAll('[aria-hidden="true"]').forEach((x) => x.remove()); return norm(c.textContent); };
+// What a cell says as it shows: without aria-hidden parts, or the category line that only shows under a description on a phone.
+const said = (e: Element) => {
+  const gone = [...e.querySelectorAll('*')].map((x) => x.getAttribute('aria-hidden') === 'true' || !x.checkVisibility());
+  const c = e.cloneNode(true) as Element;
+  [...c.querySelectorAll('*')].forEach((x, i) => { if (gone[i]) x.remove(); });
+  return norm(c.textContent);
+};
 const rows = () => [...document.querySelectorAll('tbody tr')].map((r) => [...r.children].map(said));
 const shownText = () => norm(document.getElementById('tx-shown')!.textContent);
 const t = (id: string, date: string, description: string, category: string, amount: number): Transaction => ({ id, date, description, category, amount });
@@ -104,5 +110,18 @@ describe('Transactions printed', () => {
       for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
       for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
     } finally { await commands.printMedia(false); }
+  });
+
+  test('on a phone the date and the category move under each description, so the table fits with money in and out still apart', async () => {
+    await page.viewport(390, 844);
+    document.body.style.padding = '0';
+    try {
+      await render(<Transactions />);
+      await document.fonts.ready; // measured in the real font, not the wider fallback it starts in
+      const first = [...document.querySelectorAll('tbody tr')[0]!.children].filter((c) => c.checkVisibility()).map(said);
+      expect(first).toEqual([expect.stringMatching(/^Corner CaféPending.+ · Eating out$/), expect.stringMatching(/6[.,]40/), '']);
+      const frame = document.querySelector('[data-component="table"]')!;
+      expect(frame.scrollWidth - frame.clientWidth).toBeLessThanOrEqual(1);
+    } finally { document.body.style.padding = ''; await page.viewport(900, 700); }
   });
 });

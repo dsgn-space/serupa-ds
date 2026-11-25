@@ -205,13 +205,16 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
                     onChange={() => setPicked(all ? picked.filter((n) => !rows.some((p) => p.name === n)) : [...new Set([...picked, ...rows.map((p) => p.name)])])} />
                   <TableHeaderCell sort={dir('name')} onSort={() => sortBy('name')}>Name</TableHeaderCell>
                   <TableHeaderCell>Status</TableHeaderCell>
-                  <TableHeaderCell>Owner</TableHeaderCell>
+                  {/* On a phone the owner goes under each name rather than in a column of its own, so the table fits a
+                     390px screen with the date still on one line (as Transactions does with its category). */}
+                  <TableHeaderCell className="hidden sm:table-cell">Owner</TableHeaderCell>
                   <TableHeaderCell sort={dir('updated')} onSort={() => sortBy('updated')}>Updated</TableHeaderCell>
                 </TableRow></TableHead>
                 <TableBody>{rows.map((p) => (
                   <TableRow key={p.name} selected={picked.includes(p.name)}>
                     <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
-                    <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
+                    <TableCell>{p.name}<span className="block text-sm text-text-muted sm:hidden">{p.owner}</span></TableCell>
+                    <TableCell>{p.status}</TableCell><TableCell className="hidden sm:table-cell">{p.owner}</TableCell>
                     <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                   </TableRow>
                 ))}</TableBody>

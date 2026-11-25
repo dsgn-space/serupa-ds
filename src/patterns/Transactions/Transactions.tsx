@@ -150,23 +150,26 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
             {shown.length ? (
               <Table caption={`Transactions in ${name}`} hideCaption>
                 <TableHead><TableRow>
-                  <TableHeaderCell>Date</TableHeaderCell>
+                  {/* On a phone the date and the category go under each description rather than in columns of their own,
+                     so the table fits a 390px screen in every language with money in and money out still in their own columns. */}
+                  <TableHeaderCell className="hidden sm:table-cell">Date</TableHeaderCell>
                   <TableHeaderCell>Description</TableHeaderCell>
-                  <TableHeaderCell>Category</TableHeaderCell>
+                  <TableHeaderCell className="hidden sm:table-cell">Category</TableHeaderCell>
                   <TableHeaderCell align="end">Money out</TableHeaderCell>
                   <TableHeaderCell align="end">Money in</TableHeaderCell>
                 </TableRow></TableHead>
                 <TableBody>
                   {shown.map((t) => (
                     <TableRow key={t.id}>
-                      <TableCell className="whitespace-nowrap">{day(t.date)}</TableCell>
+                      <TableCell className="hidden whitespace-nowrap sm:table-cell">{day(t.date)}</TableCell>
                       <TableHeaderCell scope="row" className="font-normal">
                         <span className="flex flex-wrap items-center gap-2">
                           <span className="min-w-0 wrap-break-word">{t.description}</span>
                           {t.pending ? <Badge tone="warning">Pending</Badge> : null}
                         </span>
+                        <span className="block text-sm text-text-muted sm:hidden">{day(t.date)} · {t.category}</span>
                       </TableHeaderCell>
-                      <TableCell>{t.category}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{t.category}</TableCell>
                       <TableCell align="end">{t.amount < 0 ? money(-t.amount) : ''}</TableCell>
                       <TableCell align="end">{t.amount > 0 ? money(t.amount) : ''}</TableCell>
                     </TableRow>

@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------
+   FormattedDate: a short date with a time is two halves, each kept to one line, so the line wraps between the
+   date and the time.
+   --------------------------------------------------------------- */
+@layer srp.components {
+.srp-formatted-date__half { white-space: nowrap; }
+}

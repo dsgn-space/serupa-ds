@@ -10,7 +10,8 @@ const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\
 
 const active = () => document.activeElement as HTMLElement;
 const status = () => latin(document.querySelector('main [role="status"]')?.textContent);
-const names = () => [...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[1]?.textContent);
+// The name is the cell's first text; the owner line under it shows only on a phone.
+const names = () => [...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[1]?.firstChild?.textContent);
 // The toast that says text, and its buttons: Undo is named by its words, the close button is "Dismiss".
 const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement | undefined;
 const undoIn = (text: string) => [...toastOf(text)!.querySelectorAll('button')].find((b) => b.textContent === 'Undo') as HTMLElement;

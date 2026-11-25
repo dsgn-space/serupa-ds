@@ -116,7 +116,7 @@ export function methodText(m: BillingPaymentMethod): string {
     : m.kind === 'bank' ? `Direct debit from ${m.bank}, account ending ${m.last4}` : `${m.provider}, phone ending ${m.phoneLast4}`;
 }
 
-const STATUS = { paid: ['Paid', 'success'], due: ['Due', 'warning'], failed: ['Payment failed', 'danger'] } as const;
+const STATUS = { paid: ['Paid', 'success'], due: ['Due', 'warning'], failed: ['Failed', 'danger'] } as const;
 
 /** The billing page: a skip link, a header, then main with the h1, the plan, usage, the card and the invoices. */
 export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, paymentMethod, invoices = demoInvoices, onCancel, onResume,
@@ -231,7 +231,9 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
                   </TableRow></TableHead>
                   <TableBody>{invoices.map((i) => (
                     <TableRow key={i.id}>
-                      <TableCell className="whitespace-nowrap"><time dateTime={i.date}>{date(i.date)}</time></TableCell>
+                      {/* A table's dates are medium ("Nov 1, 2026"), as List search's, Referral's and Activity log's are: the long form
+                          left Status past a phone's edge. Prose keeps the long form. */}
+                      <TableCell className="whitespace-nowrap"><time dateTime={i.date}>{formatDate(i.date, locale, { dateStyle: 'medium' }) || i.date}</time></TableCell>
                       <TableCell align="end">{money(i.amount, plan.currency, locale)}</TableCell>
                       <TableCell><Badge tone={STATUS[i.status][1]}>{STATUS[i.status][0]}</Badge></TableCell>
                       <TableCell align="end" className="whitespace-nowrap"><Link href={i.href} aria-label={`Download the invoice of ${date(i.date)}`}>Download</Link></TableCell>

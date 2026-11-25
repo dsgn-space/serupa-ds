@@ -195,16 +195,18 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                   <h2 id="lines" className={h2}>What it’s for</h2>
                   <Table caption={`Lines of invoice ${inv.number}`} hideCaption>
                     <TableHead><TableRow>
+                      {/* On a phone the quantity and the price go under each description ("2 × $1,200.00") rather than in
+                         columns of their own, so the lines fit a 390px screen in every language. */}
                       <TableHeaderCell>Description</TableHeaderCell>
-                      <TableHeaderCell align="end">Quantity</TableHeaderCell>
-                      <TableHeaderCell align="end">Price</TableHeaderCell>
+                      <TableHeaderCell align="end" className="hidden sm:table-cell">Quantity</TableHeaderCell>
+                      <TableHeaderCell align="end" className="hidden sm:table-cell">Price</TableHeaderCell>
                       <TableHeaderCell align="end">Amount</TableHeaderCell>
                     </TableRow></TableHead>
                     <TableBody>{inv.lines.map((l) => (
                       <TableRow key={l.id}>
-                        <TableCell>{l.description}</TableCell>
-                        <TableCell align="end">{formatNumber(l.quantity, locale)}</TableCell>
-                        <TableCell align="end">{money(l.price)}</TableCell>
+                        <TableCell>{l.description}<span className="block text-sm text-text-muted sm:hidden">{formatNumber(l.quantity, locale)} × {money(l.price)}</span></TableCell>
+                        <TableCell align="end" className="hidden sm:table-cell">{formatNumber(l.quantity, locale)}</TableCell>
+                        <TableCell align="end" className="hidden sm:table-cell">{money(l.price)}</TableCell>
                         <TableCell align="end">{money(l.price * l.quantity)}</TableCell>
                       </TableRow>
                     ))}</TableBody>

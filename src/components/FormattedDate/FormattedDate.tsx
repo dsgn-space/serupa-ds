@@ -84,8 +84,25 @@ function keepTimeTogether<T extends { type: string; value: string }>(parts: T[])
   });
 }
 
+// A date with a time wraps between the two, never inside either: "Nov 12, 2026, / 8:00 AM", not "Nov 12, / 2026,
+// 8:00 AM". The words are the same (textContent and formatDate don't change): [first half, the words between, second half].
+// Each half keeps to one line (FormattedDate.css). Only short halves, as the short and medium styles write them: a
+// long one ("Wednesday, September 30, 2026") could be wider than a narrow line, so it wraps like a sentence.
+// module state: a fixed list of Intl part types, never written to, so every request reads the same one.
+const TIME = new Set(['hour', 'minute', 'second', 'fractionalSecond', 'dayPeriod', 'timeZoneName']);
+function halves(parts: { type: string; value: string }[]): string[] {
+  const a = parts.findIndex((p) => p.type !== 'literal');
+  const cut = parts.findIndex((p, n) => n > a && p.type !== 'literal' && TIME.has(p.type) !== TIME.has(parts[a]!.type));
+  if (cut < 0) return [];
+  let b = cut;
+  while (parts[b - 1]!.type === 'literal') b--;
+  const text = (x: typeof parts) => x.map((p) => p.value).join('');
+  const out = [text(parts.slice(0, b)), text(parts.slice(b, cut)), text(parts.slice(cut))];
+  return out[0]!.length > 20 || out[2]!.length > 20 ? [] : out;
+}
+
 type Piece = { text: string; source: 'startRange' | 'endRange' | 'shared' };
-function pieces(value: unknown, locale: string | undefined, o: FormatDateOptions, zone?: string): { from: Read; to: Read | null; pieces: Piece[] } | null {
+function pieces(value: unknown, locale: string | undefined, o: FormatDateOptions, zone?: string): { from: Read; to: Read | null; pieces: Piece[]; runs: string[] } | null {
   const from = read(value);
   if (!from) return null;
   const end = o.to === undefined ? null : read(o.to);
@@ -99,7 +116,7 @@ function pieces(value: unknown, locale: string | undefined, o: FormatDateOptions
     if (last && last.source === p.source) last.text += p.value;
     else out.push({ text: p.value, source: p.source });
   }
-  return { from, to, pieces: out };
+  return { from, to, pieces: out, runs: to ? [] : halves(parts) };
 }
 
 /** A date, a time or a range in the locale's words: formatDate("2026-11-20") is "Nov 20, 2026",
@@ -137,7 +154,7 @@ function FormattedDateRender({ ref, ...props }: FormattedDateProps & React.RefAt
     </span>;
   }
   return <time lang={lang} dir={dir} {...rest} ref={ref as React.Ref<HTMLTimeElement>} dateTime={made?.from.iso} className={cls} data-component="formatted-date" suppressHydrationWarning>
-    {made?.pieces[0]?.text}
+    {made?.runs.length ? made.runs.map((r, i) => (i === 1 ? r : <span key={i} className="srp-formatted-date__half">{r}</span>)) : made?.pieces[0]?.text}
   </time>;
 }
 

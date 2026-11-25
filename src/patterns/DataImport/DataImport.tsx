@@ -247,7 +247,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
                   {bad.length ? ` ${plural(bad.length, 'row has', 'rows have')} problems, listed first.` : ''} Nothing is saved until you import.
                 </p>
                 {summary}
-                <Table caption={`Rows in ${file?.name}`} hideCaption size="sm">
+                <Table caption={`Rows in ${file?.name}`} hideCaption size="sm" pinStart>
                   <TableHead>
                     <TableRow>
                       <TableHeaderCell align="end">Line</TableHeaderCell>
