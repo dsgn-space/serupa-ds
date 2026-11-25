@@ -464,6 +464,12 @@ describe('Slider', () => {
     expect(rect(el('mk')).height).toBe(rect(thumb('mk')).height);
   });
 
+  test('marks: true on a long range still spreads its ticks over the whole track, at most 1,001 of them', async () => {
+    await render(<Slider id="mk" aria-label="Budget" min={0} max={100000} largeStep={10} marks />);
+    const at = [...el('mk').querySelectorAll<HTMLElement>(MARK)].map((m) => parseFloat(m.style.insetInlineStart));
+    expect([at.length <= 1001, Math.max(...at)]).toEqual([true, 100]);
+  });
+
   test('marks with labels: the text sits under the track, centered on its value in either direction, and the slider makes room for it', async () => {
     const marks = [{ value: 0, label: '0°' }, { value: 50, label: 'Half' }, { value: 100, label: '100°' }, { value: 120, label: 'Off the track' }];
     await render(<div style={{ width: '420px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
