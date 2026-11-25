@@ -1509,8 +1509,8 @@
  },
  "List": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "240ecb4e0f81",
+  "changed": "19.0.0",
+  "api": "b3fdde5dbb3c",
   "props": {
    "busy": "14.3.0",
    "label": "14.3.0",
@@ -1522,7 +1522,12 @@
    "selectionMode": "14.7.0",
    "value": "14.7.0",
    "values": "14.7.0",
-   "showDescription": "17.0.0"
+   "showDescription": "17.0.0",
+   "count": "19.0.0",
+   "estimatedItemHeight": "19.0.0",
+   "itemKey": "19.0.0",
+   "overscan": "19.0.0",
+   "renderItem": "19.0.0"
   },
   "known": [
    "as",
@@ -1563,17 +1568,13 @@
  },
  "Loader": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "7b10aa91a39d",
+  "changed": "19.0.0",
+  "api": "f747619a70c9",
   "props": {},
   "known": [
    "delay",
-   "glow",
    "label",
-   "lines",
    "loading",
-   "pattern",
-   "shape",
    "size",
    "tone",
    "variant"

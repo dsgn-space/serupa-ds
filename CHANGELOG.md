@@ -4,6 +4,116 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [19.0.0] - 2026-11-25
+
+### Added
+
+- A component's state is an attribute you can select on, and the `--state` modifier classes are deprecated (ADR-0025).
+  - **Added:** state attributes on the element that changes, present or absent: `data-disabled`, `data-readonly` and `data-invalid` on the fields (Input and every field built on it, Textarea, Select, Checkbox, Radio, Switch, PinInput, SegmentedControl, Slider, Rating, ColorPicker, FileUpload, SignaturePad, CascadeSelect, PeriodPicker, Field, InlineEdit and others), `data-selected` on picked items (Calendar days, List items, Table rows, TreeView items, TagGroup tags, DataGrid cells), `data-current` on the current page or link (Breadcrumb, Pagination, Navbar, Sidebar, BottomNav, PeriodPicker), `data-active` on the option the keys are on (Combobox, CommandPalette, MentionInput, TimePicker, PinInput's box), and `data-loading`, `data-checked`, `data-empty`, `data-today`, `data-outside`, `data-over`, `data-dragging`, `data-done` and `data-error` where those states were classes.
+  - **Changed:** the components' own stylesheets select these attributes, or `data-state` and ARIA where they already say the state, instead of the classes; a ToggleButton that is on is `[aria-pressed="true"]`. Nothing looks different.
+  - **Deprecated:** the `--state` modifier classes (`.srp-input--invalid`, `.srp-list__item--selected`, `.srp-navbar__link--active`, …). They are still written in 17.x and 18.x and removed in 19.0.0. Select `.srp-input[data-invalid]` and the like instead. The docs' Customizing page lists the rule, and `STATE_CLASSES` in `tools/test/state-hooks.mjs` maps each class to its attribute.
+
+### Changed
+
+- One rule for how urgent an announcement is: danger interrupts, everything else waits.
+  - **What changes:**
+    - Alert with `tone="warning"` is `role="status"` now, not `role="alert"`, so a screen reader says it at the next pause instead of cutting in. Only `tone="danger"` is `role="alert"`, as a danger toast is the only toast said at once.
+    - SaveStatus says its error at once (an assertive live region), not politely, so a failed save is as urgent as a danger toast about the same failure. "Saved" still waits its turn.
+  - **Migration:** nothing to rename, and nothing to do for most pages. A warning that must stop people before they act passes `role="alert"` itself: `<Alert tone="warning" role="alert">`.
+- `design-tokens/` keeps a theme as its mode and its brand's overlay, not 34 whole files.
+  - **What breaks:** `design-tokens/themes/<theme>.tokens.json` is gone. `themes/light.tokens.json` and `themes/dark.tokens.json` hold the alias colors (the default brand's), and `brands/<theme>.tokens.json` holds the aliases a brand sets apart from them. A tool that loaded one theme file by path (a Tokens Studio or Style Dictionary setup) loads the mode file, then the overlay.
+  - **Why:** the deep audit of 21 Nov 2026 found 34 whole files that differed in a handful of values each, 55% of `design-tokens/`. The folder goes from 2.4 MB to 1.3 MB, in the package and in every checkout.
+  - **Migration:** for `violet-dark`, load `serupa.tokens.json`, `themes/dark.tokens.json`, then `brands/violet-dark.tokens.json` (later files win). `tools/tokens/style-dictionary.config.mjs` shows it for Style Dictionary.
+- VirtualList is part of List, and Loader is a ring, dots or text.
+  - **What changes:**
+    - VirtualList is removed. A List of thousands of rows takes `ListVirtualItems` inside it, as a Table takes `TableVirtualBody`: `<List aria-label="Members" variant="card"><ListVirtualItems count={people.length} renderItem={row} /></List>`. The List's own props (`variant`, `divided`, `as`, `aria-label`, `className`) stay on the List, and `count`, `renderItem`, `itemKey`, `estimatedItemHeight` and `overscan` go to ListVirtualItems. It draws, scrolls and reads as before. The list is `data-component="list"`, `--virtual-list-height` is `--list-virtual-height`, and its focus ring is `--list-focus-ring`.
+    - Loader keeps `variant` `ring`, `dots` and `text`. `variant="skeleton"`, deprecated in 18.x, is gone: use `<Skeleton>`, with the same `shape`, `lines`, `size`, `label`, `delay` and `loading`. `spokes` and `pixel` are gone, with `pattern`, `glow`, `LoaderPattern`, `LoaderShape` and the `--loader-skeleton-*`, `--loader-pixel-*` and `--loader-spokes-*` tokens. A removed variant draws the ring.
+  - **Migration:** `serupa-migrate --from 18` rewrites a VirtualList as a List with ListVirtualItems inside, a skeleton Loader as a Skeleton, a spokes or pixel Loader as the ring, `LoaderShape` as `SkeletonShape`, and the renamed tokens. It lists a VirtualList with spread props, `VirtualListProps`, and the pixel and spokes tokens, to change by hand.
+- Patterns: section headings on app screens are 18px everywhere, as in 48 places already. Agenda, Approvals, Data export, Poll, Product page, Recipe, Send money and Multi-step form's steps used 20px. Send money's "Sent to …" and Multi-step form's "Application sent" are now 24px, like the confirmation in every other pattern. Docs (Foundations): the Type roles say when a section heading is 24px (a page's own sections, as in an article) and when it is 18px (`size="lg"`, a section on an app screen below its h1). A new check draws every pattern story and fails on an h2 of another size, with the documents and headlines that keep 24px named and explained.
+- Every dark fill is a touch lighter than its light theme's shade, and no more: the brand, success, warning, info and danger, as Apple's system colors are a touch brighter in dark. Badge's palette solids are the light theme's step in dark too.
+  - Changed: a dark theme's fill is its light theme's shade lightened in OKLCH (hue and chroma kept) as far as 3:1 on a raised dark card asks, and always by at least 0.02 of lightness while the text on it keeps 4.5:1. Blue Dark's `primary` is #2b6af2 (`blue-600` is #2563eb). Orange, Amber, Lime and Green Dark move by 0.02; the other brands were already lighter than that. `serupa-brand` makes a dark theme the same way.
+  - Changed: in dark themes `success` is #23a950 and `success-hover` #2ecc64 (were `green-500` and `green-400`), `warning` #e07d17 and `warning-hover` #fca41d (were `amber-500` and `amber-400`), each the light theme's `green-600`, `green-500`, `amber-600` and `amber-500` a touch lighter, with the same dark text on them as in light. `info` is #1e77b0 and `info-hover` #1d6693 (were `sky-400` and `sky-300`): `sky-700` and `sky-800` lightened as far as 3:1 on a raised card asks, and `on-info` is white (was `sky-950`). `danger`, `danger-hover` and `danger-pressed` are #e22e2c, #bf2422 and #9f2220 (were `red-600`, `red-700` and `red-800`), as far as white text keeps 4.5:1. More contrast keeps its own shades; the `*-text`, `*-subtle` and `*-border` tokens are unchanged.
+  - Changed: Badge's palette solids (`tone="violet" variant="solid"` and the other 17 families) are the light theme's step, 600 or 700 under white text, in dark themes too (they were 400 under 950 text). Hover and press darken them, as in light.
+  - Changed: Alert's info icon (`--alert-icon-info`) and EventCalendar's info bar (`--event-calendar-info-tone`) read `info-text`, the same `sky-700` in light and `sky-300` in dark, so each stays 3:1 on its tint.
+  - Changed: the contrast pair for `info` on the page is 3:1, what an icon or fill needs (WCAG 1.4.11); info text uses `info-text`.
+  - **What breaks:** text set from `--info` on a dark page is 3.6:1, under the 4.5:1 text needs; `--success` and `--warning` are darker in dark than they were. Code that put dark text on `--info` in dark gets 2.9:1: use `--on-info`. A custom mark on a dark tint drawn with `--info` may fall under 3:1. In dark, `--danger` and the status fills are hex values, not palette steps.
+  - **Why:** a dark theme's status fills were a palette step or two lighter than the light theme's, with info's text flipped from white to dark, so a status read as another color after dark; and a fill that was the very same shade in both modes looked dull on a dark page. 18.0.0 made the brand fill the light theme's in dark; 19.0.0 gives every fill that rule, a touch lighter (ADR-0026).
+  - **Migration:** text in a status color uses `--success-text`, `--warning-text` or `--info-text`, and text on a fill uses `--on-success`, `--on-warning` or `--on-info` (by hand). A theme that wants the old dark shades sets them itself: `[data-theme$="-dark"] { --success: var(--green-500); --info: var(--sky-400); --on-info: var(--sky-950); }`. A `serupa-brand` theme made again gets the new dark fill.
+- Tokens nothing used are removed, and a theme is its colors.
+  - **What breaks:**
+    - `--field-action` is merged into `--primary-text`, which holds the same color in every theme. Its classes (`text-field-action` and the rest) go with it, and `serupa-brand` now picks a `primary-text` that also passes 4.5:1 on a field.
+    - The `gray`, `neutral` and `stone` ramps are removed (44 tokens no component, alias or brand read). `zinc` is the neutral every alias uses, and `slate` stays as a cooler grey.
+    - `--rounded` and the bare `rounded` class are removed: they were `rounded-sm` under an older name. `--motion-ripple` and `--motion-ripple-fade` are removed: no component has used them since Button and Badge dropped their ripples.
+    - `serupa-brand` no longer takes `--corners` or `--motion`, and says so. Corners are their own setting (`data-radius`), for every brand at once.
+    - theme.js no longer moves a theme saved by 4.x under the `diki-theme` key.
+  - **Why:** the deep audit of 21 Nov 2026 found these tokens unread outside their own definitions, `field-action` equal to the brand text color in all 34 themes, and two brand options against the rule that a brand sets its colors and nothing else.
+  - **Migration:** `serupa-migrate --from 17` (`tokens-removed`) rewrites `--field-action` and the `*-field-action` classes to `primary-text`, `--rounded` and the `rounded` class to `rounded-sm`, and the ripple tokens to `--duration-500` and `--duration-300`; it lists each `--gray-*`, `--neutral-*` or `--stone-*` to move to `zinc` or `slate`. For a brand made with `--corners sharp` or `round`, set `data-radius` on `<html>`; for `--motion`, set the `--motion-*` tokens in your CSS.
+- The package ships Inter split by script only.
+  - **What breaks:** `fonts/InterVariable.woff2` and `fonts/InterVariable-Italic.woff2` (the whole fonts, 740 KB) are gone from the package. `tokens.css` never loaded them: it loads the files split by script (`fonts/InterVariable-latin.woff2` and the rest), with a `unicode-range` each, so a page that uses `tokens.css` sees no change. A page that linked a whole font itself links the split files, or takes `--font-sans` from `tokens.css`.
+  - **Why:** the deep audit of 21 Nov 2026 found the whole fonts shipped beside the split ones that every page loads.
+  - **Migration:** replace a link to `fonts/InterVariable.woff2` with `tokens.css`'s faces (`import '@diki-stwn/serupa-ds/tokens.css'`), or with `fonts/InterVariable-latin.woff2` and the other scripts your text uses.
+
+### Fixed
+
+- Checkbox, Radio, Switch, TreeView: Keep description text and tree item labels selectable so policy text and item names can be copied.
+- FileUpload: Fall back to known file extensions when `File.type` is empty under wildcard `accept` patterns such as `image/*` (for example HEIC uploads).
+- Input: Support optional `?` slots in `mask` patterns for variable-length identifiers such as 12–19 digit card numbers and 15–34 character IBANs.
+- Table: Append a localized printed summary row ("Showing 5,000 of …") when `TableVirtualBody` prints more than 5,000 rows, and document the print cap.
+- SignaturePad: Read coalesced pointer events (`getCoalescedEvents()`), smooth multi-point strokes with midpoint quadratic curves, and batch live redraws via `requestAnimationFrame`.
+- DatePicker, DateField: Convert native Buddhist, Persian, Japanese era, and ROC dates to Gregorian in `parseDate`, and reject unparseable Latin era prefixes instead of stripping them.
+- PhoneInput: Add landline minimum lengths and major area-code formatting patterns across 11 countries so valid landlines format properly and report as complete.
+- Labels: Isolate opposite-direction caller strings with Unicode FSI/PDI in Arabic labels, and route remaining Arabic counted-noun labels through CLDR 6-form plurals.
+- Email kit: Add Outlook.com `[data-ogsc]` and `[data-ogsb]` dark-mode CSS overrides alongside `prefers-color-scheme`.
+- Brand generator: Keep `primary-subtle` at soft tint chroma for bright yellow seeds and preserve dark primary identity for near-black seeds instead of collapsing to mid-grey.
+- Button: Dark-theme hover and pressed states darken custom `--btn-bg` colors just like light themes instead of lightening toward low-contrast white text.
+- Chart: Data table view spans the full chart grid width, and axis tick rounding preserves precision for large values.
+- ErrorSummary: Added `role="region"` so `aria-labelledby` is attached to a valid landmark role.
+- Accordion: Only set `aria-labelledby` on panels that carry `role="region"` (open panels when the group has six or fewer items).
+- Form: Catch synchronous throws and rejected promises from `onSubmit` and async field validators, showing the error alert and clearing `submitting`.
+- Slider: Ignore Enter key presses during IME composition so confirming a character does not commit the slider value early.
+- RelativeTime: Preserve signed zero for past timestamps (`"0 seconds ago"`) and avoid overshooting calendar months across short months such as February.
+- Duration: Treat `Infinity` and `-Infinity` as empty values instead of rendering `∞:NaN:NaN` or `PInfinityD`.
+- FileUpload: Return an empty string from `formatFileSize` for `Infinity`, `-Infinity`, `NaN`, and negative byte counts.
+- NumberInput: Guard `snap`, `step`, and `largeStep` against non-finite or non-positive values so stepping never produces `NaN`.
+- Avatar: Skip common honorifics and suffixes when computing initials when other words remain.
+- Table: Keep full opacity on idle sort icons so they maintain 3:1 non-text contrast against table headers.
+- Labels: Honor locale-formatted values in `ratingStars` and `ratingValue` across all translated label packs, and use full Arabic CLDR plural forms for `chatThoughtFor` and `statusSummary`.
+- Tokens: Order `InterVariable` `@font-face` rules with the `latin` subset last so browsers fetch only the needed subset.
+- Debug: Compare unrounded WCAG contrast ratios and floor the reported ratio to two decimals so values just below 4.5:1 are flagged as failing.
+- DateField's `value` now warns once in development when a controlled value turns undefined, as the other form controls do.
+- `useTokenValue` follows `data-shadow` and `data-type-scale` too, so a chart or canvas that reads `shadow-md` or `text-3xl` changes with them. debug.js's Theme panel offers all 17 brands and no longer a `depth` setting nothing reads, and `forEachTheme`'s error names the package once.
+- Patterns: in Price estimate, "Talk to sales" sat 6.5px above the middle of the "Start a 14-day trial" button beside it, because the row stretched the link to the button's height with its text at the top. The two now share a middle line, as in Data import. Fixed (AppShell): the footer's sides now follow main's padding (16, 24 or 32px by width), so its text starts where main's content does. It was a fixed 24px, 8px off on phones and wide screens. `--app-shell-footer-padding`, when set, still pads every side. Changed (Patterns): Page shell's "Recent" heading is the 18px section heading the other patterns use, and its list says "Help center". Changed (Patterns): Email preferences' "You won't get these emails any more" heading is 24px, like the confirmation every other pattern shows after a send ("Message sent", "You're booked"). It was 20px.
+- Fixes in ten components and the shared code:
+  - PhoneInput keeps the first digits of an international number that start like the country's trunk prefix, such as "+7 800…", a toll-free number in Russia.
+  - TransferList no longer breaks when an uncontrolled list's options stop holding a chosen value; that value is left out.
+  - FilterBar treats a date with month 13 or month 0 as malformed, rather than rolling it into the next or the last year.
+  - CascadeSelect makes an option whose loaded children are none a last step, rather than opening an empty column.
+  - ImageCropper is ready again when its src goes back to the first image before the second one loaded.
+  - Chart's heatmap shows the cell under the pointer, near a cell's edge as well, rather than the next column's.
+  - mentionQuery finds no mention when the caret is before the trigger or inside a trigger of two characters.
+  - CodeBlock counts lines from 0 with startLine={0}, and line 0 can be highlighted.
+  - SerupaProvider keeps its settings when labels written inline leave out a key that was undefined before.
+  - A control drawn from spans and divs, such as Slider, is disabled in the legend of a disabled fieldset that sits in another disabled fieldset, as native controls are.
+- Badge with `max={0}` uses the lowest max, 1 ("1+"), rather than the default 99.
+- Invoice's sums are whole cents: three at 0.10 is 0.30, and `onPay` gets the total shown, not 0.30000000000000004.
+- SessionTimeout stays signed out when "Stay signed in" or activity is answered only after the session ran out, since `onExpire` was already called.
+- Fixes in the patterns and blocks:
+  - Checkout reads "1/27" typed in the expiry date as 01/27: a slash after one digit ends the month.
+  - Profile keeps showing a new photo once it's saved, rather than a broken image.
+  - ShareDialog keeps someone removed and then invited again: closing doesn't remove them, and they are listed once, with the new access.
+  - Donation's fee that covers the card's cut isn't a cent more for the rounding of the arithmetic.
+  - Booking starts at the guests a place sleeps when that's fewer than two, and never books more.
+  - Transactions that arrive after loading show the newest month, not every month at once.
+  - TeamMembers lists an invite revoked and then sent again, with the new role, and doesn't revoke it when the toast closes. Removing the last member that can be removed moves focus to the heading.
+  - AddressBook makes the first address added after the default was removed the default.
+  - Appointment says there are no free times when the only free times are before today.
+  - SignUp's "Not your email address" rule isn't met by the whole address when its name part is short.
+  - CommentThread bolds every mention at its own place: "@Ayub" isn't Ayu, and Ayu named twice is bold twice.
+  - DataImport numbers each row by the line it starts on in the file, past empty lines and cells of more than one line.
+  - DataExport says a size that rounds to 1,000 of a unit as 1 of the next: 999,950 bytes is 1 MB.
+  - EmailPreferences takes away the "Couldn't turn them back on" message once trying again works.
+- `npx serupa-usage` counts the package's imports in code written without semicolons, where an import from another package came first; it used to miss them.
+
 ## [18.0.0] - 2026-11-22
 
 ### Added
@@ -3122,7 +3232,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v18.0.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...HEAD
+[19.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.1.0...v18.0.0
 [17.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.0.0...v17.1.0
 [17.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v16.1.0...v17.0.0
