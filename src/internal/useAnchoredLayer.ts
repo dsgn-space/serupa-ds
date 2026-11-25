@@ -102,12 +102,14 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
       placeLayer(p, a, placement, offset, fallback, rtl, name);
     };
     const resized = () => { measure(); update(); };
-    // Scrolling inside the layer doesn't move it.
-    const scrolled = (e: Event) => { if (!(e.target instanceof Node && p.contains(e.target))) update(); };
+    // Scrolling inside the layer doesn't move it. A scroll places it once a frame, however many scroll events the
+    // frame had (each placing reads and writes layout), and the listener is passive, so scrolling never waits on it.
+    let frame = 0;
+    const scrolled = (e: Event) => { if (!frame && !(e.target instanceof Node && p.contains(e.target))) frame = requestAnimationFrame(() => { frame = 0; update(); }); };
     resized();
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(resized) : null;
     if (ro) { ro.observe(p); ro.observe(a); }
-    window.addEventListener('scroll', scrolled, true); window.addEventListener('resize', resized);
+    window.addEventListener('scroll', scrolled, { capture: true, passive: true }); window.addEventListener('resize', resized);
     // A web font arriving moves text, and the anchor in it, without a resize a ResizeObserver sees: an inline
     // anchor (a Link in a sentence) has no box for one, and one further down only moves.
     const fontsOff = onFontsLoaded(resized);
@@ -116,7 +118,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
       if (named) named[1]();
-      if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
+      if (ro) ro.disconnect(); cancelAnimationFrame(frame); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
       fontsOff();
       if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }
     };

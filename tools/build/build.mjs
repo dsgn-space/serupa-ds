@@ -22,7 +22,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
-import { build } from 'esbuild';
+import { build, transformSync } from 'esbuild';
 import { compileReact, compiles } from './react-compiler.mjs';
 import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
@@ -125,7 +125,9 @@ fs.writeFileSync(path.join(D, 'components.json'), JSON.stringify({ version, runt
 const devDependencies = JSON.parse(read('package.json')).devDependencies;
 const STARTER = ['react', 'react-dom', 'vite', 'typescript', '@types/react', '@types/react-dom', '@types/node', 'eslint', 'typescript-eslint', '@typescript/typescript6', 'eslint-plugin-jsx-a11y-x', 'stylelint'];
 fs.writeFileSync(path.join(D, 'starter.json'), JSON.stringify(Object.fromEntries(STARTER.map((n) => [n, devDependencies[n]])), null, 1) + '\n');
-fs.writeFileSync(path.join(D, 'theme.js'), stamp(read('src/theme.js')));
+// theme.js runs in <head> before anything paints, so it ships minified (its notes stay in src/theme.js and the docs);
+// the /*! … */ banner with the version stays.
+fs.writeFileSync(path.join(D, 'theme.js'), transformSync(stamp(read('src/theme.js')), { minify: true, legalComments: 'inline', target: 'es2022', loader: 'js' }).code);
 // What bin/serupa-docs.mjs answers from (every guide, the skill's topics, the token descriptions) and llms.txt, the
 // summary a coding agent reads first: both from this release, so a lookup never names something it doesn't have.
 fs.writeFileSync(path.join(D, 'docs.json'), JSON.stringify(docsData(P, version)) + '\n');

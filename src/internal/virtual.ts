@@ -130,6 +130,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   const [view, setView] = React.useState<View | null>(null);
   // What Home and End do, from the last render (the key listener is added once per scroller).
   const toEdge = React.useRef((_last: boolean) => {});
+  // The wheel handler, from the scroller's effect (the listener is added only past CAP, below).
+  const wheel = React.useRef((_e: WheelEvent) => {});
   const live = React.useRef<Live>({ offsets: new Float64Array(1), top: 0, pending: null, seen: 0, origin: 0, pin: null });
 
   // Rows not measured yet count as the average of those that are (the guess until one is), so the scroll range
@@ -201,11 +203,19 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     };
     scroller.addEventListener('scroll', read, { passive: true });
     scroller.addEventListener('keydown', onKey);
-    scroller.addEventListener('wheel', onWheel, { passive: false });
+    wheel.current = onWheel;
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => { read(); remeasured(); }) : null;
     if (ro) ro.observe(scroller);
-    return () => { scroller.removeEventListener('scroll', read); scroller.removeEventListener('keydown', onKey); scroller.removeEventListener('wheel', onWheel); if (ro) ro.disconnect(); };
+    return () => { scroller.removeEventListener('scroll', read); scroller.removeEventListener('keydown', onKey); if (ro) ro.disconnect(); };
   }, [scroller]);
+  // The wheel is taken only past CAP, where it has to move the rows itself. Below it the browser scrolls on its own
+  // thread: a wheel listener that can cancel would make it wait for this one on every turn of the wheel.
+  React.useEffect(() => {
+    if (!scroller || !scaled) return;
+    const on = (e: WheelEvent) => wheel.current(e);
+    scroller.addEventListener('wheel', on, { passive: false });
+    return () => scroller.removeEventListener('wheel', on);
+  }, [scroller, scaled]);
 
   // Forget sizes past the end when rows go away, and the pinned row when the rows change.
   React.useEffect(() => { for (const i of sizes.keys()) if (i >= count) sizes.delete(i); live.current.pin = null; }, [count, sizes]);
