@@ -1,7 +1,7 @@
 // Building blocks for the Storybook pages. Everything here reads tokens.json, README.md and the component
 // guidelines at build time, so the documentation can't drift from the system.
 import * as React from 'react';
-import { DocsContext, Markdown, Primary } from '@storybook/addon-docs/blocks';
+import { AnchorMdx, CodeOrSourceMdx, DocsContext, HeadersMdx, Markdown, Primary } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import foundations from './foundations.md?raw';
@@ -57,7 +57,21 @@ function useSlugify(reserve: readonly string[] = []): Slugify {
 /** Markdown whose headings have ids no other heading on the page has (useSlugify). */
 export function DocMarkdown({ children, reserve, slugify }: { children: string; reserve?: readonly string[]; slugify?: Slugify }) {
   const own = useSlugify(reserve);
-  return <Markdown options={{ slugify: slugify || own }}>{children}</Markdown>;
+  // Storybook's own overrides are repeated: options.overrides replaces them rather than adding to them.
+  return <Markdown options={{ slugify: slugify || own, overrides: { code: CodeOrSourceMdx, a: AnchorMdx, ...HeadersMdx, table: WideTable } }}>{children}</Markdown>;
+}
+
+/** A guide's table that is wider than the page (a long type in a props table) scrolls in its own box, a named region
+ *  Tab reaches, instead of pushing the page sideways (it pushed CommandPalette's 429px past the page at 1280px). One
+ *  that fits lays out as before and is no tab stop. Named by its column headings. */
+function WideTable(props: React.ComponentProps<'table'>) {
+  const ref = React.useRef<HTMLTableElement>(null);
+  const [label, setLabel] = React.useState('Table');
+  React.useEffect(() => {
+    const heads = [...(ref.current?.querySelectorAll('thead th') ?? [])].map((th) => th.textContent?.trim()).filter(Boolean);
+    if (heads.length) setLabel(`Table: ${heads.join(', ')}`);
+  }, []);
+  return <Wide label={label}><table ref={ref} {...props} /></Wide>;
 }
 
 // Links between component guides (../Loader/README.md) become links to their Storybook pages, to the same section

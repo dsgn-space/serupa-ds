@@ -181,11 +181,13 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
                         {item.price < item.savedPrice ? <span className="text-sm text-text-muted">Was <del>{money(item.savedPrice)}</del></span> : null}
                         {change ? <Badge tone={change.tone}>{change.label}</Badge> : null}
                       </p>
-                      <div className="mt-auto flex flex-wrap gap-2">
+                      {/* Sold out, Remove is alone: its word lines up with the card's text, its padding and border (8px and
+                          1px) out past the edge, so its hover fill still shows the whole button. */}
+                      <div className={out ? 'mt-auto -ms-2 flex' : 'mt-auto flex flex-wrap gap-2'}>
                         {out ? null : (
                           <Button variant="secondary" size="sm" loading={busy === item.id} onClick={() => move(item)} aria-label={`Move to cart: ${item.name}`}>Move to cart</Button>
                         )}
-                        <Button id={`remove-${item.id}`} variant="ghost" size="sm" onClick={() => remove(item)} aria-label={`Remove: ${item.name}`}>Remove</Button>
+                        <Button id={`remove-${item.id}`} variant="ghost" size="sm" className={out ? '-ms-px' : undefined} onClick={() => remove(item)} aria-label={`Remove: ${item.name}`}>Remove</Button>
                       </div>
                     </Card>
                   );

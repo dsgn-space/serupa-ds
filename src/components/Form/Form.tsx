@@ -67,8 +67,9 @@ export interface FormProps<S extends StandardSchemaV1 | undefined = undefined> e
   /** Called with the checked values when the form is submitted and passes. Return or resolve { errors, message } when
    *  the server turns them down; a promise keeps the submit button loading until it settles. */
   onSubmit?: ((values: Out<S>, form: FormHandle) => void | FormSubmitResult | Promise<void | FormSubmitResult | undefined>) | undefined;
-  /** Checks that run once a field passes the schema, by field name: `{ username: async (value, { signal }) => taken ?
-   *  'That username is taken' : null }`. The field says "Checking…" meanwhile; a newer answer cancels the older check. */
+  /** Checks that run once a field passes the schema, by field name, such as whether a username is taken: each gets
+   *  the value and a `signal`, and returns the field's message, or null. The field says "Checking…" meanwhile; a newer
+   *  answer cancels the older check. */
   checks?: Readonly<Record<string, FormCheck>> | undefined;
   /** Messages by field name from a server, such as a form action's answer: a new object shows them all again. */
   errors?: Readonly<Record<string, React.ReactNode>> | null | undefined;
