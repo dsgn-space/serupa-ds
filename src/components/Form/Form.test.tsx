@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import * as z from 'zod';
 import * as v from 'valibot';
 import { SerupaProvider } from '../../internal/provider';
@@ -246,7 +246,7 @@ describe('Form', () => {
     await expect.poll(() => window.localStorage.getItem('serupa-form-draft:signup')).toContain('Ani');
     expect(window.localStorage.getItem('serupa-form-draft:signup')).not.toContain('secret');
     // Shown as text (Show password), it is still a password: still never kept.
-    await userEvent.click(document.querySelector<HTMLButtonElement>('.srp-password-input__toggle, [aria-label="Show password"]')!);
+    await userEvent.click(page.getByRole('button', { name: 'Show password' }));
     expect(el('p').type).toBe('text');
     await userEvent.type(el('n'), 'ka');
     await userEvent.type(el('p'), 'shown');
