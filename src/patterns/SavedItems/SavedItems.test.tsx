@@ -74,6 +74,15 @@ describe('Patterns/Saved items', () => {
     expect(onMoveToCart).toHaveBeenLastCalledWith('a');
   });
 
+  test('a sold-out item\'s Remove, alone in its row, starts its word where the card\'s text starts', async () => {
+    await render(<SavedItems items={items} />);
+    const start = (e: Element) => { const r = document.createRange(); r.selectNodeContents(e); return Math.round(r.getBoundingClientRect().left); };
+    const remove = document.getElementById('remove-c')!;
+    const card = remove.closest('li')!;
+    // Its hover fill still reaches past the text on the start side, as a ghost button's does.
+    expect([start(remove) - start(card.querySelector('h3')!), remove.getBoundingClientRect().left < start(remove)]).toEqual([0, true]);
+  });
+
   test('the items that arrive once loading ends are the ones shown', async () => {
     const screen = await render(<SavedItems loading items={[]} />);
     await screen.rerender(<SavedItems items={items} />);
