@@ -45,10 +45,11 @@ html, body { background-color: var(--surface-page); }
 
 /* A table's column headers start where their cells do, as the system's Table does, not centred over left-aligned text. */
 .sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *) th { text-align: start; }
-/* Code in a written table wraps at its spaces, as the site's does: Storybook keeps inline code on one line, so one long
-   type (CommandPalette's `{ id, label, group?, … }`) pushed its table up to 429px past the page at 1280px. Only at
-   spaces: breaking anywhere would narrow every column to a letter (tried in #2298). */
-.sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *) td code { white-space: normal; }
+/* A written table wider than the page scrolls in its own frame: Storybook keeps inline code on one line, so one long
+   type (CommandPalette's `{ id, label, group?, … }`) pushed its table up to 429px past the page at 1280px. A table that
+   fits lays out as before. Letting the code wrap instead broke names at their hyphens (`opacity-` over `*`), and
+   breaking anywhere narrowed every column to a letter (tried in #2298). */
+.sbdocs-content table:not(.srp-table, .docs-story *, .sb-unstyled *, [role="region"] *) { display: block; max-inline-size: 100%; overflow-x: auto; }
 
 /* Running text on the Docs pages stops near 65 characters a line (container-prose, KW14), like Text's measure:
    a page is 1000px wide, about 120 characters of body text. Tables, code, story frames and the docs' own blocks
