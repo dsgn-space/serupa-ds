@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, withMotion, splitWords } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, withMotion, splitWords, seen } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Progress } from './Progress';
 import { idLabels } from '../../internal/labels';
@@ -119,7 +119,7 @@ describe('Progress', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const tone of tones) {
-        const track = el('tone-' + tone).querySelector<HTMLElement>('[role=progressbar]')!, fill = css(track.querySelector('div')).backgroundColor;
+        const track = el('tone-' + tone).querySelector<HTMLElement>('[role=progressbar]')!, fill = seen(track.querySelector('div')!);
         const r = contrast(fill, 'var(--surface)'); n++; if (r < 3) low.push(`${th} ${tone} fill on the page ${r.toFixed(2)}`);
       }
       for (const sel of ['#p1 .srp-progress__label', '#p1 .srp-progress__value', '#c1 .srp-progress__value']) {
@@ -136,7 +136,7 @@ describe('Progress', () => {
     await render(<Wrap>{tones.map((t) => <Progress key={t} id={'ring-' + t} variant="circle" tone={t} value={40} aria-label={t} />)}<Progress id="ring-busy" variant="circle" aria-label="Busy" /></Wrap>);
     // Where the track's dash runs, in hundredths of the ring (pathLength 100), against where the arc's runs.
     const span = (id: string) => {
-      const [track, arc] = [...el(id).querySelectorAll('circle')] as SVGCircleElement[];
+      const [track, , arc] = [...el(id).querySelectorAll('circle')] as SVGCircleElement[];   // the track, the arc's edge (transparent but in Yellow Light), the arc
       const a = parseFloat(css(arc!).strokeDasharray), t = parseFloat(css(track!).strokeDasharray), from = -parseFloat(css(track!).strokeDashoffset || '0');
       // The arc's round end reaches half the stroke past its length: in hundredths, half the stroke over the ring's length.
       const cap = (parseFloat(css(arc!).strokeWidth) / 2) / (2 * Math.PI * arc!.r.baseVal.value) * 100;
@@ -147,7 +147,8 @@ describe('Progress', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const tone of tones) {
-        const r = contrast(css(el('ring-' + tone).querySelectorAll('circle')[1]!).stroke, 'var(--surface)');
+        const [, edge, arc] = [...el('ring-' + tone).querySelectorAll('circle')].map((c) => css(c).stroke);
+        const r = contrast(/^rgba\(.*, 0\)$/.test(edge!) ? arc! : edge!, 'var(--surface)');
         if (r < 3) low.push(`${th} ${tone} ${r.toFixed(2)}`);
       }
     }

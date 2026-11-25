@@ -68,15 +68,15 @@
 }
 .srp-combobox__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .srp-combobox__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-combobox__option--active { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--combobox-option-indicator, var(--highlight-indicator)); }
+.srp-combobox__option:where([data-active]) { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--combobox-option-indicator, var(--highlight-indicator)); }
 /* Held down: one step past the highlight, as a Menu item and a CascadeSelect option are, so a press shows before the list closes. */
 .srp-combobox__option:active:not([aria-disabled="true"]) { background: var(--combobox-option-bg-pressed, var(--pressed)); }
 .srp-combobox__option[aria-disabled="true"], .srp-combobox__option[aria-disabled="true"] * { color: var(--combobox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-combobox__group-label { padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); -webkit-user-select: none; user-select: none; }
 .srp-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.srp-combobox__option--active .srp-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
-.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary)); font-size: var(--spacing-4); }
+.srp-combobox__option:where([data-active]) .srp-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
+.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary-text)); font-size: var(--spacing-4); }
 .srp-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
 /* multiple: the tags and the text wrap inside the box, which grows a row at a time; the buttons stay at the end. */
 .srp-combobox--multiple { height: auto; min-height: var(--srp-input-h); }
@@ -84,7 +84,7 @@
 .srp-combobox__tags { display: contents; }
 .srp-combobox--multiple .srp-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
 @media (prefers-reduced-motion: reduce) { .srp-combobox__toggle .srp-icon { transition: none; } }
-@media (forced-colors: active) { .srp-combobox__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
+@media (forced-colors: active) { .srp-combobox__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
 /* Touch: 44px options. */
 @media (pointer: coarse) {
   .srp-combobox__option { min-height: max(var(--combobox-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */

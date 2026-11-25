@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, page, server, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion, disabledLook, edged } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Switch } from './Switch';
 
@@ -289,7 +289,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['on track', 'var(--primary)', 'var(--surface)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['on track, or its edge', edged('var(--primary)'), 'var(--surface)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);

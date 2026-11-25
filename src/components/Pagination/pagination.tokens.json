@@ -91,6 +91,16 @@
             "cssVar": "--pagination-text-disabled"
           }
         }
+      },
+      "edge-current": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The current page's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-edge-current"
+          }
+        }
       }
     },
     "typography": {

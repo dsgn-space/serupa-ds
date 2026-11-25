@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Logo } from '../../components/Logo/Logo';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Center } from '../../components/Center/Center';
 import { Stack } from '../../components/Stack/Stack';
@@ -33,6 +34,11 @@ import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
      that it couldn't (onResend rejected), without moving focus off the button.
    - 2.4.3, 4.1.3: each new step puts focus on its heading, so the change is said and Tab goes on from there.
    Creating the account and sending the code are the app's job: onSubmit and verify stand in for them. */
+
+// The made-up brand's logo, drawn for light and dark backgrounds: swap in your own files.
+const drawn = (w: number, body: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="32" viewBox="0 0 ${w} 32">${body}</svg>`);
+const mark = (bg: string, fg: string) => `<rect width="32" height="32" rx="8" fill="${bg}"/><path d="M9 23 16 8l7 15h-4l-3-7-3 7z" fill="${fg}"/>`;
+const word = (fill: string) => `<text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="${fill}">Acme</text>`;
 
 export interface SignUpValues { name: string; email: string; phone: string; password: string; terms: boolean }
 export type SignUpStep = 'form' | 'code' | 'done';
@@ -134,28 +140,29 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
       <Center as="main" id="main" vertical className="outline-none">
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">Your details stay here. Creating the account needs a connection.</OfflineBanner>
-        <p className="m-0 text-base font-semibold">Acme</p>
+        <Logo src={drawn(104, mark('#1d4ed8', '#fff') + word('#0f172a'))} darkSrc={drawn(104, mark('#60a5fa', '#0f172a') + word('#f8fafc'))} alt="Acme" />
         <Card className="flex flex-col gap-4">
           {step === 'form' ? (
             <>
               <Heading level={1} size="xl" ref={heading} tabIndex={-1} className="outline-none">Create your account</Heading>
               {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={2} /> : null}
               <form noValidate onSubmit={submit} className="flex flex-col gap-4">
-                <Field label="Name" error={error('sign-up-name')}>
+                <p className="m-0 text-text-muted">Fields marked * are required.</p>
+                <Field label="Name" error={error('sign-up-name')} required>
                   <Input id="sign-up-name" name="name" autoComplete="name" value={v.name} onChange={(e) => set('name')(e.target.value)} />
                 </Field>
-                <Field label="Email" hint="We’ll send a code here to check it’s yours." error={error('sign-up-email')}>
+                <Field label="Email" hint="We’ll send a code here to check it’s yours." error={error('sign-up-email')} required>
                   <Input id="sign-up-email" name="email" type="email" autoComplete="username" spellCheck={false} autoCapitalize="none" value={v.email} onChange={(e) => set('email')(e.target.value)} />
                 </Field>
                 <Field label="Phone" optional hint="For signing in if you lose your password.">
                   <PhoneInput id="sign-up-phone" name="phone" autoComplete="tel" defaultCountry="ID" value={v.phone} onValueChange={(p) => set('phone')(p)} />
                 </Field>
-                <Field label="Password" error={error('sign-up-password')}
+                <Field label="Password" error={error('sign-up-password')} required
                   hint={
                     <ul aria-label="Your password needs" className="m-0 flex list-none flex-col gap-1 p-0">
                       {rules.map((r) => (
                         <li key={r.text} className={`flex items-center gap-2 ${r.met ? 'text-text' : 'text-text-muted'}`}>
-                          <Icon name={r.met ? 'check_circle' : 'radio_button_unchecked'} size="sm" />
+                          <Icon name={r.met ? 'check_circle' : 'trip_origin'} size="sm" />
                           <span>{r.text}<span className="sr-only">{r.met ? ', done' : ', not yet'}</span></span>
                         </li>
                       ))}

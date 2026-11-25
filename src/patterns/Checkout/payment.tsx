@@ -140,7 +140,7 @@ export function MethodList({ methods, value, onChange, error }: {
   methods: readonly PaymentMethod[]; value: string; onChange: (id: string) => void; error?: React.ReactNode;
 }) {
   return (
-    <Field label="How would you like to pay?" group error={error}>
+    <Field label="How would you like to pay?" group required error={error}>
       <RadioGroup id="checkout-method" name="method" variant="card" value={value} onValueChange={(v) => onChange(String(v))}>
         {methods.map((m) => (
           <Radio key={m.id} value={m.id} disabled={!!m.unavailable} description={m.unavailable ?? m.description}>
@@ -165,7 +165,7 @@ export function MethodDetails({ method, a, set, error, card }: {
       if (!saved.length) return <>{card}</>;
       return (
         <>
-          <Field label="Card" group error={error('savedCard')}>
+          <Field label="Card" group required error={error('savedCard')}>
             <RadioGroup id="checkout-savedCard" name="savedCard" value={a.savedCard} onValueChange={(v) => set({ savedCard: String(v) })}>
               {saved.map((c) => {
                 const gone = expired(c.expiry);
@@ -187,7 +187,7 @@ export function MethodDetails({ method, a, set, error, card }: {
     case 'bank':
       return (
         <>
-          <Field label="Your bank" error={error('bank')} hint="You get a virtual account number at this bank once the order is placed.">
+          <Field label="Your bank" required error={error('bank')} hint="You get a virtual account number at this bank once the order is placed.">
             <Select id="checkout-bank" name="bank" value={a.bank} onChange={(e) => set({ bank: e.target.value })}
               placeholder="Choose a bank" options={method.banks.map((b) => ({ value: b.id, label: b.name }))} className="max-w-64" />
           </Field>
@@ -196,12 +196,12 @@ export function MethodDetails({ method, a, set, error, card }: {
     case 'ewallet':
       return (
         <>
-          <Field label="E-wallet" group error={error('ewallet')}>
+          <Field label="E-wallet" group required error={error('ewallet')}>
             <RadioGroup id="checkout-ewallet" name="ewallet" orientation="horizontal" value={a.ewallet} onValueChange={(v) => set({ ewallet: String(v) })}>
               {method.providers.map((p) => <Radio key={p.id} value={p.id}>{p.name}</Radio>)}
             </RadioGroup>
           </Field>
-          <Field label="Phone number for the e-wallet" error={error('walletPhone')} hint="Its app asks you to approve the payment.">
+          <Field label="Phone number for the e-wallet" required error={error('walletPhone')} hint="Its app asks you to approve the payment.">
             <Input id="checkout-walletPhone" name="walletPhone" type="tel" autoComplete="tel" value={a.walletPhone}
               onChange={(e) => set({ walletPhone: e.target.value })} className="max-w-64" />
           </Field>

@@ -170,6 +170,16 @@ describe('List', () => {
     await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
 
+  test('an Avatar in a selected row steps its fill up to secondary-hover, so it stays apart from the shade; a plain row keeps secondary', async () => {
+    await render(<List aria-label="People">
+      <ListItem id="ap" title="Ada Lovelace" leading={<Avatar id="avp" name="Ada Lovelace" size="sm" />} />
+      <ListItem id="as" href="#grace" title="Grace Hopper" selected leading={<Avatar id="avs" name="Grace Hopper" size="sm" />} />
+    </List>);
+    const fill = (id: string) => css(el(id).firstElementChild).backgroundColor;   // the Avatar's frame
+    expect([fill('avp'), fill('avs')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect(fill('avs')).not.toBe(css(el('as')).backgroundColor);
+  });
+
   test('linkProps\' aria-current wins over selected\'s "true", so a nav list can mark the current page (GF3)', async () => {
     await render(<List aria-label="Pages">
       <ListItem id="gp" href="#home" title="Home" selected linkProps={{ 'aria-current': 'page' }} />
@@ -254,7 +264,6 @@ describe('List', () => {
       for (const [name, fg, back, need] of [
         ['title', title, 'var(--surface)', 4.5], ['description', desc, 'var(--surface)', 4.5],
         ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row (text-muted-shaded)', 'var(--text-muted-shaded)', 'var(--surface-hover)', 4.5],
-        ['selected bar', 'var(--primary)', 'var(--surface-hover)', 3],
       ] as const) {
         const r = contrast(fg, back);
         if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);

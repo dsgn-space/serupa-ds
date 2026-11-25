@@ -42,11 +42,17 @@
 /* An empty value with no placeholder has no text to show: the pencil always shows, or the button would be invisible. */
 .srp-inline-edit__view--blank .srp-inline-edit__icon { opacity: var(--opacity-100); }
 /* Muted rather than faded: the text stays readable (4.5:1), since there is no control here for WCAG to exempt. */
-.srp-inline-edit--disabled .srp-inline-edit__view, .srp-inline-edit__view:disabled { color: var(--inline-edit-text-disabled, var(--text-muted)); }
+.srp-inline-edit:where([data-disabled]) .srp-inline-edit__view, .srp-inline-edit__view:disabled { color: var(--inline-edit-text-disabled, var(--text-muted)); }
 /* In a <fieldset disabled> the button is disabled: no pointer, and no pencil even on touch screens. */
 .srp-inline-edit__view:disabled { cursor: auto; }
 .srp-inline-edit__view:disabled .srp-inline-edit__icon { display: none; }
 .srp-inline-edit__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--inline-edit-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size, at every size */
 .srp-inline-edit__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-3\.5)); height: var(--text-xs--line-height); }   /* centered on the first line */
+/* As a value in a DescriptionList, its text lines up with the term beside it and the plain values above and below: the
+   button's padding, border and extra height hang outside the row, and show only with its hover background. */
+.srp-description-list:not(.srp-description-list--split) .srp-description-list__details > .srp-inline-edit {
+  margin-inline-start: calc(var(--spacing-0) - var(--srp-ie-px) - var(--border-width-1));
+  margin-block: calc((1lh - var(--srp-ie-h)) / 2);   /* stylelint-disable-line serupa/no-raw-value -- a line's height (1lh) has no token; half of what's left over: a count */
+}
 @media (prefers-reduced-motion: reduce) { .srp-inline-edit__view, .srp-inline-edit__icon { transition: none; } }
 }

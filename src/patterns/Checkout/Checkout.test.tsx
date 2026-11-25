@@ -60,9 +60,9 @@ describe('Patterns/Checkout', () => {
     expect(links).toContainEqual(['Enter an email address, like name@example.com', '#checkout-email']);
     expect(links).toContainEqual(['Enter the expiry date as MM/YY, like 08/27', '#checkout-cardExpiry']);
     expect(links).toHaveLength(10);
-    await expect.element(screen.getByLabelText('Full name')).toHaveAttribute('aria-invalid', 'true');
+    await expect.element(screen.getByLabelText('Full name', { exact: false })).toHaveAttribute('aria-invalid', 'true');
     // A second try with the same problems refocuses the summary.
-    (screen.getByLabelText('Full name').element() as HTMLElement).focus();
+    (screen.getByLabelText('Full name', { exact: false }).element() as HTMLElement).focus();
     await screen.getByRole('button', { name: 'Review your order' }).click();
     await vi.waitFor(() => expect(active().textContent).toContain('There'));
   });
@@ -70,7 +70,7 @@ describe('Patterns/Checkout', () => {
   test('typing, choosing and the tip all reach the review and the total', async () => {
     const screen = await render(<Checkout lines={[{ id: 'x', name: 'Mug', quantity: 2, price: 1000 }]} initial={{ ...filled, country: '' }} />);
     await userEvent.fill(screen.getByLabelText('Address line 2', { exact: false }), 'Flat 3');
-    await userEvent.selectOptions(screen.getByLabelText('Country'), 'Canada');
+    await userEvent.selectOptions(screen.getByLabelText('Country', { exact: false }), 'Canada');
     await screen.getByRole('radio', { name: /Express/ }).click();
     await userEvent.fill(screen.getByLabelText('Tip for the courier', { exact: false }), '2.50');
     await userEvent.tab();
@@ -87,7 +87,7 @@ describe('Patterns/Checkout', () => {
     const screen = await render(<Checkout initial={filled} startAtReview />);
     await screen.getByRole('button', { name: 'Change how you pay' }).click();
     await vi.waitFor(() => expect([active().getAttribute('name'), (active() as HTMLInputElement).value]).toEqual(['method', 'card']));
-    await expect.element(screen.getByLabelText('Card number')).toHaveValue('4242 4242 4242 4242');
+    await expect.element(screen.getByLabelText('Card number', { exact: false })).toHaveValue('4242 4242 4242 4242');
     await screen.getByRole('button', { name: 'Review your order' }).click();
     await screen.getByRole('button', { name: 'Change the delivery' }).click();
     await vi.waitFor(() => expect((active() as HTMLInputElement).value).toBe('standard'));
@@ -97,7 +97,7 @@ describe('Patterns/Checkout', () => {
     await screen.getByRole('button', { name: 'Review your order' }).click();
     await screen.getByRole('button', { name: 'Back' }).click();
     await vi.waitFor(() => expect(active().textContent).toBe('Delivery and payment'));
-    await expect.element(screen.getByLabelText('Full name')).toHaveValue('Ada Lovelace');
+    await expect.element(screen.getByLabelText('Full name', { exact: false })).toHaveValue('Ada Lovelace');
   });
 
   test('placing the order says so and moves on; a failure keeps the review and says nothing was charged', async () => {
@@ -240,7 +240,7 @@ describe('Patterns/Checkout: ways to pay', () => {
 
   test('the methods are radio cards in one named group, each with a decorative icon and a second line; arrows move between them and the chosen one\'s questions show under the list', async () => {
     const screen = await render(<Checkout />);
-    const group = screen.getByRole('group', { name: 'How would you like to pay?' }).element();
+    const group = screen.getByRole('group', { name: 'How would you like to pay?', exact: false }).element();
     const radios = [...group.querySelectorAll('input[type="radio"]')] as HTMLInputElement[];
     const names = radios.map((r) => r.labels?.[0]?.textContent?.trim().split(/\s{2,}|(?=[A-Z][a-z]+ [a-z])/)[0]);
     expect(radios.map((r) => r.value)).toEqual(['card', 'apple-pay', 'google-pay', 'bank', 'ewallet', 'qris']);
@@ -248,14 +248,14 @@ describe('Patterns/Checkout: ways to pay', () => {
     expect(radios.every((r) => r.labels?.[0]?.querySelector('[aria-hidden="true"] svg, svg[aria-hidden]'))).toBe(true);
     expect(radios[3]!.getAttribute('aria-describedby')).toBeTruthy();
     expect(radios[0]!.checked).toBe(true);
-    await expect.element(screen.getByLabelText('Card number')).toBeVisible();
+    await expect.element(screen.getByLabelText('Card number', { exact: false })).toBeVisible();
     radios[0]!.focus();
     await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
     expect([active().getAttribute('value'), (active() as HTMLInputElement).checked]).toEqual(['bank', true]);
     expect(document.getElementById('checkout-cardNumber')).toBeNull();
-    await expect.element(screen.getByLabelText('Your bank')).toBeVisible();
+    await expect.element(screen.getByLabelText('Your bank', { exact: false })).toBeVisible();
     await userEvent.keyboard('{ArrowDown}');
-    await expect.element(screen.getByRole('group', { name: 'E-wallet' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: 'E-wallet', exact: false })).toBeVisible();
     await userEvent.keyboard('{ArrowDown}');
     expect(document.querySelector('main')!.textContent).toContain('Scan it with any banking or e-wallet app');
   });
@@ -265,7 +265,7 @@ describe('Patterns/Checkout: ways to pay', () => {
       { kind: 'card', id: 'card', label: 'Card' },
       { kind: 'qr', id: 'qris', label: 'QRIS', unavailable: 'Not for orders over Rp 10.000.000' },
     ]} />);
-    const radios = [...screen.getByRole('group', { name: 'How would you like to pay?' }).element().querySelectorAll('input')];
+    const radios = [...screen.getByRole('group', { name: 'How would you like to pay?', exact: false }).element().querySelectorAll('input')];
     expect(radios.map((r) => [r.value, r.disabled])).toEqual([['card', false], ['qris', true]]);
     expect(document.getElementById(radios[1]!.getAttribute('aria-describedby')!.split(' ')[0]!)?.textContent).toBe('Not for orders over Rp 10.000.000');
   });
@@ -300,12 +300,12 @@ describe('Patterns/Checkout: ways to pay', () => {
       kind: 'card', id: 'card', label: 'Card',
       savedCards: [{ id: 'old', brand: 'Mastercard', last4: '1111', expiry: '01/20' }, { id: 'visa', brand: 'Visa', last4: '4242', expiry: '08/39' }],
     }]} />);
-    const saved = screen.getByRole('group', { name: 'Card' }).element();
+    const saved = screen.getByRole('group', { name: 'Card', exact: false }).element();
     expect([...saved.querySelectorAll('input')].map((r) => [r.value, r.checked, r.disabled])).toEqual([['old', false, true], ['visa', true, false], ['new', false, false]]);
     expect(saved.textContent).toContain('Expired 01/20');
     expect(document.getElementById('checkout-cardNumber')).toBeNull();
     await screen.getByRole('radio', { name: 'A new card' }).click();
-    await expect.element(screen.getByLabelText('Card number')).toBeVisible();
+    await expect.element(screen.getByLabelText('Card number', { exact: false })).toBeVisible();
     await screen.getByRole('radio', { name: /Visa ending in 4242/ }).click();
     await toReview(screen);
     expect(document.querySelector('main')!.textContent).toContain('Visa ending in 4242, expires 08/39');
@@ -325,7 +325,7 @@ describe('Patterns/Checkout: ways to pay', () => {
     const screen = await render(<Checkout initial={{ ...base, method: 'bank' }} onPlaceOrder={() => Promise.resolve({ accountNumber: '8808 0000 1111 2222', secondsLeft: 86400 })} />);
     await screen.getByRole('button', { name: 'Review your order' }).click();
     await vi.waitFor(() => expect([...active().querySelectorAll('a')].map((a) => a.textContent)).toEqual(['Choose the bank you’ll transfer from']));
-    await screen.getByLabelText('Your bank').selectOptions('mandiri');
+    await screen.getByLabelText('Your bank', { exact: false }).selectOptions('mandiri');
     await toReview(screen);
     expect(document.querySelector('main')!.textContent).toContain('Bank transfer to a Mandiri virtual account');
     await place(screen);
@@ -352,7 +352,7 @@ describe('Patterns/Checkout: ways to pay', () => {
     await screen.getByRole('button', { name: 'Review your order' }).click();
     await vi.waitFor(() => expect([...active().querySelectorAll('a')].map((a) => a.textContent)).toEqual(['Choose your e-wallet', 'Enter the phone number your e-wallet uses']));
     await screen.getByRole('radio', { name: 'OVO' }).click();
-    await screen.getByLabelText('Phone number for the e-wallet').fill('0812 3456 7890');
+    await screen.getByLabelText('Phone number for the e-wallet', { exact: false }).fill('0812 3456 7890');
     await toReview(screen);
     await place(screen);
     expect(document.querySelector('main')!.textContent).toContain('Open OVO on your phone (0812 3456 7890) and approve the payment of');

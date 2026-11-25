@@ -131,6 +131,16 @@
             "cssVar": "--slider-text-disabled"
           }
         }
+      },
+      "fill-edge": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The filled range's and the thumb's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-fill-edge"
+          }
+        }
       }
     },
     "sizing": {

@@ -17,7 +17,7 @@
 @media (hover: hover) { .srp-filter-bar__chip:has(.srp-filter-bar__edit:hover) { background: var(--filter-bar-chip-bg-hover, var(--surface-hover)); } }
 .srp-filter-bar__chip:has(.srp-filter-bar__edit:active, .srp-filter-bar__edit[aria-expanded="true"]) { background: var(--filter-bar-chip-open, var(--pressed)); }
 @media (prefers-reduced-motion: reduce) { .srp-filter-bar__chip { transition: none; } }
-.srp-filter-bar__chip--empty { border-style: dashed; }
+.srp-filter-bar__chip:where([data-empty]) { border-style: dashed; }
 .srp-filter-bar__edit {
   min-inline-size: var(--spacing-0); min-block-size: var(--control-height-sm); margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2) var(--spacing-1);
   border: var(--spacing-0); border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: transparent; color: inherit; font: inherit; font-weight: var(--font-medium);

@@ -6,7 +6,7 @@ import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Button } from '../Button/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';

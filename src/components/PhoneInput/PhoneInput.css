@@ -26,7 +26,7 @@
 .srp-phone-input__country:focus { outline: none; }
 @media (hover: hover) { .srp-phone-input__country:hover:not(:disabled) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
 .srp-phone-input__country:focus-visible:not(:disabled), .srp-phone-input[data-state="open"] .srp-phone-input__country { background: var(--phone-input-bg-hover, var(--field-hover)); }
-.srp-phone-input:not(.srp-input--invalid):has(.srp-phone-input__country:focus-visible) { --srp-input-ring: var(--phone-input-focus-ring, var(--focus-ring)); }
+.srp-phone-input:not([data-invalid]):has(.srp-phone-input__country:focus-visible) { --srp-input-ring: var(--phone-input-focus-ring, var(--focus-ring)); }
 .srp-phone-input__country:active:not(:disabled) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
 .srp-phone-input__country:disabled { cursor: var(--cursor-disabled); }
 /* The list: an overlay surface under the box, with a search field at its top and the countries under it. */
@@ -57,20 +57,20 @@
 }
 @media (pointer: coarse) { .srp-phone-input__option { min-height: var(--spacing-11); } }   /* 44px to pick on a touch screen */
 .srp-phone-input__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-phone-input__option--active { background: var(--phone-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--phone-input-option-indicator, var(--highlight-indicator)); }
+.srp-phone-input__option:where([data-active]) { background: var(--phone-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--phone-input-option-indicator, var(--highlight-indicator)); }
 .srp-phone-input__name { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-phone-input__code { flex: none; color: var(--phone-input-muted, var(--text-muted)); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
-.srp-phone-input__option--active .srp-phone-input__code { color: var(--phone-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
+.srp-phone-input__option:where([data-active]) .srp-phone-input__code { color: var(--phone-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
 .srp-phone-input__check { flex: none; width: var(--spacing-4); font-size: var(--spacing-4); color: var(--phone-input-option-color, var(--text)); }
 .srp-phone-input__message { padding: var(--spacing-1\.5) var(--spacing-2); color: var(--phone-input-muted, var(--text-muted)); }
 @media print { .srp-phone-input__popup { display: none !important; } }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
    arrow, as on every read-only control (Combobox, Select). */
-.srp-input--disabled .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
-.srp-input--readonly .srp-phone-input__country:disabled { cursor: default; }
+.srp-input:where([data-disabled]) .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
+.srp-input:where([data-readonly]) .srp-phone-input__country:disabled { cursor: default; }
 @media (forced-colors: active) {
   .srp-phone-input__popup { border-color: CanvasText; }
-  .srp-phone-input__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+  .srp-phone-input__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 }
 @media (prefers-reduced-motion: reduce) { .srp-phone-input__country { transition: none; } }
 }

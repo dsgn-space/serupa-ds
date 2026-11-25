@@ -5,7 +5,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Button } from '../../components/Button/Button';
 import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { MentionInput, mentionsIn, type MentionOption } from '../../components/MentionInput/MentionInput';
@@ -218,9 +218,9 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-3">
-              <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
+              <Skeleton shape="circle" label="" className="shrink-0" />
               {/* One name for all of them: the first is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" size="sm" lines={3} label={i === 0 ? l.loading : ''} className="min-w-0 flex-1" />
+              <Skeleton shape="text" size="sm" lines={3} label={i === 0 ? l.loading : ''} className="min-w-0 flex-1" />
             </li>
           ))}
         </ul>

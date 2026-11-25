@@ -36,7 +36,7 @@
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
    people edit the text or focus the field, whose ring is the mark then. */
 .srp-textarea:has(.srp-textarea__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--srp-ta-bd); }
-.srp-textarea--resize-none .srp-textarea__field, .srp-textarea--disabled .srp-textarea__field, .srp-textarea__field:where(:disabled), .srp-textarea--readonly .srp-textarea__field { resize: none; }
+.srp-textarea--resize-none .srp-textarea__field, .srp-textarea:where([data-disabled]) .srp-textarea__field, .srp-textarea__field:where(:disabled), .srp-textarea:where([data-readonly]) .srp-textarea__field { resize: none; }
 .srp-textarea--auto .srp-textarea__field { overflow-y: hidden; }
 /* autoResize where the browser sizes a field to its content: rows lines at least, maxRows at most (unset: no limit,
    since the max-height is then invalid and falls back to none), scrolling past that. Textarea.tsx measures elsewhere. */
@@ -83,19 +83,19 @@
   cursor: default;
 }
 .srp-textarea__actions .srp-textarea__count { align-self: center; margin-inline-end: auto; padding: var(--spacing-0); padding-inline-start: calc(var(--srp-ta-px) - var(--textarea-actions-padding, var(--spacing-1\.5))); }   /* its text lines up with the field's */
-@media (hover: hover) { .srp-textarea:hover:not(.srp-textarea--disabled, :has(.srp-textarea__field:disabled), .srp-textarea--readonly, :focus-within) { --srp-ta-bd: var(--textarea-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .srp-textarea:hover:not([data-disabled], :has(.srp-textarea__field:disabled), [data-readonly], :focus-within) { --srp-ta-bd: var(--textarea-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws, since box-shadow rings disappear there. */
 .srp-textarea:focus-within { transition-duration: var(--duration-0); --srp-ta-bd: var(--srp-ta-ring); box-shadow: 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--srp-ta-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.srp-textarea--invalid { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-textarea--invalid:hover:not(.srp-textarea--disabled, :has(.srp-textarea__field:disabled), .srp-textarea--readonly, :focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
+.srp-textarea:where([data-invalid]) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-textarea:where([data-invalid]):hover:not([data-disabled], :has(.srp-textarea__field:disabled), [data-readonly], :focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
 /* A native constraint that fails after people edit it or try to send the form: as Input (:user-invalid). */
 .srp-textarea:has(.srp-textarea__field:user-invalid) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-textarea:has(.srp-textarea__field:user-invalid):hover:not(:focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
-.srp-textarea--readonly { background: var(--textarea-bg-readonly, var(--field-readonly)); }
+.srp-textarea:where([data-readonly]) { background: var(--textarea-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.srp-textarea--disabled, .srp-textarea:where(:has(.srp-textarea__field:disabled)) { --srp-ta-bd: var(--textarea-border-disabled, var(--disabled-border)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
-.srp-textarea--disabled .srp-textarea__field, .srp-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-textarea:where([data-disabled]), .srp-textarea:where(:has(.srp-textarea__field:disabled)) { --srp-ta-bd: var(--textarea-border-disabled, var(--disabled-border)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-textarea:where([data-disabled]) .srp-textarea__field, .srp-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .srp-textarea:not(.srp-textarea--size-lg) .srp-textarea__field { font-size: var(--text-base); } }

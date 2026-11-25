@@ -214,7 +214,7 @@ function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttr
   return (
     <div {...rest} ref={mergedRef} role="group"
       aria-labelledby={labelledBy} aria-describedby={describedBy}
-      className={cn('srp-signature-pad', disabled && 'srp-signature-pad--disabled', readOnly && 'srp-signature-pad--readonly', invalid && 'srp-signature-pad--invalid', props.className)} data-component="signature-pad">
+      className={cn('srp-signature-pad', disabled && 'srp-signature-pad--disabled', readOnly && 'srp-signature-pad--readonly', invalid && 'srp-signature-pad--invalid', props.className)} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined} data-component="signature-pad">
       <FieldContext.Provider value={null}>
         <SegmentedControl className="srp-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined} value={method} onValueChange={pick}
           options={[{ value: 'draw', label: L.signatureDraw }, { value: 'type', label: L.signatureType }]} />

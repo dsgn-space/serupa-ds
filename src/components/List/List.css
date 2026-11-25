@@ -25,13 +25,14 @@
    meta included. A trailing control is positioned, so it paints, and takes the press, above that area. */
 .srp-list__item--interactive .srp-list__main::after { content: ""; position: absolute; inset: var(--spacing-0); }
 .srp-list__item--interactive .srp-list__trailing :is(a, button, input, select, textarea, label, [tabindex]) { position: relative; }
-.srp-list__item--selected { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); }
-@media (hover: hover) { .srp-list__item--interactive:hover:not(.srp-list__item--disabled) { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); } }
-.srp-list__item--interactive:not(.srp-list__item--disabled):has(.srp-list__main:active) { background: var(--list-bg-pressed, var(--pressed)); }   /* the row, not its trailing action */
-.srp-list__item--selected { box-shadow: inset var(--list-indicator-width, var(--highlight-indicator-width)) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
-.srp-list__item--selected:dir(rtl) { box-shadow: inset calc(var(--spacing-0) - var(--list-indicator-width, var(--highlight-indicator-width))) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
+/* A shaded row also steps an Avatar's fill up one (secondary-hover), which in light themes is the same zinc-100 as the shade. */
+.srp-list__item:where([data-selected]) { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--list-avatar-bg-shaded, var(--secondary-hover)); }
+@media (hover: hover) { .srp-list__item--interactive:hover:not([data-disabled]) { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--list-avatar-bg-shaded, var(--secondary-hover)); } }
+.srp-list__item--interactive:not([data-disabled]):has(.srp-list__main:active) { background: var(--list-bg-pressed, var(--pressed)); }   /* the row, not its trailing action */
+.srp-list__item:where([data-selected]) { box-shadow: inset var(--list-indicator-width, var(--highlight-indicator-width)) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
+.srp-list__item:where([data-selected]):dir(rtl) { box-shadow: inset calc(var(--spacing-0) - var(--list-indicator-width, var(--highlight-indicator-width))) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
 .srp-list__main:focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.srp-list__item--disabled .srp-list__main, .srp-list__item--disabled .srp-list__main * { color: var(--list-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-list__item:where([data-disabled]) .srp-list__main, .srp-list__item:where([data-disabled]) .srp-list__main * { color: var(--list-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-list__leading { display: inline-flex; flex-shrink: 0; }
 .srp-list__leading--icon { color: var(--list-description-color, var(--text-muted)); }
 .srp-list__leading--icon .srp-icon { font-size: var(--spacing-5); }
@@ -46,17 +47,17 @@
 .srp-list__cell { display: contents; }
 .srp-list--selectable > .srp-list__item:focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-list__item--pickable { cursor: var(--cursor-interactive); touch-action: manipulation; }
-@media (hover: hover) { .srp-list__item--pickable:hover:not(.srp-list__item--disabled) { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); } }
-.srp-list__item--pickable:not(.srp-list__item--disabled):active { background: var(--list-bg-pressed, var(--pressed)); }
-.srp-list__item--pickable.srp-list__item--disabled { cursor: var(--cursor-disabled); }
+@media (hover: hover) { .srp-list__item--pickable:hover:not([data-disabled]) { background: var(--list-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); --avatar-bg: var(--list-avatar-bg-shaded, var(--secondary-hover)); } }
+.srp-list__item--pickable:not([data-disabled]):active { background: var(--list-bg-pressed, var(--pressed)); }
+.srp-list__item--pickable.srp-list__item:where([data-disabled]) { cursor: var(--cursor-disabled); }
 /* Placeholder rows: the text lines fill the row, and the circle is the size of what will lead it. */
 .srp-list__loading .srp-list__text { flex: auto; }
-.srp-list__leading--icon .srp-loader { --srp-loader-size: var(--spacing-5); }
-.srp-list__leading--xs .srp-loader { --srp-loader-size: var(--avatar-size-xs, var(--spacing-6)); }
-.srp-list__leading--sm .srp-loader { --srp-loader-size: var(--avatar-size-sm, var(--spacing-8)); }
-.srp-list__leading--md .srp-loader { --srp-loader-size: var(--avatar-size-md, var(--spacing-10)); }
-.srp-list__leading--lg .srp-loader { --srp-loader-size: var(--avatar-size-lg, var(--spacing-12)); }
-.srp-list__leading--xl .srp-loader { --srp-loader-size: var(--avatar-size-xl, var(--spacing-16)); }
-@media (forced-colors: active) { .srp-list__item--selected { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+.srp-list__leading--icon .srp-skeleton { --srp-skeleton-size: var(--spacing-5); }
+.srp-list__leading--xs .srp-skeleton { --srp-skeleton-size: var(--avatar-size-xs, var(--spacing-6)); }
+.srp-list__leading--sm .srp-skeleton { --srp-skeleton-size: var(--avatar-size-sm, var(--spacing-8)); }
+.srp-list__leading--md .srp-skeleton { --srp-skeleton-size: var(--avatar-size-md, var(--spacing-10)); }
+.srp-list__leading--lg .srp-skeleton { --srp-skeleton-size: var(--avatar-size-lg, var(--spacing-12)); }
+.srp-list__leading--xl .srp-skeleton { --srp-skeleton-size: var(--avatar-size-xl, var(--spacing-16)); }
+@media (forced-colors: active) { .srp-list__item:where([data-selected]) { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 @media (prefers-reduced-motion: reduce) { .srp-list__item { transition: none; } }
 }

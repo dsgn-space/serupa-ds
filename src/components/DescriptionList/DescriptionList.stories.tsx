@@ -4,7 +4,7 @@ import { Alert } from '../Alert';
 import { Badge } from '../Badge';
 import { Button } from '../Button';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
-import { Loader } from '../Loader';
+import { Skeleton } from '../Skeleton';
 import { Card } from '../Card';
 import { DescriptionItem, DescriptionList } from './DescriptionList';
 
@@ -84,7 +84,7 @@ function States(args: React.ComponentProps<typeof DescriptionList>) {
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The project didn't load. Check your connection and try again.</Alert>
         : state === 'loaded' ? <Record {...args} />
         : <DescriptionList {...args} aria-busy>
-            {terms.map((t, i) => <DescriptionItem key={t} term={t}><Loader variant="skeleton" size="lg" label={i === 0 ? 'Loading project' : ''} /></DescriptionItem>)}
+            {terms.map((t, i) => <DescriptionItem key={t} term={t}><Skeleton size="lg" label={i === 0 ? 'Loading project' : ''} /></DescriptionItem>)}
           </DescriptionList>}
     </div>
   );

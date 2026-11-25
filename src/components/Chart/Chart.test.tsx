@@ -379,7 +379,7 @@ describe('Chart', () => {
     const toggle = page.getByRole('button').all();
     expect([toggle.length, toggle[0] && (toggle[0].element() as HTMLButtonElement).disabled, e.querySelector('svg'), page.getByRole('progressbar').all().length]).toEqual([1, true, null, 0]);
     const tall = e.getBoundingClientRect().height;
-    const art = e.querySelector('[data-component="loader"]') as HTMLElement;
+    const art = e.querySelector('[data-component="skeleton"]') as HTMLElement;
     expect(art.getAttribute('aria-hidden')).toBe('true');
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
     const block = art.getBoundingClientRect().height;
@@ -389,7 +389,7 @@ describe('Chart', () => {
     expect(e.getBoundingClientRect().height).toBe(tall);
     // Refreshing numbers already shown: the chart stays, busy.
     await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} loading />);
-    expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);
+    expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="skeleton"]')]).toEqual(['true', true, null]);
     // Without a loadingLabel it says the shared "Loading…".
     await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} loading />);
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');

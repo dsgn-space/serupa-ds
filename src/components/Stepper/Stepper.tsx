@@ -121,7 +121,7 @@ function StepperRender({ ref, ...props }: StepperProps & React.RefAttributes<HTM
           const Head: React.ElementType = clickable ? 'button' : 'div';
           const hasDesc = s.description != null && s.description !== '';
           return (
-            <li key={i} className={cn('srp-stepper__step', 'srp-stepper__step--' + state, i < current && 'srp-stepper__step--done')} data-state={state} aria-current={i === current ? 'step' : undefined}>
+            <li key={i} className={cn('srp-stepper__step', 'srp-stepper__step--' + state, i < current && 'srp-stepper__step--done')} data-done={(i < current) ? '' : undefined} data-state={state} aria-current={i === current ? 'step' : undefined}>
               <Head className="srp-stepper__head" {...(clickable ? { type: 'button', onClick: () => { going.current = i; props.onStepClick!(i); } } : props.onStepClick && i === current ? { tabIndex: -1 } : {})}>
                 <span className="srp-stepper__indicator" aria-hidden>
                   {state === 'complete' ? <Icon icon={icons.Check} /> : state === 'error' ? <Icon icon={icons.PriorityHigh} /> : state === 'warning' ? <Icon icon={icons.Warning} /> : displayNumber(i + 1, locale)}

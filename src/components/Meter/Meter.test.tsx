@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, color, contrast, css, withMotion, splitWords } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, withMotion, splitWords, seen } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Meter, meterState } from './Meter';
@@ -135,7 +135,7 @@ describe('Meter', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const id of ['p', 'o', 's', 'x']) {
-        const r = contrast(fill(id), 'var(--surface)'); n++; if (r < 3) low.push(`${th} ${id} fill ${r.toFixed(2)}`);
+        const r = contrast(seen(el(id).querySelector<HTMLElement>('[role=meter] > div')!), 'var(--surface)'); n++; if (r < 3) low.push(`${th} ${id} fill ${r.toFixed(2)}`);   // the fill, or the edge a theme gives it (Yellow Light's primary)
       }
       for (const sel of ['#p .srp-meter__label', '#p .srp-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }

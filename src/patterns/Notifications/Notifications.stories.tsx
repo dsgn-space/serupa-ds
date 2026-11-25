@@ -31,3 +31,9 @@ export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} }
 
 /** Offline: the page as it was loaded, with “You’re offline” at the top and what still works. */
 export const Offline: Story = { args: { online: false } };
+
+/** A year of them: 1,200 notifications, of which only the rows in view are drawn. The list scrolls on its own, by
+    keyboard too, and each row says where it is ("5 of 1,200"). */
+export const AYear: Story = {
+  args: { items: Array.from({ length: 1200 }, (_, i) => ({ id: `y${i}`, title: `Invoice ${String(1200 - i).padStart(4, '0')} was paid`, tone: 'success' as const, time: Date.now() - 60_000 * 60 * 7 * (i + 1), read: i > 1 })) },
+};

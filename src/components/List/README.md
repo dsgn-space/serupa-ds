@@ -175,6 +175,8 @@ Placeholder rows, inside a List, while its rows load.
 Each is an optional override: set it on the page, a container or one list. The list lives in `src/components/List/list.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from list.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--list-border` | `border` | Lines between items, and the frame of variant="card". |
@@ -182,19 +184,40 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-title-color` | `text` | An item's title. |
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
 | `--list-text-muted-shaded` | `text-muted-shaded` | Grey text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill. |
+| `--list-avatar-bg-shaded` | `secondary-hover` | An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade. |
 | `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
 | `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--list-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--list-title-size` | `text-sm` | Titles (14px). |
 | `--list-title-weight` | `font-medium` | Title weight (500). |
 | `--list-description-size` | `text-sm` | Descriptions (14px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--list-padding-x` | `spacing-3` | An item's side padding (12px; variant="card": padding-x-card). |
 | `--list-padding-x-card` | `spacing-4` | An item's side padding in variant="card" (16px). |
 | `--list-padding-y` | `space-row` | An item's top and bottom padding: 12px, 6px in the compact density. |
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--list-border-width` | `border-width-1` | Lines and frame (1px). |
 | `--list-indicator-width` | `highlight-indicator-width` | The width of the selected item's bar: none by default, 2px with more contrast. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--list-radius` | `radius-surface` | The corners of variant="card" (8px). |
 <!-- token-table:end -->

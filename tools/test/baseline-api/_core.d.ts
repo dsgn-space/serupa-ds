@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, attachmentKind, type AttachmentKind, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, formatFileSize, getIcon, type IconData, idLabels, type LanguagePack, localeDir, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type StandardSchemaV1, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, attachmentKind, type AttachmentKind, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, formatFileSize, getIcon, type IconData, idLabels, type LanguagePack, localeDir, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type ShortcutOptions, type Space, type StandardSchemaV1, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useShortcut, useTokenValue, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "amber" | "blue" | "cyan" | "emerald" | "fuchsia" | "green" | "indigo" | "lime" | "orange" | "pink" | "purple" | "red" | "rose" | "sky" | "teal" | "violet" | "yellow" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -169,6 +169,13 @@ interface StandardSchemaIssue {
 }
 type InferInput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["input"];
 type InferOutput<Schema extends StandardSchemaV1> = NonNullable<Schema["~standard"]["types"]>["output"];
+interface ShortcutOptions {
+    description?: string | undefined;
+    group?: string | undefined;
+    enabled?: boolean | undefined;
+    inInputs?: boolean | undefined;
+}
+declare function useShortcut(keys: string | string[], handler: (event: KeyboardEvent) => void, options?: ShortcutOptions): void;
 type Entry = "end-ellipsis" | "start-ellipsis" | number;
 declare const version: string;
 type ThemeApi = SerupaTheme;

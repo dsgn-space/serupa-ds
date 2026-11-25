@@ -379,13 +379,13 @@ describe('FileUpload', () => {
       const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(row(items(el)[0]!)).backgroundColor;
       const c = (sel: string) => getComputedStyle(el.querySelector(sel)!).color;
       const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
-      zone.classList.add('srp-file-upload__zone--over');
+      zone.setAttribute('data-over', '');
       const zo = getComputedStyle(zone).backgroundColor;
       pairs.push(['hint while dragging', c(HINT), zo, 4.5], ['title while dragging', c(TITLE), zo, 4.5]);
-      zone.classList.remove('srp-file-upload__zone--over');
-      el.classList.add('srp-file-upload--invalid');
+      zone.removeAttribute('data-over');
+      el.setAttribute('data-invalid', '');
       pairs.push(['invalid outline', getComputedStyle(zone).borderTopColor, pg, 3]);
-      el.classList.remove('srp-file-upload--invalid');
+      el.removeAttribute('data-invalid');
       for (const [k, fg, bg, min] of pairs) { const r = contrast(fg, bg); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove(); document.body.style.background = prevBg;

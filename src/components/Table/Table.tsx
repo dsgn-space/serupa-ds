@@ -18,7 +18,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
 import { useServerStyles } from '../../internal/serverStyles';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
@@ -306,7 +306,7 @@ function TableRowRender({ ref, ...props }: TableRowProps & React.RefAttributes<H
       if (first >= 0) children = kids.map(function (k, i) { return i === first ? React.cloneElement(k as React.ReactElement<TableCellProps>, { link: true }) : k; });
     }
   }
-  return <tr {...rest} ref={ref} className={cn('srp-table__row', props.selected && 'srp-table__row--selected', isLink && 'srp-table__row--link', props.className)}>
+  return <tr {...rest} ref={ref} className={cn('srp-table__row', props.selected && 'srp-table__row--selected', isLink && 'srp-table__row--link', props.className)} data-selected={props.selected ? '' : undefined}>
     {link ? <RowLinkContext.Provider value={link}>{children}</RowLinkContext.Provider> : children}
   </tr>;
 }

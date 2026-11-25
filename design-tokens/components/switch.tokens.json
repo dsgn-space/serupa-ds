@@ -84,8 +84,8 @@
       },
       "thumb-ink-dark": {
         "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "In a dark theme, the pending ring and the check on the white thumb (the theme's darkest blue, 3:1 or more on white).",
+        "$value": "{color.text-inverse}",
+        "$description": "In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-ink-dark"
@@ -144,11 +144,21 @@
       },
       "pending": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "pending's ring on the thumb (3:1 on the thumb, on or off)",
+        "$value": "{color.primary-text}",
+        "$description": "pending's ring on the off thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-pending"
+          }
+        }
+      },
+      "pending-checked": {
+        "$type": "color",
+        "$value": "{color.primary-text}",
+        "$description": "pending's ring on the on thumb (3:1 on it)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-pending-checked"
           }
         }
       },
@@ -179,6 +189,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-text-disabled"
+          }
+        }
+      },
+      "track-edge-checked": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-track-edge-checked"
           }
         }
       }

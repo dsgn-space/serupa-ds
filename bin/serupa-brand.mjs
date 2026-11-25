@@ -37,7 +37,7 @@ export function main(argv) {
   let r;
   try { r = brandTheme({ name: rest[0], color: rest[1], corners, motion, tokens }); } catch (e) { stop(e.message); }
   const [name] = rest;
-  const said = ['light', 'dark'].map((m) => `${name}-${m}: primary ${name}-${r.picks[m].primary}, hover ${r.picks[m].hover}, focus ring ${r.picks[m].focus}; more contrast ${r.picks[m].more}`);
+  const said = ['light', 'dark'].map((m) => `${name}-${m}: primary ${r.picks[m].fill ? `${r.picks[m].fill} (${name}-${r.picks[m].fillFrom}${r.picks[m].fill === r.shades[r.picks[m].fillFrom] ? '' : ', a little lighter'}), text ${name}-${r.picks[m].primary}` : `${name}-${r.picks[m].primary}`}, hover ${r.picks[m].hover}, focus ring ${r.picks[m].focus}; more contrast ${r.picks[m].more}`);
   if (out) {
     fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
     fs.writeFileSync(out, r.css);

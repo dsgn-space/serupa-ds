@@ -22,24 +22,24 @@
   border-radius: var(--radius-control); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .srp-command-palette__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-command-palette__option--active { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
+.srp-command-palette__option:where([data-active]) { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
 /* Held down: one step past the highlight, as a Menu item is, so a press shows before the palette closes. */
-.srp-command-palette__option:active:not(.srp-command-palette__option--disabled) { background: var(--command-palette-option-bg-pressed, var(--pressed)); }
-.srp-command-palette__option--disabled, .srp-command-palette__option--disabled * { color: var(--command-palette-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-command-palette__option:active:not([data-disabled]) { background: var(--command-palette-option-bg-pressed, var(--pressed)); }
+.srp-command-palette__option:where([data-disabled]), .srp-command-palette__option:where([data-disabled]) * { color: var(--command-palette-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 /* 20px beside the 14px label in a 44px row, as Sidebar's items: an Icon's own default is 24px. */
 .srp-command-palette__icon .srp-icon { font-size: var(--command-palette-icon-size, var(--spacing-5)); }
-.srp-command-palette__option--active .srp-command-palette__icon { color: inherit; }
-.srp-command-palette__option--active { --kbd-separator: currentColor; }   /* the shortcut's "+": muted, it is under 4.5:1 on the highlight */
+.srp-command-palette__option:where([data-active]) .srp-command-palette__icon { color: inherit; }
+.srp-command-palette__option:where([data-active]) { --kbd-separator: currentColor; }   /* the shortcut's "+": muted, it is under 4.5:1 on the highlight */
 .srp-command-palette__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-command-palette__text { display: flex; flex: auto; flex-direction: column; min-width: var(--spacing-0); }
 .srp-command-palette__description { font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--command-palette-muted, var(--text-muted)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.srp-command-palette__option--active .srp-command-palette__description { color: inherit; }
+.srp-command-palette__option:where([data-active]) .srp-command-palette__description { color: inherit; }
 .srp-command-palette__keys { flex: none; margin-inline-start: auto; }
 .srp-command-palette__empty { margin: var(--spacing-0); padding: var(--spacing-6) var(--spacing-2); text-align: center; color: var(--command-palette-muted, var(--text-muted)); }
 /* Loading: the ring beside its words, centred as the empty text is; under rows already listed it takes less room. */
 .srp-command-palette__loading { display: flex; align-items: center; justify-content: center; gap: var(--spacing-2); }
 .srp-command-palette__list:not(:empty) ~ .srp-command-palette__loading { padding-block: var(--spacing-3); }
 /* Forced colors drop the highlight and its bar: an outline in Highlight shows which command Enter runs (GR98). */
-@media (forced-colors: active) { .srp-command-palette__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
+@media (forced-colors: active) { .srp-command-palette__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
 }

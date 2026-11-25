@@ -134,6 +134,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-value-text` | `text-inverse` | showValue's text (4.5:1 on value-bg). |
 | `--slider-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--slider-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--slider-fill-edge` | `primary-edge` | The filled range's and the thumb's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

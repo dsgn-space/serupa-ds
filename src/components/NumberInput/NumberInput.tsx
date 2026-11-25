@@ -265,7 +265,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, nameRef, el);
   return (
     <>
-    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
+    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {affix.prefix}

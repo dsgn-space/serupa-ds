@@ -219,10 +219,11 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
                 <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
                   <Heading level={2} size="lg" id="message-title">Your message</Heading>
                   {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
-                  <Field label="Subject" error={missing.subject}>
+                  <p className="m-0 text-text-muted">Fields marked * are required.</p>
+                  <Field label="Subject" error={missing.subject} required>
                     <Input name="subject" value={draft.subject} onChange={type('subject')} />
                   </Field>
-                  <Field label="Message" hint="What happened, and what you expected." error={missing.message}>
+                  <Field label="Message" hint="What happened, and what you expected." error={missing.message} required>
                     <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
                   </Field>
                   {outcome === 'failed' ? <Alert tone="danger">The message wasn’t sent. What you typed is kept: try again.</Alert> : null}

@@ -62,6 +62,16 @@
           }
         }
       },
+      "avatar-bg-shaded": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "An Avatar's fill in a hovered, striped or selected row: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-avatar-bg-shaded"
+          }
+        }
+      },
       "row-bg-hover": {
         "$type": "color",
         "$value": "{color.surface-hover}",
@@ -144,7 +154,7 @@
       },
       "resize-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A column's resize handle on hover, while dragged and on focus.",
         "$extensions": {
           "com.serupa": {

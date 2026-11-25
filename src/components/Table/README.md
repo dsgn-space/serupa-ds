@@ -187,6 +187,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-header-bg` | `surface-muted` | The header row's background. |
 | `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
 | `--table-text-muted-shaded` | `text-muted-shaded` | Grey text in a hovered, striped or selected row, where `text-muted` would fall under 4.5:1 on the shaded fill; it reaches muted text in your cells too. |
+| `--table-avatar-bg-shaded` | `secondary-hover` | An Avatar's fill in a hovered, striped or selected row: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade. |
 | `--table-row-bg-hover` | `surface-hover` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
 | `--table-row-bg-pressed` | `pressed` | A linked row's background while it is held down, a step past its hover, as a List row's. |
 | `--table-row-bg-selected` | `surface-hover` | A selected row's background. |
@@ -195,7 +196,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |
 | `--table-action-bar-bg` | `primary-subtle` | TableActionBar's background. |
 | `--table-action-bar-text` | `text` | TableActionBar's count (4.5:1 on its background). |
-| `--table-resize-active` | `primary` | A column's resize handle on hover, while dragged and on focus. |
+| `--table-resize-active` | `primary-text` | A column's resize handle on hover, while dragged and on focus. |
 
 **Shadow**
 

@@ -6,7 +6,7 @@ import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuItem } from '../Menu/Menu';
@@ -14,6 +14,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { isRtl } from '../../internal/position';
 import { modified } from '../../internal/roving';
+import { edgeScroll, useHandleDrag, type HandlePointer } from '../../internal/handleDrag';
 
 /** One column of a Kanban board. */
 export interface KanbanColumn<T> {
@@ -59,9 +60,6 @@ export interface KanbanProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement
 type Place = { column: number; index: number };
 type Drag = { key: string | number; from: Place; to: Place; pointer: boolean };
 
-const EDGE = 48;      // px from a scrolling edge where a drag starts scrolling
-const STEP = 16;      // px per frame at the very edge
-const SLOP = 4;       // px a press moves before it counts as a drag
 
 /* Placeholder cards for a column while the board loads: decorative, the card's padding and border around two lines of
    text. The first column's label is said once, after the loader's delay (a quick load says nothing). */
@@ -103,7 +101,7 @@ interface KanbanCardProps {
 const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanCardProps) {
   const { itemKey: key, name, api, labels: L } = props;
   return (
-    <li data-key={String(key)} className={cn('srp-kanban__card', props.dragging && 'srp-kanban__card--dragging')} data-state={props.dragging ? 'dragging' : undefined}>
+    <li data-key={String(key)} className={cn('srp-kanban__card', props.dragging && 'srp-kanban__card--dragging')} data-dragging={props.dragging ? '' : undefined} data-state={props.dragging ? 'dragging' : undefined}>
       {props.disabled ? null : (
         <button type="button" className="srp-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={props.hint} aria-pressed={props.pressed}
           ref={(n) => api.current.handle(key, n)}
@@ -132,6 +130,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   const current = React.useRef(drag);
   current.current = drag;
   const board = React.useRef<HTMLDivElement | null>(null);
+  const { pointerRef, draggedRef, begin } = useHandleDrag();
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
   const H = ('h' + level) as 'h3';
@@ -168,10 +167,9 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   };
 
   // Keyboard, and a click that didn't drag (a screen reader's virtual click, a tap): pick up, then drop.
-  const dragged = React.useRef(false);
   const onClick = (key: string | number) => {
     if (props.disabled) return;
-    if (dragged.current) { dragged.current = false; return; }
+    if (draggedRef.current) { draggedRef.current = false; return; }
     if (drag && !drag.pointer) { finish(drag, true); return; }
     const at = find(key), col = at && columns[at.column], item = at && col?.items[at.index];
     if (!at || !col || item === undefined) return;
@@ -223,18 +221,13 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   };
 
   // Pointer: press a handle and move a few pixels to drag; the card follows the pointer over the columns.
-  const pointer = React.useRef<{ id: number; key: string | number; sx: number; sy: number; x: number; y: number; gx: number; gy: number; moved: boolean } | null>(null);
   const latest = React.useRef({ columns, find, finish });
   latest.current = { columns, find, finish };
-  const stop = React.useRef<(() => void) | null>(null);
-  React.useEffect(() => () => { if (stop.current) stop.current(); }, []);
   const onPointerDown = (key: string | number, e: React.PointerEvent<HTMLButtonElement>) => {
-    dragged.current = false;
+    draggedRef.current = false;
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
-    const card = e.currentTarget.closest('li')!.getBoundingClientRect();
-    pointer.current = { id: e.pointerId, key, sx: e.clientX, sy: e.clientY, x: e.clientX, y: e.clientY, gx: e.clientX - card.left, gy: e.clientY - card.top, moved: false };
     const lists = () => board.current ? [...board.current.querySelectorAll<HTMLElement>('.srp-kanban__cards')] : [];
-    const placeAt = (p: NonNullable<typeof pointer.current>): Drag | undefined => {
+    const placeAt = (p: HandlePointer): Drag | undefined => {
       const at = latest.current.find(p.key);
       if (!at) return undefined;
       // The column: the one whose box the pointer is across from, or the nearest one.
@@ -262,66 +255,27 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
       setDrag(next);
       return next;
     };
-    // Near an edge of the board (sideways) or of the column under the pointer (up and down), it scrolls that way,
-    // faster the closer the pointer is.
-    let frame = 0;
-    const tick = () => {
-      frame = 0;
-      const p = pointer.current, d = current.current;
-      if (!p || !p.moved) return;
-      let scrolled = false;
-      const nudge = (box: HTMLElement | null, horizontal: boolean) => {
-        if (!box) return;
-        const b = box.getBoundingClientRect(), lo = horizontal ? b.left : b.top, hi = horizontal ? b.right : b.bottom, at = horizontal ? p.x : p.y;
-        const edge = Math.min(EDGE, (hi - lo) / 4);
-        const by = at < lo + edge ? -Math.ceil((lo + edge - at) / edge * STEP) : at > hi - edge ? Math.ceil((at - hi + edge) / edge * STEP) : 0;
-        if (!by) return;
-        const before = horizontal ? box.scrollLeft : box.scrollTop;
-        if (horizontal) box.scrollLeft = before + by; else box.scrollTop = before + by;
-        if ((horizontal ? box.scrollLeft : box.scrollTop) !== before) scrolled = true;
-      };
-      nudge(board.current, true);
-      nudge(d ? lists()[d.to.column] || null : null, false);
-      if (scrolled) { placeAt(p); followRef.current(); }
-      frame = requestAnimationFrame(tick);
-    };
-    const move = (ev: PointerEvent) => {
-      const p = pointer.current;
-      if (!p || p.id !== ev.pointerId) return;
-      p.x = ev.clientX; p.y = ev.clientY;
-      if (!p.moved && Math.hypot(p.x - p.sx, p.y - p.sy) < SLOP) return;
-      p.moved = true;
-      dragged.current = true;
-      ev.preventDefault();
-      placeAt(p);
-      followRef.current();
-      if (!frame) frame = requestAnimationFrame(tick);
-    };
-    const end = (cancel: boolean) => (ev: PointerEvent) => {
-      const p = pointer.current;
-      if (!p || p.id !== ev.pointerId) return;
-      off();
-      if (p.moved) setTimeout(() => { dragged.current = false; });
-      let d = current.current;
-      if (p.moved) { p.x = ev.clientX; p.y = ev.clientY; d = placeAt(p) || d; }
-      if (p.moved && d && d.pointer) latest.current.finish(d, !cancel);
-    };
-    const up = end(false), cancel = end(true);
-    const off = () => {
-      pointer.current = null; stop.current = null;
-      if (frame) { cancelAnimationFrame(frame); frame = 0; }
-      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', cancel);
-    };
-    if (stop.current) stop.current();
-    stop.current = off;
-    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
+    begin(key, e, e.currentTarget.closest('li')!, {
+      axis: 'both',
+      place: (p) => { placeAt(p); followRef.current(); },
+      // Near an edge of the board (sideways) or of the column under the pointer (up and down), it scrolls that way,
+      // faster the closer the pointer is.
+      scroll: (p) => {
+        const d = current.current, col = d ? lists()[d.to.column] : undefined;
+        let scrolled = false;
+        if (board.current) { const b = board.current.getBoundingClientRect(); scrolled = edgeScroll(board.current, true, p.x, b.left, b.right); }
+        if (col) { const b = col.getBoundingClientRect(); scrolled = edgeScroll(col, false, p.y, b.top, b.bottom) || scrolled; }
+        return scrolled;
+      },
+      end: (p, cancel) => { const d = placeAt(p) || current.current; if (d && d.pointer) latest.current.finish(d, !cancel); },
+    });
   };
   // The dragged card sits under the pointer, wherever the board has placed it: after each render that moves it, and
   // on each pointer move or scroll that doesn't (those leave the board's state alone).
   // Only the dragged card is moved, so only it (and the one moved last, if another) is touched, not every card.
   const moved = React.useRef<HTMLElement | null>(null);
   const follow = () => {
-    const p = pointer.current, d = current.current;
+    const p = pointerRef.current, d = current.current;
     const li = p && p.moved && d && d.pointer && board.current ? board.current.querySelector<HTMLElement>(`li[data-key="${CSS.escape(String(d.key))}"]`) : null;
     if (moved.current && moved.current !== li) moved.current.style.transform = '';
     moved.current = li;
@@ -361,7 +315,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
           <section key={col.id} className={cn('srp-kanban__column', drag && drag.to.column === c && 'srp-kanban__column--target', over && 'srp-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
             <div className="srp-kanban__header">
               <H className="srp-kanban__title" id={titleId}>{col.title}</H>
-              <span className={cn('srp-kanban__count', over && 'srp-kanban__count--over')}>
+              <span className={cn('srp-kanban__count', over && 'srp-kanban__count--over')} data-over={over ? '' : undefined}>
                 {over ? <Icon icon={icons.Warning} /> : null}
                 {loading != null ? null : col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
                 {over ? <span className="srp-kanban__over">{L.kanbanOverLimit}</span> : null}

@@ -164,7 +164,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-bg-pressed` | `pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
 | `--combobox-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
-| `--combobox-check` | `primary` | The check next to the selected option. |
+| `--combobox-check` | `primary-text` | The check next to the selected option. |
 | `--combobox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--combobox-listbox-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 

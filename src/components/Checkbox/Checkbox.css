@@ -24,7 +24,7 @@
 /* Pressed: while the row is held (pointer, or Space on it) the box takes its held colors (below), a step past
    hover. Nothing shrinks by default; --checkbox-press-scale opts in to one. Not when read-only or disabled. */
 .srp-checkbox__control { transition: scale var(--motion-release) var(--ease-spring); }
-.srp-checkbox:active:not(.srp-checkbox--readonly, :has(.srp-checkbox__input:disabled)) .srp-checkbox__control { scale: var(--checkbox-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+.srp-checkbox:active:not([data-readonly], :has(.srp-checkbox__input:disabled)) .srp-checkbox__control { scale: var(--checkbox-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { .srp-checkbox__control { transition: none; } .srp-checkbox:active .srp-checkbox__control { scale: none; } }
 .srp-checkbox__input {
   --srp-checkbox-bd: var(--checkbox-border, var(--field-border));
@@ -45,8 +45,8 @@
 @media (hover: hover) { .srp-checkbox:hover .srp-checkbox__input { transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move); } }
 @media (hover: hover) { .srp-checkbox:hover .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --srp-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); } }
 .srp-checkbox:active .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bg: var(--checkbox-bg-pressed, var(--secondary)); --srp-checkbox-fill: var(--checkbox-bg-checked-pressed, var(--primary-pressed)); }
-.srp-checkbox:not(.srp-checkbox--invalid):active .srp-checkbox__input:not(:disabled, [readonly], :user-invalid) { --srp-checkbox-bd: var(--checkbox-border-pressed, var(--field-border-pressed)); }
-.srp-checkbox__input:checked, .srp-checkbox__input:indeterminate, .srp-checkbox__input[data-indeterminate] { background: var(--srp-checkbox-fill); border-color: var(--srp-checkbox-fill); }
+.srp-checkbox:not([data-invalid]):active .srp-checkbox__input:not(:disabled, [readonly], :user-invalid) { --srp-checkbox-bd: var(--checkbox-border-pressed, var(--field-border-pressed)); }
+.srp-checkbox__input:checked, .srp-checkbox__input:indeterminate, .srp-checkbox__input[data-indeterminate] { background: var(--srp-checkbox-fill); border-color: var(--checkbox-edge-checked, var(--primary-edge)); }   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge where the fill is under 3:1 on the page (Yellow Light) */
 .srp-checkbox__icon { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .srp-checkbox__icon .srp-icon { font-size: var(--srp-checkbox-icon); }
 .srp-checkbox__input:checked + .srp-checkbox__icon, .srp-checkbox__input:indeterminate + .srp-checkbox__icon, .srp-checkbox__input[data-indeterminate] + .srp-checkbox__icon { visibility: visible; }
@@ -55,15 +55,15 @@
   outline: var(--focus-ring-width) solid var(--srp-checkbox-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */
-.srp-checkbox--invalid .srp-checkbox__input { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-checkbox--invalid:hover .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
+.srp-checkbox:where([data-invalid]) .srp-checkbox__input { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-checkbox:where([data-invalid]):hover .srp-checkbox__input:not(:disabled, [readonly]) { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 /* A required box left unticked after people untick it or try to send the form: as Input (:user-invalid). */
 .srp-checkbox__input:user-invalid { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-checkbox:hover .srp-checkbox__input:user-invalid { --srp-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --srp-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 .srp-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
 /* Read-only: no pointer cursor or hover, since a click won't change it. */
-.srp-checkbox--readonly { cursor: default; }
+.srp-checkbox:where([data-readonly]) { cursor: default; }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-checkbox:has(.srp-checkbox__input:disabled) { color: var(--checkbox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-checkbox:has(.srp-checkbox__input:disabled) .srp-checkbox__description { color: var(--checkbox-text-disabled, var(--disabled-text)); }
@@ -84,12 +84,12 @@
   transition: border-color var(--motion-press) var(--ease-move);
 }
 .srp-checkbox--card .srp-checkbox__label { font-weight: var(--checkbox-card-label-weight, var(--font-medium)); }
-@media (hover: hover) { .srp-checkbox--card:hover:not(.srp-checkbox--readonly, :has(.srp-checkbox__input:disabled), :has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-card-border-hover, var(--field-border-hover)); } }
-.srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary)); border-color: var(--srp-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--srp-checkbox-card-on); }
+@media (hover: hover) { .srp-checkbox--card:hover:not([data-readonly], :has(.srp-checkbox__input:disabled), :has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-card-border-hover, var(--field-border-hover)); } }
+.srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary-text)); border-color: var(--srp-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--srp-checkbox-card-on); }
 .srp-checkbox--card:has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--checkbox-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-checkbox--card .srp-checkbox__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.srp-checkbox--card.srp-checkbox--invalid:not(:has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }
-.srp-checkbox--card.srp-checkbox--invalid:has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--field-border-invalid)); }
+.srp-checkbox--card.srp-checkbox:where([data-invalid]):not(:has(.srp-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }
+.srp-checkbox--card.srp-checkbox:where([data-invalid]):has(.srp-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .srp-checkbox--card:has(.srp-checkbox__input:checked) { --srp-checkbox-card-on: Highlight; } }
 @media (forced-colors: active) { .srp-checkbox__icon { color: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

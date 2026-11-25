@@ -35,6 +35,9 @@
   box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
   cursor: var(--cursor-grab); transition: scale var(--motion-change-sm) var(--ease-settle);
 }
+/* The fill's and the thumb ring's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. */
+.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__fill { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--primary-edge)); }
+.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__thumb { box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--primary-edge)), var(--slider-thumb-shadow, var(--elevation-part)); }
 .srp-slider__range {
   /* The native range over the drawn thumb: unseen and not in the way of presses, but the same box, so a screen
      reader's touch exploration finds it where the thumb is. */
@@ -44,7 +47,7 @@
   margin: var(--spacing-0); border: none; padding: var(--spacing-0); opacity: var(--opacity-0); appearance: none; pointer-events: none;
 }
 .srp-slider__thumb:has(> .srp-slider__range:focus-visible) { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-slider:not(.srp-slider--disabled, .srp-slider--readonly) .srp-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
+.srp-slider:not([data-disabled], [data-readonly]) .srp-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
 .srp-slider--mark-labels {
   --srp-slider-labels: calc(var(--spacing-1) + var(--srp-slider-labels-h, var(--text-xs--line-height)));
   block-size: calc(var(--srp-slider-thumb) + var(--srp-slider-labels)); padding-block-end: var(--srp-slider-labels);
@@ -77,19 +80,19 @@
   /* Digits of one width, so the bubble keeps its width while a drag changes the number (GR162). */
   font-variant-numeric: tabular-nums;
 }
-.srp-slider:not(.srp-slider--disabled) .srp-slider__thumb:focus-within > .srp-slider__value { opacity: var(--opacity-100); }
-@media (hover: hover) { .srp-slider:not(.srp-slider--disabled) .srp-slider__thumb:hover > .srp-slider__value { opacity: var(--opacity-100); } }
+.srp-slider:not([data-disabled]) .srp-slider__thumb:focus-within > .srp-slider__value { opacity: var(--opacity-100); }
+@media (hover: hover) { .srp-slider:not([data-disabled]) .srp-slider__thumb:hover > .srp-slider__value { opacity: var(--opacity-100); } }
 /* Vertical: the same layout turned a quarter, by writing mode, so every inline (along the track) and block (across
    it) rule above still holds. The track runs top to bottom; Slider.tsx counts places from the top, so min sits at the
    bottom. The text (mark labels, the value chip, the number fields) stays upright; the labels sit to the right of the
    track and the chip to its left. */
 .srp-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
 .srp-slider--vertical .srp-slider__mark-label > span, .srp-slider--vertical .srp-slider__value > span, .srp-slider--vertical .srp-slider__input { writing-mode: horizontal-tb; }
-.srp-slider--invalid .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
-.srp-slider--invalid .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
-.srp-slider--readonly, .srp-slider--readonly .srp-slider__thumb { cursor: default; }
-.srp-slider--disabled { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
-.srp-slider--disabled .srp-slider__thumb { cursor: var(--cursor-disabled); }
+.srp-slider:where([data-invalid]) .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
+.srp-slider:where([data-invalid]) .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
+.srp-slider:where([data-readonly]), .srp-slider:where([data-readonly]) .srp-slider__thumb { cursor: default; }
+.srp-slider:where([data-disabled]) { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
+.srp-slider:where([data-disabled]) .srp-slider__thumb { cursor: var(--cursor-disabled); }
 @media (prefers-reduced-motion: reduce) { .srp-slider__thumb, .srp-slider__value { transition: none; } }
 @media (forced-colors: active) {
   .srp-slider__track { background: CanvasText; }

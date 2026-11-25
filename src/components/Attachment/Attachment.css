@@ -34,8 +34,8 @@
 /* A thumbnail takes the icon's place, as big as it is (up to 40px). */
 .srp-attachment__thumbnail { display: flex; align-items: center; justify-content: center; }
 .srp-attachment__name { display: flex; min-inline-size: var(--spacing-0); color: inherit; font-weight: var(--font-medium); border-radius: var(--radius-inner); }
-a.srp-attachment__name { color: var(--attachment-link, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
-@media (hover: hover) { a.srp-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+a.srp-attachment__name { color: var(--attachment-link, var(--primary-text)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
+@media (hover: hover) { a.srp-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-text-hover)); text-decoration-thickness: var(--decoration-2); } }
 /* The name fades to its hover color as a Link does (motion-hover); reduced motion: at once. */
 a.srp-attachment__name { transition: color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { a.srp-attachment__name { transition: none; } }
@@ -61,14 +61,14 @@ a.srp-attachment__name:focus-visible { outline: var(--focus-ring-width) solid va
 /* Failed: the message sits under the box, as a Field's error sits under its control, with the Field's gap above it and
    the card's padding below, so it reads as this file's and keeps clear of the next one. The box is drawn behind the
    file's own lines (a ::before over the name and meta rows, reaching out over the padding and the clear border). */
-.srp-attachment--error { --srp-attachment-reach: calc(var(--attachment-padding, var(--spacing-2)) + var(--border-width-1)); border-color: transparent; background: transparent; }
-.srp-attachment--error::before {
+.srp-attachment:where([data-error]) { --srp-attachment-reach: calc(var(--attachment-padding, var(--spacing-2)) + var(--border-width-1)); border-color: transparent; background: transparent; }
+.srp-attachment:where([data-error])::before {
   content: ""; grid-row: name-start / meta-end; grid-column: icon-start / error-end; align-self: stretch;
   margin: calc(var(--spacing-0) - var(--srp-attachment-reach)); margin-inline-start: calc(var(--spacing-0) - var(--attachment-padding-start, var(--spacing-3)) - var(--border-width-1));
   border: var(--border-width-1) solid var(--attachment-border-error, var(--danger)); border-radius: var(--attachment-radius, var(--radius-control));
   background: var(--attachment-bg, var(--surface));
 }
-.srp-attachment--error .srp-attachment__error {
+.srp-attachment:where([data-error]) .srp-attachment__error {
   grid-row: error; grid-column: icon-start / error-end;
   margin-block-start: calc(var(--srp-attachment-reach) + var(--attachment-error-gap, var(--spacing-1\.5)));
   margin-inline-start: calc(var(--spacing-0) - var(--attachment-padding-start, var(--spacing-3)) - var(--border-width-1));

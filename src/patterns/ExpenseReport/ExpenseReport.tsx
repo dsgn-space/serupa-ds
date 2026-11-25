@@ -19,7 +19,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { FormattedDate } from '../../components/FormattedDate/FormattedDate';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -120,6 +120,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
   const [wasLoading, setWasLoading] = React.useState(loading);
   if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setList(expenses); } }
   const [d, setD] = React.useState<Draft>(blank);
+  const needsReceipt = d.amount !== null && d.amount > receiptOver;   // so the receipt is marked required, not optional, once the amount needs one
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);
   const [reportProblem, setReportProblem] = React.useState<string | null>(null);
@@ -182,7 +183,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
           <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
             description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading expenses" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading expenses" /></Card> : (<>
           <div className="flex flex-col gap-8 pt-6">
             {sent ? (
               <section aria-labelledby="report-sent" className="flex flex-col items-start gap-3">
@@ -196,21 +197,22 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                   <form onSubmit={add} noValidate aria-labelledby="add-expense" className="flex flex-col gap-4">
                     <h2 id="add-expense" className="m-0 text-lg font-semibold">Add an expense</h2>
                     <ErrorSummary key={tries} errors={errors} headingLevel={3} />
+                    <p className="m-0 text-text-muted">Fields marked * are required.</p>
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <Field label="Date" error={problems.date}>
+                      <Field label="Date" error={problems.date} required>
                         <DateField id="expense-date" value={d.date} max={today} onValueChange={(v) => edit({ date: v })} />
                       </Field>
-                      <Field label="What for" id="expense-category" error={problems.category}>
+                      <Field label="What for" id="expense-category" error={problems.category} required>
                         <Select placeholder="Choose one" options={CATEGORIES} value={d.category} onChange={(e) => edit({ category: e.target.value })} />
                       </Field>
-                      <Field label="What it was" id="expense-what" hint="As it says on the receipt." error={problems.what}>
+                      <Field label="What it was" id="expense-what" hint="As it says on the receipt." error={problems.what} required>
                         <Input value={d.what} onChange={(e) => edit({ what: e.target.value })} />
                       </Field>
-                      <Field label="Amount" id="expense-amount" hint={`In ${currency}.`} error={problems.amount}>
+                      <Field label="Amount" id="expense-amount" hint={`In ${currency}.`} error={problems.amount} required>
                         <NumberInput currency={currency} min={0} value={d.amount} onValueChange={(n) => edit({ amount: n })} className="max-w-48" />
                       </Field>
                     </div>
-                    <Field label="Receipt" error={problems.receipt} optional={!(d.amount !== null && d.amount > receiptOver)}>
+                    <Field label="Receipt" error={problems.receipt} required={needsReceipt} optional={!needsReceipt}>
                       <FileUpload id="expense-receipt" accept="image/*,.pdf" maxSize={10 * 1024 * 1024} hint={`A photo or PDF. Needed over ${money(receiptOver)}.`}
                         files={d.receipt ? [d.receipt] : []} onFilesChange={(f) => edit({ receipt: f.at(-1) ?? null })} />
                     </Field>

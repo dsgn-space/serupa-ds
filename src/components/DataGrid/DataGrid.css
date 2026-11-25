@@ -33,10 +33,10 @@
 .srp-data-grid--sticky { scroll-padding-top: var(--srp-data-grid-head, var(--spacing-10)); }
 .srp-data-grid__cell--center { text-align: center; }
 .srp-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
-.srp-data-grid__cell--selected { background: var(--data-grid-bg-selected, var(--primary-subtle)); }
+.srp-data-grid__cell:where([data-selected]) { background: var(--data-grid-bg-selected, var(--primary-subtle)); }
 /* A range of one cell is only the active cell: it's washed while focus is in the grid, as a spreadsheet shows where
    you are, and not on a grid nobody has reached yet or has left. A range of more cells stays washed. */
-.srp-data-grid[data-range="cell"]:not(:focus-within) .srp-data-grid__cell--selected { background: none; }
+.srp-data-grid[data-range="cell"]:not(:focus-within) .srp-data-grid__cell:where([data-selected]) { background: none; }
 .srp-data-grid__header:focus-visible, .srp-data-grid__cell:focus-visible, .srp-data-grid__cell--editing {
   outline: var(--focus-ring-width) solid var(--data-grid-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); z-index: var(--z-10);
 }
@@ -48,7 +48,7 @@
 }
 .srp-data-grid--sm .srp-data-grid__input { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
 .srp-data-grid__message { white-space: normal; text-align: center; padding: var(--data-grid-message-padding, var(--spacing-6)); }
-@media (forced-colors: active) { .srp-data-grid__cell--selected { forced-color-adjust: none; background: Highlight; color: HighlightText; } }
+@media (forced-colors: active) { .srp-data-grid__cell:where([data-selected]) { forced-color-adjust: none; background: Highlight; color: HighlightText; } }
 /* Print: the frame shows every row instead of its scrolled window (its height is the app's own, set inline, hence
    !important, as ScrollArea), the header row repeats on each page instead of sticking, and a row isn't split, as Table. */
 @media print {

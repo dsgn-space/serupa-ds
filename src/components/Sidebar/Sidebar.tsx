@@ -240,14 +240,15 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
   // ref are typed for HTMLElement, which both the link and the button are.
   const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 });
   const cls = cn('srp-sidebar__item', ctx.depth > 0 && 'srp-sidebar__item--nested', (props.current || (group && childActive)) && 'srp-sidebar__item--active', props.className);
+  const here = props.current || (group && childActive) ? '' : undefined;   // data-current: this page, or a group holding it
 
   if (group && rail) {
     return (
       <li className="srp-sidebar__li">
         <Menu placement="right-start" trigger={
           props.label != null && props.label !== false && props.label !== ''
-            ? <Tooltip content={props.label} placement="right" role="label"><button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls}>{inner(false)}</button></Tooltip>
-            : <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls}>{inner(false)}</button>
+            ? <Tooltip content={props.label} placement="right" role="label"><button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} data-current={here}>{inner(false)}</button></Tooltip>
+            : <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} data-current={here}>{inner(false)}</button>
         }>
           {railItems(kids)}
         </Menu>
@@ -257,7 +258,7 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
   if (group) {
     return (
       <li className="srp-sidebar__li" data-state={open ? 'open' : 'closed'}>
-        <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
+        <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} data-current={here} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
           <ul ref={nested} id={listId} className="srp-sidebar__list srp-sidebar__list--nested" hidden={shut} inert={(!open && exit.leaving) || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
         </SidebarContext.Provider>
@@ -265,7 +266,7 @@ function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttribute
     );
   }
   const Tag = props.as || config.link;
-  const link = <Tag {...rest} ref={ref} className={cls} aria-current={props.current ? 'page' : undefined}>{inner(false)}</Tag>;
+  const link = <Tag {...rest} ref={ref} className={cls} data-current={here} aria-current={props.current ? 'page' : undefined}>{inner(false)}</Tag>;
   return (
     <li className="srp-sidebar__li">
       {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}

@@ -10,7 +10,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Calendar } from '../../components/Calendar/Calendar';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -183,7 +183,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
 
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading times" /></Card>
               : !first && !booked ? <EmptyState icon="event_busy" title="No free times" headingLevel={2}
                   description={`${service.with} has no free times in the weeks ahead. New times open every Monday.`} />
               : booked ? (
@@ -195,10 +195,11 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
               ) : (
                 <form onSubmit={book} noValidate className="grid items-start gap-6 md:grid-cols-3">
                   <div className="flex flex-col gap-8 md:col-span-2">
+                    <p className="m-0 text-text-muted">Fields marked * are required.</p>
                     <section aria-labelledby="day" className="flex flex-col gap-4">
                       <h2 id="day" className={h2}>Day</h2>
                       <p className="m-0 text-sm text-text-muted">Days with no free times are struck through.</p>
-                      <Calendar ref={calendar} aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
+                      <Calendar ref={calendar} className="self-start" aria-labelledby="day" value={picked} onValueChange={pickDay} min={today}
                         defaultMonth={day(first ?? today)} isDateDisabled={closed} />
                       {picked ? <p id="free-times" className="m-0" role="status">{freeCount === 1 ? '1 time free' : `${formatNumber(freeCount, locale)} times free`} on {dayName(picked)}.</p> : null}
                     </section>

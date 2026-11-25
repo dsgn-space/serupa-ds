@@ -16,11 +16,11 @@
   background: var(--signature-pad-bg, var(--surface));
 }
 /* Read-only, the box is a step flatter, as a read-only field is: the typed name's field above it goes the same. */
-.srp-signature-pad--readonly .srp-signature-pad__box { background: var(--signature-pad-bg-readonly, var(--field-readonly)); }
-.srp-signature-pad--invalid .srp-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--danger)); }
+.srp-signature-pad:where([data-readonly]) .srp-signature-pad__box { background: var(--signature-pad-bg-readonly, var(--field-readonly)); }
+.srp-signature-pad:where([data-invalid]) .srp-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--danger)); }
 .srp-signature-pad__area { display: block; inline-size: var(--sizing-full); block-size: var(--sizing-full); touch-action: none; cursor: crosshair; user-select: none; -webkit-user-select: none; }
-.srp-signature-pad__area--typed, .srp-signature-pad--readonly .srp-signature-pad__area { cursor: default; }
-.srp-signature-pad--disabled .srp-signature-pad__area { cursor: var(--cursor-disabled); }
+.srp-signature-pad__area--typed, .srp-signature-pad:where([data-readonly]) .srp-signature-pad__area { cursor: default; }
+.srp-signature-pad:where([data-disabled]) .srp-signature-pad__area { cursor: var(--cursor-disabled); }
 .srp-signature-pad__strokes { fill: none; stroke: var(--signature-pad-ink, var(--text)); stroke-width: var(--signature-pad-stroke, var(--border-width-2)); stroke-linecap: round; stroke-linejoin: round; }
 /* Left to right on any page, as in the saved SVG (its x is from the left): on a right-to-left page the name ended at
    its x, past the box's left edge. */
@@ -30,7 +30,7 @@
   border-block-end: var(--border-width-1) solid var(--signature-pad-line, var(--text-muted));
 }
 .srp-signature-pad__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-1); justify-content: flex-end; }
-.srp-signature-pad--disabled .srp-signature-pad__box { opacity: var(--opacity-disabled); }
+.srp-signature-pad:where([data-disabled]) .srp-signature-pad__box { opacity: var(--opacity-disabled); }
 @media (forced-colors: active) {
   .srp-signature-pad__box { border-color: CanvasText; }
   .srp-signature-pad__strokes { stroke: CanvasText; }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { JobApplication, applicationProblems, type JobApplicationAnswers } from './JobApplication';
+import { JobApplication, applicationProblems, linkProblems, type JobApplicationAnswers } from './JobApplication';
 
 const active = () => document.activeElement as HTMLElement;
 const alertText = () => [...document.querySelectorAll('[role="alert"]')].map((e) => e.textContent).join(' ');
@@ -28,6 +28,8 @@ describe('Patterns/Job application', () => {
     expect(applicationProblems({ ...good, email: 'ana@' }).email).toBe('Enter an email address like name@example.com.');
     expect(applicationProblems({ ...good, phone: '12' }).phone).toBe('Enter a phone number with its area code, like +62 21 555 0142.');
     expect(applicationProblems({ ...good, phone: '+62 21 555 0142' })).toEqual({});
+    expect(linkProblems(['https://ana.design', '', 'ana.design'])).toEqual([undefined, undefined, 'Enter link 3 as a full address, like https://example.com/work.']);
+    expect(applicationProblems({ ...good, links: ['https://ana.design', 'portfolio'] }).links).toBe('Enter link 2 as a full address, like https://example.com/work.');
     expect(applicationProblems({ ...good, letter: 'x'.repeat(2001) }).letter).toBe('Shorten this to 2000 characters.');
   });
 
@@ -55,6 +57,27 @@ describe('Patterns/Job application', () => {
     await screen.getByRole('link', { name: /^Agree/ }).click();
     await expect.poll(() => active().id).toBe('job-consent');
     expect(onApply).not.toHaveBeenCalled();
+  });
+
+  test('links to work: Add makes a row up to 3, a bad one is named in the summary and marked, and blank ones aren’t sent', async () => {
+    const onApply = vi.fn(() => Promise.resolve());
+    const screen = await render(<JobApplication onApply={onApply} />);
+    await fill(screen);
+    const add = screen.getByRole('button', { name: 'Add a link' });
+    await add.click();
+    await expect.poll(() => active().id).toBe('job-link-0');
+    await userEvent.keyboard('ana.design');
+    await add.click();
+    await add.click();
+    await screen.getByRole('button', { name: 'Send application' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There is \S+ problem/);
+    await screen.getByRole('link', { name: 'Enter link 1 as a full address, like https://example.com/work.' }).click();
+    await expect.poll(() => active().id).toBe('job-link-0');
+    expect(active().getAttribute('aria-invalid')).toBe('true');
+    await userEvent.fill(active(), ' https://ana.design ');
+    await screen.getByRole('button', { name: 'Send application' }).click();
+    await expect.poll(() => active().textContent).toBe('Application sent');
+    expect((onApply.mock.calls[0] as unknown as [JobApplicationAnswers])[0].links).toEqual(['https://ana.design']);
   });
 
   test('Send sends the application trimmed, and the answer\'s heading takes focus with what happens next', async () => {

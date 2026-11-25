@@ -246,9 +246,9 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const empty = !value.length;
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
+    <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} data-invalid={(invalid || missing) ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
       <PickerButton {...rest} block="srp-cascade-select" buttonRef={mergedRef} open={open} panelId={base + '-panel'} invalid={invalid || missing} required={required} readOnly={readOnly} disabled={disabled} onOpen={show} onClose={() => close(false, 'trigger')}>
-        <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
+        <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} data-empty={empty ? '' : undefined} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
         <Icon icon={icons.ExpandMore} className="srp-cascade-select__chevron" />
       </PickerButton>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}

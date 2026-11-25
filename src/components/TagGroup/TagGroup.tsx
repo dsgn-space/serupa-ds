@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
-import { warnOnce } from '../../internal/warn';
 import { announce } from '../../internal/announce';
 import { useSettings } from '../../internal/provider';
 import { Icon, type IconSource } from '../Icon/Icon';
@@ -51,15 +50,12 @@ export interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   max?: number | undefined;
   /** Shown in place of the tags when there are none, such as "No labels yet". Default: nothing. */
   emptyText?: React.ReactNode;
-  /** @deprecated Use emptyText; removed in 18.0.0. Read when emptyText isn't given. */
-  empty?: React.ReactNode;
 }
 
 function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(allWords).labels;
-  const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, emptyText: 1, empty: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
-  if (process.env.NODE_ENV !== 'production' && props.empty !== undefined) warnOnce('deprecated-prop', 'TagGroup: `empty` is deprecated and removed in 18.0.0. Use `emptyText`, the name Combobox and CommandPalette give it.', 'deprecated-prop:TagGroup:empty');
-  const emptyText = props.emptyText ?? props.empty;
+  const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, emptyText: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
+  const emptyText = props.emptyText;
   const id = React.useId(), labelId = `${id}-label`;
   const mode = props.selectionMode || 'none';
   const [picked, setOwn] = useControllable<readonly string[]>(props.selected, props.defaultSelected || [], 'TagGroup', 'selected');
@@ -134,7 +130,7 @@ function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<H
           const on = picked.includes(t.id);
           return (
             <div key={t.id} role="row" data-tag-id={t.id} tabIndex={t.id === current ? 0 : -1}
-              className={cn('srp-tag-group__tag', on && 'srp-tag-group__tag--selected')}
+              className={cn('srp-tag-group__tag', on && 'srp-tag-group__tag--selected')} data-selected={on ? '' : undefined}
               aria-selected={mode !== 'none' ? on : undefined} aria-disabled={t.disabled || undefined}
               onFocus={() => setActive(t.id)} onKeyDown={(e) => onKeyDown(e, t, i)} onClick={() => select(t)}>
               <span role="gridcell" className="srp-tag-group__text">

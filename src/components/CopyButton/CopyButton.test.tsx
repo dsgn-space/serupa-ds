@@ -108,7 +108,8 @@ describe('CopyButton', () => {
     await render(<CopyButton id="fa" value={() => { calls++; return new Promise<string>((ok) => { ready = ok; }); }} onCopy={(t) => copied.push(t)} />);
     await userEvent.click(el('fa'));
     expect([write.mock.calls.length, items.length]).toEqual([1, 1]);   // written in the press, before the value is there
-    await userEvent.click(el('fa'));
+    // The button is busy now (aria-disabled), so the press is forced: Playwright would otherwise wait for it to be enabled.
+    await userEvent.click(el('fa'), { force: true });
     expect(calls).toBe(1);   // the second press waits for the first
     ready('fetched');
     const blob = await items[0]!.getType('text/plain');

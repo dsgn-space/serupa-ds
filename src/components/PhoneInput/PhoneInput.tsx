@@ -285,7 +285,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
   };
 
   return (
-    <span ref={boxRef} className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
+    <span ref={boxRef} className={cn('srp-input srp-phone-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="phone-input" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={(e) => pressFocuses(input)(e)}>
       <button ref={trigger} type="button" className="srp-phone-input__country" disabled={locked} data-value={country.code}
         aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listId : undefined}
@@ -309,7 +309,7 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
             <div id={listId} role="listbox" aria-label={label} className="srp-phone-input__listbox">
               {shownList.map((x, i) => (
                 <div key={x.c.code} id={base + '-opt-' + i} role="option" aria-selected={x.c.code === country.code} data-value={x.c.code}
-                  className={cn('srp-phone-input__option', i === active && 'srp-phone-input__option--active')}
+                  className="srp-phone-input__option" data-active={i === active ? '' : undefined}
                   onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) setActive(i); }} onClick={() => choose(x.c)}>
                   <span className="srp-phone-input__name">{x.name}</span>
                   <span className="srp-phone-input__code">+{x.c.dial}</span>

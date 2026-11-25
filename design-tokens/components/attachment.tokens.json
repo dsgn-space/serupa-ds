@@ -44,7 +44,7 @@
       },
       "link": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A linked name (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "link-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.primary-text-hover}",
         "$description": "A linked name under the pointer.",
         "$extensions": {
           "com.serupa": {

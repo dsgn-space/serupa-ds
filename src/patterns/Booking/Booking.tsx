@@ -8,7 +8,7 @@ import { Field } from '../../components/Field/Field';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { RangeCalendar } from '../../components/RangeCalendar/RangeCalendar';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -171,7 +171,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
 
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load the place" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading place" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading place" /></Card>
               : booked ? (
                 <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
                   <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked</h2>

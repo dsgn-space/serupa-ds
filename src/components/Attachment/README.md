@@ -112,8 +112,8 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-text` | `text` | The file name (4.5:1 on bg). |
 | `--attachment-muted` | `text-muted` | The kind and size (4.5:1 on bg). |
 | `--attachment-icon` | `text-muted` | The kind icon (3:1 on bg). |
-| `--attachment-link` | `primary` | A linked name (4.5:1 on bg). |
-| `--attachment-link-hover` | `primary-hover` | A linked name under the pointer. |
+| `--attachment-link` | `primary-text` | A linked name (4.5:1 on bg). |
+| `--attachment-link-hover` | `primary-text-hover` | A linked name under the pointer. |
 | `--attachment-border` | `border` | The outline. |
 | `--attachment-border-error` | `danger` | The outline of a failed upload (3:1 on the page). |
 | `--attachment-error-gap` | `spacing-1.5` | The space between a failed file's box and its message under it, a Field's gap between its control and its error (6px). |

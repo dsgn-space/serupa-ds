@@ -157,6 +157,7 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
               <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-6 md:grid-cols-3">
                 <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
                 <div className="flex flex-col gap-6 md:col-span-2">
+                  <p className="m-0 text-text-muted">Fields marked * are required.</p>
                   <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>
                     <div id="return-items" className="flex flex-col gap-4">
                       {items.map((i) => (

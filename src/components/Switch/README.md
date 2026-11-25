@@ -119,16 +119,18 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
 | `--switch-thumb` | `white` | The thumb while off: white in every theme, as Apple's. |
 | `--switch-thumb-checked` | `white` | The thumb while on: white in every theme, as Apple's. |
-| `--switch-thumb-ink-dark` | `on-primary` | In a dark theme, the pending ring and the check on the white thumb (the theme's darkest blue, 3:1 or more on white). |
+| `--switch-thumb-ink-dark` | `text-inverse` | In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light). |
 | `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
 | `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
-| `--switch-pending` | `primary` | pending's ring on the thumb (3:1 on the thumb, on or off) |
+| `--switch-pending` | `primary-text` | pending's ring on the off thumb (3:1 on it) |
+| `--switch-pending-checked` | `primary-text` | pending's ring on the on thumb (3:1 on it) |
 | `--switch-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--switch-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--switch-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--switch-track-edge-checked` | `primary-edge` | The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Shadow**
 

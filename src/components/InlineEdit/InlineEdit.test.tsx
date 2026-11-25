@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
+import { DescriptionItem, DescriptionList } from '../DescriptionList/DescriptionList';
 import { Dialog } from '../Dialog/Dialog';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
@@ -354,4 +355,14 @@ describe('InlineEdit', () => {
     await expect.poll(() => document.activeElement).toBe(input('ib'));
   });
 
+});
+
+test('as a value in a DescriptionList, its text starts where a plain value does and its row is as tall as a plain one', async () => {
+  await render(<div style={{ width: '480px' }}><DescriptionList>
+    <DescriptionItem term="Name"><InlineEdit id="dl-ie" label="Name" defaultValue="Website redesign" /></DescriptionItem>
+    <DescriptionItem term="Owner"><span id="dl-plain">Ana Lima</span></DescriptionItem>
+  </DescriptionList></div>);
+  const text = view('dl-ie').querySelector<HTMLElement>(TEXT)!.getBoundingClientRect(), plain = document.getElementById('dl-plain')!.getBoundingClientRect();
+  const row = (el: Element) => el.closest('dd')!.getBoundingClientRect().height;
+  expect([Math.round(text.left), Math.round(row(root('dl-ie')))]).toEqual([Math.round(plain.left), Math.round(row(document.getElementById('dl-plain')!))]);
 });

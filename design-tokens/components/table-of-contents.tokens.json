@@ -44,7 +44,7 @@
       },
       "line-current": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The line beside the current section's link (3:1).",
         "$extensions": {
           "com.serupa": {

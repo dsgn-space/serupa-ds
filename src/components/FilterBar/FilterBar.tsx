@@ -199,7 +199,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
       className={cn('srp-filter-bar', props.className)} data-component="filter-bar">
       <ul className="srp-filter-bar__chips" role="list">
         {active.map((f) => (
-          <li key={f.id} className={cn('srp-filter-bar__chip', isEmpty(value[f.id]) && 'srp-filter-bar__chip--empty')}>
+          <li key={f.id} className={cn('srp-filter-bar__chip', isEmpty(value[f.id]) && 'srp-filter-bar__chip--empty')} data-empty={(isEmpty(value[f.id])) ? '' : undefined}>
             <Popover title={f.label} placement="bottom-start" sheet="mobile" open={editing === f.id}
               onOpenChange={(open) => { if (open) setEditing(f.id); else closeEditor(f); }}
               trigger={<button type="button" className="srp-filter-bar__edit" data-filter={f.id} dir="auto"><TruncatedText>{said(f)}</TruncatedText></button>}>

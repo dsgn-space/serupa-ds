@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, press, seen } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Stepper, type StepperStep } from './Stepper';
 
@@ -215,7 +215,7 @@ describe('Stepper', () => {
         ['upcoming number', c(li[3]!, IND).color, c(li[3]!, IND).backgroundColor, 4.5],
         ['upcoming ring', c(li[3]!, IND).borderTopColor, page, 3],
         ['current number', c(li[2]!, IND).color, c(li[2]!, IND).backgroundColor, 4.5],
-        ['complete circle', c(li[0]!, IND).backgroundColor, page, 3],
+        ['complete circle', seen(li[0]!.querySelector(IND)!), page, 3],
         ['error mark', c(err, IND).color, c(err, IND).backgroundColor, 3],
         ['warning mark', c(warn, IND).color, c(warn, IND).backgroundColor, 3],
         ['warning ring', c(warn, IND).borderTopColor, page, 3],

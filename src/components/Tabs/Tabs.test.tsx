@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { color, contrast, css, press, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, press, settled, THEMES, withMotion, seen } from '../../../tools/test/vitest/helpers';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -202,7 +202,7 @@ describe('Tabs', () => {
   test('line: a 1px border under the row, 36px tabs (text-sm, font-medium, 12px sides), a 2px primary line under the selected one, whose label is darker; 16px icons', async () => {
     await setup();
     const r = el('un'), sel = selected('un'), other = r.querySelector('[aria-selected="false"]')!, a = getComputedStyle(sel, '::after'), s = css(sel);
-    expect([css(r.querySelector('[role="tablist"]')).borderBottomWidth, sel.getBoundingClientRect().height, a.height, a.backgroundColor]).toEqual(['1px', 36, '2px', color('var(--primary)')]);
+    expect([css(r.querySelector('[role="tablist"]')).borderBottomWidth, sel.getBoundingClientRect().height, a.height, a.backgroundColor]).toEqual(['1px', 36, '2px', color('var(--primary-text)')]);
     expect([s.fontSize, s.fontWeight, s.paddingLeft, css(sel.querySelector('[data-icon]')).fontSize]).toEqual(['14px', '500', '12px', '16px']);
     await expect.poll(() => css(sel).color).not.toBe(css(other).color);
   });
@@ -246,7 +246,7 @@ describe('Tabs', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const un = el('un').querySelector('[aria-selected="false"]')!, sel = selected('un'), pill = selected('dv');
-      const checks: Array<[string, string, string, number]> = [['tab', css(un).color, 'var(--surface)', 4.5], ['selected', css(sel).color, 'var(--surface)', 4.5], ['line', getComputedStyle(sel, '::after').backgroundColor, 'var(--surface)', 3], ['pill', css(pill).color, getComputedStyle(pill, '::before').backgroundColor, 4.5], ['pill fill', getComputedStyle(pill, '::before').backgroundColor, 'var(--surface)', 3]];
+      const checks: Array<[string, string, string, number]> = [['tab', css(un).color, 'var(--surface)', 4.5], ['selected', css(sel).color, 'var(--surface)', 4.5], ['line', getComputedStyle(sel, '::after').backgroundColor, 'var(--surface)', 3], ['pill', css(pill).color, getComputedStyle(pill, '::before').backgroundColor, 4.5], ['pill fill', seen(pill, '::before'), 'var(--surface)', 3]];
       for (const [k, a, c, min] of checks) { const r = contrast(a, c); n++; if (r < min) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     still.remove();

@@ -383,7 +383,7 @@ describe('Badge', () => {
     await expect.poll(() => clicks).toBe(3);
   });
 
-  test('hover and active: a layer in the text color, 10% on hover and 15% while pressed, with the text 30% darker (subtle and outline); solid uses black in light themes; disabled is neutral, not faded, with no layer', async () => {
+  test('hover and active: a layer in the text color, 10% on hover and 15% while pressed, with the text 30% darker (subtle and outline); a primary solid moves toward primary-hover; disabled is neutral, not faded, with no layer', async () => {
     await show();
     const layer = (e: Element) => { const c = getComputedStyle(e, '::before'); return [c.opacity, c.backgroundColor]; };
     const txt = css(el('btn')).color;
@@ -397,7 +397,7 @@ describe('Badge', () => {
     const act = await hold(el('btn'), async () => { await expect.poll(() => layer(el('btn'))[0]).toBe('0.15'); return layer(el('btn')); });
     expect(act[0]).toBe('0.15');
     await userEvent.hover(el('sbtn'));
-    await expect.poll(() => layer(el('sbtn'))).toEqual(['0.1', 'rgb(0, 0, 0)']);
+    await expect.poll(() => layer(el('sbtn'))).toEqual(['0.1', 'rgb(29, 78, 216)'])   // a primary solid badge moves toward primary-hover (blue-700), as the status tones do toward theirs;
     await userEvent.hover(el('dis'), { force: true });
     await settled();
     expect(layer(el('dis'))[0]).toBe('0');

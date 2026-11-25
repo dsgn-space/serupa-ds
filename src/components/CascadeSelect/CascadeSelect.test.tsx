@@ -328,7 +328,7 @@ describe('CascadeSelect', () => {
       ['level', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
       ['highlighted', 'var(--text)', 'var(--primary-subtle)', 4.5],
       ['hovered', 'var(--text)', 'var(--surface-muted)', 4.5],
-      ['check', 'var(--primary)', 'var(--surface-overlay)', 3],
+      ['check', 'var(--primary-text)', 'var(--surface-overlay)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
     ])).toEqual([]);
   });

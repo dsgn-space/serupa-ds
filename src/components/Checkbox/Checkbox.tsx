@@ -290,7 +290,7 @@ function CheckboxRender({ ref, ...props }: CheckboxProps & React.RefAttributes<H
   // the description sits inside the <label> (so it's clickable too); naming by the label text alone keeps it out of the name
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;
   return (
-    <label className={cn('srp-checkbox', 'srp-checkbox--size-' + size, card && 'srp-checkbox--card', (invalid || (group && group.invalid)) && 'srp-checkbox--invalid', rest.disabled && 'srp-checkbox--disabled', readOnly && 'srp-checkbox--readonly', !hasLabel && !hasDesc && 'srp-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
+    <label className={cn('srp-checkbox', 'srp-checkbox--size-' + size, card && 'srp-checkbox--card', (invalid || (group && group.invalid)) && 'srp-checkbox--invalid', rest.disabled && 'srp-checkbox--disabled', readOnly && 'srp-checkbox--readonly', !hasLabel && !hasDesc && 'srp-checkbox--bare', props.className)} data-invalid={(invalid || (group && group.invalid)) ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="checkbox" data-size={size}>
       <span className="srp-checkbox__control" key="control">
         <input {...rest} ref={setRefs} type="checkbox" className="srp-checkbox__input" data-indeterminate={mixed ? '' : undefined} key="input" />
         <span className="srp-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>

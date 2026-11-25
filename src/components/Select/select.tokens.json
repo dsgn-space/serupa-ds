@@ -134,7 +134,7 @@
       },
       "check": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The tick by the chosen option.",
         "$extensions": {
           "com.serupa": {

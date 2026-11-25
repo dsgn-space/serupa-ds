@@ -102,7 +102,7 @@ Each is an optional override: set it on the page, a container or one Splitter. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--splitter-line` | `border-control` | The handle's line (3:1 on the page). |
-| `--splitter-line-active` | `primary` | The line on hover, while dragged and on focus. |
+| `--splitter-line-active` | `primary-text` | The line on hover, while dragged and on focus. |
 | `--splitter-focus-ring` | `focus-ring` | The handle's focus ring. |
 | `--splitter-handle-size` | `spacing-2` | How thick the handle is, the area a pointer can grab (8px). |
 <!-- token-table:end -->

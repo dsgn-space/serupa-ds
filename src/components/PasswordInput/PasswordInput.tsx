@@ -120,7 +120,7 @@ function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAt
     if (props.onRevealedChange) props.onRevealedChange(!shown);
   };
   return (
-    <span className={cn('srp-input srp-password-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)}
+    <span className={cn('srp-input srp-password-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="password-input" data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       <input {...rest} ref={fieldRef} type={shown ? 'text' : 'password'} className="srp-input__field" spellCheck={false} autoCapitalize="off" autoCorrect="off" />

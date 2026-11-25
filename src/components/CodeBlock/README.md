@@ -87,7 +87,7 @@ Each is an optional override: set it on the page, a container or one CodeBlock. 
 | `--code-block-muted` | `text-muted` | The language and the line numbers (4.5:1 on bg). A marked line's number takes the text color. |
 | `--code-block-border` | `border` | The frame and the line under the header. |
 | `--code-block-mark-bg` | `primary-subtle` | A marked line's tint. |
-| `--code-block-mark-bar` | `primary` | The bar at a marked line's start. |
+| `--code-block-mark-bar` | `primary-text` | The bar at a marked line's start. |
 | `--code-block-focus-ring` | `focus-ring` | The ring inside the frame when the code scrolls and has keyboard focus. |
 | `--code-block-radius` | `radius-control` | The corners (6px). |
 | `--code-block-padding` | `spacing-4` | Space around the code (16px). |

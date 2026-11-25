@@ -245,7 +245,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   const percent = (z: number) => Math.round(z * 100) + '%';
   return (
     <div {...rest} ref={mergedRef} role="group" aria-labelledby={labelledBy}
-      className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-component="image-cropper"
+      className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-disabled={disabled ? '' : undefined} data-component="image-cropper"
       style={{ ...props.style, '--srp-image-cropper-aspect': String(aspect) } as React.CSSProperties}>
       <FieldContext.Provider value={null}>
         <div ref={frame} className="srp-image-cropper__frame" data-shape={props.shape === 'round' ? 'round' : 'rect'}

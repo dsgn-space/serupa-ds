@@ -27,7 +27,7 @@
    at least 24px apart, centre to centre: at sm the gap opens to 4px, and md and lg stars shrinking to fit stop at
    22px. With allowHalf, the half's radio takes no presses: the star's whole radio does, and where in the star the
    press lands picks the half or the whole (Rating.tsx), so each star is one target, never a 12px one. */
-.srp-rating:not(.srp-rating--readonly) {
+.srp-rating:not([data-readonly]) {
   --srp-rating-gap: max(var(--rating-gap, var(--spacing-0\.5)), calc(var(--spacing-6) - var(--srp-rating-size)));
   --srp-rating-reach: calc((var(--spacing-0) - var(--srp-rating-gap)) / 2);   /* half the gap, outward */
   gap: var(--srp-rating-gap);
@@ -46,15 +46,15 @@
 .srp-rating[aria-invalid="true"] .srp-rating__empty { color: var(--rating-invalid, var(--danger)); }
 .srp-rating[aria-invalid="true"] .srp-rating__empty svg { fill: none; stroke: currentColor; stroke-width: var(--border-width-2); stroke-linejoin: round; }
 .srp-rating[aria-invalid="true"] .srp-rating__empty path { vector-effect: non-scaling-stroke; }   /* not inherited: on the path, or the 2px is 2 of the 960 drawing units */
-.srp-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
-.srp-rating--disabled .srp-rating__choice { cursor: var(--cursor-disabled); }
+.srp-rating:where([data-disabled]) { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
+.srp-rating:where([data-disabled]) .srp-rating__choice { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   /* An empty star is an outline in the text color, not GrayText, which forced colors keep for what's disabled: the
      full stars are solid CanvasText, so the score reads by shape, not by a second gray. */
   .srp-rating__empty { color: CanvasText; }
   .srp-rating__empty svg { fill: Canvas; stroke: CanvasText; stroke-width: 56px; }   /* stylelint-disable-line serupa/no-raw-value -- in the star's 960-unit viewBox: about 1.4px at 24px */
-  .srp-rating--disabled .srp-rating__empty, .srp-rating--disabled .srp-rating__fill { color: GrayText; }
-  .srp-rating--disabled .srp-rating__empty svg { stroke: GrayText; }
+  .srp-rating:where([data-disabled]) .srp-rating__empty, .srp-rating:where([data-disabled]) .srp-rating__fill { color: GrayText; }
+  .srp-rating:where([data-disabled]) .srp-rating__empty svg { stroke: GrayText; }
   .srp-rating__fill { color: CanvasText; }
   .srp-rating__star:has(.srp-rating__choice:focus-visible) { outline-color: Highlight; }
 }

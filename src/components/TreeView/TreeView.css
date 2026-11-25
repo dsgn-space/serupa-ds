@@ -35,13 +35,13 @@
 @media (pointer: coarse) { .srp-tree-view__row { min-height: max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)); contain-intrinsic-block-size: auto calc(max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)) - var(--spacing-2)); } }
 @media (hover: hover) { .srp-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
 /* Pressed: one step past hover while held, at once. Not on the picked row or a disabled one. */
-.srp-tree-view__item:not(.srp-tree-view__item--selected, .srp-tree-view__item--disabled) > .srp-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
-.srp-tree-view__item--selected > .srp-tree-view__row {
+.srp-tree-view__item:not([data-selected], [data-disabled]) > .srp-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
+.srp-tree-view__item:where([data-selected]) > .srp-tree-view__row {
   background: var(--tree-view-item-bg-selected, var(--highlight));
   box-shadow: inset var(--srp-bar) 0 0 var(--tree-view-item-indicator, var(--highlight-indicator));
 }
 .srp-tree-view__item:focus-visible > .srp-tree-view__row { outline: var(--focus-ring-width) solid var(--tree-view-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.srp-tree-view__item--disabled > .srp-tree-view__row, .srp-tree-view__item--disabled > .srp-tree-view__row * { color: var(--tree-view-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-tree-view__item:where([data-disabled]) > .srp-tree-view__row, .srp-tree-view__item:where([data-disabled]) > .srp-tree-view__row * { color: var(--tree-view-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-tree-view__toggle { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--spacing-5); height: var(--spacing-5); color: var(--tree-view-icon-color, var(--text-muted)); }
 /* The chevron is the only pointer way to open an item when items can be picked: 20px to see, a 24px target (WCAG 2.5.8,
    GQ6) that fits the 32px row without moving anything. */
@@ -52,9 +52,9 @@
 /* cascade: a checkbox before the icon and label, drawn as Checkbox's box: a field-colored square with a 3:1 border,
    filled in primary with a check (or a dash for some) once checked. */
 .srp-tree-view__check { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; box-sizing: border-box; width: var(--tree-view-check-size, var(--spacing-4)); height: var(--tree-view-check-size, var(--spacing-4)); border: var(--border-width-1) solid var(--tree-view-check-border, var(--field-border)); border-radius: var(--tree-view-check-radius, var(--radius-inner)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-check-mark, var(--on-primary)); }
-.srp-tree-view__check:not([data-state="unchecked"]) { border-color: var(--tree-view-check-bg-checked, var(--primary)); background: var(--tree-view-check-bg-checked, var(--primary)); }
+.srp-tree-view__check:not([data-state="unchecked"]) { border-color: var(--tree-view-check-edge-checked, var(--primary-edge)); background: var(--tree-view-check-bg-checked, var(--primary)); }   /* the border is the fill's edge, as Checkbox's */
 .srp-tree-view__check .srp-icon { font-size: var(--spacing-3\.5); }
-.srp-tree-view__item--disabled > .srp-tree-view__row .srp-tree-view__check { border-color: var(--tree-view-text-disabled, var(--disabled-text)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-text-disabled, var(--disabled-text)); }
+.srp-tree-view__item:where([data-disabled]) > .srp-tree-view__row .srp-tree-view__check { border-color: var(--tree-view-text-disabled, var(--disabled-text)); background: var(--tree-view-check-bg, var(--field)); color: var(--tree-view-text-disabled, var(--disabled-text)); }
 @media (forced-colors: active) { .srp-tree-view__check { border-color: CanvasText; } .srp-tree-view__check:not([data-state="unchecked"]) { background: Highlight; color: HighlightText; } }
 .srp-tree-view__icon { display: inline-flex; flex-shrink: 0; color: var(--tree-view-icon-color, var(--text-muted)); }
 .srp-tree-view__icon .srp-icon { font-size: var(--spacing-4); }
@@ -62,5 +62,5 @@
 /* Opened or closed from the keyboard (data-instant, KW1): turned at once, no spin to wait for under a held key. */
 .srp-tree-view[data-instant] .srp-tree-view__toggle .srp-icon { transition: none; }
 @media (prefers-reduced-motion: reduce) { .srp-tree-view__toggle .srp-icon { transition: none; } }
-@media (forced-colors: active) { .srp-tree-view__item--selected > .srp-tree-view__row { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+@media (forced-colors: active) { .srp-tree-view__item:where([data-selected]) > .srp-tree-view__row { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 }

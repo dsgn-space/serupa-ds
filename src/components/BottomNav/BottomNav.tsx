@@ -18,7 +18,8 @@ export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes<HTMLElement>) {
-  const { className, hideFrom = 'md', children, ...rest } = props;
+  const { className, hideFrom: _hideFrom, children, ...rest } = props;
+  const hideFrom = props.hideFrom ?? 'md';
   const hide = hideFrom ? `srp-bottom-nav--hide-${hideFrom}` : 'srp-bottom-nav--always';
   return (
     <>
@@ -66,7 +67,7 @@ function BottomNavLinkBaseRender({ ref, ...props }: BottomNavLinkProps & React.R
   if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   const Tag = props.as || config.link;
   return <Tag {...rest} ref={ref} aria-current={props.current ? 'page' : undefined}
-    className={cn('srp-bottom-nav__link', props.current && 'srp-bottom-nav__link--active', props.className)}><span className="srp-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="srp-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="srp-bottom-nav__label">{props.children}</TruncatedText> : <span className="srp-bottom-nav__label">{props.children}</span>}</Tag>;
+    className={cn('srp-bottom-nav__link', props.current && 'srp-bottom-nav__link--active', props.className)} data-current={props.current ? '' : undefined}><span className="srp-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="srp-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>{typeof props.children === 'string' ? <TruncatedText className="srp-bottom-nav__label">{props.children}</TruncatedText> : <span className="srp-bottom-nav__label">{props.children}</span>}</Tag>;
 }
 
 const BottomNavLinkBase = /* @__PURE__ */ named('BottomNavLink', BottomNavLinkBaseRender);

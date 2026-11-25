@@ -8,6 +8,7 @@ import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Card } from '../Card/Card';
+import { Avatar } from '../Avatar/Avatar';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -76,10 +77,10 @@ describe('Table', () => {
     expect(getComputedStyle(page.getByRole('table', { name: 'Alone' }).element().parentElement!).borderTopWidth).toBe('1px');
   });
 
-  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
-    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
-      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
-    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  test('an end cell sets its numbers in tabular figures, digit under digit; a start cell keeps proportional ones, so a hyphen in its text isn\'t widened', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell align="end">Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">hotel-invoice.pdf</TableCell><TableCell id="tt" align="end">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['normal', 'tabular-nums']);
   });
 
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
@@ -151,6 +152,17 @@ describe('Table', () => {
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
+  });
+
+  test('an Avatar in a shaded row steps its fill up to secondary-hover, so it stays apart from the shade (the same zinc-100 as secondary in light themes); a plain row keeps secondary', async () => {
+    await render(<Table aria-label="People"><TableBody>
+      <TableRow data-i="p"><TableCell><Avatar id="avp" name="Ada Lovelace" size="sm" /></TableCell></TableRow>
+      <TableRow data-i="s" selected><TableCell><Avatar id="avs" name="Grace Hopper" size="sm" /></TableCell></TableRow>
+    </TableBody></Table>);
+    const fill = (i: string) => css(q(`#av${i}`).firstElementChild).backgroundColor;   // the Avatar's frame
+    await expect.poll(() => css(q('[data-i="s"]')).backgroundColor).toBe(bg('var(--surface-hover)'));
+    expect([fill('p'), fill('s')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect(fill('s')).not.toBe(css(q('[data-i="s"]')).backgroundColor);
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
@@ -361,7 +373,7 @@ describe('Table', () => {
     expect([c.backgroundColor, c.paddingLeft]).toEqual(['rgb(1, 2, 3)', '20px']);
   });
 
-  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar and the select checkbox outline 3:1; every theme', async () => {
+  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the select checkbox outline holds; every theme', async () => {
     await setup();
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -372,15 +384,13 @@ describe('Table', () => {
       const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .srp-text')).color, mts = css(q('#tdef [data-i="1"] .srp-text')).color, hd = css(q('#tdef th')).color;
       const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
-      const bar = contrast('var(--primary)', shaded); n++;
-      if (bar < 3) low.push(`${th} selected bar: ${bar.toFixed(2)}`);
       // A TableSelectCell's unchecked box, on a shaded row: the field border is soft by design, under 3:1 on purpose
       // (Checkbox README, Accessibility), so it's held to 1.3:1, where it still shows.
       const box = contrast('var(--field-border)', shaded); n++;
       if (box < 1.3) low.push(`${th} checkbox outline on a shaded row: ${box.toFixed(2)}`);
     }
     still.remove();
-    expect([low, n]).toEqual([[], 42]);
+    expect([low, n]).toEqual([[], 36]);
   });
 });
 

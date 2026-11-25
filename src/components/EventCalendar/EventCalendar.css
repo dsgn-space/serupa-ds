@@ -25,12 +25,12 @@
 .srp-event-calendar__day:focus { outline: none; }
 .srp-event-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--event-calendar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-event-calendar__date { display: block; padding-inline: var(--spacing-1); font-variant-numeric: tabular-nums; }
-.srp-event-calendar__day--outside .srp-event-calendar__date { color: var(--event-calendar-muted, var(--text-muted)); }
-.srp-event-calendar__day--today .srp-event-calendar__date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }   /* more than colour, as the agenda's today */
+.srp-event-calendar__day:where([data-outside]) .srp-event-calendar__date { color: var(--event-calendar-muted, var(--text-muted)); }
+.srp-event-calendar__day:where([data-today]) .srp-event-calendar__date { color: var(--event-calendar-today, var(--primary-text)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }   /* more than colour, as the agenda's today */
 
 .srp-event-calendar__events { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .srp-event-calendar__event {
-  --srp-evc-tone: var(--event-calendar-event-tone, var(--primary)); --srp-evc-fill: var(--event-calendar-event-bg, var(--primary-subtle));
+  --srp-evc-tone: var(--event-calendar-event-tone, var(--primary-text)); --srp-evc-fill: var(--event-calendar-event-bg, var(--primary-subtle));
   display: flex; align-items: center; gap: var(--spacing-1); box-sizing: border-box; width: var(--sizing-full); min-height: var(--spacing-6);
   margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-2); border: var(--spacing-0);
   border-inline-start: var(--border-width-2) solid var(--srp-evc-tone); border-radius: var(--event-calendar-event-radius, var(--radius-inner));
@@ -86,7 +86,7 @@
 }
 .srp-event-calendar__zone { width: var(--spacing-16); padding: var(--spacing-1); color: var(--event-calendar-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); vertical-align: bottom; }
 .srp-event-calendar__head-date { font-variant-numeric: tabular-nums; color: var(--event-calendar-text, var(--text)); font-weight: var(--font-semibold); }
-.srp-event-calendar__head--today, .srp-event-calendar__head--today .srp-event-calendar__head-date { color: var(--event-calendar-today, var(--primary)); }
+.srp-event-calendar__head:where([data-today]), .srp-event-calendar__head:where([data-today]) .srp-event-calendar__head-date { color: var(--event-calendar-today, var(--primary-text)); }
 .srp-event-calendar__column { height: auto; padding: var(--spacing-0); }
 .srp-event-calendar__scale { padding: var(--spacing-0); vertical-align: top; border-inline-end: var(--border-width-1) solid var(--event-calendar-border, var(--border)); }
 /* The all-day row, as tall in every day as the day with the most of them. */
@@ -122,7 +122,7 @@
 .srp-event-calendar__timed > li[data-short] .srp-event-calendar__title { white-space: nowrap; overflow-wrap: normal; max-height: none; }
 .srp-event-calendar__now {
   position: absolute; inset-inline: var(--spacing-0); z-index: var(--z-10); top: calc(var(--srp-evc-hour) * var(--srp-evc-at));
-  border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary)); pointer-events: none;
+  border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary-text)); pointer-events: none;
 }
 
 /* Creating and moving (onSlotSelect, onEventChange). An event that moves shows a grab cursor, and while it's dragged
@@ -130,7 +130,7 @@
    in the focus color. Its end, at the bottom of a timed event, drags its length. Nothing in the hours selects as text. */
 .srp-event-calendar__event--movable { cursor: var(--cursor-grab); }
 .srp-event-calendar[data-dragging], .srp-event-calendar[data-dragging] .srp-event-calendar__event { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
-.srp-event-calendar__event--dragging { box-shadow: var(--elevation-overlay); }
+.srp-event-calendar__event:where([data-dragging]) { box-shadow: var(--elevation-overlay); }
 .srp-event-calendar__hours { -webkit-user-select: none; user-select: none; }
 .srp-event-calendar__resize {
   position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--spacing-1\.5); cursor: ns-resize;
@@ -144,8 +144,8 @@
 
 .srp-event-calendar__agenda { display: flex; flex-direction: column; gap: var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .srp-event-calendar__agenda-date { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
-.srp-event-calendar__agenda-day--today .srp-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }
+.srp-event-calendar__agenda-day:where([data-today]) .srp-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary-text)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }
 .srp-event-calendar__agenda .srp-event-calendar__event { padding-block: var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); flex-wrap: wrap; }
 .srp-event-calendar__empty { margin: var(--spacing-0); color: var(--event-calendar-muted, var(--text-muted)); }
-@media (forced-colors: active) { .srp-event-calendar__now { border-top-color: Highlight; } .srp-event-calendar__ghost { border-color: Highlight; } .srp-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .srp-event-calendar__day--today .srp-event-calendar__date { text-decoration: underline; } }
+@media (forced-colors: active) { .srp-event-calendar__now { border-top-color: Highlight; } .srp-event-calendar__ghost { border-color: Highlight; } .srp-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .srp-event-calendar__day:where([data-today]) .srp-event-calendar__date { text-decoration: underline; } }
 }

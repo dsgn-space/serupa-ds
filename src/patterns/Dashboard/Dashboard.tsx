@@ -5,7 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Badge, type BadgeTone } from '../../components/Badge/Badge';
 import { Link } from '../../components/Link/Link';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Meter } from '../../components/Meter/Meter';
 import { Progress } from '../../components/Progress/Progress';
 import { Chart } from '../../components/Chart/Chart';
@@ -15,6 +15,7 @@ import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/Acti
 import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { FabMenu } from '../../components/FabMenu/FabMenu';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
@@ -68,6 +69,10 @@ export interface DashboardProps {
   name?: string | undefined;
   /** "New project" was pressed: in the header, or the first-run state. */
   onCreateProject?: (() => void) | undefined;
+  /** "Invite someone" was picked in the Create button, on a phone. */
+  onInvite?: (() => void) | undefined;
+  /** "Upload a file" was picked in the Create button, on a phone. */
+  onUpload?: (() => void) | undefined;
   /** Loads more activity. Return its promise, so the button shows it's busy. Without it, the demo pages through `data`. */
   onLoadMoreActivity?: (() => PromiseLike<unknown>) | undefined;
   /** With `onLoadMoreActivity`: false after the last page. */
@@ -120,7 +125,7 @@ const PAGE = 4;
 const gb = (n: number, locale: string) => `${n.toLocaleString(locale, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
-export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false, activityFailed = false, online }: DashboardProps) {
+export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onInvite, onUpload, onLoadMoreActivity, hasMoreActivity = false, activityFailed = false, online }: DashboardProps) {
   const locale = useLocale();
   const [shown, setShown] = React.useState(PAGE);
   const firstRun = !loading && !loadFailed && data.projects.length === 0;
@@ -138,6 +143,15 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
         <Stack gap={6}>
           <OfflineBanner online={online} placement="inline">These numbers are from when the page loaded. They update when you’re back.</OfflineBanner>
           <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
+          {/* On a phone, Create sits under the thumb: a FabMenu with what people start from here. From md up, New project
+              is in the header and the rest are on their own pages, so it hides. */}
+          {firstRun || loading || loadFailed ? null : (
+            <FabMenu label="Create" icon="add" extended className="md:hidden" actions={[
+              { label: 'New project', icon: 'create_new_folder', onSelect: () => onCreateProject?.() },
+              { label: 'Invite someone', icon: 'person_add', onSelect: () => onInvite?.() },
+              { label: 'Upload a file', icon: 'upload', onSelect: () => onUpload?.() },
+            ]} />
+          )}
 
           {loadFailed ? (
             <Card>
@@ -172,7 +186,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                   </div>
                   <Card padding="none" className="min-w-0 overflow-x-auto">
                     {loading ? (
-                      <div className="p-4"><Loader variant="skeleton" shape="text" lines={5} label="Loading: Recent projects" /></div>
+                      <div className="p-4"><Skeleton shape="text" lines={5} label="Loading: Recent projects" /></div>
                     ) : (
                       <Table caption="Recent projects" hideCaption>
                         <TableHead><TableRow>
@@ -193,7 +207,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                 <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
                   <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
                   <Card className="flex flex-col gap-4">
-                    {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
+                    {loading ? <Skeleton shape="text" lines={4} label="Loading: Usage" /> : (
                       <>
                         <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}
                           formatValue={(v, _, max) => `${gb(v, locale)} of ${gb(max, locale)}${v >= max * 0.8 ? ', almost full' : ''}`} />
