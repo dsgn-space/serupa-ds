@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/FieldList/labels.ts"],
+  "sourcesContent": ["// FieldList's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label. A row's Remove button and\n// what's said when a row comes or goes borrow TagGroup's and Combobox's words (\"Remove Phone 2\", \"Phone 2 added\").\nexport interface FieldListLabels {\n  /** FieldList: why Add is unavailable once the list has max rows, with the limit in the locale's digits. */\n  fieldListLimit: (max: string) => string;\n}\nexport const en: FieldListLabels = {\n  fieldListLimit: (max) => 'Limit reached: ' + max + '.',\n};\nexport const id: FieldListLabels = {\n  fieldListLimit: (max) => 'Batas tercapai: ' + max + '.',\n};\n"],
+  "mappings": ";AAOO,IAAM,KAAsB;AAAA,EACjC,gBAAgB,CAAC,QAAQ,oBAAoB,MAAM;AACrD;AACO,IAAM,KAAsB;AAAA,EACjC,gBAAgB,CAAC,QAAQ,qBAAqB,MAAM;AACtD;",
+  "names": []
+}

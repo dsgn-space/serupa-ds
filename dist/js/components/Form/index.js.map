@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Form/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Form, useForm, useFormValue } from './Form';\nexport type { FormProps, FormHandle, FormSubmitResult, FormCheck } from './Form';\nexport { FormSteps, FormStep } from './FormSteps';\nexport type { FormStepsProps, FormStepProps } from './FormSteps';\nexport type { StandardSchemaV1 } from '../../internal/standardSchema';\n"],
+  "mappings": ";AACA,SAAS,MAAM,SAAS,oBAAoB;AAE5C,SAAS,WAAW,gBAAgB;",
+  "names": []
+}
