@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/bidi.ts"],
+  "sourcesContent": ["// Unicode bidi isolation (U+2066 LRI, U+2067 RLI, U+2068 FSI, U+2069 PDI) so caller-supplied text\n// (file names, tags, emails, column names) interpolated into translated strings doesn't scramble\n// surrounding punctuation or numbers when its direction differs from the UI's.\n\nconst FSI = '\\u2068', PDI = '\\u2069';\nconst HAS_LTR = /[A-Za-z]/;\nconst HAS_RTL = /[\\u0590-\\u08FF\\uFB1D-\\uFEFC]/;\n\n/** Text in an explicit direction of its own, isolated from what's around it (LRI/RLI\u2026PDI); unchanged without one. */\nexport const isolate = (text: string, dir: 'ltr' | 'rtl' | undefined): string =>\n  (dir ? (dir === 'rtl' ? '\\u2067' : '\\u2066') + text + PDI : text);\n\n/** Isolates caller text with FSI\u2026PDI when it carries strong characters of the opposite direction (for example a Latin\n *  file name inside Arabic UI, or an Arabic/Hebrew tag inside LTR UI). Same-script strings stay unchanged. */\nexport const bidi = (text: string, ui: 'ltr' | 'rtl' = 'ltr'): string =>\n  (text && (ui === 'rtl' ? HAS_LTR.test(text) : HAS_RTL.test(text)) && !text.startsWith(FSI) ? FSI + text + PDI : text);\n"],
+  "mappings": ";AAIA,IAAM,MAAM;AAAZ,IAAsB,MAAM;AAC5B,IAAM,UAAU;AAChB,IAAM,UAAU;AAGT,IAAM,UAAU,CAAC,MAAc,QACnC,OAAO,QAAQ,QAAQ,WAAW,YAAY,OAAO,MAAM;AAIvD,IAAM,OAAO,CAAC,MAAc,KAAoB,UACpD,SAAS,OAAO,QAAQ,QAAQ,KAAK,IAAI,IAAI,QAAQ,KAAK,IAAI,MAAM,CAAC,KAAK,WAAW,GAAG,IAAI,MAAM,OAAO,MAAM;",
+  "names": []
+}

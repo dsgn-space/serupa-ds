@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Form/labels.ts"],
+  "sourcesContent": ["// Form's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface FormLabels {\n  /** Form: the page's title while a failed submit's errors show, so the tab and a screen reader's first words say so. */\n  formErrorTitle: (title: string) => string;\n  /** Form: under a field while its answer is checked, often on the server (a check from the checks prop). */\n  formChecking: string;\n  /** FormSteps: the button to the next step. */\n  formNext: string;\n  /** FormSteps: the button back to the step before. */\n  formBack: string;\n}\nexport const en: FormLabels = {\n  formErrorTitle: (title) => 'Error: ' + title,\n  formChecking: 'Checking\u2026',\n  formNext: 'Next',\n  formBack: 'Back',\n};\nexport const id: FormLabels = {\n  formErrorTitle: (title) => 'Kesalahan: ' + title,\n  formChecking: 'Memeriksa\u2026',\n  formNext: 'Berikutnya',\n  formBack: 'Kembali',\n};\n"],
+  "mappings": ";AAYO,IAAM,KAAiB;AAAA,EAC5B,gBAAgB,CAAC,UAAU,YAAY;AAAA,EACvC,cAAc;AAAA,EACd,UAAU;AAAA,EACV,UAAU;AACZ;AACO,IAAM,KAAiB;AAAA,EAC5B,gBAAgB,CAAC,UAAU,gBAAgB;AAAA,EAC3C,cAAc;AAAA,EACd,UAAU;AAAA,EACV,UAAU;AACZ;",
+  "names": []
+}

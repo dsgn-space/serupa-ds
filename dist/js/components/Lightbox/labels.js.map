@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Lightbox/labels.ts"],
+  "sourcesContent": ["// Lightbox's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface LightboxLabels {\n  /** Lightbox arrows. */\n  previousImage: string;\n  nextImage: string;\n  /** Lightbox: where the shown picture is in the set (\"2 of 5\"). */\n  imageOf: (image: number, total: number) => string;\n}\nexport const en: LightboxLabels = {\n  previousImage: 'Previous image',\n  nextImage: 'Next image',\n  imageOf: (image, total) => image + ' of ' + total,\n};\nexport const id: LightboxLabels = {\n  previousImage: 'Gambar sebelumnya',\n  nextImage: 'Gambar berikutnya',\n  imageOf: (image, total) => image + ' dari ' + total,\n};\n"],
+  "mappings": ";AASO,IAAM,KAAqB;AAAA,EAChC,eAAe;AAAA,EACf,WAAW;AAAA,EACX,SAAS,CAAC,OAAO,UAAU,QAAQ,SAAS;AAC9C;AACO,IAAM,KAAqB;AAAA,EAChC,eAAe;AAAA,EACf,WAAW;AAAA,EACX,SAAS,CAAC,OAAO,UAAU,QAAQ,WAAW;AAChD;",
+  "names": []
+}
