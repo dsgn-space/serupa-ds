@@ -45,7 +45,7 @@
   - term: Token
   - definition: A named value, such as a color or a space.
   - paragraph:
-    - img "A diagram of the install steps"
+    - 'img "A diagram of the install steps: install, import the styles, then use a component"'
 
 # DontFullWidth
 - article:
@@ -94,7 +94,7 @@
   - term: Token
   - definition: A named value, such as a color or a space.
   - paragraph:
-    - img "A diagram of the install steps"
+    - 'img "A diagram of the install steps: install, import the styles, then use a component"'
 
 # LongContent
 - article:
@@ -166,5 +166,5 @@
   - term: Token
   - definition: A named value, such as a color or a space.
   - paragraph:
-    - img "A diagram of the install steps"
+    - 'img "A diagram of the install steps: install, import the styles, then use a component"'
 
