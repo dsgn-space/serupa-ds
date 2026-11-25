@@ -4,6 +4,16 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [19.0.1] - 2026-11-25
+
+### Changed
+
+- Patterns: in Saved items, a sold-out item's Remove button is alone in its row, so its word now starts where the card's text starts instead of 9px in. Its padding and border sit past the edge, so the hover fill still shows the whole button.
+
+### Fixed
+
+- Form: the `checks` prop's description held a whole example in one line of code, which made Form's props table 254px wider than the docs page at 1280px. It now says the same in words.
+
 ## [19.0.0] - 2026-11-25
 
 ### Added
@@ -3250,7 +3260,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...HEAD
+[19.0.1]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...v19.0.1
 [19.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.1.0...v18.0.0
 [17.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.0.0...v17.1.0

@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v19.0.0
+npm install github:dsgn-space/serupa-ds#v19.0.1
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
