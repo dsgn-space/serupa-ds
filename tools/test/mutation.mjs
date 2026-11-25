@@ -12,6 +12,7 @@
 //   node tools/test/mutation.mjs … --minutes 100      start no new file after 100 minutes
 //   node tools/test/mutation.mjs … --stop 105         end by 105 minutes, leaving the file in progress unscored
 //   node tools/test/mutation.mjs … --json out.json    every file's mutants, kills and survivors, as JSON
+//   node tools/test/mutation.mjs … --hang 3           treat each file's third mutant as one that hangs (to test that)
 // A file is always put back as it was, also on Ctrl+C. Run it in a checkout with no edits to the files it mutates.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -30,7 +31,10 @@ const minutes = Number(value('--minutes')) || Infinity;
 // --stop N: end by N minutes even in the middle of a file, which then goes unscored. One file can take 45 minutes,
 // so --minutes alone let shards 1 and 4 run into the job's 120 minutes and be cancelled (Nightly, 24 Nov).
 const stop = Number(value('--stop')) || Infinity;
-const named = args.filter((a, i) => !a.startsWith('--') && !['--json', '--minutes', '--stop'].includes(args[i - 1]));
+// --hang N: take each file's N-th mutant as one that hangs, without running it, so the restart after a hang can be
+// tested (tools/test/mutation-restart.mjs).
+const hangAt = Number(value('--hang')) || 0;
+const named = args.filter((a, i) => !a.startsWith('--') && !['--json', '--minutes', '--stop', '--hang'].includes(args[i - 1]));
 
 // What to mutate, each with the test files that cover it.
 function targets() {
@@ -127,7 +131,11 @@ try {
   for (const [i, { file, tests }] of all.entries()) {
     if (Date.now() - began > minutes * 60_000) { console.log(`STOP  ${minutes} minutes up: ${all.slice(i).map((t) => t.file).join(', ')} not run`); break; }
     const abs = path.join(PROJECT, file), text = fs.readFileSync(abs, 'utf8');
-    const specs = await vitest.globTestSpecifications(tests.map((t) => path.join(PROJECT, t)));
+    // Specifications belong to the Vitest that made them, so they are made again after every restart. Running the old
+    // instance's in the new one counted every later run as failed, and so every later mutant as killed: a hang on
+    // dates.ts:8 took a real 84.3% to 100% (25 Nov).
+    const glob = () => vitest.globTestSpecifications(tests.map((t) => path.join(PROJECT, t)));
+    let specs = await glob();
     const t0 = Date.now();
     if ((await passes(specs, 300_000)) !== true) { console.log(`SKIP  ${file}: its tests fail without any mutant`); failed = true; continue; }
     const limit = Math.max(30_000, (Date.now() - t0) * 5);
@@ -135,18 +143,29 @@ try {
     console.log(`…     ${file}: ${list.length} mutants`);
     let killed = 0;
     restore.set(abs, text);
-    let cut = false;
-    for (const m of list) {
+    let cut = false, broken = false;
+    for (const [j, m] of list.entries()) {
       if (Date.now() - began > stop * 60_000) { cut = true; break; }
       fs.writeFileSync(abs, text.slice(0, m.start) + m.to + text.slice(m.end));
       vitest.invalidateFile(abs);
-      const ok = await passes(specs, limit);
-      if (ok === 'timeout') { killed++; await vitest.close(); fs.writeFileSync(abs, text); await start(); continue; }
+      const ok = j + 1 === hangAt ? 'timeout' : await passes(specs, limit);
+      if (ok === 'timeout') {
+        killed++;
+        await vitest.close();
+        fs.writeFileSync(abs, text);
+        await start();
+        specs = await glob();
+        // The new Vitest has to pass the file as it is before it scores anything, or every mutant after this one
+        // would count as killed.
+        if ((await passes(specs, 300_000)) !== true) { broken = true; break; }
+        continue;
+      }
       if (ok) survived.push(m.label); else killed++;
     }
     fs.writeFileSync(abs, text);
     vitest.invalidateFile(abs);
     restore.delete(abs);
+    if (broken) { console.log(`SKIP  ${file}: its tests fail without any mutant after Vitest restarted, so it goes unscored`); failed = true; continue; }
     if (cut) { console.log(`STOP  ${stop} minutes up: ${file} left unscored, ${all.slice(i + 1).map((t) => t.file).join(', ') || 'nothing else'} not run`); break; }
     const score = list.length ? killed / list.length : 1;
     results[file] = { mutants: list.length, killed, score: Math.round(score * 1000) / 1000 };
