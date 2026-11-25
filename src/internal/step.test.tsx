@@ -25,4 +25,10 @@ describe('steps', () => {
     }
     expect([snap(2.5, 0.5, 5.5, 1), snap(3, 0.5, 5.5, 1), snap(0.30000000000000004, 0, 1, 0.1), snap(5e-7, 0, 1e-6, 1e-7)]).toEqual([2.5, 3.5, 0.3, 5e-7]);
   });
+
+  test('snap: non-positive or non-finite step, inverted bounds, or non-finite value never produce NaN', () => {
+    expect([snap(5, 0, 10, 0), snap(5, 0, 10, -2), snap(5, 0, 10, Infinity), snap(5, 0, 10, NaN)]).toEqual([5, 5, 5, 5]);
+    expect([snap(15, 0, 10, 0), snap(-3, 0, 10, Infinity), snap(5, 10, 0, 1)]).toEqual([10, 0, 5]);
+    expect([snap(NaN, 2, 10, 1), snap(Infinity, 2, 10, 1), snap(-Infinity, 2, 10, 1)]).toEqual([2, 10, 2]);
+  });
 });

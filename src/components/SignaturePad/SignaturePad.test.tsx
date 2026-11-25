@@ -190,4 +190,22 @@ describe('SignaturePad', () => {
     }
     document.documentElement.removeAttribute('data-theme');
   });
+
+  test('multi-point strokes smooth with midpoint quadratic curves and read coalesced pointer events', async () => {
+    const vals: (SignatureValue | null)[] = [];
+    await render(<SignaturePad id="sq" aria-label="Smooth" onValueChange={(v) => vals.push(v)} />);
+    const svg = area(el('sq'));
+    const b = svg.getBoundingClientRect();
+    svg.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, button: 0, clientX: b.left + 10, clientY: b.top + 20 }));
+    const move = new PointerEvent('pointermove', { bubbles: true, pointerId: 1, clientX: b.left + 60, clientY: b.top + 40 });
+    Object.defineProperty(move, 'getCoalescedEvents', {
+      value: () => [
+        new PointerEvent('pointermove', { pointerId: 1, clientX: b.left + 30, clientY: b.top + 50 }),
+        new PointerEvent('pointermove', { pointerId: 1, clientX: b.left + 60, clientY: b.top + 40 }),
+      ],
+    });
+    svg.dispatchEvent(move);
+    svg.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1, clientX: b.left + 60, clientY: b.top + 40 }));
+    expect(vals.at(-1)?.svg).toMatch(/<path d="M10 20Q30 50 45 45L60 40"\/>/);
+  });
 });

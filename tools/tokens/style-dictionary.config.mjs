@@ -4,15 +4,15 @@
 //
 //   npm i -D style-dictionary@5
 //   node tools/tokens/style-dictionary.config.mjs [out dir]
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
+import { modeOf, themeIds } from './themeFiles.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const TOKENS = path.join(HERE, '..', '..', 'design-tokens');
 const OUT = process.argv[2] || 'build/tokens';
-const THEMES = fs.readdirSync(path.join(TOKENS, 'themes')).map((f) => f.replace(/\.tokens\.json$/, ''));
+const THEMES = themeIds(TOKENS);
 
 // Writes the format's duration object ({ value: 150, unit: 'ms' }) in its own unit, as tokens.css does. Style
 // Dictionary's time/seconds (left out below) would turn it into 0.15s.
@@ -29,7 +29,8 @@ StyleDictionary.registerTransform({
 
 for (const theme of THEMES) {
   const sd = new StyleDictionary({
-    source: [path.join(TOKENS, 'serupa.tokens.json'), path.join(TOKENS, 'themes', `${theme}.tokens.json`), path.join(TOKENS, 'components', '*.tokens.json')],
+    // A theme: the scales, its mode's aliases, then its brand's overlay on top.
+    source: [path.join(TOKENS, 'serupa.tokens.json'), path.join(TOKENS, 'themes', `${modeOf(theme)}.tokens.json`), path.join(TOKENS, 'brands', `${theme}.tokens.json`), path.join(TOKENS, 'components', '*.tokens.json')],
     usesDtcg: true,
     log: { verbosity: 'silent', warnings: 'disabled' },
     platforms: {

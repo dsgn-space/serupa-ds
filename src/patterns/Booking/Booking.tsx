@@ -125,7 +125,9 @@ export function stayProblem(stay: { start: string; end: string } | null, place: 
 export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', onReserve, loading = false, loadFailed = false, onRetry, online }: BookingProps) {
   const locale = useLocale(undefined);
   const [stay, setStay] = React.useState<{ start: string; end: string } | null>(null);
-  const [guests, setGuests] = React.useState<number | null>(2);
+  const [chosen, setGuests] = React.useState<number | null>(2);
+  // Two to start, or fewer when the place sleeps fewer (which it can say only once it has loaded).
+  const guests = chosen && Math.min(chosen, Math.max(1, place.maxGuests));
   const [asked, setAsked] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);

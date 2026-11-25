@@ -540,7 +540,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   // Closing: the options stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
   const exit = useExit(open, pop), shownList = open || exit.leaving;
   useAnchoredLayer(open, pop, box, { placement: 'bottom-start', offsetVar: '--srp-combobox-offset', matchWidth: true });
-  // The listbox scrolls, and draws only the rows in view and a few either side (useVirtual, as VirtualList does);
+  // The listbox scrolls, and draws only the rows in view and a few either side (useVirtual, as List's ListVirtualItems does);
   // its ::before and ::after stand in for the rest. The active row is always drawn, and scrolled into view.
   const listbox = React.useRef<HTMLDivElement | null>(null);
   // The rows: each shown option, and a heading before the first shown option of each group. slot: an option's row.

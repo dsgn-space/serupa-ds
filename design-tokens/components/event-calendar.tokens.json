@@ -94,7 +94,7 @@
       },
       "info-tone": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.info-text}",
         "$description": "The bar at the start of a tone=\"info\" event.",
         "$extensions": {
           "com.serupa": {

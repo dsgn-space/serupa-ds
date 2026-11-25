@@ -90,10 +90,17 @@ export function niceTicks(lo: number, hi: number, count: number): number[] {
   const raw = (hi - lo) / Math.max(1, count);
   const mag = 10 ** Math.floor(Math.log10(raw));
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw * (1 - 1e-9)) ?? 10 * mag;
+  const [, exp] = String(step).split('e');
+  const frac = (String(step).split('e')[0]!.split('.')[1] || '').length;
+  const places = Math.min(20, Math.max(0, frac - Number(exp || 0)));
+  const clean = (v: number) => Number(v.toFixed(places));
   const out: number[] = [];
-  for (let v = Math.floor(lo / step + 1e-9) * step; v < hi + step * (1 - 1e-9); v += step) out.push(+v.toPrecision(12));
-  const end = out[out.length - 1] ?? lo;
-  if (end < hi - 1e-9 * step) out.push(+(end + step).toPrecision(12));
+  for (let k = Math.floor(lo / step + 1e-9); ; k++) {
+    const v = clean(k * step);
+    if (out.length && v === out[out.length - 1]) break;
+    out.push(v);
+    if (v >= hi - 1e-9 * step) break;
+  }
   return out;
 }
 
@@ -337,11 +344,11 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
     e.preventDefault();
     if (to) { setLast(to); points.current.get(to.s + ':' + to.i)?.focus(); }
   };
-  // The category under the pointer: the nearest point (line) or the band it's in (bar).
+  // The category under the pointer: the nearest point (line) or the band it's in (bar, heatmap).
   const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!n || donut) return;   // a donut's slices say when the pointer is on them
     const x = flip(e.clientX - e.currentTarget.getBoundingClientRect().left);
-    const i = type === 'bar' ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
+    const i = type === 'bar' || heat ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
     const to = x >= start - (heat ? 0 : INSET) && i >= 0 && i < n ? i : null;
     if (heat) {
       const s = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().top - PAD_TOP) / rh);

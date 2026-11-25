@@ -66,28 +66,26 @@ export interface DataImportProps {
 }
 
 /** The rows of a CSV file: commas between cells, a line break between rows, "quoted" cells holding commas, line
-    breaks and "" for a quote. Empty lines are left out. */
-export function parseCsv(text: string): string[][] {
+    breaks and "" for a quote. Empty lines are left out. With lines, it also gets the line of the file each row
+    starts on, from 1, which is a row's number past empty lines and cells of more than one line. */
+export function parseCsv(text: string, lines?: number[]): string[][] {
   const rows: string[][] = [];
-  let row: string[] = [], cell = '', quoted = false;
+  let row: string[] = [], cell = '', quoted = false, line = 1, from = 1;
   const s = text.replace(/^\uFEFF/, '');
+  const keep = () => { row.push(cell); cell = ''; if (row.some((c) => c.trim())) { rows.push(row); lines?.push(from); } row = []; };
   for (let i = 0; i < s.length; i++) {
-    const ch = s[i];
+    const ch = s[i]!, br = ch === '\n' || ch === '\r', crlf = ch === '\r' && s[i + 1] === '\n';
+    if (br) { line++; if (crlf) i++; }
     if (quoted) {
       if (ch === '"' && s[i + 1] === '"') { cell += '"'; i++; }
       else if (ch === '"') quoted = false;
-      else cell += ch;
+      else cell += crlf ? '\r\n' : ch;
     } else if (ch === '"' && !cell) quoted = true;
     else if (ch === ',') { row.push(cell); cell = ''; }
-    else if (ch === '\n' || ch === '\r') {
-      if (ch === '\r' && s[i + 1] === '\n') i++;
-      row.push(cell); cell = '';
-      if (row.some((c) => c.trim())) rows.push(row);
-      row = [];
-    } else cell += ch;
+    else if (br) { keep(); from = line; }
+    else cell += ch;
   }
-  row.push(cell);
-  if (row.some((c) => c.trim())) rows.push(row);
+  keep();
   return rows;
 }
 
@@ -113,8 +111,9 @@ export function mappingProblems(m: ImportMapping, headers: string[]): ErrorSumma
 }
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-/** Each data row as the app's fields, with its problems and whether it updates a customer the app has. */
-export function checkRows(data: string[][], m: ImportMapping, existing: string[]): CheckedRow[] {
+/** Each data row as the app's fields, with its problems and whether it updates a customer the app has. lines are
+    the file's line of each row (parseCsv gives them); left out, the rows are lines 2 on. */
+export function checkRows(data: string[][], m: ImportMapping, existing: string[], lines?: number[]): CheckedRow[] {
   const known = new Set(existing.map((e) => e.toLowerCase()));
   const seen = new Map<string, number>();
   return data.map((cells, i) => {
@@ -127,9 +126,9 @@ export function checkRows(data: string[][], m: ImportMapping, existing: string[]
     else {
       const twice = seen.get(row.email.toLowerCase());
       if (twice) problems.push(`Same email as line ${twice}`);
-      else seen.set(row.email.toLowerCase(), i + 2);
+      else seen.set(row.email.toLowerCase(), lines?.[i] ?? i + 2);
     }
-    return { line: i + 2, row, problems, update: known.has(row.email.toLowerCase()) };
+    return { line: lines?.[i] ?? i + 2, row, problems, update: known.has(row.email.toLowerCase()) };
   });
 }
 
@@ -151,7 +150,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
   const [files, setFiles] = React.useState<File[]>([]);
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
   const [tries, setTries] = React.useState(0);
-  const table = React.useMemo(() => (file ? parseCsv(file.text) : []), [file]);
+  const [table, lines] = React.useMemo(() => { const l: number[] = []; return [file ? parseCsv(file.text, l) : [], l] as const; }, [file]);
   const headers = table[0] || [];
   const [mapping, setMapping] = React.useState<ImportMapping>(() => guessMapping(headers));
   const [skip, setSkip] = React.useState(false);
@@ -167,7 +166,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
   const fail = (found: ErrorSummaryItem[]) => { setErrors(found); setTries((t) => t + 1); return found.length > 0; };
   const error = (field: string) => errors.find((e) => e.field === field)?.message;
 
-  const checked = React.useMemo(() => checkRows(table.slice(1), mapping, existing), [table, mapping, existing]);
+  const checked = React.useMemo(() => checkRows(table.slice(1), mapping, existing, lines.slice(1)), [table, lines, mapping, existing]);
   const bad = checked.filter((r) => r.problems.length), good = checked.filter((r) => !r.problems.length);
   const updates = good.filter((r) => r.update).length;
 

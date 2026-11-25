@@ -39,12 +39,7 @@
   function pick(v, list, fallback) { return list.indexOf(v) >= 0 ? v : fallback; }
   function load() {
     try {
-      // A 4.x choice ("diki-theme") moves to the new key once: kept, and reset() forgets it for good.
       var raw = localStorage.getItem(KEY);
-      if (raw == null && (raw = localStorage.getItem('diki-theme')) != null) {
-        localStorage.setItem(KEY, raw);
-        localStorage.removeItem('diki-theme');
-      }
       var s = JSON.parse(raw || 'null');
       if (!s) return {};
       var o = {};

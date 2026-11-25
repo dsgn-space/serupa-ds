@@ -248,6 +248,9 @@ describe('FilterBar', () => {
     expect(said).toEqual(['archived', 'due', 'ghost', 'owner']);
     await render(<SerupaProvider locale="en-US"><FilterBar id="day" fields={fields} defaultValue={{ due: { start: '2026-02-30', end: '2026-03-01' } }} /></SerupaProvider>);
     expect(document.getElementById('day')!.querySelector('li button')!.textContent).toBe('Add filter');
+    // A month that doesn't exist rolls over to another date in JavaScript; it is no day either.
+    await render(<SerupaProvider locale="en-US"><FilterBar id="month" fields={fields} defaultValue={{ due: { start: '2026-13-01', end: '2026-00-15' } }} /></SerupaProvider>);
+    expect(document.getElementById('month')!.querySelector('li button')!.textContent).toBe('Add filter');
     warn.mockRestore();
   });
 });

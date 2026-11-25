@@ -51,6 +51,19 @@ describe('SerupaProvider labels', () => {
     expect([seen.length, seen[seen.length - 1]!.labels.close, seen[0]!.icons.has('u2_star')]).toEqual([2, 'Keluar', true]);
   });
 
+  test('labels written inline with a key left undefined keep the settings when the next render leaves that key out', async () => {
+    const seen: Array<ReturnType<typeof useSerupa>> = [];
+    const Peek = React.memo(function Peek() { seen.push(useSerupa()); return null; });
+    let bump: (n: number) => void = () => {};
+    function App() {
+      const [n, setN] = React.useState(0); bump = setN;
+      return <SerupaProvider labels={n ? { close: 'Tutup' } : { close: 'Tutup', dismiss: undefined }}><Peek /></SerupaProvider>;
+    }
+    await render(<App />);
+    React.act(() => bump(1));   // dismiss left out now: the same settings
+    expect(seen.length).toBe(1);
+  });
+
   test('a component prop still wins; an inner provider changes only what it sets', async () => {
     await render(<SerupaProvider labels={{ dismiss: 'Abaikan' }}>
       <Alert id="a" title="One" onDismiss={() => {}} />

@@ -17,8 +17,9 @@ function closing(s, open) {
   let depth = 0;
   for (let i = open; i < s.length; i++) {
     const c = s[i];
-    if (c === '/' && s[i + 1] === '*') { i = s.indexOf('*/', i + 2) + 1; continue; }
-    if (c === '"' || c === "'") { i = s.indexOf(c, i + 1); continue; }
+    // One left open runs to the end, so the brace is unclosed (indexOf's -1 would start the scan again).
+    if (c === '/' && s[i + 1] === '*') { const end = s.indexOf('*/', i + 2); if (end < 0) break; i = end + 1; continue; }
+    if (c === '"' || c === "'") { const end = s.indexOf(c, i + 1); if (end < 0) break; i = end; continue; }
     if (c === '{') depth++;
     else if (c === '}' && --depth === 0) return i;
   }

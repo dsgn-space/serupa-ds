@@ -19,7 +19,7 @@
 }
 .srp-chart__title { text-wrap: balance; grid-column: var(--srp-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
 .srp-chart__toggle { grid-column: var(--srp-chart-end); justify-self: end; }
-.srp-chart__frame, .srp-chart__table, .srp-chart__legend, .srp-chart > .srp-table-wrap { grid-column: var(--srp-chart-all); }
+.srp-chart__frame, .srp-chart__table, .srp-chart__legend, .srp-chart > .srp-table { grid-column: var(--srp-chart-all); }
 .srp-chart__frame { position: relative; min-inline-size: 0; }
 /* Before the first numbers: one placeholder block as tall as the plot (Chart sets its height). */
 .srp-chart__placeholder > .srp-skeleton { block-size: var(--sizing-full); }

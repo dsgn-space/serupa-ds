@@ -16,6 +16,11 @@ describe('CodeBlock', () => {
     expect(s.container.innerHTML).not.toContain('Infinity');
   });
 
+  test('startLine={0} counts from 0, and line 0 can be highlighted', async () => {
+    await render(<CodeBlock code={'a\nb'} lineNumbers startLine={0} highlight={[0]} />);
+    expect([pre().style.counterReset, [...pre().querySelector('code')!.children].map((l) => l.tagName)]).toEqual(['srp-code-line -1', ['MARK', 'SPAN']]);
+  });
+
   test('renders a <div>; ref, className and other props reach it; the code is in a <pre><code>', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<CodeBlock id="x" ref={ref} className="extra" data-x="y" code={CODE} language="js" />);

@@ -139,7 +139,7 @@ export function Poll({ question = 'Where should the summer party be?', options =
               </form>
             ) : (
               <section aria-labelledby="poll-results" className="flex flex-col items-start gap-4">
-                <h2 id="poll-results" ref={results} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">
+                <h2 id="poll-results" ref={results} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">
                   {closed ? 'Results' : 'Results so far'}
                 </h2>
                 <p className="m-0 text-text-muted">{votesWords(total)} in all.{vote ? ` You voted for “${options.find((o) => o.id === vote)?.label}”.` : ''}</p>

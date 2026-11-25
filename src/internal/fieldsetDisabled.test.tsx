@@ -7,6 +7,7 @@ import { ColorPicker } from '../components/ColorPicker/ColorPicker';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
 import { Select } from '../components/Select/Select';
 import { Textarea } from '../components/Textarea/Textarea';
+import { useFieldsetDisabled } from './useFieldsetDisabled';
 
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
 const look = (e: HTMLElement) => { const s = css(e); return [s.opacity, s.backgroundColor, s.cursor].join(' '); };
@@ -34,5 +35,18 @@ describe('in a <fieldset disabled>', () => {
     const view = q('#fs .srp-inline-edit__view') as HTMLButtonElement;
     await userEvent.hover(view, { force: true });
     expect([view.matches(':disabled'), css(view).cursor, css(view).backgroundColor, css(view.querySelector('[data-icon]')).display]).toEqual([true, 'auto', 'rgba(0, 0, 0, 0)', 'none']);
+  });
+});
+
+describe('useFieldsetDisabled', () => {
+  function Probe({ id }: { id: string }) {
+    const ref = React.useRef<HTMLSpanElement>(null);
+    return <span id={id} ref={ref} data-off={String(useFieldsetDisabled(ref))} />;
+  }
+  test('in the legend of a disabled fieldset that sits in another disabled fieldset, it is still disabled; in the outer legend it isn\'t', async () => {
+    await render(<fieldset disabled><legend><Probe id="outer" /></legend>
+      <fieldset disabled><legend><Probe id="inner" /></legend><Probe id="body" /></fieldset>
+    </fieldset>);
+    expect(['outer', 'inner', 'body'].map((id) => q('#' + id).dataset.off)).toEqual(['false', 'true', 'true']);
   });
 });

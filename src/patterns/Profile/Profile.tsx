@@ -101,7 +101,10 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
   const [savedAt, setSavedAt] = React.useState<Date | undefined>(undefined);
   // The new photo's preview: an object URL made once per file, and let go when the file changes or the page goes.
   const preview = React.useMemo(() => (files[0] ? URL.createObjectURL(files[0]) : ''), [files]);
-  React.useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
+  // A saved one is the profile's photo now: it's let go when another is saved, or when the page goes.
+  const kept = React.useRef('');
+  React.useEffect(() => () => { if (preview && preview !== kept.current) URL.revokeObjectURL(preview); }, [preview]);
+  React.useEffect(() => () => { if (kept.current) URL.revokeObjectURL(kept.current); }, []);
   const photo = preview || draft.photo;
   const dirty = profileChanged(draft, saved) || files.length > 0;
 
@@ -121,6 +124,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
     setStatus('saving');
     void Promise.resolve().then(() => onSave?.(sent, files[0] ?? null, files[0] ? crop : null)).then(() => {
       const next = { ...sent, photo: preview || sent.photo };
+      if (preview) { if (kept.current) URL.revokeObjectURL(kept.current); kept.current = preview; }
       setSaved(next);
       setDraft(next);
       setFiles([]);

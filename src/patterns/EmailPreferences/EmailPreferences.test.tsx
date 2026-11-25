@@ -50,6 +50,8 @@ describe('Patterns/Email preferences', () => {
     const screen = await render(<EmailPreferences topics={topics} onSave={onSave} />);
     await screen.getByRole('button', { name: 'Stop all emails' }).click();
     await expect.poll(() => active().textContent).toBe('You won’t get these emails any more');
+    // The same size as every pattern's confirmation (Message sent, You're booked): 2xl, 24px.
+    expect(getComputedStyle(active()).fontSize).toBe('24px');
     expect(onSave).toHaveBeenLastCalledWith({ news: false, survey: false });
     await screen.getByRole('button', { name: 'Turn them back on' }).click();
     await expect.poll(() => active().getAttribute('role')).toBe('switch');
@@ -68,7 +70,7 @@ describe('Patterns/Email preferences', () => {
   });
 
   test('a stop or a turn back on that fails says so', async () => {
-    const onSave = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('offline'));
+    const onSave = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
     const screen = await render(<EmailPreferences topics={topics} onSave={onSave} />);
     await screen.getByRole('button', { name: 'Stop all emails' }).click();
     await expect.poll(alertText).toContain('Couldn’t save your choices.');
@@ -76,5 +78,9 @@ describe('Patterns/Email preferences', () => {
     await expect.poll(() => active().textContent).toBe('You won’t get these emails any more');
     await screen.getByRole('button', { name: 'Turn them back on' }).click();
     await expect.poll(alertText).toContain('Couldn’t turn them back on.');
+    // Trying again works: the switches are back, without the old failure above them.
+    await screen.getByRole('button', { name: 'Turn them back on' }).click();
+    await expect.poll(() => active().getAttribute('role')).toBe('switch');
+    expect(alertText()).not.toContain('Couldn’t');
   });
 });

@@ -452,6 +452,11 @@ describe('PhoneInput', () => {
     warn.mockRestore();
   });
 
+  test('an international number whose own digits start like the trunk prefix keeps them: +7 800 is a Russian toll-free number', () => {
+    expect([parsePhone('+7 800 555-35-35')!.national, parsePhone('+370 612 34567')!.national, parsePhone('+7 8 800 555-35-35')!.national, formatPhone('+78005553535')])
+      .toEqual(['8005553535', '61234567', '8005553535', '+7 800 555-35-35']);
+  });
+
   test('the helpers: parsePhone, formatPhone, formatNational', () => {
     expect(parsePhone('+62 0812-3456-7890')).toEqual({ country: phoneCountry('ID'), national: '81234567890' });
     expect(parsePhone('+1 416 555 0199', 'CA')!.country.code).toBe('CA');
@@ -465,6 +470,20 @@ describe('PhoneInput', () => {
     expect([parsePhone('0812'), parsePhone('+999 1')]).toEqual([undefined, undefined]);
     expect([formatPhone('+6281234567890'), formatPhone('+74951234567'), formatPhone('+999123')]).toEqual(['+62 812-3456-7890', '+7 495 123-45-67', '+999123']);
     expect(formatNational('81234567890123', phoneCountry('ID')!)).toBe('812-3456-7890123');
+    expect([
+      formatNational('1012345678', phoneCountry('CN')!),
+      formatNational('2112345678', phoneCountry('ID')!),
+      formatNational('212345678', phoneCountry('KR')!),
+      formatNational('12345678', phoneCountry('IE')!),
+      formatNational('212345678', phoneCountry('PH')!),
+    ]).toEqual(['10 1234 5678', '21-1234-5678', '2-1234-5678', '1 234 5678', '2 1234 5678']);
+    expect([
+      10 >= phoneCountry('CN')!.min,
+      8 >= phoneCountry('KR')!.min,
+      8 >= phoneCountry('IE')!.min,
+      9 >= phoneCountry('PH')!.min,
+      8 >= phoneCountry('ID')!.min,
+    ]).toEqual([true, true, true, true, true]);
   });
   test('GR128, GR129: a pasted tel: link reads as its number, and an extension is left off rather than joined onto it', async () => {
     const got: [string, boolean][] = [];

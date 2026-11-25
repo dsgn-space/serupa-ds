@@ -5,7 +5,7 @@ Where Serupa is going, by theme, not by date: the order can change as products t
 ## Now
 
 - **Polish before breadth.** Every component, pattern and docs page held to the same details: sizes, states, words and pictures that agree across the whole system. The bug queue always goes first.
-- **The next major.** What it removes and renames, and how `npx serupa-migrate` makes those changes for you, is written up for comment in [docs/rfcs/17.0.0.md](docs/rfcs/17.0.0.md).
+- **The next major.** Breaking changes are held for one scheduled major at a time and proposed first in [docs/rfcs/](docs/rfcs/), with `npx serupa-migrate` handling the renames.
 
 ## Next
 

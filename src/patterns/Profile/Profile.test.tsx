@@ -5,7 +5,8 @@ import { userEvent } from 'vitest/browser';
 import { Profile, profileChanged, profileProblems, type ProfileInfo } from './Profile';
 
 const active = () => document.activeElement as HTMLElement;
-const alertText = () => [...document.querySelectorAll('[role="alert"]')].map((e) => e.textContent).join(' ');
+// The page's own alerts, not the announcer's live region, which keeps the last thing it said a while.
+const alertText = () => [...document.querySelectorAll('[role="alert"]:not([data-srp-announcer-assertive])')].map((e) => e.textContent).join(' ');
 const me: ProfileInfo = { name: 'Ana Lima', bio: 'Designer.', location: 'Bandung', website: 'https://ana.example.com', photo: '' };
 // A real one-pixel PNG, so the preview loads.
 const png = () => new File([Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='), (c) => c.charCodeAt(0))], 'me.png', { type: 'image/png' });
@@ -76,6 +77,9 @@ describe('Patterns/Profile', () => {
     await expect.poll(() => document.body.textContent).toContain('Saved');
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
     expect(document.querySelector('[role="img"][aria-label="Photo of Ana Lima"] img')).not.toBeNull();
+    // The saved photo's address still holds the picture: it isn't let go with the upload.
+    const saved = document.querySelector<HTMLImageElement>('[role="img"][aria-label="Photo of Ana Lima"] img')!.src;
+    expect(await fetch(saved).then((r) => r.ok, () => false)).toBe(true);
   });
 
   test('a new photo can be framed: a cropper under the upload, named by its field, with a zoom slider; none without one', async () => {

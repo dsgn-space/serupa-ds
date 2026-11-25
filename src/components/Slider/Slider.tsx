@@ -17,6 +17,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { NumberInput } from '../NumberInput/NumberInput';
 import { en as words } from './labels';
 import { isRtl } from '../../internal/position';
+import { isComposing } from '../../internal/ime';
 
 export type SliderValue = number | [number, number];
 /** A mark on a Slider's track: a value, and optional text shown under it. */
@@ -317,7 +318,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
       aria-describedby={isRange ? undefined : props['aria-describedby']} aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
       onFocus={() => { typedFrom.current = latestRef.current.slice(); }}
       onValueChange={(v) => { if (v != null) set(i, v); }}
-      onKeyUp={(e) => { if (e.key === 'Enter') fieldDone(); }}
+      onKeyUp={(e) => { if (e.key === 'Enter' && !isComposing(e)) fieldDone(); }}
       onBlur={() => { fieldDone(); typedFrom.current = null; }} /></FieldContext.Provider>
   );
   return (

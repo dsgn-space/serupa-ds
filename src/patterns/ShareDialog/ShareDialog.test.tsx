@@ -61,6 +61,21 @@ describe('Patterns/Share dialog', () => {
     await expect.element(screen.getByText('Shared with 1 person · Only people added can open')).toBeVisible();
   });
 
+  test('someone removed and then invited again keeps access: closing doesn\'t remove them, and they are listed once, with the new access', async () => {
+    const onRemove = vi.fn(), onInvite = vi.fn();
+    const screen = await render(<ShareDialog defaultOpen nativeShare={null} onRemove={onRemove} onInvite={onInvite} />);
+    await screen.getByRole('button', { name: 'Remove Budi Santoso' }).click();
+    await screen.getByRole('textbox', { name: 'Add people' }).fill('budi@example.com');
+    await screen.getByRole('button', { name: 'Add' }).click();
+    await expect.poll(() => onInvite.mock.calls.length).toBe(1);
+    await expect.poll(said).toContain('Added budi@example.com');
+    await screen.getByRole('button', { name: 'Done' }).click();
+    expect(onRemove).not.toHaveBeenCalled();
+    await expect.element(screen.getByText(digits('Shared with 2 people · Only people added can open'))).toBeVisible();
+    await screen.getByRole('button', { name: 'Share' }).click();
+    expect([screen.getByRole('button', { name: /^Remove / }).elements().length, (screen.getByRole('combobox', { name: 'Access for Budi Santoso' }).element() as HTMLSelectElement).value]).toEqual([2, 'view']);
+  });
+
   test('the link’s setting is whole phrases, stored, said, and shown on the page', async () => {
     const onLinkAccessChange = vi.fn();
     const screen = await render(<ShareDialog defaultOpen nativeShare={null} onLinkAccessChange={onLinkAccessChange} />);

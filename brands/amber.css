@@ -11,7 +11,6 @@
   --on-primary: var(--white);
   --primary-text: var(--amber-700);
   --primary-text-hover: var(--amber-800);
-  --field-action: var(--amber-700);
   --focus-ring: var(--amber-600);
   --link-visited: var(--violet-700);
   --srp-more-primary: var(--amber-900);
@@ -20,20 +19,18 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--amber-900);
   --srp-more-primary-text-hover: var(--amber-950);
-  --srp-more-field-action: var(--amber-900);
   --srp-more-focus-ring: var(--amber-700);
 }
 [data-theme="amber-dark"] {
-  --primary: #b7550e;
-  --primary-hover: #944211;
-  --primary-pressed: #7a3712;
+  --primary: #bb5915;
+  --primary-hover: #984616;
+  --primary-pressed: #7e3b16;
   --primary-edge: #00000000;
   --primary-subtle: var(--amber-950);
   --primary-subtle-pressed: var(--amber-900);
   --on-primary: var(--white);
   --primary-text: var(--amber-400);
   --primary-text-hover: var(--amber-300);
-  --field-action: var(--amber-400);
   --focus-ring: var(--amber-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--amber-300);
@@ -42,20 +39,18 @@
   --srp-more-on-primary: var(--amber-950);
   --srp-more-primary-text: var(--amber-300);
   --srp-more-primary-text-hover: var(--amber-200);
-  --srp-more-field-action: var(--amber-300);
   --srp-more-focus-ring: var(--amber-300);
 }
 :root[data-brand="amber"]:not([data-theme]), [data-brand="amber"]:not([data-theme]) {
-  --primary: light-dark(var(--amber-700), #b7550e);
-  --primary-hover: light-dark(var(--amber-800), #944211);
-  --primary-pressed: light-dark(var(--amber-900), #7a3712);
+  --primary: light-dark(var(--amber-700), #bb5915);
+  --primary-hover: light-dark(var(--amber-800), #984616);
+  --primary-pressed: light-dark(var(--amber-900), #7e3b16);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));
   --on-primary: var(--white);
   --primary-text: light-dark(var(--amber-700), var(--amber-400));
   --primary-text-hover: light-dark(var(--amber-800), var(--amber-300));
-  --field-action: light-dark(var(--amber-700), var(--amber-400));
   --focus-ring: light-dark(var(--amber-600), var(--amber-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--amber-900), var(--amber-300));
@@ -64,20 +59,18 @@
   --srp-more-on-primary: light-dark(var(--white), var(--amber-950));
   --srp-more-primary-text: light-dark(var(--amber-900), var(--amber-300));
   --srp-more-primary-text-hover: light-dark(var(--amber-950), var(--amber-200));
-  --srp-more-field-action: light-dark(var(--amber-900), var(--amber-300));
   --srp-more-focus-ring: light-dark(var(--amber-700), var(--amber-300));
 }
 :is([data-theme^="amber-"], [data-brand="amber"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--amber-700), #b7550e);
-  --primary-hover: light-dark(var(--amber-800), #944211);
-  --primary-pressed: light-dark(var(--amber-900), #7a3712);
+  --primary: light-dark(var(--amber-700), #bb5915);
+  --primary-hover: light-dark(var(--amber-800), #984616);
+  --primary-pressed: light-dark(var(--amber-900), #7e3b16);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--amber-50), var(--amber-950));
   --primary-subtle-pressed: light-dark(var(--amber-100), var(--amber-900));
   --on-primary: var(--white);
   --primary-text: light-dark(var(--amber-700), var(--amber-400));
   --primary-text-hover: light-dark(var(--amber-800), var(--amber-300));
-  --field-action: light-dark(var(--amber-700), var(--amber-400));
   --focus-ring: light-dark(var(--amber-600), var(--amber-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--amber-900), var(--amber-300));
@@ -86,7 +79,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--amber-950));
   --srp-more-primary-text: light-dark(var(--amber-900), var(--amber-300));
   --srp-more-primary-text-hover: light-dark(var(--amber-950), var(--amber-200));
-  --srp-more-field-action: light-dark(var(--amber-900), var(--amber-300));
   --srp-more-focus-ring: light-dark(var(--amber-700), var(--amber-300));
 }
 }

@@ -22,6 +22,7 @@ import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
+import { en as loadMoreWords } from '../LoadMore/labels';
 import { isRtl } from '../../internal/position';
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
@@ -258,20 +259,23 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
     const tr = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
     return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
   };
+  const showingOf = useSettings(loadMoreWords).labels.showingOf, locale = useLocale();
   const setNode = useMergedRef(ref, (n: HTMLTableSectionElement | null) => { body.current = n; });
+  const fmt = printing && count > PRINT_ROWS ? numberFormat(locale) : null;
   return (
     <tbody {...rest} ref={setNode} className={cn('srp-table__body', 'srp-table__body--virtual', props.className)}
       onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
       {lead.map((h, n) => <tr key={'lead' + n} aria-hidden="true" className="srp-table__spacer" style={{ height: h }} />)}
       {rows}
+      {fmt ? <tr className="srp-table__row"><td className="srp-table__cell" colSpan={99}>{showingOf(fmt.format(PRINT_ROWS), fmt.format(count))}</td></tr> : null}
       {!printing && r.after > 0 ? <tr aria-hidden="true" className="srp-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
   );
 }
 
 /* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
-   side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
+   side (useVirtual, as List's ListVirtualItems and Combobox do). Give the frame a height (containerProps style maxHeight, or a
    stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
    drawn ones stands in for the rest, so the columns keep their widths from the drawn rows (use table-layout: fixed or
    column widths for columns that mustn't shift while scrolling). Each drawn row gets aria-rowindex, and the table

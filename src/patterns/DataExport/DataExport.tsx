@@ -83,7 +83,8 @@ export function sizeWords(bytes: number, locale?: string) {
   const units = ['byte', 'kilobyte', 'megabyte', 'gigabyte'] as const;
   let i = 0;
   let n = bytes;
-  while (n >= 1000 && i < units.length - 1) { n /= 1000; i++; }
+  // Whole numbers of a unit (999,950 bytes rounds to 1,000 kB), so one that rounds to 1,000 is 1 of the next.
+  while (Math.round(n) >= 1000 && i < units.length - 1) { n /= 1000; i++; }
   return formatNumber(n, locale, { style: 'unit', unit: units[i], unitDisplay: 'short', maximumFractionDigits: n < 10 && i ? 1 : 0 });
 }
 
@@ -164,7 +165,7 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
             </div>
           </form>
           <section aria-labelledby="export-list" className="flex flex-col gap-4 pt-6">
-            <h2 id="export-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">Your exports</h2>
+            <h2 id="export-list" ref={listHeading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Your exports</h2>
             {asked ? <p role="status" id="export-asked" className="m-0">We’re preparing your data. We’ll email you when it’s ready to download.</p> : null}
             {list.length ? (
               <ul className="m-0 flex list-none flex-col gap-3 p-0">

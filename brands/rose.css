@@ -11,7 +11,6 @@
   --on-primary: var(--white);
   --primary-text: var(--rose-700);
   --primary-text-hover: var(--rose-800);
-  --field-action: var(--rose-700);
   --focus-ring: var(--rose-500);
   --link-visited: var(--violet-700);
   --srp-more-primary: var(--rose-900);
@@ -20,7 +19,6 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--rose-900);
   --srp-more-primary-text-hover: var(--rose-950);
-  --srp-more-field-action: var(--rose-900);
   --srp-more-focus-ring: var(--rose-700);
 }
 [data-theme="rose-dark"] {
@@ -33,7 +31,6 @@
   --on-primary: var(--white);
   --primary-text: var(--rose-400);
   --primary-text-hover: var(--rose-300);
-  --field-action: var(--rose-400);
   --focus-ring: var(--rose-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--rose-300);
@@ -42,7 +39,6 @@
   --srp-more-on-primary: var(--rose-950);
   --srp-more-primary-text: var(--rose-300);
   --srp-more-primary-text-hover: var(--rose-200);
-  --srp-more-field-action: var(--rose-300);
   --srp-more-focus-ring: var(--rose-300);
 }
 :root[data-brand="rose"]:not([data-theme]), [data-brand="rose"]:not([data-theme]) {
@@ -55,7 +51,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--rose-700), var(--rose-400));
   --primary-text-hover: light-dark(var(--rose-800), var(--rose-300));
-  --field-action: light-dark(var(--rose-700), var(--rose-400));
   --focus-ring: light-dark(var(--rose-500), var(--rose-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--rose-900), var(--rose-300));
@@ -64,7 +59,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--rose-950));
   --srp-more-primary-text: light-dark(var(--rose-900), var(--rose-300));
   --srp-more-primary-text-hover: light-dark(var(--rose-950), var(--rose-200));
-  --srp-more-field-action: light-dark(var(--rose-900), var(--rose-300));
   --srp-more-focus-ring: light-dark(var(--rose-700), var(--rose-300));
 }
 :is([data-theme^="rose-"], [data-brand="rose"]) [data-mode]:not([data-theme], [data-brand]) {
@@ -77,7 +71,6 @@
   --on-primary: var(--white);
   --primary-text: light-dark(var(--rose-700), var(--rose-400));
   --primary-text-hover: light-dark(var(--rose-800), var(--rose-300));
-  --field-action: light-dark(var(--rose-700), var(--rose-400));
   --focus-ring: light-dark(var(--rose-500), var(--rose-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--rose-900), var(--rose-300));
@@ -86,7 +79,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--rose-950));
   --srp-more-primary-text: light-dark(var(--rose-900), var(--rose-300));
   --srp-more-primary-text-hover: light-dark(var(--rose-950), var(--rose-200));
-  --srp-more-field-action: light-dark(var(--rose-900), var(--rose-300));
   --srp-more-focus-ring: light-dark(var(--rose-700), var(--rose-300));
 }
 }

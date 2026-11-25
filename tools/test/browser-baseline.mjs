@@ -21,7 +21,7 @@ import { floor } from '../browser-floor.mjs';
 
 const P = projectArg();
 // The README's floor: CSS anchor positioning (anchor(), position-area and position-try-fallbacks) needs Chrome and
-// Edge 129 and Firefox 147; @scope, which every component's styles sit inside, needs Safari 26.4.
+// Edge 129 and Firefox 147; @scope (used by Prose) is listed at Safari 26.4 in MDN compat data.
 // package.json's browserslist holds the numbers (tools/browser-floor.mjs).
 const BASELINE = floor(P);
 
@@ -43,7 +43,7 @@ const KNOWN = {
   'property overflow-clip-margin': { why: 'as overflow-clip-margin: content-box' },
   'overflow-clip-margin: content-box': { why: 'Select\'s styled field, inside @supports (appearance: base-select), which only Chromium passes today: a long value stops before the chevron; elsewhere the native select clips its own text' },
   ':open': { why: 'Select\'s styled list, inside @supports (appearance: base-select), which only newer browsers pass: the field keeps its ring and the chevron turns over while it is open' },
-  'property overflow-anchor': { why: 'VirtualList turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
+  'property overflow-anchor': { why: 'List with ListVirtualItems turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
   'overflow-anchor: none': { why: 'as overflow-anchor' },
   // Classes that do nothing in some browsers: the README's table lists them.
   'property field-sizing': { why: 'Textarea asks @supports first and measures in script elsewhere', readme: '`field-sizing-*`' },

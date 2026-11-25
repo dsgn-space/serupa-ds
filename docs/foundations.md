@@ -6,7 +6,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 | Group | Families | Character |
 | --- | --- | --- |
-| Neutrals | `slate`, `gray`, `zinc`, `neutral`, `stone` | Cool (slate) through pure (neutral) to warm (stone) greys. Pick **one** per product; the aliases use `zinc`. |
+| Neutrals | `zinc`, `slate` | `zinc` is the neutral every alias uses; `slate` is a cooler grey for your own CSS. 18.0.0 removed `gray`, `neutral` and `stone`, which nothing used. |
 | Warm | `red`, `orange`, `amber`, `yellow` | Errors, warnings, highlights. |
 | Greens | `lime`, `green`, `emerald`, `teal` | Success, positive states. |
 | Blues | `cyan`, `sky`, `blue`, `indigo` | Links, primary actions, info. |
@@ -29,7 +29,7 @@ Every token's usage note gives its contrast against white or black text. Rules o
 
 Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the two are the same pair):
 
-- **500+**: the neutrals: `slate`, `gray`, `zinc`, `neutral`, `stone`.
+- **500+**: the neutrals: `zinc` and `slate`.
 - **600+**: `red`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`.
 - **700+**: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`.
 - On a `-50` / `-100` tint, set text in the same family at **700–900**.
@@ -40,13 +40,13 @@ Every theme shares **one set of foundations**: the same palette, type, spacing s
 
 | Brand | `primary` in light | `primary` in dark | `primary-text` in dark |
 | --- | --- | --- | --- |
-| `blue` *(default)* | `blue-600` | `#2968f0` | `blue-400` |
+| `blue` *(default)* | `blue-600` | `#2b6af2` | `blue-400` |
 | `red` | `red-700` | `#d13832` | `red-400` |
-| `orange` | `orange-700` | `#c74614` | `orange-400` |
-| `amber` | `amber-700` | `#b7550e` | `amber-400` |
+| `orange` | `orange-700` | `#c94817` | `orange-400` |
+| `amber` | `amber-700` | `#bb5915` | `amber-400` |
 | `yellow` | `yellow-500`, under `yellow-950` text, in a `yellow-700` edge | `yellow-400`, under `yellow-950` text | `yellow-400` |
-| `lime` | `lime-700` | `#4e7e12` | `lime-400` |
-| `green` | `green-700` | `#18823e` | `green-400` |
+| `lime` | `lime-700` | `#538219` | `lime-400` |
+| `green` | `green-700` | `#1f8643` | `green-400` |
 | `emerald` | `emerald-700` | `#18815f` | `emerald-400` |
 | `teal` | `teal-700` | `#1e7e76` | `teal-400` |
 | `cyan` | `cyan-700` | `#1b7b97` | `cyan-400` |
@@ -64,7 +64,7 @@ A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-
 
 `primary` is a fill with white text on it: a primary button, a checked box, the selected day. `primary-text` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
 
-**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened only as far as 3:1 on a raised dark card asks: `blue-600` (#2563eb) becomes #2968f0, and no brand moves more than a few points of lightness. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `primary-edge` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `primary-edge` is transparent and nothing is drawn. A custom mark filled with `primary` takes the same edge: `box-shadow: inset 0 0 0 1px var(--primary-edge)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
+**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened as far as 3:1 on a raised dark card asks, and always a touch (0.02 of OKLCH lightness) while white text on it keeps 4.5:1, as Apple's system colors are a touch brighter in dark: `blue-600` (#2563eb) becomes #2b6af2, and no brand moves more than a few points of lightness. The status fills (`success`, `warning`, `info`, `danger`) follow the same rule. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `primary-edge` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `primary-edge` is transparent and nothing is drawn. A custom mark filled with `primary` takes the same edge: `box-shadow: inset 0 0 0 1px var(--primary-edge)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
@@ -148,32 +148,32 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `border-raised` | `zinc-200` | `zinc-800` | Deprecated: the same as `border`, which a raised card uses now. Removed in 15.0.0; `serupa-migrate` renames it. |
 | `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
-| `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
+| `success` | `green-600` | `#23a950` | Success icons and fills (3:1): in dark, `green-600` a touch lighter. Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
 | `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
-| `success-hover` | `green-500` | `green-400` | Hover / pressed state of `success` fills. |
+| `success-hover` | `green-500` | `#2ecc64` | Hover / pressed state of `success` fills. |
 | `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
 | `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
 | `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
-| `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. Not for text: use `warning-text`. |
+| `warning` | `amber-600` | `#e07d17` | Warning icons and fills (in dark, `amber-600` a touch lighter); put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
 | `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
-| `warning-hover` | `amber-500` | `amber-400` | Hover / pressed state of `warning` fills. |
+| `warning-hover` | `amber-500` | `#fca41d` | Hover / pressed state of `warning` fills. |
 | `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
 | `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
 | `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
-| `danger` | `red-600` | `red-600` | Errors, destructive buttons; white text on it. |
-| `danger-hover` | `red-700` | `red-700` | Hover / pressed state of `danger`. |
+| `danger` | `red-600` | `#e22e2c` | Errors, destructive buttons; white text on it. In dark, `red-600` a touch lighter. |
+| `danger-hover` | `red-700` | `#bf2422` | Hover / pressed state of `danger`. |
 | `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
 | `danger-subtle` | `red-50` | `red-950` | Error alert / badge background. |
 | `danger-text` | `red-700` | `red-300` | Destructive text and icons on `surface` and danger tints. |
 | `danger-subtle-hover` | `red-100` | `red-900` | Hover fill for destructive secondary, outline and ghost buttons. |
 | `danger-border` | `red-300` | `red-800` | Border of a destructive outline button. |
-| `info` | `sky-700` | `sky-400` | Informational icons and text. |
+| `info` | `sky-700` | `#1e77b0` | Informational icons and fills (3:1): in dark, `sky-700` lightened only as far as 3:1 on a raised card. Not for text: use `info-text`. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
 | `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
-| `info-hover` | `sky-800` | `sky-300` | Hover / pressed state of `info` fills. |
-| `on-info` | `white` | `sky-950` | Text and icons on `info` fills (4.5:1+). |
+| `info-hover` | `sky-800` | `#1d6693` | Hover / pressed state of `info` fills. |
+| `on-info` | `white` | `white` | Text and icons on `info` fills (4.5:1+). |
 | `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
 | `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |
@@ -189,7 +189,6 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `field-hover` | `zinc-100` | `zinc-700` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
 | `field-pressed` | `zinc-200` | `zinc-600` | The same button held down. |
 | `field-border-invalid` | `red-600` | `red-600` | An invalid field's border: `danger`, 3:1+ on `field`. |
-| `field-action` | `‹brand›-600` | `‹brand›-400` | A text action inside a field (Input's "Apply"): `primary`, 4.5:1+ on the field (a generated brand takes a lighter shade if its primary falls short). |
 | `placeholder` | `zinc-500` | `zinc-400` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
 | `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
 | `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |
@@ -219,12 +218,10 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 `serupa-brand` comes with the package and makes a light and a dark theme from one color:
 
 ```sh
-npx serupa-brand acme "#0f766e" -o src/acme-theme.css          # corners as they are
-npx serupa-brand acme "#0f766e" --corners round -o src/acme-theme.css   # or sharp
-npx serupa-brand acme "#0f766e" --motion brisk -o src/acme-theme.css   # or calm
+npx serupa-brand acme "#0f766e" -o src/acme-theme.css
 ```
 
-Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
+A theme is its colors: corners are their own setting (`data-radius`), and motion its own tokens. Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
 It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary-text` on the page at 4.5:1, the dark fill 3:1 on a raised card, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
@@ -274,9 +271,9 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 | --- | --- | --- | --- | --- |
 | `type-display` | 48px / 1.1 | 600 | tight | Hero and marketing headlines. Two lines don't touch, unlike `type-5xl` (line height 1). |
 | `type-heading-1` | 30px / 36px | 600 | tight | Page title; `<Heading level={1}>` |
-| `type-heading-2` | 24px / 32px | 600 | tight | Section title; `<Heading level={2}>` |
+| `type-heading-2` | 24px / 32px | 600 | tight | Page section title; `<Heading level={2}>` |
 | `type-heading-3` | 20px / 28px | 600 | normal | Subsection; `<Heading level={3}>` |
-| `type-heading-4` | 18px / 28px | 600 | normal | Group title; `<Heading level={4}>`, Dialog and Drawer titles |
+| `type-heading-4` | 18px / 28px | 600 | normal | Group title; `<Heading level={4}>`, Dialog and Drawer titles; a section inside an app screen (below) |
 | `type-title` | 16px / 24px | 600 | normal | Card, list and EmptyState titles |
 | `type-body` | 16px / 24px | 400 | normal | Running text |
 | `type-body-sm` | 14px / 20px | 400 | normal | UI text: controls, cells, menus, descriptions |
@@ -284,6 +281,8 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 | `type-caption` | 12px / 16px | 400 | normal | Hints, timestamps, footnotes (with `text-muted`) |
 | `type-overline` | 12px / 16px, uppercase | 600 | widest | An eyebrow above a title |
 | `type-code` | 14px / 20px, `font-mono` | 400 | normal | Inline code and code blocks |
+
+**Section headings on app screens**: a page's own sections (a marketing page, a long document) take `type-heading-2`, 24px. On an app screen, where the page title is already the 30px `h1` and its sections are forms, lists and panels, a section's `h2` is 18px: `<Heading level={2} size="lg">`, or `text-lg font-semibold` on a plain `h2`. Every pattern does this. The confirmation that replaces a form after it's sent ("Message sent") keeps 24px, since it's the screen's news.
 
 Each role is also a `font` shorthand token (`var(--text-type-label)`) and a typography token in `design-tokens/`.
 
@@ -464,7 +463,7 @@ The corner radius scale. `rounded-sm` is 4px; the 2px step is `rounded-xs`.
 | --- | --- | --- |
 | `rounded-none` | 0 | Square |
 | `rounded-xs` | 2px | Tags, small chips |
-| `rounded-sm` / `rounded` | 4px | Inputs, small buttons, checkboxes |
+| `rounded-sm` | 4px | Inputs, small buttons, checkboxes |
 | `rounded-md` | 6px | Buttons |
 | `rounded-lg` | 8px | Cards, menus |
 | `rounded-xl` | 12px | Panels |
@@ -930,7 +929,6 @@ Transition and animation tokens are in one `transitions` group (`var(--duration-
 | `motion-loop-placeholder` | `duration-1000` | One pass of a loading placeholder's pulse (Image while it loads). |
 | `motion-loop-blink` | `duration-1000` | One blink of a text caret (PinInput). |
 | `motion-loop-progress` | `duration-1200` | One pass of an indeterminate progress bar. |
-| `motion-ripple` / `motion-ripple-fade` | `duration-500` / `300` | Kept for your own press ripples; no component uses them since Button and Badge dropped theirs. |
 | `motion-stagger` | `delay-50` | The gap between items of a group arriving one after another: list rows, toasts, grid cards. |
 | `motion-stagger-limit` | `delay-300` | The longest any staggered item waits, so a long list still arrives within a moment. |
 | `motion-sequence` | `delay-50` | The offset between the steps of one entrance: a dialog's or drawer's backdrop starts, then its panel. Exits don't sequence. |
@@ -1371,7 +1369,7 @@ The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, wit
 - **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. On a phone, the Back gesture or button closes what's open the way Escape does, innermost first: a Menu, Popover, picker list, HoverCard or Tour step, the Navbar's small-screen menu and its NavbarMenu panels, as well as a Dialog or Drawer (modal or not), before it leaves the page. Each README has a Keyboard table.
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
-- **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
+- **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too. One rule sets how urgent each is: **danger interrupts, everything else waits.** A danger Alert is `role="alert"`, a danger toast and a failed save (SaveStatus) are said at once; info, success, neutral and warning are `role="status"` or polite, and wait for a pause. A warning that must stop people before they act passes `role="alert"` itself.
 - **Focus on open and close.** Dialog, Drawer and Popover take the same two props: `initialFocus`, a ref to the element inside that takes focus when it opens, and `finalFocus`, a ref to where focus goes when it closes, used while that element is still on the page (else focus goes back to the trigger).
 - **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. On a touch screen, buttons, pages in Pagination, and checkbox, radio, switch and slider rows take a press 44px across whatever their size, without moving anything; between two neighbors side by side the press goes to the nearer one. Buttons in a row keep their full 44px above and below, so where a row wraps, a press between its lines goes to the line below. The items of a menu or menubar, the options of a Combobox, TimePicker, CascadeSelect or MentionInput, and the rows of a TreeView or Sidebar are 44px high on a touch screen. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
 - **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.

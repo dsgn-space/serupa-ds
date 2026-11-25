@@ -156,7 +156,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /Saved/ },
   'SaveStatus: a failed save': {
     ui: (s) => <SaveStatus status={s ? 'error' : 'saving'} errorText="Couldn’t save: you’re offline" />,
-    act: (next) => next(), says: /you’re offline/ },
+    act: (next) => next(), says: /you’re offline/, assertive: true },
   'Table: a new sort order': {
     ui: (s) => <Table><TableHead><TableRow><TableHeaderCell sort={s ? 'ascending' : 'none'} onSort={() => {}}>Name</TableHeaderCell></TableRow></TableHead><TableBody><TableRow><TableCell>Apollo</TableCell></TableRow></TableBody></Table>,
     act: (next) => next(), says: /Sorted by Name, ascending/ },

@@ -98,8 +98,35 @@ export function dateOrder(locale?: string): Field[] {
  * year is the one within 50 years of now (in 2026: 85 is 1985, 30 is 2030, 75 is 2075 and 77 is 1977), so a birth
  * date or a deadline both read right. A leading 4-digit year reads as ISO year-month-day unless the locale writes its
  * year first. A month written as a word (12 Mei 2025, May 12, 2025) reads in the locale or in English. */
+const JP_ERAS: Record<string, number> = { R: 2018, H: 1988, S: 1925, T: 1911, M: 1867, 令和: 2018, 平成: 1988, 昭和: 1925, 大正: 1911, 明治: 1867 };
+// module state: a fixed Intl formatter, the same for every request.
+let persianFmt: Intl.DateTimeFormat | undefined;
+function persianToGregorian(y: number, m: number, d: number): Date | null {
+  if (m < 1 || m > 12 || d < 1 || d > 31) return null;
+  if (!persianFmt) persianFmt = new Intl.DateTimeFormat('en-u-ca-persian', { calendar: 'persian', numberingSystem: 'latn', year: 'numeric', month: 'numeric', day: 'numeric' });
+  const parts = (dt: Date) => {
+    const p = persianFmt!.formatToParts(dt), get = (t: string) => +(p.find((x) => x.type === t)?.value ?? 'NaN');
+    return [get('year'), get('month'), get('day')] as const;
+  };
+  // Persian month 1 (Farvardin) begins around March 20–21; approximate then step exact days.
+  let cur = new Date(y + 621, m + 1, Math.min(d, 28));
+  for (let i = 0; i < 12; i++) {
+    const [py, pm, pd] = parts(cur);
+    const diff = (y - py) * 365 + (m - pm) * 30 + (d - pd);
+    if (diff === 0) return cur;
+    cur = addDays(cur, diff);
+  }
+  const [py, pm, pd] = parts(cur);
+  return py === y && pm === m && pd === d ? cur : null;
+}
+
+function localeCalendar(locale?: string): string {
+  try { return new Intl.DateTimeFormat(locale).resolvedOptions().calendar; } catch { return 'gregory'; }
+}
+
 export function parseDate(text: string, locale?: string, now: Date = new Date()): Date | null {
-  const nums = latinDigits(text).trim().split(/[^0-9]+/).filter(Boolean);
+  const raw = latinDigits(text).trim();
+  const nums = raw.split(/[^0-9]+/).filter(Boolean);
   const own = dateOrder(locale);
   // A month written as a word, as dates are pasted from an email or a document ("12 Mei 2025", "May 12, 2025",
   // "12. März 2025"): the four-digit number (or else the last) is the year and the other is the day (L8E8).
@@ -111,6 +138,17 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
     const [day, year] = a.length === 4 ? [b, a] : [a, b];
     return fromParts([day, String(month), year], ['day', 'month', 'year'], now);
   }
+  const cal = localeCalendar(locale);
+  // Japanese era prefix (e.g. "R8/10/24" or "令和8/10/24"): convert when the locale uses the Japanese calendar;
+  // reject unparseable Latin letters attached to numeric dates rather than silently stripping them ("R8" → 2008).
+  const eraMatch = /^(R|H|S|T|M|令和|平成|昭和|大正|明治)\s*(\d{1,2})\D+(\d{1,2})\D+(\d{1,2})\D*$/i.exec(raw);
+  if (eraMatch) {
+    if (cal !== 'japanese') return null;
+    const base = JP_ERAS[eraMatch[1]!.toUpperCase()] ?? JP_ERAS[eraMatch[1]!];
+    if (!base) return null;
+    return fromParts([String(base + Number(eraMatch[2])), eraMatch[3]!, eraMatch[4]!], ['year', 'month', 'day'], now);
+  }
+  if (/[A-Za-z]/.test(raw)) return null;
   // Digits alone, as typed on a number keypad: 6 or 8 of them, split in the locale's order (11222001 and 112201 in
   // en-US, 22112001 in de-DE), or as an ISO yyyymmdd. When both make a date (20011122 in de-DE is also 20.01.1122),
   // the one nearer now wins.
@@ -125,7 +163,23 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
   if (nums.length !== 3) return null;
   // A leading 4-digit year is ISO (2001-11-22), unless the locale itself writes the year first in another order
   // (Kyrgyz: year-day-month).
-  return fromParts(nums, /^\d{4}$/.test(nums[0] ?? '') && own[0] !== 'year' ? ['year', 'month', 'day'] : own, now);
+  const order = /^\d{4}$/.test(nums[0] ?? '') && own[0] !== 'year' ? (['year', 'month', 'day'] as const) : own;
+  const yi = order.indexOf('year'), mi = order.indexOf('month'), di = order.indexOf('day');
+  const yStr = nums[yi] ?? '', yVal = Number(yStr);
+  if (cal === 'buddhist' && yStr.length === 4 && yVal >= 2400 && yVal <= 2700) {
+    const adj = nums.slice();
+    adj[yi] = String(yVal - 543);
+    return fromParts(adj, order, now);
+  }
+  if (cal === 'roc' && yStr.length === 3 && yVal >= 100 && yVal <= 250) {
+    const adj = nums.slice();
+    adj[yi] = String(yVal + 1911);
+    return fromParts(adj, order, now);
+  }
+  if (cal === 'persian' && yStr.length === 4 && yVal >= 1300 && yVal <= 1500) {
+    return persianToGregorian(yVal, Number(nums[mi]), Number(nums[di]));
+  }
+  return fromParts(nums, order, now);
 }
 // Month names in the locale and in English, long and short, as they stand alone and inside a date (Russian "май"
 // and "мая"), folded and without a closing dot.

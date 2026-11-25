@@ -36,7 +36,7 @@ Drawn from the `ReadOnly` story.
 
 ## Usage
 
-- Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`.
+- Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`. Both are client-side guidance only: always validate file types and sizes on the server.
 - Without `multiple`, a new file replaces the old one; set `multiple` (and `maxFiles` if there's a limit) when people may add several.
 - Use `onReject` if you need to log refused files or show the reason elsewhere; the messages already show under the area.
 - A refused type says what the field takes, in words from `accept`: "photo.heic isn’t a PNG or JPG." Types with no short name, such as `application/vnd.ms-excel`, get "photo.heic: this type of file isn’t accepted."

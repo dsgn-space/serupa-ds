@@ -94,11 +94,13 @@ const demo: InvoiceInfo = {
 const DAY = 864e5;
 const day = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y!, m! - 1, d); };
 
-/** The invoice's sums: before tax, the tax (rounded to cents), and the total. */
+/** The invoice's sums, each in whole cents: before tax, the tax, and the total. */
 export function invoiceTotals(lines: readonly InvoiceLine[], taxRate: number): { subtotal: number; tax: number; total: number } {
-  const subtotal = lines.reduce((n, l) => n + l.quantity * l.price, 0);
-  const tax = Math.round(subtotal * taxRate * 100) / 100;
-  return { subtotal, tax, total: subtotal + tax };
+  // Rounded to cents, so 3 × 0.10 is 0.30 and not the arithmetic's 0.30000000000000004, which onPay would get.
+  const cents = (n: number) => Math.round(n * 100) / 100;
+  const subtotal = cents(lines.reduce((n, l) => n + l.quantity * l.price, 0));
+  const tax = cents(subtotal * taxRate);
+  return { subtotal, tax, total: cents(subtotal + tax) };
 }
 
 /** Where the invoice stands on a day: paid, due (with the days left), or overdue (with the days late). */

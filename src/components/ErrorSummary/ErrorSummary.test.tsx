@@ -51,7 +51,7 @@ describe('ErrorSummary', () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en"><ErrorSummary id="x" ref={ref} className="extra" data-x="y" autoFocus={false} errors={ERRORS} /></SerupaProvider>);
     const e = el('x'), h = e.querySelector('h2')!;
-    expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.tabIndex]).toEqual(['DIV', true, 'srp-error-summary extra', 'y', 'error-summary', -1]);
+    expect([e.tagName, e.getAttribute('role'), ref.current === e, e.className, e.dataset.x, e.dataset.component, e.tabIndex]).toEqual(['DIV', 'region', true, 'srp-error-summary extra', 'y', 'error-summary', -1]);
     expect([e.getAttribute('aria-labelledby'), h.textContent]).toEqual([h.id, 'There are 2 problems']);
     expect(e.querySelector('ul')!.getAttribute('role')).toBe('list');   // list-style: none drops the list role in Safari
     expect([...e.querySelectorAll('li > a')].map((a) => [a.getAttribute('href'), a.textContent])).toEqual([['#f-name', 'Enter your full name'], ['#f-plan-basic', 'Choose a plan']]);

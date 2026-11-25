@@ -2,7 +2,7 @@
 
 Rows of related things: people, files, notifications, settings. Each row has a title, an optional muted description, something before it (an Avatar or an icon) and something after it (a date, a Badge, an action). A row can be a link or a button; trailing actions stay outside it, so controls are never nested. A press anywhere on the row works, trailing meta ("3 days ago") included, except on a trailing action, which keeps its own press.
 
-**Also called:** list view, item list.
+**Also called:** list view, item list, virtualized list.
 
 ```jsx
 import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds';
@@ -27,6 +27,7 @@ import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds'
 - A set of similar things people scan and pick from: people, files, notifications, settings.
 - Rows that each open something or do one thing, with an action of their own at the end.
 - A list beside a detail view, where the selected row shows what's open.
+- Hundreds or thousands of rows people scroll through, with `ListVirtualItems` inside (see Thousands of rows): members, files, events, log lines.
 
 ## When not to use
 
@@ -83,6 +84,28 @@ const [picked, setPicked] = React.useState<string[]>([]);
         : members.map((m) => <ListItem key={m.id} title={m.name} description={m.email} leading={<Avatar name={m.name} size="sm" />} />)}
     </List>}
 ```
+
+### Thousands of rows
+
+Put a `ListVirtualItems` inside the List in place of its rows, and the List draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. The rows are ListItems and look the same.
+
+```tsx
+<List variant="card" aria-label="Members">
+  <ListVirtualItems count={people.length} itemKey={(i) => people[i].id}
+    renderItem={(i) => <ListItem title={people[i].name} description={people[i].email} />} />
+</List>
+```
+
+- The List then scrolls inside itself, 384px tall at most (`--list-virtual-height`). Set the token, or a `style` height, to fill a panel.
+- Give the List an `aria-label` (or `aria-labelledby` pointing at a heading): it's a scrolling region people can Tab to. It takes focus while it has rows and scrolls with the arrows, Page Up, Page Down, Home and End.
+- Pass `itemKey` when rows can be added, removed or reordered, so each row keeps its element.
+- Set `estimatedItemHeight` near a typical row's height (56px fits a row with a description). Rows are measured once drawn, so rows of different heights are fine; the guess only sets the scroll range until the first rows are seen.
+- Rows can be links or buttons. Tab moves through the rows that are drawn, and the row with focus stays drawn while it's scrolled away, so focus is never lost.
+- Each drawn row has `aria-posinset` and `aria-setsize`, so screen readers say "5,001 of 10,000" though only a few rows are in the page.
+- Rows not drawn aren't in the page: the browser's find (Ctrl+F) and printing don't see them. Offer a search or filter, and keep a plain List for up to a couple of hundred rows.
+- While the first rows load, use `loading` and `ListLoadingItems` as above, in the same List: each placeholder is as tall as the row that replaces it.
+
+It draws the rows in view and 4 more on each side (`overscan`); an empty `<li>` above and below them stands in for the rest, so the scrollbar is the right size. Rows not measured yet count as the average height of those seen, and when a row above the view turns out taller or shorter, the row at the top of the view stays where it is. Past 15 million px of rows (about 270,000 rows of 56px), the scroll range stays at 15 million and is scaled, under every browser's height limit, so every row, the last included, can be reached: the scrollbar moves through the rows faster than one pixel per pixel, while the keys and the wheel still move row by row. On the server it draws the first 20 rows.
 
 ### Do and don't
 
@@ -170,6 +193,18 @@ Placeholder rows, inside a List, while its rows load.
 | `leading` | `'icon'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | none | A circle before the text: a 20px icon's, or an Avatar's of that size |
 | `label` | string | `"Loading"` | Said once as the rows appear, after the loader's delay |
 
+### ListVirtualItems
+
+The rows of a List of thousands, drawing only those in view (see Thousands of rows, under Usage).
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `count` | number | required | How many rows there are |
+| `renderItem` | `(index) => ReactElement` | required | Draws row `index`: a ListItem, or an element that passes its props and style to an `<li>` |
+| `itemKey` | `(index) => Key` | the index | A stable key for each row (its id) |
+| `estimatedItemHeight` | number | `56` | A guess at a row's height in px, for rows not drawn yet |
+| `overscan` | number | `4` | Rows drawn beyond each edge of the view |
+
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one list. The list lives in `src/components/List/list.tokens.json` (also in `design-tokens/components/`).
@@ -207,6 +242,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-padding-x-card` | `spacing-4` | An item's side padding in variant="card" (16px). |
 | `--list-padding-y` | `space-row` | An item's top and bottom padding: 12px, 6px in the compact density. |
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
+| `--list-virtual-height` | `spacing-96` | With ListVirtualItems inside: the most the list grows to before it scrolls inside (384px). |
 
 **Border**
 

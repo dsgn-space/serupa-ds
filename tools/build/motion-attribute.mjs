@@ -75,7 +75,8 @@ export const motionAttribute = () => ({
     root.walkAtRules('media', (m) => {
       if (made.has(m)) return;
       if (REDUCE.test(m.params)) {
-        const rest = m.params.replace(REDUCE, '').replace(/^\s*and\s+|\s+and\s*$/g, '').trim();
+        // Without the condition: its "and" goes too, at the start, the end or between two others.
+        const rest = m.params.replace(REDUCE, '').replace(/\s+and\s+and\s+/g, ' and ').replace(/^\s*and\s+|\s+and\s*$/g, '').trim();
         const copy = m.clone();
         rulesIn(copy, (r) => { r.selector = under(r.selector); });
         if (rest) { copy.params = rest; made.add(copy); m.after(copy); }

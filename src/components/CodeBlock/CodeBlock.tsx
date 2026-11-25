@@ -38,7 +38,8 @@ function CodeBlockRender({ ref, ...props }: CodeBlockProps & React.RefAttributes
   const base = domId('srp-code', React.useId());
   const code = String(props.code ?? '').replace(/\r\n?/g, '\n').replace(/\n$/, '');
   const lines = code.split('\n');
-  const start = Number.isFinite(Number(props.startLine)) ? Math.round(Number(props.startLine) || 1) : 1;
+  // 0 is a line number like any other (a listing that counts from 0); a missing or non-finite one is 1.
+  const start = props.startLine != null && Number.isFinite(Number(props.startLine)) ? Math.round(Number(props.startLine)) : 1;
   const marked = new Set<number>();
   for (const h of props.highlight || []) {
     const [a, b] = typeof h === 'number' ? [h, h] : h;

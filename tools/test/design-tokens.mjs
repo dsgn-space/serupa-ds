@@ -5,6 +5,7 @@
 //   node tools/test/design-tokens.mjs [project dir]
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadThemes } from '../tokens/themeFiles.mjs';
 import { spawnSync } from 'node:child_process';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { HERE, projectArg, report, done, fail } from './lib.mjs';
@@ -22,7 +23,8 @@ check('design-tokens/ is in step with tokens.json', r.status === 0, (r.stdout ||
 if (r.status !== 0 && !fs.existsSync(path.join(D, BASE_FILE))) fail(`design-tokens/${BASE_FILE} is missing: ${(r.stdout || '').trim()}`);
 
 const base = load(path.join(D, BASE_FILE));
-const themes = Object.fromEntries(fs.readdirSync(path.join(D, 'themes')).sort().map((f) => [f.slice(0, -'.tokens.json'.length), load(path.join(D, 'themes', f))]));
+const themes = loadThemes(D);
+const themeFiles = ['themes', 'brands'].flatMap((d) => fs.readdirSync(path.join(D, d)).sort().map((f) => [`${d}/${f}`, load(path.join(D, d, f))]));
 const cssOnly = load(path.join(D, 'css-values.json'));
 
 const schema = load(path.join(D, 'tokens.schema.json'));
@@ -52,7 +54,7 @@ const SHAPE = {
   typography: (v) => isObj(v) && ['fontFamily', 'fontSize', 'fontWeight', 'letterSpacing', 'lineHeight'].every((k) => k in v),
 };
 const badType = [], badValue = [], badName = [];
-const allFiles = [[BASE_FILE, base], ...Object.entries(themes).map(([k, v]) => [`themes/${k}.tokens.json`, v])];
+const allFiles = [[BASE_FILE, base], ...themeFiles];
 const compDir = path.join(D, 'components');
 if (fs.existsSync(compDir)) for (const f of fs.readdirSync(compDir).sort()) allFiles.push([`components/${f}`, load(path.join(compDir, f))]);
 for (const [f, tree] of allFiles) {
@@ -101,5 +103,8 @@ for (const v of Object.values(cssOnly)) if (isObj(v)) for (const n of Object.key
 const missing = Object.values(src).filter((g) => isObj(g) && Array.isArray(g.tokens)).flatMap((g) => g.tokens).map((x) => x.name).filter((n) => !exported.has(n));
 check('every token in tokens.json is exported (typed, as an alias, or as a CSS value)', !missing.length, missing.slice(0, 10).join(', '));
 const nAlias = new Set(Object.values(themes).map((t) => Object.keys(t.color || {}).length));
-check(`each of the ${Object.keys(themes).length} theme files has the same aliases`, nAlias.size === 1, [...nAlias].join(', '));
+check(`each of the ${Object.keys(themes).length} themes, its mode with its brand's overlay, has the same aliases`, nAlias.size === 1, [...nAlias].join(', '));
+const light = Object.keys(load(path.join(D, 'themes', 'light.tokens.json')).color);
+const strays = themeFiles.filter(([f]) => f.startsWith('brands/')).flatMap(([f, t]) => Object.keys(t.color || {}).filter((k) => !light.includes(k)).map((k) => `${f}: ${k}`));
+check('a brand overlay sets only aliases its mode file has', !strays.length, strays.slice(0, 5).join('; '));
 done(report('Design tokens', R));

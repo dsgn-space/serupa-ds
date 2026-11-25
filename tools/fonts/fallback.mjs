@@ -47,8 +47,8 @@ const LATIN = tokens.type.fonts.find((f) => f.file === 'fonts/InterVariable-lati
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-fallback-'));
 const url = (f) => 'file://' + path.join(ROOT, f);
 fs.writeFileSync(path.join(dir, 'm.html'), `<!doctype html><meta charset="utf-8"><style>
-@font-face{font-family:I;src:url("${url('fonts/InterVariable.woff2')}");font-weight:100 900}
-@font-face{font-family:I;src:url("${url('fonts/InterVariable-Italic.woff2')}");font-weight:100 900;font-style:italic}
+@font-face{font-family:I;src:url("${url('tools/fonts/source/InterVariable.woff2')}");font-weight:100 900}
+@font-face{font-family:I;src:url("${url('tools/fonts/source/InterVariable-Italic.woff2')}");font-weight:100 900;font-style:italic}
 ${FACES.map(([style, weight, names]) => `@font-face{font-family:A;src:${names.map((n) => `local("${n}")`).join(',')};font-weight:${weight};font-style:${style}}`).join('\n')}
 </style><p>x</p>`);
 // Without hinting, which rounds each advance to a whole pixel at 16px (CI's Chromium hints by default).

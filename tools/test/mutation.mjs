@@ -10,6 +10,7 @@
 //   node tools/test/mutation.mjs src/internal/step.ts src/components/Rating/Rating.tsx
 //   node tools/test/mutation.mjs … --update           write the scores of the files it ran into the baseline
 //   node tools/test/mutation.mjs … --minutes 100      start no new file after 100 minutes
+//   node tools/test/mutation.mjs … --stop 105         end by 105 minutes, leaving the file in progress unscored
 //   node tools/test/mutation.mjs … --json out.json    every file's mutants, kills and survivors, as JSON
 // A file is always put back as it was, also on Ctrl+C. Run it in a checkout with no edits to the files it mutates.
 import fs from 'node:fs';
@@ -26,7 +27,10 @@ const value = (flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : nu
 const jsonAt = value('--json');
 // --minutes N: start no new file after N minutes, so a job with a time limit ends with what it finished.
 const minutes = Number(value('--minutes')) || Infinity;
-const named = args.filter((a, i) => !a.startsWith('--') && !['--json', '--minutes'].includes(args[i - 1]));
+// --stop N: end by N minutes even in the middle of a file, which then goes unscored. One file can take 45 minutes,
+// so --minutes alone let shards 1 and 4 run into the job's 120 minutes and be cancelled (Nightly, 24 Nov).
+const stop = Number(value('--stop')) || Infinity;
+const named = args.filter((a, i) => !a.startsWith('--') && !['--json', '--minutes', '--stop'].includes(args[i - 1]));
 
 // What to mutate, each with the test files that cover it.
 function targets() {
@@ -131,7 +135,9 @@ try {
     console.log(`…     ${file}: ${list.length} mutants`);
     let killed = 0;
     restore.set(abs, text);
+    let cut = false;
     for (const m of list) {
+      if (Date.now() - began > stop * 60_000) { cut = true; break; }
       fs.writeFileSync(abs, text.slice(0, m.start) + m.to + text.slice(m.end));
       vitest.invalidateFile(abs);
       const ok = await passes(specs, limit);
@@ -141,6 +147,7 @@ try {
     fs.writeFileSync(abs, text);
     vitest.invalidateFile(abs);
     restore.delete(abs);
+    if (cut) { console.log(`STOP  ${stop} minutes up: ${file} left unscored, ${all.slice(i + 1).map((t) => t.file).join(', ') || 'nothing else'} not run`); break; }
     const score = list.length ? killed / list.length : 1;
     results[file] = { mutants: list.length, killed, score: Math.round(score * 1000) / 1000 };
     const was = baseline[file]?.score;

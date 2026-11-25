@@ -11,7 +11,6 @@
   --on-primary: var(--white);
   --primary-text: var(--lime-700);
   --primary-text-hover: var(--lime-800);
-  --field-action: var(--lime-700);
   --focus-ring: var(--lime-700);
   --link-visited: var(--violet-700);
   --srp-more-primary: var(--lime-900);
@@ -20,20 +19,18 @@
   --srp-more-on-primary: var(--white);
   --srp-more-primary-text: var(--lime-900);
   --srp-more-primary-text-hover: var(--lime-950);
-  --srp-more-field-action: var(--lime-900);
   --srp-more-focus-ring: var(--lime-700);
 }
 [data-theme="lime-dark"] {
-  --primary: #4e7e12;
-  --primary-hover: #406314;
-  --primary-pressed: #375416;
+  --primary: #538219;
+  --primary-hover: #44681a;
+  --primary-pressed: #3b591a;
   --primary-edge: #00000000;
   --primary-subtle: var(--lime-950);
   --primary-subtle-pressed: var(--lime-900);
   --on-primary: var(--white);
   --primary-text: var(--lime-400);
   --primary-text-hover: var(--lime-300);
-  --field-action: var(--lime-400);
   --focus-ring: var(--lime-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--lime-300);
@@ -42,20 +39,18 @@
   --srp-more-on-primary: var(--lime-950);
   --srp-more-primary-text: var(--lime-300);
   --srp-more-primary-text-hover: var(--lime-200);
-  --srp-more-field-action: var(--lime-300);
   --srp-more-focus-ring: var(--lime-300);
 }
 :root[data-brand="lime"]:not([data-theme]), [data-brand="lime"]:not([data-theme]) {
-  --primary: light-dark(var(--lime-700), #4e7e12);
-  --primary-hover: light-dark(var(--lime-800), #406314);
-  --primary-pressed: light-dark(var(--lime-900), #375416);
+  --primary: light-dark(var(--lime-700), #538219);
+  --primary-hover: light-dark(var(--lime-800), #44681a);
+  --primary-pressed: light-dark(var(--lime-900), #3b591a);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--lime-50), var(--lime-950));
   --primary-subtle-pressed: light-dark(var(--lime-100), var(--lime-900));
   --on-primary: var(--white);
   --primary-text: light-dark(var(--lime-700), var(--lime-400));
   --primary-text-hover: light-dark(var(--lime-800), var(--lime-300));
-  --field-action: light-dark(var(--lime-700), var(--lime-400));
   --focus-ring: light-dark(var(--lime-700), var(--lime-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--lime-900), var(--lime-300));
@@ -64,20 +59,18 @@
   --srp-more-on-primary: light-dark(var(--white), var(--lime-950));
   --srp-more-primary-text: light-dark(var(--lime-900), var(--lime-300));
   --srp-more-primary-text-hover: light-dark(var(--lime-950), var(--lime-200));
-  --srp-more-field-action: light-dark(var(--lime-900), var(--lime-300));
   --srp-more-focus-ring: light-dark(var(--lime-700), var(--lime-300));
 }
 :is([data-theme^="lime-"], [data-brand="lime"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--lime-700), #4e7e12);
-  --primary-hover: light-dark(var(--lime-800), #406314);
-  --primary-pressed: light-dark(var(--lime-900), #375416);
+  --primary: light-dark(var(--lime-700), #538219);
+  --primary-hover: light-dark(var(--lime-800), #44681a);
+  --primary-pressed: light-dark(var(--lime-900), #3b591a);
   --primary-edge: #00000000;
   --primary-subtle: light-dark(var(--lime-50), var(--lime-950));
   --primary-subtle-pressed: light-dark(var(--lime-100), var(--lime-900));
   --on-primary: var(--white);
   --primary-text: light-dark(var(--lime-700), var(--lime-400));
   --primary-text-hover: light-dark(var(--lime-800), var(--lime-300));
-  --field-action: light-dark(var(--lime-700), var(--lime-400));
   --focus-ring: light-dark(var(--lime-700), var(--lime-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--lime-900), var(--lime-300));
@@ -86,7 +79,6 @@
   --srp-more-on-primary: light-dark(var(--white), var(--lime-950));
   --srp-more-primary-text: light-dark(var(--lime-900), var(--lime-300));
   --srp-more-primary-text-hover: light-dark(var(--lime-950), var(--lime-200));
-  --srp-more-field-action: light-dark(var(--lime-900), var(--lime-300));
   --srp-more-focus-ring: light-dark(var(--lime-700), var(--lime-300));
 }
 }

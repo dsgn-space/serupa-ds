@@ -59,7 +59,9 @@ const literal = (p) => /^(["'`]).*\1$|^-?\d+(\.\d+)?$|^(true|false|null)$/.test(
 function lostLiterals(was, now) {
   const [a, b] = [union(was), union(now)];
   if (b.has('string') || b.has('any') || b.has('unknown')) return [];
-  return [...a].filter((p) => literal(p) && !b.has(p));
+  // A number or true and false that went into number or boolean are still accepted too.
+  const wider = (p) => (/^-?\d/.test(p) && b.has('number')) || ((p === 'true' || p === 'false') && b.has('boolean'));
+  return [...a].filter((p) => literal(p) && !b.has(p) && !wider(p));
 }
 
 const KIND = /^(?:export )?(?:declare )?(interface|type|function|const|class|enum|namespace|global)\b\s*([\w$]*)/;

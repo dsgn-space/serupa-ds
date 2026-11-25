@@ -1,38 +1,41 @@
 # Default
-- heading "There are 3 problems" [level=2]
-- list:
-  - listitem:
-    - link "Enter your full name":
-      - /url: "#es-name"
-  - listitem:
-    - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#es-email"
-  - listitem:
-    - link "Start date must be today or in the future":
-      - /url: "#es-date"
+- region "There are 3 problems":
+  - heading "There are 3 problems" [level=2]
+  - list:
+    - listitem:
+      - link "Enter your full name":
+        - /url: "#es-name"
+    - listitem:
+      - link "Enter an email address in the right format, like name@example.com":
+        - /url: "#es-email"
+    - listitem:
+      - link "Start date must be today or in the future":
+        - /url: "#es-date"
 
 # DontJustInvalid
-- heading "There are 3 problems" [level=2]
-- list:
-  - listitem:
-    - link "Invalid":
-      - /url: "#es-name"
-  - listitem:
-    - link "Invalid":
-      - /url: "#es-email"
-  - listitem:
-    - link "Error":
-      - /url: "#es-date"
+- region "There are 3 problems":
+  - heading "There are 3 problems" [level=2]
+  - list:
+    - listitem:
+      - link "Invalid":
+        - /url: "#es-name"
+    - listitem:
+      - link "Invalid":
+        - /url: "#es-email"
+    - listitem:
+      - link "Error":
+        - /url: "#es-date"
 
 # FromTheServer
-- heading "There are 2 problems" [level=2]
-- list:
-  - listitem:
-    - link "That email is already registered":
-      - /url: "#es-srv-email"
-  - listitem:
-    - link "Choose a username with no spaces":
-      - /url: "#es-srv-username"
+- region "There are 2 problems":
+  - heading "There are 2 problems" [level=2]
+  - list:
+    - listitem:
+      - link "That email is already registered":
+        - /url: "#es-srv-email"
+    - listitem:
+      - link "Choose a username with no spaces":
+        - /url: "#es-srv-username"
 - text: Email
 - textbox "Email" [invalid]: sam@example.com
 - text: That email is already registered Username
@@ -41,17 +44,18 @@
 - button "Create account"
 
 # InAForm
-- heading "There are 3 problems" [level=2]
-- list:
-  - listitem:
-    - link "Enter your full name":
-      - /url: "#_id1_-es-name"
-  - listitem:
-    - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#_id1_-es-email"
-  - listitem:
-    - link "Start date must be today or in the future":
-      - /url: "#_id1_-es-date"
+- region "There are 3 problems":
+  - heading "There are 3 problems" [level=2]
+  - list:
+    - listitem:
+      - link "Enter your full name":
+        - /url: "#_id1_-es-name"
+    - listitem:
+      - link "Enter an email address in the right format, like name@example.com":
+        - /url: "#_id1_-es-email"
+    - listitem:
+      - link "Start date must be today or in the future":
+        - /url: "#_id1_-es-date"
 - text: Full name
 - textbox "Full name" [invalid]
 - text: Enter your full name Email
@@ -61,64 +65,68 @@
 - text: Start date must be today or in the future
 
 # LongText
-- heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a few more answers" [level=2]
-- list:
-  - listitem:
-    - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
-      - /url: "#long-0"
-  - listitem:
-    - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
-      - /url: "#long-1"
-  - listitem:
-    - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
-      - /url: "#long-2"
-  - listitem:
-    - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
-      - /url: "#long-3"
-  - listitem:
-    - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
-      - /url: "#long-4"
-  - listitem:
-    - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
-      - /url: "#long-5"
-  - listitem:
-    - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
-      - /url: "#long-6"
-  - listitem:
-    - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
-      - /url: "#long-7"
+- region "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a few more answers":
+  - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung needs a few more answers" [level=2]
+  - list:
+    - listitem:
+      - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
+        - /url: "#long-0"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
+        - /url: "#long-1"
+    - listitem:
+      - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
+        - /url: "#long-2"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
+        - /url: "#long-3"
+    - listitem:
+      - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
+        - /url: "#long-4"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
+        - /url: "#long-5"
+    - listitem:
+      - link "Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps":
+        - /url: "#long-6"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing":
+        - /url: "#long-7"
 
 # OneError
-- heading "There is a problem" [level=2]
-- list:
-  - listitem:
-    - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#es-email"
+- region "There is a problem":
+  - heading "There is a problem" [level=2]
+  - list:
+    - listitem:
+      - link "Enter an email address in the right format, like name@example.com":
+        - /url: "#es-email"
 
 # Playground
-- heading "There are 3 problems" [level=2]
-- list:
-  - listitem:
-    - link "Enter your full name":
-      - /url: "#es-name"
-  - listitem:
-    - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#es-email"
-  - listitem:
-    - link "Start date must be today or in the future":
-      - /url: "#es-date"
+- region "There are 3 problems":
+  - heading "There are 3 problems" [level=2]
+  - list:
+    - listitem:
+      - link "Enter your full name":
+        - /url: "#es-name"
+    - listitem:
+      - link "Enter an email address in the right format, like name@example.com":
+        - /url: "#es-email"
+    - listitem:
+      - link "Start date must be today or in the future":
+        - /url: "#es-date"
 
 # WithDescription
-- heading "Check your booking" [level=2]
-- text: Fix these before you send the form again.
-- list:
-  - listitem:
-    - link "Enter your full name":
-      - /url: "#es-name"
-  - listitem:
-    - link "Enter an email address in the right format, like name@example.com":
-      - /url: "#es-email"
-  - listitem:
-    - link "Start date must be today or in the future":
-      - /url: "#es-date"
+- region "Check your booking":
+  - heading "Check your booking" [level=2]
+  - text: Fix these before you send the form again.
+  - list:
+    - listitem:
+      - link "Enter your full name":
+        - /url: "#es-name"
+    - listitem:
+      - link "Enter an email address in the right format, like name@example.com":
+        - /url: "#es-email"
+    - listitem:
+      - link "Start date must be today or in the future":
+        - /url: "#es-date"
 

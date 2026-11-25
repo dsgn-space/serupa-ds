@@ -42,7 +42,7 @@ def ranges(codes, claimed):
 
 faces = []
 for source in ("InterVariable.woff2", "InterVariable-Italic.woff2"):
-    font = TTFont(os.path.join(FONTS, source))
+    font = TTFont(os.path.join(ROOT, "tools", "fonts", "source", source))
     have = set(font.getBestCmap())
     plan = {name: parse(r) & have for name, r in SUBSETS.items()}
     taken = set().union(*plan.values())

@@ -572,8 +572,8 @@ describe('Input actions (RU15)', () => {
 
   test('contrast in every theme: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
     expect(lowContrast([
-      ['text action', 'var(--field-action)', 'var(--field)', 4.5],
-      ['text action on hover', 'var(--field-action)', 'var(--primary-subtle)', 4.5],
+      ['text action', 'var(--primary-text)', 'var(--field)', 4.5],
+      ['text action on hover', 'var(--primary-text)', 'var(--primary-subtle)', 4.5],
       ['icon action', 'var(--text-muted)', 'var(--field)', 3],
       ['icon action on hover', 'var(--text)', 'var(--field-hover)', 3],
       ['focus ring', 'var(--focus-ring)', 'var(--field)', 3],
@@ -598,5 +598,14 @@ describe('Input held state', () => {
       return out;
     });
     expect(low).toEqual([]);
+  });
+
+  test('mask optional ? slots accept 19-digit cards and variable-length IBANs without emitting ?', async () => {
+    await render(<div>
+      <Input id="card19" aria-label="Card" mask="9999 9999 9999 9999 ?999" defaultValue="4111111111111111999" />
+      <Input id="iban27" aria-label="IBAN" mask="AA99 **** **** **** ?**** **** **** **** **" defaultValue="fr7630006000011234567890189" />
+    </div>);
+    expect((document.getElementById('card19') as HTMLInputElement).value).toBe('4111 1111 1111 1111 999');
+    expect((document.getElementById('iban27') as HTMLInputElement).value).toBe('FR76 3000 6000 0112 3456 7890 189');
   });
 });

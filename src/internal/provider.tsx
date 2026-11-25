@@ -112,8 +112,9 @@ SerupaProvider.displayName = 'SerupaProvider';
 function same(a: unknown, b: unknown, depth: number): boolean {
   if (a === b) return true;
   if (!a || !b || typeof a != 'object' || typeof b != 'object') return false;
-  const x = a as Record<string, unknown>, y = b as Record<string, unknown>, keys = Object.keys(x);
-  return keys.length == Object.keys(y).length && keys.every((k) => (depth ? same(x[k], y[k], depth - 1) : x[k] === y[k]));
+  if (Array.isArray(a) != Array.isArray(b) || (Array.isArray(a) && a.length != (b as unknown[]).length)) return false;
+  const x = a as Record<string, unknown>, y = b as Record<string, unknown>;
+  return [...new Set([...Object.keys(x), ...Object.keys(y)])].every((k) => (depth ? same(x[k], y[k], depth - 1) : x[k] === y[k]));
 }
 /** The value from the render before while the new one has the same contents, so a memo that depends on it holds. */
 function useSameAsBefore<T>(v: T, depth: number): T {

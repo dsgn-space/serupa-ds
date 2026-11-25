@@ -567,6 +567,114 @@ export const TRANSFORMS = [
       return { text: b.text, count: a.count + b.count, notes: [] };
     },
   },
+  {
+    version: '19.0.0', id: 'tokens-removed', exts: ALL,
+    title: 'Tokens merged or removed: `--field-action` is `--primary-text`, `--rounded` is `--rounded-sm`, `--motion-ripple(-fade)` is `--duration-500` (`-300`), and the `gray`, `neutral` and `stone` ramps are gone',
+    run(src) {
+      let count = 0;
+      let text = src.replace(/(?<![\w-])--rounded(?![\w-])/g, () => { count++; return '--rounded-sm'; })
+        .replace(/(?<![\w-])--motion-ripple(-fade)?(?![\w-])/g, (_, fade) => { count++; return fade ? '--duration-300' : '--duration-500'; })
+        .replace(/(?<![\w-])--field-action(?![\w-])/g, () => { count++; return '--primary-text'; });
+      // the class, in a written class list: class="rounded p-2", className='rounded'
+      text = text.replace(/(\bclass(?:Name)?=)(["'])([^"'\n]*)\2/g, (m, attr, q, list) => {
+        const next = list.replace(/(?<![\w-])rounded(?![\w-])/g, () => { count++; return 'rounded-sm'; })
+          .replace(/(?<![\w-])([a-z-]+)-field-action(?![\w-])/g, (_, kind) => { count++; return kind + '-primary-text'; });
+        return attr + q + next + q;
+      });
+      return { text, count, notes: notesFor(text, /--(gray|neutral|stone)-\d+/g, 'The gray, neutral and stone ramps are removed in 19.0.0: use --zinc-* (the neutral every alias uses) or --slate-* (cooler)') };
+    },
+  },
+  {
+    // 19.0.0 folds VirtualList into List, as Table's TableVirtualBody: the List keeps its own props, the rows' go to
+    // ListVirtualItems inside it.
+    version: '19.0.0', id: 'virtual-list-in-list', exts: ALL,
+    title: 'VirtualList is a List with `ListVirtualItems` inside: `<List aria-label variant divided as><ListVirtualItems count renderItem itemKey estimatedItemHeight overscan /></List>`, and `--virtual-list-height` is `--list-virtual-height`',
+    run(src, file) {
+      if (!/VirtualList|virtual-list/.test(src)) return { text: src, count: 0, notes: [] };
+      let count = 0;
+      const notes = [];
+      let text = src.replace(/(?<![\w-])--virtual-list-height(?![\w-])/g, () => { count++; return '--list-virtual-height'; })
+        .replace(/(?<![\w-])--virtual-list-focus-ring(?![\w-])/g, () => { count++; return '--list-focus-ring'; });
+      if (CODE.includes((/\.[^./\\]+$/.exec(file)?.[0] || '').toLowerCase())) {
+        for (const [s, e] of openTags(text, 'VirtualList').reverse()) {
+          const attrs = text.slice(s, e);
+          if (!/\/\s*$/.test(attrs) || /\{\s*\.\.\./.test(attrs)) {
+            notes.unshift({ line: lineOf(text, s), message: 'VirtualList with spread props or children: make it a <List> (aria-label, variant, divided, as and the rest) with <ListVirtualItems count renderItem itemKey estimatedItemHeight overscan /> inside' });
+            continue;
+          }
+          const body = attrs.replace(/\/\s*$/, ''), mask = topLevel(body);
+          const starts = [...mask.matchAll(/(?<=\s)[A-Za-z_$][\w$:.-]*/g)].map((m) => m.index);
+          const list = [], rows = [];
+          starts.forEach((a, k) => {
+            const one = body.slice(a, k + 1 < starts.length ? starts[k + 1] : body.length).trim();
+            (/^(count|renderItem|itemKey|estimatedItemHeight|overscan)\b/.test(one) ? rows : list).push(one);
+          });
+          const open = s - '<VirtualList'.length;
+          text = text.slice(0, open) + `<List${list.map((x) => ' ' + x).join('')}><ListVirtualItems${rows.map((x) => ' ' + x).join('')} /></List>` + text.slice(e + 1);
+          count++;
+        }
+        // The import: List and ListVirtualItems in its place, once each, when no VirtualList is left to change by hand.
+        const left = (t) => (t.replace(/import\s*(?:type\s*)?\{[^}]*\}\s*from\s*["'][^"']*["']/g, '').match(/\bVirtualList\b/g) || []).length;
+        if (!left(text)) text = text.replace(/import\s*\{([^}]*)\}(\s*from\s*["']@diki-stwn\/serupa-ds[^"']*["'])/g, (m, names, from) => {
+          const list = names.split(',').map((x) => x.trim()).filter(Boolean);
+          if (!list.includes('VirtualList')) return m;
+          const next = [];
+          for (const n of list.flatMap((x) => (x === 'VirtualList' ? ['List', 'ListVirtualItems'] : [x]))) if (!next.includes(n)) next.push(n);
+          count++;
+          return `import { ${next.join(', ')} }${from}`;
+        });
+        notes.push(...notesFor(text, /\bVirtualListProps\b/g, '`VirtualListProps` is gone: the List takes `ListProps`, and ListVirtualItems `ListVirtualItemsProps`'));
+        const listed = new Set(notes.map((n) => n.line));
+        notes.push(...notesFor(text, /\bVirtualList\b(?!Props)/g, 'VirtualList is removed in 19.0.0: use a <List> with <ListVirtualItems> inside').filter((n) => !listed.has(n.line)));
+      }
+      notes.push(...notesFor(text, /srp-virtual-list\b|data-component=["']?virtual-list/g, 'a VirtualList is a List now: select [data-component="list"], or .srp-list:has(> .srp-list__spacer) for one with ListVirtualItems inside'));
+      return { text, count, notes };
+    },
+  },
+  {
+    // 19.0.0 keeps Loader's ring, dots and text. Skeleton took the skeleton variant in 18.x; spokes and pixel draw the ring.
+    version: '19.0.0', id: 'loader-ring-dots-text', exts: ALL,
+    title: 'Loader is a ring, dots or text: `variant="skeleton"` is `<Skeleton>`, `"spokes"` and `"pixel"` are the ring (their `pattern` and `glow` go), and `--loader-skeleton-*` is `--skeleton-*`',
+    run(src, file) {
+      if (!/Loader|loader-/.test(src)) return { text: src, count: 0, notes: [] };
+      let count = 0;
+      const notes = [];
+      let text = src.replace(/(?<![\w-])--loader-skeleton-(rect-height|fill|shine|radius|text-radius)(?![\w-])/g, (m, name) => { count++; return '--skeleton-' + name; });
+      if (CODE.includes((/\.[^./\\]+$/.exec(file)?.[0] || '').toLowerCase())) {
+        for (const [s, e] of openTags(text, 'Loader').reverse()) {
+          const attrs = text.slice(s, e), m = attrAt('variant').exec(topLevel(attrs));
+          const v = m && /^\s*=\s*\{?\s*(["'])(skeleton|spokes|pixel)\1\s*\}?/.exec(attrs.slice(m.index + 'variant'.length));
+          if (!v) continue;
+          const open = s - '<Loader'.length;
+          let tag = text.slice(open, e);
+          tag = removeProp(tag, 'Loader', 'variant').text;
+          if (v[2] === 'skeleton') {
+            // Skeleton's tone is neutral or inverse; primary and muted, which a skeleton Loader ignored, go.
+            if (/\btone\s*=\s*\{?\s*["'](primary|muted)["']/.test(tag)) tag = removeProp(tag, 'Loader', 'tone').text;
+            tag = removeProp(removeProp(tag, 'Loader', 'pattern').text, 'Loader', 'glow').text.replace(/^<Loader/, '<Skeleton');
+            // Its closing tag, when it has one: the first after it (the tags are taken last first).
+            const rest = /\/\s*$/.test(tag) ? text.slice(e) : text.slice(e).replace('</Loader>', '</Skeleton>');
+            text = text.slice(0, open) + tag + rest;
+          } else {
+            for (const p of ['pattern', 'glow']) tag = removeProp(tag, 'Loader', p).text;
+            text = text.slice(0, open) + tag + text.slice(e);
+          }
+          count++;
+        }
+        // Skeleton in the import beside Loader, and Loader out of it when nothing else names it.
+        if (/<Skeleton\b/.test(text)) text = text.replace(/import\s*\{([^}]*)\}(\s*from\s*["']@diki-stwn\/serupa-ds[^"']*["'])/g, (m, names, from) => {
+          const list = names.split(',').map((x) => x.trim()).filter(Boolean);
+          if (!list.includes('Loader') || list.includes('Skeleton')) return m;
+          const others = text.replace(m, '').match(/\bLoader\b/g);
+          return `import { ${(others ? list.concat('Skeleton') : list.map((x) => (x === 'Loader' ? 'Skeleton' : x))).join(', ')} }${from}`;
+        });
+        text = text.replace(/\bLoaderShape\b/g, () => { count++; return 'SkeletonShape'; });
+        notes.push(...notesFor(text, /\bLoaderPattern\b/g, '`LoaderPattern` is gone with the pixel variant in 19.0.0'));
+      }
+      notes.push(...notesFor(text, /(?<![\w-])--loader-(pixel|spokes)-[\w-]+/g, 'the pixel and spokes Loaders are removed in 19.0.0, and their tokens with them: a Loader is a ring, dots or text'));
+      return { text, count, notes };
+    },
+  },
   // 18.0.0 removes the names 17.x deprecated for it: a prop named on… reads as an event handler, empty is emptyText
   // as on Combobox, and a Placement spells the middle top and bottom.
   propsRename('18.0.0', 'surface-not-on-media', '`onMedia` is `surface`, the same values', ['Button', 'IconButton', 'Link', 'Divider', 'CopyButton', 'ToggleButton', 'Fab', 'FabMenu'], [['onMedia', 'surface']]),

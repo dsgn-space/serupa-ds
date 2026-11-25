@@ -128,4 +128,10 @@ describe('Patterns/Appointment', () => {
     await expect.element(screen.getByRole('heading', { level: 2, name: 'No free times' })).toBeVisible();
     expect(document.querySelector('main [role="grid"], main form')).toBeNull();
   });
+
+  test('free times only before today are none: it says so too, and the calendar opens on a day that can be booked', async () => {
+    const screen = await render(<Appointment today="2025-03-10" slots={{ '2025-03-04': [{ time: '10:00', free: true }] }} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No free times' })).toBeVisible();
+    expect(document.querySelector('main [role="grid"], main form')).toBeNull();
+  });
 });

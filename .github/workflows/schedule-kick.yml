@@ -56,7 +56,6 @@ jobs:
               echo "$file: ran since $since."
             fi
           done <<'LIST'
-          runner-ping.yml 23 * 1
           nightly.yml 23 17 7
           cross-browser.yml 41 19 5
           canary.yml 47 20 4

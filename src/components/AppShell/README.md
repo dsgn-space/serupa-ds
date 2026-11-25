@@ -95,5 +95,5 @@ Each is an optional override: set it on the page, a container or one AppShell. T
 | `--app-shell-padding` | `spacing-4` | Padding around main's content on small screens (16px). |
 | `--app-shell-padding-sm` | `spacing-6` | Padding around main's content from 640px (24px). |
 | `--app-shell-padding-lg` | `spacing-8` | Padding around main's content from 1024px (32px). |
-| `--app-shell-footer-padding` | `spacing-6` | Padding inside the footer (24px). |
+| `--app-shell-footer-padding` | `spacing-6` | Padding inside the footer, on every side when set. Unset, it is 24px above and below, and its sides follow main's padding (16, 24 or 32px by width), so its text starts where main's content does. |
 <!-- token-table:end -->

@@ -11,7 +11,7 @@ The system promises that every visual value comes from a token, that themes swit
 
 1. **Palette (primitive):** `--blue-600`, `--gray-900`, spacing, radius, type, motion scales. Same in every theme.
 2. **Semantic (alias):** 33 colors such as `--primary`, `--surface`, `--text-muted`, `--field-border`, each with a value per theme (`tokens.json` → `color.tokens[].value[theme]`).
-3. **Component:** 724 tokens across 53 `*.tokens.json` files, e.g. `--button-primary-bg` → `{color.primary}`. They are *not* declared anywhere; component CSS reads them with a fallback chain: `var(--button-primary-bg, var(--primary, …))`.
+3. **Component:** 724 tokens across 53 `*.tokens.json` files when this was written (1,778 across 120 in 17.0.0), e.g. `--button-primary-bg` → `{color.primary}`. They are *not* declared anywhere; component CSS reads them with a fallback chain: `var(--button-primary-bg, var(--primary, …))`.
 
 ## Decision
 

@@ -1,6 +1,7 @@
-// Input's mask: a pattern such as "9999 9999 9999 9999" (a card), "99/99/9999" (a date) or "AA99 **** **** ****"
-// (an IBAN). 9 takes a digit, a a letter, A a letter in capitals, * a letter or digit; \ makes the next character
-// plain; anything else is shown as it is, between what's typed.
+// Input's mask: a pattern such as "9999 9999 9999 9999 ?999" (a 12–19 digit card), "99/99/9999" (a date) or
+// "AA99 **** **** **** ?**** **** **** **** **" (an IBAN). 9 takes a digit, a a letter, A a letter in capitals,
+// * a letter or digit; ? marks the following slots optional (for variable-length identifiers); \ makes the next
+// character plain; anything else is shown as it is, between what's typed.
 
 import { latinDigits } from './digits';
 
@@ -18,6 +19,7 @@ export function parseMask(mask: string): Slot[] {
   for (let i = 0; i < mask.length; i++) {
     const c = mask.charAt(i);
     if (c === '\\' && i + 1 < mask.length) out.push(mask.charAt(++i));
+    else if (c === '?') continue;
     else out.push(SLOTS[c] || c);
   }
   return out;
