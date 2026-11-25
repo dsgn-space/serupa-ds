@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
@@ -84,6 +84,19 @@ describe('FileUpload', () => {
     const files = new DataTransfer(); files.items.add(file('a.png', 'image/png', 10));
     zone.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer: files }));
     await expect.poll(() => zone.hasAttribute('data-dragging')).toBe(true);
+  });
+
+  test('inside a disabled fieldset, as a native file input: a dropped or pasted file is not taken', async () => {
+    const got = vi.fn();
+    await render(<fieldset disabled><FileUpload id="fs" onFilesChange={got} /></fieldset>);
+    const zone = rootOf('fs').querySelector(ZONE) as HTMLElement;
+    const files = new DataTransfer(); files.items.add(file('a.png', 'image/png', 10));
+    const enter = new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer: files });
+    zone.dispatchEvent(enter);
+    zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: files }));
+    rootOf('fs').dispatchEvent(new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: files }));
+    await new Promise((ok) => setTimeout(ok, 50));
+    expect([enter.defaultPrevented, zone.hasAttribute('data-dragging'), got.mock.calls.length]).toEqual([false, false, 0]);
   });
 
   test('submitted without a required file: no browser bubble on the hidden input; the choose button takes focus and is described by "Choose a file.", the input is invalid; a file clears it', async () => {

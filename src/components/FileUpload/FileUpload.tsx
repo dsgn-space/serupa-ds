@@ -169,6 +169,8 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const readOnly = !disabled && !!(props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true');
   const still = disabled || readOnly;   // nothing can be added or removed
+  // A disabled <fieldset> around it turns the hidden native input off, as it would any file input: nothing is taken then either.
+  const off = () => still || !!input.current?.matches(':disabled');
   // A button can't carry aria-required, so a required upload's button is described by a hidden "Required" first.
   const required = props['aria-required'] != null ? props['aria-required'] === true || props['aria-required'] === 'true' : !!props.required;
   const removeLabel = props.removeLabel || ((n: string) => sds.labels.remove + ' ' + n);
@@ -188,7 +190,7 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   const set = (next: File[]) => { if (next.length) setMissing(false); if (!controlled) setOwn(next); if (props.onFilesChange) props.onFilesChange(next); };
   // folders: dropped entries that are folders (FQ1), which arrive as a File with no type and can't be read.
   const add = (list: FileList | File[] | null, folders?: Set<File>) => {
-    if (!list || still) return;
+    if (!list || off()) return;
     const incoming = Array.from(list), ok: File[] = [], bad: FileRejection[] = [];
     const limit = props.maxSize != null ? formatFileSize(props.maxSize, locale) : '';
     for (const f of incoming) {
@@ -285,11 +287,11 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   // Only a drag that carries files lights the area up and can be dropped (not text or a link dragged across it).
   const hasFiles = (e: React.DragEvent) => Array.from(e.dataTransfer.types || []).includes('Files');
   const drag = {
-    onDragEnter: (e: React.DragEvent) => { if (still || !hasFiles(e)) return; e.preventDefault(); depth.current++; setOver(true); },
-    onDragOver: (e: React.DragEvent) => { if (still || !hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; },
-    onDragLeave: (e: React.DragEvent) => { if (still || !hasFiles(e)) return; depth.current = Math.max(0, depth.current - 1); if (!depth.current) setOver(false); },
+    onDragEnter: (e: React.DragEvent) => { if (off() || !hasFiles(e)) return; e.preventDefault(); depth.current++; setOver(true); },
+    onDragOver: (e: React.DragEvent) => { if (off() || !hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; },
+    onDragLeave: (e: React.DragEvent) => { if (off() || !hasFiles(e)) return; depth.current = Math.max(0, depth.current - 1); if (!depth.current) setOver(false); },
     onDrop: (e: React.DragEvent) => {
-      if (still || !hasFiles(e)) return;
+      if (off() || !hasFiles(e)) return;
       e.preventDefault(); depth.current = 0; setOver(false);
       // The file items line up with dataTransfer.files; a folder's entry says so.
       const dropped = Array.from(e.dataTransfer.files), items = Array.from(e.dataTransfer.items || []).filter((it) => it.kind === 'file'), folders = new Set<File>();
@@ -302,7 +304,7 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   const onPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     if (rest.onPaste) rest.onPaste(e);
     const pasted = e.clipboardData ? Array.from(e.clipboardData.files || []) : [];
-    if (e.defaultPrevented || still || !pasted.length) return;
+    if (e.defaultPrevented || off() || !pasted.length) return;
     e.preventDefault();
     add(pasted);
   };

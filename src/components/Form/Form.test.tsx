@@ -245,9 +245,16 @@ describe('Form', () => {
     await userEvent.type(el('p'), 'secret');
     await expect.poll(() => window.localStorage.getItem('serupa-form-draft:signup')).toContain('Ani');
     expect(window.localStorage.getItem('serupa-form-draft:signup')).not.toContain('secret');
+    // Shown as text (Show password), it is still a password: still never kept.
+    await userEvent.click(document.querySelector<HTMLButtonElement>('.srp-password-input__toggle, [aria-label="Show password"]')!);
+    expect(el('p').type).toBe('text');
+    await userEvent.type(el('n'), 'ka');
+    await userEvent.type(el('p'), 'shown');
+    await expect.poll(() => window.localStorage.getItem('serupa-form-draft:signup')).toContain('Anika');
+    expect(window.localStorage.getItem('serupa-form-draft:signup')).not.toContain('secret');
     await first.unmount();
     await render(<Page />);
-    await expect.poll(() => el('n').value).toBe('Ani');
+    await expect.poll(() => el('n').value).toBe('Anika');
     expect(el('p').value).toBe('');
     await userEvent.click(el('send'));
     await expect.poll(() => onSubmit.mock.calls.length).toBe(1);

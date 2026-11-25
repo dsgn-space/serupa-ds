@@ -13,8 +13,7 @@
 .srp-event-calendar__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-4); }
 .srp-event-calendar__nav { display: flex; align-items: center; gap: var(--spacing-1); }
 .srp-event-calendar__heading { flex: auto; margin: var(--spacing-0); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--font-semibold); }
-/* Previous and Next point the way the month goes, so they turn round in right-to-left text. */
-.srp-event-calendar:dir(rtl) .srp-event-calendar__prev .srp-icon, .srp-event-calendar:dir(rtl) .srp-event-calendar__next .srp-icon { --srp-evc-flip: -1 1; scale: var(--srp-evc-flip); }
+/* Previous and Next point the way the month goes: in right-to-left text Icon turns the chevrons round itself. */
 
 .srp-event-calendar__grid { width: var(--sizing-full); table-layout: fixed; border-collapse: collapse; }
 .srp-event-calendar__grid th { padding: var(--spacing-1) var(--spacing-2); font-weight: var(--font-medium); color: var(--event-calendar-muted, var(--text-muted)); text-align: start; }
