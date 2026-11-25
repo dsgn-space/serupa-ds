@@ -62,7 +62,7 @@ const MAX_QUERY = 40;
     space at the caret ends the mention (one inside, "@Ayu L", doesn't). */
 export function mentionQuery(text: string, caret: number, trigger = '@'): Query | null {
   const start = text.lastIndexOf(trigger, caret - 1);
-  if (start < 0 || caret - start - trigger.length > MAX_QUERY) return null;
+  if (start < 0 || caret < start + trigger.length || caret - start - trigger.length > MAX_QUERY) return null;
   const before = start ? text.charAt(start - 1) : ' ';
   if (!/[\s([{"'“‘]/.test(before)) return null;
   const q = text.slice(start + trigger.length, caret);

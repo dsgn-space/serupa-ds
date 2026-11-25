@@ -166,7 +166,12 @@ export function parsePhone(value: string, prefer?: string, countries: readonly P
   if (!best && pref && (!pref.areas || pref.areas.some((a) => a.startsWith(n)))) best = pref;
   best = best || group.find((c) => !c.areas) || group[0];
   // group holds the country whose calling code matched, so there is always one.
-  return best && { country: best, national: stripTrunk(n, best) };
+  // A trunk prefix typed after the calling code ("+62 0812…") is dropped. One that isn't 0 ("8" in RU, LT and TM,
+  // "80" in BY) can be the number's own first digits ("+7 800…", a toll-free number), so it goes only when the
+  // number is too long with it.
+  if (!best) return undefined;
+  const drop = best.trunk.startsWith('0') || n.length > best.max;
+  return { country: best, national: drop ? stripTrunk(n, best) : n };
 }
 
 /** The national digits with a typed trunk prefix taken off ("0812…" in ID becomes "812…"). */

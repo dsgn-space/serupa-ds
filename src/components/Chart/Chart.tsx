@@ -344,11 +344,11 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
     e.preventDefault();
     if (to) { setLast(to); points.current.get(to.s + ':' + to.i)?.focus(); }
   };
-  // The category under the pointer: the nearest point (line) or the band it's in (bar).
+  // The category under the pointer: the nearest point (line) or the band it's in (bar, heatmap).
   const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!n || donut) return;   // a donut's slices say when the pointer is on them
     const x = flip(e.clientX - e.currentTarget.getBoundingClientRect().left);
-    const i = type === 'bar' ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
+    const i = type === 'bar' || heat ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
     const to = x >= start - (heat ? 0 : INSET) && i >= 0 && i < n ? i : null;
     if (heat) {
       const s = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().top - PAD_TOP) / rh);

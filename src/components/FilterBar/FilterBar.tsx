@@ -67,8 +67,8 @@ function emptyFor(f: FilterField): FilterValue {
   return '';
 }
 const toDate = (iso: string) => { const [y = NaN, m = NaN, d = NaN] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
-// A "yyyy-mm-dd" that names a real day (not 2026-02-30), or null.
-const isDay = (x: unknown) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && toDate(x).getDate() === Number(x.slice(8));
+// A "yyyy-mm-dd" that names a real day (not 2026-02-30 or 2026-13-01, which JavaScript rolls over), or null.
+const isDay = (x: unknown) => { if (typeof x !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(x)) return false; const d = toDate(x); return d.getDate() === Number(x.slice(8)) && d.getMonth() + 1 === Number(x.slice(5, 7)); };
 const isDayOrNull = (x: unknown) => x == null || isDay(x);
 
 /* The value checked against each field, as one read from a URL may be anything (GR283): a select takes a string, or
