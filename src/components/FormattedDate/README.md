@@ -28,6 +28,13 @@ formatDate("2026-11-20", "id", { dateStyle: "long" })                      // "2
 - How long something takes ("1 hr, 30 min"): [Duration](../Duration/README.md).
 - A date people type or pick: [DateField](../DateField/README.md) or [DatePicker](../DatePicker/README.md).
 
+## Anatomy
+
+Drawn from the `WithTime` story.
+
+1. **Date** (`.srp-formatted-date`): the `<time>` holding the words, with the moment in its `datetime`.
+2. **Half** (`.srp-formatted-date__half`): the date, or the time, of a date with a time. The line wraps between the two halves, never inside one, unless a half is wider than the line itself.
+
 ## Usage
 
 - `value` is a `Date`, a timestamp in milliseconds, an ISO date and time (`"2026-11-20T09:30:00Z"`), or a plain `"yyyy-mm-dd"` day. Pass a day as that string: `new Date("2026-11-20")` is UTC midnight, which is the 19th west of Greenwich, while `"2026-11-20"` is the 20th everywhere.
