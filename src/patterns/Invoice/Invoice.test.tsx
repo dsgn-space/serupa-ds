@@ -18,6 +18,8 @@ const inv = (over: Partial<InvoiceInfo> = {}): InvoiceInfo => ({
 describe('Patterns/Invoice', () => {
   test('the sums, and where an invoice stands on a day', () => {
     expect(invoiceTotals(inv().lines, 0.1)).toEqual({ subtotal: 250.5, tax: 25.05, total: 275.55 });
+    // Whole cents, without the arithmetic's last bit: three at 0.10 is 0.30, and what's paid is the total shown.
+    expect(invoiceTotals([{ id: 's', description: 'Stamp', quantity: 3, price: 0.1 }], 0.1)).toEqual({ subtotal: 0.3, tax: 0.03, total: 0.33 });
     expect(invoiceState({ due: '2025-03-31', paid: '' }, '2025-03-20')).toEqual({ state: 'due', days: 11 });
     expect(invoiceState({ due: '2025-03-31', paid: '' }, '2025-04-05')).toEqual({ state: 'overdue', days: 5 });
     expect(invoiceState({ due: '2025-03-31', paid: '2025-03-10' }, '2025-04-05')).toEqual({ state: 'paid', days: 0 });
