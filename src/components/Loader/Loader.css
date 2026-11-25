@@ -1,7 +1,6 @@
 /* Loader: every value is a token; sizes and colors go through its component tokens (--loader-*,
    src/components/Loader/loader.tokens.json). It draws in the text color (currentColor), so it fits any surface.
-   Structure: .srp-loader (the progressbar) > .srp-loader__art (the ring or dots), > .srp-loader__label (the text variant),
-   or > .srp-loader__line / .srp-loader__bone (the skeleton variant). */
+   Structure: .srp-loader (the progressbar) > .srp-loader__art (the ring or dots), or > .srp-loader__label (the text variant). */
 @layer srp.components {
 .srp-loader {
   display: inline-flex;
@@ -17,7 +16,7 @@
 .srp-loader__art { display: inline-flex; flex-shrink: 0; width: var(--srp-loader-size); height: var(--srp-loader-size); }
 .srp-loader--size-sm { --srp-loader-size: var(--loader-size-sm, var(--spacing-4)); gap: var(--spacing-1\.5); }
 .srp-loader--size-lg { --srp-loader-size: var(--loader-size-lg, var(--spacing-10)); gap: var(--spacing-3); }
-/* Tones: primary and muted color the ring, spokes, dots or pixel grid (the text variant stays in the text color, which keeps its
+/* Tones: primary and muted color the ring or dots (the text variant stays in the text color, which keeps its
    contrast); inverse makes everything white, for dark scrims, overlays and media that stay dark in every theme. */
 .srp-loader--primary > .srp-loader__art { color: var(--loader-primary, var(--primary-text)); }
 .srp-loader--muted > .srp-loader__art { color: var(--loader-muted, var(--text-muted)); }
@@ -42,82 +41,6 @@
 }
 .srp-loader__dot:nth-child(2) { animation-delay: var(--loader-dots-stagger, var(--delay-150)); }
 .srp-loader__dot:nth-child(3) { animation-delay: calc(var(--loader-dots-stagger, var(--delay-150)) + var(--loader-dots-stagger, var(--delay-150))); }
-/* Pixel: a 3×3 grid of square pixels in the loader's color, edge to edge, split by subtle dividers: hairlines
-   (half a unit of the 24-unit grid: 0.5px at 24px) cut out of the squares (a mask) and drawn in the loader's color at --loader-pixel-divider, so a divider looks the
-   same whether the squares beside it are lit or dim. A wave of light runs along the diagonals, from the
-   top-left corner to the bottom-right: each square rises from --loader-pixel-dim to full, holds, and fades, 75ms
-   after the diagonal before it, every 1.2s (--loader-pixel-duration). Opacity only, so it stays under reduced motion, slower. An optional glow
-   (--loader-pixel-glow, off by default) blurs a halo of the same color around the lit squares. */
-.srp-loader__px {
-  fill: currentColor;
-  opacity: var(--loader-pixel-dim, var(--opacity-15));
-  animation: srp-loader-pixel var(--loader-pixel-duration, var(--duration-1200)) var(--ease-move) infinite both;
-}
-/* stylelint-disable-next-line color-named -- inside the SVG mask: black cuts, white keeps; not a color anyone sees */
-.srp-loader__px-cut { fill: none; stroke: black; stroke-width: var(--loader-pixel-divider-width, var(--stroke-width-1)); }
-.srp-loader__px-divider { fill: none; stroke: currentColor; stroke-width: var(--loader-pixel-divider-width, var(--stroke-width-1)); stroke-opacity: var(--loader-pixel-divider, var(--opacity-10)); }
-.srp-loader--pixel .srp-loader__art > svg { filter: drop-shadow(0 0 var(--loader-pixel-glow, var(--spacing-0)) currentColor); }
-/* Right to left, the grid is mirrored, so every pattern starts from the inline start, as the glint and the skeleton sweep do (GI2). */
-.srp-loader--pixel .srp-loader__art > svg:dir(rtl) { --srp-loader-flip: -1 1; scale: var(--srp-loader-flip); }
-.srp-loader__px--d1 { animation-delay: var(--loader-pixel-stagger, var(--delay-75)); }
-.srp-loader__px--d2 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--d3 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--d4 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-/* pattern="random": each square rises, holds and fades like the wave, but on its own clock (1.5s to 2.2s, sums
-   of the duration tokens, starting 0 to 1s in), so the clocks drift apart and the grid lights up in an
-   ever-changing order with no visible loop. */
-.srp-loader--pattern-random .srp-loader__px--r0 { animation-duration: calc(var(--duration-1000) + var(--duration-500) + var(--duration-150)); animation-delay: var(--delay-0); }
-.srp-loader--pattern-random .srp-loader__px--r1 { animation-duration: calc(var(--duration-1000) + var(--duration-1000)); animation-delay: var(--delay-500); }
-.srp-loader--pattern-random .srp-loader__px--r2 { animation-duration: calc(var(--duration-1000) + var(--duration-500)); animation-delay: var(--delay-200); }
-.srp-loader--pattern-random .srp-loader__px--r3 { animation-duration: calc(var(--duration-1000) + var(--duration-500) + var(--duration-300)); animation-delay: var(--delay-700); }
-.srp-loader--pattern-random .srp-loader__px--r4 { animation-duration: calc(var(--duration-1000) + var(--duration-500) + var(--duration-75)); animation-delay: var(--delay-300); }
-.srp-loader--pattern-random .srp-loader__px--r5 { animation-duration: calc(var(--duration-1000) + var(--duration-1000) + var(--duration-200)); animation-delay: var(--delay-1000); }
-.srp-loader--pattern-random .srp-loader__px--r6 { animation-duration: calc(var(--duration-1000) + var(--duration-500) + var(--duration-200)); animation-delay: var(--delay-150); }
-.srp-loader--pattern-random .srp-loader__px--r7 { animation-duration: calc(var(--duration-1000) + var(--duration-500) + var(--duration-100)); animation-delay: calc(var(--delay-500) + var(--delay-300)); }
-.srp-loader--pattern-random .srp-loader__px--r8 { animation-duration: calc(var(--duration-1000) + var(--duration-700) + var(--duration-200)); animation-delay: var(--delay-75); }
-/* Step patterns (sweep, fall, rise, snake, spiral, cross, checker): each square has a step, 0 to 8, and starts one
-   --loader-pixel-stagger (75ms) per step after step 0. Each square rises, holds and fades exactly like the
-   wave's (srp-loader-pixel, ease-move), so every pattern moves as smoothly as the wave.
-   Wave, sweep, fall and rise loop in --loader-pixel-duration (1.2s), rows and columns stepping two at a time
-   (150ms); snake and spiral, nine steps, loop in 1.5s; cross and checker light one group, then the other 525ms
-   later, in a 1s loop. */
-.srp-loader--pattern-snake .srp-loader__px, .srp-loader--pattern-spiral .srp-loader__px { animation-duration: calc(var(--duration-1000) + var(--duration-500)); }
-.srp-loader--pattern-cross .srp-loader__px, .srp-loader--pattern-checker .srp-loader__px { animation-duration: var(--duration-1000); }
-.srp-loader__px--s1 { animation-delay: var(--loader-pixel-stagger, var(--delay-75)); }
-.srp-loader__px--s2 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s3 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s4 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s5 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s6 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s7 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-.srp-loader__px--s8 { animation-delay: calc(var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75)) + var(--loader-pixel-stagger, var(--delay-75))); }
-/* glow: a soft halo of the loader's color round the lit squares (--loader-pixel-glow-size, spacing-0.5). */
-.srp-loader--glow { --loader-pixel-glow: var(--loader-pixel-glow-size, var(--spacing-0\.5)); }
-@keyframes srp-loader-pixel {
-  0%, 100% { opacity: var(--loader-pixel-dim, var(--opacity-15)); }
-  30%, 55% { opacity: var(--opacity-100); }
-  85% { opacity: var(--loader-pixel-dim, var(--opacity-15)); }
-}
-/* Spokes: eight rounded spokes round a circle, like the iOS activity indicator, in its proportions: each spoke
-   about 10% of the size wide and 25% long, round a hole 40% across. The lead spoke is at full strength
-   and each one behind it (anticlockwise) is fainter, down to opacity-25; the drawing ticks a spoke at a time
-   (45°, step-end), a full turn every --loader-spokes-duration (1s). Under reduced motion it stands still and breathes. */
-.srp-loader__spoke { stroke: currentColor; stroke-linecap: round; stroke-width: var(--loader-spokes-width, var(--stroke-width-4)); }
-.srp-loader__spoke:nth-child(2) { opacity: var(--opacity-85); }
-.srp-loader__spoke:nth-child(3) { opacity: var(--opacity-70); }
-.srp-loader__spoke:nth-child(4) { opacity: var(--opacity-55); }
-.srp-loader__spoke:nth-child(5) { opacity: var(--opacity-45); }
-.srp-loader__spoke:nth-child(6) { opacity: var(--opacity-35); }
-.srp-loader__spoke:nth-child(7) { opacity: var(--opacity-30); }
-.srp-loader__spoke:nth-child(8) { opacity: var(--opacity-25); }
-.srp-loader--spokes .srp-loader__art > svg { animation: srp-loader-tick var(--loader-spokes-duration, var(--duration-1000)) step-end infinite; }
-/* stylelint-disable serupa/no-raw-value -- the eight spokes' turns are the art's geometry, 360deg / 8 a step, not a design value */
-@keyframes srp-loader-tick {
-  0% { transform: rotate(0deg); } 12.5% { transform: rotate(45deg); } 25% { transform: rotate(90deg); } 37.5% { transform: rotate(135deg); }
-  50% { transform: rotate(180deg); } 62.5% { transform: rotate(225deg); } 75% { transform: rotate(270deg); } 87.5% { transform: rotate(315deg); }
-  100% { transform: rotate(360deg); }
-}
-/* stylelint-enable serupa/no-raw-value */
 @keyframes srp-loader-in { from { opacity: var(--opacity-0); } }
 @keyframes srp-loader-dot {
   0%, 80%, 100% { opacity: var(--loader-dots-dim, var(--opacity-25)); scale: var(--scale-75); }
@@ -168,62 +91,17 @@
 .srp-loader__glint:dir(rtl) { --srp-loader-glint-from: var(--sizing-full); --srp-loader-glint-to: calc(var(--sizing-full) * -2); }
 .srp-loader__glint:dir(rtl)::after { --srp-loader-glint-from: calc(var(--sizing-full) / -2); --srp-loader-glint-to: var(--sizing-full); }
 @keyframes srp-loader-glint { from { translate: var(--srp-loader-glint-from) 0; } to { translate: var(--srp-loader-glint-to) 0; } }
-/* Skeleton variant: placeholder shapes in the place of content that is loading, with the same shine as the text
-   variant (a lighter band sweeping left to right every 2s, ease-move). Shapes: "text" (lines as tall as the
-   size's text line, the last of several shorter), "circle" (an avatar, the loader's size) and "rect" (an image or
-   a card, full width). Width and height follow utility classes (w-48, size-12, h-40, aspect-video…), which come
-   later in this file and win. Structure: .srp-loader--skeleton > .srp-loader__line > .srp-loader__bone (text), or
-   > .srp-loader__bone (circle, rect). The fill is the text color at --loader-skeleton-fill, so it fits any surface. */
-.srp-loader--skeleton { min-height: var(--spacing-0); gap: var(--spacing-0); flex-shrink: initial; min-width: var(--spacing-0); }   /* lines and rects shrink in a row (next to an avatar) */
-.srp-loader--shape-text { display: flex; flex-direction: column; align-items: stretch; width: var(--sizing-full); }
-.srp-loader--shape-rect { display: flex; width: var(--sizing-full); height: var(--loader-skeleton-rect-height, var(--spacing-24)); }
-.srp-loader--shape-circle { display: inline-flex; flex-shrink: 0; width: var(--srp-loader-size); height: var(--srp-loader-size); }
-.srp-loader__line { display: flex; align-items: center; font-size: var(--text-sm); height: var(--text-sm--line-height); }
-.srp-loader--size-sm .srp-loader__line { font-size: var(--text-xs); height: var(--text-xs--line-height); }
-.srp-loader--size-lg .srp-loader__line { font-size: var(--text-base); height: var(--text-base--line-height); }
-.srp-loader__bone {
-  --srp-loader-fill: color-mix(in srgb, currentColor var(--loader-skeleton-fill, var(--opacity-10)), transparent);
-  --srp-loader-glint: color-mix(in srgb, currentColor var(--loader-skeleton-shine, var(--opacity-5)), transparent);
-  position: relative;
-  overflow: hidden;
-  display: block; flex-shrink: 0; width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--loader-skeleton-radius, var(--radius-control));
-}
-.srp-loader__line > .srp-loader__bone { height: 1em; border-radius: var(--loader-skeleton-text-radius, var(--radius-inner)); }
-.srp-loader__line:last-child:not(:first-child) > .srp-loader__bone { width: var(--sizing-3-5); }   /* a paragraph's last line: 3/5 wide */
-.srp-loader--shape-circle > .srp-loader__bone { border-radius: var(--rounded-full); }
-/* The shine is a layer three bones wide, sliding on translate (the compositor) from its last third on the bone to its first. */
-.srp-loader__bone::after {
-  --srp-loader-sweep: calc(var(--sizing-full) * 2 / 3);
-  content: "";
-  position: absolute;
-  inset-block: var(--spacing-0);
-  inset-inline-end: var(--spacing-0);
-  width: calc(var(--sizing-full) + var(--sizing-full) + var(--sizing-full));
-  background-image: linear-gradient(to right, var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-glint), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill), var(--srp-loader-fill));   /* evenly spaced stops: a band about half the bone wide */
-  animation: srp-loader-sweep calc(var(--duration-1000) + var(--duration-1000)) var(--ease-move) infinite;
-}
-.srp-loader__bone:dir(rtl)::after { --srp-loader-sweep: calc(var(--sizing-full) * -2 / 3); }
-@keyframes srp-loader-sweep { to { translate: var(--srp-loader-sweep) 0; } }
-/* Reduced motion: the ring and the spokes stand still and breathe (opacity, twice the spinner's period: 1.4s);
-   the dots only fade, without growing; the pixel patterns slow to half speed; the label is plain text and the skeleton a still fill, without the shine. */
+/* Reduced motion: the ring stands still and breathes (opacity, twice the spinner's period: 1.4s); the dots only fade,
+   without growing; the label is plain text, without the shine. */
 @media (prefers-reduced-motion: reduce) {
-  .srp-loader--ring .srp-loader__art > svg, .srp-loader--spokes .srp-loader__art > svg { animation: srp-loader-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
+  .srp-loader--ring .srp-loader__art > svg { animation: srp-loader-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; }
   .srp-loader__label { -webkit-text-fill-color: currentColor; }   /* plain text, no shine */
   .srp-loader__glint { display: none; }
   .srp-loader__dot { animation-name: srp-loader-dot-fade; }
-  .srp-loader__px, .srp-loader--pixel .srp-loader__px { animation-duration: calc(var(--duration-1200) + var(--duration-1200)); }   /* half speed, keeping order and starts: 2.4s */
-  .srp-loader--pattern-snake .srp-loader__px, .srp-loader--pattern-spiral .srp-loader__px { animation-duration: calc(var(--duration-1000) + var(--duration-1000) + var(--duration-1000)); }   /* 3s */
-  .srp-loader--pattern-cross .srp-loader__px, .srp-loader--pattern-checker .srp-loader__px { animation-duration: calc(var(--duration-1000) + var(--duration-1000)); }   /* 2s */
-  .srp-loader--pattern-random .srp-loader__px { animation-duration: calc(var(--duration-1000) + var(--duration-1000) + var(--duration-1000) + var(--duration-1000)); }   /* 4s, one shared clock: the scattered starts keep it random */
-  /* stylelint-disable-next-line serupa/color-through-component-token -- as above */
-  .srp-loader__bone { background-color: var(--srp-loader-fill); }   /* a still fill */
-  .srp-loader__bone::after { display: none; }
 }
-/* Forced colors (Windows high contrast) drop background colors, which would leave a skeleton screen blank: the
-   bones keep a still GrayText fill, the system color for content that isn't there yet. */
+/* Forced colors (Windows high contrast): the label is plain text, without the shine. */
 @media (forced-colors: active) {
-  .srp-loader__bone { forced-color-adjust: none; background-color: GrayText; }
-  .srp-loader__bone::after, .srp-loader__glint { display: none; }
+  .srp-loader__glint { display: none; }
   .srp-loader__label { -webkit-text-fill-color: currentColor; }
 }
 /* Inside a loading Button the Loader (ring) takes the button's icon size. */

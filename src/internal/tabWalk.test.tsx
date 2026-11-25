@@ -40,9 +40,9 @@ async function walk(from: HTMLElement, to: HTMLElement, shift: boolean): Promise
       continue;
     }
     if (at) seen.set(at, i);
-    // A long VirtualList (10,000 rows of links) takes a Tab per row, as a page of links would: once focus is in one,
+    // A long List with ListVirtualItems (10,000 rows of links) takes a Tab per row, as a page of links would: once focus is in one,
     // scroll it to the far end, as End or the scrollbar would, and walk on from the rows drawn there.
-    const list = at?.closest<HTMLElement>('[data-component="virtual-list"]');
+    const list = at?.closest<HTMLElement>('[data-component="list"]:has(> .srp-list__spacer)');
     if (list && list !== at && !jumped) {
       jumped = true;
       const drawn = list.textContent;

@@ -63,16 +63,6 @@
             "cssVar": "--loader-size-lg"
           }
         }
-      },
-      "skeleton-rect-height": {
-        "$type": "dimension",
-        "$value": "{spacing.spacing-24}",
-        "$description": "Height of the skeleton rect when no class sets one (96px)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-skeleton-rect-height"
-          }
-        }
       }
     },
     "shape": {
@@ -115,106 +105,6 @@
             "cssVar": "--loader-label-dim"
           }
         }
-      },
-      "skeleton-fill": {
-        "$type": "number",
-        "$value": "{opacity.opacity-10}",
-        "$description": "Strength of the skeleton's fill (the text color)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-skeleton-fill"
-          }
-        }
-      },
-      "skeleton-shine": {
-        "$type": "number",
-        "$value": "{opacity.opacity-5}",
-        "$description": "Strength of the band that sweeps through the skeleton",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-skeleton-shine"
-          }
-        }
-      },
-      "skeleton-radius": {
-        "$type": "dimension",
-        "$value": "{radius.radius-control}",
-        "$description": "Corners of the skeleton rect (6px)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-skeleton-radius"
-          }
-        }
-      },
-      "skeleton-text-radius": {
-        "$type": "dimension",
-        "$value": "{radius.radius-inner}",
-        "$description": "Corners of the skeleton's text lines (4px)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-skeleton-text-radius"
-          }
-        }
-      },
-      "pixel-dim": {
-        "$type": "number",
-        "$value": "{opacity.opacity-15}",
-        "$description": "How faint a pixel square is between waves",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-dim"
-          }
-        }
-      },
-      "pixel-glow": {
-        "$type": "dimension",
-        "$value": "{spacing.spacing-0}",
-        "$description": "Glow around the lit pixel squares (blur radius); 0 is off. The `glow` prop sets it to `--loader-pixel-glow-size`",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-glow"
-          }
-        }
-      },
-      "pixel-divider": {
-        "$type": "number",
-        "$value": "{opacity.opacity-10}",
-        "$description": "Strength of the dividers, in the loader's color; the same next to lit and dim squares",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-divider"
-          }
-        }
-      },
-      "pixel-divider-width": {
-        "$type": "number",
-        "$value": "{borders.stroke-width-1}",
-        "$description": "Width of the dividers, in half-units of the 24-unit drawing (1: 0.5px at 24px)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-divider-width"
-          }
-        }
-      },
-      "pixel-glow-size": {
-        "$type": "dimension",
-        "$value": "{spacing.spacing-0_5}",
-        "$description": "Blur radius of the glow the `glow` prop turns on (2px)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-glow-size"
-          }
-        }
-      },
-      "spokes-width": {
-        "$type": "number",
-        "$value": "{borders.stroke-width-4}",
-        "$description": "Spoke thickness (drawn at 5/8 scale: 2.5 of the 24 units, about 10% of the size)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-spokes-width"
-          }
-        }
       }
     },
     "motion": {
@@ -235,36 +125,6 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--loader-dots-stagger"
-          }
-        }
-      },
-      "pixel-stagger": {
-        "$type": "duration",
-        "$value": "{transitions.delay-75}",
-        "$description": "Delay from one step of a pixel pattern to the next",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-stagger"
-          }
-        }
-      },
-      "pixel-duration": {
-        "$type": "duration",
-        "$value": "{transitions.duration-1200}",
-        "$description": "One loop of the pixel grid in the wave, sweep, fall and rise patterns (1.2s)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-pixel-duration"
-          }
-        }
-      },
-      "spokes-duration": {
-        "$type": "duration",
-        "$value": "{transitions.duration-1000}",
-        "$description": "One full turn of the spokes, a spoke at a time (a tick every 125ms)",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--loader-spokes-duration"
           }
         }
       }

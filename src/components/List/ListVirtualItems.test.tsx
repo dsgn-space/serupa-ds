@@ -4,11 +4,16 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
-import { List, ListItem, ListLoadingItems } from '../List/List';
-import { VirtualList } from './VirtualList';
+import { List, ListItem, ListLoadingItems, ListVirtualItems, type ListProps, type ListVirtualItemsProps } from './List';
+
+// A List with ListVirtualItems inside, written once: the List's props go to it, the rest to the rows.
+function Long({ count, renderItem, itemKey, estimatedItemHeight, overscan, ...list }: ListProps & ListVirtualItemsProps & React.RefAttributes<HTMLUListElement>) {
+  return <List {...list}><ListVirtualItems count={count} renderItem={renderItem} itemKey={itemKey} estimatedItemHeight={estimatedItemHeight} overscan={overscan} /></List>;
+}
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const rows = (id: string) => [...el(id).children] as HTMLElement[];
+const rows = (id: string) => [...el(id).children].filter((c) => !c.classList.contains('srp-list__spacer')) as HTMLElement[];
+const spacers = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > .srp-list__spacer')];
 // The innermost element in a row whose text is (or, for a title, starts with) the given text.
 const leaf = (r: Element, test: (t: string) => boolean) => [...r.querySelectorAll('*')].find((x) => x.childElementCount === 0 && test(x.textContent || ''))!;
 const title = (r: Element) => leaf(r, (t) => t.startsWith('Row ')).textContent;
@@ -17,39 +22,53 @@ const item = (i: number) => <ListItem title={'Row ' + (i + 1)} />;
 // Scrolls and waits for the rows to follow.
 const scrollTo = async (id: string, top: number) => { el(id).scrollTop = top; el(id).dispatchEvent(new Event('scroll')); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); };
 
-describe('VirtualList', () => {
+describe('ListVirtualItems', () => {
   test('a count that is Infinity is none: an empty list, where it threw "Invalid typed array length"', async () => {
     const errors: string[] = [];
     const seen = (e: ErrorEvent) => { errors.push(e.message); e.preventDefault(); };
     window.addEventListener('error', seen);
     try {
-      const s = await render(<VirtualList aria-label="Rows" count={Infinity} renderItem={(i) => <li>Row {i}</li>} />);
+      const s = await render(<Long aria-label="Rows" count={Infinity} renderItem={(i) => <li>Row {i}</li>} />);
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      expect([s.container.querySelectorAll('li').length, errors]).toEqual([0, []]);
+      expect([s.container.querySelectorAll('li:not(.srp-list__spacer)').length, errors]).toEqual([0, []]);
     } finally { window.removeEventListener('error', seen); }
   });
 
-  test('a <ul role="list"> that scrolls and takes focus; ref, className and other props reach it', async () => {
+  test('inside a List: the <ul role="list"> scrolls and takes focus; the List\'s ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLUListElement>();
-    await render(<VirtualList id="v" ref={ref} className="extra" data-x="y" aria-label="Rows" count={3} renderItem={item} />);
+    await render(<Long id="v" ref={ref} className="extra" data-x="y" aria-label="Rows" count={3} renderItem={item} />);
     const e = el('v');
     expect([e.tagName, e.getAttribute('role'), e.tabIndex, ref.current === e, e.classList.contains('extra'), e.classList.contains('srp-list'), e.dataset.x, e.dataset.component, e.getAttribute('aria-label')])
-      .toEqual(['UL', 'list', 0, true, true, true, 'y', 'virtual-list', 'Rows']);
+      .toEqual(['UL', 'list', 0, true, true, true, 'y', 'list', 'Rows']);
     expect(titles('v')).toEqual(['Row 1', 'Row 2', 'Row 3']);
-    expect(css(e).overflowY).toBe('auto');
+    expect([css(e).overflowY, css(e).maxHeight, spacers('v').map((s) => [s.getAttribute('aria-hidden'), s.getBoundingClientRect().height])]).toEqual(['auto', '384px', [['true', 0], ['true', 0]]]);
+  });
+
+  test('--list-virtual-height sets how tall it grows before it scrolls; a List without ListVirtualItems doesn\'t scroll', async () => {
+    await render(<>
+      <Long id="v" aria-label="Rows" count={100} renderItem={item} style={{ '--list-virtual-height': '200px' } as React.CSSProperties} />
+      <List id="plain" aria-label="Plain">{[0, 1, 2].map((i) => <ListItem key={i} title={'Row ' + (i + 1)} />)}</List>
+    </>);
+    expect([el('v').getBoundingClientRect().height, css(el('plain')).overflowY, el('plain').hasAttribute('tabindex')]).toEqual([200, 'visible', false]);
+  });
+
+  test('a List that picks rows keeps its rows as the Tab stop: the list itself takes none', async () => {
+    await render(<Long id="v" aria-label="Rows" selectionMode="multiple" count={50} renderItem={(i) => <ListItem value={'r' + i} title={'Row ' + (i + 1)} />} />);
+    await expect.poll(() => rows('v').length).toBeGreaterThan(3);
+    expect([el('v').hasAttribute('tabindex'), rows('v')[0]!.tabIndex]).toEqual([false, 0]);
   });
 
   test('with no rows it leaves the Tab order: an empty box is no stop; a tabIndex given still wins', async () => {
-    const screen = await render(<VirtualList id="v" aria-label="Rows" count={0} renderItem={item} />);
+    const screen = await render(<Long id="v" aria-label="Rows" count={0} renderItem={item} />);
     expect(el('v').hasAttribute('tabindex')).toBe(false);
-    await screen.rerender(<VirtualList id="v" aria-label="Rows" count={2} renderItem={item} />);
+    await screen.rerender(<Long id="v" aria-label="Rows" count={2} renderItem={item} />);
     expect(el('v').tabIndex).toBe(0);
-    await screen.rerender(<VirtualList id="v" aria-label="Rows" count={0} tabIndex={0} renderItem={item} />);
+    await screen.rerender(<Long id="v" aria-label="Rows" count={0} tabIndex={0} renderItem={item} />);
     expect(el('v').tabIndex).toBe(0);
   });
 
   test('of 10,000 rows it draws only those in view and a few more; each says where it is in the whole list', async () => {
-    await render(<VirtualList id="v" aria-label="Rows" count={10000} renderItem={item} />);
+    await render(<Long id="v" aria-label="Rows" count={10000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     expect(rows('v').length).toBeGreaterThan(5);
     const first = rows('v')[0]!;
@@ -60,7 +79,7 @@ describe('VirtualList', () => {
   });
 
   test('scrolling draws the rows now in view; the last row can be reached', async () => {
-    await render(<VirtualList id="v" aria-label="Rows" count={10000} renderItem={item} />);
+    await render(<Long id="v" aria-label="Rows" count={10000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     const h = rows('v')[1]!.getBoundingClientRect().height;   // the first row has no line above it
     await scrollTo('v', h * 5000);
@@ -79,7 +98,7 @@ describe('VirtualList', () => {
 
   test('rows of different heights are measured once drawn, and a row taller than the guess above the view doesn\'t move what\'s seen', async () => {
     const tall = (i: number) => <ListItem title={'Row ' + (i + 1)} description={i % 2 ? 'One line' : 'A description long enough to wrap onto several lines in a narrow list, so this row is much taller than the guess'} />;
-    await render(<div style={{ width: 240 }}><VirtualList id="v" aria-label="Rows" count={2000} renderItem={tall} estimatedItemHeight={40} /></div>);
+    await render(<div style={{ width: 240 }}><Long id="v" aria-label="Rows" count={2000} renderItem={tall} estimatedItemHeight={40} /></div>);
     await expect.poll(() => rows('v').length).toBeGreaterThan(3);
     await scrollTo('v', 20000);
     await scrollTo('v', el('v').scrollTop);
@@ -96,7 +115,7 @@ describe('VirtualList', () => {
 
   test('a row with focus stays drawn when it scrolls out of view, so focus isn\'t lost; Tab moves on from it', async () => {
     const link = (i: number) => <ListItem href={'#r' + i} title={'Row ' + (i + 1)} />;
-    await render(<><VirtualList id="v" aria-label="Rows" count={5000} renderItem={link} /><button id="after">After</button></>);
+    await render(<><Long id="v" aria-label="Rows" count={5000} renderItem={link} /><button id="after">After</button></>);
     await expect.poll(() => rows('v').length).toBeGreaterThan(3);
     const a = el('v').querySelector<HTMLAnchorElement>('a[href="#r1"]')!;
     a.focus();
@@ -111,7 +130,7 @@ describe('VirtualList', () => {
   });
 
   test('the keyboard scrolls it once it has focus', async () => {
-    await render(<VirtualList id="v" aria-label="Rows" count={1000} renderItem={item} />);
+    await render(<Long id="v" aria-label="Rows" count={1000} renderItem={item} />);
     el('v').focus();
     await userEvent.keyboard('{End}');
     await expect.poll(() => el('v').scrollTop).toBeGreaterThan(1000);
@@ -121,7 +140,7 @@ describe('VirtualList', () => {
   test('GR139: with rows of mixed heights, End reaches the last row and Home then the first, each in one press', async () => {
     // Taller than the guess on the way up, so the rows measured as the view goes back move the top it aimed for.
     const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} description={i % 3 ? 'A longer line under the title that wraps onto a second line in a narrow list. '.repeat(i % 3) : undefined} />;
-    await render(<div style={{ width: 280 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    await render(<div style={{ width: 280 }}><Long id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
     el('v').focus();
     await userEvent.keyboard('{End}');
     await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
@@ -133,7 +152,7 @@ describe('VirtualList', () => {
 
   test('GR142: after End, the first PageUp moves the view up a screen, with rows of mixed heights', async () => {
     const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} style={{ minHeight: [40, 64, 96][i % 3] }} />;
-    await render(<div style={{ width: 320 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    await render(<div style={{ width: 320 }}><Long id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
     el('v').focus();
     for (const k of ['{End}', '{Home}', '{End}']) {
       await userEvent.keyboard(k);
@@ -154,20 +173,20 @@ describe('VirtualList', () => {
 
   test('fewer rows, or none, after a change; itemKey keeps a row\'s element when rows before it go', async () => {
     const ids = Array.from({ length: 50 }, (_, i) => 'id' + i);
-    const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]!} renderItem={(i) => <ListItem title={list[i]} />} />;
+    const page = (list: string[]) => <Long id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]!} renderItem={(i) => <ListItem title={list[i]} />} />;
     const screen = await render(page(ids));
     const third = rows('v')[2];
     await screen.rerender(page(ids.slice(1)));
     expect([rows('v')[1] === third, rows('v')[1]!.getAttribute('aria-setsize')]).toEqual([true, '49']);
     await screen.rerender(page([]));
-    expect([rows('v').length, el('v').style.getPropertyValue('--srp-vl-after'), el('v').scrollHeight <= el('v').clientHeight]).toEqual([0, '0px', true]);
+    expect([rows('v').length, spacers('v').map((s) => s.style.height), el('v').scrollHeight <= el('v').clientHeight]).toEqual([0, ['0px', '0px'], true]);
   });
 
   test('GR93: after a jump to the middle, each small scroll moves the view by about as much, while the rows it brings in are measured', async () => {
     const at = () => { const box = el('v').getBoundingClientRect().top; const r = rows('v').find((x) => x.getBoundingClientRect().bottom > box + 1)!; return Number(r.getAttribute('aria-posinset')) * 1000 + (box - r.getBoundingClientRect().top); };
     const screen = await render(<div />);
     for (const count of [10000, 100000]) {
-      await screen.rerender(<VirtualList key={count} id="v" aria-label="Rows" count={count} renderItem={item} />);
+      await screen.rerender(<Long key={count} id="v" aria-label="Rows" count={count} renderItem={item} />);
       await expect.poll(() => rows('v').length).toBeLessThan(30);
       const h = rows('v')[1]!.getBoundingClientRect().height;
       await scrollTo('v', el('v').scrollHeight / 2);
@@ -185,7 +204,7 @@ describe('VirtualList', () => {
 
   test('Tab through rows of links: the list scrolls to show each one (it used to scroll back to the top, leaving focus out of view)', async () => {
     const link = (i: number) => <ListItem href="#" title={'Row ' + (i + 1)} />;
-    await render(<><button id="b">b</button><VirtualList id="v" aria-label="Rows" count={10000} renderItem={link} /></>);
+    await render(<><button id="b">b</button><Long id="v" aria-label="Rows" count={10000} renderItem={link} /></>);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     el('b').focus();
     // Two frames after each press, as a person's presses come: the rows past the last one drawn are drawn on the scroll
@@ -199,7 +218,7 @@ describe('VirtualList', () => {
   // GR94 in two tests, each well inside the time limit on a busy runner (12-17s as one, with coverage). Waits are for
   // what the test needs, not fixed sleeps: the rows to stop changing before a key, then the rows it should bring.
   const huge = async () => {
-    await render(<VirtualList id="v" aria-label="Rows" count={10_000_000} renderItem={item} />);
+    await render(<Long id="v" aria-label="Rows" count={10_000_000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
   };
   const first = () => { const box = el('v').getBoundingClientRect().top; return Number(rows('v').find((x) => x.getBoundingClientRect().bottom > box + 1)!.getAttribute('aria-posinset')); };
@@ -254,7 +273,7 @@ describe('VirtualList', () => {
     try {
       const screen = await render(<div />);
       for (const count of [600000, 1000000]) {
-        await screen.rerender(<VirtualList key={count} id="big" aria-label="Rows" count={count} renderItem={tall} />);
+        await screen.rerender(<Long key={count} id="big" aria-label="Rows" count={count} renderItem={tall} />);
         el('big').focus();
         for (let k = 0; k < 3; k++) {
           await userEvent.keyboard('{End}');
@@ -277,7 +296,7 @@ describe('VirtualList', () => {
   });
 
   test('its rows and focus ring read in every theme', async () => {
-    await render(<VirtualList id="v" variant="card" aria-label="Rows" count={100} renderItem={(i) => <ListItem title={'Row ' + i} description="Muted" />} />);
+    await render(<Long id="v" variant="card" aria-label="Rows" count={100} renderItem={(i) => <ListItem title={'Row ' + i} description="Muted" />} />);
     el('v').focus();
     const low: string[] = [];
     for (const th of THEMES) {
@@ -293,11 +312,11 @@ describe('VirtualList', () => {
   });
 
   // The README's loading recipe: until the first rows arrive, a busy List of ListLoadingItems in the rows' shape.
-  test('the loading recipe: ListLoadingItems rows are as tall as the VirtualList rows that replace them', async () => {
+  test('the loading recipe: ListLoadingItems rows are as tall as the ListVirtualItems rows that replace them', async () => {
     const person = (i: number) => <ListItem leading={<Avatar name={'Ada ' + i} alt="" size="sm" />} title={'Ada ' + i} description="ada@example.com" />;
     await render(<div style={{ width: 400 }}>
       <List id="wait" aria-label="Members" loading><ListLoadingItems rows={3} showDescription leading="sm" label="Loading members" /></List>
-      <VirtualList id="v" aria-label="Members" count={3} renderItem={person} />
+      <Long id="v" aria-label="Members" count={3} renderItem={person} />
     </div>);
     expect(el('wait').getAttribute('aria-busy')).toBe('true');
     const heights = (id: string) => rows(id).map((r) => r.getBoundingClientRect().height);

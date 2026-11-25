@@ -275,7 +275,7 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
 }
 
 /* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
-   side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
+   side (useVirtual, as List's ListVirtualItems and Combobox do). Give the frame a height (containerProps style maxHeight, or a
    stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
    drawn ones stands in for the rest, so the columns keep their widths from the drawn rows (use table-layout: fixed or
    column widths for columns that mustn't shift while scrolling). Each drawn row gets aria-rowindex, and the table

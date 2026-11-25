@@ -1,4 +1,4 @@
-// exports: List, ListItem, type ListItemOwnProps, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps, ListSelectAll, type ListSelectAllProps
+// exports: List, ListItem, type ListItemOwnProps, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps, ListSelectAll, type ListSelectAllProps, ListVirtualItems, type ListVirtualItemsProps
 interface ListLabels {
     listSelectAll: string;
 }
@@ -49,3 +49,11 @@ interface ListSelectAllProps extends Omit<CheckboxProps, "checked" | "defaultChe
 }
 declare const ListSelectAll: React.FC<ListSelectAllProps & React.RefAttributes<HTMLInputElement>>;
 declare function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement;
+interface ListVirtualItemsProps {
+    count: number;
+    renderItem: (index: number) => React.ReactElement;
+    itemKey?: ((index: number) => React.Key) | undefined;
+    estimatedItemHeight?: number | undefined;
+    overscan?: number | undefined;
+}
+declare function ListVirtualItems(props: ListVirtualItemsProps): React.ReactElement;

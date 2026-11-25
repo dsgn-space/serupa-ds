@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { List, ListItem, ListLoadingItems, ListSelectAll, type ListProps } from './List';
+import { List, ListItem, ListLoadingItems, ListSelectAll, ListVirtualItems, type ListProps } from './List';
 import { Stack } from '../Stack/Stack';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
@@ -30,7 +30,7 @@ function Members({ links, ...args }: ListProps & { links?: boolean }) {
 const meta = {
   title: 'Components/Content/List',
   component: List,
-  subcomponents: { ListItem },
+  subcomponents: { ListItem, ListVirtualItems },
   args: { 'aria-label': 'Members' },
   argTypes: { variant: { control: 'inline-radio', options: ['plain', 'card'] }, children: { control: false } },
   render: (args) => <div style={{ maxWidth: 480 }}><List {...args} /></div>,
@@ -147,3 +147,39 @@ function PickFiles({ start = ['notes', 'photo'], single = false }: { start?: str
 export const Selectable: Story = { name: 'Picking rows', render: () => <PickFiles /> };
 /** One row at a time, with no checkboxes: the picked row has the primary bar. */
 export const SelectableSingle: Story = { name: 'Picking one row', render: () => <PickFiles single start={['photo']} /> };
+
+// Thousands of rows: ListVirtualItems draws only those in view. 10,000 made-up people, the same every time, so the
+// screenshots stay the same.
+const FIRST = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan', 'Barbara', 'Dennis', 'Frances', 'Ken', 'Radia'];
+const LAST = ['Lovelace', 'Hopper', 'Torvalds', 'Hamilton', 'Turing', 'Liskov', 'Ritchie', 'Allen', 'Thompson', 'Perlman'];
+const ROLES = ['Admin', 'Editor', 'Viewer'];
+const person = (i: number) => {
+  const name = `${FIRST[i % 10]} ${LAST[Math.floor(i / 10) % 10]} ${i + 1}`;
+  return { name, email: name.toLowerCase().replace(/ /g, '.') + '@example.com', role: ROLES[i % 3]! };
+};
+export const Virtual: Story = {
+  name: 'Thousands of rows',
+  render: (args) => <div style={{ maxWidth: 480 }}>
+    <List {...args} variant="card">
+      <ListVirtualItems count={10000} renderItem={(i) => { const p = person(i); return <ListItem leading={<Avatar name={p.name} alt="" size="sm" />} title={p.name} description={p.email} trailing={<Badge>{p.role}</Badge>} />; }} />
+    </List>
+  </div>,
+};
+// Rows that are links: Tab moves through the drawn rows, and the one with focus stays drawn when scrolled away.
+export const VirtualLinks: Story = {
+  name: 'Thousands of links',
+  render: (args) => <div style={{ maxWidth: 480 }}>
+    <List {...args}>
+      <ListVirtualItems count={10000} renderItem={(i) => { const p = person(i); return <ListItem href="#" selected={i === 0} title={p.name} description={p.email} />; }} />
+    </List>
+  </div>,
+};
+// Rows of different heights: each is measured once drawn.
+export const VirtualMixedHeights: Story = {
+  name: 'Thousands of rows, different heights',
+  render: (args) => <div style={{ maxWidth: 480 }}>
+    <List {...args}>
+      <ListVirtualItems count={10000} renderItem={(i) => { const p = person(i); return <ListItem title={p.name} description={i % 4 === 0 ? `${p.email}, on the ${p.role.toLowerCase()} team since ${2000 + (i % 25)}, working across design, engineering and support` : p.email} />; }} />
+    </List>
+  </div>,
+};
