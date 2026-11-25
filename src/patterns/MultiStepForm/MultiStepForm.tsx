@@ -174,7 +174,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
       {s.isFirst ? null : <Button variant="ghost" onClick={s.back} disabled={busy}>Back</Button>}
     </div>
   );
-  const h2 = (i: number) => <Heading level={2} size="xl" {...s.headingProps(i)} className="outline-none">{STEPS[i]?.title}</Heading>;
+  const h2 = (i: number) => <Heading level={2} size="lg" {...s.headingProps(i)} className="outline-none">{STEPS[i]?.title}</Heading>;
 
   return (
     <div className="min-h-screen bg-surface text-text">
@@ -189,7 +189,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
           <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
           {sent ? (
             <Card className="flex flex-col gap-4">
-              <Heading level={2} size="xl" ref={done} tabIndex={-1} className="outline-none">Application sent</Heading>
+              <Heading level={2} size="2xl" ref={done} tabIndex={-1} className="outline-none">Application sent</Heading>
               <p className="m-0 wrap-anywhere">We’ve emailed a copy to <bdi dir="ltr">{a.email}</bdi>. Your reference is <strong>BA-20418</strong>.</p>
               <Heading level={3} size="base">What happens next</Heading>
               <ol className="m-0 flex list-decimal flex-col gap-1 ps-5">

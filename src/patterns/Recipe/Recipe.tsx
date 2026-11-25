@@ -99,7 +99,7 @@ export function Recipe({ recipe = demo }: RecipeProps) {
             </DescriptionList>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               <section aria-labelledby="recipe-ingredients" className="flex flex-col gap-4">
-                <h2 id="recipe-ingredients" className="m-0 text-xl font-semibold">Ingredients</h2>
+                <h2 id="recipe-ingredients" className="m-0 text-lg font-semibold">Ingredients</h2>
                 <Field label="Servings" hint="From 1 to 24." id="recipe-serves">
                   <NumberInput min={1} max={24} value={serves} onValueChange={setServes} className="max-w-32" />
                 </Field>
@@ -114,7 +114,7 @@ export function Recipe({ recipe = demo }: RecipeProps) {
                 </ul>
               </section>
               <section aria-labelledby="recipe-steps" className="flex flex-col gap-4 md:col-span-2">
-                <h2 id="recipe-steps" className="m-0 text-xl font-semibold">Method</h2>
+                <h2 id="recipe-steps" className="m-0 text-lg font-semibold">Method</h2>
                 <p className="m-0 text-text-muted">{done.length === recipe.steps.length ? 'Every step done. Enjoy!' : `${num(done.length)} of ${num(recipe.steps.length)} steps done.`}</p>
                 <ol className="m-0 flex list-none flex-col gap-4 p-0">
                   {recipe.steps.map((s, n) => (

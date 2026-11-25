@@ -141,7 +141,7 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
             </p>
           </div>
           <section aria-labelledby="approvals-list" className="flex flex-col gap-4 pt-4">
-            <h2 id="approvals-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">{show === 'waiting' ? 'Waiting' : 'Decided'}</h2>
+            <h2 id="approvals-list" ref={listHeading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">{show === 'waiting' ? 'Waiting' : 'Decided'}</h2>
             {show === 'waiting' ? (
               waiting.length ? waiting.map((r) => (
                 <Card key={r.id} as="article" padding="sm" aria-labelledby={`approval-${r.id}`} className="gap-3">
