@@ -9,7 +9,7 @@ import { PasswordInput } from '../PasswordInput/PasswordInput';
 const meta = {
   title: 'Components/Overlays/Tooltip',
   component: Tooltip,
-  args: { content: 'Download as PDF', placement: 'top', open: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
+  args: { content: 'Download as PDF', placement: 'top', defaultOpen: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
   argTypes: { placement: { control: 'select', options: ['top', 'bottom', 'left', 'right', 'top-start', 'top-end', 'bottom-start', 'bottom-end', 'left-start', 'right-end'] }, children: { control: false } },
   decorators: [(Story) => <div style={{ padding: '56px 120px' }}><Story /></div>],
 } satisfies Meta<typeof Tooltip>;
@@ -20,7 +20,7 @@ export const Playground: Story = {};
 
 export const OnHover: Story = {
   name: 'On hover and focus',
-  args: { open: undefined },
+  args: { defaultOpen: undefined },
   render: () => <div className="flex gap-3">
     <Tooltip content="Download as PDF"><IconButton icon="download" label="Download" variant="secondary" hideTitle /></Tooltip>
     <Tooltip content="Ctrl + S" placement="bottom"><Button variant="secondary">Save</Button></Tooltip>
@@ -73,7 +73,7 @@ export const Disabled: Story = {
 /** Do: a word or two that names an icon-only button. */
 export const DoNameIcon: Story = {
   name: 'Do: name an icon button',
-  args: { content: 'Download', open: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
+  args: { content: 'Download', defaultOpen: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
 };
 /** Don't: a rule people need, hidden in a tooltip: nothing on the page shows it, and touch screens never do. */
 export const DontNeededInfo: Story = { tags: ['!visual'],

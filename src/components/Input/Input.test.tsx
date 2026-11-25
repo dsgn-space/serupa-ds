@@ -159,14 +159,14 @@ describe('Input', () => {
     await expect.poll(() => css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
   });
 
-  test('the hover border is the resting border one gray step stronger, in every theme: zinc-400 on zinc-300 in light, zinc-600 on zinc-700 in dark', async () => {
+  test('the hover border is the resting border one gray step stronger, in every theme: zinc-600 on zinc-500 in light, zinc-400 on zinc-500 in dark', async () => {
     await render(<><Input id="hz" aria-label="Hover" /><Input id="rz" aria-label="Rest" /></>);
     await page.getByRole('textbox', { name: 'Hover' }).hover();
     const seen: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const dark = th.endsWith('dark');
-      const want = [color(dark ? 'var(--zinc-700)' : 'var(--zinc-300)'), color(dark ? 'var(--zinc-600)' : 'var(--zinc-400)')];
+      const want = [color('var(--zinc-500)'), color(dark ? 'var(--zinc-400)' : 'var(--zinc-600)')];
       await expect.poll(() => css(box('hz')).borderTopColor).toBe(color('var(--field-border-hover)'));
       if ([css(box('rz')).borderTopColor, css(box('hz')).borderTopColor].join() !== want.join()) seen.push(th);
     }
@@ -229,13 +229,13 @@ describe('Input', () => {
     expect(css(l).pointerEvents).toBe('none');
   });
 
-  test('contrast in every theme: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1, the soft border 1.3:1', () => {
+  test('contrast in every theme: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1 and the border 3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
       ['prefix and suffix', 'var(--placeholder)', 'var(--field)', 4.5],
-      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
-      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
+      ['border 3:1 on the field (WCAG 1.4.11)', 'var(--field-border)', 'var(--field)', 3],
+      ['border 3:1 on the page', 'var(--field-border)', 'var(--surface)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
       ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3],
     ])).toEqual([]);

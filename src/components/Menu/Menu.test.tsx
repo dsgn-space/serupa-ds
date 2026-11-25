@@ -553,7 +553,7 @@ describe('Menu', () => {
       .toEqual(['Control+Plus', 'Control+-', 'Meta+Plus', 'Plus', 'Meta+K', 'Control+S', 'Control+Shift+P', 'G I', 'Control+K Control+S', 'Shift+Plus']);
   });
 
-  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons 3:1, in every theme', async () => {
+  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons and the highlighted item\'s bar 3:1, in every theme', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
@@ -566,7 +566,7 @@ describe('Menu', () => {
       second.focus();
       checks.push(['label', c(first), bg, 4.5], ['shortcut', c(first.querySelector('kbd')!), bg, 4.5], ['group label', c(m.querySelector('[role=presentation]')!), bg, 4.5], ['delete', c(del), bg, 4.5]);
       first.focus();
-      checks.push(['highlighted label', c(first), bgOf(first), 4.5], ['highlighted shortcut', c(first.querySelector('kbd')!), bgOf(first), 4.5], ['highlighted icon', c(first.querySelector(':scope > span[aria-hidden]:first-child')!), bgOf(first), 3]);
+      checks.push(['highlight bar', getComputedStyle(first).getPropertyValue('--highlight-indicator'), bgOf(first), 3], ['highlight bar on the menu', getComputedStyle(first).getPropertyValue('--highlight-indicator'), bg, 3], ['highlighted label', c(first), bgOf(first), 4.5], ['highlighted shortcut', c(first.querySelector('kbd')!), bgOf(first), 4.5], ['highlighted icon', c(first.querySelector(':scope > span[aria-hidden]:first-child')!), bgOf(first), 3]);
       del.focus();
       checks.push(['highlighted delete', c(del), bgOf(del), 4.5]);
       for (const [k, fg, back, min] of checks) { const r = contrast(fg, back); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }

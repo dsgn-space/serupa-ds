@@ -261,7 +261,7 @@ describe('PeriodPicker', () => {
     expect(bs[0]!.getAttribute('lang')).toBe('de-DE');
   });
 
-  test('contrast in every theme: text and placeholder 4.5:1 on the field, icon 3:1, the soft border 1.3:1; periods and the title 4.5:1 on the popup, the chosen one on primary, this one in primary', () => {
+  test('contrast in every theme: text and placeholder 4.5:1 on the field, icon 3:1 and the border 3:1; periods and the title 4.5:1 on the popup, the chosen one on primary, this one in primary', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],

@@ -46,6 +46,8 @@
    press (WCAG 2.5.8) through a box 1px past each edge, as SearchInput's small × does. */
 .srp-tag-group__tag { --srp-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); --srp-tag-py: calc((var(--control-height-sm) - var(--text-xs--line-height)) / 2 - var(--border-width-1)); }
 .srp-tag-group__remove::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1)); }
+/* On a touch screen the × takes a 44px-tall press (WCAG 2.5.5); across, it stays inside its tag so the tag next to it keeps its own. */
+@media (pointer: coarse) { .srp-tag-group__remove::after { inset-block: calc((var(--srp-tag-inner) - var(--spacing-11)) / 2); } }   /* stylelint-disable-line serupa/no-raw-value -- half the difference, on each side */
 /* A tag's icons (its own, the check of a selected tag, the ×) are 14px beside the 12px label, as a small Button's:
    an Icon's own default is 24px, which filled the whole 24px tag. */
 .srp-tag-group__tag .srp-icon { font-size: var(--tag-group-icon-size, var(--spacing-3\.5)); }

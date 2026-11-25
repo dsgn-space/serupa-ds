@@ -100,6 +100,8 @@
   inset-inline: calc(var(--spacing-0) - var(--srp-badge-rm-reach));
   border-radius: var(--badge-radius, var(--radius-control));
 }
+/* On a touch screen the × takes a 44px press (WCAG 2.5.5), as the other small controls do (Button, Breadcrumb). */
+@media (pointer: coarse) { .srp-badge__remove { --srp-badge-rm-reach: calc((var(--spacing-11) - var(--srp-badge-icon)) / 2); --srp-badge-rm-reach-y: calc((var(--spacing-11) - var(--srp-badge-h)) / 2); } }
 @media (hover: hover) { .srp-badge__remove:hover { opacity: var(--opacity-100); } }
 .srp-badge__remove:focus-visible { opacity: var(--opacity-100); }
 .srp-badge__remove:focus-visible::after { outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }   /* the ring goes round the whole 24×24 target */
