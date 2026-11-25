@@ -1,0 +1,12 @@
+---
+"@diki-stwn/serupa-ds": minor
+---
+
+- Added: `sm:table-cell` and the other breakpoint variants of `table-cell`, so a table column can hide on a phone (`hidden sm:table-cell`).
+- Fixed (Table): on a phone (below 640px) each cell keeps 8px a side rather than 12px, so a table fits a 390px screen more often. `--table-padding-x` still sets it everywhere.
+- Fixed (Transactions): on a phone the category shows under each description rather than in its own column, so the table fits a 390px screen with money in and money out still in their own columns.
+- Fixed (List with search and filters): on a phone each project's owner shows under its name, so the table fits with the date still on one line.
+- Fixed (Activity log): the date and the time each stay on one line, breaking between them, not inside them.
+- Fixed (Billing): an invoice's date reads in the locale's medium style, as in List search and Referral, and a failed payment's status says "Failed".
+- Fixed (Referral): a long email breaks after its @ rather than pushing the table wider.
+- Fixed (API keys, Data import): their tables pin the first column (API keys also the last) when they scroll sideways on a phone.

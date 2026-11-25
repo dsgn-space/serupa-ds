@@ -152,7 +152,9 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
                 <TableHead><TableRow>
                   <TableHeaderCell>Date</TableHeaderCell>
                   <TableHeaderCell>Description</TableHeaderCell>
-                  <TableHeaderCell>Category</TableHeaderCell>
+                  {/* On a phone the category goes under each description rather than in a column of its own, so the table
+                     fits a 390px screen with money in and money out still in their own columns. */}
+                  <TableHeaderCell className="hidden sm:table-cell">Category</TableHeaderCell>
                   <TableHeaderCell align="end">Money out</TableHeaderCell>
                   <TableHeaderCell align="end">Money in</TableHeaderCell>
                 </TableRow></TableHead>
@@ -165,8 +167,9 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
                           <span className="min-w-0 wrap-break-word">{t.description}</span>
                           {t.pending ? <Badge tone="warning">Pending</Badge> : null}
                         </span>
+                        <span className="block text-sm text-text-muted sm:hidden">{t.category}</span>
                       </TableHeaderCell>
-                      <TableCell>{t.category}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{t.category}</TableCell>
                       <TableCell align="end">{t.amount < 0 ? money(-t.amount) : ''}</TableCell>
                       <TableCell align="end">{t.amount > 0 ? money(t.amount) : ''}</TableCell>
                     </TableRow>

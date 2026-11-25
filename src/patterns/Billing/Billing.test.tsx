@@ -49,7 +49,7 @@ describe('Patterns/Billing', () => {
     const alert = screen.getByRole('alert');
     await expect.element(alert.getByText(/^The payment on .+ failed$/)).toBeVisible();
     await expect.element(alert.getByRole('link', { name: 'Update card' })).toHaveAttribute('href', '#pay');
-    await expect.element(screen.getByRole('table').getByText('Payment failed')).toBeVisible();
+    await expect.element(screen.getByRole('table').getByText('Failed', { exact: true })).toBeVisible();
   });
 
   test('each way to pay is said in words, with the way to change it', async () => {

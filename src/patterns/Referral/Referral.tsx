@@ -165,7 +165,8 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
                   </TableRow></TableHead>
                   <TableBody>{list.map((r) => (
                     <TableRow key={r.email}>
-                      <TableCell className="wrap-break-word">{r.email}</TableCell>
+                      {/* On a phone an address breaks after its @, not past the screen's edge. */}
+                      <TableCell className="wrap-break-word">{r.email.includes('@') ? <>{r.email.slice(0, r.email.indexOf('@') + 1)}<wbr />{r.email.slice(r.email.indexOf('@') + 1)}</> : r.email}</TableCell>
                       <TableCell className="whitespace-nowrap"><FormattedDate value={r.invited} /></TableCell>
                       <TableCell><Badge tone={STATE[r.state].tone}>{r.state === 'rewarded' ? `${STATE.rewarded.label} ${money(reward)}` : STATE[r.state].label}</Badge></TableCell>
                     </TableRow>
