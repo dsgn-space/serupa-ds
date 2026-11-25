@@ -86,7 +86,10 @@ function keepTimeTogether<T extends { type: string; value: string }>(parts: T[])
 
 // A date with a time wraps between the two, never inside either: "Nov 12, 2026, / 8:00 AM", not "Nov 12, / 2026,
 // 8:00 AM". The words are the same (textContent and formatDate don't change): [first half, the words between, second half].
-const TIME = new Set([...CLOCK, 'dayPeriod', 'timeZoneName']);
+// Each half is an inline-block, so it moves to the next line whole, and only a half wider than the line itself
+// ("Wednesday, September 30, 2026" in 160px) wraps inside.
+// module state: a fixed list of Intl part types, never written to, so every request reads the same one.
+const TIME = new Set(['hour', 'minute', 'second', 'fractionalSecond', 'dayPeriod', 'timeZoneName']);
 function halves(parts: { type: string; value: string }[]): string[] {
   const a = parts.findIndex((p) => p.type !== 'literal');
   const cut = parts.findIndex((p, n) => n > a && p.type !== 'literal' && TIME.has(p.type) !== TIME.has(parts[a]!.type));
@@ -150,7 +153,7 @@ function FormattedDateRender({ ref, ...props }: FormattedDateProps & React.RefAt
     </span>;
   }
   return <time lang={lang} dir={dir} {...rest} ref={ref as React.Ref<HTMLTimeElement>} dateTime={made?.from.iso} className={cls} data-component="formatted-date" suppressHydrationWarning>
-    {made?.runs.length ? made.runs.map((r, i) => (i === 1 ? r : <span key={i} style={{ whiteSpace: 'nowrap' }}>{r}</span>)) : made?.pieces[0]?.text}
+    {made?.runs.length ? made.runs.map((r, i) => (i === 1 ? r : <span key={i} style={{ display: 'inline-block' }}>{r}</span>)) : made?.pieces[0]?.text}
   </time>;
 }
 
