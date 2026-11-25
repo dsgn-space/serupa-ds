@@ -37,13 +37,14 @@
   - radio "5 stars"
 
 # InAField
-- text: How was your stay? Choose it again to clear.
+- text: How was your stay?
 - radiogroup "How was your stay?":
   - radio "1 star"
   - radio "2 stars"
   - radio "3 stars"
   - radio "4 stars"
   - radio "5 stars"
+- text: Choose it again to clear.
 
 # InAGrid
 - radiogroup "Your rating":

@@ -162,6 +162,8 @@ if (D) {
   // with every line in size.mjs met; this stays a backstop.
   // 22 Nov 2026: 300 KB. main is at 293 KB, and the state-attribute aliases kept for 18.0.0 add 1.6 KB; they go
   // when the deprecated names are removed, so this stays a backstop.
+  // 24 Nov 2026: a round of visual-review fixes across 40 components (the Switch press, Textarea's grip, MentionInput's
+  // tints, PhoneInput's own country list) adds about 4.5 KB, each component's line in size.mjs raised with it.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
   t('index.js leaves the full icon set out (loaded on demand) and stays under 300 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 300 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by named()

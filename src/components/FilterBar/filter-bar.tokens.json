@@ -34,18 +34,28 @@
       },
       "chip-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "A chip's outline (3:1 on the page).",
+        "$value": "{color.border-strong}",
+        "$description": "A chip's outline: the light one a tag and an outline Badge have (its words mark the chip).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--filter-bar-chip-border"
           }
         }
       },
+      "chip-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover}",
+        "$description": "A chip's fill under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-chip-bg-hover"
+          }
+        }
+      },
       "chip-open": {
         "$type": "color",
-        "$value": "{color.primary-text}",
-        "$description": "A chip's text while its editor is open (4.5:1 on chip-bg).",
+        "$value": "{color.pressed}",
+        "$description": "A chip's fill while held and while its editor is open (its text keeps 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--filter-bar-chip-open"

@@ -92,8 +92,8 @@ Each is an optional override: set it on the page, a container or one progress in
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--progress-track` | `surface` | The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11). |
-| `--progress-track-border` | `border-control` | The bar's edge, 3:1 against the page, which marks the whole scale (WCAG 1.4.11). |
+| `--progress-track` | `track` | The empty part of the bar: the shared `track` gray, Apple's level (zinc-200 in light, zinc-700 in dark), with no edge. |
+| `--progress-track-border` | `track` | The bar's 1px edge: the track's own color by default, so no edge shows; set it to outline the bar. |
 | `--progress-ring-track` | `secondary` | The ring's empty part. The arc runs along the page on both sides, so it keeps 3:1 there. |
 | `--progress-fill` | `primary` | The done part, tone="primary" (the default; 3:1 on the track and the surface). |
 | `--progress-fill-success` | `success` | The done part, tone="success". |

@@ -57,10 +57,11 @@ describe('Switch', () => {
     expect(calls).toEqual(['change', 'true change', 'change', 'false change']);
   });
 
-  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in border-control, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="srp-switch">; md: a 36 by 20px round track in track (the light gray Apple uses), a 16px white thumb with a small shadow and no edge, 2px from the start, centered on the label\'s first line', async () => {
     await setup();
     const s = still(), md = box('md');
-    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--border-control)'), 16, color('var(--field)'), 2, '14px']);
+    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--track)'), 16, color('var(--white)'), 2, '14px']);
+    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toMatch(/^rgba\(0, 0, 0, [0-9.]+\) 0px 1px/);
     expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
     expect(md.vGap).toBeLessThan(0.5);
     expect(md.mid).toBeLessThan(1);
@@ -91,12 +92,14 @@ describe('Switch', () => {
     expect(page.getByRole('switch', { name: 'Enable row', exact: true }).elements().length).toBe(1);
   });
 
-  test('a click on the label turns a controlled switch on through onChange; on: a primary track and the thumb at the end (2px in) in on-primary', async () => {
+  test('a click on the label turns a controlled switch on through onChange; on: a primary track and the thumb at the end (2px in), white', async () => {
     await setup();
     await userEvent.click(document.querySelector('label.extra > span + span > span:first-child')!);
     await away();
     expect([changes.join(), el('md').checked]).toEqual(['true', true]);
-    await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--primary)'), 2, color('var(--on-primary)')]);
+    await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--primary)'), 2, color('var(--white)')]);
+    document.documentElement.setAttribute('data-theme', 'blue-dark');
+    try { expect([box('md').thumbBg, css(document.querySelector('label:has(#md) input + span')).backgroundColor]).toEqual([color('var(--white)'), color('var(--white)')]); } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
   });
 
   test('Space flips it from the keyboard; it is announced as a checked switch', async () => {
@@ -129,10 +132,11 @@ describe('Switch', () => {
     expect(i.checked).toBe(true);
   });
 
-  test('hover: border-control-hover while off, primary-hover while on', async () => {
+  test('hover: off, the track takes border-strong; on, primary-hover', async () => {
     await setup();
     await userEvent.hover(el('bad'));
-    await expect.poll(() => box('bad').bg).toBe(color('var(--border-control-hover)'));
+    await expect.poll(() => box('bad').bg).toBe(color('var(--border-strong)'));
+    expect(box('bad').bg).toBe(color('var(--border-strong)'));
     await away();
     await userEvent.hover(el('lg'));
     await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
@@ -152,7 +156,7 @@ describe('Switch', () => {
 
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
-    await expect.poll(() => box('inv').bg).toBe(color('var(--border-control)'));
+    await expect.poll(() => box('inv').bg).toBe(color('var(--track)'));
     expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
@@ -285,7 +289,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--border-control)', 'var(--surface)', 3], ['on track, or its edge', edged('var(--primary)'), 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--border-control)', 3], ['off thumb, hover', 'var(--field)', 'var(--border-control-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['on track, or its edge', edged('var(--primary)'), 'var(--surface)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);
@@ -300,13 +304,14 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control-pressed; on: primary-pressed), and the thumb stays full size; not when disabled (ED1)', async () => {
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control; on: primary-pressed), and the thumb grows 4px wider toward the middle (its far edge stays put); not when disabled (ED1)', async () => {
     await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
     const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
-    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1')];
+    const edges = (id: string) => { const t = thumb(id).getBoundingClientRect(), k = el(id).getBoundingClientRect(); return [Math.round(t.left - k.left), Math.round(k.right - t.right)]; };
+    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, ...edges(id)];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control-pressed)'), '1']);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1']);
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control)'), '1', '20px', 2, 14]);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '20px', 14, 2]);
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 });

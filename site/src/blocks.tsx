@@ -163,7 +163,11 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
     return () => seen.disconnect();
   }, []);
   const arm = () => stage.current?.setAttribute(ARMED, '');
-  return <div ref={stage} className={className} data-site-demo="" inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}>
+  // A story that takes the whole screen (a bar fixed to the window) is shown here in the page, not in a frame of its own
+  // (an anatomy picture, a Do or Don't): its stage holds its fixed parts (site.css), so they stay in the picture rather
+  // than pinning themselves to the window over the docs.
+  const whole = parameter(entry, 'layout') === 'fullscreen' ? '' : undefined;
+  return <div ref={stage} className={className} data-site-demo="" data-site-whole={whole} inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}>
     {mode === 'held'
       ? <div className="site-held">
         <p>This example opens over the page.</p>
@@ -234,7 +238,8 @@ const lead = (entry: { name: string; description: string }) => {
 
 /** Every story of the page, each under its name. */
 export function Stories({ title, includePrimary = true }: { title?: string; includePrimary?: boolean }) {
-  const all = useDocs().componentStories();
+  // A Do or a Don't is drawn in the guide's "Do and don't" section, beside its rule: not again among the examples.
+  const all = useDocs().componentStories().filter((entry) => !VERDICT.test(entry.name));
   const list = includePrimary ? all : all.slice(1);
   return <>
     {title ? <Heading level={2} className="site-h site-h2">{title}</Heading> : null}

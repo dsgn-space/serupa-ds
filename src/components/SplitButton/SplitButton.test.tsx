@@ -56,6 +56,17 @@ describe('SplitButton', () => {
     await userEvent.keyboard('{Escape}');
   });
 
+  test('primary: the line between the halves is one clean 1px line from top to bottom, not a border that meets the clear top and bottom borders at an angle', async () => {
+    await render(<><SplitButton id="ln" aria-label="Publish" menuLabel="More" menu={<MenuItem>Schedule</MenuItem>}>Publish</SplitButton>
+      <div dir="rtl"><SplitButton id="lr" aria-label="Publish" menuLabel="More" menu={<MenuItem>Schedule</MenuItem>}>Publish</SplitButton></div></>);
+    for (const [id, side] of [['ln', 'left'], ['lr', 'right']] as const) {
+      const arrow = css(el(id).querySelectorAll('button')[1]!);
+      // Every border the same clear color, so no corner is cut where two of them meet; the line is drawn over the edge.
+      expect([new Set([arrow.borderTopColor, arrow.borderBottomColor, arrow.borderLeftColor, arrow.borderRightColor]).size, arrow.backgroundImage.startsWith('linear-gradient'), arrow.backgroundSize, arrow.backgroundPositionX, arrow.backgroundOrigin])
+        .toEqual([1, true, '1px 100%', side === 'left' ? '0%' : '100%', 'border-box']);
+    }
+  });
+
   test('disabled turns off both halves; loading only the main one, and the menu stays usable', async () => {
     const log: string[] = [];
     const { rerender } = await render(<Save log={log} disabled />);
@@ -70,11 +81,6 @@ describe('SplitButton', () => {
     await userEvent.keyboard('{Escape}');
   });
 
-  test('two primary halves have an edge between them in their text color', async () => {
-    await render(<Save log={[]} />);
-    const arrow = el('sb').querySelectorAll('button')[1]!;
-    expect(css(arrow).borderInlineStartColor).not.toBe(css(el('sb').querySelector('button')).borderInlineStartColor);
-  });
   test('placement: the menu opens on the side asked for, every one of the twelve (bottom-end by default)', async () => {
     const all = ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end', 'right', 'right-start', 'right-end'] as const;
     const sides: string[] = [];

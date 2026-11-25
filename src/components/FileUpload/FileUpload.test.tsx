@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 import { formatNumber } from '../FormattedNumber/formatNumber';
@@ -181,7 +181,7 @@ describe('FileUpload', () => {
     await expect.poll(() => names(el)).toBe('shot.png');
   });
 
-  test('an error under it is a Field error\'s size, 14px, with the icon centred on the first line (GR392)', async () => {
+  test('an error under it is a Field error\'s size, 12px, with the icon centred on the first line (GR392)', async () => {
     await render(<><Field label="Contract" error="Add the signed contract"><FileUpload id="gr392f" /></Field><FileUpload id="gr392" accept="image/*" /></>);
     const fieldError = document.querySelector('[data-icon="error"]')!.parentElement!;   // the only error until the upload
     await userEvent.upload(input(rootOf('gr392')), [file('notes.txt', 'text/plain', 10)]);
@@ -189,7 +189,7 @@ describe('FileUpload', () => {
     const look = (text: Element, icon: Element) => [css(text).fontSize, css(text).lineHeight, css(text).gap, Math.round(icon.getBoundingClientRect().height)];
     const own = rootOf('gr392').querySelector('[role=alert] > p')!;
     expect(look(own, own.querySelector('[data-icon]')!)).toEqual(look(fieldError, fieldError.querySelector('[data-icon]')!));
-    expect(css(own).fontSize).toBe('14px');
+    expect(css(own).fontSize).toBe('12px');
   });
 
   test('L8E110: files that are all refused (a duplicate, a wrong type) call no onFilesChange; the list is as it was', async () => {
@@ -234,6 +234,21 @@ describe('FileUpload', () => {
     zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: dt }));
     await expect.poll(() => zone.className).not.toMatch(/zone--over/);
     expect(names(q(many))).toBe('drop.gif');
+  });
+
+  test('the drop area is outlined as a field is: field-border at rest, field-border-hover under the pointer, in every theme', async () => {
+    await render(<Many />);
+    const zone = q(`${many} > ${ZONE}`);
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      await userEvent.unhover(zone);
+      await expect.poll(() => zone.matches(':hover')).toBe(false);
+      expect([th, css(zone).borderTopColor]).toEqual([th, color('var(--field-border)')]);
+      await userEvent.hover(zone, { position: { x: 8, y: 8 } });
+      expect([th, css(zone).borderTopColor]).toEqual([th, color('var(--field-border-hover)')]);
+    }
+    still.remove(); document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
   test('forced colors: the drag-over area keeps a Highlight border, unlike the resting one', async () => {
@@ -363,19 +378,19 @@ describe('FileUpload', () => {
       document.documentElement.setAttribute('data-theme', th);
       const zone = el.querySelector(ZONE)!, zs = getComputedStyle(zone), pg = getComputedStyle(document.body).backgroundColor, ib = getComputedStyle(row(items(el)[0]!)).backgroundColor;
       const c = (sel: string) => getComputedStyle(el.querySelector(sel)!).color;
-      const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['zone outline', zs.borderTopColor, pg, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
-      zone.classList.add('srp-file-upload__zone--over');
+      const pairs: Array<[string, string, string, number]> = [['title', c(TITLE), zs.backgroundColor, 4.5], ['hint', c(HINT), zs.backgroundColor, 4.5], ['icon', c(`${ZONE} > [data-icon]`), zs.backgroundColor, 3], ['error', c('[role=alert] > p'), pg, 4.5], ['file name', c(NAME), ib, 4.5], ['size', c(SIZE), ib, 4.5]];
+      zone.setAttribute('data-over', '');
       const zo = getComputedStyle(zone).backgroundColor;
       pairs.push(['hint while dragging', c(HINT), zo, 4.5], ['title while dragging', c(TITLE), zo, 4.5]);
-      zone.classList.remove('srp-file-upload__zone--over');
-      el.classList.add('srp-file-upload--invalid');
+      zone.removeAttribute('data-over');
+      el.setAttribute('data-invalid', '');
       pairs.push(['invalid outline', getComputedStyle(zone).borderTopColor, pg, 3]);
-      el.classList.remove('srp-file-upload--invalid');
+      el.removeAttribute('data-invalid');
       for (const [k, fg, bg, min] of pairs) { const r = contrast(fg, bg); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove(); document.body.style.background = prevBg;
     expect(low).toEqual([]);
-    expect(n).toBe(60);
+    expect(n).toBe(54);
   });
 
   test('--file-upload-zone-bg overrides one upload', async () => {
@@ -638,7 +653,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
   });
 
   test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
-    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const long = { state: 'error' as const, message: "The server didn't answer in time, so the file wasn't sent. Try again in a moment, or check your connection." };
     const screen = await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
     // The words' box inside the button is the one that cuts a label too long for it.
     const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('span[id$="-retry"]')!.parentElement!;
@@ -646,7 +661,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
   });
 
   test('a failure message that wraps keeps its icon on the first line, not centred on the whole message', async () => {
-    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const long = { state: 'error' as const, message: "The server didn't answer in time, so the file wasn't sent. Try again in a moment, or check your connection." };   // two lines under the box, which runs the row's width
     await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
     const failed = [...document.querySelectorAll('span')].find((s) => s.textContent === long.message)!, icon = failed.querySelector('svg')!.getBoundingClientRect();
     const range = document.createRange();
@@ -707,7 +722,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const [ok, bad] = items(el).map(row), bg = css(ok!).backgroundColor;
-      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(DONE)).color, 4.5], ['failed', css(bad!.querySelector('[id$="-error"]')).color, 4.5], ['failed outline', css(bad!).borderTopColor, 3]];
+      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(DONE)).color, 4.5], ['failed', css(bad!.querySelector('[id$="-error"]')).color, 4.5], ['failed outline', getComputedStyle(bad!, '::before').borderTopColor, 3]];
       for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();

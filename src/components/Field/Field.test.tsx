@@ -66,7 +66,7 @@ describe('Field', () => {
     expect(el('mail').parentElement?.className).toMatch(/srp-input--invalid/);
     expect(el('mail').getAttribute('aria-required')).toBe('true');
     expect(f.querySelector('label > span[aria-hidden]')?.getAttribute('aria-hidden')).toBe('true');
-    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__hint', 'srp-field__control', 'srp-field__error']);
+    expect([...f.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__control', 'srp-field__hint', 'srp-field__error']);   // the hint under the box, then the error
     expect((f.querySelector<HTMLElement>('[data-icon] + span[id]')?.previousElementSibling as HTMLElement | null)?.dataset.icon).toBe('error');
 
     await screen.getByRole('button', { name: 'Clear' }).click();
@@ -145,6 +145,18 @@ describe('Field', () => {
     expect(getComputedStyle(mark).color).toBe(getComputedStyle(label).color);
   });
 
+  test('the hint and the message are a size under the label: 12px on a 16px line beside the 14px label, the message\'s icon 14px on its first line', async () => {
+    await render(<>
+      <Field id="sz" label="Email" hint="For receipts." error="Enter an email address."><Input /></Field>
+      <Field id="sw" label="Name" warning="A project with this name was archived."><Input /></Field>
+    </>);
+    const box = (id: string) => el(id).closest('[data-component="field"]')!, at = (id: string, sel: string) => css(box(id).querySelector(sel));
+    expect([at('sz', '.srp-field__label').fontSize, at('sz', '.srp-field__hint').fontSize, at('sz', '.srp-field__hint').lineHeight, at('sz', '.srp-field__error').fontSize, at('sw', '.srp-field__warning').fontSize])
+      .toEqual(['14px', '12px', '16px', '12px', '12px']);
+    const icon = box('sz').querySelector('[data-icon="error"]')!.getBoundingClientRect(), line = box('sz').querySelector('[data-icon="error"]')!.parentElement!.getBoundingClientRect();
+    expect([Math.round(icon.width), Math.round(icon.top + icon.height / 2 - line.top)]).toEqual([14, 8]);
+  });
+
   test('group: a <fieldset> whose <legend> lays out like a label; the hint and error describe the fieldset; controls keep their ids; a disabled group disables every control', async () => {
     await render(<>
       <Field group label="Plan" hint="Pick one." error="Choose a plan." id="grp">
@@ -159,8 +171,10 @@ describe('Field', () => {
     expect((fs.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)?.textContent)).toEqual(['Pick one.', 'Choose a plan.']);
     expect(el('r1').id).toBe('r1');
     expect(css(fs).borderTopWidth).toBe('0px');
-    // The hint is the first thing the fieldset's aria-describedby names.
-    expect(document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0]!)!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
+    // The hint is the first thing the fieldset's aria-describedby names, and it sits under the choices, above the error.
+    const hint = document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0]!)!;
+    expect([...fs.children].map((c) => c.className.split(' ')[0])).toEqual(['srp-field__label', 'srp-field__control', 'srp-field__hint', 'srp-field__error']);
+    expect(hint.getBoundingClientRect().top).toBeGreaterThanOrEqual(el('r2').getBoundingClientRect().bottom);
     expect(el('c1').matches(':disabled')).toBe(true);
   });
 

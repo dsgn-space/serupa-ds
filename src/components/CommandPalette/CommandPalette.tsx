@@ -254,7 +254,7 @@ const Option = /* @__PURE__ */ React.memo(function Option({ r, id, on, query, ac
           <span id={`${id}-d`} className="srp-command-palette__description">{r.c.description}</span>
         </span>
       ) : <Highlight className="srp-command-palette__label" query={query}>{r.c.label}</Highlight>}
-      {r.c.shortcut && r.c.shortcut.length ? <Kbd className="srp-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
+      {r.c.shortcut && r.c.shortcut.length ? <Kbd className="srp-command-palette__keys" keys={r.c.shortcut} /> : null}
     </div>
   );
 });

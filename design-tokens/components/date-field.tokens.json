@@ -77,6 +77,16 @@
             "cssVar": "--date-field-year-width"
           }
         }
+      },
+      "error-icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The error icon beside the 14px message (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-error-icon-size"
+          }
+        }
       }
     }
   }

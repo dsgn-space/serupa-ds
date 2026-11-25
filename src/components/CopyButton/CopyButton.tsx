@@ -11,6 +11,7 @@ import { announce } from '../../internal/announce';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { feedbackHold } from '../../internal/timing';
+import { useCut } from '../../internal/useCut';
 
 export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'startIcon' | 'endIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
@@ -67,10 +68,14 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
     <Icon icon={icons.Check} className="srp-copy-btn__icon srp-copy-btn__icon--done" />
     <Icon icon={icons.Error} className="srp-copy-btn__icon srp-copy-btn__icon--failed" />
   </span>;
+  // A text label cut with an ellipsis shows in full as the title on hover, as Button's does.
+  const first = React.useRef<HTMLSpanElement>(null);
+  const tipOk = !iconOnly && typeof label === 'string' && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
+  const cut = useCut(tipOk, name, () => first.current);
   const failedShort = sds.labels.copyFailedShort;
   const common = {
     ...rest, ref: ref as React.Ref<HTMLElement>, onClick, variant: variant || 'outline', size: size || 'sm',
-    'data-copied': copied ? '' : undefined, 'data-failed': failed ? '' : undefined, className: cn('srp-copy-btn', copied && 'srp-copy-btn--copied', failed && 'srp-copy-btn--failed', className),
+    title: cut && tipOk ? name : rest.title, 'data-copied': copied ? '' : undefined, 'data-failed': failed ? '' : undefined, className: cn('srp-copy-btn', copied && 'srp-copy-btn--copied', failed && 'srp-copy-btn--failed', className),
   };
   if (iconOnly) {
     // Its name shows in a Tooltip on hover and on keyboard focus, as IconButton's does: a title shows on hover only.
@@ -83,7 +88,7 @@ function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttribut
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
   return <ButtonBase {...common} startIcon={glyph}>
     <span className="srp-copy-btn__labels">
-      <span className={cn('srp-copy-btn__label', shown && 'srp-copy-btn__label--off')} aria-hidden={shown ? true : undefined}>{label}</span>
+      <span ref={first} className={cn('srp-copy-btn__label', shown && 'srp-copy-btn__label--off')} aria-hidden={shown ? true : undefined}>{label}</span>
       <span className={cn('srp-copy-btn__label', !copied && 'srp-copy-btn__label--off')} aria-hidden={!copied || undefined}>{done}</span>
       {/* Only while it shows: a rare message, so the button's usual width stays that of "Copy" and "Copied". */}
       {failed ? <span className="srp-copy-btn__label">{failedShort}</span> : null}

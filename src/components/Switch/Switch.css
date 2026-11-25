@@ -22,7 +22,7 @@
 .srp-switch__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; height: var(--srp-switch-lh); }
 .srp-switch--bare .srp-switch__control { height: var(--srp-switch-h); }
 .srp-switch__input {
-  --srp-switch-track: var(--switch-track, var(--border-control));
+  --srp-switch-track: var(--switch-track, var(--track));
   --srp-switch-on: var(--switch-track-checked, var(--primary));
   --srp-switch-ring: var(--switch-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
@@ -31,22 +31,26 @@
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move);
 }
-@media (hover: hover) { .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-hover, var(--border-control-hover)); --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
+@media (hover: hover) {
+  .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); }
+  .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly], :checked) { --srp-switch-track: var(--switch-track-hover, var(--border-strong)); }
+}
 .srp-switch__input:checked { background: var(--srp-switch-on); }
 /* The on track's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. :where keeps the invalid and disabled edges over it. */
 .srp-switch__input:where(:checked) { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--switch-track-edge-checked, var(--primary-edge)); }
 .srp-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
-  width: var(--srp-switch-thumb); height: var(--srp-switch-thumb); margin-block: auto;
-  border-radius: var(--rounded-full); background: var(--switch-thumb, var(--field));
+  width: calc(var(--srp-switch-thumb) + var(--srp-switch-stretch, var(--spacing-0))); height: var(--srp-switch-thumb); margin-block: auto;
+  border-radius: var(--rounded-full); background: var(--switch-thumb, var(--white));
+  box-shadow: var(--switch-thumb-shadow, var(--elevation-part));   /* no edge, a small shadow, as Apple's thumb */
   pointer-events: none;
   transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
-.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--on-primary)); }
+.srp-switch__input:checked + .srp-switch__thumb { background: var(--switch-thumb-checked, var(--white)); }
 /* On, the thumb moves to the end by translate, which the compositor runs without laying out the row each frame
    (EG1); right to left, the end is on the left. */
-.srp-switch__input:checked + .srp-switch__thumb { translate: calc(var(--srp-switch-w) - var(--srp-switch-thumb) - var(--srp-switch-pad) - var(--srp-switch-pad)) var(--spacing-0); }
-.srp-switch__input:checked + .srp-switch__thumb:dir(rtl) { translate: calc(var(--srp-switch-thumb) + var(--srp-switch-pad) + var(--srp-switch-pad) - var(--srp-switch-w)) var(--spacing-0); }
+.srp-switch__input:checked + .srp-switch__thumb { translate: calc(var(--srp-switch-w) - var(--srp-switch-thumb) - var(--srp-switch-stretch, var(--spacing-0)) - var(--srp-switch-pad) - var(--srp-switch-pad)) var(--spacing-0); }
+.srp-switch__input:checked + .srp-switch__thumb:dir(rtl) { translate: calc(var(--srp-switch-thumb) + var(--srp-switch-stretch, var(--spacing-0)) + var(--srp-switch-pad) + var(--srp-switch-pad) - var(--srp-switch-w)) var(--spacing-0); }
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */
 .srp-switch__input:focus-visible {
   outline: var(--focus-ring-width) solid var(--srp-switch-ring); outline-offset: var(--focus-ring-offset);
@@ -59,33 +63,37 @@
 /* Read-only: no pointer cursor or hover, since a click won't flip it. */
 .srp-switch:where([data-readonly]) { cursor: default; }
 /* Pressed: while the row is held (pointer, or Space on the switch) the track takes its held color, a step past
-   hover. Nothing shrinks by default; --switch-press-scale opts in to a smaller thumb. Not when read-only, pending
+   hover. The thumb grows 4px wider toward the middle (--switch-press-stretch), as Apple's, at once (a width transition would lay the page out every frame); --switch-press-scale opts in to a smaller one. Not when read-only, pending
    or disabled. */
-.srp-switch:not([data-readonly], .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control-pressed)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
-.srp-switch:active:not([data-readonly], .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
-/* Pending: Loader's ring on the thumb (EE1): a quarter arc in the brand (primary-text on the off thumb's field, primary on the
-   on thumb's on-primary, 3:1 on each) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
+.srp-switch:not([data-readonly], .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
+.srp-switch:active:not([data-readonly], .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { --srp-switch-stretch: var(--switch-press-stretch, var(--spacing-1)); scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+/* Pending: Loader's ring on the thumb (EE1): a quarter arc in the brand (primary-text on the white thumb, on-primary on it in a dark theme, 3:1 on each) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */
 .srp-switch--pending { cursor: progress; }
 .srp-switch__thumb { display: inline-flex; align-items: center; justify-content: center; }
+/* The thumb is white in every theme, as Apple's, so what sits on it (the pending ring, the check) takes the light
+   theme's primary there: color-scheme light resolves the light-dark() tokens of an auto theme to their light side, and
+   a fixed dark theme's primary is too light on white, so it takes on-primary (its darkest blue), 3:1 or more. */
+.srp-switch__thumb { color-scheme: light; }
+[data-theme$="-dark"] .srp-switch__thumb { --srp-switch-ink: var(--switch-thumb-ink-dark, var(--text-inverse)); }
 .srp-switch__spinner {
   --srp-switch-spin: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2);
   box-sizing: border-box; width: var(--srp-switch-spin); height: var(--srp-switch-spin);
-  color: var(--switch-pending, var(--primary-text));
+  color: var(--switch-pending, var(--srp-switch-ink, var(--primary-text)));
   border: var(--border-width-2) solid color-mix(in srgb, currentColor var(--opacity-20), transparent); border-block-start-color: currentColor; border-radius: var(--rounded-full);
   animation: spin var(--motion-loop-spinner) var(--ease-linear) infinite;
 }
+.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending-checked, var(--srp-switch-ink, var(--primary-text))); }
 /* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
-.srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--primary)); }
+.srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--srp-switch-ink, var(--primary-text))); }
 .srp-switch__input:checked + .srp-switch__thumb > .srp-switch__check { display: block; }
-.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending-checked, var(--primary)); }
 @keyframes srp-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-switch:has(.srp-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-switch:has(.srp-switch__input:disabled) .srp-switch__description { color: var(--switch-text-disabled, var(--disabled-text)); }
 /* Neutral, not faded (foundations.md, States): on or off, a disabled-surface track in a disabled-border edge, with a disabled-text thumb. */
 .srp-switch__input:disabled { --srp-switch-track: var(--switch-fill-disabled, var(--disabled-surface)); --srp-switch-on: var(--switch-fill-disabled, var(--disabled-surface)); box-shadow: inset 0 0 0 var(--border-width-1) var(--switch-border-disabled, var(--disabled-border)); }
-.srp-switch__input:disabled + .srp-switch__thumb { background: var(--switch-text-disabled, var(--disabled-text)); }
+.srp-switch__input:disabled + .srp-switch__thumb { background: var(--switch-text-disabled, var(--disabled-text)); box-shadow: none; }
 .srp-switch__input:disabled + .srp-switch__thumb > .srp-switch__check { color: var(--switch-fill-disabled, var(--disabled-surface)); }
 @media (prefers-reduced-motion: reduce) { .srp-switch__input, .srp-switch__thumb { transition: none; } .srp-switch:active .srp-switch__thumb { scale: none; } .srp-switch__spinner { animation: srp-switch-breathe calc(var(--motion-loop-spinner) + var(--motion-loop-spinner)) var(--ease-move) infinite; } }
 @media (forced-colors: active) {

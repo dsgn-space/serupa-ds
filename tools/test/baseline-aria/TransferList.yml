@@ -70,7 +70,7 @@
     - text: Name
 
 # InAField
-- text: Columns The table shows them in this order.
+- text: Columns
 - group "Columns":
   - paragraph: Available (6)
   - group "Available (6)":
@@ -94,7 +94,7 @@
   - group "Chosen (1)":
     - checkbox "ID" [disabled] [invalid]
     - text: ID Always shown
-- text: Choose at least two columns.
+- text: The table shows them in this order. Choose at least two columns.
 
 # LongText
 - group "Permissions":

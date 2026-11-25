@@ -78,7 +78,7 @@ const tiles = (rows: Array<[React.ComponentProps<typeof IconTile>['tone'], React
     {rows.map(([tone, icon, label]) => <li key={label} className="flex items-center gap-3"><IconTile icon={icon} tone={tone} size="sm" />{label}</li>)}
   </ul>
 );
-/** Do: \`neutral\` for most rows, with a status tone only where the row is about that status. */
+/** Do: `neutral` for most rows, with a status tone only where the row is about that status. */
 export const DoNeutralTones: Story = { name: 'Do: keep most tiles neutral', render: () => tiles([['neutral', icons.Description, 'Documents'], ['neutral', icons.Person, 'People'], ['neutral', icons.Schedule, 'Schedule'], ['danger', icons.Error, '2 failed uploads']]) };
 /** Don't: tones picked for decoration, so a real warning doesn't stand out. */
 export const DontDecorativeTones: Story = { tags: ['!visual'], name: "Don't: color tiles for decoration", render: () => tiles([['success', icons.Description, 'Documents'], ['warning', icons.Person, 'People'], ['info', icons.Schedule, 'Schedule'], ['danger', icons.Error, '2 failed uploads']]) };

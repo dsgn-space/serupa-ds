@@ -14,7 +14,8 @@
      dash of the hover cursor, the ring around a marker (half a focus width) and when the markers come in. */
   --srp-chart-start: 1; --srp-chart-end: 2; --srp-chart-all: 1 / -1; --srp-chart-span: span 2;
   --srp-chart-path: 1; --srp-chart-dash: 2 3; --srp-chart-ring: calc(var(--stroke-width-3) / 2);
-  --srp-chart-marker-delay: calc(var(--motion-enter-lg) * 0.6);
+  --srp-chart-in: var(--chart-duration-enter, var(--duration-700));   /* a chart is read as it comes in: 700ms, not a panel's 300ms */
+  --srp-chart-marker-delay: calc(var(--srp-chart-in) * 0.6);
 }
 .srp-chart__title { text-wrap: balance; grid-column: var(--srp-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
 .srp-chart__toggle { grid-column: var(--srp-chart-end); justify-self: end; }
@@ -98,11 +99,11 @@
   /* Once, on the first paint: the line draws from its start, its markers and the bars come in after. These are
      inside an SVG, whose parts the browser paints whatever moves them (only the outer svg can get its own layer), so a
      clip or a scale would cost the same as the dash; they run once, on a small box, and never under reduced motion. */
-  .srp-chart__plot .srp-chart__line { stroke-dasharray: var(--srp-chart-path) var(--srp-chart-path); animation: srp-chart-draw var(--motion-enter-lg) var(--ease-enter) both; }
+  .srp-chart__plot .srp-chart__line { stroke-dasharray: var(--srp-chart-path) var(--srp-chart-path); animation: srp-chart-draw var(--srp-chart-in) var(--ease-enter) both; }
   .srp-chart__plot .srp-chart__marker { animation: srp-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--srp-chart-marker-delay); }
-  .srp-chart__plot .srp-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: srp-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
+  .srp-chart__plot .srp-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: srp-chart-grow var(--srp-chart-in) var(--ease-settle) both; }
   .srp-chart__plot .srp-chart__bar--neg { transform-origin: var(--sizing-1-2) 0; }
-  .srp-chart__plot .srp-chart__area, .srp-chart__plot .srp-chart__slice, .srp-chart__plot .srp-chart__cell { animation: srp-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
+  .srp-chart__plot .srp-chart__area, .srp-chart__plot .srp-chart__slice, .srp-chart__plot .srp-chart__cell { animation: srp-chart-fade var(--srp-chart-in) var(--ease-enter) both; }
   .srp-chart__tip { animation: srp-chart-fade var(--motion-enter-sm) var(--ease-enter); }
   .srp-chart__marker { transition: stroke-width var(--motion-hover) var(--ease-move); }
 }

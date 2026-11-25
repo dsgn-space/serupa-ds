@@ -3,15 +3,14 @@
 <form noValidate="" style="display:grid;gap:var(--spacing-4);justify-items:start">
 <fieldset class="srp-field srp-field--group" aria-describedby="srp-f_R_1_-hint" data-component="field">
 <legend class="srp-field__label">Meeting starts</legend>
-<div class="srp-field__hint" id="srp-f_R_1_-hint">In the time zone you choose</div>
 <div class="srp-field__control">
 <div style="display:flex;flex-wrap:wrap;gap:var(--spacing-3)">
 <div style="width:var(--spacing-48)">
 <div class="srp-field" data-component="field">
-<label class="srp-field__label" for="srp-f_R_6t_-control" id="srp-f_R_6t_-label">Date</label>
+<label class="srp-field__label" for="srp-f_R_6l_-control" id="srp-f_R_6l_-label">Date</label>
 <div class="srp-field__control">
 <span class="srp-input srp-input--size-md srp-date-picker" data-component="date-picker" data-state="closed" data-size="md">
-<input id="srp-f_R_6t_-control" aria-describedby="srp-dp_R_3mt_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
+<input id="srp-f_R_6l_-control" aria-describedby="srp-dp_R_2ml_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
 <span class="srp-input__actions">
 <button type="button" aria-haspopup="dialog" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-date-picker__button" data-component="input-action" aria-label="Choose a date">
 <span class="srp-input-action__icon" aria-hidden="true">
@@ -24,8 +23,8 @@
 </span>
 </button>
 </span>
-<span id="srp-dp_R_3mt_-format" hidden="">Format: mm/dd/yyyy</span>
-<div id="srp-dp_R_3mt_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
+<span id="srp-dp_R_2ml_-format" hidden="">Format: mm/dd/yyyy</span>
+<div id="srp-dp_R_2ml_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
 </div>
 </span>
 </div>
@@ -33,12 +32,12 @@
 </div>
 <div style="width:var(--spacing-32)">
 <div class="srp-field" data-component="field">
-<label class="srp-field__label" for="srp-f_R_at_-control" id="srp-f_R_at_-label">Time</label>
+<label class="srp-field__label" for="srp-f_R_al_-control" id="srp-f_R_al_-label">Time</label>
 <div class="srp-field__control">
 <span class="srp-input srp-input--size-md srp-time-picker" data-component="time-picker" data-state="closed" data-size="md">
-<input id="srp-f_R_at_-control" aria-describedby="srp-tp_R_3qt_-format" type="text" role="combobox" autoComplete="off" spellCheck="false" autoCorrect="off" autoCapitalize="off" class="srp-input__field" placeholder="hh:mm AM/PM" aria-expanded="false" aria-controls="srp-tp_R_3qt_" aria-autocomplete="none" aria-haspopup="listbox" value="9:00 AM"/>
+<input id="srp-f_R_al_-control" aria-describedby="srp-tp_R_2ql_-format" type="text" role="combobox" autoComplete="off" spellCheck="false" autoCorrect="off" autoCapitalize="off" class="srp-input__field" placeholder="hh:mm AM/PM" aria-expanded="false" aria-controls="srp-tp_R_2ql_" aria-autocomplete="none" aria-haspopup="listbox" value="9:00 AM"/>
 <span class="srp-input__actions">
-<button type="button" tabindex="-1" aria-controls="srp-tp_R_3qt_" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-time-picker__button" data-component="input-action" aria-label="Choose a time">
+<button type="button" tabindex="-1" aria-controls="srp-tp_R_2ql_" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-time-picker__button" data-component="input-action" aria-label="Choose a time">
 <span class="srp-input-action__icon" aria-hidden="true">
 <span aria-hidden="true" data-icon="schedule:outlined" class="srp-icon">
 <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
@@ -49,8 +48,8 @@
 </span>
 </button>
 </span>
-<span id="srp-tp_R_3qt_-format" hidden="">Format: hh:mm AM/PM</span>
-<ul id="srp-tp_R_3qt_" role="listbox" aria-label="Choose a time" popover="manual" hidden="" inert="" class="srp-time-picker__list">
+<span id="srp-tp_R_2ql_-format" hidden="">Format: hh:mm AM/PM</span>
+<ul id="srp-tp_R_2ql_" role="listbox" aria-label="Choose a time" popover="manual" hidden="" inert="" class="srp-time-picker__list">
 </ul>
 </span>
 </div>
@@ -58,10 +57,10 @@
 </div>
 <div style="width:var(--spacing-60)">
 <div class="srp-field" data-component="field">
-<label class="srp-field__label" for="srp-f_R_et_-control" id="srp-f_R_et_-label">Time zone</label>
+<label class="srp-field__label" for="srp-f_R_el_-control" id="srp-f_R_el_-label">Time zone</label>
 <div class="srp-field__control">
 <span class="srp-input srp-combobox srp-input--size-md srp-time-zone-picker" data-component="combobox" data-size="md" data-state="closed">
-<input placeholder="Search a city or time zone" id="srp-f_R_et_-control" type="text" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" class="srp-input__field" value="Jakarta"/>
+<input placeholder="Search a city or time zone" id="srp-f_R_el_-control" type="text" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" class="srp-input__field" value="Jakarta"/>
 <span class="srp-input__actions">
 <button type="button" tabindex="-1" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-combobox__button srp-combobox__toggle" data-component="input-action" aria-label="Show options">
 <span class="srp-input-action__icon" aria-hidden="true">
@@ -75,7 +74,7 @@
 </button>
 </span>
 <div class="srp-combobox__popup" popover="manual" hidden="" inert="">
-<div id="srp-cbx_R_3ut_-list" role="listbox" class="srp-combobox__listbox" aria-labelledby="srp-f_R_et_-label">
+<div id="srp-cbx_R_2ul_-list" role="listbox" class="srp-combobox__listbox" aria-labelledby="srp-f_R_el_-label">
 </div>
 </div>
 </span>
@@ -84,6 +83,7 @@
 </div>
 </div>
 </div>
+<div class="srp-field__hint" id="srp-f_R_1_-hint">In the time zone you choose</div>
 </fieldset>
 <button type="submit" data-component="button" data-variant="primary" data-size="md" class="srp-btn srp-btn--primary srp-btn--size-md">
 <span class="srp-btn__label">Schedule</span>
@@ -95,10 +95,9 @@
 <div style="width:var(--spacing-64)">
 <div class="srp-field" data-component="field">
 <label class="srp-field__label" for="srp-f_R_0_-control" id="srp-f_R_0_-label">Date of birth</label>
-<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy. In the calendar, click the month for the months and years.</div>
 <div class="srp-field__control">
 <span class="srp-input srp-input--size-md srp-date-picker" data-component="date-picker" data-state="closed" data-size="md">
-<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_7_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
+<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_5_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
 <span class="srp-input__actions">
 <button type="button" aria-haspopup="dialog" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-date-picker__button" data-component="input-action" aria-label="Choose a date">
 <span class="srp-input-action__icon" aria-hidden="true">
@@ -111,11 +110,12 @@
 </span>
 </button>
 </span>
-<span id="srp-dp_R_7_-format" hidden="">Format: mm/dd/yyyy</span>
-<div id="srp-dp_R_7_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
+<span id="srp-dp_R_5_-format" hidden="">Format: mm/dd/yyyy</span>
+<div id="srp-dp_R_5_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
 </div>
 </span>
 </div>
+<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy. In the calendar, click the month for the months and years.</div>
 </div>
 </div>
 
@@ -145,10 +145,9 @@
 <div style="width:var(--spacing-64)">
 <div class="srp-field" data-component="field">
 <label class="srp-field__label" for="srp-f_R_0_-control" id="srp-f_R_0_-label">Due date</label>
-<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy</div>
 <div class="srp-field__control">
 <span class="srp-input srp-input--size-md srp-date-picker" data-component="date-picker" data-state="closed" data-size="md">
-<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_7_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
+<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_5_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
 <span class="srp-input__actions">
 <button type="button" aria-haspopup="dialog" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-date-picker__button" data-component="input-action" aria-label="Choose a date">
 <span class="srp-input-action__icon" aria-hidden="true">
@@ -161,11 +160,12 @@
 </span>
 </button>
 </span>
-<span id="srp-dp_R_7_-format" hidden="">Format: mm/dd/yyyy</span>
-<div id="srp-dp_R_7_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
+<span id="srp-dp_R_5_-format" hidden="">Format: mm/dd/yyyy</span>
+<div id="srp-dp_R_5_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
 </div>
 </span>
 </div>
+<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy</div>
 </div>
 </div>
 
@@ -217,10 +217,9 @@
 <div style="width:var(--spacing-64)">
 <div class="srp-field" data-component="field">
 <label class="srp-field__label" for="srp-f_R_0_-control" id="srp-f_R_0_-label">Due date</label>
-<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy, from today on</div>
 <div class="srp-field__control">
 <span class="srp-input srp-input--size-md srp-date-picker" data-component="date-picker" data-state="closed" data-size="md">
-<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_7_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
+<input id="srp-f_R_0_-control" aria-describedby="srp-f_R_0_-hint srp-dp_R_5_-format" type="text" inputMode="numeric" autoComplete="off" class="srp-input__field" placeholder="mm/dd/yyyy" value=""/>
 <span class="srp-input__actions">
 <button type="button" aria-haspopup="dialog" aria-expanded="false" class="srp-input-action srp-input-action--icon srp-date-picker__button" data-component="input-action" aria-label="Choose a date">
 <span class="srp-input-action__icon" aria-hidden="true">
@@ -233,11 +232,12 @@
 </span>
 </button>
 </span>
-<span id="srp-dp_R_7_-format" hidden="">Format: mm/dd/yyyy</span>
-<div id="srp-dp_R_7_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
+<span id="srp-dp_R_5_-format" hidden="">Format: mm/dd/yyyy</span>
+<div id="srp-dp_R_5_" role="dialog" aria-label="Choose a date" popover="manual" hidden="" inert="" class="srp-date-picker__popup">
 </div>
 </span>
 </div>
+<div class="srp-field__hint" id="srp-f_R_0_-hint">mm/dd/yyyy, from today on</div>
 </div>
 </div>
 

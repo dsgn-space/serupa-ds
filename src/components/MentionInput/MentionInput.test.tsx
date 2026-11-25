@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Dialog } from '../Dialog/Dialog';
 import { MentionInput, mentionQuery, mentionsIn, type MentionOption } from './MentionInput';
@@ -232,6 +232,44 @@ describe('MentionInput', () => {
       expect(contrast(css(desc).color, css(act).backgroundColor), th + ' description on active').toBeGreaterThanOrEqual(4.5);
     }
     document.documentElement.removeAttribute('data-theme');
+  });
+
+  test('each mention has a brand tint behind it, lined up with its text, that keeps the text 4.5:1 in every theme', async () => {
+    await render(<Box defaultValue="Hi @Ayu Lestari and @Nobody, see @Budi Santoso" />);
+    const marks = [...document.querySelectorAll('[aria-hidden="true"] > mark')] as HTMLElement[];
+    expect(marks.map((m) => m.textContent)).toEqual(['@Ayu Lestari', '@Budi Santoso']);
+    expect(marks[0]!.closest('[aria-hidden="true"]')).not.toBeNull();   // a picture only: the text is the textarea's
+    expect(css(marks[0]!).backgroundColor).toBe(color('var(--primary-subtle)'));
+    // Lined up: the tint covers "@Ayu Lestari" where the textarea draws it, measured from a copy of the text.
+    const el = box(), r = marks[0]!.getBoundingClientRect(), f = el.getBoundingClientRect();
+    const probe = document.createElement('span');
+    probe.style.font = getComputedStyle(el).font;
+    probe.style.whiteSpace = 'pre';
+    probe.textContent = 'Hi ';
+    document.body.appendChild(probe);
+    const left = f.left + el.clientLeft + parseFloat(getComputedStyle(el).paddingLeft) + probe.getBoundingClientRect().width;
+    probe.remove();
+    expect(Math.abs(r.left - left)).toBeLessThan(1.5);
+    expect(r.top).toBeGreaterThanOrEqual(f.top);
+    expect(r.bottom).toBeLessThanOrEqual(f.bottom);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect(contrast(css(el).color, css(marks[0]!).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    // Typing keeps it: a mention typed whole gets its tint, and one broken stops having it.
+    await userEvent.click(el);
+    await userEvent.keyboard('{Control>}{End}{/Control} @Budi Santoso');
+    await expect.poll(() => document.querySelectorAll('[aria-hidden="true"] > mark').length).toBe(3);
+  });
+
+  test('the tint scrolls with the text in a scrolled field', async () => {
+    await render(<Box rows={2} defaultValue={'one\ntwo\nthree\nfour\nfive @Ayu Lestari'} />);
+    const el = box();
+    el.scrollTop = el.scrollHeight;
+    el.dispatchEvent(new Event('scroll'));
+    const mark = document.querySelector('[aria-hidden="true"] > mark') as HTMLElement;
+    await expect.poll(() => { const r = mark.getBoundingClientRect(), f = el.getBoundingClientRect(); return r.top >= f.top && r.bottom <= f.bottom + 0.5; }).toBe(true);
   });
 });
 

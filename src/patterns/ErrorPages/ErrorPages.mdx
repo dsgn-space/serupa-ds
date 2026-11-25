@@ -20,7 +20,7 @@ Four pages for when the page someone asked for can't be shown: not found (404), 
 ## What each part is for
 
 - **The page's `<title>`** says what happened ("Page not found – Acme"), so it's the first thing a screen reader reads, and what the tab and the history show (2.4.2). The title before comes back when the page goes.
-- **The h1** says what happened, in plain words. **An EmptyState** under it (its title is an h2) says what to do about it, why it happened in a sentence, and holds the buttons.
+- **One heading and one description**, in an EmptyState: its title is the h1 and says what happened, in plain words; the description says why and what to do, and the buttons follow.
 - **A way back on every page**: a header link to the home page, and in main "Go to the home page" plus the page's own next step: "Go back", "Try again" or "Sign in as someone else". No one is left at a dead end.
 - **Words that don't blame.** The server page says "It isn’t something you did." The not-found page says the link may have a typo, not that the person typed it wrong.
 - **A reference on the server page**, for support to find what failed. Pass your own as `reference`.

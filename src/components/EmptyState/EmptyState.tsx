@@ -19,8 +19,8 @@ export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   size?: 'sm' | 'md' | undefined;
   /** 'plain' (default) or 'dashed': a dashed frame, for a drop zone or a slot to fill. */
   variant?: 'plain' | 'dashed' | undefined;
-  /** The title's heading level, to fit the page outline. Default: 3. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
+  /** The title's heading level, to fit the page outline: 1 when it is the whole page, such as an error page. Default: 3. */
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
   /** Says the title and description to screen readers once, politely, as it appears: for a result shown after a search
       or a filter ("No results for “mars”"), which would otherwise appear in silence. Not for an empty page on arrival. Default: false. */
   announce?: boolean | undefined;
@@ -37,7 +37,7 @@ function EmptyStateRender({ ref, ...props }: EmptyStateProps & React.RefAttribut
   const rest = omit(props, { icon: 1, title: 1, description: 1, actions: 1, size: 1, variant: 1, headingLevel: 1, announce: 1, suggestions: 1, onSuggestion: 1, onClearFilters: 1, className: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const variant = oneOf(['plain', 'dashed'] as const, props.variant, 'plain');
-  const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 3;
+  const level = [1, 2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 3;
   const H = ('h' + level) as 'h3';
   const icon = asIcon(props.icon as React.ReactNode);
   const suggestions = (props.suggestions || []).filter(Boolean);

@@ -24,8 +24,8 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The drawing box's outline (3:1 on the page).",
+        "$value": "{color.field-border}",
+        "$description": "The drawing box's outline: the field's border, as a Textarea has. The line marks where to sign (3:1).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--signature-pad-border"

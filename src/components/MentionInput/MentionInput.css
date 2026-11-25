@@ -5,6 +5,16 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-mention-input { position: relative; display: block; }
+/* The tints behind the mentions: a copy of the text, placed and sized over the field's text by MentionInput.tsx. It
+   comes before the Textarea, so the field's text (positioned too) paints over it, and its box's background under it. */
+.srp-mention-input__marks {
+  position: absolute; box-sizing: border-box; overflow: hidden; pointer-events: none;   /* hidden in the markup until MentionInput.tsx places it */
+  white-space: pre-wrap; overflow-wrap: break-word; color: transparent; -webkit-user-select: none; user-select: none;
+}
+.srp-mention-input__mention {
+  border-radius: var(--mention-input-mention-radius, var(--radius-inner)); background: var(--mention-input-mention-bg, var(--primary-subtle)); color: transparent;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
 /* An empty box at the caret, one line tall, that the list is placed against. */
 /* Placed in pixels at the caret by MentionInput.tsx (style.left and top), from where the text lays it out in either direction. */
 .srp-mention-input__anchor { position: absolute; inset-block-start: var(--spacing-0); inline-size: var(--spacing-0); pointer-events: none; }
@@ -38,6 +48,7 @@
 .srp-mention-input__message { padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2)); color: var(--mention-input-description-color, var(--text-muted)); }
 @media (forced-colors: active) {
   .srp-mention-input__popup { border-color: CanvasText; }
+  .srp-mention-input__mention { background: transparent; text-decoration: underline; text-decoration-color: CanvasText; }
   .srp-mention-input__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 }
 

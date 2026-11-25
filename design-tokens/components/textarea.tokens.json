@@ -84,8 +84,8 @@
       },
       "count": {
         "$type": "color",
-        "$value": "{color.placeholder}",
-        "$description": "The character count",
+        "$value": "{color.text-muted}",
+        "$description": "The character count under the text, as a Field hint.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-count"
@@ -119,6 +119,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-text-disabled"
+          }
+        }
+      },
+      "resize-grip": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The two lines of the resize grip in the corner (Chrome, Edge and Safari).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-resize-grip"
           }
         }
       }
@@ -157,7 +167,7 @@
       "padding-y-sm": {
         "$type": "dimension",
         "$value": "{spacing.spacing-1}",
-        "$description": "Top and bottom padding, sm (4px).",
+        "$description": "Top and bottom padding, sm (4px), counting the border: one row is as tall as an Input of the same size.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-padding-y-sm"
@@ -167,7 +177,7 @@
       "padding-y-md": {
         "$type": "dimension",
         "$value": "{spacing.spacing-1_5}",
-        "$description": "Top and bottom padding, md (6px).",
+        "$description": "Top and bottom padding, md (6px), counting the border: one row is as tall as an Input of the same size.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-padding-y-md"
@@ -177,7 +187,7 @@
       "padding-y-lg": {
         "$type": "dimension",
         "$value": "{spacing.spacing-2_5}",
-        "$description": "Top and bottom padding, lg (10px).",
+        "$description": "Top and bottom padding, lg (10px), counting the border: one row is as tall as an Input of the same size.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-padding-y-lg"

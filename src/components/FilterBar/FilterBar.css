@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    FilterBar: a wrapping row: the chips, "Add filter", "Clear all", any actions, then the results count at the end.
-   A chip is one outlined box (border, 6px corners, surface background, 28px tall like a sm control plus its border):
+   A chip is one outlined box (border-strong, 6px corners, surface background, 28px tall like a sm control plus its border):
    its text button, then a small × button. A chip with nothing chosen yet is dashed. The editor in the popover is a
    column of its control and a Done button at the end.
    --------------------------------------------------------------- */
@@ -9,22 +9,30 @@
 .srp-filter-bar__chips { display: contents; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .srp-filter-bar__chip, .srp-filter-bar__add { display: inline-flex; align-items: center; min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
 .srp-filter-bar__chip {
-  gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--border-control));
+  gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--border-strong));
   border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: var(--filter-bar-chip-bg, var(--surface)); --surface-behind: var(--filter-bar-chip-bg, var(--surface));
+  transition: background-color var(--motion-hover) var(--ease-move);
 }
+/* The chip answers as a button does: a gray fill under the pointer, a pressed one while held and while its editor is open. */
+@media (hover: hover) { .srp-filter-bar__chip:has(.srp-filter-bar__edit:hover) { background: var(--filter-bar-chip-bg-hover, var(--surface-hover)); } }
+.srp-filter-bar__chip:has(.srp-filter-bar__edit:active, .srp-filter-bar__edit[aria-expanded="true"]) { background: var(--filter-bar-chip-open, var(--pressed)); }
+@media (prefers-reduced-motion: reduce) { .srp-filter-bar__chip { transition: none; } }
 .srp-filter-bar__chip:where([data-empty]) { border-style: dashed; }
 .srp-filter-bar__edit {
   min-inline-size: var(--spacing-0); min-block-size: var(--control-height-sm); margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2) var(--spacing-1);
   border: var(--spacing-0); border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: transparent; color: inherit; font: inherit; font-weight: var(--font-medium);
   text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .srp-filter-bar__edit:hover { text-decoration: underline; } }
 .srp-filter-bar__edit:focus-visible { outline: var(--focus-ring-width) solid var(--filter-bar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-filter-bar__edit[aria-expanded="true"] { color: var(--filter-bar-chip-open, var(--primary-text)); }
 .srp-filter-bar__count { margin-inline-start: auto; color: var(--filter-bar-muted, var(--text-muted)); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .srp-filter-bar__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); }
 .srp-filter-bar__editor { display: flex; flex-direction: column; gap: var(--spacing-3); min-inline-size: var(--filter-bar-editor-width, var(--spacing-56)); }
-.srp-filter-bar__options { max-block-size: var(--spacing-72); overflow-y: auto; overscroll-behavior-block: contain; }
+.srp-filter-bar__options {
+  /* It scrolls, so it would cut a focused choice's ring: room for the ring inside, given back outside, so nothing moves. */
+  --srp-filter-bar-reach: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+  max-block-size: var(--spacing-72); overflow-y: auto; overscroll-behavior-block: contain;
+  padding: var(--srp-filter-bar-reach); margin: calc(var(--spacing-0) - var(--srp-filter-bar-reach));
+}
 .srp-filter-bar__done { align-self: flex-end; }
 @media (forced-colors: active) { .srp-filter-bar__chip { border-color: CanvasText; } }
 }

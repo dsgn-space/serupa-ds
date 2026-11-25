@@ -79,6 +79,11 @@ describe('EmptyState', () => {
     expect([el('ebad').className, !!el('ebad').querySelector('h3'), part('ebad', 'icon')]).toEqual(['srp-empty-state', true, null]);
   });
 
+  test('headingLevel 1: the title is the page\'s h1, for a whole page with nothing in it, such as an error page', async () => {
+    await render(<EmptyState id="eh1" title="Page not found" headingLevel={1} />);
+    expect(el('eh1').querySelector('h1')?.textContent).toBe('Page not found');
+  });
+
   test('tokens (--empty-state-icon-box, --empty-state-title-color) override one empty state; the actions are reachable with the keyboard', async () => {
     await render(<><EmptyState id="etok" title="T" icon="inbox" style={{ '--empty-state-icon-box': '64px', '--empty-state-title-color': 'rgb(1, 2, 3)' } as React.CSSProperties} /><Projects /></>);
     expect([part('etok', 'icon')!.offsetWidth, css(part('etok', 'title')).color]).toEqual([64, 'rgb(1, 2, 3)']);

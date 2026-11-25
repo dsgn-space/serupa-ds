@@ -43,7 +43,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   disabled?: boolean | undefined;
   /** A <fieldset> with a <legend> for a set of checkboxes or radios; the hint and error describe the fieldset. */
   group?: boolean | undefined;
-  /** 'vertical' (default): label, hint, control and error stacked. 'horizontal': the label in a column at the start
+  /** 'vertical' (default): label, control, hint and error stacked. 'horizontal': the label in a column at the start
    *  (--field-label-width) on the control's first line, with the control, hint and error beside it, for dense
    *  settings forms; it stacks again when the field is too narrow for both. Not with group. */
   orientation?: 'vertical' | 'horizontal' | undefined;
@@ -170,10 +170,10 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
     return (
       <fieldset {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} data-disabled={props.disabled ? '' : undefined} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
         {label}
-        {hint}
         <FieldContext.Provider value={null}>
           <div className="srp-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
         </FieldContext.Provider>
+        {hint}
         {error}
       </fieldset>
     );
@@ -190,8 +190,8 @@ function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLEle
   return (
     <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} data-disabled={props.disabled ? '' : undefined} aria-busy={busy} data-component="field">
       {label}
-      {hint}
       {body}
+      {hint}
       {error}
     </div>
   );

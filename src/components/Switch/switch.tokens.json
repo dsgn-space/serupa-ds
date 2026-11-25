@@ -4,8 +4,8 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The track while off",
+        "$value": "{color.track}",
+        "$description": "The track while off: Apple's light gray.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track"
@@ -14,8 +14,8 @@
       },
       "track-hover": {
         "$type": "color",
-        "$value": "{color.border-control-hover}",
-        "$description": "The track while off, on hover",
+        "$value": "{color.border-strong}",
+        "$description": "The track while off, on hover: a step darker than track.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-hover"
@@ -24,7 +24,7 @@
       },
       "track-pressed": {
         "$type": "color",
-        "$value": "{color.border-control-pressed}",
+        "$value": "{color.border-control}",
         "$description": "The off track while held down, one step past track-hover.",
         "$extensions": {
           "com.serupa": {
@@ -64,8 +64,8 @@
       },
       "thumb": {
         "$type": "color",
-        "$value": "{color.field}",
-        "$description": "The thumb while off",
+        "$value": "{color.white}",
+        "$description": "The thumb while off: white in every theme, as Apple's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb"
@@ -74,17 +74,27 @@
       },
       "thumb-checked": {
         "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "The thumb while on",
+        "$value": "{color.white}",
+        "$description": "The thumb while on: white in every theme, as Apple's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-checked"
           }
         }
       },
+      "thumb-ink-dark": {
+        "$type": "color",
+        "$value": "{color.text-inverse}",
+        "$description": "In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-thumb-ink-dark"
+          }
+        }
+      },
       "icon": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The check on the thumb while on, with icon (3:1 on the thumb)",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +154,7 @@
       },
       "pending-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "pending's ring on the on thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
@@ -189,6 +199,18 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-edge-checked"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "thumb-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-part}",
+        "$description": "The thumb's shadow, on or off.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-thumb-shadow"
           }
         }
       }
@@ -281,6 +303,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-size-lg"
+          }
+        }
+      },
+      "press-stretch": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "How much wider the thumb grows while it's held down (4px), toward the middle of the track, as Apple's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-press-stretch"
           }
         }
       }

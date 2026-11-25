@@ -32,6 +32,7 @@ describe('ErrorBoundary', () => {
     expect([box.className, box.querySelector('[role=alert]')?.textContent]).toEqual(['srp-error-boundary extra', expect.stringContaining('Something went wrong')]);
     expect(box.textContent).toContain('This part of the page couldn’t load.');
     await expect.element(page.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Try again' }).element().dataset.variant).toBe('secondary');   // the way out, drawn as an Alert's action is (Alert's guide)
     expect([(onError.mock.calls[0]?.[0] as Error).message, typeof onError.mock.calls[0]?.[1].componentStack]).toEqual(['boom', 'string']);
     expect(document.getElementById('other')!.textContent).toBe('Still here');
   });

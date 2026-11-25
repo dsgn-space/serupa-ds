@@ -334,7 +334,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
         <div className="srp-slider__fill" style={{ insetInlineStart: (vertical ? 100 - hi : lo) + '%', inlineSize: hi - lo + '%' }} />
         {marks.map((m, i) => (
           <span key={i} className="srp-slider__mark" style={{ insetInlineStart: place(pct(m.value)) + '%' }} aria-hidden="true">
-            {m.value > min && m.value < max ? <span className="srp-slider__tick" /> : null}
+            {m.value > min && m.value < max ? <span className={cn('srp-slider__tick', (pct(m.value) < lo || pct(m.value) > hi) && 'srp-slider__tick--off')} /> : null}
             {m.label != null && m.label !== false ? <span className="srp-slider__mark-label"><span>{m.label}</span></span> : null}
           </span>
         ))}

@@ -10,7 +10,7 @@ interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ti
     actions?: React.ReactNode | undefined;
     size?: "md" | "sm" | undefined;
     variant?: "dashed" | "plain" | undefined;
-    headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
+    headingLevel?: 1 | 2 | 3 | 4 | 5 | 6 | undefined;
     announce?: boolean | undefined;
     suggestions?: string[] | undefined;
     onSuggestion?: ((suggestion: string) => void) | undefined;

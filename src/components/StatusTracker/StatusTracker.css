@@ -19,7 +19,7 @@
 /* Half the strip's height, whatever --status-tracker-height is: the shape that says "down". */
 .srp-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
 .srp-status-tracker [data-state="none"] { --srp-st-fill: transparent; }
-.srp-status-tracker__day[data-state="none"], .srp-status-tracker__key[data-state="none"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--border-control)); }
+.srp-status-tracker__day[data-state="none"], .srp-status-tracker__key[data-state="none"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--border-strong)); }
 .srp-status-tracker__caption { min-block-size: var(--text-sm--line-height); overflow-wrap: anywhere; color: var(--status-tracker-text, var(--text)); }
 .srp-status-tracker__summary { margin: var(--spacing-0); overflow-wrap: anywhere; color: var(--status-tracker-muted, var(--text-muted)); }
 .srp-status-tracker__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--status-tracker-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }

@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   ErrorSummary: a box with a danger border (--error-summary-border) and a heading over a list of links, one per error,
+   ErrorSummary: a box on the danger tint with a danger border (--error-summary-border) and a heading over a list of links, one per error,
    in the danger color and underlined. Focused, it shows the focus ring (it takes focus when it appears). Every value
    reads one of its own tokens (error-summary.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
@@ -9,7 +9,7 @@
   padding: var(--error-summary-padding, var(--spacing-4));
   border: var(--error-summary-border-width, var(--border-width-2)) solid var(--error-summary-border, var(--danger));
   border-radius: var(--error-summary-radius, var(--radius-control));
-  background: var(--error-summary-bg, var(--surface)); --surface-behind: var(--error-summary-bg, var(--surface));
+  background: var(--error-summary-bg, var(--danger-subtle)); --surface-behind: var(--error-summary-bg, var(--danger-subtle));
   color: var(--error-summary-text, var(--text));
 }
 .srp-error-summary:focus { outline: none; }

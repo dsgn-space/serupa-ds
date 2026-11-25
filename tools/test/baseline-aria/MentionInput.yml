@@ -9,18 +9,20 @@
   - text: Sent to @Dimas Pratama
 
 # DoSayHow
-- text: Comment Type @ to mention someone.
+- text: Comment
 - textbox "Comment"
+- text: Type @ to mention someone.
 
 # DontHide
 - text: Comment
 - textbox "Comment"
 
 # InAField
-- text: Comment Type @ to mention someone; they get a notification.
+- text: Comment
 - textbox "Comment":
   - /placeholder: Add a comment. Type @ to mention someone.
 - button "Comment" [disabled]
+- text: Type @ to mention someone; they get a notification.
 
 # Invalid
 - textbox "Comment" [invalid]:

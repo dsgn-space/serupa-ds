@@ -134,7 +134,10 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
       // Released off the handle, there's no click: then the blur counts after all.
       window.addEventListener('pointerup', () => setTimeout(() => { if (dropping.current) { dropping.current = false; onBlur(); } }), { once: true });
     }
-    if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
+    // A press works while a row is picked up from the keyboard too: dragging that row's handle carries it on with the
+    // pointer, dragging another row's handle puts the picked-up one back and drags that one, and a press that doesn't
+    // move still drops it there (onClick).
+    if (props.disabled || e.button !== 0) return;
     // In a right-to-left row the first item is on the right, so "before" is further right.
     const flip = rtl();
     const placeAt = (p: HandlePointer): Drag | undefined => {

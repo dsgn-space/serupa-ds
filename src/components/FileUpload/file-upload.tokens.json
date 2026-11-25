@@ -14,8 +14,8 @@
       },
       "zone-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The drop area's dashed outline (3:1 on the surface).",
+        "$value": "{color.field-border}",
+        "$description": "The drop area's dashed outline: a field's border, which darkens under the pointer (zone-border-hover). Its words and the Choose button mark it, as a field's label does.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--file-upload-zone-border"

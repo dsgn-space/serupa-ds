@@ -29,12 +29,13 @@
   - button "Zoom in"
 
 # ProfilePhoto
-- text: Profile photo Shown round, beside your name.
+- text: Profile photo
 - group "Profile photo":
   - application "Crop area"
   - button "Zoom out" [disabled]
   - slider "Zoom": "1"
   - button "Zoom in"
+- text: Shown round, beside your name.
 - button "Save"
 
 # StressNarrowStrip

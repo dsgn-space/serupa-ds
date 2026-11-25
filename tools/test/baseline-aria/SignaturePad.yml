@@ -30,7 +30,7 @@
   - button "Clear" [disabled]
 
 # InField
-- text: Sign to accept the terms Draw or type your name.
+- text: Sign to accept the terms
 - group "Sign to accept the terms":
   - radiogroup "Signature method" [invalid]:
     - radio "Draw" [checked]
@@ -39,7 +39,7 @@
   - img "Signature area, empty"
   - button "Undo" [disabled]
   - button "Clear" [disabled]
-- text: Sign before you continue.
+- text: Draw or type your name. Sign before you continue.
 
 # LongText
 - group "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung signature":

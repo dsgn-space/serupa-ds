@@ -56,9 +56,9 @@ Drawn from the `LongLabel` story.
 
 | State | Look |
 | --- | --- |
-| Off | A `border-control` track, the thumb in `field` at the start |
-| On | A `primary` track, the thumb in `on-primary` at the end |
-| Hover | `border-control-hover` off, `primary-hover` on |
+| Off | A `track` track (the light gray Apple uses), a white thumb at the start, with the `elevation-part` shadow and no edge, as Apple's, in every theme |
+| On | A `primary` track, the white thumb at the end |
+| Hover | `border-strong` off, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
@@ -111,25 +111,32 @@ Each is an optional override: set it on the page, a container or one switch. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--switch-track` | `border-control` | The track while off |
-| `--switch-track-hover` | `border-control-hover` | The track while off, on hover |
-| `--switch-track-pressed` | `border-control-pressed` | The off track while held down, one step past track-hover. |
+| `--switch-track` | `track` | The track while off: Apple's light gray. |
+| `--switch-track-hover` | `border-strong` | The track while off, on hover: a step darker than track. |
+| `--switch-track-pressed` | `border-control` | The off track while held down, one step past track-hover. |
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
-| `--switch-thumb` | `field` | The thumb while off |
-| `--switch-thumb-checked` | `on-primary` | The thumb while on |
-| `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
+| `--switch-thumb` | `white` | The thumb while off: white in every theme, as Apple's. |
+| `--switch-thumb-checked` | `white` | The thumb while on: white in every theme, as Apple's. |
+| `--switch-thumb-ink-dark` | `text-inverse` | In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light). |
+| `--switch-icon` | `primary-text` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
 | `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
 | `--switch-pending` | `primary-text` | pending's ring on the off thumb (3:1 on it) |
-| `--switch-pending-checked` | `primary` | pending's ring on the on thumb (3:1 on it) |
+| `--switch-pending-checked` | `primary-text` | pending's ring on the on thumb (3:1 on it) |
 | `--switch-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--switch-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--switch-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--switch-track-edge-checked` | `primary-edge` | The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--switch-thumb-shadow` | `elevation-part` | The thumb's shadow, on or off. |
 
 **Sizing**
 
@@ -144,6 +151,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-thumb-size-sm` | `spacing-3` | Thumb size, sm (12px). |
 | `--switch-thumb-size-md` | `spacing-4` | Thumb size, md (16px). |
 | `--switch-thumb-size-lg` | `spacing-5` | Thumb size, lg (20px). |
+| `--switch-press-stretch` | `spacing-1` | How much wider the thumb grows while it's held down (4px), toward the middle of the track, as Apple's. |
 
 **Spacing**
 

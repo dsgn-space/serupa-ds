@@ -82,6 +82,16 @@
           }
         }
       },
+      "error-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "The space between a failed file's box and its message under it, a Field's gap between its control and its error (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-error-gap"
+          }
+        }
+      },
       "error": {
         "$type": "color",
         "$value": "{color.danger-text}",

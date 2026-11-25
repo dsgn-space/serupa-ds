@@ -34,8 +34,8 @@
       },
       "none": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "A day without data: its outline (3:1).",
+        "$value": "{color.border-strong}",
+        "$description": "A day without data: its outline, the light one a tag and an outline Badge have (the legend and the day's name say it, so it needn't be 3:1).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--status-tracker-none"

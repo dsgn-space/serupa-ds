@@ -9,6 +9,9 @@
   --srp-ta-px: var(--textarea-padding-x-md, var(--spacing-3));
   --srp-ta-py: var(--textarea-padding-y-md, var(--spacing-1\.5));
   --srp-ta-bd: var(--textarea-border, var(--field-border));
+  /* The space above and below the text counts the border, so one row is as tall as an Input or a Button of the same
+     size (24, 32, 44px): padding-y less the border width. */
+  --srp-ta-pad: calc(var(--srp-ta-py) - var(--textarea-border-width, var(--border-width-1)));
   --srp-ta-ring: var(--textarea-focus-ring, var(--focus-ring));
   display: inline-flex; flex-direction: column;
   box-sizing: border-box; width: var(--sizing-full);
@@ -23,8 +26,9 @@
 .srp-textarea--size-lg { --srp-ta-px: var(--textarea-padding-x-lg, var(--spacing-4)); --srp-ta-py: var(--textarea-padding-y-lg, var(--spacing-2\.5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .srp-textarea__field {
   display: block; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0);
-  margin: var(--spacing-0); padding: var(--srp-ta-py) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
+  margin: var(--spacing-0); padding: var(--srp-ta-pad) var(--srp-ta-px); border: 0; border-radius: inherit; background: transparent; outline: none;
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
+  position: relative;   /* its text paints over a positioned layer placed before it, such as MentionInput's mention tints */
 }
 .srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
 /* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */
@@ -38,8 +42,8 @@
    since the max-height is then invalid and falls back to none), scrolling past that. Textarea.tsx measures elsewhere. */
 @supports (field-sizing: content) {
   .srp-textarea--auto .srp-textarea__field {
-    --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
-    --srp-ta-max: calc(var(--srp-ta-max-rows) * 1lh + 2 * var(--srp-ta-py));
+    --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-pad));
+    --srp-ta-max: calc(var(--srp-ta-max-rows) * 1lh + 2 * var(--srp-ta-pad));
     field-sizing: content; min-height: var(--srp-ta-min); max-height: var(--srp-ta-max); overflow-y: auto; overscroll-behavior: contain;
   }
 }
@@ -48,16 +52,26 @@
 @media print {
   @supports (field-sizing: content) {
     .srp-textarea__field {
-      --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-py));
+      --srp-ta-min: calc(var(--srp-ta-rows) * 1lh + 2 * var(--srp-ta-pad));
       field-sizing: content; min-block-size: var(--srp-ta-min);
       block-size: auto !important; max-block-size: none !important; overflow: visible; resize: none;
     }
   }
 }
-/* The count sits under the text, at the end, in text-xs with tabular digits; it turns text-colored at maxLength. */
+/* The resize grip (Chrome, Edge, Safari): two short diagonal lines in the count's muted color, in place of the
+   browser's gray hatching, so the corner reads as one quiet mark beside the count. Firefox draws its own. */
+.srp-textarea__field::-webkit-resizer {
+  --srp-ta-grip: var(--textarea-resize-grip, var(--text-muted));
+  background: linear-gradient(to top left,
+    transparent var(--sizing-1-4), var(--srp-ta-grip) var(--sizing-1-4), var(--srp-ta-grip) calc(var(--sizing-1-4) + var(--border-width-1)), transparent calc(var(--sizing-1-4) + var(--border-width-1)),
+    transparent var(--sizing-1-2), var(--srp-ta-grip) var(--sizing-1-2), var(--srp-ta-grip) calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1)));
+  background-repeat: no-repeat; background-position: top left; background-size: var(--sizing-3-4) var(--sizing-3-4);   /* in from the box's corner */
+}
+/* The count sits under the text, at the end, in text-xs text-muted like a Field hint, with tabular digits; it turns
+   text-colored at maxLength. */
 .srp-textarea__count {
   align-self: flex-end; padding: var(--spacing-0) var(--srp-ta-px) var(--srp-ta-py);
-  color: var(--textarea-count, var(--placeholder)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
+  color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
 .srp-textarea__count--full { color: var(--textarea-count-full, var(--text)); }

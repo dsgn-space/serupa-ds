@@ -73,15 +73,33 @@ export function mentionQuery(text: string, caret: number, trigger = '@'): Query 
 /** The options mentioned in a text: each one whose trigger and label ("@Ayu Lestari") appear in it, in the order
     they first appear. For the app to notify them when the text is sent. */
 export function mentionsIn(text: string, options: readonly MentionOption[], trigger = '@'): MentionOption[] {
-  // At each trigger, the longest name written there whole: "@Ayu Lestari" is Ayu Lestari, not Ayu as well, and
-  // "@Ayub" is nobody, while an "@Ayu" further on still counts.
-  const longest = options.slice().sort((a, b) => b.label.length - a.label.length);
   const found: MentionOption[] = [];
+  for (const m of mentionSpans(text, byLength(options), trigger)) if (!found.includes(m.option)) found.push(m.option);
+  return found;
+}
+
+type Named = { label: string; option: MentionOption };
+// The options with their labels read once, longest first, for mentionSpans.
+function byLength(options: readonly MentionOption[]): Named[] {
+  return options.map((option) => ({ label: option.label, option })).sort((a, b) => b.label.length - a.label.length);
+}
+
+// Each mention in a text, where it starts and ends ("@Ayu Lestari", trigger and name), in order. At each trigger,
+// the longest name written there whole: "@Ayu Lestari" is Ayu Lestari, not Ayu as well, and "@Ayub" is nobody,
+// while an "@Ayu" further on still counts.
+function mentionSpans(text: string, longest: readonly Named[], trigger: string): { start: number; end: number; option: MentionOption }[] {
+  const spans: { start: number; end: number; option: MentionOption }[] = [];
   for (let at = text.indexOf(trigger); at >= 0; at = text.indexOf(trigger, at + trigger.length)) {
     const o = longest.find((x) => x.label && text.startsWith(x.label, at + trigger.length) && !/[\p{L}\p{N}]/u.test(text.charAt(at + trigger.length + x.label.length)));
-    if (o && !found.includes(o)) found.push(o);
+    if (o) spans.push({ start: at, end: at + trigger.length + o.label.length, option: o.option });
   }
-  return found;
+  return spans;
+}
+
+// The mentions in the field's text, the labels read once per options given, not on every key.
+function useSpans(text: string, options: readonly MentionOption[], trigger: string) {
+  const longest = React.useMemo(() => byLength(options), [options]);
+  return React.useMemo(() => mentionSpans(text, longest, trigger), [text, longest, trigger]);
 }
 
 // The textarea's caret, in pixels from its padding box's corner: a copy of the field with the text up to the caret
@@ -205,6 +223,29 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     a.style.top = el.offsetTop + el.clientTop + Math.max(0, Math.min(c.top, el.clientHeight - c.height)) + 'px';
     a.style.height = c.height + 'px';
   }, [open, q && q.start, text]);
+  // The tints behind the mentions: a copy of the text, laid out as the field lays it out, over the field's box and
+  // under its text, with each mention marked. Kept on the field's size and scroll.
+  const marks = React.useRef<HTMLDivElement | null>(null);
+  const spans = useSpans(text, options, trigger);
+  const hasMarks = spans.length > 0;
+  useIsoLayoutEffect(() => {
+    const el = field.current, m = marks.current;
+    if (!el || !m) return;
+    const place = () => {
+      m.hidden = false;
+      const cs = getComputedStyle(el);
+      for (const k of COPIED) if (k !== 'width' && !k.startsWith('border')) m.style[k] = cs[k];
+      Object.assign(m.style, { left: el.offsetLeft + el.clientLeft + 'px', top: el.offsetTop + el.clientTop + 'px', width: el.clientWidth + 'px', height: el.clientHeight + 'px' });
+      m.scrollTop = el.scrollTop;
+      m.scrollLeft = el.scrollLeft;
+    };
+    place();
+    const sync = () => { m.scrollTop = el.scrollTop; m.scrollLeft = el.scrollLeft; };
+    el.addEventListener('scroll', sync);
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(place);
+    if (ro) ro.observe(el);
+    return () => { el.removeEventListener('scroll', sync); if (ro) ro.disconnect(); };
+  }, [hasMarks, text]);
   useAnchoredLayer(open, pop, anchor, { placement: 'bottom-start', offsetVar: '--srp-mention-input-offset', watch: shown.length,
     onOutside: () => setQuery(null), onFocusOutside: () => setQuery(null) });
 
@@ -231,6 +272,12 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const keep = (e: React.MouseEvent) => e.preventDefault();   // a press in the list leaves focus in the field
   return (
     <span ref={wrap} className={cn('srp-mention-input', className)} style={style} data-component="mention-input" data-state={open ? 'open' : 'closed'}>
+      {hasMarks ? (
+        <div ref={marks} className="srp-mention-input__marks" aria-hidden="true" hidden>
+          {spans.map((m, i) => [text.slice(i ? spans[i - 1]!.end : 0, m.start), <mark key={m.start} className="srp-mention-input__mention">{text.slice(m.start, m.end)}</mark>])}
+          {text.slice(spans[spans.length - 1]!.end)}{'\u200b'}
+        </div>
+      ) : null}
       <Textarea {...rest} ref={setRefs} value={text}
         aria-autocomplete="list" aria-controls={open ? listId : undefined}
         aria-activedescendant={open && current >= 0 ? base + '-opt-' + current : undefined}
