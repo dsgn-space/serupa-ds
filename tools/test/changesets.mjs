@@ -42,6 +42,27 @@ const pending = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWit
 const unreadable = pending.map((f) => [f, parseChangeset(fs.readFileSync(path.join(dir, f), 'utf8'), pkg).error]).filter(([, e]) => e);
 t(`every pending changeset has a bump for ${pkg} (${pending.length})`, !unreadable.length, unreadable.map(([f, e]) => `.changeset/${f}: ${e}`).join('; '));
 
+// A lone * outside code is an emphasis mark to the docs' markdown: "Fields marked * are required." italicised the rest
+// of its entry and turned the code spans after it inside out, so one inline code ran 1,962px wide and every page that
+// lists the entry (the Changelog, Card, Field…) scrolled sideways 856px at 1280px. A * that is meant goes in code (`*`,
+// `aria-*`) or is escaped (\*); ** (bold) and a "* " bullet are fine.
+const loneStars = (file, text) => text.split('\n').flatMap((line, i) => {
+  const bare = line.replace(/`[^`]*`/g, '').replace(/\\\*/g, '').replace(/\*\*/g, '').replace(/^\s*\* /, '');
+  return bare.includes('*') ? [`${file}:${i + 1} …${bare.match(/.{0,30}\*.{0,30}/)[0]}…`] : [];
+});
+t('loneStars finds a bare * and leaves code, escapes, bold and bullets alone',
+  loneStars('x', 'Fields marked * are required.').length === 1 && loneStars('x', 'data-* and id').length === 1
+  && !loneStars('x', '* A `*` on each, `aria-*`, \\* and **bold**.').length);
+const starred = [['CHANGELOG.md', read('CHANGELOG.md')], ...pending.map((f) => [`.changeset/${f}`, fs.readFileSync(path.join(dir, f), 'utf8')])].flatMap(([f, x]) => loneStars(f, x));
+t('no changeset or CHANGELOG.md line has a lone * outside code (the docs read it as emphasis)', !starred.length,
+  `${starred.slice(0, 5).join('; ')}: put it in code (\`*\`) or escape it (\\*)`);
+
+t('a fenced example keeps its lines under the entry, not joined into one inline code',
+  JSON.stringify(entriesOf('New x\nmore.\n\n```js\na();\nb();\n```\n\nAfter.')) === JSON.stringify(['New x more.\n\n  ```js\n  a();\n  b();\n  ```\n\n  After.']),
+  JSON.stringify(entriesOf('New x\nmore.\n\n```js\na();\nb();\n```\n\nAfter.')));
+const flattened = read('CHANGELOG.md').split('\n').map((l, i) => [i + 1, l]).filter(([, l]) => /\S.*```/.test(l) && !/^\s*```/.test(l));
+t('no CHANGELOG.md entry has a code fence joined into its line', !flattened.length, flattened.map(([n]) => `CHANGELOG.md:${n}`).join(', '));
+
 // GR195: a lead sentence with bullets stays one entry, the bullets nested; bullets alone are one entry each.
 t('a lead sentence keeps its bullets nested under it', JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')) === JSON.stringify(['Four mistakes warn.\n  - Select: a.\n  - NumberInput: b.']), JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')));
 t('bullets alone are one entry each, and plain text is one', JSON.stringify(entriesOf('- Fixed: a.\n- Added: b.')) === JSON.stringify(['Fixed: a.', 'Added: b.']) && JSON.stringify(entriesOf('One\nline.')) === JSON.stringify(['One line.']));
