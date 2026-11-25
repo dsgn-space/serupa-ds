@@ -31,6 +31,7 @@ let pkg = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const tag = `v${pkg.version}`;
 
 const tagged = !!run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`], remote);
+// A draft counts: a re-run of the workflow's finish job publishes it.
 const released = () => { try { execFileSync('gh', ['release', 'view', tag], { cwd: P, stdio: 'ignore' }); return true; } catch { return false; } };
 if (tagged && released()) { console.log(`${tag} is already released.`); process.exit(0); }
 const back = run('git', ['rev-parse', 'HEAD']);
@@ -105,8 +106,13 @@ if (!tagged) {
 home();
 // A patch on the previous major's branch (14.x after 15.0.0) leaves "Latest" on the new major.
 const latest = isLatest(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
-run('gh', ['release', 'create', tag, tarball, ...kits, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag', `--latest=${latest}`], { stdio: 'inherit' });
+// In the Release workflow the release starts as a draft: the repository's releases are immutable, so files can be
+// attached only before it is published. The notes job attaches the pictures, then the finish job publishes it
+// (with this --latest). A local run publishes at once.
+const draft = !!process.env.GITHUB_OUTPUT;
+if (draft) fs.appendFileSync(process.env.GITHUB_OUTPUT, `latest=${latest}\n`);
+run('gh', ['release', 'create', tag, tarball, ...kits, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag', `--latest=${latest}`, ...(draft ? ['--draft'] : [])], { stdio: 'inherit' });
 fs.rmSync(notes);
 fs.rmSync(path.join(P, '.release-kits'), { recursive: true, force: true });
 // The Release workflow's publish job sends the same tarball to the private registry once the name is scoped (15.0.0).
-console.log(`Released ${tag}.`);
+console.log(draft ? `Made ${tag}'s release as a draft: the workflow publishes it once the pictures are attached.` : `Released ${tag}.`);

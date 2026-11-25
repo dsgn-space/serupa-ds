@@ -33,6 +33,7 @@ jobs:
       tarball: ${{ steps.release.outputs.tarball }}
       tag: ${{ steps.release.outputs.tag }}
       prev: ${{ steps.release.outputs.prev }}
+      latest: ${{ steps.release.outputs.latest }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -118,7 +119,7 @@ jobs:
           retention-days: 1
           if-no-files-found: ignore
 
-  # Attaches the pictures to the release and adds the table to its notes: main's own script, no dependencies.
+  # Attaches the pictures to the draft release and adds the table to its notes: main's own script, no dependencies.
   notes:
     needs: [release, screenshots]
     runs-on: ubuntu-24.04
@@ -140,6 +141,24 @@ jobs:
           TAG: ${{ needs.release.outputs.tag }}
           PREV: ${{ needs.release.outputs.prev }}
         run: node tools/release-screenshots.mjs "$TAG" "$PREV" shots
+
+  # The repository's releases are immutable: nothing can be attached once one is published. So npm run release makes
+  # the release as a draft, notes attaches the pictures, and this publishes it. It runs whatever became of the
+  # pictures (no previous release, a failed drawing), since a release must never wait on them for good. Re-run it
+  # alone if it failed: the draft and its files are already there.
+  finish:
+    needs: [release, screenshots, notes]
+    if: always() && needs.release.result == 'success' && needs.release.outputs.tarball != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write   # publishing the release
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release.outputs.tag }}
+          LATEST: ${{ needs.release.outputs.latest }}
+        run: gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest="${LATEST:-true}"
 
   # Main only. On a maintenance branch (14.x) a fix's pull request runs `node tools/version.mjs` itself, so the
   # release job above tags it when it merges: the action names its branch after the workflow's ref, which is
@@ -239,11 +258,11 @@ jobs:
           printf '%s:registry=%s\n//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}\n' "${name%%/*}" "$registry" > "$RUNNER_TEMP/.npmrc"
           NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/.npmrc" npm publish "$TARBALL" --registry "$registry" --ignore-scripts
 
-  # The release as a project installs it (D5): the tarball from the GitHub release, by the URL the README's install
-  # line gives, on every Node package.json allows. No npm ci: tools/test/consumer.mjs needs only Node.
+  # The release as a project installs it (D5): the tarball from the published GitHub release (a draft's files have no
+  # download URL), by the URL the README's install line gives, on every Node package.json allows. No npm ci: tools/test/consumer.mjs needs only Node.
   installed:
-    needs: release
-    if: needs.release.outputs.tarball != ''
+    needs: [release, finish]
+    if: always() && needs.finish.result == 'success' && needs.release.outputs.tarball != ''
     strategy:
       fail-fast: false
       matrix:
