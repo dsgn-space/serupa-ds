@@ -17,10 +17,17 @@ export function parseChangeset(text, name) {
 // A changeset's body as changelog entries: each "- " line is one (its indented lines go with it), and text with no
 // bullets is one. A lead sentence followed by bullets is one entry with the bullets nested under it, so "Four
 // mistakes now warn…" keeps its four cases rather than filing each as a change of its own (GR195).
+// Prose lines join into one, but a fenced code block keeps its lines, set under the entry's bullet: joined, a
+// changeset's example became one inline code 1,143px wide on the Changelog page.
+const joined = (text) => text.split(/(^```[\s\S]*?^```)/m)
+  .map((part, i) => (i % 2 ? `\n\n${part}\n\n` : part.trim().replace(/\n+/g, ' ')))
+  .join('').trim().replace(/\n{3,}/g, '\n\n')
+  .split('\n').map((l, i) => (i && l ? `  ${l}` : l)).join('\n');
+
 export function entriesOf(raw) {
   const body = raw.trim();
-  if (!/^- /m.test(body)) return [body.replace(/\n+/g, ' ')];
+  if (!/^- /m.test(body)) return [joined(body)];
   const [first, ...rest] = body.split(/\n(?=- )/);
   if (/^- /.test(first)) return [first, ...rest].map((e) => e.replace(/^- /, ''));
-  return [`${first.trim().replace(/\n+/g, ' ')}\n${rest.map((e) => e.trim().split('\n').map((l) => `  ${l}`).join('\n')).join('\n')}`];
+  return [`${joined(first)}\n${rest.map((e) => e.trim().split('\n').map((l) => `  ${l}`).join('\n')).join('\n')}`];
 }

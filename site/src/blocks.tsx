@@ -20,6 +20,11 @@ import { Drawn } from './drawn';
 import { StoryView, entryOf, parameter, sourceOf, type StoryEntry } from './stories';
 
 export { Markdown };
+// Storybook's Markdown overrides, which docs/blocks.tsx repeats when it adds its own table: the site's Markdown draws
+// every element its own way (markdown.tsx) and leaves the options' overrides aside, so these only have to exist.
+export const AnchorMdx = 'a';
+export const CodeOrSourceMdx = 'code';
+export const HeadersMdx: Record<string, string> = {};
 
 export interface Docs {
   /** The stories of the page's stories file, as Storybook's context lists them. */
