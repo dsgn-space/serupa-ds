@@ -60,8 +60,8 @@ t('no changeset or CHANGELOG.md line has a lone * outside code (the docs read it
 t('a fenced example keeps its lines under the entry, not joined into one inline code',
   JSON.stringify(entriesOf('New x\nmore.\n\n```js\na();\nb();\n```\n\nAfter.')) === JSON.stringify(['New x more.\n\n  ```js\n  a();\n  b();\n  ```\n\n  After.']),
   JSON.stringify(entriesOf('New x\nmore.\n\n```js\na();\nb();\n```\n\nAfter.')));
-const flattened = read('CHANGELOG.md').split('\n').map((l, i) => [i + 1, l]).filter(([, l]) => /\S.*```/.test(l) && !/^\s*```/.test(l));
-t('no CHANGELOG.md entry has a code fence joined into its line', !flattened.length, flattened.map(([n]) => `CHANGELOG.md:${n}`).join(', '));
+const flattened = read('CHANGELOG.md').split('\n').flatMap((l, i) => (/\S.*```/.test(l) && !/^\s*```/.test(l) ? [`CHANGELOG.md:${i + 1}`] : []));
+t('no CHANGELOG.md entry has a code fence joined into its line', !flattened.length, flattened.join(', '));
 
 // GR195: a lead sentence with bullets stays one entry, the bullets nested; bullets alone are one entry each.
 t('a lead sentence keeps its bullets nested under it', JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')) === JSON.stringify(['Four mistakes warn.\n  - Select: a.\n  - NumberInput: b.']), JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')));
