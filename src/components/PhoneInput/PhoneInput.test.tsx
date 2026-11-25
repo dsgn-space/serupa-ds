@@ -212,7 +212,7 @@ describe('PhoneInput', () => {
     expect([code('ca'), field('ca').value]).toEqual(['CA', '(416) 555-0199']);
   });
 
-  test('the country list: a press opens and picks, the pointer highlights; a press outside or Tab closes it; no match says so and is announced; names, codes and the highlight read in every theme', async () => {
+  test('the country list: a press opens and picks, the pointer highlights; a press outside, Tab or focus moving away closes it; no match says so and is announced; names, codes and the highlight read in every theme', async () => {
     await render(<Wrap><button id="cl-out">out</button><PhoneInput id="cl" aria-label="Phone" defaultCountry="ID" /></Wrap>);
     let opts = await options('cl');
     await userEvent.hover(opts.find((o) => o.dataset.value === 'MY')!);
@@ -238,6 +238,10 @@ describe('PhoneInput', () => {
     await expect.poll(() => list()).toBe(null);
     opts = await options('cl');
     await userEvent.keyboard('{Tab}');
+    await expect.poll(() => list()).toBe(null);
+    // Focus moved off the list another way (a screen reader's own move, a script) closes it too.
+    await options('cl');
+    document.getElementById('cl-out')!.focus();
     await expect.poll(() => list()).toBe(null);
     // Nothing matches: the list says so, and so does the announcer after a pause; Enter then picks nothing.
     await options('cl');
