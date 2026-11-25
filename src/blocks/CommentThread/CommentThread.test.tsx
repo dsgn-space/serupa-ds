@@ -186,6 +186,22 @@ describe('Blocks/Comment thread', () => {
     expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
+  test('a save that settles after another comment\'s edit has opened leaves that edit box open, with its draft', async () => {
+    let done = () => {};
+    const two: ThreadComment[] = [...start, { id: 'd', author: { name: 'You' }, body: 'Second note.', date: ago(5), mine: true }];
+    const onEdit = vi.fn((id: string) => (id === 'b' ? new Promise<void>((ok) => { done = ok; }) : undefined));
+    await render(<CommentThread comments={two} onReply={() => {}} onEdit={onEdit} />);
+    const [first, second] = page.getByRole('article', { name: /^You/ }).all();
+    await userEvent.click(first!.getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
+    (page.getByRole('textbox', { name: 'Edit comment' }).element() as HTMLTextAreaElement).form!.requestSubmit();
+    await userEvent.click(second!.getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Second note, longer.');
+    done();
+    await expect.poll(said).toContain('Comment saved');
+    expect((page.getByRole('textbox', { name: 'Edit comment' }).element() as HTMLTextAreaElement).value).toBe('Second note, longer.');
+  });
+
   test('loading: the list is busy, only the first skeleton is named, the reply box is there, and no empty text', async () => {
     const screen = await render(<CommentThread comments={[]} onReply={() => {}} loading loadingCount={3} />);
     const thread = page.getByRole('region', { name: 'Comments' });

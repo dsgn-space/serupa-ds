@@ -59,7 +59,8 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
   const [shown, setShown] = React.useState<number | null>(null);
   const list = React.useRef<HTMLOListElement | null>(null);
   const dateFmt = React.useMemo(() => dateFormat(locale, { dateStyle: 'medium' }), [locale]);
-  const say = React.useCallback((d: StatusDay) => L.statusDay(dateFmt.format(toDate(d.date)), wordOf(L, d.state)) + (d.note ? '. ' + d.note : ''), [L, dateFmt]);
+  // A date that doesn't read as one leaves that day unnamed rather than throwing the whole strip away.
+  const say = React.useCallback((d: StatusDay) => L.statusDay(((t) => (isNaN(t.getTime()) ? '' : dateFmt.format(t)))(toDate(d.date)), wordOf(L, d.state)) + (d.note ? '. ' + d.note : ''), [L, dateFmt]);
 
   const known = days.filter((d) => d.state !== 'none');
   const upShare = known.length ? known.filter((d) => d.state === 'up').length / known.length : 1;

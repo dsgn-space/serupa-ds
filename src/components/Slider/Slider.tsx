@@ -80,7 +80,10 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min
 function markList(marks: SliderProps['marks'], min: number, max: number, step: number, large: number): SliderMark[] {
   if (Array.isArray(marks)) return marks.filter((m) => m && isFinite(m.value) && m.value >= min && m.value <= max);
   if (marks !== true) return [];
-  const every = (max - min) / step > 100 ? step * large : step, out: SliderMark[] = [];
+  // At most 1,000 spaces, spread over the whole track: past that, whole steps apart enough to fit.
+  let every = (max - min) / step > 100 ? step * large : step;
+  if ((max - min) / every > 1000) every = step * Math.ceil((max - min) / step / 1000);
+  const out: SliderMark[] = [];
   for (let i = 0, v = min; v <= max + every / 1e9 && i <= 1000; i++, v = min + i * every) out.push({ value: snapToGrid(v, min, max, step) });
   return out;
 }

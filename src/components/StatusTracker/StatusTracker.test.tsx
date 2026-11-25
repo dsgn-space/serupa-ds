@@ -27,6 +27,12 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); });
 afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); });
 
 describe('StatusTracker', () => {
+  test('a day whose date doesn\'t read leaves that day unnamed; the strip still draws', async () => {
+    const days = sampleDays(3);
+    await render(<Days days={[{ ...days[0]!, date: 'not a date' }, ...days.slice(1)]} />);
+    expect(bars()).toHaveLength(3);
+  });
+
   test('a list named by label with a bar a day, each named with its date, state and note; props reach the root', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Days ref={ref} className="extra" data-x="y" />);

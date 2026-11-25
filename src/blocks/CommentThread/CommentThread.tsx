@@ -12,6 +12,7 @@ import { MentionInput, mentionsIn, type MentionOption } from '../../components/M
 import { toast } from '../../components/Toast/Toast';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 import { announce } from '../../internal/announce';
+import { useLatest } from '../../internal/cn';
 
 /* Comment thread (BL8): comments with who and when, a reply box with a character count, and edit and delete for
    your own, for an app to copy. What it carries (WCAG 2.2):
@@ -161,6 +162,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
   const id = React.useId();
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
   const [editing, setEditing] = React.useState<string | null>(null);
+  const editingRef = useLatest(editing);
   const [draft, setDraft] = React.useState('');
   const [reply, setReply] = React.useState('');
   const [error, setError] = React.useState(false);
@@ -187,7 +189,11 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
     if (thenable(out)) out.then(() => setBusy(false), () => setBusy(false));
   };
   const startEdit = (c: ThreadComment) => { setEditing(c.id); setDraft(c.body); setEditError(false); setFailed(null); focus(byId(`${id}${c.id}-edit`)); };
-  const stopEdit = (cid: string) => { setEditing(null); setEditError(false); setFailed(null); focus(byId(`${id}${cid}-edit-button`)); };
+  // Only this comment's edit box: a save that settles after another comment's edit has opened leaves that one open.
+  const stopEdit = (cid: string) => {
+    if (editingRef.current !== cid) return;
+    setEditing(null); setEditError(false); setFailed(null); focus(byId(`${id}${cid}-edit-button`));
+  };
   const save = (c: ThreadComment) => (e: React.FormEvent) => {
     e.preventDefault();
     if (!onEdit || saving) return;
