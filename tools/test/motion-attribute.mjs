@@ -22,6 +22,9 @@ t('a no-preference rule is kept off inside the attribute, on the subject and bef
 const root = flat(w('@media (prefers-reduced-motion: reduce) { :where(html) { scroll-behavior: auto; } ::view-transition-group(*) { animation-name: none; } }'));
 t('a rule for the root puts the attribute on the root',
   root.includes(':where(:root[data-motion="reduce"]) { scroll-behavior: auto; }') && root.includes(':where(:root[data-motion="reduce"])::view-transition-group(*)'), root);
+const middle = flat(w('@media screen and (prefers-reduced-motion: reduce) and (min-width: 1px) { .srp-a { scale: none; } }'));
+t('a reduce condition between two others leaves a query that still parses: "screen and (min-width: 1px)"',
+  middle.includes('@media screen and (min-width: 1px) { :where([data-motion="reduce"]) .srp-a'), middle);
 t('CSS with no motion query is left as it is', w('.srp-a { color: red; }') === '.srp-a { color: red; }', 'changed');
 
 const dist = path.join(PROJECT, 'dist');
