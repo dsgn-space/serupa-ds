@@ -52,6 +52,8 @@ t('11.0.0: the four breaking entries', at('11.0.0')?.entries.length === 4, JSON.
 t('10.0.0: an entry with a migration note but no "Breaking" mark, with its note', at('10.0.0')?.entries.some((e) => e.includes("Link's and BreadcrumbItem's `as`") && e.includes('**Migration.**')));
 t('3.0.0: the entries under "Changed (breaking)", with their table', at('3.0.0')?.entries.some((e) => e.includes('Spinner is now **Loader**') && e.includes('| Before (2.x) |')));
 t('a minor release is not a major', !at('12.0.0')?.entries.some((e) => e.includes('Badge: letting go of a press')) && !guide.some((m) => m.version === '10.1.0'));
+const pre = majorsIn('## [11.0.0-beta.1]\n\n- **Breaking.** x.\n\n## [11.0.0] - 2026-01-02\n\n- **Breaking.** y.\n');
+t('a prerelease of a major (11.0.0-beta.1) is not the major itself', JSON.stringify(pre.map((m) => [m.version, m.date])) === '[["11.0.0","2026-01-02"]]', JSON.stringify(pre));
 const pending = nextMajor(version, changesets);
 t(`the next major (${next}) comes from the major changesets`, majors.length ? pending?.version === next && pending.entries.length >= majors.length : pending === null, JSON.stringify(pending?.entries.map((e) => e.slice(0, 50))));
 t('a changeset with single quotes or Windows line ends counts', nextMajor('1.0.0', { a: "---\r\n'serupa-ds': major\r\n---\r\n\r\n- **Breaking.** x.\r\n" })?.entries[0] === '- **Breaking.** x.');
