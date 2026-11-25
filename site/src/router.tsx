@@ -37,11 +37,12 @@ export function usePath(): string {
 
 /** Where a link in the docs leads on the site: a Storybook link's page, or the href as it is. */
 export function resolve(to: string): string {
-  const story = /^\?path=\/(docs|story)\/([a-z0-9-]+?)(?:--([a-z0-9-]+))?$/.exec(to);
+  // A docs link may name a section of its page (#props): it leads to the same section of the site's page.
+  const story = /^\?path=\/(docs|story)\/([a-z0-9-]+?)(?:--([a-z0-9-]+))?(#[\w-]+)?$/.exec(to);
   if (!story) return to;
   const page = pageForStorybook(story[2]!);
   if (!page) return to;
-  return page.path + (story[1] === 'story' && story[3] ? '#' + story[3] : '');
+  return page.path + (story[1] === 'story' && story[3] ? '#' + story[3] : story[4] ?? '');
 }
 
 if (typeof window !== 'undefined') {
