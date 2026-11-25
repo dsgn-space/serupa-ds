@@ -21,7 +21,7 @@ import { ScrollArea } from "@diki-stwn/serupa-ds";
 
 - A data table: use [Table](../Table/README.md), whose frame already scrolls this way.
 - Code: use [CodeBlock](../CodeBlock/README.md).
-- A long list of thousands of rows: use a [List](../List/README.md#thousands-of-rows) with `ListVirtualItems`, which draws only the rows in view.
+- A long list of thousands of rows: use a [List](../List/README.md) with `ListVirtualItems`, which draws only the rows in view.
 - The page itself: let the page scroll. A box that scrolls inside a page that scrolls is harder to use, above all on a phone.
 
 ## Usage

@@ -10,7 +10,7 @@ const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\
 
 const active = () => document.activeElement as HTMLElement;
 const status = () => latin(document.querySelector('main [role="status"]')?.textContent);
-const titles = () => [...document.querySelectorAll('main ul > li:not(.srp-list__spacer)')];
+const titles = () => [...document.querySelectorAll('main ul > li:not([aria-hidden])')];
 
 // Notifications: the bell named with its count, unread said in words, a filter whose count is a status, and focus kept
 // in the list as read ones leave it.
@@ -20,7 +20,7 @@ describe('Patterns/Notifications', () => {
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
     await expect.element(screen.getByRole('button', { name: digits('Notifications, 3 unread') })).toBeInTheDocument();
     expect(status()).toBe('3 unread');
-    const unreadWords = [...document.querySelectorAll('main ul > li:not(.srp-list__spacer)')].filter((li) => /Unread/.test(li.textContent || '')).length;
+    const unreadWords = [...document.querySelectorAll('main ul > li:not([aria-hidden])')].filter((li) => /Unread/.test(li.textContent || '')).length;
     expect(unreadWords).toBe(3);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
@@ -142,7 +142,7 @@ describe('Patterns/Notifications', () => {
     const onRetry = vi.fn();
     const screen = await render(<Notifications loadFailed onRetry={onRetry} />);
     await expect.element(screen.getByRole('heading', { name: 'Couldn’t load your notifications' })).toBeVisible();
-    expect(document.querySelectorAll('main ul > li:not(.srp-list__spacer)')).toHaveLength(0);
+    expect(document.querySelectorAll('main ul > li:not([aria-hidden])')).toHaveLength(0);
     await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
     expect(status()).toBe('');
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));

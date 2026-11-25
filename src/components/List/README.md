@@ -27,7 +27,7 @@ import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds'
 - A set of similar things people scan and pick from: people, files, notifications, settings.
 - Rows that each open something or do one thing, with an action of their own at the end.
 - A list beside a detail view, where the selected row shows what's open.
-- Hundreds or thousands of rows people scroll through, with [`ListVirtualItems`](#thousands-of-rows) inside: members, files, events, log lines.
+- Hundreds or thousands of rows people scroll through, with `ListVirtualItems` inside (see Thousands of rows): members, files, events, log lines.
 
 ## When not to use
 
@@ -195,7 +195,7 @@ Placeholder rows, inside a List, while its rows load.
 
 ### ListVirtualItems
 
-The rows of a List of thousands, drawing only those in view (see [Thousands of rows](#thousands-of-rows)).
+The rows of a List of thousands, drawing only those in view (see Thousands of rows, under Usage).
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |

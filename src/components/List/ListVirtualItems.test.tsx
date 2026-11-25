@@ -12,8 +12,8 @@ function Long({ count, renderItem, itemKey, estimatedItemHeight, overscan, ...li
 }
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const rows = (id: string) => [...el(id).children].filter((c) => !c.classList.contains('srp-list__spacer')) as HTMLElement[];
-const spacers = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > .srp-list__spacer')];
+const rows = (id: string) => [...el(id).children].filter((c) => c.getAttribute('aria-hidden') !== 'true') as HTMLElement[];
+const spacers = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > li[aria-hidden="true"]')];
 // The innermost element in a row whose text is (or, for a title, starts with) the given text.
 const leaf = (r: Element, test: (t: string) => boolean) => [...r.querySelectorAll('*')].find((x) => x.childElementCount === 0 && test(x.textContent || ''))!;
 const title = (r: Element) => leaf(r, (t) => t.startsWith('Row ')).textContent;
@@ -30,7 +30,7 @@ describe('ListVirtualItems', () => {
     try {
       const s = await render(<Long aria-label="Rows" count={Infinity} renderItem={(i) => <li>Row {i}</li>} />);
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      expect([s.container.querySelectorAll('li:not(.srp-list__spacer)').length, errors]).toEqual([0, []]);
+      expect([s.container.querySelectorAll('li:not([aria-hidden])').length, errors]).toEqual([0, []]);
     } finally { window.removeEventListener('error', seen); }
   });
 
