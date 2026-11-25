@@ -24,8 +24,11 @@ t(`each says one of VPAT's terms (${TERMS.join(', ')})`, !badTerm.length, badTer
 const bare = got.filter((c) => !c.remarks || c.remarks.trim().length < 20);
 t('each has remarks: how it\'s met, or why it isn\'t, or whose it is', !bare.length, bare.map((c) => c.id).join(', '));
 const major = (v) => Number(String(v).split('.')[0]);
-t(`reviewed for the current major (${acr.reviewed?.version} on ${acr.reviewed?.date}, package ${pkg.version})`,
-  /^\d+\.\d+\.\d+$/.test(acr.reviewed?.version || '') && /^\d{4}-\d{2}-\d{2}$/.test(acr.reviewed?.date || '') && major(acr.reviewed.version) === major(pkg.version));
+// The current major, or the next one: a major's review goes in on main before its Release pull request, which only
+// the release bot writes, raises package.json, and both have to pass.
+const ahead = major(acr.reviewed?.version) - major(pkg.version);
+t(`reviewed for the current major or the next (${acr.reviewed?.version} on ${acr.reviewed?.date}, package ${pkg.version})`,
+  /^\d+\.\d+\.\d+$/.test(acr.reviewed?.version || '') && /^\d{4}-\d{2}-\d{2}$/.test(acr.reviewed?.date || '') && (ahead === 0 || ahead === 1));
 // The remarks name files and checks: they must exist.
 const named = got.flatMap((c) => [...c.remarks.matchAll(/`(tools\/[\w./-]+)`/g)].map((m) => m[1]));
 const gone = named.filter((f) => !fs.existsSync(path.join(PROJECT, f)));
