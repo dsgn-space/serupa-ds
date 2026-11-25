@@ -60,10 +60,11 @@ export function DocMarkdown({ children, reserve, slugify }: { children: string; 
   return <Markdown options={{ slugify: slugify || own }}>{children}</Markdown>;
 }
 
-// Links between component guides (../Loader/README.md) become links to their Storybook pages.
+// Links between component guides (../Loader/README.md) become links to their Storybook pages, to the same section
+// when they name one (#props).
 function relink(md: string): string {
-  return md.replace(/\]\((?:\.\.\/)?(?:src\/components\/)?(\w+)\/README\.md(#[\w-]+)?\)/g, (_, name) => `](?path=/docs/${docsId[name] || `components-${name.toLowerCase()}`}--docs)`)
-    .replace(/\]\(README\.md(#[\w-]+)?\)/g, '](?path=/docs/introduction--docs)');
+  return md.replace(/\]\((?:\.\.\/)?(?:src\/components\/)?(\w+)\/README\.md(#[\w-]+)?\)/g, (_, name: string, hash?: string) => `](?path=/docs/${docsId[name] || `components-${name.toLowerCase()}`}--docs${hash ?? ''})`)
+    .replace(/\]\(README\.md(#[\w-]+)?\)/g, (_, hash?: string) => `](?path=/docs/introduction--docs${hash ?? ''})`);
 }
 
 // The guide in pieces, with the anatomy diagram after the "## Anatomy" heading and the text before its list.

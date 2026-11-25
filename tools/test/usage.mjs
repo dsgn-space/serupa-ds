@@ -35,6 +35,8 @@ if (a <button) {}` },
 ];
 const r = usage(files, components);
 const by = (n) => r.exports.find((e) => e.name === n);
+// Code without semicolons: an import before the package's isn't read as part of it.
+const bare = usage([{ file: 'src/Bare.tsx', code: "import { useState } from 'react'\nimport { Button } from '@diki-stwn/serupa-ds'\nexport const B = () => <Button />\n" }], components);
 
 const bin = path.join(PROJECT, 'bin', 'serupa-usage.mjs');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-usage-'));
@@ -51,6 +53,7 @@ try { parsed = JSON.parse(json.stdout); } catch { /* reported below */ }
 
 done(report('Usage scanner', [
   { name: 'counts named, renamed and namespace imports and window.Serupa, by the name each was exported as', ok: by('Button')?.uses === 3 && by('Button')?.files === 2 && by('Card')?.uses === 1 && by('Badge')?.uses === 1 && by('Tooltip')?.uses === 1, detail: JSON.stringify(r.exports) },
+  { name: 'code without semicolons: the package\'s import is read on its own, past the one before it', ok: bare.exports.find((e) => e.name === 'Button')?.uses === 1, detail: JSON.stringify(bare.exports) },
   { name: 'a sub-export (NavbarLink) is its own row and marks its component (Navbar) used', ok: by('NavbarLink')?.uses === 1 && !r.unused.includes('Navbar'), detail: JSON.stringify(r.unused) },
   { name: 'reads each prop once per tag, past braces and arrows inside a prop', ok: JSON.stringify(by('Button')?.props) === JSON.stringify({ disabled: 1, onClick: 1, size: 1, type: 1, variant: 1 }) && JSON.stringify(by('Navbar')?.props) === JSON.stringify({ brand: 1, sticky: 1 }), detail: JSON.stringify(by('Button')?.props) },
   { name: 'a type import, a local component of the same name, and a < comparison count for nothing', ok: r.importing === 3 && by('Button')?.uses === 3 },

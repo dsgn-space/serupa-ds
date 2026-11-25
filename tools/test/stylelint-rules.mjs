@@ -34,7 +34,8 @@ await t('no-physical-shorthand: symmetric shorthands and logical corners pass', 
 .srp-y { padding: var(--spacing-1) var(--spacing-2) var(--spacing-3) var(--spacing-2); border-radius: var(--radius-sm) / var(--radius-md); }`), []);
 await t('no-physical-shorthand: right and left differ (padding, inset, border-width) and corners differ left to right', layered(`.srp-x { padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-6); inset: 0 auto 0 0; border-width: 0 var(--border-width-1) 0 0; }
 .srp-y { border-radius: var(--radius-md) 0 0 var(--radius-md); }
-.srp-z { border-radius: 0 var(--radius-md); }`), ['serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand']);
+.srp-z { border-radius: 0 var(--radius-md); }
+.srp-w { border-radius: var(--radius-md) var(--radius-md) 0; }`), ['serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand']);
 
 await t('radius-through-role: roles, a component token, none, xs and full pass', layered(`.srp-x { border-radius: var(--x-radius, var(--radius-control)); }
 .srp-y { border-start-start-radius: var(--radius-surface); border-radius: var(--rounded-full); --srp-y-r: var(--rounded-none); }

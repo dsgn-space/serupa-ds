@@ -170,7 +170,7 @@ const physical = rule('serupa/no-physical-shorthand', {
     if (BOX.test(prop)) {
       const v = groups[0];
       if (v.length === 4 && v[1] !== v[3]) flag(decl, m.box(prop), decl.value);
-    } else if (groups.some((v) => (v.length === 2 && v[0] !== v[1]) || (v.length === 3 && v[0] !== v[1]) || (v.length === 4 && (v[0] !== v[1] || v[2] !== v[3])))) {
+    } else if (groups.some((v) => (v.length === 2 && v[0] !== v[1]) || (v.length === 3 && (v[0] !== v[1] || v[1] !== v[2])) || (v.length === 4 && (v[0] !== v[1] || v[2] !== v[3])))) {
       flag(decl, m.radius, decl.value);
     }
   });
