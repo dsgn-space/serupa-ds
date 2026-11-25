@@ -112,14 +112,14 @@ describe('Transactions printed', () => {
     } finally { await commands.printMedia(false); }
   });
 
-  test('on a phone the category moves under each description, so the table fits with money in and out still apart', async () => {
+  test('on a phone the date and the category move under each description, so the table fits with money in and out still apart', async () => {
     await page.viewport(390, 844);
     document.body.style.padding = '0';
     try {
       await render(<Transactions />);
       await document.fonts.ready; // measured in the real font, not the wider fallback it starts in
       const first = [...document.querySelectorAll('tbody tr')[0]!.children].filter((c) => c.checkVisibility()).map(said);
-      expect(first).toEqual([expect.any(String), 'Corner CaféPendingEating out', expect.stringMatching(/6[.,]40/), '']);
+      expect(first).toEqual([expect.stringMatching(/^Corner CaféPending.+ · Eating out$/), expect.stringMatching(/6[.,]40/), '']);
       const frame = document.querySelector('[data-component="table"]')!;
       expect(frame.scrollWidth - frame.clientWidth).toBeLessThanOrEqual(1);
     } finally { document.body.style.padding = ''; await page.viewport(900, 700); }
