@@ -162,12 +162,20 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
     seen.observe(el);
     return () => seen.disconnect();
   }, []);
+  // Run from the button, the example replaced it, so when what it opened closes, focus would go back to a button that
+  // is gone and fall to the top of the page (WCAG 2.4.3): it comes back to the stage instead.
+  React.useEffect(() => {
+    if (mode !== 'run') return;
+    const back = () => requestAnimationFrame(() => { if (document.activeElement === document.body) stage.current?.focus({ preventScroll: true }); });
+    document.addEventListener('focusout', back);
+    return () => document.removeEventListener('focusout', back);
+  }, [mode]);
   const arm = () => stage.current?.setAttribute(ARMED, '');
   // A story that takes the whole screen (a bar fixed to the window) is shown here in the page, not in a frame of its own
   // (an anatomy picture, a Do or Don't): its stage holds its fixed parts (site.css), so they stay in the picture rather
   // than pinning themselves to the window over the docs.
   const whole = parameter(entry, 'layout') === 'fullscreen' ? '' : undefined;
-  return <div ref={stage} className={className} data-site-demo="" data-site-whole={whole} inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}>
+  return <div ref={stage} className={className} data-site-demo="" data-site-whole={whole} inert={!awake} {...(mode === 'run' ? { [ARMED]: '', tabIndex: -1 } : {})} onPointerEnter={arm} onFocus={arm}>
     {mode === 'held'
       ? <div className="site-held">
         <p>This example opens over the page.</p>

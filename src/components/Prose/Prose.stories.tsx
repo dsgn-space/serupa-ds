@@ -19,9 +19,12 @@ function Article() {
     <table><thead><tr><th>Plan</th><th>Seats</th><th>Price</th></tr></thead><tbody><tr><td>Free</td><td>3</td><td>$0</td></tr><tr><td>Team</td><td>25</td><td>$12 a seat</td></tr></tbody></table>
     <hr />
     <dl><dt>Token</dt><dd>A named value, such as a color or a space.</dd></dl>
-    <p><img src="data:image/png;base64," alt="A diagram of the install steps" width={320} height={120} /></p>
+    <p><img src={DIAGRAM} alt="A diagram of the install steps: install, import the styles, then use a component" width={320} height={120} /></p>
   </>;
 }
+
+// Three steps joined by arrows, drawn in gray so it reads on a light and a dark page.
+const DIAGRAM = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120"><g fill="none" stroke="#71717a" stroke-width="2"><rect x="8" y="36" width="72" height="48" rx="8"/><rect x="124" y="36" width="72" height="48" rx="8"/><rect x="240" y="36" width="72" height="48" rx="8"/><path d="M84 60h32m-8-8 8 8-8 8M200 60h32m-8-8 8 8-8 8"/></g></svg>');
 
 const meta = {
   title: 'Components/Layout and type/Prose',

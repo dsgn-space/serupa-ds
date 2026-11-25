@@ -15,7 +15,7 @@
       "border": {
         "$type": "color",
         "$value": "{color.field-border}",
-        "$description": "The control's outline: the same soft hairline as a form field's (under 3:1 by design, as field-border is; more contrast brings back 3:1).",
+        "$description": "The control's outline: a form field's border, 3:1 on the page.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-border"

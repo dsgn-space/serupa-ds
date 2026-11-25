@@ -869,3 +869,17 @@ describe('Button surface', () => {
     expect(getComputedStyle(el('m-tok')).color).toBe('rgb(250, 240, 200)');
   });
 });
+
+describe('outline edge (WCAG 1.4.11)', () => {
+  test('an outline button\'s border is 3:1 on the page and on a raised card, in every theme', async () => {
+    await render(<Button id="ol" variant="outline">Export</Button>);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const edge = getComputedStyle(document.getElementById('ol')!).borderTopColor;
+      for (const bg of ['var(--surface)', 'var(--surface-raised)']) { const r = contrast(edge, bg); if (r < 3) low.push(`${th} on ${bg} ${r.toFixed(2)}`); }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+});
