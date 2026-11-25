@@ -121,7 +121,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
           <Card padding="lg" className="mt-6">
             {stopped ? (
               <section aria-labelledby="stopped" className="flex flex-col items-start gap-3">
-                <h2 id="stopped" ref={answer} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">You won’t get these emails any more</h2>
+                <h2 id="stopped" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You won’t get these emails any more</h2>
                 <p className="m-0">We’ll still send receipts, delivery updates and security alerts, as they’re about orders and your account.</p>
                 {failed ? <Alert tone="danger">Couldn’t turn them back on. Try again.</Alert> : null}
                 <Button variant="secondary" loading={busy} onClick={turnBack}>Turn them back on</Button>

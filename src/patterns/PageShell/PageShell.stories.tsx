@@ -34,7 +34,7 @@ const commands: Command[] = [
   { id: 'billing', label: 'Billing migration', group: 'Projects', href: '#projects/billing-migration' },
 ];
 
-const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tokens v2', 'Onboarding emails', 'Status page', 'Help centre', 'Pricing page', 'Search', 'Invoices', 'Team settings', 'Audit log'];
+const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tokens v2', 'Onboarding emails', 'Status page', 'Help center', 'Pricing page', 'Search', 'Invoices', 'Team settings', 'Audit log'];
 
 /* The page shell: a skip link first, a sticky Navbar (the banner), a Sidebar beside main, and a footer. The Navbar
    and the Sidebar are both navigation landmarks, so the Sidebar gets its own name ("Workspace"), told apart from the
@@ -93,7 +93,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
           <Text tone="muted" size="sm">Twelve active projects in the Acme workspace.</Text>
         </Stack>
         <Stack as="section" gap={3} aria-labelledby="recent">
-          <Heading level={2} id="recent">Recent</Heading>
+          <Heading level={2} size="lg" id="recent">Recent</Heading>
           <Stack as="ul" gap={3}>
             {rows.map((r) => <Card as="li" key={r} padding="sm">{r}</Card>)}
           </Stack>

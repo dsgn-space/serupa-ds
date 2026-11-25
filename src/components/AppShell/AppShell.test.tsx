@@ -28,6 +28,20 @@ describe('AppShell', () => {
     expect([Math.round(main.getBoundingClientRect().left - root.getBoundingClientRect().left), css(main).paddingLeft]).toEqual([200, '24px']);
   });
 
+  test('the footer\'s text starts where main\'s content does, at 16, 24 and 32px of padding; footer-padding set still pads every side', async () => {
+    await render(shell());
+    const starts = () => [el('title').getBoundingClientRect().left, q('footer').getBoundingClientRect().left + parseFloat(css(q('footer')).paddingInlineStart)];
+    for (const [w, pad] of [[400, 16], [800, 24], [1280, 32]] as const) {
+      await page.viewport(w, 700);
+      await expect.poll(() => window.innerWidth).toBe(w);
+      expect([w, css(q('main')).paddingInlineStart, ...new Set(starts())]).toEqual([w, `${pad}px`, starts()[0]]);
+      expect(css(q('footer')).paddingBlockStart).toBe('24px');
+    }
+    q('#shell').style.setProperty('--app-shell-footer-padding', '12px');
+    const f = css(q('footer'));
+    expect([f.paddingTop, f.paddingInlineStart, f.paddingBottom, f.paddingInlineEnd]).toEqual(['12px', '12px', '12px', '12px']);
+  });
+
   test('at least the screen tall: the footer at the bottom of a short page, which doesn\'t scroll, sticky bar or not', async () => {
     await page.viewport(900, 600);
     await expect.poll(() => window.innerHeight).toBe(600);

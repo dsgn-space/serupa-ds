@@ -50,6 +50,8 @@ describe('Patterns/Email preferences', () => {
     const screen = await render(<EmailPreferences topics={topics} onSave={onSave} />);
     await screen.getByRole('button', { name: 'Stop all emails' }).click();
     await expect.poll(() => active().textContent).toBe('You won’t get these emails any more');
+    // The same size as every pattern's confirmation (Message sent, You're booked): 2xl, 24px.
+    expect(getComputedStyle(active()).fontSize).toBe('24px');
     expect(onSave).toHaveBeenLastCalledWith({ news: false, survey: false });
     await screen.getByRole('button', { name: 'Turn them back on' }).click();
     await expect.poll(() => active().getAttribute('role')).toBe('switch');
