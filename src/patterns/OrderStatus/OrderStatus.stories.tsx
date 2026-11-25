@@ -32,8 +32,8 @@ export const Delayed: Story = {
 /** Delivered: every step is done. */
 export const Delivered: Story = { args: { order: { ...placed, number: '1038', stage: 'delivered', arriving: undefined } } };
 
-/** Cancelled: the steps give way to a line that says so and what happens to the money. */
-export const Cancelled: Story = {
+/** Canceled: the steps give way to a line that says so and what happens to the money. */
+export const Canceled: Story = {
   args: { order: { ...placed, number: '1039', cancelled: true, events: [{ id: 'e2', at: '2025-03-02T10:02:00', title: 'Order cancelled' }, ...placed.events] } },
 };
 

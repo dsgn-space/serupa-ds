@@ -30,7 +30,7 @@ import { Stack } from '../../components/Stack/Stack';
    - 4.1.3: a delay says so in a warning above the steps, with the reason and the new day.
    - 3.3.4, 3.3.6: cancelling asks first, in a dialog that names the order and says what happens to the money, and
      whose way out is "Keep order", not a second "Cancel". A cancel that fails says so in the dialog, which stays open.
-   - 2.4.3, 4.1.3: after a cancel the button is gone, so focus goes to the h1, the stage says "Cancelled", and a
+   - 2.4.3, 4.1.3: after a cancel the button is gone, so focus goes to the h1, the stage says "Canceled", and a
      toast says so too.
    - 3.2.4, 1.4.1: once the order has shipped there is no Cancel button, and a sentence says why and what to do.
    - 1.3.1: the items are a list, and the totals a description list, with the total in words ("Total").
