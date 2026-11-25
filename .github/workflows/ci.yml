@@ -317,8 +317,12 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
+      # Tried three times: the registry's attestations endpoint sometimes answers a bare "OK" instead of JSON
+      # (FETCH_ERROR "invalid json response body"), which took a pull request out of the queue three times from 23 to
+      # 25 November. A signature that really is missing or wrong fails all three.
       - name: Dependencies are signed by the registry
-        run: npm audit signatures
+        shell: bash
+        run: for i in 1 2 3; do npm audit signatures && exit 0; [ "$i" = 3 ] || sleep 15; done; exit 1
       - name: No dependency with a known high or critical advisory
         run: npm audit --audit-level=high
       - name: Every file carries the same version
