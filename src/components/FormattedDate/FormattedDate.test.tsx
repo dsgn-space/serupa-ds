@@ -117,4 +117,15 @@ describe('FormattedDate', () => {
       root.unmount();
     } finally { host.remove(); }
   });
+
+  test('a date with a time wraps between the two, never inside either, with the same words', async () => {
+    await render(<div style={{ width: 90 }}><FormattedDate id="x" value="2026-11-12T08:00:00Z" timeZone="UTC" timeStyle="short" locale="en-US" /></div>);
+    expect(plain(el('x').textContent)).toBe(plain(formatDate('2026-11-12T08:00:00Z', 'en-US', { timeStyle: 'short', timeZone: 'UTC' })));
+    const lines = [...el('x').querySelectorAll('span')].map((s) => [plain(s.textContent), Math.round(s.getBoundingClientRect().top)] as const);
+    expect(lines.map(([t]) => t)).toEqual(['Nov 12, 2026', '8:00 AM']);
+    expect(lines[1]![1]).toBeGreaterThan(lines[0]![1]);
+    // a day alone, a time alone and a range stay one run, as before
+    await render(<FormattedDate id="d" value="2026-11-12" locale="en-US" />);
+    expect(el('d').querySelector('span')).toBeNull();
+  });
 });

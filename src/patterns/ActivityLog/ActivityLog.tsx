@@ -140,9 +140,9 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
                 <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
                 <TableBody>{rows.map((e) => (
                   <TableRow key={e.id}>
-                    {/* The day and the time each keep to one line, and on a phone the time goes under the day: one
-                        unbroken "Nov 12, 2026, 8:00 AM" took half the screen and pushed What past its edge. */}
-                    <TableCell><span className="whitespace-nowrap"><FormattedDate value={e.time} /></span> <span className="whitespace-nowrap"><FormattedDate value={e.time} dateStyle={false} timeStyle="short" /></span></TableCell>
+                    {/* No nowrap: the day and the time each keep to one line (FormattedDate), so on a phone the time goes
+                        under the day. One unbroken "Nov 12, 2026, 8:00 AM" took half the screen and pushed What past its edge. */}
+                    <TableCell><FormattedDate value={e.time} timeStyle="short" /></TableCell>
                     <TableCell>{e.actor}</TableCell>
                     <TableCell><span className="me-2">{e.action}</span><Badge>{kindLabel(e.kind)}</Badge></TableCell>
                   </TableRow>
