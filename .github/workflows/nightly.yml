@@ -171,6 +171,10 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
+      # The restart after a hang, tested on one small file (a minute): a new Vitest that kept the old one's test
+      # specifications once counted every later mutant as killed (25 Nov).
+      - if: matrix.shard == 1
+        run: node tools/test/mutation-restart.mjs
       - env:
           SERUPA_SHARD: ${{ matrix.shard }}/6
         # No new file after 75 minutes, and an end by 100 even mid-file: one file can take 45 minutes, so shards 1 and
