@@ -30,15 +30,15 @@
 }
 @media (pointer: coarse) { .srp-mention-input__option { min-height: max(var(--mention-input-option-height, var(--control-height-md)), var(--spacing-11)); } }   /* 44px to pick on a touch screen, as Menu's items */
 .srp-mention-input__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
+.srp-mention-input__option:where([data-active]) { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
 .srp-mention-input__option[aria-disabled="true"], .srp-mention-input__option[aria-disabled="true"] * { color: var(--mention-input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-mention-input__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-mention-input__description { color: var(--mention-input-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.srp-mention-input__option--active .srp-mention-input__description { color: var(--mention-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
+.srp-mention-input__option:where([data-active]) .srp-mention-input__description { color: var(--mention-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
 .srp-mention-input__message { padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2)); color: var(--mention-input-description-color, var(--text-muted)); }
 @media (forced-colors: active) {
   .srp-mention-input__popup { border-color: CanvasText; }
-  .srp-mention-input__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+  .srp-mention-input__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 }
 
 /* The list is an on-screen layer: it doesn't print. */

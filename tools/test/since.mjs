@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import { done, report } from './lib.mjs';
 import { FILE, advance, propsOf } from '../since.mjs';
+import { sinceText } from '../../docs/since.ts';
 
 const data = JSON.parse(fs.readFileSync(FILE, 'utf8'));
 const VERSION = /^\d+\.\d+\.\d+$/;
@@ -15,6 +16,8 @@ const v2 = 'interface AProps {\n    size?: "sm" | "md";\n    readonly tone?: str
 const fresh = advance(undefined, v1, '16.0.0');
 const moved = advance({ added: null, changed: null, api: 'x', props: {}, known: propsOf(v1) }, v2, '16.1.0');
 const same = advance(moved, v2, '16.2.0');
+const later = advance(fresh, v2, '16.1.0');
+const text = sinceText({ added: '16.0.0', changed: null, props: { a: '16.1.0', b: '17.0.0-next.1', c: '16.2.0' } });
 
 done(report('Added in / changed in (docs/since.json)', [
   { name: 'there are entries, and Button is one', ok: !!data.Button },
@@ -23,4 +26,6 @@ done(report('Added in / changed in (docs/since.json)', [
   { name: 'a component new in a release is added in it', ok: fresh.added === '16.0.0' && fresh.changed === null },
   { name: 'a changed API is changed in the release, and only its new prop gets that release', ok: moved.changed === '16.1.0' && JSON.stringify(moved.props) === '{"tone":"16.1.0"}', detail: JSON.stringify(moved) },
   { name: 'an API that didn\'t change keeps its entry', ok: same === moved },
+  { name: 'the props a new component came with keep its release when its API changes later: only the new prop gets the later one', ok: JSON.stringify(later.props) === '{"tone":"16.1.0"}', detail: JSON.stringify(later) },
+  { name: 'a prerelease sorts by its release, newest first, and none is dropped', ok: text.includes('New in 17.0.0-next.1: `b`; 16.2.0: `c`; 16.1.0: `a`.'), detail: text },
 ]));

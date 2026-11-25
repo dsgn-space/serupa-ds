@@ -102,7 +102,7 @@ Drawn from the `Open` story.
 | `onMarkRead` | `(id) => void` | | Shows "Mark as read" on unread ones. |
 | `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer while one is unread. |
 | `onClear` | `() => void` | | Shows "Clear all" in the footer while the list has any. It can't be undone, so it asks first in the footer ("Clear every notification? This can’t be undone."), with focus on "Keep them"; the destructive "Clear all" beside it calls `onClear`. When the button chosen goes away, focus moves to the other one or to the empty line. |
-| `emptyText` | ReactNode | `"No notifications yet"` | What shows with none (`empty` is its deprecated old name, removed in 18.0.0). |
+| `emptyText` | ReactNode | `"No notifications yet"` | What shows with none. |
 | `settingsHref` | string | | Where people choose which notifications they get. The footer then starts with a "Notification settings" link to it, so someone who gets too many can turn some off from the drawer. |
 | `description`, `footer`, `unsaved` | never | | Not taken: the list is the content, the footer holds its buttons, and there is nothing to edit. |
 | `open` | boolean | | Controlled: whether it's open. |
@@ -126,6 +126,7 @@ Each is an optional override: set it on the page, a container or one Notificatio
 | `--notification-center-icon-warning` | `warning` | The warning tone's icon. |
 | `--notification-center-icon-danger` | `danger` | The danger tone's icon. |
 | `--notification-center-focus-ring` | `focus-ring` | The ring around a notification (or the empty line) focused after "Mark as read". |
+| `--notification-center-unread-edge` | `primary-edge` | The unread dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--notification-center-row-padding` | `spacing-3` | Space above and below each notification (12px). |
 | `--notification-center-unread-weight` | `font-semibold` | An unread notification's title. |
 <!-- token-table:end -->

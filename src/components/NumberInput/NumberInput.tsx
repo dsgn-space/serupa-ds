@@ -92,8 +92,9 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   // NaN (Number() of an empty answer) and Infinity (a division by zero) are no number, as null is.
   const major = (n: number | null | undefined) => (n == null || !Number.isFinite(n) ? null : factor === 1 ? n : n / factor);
   // A percent's value is the fraction (0.15 shows 15%), so without a step it moves one percent, not 100% (GR175).
-  const step = Number(props.step) > 0 ? Number(props.step) / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
-  const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
+  const rawStep = Number(props.step), rawLarge = Number(props.largeStep);
+  const step = Number.isFinite(rawStep) && rawStep > 0 ? rawStep / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
+  const large = Number.isFinite(rawLarge) && rawLarge > 0 ? rawLarge : 10;
   const min = props.min != null && isFinite(props.min) ? (major(props.min) as number) : undefined;
   const max = props.max != null && isFinite(props.max) ? (major(props.max) as number) : undefined;
   // min above max: no value can be entered, and assistive tech hears a range that runs backwards (GR161).
@@ -265,7 +266,7 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const mergedRef = useMergedRef(ref, nameRef, el);
   return (
     <>
-    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)}
+    <span className={cn('srp-input srp-number-input', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.steppers !== false && 'srp-number-input--steppers', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={(e) => pressFocuses(el)(e)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {affix.prefix}

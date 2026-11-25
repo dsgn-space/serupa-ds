@@ -64,6 +64,28 @@ describe('Patterns/Team members', () => {
     await expect.poll(() => onRemove.mock.calls).toEqual([['u4']]);
   });
 
+  test('removing the last member that can be removed moves focus to the heading, past the owner\'s row', async () => {
+    const screen = await render(<TeamMembers />);
+    for (const name of ['Dewi Lestari', 'Chen Wei', 'Budi Santoso']) await screen.getByRole('button', { name: `Remove ${name}` }).click();
+    await expect.poll(() => active().tagName).toBe('H2');
+  });
+
+  test('an invite revoked and then sent again is listed once, with the new role, and isn\'t revoked when the toast closes', async () => {
+    const onRevoke = vi.fn(), onInvite = vi.fn();
+    const screen = await render(<TeamMembers onRevoke={onRevoke} onInvite={onInvite} />);
+    await screen.getByRole('button', { name: 'Revoke the invite to eko@example.com' }).click();
+    await screen.getByRole('button', { name: 'Invite people' }).click();
+    await screen.getByRole('textbox', { name: /^Email addresses/ }).fill('eko@example.com');
+    await screen.getByRole('dialog').getByRole('combobox', { name: /^Role/ }).selectOptions('viewer');
+    await screen.getByRole('button', { name: 'Send invites' }).click();
+    await expect.poll(() => onInvite.mock.calls.length).toBe(1);
+    await expect.element(screen.getByRole('heading', { level: 2, name: digits('Invites (1)') })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Revoke the invite to eko@example.com' }).elements()).toHaveLength(1);
+    await page.elementLocator(toastOf('Revoked the invite to eko@example.com')).getByRole('button', { name: 'Dismiss' }).click();
+    await expect.poll(() => toastOf('Revoked the invite to eko@example.com')).toBeUndefined();
+    expect(onRevoke).not.toHaveBeenCalled();
+  });
+
   test('revoking the last invite moves focus to the heading and says none are waiting; Resend is said in a toast', async () => {
     const onRevoke = vi.fn(), onResend = vi.fn();
     const screen = await render(<TeamMembers onRevoke={onRevoke} onResend={onResend} />);

@@ -12,7 +12,7 @@ import { Select } from '../../components/Select/Select';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
@@ -115,23 +115,33 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
   const membersHeading = React.useRef<HTMLHeadingElement>(null);
   const invitesHeading = React.useRef<HTMLHeadingElement>(null);
   const shown = members.filter((m) => !gone.has(m.id));
-  const open = [...invites, ...sent].filter((i) => !gone.has(i.email));
+  // An address invited again is one row, with the role it was sent last.
+  const all = [...invites, ...sent];
+  const open = all.filter((i, n) => !gone.has(i.email) && !all.some((j, k) => k > n && j.email === i.email));
+  // Revokes whose toast is still up, and those of them invited again since, which mustn't be revoked when it closes.
+  const pending = React.useRef(new Set<string>()), again = React.useRef(new Set<string>());
   const later = (f: () => void) => requestAnimationFrame(f);
   const focusId = (id: string) => () => document.getElementById(id)?.focus();
 
   // Takes a row out with Undo, and moves focus to the next row's button, or the one before, or the list's heading.
   const takeOut = <T,>(rows: readonly T[], row: T, key: string, button: (r: T) => string, heading: React.RefObject<HTMLHeadingElement | null>,
-    title: string, commit: () => void) => {
+    title: string, commit: () => void, undone?: () => void) => {
     const at = rows.indexOf(row), next = rows[at + 1] ?? rows[at - 1];
     setGone((g) => new Set(g).add(key));
     later(next !== undefined ? focusId(button(next)) : () => heading.current?.focus());
     toast.undo({
       title, commit,
-      onUndo: () => { setGone((g) => { const n = new Set(g); n.delete(key); return n; }); later(focusId(button(row))); },
+      onUndo: () => { undone?.(); setGone((g) => { const n = new Set(g); n.delete(key); return n; }); later(focusId(button(row))); },
     });
   };
-  const remove = (m: TeamMember) => takeOut(shown, m, m.id, (r) => `remove-${r.id}`, membersHeading, `Removed ${m.name}`, () => onRemove?.(m.id));
-  const revoke = (i: TeamInvite) => takeOut(open, i, i.email, (r) => `revoke-${r.email}`, invitesHeading, `Revoked the invite to ${i.email}`, () => onRevoke?.(i.email));
+  const remove = (m: TeamMember) => takeOut(shown.filter((r) => r.role !== 'owner'), m, m.id, (r) => `remove-${r.id}`, membersHeading, `Removed ${m.name}`, () => onRemove?.(m.id));
+  const revoke = (i: TeamInvite) => {
+    pending.current.add(i.email);
+    takeOut(open, i, i.email, (r) => `revoke-${r.email}`, invitesHeading, `Revoked the invite to ${i.email}`, () => {
+      pending.current.delete(i.email);
+      if (!again.current.delete(i.email)) onRevoke?.(i.email);
+    }, () => pending.current.delete(i.email));
+  };
   const resend = (i: TeamInvite) => { onResend?.(i.email); toast({ title: `Sent the invite to ${i.email} again`, tone: 'success' }); };
   const change = (m: TeamMember, r: TeamRole) => {
     setRoles((x) => ({ ...x, [m.id]: r }));
@@ -151,6 +161,8 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
     // A failed invite, by rejecting or by throwing, keeps the dialog open and says so; the addresses stay typed.
     setBusy(true);
     void Promise.resolve().then(() => onInvite?.(emails, role)).then(() => {
+      emails.forEach((x) => { if (pending.current.has(x)) again.current.add(x); });
+      setGone((g) => new Set([...g].filter((x) => !emails.includes(x))));
       setSent((s) => [...s, ...emails.map((email) => ({ email, role }))]);
       setInviting(false);
       setText('');
@@ -175,7 +187,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
               <Heading level={2} size="lg">Members</Heading>
               <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
                 {/* One name for all of them: the first row is named, the others are only pictures. */}
-                {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
+                {[0, 1, 2].map((i) => <li key={i}><Skeleton shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
               </ul>
             </Card>
           ) : <>

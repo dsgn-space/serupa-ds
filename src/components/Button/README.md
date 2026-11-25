@@ -241,7 +241,7 @@ Button's behavior follows web standards; its look comes only from this design sy
 
 ## Props
 
-Button's own props are `variant` (`primary`), `destructive`, `surface` (`dark` or `light`: white or black over a photo, in every theme; `onMedia` is its deprecated old name, removed in 18.0.0), `size` (`md`), `startIcon`, `endIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
+Button's own props are `variant` (`primary`), `destructive`, `surface` (`dark` or `light`: white or black over a photo, in every theme), `size` (`md`), `startIcon`, `endIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
 
 `buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 
@@ -271,15 +271,15 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | Token | Default | Use |
 | --- | --- | --- |
 | `--button-primary-bg` | `primary` | Primary background. |
-| `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker in light themes, lighter in dark. |
-| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker in light themes, lighter in dark. |
+| `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker. |
+| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker. |
 | `--button-primary-text` | `on-primary` | Primary text and icons. |
 | `--button-secondary-bg` | `surface-raised` | Secondary background. |
 | `--button-secondary-bg-hover` | `primary-subtle` | Secondary background on hover. |
-| `--button-secondary-text` | `primary` | Secondary text and icons. |
-| `--button-secondary-text-hover` | `primary-hover` | Secondary text and icons on hover. |
-| `--button-secondary-border` | `primary` | Secondary border. |
-| `--button-secondary-border-hover` | `primary-hover` | Secondary border on hover. |
+| `--button-secondary-text` | `primary-text` | Secondary text and icons. |
+| `--button-secondary-text-hover` | `primary-text-hover` | Secondary text and icons on hover. |
+| `--button-secondary-border` | `primary-text` | Secondary border. |
+| `--button-secondary-border-hover` | `primary-text-hover` | Secondary border on hover. |
 | `--button-secondary-bg-pressed` | `primary-subtle-pressed` | Secondary background while held down, one step past hover. |
 | `--button-outline-bg` | `surface-raised` | Outline background. |
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
@@ -290,7 +290,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
 | `--button-ghost-bg-pressed` | `secondary-hover` | Ghost background while held down, one step past hover. |
 | `--button-ghost-text` | `text` | Ghost text and icons. |
-| `--button-link-text` | `primary` | Link text. |
+| `--button-link-text` | `primary-text` | Link text. |
 | `--button-destructive-primary-bg` | `danger` | Destructive primary background. |
 | `--button-destructive-primary-bg-hover` | `danger-hover` | Destructive primary background on hover. |
 | `--button-destructive-primary-bg-pressed` | `danger-pressed` | Destructive primary background while held down, one step past hover. |

@@ -74,7 +74,7 @@
       },
       "primary-subtle-text": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Primary subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -102,9 +102,19 @@
           }
         }
       },
+      "primary-solid-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "Primary solid: the color a clickable badge moves toward on hover and press",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-solid-hover"
+          }
+        }
+      },
       "primary-outline-text": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Primary outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +124,7 @@
       },
       "primary-outline-border": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "Primary outline: border",
         "$extensions": {
           "com.serupa": {

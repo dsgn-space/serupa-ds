@@ -164,7 +164,7 @@
       },
       "action-text": {
         "$type": "color",
-        "$value": "{color.field-action}",
+        "$value": "{color.primary-text}",
         "$description": "A text action's words, such as Apply (4.5:1 on the field).",
         "$extensions": {
           "com.serupa": {

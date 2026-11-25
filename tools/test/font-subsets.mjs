@@ -40,7 +40,7 @@ const LINES = [
   ['weight 200', 'font-weight:200', 'Thin 2/3'],
 ];
 const text = LINES.map(([, style, words]) => `<p style="${style}">${words}</p>`).join('');
-const whole = `@font-face{font-family:T;src:url("${at('fonts/InterVariable.woff2')}");font-weight:100 900}@font-face{font-family:T;src:url("${at('fonts/InterVariable-Italic.woff2')}");font-weight:100 900;font-style:italic}`;
+const whole = `@font-face{font-family:T;src:url("${at('tools/fonts/source/InterVariable.woff2')}");font-weight:100 900}@font-face{font-family:T;src:url("${at('tools/fonts/source/InterVariable-Italic.woff2')}");font-weight:100 900;font-style:italic}`;
 const split = faces.map((f) => `@font-face{font-family:T;src:url("${at(f.file)}");font-weight:${f.weight};font-style:${f.style};unicode-range:${f.unicodeRange}}`).join('');
 // A picture of each line, as base64.
 const shots = async (name, css) => {

@@ -80,7 +80,7 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
   let i = UNITS.findIndex(([, , under]) => abs < under);
   if (day) i = Math.max(i, 3);
   // Under 45 seconds is "now" ("0 seconds ago" with numeric always): a timer every 15s can't keep seconds honest.
-  if (i === 0) return rtf.format(0, 'second');
+  if (i === 0) return rtf.format(secs < 0 ? -0 : 0, 'second');
   // With numeric "auto", "yesterday", "last month" and "last year" are calendar words: days, months and years are
   // counted on the viewer's calendar, not by elapsed time, and a moment on the same calendar day (month, year)
   // falls back to the unit below (GL2). 01:00 seen at 23:00 is "22 hours ago", not "yesterday".
@@ -88,9 +88,14 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
   if (options?.numeric !== 'always' || day) {
     const a = new Date(t), b = new Date(now);
     for (; i >= 3; i--) {
-      const n = i === 3 ? Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())) / 86400000)
+      let n = i === 3 ? Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())) / 86400000)
         : i === 4 ? (a.getFullYear() - b.getFullYear()) * 12 + a.getMonth() - b.getMonth() : a.getFullYear() - b.getFullYear();
-      if (n !== 0 || (day && i === 3)) return rtf.format(n, unit(i)[0]);
+      // Across a short month boundary (Jan 31 to Mar 1 is 29 days), calendar months can overshoot elapsed time ("2 months ago").
+      if (i >= 4 && !day) {
+        const cap = Math.max(1, Math.ceil(abs / unit(i)[1]));
+        if (Math.abs(n) > cap) n = Math.sign(n) * cap;
+      }
+      if (n !== 0 || (day && i === 3)) return rtf.format(n === 0 && secs < 0 ? -0 : n, unit(i)[0]);
     }
   }
   return rtf.format(Math.round(secs / unit(i)[1]), unit(i)[0]);

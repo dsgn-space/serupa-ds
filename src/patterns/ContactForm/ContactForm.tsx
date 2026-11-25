@@ -6,7 +6,7 @@ import { Alert } from '../../components/Alert/Alert';
 import { Link } from '../../components/Link/Link';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
-import { Select } from '../../components/Select/Select';
+import { CascadeSelect, type CascadeOption } from '../../components/CascadeSelect/CascadeSelect';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
@@ -18,7 +18,8 @@ import { Stack } from '../../components/Stack/Stack';
 /* Contact form: a message to the people behind a product, with what they need to answer it, and an answer to say it
    arrived. For an app to copy. What it carries (WCAG 2.2):
    - 3.3.2, 1.3.5: each field says what it's for, which are optional, and its format; name and email say what they are
-     for autofill. The order number is asked for only when the topic is an order.
+     for autofill. The topic is a CascadeSelect, a kind then what about it, read as one path ("An order, It hasn’t
+     arrived"). The order number is asked for only when the topic is an order.
    - 3.3.1, 2.4.3: sending with problems shows a summary at the top that takes focus, each problem a link to its
      field, and each field says its own problem too.
    - 3.3.4, 4.1.3: Send shows it's busy; a message that can't be sent says so next to the button and keeps every field.
@@ -29,8 +30,9 @@ import { Stack } from '../../components/Stack/Stack';
 export interface ContactMessage {
   name: string;
   email: string;
+  /** The topic's path, its values joined by "/": "order/late", or "other" for one with no second step. */
   topic: string;
-  /** With the "order" topic: the order's number. */
+  /** With an "order/…" topic: the order's number. */
   order: string;
   message: string;
   /** Send a copy to the email given. */
@@ -47,12 +49,16 @@ export interface ContactFormProps {
   online?: boolean | undefined;
 }
 
-const TOPICS = [
-  { value: 'order', label: 'An order' },
-  { value: 'account', label: 'My account' },
+const TOPICS: CascadeOption[] = [
+  { value: 'order', label: 'An order', children: [
+    { value: 'late', label: 'It hasn’t arrived' }, { value: 'wrong', label: 'Something’s wrong with it' }, { value: 'return', label: 'Sending it back' }] },
+  { value: 'account', label: 'My account', children: [
+    { value: 'sign-in', label: 'Signing in' }, { value: 'email', label: 'Changing my email' }, { value: 'close', label: 'Closing it' }] },
   { value: 'product', label: 'A product question' },
   { value: 'other', label: 'Something else' },
 ];
+/** Whether a topic is about an order, so the order number is asked for. */
+export const aboutOrder = (topic: string) => topic.split('/')[0] === 'order';
 const LIMIT = 1000;
 const blank: ContactMessage = { name: '', email: '', topic: '', order: '', message: '', copy: false };
 const FIELDS = ['name', 'email', 'topic', 'order', 'message'] as const;
@@ -65,7 +71,7 @@ export function contactProblems(m: ContactMessage): Problems {
   if (!m.email.trim()) out.email = 'Enter your email address, so we can reply.';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.email.trim())) out.email = 'Enter an email address like name@example.com.';
   if (!m.topic) out.topic = 'Choose what it’s about.';
-  if (m.topic === 'order' && m.order.trim() && !/^[A-Z]-?\d{4,}$/i.test(m.order.trim())) out.order = 'Enter the order number as it is on your receipt, like A-10432.';
+  if (aboutOrder(m.topic) && m.order.trim() && !/^[A-Z]-?\d{4,}$/i.test(m.order.trim())) out.order = 'Enter the order number as it is on your receipt, like A-10432.';
   if (m.message.trim().length < 10) out.message = m.message.trim() ? 'Tell us a little more: at least 10 characters.' : 'Enter your message.';
   else if (m.message.length > LIMIT) out.message = `Shorten your message to ${LIMIT} characters.`;
   return out;
@@ -90,7 +96,7 @@ export function ContactForm({ onSend, replyTime = 'within 2 working days', onlin
     setProblems(found);
     setTries((t) => t + 1);
     if (Object.keys(found).length) return;
-    const out: ContactMessage = { ...m, name: m.name.trim(), email: m.email.trim(), order: m.topic === 'order' ? m.order.trim().toUpperCase() : '', message: m.message.trim() };
+    const out: ContactMessage = { ...m, name: m.name.trim(), email: m.email.trim(), order: aboutOrder(m.topic) ? m.order.trim().toUpperCase() : '', message: m.message.trim() };
     setBusy(true);
     void Promise.resolve().then(() => onSend?.(out)).then((ref) => setSent({ reference: typeof ref === 'string' ? ref : '', email: out.email }), () => setFailed(true))
       .finally(() => setBusy(false));
@@ -127,9 +133,9 @@ export function ContactForm({ onSend, replyTime = 'within 2 working days', onlin
                   <Input type="email" autoComplete="email" value={m.email} onChange={(e) => edit({ email: e.target.value })} />
                 </Field>
                 <Field label="What’s it about?" id="contact-topic" error={problems.topic} required>
-                  <Select placeholder="Choose a topic" options={TOPICS} value={m.topic} onChange={(e) => edit({ topic: e.target.value })} />
+                  <CascadeSelect aria-label="What’s it about?" placeholder="Choose a topic" levels={['Kind', 'About']} options={TOPICS} value={m.topic ? m.topic.split('/') : []} onValueChange={(v) => edit({ topic: v.join('/') })} />
                 </Field>
-                {m.topic === 'order' ? (
+                {aboutOrder(m.topic) ? (
                   <Field label="Order number" id="contact-order" hint="On your receipt and order email, like A-10432." error={problems.order} optional>
                     <Input autoComplete="off" spellCheck={false} value={m.order} onChange={(e) => edit({ order: e.target.value })} className="max-w-48" />
                   </Field>

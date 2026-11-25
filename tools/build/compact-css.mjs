@@ -21,7 +21,7 @@ export function compactCss(css) {
   while (i < n) {
     const ch = css[i];
     if (ch === '/' && css[i + 1] === '*') {
-      const end = css.indexOf('*/', i + 2) + 2, comment = css.slice(i, end);
+      const close = css.indexOf('*/', i + 2), end = close < 0 ? n : close + 2, comment = css.slice(i, end);   // one left open runs to the end
       word('/');
       out.push(comment);
       if (comment.startsWith('/*!')) out.push('\n');   // the banner keeps its own line
@@ -47,7 +47,8 @@ export function compactCss(css) {
     }
     if (/\s/.test(ch)) { space = true; i++; continue; }
     // A custom property: its name, then its value as written up to the ";" or "}" that ends it.
-    if ((last() === '{' || last() === ';') && (ch === '-' || ch === 'i')) {
+    // At the start of a block, or after a ";": an at-rule's "{" has its line break after it.
+    if ((last() === '{' || last() === ';' || (last() === '\n' && out[out.length - 2] === '{')) && (ch === '-' || ch === 'i')) {
       CUSTOM.lastIndex = i;
       const m = CUSTOM.exec(css);
       if (m) {

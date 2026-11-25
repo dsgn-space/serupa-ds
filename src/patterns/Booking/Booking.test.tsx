@@ -91,6 +91,17 @@ describe('Patterns/Booking', () => {
     expect(document.body.textContent).toContain('Choose your dates to see the price.');
   });
 
+  test('a place that sleeps one starts at one guest, and Reserve books one', async () => {
+    const onReserve = vi.fn(() => Promise.resolve());
+    const screen = await render(<Booking place={{ ...place, maxGuests: 1 }} onReserve={onReserve} />);
+    // In the reader's digits: "1" or Arabic-Indic "١".
+    await expect.poll(() => (screen.getByRole('spinbutton', { name: /Guests/ }).element() as HTMLInputElement).value).toMatch(/^[1١]$/);
+    await pick('2026-11-05', '2026-11-09');
+    await screen.getByRole('button', { name: 'Reserve' }).click();
+    await expect.poll(() => onReserve.mock.calls.length).toBe(1);
+    expect(onReserve).toHaveBeenCalledWith({ start: '2026-11-05', end: '2026-11-09', guests: 1 });
+  });
+
   test('a booking that fails says so next to the button and keeps the dates', async () => {
     const screen = await render(<Booking place={place} onReserve={() => Promise.reject(new Error('taken'))} />);
     await pick('2026-11-05', '2026-11-09');

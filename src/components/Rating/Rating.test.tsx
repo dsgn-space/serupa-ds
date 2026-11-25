@@ -192,6 +192,20 @@ describe('Rating', () => {
     expect(low).toEqual([]);
     expect([idLabels.ratingStars(2.5, '2,5'), idLabels.ratingValue(4.5, 5, '4,5', '5'), idLabels.ratingStars(1, '1')]).toEqual(['2,5 bintang', '4,5 dari 5', '1 bintang']);
   });
+  test('translated label packs honor locale-formatted decimals in ratingStars and ratingValue', async () => {
+    const [{ labels: deLabels }, { labels: arLabels }] = await Promise.all([import('../../labels/de'), import('../../labels/ar')]);
+    await render(
+      <SerupaProvider locale="de-DE" labels={deLabels}>
+        <div>
+          <Rating id="rde" aria-label="Bewertung" allowHalf max={3} />
+          <Rating id="rdero" readOnly value={4.5} />
+        </div>
+      </SerupaProvider>,
+    );
+    expect(radios('rde')[0]!.getAttribute('aria-label')).toBe('0,5 Sterne');
+    expect(el('rdero').getAttribute('aria-label')).toBe('4,5 von 5');
+    expect([arLabels.ratingStars(2.5, '٢٫٥'), arLabels.ratingValue(4.5, 5, '٤٫٥', '٥')]).toEqual(['٢٫٥ نجمة', '٤٫٥ من ٥']);
+  });
   test('L8E88 in a required Field (or with aria-required): the radiogroup says it is required', async () => {
     await render(<><Field label="How was your stay?" required><Rating /></Field><Rating aria-label="Food" aria-required /></>);
     expect([page.getByRole('radiogroup', { name: 'How was your stay?' }).element().getAttribute('aria-required'), page.getByRole('radiogroup', { name: 'Food' }).element().getAttribute('aria-required')]).toEqual(['true', 'true']);

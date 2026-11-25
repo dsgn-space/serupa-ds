@@ -146,13 +146,6 @@
         "fonts": [
           {
             "family": "Inter",
-            "file": "fonts/InterVariable-latin.woff2",
-            "weight": "100 900",
-            "style": "normal",
-            "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
-          },
-          {
-            "family": "Inter",
             "file": "fonts/InterVariable-latin-ext.woff2",
             "weight": "100 900",
             "style": "normal",
@@ -202,9 +195,9 @@
           },
           {
             "family": "Inter",
-            "file": "fonts/InterVariable-Italic-latin.woff2",
+            "file": "fonts/InterVariable-latin.woff2",
             "weight": "100 900",
-            "style": "italic",
+            "style": "normal",
             "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
           },
           {
@@ -255,6 +248,13 @@
             "weight": "100 900",
             "style": "italic",
             "unicodeRange": "U+02CD, U+02D8-02D9, U+02DB, U+0302, U+0306-0307, U+030A-031B, U+0326-0328, U+032C-036F, U+0E3F, U+1DC0-1DFF, U+2070-209C, U+20DB-2109, U+2117-2121, U+2126-2190, U+2192, U+2194-2211, U+221A-2298, U+2303-232B, U+2380-238B, U+23CE-23CF, U+2423-2468, U+24B6-24EA, U+25A0-26A0, U+2713-2788, U+27EF-27FA, U+2913, U+2A38, U+2B06-2B24, U+2E18, U+A92E, U+E000-E163, U+E1C3-E2DC, U+EE01-EEE1, U+F6C3, U+1F12F-1F16B, U+1F850-1F852"
+          },
+          {
+            "family": "Inter",
+            "file": "fonts/InterVariable-Italic-latin.woff2",
+            "weight": "100 900",
+            "style": "italic",
+            "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
           }
         ],
         "families": {
@@ -811,43 +811,43 @@
     "primary": {
       "$type": "color",
       "$value": "{color.blue-600}",
-      "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text on it and for it on the tints (`primary-subtle` and the status ones), with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{blue-400}",
+            "blue-dark": "#2b6af2",
             "red-light": "{red-700}",
-            "red-dark": "{red-400}",
+            "red-dark": "#d13832",
             "orange-light": "{orange-700}",
-            "orange-dark": "{orange-400}",
+            "orange-dark": "#c94817",
             "amber-light": "{amber-700}",
-            "amber-dark": "{amber-400}",
-            "yellow-light": "{yellow-700}",
+            "amber-dark": "#bb5915",
+            "yellow-light": "{yellow-500}",
             "yellow-dark": "{yellow-400}",
             "lime-light": "{lime-700}",
-            "lime-dark": "{lime-400}",
+            "lime-dark": "#538219",
             "green-light": "{green-700}",
-            "green-dark": "{green-400}",
+            "green-dark": "#1f8643",
             "emerald-light": "{emerald-700}",
-            "emerald-dark": "{emerald-400}",
+            "emerald-dark": "#18815f",
             "teal-light": "{teal-700}",
-            "teal-dark": "{teal-400}",
+            "teal-dark": "#1e7e76",
             "cyan-light": "{cyan-700}",
-            "cyan-dark": "{cyan-400}",
+            "cyan-dark": "#1b7b97",
             "sky-light": "{sky-700}",
-            "sky-dark": "{sky-400}",
+            "sky-dark": "#1e77b0",
             "indigo-light": "{indigo-600}",
-            "indigo-dark": "{indigo-400}",
+            "indigo-dark": "#5d5afa",
             "violet-light": "{violet-600}",
-            "violet-dark": "{violet-400}",
+            "violet-dark": "#8648fa",
             "purple-light": "{purple-600}",
-            "purple-dark": "{purple-400}",
+            "purple-dark": "#9a3cf2",
             "fuchsia-light": "{fuchsia-700}",
-            "fuchsia-dark": "{fuchsia-400}",
+            "fuchsia-dark": "#b636c3",
             "pink-light": "{pink-700}",
-            "pink-dark": "{pink-400}",
+            "pink-dark": "#d02f6b",
             "rose-light": "{rose-700}",
-            "rose-dark": "{rose-400}"
+            "rose-dark": "#d4304d"
           },
           "contrastMore": {
             "blue-light": "{blue-800}",
@@ -884,6 +884,72 @@
             "pink-dark": "{pink-300}",
             "rose-light": "{rose-900}",
             "rose-dark": "{rose-300}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-600}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-700}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-700}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-700}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-700}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-700}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-700}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-700}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-700}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-700}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-600}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-600}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-600}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-700}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-700}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-700}",
+              "by": 0.06
+            }
           }
         }
       }
@@ -891,43 +957,43 @@
     "primary-hover": {
       "$type": "color",
       "$value": "{color.blue-700}",
-      "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). More contrast: brand 900 / brand 200.",
+      "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{blue-300}",
+            "blue-dark": "#2255df",
             "red-light": "{red-800}",
-            "red-dark": "{red-300}",
+            "red-dark": "#b0342f",
             "orange-light": "{orange-800}",
-            "orange-dark": "{orange-300}",
+            "orange-dark": "#a13a1a",
             "amber-light": "{amber-800}",
-            "amber-dark": "{amber-300}",
-            "yellow-light": "{yellow-800}",
+            "amber-dark": "#984616",
+            "yellow-light": "#d9a500",
             "yellow-dark": "{yellow-300}",
             "lime-light": "{lime-800}",
-            "lime-dark": "{lime-300}",
+            "lime-dark": "#44681a",
             "green-light": "{green-800}",
-            "green-dark": "{green-300}",
+            "green-dark": "#1e6b39",
             "emerald-light": "{emerald-800}",
-            "emerald-dark": "{emerald-300}",
+            "emerald-dark": "#16674e",
             "teal-light": "{teal-800}",
-            "teal-dark": "{teal-300}",
+            "teal-dark": "#1c6661",
             "cyan-light": "{cyan-800}",
-            "cyan-dark": "{cyan-300}",
+            "cyan-dark": "#1e647c",
             "sky-light": "{sky-800}",
-            "sky-dark": "{sky-300}",
+            "sky-dark": "#1d6693",
             "indigo-light": "{indigo-700}",
-            "indigo-dark": "{indigo-300}",
+            "indigo-dark": "#504cde",
             "violet-light": "{violet-700}",
-            "violet-dark": "{violet-300}",
+            "violet-dark": "#7737e5",
             "purple-light": "{purple-700}",
-            "purple-dark": "{purple-300}",
+            "purple-dark": "#842cd6",
             "fuchsia-light": "{fuchsia-800}",
-            "fuchsia-dark": "{fuchsia-300}",
+            "fuchsia-dark": "#9930a2",
             "pink-light": "{pink-800}",
-            "pink-dark": "{pink-300}",
+            "pink-dark": "#ae2b5b",
             "rose-light": "{rose-800}",
-            "rose-dark": "{rose-300}"
+            "rose-dark": "#b42c49"
           },
           "contrastMore": {
             "blue-light": "{blue-900}",
@@ -964,6 +1030,72 @@
             "pink-dark": "{pink-200}",
             "rose-light": "{rose-950}",
             "rose-dark": "{rose-200}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-700}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-800}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-800}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-800}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-800}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-800}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-800}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-800}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-800}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-800}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-700}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-700}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-700}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-800}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-800}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-800}",
+              "by": 0.06
+            }
           }
         }
       }
@@ -971,43 +1103,43 @@
     "primary-pressed": {
       "$type": "color",
       "$value": "{color.blue-800}",
-      "$description": "Alias. Pressed state of `primary`: one step past `primary-hover` (darker in light themes, lighter in dark), so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{blue-200}",
+            "blue-dark": "#2346b6",
             "red-light": "{red-900}",
-            "red-dark": "{red-200}",
+            "red-dark": "#95322f",
             "orange-light": "{orange-900}",
-            "orange-dark": "{orange-200}",
+            "orange-dark": "#823318",
             "amber-light": "{amber-900}",
-            "amber-dark": "{amber-200}",
-            "yellow-light": "{yellow-900}",
+            "amber-dark": "#7e3b16",
+            "yellow-light": "{yellow-600}",
             "yellow-dark": "{yellow-200}",
             "lime-light": "{lime-900}",
-            "lime-dark": "{lime-200}",
+            "lime-dark": "#3b591a",
             "green-light": "{green-900}",
-            "green-dark": "{green-200}",
+            "green-dark": "#1b5932",
             "emerald-light": "{emerald-900}",
-            "emerald-dark": "{emerald-200}",
+            "emerald-dark": "#135642",
             "teal-light": "{teal-900}",
-            "teal-dark": "{teal-200}",
+            "teal-dark": "#1c5551",
             "cyan-light": "{cyan-900}",
-            "cyan-dark": "{cyan-200}",
+            "cyan-dark": "#1d5469",
             "sky-light": "{sky-900}",
-            "sky-dark": "{sky-200}",
+            "sky-dark": "#1d577c",
             "indigo-light": "{indigo-800}",
-            "indigo-dark": "{indigo-200}",
+            "indigo-dark": "#4443b6",
             "violet-light": "{violet-800}",
-            "violet-dark": "{violet-200}",
+            "violet-dark": "#642fc2",
             "purple-light": "{purple-800}",
-            "purple-dark": "{purple-200}",
+            "purple-dark": "#712aaf",
             "fuchsia-light": "{fuchsia-900}",
-            "fuchsia-dark": "{fuchsia-200}",
+            "fuchsia-dark": "#822e87",
             "pink-light": "{pink-900}",
-            "pink-dark": "{pink-200}",
+            "pink-dark": "#932950",
             "rose-light": "{rose-900}",
-            "rose-dark": "{rose-200}"
+            "rose-dark": "#9c2a47"
           },
           "contrastMore": {
             "blue-light": "{blue-950}",
@@ -1044,6 +1176,161 @@
             "pink-dark": "{pink-100}",
             "rose-light": "{rose-950}",
             "rose-dark": "{rose-100}"
+          },
+          "lift": {
+            "blue-dark": {
+              "from": "{color.blue-800}",
+              "by": 0.02
+            },
+            "red-dark": {
+              "from": "{color.red-900}",
+              "by": 0.0665
+            },
+            "orange-dark": {
+              "from": "{color.orange-900}",
+              "by": 0.02
+            },
+            "amber-dark": {
+              "from": "{color.amber-900}",
+              "by": 0.02
+            },
+            "lime-dark": {
+              "from": "{color.lime-900}",
+              "by": 0.02
+            },
+            "green-dark": {
+              "from": "{color.green-900}",
+              "by": 0.02
+            },
+            "emerald-dark": {
+              "from": "{color.emerald-900}",
+              "by": 0.0285
+            },
+            "teal-dark": {
+              "from": "{color.teal-900}",
+              "by": 0.027
+            },
+            "cyan-dark": {
+              "from": "{color.cyan-900}",
+              "by": 0.022
+            },
+            "sky-dark": {
+              "from": "{color.sky-900}",
+              "by": 0.0455
+            },
+            "indigo-dark": {
+              "from": "{color.indigo-800}",
+              "by": 0.058
+            },
+            "violet-dark": {
+              "from": "{color.violet-800}",
+              "by": 0.0355
+            },
+            "purple-dark": {
+              "from": "{color.purple-800}",
+              "by": 0.022
+            },
+            "fuchsia-dark": {
+              "from": "{color.fuchsia-900}",
+              "by": 0.0595
+            },
+            "pink-dark": {
+              "from": "{color.pink-900}",
+              "by": 0.0495
+            },
+            "rose-dark": {
+              "from": "{color.rose-900}",
+              "by": 0.06
+            }
+          }
+        }
+      }
+    },
+    "primary-edge": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0,
+          0
+        ],
+        "hex": "#000000",
+        "alpha": 0
+      },
+      "$description": "Alias. A 1px edge just inside a `primary` fill that has no text on it (a checked box, a Switch that's on, a Slider or Progress fill, a dot), for a theme whose fill is under 3:1 on the page: Yellow Light's bright yellow 500 takes a yellow 700 edge (4.9:1 on white, WCAG 1.4.11). Transparent in every other theme, where the fill passes by itself, so nothing is drawn.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "#00000000",
+            "red-light": "#00000000",
+            "red-dark": "#00000000",
+            "orange-light": "#00000000",
+            "orange-dark": "#00000000",
+            "amber-light": "#00000000",
+            "amber-dark": "#00000000",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "#00000000",
+            "lime-light": "#00000000",
+            "lime-dark": "#00000000",
+            "green-light": "#00000000",
+            "green-dark": "#00000000",
+            "emerald-light": "#00000000",
+            "emerald-dark": "#00000000",
+            "teal-light": "#00000000",
+            "teal-dark": "#00000000",
+            "cyan-light": "#00000000",
+            "cyan-dark": "#00000000",
+            "sky-light": "#00000000",
+            "sky-dark": "#00000000",
+            "indigo-light": "#00000000",
+            "indigo-dark": "#00000000",
+            "violet-light": "#00000000",
+            "violet-dark": "#00000000",
+            "purple-light": "#00000000",
+            "purple-dark": "#00000000",
+            "fuchsia-light": "#00000000",
+            "fuchsia-dark": "#00000000",
+            "pink-light": "#00000000",
+            "pink-dark": "#00000000",
+            "rose-light": "#00000000",
+            "rose-dark": "#00000000"
+          },
+          "contrastMore": {
+            "blue-light": "#00000000",
+            "blue-dark": "#00000000",
+            "red-light": "#00000000",
+            "red-dark": "#00000000",
+            "orange-light": "#00000000",
+            "orange-dark": "#00000000",
+            "amber-light": "#00000000",
+            "amber-dark": "#00000000",
+            "yellow-light": "#00000000",
+            "yellow-dark": "#00000000",
+            "lime-light": "#00000000",
+            "lime-dark": "#00000000",
+            "green-light": "#00000000",
+            "green-dark": "#00000000",
+            "emerald-light": "#00000000",
+            "emerald-dark": "#00000000",
+            "teal-light": "#00000000",
+            "teal-dark": "#00000000",
+            "cyan-light": "#00000000",
+            "cyan-dark": "#00000000",
+            "sky-light": "#00000000",
+            "sky-dark": "#00000000",
+            "indigo-light": "#00000000",
+            "indigo-dark": "#00000000",
+            "violet-light": "#00000000",
+            "violet-dark": "#00000000",
+            "purple-light": "#00000000",
+            "purple-dark": "#00000000",
+            "fuchsia-light": "#00000000",
+            "fuchsia-dark": "#00000000",
+            "pink-light": "#00000000",
+            "pink-dark": "#00000000",
+            "rose-light": "#00000000",
+            "rose-dark": "#00000000"
           }
         }
       }
@@ -1139,10 +1426,46 @@
     "on-primary": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark).",
+      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes, yellow 950 in Yellow Light and Yellow Dark, whose fills are bright (brand 950 in dark with more contrast, where the fill is brand 300).",
       "$extensions": {
         "com.serupa": {
           "themes": {
+            "blue-dark": "{white}",
+            "red-light": "{white}",
+            "red-dark": "{white}",
+            "orange-light": "{white}",
+            "orange-dark": "{white}",
+            "amber-light": "{white}",
+            "amber-dark": "{white}",
+            "yellow-light": "{yellow-950}",
+            "yellow-dark": "{yellow-950}",
+            "lime-light": "{white}",
+            "lime-dark": "{white}",
+            "green-light": "{white}",
+            "green-dark": "{white}",
+            "emerald-light": "{white}",
+            "emerald-dark": "{white}",
+            "teal-light": "{white}",
+            "teal-dark": "{white}",
+            "cyan-light": "{white}",
+            "cyan-dark": "{white}",
+            "sky-light": "{white}",
+            "sky-dark": "{white}",
+            "indigo-light": "{white}",
+            "indigo-dark": "{white}",
+            "violet-light": "{white}",
+            "violet-dark": "{white}",
+            "purple-light": "{white}",
+            "purple-dark": "{white}",
+            "fuchsia-light": "{white}",
+            "fuchsia-dark": "{white}",
+            "pink-light": "{white}",
+            "pink-dark": "{white}",
+            "rose-light": "{white}",
+            "rose-dark": "{white}"
+          },
+          "contrastMore": {
+            "blue-light": "{white}",
             "blue-dark": "{blue-950}",
             "red-light": "{white}",
             "red-dark": "{red-950}",
@@ -1176,6 +1499,166 @@
             "pink-dark": "{pink-950}",
             "rose-light": "{white}",
             "rose-dark": "{rose-950}"
+          }
+        }
+      }
+    },
+    "primary-text": {
+      "$type": "color",
+      "$value": "{color.blue-600}",
+      "$description": "Alias. Brand text, links, icons, lines and borders: what `primary` is as a fill, 4.5:1 as text on `surface`, `surface-muted` and the tints. Light themes: the same shade as `primary`; dark themes: brand 400, which a dark page needs for text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-400}",
+            "red-light": "{red-700}",
+            "red-dark": "{red-400}",
+            "orange-light": "{orange-700}",
+            "orange-dark": "{orange-400}",
+            "amber-light": "{amber-700}",
+            "amber-dark": "{amber-400}",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "{yellow-400}",
+            "lime-light": "{lime-700}",
+            "lime-dark": "{lime-400}",
+            "green-light": "{green-700}",
+            "green-dark": "{green-400}",
+            "emerald-light": "{emerald-700}",
+            "emerald-dark": "{emerald-400}",
+            "teal-light": "{teal-700}",
+            "teal-dark": "{teal-400}",
+            "cyan-light": "{cyan-700}",
+            "cyan-dark": "{cyan-400}",
+            "sky-light": "{sky-700}",
+            "sky-dark": "{sky-400}",
+            "indigo-light": "{indigo-600}",
+            "indigo-dark": "{indigo-400}",
+            "violet-light": "{violet-600}",
+            "violet-dark": "{violet-400}",
+            "purple-light": "{purple-600}",
+            "purple-dark": "{purple-400}",
+            "fuchsia-light": "{fuchsia-700}",
+            "fuchsia-dark": "{fuchsia-400}",
+            "pink-light": "{pink-700}",
+            "pink-dark": "{pink-400}",
+            "rose-light": "{rose-700}",
+            "rose-dark": "{rose-400}"
+          },
+          "contrastMore": {
+            "blue-light": "{blue-800}",
+            "blue-dark": "{blue-300}",
+            "red-light": "{red-900}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-900}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-900}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-900}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-900}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-900}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-800}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-800}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-900}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-800}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-700}",
+            "indigo-dark": "{indigo-300}",
+            "violet-light": "{violet-800}",
+            "violet-dark": "{violet-300}",
+            "purple-light": "{purple-800}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{fuchsia-900}",
+            "fuchsia-dark": "{fuchsia-300}",
+            "pink-light": "{pink-800}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-900}",
+            "rose-dark": "{rose-300}"
+          }
+        }
+      }
+    },
+    "primary-text-hover": {
+      "$type": "color",
+      "$value": "{color.blue-700}",
+      "$description": "Alias. `primary-text` on hover: a link or a secondary button's text under the pointer. One step past `primary-text` (darker in light themes, lighter in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-300}",
+            "red-light": "{red-800}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-800}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-800}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-800}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-800}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-800}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-800}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-800}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-800}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-800}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-700}",
+            "indigo-dark": "{indigo-300}",
+            "violet-light": "{violet-700}",
+            "violet-dark": "{violet-300}",
+            "purple-light": "{purple-700}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{fuchsia-800}",
+            "fuchsia-dark": "{fuchsia-300}",
+            "pink-light": "{pink-800}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-800}",
+            "rose-dark": "{rose-300}"
+          },
+          "contrastMore": {
+            "blue-light": "{blue-900}",
+            "blue-dark": "{blue-200}",
+            "red-light": "{red-950}",
+            "red-dark": "{red-200}",
+            "orange-light": "{orange-950}",
+            "orange-dark": "{orange-200}",
+            "amber-light": "{amber-950}",
+            "amber-dark": "{amber-200}",
+            "yellow-light": "{yellow-950}",
+            "yellow-dark": "{yellow-200}",
+            "lime-light": "{lime-950}",
+            "lime-dark": "{lime-200}",
+            "green-light": "{green-950}",
+            "green-dark": "{green-200}",
+            "emerald-light": "{emerald-900}",
+            "emerald-dark": "{emerald-200}",
+            "teal-light": "{teal-900}",
+            "teal-dark": "{teal-200}",
+            "cyan-light": "{cyan-950}",
+            "cyan-dark": "{cyan-200}",
+            "sky-light": "{sky-900}",
+            "sky-dark": "{sky-200}",
+            "indigo-light": "{indigo-800}",
+            "indigo-dark": "{indigo-200}",
+            "violet-light": "{violet-900}",
+            "violet-dark": "{violet-200}",
+            "purple-light": "{purple-900}",
+            "purple-dark": "{purple-200}",
+            "fuchsia-light": "{fuchsia-950}",
+            "fuchsia-dark": "{fuchsia-200}",
+            "pink-light": "{pink-900}",
+            "pink-dark": "{pink-200}",
+            "rose-light": "{rose-950}",
+            "rose-dark": "{rose-200}"
           }
         }
       }
@@ -1502,86 +1985,6 @@
         }
       }
     },
-    "field-action": {
-      "$type": "color",
-      "$value": "{color.blue-600}",
-      "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary`, which keeps 4.5:1 on the field. Its own alias so a brand whose primary falls short on the field can take a lighter shade.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-400}",
-            "red-light": "{red-700}",
-            "red-dark": "{red-400}",
-            "orange-light": "{orange-700}",
-            "orange-dark": "{orange-400}",
-            "amber-light": "{amber-700}",
-            "amber-dark": "{amber-400}",
-            "yellow-light": "{yellow-700}",
-            "yellow-dark": "{yellow-400}",
-            "lime-light": "{lime-700}",
-            "lime-dark": "{lime-400}",
-            "green-light": "{green-700}",
-            "green-dark": "{green-400}",
-            "emerald-light": "{emerald-700}",
-            "emerald-dark": "{emerald-400}",
-            "teal-light": "{teal-700}",
-            "teal-dark": "{teal-400}",
-            "cyan-light": "{cyan-700}",
-            "cyan-dark": "{cyan-400}",
-            "sky-light": "{sky-700}",
-            "sky-dark": "{sky-400}",
-            "indigo-light": "{indigo-600}",
-            "indigo-dark": "{indigo-400}",
-            "violet-light": "{violet-600}",
-            "violet-dark": "{violet-400}",
-            "purple-light": "{purple-600}",
-            "purple-dark": "{purple-400}",
-            "fuchsia-light": "{fuchsia-700}",
-            "fuchsia-dark": "{fuchsia-400}",
-            "pink-light": "{pink-700}",
-            "pink-dark": "{pink-400}",
-            "rose-light": "{rose-700}",
-            "rose-dark": "{rose-400}"
-          },
-          "contrastMore": {
-            "blue-light": "{blue-800}",
-            "blue-dark": "{blue-300}",
-            "red-light": "{red-900}",
-            "red-dark": "{red-300}",
-            "orange-light": "{orange-900}",
-            "orange-dark": "{orange-300}",
-            "amber-light": "{amber-900}",
-            "amber-dark": "{amber-300}",
-            "yellow-light": "{yellow-900}",
-            "yellow-dark": "{yellow-300}",
-            "lime-light": "{lime-900}",
-            "lime-dark": "{lime-300}",
-            "green-light": "{green-900}",
-            "green-dark": "{green-300}",
-            "emerald-light": "{emerald-800}",
-            "emerald-dark": "{emerald-300}",
-            "teal-light": "{teal-800}",
-            "teal-dark": "{teal-300}",
-            "cyan-light": "{cyan-900}",
-            "cyan-dark": "{cyan-300}",
-            "sky-light": "{sky-800}",
-            "sky-dark": "{sky-300}",
-            "indigo-light": "{indigo-700}",
-            "indigo-dark": "{indigo-300}",
-            "violet-light": "{violet-800}",
-            "violet-dark": "{violet-300}",
-            "purple-light": "{purple-800}",
-            "purple-dark": "{purple-300}",
-            "fuchsia-light": "{fuchsia-900}",
-            "fuchsia-dark": "{fuchsia-300}",
-            "pink-light": "{pink-800}",
-            "pink-dark": "{pink-300}",
-            "rose-light": "{rose-900}",
-            "rose-dark": "{rose-300}"
-          }
-        }
-      }
-    },
     "placeholder": {
       "$type": "color",
       "$value": "{color.zinc-500}",
@@ -1713,7 +2116,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
+      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-600}",
@@ -1817,13 +2220,19 @@
     "success": {
       "$type": "color",
       "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1). For success text use `success-text`.",
+      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-500}",
+          "dark": "#23a950",
           "contrastMore": {
             "light": "{green-700}",
             "dark": "{green-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.green-600}",
+              "by": 0.02
+            }
           }
         }
       }
@@ -1858,7 +2267,13 @@
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{green-400}"
+          "dark": "#2ecc64",
+          "lift": {
+            "dark": {
+              "from": "{color.green-500}",
+              "by": 0.02
+            }
+          }
         }
       }
     },
@@ -1899,13 +2314,19 @@
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`.",
+      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-500}",
+          "dark": "#e07d17",
           "contrastMore": {
             "light": "{amber-700}",
             "dark": "{amber-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.amber-600}",
+              "by": 0.02
+            }
           }
         }
       }
@@ -1940,7 +2361,13 @@
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{amber-400}"
+          "dark": "#fca41d",
+          "lift": {
+            "dark": {
+              "from": "{color.amber-500}",
+              "by": 0.02
+            }
+          }
         }
       }
     },
@@ -1981,10 +2408,16 @@
     "danger": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `danger-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-600}"
+          "dark": "#e22e2c",
+          "lift": {
+            "dark": {
+              "from": "{color.red-600}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -1994,7 +2427,13 @@
       "$description": "Alias. Hover / pressed state of `danger`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-700}"
+          "dark": "#bf2422",
+          "lift": {
+            "dark": {
+              "from": "{color.red-700}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -2004,7 +2443,13 @@
       "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{red-800}"
+          "dark": "#9f2220",
+          "lift": {
+            "dark": {
+              "from": "{color.red-800}",
+              "by": 0.0175
+            }
+          }
         }
       }
     },
@@ -2065,13 +2510,19 @@
     "info": {
       "$type": "color",
       "$value": "{color.sky-700}",
-      "$description": "Alias. Informational icons and text.",
+      "$description": "Alias. Informational icons and fills (3:1), with white `on-info` text: sky-700 in light, the same shade lightened only as far as 3:1 on a raised dark card in dark (#1e77b0). For info text use `info-text`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-400}",
+          "dark": "#1e77b0",
           "contrastMore": {
             "light": "{sky-800}",
             "dark": "{sky-300}"
+          },
+          "lift": {
+            "dark": {
+              "from": "{color.sky-700}",
+              "by": 0.0455
+            }
           }
         }
       }
@@ -2106,7 +2557,13 @@
       "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-300}"
+          "dark": "#1d6693",
+          "lift": {
+            "dark": {
+              "from": "{color.sky-800}",
+              "by": 0.0455
+            }
+          }
         }
       }
     },
@@ -2116,7 +2573,7 @@
       "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "dark": "{sky-950}"
+          "dark": "{white}"
         }
       }
     },
@@ -2682,204 +3139,6 @@
         }
       }
     },
-    "gray-50": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9765,
-          0.9804,
-          0.9843
-        ],
-        "hex": "#f9fafb"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-100": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9529,
-          0.9569,
-          0.9647
-        ],
-        "hex": "#f3f4f6"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-200": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.898,
-          0.9059,
-          0.9216
-        ],
-        "hex": "#e5e7eb"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.0:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-300": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.8196,
-          0.8353,
-          0.8588
-        ],
-        "hex": "#d1d5db"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-400": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6118,
-          0.6392,
-          0.6863
-        ],
-        "hex": "#9ca3af"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-500": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.4196,
-          0.4471,
-          0.502
-        ],
-        "hex": "#6b7280"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-600": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.2941,
-          0.3333,
-          0.3882
-        ],
-        "hex": "#4b5563"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.6:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-700": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.2157,
-          0.2549,
-          0.3176
-        ],
-        "hex": "#374151"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (10.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-800": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.1216,
-          0.1608,
-          0.2157
-        ],
-        "hex": "#1f2937"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (14.7:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-900": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0667,
-          0.0941,
-          0.1529
-        ],
-        "hex": "#111827"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (17.7:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "gray-950": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0118,
-          0.0275,
-          0.0706
-        ],
-        "hex": "#030712"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (20.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
     "zinc-50": {
       "$type": "color",
       "$value": {
@@ -3072,402 +3331,6 @@
         "hex": "#09090b"
       },
       "$description": "Text, dark surfaces. Text: white passes on it (19.9:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-50": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9804,
-          0.9804,
-          0.9804
-        ],
-        "hex": "#fafafa"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-100": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9608,
-          0.9608,
-          0.9608
-        ],
-        "hex": "#f5f5f5"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-200": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.898,
-          0.898,
-          0.898
-        ],
-        "hex": "#e5e5e5"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.7:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-300": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.8314,
-          0.8314,
-          0.8314
-        ],
-        "hex": "#d4d4d4"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.2:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-400": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6392,
-          0.6392,
-          0.6392
-        ],
-        "hex": "#a3a3a3"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-500": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.451,
-          0.451,
-          0.451
-        ],
-        "hex": "#737373"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.7:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-600": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.3216,
-          0.3216,
-          0.3216
-        ],
-        "hex": "#525252"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.8:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-700": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.251,
-          0.251,
-          0.251
-        ],
-        "hex": "#404040"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (10.4:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-800": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.149,
-          0.149,
-          0.149
-        ],
-        "hex": "#262626"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (15.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-900": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0902,
-          0.0902,
-          0.0902
-        ],
-        "hex": "#171717"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (17.9:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "neutral-950": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0392,
-          0.0392,
-          0.0392
-        ],
-        "hex": "#0a0a0a"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (19.8:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-50": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9804,
-          0.9804,
-          0.9765
-        ],
-        "hex": "#fafaf9"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-100": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9608,
-          0.9608,
-          0.9569
-        ],
-        "hex": "#f5f5f4"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.2:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-200": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.9059,
-          0.898,
-          0.8941
-        ],
-        "hex": "#e7e5e4"
-      },
-      "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.7:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-300": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.8392,
-          0.8275,
-          0.8196
-        ],
-        "hex": "#d6d3d1"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.1:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-400": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6588,
-          0.6353,
-          0.6196
-        ],
-        "hex": "#a8a29e"
-      },
-      "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-500": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.4706,
-          0.4431,
-          0.4235
-        ],
-        "hex": "#78716c"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-600": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.3412,
-          0.3255,
-          0.3059
-        ],
-        "hex": "#57534e"
-      },
-      "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.6:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-700": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.2667,
-          0.251,
-          0.2353
-        ],
-        "hex": "#44403c"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (10.3:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-800": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.1608,
-          0.1451,
-          0.1412
-        ],
-        "hex": "#292524"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (15.2:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-900": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.1098,
-          0.098,
-          0.0902
-        ],
-        "hex": "#1c1917"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (17.5:1).",
-      "$extensions": {
-        "com.serupa": {
-          "themed": true
-        }
-      }
-    },
-    "stone-950": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0471,
-          0.0392,
-          0.0353
-        ],
-        "hex": "#0c0a09"
-      },
-      "$description": "Text, dark surfaces. Text: white passes on it (19.8:1).",
       "$extensions": {
         "com.serupa": {
           "themed": true
@@ -7245,14 +7108,6 @@
       },
       "$description": "`rounded-sm`: 4px. Inputs, small buttons, checkboxes."
     },
-    "rounded": {
-      "$type": "dimension",
-      "$value": {
-        "value": 0.25,
-        "unit": "rem"
-      },
-      "$description": "`rounded`: 4px. Same as `rounded-sm`; kept for older code."
-    },
     "rounded-md": {
       "$type": "dimension",
       "$value": {
@@ -10814,16 +10669,6 @@
       "$value": "{transitions.duration-1200}",
       "$description": "One pass of an indeterminate progress bar."
     },
-    "motion-ripple": {
-      "$type": "duration",
-      "$value": "{transitions.duration-500}",
-      "$description": "A press ripple spreading out from the pointer: Button and Badge."
-    },
-    "motion-ripple-fade": {
-      "$type": "duration",
-      "$value": "{transitions.duration-300}",
-      "$description": "A press ripple fading once it has spread."
-    },
     "motion-stagger": {
       "$type": "duration",
       "$value": "{transitions.delay-50}",
@@ -10941,7 +10786,7 @@
     },
     "animate-spin": {
       "$value": "spin 1s linear infinite",
-      "$description": "`animate-spin`: loading spinners (Button uses it)."
+      "$description": "`animate-spin`: utility spin animation (Loader uses `motion-loop-spinner`)."
     },
     "animate-spin-reduced": {
       "$value": "spin 3s linear infinite",

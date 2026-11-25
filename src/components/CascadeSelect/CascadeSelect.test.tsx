@@ -206,6 +206,19 @@ describe('CascadeSelect', () => {
     expect(load.mock.calls[0]![0].map((o) => o.value)).toEqual(['a']);
   });
 
+  test('loadOptions: an option whose children load as none is a last step: no empty column, and choosing it again picks it', async () => {
+    const onValueChange = vi.fn();
+    await render(<CascadeSelect aria-label="Area" options={[{ value: 'a', label: 'A' }]} loadOptions={async () => []} onValueChange={onValueChange} />);
+    await userEvent.click(button());
+    const option = (label: string) => [...panel().querySelectorAll<HTMLElement>('[role=option]')].find((o) => o.textContent === label)!;
+    await userEvent.click(option('A'));
+    await until(() => !panel().querySelector('[role=status]'));
+    expect([panel().querySelectorAll('[role=listbox]').length, option('A').querySelector('[data-icon]')]).toEqual([1, null]);
+    await userEvent.click(option('A'));
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenLastCalledWith(['a'], expect.anything());
+  });
+
   test('loadOptions: a saved value three levels deep reads in words without opening, its levels loaded one at a time', async () => {
     const tree: Record<string, CascadeOption[]> = {
       '32': [{ value: '3273', label: 'Kota Bandung' }],
@@ -328,7 +341,7 @@ describe('CascadeSelect', () => {
       ['level', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
       ['highlighted', 'var(--text)', 'var(--primary-subtle)', 4.5],
       ['hovered', 'var(--text)', 'var(--surface-muted)', 4.5],
-      ['check', 'var(--primary)', 'var(--surface-overlay)', 3],
+      ['check', 'var(--primary-text)', 'var(--surface-overlay)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
     ])).toEqual([]);
   });

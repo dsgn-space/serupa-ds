@@ -55,7 +55,7 @@ Drawn from the `LongText` story.
 
 ## Accessibility
 
-- `role="alert"` (warning, danger) is read out at once when the alert appears; `role="status"` waits for a pause. A screen reader only announces an alert that's added to the page, so render it when the event happens rather than toggling its text.
+- `role="alert"` (danger) is read out at once when the alert appears; `role="status"` (every other tone, warning too) waits for a pause. Danger interrupts and the rest wait, as in Toast and SaveStatus. Pass `role="alert"` for a warning that must stop people before they act. A screen reader only announces an alert that's added to the page, so render it when the event happens rather than toggling its text.
 - The icon is decorative: the title or message must say what happened. Don't rely on the color alone.
 - The close button is a real button with a name, 24×24px.
 - In forced-colors mode the box gets a visible border and the icon a system color.
@@ -76,7 +76,7 @@ Drawn from the `LongText` story.
 | `onDismiss` | function | | Shows a close button (a small ghost Button) that calls it |
 | `dismissLabel` | string | `'Dismiss'` | The close button's name |
 
-`role` is `"alert"` for warning and danger and `"status"` for the others; pass `role` to change it. `className`, `style`, `ref` and everything else go to the box, which has `data-component="alert"` and `data-tone`.
+`role` is `"alert"` for danger and `"status"` for the others; pass `role` to change it. `className`, `style`, `ref` and everything else go to the box, which has `data-component="alert"` and `data-tone`.
 
 ## Component tokens
 
@@ -86,7 +86,7 @@ Each is an optional override: set it on the page, a container or one alert. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--alert-bg-info` | `info-subtle` | The background of a info alert. |
-| `--alert-icon-info` | `info` | The icon and the border tint of a info alert (3:1 on its background). |
+| `--alert-icon-info` | `info-text` | The icon and the border tint of a info alert (3:1 on its background). |
 | `--alert-bg-success` | `success-subtle` | The background of a success alert. |
 | `--alert-icon-success` | `success` | The icon and the border tint of a success alert (3:1 on its background). |
 | `--alert-bg-warning` | `warning-subtle` | The background of a warning alert. |

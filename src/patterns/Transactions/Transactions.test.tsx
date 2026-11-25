@@ -66,6 +66,14 @@ describe('Patterns/Transactions', () => {
     expect(norm(document.querySelector('main dl')!.textContent)).toMatch(/You kept.*400/);
   });
 
+  test('transactions that arrive after loading show the newest month, not every month at once', async () => {
+    const tx = [t('a', '2026-11-02', 'Rent', 'Home', -900), t('c', '2026-10-01', 'Pay', 'Income', 400)];
+    const screen = await render(<Transactions transactions={[]} loading />);
+    await screen.rerender(<Transactions transactions={tx} />);
+    await expect.poll(rows).toHaveLength(1);
+    expect((screen.getByRole('combobox', { name: 'Month' }).element() as HTMLSelectElement).value).toBe('2026-11');
+  });
+
   test('while loading, one placeholder; a failed load says so, with Try again', async () => {
     const onRetry = vi.fn();
     const screen = await render(<Transactions loading />);

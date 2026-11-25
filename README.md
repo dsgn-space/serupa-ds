@@ -14,7 +14,7 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v17.1.0
+npm install github:dsgn-space/serupa-ds#v18.0.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
@@ -32,14 +32,14 @@ npm install @diki-stwn/serupa-ds
 
 Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
 
-Always pin a tag (`#v17.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v18.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v17.1.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v18.0.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -258,7 +258,7 @@ function Cards({ items }: { items: { id: string; title: string }[] }) {
 
 Every utility class works on its own, with no framework or build step, and every class whose value is on a scale reads it from its token: `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)`. Change a token on a page and its classes follow. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (they write the token's shape out so a color class can recolor it), and `rounded-full` (9999px). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
 
-The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
+The palette has 19 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
 
 ## Components
 
@@ -346,6 +346,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [OfflineBanner](src/components/OfflineBanner/README.md) (beta) | Says when the connection drops and when it comes back, on screen and to screen readers. |
 | [Progress](src/components/Progress/README.md) | Shows how far along a task is when you can tell: an upload, a setup, a quota. |
 | [SaveStatus](src/components/SaveStatus/README.md) | A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. |
+| [Skeleton](src/components/Skeleton/README.md) (beta) | Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. |
 | [Toast](src/components/Toast/README.md) | A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. |
 
 ### Forms
@@ -471,7 +472,7 @@ From 15.0.0, the palette and effect primitives that no component or theme reads 
 
 Each component is **stable** unless it says otherwise. A component marked **beta** is ready to use, but its API may still change in a minor release, and that release's changeset says how. It becomes stable once it has shipped, its bug bash has nothing left open, and its API has gone four weeks without a breaking change ([CONTRIBUTING](CONTRIBUTING.md)); an **alpha** one is still taking shape and may change in any release. A **deprecated** one keeps working until the next major removes it. The status is in the doc comment on the component's export (`@beta`, `@alpha` or `@deprecated`), so your editor shows it on hover, and it also appears above the component's guide in Storybook and after its name in the index below.
 
-Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major, which says how to move off them (`npx serupa-migrate` makes the renames). A name is deprecated at least four weeks before a major removes it (the wait was suspended through 17.0.0, while the API was still being adjusted). Breaking changes are held for one scheduled major at a time, each proposed in [docs/rfcs/](docs/rfcs/), and the previous major gets bug and security fixes for four weeks after a new one ships. [CONTRIBUTING.md](CONTRIBUTING.md#release-cadence-and-support) has the details. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
+Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major, which says how to move off them (`npx serupa-migrate` makes the renames). A name is deprecated at least four weeks before a major removes it (the wait was suspended through 18.0.0, while the API was still being adjusted). Breaking changes are held for one scheduled major at a time, each proposed in [docs/rfcs/](docs/rfcs/), and the previous major gets bug and security fixes for four weeks after a new one ships. [CONTRIBUTING.md](CONTRIBUTING.md#release-cadence-and-support) has the details. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
 
 ## Design tokens for design tools
 
@@ -480,7 +481,8 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | File | Holds |
 | --- | --- |
 | `serupa.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
-| `themes/<theme>.tokens.json` | The alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
+| `themes/light.tokens.json`, `themes/dark.tokens.json` | The alias colors in light and in dark, as references into the palette (`"{color.blue-600}"`): the default brand's |
+| `brands/<theme>.tokens.json` | A brand's overlay: the aliases it sets apart from its mode's file. A theme is `serupa.tokens.json`, then its mode's file, then its overlay (`brands/violet-dark.tokens.json` over `themes/dark.tokens.json`) |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 | `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
@@ -583,7 +585,7 @@ Two features set the oldest versions that get the whole system, so the baseline 
 | Feature | Needs | Without it |
 | --- | --- | --- |
 | CSS anchor positioning (`anchor()`, `position-area`, `position-try-fallbacks`) | Chrome and Edge 129, Safari 26, Firefox 147 | Menus, popovers, tooltips and the picker lists can't be placed by CSS next to what opens them. |
-| `@scope`, which keeps each component's styles to its own markup | Chrome and Edge 118, Safari 26.4, Firefox 146 | A component's styles reach into whatever is nested inside it. |
+| `@scope`, which keeps Prose's styles from reaching components nested inside it | Chrome and Edge 118, Safari 26.4, Firefox 146 | Prose's styles don't apply where `@scope` isn't supported. |
 | `light-dark()`, behind `data-brand` and `data-mode` | Chrome and Edge 123, Safari 17.5, Firefox 120 | A page or section themed only by `data-brand` / `data-mode` loses its theme colors. |
 | `@property`, which gives the `--srp-*` variables their starting values | Chrome and Edge 85, Safari 16.4, Firefox 128 | The utilities that combine through those variables (`translate-*`, `rotate-*`, `scale-*`, `skew-*`, `shadow-*`, `ring-*`, gradients, filters and `mask-*`) do nothing unless every part is set. |
 | The `popover` attribute (the top layer) | Chrome and Edge 114, Safari 17, Firefox 125 | Menu, Popover, Tooltip and the picker lists open in the page instead of the top layer, where a parent's `overflow: hidden` can clip them. |
@@ -607,6 +609,6 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | Work | Used for | License |
 | --- | --- | --- |
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT, `licenses/TailwindCSS-MIT.txt` |
-| Inter (Rasmus Andersson) | `font-sans`: `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2`, and the same split by script, `fonts/InterVariable-*.woff2` | SIL Open Font License 1.1, `licenses/Inter-OFL-1.1.txt` |
+| Inter (Rasmus Andersson) | `font-sans`: Inter's variable fonts split by script, `fonts/InterVariable-*.woff2` | SIL Open Font License 1.1, `licenses/Inter-OFL-1.1.txt` |
 | Material Symbols (Google) | Icons, as SVG in the components and `@diki-stwn/serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0, `licenses/MaterialSymbols-Apache-2.0.txt` |
 | React 19.3.1 (Meta) | Running the components on plain pages: `dist/lib/`, built from the `react` and `react-dom` packages by the build | MIT, `licenses/React-MIT.txt` |

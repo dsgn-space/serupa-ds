@@ -70,7 +70,7 @@ Drawn from the `External` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `tone` | `'primary'` \| `'neutral'` | `'primary'` | The primary color, or the surrounding text's color (still underlined) |
-| `surface` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: white for dark media, black for light, in every theme (`onMedia` is its deprecated old name, removed in 18.0.0) |
+| `surface` | `'dark'` \| `'light'` | none | Over a photo or a colored panel: white for dark media, black for light, in every theme |
 | `underline` | `'always'` \| `'hover'` | `'always'` | Always underlined, or only on hover and focus (a link in a paragraph stays underlined) |
 | `external` | boolean | `false` | Opens a new tab (`target="_blank"`, adds `noopener noreferrer` to your `rel`), with a new-tab icon and "(opens in a new tab)" for screen readers. Your `target="_self"` (or `_parent`, `_top`) keeps it in the tab, without the icon or the note |
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; it gets `className`, `ref` and every other prop. Set it once for the app with `configure({ link })`; `as` wins for one link. Typed: the props and `ref` are those of the element `as` names, so `as={RouterLink} to="/x"` checks `to`, and without `as` they're an `<a>`'s. A link set only with `configure({ link })` is typed as an `<a>`, so pass it `href`. |
@@ -84,8 +84,8 @@ Each is an optional override: set it on the page, a container or one link. The l
 <!-- token-table:start (made from link.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--link-text` | `primary` | tone="primary" text and underline (4.5:1 on surface). |
-| `--link-text-hover` | `primary-hover` | tone="primary" on hover. |
+| `--link-text` | `primary-text` | tone="primary" text and underline (4.5:1 on surface). |
+| `--link-text-hover` | `primary-text-hover` | tone="primary" on hover. |
 | `--link-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--link-on-dark` | `white` | surface="dark": the link, its hover and its focus ring over dark media. |
 | `--link-on-light` | `black` | surface="light": the link, its hover and its focus ring over light media. |

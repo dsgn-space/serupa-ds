@@ -106,6 +106,7 @@ export function formatExpiry(next: string, prev: string): string {
   const full = /^\s*(\d{1,2})\s*[/-]\s*(\d{4}|\d{2})\s*$/.exec(next);
   if (full) return `${full[1]!.padStart(2, '0')}/${full[2]!.slice(-2)}`;
   if (next.length < prev.length) return next.replace(/[^\d/]/g, '').slice(0, 5);
+  if (/^\s*\d\s*[/-]$/.test(next)) return `0${next.trim()[0]}/`;   // "1/": a slash typed after one digit ends the month
   const d = next.replace(/\D/g, '').slice(0, 4);
   if (d.length === 1 && d > '1') return `0${d}/`;
   return d.length >= 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;

@@ -6,7 +6,8 @@
 //   /* badge-palette:end */
 // The families are the palette's, without the grays. The steps, checked for contrast by Badge.test.tsx:
 //   light: subtle 100 fill + 700 text; solid 600 + white where white reads 4.5:1 on 600, else 700; outline 700.
-//   dark: subtle 950 fill + 300 text; solid 400 + 950 text; outline 300 text on a 400 border.
+//   dark: subtle 950 fill + 300 text; solid the light theme's own (600 or 700 + white), as a dark theme's fills are the
+//   light theme's (ADR-0026); outline 300 text on a 400 border.
 // Three blocks set them: the light themes (and a page with no theme), the dark ones, and light-dark() pairs for the
 // data-brand and data-mode axes, which follow the element's color-scheme.
 //   node tools/tokens/badge-palette.mjs           rewrite the rules
@@ -19,7 +20,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 export const CSS = path.join(ROOT, 'src', 'components', 'Badge', 'Badge.css');
 const START = '/* badge-palette:start (made from tokens.json by npm run tokens: edit tools/tokens/badge-palette.mjs) */';
 const END = '/* badge-palette:end */';
-const GRAYS = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone']);
+const GRAYS = new Set(['slate', 'zinc']);
 // The status tones, by the family each reads (their colors come from the status roles, not these families).
 export const STATUS = { success: 'green', warning: 'amber', danger: 'red', info: 'sky' };
 
@@ -51,7 +52,7 @@ export function rules(tokens) {
     return `--srp-bdg-${f.name}-sbg: ${s.sbg}; --srp-bdg-${f.name}-sfg: ${s.sfg}; --srp-bdg-${f.name}-xbg: ${s.xbg}; --srp-bdg-${f.name}-xfg: ${s.xfg}; --srp-bdg-${f.name}-o: ${s.o}; --srp-bdg-${f.name}-obd: ${s.obd};`;
   }).join(' ');
   const light = (f) => ({ sbg: v(`${f.name}-100`), sfg: v(`${f.name}-700`), xbg: v(`${f.name}-${f.solid}`), xfg: v('white'), o: v(`${f.name}-700`), obd: v(`${f.name}-700`) });
-  const dark = (f) => ({ sbg: v(`${f.name}-950`), sfg: v(`${f.name}-300`), xbg: v(`${f.name}-400`), xfg: v(`${f.name}-950`), o: v(`${f.name}-300`), obd: v(`${f.name}-400`) });
+  const dark = (f) => ({ sbg: v(`${f.name}-950`), sfg: v(`${f.name}-300`), xbg: v(`${f.name}-${f.solid}`), xfg: v('white'), o: v(`${f.name}-300`), obd: v(`${f.name}-400`) });
   const both = (f) => { const l = light(f), d = dark(f); return Object.fromEntries(Object.keys(l).map((k) => [k, `light-dark(${l[k]}, ${d[k]})`])); };
   // A status tone follows its roles (success-subtle, success-text, success, on-success), so a theme or page that sets
   // --success or --danger moves its badges too (GR249); each is a --badge-<status>-* component token. A clickable solid one

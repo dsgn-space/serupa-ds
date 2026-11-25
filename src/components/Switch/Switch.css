@@ -33,6 +33,8 @@
 }
 @media (hover: hover) { .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-hover, var(--border-control-hover)); --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
 .srp-switch__input:checked { background: var(--srp-switch-on); }
+/* The on track's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. :where keeps the invalid and disabled edges over it. */
+.srp-switch__input:where(:checked) { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--switch-track-edge-checked, var(--primary-edge)); }
 .srp-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--srp-switch-pad);
   width: var(--srp-switch-thumb); height: var(--srp-switch-thumb); margin-block: auto;
@@ -51,31 +53,32 @@
 }
 /* Invalid: a 2px danger edge inside the track, on or off, like Checkbox's danger border; the track keeps its
    color, so an off switch still reads as off. Focused, the focus ring outside it turns danger too. */
-.srp-switch--invalid .srp-switch__input { --srp-switch-ring: var(--switch-invalid, var(--danger)); box-shadow: inset 0 0 0 var(--border-width-2) var(--switch-invalid, var(--danger)); }
+.srp-switch:where([data-invalid]) .srp-switch__input { --srp-switch-ring: var(--switch-invalid, var(--danger)); box-shadow: inset 0 0 0 var(--border-width-2) var(--switch-invalid, var(--danger)); }
 .srp-switch__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-switch__description { color: var(--switch-description-color, var(--text-muted)); }
 /* Read-only: no pointer cursor or hover, since a click won't flip it. */
-.srp-switch--readonly { cursor: default; }
+.srp-switch:where([data-readonly]) { cursor: default; }
 /* Pressed: while the row is held (pointer, or Space on the switch) the track takes its held color, a step past
    hover. Nothing shrinks by default; --switch-press-scale opts in to a smaller thumb. Not when read-only, pending
    or disabled. */
-.srp-switch:not(.srp-switch--readonly, .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control-pressed)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
-.srp-switch:active:not(.srp-switch--readonly, .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
-/* Pending: Loader's ring on the thumb (EE1): a quarter arc in primary (3:1 on the off thumb's field, and on the
-   on thumb's on-primary) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
+.srp-switch:not([data-readonly], .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control-pressed)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
+.srp-switch:active:not([data-readonly], .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
+/* Pending: Loader's ring on the thumb (EE1): a quarter arc in the brand (primary-text on the off thumb's field, primary on the
+   on thumb's on-primary, 3:1 on each) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */
 .srp-switch--pending { cursor: progress; }
 .srp-switch__thumb { display: inline-flex; align-items: center; justify-content: center; }
 .srp-switch__spinner {
   --srp-switch-spin: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2);
   box-sizing: border-box; width: var(--srp-switch-spin); height: var(--srp-switch-spin);
-  color: var(--switch-pending, var(--primary));
+  color: var(--switch-pending, var(--primary-text));
   border: var(--border-width-2) solid color-mix(in srgb, currentColor var(--opacity-20), transparent); border-block-start-color: currentColor; border-radius: var(--rounded-full);
   animation: spin var(--motion-loop-spinner) var(--ease-linear) infinite;
 }
 /* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
 .srp-switch__check { --srp-switch-glyph: calc(var(--srp-switch-thumb) - var(--srp-switch-pad) * 2); display: none; inline-size: var(--srp-switch-glyph); block-size: var(--srp-switch-glyph); color: var(--switch-icon, var(--primary)); }
 .srp-switch__input:checked + .srp-switch__thumb > .srp-switch__check { display: block; }
+.srp-switch__input:checked + .srp-switch__thumb > .srp-switch__spinner { color: var(--switch-pending-checked, var(--primary)); }
 @keyframes srp-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .srp-switch:has(.srp-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
@@ -97,8 +100,9 @@
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */
 .srp-switch { position: relative; isolation: isolate; }
-/* Pressed twice (on and off), the label highlights none of its words: it is part of the control, as a Button's is. */
+/* Pressed twice (on and off), the label highlights none of its words: it is part of the control, as a Button's is. Descriptions stay selectable so explanatory text can be copied. */
 .srp-switch { -webkit-user-select: none; user-select: none; }
+.srp-switch__description { -webkit-user-select: text; user-select: text; }
 .srp-switch::after { --srp-under: calc(var(--z-10) * -1); --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset: var(--srp-reach); }
 /* Touch (EQ1): 44px to press, as Apple and Material ask. */
 @media (pointer: coarse) { .srp-switch::after { --srp-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); } }

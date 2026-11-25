@@ -8,7 +8,7 @@ REGION="${REGION:-jp-osa}"           # Osaka: BUYOSA gives 70% off here
 ZONE="${ZONE:-${REGION}-1}"
 PROFILE="${PROFILE:-bx3d-128x640}"    # Gen3 balanced, 128 vCPU / 640 GB; covered by BUYOSA and VPC1000
 CONCURRENT="${CONCURRENT:-28}"  # 28 x 4 vCPU = 112, leaves 16 vCPU for Docker, the runner and the OS
-IDLE_HOURS="${IDLE_HOURS:-24}"  # with nothing running here and nothing queued for the repository; 0: never
+IDLE_HOURS="${IDLE_HOURS:-2}"   # with nothing running here and nothing queued for the repository; 0: never
 KEY="${KEY:-diki-mac}"
 VPC="${VPC:-serupa-ci}"
 

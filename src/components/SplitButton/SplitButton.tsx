@@ -21,7 +21,7 @@ export interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   menuLabel: string;
   /** 'primary' (default), 'secondary' or 'outline', for both halves. */
   variant?: 'primary' | 'secondary' | 'outline' | undefined;
-  /** 'sm', 'md' (default) or 'lg'. */
+  /** 'sm', 'md' or 'lg'. Default: the size around it (a ButtonGroup's or a SerupaProvider's), else md, as a Button's. */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** The danger color, for a main action that deletes or can't be undone. */
   destructive?: boolean | undefined;
@@ -46,7 +46,8 @@ const OWN = { children: 1, onClick: 1, menu: 1, menuLabel: 1, variant: 1, size: 
 function SplitButtonRender({ ref, ...props }: SplitButtonProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
   const variant = props.variant === 'secondary' || props.variant === 'outline' ? props.variant : 'primary';
-  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
+  // None of its own: both halves take the size around them (a ButtonGroup, a SerupaProvider), else md, as a Button does.
+  const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
   // The name goes to the group, which has the role; everything else to the wrapper.
   const label = rest['aria-label'], labelledBy = rest['aria-labelledby'];
   delete rest['aria-label']; delete rest['aria-labelledby'];

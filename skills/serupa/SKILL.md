@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v17.1.0
+npm install github:dsgn-space/serupa-ds#v18.0.0
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -47,7 +47,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
    4. A native element (`<details>`, `<progress>`, `<dl>`) styled with the utility classes and tokens.
    5. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
-3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary`, `on-primary`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For text in a status color, use the `*-text` alias, never the fill.
+3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary` (a fill), `on-primary`, `primary-text`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For brand or status text, use the `*-text` alias, never the fill.
 4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `srp-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa.
 5. **Shared props.** `size` is `'sm' | 'md' | 'lg'`, at heights of 24, 32 and 44px. Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
 6. **Pick feedback by how long it stays.** To confirm that something worked ("Saved", "Invite sent"), call `toast("Saved")`, and render one `<Toaster />` near the app's root. It goes away on its own and screen readers hear it. Use an `Alert` for a message that must stay on the page until it's dealt with, and `SaveStatus` for autosave.
@@ -149,11 +149,12 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **EmptyState**: What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it. Also called: blank slate, zero state.
 - **ErrorBoundary**: Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page. Also called: error fallback, crash screen.
 - **Illustration** (beta): A small line drawing for an empty state, an error page or a finished flow. Also called: spot illustration, artwork.
-- **Loader**: Shows that something is loading when you can't say how far along it is. Also called: spinner, skeleton, loading indicator.
+- **Loader**: Shows that something is loading when you can't say how far along it is. Also called: spinner, loading indicator.
 - **Meter**: Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level. Also called: gauge.
 - **OfflineBanner** (beta): Says when the connection drops and when it comes back, on screen and to screen readers. Also called: connection banner, offline indicator.
 - **Progress**: Shows how far along a task is when you can tell: an upload, a setup, a quota. Also called: progress bar.
 - **SaveStatus**: A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. Also called: autosave indicator, sync status.
+- **Skeleton** (beta): Gray placeholder shapes where content is loading, so the layout is already in place and nothing jumps when the content arrives. Also called: placeholder, shimmer, loading placeholder.
 - **Toast**: A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Also called: snackbar, notification.
 
 ### Forms

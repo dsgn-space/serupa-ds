@@ -20,7 +20,7 @@
 //  11. One version everywhere (tools/release.mjs --check).
 //  12. Every stylesheet puts its rules in the srp.* cascade layers, declared in one order.
 //  13. Every width in a media query in src/ (CSS and matchMedia) is a screen-* value (max-width may be value - 0.02px or - 1px).
-//  14. One brand list: theme.js, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
+//  14. One brand list: theme.js, debug.js's Theme panel, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
 //  15. Hover styles only inside @media (hover: hover).
 //  16. Floating layers don't print; background-only states have a forced-colors fallback.
 //  17. Every srp-* class a component stylesheet styles is one the code can produce.
@@ -28,7 +28,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { HERE, projectArg, report, done } from './lib.mjs';
-import { PAIRS } from '../tokens/contrast-pairs.mjs';
+import { PAIRS, FILL_SURFACES } from '../tokens/contrast-pairs.mjs';
 import { toSource, fromSource } from '../tokens/source.mjs';
 import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import { isDeepStrictEqual } from 'node:util';
@@ -227,6 +227,15 @@ for (const th of THEMES) for (const [fg, bg, need] of PAIRS) {
   if (r < need) low.push(`${th}: ${fg} on ${bg} ${r.toFixed(2)}:1 (needs ${need})`);
 }
 check(`contrast: ${PAIRS.length} text, control and focus pairs pass WCAG in all ${THEMES.length} themes`, !low.length, low.slice(0, 8).join('; '));
+// A primary fill passes 3:1 on every surface by itself, or inside the theme's primary-edge (transparent where it isn't needed).
+const bare = [];
+for (const th of THEMES) for (const bg of FILL_SURFACES) {
+  const edge = resolve('primary-edge', th), solid = !/^#[0-9a-f]{6}00$/i.test(edge);
+  const r = ratio(resolve('primary', th), resolve(bg, th)), e = solid ? ratio(edge, resolve(bg, th)) : 0;
+  if (Math.max(r, e) < 3) bare.push(`${th}: primary on ${bg} ${r.toFixed(2)}:1${solid ? `, its edge ${e.toFixed(2)}:1` : ', no edge'}`);
+  if (solid && r >= 3) bare.push(`${th}: primary is ${r.toFixed(2)}:1 on ${bg}, so primary-edge should be transparent`);
+}
+check(`a primary fill is 3:1 on ${FILL_SURFACES.length} surfaces in all ${THEMES.length} themes, or has a primary-edge that is (and only then)`, !bare.length, bare.slice(0, 8).join('; '));
 
 // 9. responsive variants use the breakpoint tokens
 const SCR = Object.fromEntries(groups.layout.tokens.filter((x) => x.name.startsWith('screen-')).map((x) => [x.name.slice(7), x.value]));
@@ -263,6 +272,12 @@ check('tokens.json is exactly what tokens/serupa.tokens.json gives (npm run toke
 {
   const src = JSON.parse(read('tokens/serupa.tokens.json'));
   check('tokens/serupa.tokens.json turns into tokens.json and back without a change', isDeepStrictEqual(toSource(fromSource(src).tokens), src));
+  // A lifted dark fill names its palette step (ADR-0026): a hex changed without its lift, or the other way, is caught.
+  const lifted = Object.entries(src.color).filter(([, x]) => x.$extensions?.['com.serupa']?.lift);
+  const off = structuredClone(src);
+  off.color.success.$extensions['com.serupa'].dark = '#00ff00';
+  const caught = fromSource(off).problems.some((m) => m.startsWith('color.success: dark is #00ff00'));
+  check(`every dark fill says the palette step it is lifted from (${lifted.length} tokens), and a hex that isn't that step lifted is caught`, lifted.length >= 10 && !fromSource(src).problems.length && caught, caught ? '' : 'a wrong hex beside its lift went through');
 }
 
 // 12. cascade layers: every shipped stylesheet declares the same layer order and keeps its rules inside its layer
@@ -335,6 +350,8 @@ const jsDoc = /data-brand\s+([a-z0-9 |]+?)\s+\(default: ([a-z0-9]+)\)/.exec(them
 if (!jsDoc || !same(jsDoc[1].split('|').map((s) => s.trim()), BRANDS) || jsDoc[2] !== BRANDS[0]) brandIssues.push(`src/theme.js: the header should read "data-brand  ${BRANDS.join(' | ')}  (default: ${BRANDS[0]})"`);
 const jsDefault = /pick\(root\.getAttribute\(["']data-brand["']\), BRANDS, ["']([^"']+)["']\)/.exec(themeJs);
 if (!jsDefault || jsDefault[1] !== BRANDS[0]) brandIssues.push(`src/theme.js: the default brand should be "${BRANDS[0]}" (the first theme's brand)`);
+const dbgBrands = /brand: \[([^\]]*)\]/.exec(read('src/debug.js'));
+if (!dbgBrands || !same(listOf(dbgBrands[1]), BRANDS)) brandIssues.push(`src/debug.js: the Theme panel's brand list should be [${BRANDS.join(', ')}]`);
 const tsType = /export type ThemeBrand\s*=\s*([^;]+);/.exec(read('src/theme-types.ts'));
 if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');
 else if (!same(listOf(tsType[1]), BRANDS)) brandIssues.push(`src/theme-types.ts: ThemeBrand is ${listOf(tsType[1]).join(' | ')}, tokens.json gives ${BRANDS.map((b) => `'${b}'`).join(' | ')}`);
@@ -354,7 +371,7 @@ for (const f of testFiles(path.join('tools', 'test'))) {
 // The themes with pictures (tools/design-qa.mjs) are some of them, in their order, the default first.
 const shown = SHOWN_THEMES.filter((id) => THEME_IDS.includes(id));
 if (shown.length !== SHOWN_THEMES.length || SHOWN_THEMES[0] !== THEME_IDS[0] || !same([...SHOWN_THEMES].sort((x, y) => THEME_IDS.indexOf(x) - THEME_IDS.indexOf(y)), SHOWN_THEMES)) brandIssues.push(`tools/design-qa.mjs: THEMES [${SHOWN_THEMES.join(', ')}] must be themes of tokens.json, in its order, starting with ${THEME_IDS[0]}`);
-check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
+check(`one brand list: theme.js, debug.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
 // 15. hover only where there is hover: on a touch screen the browser keeps :hover on the last element tapped, so a
 // hover color would stick ("still selected"). Every :hover rule sits inside @media (hover: hover); :active still
@@ -408,7 +425,7 @@ check('print: every component that floats over the page (position: fixed, popove
 check('forced colors: every state that only changes the background also changes a border, outline or color, or has a forced-colors rule', !fadesInForcedColors.length, [...new Set(fadesInForcedColors)].join('; '));
 
 // 17. no dead component CSS (idea 80): every srp-* class a component stylesheet styles is one the code can produce:
-// written out ("srp-btn__label"), built from a prefix the code joins ("srp-loader__px--d" + n, `srp-tag--${tone}`), or
+// written out ("srp-btn__label"), built from a prefix the code joins ("srp-loader--" + variant, `srp-tag--${tone}`), or
 // ending in a piece the code joins on ("srp-" + name + "__ripple"). A class nothing produces is a rule that never applies.
 const sources = srcFiles('src').filter((f) => /\.tsx?$/.test(f)).map((f) => read(f)).join('\n')
   + fs.readdirSync(path.join(P, 'src', 'components')).flatMap((n) => fs.existsSync(path.join(P, 'src', 'components', n, 'preview.html')) ? [read(path.join('src', 'components', n, 'preview.html'))] : []).join('\n');

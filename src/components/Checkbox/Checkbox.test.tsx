@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, settle, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, settle, withMotion, disabledLook, edged } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Checkbox, CheckboxGroup } from './Checkbox';
 import { SerupaProvider } from '../../internal/provider';
@@ -79,7 +79,7 @@ describe('Checkbox', () => {
     expect(input('c').checked).toBe(true);
     expect(changes).toEqual([true]);
     expect(css(input('c')).backgroundColor).toBe(color('var(--primary)'));
-    expect(css(input('c')).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(input('c')).borderTopColor).toBe(color('var(--primary-edge)'));   // the border is the fill's edge: transparent over it, but in Yellow Light
     expect(css(icon).visibility).toBe('visible');
     expect(css(icon).color).toBe(color('var(--on-primary)'));
     expect(icon.getAttribute('aria-hidden')).toBe('true');
@@ -223,7 +223,7 @@ describe('Checkbox', () => {
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
-      ['checked fill', 'var(--primary)', 'var(--surface)', 3],
+      ['checked fill, or its edge where the theme has one', () => edged('var(--primary)'), 'var(--surface)', 3],
       ['check on fill', 'var(--on-primary)', 'var(--primary)', 4.5],
       ['check on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 4.5],
       ['focus ring', 'var(--focus-ring)', 'var(--surface)', 3],
@@ -344,7 +344,7 @@ describe('CheckboxGroup', () => {
     const look = (id: string) => [css(el(id)).backgroundColor, css(el(id)).borderTopColor, css(box(id)).scale.replace('none', '1')];
     const rest = look('pd');
     expect(await press(el('pc').closest('label')!, () => look('pc'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-pressed)'), '1']);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-edge)'), '1']);
     expect((await press(el('pi').closest('label')!, () => look('pi')))[1]).toBe(color('var(--field-border-invalid)'));
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
@@ -385,7 +385,7 @@ describe('CheckboxGroup', () => {
     expect(page.getByRole('group').element().className).toMatch(/srp-checkbox-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary-text)'));
     expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
     expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
     await userEvent.click(page.getByText('A printed note', { exact: true }));
@@ -400,7 +400,7 @@ describe('CheckboxGroup', () => {
     b!.blur();
     expect([b!.hasAttribute('data-key-focus'), css(card(b!)).outlineStyle]).toEqual([false, 'none']);
     await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
-    expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
+    expect(lowContrast([['checked card border', 'var(--primary-text)', 'var(--surface)', 3]])).toEqual([]);
   });
 
   test('a card clicked in Safari, where the label passes the click on to its box with detail 0 as a key would, shows no keyboard ring', async () => {
@@ -464,5 +464,11 @@ describe('CheckboxGroup with many boxes', () => {
     await userEvent.click(input('m7'));
     await userEvent.click(input('m8'));
     expect([input('m7').checked, input('m8').checked, [...drawn].sort()]).toEqual([true, true, ['m7', 'm8', 'mall']]);
+  });
+
+  test('description text stays selectable so policy or explanatory text can be copied', async () => {
+    await render(<Checkbox id="sel" description="Copy this policy text.">Accept</Checkbox>);
+    const desc = document.getElementById(input('sel').getAttribute('aria-describedby')!)!;
+    expect(getComputedStyle(desc).userSelect).toBe('text');
   });
 });

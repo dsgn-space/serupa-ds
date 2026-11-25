@@ -129,7 +129,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-outside-color-hover` | `text` | A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill. |
 | `--calendar-day-bg-hover` | `secondary` | A day or preset under the pointer, as Pagination's pages. |
 | `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
-| `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
+| `--calendar-today-color` | `primary-text` | Today's number (4.5:1 on surface). |
 | `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold. |
 | `--calendar-bg-selected` | `primary` | The selected day. |
 | `--calendar-color-selected` | `on-primary` | Its number. |
@@ -137,6 +137,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
 | `--calendar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--calendar-edge-selected` | `primary-edge` | The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

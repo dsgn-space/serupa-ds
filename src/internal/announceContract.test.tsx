@@ -33,6 +33,7 @@ import { NumberInput } from '../components/NumberInput/NumberInput';
 import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
+import { Skeleton } from '../components/Skeleton/Skeleton';
 import { Pagination } from '../components/Pagination/Pagination';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { Kanban } from '../components/Kanban/Kanban';
@@ -68,6 +69,9 @@ const SITES: Record<string, Site> = {
   'Loader: its label when it shows': {
     ui: (s) => (s ? <Loader label="Loading results" delay={0} /> : <span />),
     act: (next) => next(), says: /Loading results/ },
+  'Skeleton: its label when it shows': {
+    ui: (s) => (s ? <Skeleton label="Loading profile" delay={0} /> : <span />),
+    act: (next) => next(), says: /Loading profile/ },
   'Toast: a toast': {
     ui: () => <span />,
     act: async () => { React.act(() => { toast({ title: 'Link copied', duration: 0 }); }); }, says: /Link copied/ },
@@ -148,7 +152,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /Saved/ },
   'SaveStatus: a failed save': {
     ui: (s) => <SaveStatus status={s ? 'error' : 'saving'} errorText="Couldn’t save: you’re offline" />,
-    act: (next) => next(), says: /you’re offline/ },
+    act: (next) => next(), says: /you’re offline/, assertive: true },
   'Table: a new sort order': {
     ui: (s) => <Table><TableHead><TableRow><TableHeaderCell sort={s ? 'ascending' : 'none'} onSort={() => {}}>Name</TableHeaderCell></TableRow></TableHead><TableBody><TableRow><TableCell>Apollo</TableCell></TableRow></TableBody></Table>,
     act: (next) => next(), says: /Sorted by Name, ascending/ },

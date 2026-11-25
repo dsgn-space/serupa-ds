@@ -32,7 +32,7 @@
 }
 .srp-select--has-icon .srp-select__field { padding-inline-start: calc(var(--srp-select-px) + var(--srp-select-icon) + var(--select-gap, var(--spacing-2))); }
 .srp-select__field option, .srp-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
-.srp-select--empty .srp-select__field { color: var(--select-placeholder, var(--placeholder)); }
+.srp-select:where([data-empty]) .srp-select__field { color: var(--select-placeholder, var(--placeholder)); }
 /* Filled in by the browser (a country, a card's month): the box keeps its look, as Input's does (GR411). */
 .srp-select__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--select-text, var(--text)); }
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
@@ -44,23 +44,23 @@
    theirs, so the chevrons of a column of fields line up. */
 .srp-select__icon--chevron { inset-inline-end: var(--spacing-2); }
 .srp-select__icon .srp-icon { font-size: var(--srp-select-icon); }
-@media (hover: hover) { .srp-select:hover:not(.srp-select--disabled, :has(.srp-select__field:disabled), .srp-select--readonly, :focus-within) { --srp-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .srp-select:hover:not([data-disabled], :has(.srp-select__field:disabled), [data-readonly], :focus-within) { --srp-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws. */
 .srp-select:focus-within { transition-duration: var(--duration-0); --srp-select-bd: var(--srp-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--srp-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.srp-select--invalid { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); --srp-select-ring: var(--select-invalid, var(--field-border-invalid)); }
-@media (hover: hover) { .srp-select--invalid:hover:not(.srp-select--disabled, :has(.srp-select__field:disabled), :focus-within) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
+.srp-select:where([data-invalid]) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); --srp-select-ring: var(--select-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .srp-select:where([data-invalid]):hover:not([data-disabled], :has(.srp-select__field:disabled), :focus-within) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* A required select left on its empty option after people change it or try to send the form: as Input (:user-invalid). */
 .srp-select:has(.srp-select__field:user-invalid) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); --srp-select-ring: var(--select-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-select:has(.srp-select__field:user-invalid):hover:not(:focus-within) { --srp-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native select follows that on its own). */
-.srp-select--disabled, .srp-select:where(:has(.srp-select__field:disabled)) { --srp-select-bd: var(--select-border-disabled, var(--disabled-border)); background: var(--select-bg-disabled, var(--field-readonly)); color: var(--select-text-disabled, var(--disabled-text)); }
+.srp-select:where([data-disabled]), .srp-select:where(:has(.srp-select__field:disabled)) { --srp-select-bd: var(--select-border-disabled, var(--disabled-border)); background: var(--select-bg-disabled, var(--field-readonly)); color: var(--select-text-disabled, var(--disabled-text)); }
 /* Full opacity: older Chrome (129, the floor) fades a disabled select to 0.7 on top of the disabled color. */
-.srp-select--disabled .srp-select__field, .srp-select__field:disabled { color: var(--select-text-disabled, var(--disabled-text)); opacity: var(--opacity-100); }
-.srp-select--disabled .srp-select__field, .srp-select__field:where(:disabled) { cursor: var(--cursor-disabled); }
+.srp-select:where([data-disabled]) .srp-select__field, .srp-select__field:disabled { color: var(--select-text-disabled, var(--disabled-text)); opacity: var(--opacity-100); }
+.srp-select:where([data-disabled]) .srp-select__field, .srp-select__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* Read-only: the read-only field background, as Input, and a default cursor, since it doesn't open. */
-.srp-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
-.srp-select--readonly .srp-select__field { cursor: default; }
+.srp-select:where([data-readonly]) { background: var(--select-bg-disabled, var(--field-readonly)); }
+.srp-select:where([data-readonly]) .srp-select__field { cursor: default; }
 @media (forced-colors: active) { .srp-select__icon { color: CanvasText; } }
 /* Where the browser lets the page style a select's list (appearance: base-select), the list is drawn as Combobox's:
    an overlay surface with its border, radius and shadow, options with the highlight fill under the pointer or the
@@ -102,7 +102,7 @@
      (the browser puts it first) lands at the end, pushed there by its auto margin. Only the chosen option has one: no
      space kept in the others. */
   .srp-select__field option::checkmark {
-    margin-inline-start: auto; flex-shrink: 0; color: var(--select-check, var(--primary));
+    margin-inline-start: auto; flex-shrink: 0; color: var(--select-check, var(--primary-text));
     content: "" / ""; inline-size: var(--spacing-4); block-size: var(--spacing-4); background: currentColor;
     /* stylelint-disable-next-line serupa/no-raw-value -- the Material check's path (the icon Combobox shows), as fractions of its 16px box: points of a drawing, not sizes */
     clip-path: shape(from 39.7917% 63.125%, line by 35.3125% -35.3125%, curve by 2.9167% -1.25% with 1.25% -1.25%, smooth by 2.9167% 1.25%, smooth by 1.25% 2.9688%, smooth by -1.25% 2.9688%, line by -38.2292% 38.3333%, curve by -2.9167% 1.25% with -1.25% 1.25%, smooth by -2.9167% -1.25%, line by -17.9167% -17.9167%, curve by -1.1979% -2.9688% with -1.25% -1.25%, smooth by 1.3021% -2.9688%, smooth by 2.9688% -1.25%, smooth by 2.9688% 1.25%, close);

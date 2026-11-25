@@ -42,7 +42,7 @@
 /* An empty value with no placeholder has no text to show: the pencil always shows, or the button would be invisible. */
 .srp-inline-edit__view--blank .srp-inline-edit__icon { opacity: var(--opacity-100); }
 /* Muted rather than faded: the text stays readable (4.5:1), since there is no control here for WCAG to exempt. */
-.srp-inline-edit--disabled .srp-inline-edit__view, .srp-inline-edit__view:disabled { color: var(--inline-edit-text-disabled, var(--text-muted)); }
+.srp-inline-edit:where([data-disabled]) .srp-inline-edit__view, .srp-inline-edit__view:disabled { color: var(--inline-edit-text-disabled, var(--text-muted)); }
 /* In a <fieldset disabled> the button is disabled: no pointer, and no pencil even on touch screens. */
 .srp-inline-edit__view:disabled { cursor: auto; }
 .srp-inline-edit__view:disabled .srp-inline-edit__icon { display: none; }

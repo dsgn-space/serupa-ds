@@ -34,7 +34,7 @@
       },
       "primary-icon": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A primary tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {

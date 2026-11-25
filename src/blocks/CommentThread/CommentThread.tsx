@@ -5,7 +5,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Button } from '../../components/Button/Button';
 import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { MentionInput, mentionsIn, type MentionOption } from '../../components/MentionInput/MentionInput';
@@ -135,13 +135,15 @@ function Box({ people, value, onValue, onKeyDown, ...rest }: { people: readonly 
     : <Textarea {...rest} onKeyDown={keys} value={value} onChange={(e) => onValue(e.target.value)} showCount autoResize />;
 }
 
-// A comment's text with each mention of someone in people in bold, so it reads as a mention without color.
+// A comment's text with each mention of someone in people in bold, so it reads as a mention without color. At each
+// "@", the longest name written there whole, as mentionsIn finds them: "@Ayub" is nobody, and every "@Ayu" is Ayu.
 function Mentions({ text, people }: { text: string; people: readonly MentionOption[] }) {
   const out: React.ReactNode[] = [];
+  const longest = people.slice().sort((a, b) => b.label.length - a.label.length);
   let at = 0;
-  for (const p of mentionsIn(text, people)) {
-    const i = text.indexOf('@' + p.label, at);
-    if (i < 0) continue;
+  for (let i = text.indexOf('@'); i >= 0; i = text.indexOf('@', Math.max(i + 1, at))) {
+    const p = longest.find((x) => x.label && text.startsWith(x.label, i + 1) && !/[\p{L}\p{N}]/u.test(text.charAt(i + 1 + x.label.length)));
+    if (!p) continue;
     if (i > at) out.push(text.slice(at, i));
     out.push(<strong key={i} className="font-semibold">{'@' + p.label}</strong>);
     at = i + 1 + p.label.length;
@@ -218,9 +220,9 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-3">
-              <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
+              <Skeleton shape="circle" label="" className="shrink-0" />
               {/* One name for all of them: the first is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" size="sm" lines={3} label={i === 0 ? l.loading : ''} className="min-w-0 flex-1" />
+              <Skeleton shape="text" size="sm" lines={3} label={i === 0 ? l.loading : ''} className="min-w-0 flex-1" />
             </li>
           ))}
         </ul>

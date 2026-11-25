@@ -12,7 +12,7 @@ import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -132,7 +132,8 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
     void Promise.resolve().then(() => onSave?.(out)).then((id) => {
       const saved: SavedAddress = { ...out, id: out.id ?? (typeof id === 'string' ? id : `new-${Date.now()}`) };
       setList((l) => (out.id ? l.map((a) => (a.id === out.id ? saved : a)) : [...l, saved]));
-      if (makeDefault || !def) { setDef(saved.id); onDefaultChange?.(saved.id); }
+      // With no default shown (none yet, or the default was removed), the new address is it.
+      if (makeDefault || !shown.some((x) => x.id === def)) { setDef(saved.id); onDefaultChange?.(saved.id); }
       setDraft(null);
       toast({ title: out.id ? `Saved ${saved.label}` : `Added ${saved.label}`, tone: 'success' });
     }, () => setFailed(true)).finally(() => setBusy(false));
@@ -164,7 +165,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
           <section aria-labelledby="saved" className="flex flex-col gap-4 pt-6">
             <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={5} label="Loading addresses" /></Card>
               : !shown.length ? <EmptyState icon="location_on" title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} />
               : (
                 <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-2">

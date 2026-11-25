@@ -81,7 +81,7 @@ Past `max`, a Show more button follows the tags; with none, the `emptyText` word
 | `selected` / `defaultSelected` | `string[]` | | The picked ids |
 | `onSelectedChange` | `(ids) => void` | | Called with the picked ids |
 | `max` | `number` | all | Show this many, and "Show more" for the rest |
-| `emptyText` | `ReactNode` | | Shown when there are no tags (`empty` is its deprecated old name, removed in 18.0.0) |
+| `emptyText` | `ReactNode` | | Shown when there are no tags |
 
 `className`, `ref` and other props go to the outer `<div>`.
 
@@ -100,15 +100,15 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-bg-hover` | `surface-hover` | A tag that can be picked, under the pointer. A picked tag keeps its own colors, as a pressed ToggleButton does. |
 | `--tag-group-bg-pressed` | `pressed` | A tag that can be picked, while it's held down, one step past bg-hover. |
 | `--tag-group-bg-selected` | `primary-subtle` | A picked tag's background. |
-| `--tag-group-text-selected` | `primary` | A picked tag's words and tick (4.5:1 on bg-selected). |
-| `--tag-group-border-selected` | `primary` | A picked tag's border. |
+| `--tag-group-text-selected` | `primary-text` | A picked tag's words and tick (4.5:1 on bg-selected). |
+| `--tag-group-border-selected` | `primary-text` | A picked tag's border. |
 | `--tag-group-remove-hover` | `surface-hover` | The × button's background under the pointer. |
 | `--tag-group-remove-pressed` | `pressed` | The × while it's held down, one step past remove-hover. |
 | `--tag-group-label` | `text` | The group's label. |
 | `--tag-group-muted` | `text-muted` | The empty text. |
 | `--tag-group-focus-ring` | `focus-ring` | The focus ring around the focused tag. |
-| `--tag-group-more` | `primary` | The Show more and Show less button's words (4.5:1 on the page). |
-| `--tag-group-more-hover` | `primary-hover` | The Show more and Show less button's words on hover, as a link's (4.5:1 on the page). |
+| `--tag-group-more` | `primary-text` | The Show more and Show less button's words (4.5:1 on the page). |
+| `--tag-group-more-hover` | `primary-text-hover` | The Show more and Show less button's words on hover, as a link's (4.5:1 on the page). |
 | `--tag-group-icon` | `text-muted` | A tag's leading icon (decorative; the words name the tag). |
 | `--tag-group-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--tag-group-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

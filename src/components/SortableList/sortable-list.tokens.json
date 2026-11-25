@@ -34,7 +34,7 @@
       },
       "item-border-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The border of the row being moved.",
         "$extensions": {
           "com.serupa": {

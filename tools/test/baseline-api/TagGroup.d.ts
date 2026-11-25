@@ -19,6 +19,5 @@ interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
     onSelectedChange?: ((ids: string[]) => void) | undefined;
     max?: number | undefined;
     emptyText?: React.ReactNode;
-    empty?: React.ReactNode;
 }
 declare const TagGroup: React.FC<TagGroupProps & React.RefAttributes<HTMLDivElement>>;

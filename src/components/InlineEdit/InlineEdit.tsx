@@ -56,9 +56,9 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const sds = useSettings(words);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const [value, setOwn, controlled] = useControllable<string>(props.value, props.defaultValue ?? '', 'InlineEdit', 'value');
-  const [ownEditing, setOwnEditing] = React.useState(!!props.defaultEditing);
+  const [editingIn, setOwnEditing, editingControlled] = useControllable<boolean>(props.editing, !!props.defaultEditing, 'InlineEdit', 'editing');
   const locked = !!props.disabled || !!props.readOnly;
-  const editing = !locked && (props.editing ?? ownEditing);
+  const editing = !locked && !!editingIn;
   const [draft, setDraft] = React.useState(value);
   const [error, setError] = React.useState<React.ReactNode>(null);
   // Opened by the editing prop rather than open(): the field starts from the text as it is now, not from a draft left
@@ -81,7 +81,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   React.useEffect(() => { const t = errorText.current && errorText.current.textContent; if (tries && t) announce(t); }, [tries]);
 
   const setEditing = (on: boolean) => {
-    if (props.editing === undefined) setOwnEditing(on);
+    if (!editingControlled) setOwnEditing(on);
     if (props.onEditingChange) props.onEditingChange(on);
   };
   const open = () => { if (locked) return; closing.current = false; setDraft(value); setError(null); setEditing(true); };
@@ -141,7 +141,7 @@ function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttribut
   const text = <span className={cn('srp-inline-edit__text', empty && 'srp-inline-edit__text--placeholder')}>{empty ? props.placeholder : value}</span>;
   const cls = cn('srp-inline-edit', 'srp-inline-edit--size-' + size, editing && 'srp-inline-edit--editing', props.disabled && 'srp-inline-edit--disabled', error != null && 'srp-inline-edit--invalid', props.className);
   return (
-    <div {...rest} ref={ref} className={cls} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
+    <div {...rest} ref={ref} className={cls} data-disabled={props.disabled ? '' : undefined} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
       {editing ? (
         <Input {...ip} ref={field} size={size} aria-label={props.label} value={draft} invalid={error != null || ip.invalid}
           aria-describedby={cn(ip['aria-describedby'], error != null && errorId) || undefined}

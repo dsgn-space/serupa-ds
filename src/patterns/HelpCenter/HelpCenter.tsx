@@ -11,7 +11,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
 import { Container } from '../../components/Container/Container';
@@ -122,7 +122,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
           <OfflineBanner online={online} placement="inline">You can read the answers already loaded. Searching for more and sending a question need a connection.</OfflineBanner>
           <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
           {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>
+            : loading ? <Card><Skeleton shape="text" lines={6} label="Loading help articles" /></Card> : (<>
 
           <section aria-labelledby="help-topics" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="help-topics">Topics</Heading>

@@ -10,7 +10,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Calendar } from '../../components/Calendar/Calendar';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -137,9 +137,10 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
   const calendar = React.useRef<HTMLDivElement>(null);
   const times = React.useRef<HTMLDivElement>(null);
   const done = React.useRef<HTMLHeadingElement>(null);
-  const open = React.useMemo(() => new Set(freeDays(slots)), [slots]);
+  // Free times before today can't be booked: with none from today on, there's nothing to choose.
+  const open = React.useMemo(() => new Set(freeDays(slots).filter((d) => d >= today)), [slots, today]);
   const closed = React.useCallback((d: Date) => !open.has(iso(d)), [open]);
-  const first = freeDays(slots)[0];
+  const first = [...open][0];
   const daySlots = picked ? slots[picked] ?? [] : [];
   const freeCount = daySlots.filter((s) => s.free).length;
   const dayName = (d: string) => new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric', calendar: 'gregory', numberingSystem: 'latn' }).format(day(d));
@@ -183,7 +184,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
 
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load the times" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading times" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading times" /></Card>
               : !first && !booked ? <EmptyState icon="event_busy" title="No free times" headingLevel={2}
                   description={`${service.with} has no free times in the weeks ahead. New times open every Monday.`} />
               : booked ? (

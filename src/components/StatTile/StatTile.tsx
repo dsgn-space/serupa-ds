@@ -5,7 +5,7 @@ import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { Badge } from '../Badge/Badge';
 import { Sparkline } from '../Sparkline/Sparkline';
-import { Loader } from '../Loader/Loader';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { en as words } from './labels';
 
 /** How a number changed since the period before. */
@@ -55,7 +55,7 @@ function StatTileRender({ ref, ...props }: StatTileProps & React.RefAttributes<H
   const trend = props.trend && props.trend.length > 1 ? props.trend : null;
   return (
     <Tag {...rest} ref={ref as React.Ref<HTMLDivElement & HTMLLIElement>} aria-busy={props.loading || undefined} className={cn('srp-stat-tile', props.className)} data-component="stat-tile">
-      {props.loading ? <Loader variant="skeleton" shape="text" lines={3} label={props.loadingLabel} /> : <>
+      {props.loading ? <Skeleton shape="text" lines={3} label={props.loadingLabel} /> : <>
         <p className="srp-stat-tile__label">{props.label}</p>
         <p className="srp-stat-tile__value">{props.value}</p>
         {c ? (

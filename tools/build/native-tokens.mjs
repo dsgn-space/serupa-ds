@@ -17,6 +17,7 @@
 // by the appearance (assetCatalog below, tools/release-kits.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadThemes } from '../tokens/themeFiles.mjs';
 
 const NS = 'com.serupa';
 const GROUPS = { spacing: 'size', radius: 'size', borders: 'size', sizing: 'size', fontSize: 'font', opacity: 'ratio', transitions: 'time' };
@@ -41,7 +42,7 @@ const doc = (s) => (s ? String(s).replace(/\s+/g, ' ').replace(/\*\//g, '* /').t
 export function nativeTokens(dir) {
   const load = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
   const base = load('serupa.tokens.json');
-  const themes = Object.fromEntries(fs.readdirSync(path.join(dir, 'themes')).sort().map((f) => [f.replace('.tokens.json', ''), load(path.join('themes', f))]));
+  const themes = loadThemes(dir);
   const index = new Map([...walk(base)].map(([p, t]) => [p.join('.'), t]));
   const resolve = (v, more = new Map()) => {
     for (let i = 0; typeof v === 'string' && /^\{.+\}$/.test(v) && i < 10; i++) { const k = v.slice(1, -1); v = (more.get(k) || index.get(k))?.$value; }

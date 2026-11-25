@@ -129,7 +129,7 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
+    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} data-invalid={invalid ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode="numeric" autoComplete={rest.autoComplete || 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : datePattern(locale)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}

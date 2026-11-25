@@ -34,7 +34,7 @@
       },
       "indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "The line under the selected tab (3:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -139,6 +139,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tabs-close-bg-pressed"
+          }
+        }
+      },
+      "pill-edge-selected": {
+        "$type": "color",
+        "$value": "{color.primary-edge}",
+        "$description": "The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-pill-edge-selected"
           }
         }
       }

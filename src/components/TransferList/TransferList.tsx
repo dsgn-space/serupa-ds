@@ -1,6 +1,7 @@
 'use client';
 import { listFormat } from '../../internal/intl';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useMergedRef, cn, domId, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -73,9 +74,9 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
   const nameRef = useNameCheck('TransferList', NAME_HOW.group);
   const sds = useSettings(words), locale = useLocale();
   const known = (vs: readonly string[] | undefined) => (vs || []).filter((v, i, a) => a.indexOf(v) === i && options.some((o) => o.value === v));
-  const controlled = valueIn !== undefined;
-  const [own, setOwn] = React.useState<string[]>(() => known(defaultValue));
-  const chosen = controlled ? known(valueIn) : own;
+  const [held, setOwn, controlled] = useControllable<readonly string[]>(valueIn, known(defaultValue), 'TransferList', 'value');
+  // Only the values the options still hold: options can change under an uncontrolled list too.
+  const chosen = known(held);
   const [checkedLeft, setCheckedLeft] = React.useState<string[]>([]);
   const [checkedRight, setCheckedRight] = React.useState<string[]>([]);
   const root = React.useRef<HTMLDivElement | null>(null);

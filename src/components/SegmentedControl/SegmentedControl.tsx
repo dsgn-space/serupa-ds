@@ -216,7 +216,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
       role="radiogroup" aria-disabled={disabled || undefined}
       aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
       aria-labelledby={props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel)}
-      className={cn('srp-segmented', 'srp-segmented--size-' + size, props.fullWidth && 'srp-segmented--full', props.fullWidth && tight && 'srp-segmented--fit', disabled && 'srp-segmented--disabled', invalid && 'srp-segmented--invalid', readOnly && 'srp-segmented--readonly', props.className)}
+      className={cn('srp-segmented', 'srp-segmented--size-' + size, props.fullWidth && 'srp-segmented--full', props.fullWidth && tight && 'srp-segmented--fit', disabled && 'srp-segmented--disabled', invalid && 'srp-segmented--invalid', readOnly && 'srp-segmented--readonly', props.className)} data-disabled={disabled ? '' : undefined} data-invalid={invalid ? '' : undefined} data-readonly={readOnly ? '' : undefined}
       data-component="segmented-control" data-size={size} onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {box ? <span ref={indicator} className="srp-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
       {options.map((o) => {
@@ -227,7 +227,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
         return (
           <button key={o.value} ref={(n) => { buttons.current[o.value] = n; }} type="button" role="radio" aria-checked={on}
             aria-label={o['aria-label']} title={typeof o.label === 'string' && !o['aria-label'] && cut.split('\n').includes(o.value) ? o.label : undefined} disabled={off} tabIndex={tab} data-value={o.value}
-            className={cn('srp-segmented__item', on && 'srp-segmented__item--selected', !hasLabel && 'srp-segmented__item--icon-only')}
+            className={cn('srp-segmented__item', on && 'srp-segmented__item--selected', !hasLabel && 'srp-segmented__item--icon-only')} data-selected={on ? '' : undefined}
             onClick={() => choose(o.value)} onKeyDown={onKeyDown}>
             {icon != null && icon !== false ? <span className="srp-segmented__icon" aria-hidden>{icon}</span> : null}
             {hasLabel ? <span className="srp-segmented__label">{o.label}</span> : null}

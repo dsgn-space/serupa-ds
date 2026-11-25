@@ -67,8 +67,8 @@ function emptyFor(f: FilterField): FilterValue {
   return '';
 }
 const toDate = (iso: string) => { const [y = NaN, m = NaN, d = NaN] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
-// A "yyyy-mm-dd" that names a real day (not 2026-02-30), or null.
-const isDay = (x: unknown) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && toDate(x).getDate() === Number(x.slice(8));
+// A "yyyy-mm-dd" that names a real day (not 2026-02-30 or 2026-13-01, which JavaScript rolls over), or null.
+const isDay = (x: unknown) => { if (typeof x !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(x)) return false; const d = toDate(x); return d.getDate() === Number(x.slice(8)) && d.getMonth() + 1 === Number(x.slice(5, 7)); };
 const isDayOrNull = (x: unknown) => x == null || isDay(x);
 
 /* The value checked against each field, as one read from a URL may be anything (GR283): a select takes a string, or
@@ -199,7 +199,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
       className={cn('srp-filter-bar', props.className)} data-component="filter-bar">
       <ul className="srp-filter-bar__chips" role="list">
         {active.map((f) => (
-          <li key={f.id} className={cn('srp-filter-bar__chip', isEmpty(value[f.id]) && 'srp-filter-bar__chip--empty')}>
+          <li key={f.id} className={cn('srp-filter-bar__chip', isEmpty(value[f.id]) && 'srp-filter-bar__chip--empty')} data-empty={(isEmpty(value[f.id])) ? '' : undefined}>
             <Popover title={f.label} placement="bottom-start" sheet="mobile" open={editing === f.id}
               onOpenChange={(open) => { if (open) setEditing(f.id); else closeEditor(f); }}
               trigger={<button type="button" className="srp-filter-bar__edit" data-filter={f.id} dir="auto"><TruncatedText>{said(f)}</TruncatedText></button>}>

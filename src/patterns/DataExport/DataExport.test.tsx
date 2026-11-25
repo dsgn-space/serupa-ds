@@ -15,6 +15,8 @@ describe('Patterns/Download your data', () => {
     const parts = [{ id: 'a', label: 'A', holds: '', bytes: 500 }, { id: 'b', label: 'B', holds: '', bytes: 1_250_000 }];
     expect([exportSize(parts, ['a', 'b']), exportSize(parts, ['b']), exportSize(parts, [])]).toEqual([1_250_500, 1_250_000, 0]);
     expect([sizeWords(500, 'en-US'), sizeWords(240_000, 'en-US'), sizeWords(1_320_000_000, 'en-US'), sizeWords(18_400_000, 'en-US')]).toEqual(['500 byte', '240 kB', '1.3 GB', '18 MB']);
+    // A size that rounds up to 1,000 of a unit is 1 of the next.
+    expect([sizeWords(999_950, 'en-US'), sizeWords(999_600, 'en-US'), sizeWords(9_960, 'en-US')]).toEqual(['1 MB', '1 MB', '10 kB']);
   });
 
   test('one main and h1, the skip link first, everything chosen with its size, and the size follows the choice', async () => {

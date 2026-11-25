@@ -1,6 +1,7 @@
 'use client';
 import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
+import { useControlledSwitch } from '../../internal/controllable';
 import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -132,6 +133,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
   const own = dateOrder(locale).filter((k): k is DatePart => k === 'day' || k === 'month' || k === 'year');
   const order: readonly DatePart[] = props.order && ORDERS[props.order] ? ORDERS[props.order] : own.length === 3 ? own : ORDERS.dmy;
   const controlled = props.value !== undefined;
+  useControlledSwitch(controlled, 'DateField', 'value');
   const [parts, setParts] = React.useState<Parts>(() => partsOf(controlled ? props.value : props.defaultValue));
   const now = read(parts, props.min, props.max);
   // required: a form sent with all three boxes empty marks them, until something is typed.
@@ -240,7 +242,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, firstBox); setRef(ref, n); nameRef(n); }} role="group"
       aria-labelledby={labelledBy} aria-describedby={cn(props['aria-describedby'], said && errorId) || undefined}
       onBlur={(e) => { if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget)) && (parts.day || parts.month || parts.year)) check(); }}
-      className={cn('srp-date-field', disabled && 'srp-date-field--disabled', props.className)} data-component="date-field">
+      className={cn('srp-date-field', disabled && 'srp-date-field--disabled', props.className)} data-disabled={disabled ? '' : undefined} data-component="date-field">
       <FieldContext.Provider value={null}>
         {order.map((k) => (
           <div key={k} className={cn('srp-date-field__part', 'srp-date-field__part--' + k)}>

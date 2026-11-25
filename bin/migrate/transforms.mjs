@@ -97,10 +97,10 @@ export function removeProp(src, component, prop) {
   for (const [s, e] of openTags(src, component).reverse()) {
     let attrs = src.slice(s, e);
     for (const m of [...topLevel(attrs).matchAll(attrAt(prop))].reverse()) {
-      let i = m.index + prop.length;
-      while (/\s/.test(attrs[i] || '')) i++;
-      if (attrs[i] === '=') {
-        i++;
+      let i = m.index + prop.length, j = i;
+      while (/\s/.test(attrs[j] || '')) j++;
+      if (attrs[j] === '=') {
+        i = j + 1;
         while (/\s/.test(attrs[i] || '')) i++;
         if (attrs[i] === '"' || attrs[i] === "'") i = attrs.indexOf(attrs[i], i + 1) + 1;
         else if (attrs[i] === '{') i = closeBrace(attrs, i) + 1;
@@ -565,6 +565,71 @@ export const TRANSFORMS = [
       const a = renameValue(src, 'Drawer', 'placement', 'left', 'start');
       const b = renameValue(a.text, 'Drawer', 'placement', 'right', 'end');
       return { text: b.text, count: a.count + b.count, notes: [] };
+    },
+  },
+  {
+    version: '19.0.0', id: 'tokens-removed', exts: ALL,
+    title: 'Tokens merged or removed: `--field-action` is `--primary-text`, `--rounded` is `--rounded-sm`, `--motion-ripple(-fade)` is `--duration-500` (`-300`), and the `gray`, `neutral` and `stone` ramps are gone',
+    run(src) {
+      let count = 0;
+      let text = src.replace(/(?<![\w-])--rounded(?![\w-])/g, () => { count++; return '--rounded-sm'; })
+        .replace(/(?<![\w-])--motion-ripple(-fade)?(?![\w-])/g, (_, fade) => { count++; return fade ? '--duration-300' : '--duration-500'; })
+        .replace(/(?<![\w-])--field-action(?![\w-])/g, () => { count++; return '--primary-text'; });
+      // the class, in a written class list: class="rounded p-2", className='rounded'
+      text = text.replace(/(\bclass(?:Name)?=)(["'])([^"'\n]*)\2/g, (m, attr, q, list) => {
+        const next = list.replace(/(?<![\w-])rounded(?![\w-])/g, () => { count++; return 'rounded-sm'; })
+          .replace(/(?<![\w-])([a-z-]+)-field-action(?![\w-])/g, (_, kind) => { count++; return kind + '-primary-text'; });
+        return attr + q + next + q;
+      });
+      return { text, count, notes: notesFor(text, /--(gray|neutral|stone)-\d+/g, 'The gray, neutral and stone ramps are removed in 19.0.0: use --zinc-* (the neutral every alias uses) or --slate-* (cooler)') };
+    },
+  },
+  // 18.0.0 removes the names 17.x deprecated for it: a prop named on… reads as an event handler, empty is emptyText
+  // as on Combobox, and a Placement spells the middle top and bottom.
+  propsRename('18.0.0', 'surface-not-on-media', '`onMedia` is `surface`, the same values', ['Button', 'IconButton', 'Link', 'Divider', 'CopyButton', 'ToggleButton', 'Fab', 'FabMenu'], [['onMedia', 'surface']]),
+  propsRename('18.0.0', 'empty-text', 'TagGroup and NotificationCenter: `empty` is `emptyText`', ['TagGroup', 'NotificationCenter'], [['empty', 'emptyText']], { leftovers: false }),
+  {
+    version: '18.0.0', id: 'toaster-top-bottom', exts: CODE,
+    title: 'Toaster: `placement="top-center"` is `"top"` and `"bottom-center"` is `"bottom"`',
+    run(src) {
+      if (!/\bToaster\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const a = renameValue(src, 'Toaster', 'placement', 'top-center', 'top');
+      const b = renameValue(a.text, 'Toaster', 'placement', 'bottom-center', 'bottom');
+      return { text: b.text, count: a.count + b.count, notes: [] };
+    },
+  },
+  {
+    version: '18.0.0', id: 'placement-types', exts: CODE,
+    title: '`ToasterPosition` is `ToasterPlacement` and `FabPosition` is `FabPlacement`, named after the prop they type',
+    run(src) {
+      let count = 0;
+      const text = src.replace(/\b(Toaster|Fab)Position\b/g, (m, c) => { count++; return `${c}Placement`; });
+      return { text, count, notes: [] };
+    },
+  },
+  {
+    // 18.0.0 splits the brand color by job: `primary` is the fill (the same shade in light and dark, under white
+    // text) and `primary-text` is the brand as text, a line or an icon (brand 400 in dark, as `primary` was). Text set
+    // straight from `--primary` would be about 3.6:1 on a dark page, so it takes the text token.
+    version: '18.0.0', id: 'primary-text', exts: ALL,
+    title: 'Brand text is `primary-text`: `color: var(--primary)` and the `text-primary` class take `--primary-text` and `text-primary-text`; `primary` is the fill, the same in light and dark',
+    run(src, file) {
+      let count = 0;
+      // A text color set straight from the token; a fallback inside another var() is a component token's default, left.
+      let text = src.replace(/(?<![\w-])((?:color|text-decoration-color|caret-color)\s*:\s*var\(--primary)(-hover)?\)/g, (m, head, hover = '', at, all) => {
+        // A class named for the token itself (.text-primary { color: var(--primary) }) says what it sets: left.
+        if (/-primary(?:-hover)?(?:::?[\w-]+)*\s*\{[^{}]*$/.test(all.slice(all.lastIndexOf('\n', at) + 1, at))) return m;
+        count++; return `${head}-text${hover})`;
+      });
+      // The utility classes, with their variants (hover:, md:); a name that is a whole code span is prose, left.
+      text = text.replace(/(?<![\w$./-])((?:[a-z0-9@[\]-]+:)*(?:text|decoration|caret|placeholder)-primary)(-hover)?(?![\w/-])/g, (m, head, hover = '', at, all) => {
+        if (all[at - 1] === '`' && all[at + m.length] === '`') return m;
+        if (/\.(?:css|scss|sass|less)$/i.test(file)) return m;
+        count++; return `${head}-text${hover}`;
+      });
+      // A theme of the project's own that sets the fill and not the text: serupa-brand makes both.
+      const notes = /--primary-text\s*:/.test(text) ? [] : notesFor(text, /(?<![\w-])--primary\s*:/g, 'this sets `--primary` and not `--primary-text`, so brand text here stays blue: make the theme again with `npx serupa-brand`, or set `--primary-text` and `--primary-text-hover` (what `--primary` and `--primary-hover` were) and give `--primary` the light theme\'s shade in dark too, with `--on-primary: var(--white)`').slice(0, 1);
+      return { text, count, notes };
     },
   },
 ];

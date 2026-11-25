@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, drag, disabledLook, seen } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Slider } from './Slider';
@@ -353,7 +353,7 @@ describe('Slider', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
-      const parts = { track: q(':scope > div').backgroundColor, fill: q(':scope > div > div').backgroundColor, thumb: q('input[type=range]').borderTopColor };
+      const parts = { track: q(':scope > div').backgroundColor, fill: seen(el('one').querySelector(':scope > div > div')!), thumb: q('input[type=range]').borderTopColor };
       for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     expect([low, n]).toEqual([[], 18]);
@@ -687,5 +687,17 @@ describe('Slider inputs', () => {
   test('disabled and read-only reach the fields', async () => {
     await render(<><Slider aria-label="A" disabled inputs /><Slider aria-label="B" readOnly inputs /></>);
     expect([fields()[0].disabled, fields()[1].readOnly]).toEqual([true, true]);
+  });
+
+  test('Enter while composing in the field does not commit the slider', async () => {
+    const onCommit = vi.fn();
+    await render(<En><Slider aria-label="Volume" defaultValue={35} inputs onValueCommit={onCommit} /></En>);
+    const [f] = fields();
+    await userEvent.tripleClick(f);
+    await userEvent.keyboard('50');
+    f.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', isComposing: true, bubbles: true }));
+    expect(onCommit).not.toHaveBeenCalled();
+    f.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+    expect(onCommit).toHaveBeenCalledTimes(1);
   });
 });

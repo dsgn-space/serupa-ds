@@ -59,7 +59,7 @@ Drawn from the `Multiple` story.
 
 ### Loading and failed
 
-- **The first load:** in place of the tree, a few skeleton [Loader](../Loader/README.md) lines (`size="md"`) in a box with `aria-busy`. Give the first a `label` ("Loading files") and the others `label=""`. Render the tree once its top level is here: an empty tree has nothing to focus.
+- **The first load:** in place of the tree, a few [Skeleton](../Skeleton/README.md) lines (`size="md"`) in a box with `aria-busy`. Give the first a `label` ("Loading files") and the others `label=""`. Render the tree once its top level is here: an empty tree has nothing to focus.
 - **A folder that loads when it opens:** give it `children: []` so it can open, then load its children in `onExpandedChange`. Until they come, its one child is a disabled "Loading…" item: people can reach it and hear it, but not pick it. When the children arrive, focus on that item goes to the first of them.
 - **Failed:** the same item says so: "Didn't load. Close and open the folder to try again." Closing and opening the folder loads it again. When the whole tree fails, show a danger [Alert](../Alert/README.md) with Retry in `actions` in its place.
 
@@ -139,6 +139,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-check-bg` | `field` | With cascade: an unchecked box's fill. |
 | `--tree-view-check-bg-checked` | `primary` | With cascade: a checked or mixed box's fill and border (3:1 on the row). |
 | `--tree-view-check-mark` | `on-primary` | With cascade: the check or dash on a filled box. |
+| `--tree-view-check-edge-checked` | `primary-edge` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Radius**
 

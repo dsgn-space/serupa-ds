@@ -14,7 +14,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
 import { OfflineBanner } from '../../components/OfflineBanner/OfflineBanner';
@@ -92,7 +92,9 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
   const months = monthsOf(transactions);
   const monthName = (m: string) => formatDate(`${m}-15`, locale, { options: { month: 'long', year: 'numeric' } });
   const day = (iso: string) => formatDate(iso, locale, { options: { day: 'numeric', month: 'short' } });
-  const [month, setMonth] = React.useState(months[0] ?? '');
+  const [picked, setMonth] = React.useState(months[0] ?? '');
+  // The month picked while it still has transactions, else the newest: they can arrive after the first render.
+  const month = months.includes(picked) ? picked : months[0] ?? '';
   const [query, setQuery] = React.useState('');
   const [category, setCategory] = React.useState('');
   const ofMonth = findTx(transactions, month, '', '');
@@ -114,7 +116,7 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
           <OfflineBanner online={online} placement="inline" className="mb-6">These are the transactions loaded before you went offline. New ones show when you’re back.</OfflineBanner>
           <PageHeader breadcrumb={[{ label: 'Accounts', href: '#accounts' }, { label: account }]} title={`${account}: transactions`} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your transactions" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading transactions" /></Card>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading transactions" /></Card>
             : !transactions.length ? <div className="pt-6"><EmptyState icon="receipt_long" title="No transactions yet" headingLevel={2}
                 description="Money in and out of this account shows here, by month, as soon as it moves." /></div> : (<>
           <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2">

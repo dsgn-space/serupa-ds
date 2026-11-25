@@ -66,7 +66,7 @@ Each is an optional override: set it on the page, a container or one Illustratio
 | --- | --- | --- |
 | `--illustration-line` | `text-muted` | The outlines (3:1 on the surface behind). |
 | `--illustration-fill` | `secondary` | The shapes' soft fill. |
-| `--illustration-accent` | `primary` | The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind). |
+| `--illustration-accent` | `primary-text` | The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind). |
 | `--illustration-size-sm` | `spacing-24` | size="sm" (96px wide). |
 | `--illustration-size-md` | `spacing-40` | size="md" (160px wide). |
 | `--illustration-size-lg` | `spacing-56` | size="lg" (224px wide). |

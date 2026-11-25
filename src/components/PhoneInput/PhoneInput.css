@@ -32,8 +32,8 @@
 .srp-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
    arrow, as on every read-only control (Combobox, Select). */
-.srp-input--disabled .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
-.srp-input--readonly .srp-phone-input__country:has(:disabled) { cursor: default; }
+.srp-input:where([data-disabled]) .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
+.srp-input:where([data-readonly]) .srp-phone-input__country:has(:disabled) { cursor: default; }
 @media (forced-colors: active) { .srp-phone-input__country:has(.srp-phone-input__select:focus-visible) { outline-color: Highlight; } }
 @media (prefers-reduced-motion: reduce) { .srp-phone-input__country { transition: none; } }
 }

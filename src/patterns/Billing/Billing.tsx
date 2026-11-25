@@ -9,7 +9,7 @@ import { Link } from '../../components/Link/Link';
 import { Meter } from '../../components/Meter/Meter';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { Alert } from '../../components/Alert/Alert';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -165,7 +165,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             ['Plan', 'Usage', 'Invoices'].map((t, i) => (
               <section key={t} aria-labelledby={`billing-loading-${i}`} className="flex flex-col gap-4">
                 <Heading level={2} size="lg" id={`billing-loading-${i}`}>{t}</Heading>
-                <Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading billing' : ''} /></Card>
+                <Card><Skeleton shape="text" lines={3} label={i === 0 ? 'Loading billing' : ''} /></Card>
               </section>
             ))
           ) : <>

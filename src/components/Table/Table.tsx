@@ -18,10 +18,11 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
 import { useServerStyles } from '../../internal/serverStyles';
-import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { SkeletonArt, useSkeletonShown } from '../../internal/skeletonArt';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
+import { en as loadMoreWords } from '../LoadMore/labels';
 import { isRtl } from '../../internal/position';
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
@@ -258,13 +259,16 @@ function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React
     const tr = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
     return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
   };
+  const showingOf = useSettings(loadMoreWords).labels.showingOf, locale = useLocale();
   const setNode = useMergedRef(ref, (n: HTMLTableSectionElement | null) => { body.current = n; });
+  const fmt = printing && count > PRINT_ROWS ? numberFormat(locale) : null;
   return (
     <tbody {...rest} ref={setNode} className={cn('srp-table__body', 'srp-table__body--virtual', props.className)}
       onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
       {lead.map((h, n) => <tr key={'lead' + n} aria-hidden="true" className="srp-table__spacer" style={{ height: h }} />)}
       {rows}
+      {fmt ? <tr className="srp-table__row"><td className="srp-table__cell" colSpan={99}>{showingOf(fmt.format(PRINT_ROWS), fmt.format(count))}</td></tr> : null}
       {!printing && r.after > 0 ? <tr aria-hidden="true" className="srp-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
   );
@@ -306,7 +310,7 @@ function TableRowRender({ ref, ...props }: TableRowProps & React.RefAttributes<H
       if (first >= 0) children = kids.map(function (k, i) { return i === first ? React.cloneElement(k as React.ReactElement<TableCellProps>, { link: true }) : k; });
     }
   }
-  return <tr {...rest} ref={ref} className={cn('srp-table__row', props.selected && 'srp-table__row--selected', isLink && 'srp-table__row--link', props.className)}>
+  return <tr {...rest} ref={ref} className={cn('srp-table__row', props.selected && 'srp-table__row--selected', isLink && 'srp-table__row--link', props.className)} data-selected={props.selected ? '' : undefined}>
     {link ? <RowLinkContext.Provider value={link}>{children}</RowLinkContext.Provider> : children}
   </tr>;
 }

@@ -16,6 +16,9 @@
 //   themes        a value per theme for the other themes, for an alias color that follows the brand; $value is the
 //                 first theme's
 //   themed        a value that is set with the themed tokens though it's the same in every theme (the palette)
+//   lift          where a dark fill comes from (ADR-0026): { "<theme, or dark>": { "from": "{color.green-600}", "by": 0.02 } }
+//                 says that theme's hex is green-600 lightened by 0.02 of OKLCH lightness, hue and chroma kept. The
+//                 check makes sure the hex is still that: change both, or work them out again with lift.mjs
 //   contrastMore, compact   the value with more contrast, and in the compact density, as in tokens.json
 // A token the format has no type for yet (degrees, em, keywords, CSS shorthands) has no $type and its CSS as $value.
 // The type styles, font files and families aren't tokens: they're kept as they are, in the root's $extensions.
@@ -23,6 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { typed, pathName } from './export.mjs';
+import { lighter } from '../../bin/brand/generate.mjs';
 
 const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(import.meta.dirname, '..', '..'));
 export const SOURCE = path.join(P, 'tokens', 'serupa.tokens.json');
@@ -122,6 +126,14 @@ export function fromSource(src) {
           if (!back || back[0] !== tok.$type || !isDeepStrictEqual(back[1], tok.$value)) problems.push(`${g}.${p}: its css "${ext.css}" no longer means its $value; change both, or take css out`);
         }
       } else css = String(tok.$value);
+      // A lifted dark fill is still its palette step, lightened by what lift says.
+      for (const [k, l] of Object.entries(ext.lift || {})) {
+        const at = k === 'dark' ? ext.dark : ext.themes?.[k];
+        const r = REF.exec(String(l.from)), [fg, fp] = r ? r[1].split('.') : [];
+        const base = fg && src[fg]?.[fp]?.$value?.hex;
+        if (!base) problems.push(`${g}.${p}: its lift for ${k} is from ${l.from}, which isn't a palette color`);
+        else if (at !== lighter(base, l.by)) problems.push(`${g}.${p}: ${k} is ${at}, but ${l.from} lightened by ${l.by} is ${lighter(base, l.by)}; change both, or run node tools/tokens/lift.mjs`);
+      }
       const value = ext.themes ? { [first]: css, ...ext.themes } : ext.dark != null ? Object.fromEntries(meta.themes.map((th) => [th.id, th.id.endsWith('-dark') ? ext.dark : css])) : ext.themed ? { [first]: css } : css;
       const x = { name, value };
       if ('$description' in tok) x.usage = tok.$description;

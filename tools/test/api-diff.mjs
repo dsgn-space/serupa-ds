@@ -21,6 +21,8 @@ const cases = [
   ['a removed export', base, base.replace('Chip, type ChipProps', 'type ChipProps'), 'major', ['Chip: no longer exported']],
   ['a new optional prop', base, props('tone?: ChipTone | undefined;', 'size?: "md" | "sm" | undefined;', 'onRemove?: ((event: React.MouseEvent) => void) | undefined;', 'dot?: boolean | undefined;'), 'minor', []],
   ['a new accepted value', base, props('tone?: ChipTone | undefined;', 'size?: "lg" | "md" | "sm" | undefined;', 'onRemove?: ((event: React.MouseEvent) => void) | undefined;'), 'minor', []],
+  ['a number union widened to number', base.replace('"md" | "sm"', '1 | 2'), props('tone?: ChipTone | undefined;', 'size?: number | undefined;', 'onRemove?: ((event: React.MouseEvent) => void) | undefined;'), 'minor', []],
+  ['true and false widened to boolean', props('tone?: ChipTone | undefined;', 'dense?: true | undefined;'), props('tone?: ChipTone | undefined;', 'dense?: boolean | undefined;'), 'minor', []],
   ['a literal union widened to string', base, props('tone?: ChipTone | undefined;', 'size?: string | undefined;', 'onRemove?: ((event: React.MouseEvent) => void) | undefined;'), 'minor', []],
   ['an element prop no longer left out, declared by the component', base, base.replace('"color">', '"color" | "title">').replace('    tone?', '    title?: string | undefined;\n    tone?'), 'minor', []],
   ['a new export', base, base.replace('Chip, type ChipProps', 'Chip, chipClass, type ChipProps'), 'minor', []],

@@ -350,7 +350,7 @@ const TreeRow = /* @__PURE__ */ React.memo(function TreeRow(props: { item: TreeV
       aria-selected={mode === 'none' || checks ? undefined : mode === 'multiple' ? picked : picked || undefined}
       aria-checked={checks ? checked : undefined}
       aria-disabled={item.disabled || undefined}
-      className={cn('srp-tree-view__item', picked && !checks && 'srp-tree-view__item--selected', item.disabled && 'srp-tree-view__item--disabled')}
+      className={cn('srp-tree-view__item', picked && !checks && 'srp-tree-view__item--selected', item.disabled && 'srp-tree-view__item--disabled')} data-selected={(picked && !checks) ? '' : undefined} data-disabled={item.disabled ? '' : undefined}
       onFocus={(e) => { if (e.target === e.currentTarget) api.current.focus(id); }}>
       <div className="srp-tree-view__row" style={{ '--srp-tree-level': level - 1 } as React.CSSProperties}
         onClick={(e) => api.current.press(item, e)}>

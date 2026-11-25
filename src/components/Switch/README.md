@@ -124,10 +124,12 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
 | `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
-| `--switch-pending` | `primary` | pending's ring on the thumb (3:1 on the thumb, on or off) |
+| `--switch-pending` | `primary-text` | pending's ring on the off thumb (3:1 on it) |
+| `--switch-pending-checked` | `primary` | pending's ring on the on thumb (3:1 on it) |
 | `--switch-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--switch-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--switch-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--switch-track-edge-checked` | `primary-edge` | The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

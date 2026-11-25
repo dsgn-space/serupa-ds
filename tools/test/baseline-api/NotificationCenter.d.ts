@@ -30,7 +30,6 @@ interface NotificationCenterProps extends DrawerProps {
     onMarkAllRead?: (() => void) | undefined;
     onClear?: (() => void) | undefined;
     emptyText?: React.ReactNode | undefined;
-    empty?: React.ReactNode | undefined;
     settingsHref?: string | undefined;
 }
 interface ToastHistoryOptions {

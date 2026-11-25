@@ -1272,21 +1272,20 @@
    so .border-t-4 draws only the top and other sides keep no border.
    --------------------------------------------------------------- */
 /* border-radius */
-.rounded { border-radius: var(--rounded); }
-.rounded-s { border-start-start-radius: var(--rounded); border-end-start-radius: var(--rounded); }
-.rounded-e { border-start-end-radius: var(--rounded); border-end-end-radius: var(--rounded); }
-.rounded-t { border-top-left-radius: var(--rounded); border-top-right-radius: var(--rounded); }
-.rounded-r { border-top-right-radius: var(--rounded); border-bottom-right-radius: var(--rounded); }
-.rounded-b { border-bottom-right-radius: var(--rounded); border-bottom-left-radius: var(--rounded); }
-.rounded-l { border-top-left-radius: var(--rounded); border-bottom-left-radius: var(--rounded); }
-.rounded-ss { border-start-start-radius: var(--rounded); }
-.rounded-se { border-start-end-radius: var(--rounded); }
-.rounded-ee { border-end-end-radius: var(--rounded); }
-.rounded-es { border-end-start-radius: var(--rounded); }
-.rounded-tl { border-top-left-radius: var(--rounded); }
-.rounded-tr { border-top-right-radius: var(--rounded); }
-.rounded-br { border-bottom-right-radius: var(--rounded); }
-.rounded-bl { border-bottom-left-radius: var(--rounded); }
+.rounded-s { border-start-start-radius: var(--rounded-sm); border-end-start-radius: var(--rounded-sm); }
+.rounded-e { border-start-end-radius: var(--rounded-sm); border-end-end-radius: var(--rounded-sm); }
+.rounded-t { border-top-left-radius: var(--rounded-sm); border-top-right-radius: var(--rounded-sm); }
+.rounded-r { border-top-right-radius: var(--rounded-sm); border-bottom-right-radius: var(--rounded-sm); }
+.rounded-b { border-bottom-right-radius: var(--rounded-sm); border-bottom-left-radius: var(--rounded-sm); }
+.rounded-l { border-top-left-radius: var(--rounded-sm); border-bottom-left-radius: var(--rounded-sm); }
+.rounded-ss { border-start-start-radius: var(--rounded-sm); }
+.rounded-se { border-start-end-radius: var(--rounded-sm); }
+.rounded-ee { border-end-end-radius: var(--rounded-sm); }
+.rounded-es { border-end-start-radius: var(--rounded-sm); }
+.rounded-tl { border-top-left-radius: var(--rounded-sm); }
+.rounded-tr { border-top-right-radius: var(--rounded-sm); }
+.rounded-br { border-bottom-right-radius: var(--rounded-sm); }
+.rounded-bl { border-bottom-left-radius: var(--rounded-sm); }
 @each rounded- {
   .rounded-{k} { border-radius: var(--{t}); }
 }

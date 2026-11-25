@@ -72,6 +72,12 @@ describe('TransferList', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
+  test('uncontrolled: options that no longer hold a chosen value leave it out, rather than break', async () => {
+    const screen = await render(en(<TransferList aria-label="Columns" options={options} defaultValue={['email', 'name']} name="cols" />));
+    await screen.rerender(en(<TransferList aria-label="Columns" options={options.filter((o) => o.value !== 'email')} defaultValue={['email', 'name']} name="cols" />));
+    expect([items('Chosen'), [...document.querySelectorAll<HTMLInputElement>('input[type="hidden"][name="cols"]')].map((i) => i.value)]).toEqual([['Name'], ['name']]);
+  });
+
   test('controlled: it shows value, and a move only asks', async () => {
     const onValueChange = vi.fn();
     const screen = await render(en(<TransferList aria-label="Columns" options={options} value={['phone']} onValueChange={onValueChange} />));

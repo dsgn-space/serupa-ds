@@ -95,6 +95,7 @@ function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<H
       <div {...rest} {...aria} {...data} ref={(n) => { restyle(n); nameRef(n); }} className={cls}>
         <svg className="srp-progress__ring" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
           <circle className="srp-progress__track" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={Math.max(0, 100 - done - 2 * RING_GAP) + ' 100'} strokeDashoffset={-(done + RING_GAP)} />
+          <circle className="srp-progress__arc srp-progress__arc--edge" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={done + ' 100'} />
           <circle className="srp-progress__arc" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={done + ' 100'} />
         </svg>
         {showValue && size !== 'sm' ? <span className="srp-progress__value" aria-hidden>{text}</span> : null}

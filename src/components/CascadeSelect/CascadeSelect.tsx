@@ -115,7 +115,8 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
     if (o.isLeaf || !props.loadOptions) return null;
     return loaded.get(keyOf(at)) || null;
   };
-  const hasMore = (o: CascadeOption, at: string[]) => !o.isLeaf && (o.children ? o.children.length > 0 : !!props.loadOptions || (loaded.get(keyOf(at)) || []).length > 0);
+  // With loadOptions, more until its children have loaded as none: then it's a last step, as children={[]} is.
+  const hasMore = (o: CascadeOption, at: string[]) => { if (o.isLeaf) return false; if (o.children) return o.children.length > 0; const l = loaded.get(keyOf(at)); return !!props.loadOptions && (!Array.isArray(l) || l.length > 0); };
   // The columns for a path: the first column, then the children of each option on it.
   const columnsFor = (p: string[]) => {
     const cols: { options: CascadeOption[] | 'loading' | 'failed'; chosen: CascadeOption | null }[] = [];
@@ -126,6 +127,7 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
       cols.push({ options: list, chosen });
       if (!chosen) break;
       list = childrenOf(chosen, p.slice(0, i + 1));
+      if (Array.isArray(list) && !list.length) break;   // children that loaded as none: no empty column
     }
     return cols;
   };
@@ -246,9 +248,9 @@ function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAt
   const empty = !value.length;
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
+    <div className={cn('srp-cascade-select', 'srp-cascade-select--size-' + size, (invalid || missing) && 'srp-cascade-select--invalid', disabled && 'srp-cascade-select--disabled', readOnly && 'srp-cascade-select--readonly', open && 'srp-cascade-select--open', props.className)} data-invalid={(invalid || missing) ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
       <PickerButton {...rest} block="srp-cascade-select" buttonRef={mergedRef} open={open} panelId={base + '-panel'} invalid={invalid || missing} required={required} readOnly={readOnly} disabled={disabled} onOpen={show} onClose={() => close(false, 'trigger')}>
-        <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
+        <TruncatedText className={cn('srp-cascade-select__value', empty && 'srp-cascade-select__value--empty')} data-empty={empty ? '' : undefined} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
         <Icon icon={icons.ExpandMore} className="srp-cascade-select__chevron" />
       </PickerButton>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}

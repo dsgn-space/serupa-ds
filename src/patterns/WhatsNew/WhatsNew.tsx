@@ -8,7 +8,7 @@ import { SegmentedControl } from '../../components/SegmentedControl/SegmentedCon
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { formatDate } from '../../components/FormattedDate/FormattedDate';
@@ -107,7 +107,7 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, 
           <OfflineBanner online={online} placement="inline" className="mb-6">These are the changes loaded before you went offline.</OfflineBanner>
           <PageHeader title="What’s new" description={loading || loadFailed ? undefined : unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
           {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load what’s new" onRetry={() => onRetry?.()} headingLevel={2} /></div>
-            : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading what’s new" /></Card> : (<>
+            : loading ? <Card className="mt-6"><Skeleton shape="text" lines={6} label="Loading what’s new" /></Card> : (<>
           <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
             <SegmentedControl aria-label="Show" value={kind} onValueChange={(v) => { setKind(v); setShown(months); }}
               options={[{ value: 'all', label: 'All' }, { value: 'new', label: 'New' }, { value: 'improved', label: 'Improved' }, { value: 'fixed', label: 'Fixed' }]} />

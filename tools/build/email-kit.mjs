@@ -41,7 +41,7 @@ export function emailSizes(dir) {
     if (m && get(`${x.name}--line-height`) != null) text[m[1]] = [x.value, get(`${x.name}--line-height`)];
   }
   const pick = (prefix) => Object.fromEntries(scalar.filter((x) => x.kind === 'size' && x.name.startsWith(prefix) && !/[.]/.test(x.name)).map((x) => [x.name.slice(prefix.length) || 'default', x.value]));
-  return { text, spacing: pick('spacing-'), radius: { ...pick('rounded-'), default: get('rounded') } };
+  return { text, spacing: pick('spacing-'), radius: { ...pick('rounded-'), default: get('rounded-sm') } };
 }
 
 const TONES = ['info', 'success', 'warning', 'danger'];
@@ -58,7 +58,7 @@ export function emailRules(c, s) {
     'serupa-h2': [['margin', `0 0 ${sp(3)}`], ['font-family', FONT], ['font-weight', '600'], ['color', c.text], ...type('xl')],
     'serupa-text': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c.text], ...type('base')],
     'serupa-muted': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c['text-muted']], ...type('sm')],
-    'serupa-link': [['color', c.primary], ['text-decoration', 'underline']],
+    'serupa-link': [['color', c['primary-text']], ['text-decoration', 'underline']],
     'serupa-button-cell': [['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['mso-padding-alt', `${sp(3)} ${sp(5)}`]],
     'serupa-button': [['display', 'inline-block'], ['padding', `${sp(3)} ${sp(5)}`], ['font-family', FONT], ['font-weight', '600'], ['color', c['on-primary']], ['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['text-decoration', 'none'], ...type('base'), ['mso-padding-alt', '0']],
     'serupa-divider': [['border-top', `1px solid ${c.border}`], ['font-size', '0'], ['line-height', '0'], ['height', '1px']],
@@ -75,7 +75,7 @@ export function emailRules(c, s) {
 }
 
 const decl = (list, important = '') => list.map(([p, v]) => `${p}: ${v}${important}`).join('; ');
-const css = (rules, indent = '', important = '') => Object.entries(rules).map(([k, v]) => `${indent}.${k} { ${decl(v, important)}; }`).join('\n');
+const css = (rules, indent = '', important = '', prefix = '') => Object.entries(rules).map(([k, v]) => `${indent}${prefix}.${k} { ${decl(v, important)}; }`).join('\n');
 // Only what changes between light and dark goes in the dark block: the colors.
 const colorsOnly = (rules) => Object.fromEntries(Object.entries(rules).map(([k, v]) => [k, v.filter(([p]) => /color$|^border(-top|-left|-right)?$/.test(p))]).filter(([, v]) => v.length));
 
@@ -89,7 +89,8 @@ export function emailFiles(dir, version) {
   for (const b of brands) {
     const light = emailRules(colors[`${b}-light`], sizes);
     const dark = colorsOnly(emailRules(colors[`${b}-dark`], sizes));
-    const darkCss = `@media (prefers-color-scheme: dark) {\n${css(dark, '  ', ' !important')}\n}`;
+    const ogsc = Object.entries(dark).map(([k, v]) => `[data-ogsc] .${k}, [data-ogsb] .${k} { ${decl(v, ' !important')}; }`).join('\n');
+    const darkCss = `@media (prefers-color-scheme: dark) {\n${css(dark, '  ', ' !important')}\n}\n${ogsc}`;
     files[`${b}.css`] = `/* ${head}\n   Plain CSS for HTML email: hex colors and px only. Inline it before sending; the dark block stays in <style>. */\n:root { color-scheme: light dark; supported-color-schemes: light dark; }\n${css(light)}\n\n${darkCss}\n`;
     const st = (k) => `class="${k}" style="${decl(light[k])}"`;
     files[`${b}.html`] = `<!doctype html>

@@ -23,8 +23,8 @@
 .srp-tag-group__tag[aria-selected="false"]:not([aria-disabled="true"]):active { background: var(--tag-group-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .srp-tag-group__tag[aria-selected] { transition: none; } }
 .srp-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-tag-group__tag--selected {
-  border-color: var(--tag-group-border-selected, var(--primary)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary));
+.srp-tag-group__tag:where([data-selected]) {
+  border-color: var(--tag-group-border-selected, var(--primary-text)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary-text));
 }
 .srp-tag-group__tag[aria-disabled="true"], .srp-tag-group__tag[aria-disabled="true"] * { border-color: var(--tag-group-border-disabled, var(--disabled-border)); color: var(--tag-group-text-disabled, var(--disabled-text)); }
 .srp-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
@@ -52,13 +52,13 @@
 .srp-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .srp-tag-group__remove { transition: none; } }
 .srp-tag-group__more {
-  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary-text)); font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   text-decoration: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 /* Show more is underlined as a link is (1px, 2px below the words), and answers a pointer as one does: primary-hover, and the underline thickens to 2px. */
-@media (hover: hover) { .srp-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+@media (hover: hover) { .srp-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-text-hover)); text-decoration-thickness: var(--decoration-2); } }
 .srp-tag-group__more { transition: color var(--motion-hover) var(--ease-move); }   /* fades as a Link does */
 @media (prefers-reduced-motion: reduce) { .srp-tag-group__more { transition: none; } }
 .srp-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-@media (forced-colors: active) { .srp-tag-group__tag { border-color: CanvasText; } .srp-tag-group__tag--selected { border-width: var(--border-width-2); } }
+@media (forced-colors: active) { .srp-tag-group__tag { border-color: CanvasText; } .srp-tag-group__tag:where([data-selected]) { border-width: var(--border-width-2); } }
 }

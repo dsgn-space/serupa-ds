@@ -118,7 +118,7 @@ The table keeps its header and caption in every state, so the page doesn't move 
 - A resize handle is a focusable `separator` named for its column ("Resize Name column", the `tableResizeColumn` label), with `aria-valuenow`, `aria-valuemin` and `aria-valuemax` in pixels, so screen readers say the width as it changes. Before a width is set, its value is the column's drawn width. It's described as "Press Enter for width buttons" (the `tableResizeHint` label), since a separator can't say it opens anything. It's 12px wide; the arrow keys do what dragging does, and its popover's three buttons do the same for a pointer (Narrower and Wider move 16px; the `tableNarrower`, `tableWider` and `tableFitColumn` labels).
 - A `TableExpandCell`'s button is named for its row ("Details, Order 1001", `tableRowDetails`), with `aria-expanded` and `aria-controls` pointing at the `TableDetailRow`, which stays in the page, hidden, while closed. The header's cell is named "Details" (`tableDetails`) for screen readers and shows nothing. In right-to-left pages the chevron points left.
 - `TableColumnsMenu` is a [Popover](../Popover/README.md) titled "Columns" (`tableColumns`) of [Checkbox](../Checkbox/README.md)es named by the columns; a required column's box is checked and disabled.
-- In print, the frame shows the whole table instead of its scrolled window, the header row repeats on every page, and a row isn't split across pages.
+- In print, the frame shows the whole table instead of its scrolled window, the header row repeats on every page, and a row isn't split across pages. `TableVirtualBody` prints up to 5,000 rows and appends a localized summary row ("Showing 5,000 of 12,345") when more rows exist.
 - Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (every theme, `Table.test.tsx`). Selection isn't shown by color alone: the bar shows it, and a `TableSelectCell`'s checkbox ("Select Ada, checked") says it to screen readers. Browsers ignore `aria-selected` on a plain table's rows, so `selected` doesn't set it; give selectable rows a `TableSelectCell`. The checkbox outline keeps 3:1 on a shaded row.
 
 ### Keyboard
@@ -196,7 +196,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |
 | `--table-action-bar-bg` | `primary-subtle` | TableActionBar's background. |
 | `--table-action-bar-text` | `text` | TableActionBar's count (4.5:1 on its background). |
-| `--table-resize-active` | `primary` | A column's resize handle on hover, while dragged and on focus. |
+| `--table-resize-active` | `primary-text` | A column's resize handle on hover, while dragged and on focus. |
 
 **Shadow**
 

@@ -32,11 +32,11 @@
   --srp-pp-bd: var(--srp-pp-ring); transition-duration: var(--duration-0);
   box-shadow: 0 0 0 var(--border-width-1) var(--srp-pp-bd); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0);
 }
-.srp-period-picker--invalid { --srp-pp-bd: var(--period-picker-invalid, var(--field-border-invalid)); --srp-pp-ring: var(--period-picker-invalid, var(--field-border-invalid)); }
-.srp-period-picker--readonly .srp-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
-.srp-period-picker--disabled .srp-period-picker__button { --srp-pp-bd: var(--period-picker-border-disabled, var(--disabled-border)); background: var(--period-picker-bg-disabled, var(--field-readonly)); color: var(--period-picker-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-period-picker:where([data-invalid]) { --srp-pp-bd: var(--period-picker-invalid, var(--field-border-invalid)); --srp-pp-ring: var(--period-picker-invalid, var(--field-border-invalid)); }
+.srp-period-picker:where([data-readonly]) .srp-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
+.srp-period-picker:where([data-disabled]) .srp-period-picker__button { --srp-pp-bd: var(--period-picker-border-disabled, var(--disabled-border)); background: var(--period-picker-bg-disabled, var(--field-readonly)); color: var(--period-picker-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .srp-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.srp-period-picker__value--empty { color: var(--period-picker-placeholder, var(--placeholder)); }
+.srp-period-picker__value:where([data-empty]) { color: var(--period-picker-placeholder, var(--placeholder)); }
 .srp-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--srp-pp-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
 
 .srp-period-picker__panel {
@@ -70,17 +70,17 @@
   margin: var(--spacing-0); padding: var(--spacing-1); border: var(--spacing-0); border-radius: var(--period-picker-period-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation; overflow-wrap: anywhere;
 }
-@media (hover: hover) { .srp-period-picker__period:hover:not([aria-disabled="true"], .srp-period-picker__period--selected) { background: var(--period-picker-period-bg-hover, var(--secondary)); --surface-behind: var(--period-picker-period-bg-hover, var(--secondary)); } }
-.srp-period-picker__period:active:not([aria-disabled="true"], .srp-period-picker__period--selected) { background: var(--period-picker-period-bg-pressed, var(--pressed)); }
+@media (hover: hover) { .srp-period-picker__period:hover:not([aria-disabled="true"], [data-selected]) { background: var(--period-picker-period-bg-hover, var(--secondary)); --surface-behind: var(--period-picker-period-bg-hover, var(--secondary)); } }
+.srp-period-picker__period:active:not([aria-disabled="true"], [data-selected]) { background: var(--period-picker-period-bg-pressed, var(--pressed)); }
 .srp-period-picker__period:focus { outline: none; }
 .srp-period-picker__period:focus-visible { outline: var(--focus-ring-width) solid var(--period-picker-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-period-picker__period--current { color: var(--period-picker-current, var(--primary)); font-weight: var(--font-semibold); }
-.srp-period-picker__period--selected { background: var(--period-picker-bg-selected, var(--primary)); color: var(--period-picker-text-selected, var(--on-primary)); }
-.srp-period-picker__period--disabled { color: var(--period-picker-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.srp-period-picker__period:where([data-current]) { color: var(--period-picker-current, var(--primary-text)); font-weight: var(--font-semibold); }
+.srp-period-picker__period:where([data-selected]) { background: var(--period-picker-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--period-picker-edge-selected, var(--primary-edge)); color: var(--period-picker-text-selected, var(--on-primary)); }
+.srp-period-picker__period:where([data-disabled]) { color: var(--period-picker-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   .srp-period-picker__panel { border-color: CanvasText; }
-  .srp-period-picker__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; }
-  .srp-period-picker__period--current { text-decoration: underline; }
+  .srp-period-picker__period:where([data-selected]) { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+  .srp-period-picker__period:where([data-current]) { text-decoration: underline; }
 }
 @media print { .srp-period-picker__panel { display: none; } }
 }

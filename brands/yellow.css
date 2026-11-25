@@ -2,67 +2,83 @@
 @layer srp.tokens, srp.base, srp.components, srp.utilities;
 @layer srp.tokens {
 [data-theme="yellow-light"] {
-  --primary: var(--yellow-700);
-  --primary-hover: var(--yellow-800);
-  --primary-pressed: var(--yellow-900);
+  --primary: var(--yellow-500);
+  --primary-hover: #d9a500;
+  --primary-pressed: var(--yellow-600);
+  --primary-edge: var(--yellow-700);
   --primary-subtle: var(--yellow-50);
   --primary-subtle-pressed: var(--yellow-100);
-  --on-primary: var(--white);
-  --field-action: var(--yellow-700);
+  --on-primary: var(--yellow-950);
+  --primary-text: var(--yellow-700);
+  --primary-text-hover: var(--yellow-800);
   --focus-ring: var(--yellow-700);
   --link-visited: var(--violet-700);
   --srp-more-primary: var(--yellow-900);
   --srp-more-primary-hover: var(--yellow-950);
   --srp-more-primary-pressed: var(--yellow-950);
-  --srp-more-field-action: var(--yellow-900);
+  --srp-more-on-primary: var(--white);
+  --srp-more-primary-text: var(--yellow-900);
+  --srp-more-primary-text-hover: var(--yellow-950);
   --srp-more-focus-ring: var(--yellow-700);
 }
 [data-theme="yellow-dark"] {
   --primary: var(--yellow-400);
   --primary-hover: var(--yellow-300);
   --primary-pressed: var(--yellow-200);
+  --primary-edge: #00000000;
   --primary-subtle: var(--yellow-950);
   --primary-subtle-pressed: var(--yellow-900);
   --on-primary: var(--yellow-950);
-  --field-action: var(--yellow-400);
+  --primary-text: var(--yellow-400);
+  --primary-text-hover: var(--yellow-300);
   --focus-ring: var(--yellow-400);
   --link-visited: var(--violet-300);
   --srp-more-primary: var(--yellow-300);
   --srp-more-primary-hover: var(--yellow-200);
   --srp-more-primary-pressed: var(--yellow-100);
-  --srp-more-field-action: var(--yellow-300);
+  --srp-more-on-primary: var(--yellow-950);
+  --srp-more-primary-text: var(--yellow-300);
+  --srp-more-primary-text-hover: var(--yellow-200);
   --srp-more-focus-ring: var(--yellow-300);
 }
 :root[data-brand="yellow"]:not([data-theme]), [data-brand="yellow"]:not([data-theme]) {
-  --primary: light-dark(var(--yellow-700), var(--yellow-400));
-  --primary-hover: light-dark(var(--yellow-800), var(--yellow-300));
-  --primary-pressed: light-dark(var(--yellow-900), var(--yellow-200));
+  --primary: light-dark(var(--yellow-500), var(--yellow-400));
+  --primary-hover: light-dark(#d9a500, var(--yellow-300));
+  --primary-pressed: light-dark(var(--yellow-600), var(--yellow-200));
+  --primary-edge: light-dark(var(--yellow-700), #00000000);
   --primary-subtle: light-dark(var(--yellow-50), var(--yellow-950));
   --primary-subtle-pressed: light-dark(var(--yellow-100), var(--yellow-900));
-  --on-primary: light-dark(var(--white), var(--yellow-950));
-  --field-action: light-dark(var(--yellow-700), var(--yellow-400));
+  --on-primary: var(--yellow-950);
+  --primary-text: light-dark(var(--yellow-700), var(--yellow-400));
+  --primary-text-hover: light-dark(var(--yellow-800), var(--yellow-300));
   --focus-ring: light-dark(var(--yellow-700), var(--yellow-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--yellow-900), var(--yellow-300));
   --srp-more-primary-hover: light-dark(var(--yellow-950), var(--yellow-200));
   --srp-more-primary-pressed: light-dark(var(--yellow-950), var(--yellow-100));
-  --srp-more-field-action: light-dark(var(--yellow-900), var(--yellow-300));
+  --srp-more-on-primary: light-dark(var(--white), var(--yellow-950));
+  --srp-more-primary-text: light-dark(var(--yellow-900), var(--yellow-300));
+  --srp-more-primary-text-hover: light-dark(var(--yellow-950), var(--yellow-200));
   --srp-more-focus-ring: light-dark(var(--yellow-700), var(--yellow-300));
 }
 :is([data-theme^="yellow-"], [data-brand="yellow"]) [data-mode]:not([data-theme], [data-brand]) {
-  --primary: light-dark(var(--yellow-700), var(--yellow-400));
-  --primary-hover: light-dark(var(--yellow-800), var(--yellow-300));
-  --primary-pressed: light-dark(var(--yellow-900), var(--yellow-200));
+  --primary: light-dark(var(--yellow-500), var(--yellow-400));
+  --primary-hover: light-dark(#d9a500, var(--yellow-300));
+  --primary-pressed: light-dark(var(--yellow-600), var(--yellow-200));
+  --primary-edge: light-dark(var(--yellow-700), #00000000);
   --primary-subtle: light-dark(var(--yellow-50), var(--yellow-950));
   --primary-subtle-pressed: light-dark(var(--yellow-100), var(--yellow-900));
-  --on-primary: light-dark(var(--white), var(--yellow-950));
-  --field-action: light-dark(var(--yellow-700), var(--yellow-400));
+  --on-primary: var(--yellow-950);
+  --primary-text: light-dark(var(--yellow-700), var(--yellow-400));
+  --primary-text-hover: light-dark(var(--yellow-800), var(--yellow-300));
   --focus-ring: light-dark(var(--yellow-700), var(--yellow-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --srp-more-primary: light-dark(var(--yellow-900), var(--yellow-300));
   --srp-more-primary-hover: light-dark(var(--yellow-950), var(--yellow-200));
   --srp-more-primary-pressed: light-dark(var(--yellow-950), var(--yellow-100));
-  --srp-more-field-action: light-dark(var(--yellow-900), var(--yellow-300));
+  --srp-more-on-primary: light-dark(var(--white), var(--yellow-950));
+  --srp-more-primary-text: light-dark(var(--yellow-900), var(--yellow-300));
+  --srp-more-primary-text-hover: light-dark(var(--yellow-950), var(--yellow-200));
   --srp-more-focus-ring: light-dark(var(--yellow-700), var(--yellow-300));
 }
 }

@@ -1,0 +1,108 @@
+{
+  "color": {
+    "primary": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7882,
+          0.2824,
+          0.0902
+        ],
+        "hex": "#c94817"
+      },
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary"
+        }
+      }
+    },
+    "primary-hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6314,
+          0.2275,
+          0.102
+        ],
+        "hex": "#a13a1a"
+      },
+      "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-hover"
+        }
+      }
+    },
+    "primary-pressed": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5098,
+          0.2,
+          0.0941
+        ],
+        "hex": "#823318"
+      },
+      "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-pressed"
+        }
+      }
+    },
+    "primary-subtle": {
+      "$type": "color",
+      "$value": "{color.orange-950}",
+      "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-subtle"
+        }
+      }
+    },
+    "primary-subtle-pressed": {
+      "$type": "color",
+      "$value": "{color.orange-900}",
+      "$description": "Alias. Pressed state of a fill in `primary-subtle` (a secondary button held down): one step past it (brand 100 light, brand 900 dark). `primary-hover` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-subtle-pressed"
+        }
+      }
+    },
+    "primary-text": {
+      "$type": "color",
+      "$value": "{color.orange-400}",
+      "$description": "Alias. Brand text, links, icons, lines and borders: what `primary` is as a fill, 4.5:1 as text on `surface`, `surface-muted` and the tints. Light themes: the same shade as `primary`; dark themes: brand 400, which a dark page needs for text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-text"
+        }
+      }
+    },
+    "primary-text-hover": {
+      "$type": "color",
+      "$value": "{color.orange-300}",
+      "$description": "Alias. `primary-text` on hover: a link or a secondary button's text under the pointer. One step past `primary-text` (darker in light themes, lighter in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-text-hover"
+        }
+      }
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$value": "{color.orange-400}",
+      "$description": "Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). More contrast: brand 700 / brand 300.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--focus-ring"
+        }
+      }
+    }
+  }
+}

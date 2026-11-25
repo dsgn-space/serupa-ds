@@ -427,7 +427,7 @@ describe('Button', () => {
     expect(g('nested-d').borderTopColor).toBe(probe('violet-dark', 'borderTopColor', 'var(--danger-border)'));
   });
 
-  test('a primary button given its own background and no hover color gets one from it (176): darker in a light theme, lighter in a dark one; a hover color given, or no background given, keeps its own', async () => {
+  test('a primary button given its own background and no hover color gets one from it (176): darker in both light and dark themes; a hover color given, or no background given, keeps its own', async () => {
     await render(<div>
       <Button id="own" style={vars({ '--button-primary-bg': 'var(--emerald-600)' })}>Own</Button>
       <div data-theme="blue-dark"><Button id="own-d" style={vars({ '--button-primary-bg': 'var(--emerald-600)' })}>Own dark</Button></div>
@@ -439,8 +439,8 @@ describe('Button', () => {
     const hovered = async (id: string) => { await userEvent.hover(el(id)); await eased(el(id)); await expect.poll(() => el(id).getAnimations().length).toBe(0); return getComputedStyle(el(id)).backgroundColor; };
     const [l, , h] = lch('var(--emerald-600)');
     const [ll, , lh] = lch(await hovered('own')), [dl, , dh] = lch(await hovered('own-d'));
-    // Its own hue still (not the theme's blue), one step darker or lighter.
-    expect([ll! < l! - 0.05, dl! > l! + 0.08, Math.abs(lh! - h!) < 2, Math.abs(dh! - h!) < 2]).toEqual([true, true, true, true]);
+    // Its own hue still (not the theme's blue), one step darker in both themes so white text keeps contrast.
+    expect([ll! < l! - 0.05, dl! < l! - 0.05, Math.abs(lh! - h!) < 2, Math.abs(dh! - h!) < 2]).toEqual([true, true, true, true]);
     expect(await hovered('both')).toBe(color('var(--emerald-800)'));
     expect(await hovered('plainh')).toBe(color('var(--primary-hover)'));
     await userEvent.unhover(el('plainh'));
@@ -546,26 +546,29 @@ describe('Button micro-interactions', () => {
     expect(bad.slice(0, 12)).toEqual([]);
   });
 
-  test('press: a primary button given its own background works out a held fill a step past its worked-out hover, darker in light themes, lighter in dark; surface takes a stronger wash of its ink', async () => {
+  test('press: a primary button given its own background works out hover and held fills darker in both light and dark themes, keeping 4.5:1 text contrast; surface takes a stronger wash of its ink', async () => {
     await render(<div>
       <div data-theme="blue-light"><Button id="own-l" style={vars({ '--button-primary-bg': '#0f766e' })}>Own</Button></div>
-      <div data-theme="blue-dark"><Button id="own-d" style={vars({ '--button-primary-bg': '#2dd4bf' })}>Own</Button></div>
+      <div data-theme="blue-dark"><Button id="own-d" style={vars({ '--button-primary-bg': '#0f766e' })}>Own</Button></div>
       <div style={{ background: '#000' }}><Button id="od" surface="dark" variant="outline">On photo</Button><Button id="odp" surface="dark">On photo</Button></div>
     </div>);
     const cv = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d', { willReadFrequently: true })!;
-    const lum = (c: string) => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const [r, g, b] = cv.getImageData(0, 0, 1, 1).data; return contrast(`rgb(${r}, ${g}, ${b})`, 'rgb(0, 0, 0)'); };
+    const rgb = (c: string) => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const [r, g, b] = cv.getImageData(0, 0, 1, 1).data; return `rgb(${r}, ${g}, ${b})`; };
+    const lum = (c: string) => contrast(rgb(c), 'rgb(0, 0, 0)');
     const fills = async (id: string) => {
+      const ink = rgb(getComputedStyle(el(id)).color);
       const rest = getComputedStyle(el(id)).backgroundColor;
       await userEvent.hover(el(id)); await eased(el(id));
       const hov = getComputedStyle(el(id)).backgroundColor;
       el(id).setAttribute('data-pressed', ''); await eased(el(id));
       const held = getComputedStyle(el(id)).backgroundColor;
       el(id).removeAttribute('data-pressed'); await userEvent.unhover(el(id));
-      return { rest, hov, held };
+      return { ink, rest, hov, held };
     };
     const l = await fills('own-l'), d = await fills('own-d');
     expect([lum(l.held) < lum(l.hov), lum(l.hov) < lum(l.rest)]).toEqual([true, true]);
-    expect([lum(d.held) > lum(d.hov), lum(d.hov) > lum(d.rest)]).toEqual([true, true]);
+    expect([lum(d.held) < lum(d.hov), lum(d.hov) < lum(d.rest)]).toEqual([true, true]);
+    for (const s of [l, d]) for (const bg of [s.rest, s.hov, s.held]) expect(contrast(s.ink, rgb(bg))).toBeGreaterThanOrEqual(4.5);
     const o = await fills('od'), p = await fills('odp');
     expect(new Set([o.rest, o.hov, o.held]).size).toBe(3);
     expect(new Set([p.rest, p.hov, p.held]).size).toBe(3);

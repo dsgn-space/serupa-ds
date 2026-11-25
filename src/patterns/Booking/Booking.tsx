@@ -8,7 +8,7 @@ import { Field } from '../../components/Field/Field';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { RangeCalendar } from '../../components/RangeCalendar/RangeCalendar';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
-import { Loader } from '../../components/Loader/Loader';
+import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -125,7 +125,9 @@ export function stayProblem(stay: { start: string; end: string } | null, place: 
 export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', onReserve, loading = false, loadFailed = false, onRetry, online }: BookingProps) {
   const locale = useLocale(undefined);
   const [stay, setStay] = React.useState<{ start: string; end: string } | null>(null);
-  const [guests, setGuests] = React.useState<number | null>(2);
+  const [chosen, setGuests] = React.useState<number | null>(2);
+  // Two to start, or fewer when the place sleeps fewer (which it can say only once it has loaded).
+  const guests = chosen && Math.min(chosen, Math.max(1, place.maxGuests));
   const [asked, setAsked] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
@@ -171,7 +173,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
 
           <div className="pt-6">
             {loadFailed ? <EmptyLoadFailed title="Couldn’t load the place" onRetry={() => onRetry?.()} headingLevel={2} />
-              : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading place" /></Card>
+              : loading ? <Card><Skeleton shape="text" lines={6} label="Loading place" /></Card>
               : booked ? (
                 <section aria-labelledby="booked" className="flex flex-col items-start gap-3">
                   <h2 id="booked" ref={done} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">You’re booked</h2>

@@ -19,7 +19,7 @@
 .srp-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
 .srp-toc__link { --srp-bar: var(--border-width-2); }
 .srp-toc__link:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--srp-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
+.srp-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--srp-bar) 0 0 var(--table-of-contents-line-current, var(--primary-text)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary-text)); }
 @media (forced-colors: active) { .srp-toc__link[aria-current="location"] { border-inline-start-color: CanvasText; outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 /* The rail (variant="rail"): a 24px-wide column of 2px dashes, 12px long and 6px apart, one per heading, each level
    4px shorter (two levels at most) and pushed to the end edge; the current section's in line-current, the others in dash. Pointing at it,
@@ -31,7 +31,7 @@
 .srp-toc--rail { position: relative; inline-size: var(--spacing-6); }
 .srp-toc__rail { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-1\.5); padding-block: var(--spacing-2); cursor: default; }
 .srp-toc__dash { display: block; block-size: var(--border-width-2); inline-size: calc(var(--spacing-3) - var(--spacing-1) * var(--srp-toc-depth, 0)); border-radius: var(--radius-pill); background: var(--table-of-contents-dash, var(--border-strong)); }
-.srp-toc__dash[data-current] { background: var(--table-of-contents-line-current, var(--primary)); }
+.srp-toc__dash[data-current] { background: var(--table-of-contents-line-current, var(--primary-text)); }
 .srp-toc--rail .srp-toc__panel {
   box-sizing: border-box; position: absolute; inset-block-start: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-popover);
   inline-size: max-content; max-inline-size: var(--container-3xs); padding: var(--spacing-3);

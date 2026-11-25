@@ -44,7 +44,7 @@
       },
       "chip-open": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.primary-text}",
         "$description": "A chip's text while its editor is open (4.5:1 on chip-bg).",
         "$extensions": {
           "com.serupa": {

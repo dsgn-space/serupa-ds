@@ -36,7 +36,7 @@ Drawn from the `ReadOnly` story.
 
 ## Usage
 
-- Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`.
+- Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`. Both are client-side guidance only: always validate file types and sizes on the server.
 - Without `multiple`, a new file replaces the old one; set `multiple` (and `maxFiles` if there's a limit) when people may add several.
 - Use `onReject` if you need to log refused files or show the reason elsewhere; the messages already show under the area.
 - A refused type says what the field takes, in words from `accept`: "photo.heic isn’t a PNG or JPG." Types with no short name, such as `application/vnd.ms-excel`, get "photo.heic: this type of file isn’t accepted."
@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-zone-border-hover` | `field-border-hover` | The drop area's outline while the pointer is over it (a click there browses for files). |
 | `--file-upload-zone-bg-pressed` | `field-hover` | The drop area's fill while pressed (a click there browses for files), as a field's buttons fill. |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
-| `--file-upload-zone-border-active` | `primary` | Its outline then. |
+| `--file-upload-zone-border-active` | `primary-text` | Its outline then. |
 | `--file-upload-zone-border-invalid` | `danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |
 | `--file-upload-icon-color` | `text-muted` | The upload icon and file icons (3:1). |
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |

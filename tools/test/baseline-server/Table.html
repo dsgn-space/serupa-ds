@@ -38,7 +38,7 @@
 </tr>
 </thead>
 <tbody class="srp-table__body">
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -80,7 +80,7 @@
 <span data-component="text" class="srp-text srp-text--muted">Editor</span>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -466,7 +466,7 @@
 <div style="display:grid;gap:12px">
 <div style="display:flex;gap:8px">
 <div aria-label="State" role="radiogroup" class="srp-segmented srp-segmented--size-sm" data-component="segmented-control" data-size="sm">
-<button type="button" role="radio" aria-checked="true" tabindex="0" data-value="loading" class="srp-segmented__item srp-segmented__item--selected">
+<button type="button" role="radio" aria-checked="true" tabindex="0" data-value="loading" class="srp-segmented__item srp-segmented__item--selected" data-selected="">
 <span class="srp-segmented__label">Loading</span>
 </button>
 <button type="button" role="radio" aria-checked="false" tabindex="-1" data-value="loaded" class="srp-segmented__item">
@@ -494,67 +494,33 @@
 <tbody class="srp-table__body srp-table__loading">
 <tr class="srp-table__loading-row">
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
-</span>
-</span>
-</span>
-</td>
-</tr>
-<tr class="srp-table__loading-row">
-<td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
-</span>
-</span>
-</span>
-</td>
-<td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
-</span>
-</span>
-</span>
-</td>
-<td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
-</span>
-</span>
-</span>
-</td>
-<td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
@@ -562,33 +528,33 @@
 </tr>
 <tr class="srp-table__loading-row">
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
@@ -596,33 +562,67 @@
 </tr>
 <tr class="srp-table__loading-row">
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
 </td>
 <td class="srp-table__cell">
-<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-loader srp-loader--skeleton srp-loader--shape-text srp-loader--size-md srp-loader--waiting">
-<span class="srp-loader__line">
-<span class="srp-loader__bone">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
+</span>
+</span>
+</span>
+</td>
+</tr>
+<tr class="srp-table__loading-row">
+<td class="srp-table__cell">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
+</span>
+</span>
+</span>
+</td>
+<td class="srp-table__cell">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
+</span>
+</span>
+</span>
+</td>
+<td class="srp-table__cell">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
+</span>
+</span>
+</span>
+</td>
+<td class="srp-table__cell">
+<span data-component="skeleton" data-size="md" data-shape="text" aria-hidden="true" class="srp-skeleton srp-skeleton--text srp-skeleton--size-md srp-skeleton--waiting">
+<span class="srp-skeleton__line">
+<span class="srp-skeleton__bone">
 </span>
 </span>
 </span>
@@ -691,7 +691,7 @@
 </button>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell">Grace Hopper</td>
 <td class="srp-table__cell">Arlington</td>
 <td class="srp-table__cell srp-table__cell--end">1</td>
@@ -968,7 +968,7 @@
 </tr>
 </thead>
 <tbody class="srp-table__body">
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -989,7 +989,7 @@
 <span data-component="text" class="srp-text srp-text--muted">Admin</span>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -1010,7 +1010,7 @@
 <span data-component="text" class="srp-text srp-text--muted">Editor</span>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -1031,7 +1031,7 @@
 <span data-component="text" class="srp-text srp-text--muted">Viewer</span>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -1107,7 +1107,7 @@
 <data value="1204" class="srp-formatted-number" data-component="formatted-number" data-format="decimal">1,204</data>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell srp-table__select">
 <label class="srp-checkbox srp-checkbox--size-md srp-checkbox--bare" data-component="checkbox" data-size="md">
 <span class="srp-checkbox__control">
@@ -1210,7 +1210,7 @@
 <data value="1204" class="srp-formatted-number" data-component="formatted-number" data-format="decimal">1,204</data>
 </td>
 </tr>
-<tr class="srp-table__row srp-table__row--selected">
+<tr class="srp-table__row srp-table__row--selected" data-selected="">
 <td class="srp-table__cell">Grace Hopper</td>
 <td class="srp-table__cell">
 <span data-component="text" class="srp-text srp-text--muted">Editor</span>

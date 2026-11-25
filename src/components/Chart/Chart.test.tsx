@@ -369,7 +369,7 @@ describe('Chart', () => {
     const toggle = page.getByRole('button').all();
     expect([toggle.length, toggle[0] && (toggle[0].element() as HTMLButtonElement).disabled, e.querySelector('svg'), page.getByRole('progressbar').all().length]).toEqual([1, true, null, 0]);
     const tall = e.getBoundingClientRect().height;
-    const art = e.querySelector('[data-component="loader"]') as HTMLElement;
+    const art = e.querySelector('[data-component="skeleton"]') as HTMLElement;
     expect(art.getAttribute('aria-hidden')).toBe('true');
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
     const block = art.getBoundingClientRect().height;
@@ -379,7 +379,7 @@ describe('Chart', () => {
     expect(e.getBoundingClientRect().height).toBe(tall);
     // Refreshing numbers already shown: the chart stays, busy.
     await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} loading />);
-    expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);
+    expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="skeleton"]')]).toEqual(['true', true, null]);
     // Without a loadingLabel it says the shared "Loading…".
     await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} loading />);
     await expect.poll(() => document.querySelector('[data-srp-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
@@ -423,10 +423,29 @@ describe('Chart', () => {
     expect(tip.closest('figure')!.lastElementChild!.textContent).toBe('050');   // the scale: lowest, the steps, highest
   });
 
+  test('heatmap: the pointer near a cell\'s edge shows that cell, not the next column\'s', async () => {
+    await render(<Chart type="heatmap" title="Visits" categories={DAYS} series={HOURS} />);
+    const svg = page.getByRole('figure').element().querySelector('svg')!;
+    const tip = () => [...document.querySelectorAll('figure [aria-hidden] div')].map((e) => e.parentElement!.textContent).find((t) => /Morning/.test(t));
+    for (const [name, dx] of [['Morning, Mon: 0', -2], ['Morning, Tue: 10', 2], ['Morning, Wed: 20', -2]] as const) {
+      const r = page.getByRole('img', { name }).element().getBoundingClientRect();
+      svg.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: (dx < 0 ? r.right : r.left) + dx, clientY: r.top + r.height / 2 }));
+      await expect.poll(tip, { timeout: 1000 }).toBe(name.replace(/^Morning, (\w+): /, '$1Morning'));
+    }
+  });
+
   test('heatmap: rows past eight are kept, and the default height gives each row its room', async () => {
     const rows = Array.from({ length: 12 }, (_, k) => ({ name: 'Row ' + (k + 1), values: [k, k + 1] }));
     await render(<Chart type="heatmap" title="Grid" categories={['A', 'B']} series={rows} />);
     expect(page.getByRole('img', { name: 'Row 12, B: 12' }).elements()).toHaveLength(1);
     expect(Number(page.getByRole('group', { name: 'Heatmap' }).element().getAttribute('height'))).toBe(12 * 32 + 8 + 24);
+  });
+
+  test('table view spans the full chart width and niceTicks stays distinct above 1e14', async () => {
+    await render(<div style={{ width: 640 }}><Chart title="Sales" defaultView="table" categories={['Jan', 'Feb']} series={[{ name: 'Revenue', values: [10, 20] }]} /></div>);
+    const fig = page.getByRole('figure').element();
+    const wrap = page.getByRole('table').element().parentElement!;
+    expect(Math.round(wrap.getBoundingClientRect().width)).toBe(Math.round(fig.getBoundingClientRect().width));
+    expect(niceTicks(1e15, 1e15 + 3, 4)).toEqual([1e15, 1e15 + 1, 1e15 + 2, 1e15 + 3]);
   });
 });

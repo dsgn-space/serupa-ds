@@ -124,7 +124,9 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   const [ownZoom, setZoom] = React.useState(first);
   const [ownCenter, setCenter] = React.useState<[number, number]>([0.5, 0.5]);
   const [shown, setShown] = React.useState(props.src);
-  if (shown !== props.src) { setShown(props.src); setNat(null); setFailed(false); setZoom(first); setCenter([0.5, 0.5]); }
+  // Which src this is, counting each change: back to an earlier src before the one between loaded is a new load too.
+  const [gen, setGen] = React.useState(0);
+  if (shown !== props.src) { setShown(props.src); setGen(gen + 1); setNat(null); setFailed(false); setZoom(first); setCenter([0.5, 0.5]); }
   // Controlled, the view follows crop; otherwise it's this cropper's own.
   const ctl = nat && props.crop ? viewOf(nat[0], nat[1], aspect, maxZoom, props.crop) : null;
   const zoom = ctl ? ctl.zoom : ownZoom, center = ctl ? ctl.center : ownCenter;
@@ -147,12 +149,12 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
     const b = areaOf(nat[0], nat[1], aspect, clamp(z, 1, maxZoom), 0.5, 0.5);
     go(nat, z, (px - fx * b.width + b.width / 2) / nat[0], (py - fy * b.height + b.height / 2) / nat[1]);
   };
-  // The src whose size is known, so a load event after the ref saw it loaded doesn't say the crop twice.
-  const read = React.useRef<string | null>(null);
+  // The src (by gen) whose size is known, so a load event after the ref saw it loaded doesn't say the crop twice.
+  const read = React.useRef<number | null>(null);
   const firstSrc = React.useRef(props.src);
   const loaded = (i: HTMLImageElement) => {
-    if (read.current === props.src) return;
-    read.current = props.src;
+    if (read.current === gen) return;
+    read.current = gen;
     if (!i.naturalWidth || !i.naturalHeight) { setFailed(true); return; }
     const n: [number, number] = [i.naturalWidth, i.naturalHeight];
     setNat(n); setFailed(false);
@@ -245,7 +247,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   const percent = (z: number) => Math.round(z * 100) + '%';
   return (
     <div {...rest} ref={mergedRef} role="group" aria-labelledby={labelledBy}
-      className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-component="image-cropper"
+      className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-disabled={disabled ? '' : undefined} data-component="image-cropper"
       style={{ ...props.style, '--srp-image-cropper-aspect': String(aspect) } as React.CSSProperties}>
       <FieldContext.Provider value={null}>
         <div ref={frame} className="srp-image-cropper__frame" data-shape={props.shape === 'round' ? 'round' : 'rect'}
@@ -253,7 +255,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
           tabIndex={live ? 0 : undefined} role={live ? 'application' : undefined} aria-label={live ? L.cropArea : undefined} aria-describedby={live ? base + '-how' : undefined}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onKeyDown={onKey}>
           <img ref={imgRef} key={props.src} className="srp-image-cropper__img" src={props.src} alt="" draggable={false} crossOrigin={props.crossOrigin}
-            style={imgStyle} onLoad={(e) => loaded(e.currentTarget)} onError={() => { read.current = props.src; setFailed(true); }} />
+            style={imgStyle} onLoad={(e) => loaded(e.currentTarget)} onError={() => { read.current = gen; setFailed(true); }} />
           {failed ? <span className="srp-image-cropper__fallback"><Icon icon={icons.BrokenImage} />{L.cropFailed}</span> : null}
           <span className="srp-image-cropper__mask" aria-hidden="true" />
           <span className="srp-image-cropper__grid" aria-hidden="true" />

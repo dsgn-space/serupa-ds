@@ -45,16 +45,38 @@ export function contrast(fg: string, bg: string): number {
   return (x! + 0.05) / (y! + 0.05);
 }
 
+const opaque = (c: string) => !/^(transparent|rgba\(.*,\s*0\))$/.test(c);
+
+/**
+ * A primary fill as it stands on the page in the current theme: the theme's primary-edge where it has one (Yellow
+ * Light, whose yellow 500 is under 3:1 on white), else the fill itself. For a contrast pair that names the token.
+ */
+export function edged(fill: string): string {
+  const edge = color('var(--primary-edge)');
+  return opaque(edge) ? edge : color(fill);
+}
+
+/**
+ * What marks an element's fill off from the page: the edge it draws round the fill (the first box-shadow or the
+ * border, when one has a color), else its background. For a mark that takes primary-edge.
+ */
+export function seen(el: Element, pseudo?: string): string {
+  const s = getComputedStyle(el, pseudo), shadow = /^rgba?\([^)]*\)/.exec(s.boxShadow)?.[0];
+  if (shadow && opaque(shadow)) return shadow;
+  if (parseFloat(s.borderTopWidth) > 0 && opaque(s.borderTopColor)) return s.borderTopColor;
+  return s.backgroundColor;
+}
+
 /**
  * Every pair below its minimum, in every theme, as "theme name ratio". Empty when all pass.
- * Each pair is [name, foreground, background, minimum].
+ * Each pair is [name, foreground, background, minimum]; a foreground can be a function, read in each theme.
  */
-export function lowContrast(pairs: Array<[string, string, string, number]>): string[] {
+export function lowContrast(pairs: Array<[string, string | (() => string), string, number]>): string[] {
   const low: string[] = [];
   for (const th of THEMES) {
     document.documentElement.setAttribute('data-theme', th);
     for (const [name, fg, bg, need] of pairs) {
-      const r = contrast(fg, bg);
+      const r = contrast(typeof fg === 'function' ? fg() : fg, bg);
       if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);
     }
   }

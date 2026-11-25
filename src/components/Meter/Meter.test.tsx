@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, color, contrast, css, withMotion, splitWords } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, withMotion, splitWords, seen } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Meter, meterState } from './Meter';
@@ -128,7 +128,8 @@ describe('Meter', () => {
       for (const id of ['p', 'o', 's', 'x']) {
         const track = el(id).querySelector<HTMLElement>('[role=meter]')!, bg = css(track).backgroundColor;
         const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
-        for (const [what, r] of [['fill', contrast(fill(id), 'var(--surface)')], ['fill on its track', contrast(fill(id), bg)], ['track edge', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${id} ${what} ${r.toFixed(2)}`); }
+        const mark = seen(track.querySelector('div')!);   // the fill, or the edge a theme gives it (Yellow Light's primary)
+        for (const [what, r] of [['fill', contrast(mark, 'var(--surface)')], ['fill on its track', contrast(mark, bg)], ['track edge', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${id} ${what} ${r.toFixed(2)}`); }
       }
       for (const sel of ['#p .srp-meter__label', '#p .srp-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }

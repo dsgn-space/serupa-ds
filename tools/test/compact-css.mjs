@@ -28,6 +28,11 @@ const out = compactCss(tricky);
 t('strings, escapes and comments keep every character; only whitespace around { } ; : , > goes', printed(out) === printed(tricky), `${out}\n${firstDiff(printed(tricky), printed(out))}`);
 t('a hex escape keeps the space that ends it (".\\31 0" is ".10")', out.includes('.\\31 0\\:p-2{'), out);
 t('the /*! banner keeps its own line, and each rule ends its line', out.startsWith('/*! keep me */\n') && /\}\n\.\\31 0/.test(out), out);
+// The first declaration in an at-rule's block (@property's initial-value, a custom property) is kept as written too.
+const opening = compactCss('@property --a { initial-value: a   b; syntax: "*"; inherits: false; }\n@font-palette-values --p { --x: 1   2; }');
+t('the first custom property or initial-value in an at-rule\'s block keeps its value as written', opening.includes('initial-value:a   b;') && opening.includes('--x:1   2'), opening);
+// A comment left open runs to the end of the file rather than looping for ever.
+t('a comment left open ends the CSS', compactCss('.a{color:red}/* oops') === '.a{color:red}\n/* oops', JSON.stringify(compactCss('.a{color:red}/* oops')));
 
 // The files the package ships: each is the same CSS as its source, uncompacted, would be.
 const src = (n) => read(`src/components/${n}/${n}.css`);

@@ -20,7 +20,8 @@ const KINDS = { patterns: 'pattern', blocks: 'block' };
 /** A template's import lines turned into the package's, and what it needs: its blocks, its own files, and anything not public. */
 export function rewrite(code) {
   const blocks = new Set(), local = new Set(), missing = [];
-  const out = code.replace(/^import (type )?([\s\S]*?) from '([^']+)';$/gm, (line, type, what, from) => {
+  // An import's names run to its own "from", never past a ";" into the next line's (after `import './x.css';`).
+  const out = code.replace(/^import (type )?([^;]*?) from '([^']+)';$/gm, (line, type, what, from) => {
     let m;
     if ((m = /^\.\.\/\.\.\/components\/\w+\/\w+$/.exec(from))) return `import ${type ?? ''}${what} from '${PKG}';`;
     if ((m = /^(?:\.\.\/\.\.\/blocks|\.\.)\/(\w+)\/\1$/.exec(from))) { blocks.add(m[1]); return `import ${type ?? ''}${what} from './${m[1]}';`; }

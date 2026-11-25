@@ -154,7 +154,7 @@ const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
         return (
           <td key={t} aria-selected={sel} role="gridcell">
             <button type="button" tabIndex={t === p.stop ? 0 : -1} aria-label={p.dayLabel ? p.dayLabel(d, full.format(d)) : full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
-              className={cn('srp-calendar__day', outside && 'srp-calendar__day--outside', sel && 'srp-calendar__day--selected', now && 'srp-calendar__day--today', off && 'srp-calendar__day--disabled', p.dayClassName && p.dayClassName(d))}
+              className={cn('srp-calendar__day', outside && 'srp-calendar__day--outside', sel && 'srp-calendar__day--selected', now && 'srp-calendar__day--today', off && 'srp-calendar__day--disabled', p.dayClassName && p.dayClassName(d))} data-outside={outside ? '' : undefined} data-selected={sel ? '' : undefined} data-today={now ? '' : undefined} data-disabled={off ? '' : undefined}
               data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
               onClick={() => p.on.pick(d)} onFocus={() => p.on.focus(d)} onMouseEnter={p.hover ? () => p.on.hover(d) : undefined}>
               {p.cal.date(d)}
@@ -412,7 +412,7 @@ function Periods(p: { view: PeriodView; page: number; focus: number; value: Date
               return (
                 <td key={n} role="gridcell" aria-selected={n === sel}>
                   <button type="button" tabIndex={n === p.focus ? 0 : -1} aria-disabled={off || undefined} aria-current={n === now ? 'date' : undefined}
-                    className={cn('srp-calendar__period', n === sel && 'srp-calendar__period--selected', n === now && 'srp-calendar__period--today', off && 'srp-calendar__period--disabled')}
+                    className={cn('srp-calendar__period', n === sel && 'srp-calendar__period--selected', n === now && 'srp-calendar__period--today', off && 'srp-calendar__period--disabled')} data-selected={(n === sel) ? '' : undefined} data-today={(n === now) ? '' : undefined} data-disabled={off ? '' : undefined}
                     onClick={() => p.onPick(n)} onFocus={() => { if (n !== p.focus) p.onFocus(n); }}>
                     {p.view === 'months' ? <><span aria-hidden>{p.fmt.monthShort.format(p.cal.at(n))}</span><span className="srp-visually-hidden">{p.fmt.title.format(p.cal.at(n))}</span></> : yearText(p.fmt, p.cal, n)}
                   </button>

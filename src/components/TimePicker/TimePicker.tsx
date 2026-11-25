@@ -182,7 +182,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-time-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
+    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-time-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} data-invalid={invalid ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} dir={rest.dir ?? dir} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
@@ -201,7 +201,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
       <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-time-picker__list">
         {open || exit.leaving ? times.map((n, i) => (
           <li key={n} id={`${id}-${i}`} lang={lang} role="option" aria-selected={n === value} data-value={toHHmm(n)}
-            className={cn('srp-time-picker__option', i === active && 'srp-time-picker__option--active', n === value && 'srp-time-picker__option--selected')}
+            className={cn('srp-time-picker__option', i === active && 'srp-time-picker__option--active', n === value && 'srp-time-picker__option--selected')} data-active={(i === active) ? '' : undefined}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
             <span className="srp-time-picker__time">{dir ? <span dir={dir}>{fmt(n)}</span> : fmt(n)}</span>
             {n === value ? <Icon icon={icons.Check} className="srp-time-picker__check" /> : null}

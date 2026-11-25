@@ -116,13 +116,13 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-bg` | `surface` | The background. |
 | `--event-calendar-text` | `text` | The month's title and the dates (4.5:1 on bg). |
 | `--event-calendar-muted` | `text-muted` | Weekday names, the dates of other months, "+N more" and the empty agenda (4.5:1 on bg). |
-| `--event-calendar-today` | `primary` | Today's date, in the month and the agenda. |
+| `--event-calendar-today` | `primary-text` | Today's date, in the month and the agenda. |
 | `--event-calendar-border` | `border` | The lines between days. |
 | `--event-calendar-focus-ring` | `focus-ring` | The focus ring on a day and an event. |
 | `--event-calendar-event-bg` | `primary-subtle` | A primary event's fill (other tones use their own subtle color). |
 | `--event-calendar-event-text` | `text` | An event's time and title (4.5:1 on each tone's fill). |
-| `--event-calendar-event-tone` | `primary` | The bar at the start of an event with no tone. |
-| `--event-calendar-info-tone` | `info` | The bar at the start of a tone="info" event. |
+| `--event-calendar-event-tone` | `primary-text` | The bar at the start of an event with no tone. |
+| `--event-calendar-info-tone` | `info-text` | The bar at the start of a tone="info" event. |
 | `--event-calendar-info-bg` | `info-subtle` | The fill of a tone="info" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-success-tone` | `success` | The bar at the start of a tone="success" event. |
 | `--event-calendar-success-bg` | `success-subtle` | The fill of a tone="success" event (its text stays event-text, 4.5:1 on it). |
@@ -132,7 +132,7 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-more-bg-hover` | `surface-hover` | "+N more" under the pointer. |
 | `--event-calendar-more-bg-pressed` | `pressed` | The "+N more" button's background while it's held down, one step past hover. |
-| `--event-calendar-now` | `primary` | The line across today at the time now, in the week and day views. |
+| `--event-calendar-now` | `primary-text` | The line across today at the time now, in the week and day views. |
 
 **Radius**
 
