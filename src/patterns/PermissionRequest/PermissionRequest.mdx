@@ -12,6 +12,9 @@ Asks the browser for the camera (or the microphone, location, notifications, the
 ## When to use it
 
 - A feature needs something the browser guards with its own question: the camera or microphone, location, notifications, reading the clipboard.
+
+## When not to use it
+
 - Not on page load, and not in onboarding before the feature is in sight: a question with no reason in view gets a no, and many browsers then stop asking for good.
 - Not for cookies: that's the [Consent banner](?path=/docs/patterns-consent-banner--docs).
 

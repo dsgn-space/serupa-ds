@@ -21,7 +21,7 @@ Short term: subset the shipped font to the icons the system and its projects use
 | Payload | Poor: ~1 MB before the first icon draws, on every project |
 | First paint | Poor: with `swap`, the word "close" or "arrow_forward" shows in Inter until the font arrives, then the layout jumps |
 | Authoring | Excellent: any Material Symbols name works with no build step |
-| Accessibility | Fine while `aria-hidden` (the default); a labelled icon needs care so the ligature text isn't read out |
+| Accessibility | Fine while `aria-hidden` (the default); a labeled icon needs care so the ligature text isn't read out |
 
 ### B: Subset font (recommended now)
 A build step (`fonttools`' `pyftsubset`, or a Node equivalent) keeps only the listed names, from `docs/icon-names.json` plus the names in component code; a project can add its own list. Typical result: 10–40 KB.

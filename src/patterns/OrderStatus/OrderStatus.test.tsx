@@ -15,14 +15,14 @@ const order = (over: Partial<OrderInfo> = {}): OrderInfo => ({
 });
 
 // Order status: the stage is a sentence, cancelling asks first and is done only once the server says so, and an
-// order that has shipped says why it can't be cancelled.
+// order that has shipped says why it can't be canceled.
 describe('Patterns/Order status', () => {
-  test('the stage in words, whether it can be cancelled, and what the items cost', () => {
+  test('the stage in words, whether it can be canceled, and what the items cost', () => {
     expect(stageWords({ stage: 'placed', arriving: 'Friday' })).toEqual({ title: 'Order placed', detail: 'We’re getting it ready. Arriving Friday.' });
     expect(stageWords({ stage: 'packed' })).toEqual({ title: 'Packed', detail: 'It’s waiting for the courier.' });
     expect(stageWords({ stage: 'shipped', arriving: 'Friday' }).title).toBe('On its way');
     expect(stageWords({ stage: 'delivered', arriving: 'Friday' }).detail).not.toContain('Arriving');
-    expect(stageWords({ stage: 'shipped', cancelled: true }).title).toBe('Cancelled');
+    expect(stageWords({ stage: 'shipped', cancelled: true }).title).toBe('Canceled');
     expect([canCancel({ stage: 'placed' }), canCancel({ stage: 'packed' }), canCancel({ stage: 'shipped' }), canCancel({ stage: 'delivered' }), canCancel({ stage: 'placed', cancelled: true })]).toEqual([true, true, false, false, false]);
     expect(subtotal(order().items)).toBe(42);
   });
@@ -74,14 +74,14 @@ describe('Patterns/Order status', () => {
     expect(document.body.textContent).toContain('It’s running late');
     await screen.getByRole('button', { name: 'Cancel order' }).click();
     await screen.getByRole('dialog').getByRole('button', { name: 'Cancel order' }).click();
-    await expect.poll(() => document.querySelector('h2')?.textContent).toBe('Cancelled');
+    await expect.poll(() => document.querySelector('h2')?.textContent).toBe('Canceled');
     expect(onCancel).toHaveBeenCalledTimes(1);
     await expect.poll(() => active().tagName).toBe('H1');
-    await expect.poll(() => toasted('Order 77 is cancelled')).toBe(true);
+    await expect.poll(() => toasted('Order 77 is canceled')).toBe(true);
     expect(screen.getByRole('navigation', { name: 'Order progress' }).elements()).toHaveLength(0);
     expect(screen.getByRole('button', { name: 'Cancel order' }).elements()).toHaveLength(0);
     expect(document.body.textContent).not.toContain('It’s running late');
-    expect(screen.getByRole('list', { name: 'What’s happened' }).getByRole('listitem').first().element().textContent).toContain('Order cancelled');
+    expect(screen.getByRole('list', { name: 'What’s happened' }).getByRole('listitem').first().element().textContent).toContain('Order canceled');
   });
 
   test('a cancel that fails says so in the dialog, which stays open, and the order stays as it was', async () => {
@@ -100,7 +100,7 @@ describe('Patterns/Order status', () => {
   test('once shipped: no Cancel button, a sentence says why, and the courier\'s page is a link; a delay says so', async () => {
     const screen = await render(<OrderStatus order={order({ stage: 'shipped', delay: 'A day behind after flooding.' })} onCancel={() => {}} />);
     expect(screen.getByRole('button', { name: 'Cancel order' }).elements()).toHaveLength(0);
-    expect(document.body.textContent).toContain('It has shipped, so it can’t be cancelled.');
+    expect(document.body.textContent).toContain('It has shipped, so it can’t be canceled.');
     expect(screen.getByRole('link', { name: /Track the parcel with JNE/ }).element().getAttribute('href')).toBe('#jne');
     expect(document.body.textContent).toContain('A day behind after flooding.');
   });

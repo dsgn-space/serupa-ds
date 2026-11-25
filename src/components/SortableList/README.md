@@ -48,7 +48,7 @@ Drawn from the `Horizontal` story.
 
 - Pointer: press the handle and move more than 4px; the row follows the pointer and the others move out of its way. Letting go drops it. A press without moving picks the row up, as Space does; a press on another row's handle then drops it in that row's place, and a press on its own handle drops it where it is (WCAG 2.5.7: no drag needed). Picked up from the keyboard, it can still be dragged: dragging its handle carries it on with the pointer, and dragging another row's handle puts it back and drags that row instead. Held near the top or bottom edge of the list's scrolling container (or of the window), it scrolls that way, faster nearer the edge, so a row can be moved past the screen.
 - Keyboard: Space or Enter on a handle picks the row up. The arrow keys move it one place, Home and End to either end. Space or Enter drops it, and Escape, Tab or a click elsewhere puts it back where it was. Focus stays on its handle throughout.
-- Nothing is reported until the drop, so a cancelled move leaves your data alone.
+- Nothing is reported until the drop, so a canceled move leaves your data alone.
 - `disabled` shows the rows without handles.
 - `orientation="horizontal"` lays the items out in a row (a board's columns, a set of tabs) that scrolls sideways inside itself when it doesn't fit: a drag moves sideways and scrolls at the left and right edges, and Left and Right follow the reading direction, so in right-to-left ArrowLeft moves an item later. Up and Down still move it earlier and later.
 

@@ -31,7 +31,7 @@
 - text: Email me about orders
 
 # DontCardsForShortOptions
-- group "Colour":
+- group "Color":
   - checkbox "Red" [checked]
   - text: Red
   - checkbox "Green"

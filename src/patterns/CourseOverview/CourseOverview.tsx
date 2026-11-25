@@ -126,7 +126,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
                 </div>
               ) : (
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="m-0 font-semibold">You’ve done every lesson. Well done!</p>
+                  <p className="m-0 font-semibold">You’ve finished every lesson.</p>
                   <Button href="#certificate">Get your certificate</Button>
                 </div>
               )}

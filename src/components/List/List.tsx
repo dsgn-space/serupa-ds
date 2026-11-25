@@ -68,7 +68,7 @@ export interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElem
 }
 
 /** ListItem's props: its own, `as`, and linkProps typed by the element `as` names (an <a>'s by default), so
- *  <ListItem as={RouterLink} linkProps={{ to: '/team' }}> checks `to` against RouterLink's props (GR276). */
+ *  <ListItem as={RouterLink} linkProps={{ to: '/team' }}> checks `to` against RouterLink's props. */
 export type ListItemProps<C extends React.ElementType = 'a'> = ListItemOwnProps & {
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. Its props go in linkProps. */
   as?: C | undefined;

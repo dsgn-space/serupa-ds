@@ -21,8 +21,8 @@ import { ContextualHelp } from "@diki-stwn/serupa-ds";
 
 - What an icon button does: use [Tooltip](../Tooltip/README.md), which shows on hover and focus.
 - A preview of a person, page or record on hover: use [HoverCard](../HoverCard/README.md).
-- Controls, a form or several links: use [Popover](../Popover/README.md) with a labelled button.
-- Anything people need to finish the task, such as a field's format or a requirement: put it on the page, as the Field's `description`.
+- Controls, a form or several links: use [Popover](../Popover/README.md) with a labeled button.
+- Anything people need to finish the task, such as a field's format or a requirement: put it on the page, as the Field's `hint`.
 
 ## Anatomy
 

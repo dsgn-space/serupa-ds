@@ -4,8 +4,6 @@ Shows that something is loading when you can't say how far along it is. Three lo
 
 **Also called:** spinner, loading indicator.
 
-Called Spinner before 3.0.0: see the upgrade table in the changelog.
-
 ```jsx
 import { Loader } from '@diki-stwn/serupa-ds';
 

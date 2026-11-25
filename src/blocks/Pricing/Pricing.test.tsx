@@ -93,7 +93,7 @@ describe('Blocks/Pricing', () => {
     expect(text('pro').replace(/\s/g, ' ')).toContain('Rp 1.500.000 ditagih per tahun');
   });
 
-  test('before anyone chooses, a line under the plans says paid plans renew until cancelled and links to where to cancel', async () => {
+  test('before anyone chooses, a line under the plans says paid plans renew until canceled and links to where to cancel', async () => {
     const renews = () => [...document.querySelectorAll('p')].find((p) => /renew/.test(p.textContent || ''))?.textContent;
     await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} cancelHref="/settings/billing" /></SerupaProvider>);
     expect(renews()).toBe('Paid plans renew every month at the price shown until you cancel. Cancel any time in Billing settings.');

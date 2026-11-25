@@ -70,7 +70,7 @@ function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLS
   const shownRef = React.useRef('');
   // every render: the value it shows, which a read-only change goes back to.
   React.useEffect(() => { if (ownRef.current) shownRef.current = ownRef.current.value; });
-  // Read-only: a native <select> has no readonly, so the keys and the press that open or change it are cancelled,
+  // Read-only: a native <select> has no readonly, so the keys and the press that open or change it are canceled,
   // and a change that still gets through (a phone's picker) is put back, without onChange.
   const readOnly = !!props.readOnly;
   if (readOnly) rest['aria-readonly'] = true;

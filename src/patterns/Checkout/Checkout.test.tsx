@@ -342,11 +342,11 @@ describe('Patterns/Checkout: ways to pay', () => {
     await expect.element(screen.getByRole('timer', { name: /^Time left to pay/ })).toBeVisible();
   });
 
-  test('when the time to pay has passed, it says the order is cancelled and nothing was charged, and "Choose another way to pay" goes back to the methods', async () => {
+  test('when the time to pay has passed, it says the order is canceled and nothing was charged, and "Choose another way to pay" goes back to the methods', async () => {
     const screen = await render(<Checkout initial={{ ...base, method: 'qris' }} onPlaceOrder={() => Promise.resolve({ payBy: Date.now() - 1000 })} />);
     await toReview(screen);
     await place(screen);
-    await expect.element(screen.getByText('The time to pay has run out, so the order is cancelled. Nothing was charged.')).toBeVisible();
+    await expect.element(screen.getByText('The time to pay has run out, so the order is canceled. Nothing was charged.')).toBeVisible();
     await screen.getByRole('button', { name: 'Choose another way to pay' }).click();
     await vi.waitFor(() => expect([active().getAttribute('name'), (active() as HTMLInputElement).value]).toEqual(['method', 'qris']));
   });

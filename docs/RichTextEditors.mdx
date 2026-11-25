@@ -15,7 +15,7 @@ Serupa has no rich text editor of its own: a good one is a large project, and th
 | The editable area | The editor's own element, inside `Prose` | Headings, lists, quotes and code read as they will once published, in every theme |
 | Its box | Your own class, read from the field tokens | The same border, background, hover and focus ring as Input and Textarea |
 | Bold, italic, lists | `Toolbar` of `ToggleButton`s (`variant="ghost"`), in `ButtonGroup`s | One Tab stop, the arrow keys across, `aria-pressed` for what's on |
-| Fewer used commands | A `Menu` in the Toolbar, or a [Menubar](?path=/docs/components-overlays-menubar--docs) for a full editor | Insert table, export, page setup: out of the way, still one keyboard path |
+| Less-used commands | A `Menu` in the Toolbar, or a [Menubar](?path=/docs/components-overlays-menubar--docs) for a full editor | Insert table, export, page setup: out of the way, still one keyboard path |
 | Its label, hint and error | `Field` | The hint and error describe the editable area, and an error marks it invalid |
 
 ## With Tiptap
@@ -81,7 +81,7 @@ Draw the box around the toolbar and the editable area with the field tokens, so 
 [data-editor] .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--placeholder); float: inline-start; height: 0; pointer-events: none; }
 ```
 
-The ring goes round the whole box while the focus is anywhere in it, toolbar included, so it's clear which field the buttons work on. The editable area draws no ring of its own.
+The ring goes around the whole box while the focus is anywhere in it, toolbar included, so it's clear which field the buttons work on. The editable area draws no ring of its own.
 
 ## Accessibility
 
@@ -91,7 +91,7 @@ The ring goes round the whole box while the focus is anywhere in it, toolbar inc
 - **Output:** sanitize the HTML before you show it anywhere else, and show it inside `Prose`, so what people wrote reads the same as it did while they wrote it.
 - **Read only:** for a field shown read only, show the HTML inside `Prose` with the box's read-only background (`var(--field-readonly)`), not a disabled editor: people can still reach and read it.
 
-## When not to use one
+## When not to use
 
 - Plain text, even long: use a [Textarea](?path=/docs/components-forms-textarea--docs). Formatting people don't need is more to learn and more to sanitize.
 - A comment with a link or two: a Textarea with Markdown, shown through Prose, is simpler for everyone.

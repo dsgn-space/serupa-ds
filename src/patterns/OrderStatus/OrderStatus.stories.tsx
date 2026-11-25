@@ -18,7 +18,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** An order on its way: the stage in words, the steps, what happened, and the courier's page. It can't be cancelled now, and says why. */
+/** An order on its way: the stage in words, the steps, what happened, and the courier's page. It can't be canceled now, and says why. */
 export const Default: Story = {};
 
 /** Just placed, so it can still be cancelled: Cancel order asks first, and "Keep order" is the way out. */
@@ -32,9 +32,9 @@ export const Delayed: Story = {
 /** Delivered: every step is done. */
 export const Delivered: Story = { args: { order: { ...placed, number: '1038', stage: 'delivered', arriving: undefined } } };
 
-/** Cancelled: the steps give way to a line that says so and what happens to the money. */
-export const Cancelled: Story = {
-  args: { order: { ...placed, number: '1039', cancelled: true, events: [{ id: 'e2', at: '2025-03-02T10:02:00', title: 'Order cancelled' }, ...placed.events] } },
+/** Canceled: the steps give way to a line that says so and what happens to the money. */
+export const Canceled: Story = {
+  args: { order: { ...placed, number: '1039', cancelled: true, events: [{ id: 'e2', at: '2025-03-02T10:02:00', title: 'Order canceled' }, ...placed.events] } },
 };
 
 /** The order is on its way from the server: its number stays, with a placeholder under it. */

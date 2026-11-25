@@ -24,7 +24,7 @@ import { Stack } from '../../components/Stack/Stack';
    debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
    - The plan says what it costs and the day it renews, in the reader's locale, before anyone looks for it.
    - Cancelling takes no more steps than signing up: one button, then a dialog that says what changes and when, with
-     Keep my plan and Cancel plan side by side, the same size. Nothing is deleted, and a cancelled plan can be resumed.
+     Keep my plan and Cancel plan side by side, the same size. Nothing is deleted, and a canceled plan can be resumed.
    - 1.4.1: usage says how much in words ("4 of 10 seats"), and "almost full" in words too, not only in color.
    - 1.3.1: invoices are a table with a caption; each Download link names its invoice ("Download the invoice of
      1 October 2026").
@@ -42,9 +42,9 @@ export interface BillingPlan {
   price: number;
   currency: string;
   interval: 'month' | 'year';
-  /** The next renewal, or the last day when cancelled: "2026-12-01". */
+  /** The next renewal, or the last day when canceled: "2026-12-01". */
   renews: string;
-  /** Cancelled: it stays active until `renews`, then stops. */
+  /** Canceled: it stays active until `renews`, then stops. */
   cancelled?: boolean | undefined;
 }
 export interface BillingUsage { seats: { used: number; limit: number }; storageGb: { used: number; limit: number } }
@@ -69,7 +69,7 @@ export interface BillingProps {
   invoices?: readonly BillingInvoice[] | undefined;
   /** Cancel plan was confirmed. Return its promise: a rejection keeps the dialog open and says so. */
   onCancel?: (() => unknown) | undefined;
-  /** Resume plan was pressed on a cancelled plan. */
+  /** Resume plan was pressed on a canceled plan. */
   onResume?: (() => void) | undefined;
   /** Where Change plan leads. Default: "#plans". */
   changePlanHref?: string | undefined;
@@ -142,7 +142,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
     return Promise.resolve().then(() => onCancel?.()).then(() => {
       setCancelled(true);
       setAsking(false);
-      toast({ title: `Cancelled. ${plan.name} stays active until ${date(plan.renews)}.` });
+      toast({ title: `Canceled. ${plan.name} stays active until ${date(plan.renews)}.` });
     }, () => setFailed(true));
   };
   const [busy, setBusy] = React.useState(false);
@@ -180,7 +180,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
               <Heading level={2} size="lg" id="billing-plan">Plan</Heading>
               <Card className="flex flex-row flex-wrap items-start justify-between gap-4">
                 <div className="flex flex-col gap-1">
-                  <p className="m-0 text-lg font-semibold">{plan.name}{cancelled ? <Badge tone="warning" className="ms-2">Cancelled</Badge> : null}</p>
+                  <p className="m-0 text-lg font-semibold">{plan.name}{cancelled ? <Badge tone="warning" className="ms-2">Canceled</Badge> : null}</p>
                   <p className="m-0">{price} a {plan.interval}</p>
                   <p className="m-0 text-text-muted">
                     {cancelled ? `Active until ${date(plan.renews)}, then it stops. Nothing is deleted.` : `Renews on ${date(plan.renews)} for ${price}.`}

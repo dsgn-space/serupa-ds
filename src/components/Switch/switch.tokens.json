@@ -85,7 +85,7 @@
       "thumb-ink-dark": {
         "$type": "color",
         "$value": "{color.text-inverse}",
-        "$description": "In a dark theme, the pending ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light).",
+        "$description": "In a dark theme, the loading ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-thumb-ink-dark"
@@ -145,7 +145,7 @@
       "pending": {
         "$type": "color",
         "$value": "{color.primary-text}",
-        "$description": "pending's ring on the off thumb (3:1 on it)",
+        "$description": "The loading ring on the off thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-pending"
@@ -155,7 +155,7 @@
       "pending-checked": {
         "$type": "color",
         "$value": "{color.primary-text}",
-        "$description": "pending's ring on the on thumb (3:1 on it)",
+        "$description": "The loading ring on the on thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-pending-checked"

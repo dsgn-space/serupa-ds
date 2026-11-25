@@ -136,7 +136,7 @@ The box and the number use Input's tokens. These style the country part; each is
 | `--phone-input-listbox-border` | `border-overlay` | The country list's outline, and the line under its search field. |
 | `--phone-input-option-color` | `text` | A country's name, the search text, and the calling code of the highlighted country. |
 | `--phone-input-option-bg-active` | `highlight` | The highlighted country (hover or arrow keys). |
-| `--phone-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted country's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
+| `--phone-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted country's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--phone-input-muted` | `text-muted` | A country's calling code in the list, the search icon and the no-match message. |
 | `--phone-input-focus-ring` | `focus-ring` | The box's focus ring while the country button has keyboard focus (the field's own is Input's). |
 | `--phone-input-gap` | `spacing-1` | Space around the chevron (4px). |

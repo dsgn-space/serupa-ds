@@ -53,7 +53,7 @@ function SwitchRender({ ref, ...props }: SwitchProps & React.RefAttributes<HTMLI
     const before = rest.onChange;
     rest.onChange = function (e: React.ChangeEvent<HTMLInputElement>) { if (before) before(e); checkedChange(e.currentTarget.checked, { event: e }); };
   }
-  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
+  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is canceled, which
   // puts the switch back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
   // Pending blocks a flip the same way, with aria-busy instead: it isn't read-only, it's waiting.
   const readOnly = !!rest.readOnly, pending = !!props.loading;
