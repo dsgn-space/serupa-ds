@@ -47,7 +47,7 @@
 .srp-progress--circle { --srp-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--srp-progress-ring); height: var(--srp-progress-ring); flex-shrink: 0; vertical-align: middle; }
 .srp-progress__ring { display: block; overflow: visible; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--srp-progress-start); }   /* overflow: the arc's edge reaches half a unit past the box */
 .srp-progress__ring .srp-progress__track, .srp-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
-.srp-progress__ring .srp-progress__track { stroke: var(--progress-ring-track, var(--secondary)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
+.srp-progress__ring .srp-progress__track { stroke: var(--progress-ring-track, var(--track)); transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle), stroke-dashoffset var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
 /* The arc's edge: the same arc a third wider, drawn under it. The ring scales with its viewBox, so the edge is a share of the stroke, not a border width. */
 /* stylelint-disable-next-line serupa/no-raw-value -- 4 / 3: a third wider, in the ring's own units */
 .srp-progress__arc--edge { stroke: var(--srp-progress-edge); stroke-width: calc(var(--progress-stroke-width, var(--stroke-width-3)) * 4 / 3); }

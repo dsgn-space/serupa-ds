@@ -25,4 +25,16 @@
 .srp-field__body { display: flex; flex: auto; flex-basis: var(--field-control-min-width, var(--container-3xs)); flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
 /* The required mark dims with its label: a disabled field asks for nothing, so no red mark there either. */
 .srp-field:where([data-disabled]) > .srp-field__label, .srp-field:where([data-disabled]) .srp-field__required, .srp-field:where([data-disabled]) .srp-field__body > .srp-field__hint, .srp-field:where([data-disabled]) > .srp-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
+/* A control that brings something for the end of the message row, such as Textarea's count, wraps itself and that in
+   [data-field-row] and marks it [data-field-end]: the Field then lays out as two columns, the hint and the message at
+   the start, that item at the end of the first row under the control (dense placement). The columns follow the
+   writing direction, and the hint wraps beside the item in a narrow field. */
+:where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > [data-field-row]:only-child) {
+  display: grid; grid-template-columns: [start] minmax(var(--spacing-0), 1fr) [end-slot] auto [end]; grid-auto-flow: row dense;
+  column-gap: var(--field-end-gap, var(--spacing-4));
+}
+:where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) > *, :where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) [data-field-row] > * { grid-column: start / end; }
+:where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) > :is(.srp-field__hint, .srp-field__error, .srp-field__warning, .srp-field__checking) { grid-column: start / end-slot; }
+:where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) > .srp-field__control:has(> [data-field-row]:only-child), :where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) > .srp-field__control > [data-field-row]:only-child { display: contents; }
+:where(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body) [data-field-row] > [data-field-end] { grid-column: end-slot / end; align-self: start; }
 }

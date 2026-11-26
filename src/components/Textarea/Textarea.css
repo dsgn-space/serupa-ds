@@ -2,7 +2,8 @@
    Textarea: a multi-line text field, Input's sibling. Sizes sm, md, lg with Input's text sizes (text-xs, text-sm,
    text-base) and side padding; the height comes from rows (or the text, with autoResize). Field colors come
    from the alias tokens (field, field-border, placeholder), like Input. Structure: .srp-textarea (the box) >
-   .srp-textarea__field (the native <textarea>), .srp-textarea__count, .srp-textarea__actions. Every value goes through --textarea-* tokens.
+   .srp-textarea__field (the native <textarea>), .srp-textarea__actions; with showCount, .srp-textarea__wrap holds the
+   box and .srp-textarea__count under it. Every value goes through --textarea-* tokens.
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-textarea {
@@ -58,22 +59,19 @@
     }
   }
 }
-/* The resize grip (Chrome, Edge, Safari): two short diagonal lines in the count's muted color, in place of the
-   browser's gray hatching, so the corner reads as one quiet mark beside the count. Firefox draws its own. */
-.srp-textarea__field::-webkit-resizer {
-  --srp-ta-grip: var(--textarea-resize-grip, var(--text-muted));
-  background: linear-gradient(to top left,
-    transparent var(--sizing-1-4), var(--srp-ta-grip) var(--sizing-1-4), var(--srp-ta-grip) calc(var(--sizing-1-4) + var(--border-width-1)), transparent calc(var(--sizing-1-4) + var(--border-width-1)),
-    transparent var(--sizing-1-2), var(--srp-ta-grip) var(--sizing-1-2), var(--srp-ta-grip) calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1)));
-  background-repeat: no-repeat; background-position: top left; background-size: var(--sizing-3-4) var(--sizing-3-4);   /* in from the box's corner */
+/* showCount: the count under the box, at its end, in text-xs text-muted like a Field hint, with tabular digits; it
+   turns text-colored at maxLength. The resize handle is the browser's own, at its own size. */
+.srp-textarea__wrap {
+  display: inline-flex; flex-direction: column; gap: var(--textarea-count-gap, var(--spacing-1\.5));
+  box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); vertical-align: middle;
 }
-/* The count sits under the text, at the end, in text-xs text-muted like a Field hint, with tabular digits; it turns
-   text-colored at maxLength. */
 .srp-textarea__count {
-  align-self: flex-end; padding: var(--spacing-0) var(--srp-ta-px) var(--srp-ta-py);
+  align-self: end;
   color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
-  font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
+  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
+/* In a Field, the count sits at the end of the hint's or error's row: the wrap is the Field's [data-field-row] and
+   the count its [data-field-end] (Field.css). */
 .srp-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
 /* actions: a row under the text, inside the box, with the buttons at the end; the count, when shown, starts it. */
 .srp-textarea__actions {

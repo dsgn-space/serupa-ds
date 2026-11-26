@@ -125,6 +125,16 @@
             "cssVar": "--field-column-gap"
           }
         }
+      },
+      "end-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The least space between the hint or message and an item at the end of its row, such as Textarea's count (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--field-end-gap"
+          }
+        }
       }
     },
     "sizing": {

@@ -85,7 +85,7 @@
       "count": {
         "$type": "color",
         "$value": "{color.text-muted}",
-        "$description": "The character count under the text, as a Field hint.",
+        "$description": "The character count under the box, as a Field hint.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-count"
@@ -125,7 +125,8 @@
       "resize-grip": {
         "$type": "color",
         "$value": "{color.text-muted}",
-        "$description": "The two lines of the resize grip in the corner (Chrome, Edge and Safari).",
+        "$description": "Deprecated, removed in 20.0.0: the resize handle is the browser's own again, so this has no effect.",
+        "$deprecated": "No effect since 19.2.0: the resize handle is the browser's own. Removed in 20.0.0.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-resize-grip"
@@ -211,6 +212,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-actions-padding"
+          }
+        }
+      },
+      "count-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "With `showCount`, the space between the box and the count under it (6px), as a Field's gap.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-count-gap"
           }
         }
       }

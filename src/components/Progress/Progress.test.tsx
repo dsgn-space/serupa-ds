@@ -84,6 +84,17 @@ describe('Progress', () => {
     expect([thick('sm'), thick('lg')]).toEqual([4, 12]);
   });
 
+  test('the circle\'s empty part is the shared track gray, as the bar\'s, in every theme (it read the button fill secondary)', async () => {
+    await render(<div><Progress id="rt" variant="circle" value={30} aria-label="Storage" /><Progress id="rb" value={30} aria-label="Storage" /></div>);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const ring = getComputedStyle(el('rt').querySelector('svg > circle')!).stroke;
+      expect([th, ring]).toEqual([th, color('var(--track)')]);
+      expect([th, ring]).toEqual([th, getComputedStyle(el('rb').querySelector('[role=progressbar]')!).backgroundColor]);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
   test('circle: a 40px progressbar ring (24, 64px for sm, lg), the arc 30% round, the value inside for md and lg only; without a value a quarter arc that turns', async () => {
     await render(<SerupaProvider locale="en-US"><div>
       <Progress id="c1" variant="circle" value={30} showValue aria-label="Storage" />

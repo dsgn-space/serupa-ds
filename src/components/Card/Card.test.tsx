@@ -151,16 +151,22 @@ describe('Card', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
-  test('a divider inside an elevated card reads border-overlay, so it stays visible on the raised fill in dark; on an outline card it keeps border', async () => {
+  test('a divider inside an elevated card reads border-elevated, the raised step\'s line, so it stays visible on the raised fill in dark; on an outline card it keeps border', async () => {
     await render(<Col><Card id="dve" variant="elevated"><div id="dvi" /></Card><Card><div id="dvo" /></Card></Col>);
     for (const id of ['dvi', 'dvo']) el(id).style.borderTop = '1px solid var(--border)';
     for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
       document.documentElement.setAttribute('data-theme', th);
-      expect([th, css(el('dvi')).borderTopColor]).toEqual([th, color('var(--border-overlay)')]);
+      expect([th, css(el('dvi')).borderTopColor]).toEqual([th, color('var(--border-elevated)')]);
       expect(css(el('dvi')).borderTopColor).not.toBe(css(el('dve')).backgroundColor);
       expect([th, css(el('dvo')).borderTopColor]).toEqual([th, color('var(--border)')]);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
+  test('an elevated card\'s dividers follow border-elevated, not the top layer\'s border-overlay: an elevated card isn\'t an overlay', async () => {
+    await render(<div style={{ '--border-elevated': 'rgb(1, 2, 3)', '--border-overlay': 'rgb(9, 8, 7)' } as React.CSSProperties}><Card variant="elevated"><div id="dvr" /></Card></div>);
+    el('dvr').style.borderTop = '1px solid var(--border)';
+    expect(css(el('dvr')).borderTopColor).toBe('rgb(1, 2, 3)');
   });
 
   test('a form field on an elevated card stands out from the card in every dark theme (field-raised), and on an outline card keeps the page\'s field', async () => {
