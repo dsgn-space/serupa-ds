@@ -61,7 +61,7 @@ describe('Switch', () => {
     await setup();
     const s = still(), md = box('md');
     expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--track)'), 16, color('var(--white)'), 2, '14px']);
-    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toMatch(/^rgba\(0, 0, 0, [0-9.]+\) 0px 1px/);
+    expect(css(el('md').closest('label')!.querySelector('input + span')).boxShadow).toMatch(/^rgb\(255, 255, 255\) 0px 0px 0px 0px, rgba\(0, 0, 0, [0-9.]+\) 0px 1px/);   // the press stretch's copy, unmoved at rest, then the shadow
     expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
     expect(md.vGap).toBeLessThan(0.5);
     expect(md.mid).toBeLessThan(1);
@@ -304,14 +304,15 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: while the row is held the track takes its held color, a step past hover (off: track-pressed; on: primary-pressed), and the thumb grows 4px wider toward the middle (its far edge stays put); not when disabled (ED1)', async () => {
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: track-pressed; on: primary-pressed), and the thumb grows 4px wider toward the middle, a copy of it in its color 4px over (its far edge stays put); not when disabled (ED1)', async () => {
     await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
     const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
     const edges = (id: string) => { const t = thumb(id).getBoundingClientRect(), k = el(id).getBoundingClientRect(); return [Math.round(t.left - k.left), Math.round(k.right - t.right)]; };
-    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, ...edges(id)];
+    const reach = (id: string) => { const m = /^rgb\([^)]+\) (-?[\d.]+px) 0px 0px 0px/.exec(css(thumb(id)).boxShadow); return m ? m[1] : css(thumb(id)).boxShadow; };
+    const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, reach(id), ...edges(id)];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '20px', 2, 14]);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '20px', 14, 2]);
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '16px', '4px', 2, 18]);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '16px', '-4px', 18, 2]);
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 
