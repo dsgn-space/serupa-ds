@@ -179,8 +179,10 @@ jobs:
           SERUPA_SHARD: ${{ matrix.shard }}/6
         # No new file after 75 minutes, and an end by 100 even mid-file: one file can take 45 minutes, so shards 1 and
         # 4 still ran into the job's 120 minutes and were cancelled with nothing reported (24 Nov). The 20 left cover
-        # the setup and the upload.
-        run: node tools/test/mutation.mjs --rotate --minutes 75 --stop 100 --json mutation.json
+        # the setup and the upload. --stop is checked between mutants, so a run that hangs inside one never reaches it:
+        # shards 3 and 6 printed nothing for two hours and were cancelled (26 Nov). timeout ends it at 105 minutes from
+        # outside, and SIGKILL a minute later if the event loop is stuck, so the step fails with its log and JSON.
+        run: timeout -k 1m 105m node tools/test/mutation.mjs --rotate --minutes 75 --stop 100 --json mutation.json
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
