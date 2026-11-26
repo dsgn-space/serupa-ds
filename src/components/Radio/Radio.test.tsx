@@ -261,12 +261,12 @@ describe('Radio', () => {
     expect([input('o1').matches(':disabled'), disabledLook(wrap('o1'))]).toEqual([true, 'neutral']);
   });
 
-  test('contrast in every theme: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1 and the border 3:1', () => {
+  test('contrast in every theme: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
-      ['border 3:1 on the field (WCAG 1.4.11)', 'var(--field-border)', 'var(--field)', 3],
-      ['border 3:1 on the page', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['checked fill, or its edge where the theme has one', () => edged('var(--primary)'), 'var(--surface)', 3],
       ['dot on fill', 'var(--on-primary)', 'var(--primary)', 3],
       ['dot on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 3],

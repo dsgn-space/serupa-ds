@@ -1863,11 +1863,11 @@
     },
     "field-border": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: zinc-500 in light and in dark, 3:1 or more against the field and the page in every theme, as WCAG 1.4.11 asks of a control's boundary. More contrast (`data-contrast=\"more\"` or the system setting) makes it darker still. For a softer line in your own app, set `--field-border` to `var(--border-strong)`, and know it is then under 3:1. Other controls' edges use `border-control`.",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-500}",
+          "dark": "{zinc-700}",
           "contrastMore": {
             "light": "{zinc-700}",
             "dark": "{zinc-300}"
@@ -1877,11 +1877,11 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
-      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-600 in light, zinc-400 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-400 in light, zinc-600 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-400}",
+          "dark": "{zinc-600}",
           "contrastMore": {
             "light": "{zinc-900}",
             "dark": "{zinc-100}"
@@ -1891,11 +1891,11 @@
     },
     "field-border-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
-      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-700 in light, zinc-300 in dark).",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-500 in light, zinc-500 in dark).",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-300}",
+          "dark": "{zinc-500}",
           "contrastMore": {
             "light": "{zinc-950}",
             "dark": "{zinc-50}"
@@ -2116,7 +2116,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` and other controls `border-control`, both 3:1.",
+      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design); other controls `border-control`, 3:1.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-600}",

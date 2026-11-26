@@ -285,7 +285,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
 | `--button-outline-bg-pressed` | `secondary-hover` | Outline background while held down, one step past hover. |
 | `--button-outline-text` | `text` | Outline text and icons. |
-| `--button-outline-border` | `border-control` | Outline border: border-control, 3:1 on the page and on a raised card in every theme (WCAG 1.4.11). |
+| `--button-outline-border` | `border-overlay` | Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill. |
 | `--button-ghost-bg` | `transparent` | Ghost background (transparent). |
 | `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
 | `--button-ghost-bg-pressed` | `secondary-hover` | Ghost background while held down, one step past hover. |

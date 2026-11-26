@@ -154,8 +154,8 @@
       },
       "outline-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "Outline border: border-control, 3:1 on the page and on a raised card in every theme (WCAG 1.4.11).",
+        "$value": "{color.border-overlay}",
+        "$description": "Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-outline-border"

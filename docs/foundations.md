@@ -181,8 +181,8 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `disabled-text` | `zinc-500` | `zinc-400` | Labels, marks and icons of a disabled control: at least 3:1 on every surface, `zinc-700` / `zinc-300` with more contrast. |
 | `disabled-surface` | `zinc-100` | `zinc-800` | Fill of a disabled control that has one (a checked box, a switch track, a slider fill's track). |
 | `disabled-border` | `zinc-300` | `zinc-700` | Edge of a disabled control or field. |
-| `field-border` | `zinc-500` | `zinc-500` | Border of form fields, 3:1 or more on the field and the page (WCAG 1.4.11). |
-| `field-border-hover` | `zinc-600` | `zinc-400` | Field border on hover: the resting `field-border` one gray step stronger. The accent is kept for focus. |
+| `field-border` | `zinc-300` | `zinc-700` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
+| `field-border-hover` | `zinc-400` | `zinc-600` | Field border on hover: the resting `field-border` one gray step stronger. The accent is kept for focus. |
 | `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
 | `border-control-hover` | `zinc-600` | `zinc-300` | `border-control` on hover (Switch's track). |
 | `field-hover` | `zinc-100` | `zinc-700` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
@@ -196,7 +196,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 
 - `on-primary` on `primary`: 4.8–6.5:1, 7.6:1 in Yellow Light and 9.5:1 in Yellow Dark. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
 - `focus-ring` on `surface`: 3.7:1 or more.
-- **Form field borders are 3:1.** A field's resting border (`field-border`, zinc-500 in light and dark) is 3:1 or more on the field and on the page in every theme, as WCAG 1.4.11 asks of a control's edge; hover and pressed go a step stronger, and more contrast (`data-contrast="more"`, or the system's own setting) darker still. A product that wants the old softer line sets `--field-border` to `var(--border-strong)`, and is then under 3:1.
+- **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 fill) is about 1.5:1 in light and 1.4:1 to 1.9:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its fill in dark, the stronger border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-control)`. The checks hold the border to 1.3:1 so it never fades out entirely. Every other control's edge, `border-control`, keeps 3:1.
 - Dark themes fill with the light theme's `primary` under white text, a little lighter where 3:1 on a raised card asks it; brand text there is `primary-text` (brand 400), since the fill's shade is 3.4:1 as text on a dark card.
 
 ### Naming

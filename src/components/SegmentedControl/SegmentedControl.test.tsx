@@ -262,7 +262,7 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('rtl')[0]).toBe(0);
   });
 
-  test('contrast: the outline is the field\'s border, 3:1 on the page, labels 4.5:1, in every theme', async () => {
+  test('contrast: the outline is the field\'s soft hairline (1.3:1 on the page by design, 3:1 with more contrast), labels 4.5:1, in every theme', async () => {
     await render(<Col><Period /></Col>);
     const e = el('per'), indi = e.querySelector(':scope > span[aria-hidden]')!;
     const low: string[] = [];
@@ -274,7 +274,7 @@ describe('SegmentedControl', () => {
       await settled();
       const bg = css(e).backgroundColor;
       const pairs: Array<[string, string, string, number]> = [
-        ['outline on page, 3:1 like a field\'s', css(e).borderTopColor, 'var(--surface)', 3],
+        ['outline on page, soft by design like a field\'s', css(e).borderTopColor, 'var(--surface)', 1.3],
         ['label on bg', css(seg('per', 'day')).color, bg, 4.5],
         ['selected label', css(e.querySelector('[aria-checked=true]')).color, css(indi).backgroundColor, 4.5],
         ['selection outline on bg, soft by design', css(indi).borderTopColor, bg, 1.2],

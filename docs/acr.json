@@ -133,8 +133,8 @@
       "id": "1.4.11",
       "name": "Non-text Contrast",
       "level": "AA",
-      "conformance": "Supports",
-      "remarks": "Focus rings, icons that carry meaning and the edges of controls meet 3:1 in every theme, checked with the text pairs: text fields, Checkbox, Radio, SegmentedControl and outline buttons (field-border and border-control), Slider, Switch, Meter and Progress, and the 2px bar that marks the keyboard-highlighted item of a menu or list box (highlight-indicator). More contrast (data-contrast=\"more\" or the system setting) makes them darker still."
+      "conformance": "Partially Supports",
+      "remarks": "Focus rings, icons that carry meaning and the edges of controls such as Slider, Switch, Meter and Progress meet 3:1 in every theme, checked with the text pairs, and so does the 2px bar that marks the keyboard-highlighted item of a menu or list box (highlight-indicator). Resting borders on text fields, Checkbox, Radio and SegmentedControl are soft by design (about 1.48:1 in light and 1.43:1 in dark), and outline buttons use the same soft line as other borders: the label, hover border and focus ring mark the control, and more contrast (data-contrast=\"more\" or the system setting) brings back 3:1 borders. An app that must conform without that setting sets --field-border to var(--border-control)."
     },
     {
       "id": "1.4.12",
