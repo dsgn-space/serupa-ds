@@ -303,6 +303,10 @@ jobs:
           out="$RUNNER_TEMP/baselines"
           rm -rf "$out"
           mkdir -p "$out/files"
+          # upload-artifact uploads nothing for a folder with no files, and commit's download then fails: every push to
+          # main whose measurement matched went red this way (26 Nov). The marker makes an unchanged measurement an
+          # artifact too; commit reads only files/.
+          : > "$out/measured"
           git add -A -- tools/test/baseline-utilities.json
           git diff --cached --no-renames --name-only --diff-filter=d -z | xargs -0 -r cp --parents -t "$out/files" --
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
