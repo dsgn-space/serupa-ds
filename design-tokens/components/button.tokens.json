@@ -154,8 +154,8 @@
       },
       "outline-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
-        "$description": "Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill.",
+        "$value": "{color.border-elevated}",
+        "$description": "Outline border: border-elevated, the line for the raised fill the button has: the same as border in light and a step above that fill in dark, where border would match it.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--button-outline-border"

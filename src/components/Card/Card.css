@@ -29,7 +29,7 @@
    outlines it (as a neutral Alert's does), and in light, where zinc-50 shows on white, it stays borderless. */
 /* What's inside reads `border` a step off the raised surface in dark, so its dividers show; the card's own edge stays
    the outline card's. */
-.srp-card--elevated > * { --border: var(--card-divider-elevated, var(--border-overlay)); }
+.srp-card--elevated > * { --border: var(--card-divider-elevated, var(--border-elevated)); }
 .srp-card--filled { background: var(--card-bg-filled, var(--surface-muted)); --surface-behind: var(--card-bg-filled, var(--surface-muted)); --srp-card-filled-edge: light-dark(transparent, var(--card-border-filled, var(--border))); border-color: var(--srp-card-filled-edge); box-shadow: var(--shadow-none); --srp-row-hover: var(--card-row-bg-hover-filled, var(--surface-raised)); }
 .srp-card--padding-none { padding: var(--spacing-0); }
 .srp-card--padding-sm { padding: var(--card-padding-sm, var(--spacing-3)); }

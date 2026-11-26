@@ -54,6 +54,7 @@
   --track-hover: var(--zinc-300);
   --track-pressed: var(--zinc-500);
   --border-overlay: var(--zinc-200);
+  --border-elevated: var(--zinc-200);
   --focus-ring: var(--blue-500);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -394,6 +395,7 @@
   --track-hover: var(--zinc-300);
   --track-pressed: var(--zinc-500);
   --border-overlay: var(--zinc-200);
+  --border-elevated: var(--zinc-200);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
   --success-text: var(--green-700);
@@ -493,6 +495,7 @@
   --track-hover: var(--zinc-600);
   --track-pressed: var(--zinc-400);
   --border-overlay: var(--zinc-600);
+  --border-elevated: var(--zinc-600);
   --success: #23a950;
   --success-subtle: var(--green-950);
   --success-text: var(--green-300);
@@ -620,6 +623,7 @@
   --track-hover: light-dark(var(--zinc-300), var(--zinc-600));
   --track-pressed: light-dark(var(--zinc-500), var(--zinc-400));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
+  --border-elevated: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --success: light-dark(var(--green-600), #23a950);
   --success-subtle: light-dark(var(--green-50), var(--green-950));

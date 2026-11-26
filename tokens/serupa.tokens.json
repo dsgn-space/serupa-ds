@@ -1766,7 +1766,7 @@
     "surface-hover-raised": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1. Gray text on it reads `text-muted-shaded`.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark #333338, a step above zinc-800: zinc-800 and zinc-700 mixed half and half in sRGB (`color-mix(in srgb, zinc-800, zinc-700)`), so it sits between two palette steps rather than adding one, and muted text keeps 4.5:1 on it. Gray text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "dark": "#333338"
@@ -1920,7 +1920,7 @@
     "border-control-hover": {
       "$type": "color",
       "$value": "{color.zinc-400}",
-      "$description": "Alias. `border-control` on hover, one step stronger (Switch's track).",
+      "$description": "Alias. `border-control` on hover, one step stronger (Carousel's dots).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-500}",
@@ -1934,7 +1934,8 @@
     "border-control-pressed": {
       "$type": "color",
       "$value": "{color.zinc-500}",
-      "$description": "Alias. `border-control` while held down, one step past `border-control-hover`.",
+      "$description": "Alias. `border-control` while held down, one step past `border-control-hover`. Nothing in Serupa reads it.",
+      "$deprecated": "Nothing in Serupa reads it since Switch's track took `track-pressed`. Removed in 20.0.0. For a pressed control edge of your own, use `border-control-hover` or set the color yourself.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-400}",
@@ -1968,7 +1969,7 @@
     "field-raised": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. `field-hover` and `field-pressed` already sit a step past it.",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, zinc-800 and zinc-700 mixed half and half, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. `field-hover` and `field-pressed` already sit a step past it.",
       "$extensions": {
         "com.serupa": {
           "dark": "#333338"
@@ -2172,7 +2173,17 @@
     "border-overlay": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. The edge of a top-layer surface. In dark it is one step stronger than `border`, so a menu stands off the page.",
+      "$description": "Alias. The edge of a top-layer surface (Menu, Popover, Dialog, Drawer, Toast, the picker lists), and the lines inside it. In dark it is one step stronger than `border`, so a menu stands off the page.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-600}"
+        }
+      }
+    },
+    "border-elevated": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. A line on the raised step, `surface-raised`: the dividers inside an elevated Card and the outline Button's border (the button's fill is `surface-raised`). The same zinc-200 as `border` in light; in dark zinc-600, a step above the zinc-800 fill, where `border` (zinc-800) would match it and vanish. The same values as `border-overlay`, which is the top layer's. Not named border-raised: that name was removed in 15.0.0, and serupa-migrate still turns it into `border`.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-600}"

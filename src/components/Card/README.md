@@ -142,7 +142,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-wash-pressed` | `text` | The color washed over a card with `href` while it's held down, at layer-pressed strength: darker in light themes, lighter in dark. |
 | `--card-text-muted-pressed` | `text-muted-shaded` | Muted text on a card with `href` while it's held down (4.5:1 on the washed fill). |
 | `--card-focus-ring` | `focus-ring` | A linked card's keyboard focus ring |
-| `--card-divider-elevated` | `border-overlay` | What a divider or separator inside an elevated card reads as `border`: the top-layer edge color, since in dark `border` is the raised surface's own color and a line in it vanished |
+| `--card-divider-elevated` | `border-elevated` | What a divider or separator inside an elevated card reads as `border`: `border-elevated`, the line for the raised surface, since in dark `border` is that surface's own color and a line in it vanished |
 
 **Shadow**
 

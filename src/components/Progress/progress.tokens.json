@@ -24,8 +24,8 @@
       },
       "ring-track": {
         "$type": "color",
-        "$value": "{color.secondary}",
-        "$description": "The ring's empty part. The arc runs along the page on both sides, so it keeps 3:1 there.",
+        "$value": "{color.track}",
+        "$description": "The ring's empty part: the shared `track` gray, as the bar's (zinc-200 in light, zinc-700 in dark). The arc runs along the page on both sides, so it keeps 3:1 there.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--progress-ring-track"

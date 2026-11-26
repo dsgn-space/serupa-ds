@@ -105,6 +105,16 @@ async function withRouter(run: (linkRef: React.RefObject<HTMLAnchorElement | nul
 }
 
 describe('Button', () => {
+  test('an outline button\'s border is border-elevated, the line for its raised fill, not the top layer\'s border-overlay: a button isn\'t an overlay', async () => {
+    await render(<div style={{ '--border-elevated': 'rgb(1, 2, 3)', '--border-overlay': 'rgb(9, 8, 7)' } as React.CSSProperties}><Button id="ob" variant="outline">Edit</Button></div>);
+    expect(getComputedStyle(el('ob')).borderTopColor).toBe('rgb(1, 2, 3)');
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect([th, color('var(--border-elevated)')]).toEqual([th, color('var(--border-overlay)')]);   // the same values: nothing looks different
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
   test('type="submit" submits the form on click, and through Enter in a field; onClick runs; type defaults to "button" (never submits by accident)', async () => {
     await withRouter(async () => {
       await userEvent.click(el('sub'));
