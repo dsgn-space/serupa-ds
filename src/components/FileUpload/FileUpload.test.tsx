@@ -93,6 +93,8 @@ describe('FileUpload', () => {
     const files = new DataTransfer(); files.items.add(file('a.png', 'image/png', 10));
     const enter = new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer: files });
     zone.dispatchEvent(enter);
+    zone.dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer: files }));
+    zone.dispatchEvent(new DragEvent('dragleave', { bubbles: true, cancelable: true, dataTransfer: files }));
     zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: files }));
     rootOf('fs').dispatchEvent(new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: files }));
     await new Promise((ok) => setTimeout(ok, 50));
