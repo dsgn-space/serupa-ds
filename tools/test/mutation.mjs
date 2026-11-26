@@ -125,6 +125,7 @@ function save() {
   fs.writeFileSync(BASELINE, JSON.stringify(Object.fromEntries(Object.entries(next).sort()), null, 2) + '\n');
 }
 let failed = false;
+console.log('…     starting Vitest');
 await start();
 try {
   const began = Date.now(), all = targets();
@@ -136,11 +137,13 @@ try {
     // dates.ts:8 took a real 84.3% to 100% (25 Nov).
     const glob = () => vitest.globTestSpecifications(tests.map((t) => path.join(PROJECT, t)));
     let specs = await glob();
+    // Named before its first run, so a log that stops shows which file it stopped in: shards 3 and 6 printed nothing
+    // in two hours and were cancelled (Nightly, 26 Nov).
+    const list = mutants(file, text), survived = [];
+    console.log(`…     ${file}: ${list.length} mutants`);
     const t0 = Date.now();
     if ((await passes(specs, 300_000)) !== true) { console.log(`SKIP  ${file}: its tests fail without any mutant`); failed = true; continue; }
     const limit = Math.max(30_000, (Date.now() - t0) * 5);
-    const list = mutants(file, text), survived = [];
-    console.log(`…     ${file}: ${list.length} mutants`);
     let killed = 0;
     restore.set(abs, text);
     let cut = false, broken = false;
