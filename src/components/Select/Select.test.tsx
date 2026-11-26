@@ -338,20 +338,20 @@ describe('Select: the styled list', () => {
     }
   });
 
-  test('the option under the keyboard has the gray highlight fill and a 2px bar 3:1 on it (text-dark with more contrast); text reads 4.5:1 on the list and on that fill, the tick 3:1, and the bar 3:1 on the fill, in every theme', async () => {
+  test('the option under the keyboard has the grey highlight fill and no bar (a 2px bar with more contrast); text reads 4.5:1 on the list and on that fill, the tick 3:1, and the more-contrast bar 3:1 on the fill, in every theme', async () => {
     await render(<div style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></div>);
     const s = document.querySelector('select')!;
     if (!styled) return expect(css(s).appearance).toBe('none');
     s.focus();
     await userEvent.keyboard(OPEN + '{ArrowDown}');
     const act = document.activeElement as HTMLOptionElement;
-    expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--highlight)'), `${color('var(--highlight-indicator)')} 2px 0px 0px 0px inset`]);
+    expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--highlight)'), `${color('var(--highlight)')} 2px 0px 0px 0px inset`]);
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after, ::picker(select) { transition: none !important; }'; document.head.appendChild(still);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = getComputedStyle(s, '::picker(select)').backgroundColor, abg = css(act).backgroundColor;
-      const pairs: Array<[string, string, string, number]> = [['option', css(opt('Apple')).color, bg, 4.5], ['active option', css(act).color, abg, 4.5], ['group', getComputedStyle(document.querySelector('optgroup legend') ?? document.querySelector('optgroup')!).color, bg, 4.5], ['tick', getComputedStyle(opt('Apple'), '::checkmark').color, bg, 3], ['bar', css(act).boxShadow.match(/rgb\([^)]+\)/)![0], abg, 3], ['bar on the list', css(act).boxShadow.match(/rgb\([^)]+\)/)![0], bg, 3]];
+      const pairs: Array<[string, string, string, number]> = [['option', css(opt('Apple')).color, bg, 4.5], ['active option', css(act).color, abg, 4.5], ['group', getComputedStyle(document.querySelector('optgroup legend') ?? document.querySelector('optgroup')!).color, bg, 4.5], ['tick', getComputedStyle(opt('Apple'), '::checkmark').color, bg, 3], ];
       document.documentElement.setAttribute('data-contrast', 'more');
       pairs.push(['more-contrast bar', css(act).boxShadow.match(/rgb\([^)]+\)/)![0], css(act).backgroundColor, 3]);
       document.documentElement.removeAttribute('data-contrast');

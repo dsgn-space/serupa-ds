@@ -718,7 +718,7 @@ describe('Combobox', () => {
     expect(low).toEqual([]);
   });
 
-  test('the highlighted option: the gray highlight fill and a 2px bar at its start, 3:1 on the fill; text-dark with more contrast; on the right in rtl', async () => {
+  test('the highlighted option: the grey highlight fill and no bar; with more contrast a 2px bar at its start, 3:1 on the fill, on the right in rtl', async () => {
     await render(<Countries />);
     await open();
     await userEvent.keyboard('{ArrowDown}');
@@ -726,9 +726,7 @@ describe('Combobox', () => {
     const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--text)'; document.body.appendChild(probe);
     const fill = () => getComputedStyle(probe).backgroundColor;
     await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(fill());
-    const bar = color('var(--highlight-indicator)');
-    expect(getComputedStyle(act()).boxShadow).toBe(`${bar} 2px 0px 0px 0px inset`);
-    expect(contrast(bar, fill())).toBeGreaterThanOrEqual(3);
+    expect(getComputedStyle(act()).boxShadow).toBe(`${fill()} 2px 0px 0px 0px inset`);
     document.documentElement.setAttribute('data-contrast', 'more');
     await expect.poll(() => getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} 2px 0px 0px 0px inset`);
     expect(contrast(getComputedStyle(probe).color, fill())).toBeGreaterThanOrEqual(3);

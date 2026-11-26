@@ -1849,11 +1849,11 @@
     },
     "highlight-indicator": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. zinc-500 in light and zinc-400 in dark, 3:1 or more on `highlight` and on the overlay surface in every theme, so the keyboard's place in an open list shows by more than the gray fill (WCAG 1.4.11, 2.4.7). Sidebar, Navbar, List, TreeView and Table draw it only where `highlight-indicator-width` gives it a width. More contrast (`data-contrast=\"more\"` or the system setting) turns it `text`-dark, and forced colors outline the item in `Highlight`.",
+      "$value": "{color.zinc-100}",
+      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the gray fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-400}",
+          "dark": "{zinc-700}",
           "contrastMore": {
             "light": "{zinc-950}",
             "dark": "{white}"
@@ -2116,7 +2116,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design); other controls `border-control`, 3:1.",
+      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-600}",

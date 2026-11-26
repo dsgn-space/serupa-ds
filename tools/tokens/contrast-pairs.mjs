@@ -69,12 +69,9 @@ export const PAIRS = [
   ['danger', 'surface', 3, 'Destructive secondary button border'],
   // The resting field border is soft by design (zinc-300 in light, zinc-700 in dark): below the 3:1 WCAG 1.4.11 asks
   // of a control's boundary, a deliberate exception. These pairs hold it to 1.3:1, so it never fades out entirely; the
-  // focus ring and more contrast keep 3:1. Every other control's edge is border-control, held to 3:1 below, and so is
-  // the bar that marks the keyboard's item in an open list.
+  // focus ring and more contrast keep 3:1. Every other control's edge is border-control, held to 3:1 below.
   ['field-border', 'field', 1.3, 'Field border, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface', 1.3, 'Field border on the page, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
-  ['highlight-indicator', 'highlight', 3, 'The bar on the keyboard-highlighted item of a menu or list box (WCAG 1.4.11, 2.4.7)'],
-  ['highlight-indicator', 'surface-overlay', 3, 'The highlighted item\'s bar against the menu around it'],
   ['focus-ring', 'field', 3, 'The focus ring on a field'],
   ['field-border-invalid', 'field', 3, 'An invalid field border'],
   ['field-border-invalid', 'surface', 3, 'An invalid field border on the page'],

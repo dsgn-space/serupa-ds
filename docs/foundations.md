@@ -128,7 +128,7 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `primary-edge` | transparent (`yellow-700` in Yellow Light) | transparent | A 1px edge inside a `primary` fill with no text on it, where the fill is under 3:1 on the page. |
 | `secondary` | `zinc-100` | `zinc-700` | Secondary button fill; hover fill for outline and ghost buttons. |
 | `secondary-hover` | `zinc-200` | `zinc-600` | Hover state of `secondary`. |
-| `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list a 2px `highlight-indicator` bar at the row's start marks it too, 3:1 on the fill. |
+| `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface-page` | `white` | `zinc-950` | The page itself: the `<html>` and `<body>` background, and a `data-mode` or `data-theme` section's. The same as `surface` in light; in dark a step below the cards, panels and bars on it, so they and every control sit lighter than the page. |
 | `surface` | `white` | `zinc-900` | Card, panel and bar background. |
