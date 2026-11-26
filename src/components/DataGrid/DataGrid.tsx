@@ -125,9 +125,12 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   const cellText = (r: number, c: number) => { const at = cellAt(r, c); return at ? textOf(at.col, at.row) : ''; };
   const change = (changes: DataGridCellChange[]) => {
     if (!changes.length || !props.onRowsChange) return;
+    // By row first, so a paste over many rows reads the changes once, not once per row.
+    const byRow = new Map<string, DataGridCellChange[]>();
+    for (const x of changes) { const list = byRow.get(x.rowId); if (list) list.push(x); else byRow.set(x.rowId, [x]); }
     const next = rows.map((row) => {
-      const mine = changes.filter((x) => x.rowId === String(row[key]));
-      if (!mine.length) return row;
+      const mine = byRow.get(String(row[key]));
+      if (!mine) return row;
       const copy: DataGridRow = { ...row };
       for (const x of mine) copy[x.column] = x.value;
       return copy;
@@ -146,13 +149,14 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     props.onKeyDown?.(e);
     if (e.defaultPrevented || edit || isComposing(e)) return;
-    const ctrl = e.ctrlKey || e.metaKey, shift = e.shiftKey, back = rtl() ? 1 : -1;
+    const ctrl = e.ctrlKey || e.metaKey, shift = e.shiftKey;
+    const back = () => (rtl() ? 1 : -1);   // read only for the side arrows: it asks for the computed style
     const go = (p: Pos) => { e.preventDefault(); move(p, shift); };
     switch (e.key) {
       case 'ArrowDown': return go({ r: cur.r + 1, c: cur.c });
       case 'ArrowUp': return go({ r: cur.r - 1, c: cur.c });
-      case 'ArrowRight': return go({ r: cur.r, c: ctrl ? (back < 0 ? lastCol : 0) : cur.c - back });
-      case 'ArrowLeft': return go({ r: cur.r, c: ctrl ? (back < 0 ? 0 : lastCol) : cur.c + back });
+      case 'ArrowRight': { const b = back(); return go({ r: cur.r, c: ctrl ? (b < 0 ? lastCol : 0) : cur.c - b }); }
+      case 'ArrowLeft': { const b = back(); return go({ r: cur.r, c: ctrl ? (b < 0 ? 0 : lastCol) : cur.c + b }); }
       case 'Home': return go(ctrl ? { r: 1, c: 0 } : { r: cur.r, c: 0 });
       case 'End': return go(ctrl ? { r: lastRow, c: lastCol } : { r: cur.r, c: lastCol });
       case 'PageDown': return go({ r: cur.r + 10, c: cur.c });

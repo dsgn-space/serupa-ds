@@ -114,7 +114,7 @@ if (D) {
   t('version matches package.json', D.version === pkg.version, D.version);
   // base.css and theme.js say __VERSION__ in src/, which the build replaces (tools/build/build.mjs).
   const unstamped = ['dist/base.css', 'dist/theme.js'].filter((f) => read(f).includes('__VERSION__') || !read(f).includes(`Serupa v${pkg.version} `));
-  t('dist/base.css and dist/theme.js carry package.json\'s version (stamped at build)', !unstamped.length && [`version = "${pkg.version}"`, `version = '${pkg.version}'`].some((v) => read('dist/theme.js').includes(v)), unstamped.join(', '));
+  t('dist/base.css and dist/theme.js carry package.json\'s version (stamped at build)', !unstamped.length && [`version = "${pkg.version}"`, `version = '${pkg.version}'`, `version="${pkg.version}"`].some((v) => read('dist/theme.js').includes(v)), unstamped.join(', '));
   // Server-rendered apps paste theme.js into an inline <script> to avoid a flash of the wrong theme: a closing script tag
   // anywhere in it (a comment included) ends that script early, and an HTML comment opener changes how the rest is read.
   const inlineBreakers = ['</script', '<!--'].filter((x) => read('dist/theme.js').toLowerCase().includes(x));

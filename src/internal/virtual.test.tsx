@@ -47,3 +47,19 @@ test('past the height limit (1,000,000 rows of 20px), scrollToIndex maps the row
   await expect.poll(() => shown()).toContain(400_000);
   expect(out.r!.offsetOf(400_000)).toBeGreaterThanOrEqual(s.scrollTop - 1);
 });
+
+test('a list under the height limit leaves the wheel to the browser: no wheel listener that could hold scrolling up; one past it takes the wheel', async () => {
+  const real = HTMLElement.prototype.addEventListener, wheels: Array<[string, boolean]> = [];
+  HTMLElement.prototype.addEventListener = function (this: HTMLElement, type: string, fn: EventListenerOrEventListenerObject, o?: boolean | AddEventListenerOptions) {
+    if (type === 'wheel' && this.id === 's') wheels.push([this.id, typeof o === 'object' && o.passive === false]);
+    return real.call(this, type, fn, o);
+  } as typeof real;
+  try {
+    const small = await render(<Rows count={50} out={{}} />);
+    await frame();
+    expect(wheels).toEqual([]);
+    await small.unmount();
+    await render(<Rows count={1_000_000} out={{}} />);
+    await expect.poll(() => wheels).toEqual([['s', true]]);
+  } finally { HTMLElement.prototype.addEventListener = real; }
+});
