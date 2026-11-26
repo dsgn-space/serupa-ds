@@ -80,7 +80,7 @@ export const PAIRS = [
   ['text', 'field-hover', 4.5, 'Text or an icon on a button in a field under the pointer'],
   ['text', 'field-pressed', 4.5, 'Text or an icon on a button in a field held down'],
   ['border-control', 'surface', 1.3, 'A control edge (Meter and Progress track edge, Carousel dot, Stepper ring), soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception'],
-  ['border-control-pressed', 'surface', 1.3, 'A control edge while held down'],
+  ['border-control-pressed', 'surface', 1.3, 'A control edge while held down (deprecated, removed in 20.0.0)'],
   ['placeholder', 'field', 4.5, 'Muted text in a field: a prefix, a suffix, a character count'],
   ['text-muted', 'field', 3, 'A muted icon in a field (a chevron, a search or clear icon)'],
   ['placeholder', 'field-readonly', 4.5, 'A placeholder in a read-only or disabled field'],

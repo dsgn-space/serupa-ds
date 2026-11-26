@@ -145,7 +145,8 @@ Alias tokens give a color a **job** instead of a hue. Each one points to a palet
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. In dark a quiet step off the `zinc-900` cards and bars it outlines. Never a control's boundary: fields use `field-border`, other controls `border-control`. |
 | `border-strong` | `zinc-300` | `zinc-600` | Emphasized dividers and outlines. Form fields use `field-border`. |
-| `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
+| `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface, and the lines inside it; one step stronger than `border` in dark. |
+| `border-elevated` | `zinc-200` | `zinc-600` | A line on `surface-raised`: an elevated Card's dividers, the outline Button's border. The same values as `border-overlay`, for the raised step rather than the top layer. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `#23a950` | Success icons and fills (3:1): in dark, `green-600` a touch lighter. Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
@@ -538,7 +539,7 @@ Effect utilities, as classes in `bundle.css`. Box shadows are tokens in the `sha
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
-- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
+- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge (lines inside it use `border-elevated`), and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`disabled-text`, `disabled-surface`, `disabled-border`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
 
