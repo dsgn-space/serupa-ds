@@ -15,6 +15,13 @@
   - text: A short note
 - text: 12 / 280
 
+# CountInField
+- text: Bio
+- textbox "Bio": A short note
+- text: 12 / 280 Shown on your public profile. Keep it to a line or two. Delivery note
+- textbox "Delivery note" [invalid]
+- text: 0 / 140 Say where to leave the parcel.
+
 # DoSizeRows
 - textbox "Describe the problem":
   - /placeholder: What happened, and what did you expect?

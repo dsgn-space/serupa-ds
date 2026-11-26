@@ -13,7 +13,7 @@ import { Textarea } from '@diki-stwn/serupa-ds';
 // grows with the text from 2 lines up to 8, then scrolls
 <Textarea aria-label="Reply" autoResize rows={2} maxRows={8} value={reply} onChange={(e) => setReply(e.target.value)} />
 
-// a count under the text: "32 / 280"
+// a count under the box, at its end: "32 / 280" (in a Field, on the hint's row)
 <Textarea id="bio" maxLength={280} showCount />
 
 // a comment box: Attach and Send in a row under the text, inside the box
@@ -41,7 +41,7 @@ import { Textarea } from '@diki-stwn/serupa-ds';
 Drawn from the `Actions` story.
 
 1. **Field** (`.srp-textarea__field`): where the text is typed; it can grow with it.
-2. **Count** (`.srp-textarea__count`): how many characters are left, announced as the limit nears.
+2. **Count** (`.srp-textarea__count`): how many characters are used of the limit, announced as it nears. Under the box at its end; in a Field, on the row of the hint or error; with `actions`, at the start of their row.
 3. **Actions** (`.srp-textarea__actions`): an optional row of buttons under the text, inside the box.
 
 ## Usage
@@ -55,7 +55,7 @@ Drawn from the `Actions` story.
 
 | State | Look |
 | --- | --- |
-| Rest | `field` background, 1px `field-border`, a resize handle at the bottom corner |
+| Rest | `field` background, 1px `field-border`, the browser's own resize handle at the bottom corner |
 | Hover | `field-border-hover` |
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
@@ -77,7 +77,7 @@ Drawn from the `Actions` story.
 - Native constraints (`required`, `type="email"`, `pattern`, `min`, `maxLength`…) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. Inside a Field, the Field then says which constraint fails, in its error slot (in the provider's words), with `aria-invalid` and the description, so the border is never the only sign; an `error` you pass wins. On its own, the border is only a color: set `invalid` and say the problem in text when you check it yourself. To keep the browser out of it, leave out the attribute and check the value in your own code.
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing: with `maxLength` it's read out once when a few characters are left (10, or a fifth of a short limit) and once when the limit is reached, in the `charactersLeft` label's words. A form reset puts it back to the default text's count.
 - `maxLength` stops typing at the limit, counted in characters as people see them, the same way as the count: an emoji such as 👨‍👩‍👧 or 🇮🇩 is one, where the browser's own `maxlength` would count it as up to 8. Textarea applies the limit itself, so once the page is hydrated the `<textarea>` has no `maxlength` attribute. Server-rendered HTML keeps it, so the cap holds before the script runs. Text pasted past the limit is cut at the end of the paste (what comes after it stays), and an input method's text is cut once it's confirmed. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
-- A press anywhere on the box, such as on the count row, focuses the field with the caret at the end, as Input's box does.
+- A press anywhere on the box, such as on the actions row, focuses the field with the caret at the end, as Input's box does.
 - Text, the placeholder and the count keep 4.5:1 on `field`, and the focus ring and invalid border 3:1, in every theme (`Textarea.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - A native constraint the value fails (`required`, `minLength`) is reported by the browser in its own language. Inside a `SerupaProvider` whose labels set `invalidValue` (`idLabels` does), the message is in the provider's words instead ("Isi kolom ini."). It's set when the browser checks the field and cleared on the next keystroke or value change. A message you set yourself with `setCustomValidity` stays. In English the browser's own message is kept.
 
@@ -100,7 +100,7 @@ Drawn from the `Actions` story.
 | `resize` | `'vertical'` \| `'none'` | `'vertical'` | A handle to drag the height, or a fixed height |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
 | `actions` | ReactNode | | A row under the text, inside the box: buttons such as Attach or Send, at the end. With `showCount`, the count starts the row. A disabled Textarea disables them too |
-| `showCount` | boolean | `false` | A character count under the text, in characters as people see them (an emoji is one): "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
+| `showCount` | boolean | `false` | A character count under the box, at its end (in a Field, on the row of the hint or error), in characters as people see them (an emoji is one): "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
 
 Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`. Inside a `<fieldset disabled>` the box takes the disabled look too, as the native field is disabled with it.
 
@@ -121,11 +121,10 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-placeholder` | `placeholder` | Placeholder text |
 | `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
-| `--textarea-count` | `text-muted` | The character count under the text, as a Field hint. |
+| `--textarea-count` | `text-muted` | The character count under the box, as a Field hint. |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
 | `--textarea-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--textarea-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--textarea-resize-grip` | `text-muted` | The two lines of the resize grip in the corner (Chrome, Edge and Safari). |
 
 **Spacing**
 
@@ -139,6 +138,8 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px), counting the border: one row is as tall as an Input of the same size. |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
+| `--textarea-count-gap` | `spacing-1.5` | With `showCount`, the space between the box and the count under it (6px), as a Field's gap. |
+| `--textarea-count-inline-gap` | `spacing-4` | In a Field, the least space between the hint or error and the count on the same row (16px). |
 
 **Border**
 

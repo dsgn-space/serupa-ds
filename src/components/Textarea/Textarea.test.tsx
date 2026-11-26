@@ -5,6 +5,7 @@ import { commands, server, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Textarea } from './Textarea';
+import { Field } from '../Field/Field';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
@@ -14,7 +15,7 @@ const box = (id: string) => {
   const i = el(id), w = i.parentElement as HTMLElement, c = css(w), f = css(i);
   return { rows: i.rows, wrap: w.className, fh: Math.round(i.getBoundingClientRect().height), fs: f.fontSize, pl: f.paddingLeft, pt: f.paddingTop, bc: c.borderTopColor, bw: c.borderTopWidth, r: c.borderRadius, bs: c.boxShadow, bg: c.backgroundColor, op: c.opacity, size: w.dataset.size, comp: w.dataset.component, resize: f.resize, oy: f.overflowY };
 };
-const count = (id: string) => el(id).nextElementSibling as HTMLElement;
+const count = (id: string) => document.getElementById(el(id).getAttribute('aria-describedby')!.split(' ').pop()!) as HTMLElement;
 const away = () => userEvent.hover(document.body, { position: { x: 800, y: 5 } });
 
 function Ctrl(props: { onValue: (v: string) => void }) {
@@ -87,9 +88,9 @@ describe('Textarea', () => {
     expect([el('kb-ta').value, document.activeElement?.id]).toEqual(['a\nb', 'kb-after']);
   });
 
-  test('a press on the box outside the field (the count row, its side) focuses the field with the caret at the end; a disabled one does nothing (GE1)', async () => {
+  test('a press on the box outside the field (the actions row, its side) focuses the field with the caret at the end; a disabled one does nothing (GE1)', async () => {
     await render(<div style={{ width: '300px' }}>
-      <Textarea id="tp" aria-label="Bio" showCount maxLength={50} defaultValue="hello" />
+      <Textarea id="tp" aria-label="Bio" showCount maxLength={50} defaultValue="hello" actions={<span>Tip</span>} />
       <Textarea id="tp-off" aria-label="Off" showCount disabled />
       <button id="tp-away">away</button>
     </div>, { wrapper: EnUS });
@@ -181,14 +182,30 @@ describe('Textarea', () => {
     expect([count('car').textContent, count('cfa').textContent]).toEqual(['١٢ / ٢٠٠', '۳']);
   });
 
-  test('showCount: the count sits inside the box at its end in 12px text-muted, like a hint; the resize grip is two thin lines in the same muted color, in from the corner', async () => {
+  test('showCount: the count sits under the box, at its end, in 12px text-muted like a hint; the resize handle is the browser\'s own', async () => {
     await render(<div style={{ width: '300px' }}><Textarea id="out" aria-label="Bio" showCount maxLength={280} defaultValue="Hello" /></div>, { wrapper: EnUS });
-    const box = el('out').parentElement!.getBoundingClientRect(), c = count('out'), r = c.getBoundingClientRect();
-    expect([r.bottom <= box.bottom, r.right <= box.right, css(c).fontSize, css(c).color]).toEqual([true, true, '12px', color('var(--text-muted)')]);
-    if (server.browser !== 'firefox') {
-      const grip = getComputedStyle(el('out'), '::-webkit-resizer');
-      expect([grip.backgroundImage.includes(color('var(--text-muted)')), grip.backgroundRepeat]).toEqual([true, 'no-repeat']);
+    const b = el('out').parentElement!.getBoundingClientRect(), c = count('out'), r = c.getBoundingClientRect();
+    expect([r.top >= b.bottom, Math.round(r.right), css(c).fontSize, css(c).color]).toEqual([true, Math.round(b.right), '12px', color('var(--text-muted)')]);
+    if (server.browser !== 'firefox') expect(getComputedStyle(el('out'), '::-webkit-resizer').backgroundImage).toBe('none');
+  });
+
+  test('showCount in a Field: the count shares the row of the hint (or of the error) at the end, the message at the start; mirrored right to left; the hint wraps beside it at 320px', async () => {
+    await render(<div style={{ width: '320px' }}>
+      <Field label="Bio" hint="Shown on your public profile, so keep it to a line or two that says who you are."><Textarea id="fh" showCount maxLength={280} defaultValue="Hi" /></Field>
+      <Field label="Note" error="Say where to leave it."><Textarea id="fe" showCount maxLength={140} /></Field>
+      <div dir="rtl"><Field label="Bio" hint="Hint"><Textarea id="fr" showCount maxLength={280} /></Field></div>
+    </div>, { wrapper: EnUS });
+    const at = (n: Element) => n.getBoundingClientRect();
+    for (const [id, msg] of [['fh', '.srp-field__hint'], ['fe', '.srp-field__error']] as const) {
+      const field = el(id).closest('.srp-field')!, b = at(el(id).parentElement!), c = at(count(id)), m = at(field.querySelector(msg)!);
+      // The message and the count start on the same row, under the box; the message keeps to the start, the count to the end.
+      expect([Math.round(c.top) === Math.round(m.top), c.top >= b.bottom, Math.round(m.left) === Math.round(b.left), Math.round(c.right) === Math.round(b.right), m.right <= c.left]).toEqual([true, true, true, true, true]);
     }
+    expect(at(document.querySelector('#fh')!.closest('.srp-field')!.querySelector('.srp-field__hint')!).height).toBeGreaterThan(20);   // wrapped, beside the count
+    const rb = at(el('fr').parentElement!), rc = at(count('fr')), rh = at(el('fr').closest('.srp-field')!.querySelector('.srp-field__hint')!);
+    expect([Math.round(rc.left) === Math.round(rb.left), Math.round(rh.right) === Math.round(rb.right), Math.round(rc.top) === Math.round(rh.top)]).toEqual([true, true, true]);
+    expect([el('fh').getAttribute('aria-describedby')!.split(' ').length, el('fe').getAttribute('aria-invalid')]).toEqual([2, 'true']);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
   });
 
   test('showCount: "2 / 5" under the text, linked by aria-describedby after the field\'s own; counts typing, stops at maxLength and turns text-colored', async () => {
