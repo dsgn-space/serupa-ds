@@ -28,7 +28,8 @@ export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
   resize?: 'vertical' | 'none' | undefined;
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
   invalid?: boolean | undefined;
-  /** A character count under the text, "12 / 200" with maxLength (text-colored once it's reached). Linked to the field with aria-describedby. Default: false. */
+  /** A character count under the box, at its end, "12 / 200" with maxLength (text-colored once it's reached); in a
+      Field it shares the row of the hint or error. Linked to the field with aria-describedby. Default: false. */
   showCount?: boolean | undefined;
   /** A row under the text, inside the box: buttons such as Send or Attach, at the end (a toolbar can start the row with
       className="me-auto"). They come after the field in the Tab order, and are disabled with it. With showCount, the
@@ -38,10 +39,11 @@ export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
 
 /* Textarea: a multi-line text field, Input's sibling. size "sm", "md" (default) or "lg" (Input's text sizes and
    side padding); rows (default 3); autoResize (grows with the text from rows up to maxRows, then scrolls);
-   resize "vertical" (default) or "none"; invalid; showCount (a character count under the text, "12 / 200" with
-   maxLength); maxLength (in characters as people see them, like the count, applied by Textarea rather than the
+   resize "vertical" (default) or "none"; invalid; showCount (a character count under the box, at its end,
+   "12 / 200" with maxLength); maxLength (in characters as people see them, like the count, applied by Textarea rather than the
    browser). Renders <span class="srp-textarea"> around a native <textarea>: className and style go to the box,
-   every other prop (value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <textarea>. */
+   every other prop (value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <textarea>. With
+   showCount (and no actions), a <span class="srp-textarea__wrap"> holds the box and the count under it. */
 const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1, showCount: 1, actions: 1, className: 1, style: 1 } as const;
 
 // Whether the browser sizes a field to its content (field-sizing: content: Chromium 123+, Safari 26+). False on the
@@ -107,17 +109,18 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   const restyle = useServerStyles<HTMLSpanElement>();
   const describedBy = props.showCount ? cn(rest['aria-describedby'], countId) : rest['aria-describedby'];
   const acts = props.actions != null && props.actions !== false;
-  const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
-  return (
+  const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count" data-field-end={acts ? undefined : ''}>{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
+  const box = (
     <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
       <textarea {...rest} aria-invalid={invalid || rest['aria-invalid']} aria-describedby={describedBy} onChange={onChange} ref={setRefs} rows={rows} className="srp-textarea__field" key="field"
         style={{ '--srp-ta-rows': rows, '--srp-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
-      {props.showCount && !acts ? count : null}
       {/* A fieldset, so a disabled Textarea disables every button in the row as well; role none, since it groups nothing for a screen reader. */}
       {acts ? <fieldset className="srp-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
     </span>
   );
+  // The count under the box, at its end; in a Field, on the row of the hint or error (data-field-row, Field.css).
+  return props.showCount && !acts ? <span className="srp-textarea__wrap" data-field-row="">{box}{count}</span> : box;
 }
 
-/** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box that holds the count; className and style go to the box. Label it with <label htmlFor> or aria-label. */
+/** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box, with the count under it; className and style go to the box. Label it with <label htmlFor> or aria-label. */
 export const Textarea = /* @__PURE__ */ named('Textarea', TextareaRender);

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Textarea } from './Textarea';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Field } from '../Field/Field';
 
 const meta = {
   title: 'Components/Forms/Textarea',
@@ -29,7 +30,16 @@ export const Actions: Story = {
   args: { 'aria-label': 'Comment', placeholder: 'Add a comment', autoResize: true, rows: 2, maxRows: 8, showCount: true, maxLength: 2000,
     actions: <><IconButton icon="attach_file" label="Attach a file" size="sm" variant="ghost" /><Button size="sm">Comment</Button></> },
 };
+/** The count under the box, at its end. */
 export const Count: Story = { name: 'Character count', args: { showCount: true, maxLength: 280, defaultValue: 'A short note' } };
+/** In a Field, the count shares a row with the hint or the error: the message at the start, the count at the end. */
+export const CountInField: Story = {
+  name: 'Character count in a Field',
+  render: () => <div className="flex flex-col gap-6">
+    <Field label="Bio" hint="Shown on your public profile. Keep it to a line or two."><Textarea showCount maxLength={280} defaultValue="A short note" /></Field>
+    <Field label="Delivery note" error="Say where to leave the parcel."><Textarea showCount maxLength={140} /></Field>
+  </div>,
+};
 
 export const States: Story = {
   render: () => <div className="flex flex-col gap-3">
