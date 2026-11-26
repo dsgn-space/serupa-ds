@@ -205,7 +205,7 @@ describe('Stepper', () => {
     expect(rect(li[0]!).left).toBeGreaterThan(rect(li[1]!).left);
   });
 
-  test('contrast: numbers and text keep 4.5:1, circles, rings and marks 3:1, in every theme', async () => {
+  test('contrast: numbers and text keep 4.5:1, circles and marks 3:1, the upcoming ring 1.3:1 (border-control, soft by design), in every theme', async () => {
     await setup();
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
@@ -213,7 +213,7 @@ describe('Stepper', () => {
       const page = css(document.body).backgroundColor, li = lis('st'), err = lis('err')[1]!, warn = lis('warn')[1]!, c = (l: Element, s: string) => css(l.querySelector(s));
       const pairs: Array<[string, string, string, number]> = [
         ['upcoming number', c(li[3]!, IND).color, c(li[3]!, IND).backgroundColor, 4.5],
-        ['upcoming ring', c(li[3]!, IND).borderTopColor, page, 3],
+        ['upcoming ring, border-control, soft by design', c(li[3]!, IND).borderTopColor, page, 1.3],
         ['current number', c(li[2]!, IND).color, c(li[2]!, IND).backgroundColor, 4.5],
         ['complete circle', seen(li[0]!.querySelector(IND)!), page, 3],
         ['error mark', c(err, IND).color, c(err, IND).backgroundColor, 3],

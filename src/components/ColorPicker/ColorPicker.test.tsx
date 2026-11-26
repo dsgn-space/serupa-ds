@@ -333,14 +333,14 @@ describe('ColorPicker', () => {
       new FormData(document.getElementById('f') as HTMLFormElement).get('color')]).toEqual([true, [], 'true', false, true, 'fde047', true, 'true', '#fde047']);
   });
 
-  test('pointed at, a swatch not yet picked shows a 2px ring in border-control (3:1 on the page in every theme), where the picked one\'s ring goes; the picked one keeps its primary ring', async () => {
+  test('pointed at, a swatch not yet picked shows a 2px ring in border-control (1.3:1 or more on the page in every theme, soft by design), where the picked one\'s ring goes; the picked one keeps its primary ring', async () => {
     await render(<ColorPicker aria-label="Label color" swatches={SW} defaultValue="#1D4ED8" />);
     const ring = (b: HTMLElement) => { const c = css(b); return [c.outlineStyle, c.outlineWidth, c.outlineColor]; };
     expect(ring(swatch('Yellow'))[0]).toBe('none');
     await userEvent.hover(swatch('Yellow'));
     await expect.poll(() => ring(swatch('Yellow'))).toEqual(['solid', '2px', color('var(--border-control)')]);
     const low: string[] = [];
-    for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(swatch('Yellow')).outlineColor, css(document.body).backgroundColor); if (r < 3) low.push(`${th}: ${r.toFixed(2)}`); }
+    for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(swatch('Yellow')).outlineColor, css(document.body).backgroundColor); if (r < 1.3) low.push(`${th}: ${r.toFixed(2)}`); }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
     await userEvent.hover(swatch('Blue'));
@@ -384,7 +384,7 @@ describe('ColorPicker', () => {
   });
 
   // DT1: the edge was --border, 1.27:1 on the page, so a white swatch on a white page (a black one on a dark page) had no edge.
-  test('every swatch and the native well have an edge that keeps 3:1 on the page in every theme, so white and black swatches show', async () => {
+  test('every swatch and the native well have an edge on the page in every theme (border-control, soft by design, 1.3:1 or more), so white and black swatches show', async () => {
     await render(<div style={{ background: 'var(--surface)', padding: '8px' }}><ColorPicker aria-label="C" swatches={['#ffffff', '#000000']} /></div>);
     const page = () => css(radios()[0]!.closest('div[style]')).backgroundColor;
     const native = document.querySelector('input[type="color"]') as HTMLElement;
@@ -393,10 +393,10 @@ describe('ColorPicker', () => {
       document.documentElement.setAttribute('data-theme', th);
       for (const b of radios()) {
         const edge = /rgba?\([^)]*\)/.exec(css(b).boxShadow)![0], r = contrast(edge, page());
-        if (r < 3) low.push(`${th} ${b.getAttribute('aria-label')} ${r.toFixed(2)}`);
+        if (r < 1.3) low.push(`${th} ${b.getAttribute('aria-label')} ${r.toFixed(2)}`);
       }
       const n = contrast(css(native).borderTopColor, page());
-      if (n < 3) low.push(`${th} native well ${n.toFixed(2)}`);
+      if (n < 1.3) low.push(`${th} native well ${n.toFixed(2)}`);
     }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);

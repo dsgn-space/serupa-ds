@@ -61,7 +61,7 @@ Drawn from the `AnnounceComplete` story.
 ## Accessibility
 
 - `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
-- Every tone's fill keeps 3:1 on the page and on the bar's track, the track's border-control edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in every theme (`Progress.test.tsx`). The bar's track is the page's surface inside that edge; the ring's track stays secondary, since its arc runs along the page. In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
+- Every tone's fill keeps 3:1 on the page and on the bar's track, the track's border-control edge a soft line by design (3:1 with more contrast), and the label and value 4.5:1, in every theme (`Progress.test.tsx`). The bar's track is the page's surface inside that edge; the ring's track stays secondary, since its arc runs along the page. In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
 - Value changes aren't read out on their own, since reading every step is noisy. `announceComplete` says when it's done, politely ("Upload: complete", from `labels.progressComplete`, or your own words); for milestones in between, use `announce()` or your own live region.
 - **Keyboard:** none: it isn't focusable.
 

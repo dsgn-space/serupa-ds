@@ -177,7 +177,7 @@ describe('Rating', () => {
     expect([svg('ok').fill === 'none', svg('bad').fill, path.strokeWidth, path.vectorEffect]).toEqual([false, 'none', '2px', 'non-scaling-stroke']);
   });
 
-  test('the filled and empty star colors are 3:1 on the page in every theme; Indonesian names ("2,5 bintang", "4,5 dari 5")', async () => {
+  test('the filled star color is 3:1 on the page in every theme, the empty one 1.3:1 (border-control, soft by design); Indonesian names ("2,5 bintang", "4,5 dari 5")', async () => {
     await render(<Rating id="t" aria-label="Theme" defaultValue={1} />);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -185,7 +185,7 @@ describe('Rating', () => {
       const page = css(document.body).backgroundColor;
       for (const [k, layer] of [['fill', 1], ['empty', 0]] as const) {
         const r = contrast(css(stars('t')[0]!.children[layer]!).color, page);
-        if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`);
+        if (r < (k === 'empty' ? 1.3 : 3)) low.push(`${th} ${k}: ${r.toFixed(2)}`);
       }
     }
     document.documentElement.removeAttribute('data-theme');

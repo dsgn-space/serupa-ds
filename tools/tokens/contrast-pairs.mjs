@@ -69,7 +69,8 @@ export const PAIRS = [
   ['danger', 'surface', 3, 'Destructive secondary button border'],
   // The resting field border is soft by design (zinc-300 in light, zinc-700 in dark): below the 3:1 WCAG 1.4.11 asks
   // of a control's boundary, a deliberate exception. These pairs hold it to 1.3:1, so it never fades out entirely; the
-  // focus ring and more contrast keep 3:1. Every other control's edge is border-control, held to 3:1 below.
+  // focus ring and more contrast keep 3:1. border-control, the edge of other controls, is soft by design too (zinc-300 in light,
+  // zinc-600 in dark) and held to 1.3:1 the same way.
   ['field-border', 'field', 1.3, 'Field border, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface', 1.3, 'Field border on the page, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['focus-ring', 'field', 3, 'The focus ring on a field'],
@@ -78,8 +79,8 @@ export const PAIRS = [
   ['primary-text', 'field', 4.5, 'A text action in a field (Input)'],
   ['text', 'field-hover', 4.5, 'Text or an icon on a button in a field under the pointer'],
   ['text', 'field-pressed', 4.5, 'Text or an icon on a button in a field held down'],
-  ['border-control', 'surface', 3, 'A control edge (Slider and Switch track, Meter and Progress track edge, Carousel dot, Stepper ring)'],
-  ['border-control-pressed', 'surface', 3, "A Switch's off track while held down"],
+  ['border-control', 'surface', 1.3, 'A control edge (Meter and Progress track edge, Carousel dot, Stepper ring), soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception'],
+  ['border-control-pressed', 'surface', 1.3, 'A control edge while held down'],
   ['placeholder', 'field', 4.5, 'Muted text in a field: a prefix, a suffix, a character count'],
   ['text-muted', 'field', 3, 'A muted icon in a field (a chevron, a search or clear icon)'],
   ['placeholder', 'field-readonly', 4.5, 'A placeholder in a read-only or disabled field'],
@@ -121,9 +122,9 @@ export const PAIRS = [
   ['field-border', 'surface-raised', 1.3, 'A field border on a raised card, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface-overlay', 1.3, 'A field border in a dialog or popover, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'primary-subtle', 1.25, 'A field border on a primary-subtle row or zone, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields (the floor is the lowest theme, Cyan Dark at 1.28)'],
-  ['border-control', 'surface-muted', 3, 'A control edge, or a Meter track edge, on a muted surface'],
-  ['border-control', 'surface-raised', 3, 'A control edge, or a Meter track edge, on a raised card'],
-  ['border-control', 'primary-subtle', 3, 'A control edge on a primary-subtle row or zone'],
+  ['border-control', 'surface-muted', 1.3, 'A control edge, or a Meter track edge, on a muted surface, soft by design'],
+  ['border-control', 'surface-raised', 1.3, 'A control edge, or a Meter track edge, on a raised card, soft by design'],
+  ['border-control', 'primary-subtle', 1.25, 'A control edge on a primary-subtle row or zone, soft by design'],
   ['focus-ring', 'surface-raised', 3, 'The focus ring on a raised card'],
   ['focus-ring', 'surface-muted', 3, 'The focus ring on a muted surface'],
   ['focus-ring', 'primary-subtle', 3, 'The focus ring on a primary-subtle highlight (a selected row or option)'],

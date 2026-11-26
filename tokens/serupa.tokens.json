@@ -1905,11 +1905,11 @@
     },
     "border-control": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The edge of a control that isn't a text or choice field: Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. A soft line by design, zinc-300 in light and zinc-600 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge, as `field-border` is: more contrast (`data-contrast=\"more\"` or the system setting) brings back 3:1+.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-400}",
+          "dark": "{zinc-600}",
           "contrastMore": {
             "light": "{zinc-700}",
             "dark": "{zinc-300}"
@@ -1919,11 +1919,11 @@
     },
     "border-control-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": "{color.zinc-400}",
       "$description": "Alias. `border-control` on hover, one step stronger (Switch's track).",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-300}",
+          "dark": "{zinc-500}",
           "contrastMore": {
             "light": "{zinc-900}",
             "dark": "{zinc-100}"
@@ -1933,11 +1933,11 @@
     },
     "border-control-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
-      "$description": "Alias. `border-control` while held down, one step past `border-control-hover` (Switch's track).",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. `border-control` while held down, one step past `border-control-hover`.",
       "$extensions": {
         "com.serupa": {
-          "dark": "{zinc-200}",
+          "dark": "{zinc-400}",
           "contrastMore": {
             "light": "{zinc-950}",
             "dark": "{zinc-50}"
@@ -2137,6 +2137,34 @@
           "contrastMore": {
             "light": "{zinc-500}",
             "dark": "{zinc-400}"
+          }
+        }
+      }
+    },
+    "track-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The empty part of a track under the pointer, a step darker than `track` (Switch off: zinc-300 in light, zinc-600 in dark). A fill, not an edge.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-600}",
+          "contrastMore": {
+            "light": "{zinc-600}",
+            "dark": "{zinc-300}"
+          }
+        }
+      }
+    },
+    "track-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The empty part of a track while held down, a step past `track-hover` (Switch off: zinc-500 in light, zinc-400 in dark). A fill, not an edge.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-400}",
+          "contrastMore": {
+            "light": "{zinc-700}",
+            "dark": "{zinc-300}"
           }
         }
       }

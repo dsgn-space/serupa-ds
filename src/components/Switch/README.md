@@ -112,8 +112,8 @@ Each is an optional override: set it on the page, a container or one switch. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--switch-track` | `track` | The track while off: Apple's light gray. |
-| `--switch-track-hover` | `border-strong` | The track while off, on hover: a step darker than track. |
-| `--switch-track-pressed` | `border-control` | The off track while held down, one step past track-hover. |
+| `--switch-track-hover` | `track-hover` | The track while off, on hover: track-hover, a step darker than track. |
+| `--switch-track-pressed` | `track-pressed` | The off track while held down: track-pressed, one step past track-hover. |
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
