@@ -49,7 +49,7 @@ Drawn from the `ContrastCheck` story.
 
 | State | Look |
 | --- | --- |
-| Rest | Round swatches, each with a thin inset `border-control` edge (3:1 on the page), so white shows on white and black on black |
+| Rest | Round swatches, each with a thin inset `border-control` edge (a soft line, 3:1 with more contrast), so white shows on white and black on black |
 | Picked | A `primary` ring outside the swatch and a check in white or black, whichever stands out on it |
 | Focus | A `focus-ring` outline around the swatch |
 | Invalid | Every swatch's edge turns into a 2px `danger` one, as a field's border does |
@@ -73,7 +73,7 @@ Drawn from the `ContrastCheck` story.
 
 - `role="radiogroup"` named by `aria-label`, `aria-labelledby` or a surrounding [Field](../Field/README.md)'s label, with a `role="radio"` swatch for each color and `aria-checked` on the picked one. In a Field, the hint and error describe the radiogroup, and `aria-required` and `aria-invalid` sit on it. The hex field is its own field, named "Hex code".
 - The picked swatch shows a ring (3:1 on the page in every theme) and a check in white or black, whichever stands out more on that color, so the choice doesn't rely on seeing the color.
-- Every swatch, and the native color well, has a thin border in `border-control`, which keeps 3:1 on the page in every theme. So a white swatch shows on a white page and a black one on a dark page (WCAG 1.4.11). In forced-colors mode the swatches keep their real colors and the ring uses Highlight.
+- Every swatch, and the native color well, has a thin border in `border-control`, a soft line by design (3:1 with more contrast). So a white swatch shows on a white page and a black one on a dark page (WCAG 1.4.11). In forced-colors mode the swatches keep their real colors and the ring uses Highlight.
 - The contrast line is a polite live region, so a change is read out. The warning has an icon and words, not just a color.
 - With `contrastWith`, every swatch also says its ratio before it's picked, as its description ("Contrast 1.3:1, below 4.5:1, which can be hard to read"), and a swatch under `minContrast` is struck through with a diagonal line (`CanvasText` in forced-colors mode) and has `data-low-contrast`. The line goes away once it's picked, when the check and the contrast line take over.
 

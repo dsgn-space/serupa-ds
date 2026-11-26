@@ -85,7 +85,7 @@
       "option-indicator": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
-        "$description": "The 2px bar at the highlighted item's start: 3:1 on the fill and on the list, `text`-dark with more contrast.",
+        "$description": "The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--time-picker-option-indicator"

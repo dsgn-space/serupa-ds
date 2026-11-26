@@ -133,8 +133,8 @@
       "id": "1.4.11",
       "name": "Non-text Contrast",
       "level": "AA",
-      "conformance": "Supports",
-      "remarks": "Focus rings, icons that carry meaning and the edges of controls meet 3:1 in every theme, checked with the text pairs: text fields, Checkbox, Radio, SegmentedControl and outline buttons (field-border and border-control), Slider, Switch, Meter and Progress, and the 2px bar that marks the keyboard-highlighted item of a menu or list box (highlight-indicator). More contrast (data-contrast=\"more\" or the system setting) makes them darker still."
+      "conformance": "Partially Supports",
+      "remarks": "Focus rings, icons that carry meaning, and the thumbs and fills of Slider, Switch, Meter and Progress meet 3:1 in every theme, checked with the text pairs. The thin edges of other controls (border-control: Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches) are soft by design, like field borders, and more contrast brings back 3:1. Resting borders on text fields, Checkbox and Radio are soft by design (about 1.48:1 in light and 1.43:1 in dark), and list/menu highlight fills are subtle (about 1.10:1 in light and 1.43:1 in dark): the label, hover border and focus ring mark the control, and more contrast (data-contrast=\"more\" or the system setting) brings back 3:1 borders. An app that must conform without that setting sets --field-border to var(--border-control)."
     },
     {
       "id": "1.4.12",
@@ -239,7 +239,7 @@
       "name": "Focus Visible",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Focusable controls show a 2px focus ring at 3:1 against page and field surfaces, with an outline that stays in forced colors. Menu and list box items mark the active option with the highlight fill and a 2px bar at its start, 3:1 on the fill and on the list in every theme (highlight-indicator), outlined in forced colors."
+      "remarks": "Focusable controls show a 2px focus ring at 3:1 against page and field surfaces, with an outline that stays in forced colors. Menu and listbox items highlight the active option with `--highlight` (subtle in default themes, outlined in forced colors and strengthened with `data-contrast=\"more\"`)."
     },
     {
       "id": "2.4.11",

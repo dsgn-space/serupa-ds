@@ -118,7 +118,7 @@ describe('ToggleButton', () => {
       expect([theme, on.backgroundColor, on.color, on.borderTopColor]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)'), color('var(--border-control)')]);
       expect([theme, on.backgroundColor === off.backgroundColor, on.borderTopColor === off.borderTopColor]).toEqual([theme, false, false]);
       expect(contrast(on.color, on.backgroundColor), theme).toBeGreaterThanOrEqual(3.4);
-      expect(contrast(on.borderTopColor, color('var(--surface)')), theme).toBeGreaterThanOrEqual(3);
+      expect(contrast(on.borderTopColor, color('var(--surface)')), theme).toBeGreaterThanOrEqual(1.3);
       expect([theme, ghost.backgroundColor, ghost.color]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)')]);
     }
     document.documentElement.removeAttribute('data-theme');

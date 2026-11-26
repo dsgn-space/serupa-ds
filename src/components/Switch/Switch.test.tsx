@@ -132,11 +132,11 @@ describe('Switch', () => {
     expect(i.checked).toBe(true);
   });
 
-  test('hover: off, the track takes border-strong; on, primary-hover', async () => {
+  test('hover: off, the track takes track-hover; on, primary-hover', async () => {
     await setup();
     await userEvent.hover(el('bad'));
-    await expect.poll(() => box('bad').bg).toBe(color('var(--border-strong)'));
-    expect(box('bad').bg).toBe(color('var(--border-strong)'));
+    await expect.poll(() => box('bad').bg).toBe(color('var(--track-hover)'));
+    expect(box('bad').bg).toBe(color('var(--track-hover)'));
     await away();
     await userEvent.hover(el('lg'));
     await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
@@ -304,13 +304,13 @@ describe('Switch', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('pressed: while the row is held the track takes its held color, a step past hover (off: border-control; on: primary-pressed), and the thumb grows 4px wider toward the middle (its far edge stays put); not when disabled (ED1)', async () => {
+  test('pressed: while the row is held the track takes its held color, a step past hover (off: track-pressed; on: primary-pressed), and the thumb grows 4px wider toward the middle (its far edge stays put); not when disabled (ED1)', async () => {
     await render(<><Switch id="ps">Press me</Switch><Switch id="pk" defaultChecked>On</Switch><Switch id="pd" disabled>Off</Switch></>);
     const thumb = (id: string) => el(id).nextElementSibling as HTMLElement;
     const edges = (id: string) => { const t = thumb(id).getBoundingClientRect(), k = el(id).getBoundingClientRect(); return [Math.round(t.left - k.left), Math.round(k.right - t.right)]; };
     const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, ...edges(id)];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--border-control)'), '1', '20px', 2, 14]);
+    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '20px', 2, 14]);
     expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '20px', 14, 2]);
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });

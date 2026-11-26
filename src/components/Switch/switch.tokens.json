@@ -14,8 +14,8 @@
       },
       "track-hover": {
         "$type": "color",
-        "$value": "{color.border-strong}",
-        "$description": "The track while off, on hover: a step darker than track.",
+        "$value": "{color.track-hover}",
+        "$description": "The track while off, on hover: track-hover, a step darker than track.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-hover"
@@ -24,8 +24,8 @@
       },
       "track-pressed": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The off track while held down, one step past track-hover.",
+        "$value": "{color.track-pressed}",
+        "$description": "The off track while held down: track-pressed, one step past track-hover.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-track-pressed"

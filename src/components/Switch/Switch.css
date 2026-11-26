@@ -33,7 +33,7 @@
 }
 @media (hover: hover) {
   .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); }
-  .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly], :checked) { --srp-switch-track: var(--switch-track-hover, var(--border-strong)); }
+  .srp-switch:not(.srp-switch--pending):hover .srp-switch__input:not(:disabled, [readonly], :checked) { --srp-switch-track: var(--switch-track-hover, var(--track-hover)); }
 }
 .srp-switch__input:checked { background: var(--srp-switch-on); }
 /* The on track's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. :where keeps the invalid and disabled edges over it. */
@@ -65,7 +65,7 @@
 /* Pressed: while the row is held (pointer, or Space on the switch) the track takes its held color, a step past
    hover. The thumb grows 4px wider toward the middle (--switch-press-stretch), as Apple's, at once (a width transition would lay the page out every frame); --switch-press-scale opts in to a smaller one. Not when read-only, pending
    or disabled. */
-.srp-switch:not([data-readonly], .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--border-control)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
+.srp-switch:not([data-readonly], .srp-switch--pending):active .srp-switch__input:not(:disabled, [readonly]) { --srp-switch-track: var(--switch-track-pressed, var(--track-pressed)); --srp-switch-on: var(--switch-track-checked-pressed, var(--primary-pressed)); }
 .srp-switch:active:not([data-readonly], .srp-switch--pending, :has(.srp-switch__input:disabled)) .srp-switch__thumb { --srp-switch-stretch: var(--switch-press-stretch, var(--spacing-1)); scale: var(--switch-press-scale, var(--scale-100)); transition: translate var(--motion-press) var(--ease-move), background-color var(--motion-press) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
 /* Pending: Loader's ring on the thumb (EE1): a quarter arc in the brand (primary-text on the white thumb, on-primary on it in a dark theme, 3:1 on each) on a faint track of the same color, turning at --motion-loop-spinner; under reduced motion
    it stands still and breathes. */

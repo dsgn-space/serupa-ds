@@ -188,7 +188,7 @@ describe('Splitter', () => {
     localStorage.removeItem('srp-test-split');
   });
 
-  test('the handle\'s line is 3:1 on the page in every theme; the default name comes from the resizePanes label', async () => {
+  test('the handle\'s line is 1.3:1 or more on the page in every theme (border-control, soft by design); the default name comes from the resizePanes label', async () => {
     await render(<Two />);
     const line = (pseudo: string) => getComputedStyle(handle('s'), pseudo).backgroundColor;
     const low: string[] = [];
@@ -196,7 +196,7 @@ describe('Splitter', () => {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor;
       const r = contrast(line('::before'), page);
-      if (r < 3) low.push(`${th}: ${r.toFixed(2)}`);
+      if (r < 1.3) low.push(`${th}: ${r.toFixed(2)}`);
     }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);

@@ -162,7 +162,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-color` | `text` | An option's label. |
 | `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
 | `--combobox-option-bg-pressed` | `pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
-| `--combobox-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: 3:1 on the fill and on the list, `text`-dark with more contrast. |
+| `--combobox-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary-text` | The check next to the selected option. |
 | `--combobox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

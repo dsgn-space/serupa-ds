@@ -281,8 +281,8 @@
     },
     "highlight-indicator": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. zinc-500 in light and zinc-400 in dark, 3:1 or more on `highlight` and on the overlay surface in every theme, so the keyboard's place in an open list shows by more than the gray fill (WCAG 1.4.11, 2.4.7). Sidebar, Navbar, List, TreeView and Table draw it only where `highlight-indicator-width` gives it a width. More contrast (`data-contrast=\"more\"` or the system setting) turns it `text`-dark, and forced colors outline the item in `Highlight`.",
+      "$value": "{color.zinc-100}",
+      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the gray fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--highlight-indicator"
@@ -291,8 +291,8 @@
     },
     "field-border": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: zinc-500 in light and in dark, 3:1 or more against the field and the page in every theme, as WCAG 1.4.11 asks of a control's boundary. More contrast (`data-contrast=\"more\"` or the system setting) makes it darker still. For a softer line in your own app, set `--field-border` to `var(--border-strong)`, and know it is then under 3:1. Other controls' edges use `border-control`.",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border"
@@ -301,8 +301,8 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
-      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-600 in light, zinc-400 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-400 in light, zinc-600 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-hover"
@@ -311,8 +311,8 @@
     },
     "field-border-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
-      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-700 in light, zinc-300 in dark).",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Field border while held down (Checkbox's box, Radio's circle): `field-border-hover` one gray step stronger again (zinc-500 in light, zinc-500 in dark).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-pressed"
@@ -321,8 +321,8 @@
     },
     "border-control": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The edge of a control that isn't a text or choice field: Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. A soft line by design, zinc-300 in light and zinc-600 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge, as `field-border` is: more contrast (`data-contrast=\"more\"` or the system setting) brings back 3:1+.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-control"
@@ -331,7 +331,7 @@
     },
     "border-control-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": "{color.zinc-400}",
       "$description": "Alias. `border-control` on hover, one step stronger (Switch's track).",
       "$extensions": {
         "com.serupa": {
@@ -341,8 +341,8 @@
     },
     "border-control-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
-      "$description": "Alias. `border-control` while held down, one step past `border-control-hover` (Switch's track).",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. `border-control` while held down, one step past `border-control-hover`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-control-pressed"
@@ -500,7 +500,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` and other controls `border-control`, both 3:1.",
+      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"
@@ -514,6 +514,26 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--track"
+        }
+      }
+    },
+    "track-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The empty part of a track under the pointer, a step darker than `track` (Switch off: zinc-300 in light, zinc-600 in dark). A fill, not an edge.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--track-hover"
+        }
+      }
+    },
+    "track-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The empty part of a track while held down, a step past `track-hover` (Switch off: zinc-500 in light, zinc-400 in dark). A fill, not an edge.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--track-pressed"
         }
       }
     },
