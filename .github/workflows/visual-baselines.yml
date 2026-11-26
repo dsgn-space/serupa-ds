@@ -313,7 +313,9 @@ jobs:
 
   commit:
     needs: render
-    if: needs.render.result == 'success'
+    # !cancelled(): on a label event render's own need, settled, is skipped, and without a status function that skip
+    # would skip this job too, so the label measured the baselines but never committed them (26 Nov, #2352 and #2354).
+    if: "!cancelled() && needs.render.result == 'success'"
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
