@@ -131,7 +131,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   // What Home and End do, from the last render (the key listener is added once per scroller).
   const toEdge = React.useRef((_last: boolean) => {});
   // The wheel handler, from the scroller's effect (the listener is added only past CAP, below).
-  const wheel = React.useRef((_e: WheelEvent) => {});
+  const wheel = React.useRef<((e: WheelEvent) => void) | null>(null);
   const live = React.useRef<Live>({ offsets: new Float64Array(1), top: 0, pending: null, seen: 0, origin: 0, pin: null });
 
   // Rows not measured yet count as the average of those that are (the guess until one is), so the scroll range
@@ -212,7 +212,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   // thread: a wheel listener that can cancel would make it wait for this one on every turn of the wheel.
   React.useEffect(() => {
     if (!scroller || !scaled) return;
-    const on = (e: WheelEvent) => wheel.current(e);
+    const on = (e: WheelEvent) => wheel.current?.(e);
     scroller.addEventListener('wheel', on, { passive: false });
     return () => scroller.removeEventListener('wheel', on);
   }, [scroller, scaled]);
