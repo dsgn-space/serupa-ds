@@ -1,0 +1,3810 @@
+{
+ "version": "19.2.0",
+ "runtimeUtilities": [
+  "absolute",
+  "block",
+  "border",
+  "container",
+  "css",
+  "fixed",
+  "g",
+  "grid",
+  "hidden",
+  "inline",
+  "json",
+  "lowercase",
+  "me-auto",
+  "mjs",
+  "outline",
+  "resize",
+  "ring",
+  "shadow",
+  "sr-only",
+  "static",
+  "table",
+  "underline",
+  "uppercase",
+  "view-transition-match",
+  "visible"
+ ],
+ "components": {
+  "Icon": {
+   "exports": [
+    "Icon",
+    "SerupaProvider",
+    "asIcon",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-icon",
+    "srp-icon--bold",
+    "srp-icon--custom",
+    "srp-icon--fixed",
+    "srp-icon--mirror",
+    "srp-icon--semibold"
+   ]
+  },
+  "Heading": {
+   "exports": [
+    "Heading"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-heading",
+    "srp-heading--1",
+    "srp-heading--2",
+    "srp-heading--3",
+    "srp-heading--4",
+    "srp-heading--5",
+    "srp-heading--6",
+    "srp-heading--size-2xl",
+    "srp-heading--size-3xl",
+    "srp-heading--size-4xl",
+    "srp-heading--size-5xl",
+    "srp-heading--size-base",
+    "srp-heading--size-lg",
+    "srp-heading--size-sm",
+    "srp-heading--size-xl"
+   ]
+  },
+  "Text": {
+   "exports": [
+    "Text"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-text",
+    "srp-text--base",
+    "srp-text--bold",
+    "srp-text--clamp",
+    "srp-text--danger",
+    "srp-text--lg",
+    "srp-text--measure",
+    "srp-text--medium",
+    "srp-text--muted",
+    "srp-text--neutral",
+    "srp-text--normal",
+    "srp-text--primary",
+    "srp-text--semibold",
+    "srp-text--sm",
+    "srp-text--truncate",
+    "srp-text--xl",
+    "srp-text--xs"
+   ]
+  },
+  "Button": {
+   "exports": [
+    "BUTTON_VARIANTS",
+    "Button",
+    "ButtonBase",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "buttonClass",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Loader"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-btn--destructive",
+    "srp-btn--ghost",
+    "srp-btn--icon-end",
+    "srp-btn--icon-only",
+    "srp-btn--icon-start",
+    "srp-btn--link",
+    "srp-btn--loading-cover",
+    "srp-btn--on-dark",
+    "srp-btn--on-light",
+    "srp-btn--outline",
+    "srp-btn--primary",
+    "srp-btn--secondary",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-btn--wrap",
+    "srp-btn__check",
+    "srp-btn__icon",
+    "srp-btn__icon--end",
+    "srp-btn__label",
+    "srp-btn__loader",
+    "srp-icon"
+   ]
+  },
+  "Loader": {
+   "exports": [
+    "Loader",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-btn",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-loader",
+    "srp-loader--inverse",
+    "srp-loader--muted",
+    "srp-loader--primary",
+    "srp-loader--ring",
+    "srp-loader--size-lg",
+    "srp-loader--size-sm",
+    "srp-loader--text",
+    "srp-loader--waiting",
+    "srp-loader__arc",
+    "srp-loader__art",
+    "srp-loader__dot",
+    "srp-loader__glint",
+    "srp-loader__label",
+    "srp-loader__track"
+   ]
+  },
+  "Badge": {
+   "exports": [
+    "Badge",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Loader",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-badge",
+    "srp-badge--count",
+    "srp-badge--indicator",
+    "srp-badge--interactive",
+    "srp-badge--lead",
+    "srp-badge--outline",
+    "srp-badge--ping",
+    "srp-badge--removable",
+    "srp-badge--solid",
+    "srp-badge--subtle",
+    "srp-badge--tone-amber",
+    "srp-badge--tone-blue",
+    "srp-badge--tone-cyan",
+    "srp-badge--tone-danger",
+    "srp-badge--tone-emerald",
+    "srp-badge--tone-fuchsia",
+    "srp-badge--tone-green",
+    "srp-badge--tone-indigo",
+    "srp-badge--tone-info",
+    "srp-badge--tone-lime",
+    "srp-badge--tone-neutral",
+    "srp-badge--tone-orange",
+    "srp-badge--tone-pink",
+    "srp-badge--tone-primary",
+    "srp-badge--tone-purple",
+    "srp-badge--tone-red",
+    "srp-badge--tone-rose",
+    "srp-badge--tone-sky",
+    "srp-badge--tone-success",
+    "srp-badge--tone-teal",
+    "srp-badge--tone-violet",
+    "srp-badge--tone-warning",
+    "srp-badge--tone-yellow",
+    "srp-badge__dot",
+    "srp-badge__icon",
+    "srp-badge__icon--dot",
+    "srp-badge__label",
+    "srp-badge__loader",
+    "srp-badge__remove",
+    "srp-icon",
+    "srp-loader"
+   ]
+  },
+  "Input": {
+   "exports": [
+    "Input",
+    "InputAction",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-input",
+    "srp-input--size-lg",
+    "srp-input--size-sm",
+    "srp-input-action",
+    "srp-input-action--icon",
+    "srp-input-action--text",
+    "srp-input-action__icon",
+    "srp-input-rejected",
+    "srp-input__actions",
+    "srp-input__affix",
+    "srp-input__count",
+    "srp-input__count--full",
+    "srp-input__field",
+    "srp-input__icon"
+   ]
+  },
+  "Textarea": {
+   "exports": [
+    "SerupaProvider",
+    "Textarea",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Input"
+   ],
+   "classes": [
+    "srp-textarea",
+    "srp-textarea--auto",
+    "srp-textarea--resize-none",
+    "srp-textarea--size-lg",
+    "srp-textarea--size-sm",
+    "srp-textarea__actions",
+    "srp-textarea__count",
+    "srp-textarea__count--full",
+    "srp-textarea__field",
+    "srp-textarea__wrap"
+   ]
+  },
+  "Field": {
+   "exports": [
+    "Field",
+    "FormErrors",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "Loader",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-field",
+    "srp-field--group",
+    "srp-field--horizontal",
+    "srp-field__body",
+    "srp-field__checking",
+    "srp-field__control",
+    "srp-field__error",
+    "srp-field__error-icon",
+    "srp-field__hint",
+    "srp-field__label",
+    "srp-field__optional",
+    "srp-field__required",
+    "srp-field__warning"
+   ]
+  },
+  "Select": {
+   "exports": [
+    "Select"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-select",
+    "srp-select--has-icon",
+    "srp-select--size-lg",
+    "srp-select--size-sm",
+    "srp-select__field",
+    "srp-select__icon",
+    "srp-select__icon--chevron",
+    "srp-select__icon--start",
+    "srp-select__placeholder"
+   ]
+  },
+  "Checkbox": {
+   "exports": [
+    "Checkbox",
+    "CheckboxGroup",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-checkbox",
+    "srp-checkbox--bare",
+    "srp-checkbox--card",
+    "srp-checkbox--size-lg",
+    "srp-checkbox--size-sm",
+    "srp-checkbox-group",
+    "srp-checkbox-group--card",
+    "srp-checkbox-group--horizontal",
+    "srp-checkbox-group--vertical",
+    "srp-checkbox__control",
+    "srp-checkbox__description",
+    "srp-checkbox__icon",
+    "srp-checkbox__input",
+    "srp-checkbox__label",
+    "srp-checkbox__text",
+    "srp-icon"
+   ]
+  },
+  "ColorPicker": {
+   "exports": [
+    "ColorPicker",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input"
+   ],
+   "classes": [
+    "srp-color-picker",
+    "srp-color-picker--size-lg",
+    "srp-color-picker--size-sm",
+    "srp-color-picker__check",
+    "srp-color-picker__contrast",
+    "srp-color-picker__contrast--low",
+    "srp-color-picker__custom",
+    "srp-color-picker__hash",
+    "srp-color-picker__hex",
+    "srp-color-picker__native",
+    "srp-color-picker__swatch",
+    "srp-color-picker__swatch--low",
+    "srp-color-picker__swatches",
+    "srp-color-picker__validity",
+    "srp-color-picker__warning"
+   ]
+  },
+  "Radio": {
+   "exports": [
+    "Radio",
+    "RadioGroup"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-radio",
+    "srp-radio--bare",
+    "srp-radio--card",
+    "srp-radio--size-lg",
+    "srp-radio--size-sm",
+    "srp-radio-group",
+    "srp-radio-group--card",
+    "srp-radio-group--horizontal",
+    "srp-radio-group--vertical",
+    "srp-radio__control",
+    "srp-radio__description",
+    "srp-radio__dot",
+    "srp-radio__input",
+    "srp-radio__label",
+    "srp-radio__text"
+   ]
+  },
+  "Switch": {
+   "exports": [
+    "Switch"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-switch",
+    "srp-switch--bare",
+    "srp-switch--label-start",
+    "srp-switch--pending",
+    "srp-switch--size-lg",
+    "srp-switch--size-sm",
+    "srp-switch__check",
+    "srp-switch__control",
+    "srp-switch__description",
+    "srp-switch__input",
+    "srp-switch__spinner",
+    "srp-switch__text",
+    "srp-switch__thumb"
+   ]
+  },
+  "Card": {
+   "exports": [
+    "Card",
+    "CardBody",
+    "CardFooter",
+    "CardHeader"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-btn--ghost",
+    "srp-btn--icon-only",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-card",
+    "srp-card--elevated",
+    "srp-card--filled",
+    "srp-card--link",
+    "srp-card--padding-lg",
+    "srp-card--padding-none",
+    "srp-card--padding-sm",
+    "srp-card__action",
+    "srp-card__body",
+    "srp-card__description",
+    "srp-card__footer",
+    "srp-card__footer--between",
+    "srp-card__footer--start",
+    "srp-card__header",
+    "srp-card__heading",
+    "srp-card__link",
+    "srp-card__link--cover",
+    "srp-card__title"
+   ]
+  },
+  "Alert": {
+   "exports": [
+    "Alert",
+    "SerupaProvider",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon"
+   ],
+   "classes": [
+    "srp-alert",
+    "srp-alert--danger",
+    "srp-alert--neutral",
+    "srp-alert--success",
+    "srp-alert--warning",
+    "srp-alert__actions",
+    "srp-alert__content",
+    "srp-alert__dismiss",
+    "srp-alert__icon",
+    "srp-alert__message",
+    "srp-alert__title",
+    "srp-btn",
+    "srp-btn--icon-only",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-icon"
+   ]
+  },
+  "IconButton": {
+   "exports": [
+    "IconButton"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "Tooltip"
+   ],
+   "classes": [
+    "srp-icon-btn--round"
+   ]
+  },
+  "Fab": {
+   "exports": [
+    "Fab"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "Tooltip"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-fab",
+    "srp-fab--bottom-end",
+    "srp-fab--bottom-start",
+    "srp-fab--extended",
+    "srp-fab--shrunk",
+    "srp-fab--sm",
+    "srp-fab--top-end",
+    "srp-fab--top-start",
+    "srp-fab__label",
+    "srp-icon",
+    "srp-loader",
+    "srp-navbar--sticky",
+    "srp-offline-banner--bottom",
+    "srp-offline-banner--top"
+   ]
+  },
+  "Avatar": {
+   "exports": [
+    "AVATAR_SIZES",
+    "Avatar",
+    "AvatarGroupSize",
+    "SerupaProvider",
+    "en",
+    "id",
+    "initials",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-avatar",
+    "srp-avatar--lg",
+    "srp-avatar--sm",
+    "srp-avatar--square",
+    "srp-avatar--xl",
+    "srp-avatar--xs",
+    "srp-avatar__frame",
+    "srp-avatar__icon",
+    "srp-avatar__img",
+    "srp-avatar__img--in",
+    "srp-avatar__img--late",
+    "srp-avatar__status",
+    "srp-avatar__status--away",
+    "srp-avatar__status--busy",
+    "srp-avatar__status--offline",
+    "srp-avatar__status--online"
+   ]
+  },
+  "AvatarGroup": {
+   "exports": [
+    "AvatarGroup",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Avatar",
+    "Popover"
+   ],
+   "classes": [
+    "srp-avatar-group",
+    "srp-avatar-group--lg",
+    "srp-avatar-group--sm",
+    "srp-avatar-group--xl",
+    "srp-avatar-group--xs",
+    "srp-avatar-group__item",
+    "srp-avatar-group__list",
+    "srp-avatar-group__more",
+    "srp-avatar__frame"
+   ]
+  },
+  "Tabs": {
+   "exports": [
+    "SerupaProvider",
+    "Tab",
+    "TabList",
+    "TabPanel",
+    "Tabs",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useTabRow"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-tabs",
+    "srp-tabs--lg",
+    "srp-tabs--line",
+    "srp-tabs--pill",
+    "srp-tabs--sm",
+    "srp-tabs--vertical",
+    "srp-tabs__add",
+    "srp-tabs__bar",
+    "srp-tabs__close",
+    "srp-tabs__icon",
+    "srp-tabs__list",
+    "srp-tabs__panel",
+    "srp-tabs__tab"
+   ]
+  },
+  "Tooltip": {
+   "exports": [
+    "Tooltip",
+    "coolTooltips"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-tooltip"
+   ]
+  },
+  "Dialog": {
+   "exports": [
+    "Dialog",
+    "Discard",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useUnsavedChanges"
+   ],
+   "uses": [
+    "Button",
+    "IconButton"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-btn--icon-only",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-dialog",
+    "srp-dialog--full",
+    "srp-dialog--full-mobile",
+    "srp-dialog--lg",
+    "srp-dialog--sm",
+    "srp-dialog__body",
+    "srp-dialog__close",
+    "srp-dialog__description",
+    "srp-dialog__footer",
+    "srp-dialog__header",
+    "srp-dialog__heading",
+    "srp-dialog__panel",
+    "srp-dialog__title"
+   ]
+  },
+  "Menu": {
+   "exports": [
+    "ContextMenu",
+    "Menu",
+    "MenuCheckboxItem",
+    "MenuGroup",
+    "MenuItem",
+    "MenuRadioGroup",
+    "MenuRadioItem",
+    "MenuSeparator",
+    "MenuSub",
+    "MenuSwap",
+    "keyShortcuts"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-menu",
+    "srp-menu--sub",
+    "srp-menu__check",
+    "srp-menu__chevron",
+    "srp-menu__group",
+    "srp-menu__group-label",
+    "srp-menu__icon",
+    "srp-menu__item",
+    "srp-menu__item--destructive",
+    "srp-menu__item--sub",
+    "srp-menu__label",
+    "srp-menu__point",
+    "srp-menu__separator",
+    "srp-menu__shortcut"
+   ]
+  },
+  "Toast": {
+   "exports": [
+    "SerupaProvider",
+    "Toaster",
+    "en",
+    "id",
+    "toast",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "watchToasts"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "IconButton",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-offline-banner--bottom",
+    "srp-offline-banner--top",
+    "srp-toast",
+    "srp-toast--danger",
+    "srp-toast--info",
+    "srp-toast--success",
+    "srp-toast--warning",
+    "srp-toast__action",
+    "srp-toast__close",
+    "srp-toast__content",
+    "srp-toast__count",
+    "srp-toast__description",
+    "srp-toast__icon",
+    "srp-toast__title",
+    "srp-toaster",
+    "srp-toaster--bottom-center",
+    "srp-toaster--bottom-end",
+    "srp-toaster--bottom-start",
+    "srp-toaster--top-center",
+    "srp-toaster--top-end",
+    "srp-toaster--top-start",
+    "srp-toaster__list",
+    "srp-toaster__more"
+   ]
+  },
+  "Stack": {
+   "exports": [
+    "Stack"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-stack",
+    "srp-stack--align-baseline",
+    "srp-stack--align-center",
+    "srp-stack--align-end",
+    "srp-stack--align-start",
+    "srp-stack--align-stretch",
+    "srp-stack--gaps",
+    "srp-stack--justify-between",
+    "srp-stack--justify-center",
+    "srp-stack--justify-end",
+    "srp-stack--lg-align-baseline",
+    "srp-stack--lg-align-center",
+    "srp-stack--lg-align-end",
+    "srp-stack--lg-align-start",
+    "srp-stack--lg-align-stretch",
+    "srp-stack--lg-column",
+    "srp-stack--lg-row",
+    "srp-stack--md-align-baseline",
+    "srp-stack--md-align-center",
+    "srp-stack--md-align-end",
+    "srp-stack--md-align-start",
+    "srp-stack--md-align-stretch",
+    "srp-stack--md-column",
+    "srp-stack--md-row",
+    "srp-stack--row",
+    "srp-stack--sm-align-baseline",
+    "srp-stack--sm-align-center",
+    "srp-stack--sm-align-end",
+    "srp-stack--sm-align-start",
+    "srp-stack--sm-align-stretch",
+    "srp-stack--sm-column",
+    "srp-stack--sm-row",
+    "srp-stack--wrap"
+   ]
+  },
+  "Grid": {
+   "exports": [
+    "Grid"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-grid",
+    "srp-grid--auto",
+    "srp-grid--cols",
+    "srp-grid--fill",
+    "srp-grid--fixed",
+    "srp-grid--gaps",
+    "srp-grid--upto"
+   ]
+  },
+  "Container": {
+   "exports": [
+    "Container"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-container",
+    "srp-container--2xl",
+    "srp-container--full",
+    "srp-container--lg",
+    "srp-container--md",
+    "srp-container--padded",
+    "srp-container--prose",
+    "srp-container--xl"
+   ]
+  },
+  "Divider": {
+   "exports": [
+    "Divider"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-divider",
+    "srp-divider--label",
+    "srp-divider--on-dark",
+    "srp-divider--on-light",
+    "srp-divider--vertical",
+    "srp-divider__label"
+   ]
+  },
+  "VisuallyHidden": {
+   "exports": [
+    "VisuallyHidden"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-visually-hidden",
+    "srp-visually-hidden--focusable"
+   ]
+  },
+  "Link": {
+   "exports": [
+    "AutoFocusLink",
+    "Link",
+    "NewTabNote",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-link",
+    "srp-link--hover-underline",
+    "srp-link--neutral",
+    "srp-link--on-dark",
+    "srp-link--on-light",
+    "srp-link__icon",
+    "srp-link__last"
+   ]
+  },
+  "Breadcrumb": {
+   "exports": [
+    "Breadcrumb",
+    "BreadcrumbItem",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Menu"
+   ],
+   "classes": [
+    "srp-breadcrumb",
+    "srp-breadcrumb__icon",
+    "srp-breadcrumb__item",
+    "srp-breadcrumb__li",
+    "srp-breadcrumb__link",
+    "srp-breadcrumb__list",
+    "srp-breadcrumb__more",
+    "srp-breadcrumb__separator",
+    "srp-icon"
+   ]
+  },
+  "Pagination": {
+   "exports": [
+    "Pagination",
+    "SerupaProvider",
+    "en",
+    "id",
+    "paginationRange",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "Select"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-pagination",
+    "srp-pagination--lg",
+    "srp-pagination--sm",
+    "srp-pagination--summary",
+    "srp-pagination__arrow",
+    "srp-pagination__ellipsis",
+    "srp-pagination__item",
+    "srp-pagination__jump",
+    "srp-pagination__jump-field",
+    "srp-pagination__list",
+    "srp-pagination__page-size",
+    "srp-pagination__summary"
+   ]
+  },
+  "Table": {
+   "exports": [
+    "SerupaProvider",
+    "SkeletonArt",
+    "Table",
+    "TableActionBar",
+    "TableBody",
+    "TableCell",
+    "TableColumnsMenu",
+    "TableDetailRow",
+    "TableExpandCell",
+    "TableFoot",
+    "TableHead",
+    "TableHeaderCell",
+    "TableLoadingRows",
+    "TableMessageRow",
+    "TableRow",
+    "TableSelectCell",
+    "TableVirtualBody",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSkeletonShown"
+   ],
+   "uses": [
+    "Button",
+    "Checkbox",
+    "Icon",
+    "IconButton",
+    "List",
+    "LoadMore",
+    "Popover",
+    "Skeleton",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-card--padding-none",
+    "srp-checkbox",
+    "srp-icon",
+    "srp-table",
+    "srp-table--fixed",
+    "srp-table--pin-end",
+    "srp-table--pin-start",
+    "srp-table--sm",
+    "srp-table--sticky",
+    "srp-table--striped",
+    "srp-table-action-bar",
+    "srp-table-action-bar--sticky",
+    "srp-table-action-bar__actions",
+    "srp-table-action-bar__count",
+    "srp-table-columns",
+    "srp-table-width",
+    "srp-table__body",
+    "srp-table__body--virtual",
+    "srp-table__caption",
+    "srp-table__cell",
+    "srp-table__cell--center",
+    "srp-table__cell--end",
+    "srp-table__detail-cell",
+    "srp-table__expand",
+    "srp-table__expand-button",
+    "srp-table__foot",
+    "srp-table__head",
+    "srp-table__header",
+    "srp-table__header--resizable",
+    "srp-table__header--sortable",
+    "srp-table__resize",
+    "srp-table__row",
+    "srp-table__row--link",
+    "srp-table__row-link",
+    "srp-table__select",
+    "srp-table__sort",
+    "srp-table__sort-icon",
+    "srp-table__spacer",
+    "srp-table__table"
+   ]
+  },
+  "Accordion": {
+   "exports": [
+    "Accordion",
+    "AccordionItem",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon"
+   ],
+   "classes": [
+    "srp-accordion",
+    "srp-accordion--card",
+    "srp-accordion__clip",
+    "srp-accordion__content",
+    "srp-accordion__heading",
+    "srp-accordion__icon",
+    "srp-accordion__item",
+    "srp-accordion__panel",
+    "srp-accordion__title",
+    "srp-accordion__toolbar",
+    "srp-accordion__trigger",
+    "srp-card--padding-none",
+    "srp-icon"
+   ]
+  },
+  "Navbar": {
+   "exports": [
+    "Navbar",
+    "NavbarLink",
+    "NavbarMenu",
+    "NavbarMenuGroup",
+    "NavbarMenuLink",
+    "SerupaProvider",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Container",
+    "Fab",
+    "Icon",
+    "IconButton",
+    "TruncatedText"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-container",
+    "srp-icon",
+    "srp-navbar",
+    "srp-navbar--condense",
+    "srp-navbar--sticky",
+    "srp-navbar__actions",
+    "srp-navbar__brand",
+    "srp-navbar__chevron",
+    "srp-navbar__inner",
+    "srp-navbar__link",
+    "srp-navbar__links",
+    "srp-navbar__menu",
+    "srp-navbar__menu-button",
+    "srp-navbar__menu-desc",
+    "srp-navbar__menu-inner",
+    "srp-navbar__menu-link",
+    "srp-navbar__menu-list",
+    "srp-navbar__menu-name",
+    "srp-navbar__menu-panel",
+    "srp-navbar__menu-title",
+    "srp-navbar__nav",
+    "srp-navbar__nav--leaving",
+    "srp-navbar__toggle"
+   ]
+  },
+  "Sidebar": {
+   "exports": [
+    "SerupaProvider",
+    "Sidebar",
+    "SidebarItem",
+    "SidebarSection",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Menu",
+    "Tooltip",
+    "TruncatedText"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-sidebar",
+    "srp-sidebar__badge",
+    "srp-sidebar__body",
+    "srp-sidebar__chevron",
+    "srp-sidebar__dot",
+    "srp-sidebar__footer",
+    "srp-sidebar__header",
+    "srp-sidebar__icon",
+    "srp-sidebar__item",
+    "srp-sidebar__item--nested",
+    "srp-sidebar__label",
+    "srp-sidebar__li",
+    "srp-sidebar__list",
+    "srp-sidebar__list--nested",
+    "srp-sidebar__menu-item",
+    "srp-sidebar__section-title"
+   ]
+  },
+  "ToggleButton": {
+   "exports": [
+    "ToggleButton"
+   ],
+   "uses": [
+    "Button",
+    "Icon"
+   ],
+   "classes": [
+    "srp-btn--outline",
+    "srp-toggle-button"
+   ]
+  },
+  "ButtonGroup": {
+   "exports": [
+    "ButtonGroup"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-btn",
+    "srp-btn--icon-only",
+    "srp-btn--link",
+    "srp-btn--primary",
+    "srp-btn--size-sm",
+    "srp-button-group",
+    "srp-button-group--attached",
+    "srp-button-group--vertical"
+   ]
+  },
+  "PasswordInput": {
+   "exports": [
+    "PasswordInput",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-input__field",
+    "srp-password-input",
+    "srp-password-input__caps"
+   ]
+  },
+  "PhoneInput": {
+   "exports": [
+    "PHONE_COUNTRIES",
+    "PhoneInput",
+    "SerupaProvider",
+    "en",
+    "formatNational",
+    "formatPhone",
+    "id",
+    "isPhoneComplete",
+    "parsePhone",
+    "phoneCountry",
+    "phoneOnly",
+    "phonePattern",
+    "pressFocuses",
+    "stripTrunk",
+    "toE164",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Combobox",
+    "Icon",
+    "Input",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-input",
+    "srp-input__field",
+    "srp-phone-input",
+    "srp-phone-input__check",
+    "srp-phone-input__chevron",
+    "srp-phone-input__code",
+    "srp-phone-input__country",
+    "srp-phone-input__dial",
+    "srp-phone-input__listbox",
+    "srp-phone-input__message",
+    "srp-phone-input__name",
+    "srp-phone-input__option",
+    "srp-phone-input__popup",
+    "srp-phone-input__search",
+    "srp-phone-input__search-box",
+    "srp-phone-input__search-icon"
+   ]
+  },
+  "List": {
+   "exports": [
+    "List",
+    "ListItem",
+    "ListLoadingItems",
+    "ListSelectAll",
+    "ListVirtualItems",
+    "SerupaProvider",
+    "SkeletonArt",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSkeletonShown"
+   ],
+   "uses": [
+    "Checkbox",
+    "Icon",
+    "Skeleton"
+   ],
+   "classes": [
+    "srp-card--padding-none",
+    "srp-icon",
+    "srp-list",
+    "srp-list--card",
+    "srp-list--divided",
+    "srp-list--inset",
+    "srp-list--selectable",
+    "srp-list__cell",
+    "srp-list__description",
+    "srp-list__item",
+    "srp-list__item--interactive",
+    "srp-list__item--pickable",
+    "srp-list__leading",
+    "srp-list__leading--icon",
+    "srp-list__leading--lg",
+    "srp-list__leading--md",
+    "srp-list__leading--sm",
+    "srp-list__leading--xl",
+    "srp-list__leading--xs",
+    "srp-list__loading",
+    "srp-list__main",
+    "srp-list__select",
+    "srp-list__spacer",
+    "srp-list__text",
+    "srp-list__title",
+    "srp-list__trailing",
+    "srp-skeleton"
+   ]
+  },
+  "EmptyState": {
+   "exports": [
+    "AnnounceText",
+    "ClearFilters",
+    "EmptyState",
+    "SerupaProvider",
+    "Suggestions",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-btn--icon-only",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-empty-state",
+    "srp-empty-state--dashed",
+    "srp-empty-state--sm",
+    "srp-empty-state__actions",
+    "srp-empty-state__description",
+    "srp-empty-state__icon",
+    "srp-empty-state__icon--custom",
+    "srp-empty-state__suggestion",
+    "srp-empty-state__suggestions",
+    "srp-empty-state__text",
+    "srp-empty-state__title",
+    "srp-icon"
+   ]
+  },
+  "Popover": {
+   "exports": [
+    "Popover"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-popover",
+    "srp-popover--sheet",
+    "srp-popover__body",
+    "srp-popover__title"
+   ]
+  },
+  "Drawer": {
+   "exports": [
+    "Drawer",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Dialog",
+    "IconButton"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-btn--icon-only",
+    "srp-btn--size-lg",
+    "srp-btn--size-sm",
+    "srp-dialog",
+    "srp-drawer",
+    "srp-drawer--bottom",
+    "srp-drawer--end",
+    "srp-drawer--left",
+    "srp-drawer--lg",
+    "srp-drawer--nonmodal",
+    "srp-drawer--right",
+    "srp-drawer--sm",
+    "srp-drawer--snaps",
+    "srp-drawer--start",
+    "srp-drawer--top",
+    "srp-drawer__body",
+    "srp-drawer__close",
+    "srp-drawer__description",
+    "srp-drawer__footer",
+    "srp-drawer__grip",
+    "srp-drawer__handle",
+    "srp-drawer__header",
+    "srp-drawer__heading",
+    "srp-drawer__panel",
+    "srp-drawer__title"
+   ]
+  },
+  "Progress": {
+   "exports": [
+    "Progress",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-progress",
+    "srp-progress--bar",
+    "srp-progress--circle",
+    "srp-progress--danger",
+    "srp-progress--size-lg",
+    "srp-progress--size-sm",
+    "srp-progress--success",
+    "srp-progress--warning",
+    "srp-progress__arc",
+    "srp-progress__arc--edge",
+    "srp-progress__fill",
+    "srp-progress__header",
+    "srp-progress__label",
+    "srp-progress__ring",
+    "srp-progress__track",
+    "srp-progress__value"
+   ]
+  },
+  "RelativeTime": {
+   "exports": [
+    "RelativeTime",
+    "SerupaProvider",
+    "relativeTime",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-relative-time"
+   ]
+  },
+  "CopyButton": {
+   "exports": [
+    "CopyButton",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "Tooltip"
+   ],
+   "classes": [
+    "srp-copy-btn",
+    "srp-copy-btn__icon--copy",
+    "srp-copy-btn__icon--done",
+    "srp-copy-btn__icon--failed",
+    "srp-copy-btn__icons",
+    "srp-copy-btn__label",
+    "srp-copy-btn__label--off",
+    "srp-copy-btn__labels"
+   ]
+  },
+  "Meter": {
+   "exports": [
+    "Meter",
+    "SerupaProvider",
+    "en",
+    "id",
+    "meterState",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-meter",
+    "srp-meter--danger",
+    "srp-meter--size-lg",
+    "srp-meter--size-sm",
+    "srp-meter--success",
+    "srp-meter--warning",
+    "srp-meter__fill",
+    "srp-meter__header",
+    "srp-meter__label",
+    "srp-meter__track",
+    "srp-meter__value"
+   ]
+  },
+  "SearchInput": {
+   "exports": [
+    "SearchInput",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "Loader"
+   ],
+   "classes": [
+    "srp-input__field",
+    "srp-loader",
+    "srp-search-input",
+    "srp-search-input__icon"
+   ]
+  },
+  "NumberInput": {
+   "exports": [
+    "NumberInput",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "DatePicker",
+    "Icon",
+    "Input"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-input",
+    "srp-input__field",
+    "srp-number-input",
+    "srp-number-input--steppers",
+    "srp-number-input__step",
+    "srp-number-input__steppers"
+   ]
+  },
+  "Slider": {
+   "exports": [
+    "SerupaProvider",
+    "Slider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "NumberInput"
+   ],
+   "classes": [
+    "srp-slider",
+    "srp-slider--inputs",
+    "srp-slider--mark-labels",
+    "srp-slider--size-lg",
+    "srp-slider--size-sm",
+    "srp-slider--vertical",
+    "srp-slider__fill",
+    "srp-slider__input",
+    "srp-slider__mark",
+    "srp-slider__mark-label",
+    "srp-slider__range",
+    "srp-slider__thumb",
+    "srp-slider__tick",
+    "srp-slider__tick--off",
+    "srp-slider__track",
+    "srp-slider__value"
+   ]
+  },
+  "SortableList": {
+   "exports": [
+    "SerupaProvider",
+    "SortableList",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-sortable-list",
+    "srp-sortable-list--sorting",
+    "srp-sortable-list__content",
+    "srp-sortable-list__handle",
+    "srp-sortable-list__item"
+   ]
+  },
+  "SegmentedControl": {
+   "exports": [
+    "SegmentedControl"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-segmented",
+    "srp-segmented--fit",
+    "srp-segmented--full",
+    "srp-segmented--size-lg",
+    "srp-segmented--size-sm",
+    "srp-segmented__icon",
+    "srp-segmented__indicator",
+    "srp-segmented__item",
+    "srp-segmented__item--icon-only",
+    "srp-segmented__label"
+   ]
+  },
+  "Combobox": {
+   "exports": [
+    "Combobox",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Badge",
+    "Highlight",
+    "Icon",
+    "Input",
+    "Loader"
+   ],
+   "classes": [
+    "srp-combobox",
+    "srp-combobox--multiple",
+    "srp-combobox__check",
+    "srp-combobox__description",
+    "srp-combobox__group-label",
+    "srp-combobox__listbox",
+    "srp-combobox__message",
+    "srp-combobox__option",
+    "srp-combobox__popup",
+    "srp-combobox__tags",
+    "srp-combobox__text",
+    "srp-combobox__toggle",
+    "srp-combobox__values",
+    "srp-icon",
+    "srp-input__field"
+   ]
+  },
+  "Stepper": {
+   "exports": [
+    "SerupaProvider",
+    "Stepper",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSteps"
+   ],
+   "uses": [
+    "Icon",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-stepper",
+    "srp-stepper--compact",
+    "srp-stepper--horizontal",
+    "srp-stepper--measure",
+    "srp-stepper--size-sm",
+    "srp-stepper--tight",
+    "srp-stepper--vertical",
+    "srp-stepper__connector",
+    "srp-stepper__description",
+    "srp-stepper__head",
+    "srp-stepper__indicator",
+    "srp-stepper__list",
+    "srp-stepper__step",
+    "srp-stepper__step--warning",
+    "srp-stepper__summary",
+    "srp-stepper__text",
+    "srp-stepper__title"
+   ]
+  },
+  "Kbd": {
+   "exports": [
+    "Kbd",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-kbd",
+    "srp-kbd--size-sm",
+    "srp-kbd__key",
+    "srp-kbd__key--char",
+    "srp-kbd__plus"
+   ]
+  },
+  "FileUpload": {
+   "exports": [
+    "FileUpload",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Attachment",
+    "Button",
+    "ErrorBoundary",
+    "Icon",
+    "Progress"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-file-upload",
+    "srp-file-upload__error",
+    "srp-file-upload__errors",
+    "srp-file-upload__hint",
+    "srp-file-upload__icon",
+    "srp-file-upload__input",
+    "srp-file-upload__item",
+    "srp-file-upload__list",
+    "srp-file-upload__required",
+    "srp-file-upload__thumbnail",
+    "srp-file-upload__title",
+    "srp-file-upload__zone",
+    "srp-icon"
+   ]
+  },
+  "FormattedNumber": {
+   "exports": [
+    "FormattedNumber",
+    "SerupaProvider",
+    "formatNumber",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-formatted-number",
+    "srp-formatted-number__changed"
+   ]
+  },
+  "Calendar": {
+   "exports": [
+    "Calendar",
+    "PresetList",
+    "SerupaProvider",
+    "dayPresets",
+    "en",
+    "id",
+    "isoWeek",
+    "rangePresets",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton",
+    "PeriodPicker",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-calendar",
+    "srp-calendar--paired-next",
+    "srp-calendar--paired-previous",
+    "srp-calendar--presets",
+    "srp-calendar--weeks",
+    "srp-calendar__day",
+    "srp-calendar__day--in-range",
+    "srp-calendar__day--range-end",
+    "srp-calendar__day--range-start",
+    "srp-calendar__grid",
+    "srp-calendar__header",
+    "srp-calendar__heading",
+    "srp-calendar__heading--static",
+    "srp-calendar__heading-icon",
+    "srp-calendar__menu",
+    "srp-calendar__menus",
+    "srp-calendar__nav--next",
+    "srp-calendar__nav--prev",
+    "srp-calendar__period",
+    "srp-calendar__periods",
+    "srp-calendar__preset",
+    "srp-calendar__presets",
+    "srp-calendar__title",
+    "srp-calendar__week"
+   ]
+  },
+  "DatePicker": {
+   "exports": [
+    "DatePicker",
+    "SerupaProvider",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Calendar",
+    "Input"
+   ],
+   "classes": [
+    "srp-date-picker",
+    "srp-date-picker__popup",
+    "srp-date-range-picker"
+   ]
+  },
+  "DateRangePicker": {
+   "exports": [
+    "DateRangePicker",
+    "PresetList",
+    "SerupaProvider",
+    "dayPresets",
+    "en",
+    "id",
+    "rangePresets",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Calendar",
+    "DatePicker",
+    "Input",
+    "RangeCalendar"
+   ],
+   "classes": [
+    "srp-date-range-picker",
+    "srp-date-range-picker__actions",
+    "srp-date-range-picker__body",
+    "srp-date-range-picker__button",
+    "srp-date-range-picker__calendar",
+    "srp-date-range-picker__dash",
+    "srp-date-range-picker__field",
+    "srp-date-range-picker__popup",
+    "srp-input--size-sm"
+   ]
+  },
+  "Image": {
+   "exports": [
+    "Image",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Dialog",
+    "Icon",
+    "IconButton"
+   ],
+   "classes": [
+    "srp-dialog__body",
+    "srp-icon",
+    "srp-image",
+    "srp-image--contain",
+    "srp-image--cover",
+    "srp-image--dim",
+    "srp-image--error",
+    "srp-image--fades",
+    "srp-image--fill",
+    "srp-image--loaded",
+    "srp-image--loading",
+    "srp-image--ratio-4-3",
+    "srp-image--ratio-auto",
+    "srp-image--ratio-square",
+    "srp-image--ratio-video",
+    "srp-image--rounded",
+    "srp-image--sized",
+    "srp-image__fallback",
+    "srp-image__full",
+    "srp-image__img",
+    "srp-image__picture",
+    "srp-image__remove",
+    "srp-image__stage",
+    "srp-image__view",
+    "srp-image__viewer"
+   ]
+  },
+  "InlineEdit": {
+   "exports": [
+    "InlineEdit",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-description-list",
+    "srp-description-list--split",
+    "srp-description-list__details",
+    "srp-inline-edit",
+    "srp-inline-edit--editing",
+    "srp-inline-edit--size-lg",
+    "srp-inline-edit--size-sm",
+    "srp-inline-edit__error",
+    "srp-inline-edit__error-icon",
+    "srp-inline-edit__icon",
+    "srp-inline-edit__text",
+    "srp-inline-edit__text--placeholder",
+    "srp-inline-edit__view",
+    "srp-inline-edit__view--blank",
+    "srp-inline-edit__view--static"
+   ]
+  },
+  "TimePicker": {
+   "exports": [
+    "SerupaProvider",
+    "TimePicker",
+    "en",
+    "id",
+    "pressFocuses",
+    "useAffixes",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "DatePicker",
+    "Icon",
+    "Input"
+   ],
+   "classes": [
+    "srp-time-picker",
+    "srp-time-picker__check",
+    "srp-time-picker__list",
+    "srp-time-picker__option"
+   ]
+  },
+  "Carousel": {
+   "exports": [
+    "Carousel",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton"
+   ],
+   "classes": [
+    "srp-carousel",
+    "srp-carousel--multi",
+    "srp-carousel--peek",
+    "srp-carousel__arrow",
+    "srp-carousel__arrow--next",
+    "srp-carousel__arrow--prev",
+    "srp-carousel__dot",
+    "srp-carousel__dots",
+    "srp-carousel__frame",
+    "srp-carousel__ltr",
+    "srp-carousel__rtl",
+    "srp-carousel__slide",
+    "srp-carousel__track",
+    "srp-carousel__viewport"
+   ]
+  },
+  "AppShell": {
+   "exports": [
+    "AppShell"
+   ],
+   "uses": [
+    "SkipLink"
+   ],
+   "classes": [
+    "srp-app-shell",
+    "srp-app-shell--muted",
+    "srp-app-shell__bottom",
+    "srp-app-shell__footer",
+    "srp-app-shell__main",
+    "srp-app-shell__main--padded",
+    "srp-app-shell__side",
+    "srp-app-shell__side--from-lg",
+    "srp-app-shell__side--from-md",
+    "srp-app-shell__side--from-sm"
+   ]
+  },
+  "Attachment": {
+   "exports": [
+    "Attachment",
+    "MiddleCutName",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "ErrorBoundary",
+    "FileUpload",
+    "Icon",
+    "IconButton",
+    "Progress",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-attachment",
+    "srp-attachment--uploading",
+    "srp-attachment__body",
+    "srp-attachment__done",
+    "srp-attachment__error",
+    "srp-attachment__icon",
+    "srp-attachment__meta",
+    "srp-attachment__name",
+    "srp-attachment__name-end",
+    "srp-attachment__name-start",
+    "srp-attachment__name-text",
+    "srp-attachment__progress",
+    "srp-attachment__remove",
+    "srp-attachment__retry",
+    "srp-attachment__size",
+    "srp-attachment__thumbnail",
+    "srp-icon"
+   ]
+  },
+  "BottomNav": {
+   "exports": [
+    "BottomNav",
+    "BottomNavLink"
+   ],
+   "uses": [
+    "Icon",
+    "TruncatedText"
+   ],
+   "classes": [
+    "srp-bottom-nav",
+    "srp-bottom-nav--always",
+    "srp-bottom-nav--hide-lg",
+    "srp-bottom-nav--hide-md",
+    "srp-bottom-nav--hide-sm",
+    "srp-bottom-nav__badge",
+    "srp-bottom-nav__icon",
+    "srp-bottom-nav__item",
+    "srp-bottom-nav__label",
+    "srp-bottom-nav__link",
+    "srp-bottom-nav__list",
+    "srp-bottom-nav__spacer"
+   ]
+  },
+  "CascadeSelect": {
+   "exports": [
+    "CascadeSelect",
+    "PickerButton",
+    "PickerValidity",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "TruncatedText"
+   ],
+   "classes": [
+    "srp-cascade-select",
+    "srp-cascade-select--size-lg",
+    "srp-cascade-select--size-sm",
+    "srp-cascade-select__back",
+    "srp-cascade-select__button",
+    "srp-cascade-select__check",
+    "srp-cascade-select__chevron",
+    "srp-cascade-select__column",
+    "srp-cascade-select__label",
+    "srp-cascade-select__level",
+    "srp-cascade-select__list",
+    "srp-cascade-select__more",
+    "srp-cascade-select__note",
+    "srp-cascade-select__option",
+    "srp-cascade-select__option--on",
+    "srp-cascade-select__panel",
+    "srp-cascade-select__validity",
+    "srp-cascade-select__value"
+   ]
+  },
+  "Center": {
+   "exports": [
+    "Center"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-center",
+    "srp-center--intrinsic",
+    "srp-center--padded",
+    "srp-center--text",
+    "srp-center--vertical"
+   ]
+  },
+  "Chart": {
+   "exports": [
+    "Chart",
+    "SerupaProvider",
+    "SkeletonArt",
+    "en",
+    "id",
+    "markerPath",
+    "niceTicks",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSkeletonShown"
+   ],
+   "uses": [
+    "Button",
+    "List",
+    "Skeleton",
+    "Table"
+   ],
+   "classes": [
+    "srp-chart",
+    "srp-chart--s1",
+    "srp-chart--s2",
+    "srp-chart--s3",
+    "srp-chart--s4",
+    "srp-chart--s5",
+    "srp-chart--s6",
+    "srp-chart--s7",
+    "srp-chart--s8",
+    "srp-chart__area",
+    "srp-chart__bar",
+    "srp-chart__bar--neg",
+    "srp-chart__baseline",
+    "srp-chart__cell",
+    "srp-chart__cell--d1",
+    "srp-chart__cell--d2",
+    "srp-chart__cell--d3",
+    "srp-chart__cell--d4",
+    "srp-chart__cell--d5",
+    "srp-chart__cell--d6",
+    "srp-chart__cell--d7",
+    "srp-chart__cell--empty",
+    "srp-chart__cell--s1",
+    "srp-chart__cell--s2",
+    "srp-chart__cell--s3",
+    "srp-chart__cell--s4",
+    "srp-chart__cell--s5",
+    "srp-chart__cursor",
+    "srp-chart__focus",
+    "srp-chart__frame",
+    "srp-chart__gridline",
+    "srp-chart__key",
+    "srp-chart__key-value",
+    "srp-chart__label",
+    "srp-chart__legend",
+    "srp-chart__legend--scale",
+    "srp-chart__legend--waiting",
+    "srp-chart__line",
+    "srp-chart__marker",
+    "srp-chart__pattern-fill",
+    "srp-chart__pattern-mark",
+    "srp-chart__placeholder",
+    "srp-chart__plot",
+    "srp-chart__point",
+    "srp-chart__scale",
+    "srp-chart__slice",
+    "srp-chart__swatch",
+    "srp-chart__table",
+    "srp-chart__tip",
+    "srp-chart__tip-name",
+    "srp-chart__tip-row",
+    "srp-chart__tip-row--focus",
+    "srp-chart__tip-title",
+    "srp-chart__tip-value",
+    "srp-chart__title",
+    "srp-chart__toggle",
+    "srp-chart__total",
+    "srp-chart__zero",
+    "srp-skeleton",
+    "srp-table"
+   ]
+  },
+  "Chat": {
+   "exports": [
+    "Chat",
+    "ChatApproval",
+    "ChatCitation",
+    "ChatComposer",
+    "ChatDivider",
+    "ChatMessage",
+    "ChatReplyActions",
+    "ChatSteps",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "CopyButton",
+    "Icon",
+    "IconButton",
+    "Loader",
+    "RelativeTime",
+    "Textarea",
+    "ToggleButton",
+    "Tooltip",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-chat",
+    "srp-chat-approval",
+    "srp-chat-approval--approved",
+    "srp-chat-approval--denied",
+    "srp-chat-approval__actions",
+    "srp-chat-approval__detail",
+    "srp-chat-approval__icon",
+    "srp-chat-approval__title",
+    "srp-chat-citation",
+    "srp-chat-citation__index",
+    "srp-chat-citation__source",
+    "srp-chat-composer",
+    "srp-chat-composer__attachments",
+    "srp-chat-composer__field",
+    "srp-chat-composer__row",
+    "srp-chat-divider",
+    "srp-chat-divider__text",
+    "srp-chat-message",
+    "srp-chat-message--failed",
+    "srp-chat-message--follow",
+    "srp-chat-message--own",
+    "srp-chat-message__attachments",
+    "srp-chat-message__author",
+    "srp-chat-message__avatar",
+    "srp-chat-message__branch",
+    "srp-chat-message__branches",
+    "srp-chat-message__bubble",
+    "srp-chat-message__head",
+    "srp-chat-message__main",
+    "srp-chat-message__reasoning",
+    "srp-chat-message__reasoning-icon",
+    "srp-chat-message__reasoning-text",
+    "srp-chat-message__reasoning-toggle",
+    "srp-chat-message__status",
+    "srp-chat-message__status--failed",
+    "srp-chat-reply-actions",
+    "srp-chat-steps",
+    "srp-chat-steps__detail",
+    "srp-chat-steps__icon",
+    "srp-chat-steps__label",
+    "srp-chat-steps__step",
+    "srp-chat-steps__step--done",
+    "srp-chat-steps__step--failed",
+    "srp-chat-steps__text",
+    "srp-chat__jump",
+    "srp-chat__log",
+    "srp-chat__older",
+    "srp-icon"
+   ]
+  },
+  "CodeBlock": {
+   "exports": [
+    "CodeBlock",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "CopyButton"
+   ],
+   "classes": [
+    "srp-card--padding-none",
+    "srp-code-block",
+    "srp-code-block--numbered",
+    "srp-code-block--wrap",
+    "srp-code-block__code",
+    "srp-code-block__copy",
+    "srp-code-block__header",
+    "srp-code-block__language",
+    "srp-code-block__line",
+    "srp-code-block__line--marked",
+    "srp-code-block__pre",
+    "srp-code-block__title"
+   ]
+  },
+  "CommandPalette": {
+   "exports": [
+    "CommandPalette",
+    "LoaderRing",
+    "RingArt",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Dialog",
+    "Highlight",
+    "Icon",
+    "Kbd",
+    "Loader"
+   ],
+   "classes": [
+    "srp-command-palette__description",
+    "srp-command-palette__empty",
+    "srp-command-palette__field",
+    "srp-command-palette__group",
+    "srp-command-palette__heading",
+    "srp-command-palette__icon",
+    "srp-command-palette__keys",
+    "srp-command-palette__label",
+    "srp-command-palette__list",
+    "srp-command-palette__loading",
+    "srp-command-palette__option",
+    "srp-command-palette__text",
+    "srp-icon"
+   ]
+  },
+  "ContextualHelp": {
+   "exports": [
+    "ContextualHelp",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton",
+    "Popover"
+   ],
+   "classes": [
+    "srp-contextual-help",
+    "srp-contextual-help__button",
+    "srp-contextual-help__button--info"
+   ]
+  },
+  "Countdown": {
+   "exports": [
+    "Countdown",
+    "SerupaProvider",
+    "countdownClock",
+    "countdownWords",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-countdown",
+    "srp-countdown--wraps"
+   ]
+  },
+  "DataGrid": {
+   "exports": [
+    "DataGrid",
+    "SerupaProvider",
+    "SkeletonArt",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSkeletonShown"
+   ],
+   "uses": [
+    "List",
+    "Skeleton"
+   ],
+   "classes": [
+    "srp-card--padding-none",
+    "srp-data-grid",
+    "srp-data-grid--lg",
+    "srp-data-grid--sm",
+    "srp-data-grid--sticky",
+    "srp-data-grid__cell",
+    "srp-data-grid__cell--center",
+    "srp-data-grid__cell--editing",
+    "srp-data-grid__cell--end",
+    "srp-data-grid__header",
+    "srp-data-grid__input",
+    "srp-data-grid__loading",
+    "srp-data-grid__message",
+    "srp-data-grid__table"
+   ]
+  },
+  "DateField": {
+   "exports": [
+    "DateField",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "Input",
+    "Select"
+   ],
+   "classes": [
+    "srp-date-field",
+    "srp-date-field__error",
+    "srp-date-field__error-icon",
+    "srp-date-field__input",
+    "srp-date-field__input--select",
+    "srp-date-field__label",
+    "srp-date-field__part",
+    "srp-date-field__part--day",
+    "srp-date-field__part--month",
+    "srp-date-field__part--year"
+   ]
+  },
+  "DescriptionList": {
+   "exports": [
+    "DescriptionItem",
+    "DescriptionList"
+   ],
+   "uses": [
+    "InlineEdit"
+   ],
+   "classes": [
+    "srp-description-list",
+    "srp-description-list--dividers",
+    "srp-description-list--inline",
+    "srp-description-list--split",
+    "srp-description-list__details",
+    "srp-description-list__item",
+    "srp-description-list__item--emphasis",
+    "srp-description-list__term"
+   ]
+  },
+  "Duration": {
+   "exports": [
+    "Duration",
+    "SerupaProvider",
+    "formatDuration",
+    "isoDuration",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-duration--digital"
+   ]
+  },
+  "ErrorBoundary": {
+   "exports": [
+    "ErrorBoundary",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Alert",
+    "Button"
+   ],
+   "classes": [
+    "srp-error-boundary"
+   ]
+  },
+  "ErrorSummary": {
+   "exports": [
+    "ErrorSummary",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-error-summary",
+    "srp-error-summary__description",
+    "srp-error-summary__link",
+    "srp-error-summary__list",
+    "srp-error-summary__title"
+   ]
+  },
+  "EventCalendar": {
+   "exports": [
+    "EventCalendar",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Calendar",
+    "IconButton",
+    "Popover",
+    "SegmentedControl",
+    "TruncatedText",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-event-calendar",
+    "srp-event-calendar__agenda",
+    "srp-event-calendar__agenda-date",
+    "srp-event-calendar__agenda-day",
+    "srp-event-calendar__column",
+    "srp-event-calendar__date",
+    "srp-event-calendar__day",
+    "srp-event-calendar__empty",
+    "srp-event-calendar__event",
+    "srp-event-calendar__event--danger",
+    "srp-event-calendar__event--info",
+    "srp-event-calendar__event--movable",
+    "srp-event-calendar__event--success",
+    "srp-event-calendar__event--warning",
+    "srp-event-calendar__events",
+    "srp-event-calendar__events--all",
+    "srp-event-calendar__ghost",
+    "srp-event-calendar__grid",
+    "srp-event-calendar__head",
+    "srp-event-calendar__head-date",
+    "srp-event-calendar__heading",
+    "srp-event-calendar__hours",
+    "srp-event-calendar__hours-grid",
+    "srp-event-calendar__more",
+    "srp-event-calendar__nav",
+    "srp-event-calendar__now",
+    "srp-event-calendar__pinned",
+    "srp-event-calendar__repeat",
+    "srp-event-calendar__resize",
+    "srp-event-calendar__scale",
+    "srp-event-calendar__scroll",
+    "srp-event-calendar__time",
+    "srp-event-calendar__timed",
+    "srp-event-calendar__title",
+    "srp-event-calendar__toolbar",
+    "srp-event-calendar__zone"
+   ]
+  },
+  "FabMenu": {
+   "exports": [
+    "FabMenu"
+   ],
+   "uses": [
+    "Fab",
+    "Icon",
+    "Menu"
+   ],
+   "classes": [
+    "srp-fab-menu",
+    "srp-menu"
+   ]
+  },
+  "FieldList": {
+   "exports": [
+    "FieldList",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Combobox",
+    "Icon",
+    "IconButton",
+    "SortableList",
+    "TagGroup"
+   ],
+   "classes": [
+    "srp-field-list",
+    "srp-field-list__add",
+    "srp-field-list__error",
+    "srp-field-list__error-icon",
+    "srp-field-list__fields",
+    "srp-field-list__hint",
+    "srp-field-list__label",
+    "srp-field-list__limit",
+    "srp-field-list__remove",
+    "srp-field-list__row",
+    "srp-field-list__row-error",
+    "srp-field-list__rows"
+   ]
+  },
+  "FilterBar": {
+   "exports": [
+    "FilterBar",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Checkbox",
+    "DateRangePicker",
+    "Icon",
+    "IconButton",
+    "Input",
+    "Menu",
+    "Popover",
+    "Radio",
+    "Switch",
+    "TruncatedText"
+   ],
+   "classes": [
+    "srp-filter-bar",
+    "srp-filter-bar__actions",
+    "srp-filter-bar__add",
+    "srp-filter-bar__chip",
+    "srp-filter-bar__chips",
+    "srp-filter-bar__count",
+    "srp-filter-bar__done",
+    "srp-filter-bar__edit",
+    "srp-filter-bar__editor",
+    "srp-filter-bar__options"
+   ]
+  },
+  "Form": {
+   "exports": [
+    "Form",
+    "FormInternals",
+    "FormStep",
+    "FormSteps",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useForm",
+    "useFormValue",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Alert",
+    "Button",
+    "ErrorBoundary",
+    "ErrorSummary",
+    "Input",
+    "Stepper"
+   ],
+   "classes": [
+    "srp-form",
+    "srp-form-steps",
+    "srp-form-steps__actions",
+    "srp-form-steps__panel",
+    "srp-form-steps__title"
+   ]
+  },
+  "FormattedDate": {
+   "exports": [
+    "FormattedDate",
+    "SerupaProvider",
+    "formatDate",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-formatted-date__half"
+   ]
+  },
+  "Highlight": {
+   "exports": [
+    "Highlight",
+    "highlightRanges"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-highlight",
+    "srp-highlight__mark"
+   ]
+  },
+  "HoverCard": {
+   "exports": [
+    "HoverCard"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-hover-card"
+   ]
+  },
+  "IconTile": {
+   "exports": [
+    "IconTile"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-icon-tile",
+    "srp-icon-tile--circle",
+    "srp-icon-tile--danger",
+    "srp-icon-tile--info",
+    "srp-icon-tile--lg",
+    "srp-icon-tile--primary",
+    "srp-icon-tile--sm",
+    "srp-icon-tile--success",
+    "srp-icon-tile--warning",
+    "srp-icon-tile--xl",
+    "srp-icon-tile__icon"
+   ]
+  },
+  "Illustration": {
+   "exports": [
+    "Illustration"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-illustration",
+    "srp-illustration--lg",
+    "srp-illustration--sm",
+    "srp-illustration__accent",
+    "srp-illustration__fill",
+    "srp-illustration__line"
+   ]
+  },
+  "ImageCropper": {
+   "exports": [
+    "ImageCropper",
+    "SerupaProvider",
+    "cropImage",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton",
+    "Slider"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-image-cropper",
+    "srp-image-cropper__fallback",
+    "srp-image-cropper__frame",
+    "srp-image-cropper__grid",
+    "srp-image-cropper__img",
+    "srp-image-cropper__mask",
+    "srp-image-cropper__slider",
+    "srp-image-cropper__zoom"
+   ]
+  },
+  "Kanban": {
+   "exports": [
+    "Kanban",
+    "SerupaProvider",
+    "SkeletonArt",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useSkeletonShown"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton",
+    "List",
+    "Menu",
+    "Skeleton"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-kanban",
+    "srp-kanban--moving",
+    "srp-kanban__card",
+    "srp-kanban__cards",
+    "srp-kanban__column",
+    "srp-kanban__column--target",
+    "srp-kanban__content",
+    "srp-kanban__count",
+    "srp-kanban__empty",
+    "srp-kanban__handle",
+    "srp-kanban__header",
+    "srp-kanban__loading",
+    "srp-kanban__menu",
+    "srp-kanban__title",
+    "srp-skeleton"
+   ]
+  },
+  "KeyboardShortcuts": {
+   "exports": [
+    "KeyboardShortcuts",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "DescriptionList",
+    "Dialog",
+    "Kbd",
+    "Switch"
+   ],
+   "classes": [
+    "srp-keyboard-shortcuts__group",
+    "srp-keyboard-shortcuts__heading",
+    "srp-keyboard-shortcuts__list",
+    "srp-keyboard-shortcuts__row",
+    "srp-keyboard-shortcuts__single"
+   ]
+  },
+  "Lightbox": {
+   "exports": [
+    "Lightbox",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Dialog",
+    "Icon",
+    "IconButton"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-lightbox__body",
+    "srp-lightbox__caption",
+    "srp-lightbox__count",
+    "srp-lightbox__fallback",
+    "srp-lightbox__figure",
+    "srp-lightbox__img",
+    "srp-lightbox__nav",
+    "srp-lightbox__stage"
+   ]
+  },
+  "LoadMore": {
+   "exports": [
+    "LoadMore",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button"
+   ],
+   "classes": [
+    "srp-load-more",
+    "srp-load-more__end",
+    "srp-load-more__summary"
+   ]
+  },
+  "Logo": {
+   "exports": [
+    "Logo"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-logo",
+    "srp-logo--lg",
+    "srp-logo--sm",
+    "srp-logo__picture"
+   ]
+  },
+  "MaskedValue": {
+   "exports": [
+    "MaskedValue",
+    "SerupaProvider",
+    "en",
+    "id",
+    "maskValue",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "IconButton",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-masked-value",
+    "srp-masked-value__text",
+    "srp-masked-value__toggle"
+   ]
+  },
+  "MentionInput": {
+   "exports": [
+    "MentionInput",
+    "SerupaProvider",
+    "mentionQuery",
+    "mentionsIn",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Avatar",
+    "Combobox",
+    "Highlight",
+    "Textarea"
+   ],
+   "classes": [
+    "srp-mention-input",
+    "srp-mention-input__anchor",
+    "srp-mention-input__description",
+    "srp-mention-input__listbox",
+    "srp-mention-input__marks",
+    "srp-mention-input__mention",
+    "srp-mention-input__message",
+    "srp-mention-input__option",
+    "srp-mention-input__popup",
+    "srp-mention-input__text"
+   ]
+  },
+  "Menubar": {
+   "exports": [
+    "Menubar",
+    "MenubarMenu"
+   ],
+   "uses": [
+    "Menu"
+   ],
+   "classes": [
+    "srp-menubar",
+    "srp-menubar__item"
+   ]
+  },
+  "NotificationCenter": {
+   "exports": [
+    "NotificationCenter",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings",
+    "useToastHistory"
+   ],
+   "uses": [
+    "Button",
+    "Drawer",
+    "Icon",
+    "IconButton",
+    "RelativeTime",
+    "Toast",
+    "Tooltip",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-notification-center__ask",
+    "srp-notification-center__content",
+    "srp-notification-center__description",
+    "srp-notification-center__dot",
+    "srp-notification-center__empty",
+    "srp-notification-center__icon",
+    "srp-notification-center__item",
+    "srp-notification-center__item--danger",
+    "srp-notification-center__item--info",
+    "srp-notification-center__item--success",
+    "srp-notification-center__item--warning",
+    "srp-notification-center__list",
+    "srp-notification-center__settings",
+    "srp-notification-center__time",
+    "srp-notification-center__title"
+   ]
+  },
+  "OfflineBanner": {
+   "exports": [
+    "OfflineBanner",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Fab",
+    "Icon"
+   ],
+   "classes": [
+    "srp-navbar--sticky",
+    "srp-offline-banner",
+    "srp-offline-banner--bottom",
+    "srp-offline-banner--top",
+    "srp-offline-banner__icon",
+    "srp-offline-banner__title"
+   ]
+  },
+  "PageSection": {
+   "exports": [
+    "PageSection"
+   ],
+   "uses": [
+    "Container"
+   ],
+   "classes": [
+    "srp-page-section",
+    "srp-page-section--center",
+    "srp-page-section--divider",
+    "srp-page-section--lg",
+    "srp-page-section--md",
+    "srp-page-section--muted",
+    "srp-page-section--sm",
+    "srp-page-section__inner"
+   ]
+  },
+  "PeriodPicker": {
+   "exports": [
+    "PeriodPicker",
+    "PickerButton",
+    "PickerValidity",
+    "SerupaProvider",
+    "en",
+    "id",
+    "periodIndex",
+    "periodValue",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon",
+    "IconButton",
+    "TruncatedText",
+    "VisuallyHidden"
+   ],
+   "classes": [
+    "srp-period-picker",
+    "srp-period-picker--size-lg",
+    "srp-period-picker--size-sm",
+    "srp-period-picker__button",
+    "srp-period-picker__grid",
+    "srp-period-picker__header",
+    "srp-period-picker__icon",
+    "srp-period-picker__panel",
+    "srp-period-picker__period",
+    "srp-period-picker__title",
+    "srp-period-picker__validity",
+    "srp-period-picker__value"
+   ]
+  },
+  "PinInput": {
+   "exports": [
+    "PinInput"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-pin-input",
+    "srp-pin-input--size-lg",
+    "srp-pin-input--size-sm",
+    "srp-pin-input__box",
+    "srp-pin-input__box--caret",
+    "srp-pin-input__boxes",
+    "srp-pin-input__field"
+   ]
+  },
+  "Prose": {
+   "exports": [
+    "Prose"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-kbd",
+    "srp-prose"
+   ]
+  },
+  "QRCode": {
+   "exports": [
+    "QRCode",
+    "SerupaProvider",
+    "en",
+    "encodeQR",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "Loader"
+   ],
+   "classes": [
+    "srp-qr-code",
+    "srp-qr-code--lg",
+    "srp-qr-code--md",
+    "srp-qr-code--sm",
+    "srp-qr-code__code",
+    "srp-qr-code__dark",
+    "srp-qr-code__icon",
+    "srp-qr-code__light",
+    "srp-qr-code__message",
+    "srp-qr-code__status"
+   ]
+  },
+  "Quote": {
+   "exports": [
+    "Quote"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-quote",
+    "srp-quote--lg",
+    "srp-quote__author",
+    "srp-quote__by",
+    "srp-quote__source",
+    "srp-quote__text",
+    "srp-quote__who"
+   ]
+  },
+  "RangeCalendar": {
+   "exports": [
+    "RangeCalendar",
+    "RangePickContext",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Calendar",
+    "DateRangePicker"
+   ],
+   "classes": [
+    "srp-range-calendar",
+    "srp-range-calendar__months",
+    "srp-range-calendar__status"
+   ]
+  },
+  "Rating": {
+   "exports": [
+    "Rating",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-rating",
+    "srp-rating--size-lg",
+    "srp-rating--size-sm",
+    "srp-rating__choice",
+    "srp-rating__choice--half",
+    "srp-rating__empty",
+    "srp-rating__fill",
+    "srp-rating__star"
+   ]
+  },
+  "SaveStatus": {
+   "exports": [
+    "LoaderRing",
+    "RingArt",
+    "SaveStatus",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Icon",
+    "Loader",
+    "RelativeTime"
+   ],
+   "classes": [
+    "srp-save-status",
+    "srp-save-status__face",
+    "srp-save-status__face--error",
+    "srp-save-status__face--saved",
+    "srp-save-status__icon",
+    "srp-save-status__text"
+   ]
+  },
+  "ScrollArea": {
+   "exports": [
+    "ScrollArea",
+    "SerupaProvider",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-scroll-area",
+    "srp-scroll-area--both",
+    "srp-scroll-area--horizontal",
+    "srp-scroll-area--more-end",
+    "srp-scroll-area--more-start",
+    "srp-scroll-area--vertical"
+   ]
+  },
+  "ShowMore": {
+   "exports": [
+    "SerupaProvider",
+    "ShowMore",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button"
+   ],
+   "classes": [
+    "srp-show-more",
+    "srp-show-more__text",
+    "srp-show-more__text--cut",
+    "srp-show-more__toggle"
+   ]
+  },
+  "SidebarLayout": {
+   "exports": [
+    "SidebarLayout"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-sidebar-layout",
+    "srp-sidebar-layout--align-start",
+    "srp-sidebar-layout__content",
+    "srp-sidebar-layout__side"
+   ]
+  },
+  "SignaturePad": {
+   "exports": [
+    "SerupaProvider",
+    "SignaturePad",
+    "en",
+    "id",
+    "signatureToPng",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Input",
+    "SegmentedControl"
+   ],
+   "classes": [
+    "srp-signature-pad",
+    "srp-signature-pad__actions",
+    "srp-signature-pad__area",
+    "srp-signature-pad__area--typed",
+    "srp-signature-pad__box",
+    "srp-signature-pad__how",
+    "srp-signature-pad__label",
+    "srp-signature-pad__line",
+    "srp-signature-pad__method",
+    "srp-signature-pad__strokes",
+    "srp-signature-pad__typed",
+    "srp-signature-pad__validity"
+   ]
+  },
+  "Skeleton": {
+   "exports": [
+    "SerupaProvider",
+    "Skeleton",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "List"
+   ],
+   "classes": [
+    "srp-skeleton",
+    "srp-skeleton--circle",
+    "srp-skeleton--inverse",
+    "srp-skeleton--rect",
+    "srp-skeleton--size-lg",
+    "srp-skeleton--size-sm",
+    "srp-skeleton--text",
+    "srp-skeleton--waiting",
+    "srp-skeleton__bone",
+    "srp-skeleton__line"
+   ]
+  },
+  "SkipLink": {
+   "exports": [
+    "SerupaProvider",
+    "SkipLink",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-skip-link"
+   ]
+  },
+  "Sparkline": {
+   "exports": [
+    "SerupaProvider",
+    "Sparkline",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-sparkline",
+    "srp-sparkline__area",
+    "srp-sparkline__dot",
+    "srp-sparkline__line"
+   ]
+  },
+  "SplitButton": {
+   "exports": [
+    "SplitButton"
+   ],
+   "uses": [
+    "Button",
+    "ButtonGroup",
+    "Icon",
+    "IconButton",
+    "Menu"
+   ],
+   "classes": [
+    "srp-btn",
+    "srp-button-group",
+    "srp-split-button"
+   ]
+  },
+  "Splitter": {
+   "exports": [
+    "SerupaProvider",
+    "Splitter",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-splitter",
+    "srp-splitter--vertical",
+    "srp-splitter__handle",
+    "srp-splitter__pane",
+    "srp-splitter__pane--first",
+    "srp-splitter__pane--second"
+   ]
+  },
+  "StatTile": {
+   "exports": [
+    "SerupaProvider",
+    "StatTile",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Badge",
+    "Skeleton",
+    "Sparkline"
+   ],
+   "classes": [
+    "srp-stat-tile",
+    "srp-stat-tile__change",
+    "srp-stat-tile__label",
+    "srp-stat-tile__trend",
+    "srp-stat-tile__value"
+   ]
+  },
+  "StatusTracker": {
+   "exports": [
+    "SerupaProvider",
+    "StatusTracker",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-status-tracker",
+    "srp-status-tracker__caption",
+    "srp-status-tracker__day",
+    "srp-status-tracker__days",
+    "srp-status-tracker__key",
+    "srp-status-tracker__legend",
+    "srp-status-tracker__summary",
+    "srp-status-tracker__swatch"
+   ]
+  },
+  "TabNav": {
+   "exports": [
+    "TabNav",
+    "TabNavLink"
+   ],
+   "uses": [
+    "Icon",
+    "Tabs"
+   ],
+   "classes": [
+    "srp-tab-nav__item",
+    "srp-tab-nav__list"
+   ]
+  },
+  "TableOfContents": {
+   "exports": [
+    "SerupaProvider",
+    "TableOfContents",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [],
+   "classes": [
+    "srp-toc",
+    "srp-toc--rail",
+    "srp-toc__dash",
+    "srp-toc__link",
+    "srp-toc__list",
+    "srp-toc__panel",
+    "srp-toc__rail",
+    "srp-toc__title"
+   ]
+  },
+  "TagGroup": {
+   "exports": [
+    "SerupaProvider",
+    "TagGroup",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Combobox",
+    "Icon",
+    "ShowMore"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-tag-group",
+    "srp-tag-group__avatar",
+    "srp-tag-group__cell",
+    "srp-tag-group__check",
+    "srp-tag-group__empty",
+    "srp-tag-group__icon",
+    "srp-tag-group__label",
+    "srp-tag-group__more",
+    "srp-tag-group__remove",
+    "srp-tag-group__tag",
+    "srp-tag-group__tags",
+    "srp-tag-group__text"
+   ]
+  },
+  "TimeZonePicker": {
+   "exports": [
+    "SerupaProvider",
+    "TimeZonePicker",
+    "allTimeZones",
+    "en",
+    "id",
+    "timeZoneInfo",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Combobox"
+   ],
+   "classes": [
+    "srp-time-zone-picker"
+   ]
+  },
+  "Timeline": {
+   "exports": [
+    "SerupaProvider",
+    "Timeline",
+    "TimelineItem",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-timeline",
+    "srp-timeline--alternate",
+    "srp-timeline--horizontal",
+    "srp-timeline-scroll",
+    "srp-timeline-scroll--stack",
+    "srp-timeline__body",
+    "srp-timeline__content",
+    "srp-timeline__item",
+    "srp-timeline__item--danger",
+    "srp-timeline__item--info",
+    "srp-timeline__item--primary",
+    "srp-timeline__item--success",
+    "srp-timeline__item--warning",
+    "srp-timeline__marker",
+    "srp-timeline__marker--icon",
+    "srp-timeline__rail",
+    "srp-timeline__time",
+    "srp-timeline__title"
+   ]
+  },
+  "ToggleGroup": {
+   "exports": [
+    "ToggleGroup"
+   ],
+   "uses": [
+    "ButtonGroup",
+    "ToggleButton"
+   ],
+   "classes": []
+  },
+  "Toolbar": {
+   "exports": [
+    "SerupaProvider",
+    "Toolbar",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "IconButton",
+    "Menu"
+   ],
+   "classes": [
+    "srp-toolbar",
+    "srp-toolbar--overflow",
+    "srp-toolbar--vertical",
+    "srp-toolbar__more"
+   ]
+  },
+  "Tour": {
+   "exports": [
+    "SerupaProvider",
+    "Tour",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "IconButton",
+    "Stepper"
+   ],
+   "classes": [
+    "srp-tour",
+    "srp-tour--center",
+    "srp-tour__actions",
+    "srp-tour__close",
+    "srp-tour__count",
+    "srp-tour__foot",
+    "srp-tour__head",
+    "srp-tour__text",
+    "srp-tour__title"
+   ]
+  },
+  "TransferList": {
+   "exports": [
+    "SerupaProvider",
+    "TransferList",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Checkbox"
+   ],
+   "classes": [
+    "srp-transfer-list",
+    "srp-transfer-list__count",
+    "srp-transfer-list__empty",
+    "srp-transfer-list__moves",
+    "srp-transfer-list__side",
+    "srp-transfer-list__title",
+    "srp-transfer-list__validity"
+   ]
+  },
+  "TreeView": {
+   "exports": [
+    "TreeView"
+   ],
+   "uses": [
+    "Icon"
+   ],
+   "classes": [
+    "srp-icon",
+    "srp-tree-view",
+    "srp-tree-view__check",
+    "srp-tree-view__group",
+    "srp-tree-view__icon",
+    "srp-tree-view__item",
+    "srp-tree-view__label",
+    "srp-tree-view__row",
+    "srp-tree-view__toggle"
+   ]
+  },
+  "TruncatedText": {
+   "exports": [
+    "TruncatedText"
+   ],
+   "uses": [
+    "Tooltip"
+   ],
+   "classes": [
+    "srp-truncated-text",
+    "srp-truncated-text--clamp",
+    "srp-truncated-text--middle",
+    "srp-truncated-text__start"
+   ]
+  },
+  "TypeToConfirm": {
+   "exports": [
+    "SerupaProvider",
+    "TypeToConfirm",
+    "en",
+    "id",
+    "useLocale",
+    "useOwnLang",
+    "useSerupa",
+    "useSettings"
+   ],
+   "uses": [
+    "Button",
+    "Field",
+    "Input"
+   ],
+   "classes": [
+    "srp-field",
+    "srp-type-to-confirm",
+    "srp-type-to-confirm__phrase"
+   ]
+  }
+ }
+}

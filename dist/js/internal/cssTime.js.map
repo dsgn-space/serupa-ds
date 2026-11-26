@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/cssTime.ts"],
+  "sourcesContent": ["/** A CSS time as milliseconds: \"200ms\", \"0.2s\" and \".2s\" (what a minifier makes of 200ms) all read 200. */\nexport const toMs = (t: string): number => (parseFloat(t) || 0) * (t.trim().endsWith('ms') ? 1 : 1000);\n"],
+  "mappings": ";AACO,IAAM,OAAO,CAAC,OAAuB,WAAW,CAAC,KAAK,MAAM,EAAE,KAAK,EAAE,SAAS,IAAI,IAAI,IAAI;",
+  "names": []
+}

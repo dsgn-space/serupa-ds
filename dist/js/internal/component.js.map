@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/component.ts"],
+  "sourcesContent": ["import type * as React from 'react';\n\n// Every component is a plain function component that takes ref as a prop (React 19), named through this, called with\n// a /* @__PURE__ */ mark, so a bundler can drop the components a project doesn't import. A bare\n// `X.displayName = \"X\"` statement is a side effect that keeps every component in the bundle. The function itself is\n// declared at the top of its file (function ButtonRender(\u2026)), so the React Compiler and its lint rules see it.\n\n/** A function component with a displayName (the name React DevTools and warnings show), kept when a minifier renames the function. */\n// Typed as React.FC<P>, one interface React caches, rather than the function's own type: a project's editor checks\n// fewer types, and the declarations name only the props, not the render function's inferred return.\nexport function named<P>(name: string, c: (props: P) => React.ReactNode): React.FC<P> {\n  return Object.assign(c, { displayName: name });\n}\n"],
+  "mappings": ";AAUO,SAAS,MAAS,MAAc,GAA+C;AACpF,SAAO,OAAO,OAAO,GAAG,EAAE,aAAa,KAAK,CAAC;AAC/C;",
+  "names": []
+}

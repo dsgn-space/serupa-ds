@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/AppShell/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { AppShell } from './AppShell';\nexport type { AppShellProps } from './AppShell';\n"],
+  "mappings": ";AACA,SAAS,gBAAgB;",
+  "names": []
+}
