@@ -4,6 +4,79 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [19.1.0] - 2026-11-26
+
+### Added
+
+- Attachment (and FileUpload's rows): a failed file's message sits under its box, as a Field's error sits under its control: 6px below it (`--attachment-error-gap`), at the box's start edge, in 12px text with a 14px icon, with the card's padding under it before the next file. The box keeps its danger outline, and its name, kind, size and buttons.
+- Calendar and EventCalendar: today is no longer semibold. Calendar marks it with its primary color and a small dot under the number (`--calendar-today-weight` now defaults to `font-normal`), in every picker built on it, such as DatePicker. EventCalendar's month view underlines today's number, as its agenda does.
+- Chart: it comes in over 700ms (was 300ms, a panel's time), slow enough to follow: the line draws, the bars grow and the areas fade, and the points come in as the line reaches them. New token `--chart-duration-enter`. Still with reduced motion.
+- EmptyState: `headingLevel={1}` makes the title the page's h1, for a whole page such as an error page. The Error pages pattern now uses one heading and one description: the EmptyState's title is the h1.
+- Field: the hint sits under the control (with `group`, under the choices), above the error, instead of between the label and the control. It's still the first thing the control's `aria-describedby` names.
+- Field: the hint and the message (error, warning, "checking…") are a size under the 14px label: `text-xs`, 12px on a 16px line. The message's icon is 14px (`--field-error-icon-size`, was 16px), centered on its first line.
+- FilterBar: a chip answers as a button does. Under the pointer it fills with `surface-hover` (was an underline), and while held or while its editor is open with `pressed` (was primary text, `--filter-bar-chip-open` is now that fill). New token `--filter-bar-chip-bg-hover`. Its outline is the light `border-strong` a tag has (was `border-control`).
+- Kbd has one height: every key is 20px tall wherever text is around it, in a sentence, a tooltip, Prose, KeyboardShortcuts and CommandPalette's rows. The default was 24px, which filled a whole line of body text and stretched 14px lines; CommandPalette and KeyboardShortcuts already drew 20px keys and look the same. Inside Prose, a Kbd keeps its own 12px sans label instead of turning mono 14px. A one-character key (K, ⌘, ↑) is now square, so ⌘ and K are the same width. `size="sm"` is now the quiet key for inside a control, such as the search button in a header: 16px (was 20px), a 1px outline all round in the light `border` color, and no + between its keys (screen readers still hear "Command + K"). New component tokens: `--kbd-border-sm`, `--kbd-border-bottom-width`, `--kbd-padding-x-sm` and `--kbd-gap-sm`. `--kbd-height-md` is now `spacing-5` (20px) and `--kbd-height-sm` `spacing-4` (16px): set them to bring the old sizes back.
+- MentionInput: each @mention in the text now has a light brand tint behind it (`primary-subtle`), so mentions stand out from the rest of the text. New tokens `--mention-input-mention-bg` and `--mention-input-mention-radius`.
+- Meter and Progress: the bar's track is the shared light gray `track` (the level Apple's controls use), with no darker edge (was the page's surface inside `border-control`). Every fill keeps 3:1 on the page; on the track, success, warning and danger fills can be under 3:1. `--meter-track`, `--meter-track-border`, `--progress-track` and `--progress-track-border` now default to `track`.
+- PasswordInput: while Caps Lock is on, a caps-lock icon shows before the eye in place of the words "Caps Lock is on". The words stay as the icon's tooltip and for screen readers, which still hear them once and in the field's description.
+- PhoneInput: the country menu is now Serupa's own searchable list instead of the browser's native picker. The "+62" button opens a list of the countries with a search field at its top: type a name, an ISO code or a calling code to find one. The box draws the one focus ring for the menu and the number alike, and the menu shades while it has focus. New tokens for the list: `--phone-input-listbox-bg`, `-listbox-border`, `-listbox-shadow`, `-listbox-radius`, `-listbox-max-height`, `-option-color`, `-option-bg-active`, `-option-indicator`, `-muted`, `-offset` and `-z-index`; `--phone-input-focus-ring` now colors the box's ring while the menu has focus.
+- `sm:table-cell` and the other breakpoint variants of `table-cell`, so a table column can hide on a phone (`hidden sm:table-cell`).
+- SegmentedControl: the segments are 2px apart, the same as the track's padding around them (`--segmented-control-padding` sets both).
+- SignaturePad: the drawing box's outline is the field's border (`field-border`), as a Textarea has, not the stronger `border-control`. The line to sign on keeps 3:1.
+- Slider: the track is the shared light gray `track` (the level Apple's controls use), as Switch's, Meter's and Progress's, in place of the dark `border-control` bar. The fill and the thumb's ring keep 3:1. A mark's tick past the fill is a line in `border-strong`, so it shows on the light track. New token `--slider-mark-off`.
+- Softer control edges, and Switch's track fills come from track tokens.
+  - **`border-control` is a soft line.** It is zinc-300 in light and zinc-600 in dark (was zinc-500 and zinc-400), with `border-control-hover` (zinc-400 / zinc-500) and `border-control-pressed` (zinc-500 / zinc-400) a step stronger each. It draws the edges of Meter and Progress tracks, Carousel dots, Stepper rings and lines, ColorPicker swatches, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. Like `field-border`, it is now under the 3:1 WCAG 1.4.11 asks of a control's edge, a deliberate design choice; more contrast (`data-contrast="more"` or the system setting) brings back 3:1+. To keep the old edge, set `--border-control: var(--zinc-500)` in light and `var(--zinc-400)` in dark.
+  - **New `track-hover` and `track-pressed` tokens.** Switch's off track on hover and while held down now uses these fills instead of `border-strong` and `border-control`, with the same colors as before (zinc-300 / zinc-600 on hover, zinc-500 / zinc-400 pressed).
+- Switch: off, the track is the light `track` gray in place of `border-control`, and the thumb is white in every theme (light and dark, on or off) with the small `elevation-part` shadow and no edge, as Apple's. The pending ring and the check on it keep 3:1 (a dark theme's `on-primary`). On the light track the off switch, and in dark themes the white thumb on the on track, are under 3:1, a design choice. New tokens `--switch-thumb-shadow` and `--switch-thumb-ink-dark`; `--switch-thumb` and `--switch-thumb-checked` now default to `white`; `--switch-track` now defaults to `track`, `--switch-track-hover` to `border-strong` and `--switch-track-pressed` to `border-control`.
+- Switch: while held, the thumb grows 4px wider toward the middle of the track, as Apple's. New token `--switch-press-stretch`.
+- TagGroup: a tag sets its words as a small Button does, 12px on a 16px line in its 24px (was 14px), with 14px icons, the check and the × (`--tag-group-icon-size`, was 16px). An avatar is 20px and sits inside the tag's border with 1px clear of it (`--tag-group-avatar-size`, was 24px, which covered the border), its initials 8px (`--tag-group-avatar-text`) so two letters fit with wider letter spacing. A plain tag's border is the light `border-strong` a field and an outline Badge have (`--tag-group-border`, was `border-control`); a picked tag keeps its 3:1 brand border.
+- Textarea: the count is `text-muted`, like a Field hint (was `placeholder`), and the resize grip in Chrome, Edge and Safari is two thin lines in the same muted color, set in from the corner, in place of the browser's gray hatching. New token `--textarea-resize-grip`.
+- New shared token `track`: the empty part of a track, zinc-200 in light and zinc-700 in dark, the level Apple's switches and sliders use. Switch, Slider, Meter and Progress use it, and it has the color utility classes (`bg-track`, `text-track`, `border-track` and the rest).
+
+### Fixed
+
+- Checkbox and Radio cards: a checked card under the pointer keeps its whole 2px primary border; the hover's gray border no longer replaces its outer half.
+- ContextualHelp: the panel opens 2px from the button (was 8px), so it sits about 7px from the small "?" itself rather than 13px. New token `--contextual-help-offset`.
+- CopyButton with a long label: the label ends with an ellipsis instead of being cut mid-letter, and shows in full as the title on hover, as Button's does. "Copied" now sits beside its check at the start, rather than in the middle of the wide button, and the labels cross-fade with the icons over the same time, so the check never shows beside "Copy" on the way back.
+- Dialog and Drawer lock the page's scroll only while one is open as a modal. An open `<dialog class="srp-dialog">` drawn inside the page (as a picture or a static mock-up does, and as the docs' anatomy pictures of Image and Lightbox do) no longer stops the whole page scrolling.
+- ErrorBoundary: Try again is a secondary Button, the way an Alert's main action is drawn (was outline).
+- ErrorSummary: the box sits on the danger tint a danger Alert has (`danger-subtle`, was the page's surface); its text and links keep 4.5:1 on it. `--error-summary-bg`.
+- Fab and FabMenu: a loading Fab's spinner is centered and as big as its 24px icon. Fab's rule that sizes its icon's SVG also stretched the spinner's ring to 24px inside Button's 16px spinner box, so it sat 4px low and to the end. The spinner now takes `--fab-icon-size`, as the icon does.
+- FileUpload: the drop area's dashed outline is a field's border (`field-border`, was the darker `border-control`), so under the pointer it darkens to `field-border-hover` instead of turning lighter. Its error is a Field error's new size, 12px with a 14px icon.
+- FilterBar: in an editor's list of choices, a focused checkbox or radio shows its whole focus ring; the scrolling list cut it off at the edge.
+- Accessibility: remove buttons on badges and tags take a bigger press on touch screens. On a touch screen, the × on a removable Badge takes a 44px press, and TagGroup's × a 44px-tall one.
+- Docs and copy: one spelling and one voice everywhere. Pattern screens say "Canceled", "Gray" and "Color" (American spelling, as the tokens and props do); the course page ends on "You’ve finished every lesson." without an exclamation mark; the server error page's title says what failed ("We couldn’t load this page"). Every pattern and block guide now has its own "When not to use it" section. Token descriptions say "gray", and Switch's describe the loading ring by its current prop name. Guides drop stale version history and internal file paths, use `SkipLink` for the skip link, name `IconButton`'s `label` and Button's `loadingLabel`, and fix a few slips ("Less-used commands", "goes around", "Start icon" and "End icon").
+- Fixes from the Gemini review:
+  - **Form drafts never keep a shown password.** A password shown with PasswordInput's Show password button became a text field and was saved in the draft. Fields marked `current-password` or `new-password` are now left out too.
+  - **EventCalendar's arrows point the right way in right-to-left pages.** Previous and Next were turned round twice, so they pointed left-to-right.
+  - **FileUpload takes nothing inside a disabled `<fieldset>`**, as a native file input. Before, a dropped or pasted file was still added.
+  - **PhoneInput reads a pasted number in any script.** A number written in Arabic-Indic, Persian or full-width digits is read correctly, and so is an Argentine mobile in international form with its 9 (+54 9 11 2345-6789). Before, the first came out empty and the second was one digit too long.
+- Faster scrolling and a smaller first script, from the Gemini review:
+  - **`dist/theme.js` is minified** (about 1.5 KB gzipped, down from 3.2 KB). It still carries its version banner and still works pasted into an inline `<script>`. Its notes stay in the guides.
+  - **Open menus, popovers and pickers follow a scroll once a frame**, from a passive listener, so scrolling the page never waits on them.
+  - **Virtualized lists and tables leave the wheel to the browser** unless they are past the 15-million-pixel limit, where they have to move the rows themselves. Scrolling a long Table or Combobox list no longer waits on a wheel listener.
+  - **A DataGrid paste or delete over many rows** reads the changes once, not once per row.
+- Slider with `marks` on a long range (0 to 100,000) spreads its ticks over the whole track. Before, they stopped after 1,001, a tenth of the way along.
+- StatusTracker draws when a day's date doesn't read as one, leaving that day unnamed. Before, it threw and the whole strip was lost.
+- CommentThread keeps another comment's edit box open, with its draft, when an earlier save settles after it opened. Before, the save closed it and the draft was lost.
+- InlineEdit: its error follows Field's message, 12px text with a 14px icon centered on the first line.
+- A date typed in the Persian calendar (`fa-IR`) reads as its own day. The first of Ordibehesht through Mehr read as the day before, the first of Farvardin after a leap year read as no date, and a day a month doesn't have (31 Mehr) read as the next month's first.
+- Table: on a phone (below 640px) each cell keeps 8px a side rather than 12px, so a table fits a 390px screen more often. `--table-padding-x` still sets it everywhere.
+- Transactions: on a phone the date and the category show under each description rather than in columns of their own, so the table fits a 390px screen in every language with money in and money out still in their own columns.
+- Invoice: on a phone each line's quantity and price show under its description ("2 × $1,200.00"), so the lines fit a 390px screen in every language.
+- List with search and filters: on a phone each project's owner shows under its name, so the table fits with the date still on one line.
+- FormattedDate: a date with a time wraps between the two, never inside either ("Nov 12, 2026," then "8:00 AM"), with the same words. Activity log's When column wraps this way on a phone.
+- Billing: an invoice's date reads in the locale's medium style, as in List search and Referral, and a failed payment's status says "Failed".
+- Referral: a long email breaks after its @ rather than pushing the table wider.
+- API keys, Data import: their tables pin the first column (API keys also the last) when they scroll sideways on a phone.
+- SortableList: the row being moved, from the keyboard or the pointer, now carries the one focus ring around the whole row, and its handle's own ring hides, instead of a primary border with the handle's ring inside it. A row picked up with Space can now be dragged with the pointer too: dragging its handle carries it on, and dragging another row's handle puts it back and drags that row. Each row starts 8px before its handle (was 4px; `--sortable-list-item-padding-start`).
+- ButtonGroup and SplitButton: the line between two attached primary buttons is one clean 1px line from top to bottom. It was the second button's start border, which met the clear top and bottom borders at an angle and left a notch at each end.
+- StatusTracker: a day without data is outlined in the light `border-strong` a tag and an outline Badge have (was `border-control`, which stood out more than the days with data). `--status-tracker-none`.
+- Stepper: horizontal, it spans its box even when that box centers its content (a centered grid). It was as narrow as the line under the circles, so in compact mode the circles overlapped and the lines didn't show.
+- Textarea: the field is positioned (`position: relative`), so its text paints over a layer placed before it, such as MentionInput's mention tints.
+- Textarea's top and bottom padding now counts its 1px border, so one row is as tall as an Input or a Button of the same size: 24, 32 and 44px (it was 26, 34 and 46, the border sitting outside a control-height field). Every Textarea is 2px shorter. In ChatComposer, the one-line message field and Send are now the same 32px and share their top and bottom edges.
+- ToggleGroup and attached ButtonGroup: choosing another toggle no longer hides the shared line for a moment. Neighbors share one border line, drawn by the button on top; the order switched at once while the border colors faded, so the newly on button covered the other's line in its old gray for 150ms. The border color now switches at once in an attached group, and the fill still fades.
+
 ## [19.0.1] - 2026-11-25
 
 ### Changed
@@ -3260,7 +3333,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.1.0...HEAD
+[19.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...v19.1.0
 [19.0.1]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...v19.0.1
 [19.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v17.1.0...v18.0.0
