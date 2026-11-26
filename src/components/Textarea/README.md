@@ -125,6 +125,7 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
 | `--textarea-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--textarea-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--textarea-resize-grip` | `text-muted` | Deprecated, removed in 20.0.0: the resize handle is the browser's own again, so this has no effect. |
 
 **Spacing**
 

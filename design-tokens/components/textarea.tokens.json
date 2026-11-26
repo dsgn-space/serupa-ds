@@ -121,6 +121,17 @@
             "cssVar": "--textarea-text-disabled"
           }
         }
+      },
+      "resize-grip": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Deprecated, removed in 20.0.0: the resize handle is the browser's own again, so this has no effect.",
+        "$deprecated": "No effect since 19.2.0: the resize handle is the browser's own. Removed in 20.0.0.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-resize-grip"
+          }
+        }
       }
     },
     "spacing": {

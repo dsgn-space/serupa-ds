@@ -932,8 +932,8 @@
  },
  "EmptyState": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "a14d3fd185aa",
+  "changed": "19.1.0",
+  "api": "064c58a87562",
   "props": {},
   "known": [
    "actions",
