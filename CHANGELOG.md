@@ -4,6 +4,21 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [19.2.0] - 2026-11-26
+
+### Added
+
+- Textarea: the count sits under the box, at its end (was inside the box). In a Field it shares a row with the hint or the error: the message at the start, the count at the end (mirrored right to left). With `actions` it still starts the actions row inside the box. The resize handle is the browser's own again, at its default size. New tokens `--textarea-count-gap` and `--field-end-gap`. Deprecated: `--textarea-resize-grip` (added in 19.1.0) no longer has an effect, since the handle is the browser's own; it is removed in 20.0.0. Drop it from your overrides.
+- Tokens: a tidy-up of tokens used for the wrong job. Nothing looks different except Progress's ring, in light themes.
+  - New token `border-elevated`: a line on the raised step (`surface-raised`), with the same values as `border-overlay` (zinc-200 in light, zinc-600 in dark). The outline Button's border (`--button-outline-border`) and the dividers inside an elevated Card (`--card-divider-elevated`) now use it. They read `border-overlay` before, the top layer's edge, though neither a button nor a card is in the top layer. A project that set `--border-overlay` to restyle outline buttons or elevated cards sets `--border-elevated` now.
+  - Progress: the circle's empty part is the shared `track` gray, like the bar's (`--progress-ring-track`). It used `secondary`, the button fill. It is one step darker in light (zinc-200, was zinc-100), and the same zinc-700 in dark.
+  - Deprecated: `border-control-pressed`. Nothing in Serupa reads it since Switch's off track took `track-pressed`. It keeps working, and is removed in 20.0.0. For a pressed control edge of your own, use `border-control-hover` or set the color yourself.
+  - The token descriptions say where `border-control-hover` is used (Carousel's dots, no longer Switch's track) and where the dark #333338 of `surface-hover-raised` and `field-raised` comes from: zinc-800 and zinc-700 mixed half and half, between two palette steps rather than a new one.
+
+### Fixed
+
+- Switch: the thumb's stretch on a press is smooth. The extra 4px is now a copy of the thumb in its own color that eases toward the middle, and the thumb itself no longer resizes or shifts on a press. An on thumb no longer pokes past the end of the track and slides back when pressed or released. Reduced motion still turns it off.
+
 ## [19.1.0] - 2026-11-26
 
 ### Added
@@ -3333,7 +3348,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.1.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.2.0...HEAD
+[19.2.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.1.0...v19.2.0
 [19.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...v19.1.0
 [19.0.1]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...v19.0.1
 [19.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v18.0.0...v19.0.0
