@@ -285,7 +285,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     if (!key || !el) return;
     window.clearTimeout(L.draftTimer);
     L.draftTimer = window.setTimeout(() => {
-      const secret = new Set(Array.from(el.querySelectorAll<HTMLInputElement>('input[type=password], [autocomplete^="cc-"], [autocomplete~="one-time-code"]'), (c) => pathKey(c.name)));
+      const secret = new Set(Array.from(el.querySelectorAll<HTMLInputElement>('input[type=password], [autocomplete~="current-password"], [autocomplete~="new-password"], [autocomplete^="cc-"], [autocomplete~="one-time-code"]'), (c) => pathKey(c.name)));
       const keep: Record<string, unknown> = {};
       L.flat.forEach((v, k) => { if (!secret.has(k) && !(typeof File !== 'undefined' && (v instanceof File || (Array.isArray(v) && v.some((f) => f instanceof File))))) keep[k] = v; });
       try { window.localStorage.setItem(draftKey(key), JSON.stringify({ at: Date.now(), values: keep })); } catch { return; }

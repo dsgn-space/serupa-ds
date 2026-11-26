@@ -7,7 +7,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Field } from '../Field/Field';
 import { PhoneInput, type PhoneValueDetails } from './PhoneInput';
-import { PHONE_COUNTRIES, formatNational, formatPhone, parsePhone, phoneCountry } from './phone';
+import { PHONE_COUNTRIES, formatNational, formatPhone, isPhoneComplete, parsePhone, phoneCountry, toE164 } from './phone';
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
@@ -459,6 +459,14 @@ describe('PhoneInput', () => {
   test('an international number whose own digits start like the trunk prefix keeps them: +7 800 is a Russian toll-free number', () => {
     expect([parsePhone('+7 800 555-35-35')!.national, parsePhone('+370 612 34567')!.national, parsePhone('+7 8 800 555-35-35')!.national, formatPhone('+78005553535')])
       .toEqual(['8005553535', '61234567', '8005553535', '+7 800 555-35-35']);
+  });
+
+  test('parsePhone reads a number written in Arabic-Indic, Persian or full-width digits, and an Argentine mobile with its 9 (+54 9 11…)', () => {
+    expect(['+٩٦٦ ٥٠ ١٢٣ ٤٥٦٧', '+۹۸ ۹۱۲ ۳۴۵ ۶۷۸۹', '＋６２ ８１２ ３４５６ ７８９０'].map((v) => { const p = parsePhone(v); return p && toE164(p.national, p.country); }))
+      .toEqual(['+966501234567', '+989123456789', '+6281234567890']);
+    const ar = parsePhone('+54 9 11 2345-6789')!;
+    expect([ar.country.code, ar.national, isPhoneComplete(ar.national, ar.country), formatPhone('+5491123456789')]).toEqual(['AR', '91123456789', true, '+54 9 11 2345-6789']);
+    expect(formatPhone('+541123456789')).toBe('+54 11 2345-6789');
   });
 
   test('the helpers: parsePhone, formatPhone, formatNational', () => {

@@ -621,4 +621,15 @@ describe('EventCalendar creating and moving', () => {
     const heading = el('ar').querySelector('[role="heading"], h2, h3')!.textContent;
     expect([readsLeftToRight(el('ar'), heading), getComputedStyle(el('ar').querySelector('[role="grid"]')!).direction]).toEqual([false, 'ltr']);
   });
+
+  test('right to left: Previous and Next point the way the month goes, each flipped once (Previous points right)', async () => {
+    await render(<div dir="rtl"><EventCalendar id="rt" events={[]} locale="en" defaultMonth={new Date(2026, 10, 1)} /></div>);
+    // The x scale an arrow is drawn at: its box's times its svg's.
+    const across = (name: string) => {
+      const svg = page.getByRole('button', { name }).element().querySelector('svg')!, box = svg.parentElement!;
+      const x = (e: Element) => { const v = getComputedStyle(e).scale; return v === 'none' ? 1 : Number(v.split(' ')[0]); };
+      return x(box) * x(svg);
+    };
+    expect([across('Previous month'), across('Next month')]).toEqual([-1, -1]);
+  });
 });
