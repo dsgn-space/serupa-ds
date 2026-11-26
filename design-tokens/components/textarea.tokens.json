@@ -213,16 +213,6 @@
             "cssVar": "--textarea-count-gap"
           }
         }
-      },
-      "count-inline-gap": {
-        "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
-        "$description": "In a Field, the least space between the hint or error and the count on the same row (16px).",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--textarea-count-inline-gap"
-          }
-        }
       }
     },
     "border": {

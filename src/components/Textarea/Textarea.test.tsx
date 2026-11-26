@@ -196,13 +196,15 @@ describe('Textarea', () => {
       <div dir="rtl"><Field label="Bio" hint="Hint"><Textarea id="fr" showCount maxLength={280} /></Field></div>
     </div>, { wrapper: EnUS });
     const at = (n: Element) => n.getBoundingClientRect();
-    for (const [id, msg] of [['fh', '.srp-field__hint'], ['fe', '.srp-field__error']] as const) {
-      const field = el(id).closest('.srp-field')!, b = at(el(id).parentElement!), c = at(count(id)), m = at(field.querySelector(msg)!);
+    // The hint, or the error's line (its text's parent, with the icon): the first id the field is described by.
+    const message = (id: string) => { const n = document.getElementById(el(id).getAttribute('aria-describedby')!.split(' ')[0]!)!; return n.tagName === 'SPAN' ? n.parentElement! : n; };
+    for (const id of ['fh', 'fe']) {
+      const b = at(el(id).parentElement!), c = at(count(id)), m = at(message(id));
       // The message and the count start on the same row, under the box; the message keeps to the start, the count to the end.
       expect([Math.round(c.top) === Math.round(m.top), c.top >= b.bottom, Math.round(m.left) === Math.round(b.left), Math.round(c.right) === Math.round(b.right), m.right <= c.left]).toEqual([true, true, true, true, true]);
     }
-    expect(at(document.querySelector('#fh')!.closest('.srp-field')!.querySelector('.srp-field__hint')!).height).toBeGreaterThan(20);   // wrapped, beside the count
-    const rb = at(el('fr').parentElement!), rc = at(count('fr')), rh = at(el('fr').closest('.srp-field')!.querySelector('.srp-field__hint')!);
+    expect(at(message('fh')).height).toBeGreaterThan(20);   // wrapped, beside the count
+    const rb = at(el('fr').parentElement!), rc = at(count('fr')), rh = at(message('fr'));
     expect([Math.round(rc.left) === Math.round(rb.left), Math.round(rh.right) === Math.round(rb.right), Math.round(rc.top) === Math.round(rh.top)]).toEqual([true, true, true]);
     expect([el('fh').getAttribute('aria-describedby')!.split(' ').length, el('fe').getAttribute('aria-invalid')]).toEqual([2, 'true']);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);

@@ -70,18 +70,8 @@
   color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
-/* In a Field, the count sits on the row of the hint, or of the error when there's no hint, at the end: the Field
-   lays out as a two-column grid, the hint and the message in the first column, the count in the second (dense, so
-   it takes the first free row under the box). It mirrors in right-to-left pages and the hint wraps beside it at 320px. */
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) {
-  display: grid; grid-template-columns: minmax(var(--spacing-0), 1fr) auto; grid-auto-flow: row dense;
-  column-gap: var(--textarea-count-inline-gap, var(--spacing-4));
-}
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > * { grid-column: 1 / -1; }
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > :is(.srp-field__hint, .srp-field__error, .srp-field__warning, .srp-field__checking) { grid-column: 1; }
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > .srp-field__control, :is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > .srp-field__control > .srp-textarea__wrap { display: contents; }
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > .srp-field__control > .srp-textarea__wrap > .srp-textarea { grid-column: 1 / -1; }
-:is(.srp-field:not(.srp-field--horizontal, .srp-field--group), .srp-field__body):has(> .srp-field__control > .srp-textarea__wrap:only-child) > .srp-field__control > .srp-textarea__wrap > .srp-textarea__count { grid-column: 2; align-self: start; }
+/* In a Field, the count sits at the end of the hint's or error's row: the wrap is the Field's [data-field-row] and
+   the count its [data-field-end] (Field.css). */
 .srp-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
 /* actions: a row under the text, inside the box, with the buttons at the end; the count, when shown, starts it. */
 .srp-textarea__actions {

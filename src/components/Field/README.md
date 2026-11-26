@@ -138,6 +138,7 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--field-gap` | `spacing-1.5` | Space between label, hint, control and error (6px) |
 | `--field-error-gap` | `spacing-1` | Error icon to text (4px) |
 | `--field-column-gap` | `spacing-4` | `orientation="horizontal"`: label column to control (16px) |
+| `--field-end-gap` | `spacing-4` | The least space between the hint or message and an item at the end of its row, such as Textarea's count (16px). |
 | `--field-error-icon-size` | `spacing-3.5` | The icon of an error, a warning or "checking…" (14px), on the 12px message's first line |
 | `--field-label-width` | `spacing-48` | `orientation="horizontal"`: the label column (192px) |
 | `--field-control-min-width` | `container-3xs` | `orientation="horizontal"`: the narrowest control column before it wraps under the label (256px) |

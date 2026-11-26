@@ -139,7 +139,6 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
 | `--textarea-count-gap` | `spacing-1.5` | With `showCount`, the space between the box and the count under it (6px), as a Field's gap. |
-| `--textarea-count-inline-gap` | `spacing-4` | In a Field, the least space between the hint or error and the count on the same row (16px). |
 
 **Border**
 

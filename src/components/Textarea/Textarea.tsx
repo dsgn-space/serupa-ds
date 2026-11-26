@@ -109,7 +109,7 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
   const restyle = useServerStyles<HTMLSpanElement>();
   const describedBy = props.showCount ? cn(rest['aria-describedby'], countId) : rest['aria-describedby'];
   const acts = props.actions != null && props.actions !== false;
-  const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
+  const count = <span className={cn('srp-textarea__count', max != null && length >= max && 'srp-textarea__count--full')} id={countId} key="count" data-field-end={acts ? undefined : ''}>{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
   const box = (
     <span className={cn('srp-textarea', 'srp-textarea--size-' + size, invalid && 'srp-textarea--invalid', rest.disabled && 'srp-textarea--disabled', rest.readOnly && 'srp-textarea--readonly', resize === 'none' && 'srp-textarea--resize-none', auto && 'srp-textarea--auto', acts && 'srp-textarea--actions', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={(e) => pressFocuses(own)(e)}>
       <textarea {...rest} aria-invalid={invalid || rest['aria-invalid']} aria-describedby={describedBy} onChange={onChange} ref={setRefs} rows={rows} className="srp-textarea__field" key="field"
@@ -118,8 +118,8 @@ function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<H
       {acts ? <fieldset className="srp-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
     </span>
   );
-  // The count under the box, at its end; in a Field, Textarea.css puts it on the hint's row.
-  return props.showCount && !acts ? <span className="srp-textarea__wrap">{box}{count}</span> : box;
+  // The count under the box, at its end; in a Field, on the row of the hint or error (data-field-row, Field.css).
+  return props.showCount && !acts ? <span className="srp-textarea__wrap" data-field-row="">{box}{count}</span> : box;
 }
 
 /** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box, with the count under it; className and style go to the box. Label it with <label htmlFor> or aria-label. */
