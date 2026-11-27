@@ -311,8 +311,9 @@ describe('Switch', () => {
     const reach = (id: string) => { const m = /^rgb\([^)]+\) (-?[\d.]+px) 0px 0px 0px/.exec(css(thumb(id)).boxShadow); return m ? m[1] : css(thumb(id)).boxShadow; };
     const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, reach(id), ...edges(id)];
     const rest = look('pd');
-    expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '16px', '4px', 2, 18]);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '16px', '-4px', 18, 2]);
+    // Polled: Firefox takes a moment to make the row :active when the press moves focus from another switch.
+    await press(el('ps').closest('label')!, () => expect.poll(() => look('ps')).toEqual([color('var(--track-pressed)'), '1', '16px', '4px', 2, 18]));
+    await press(el('pk').closest('label')!, () => expect.poll(() => look('pk')).toEqual([color('var(--primary-pressed)'), '1', '16px', '-4px', 18, 2]));
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 
@@ -335,4 +336,3 @@ describe('Switch', () => {
   });
 });
 
-// TEMPORARY: touched so the cross-browser pull request run tests this folder; removed before merge.

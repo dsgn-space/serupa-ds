@@ -84,4 +84,3 @@ describe('Patterns/Contact form', () => {
     expect((document.getElementById('contact-message') as HTMLTextAreaElement).value).toBe('A question about gift cards.');
   });
 });
-// TEMPORARY: touched so the cross-browser pull request run tests this folder; removed before merge.
