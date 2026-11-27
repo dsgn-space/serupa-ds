@@ -1,7 +1,8 @@
 name: Screen readers
 
 # Every night, VoiceOver (macOS, WebKit) and NVDA (Windows, Chromium) read Button, Checkbox, Switch, Tabs, Dialog,
-# Combobox, Menu, Toast and DatePicker through Guidepup (I9, tools/test/screen-reader.mjs). It doesn't block pull
+# Combobox, Menu, Toast, DatePicker, RadioGroup, Select, Slider, Accordion, Field (with an error) and Alert through
+# Guidepup (I9, tools/test/screen-reader.mjs). It doesn't block pull
 # requests: a red run is a screen reader difference to look at. What each reader said is in the run's artifacts.
 on:
   schedule:
@@ -10,6 +11,11 @@ on:
     # even when it is late.
     - cron: '53 20 * * *'
   workflow_dispatch:
+    inputs:
+      only:
+        description: 'Components to read, comma-separated (Slider,Alert); empty reads them all'
+        required: false
+        default: ''
 
 # A newer run of this workflow on the same branch cancels the one before it.
 concurrency:
@@ -52,6 +58,8 @@ jobs:
         run: npm run build
       - name: Read the components
         shell: bash
+        env:
+          SERUPA_SR_ONLY: ${{ inputs.only }}
         run: node tools/test/screen-reader.mjs
       - name: Upload what the reader said
         if: always()
