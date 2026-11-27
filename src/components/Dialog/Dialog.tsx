@@ -64,7 +64,7 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
   const showClose = props.closeButton != null ? props.closeButton : !alert;
   const backdrop = props.closeOnBackdrop != null ? props.closeOnBackdrop : !alert;
   // Open and close, focus in and back, Escape and the browser asking to close, and "Discard changes?" (useModalDialog).
-  const { dialogRef, open, close, request, asking, setAsking, arrivedRef, onCancel, onClose } = useModalDialog({
+  const { dialogRef, open, close, request, asking, setAsking, arrived, onCancel, onClose } = useModalDialog({
     name: 'Dialog', open: props.open, defaultOpen: props.defaultOpen, onOpenChange: props.onOpenChange, initialFocus: props.initialFocus,
     finalFocus: props.finalFocus, unsaved: props.unsaved, modal: true, onCancel: rest.onCancel, onClose: rest.onClose,
   });
@@ -89,7 +89,7 @@ function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLD
       role={alert ? 'alertdialog' : undefined} aria-modal="true"
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
-      className={cn('srp-dialog', 'srp-dialog--' + size, props.fullScreen === true && 'srp-dialog--full', props.fullScreen === 'mobile' && 'srp-dialog--full-mobile', props.className)} data-component="dialog" data-size={size} data-state={open ? 'open' : 'closed'} data-instant={arrivedRef.current ? '' : undefined}
+      className={cn('srp-dialog', 'srp-dialog--' + size, props.fullScreen === true && 'srp-dialog--full', props.fullScreen === 'mobile' && 'srp-dialog--full-mobile', props.className)} data-component="dialog" data-size={size} data-state={open ? 'open' : 'closed'} data-instant={arrived ? '' : undefined}
       onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
       <div className="srp-dialog__panel">
         {has(props.title) || has(props.description) || showClose ? (

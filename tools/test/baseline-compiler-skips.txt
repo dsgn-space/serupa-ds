@@ -6,8 +6,6 @@ src/components/Combobox/Combobox.tsx ComboboxRender
 src/components/CommandPalette/CommandPalette.tsx CommandPaletteRender
 src/components/DatePicker/DatePicker.tsx DatePickerRender
 src/components/DateRangePicker/DateRangePicker.tsx DateRangePickerRender
-src/components/Dialog/Dialog.tsx DialogRender
-src/components/Drawer/Drawer.tsx DrawerRender
 src/components/EventCalendar/EventCalendar.tsx Body
 src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
 src/components/FieldList/FieldList.tsx FieldListRender

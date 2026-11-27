@@ -164,8 +164,10 @@ if (D) {
   // when the deprecated names are removed, so this stays a backstop.
   // 24 Nov 2026: a round of visual-review fixes across 40 components (the Switch press, Textarea's grip, MentionInput's
   // tints, PhoneInput's own country list) adds about 4.5 KB, each component's line in size.mjs raised with it.
+  // 27 Nov 2026: 305 KB. The React Compiler's next batches (Dialog, Drawer, FileUpload, FormattedNumber, Calendar's
+  // period grid; ADR-0017) took main past 300 KB, each component's line in size.mjs raised with it; this stays a backstop.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 300 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 300 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 305 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 305 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
