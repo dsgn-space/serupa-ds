@@ -142,7 +142,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
     onPointerEnter: (e: React.PointerEvent<HTMLElement>) => { theirs(cp.onPointerEnter, e); if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); },
     onPointerLeave: (e: React.PointerEvent<HTMLElement>) => { theirs(cp.onPointerLeave, e); if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, 'hover'); } },
     // Keyboard focus only (focus-visible): a click on the link is on its way to the page it opens.
-    onFocus: (e: React.FocusEvent<HTMLElement>) => { theirs(cp.onFocus, e); const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => { theirs(cp.onFocus, e); const t = e.target; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } },
     onBlur: (e: React.FocusEvent<HTMLElement>) => { theirs(cp.onBlur, e); focused.current = false; blurred(e); },
   }} />;
   const mergedRef = useMergedRef(ref, (n) => { cardRef.current = n; });
