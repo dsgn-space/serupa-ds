@@ -72,7 +72,26 @@ const SAME_IN = {
   tr: ['attachmentVideo'],
   vi: ['attachmentVideo'],
   pt: ['chartTotal'],
+  cs: ['attachmentVideo', 'sliderMaximum'],
+  da: ['attachmentVideo', 'chatSend', 'chatStop', 'colorName'],   // "Send" and "Stop" are the Danish verbs, "orange" the colour
+  nb: ['attachmentVideo', 'chatSend', 'colorName'],
+  fi: ['attachmentVideo', 'periodQuarter'],   // Q4: Finnish UIs write the quarter as English does
+  hu: ['sliderMaximum'],
+  ro: ['attachmentDoc', 'attachmentAudio', 'chartTotal'],
 };
+// Labels that turn what the caller passes into the language's own words (a key name, a kind of file, a direction).
+const PASSED_MAY_CHANGE = new Set(['keyName', 'avatarStatus', 'chartKind', 'colorName', 'meterZone', 'periodPlaceholder', 'periodPrevious', 'periodNext', 'dateFieldError', 'tableSorted', 'fileWrongType', 'invalidValue', 'statusDay', 'chartSummary']);
+const NUMBER_MAY_CHANGE = new Set(['ratingStars', 'cascadeLevel', 'periodQuarter']);
+// contrast takes the ratio already formatted, and a pack may write its own decimal sign.
+PASSED_MAY_CHANGE.add('contrast');
+// English words that mean different things in different places, so a language may need two words for them.
+const TERMS_MAY_DIFFER = new Set([]);
+// Keys whose English word has its own sense there, so the same English may rightly take other words: a step's status
+// ("Done", finished) beside a button's action, "Back" up a level, a chat's "Try again" that resends, a tab naming a
+// calendar view beside a field's label, Transfer's move out of the chosen list, a date field's day of the month.
+const OWN_SENSE = new Set(['chatStepDone', 'cascadeBack', 'chatRetry', 'transferRemove', 'dayView', 'weekView', 'monthView', 'dateFieldDay']);
+// Languages whose dual names two of a thing without the number ("إشعاران", two notifications).
+const DUAL = new Set(['ar', 'he']);
 const sameOk = (l, k) => SAME_OK.has(k) || (SAME_IN[l] || []).includes(k);
 
 const fnNoSample = Object.keys(en).filter((k) => typeof en[k] === 'function' && !SAMPLES[k]);
@@ -100,6 +119,69 @@ for (const [l, mod] of Object.entries(packs)) {
     `missing: ${missing.slice(0, 8).join(', ')}; not in English: ${extra.slice(0, 8).join(', ')}; another kind: ${kind.join(', ')}`);
   t(`${l}: every word and every sample says something`, !empty.length, empty.slice(0, 8).join('; '));
   if (l !== 'en') t(`${l}: nothing is left in English`, !same.length, same.slice(0, 10).join('; '));
+}
+// Automated review (RX12): what a native speaker would catch first that a machine can, run on every pack.
+const sentenceEnd = /[.!?…。！？।؟]$/u;
+// Greek asks with ";" (its question mark). Thai ends a sentence with a space or nothing, so a Thai text only must not
+// gain a full stop English lacks.
+const endsSentence = (l, x) => (l === 'el' ? /[.!…;]$/u : sentenceEnd).test(x);
+const NO_FULL_STOP = new Set(['th']);
+const real = Object.entries(packs).filter(([l]) => l !== 'en' && l !== 'pseudo');
+const enOut = (k, args) => { try { return en[k](...args); } catch { return ''; } };
+for (const [l, mod] of real) {
+  const L = mod.labels, nf = new Intl.NumberFormat(mod.locale);
+  const lost = [], broken = [], unformatted = [], tidy = [], ends = [], long = [], drift = [];
+  const seen = new Map();
+  const ellipsis = { spaced: [], tight: [] };
+  for (const k of Object.keys(en)) {
+    if (!(k in L) || typeof L[k] !== typeof en[k]) continue;
+    if (typeof en[k] === 'string') {
+      const [e, x] = [en[k], L[k]];
+      if (!e.trim()) continue;
+      if (x !== x.trim() || /\s{2}/.test(x)) tidy.push(k);
+      if (/\.{3}/.test(x) && e.includes('…')) tidy.push(`${k} (… as ...)`);
+      // An abbreviation keeps its dot ("Sem." for Wk).
+      if ((NO_FULL_STOP.has(l) ? /\.$/.test(x) && !sentenceEnd.test(e) : sentenceEnd.test(e) !== endsSentence(l, x)) && !/[:：]$/.test(x) && !(/^\S{1,5}\.$/u.test(x) && e.length <= 4)) ends.push(k);
+      if (x.endsWith('…')) (x.endsWith(' …') ? ellipsis.spaced : ellipsis.tight).push(k);
+      // A short control word that grows past three times English's length, and past 24 characters, won't fit its button or tab.
+      if (e.length <= 16 && x.length > 24 && x.length > e.length * 3) long.push(`${k} (${e.length}→${x.length})`);
+      // One English word, one translation: the same English text gets the same words everywhere in a pack.
+      const prev = seen.get(e);
+      if (OWN_SENSE.has(k)) continue;
+      if (prev && prev[1] !== x && !TERMS_MAY_DIFFER.has(e)) drift.push(`"${e}": ${prev[0]} "${prev[1]}" vs ${k} "${x}"`);
+      else if (!prev) seen.set(e, [k, x]);
+      continue;
+    }
+    for (const args of SAMPLES[k] || []) {
+      let out;
+      try { out = L[k](...args); } catch { continue; }   // reported above
+      const eo = enOut(k, args);
+      if (typeof out !== 'string') continue;
+      // Nothing left over from building the text: no "#" from plural(), no undefined, NaN or [object Object].
+      if (/undefined|NaN|\[object |(^|\s)#(\s|$)|\{\w+\}/.test(out)) broken.push(`${k}(${JSON.stringify(args)}) → ${out}`);
+      if (out !== out.trim() || /\s{2}/.test(out)) tidy.push(`${k}(${JSON.stringify(args)})`);
+      // Every name or value the caller passes and English shows is shown here too (in any script's own digits for a number).
+      for (const a of args.flat()) {
+        if (typeof a === 'string' && a.length > 1 && eo.includes(a) && !out.includes(a) && !PASSED_MAY_CHANGE.has(k)) lost.push(`${k}: "${a}"`);
+        if (typeof a === 'number' && a >= 2 && eo.includes(String(a)) && !out.includes(String(a)) && !out.includes(nf.format(a)) && !NUMBER_MAY_CHANGE.has(k) && !(a === 2 && DUAL.has(l))) lost.push(`${k}: ${a}`);
+      }
+      // A count of 1,240 is written the language's way (1.240, 1 240, १,२४०), never as English's 1,240 or a bare 1240.
+      const big = args.map((a) => (typeof a === 'number' && Number.isInteger(a) && a > 1 ? 1240 : a));
+      if (big.some((a, i) => a !== args[i]) && enOut(k, big).includes('1,240')) {
+        let o2 = '';
+        try { o2 = L[k](...big); } catch { /* reported above */ }
+        if (typeof o2 === 'string' && !o2.includes(nf.format(1240))) unformatted.push(`${k} → ${o2}`);
+      }
+    }
+  }
+  t(`${l}: placeholders: every name and number the caller passes is kept`, !lost.length, [...new Set(lost)].slice(0, 10).join('; '));
+  t(`${l}: plurals and formats: no "#", undefined or NaN left in a text`, !broken.length, broken.slice(0, 6).join('; '));
+  t(`${l}: numbers: a count is grouped the ${mod.locale} way (${nf.format(1240)})`, !unformatted.length, unformatted.slice(0, 6).join('; '));
+  if (ellipsis.spaced.length && ellipsis.tight.length) tidy.push(`… with a space in ${ellipsis.spaced.join(', ')} but not in ${ellipsis.tight.join(', ')}`);
+  t(`${l}: tidy: no doubled or edge spaces, … not ..., one way of spacing …`, !tidy.length, tidy.slice(0, 10).join(', '));
+  t(`${l}: a sentence ends like a sentence, and a label doesn't gain a full stop`, !ends.length, ends.slice(0, 12).join(', '));
+  t(`${l}: length: no short control word grows past 3× English (overflow risk)`, !long.length, long.slice(0, 10).join(', '));
+  t(`${l}: terms: the same English words are translated the same way`, !drift.length, drift.slice(0, 6).join('; '));
 }
 // The pseudo-locale: each word between ⟦ ⟧ and at least 40% longer than English, and a name a label is given stays.
 if (packs.pseudo) {

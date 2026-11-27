@@ -43,7 +43,23 @@ import { labels, locale } from '@diki-stwn/serupa-ds/labels/id';
 <SerupaProvider locale={locale} labels={labels}>{children}</SerupaProvider>
 ```
 
-Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`, with `dir="rtl"` on the page), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`) and Malay (`ms`), plus the pseudo-locale (`pseudo`, below). Each pack has every word, says something for each case (a count of one and of several, each reason a field can fail), and leaves nothing in English: a check fails the build when one doesn't.
+Packs ship for English (`en`, the default), Indonesian (`id`, the same words as `idLabels`), German (`de`), Spanish (`es`), French (`fr`), Portuguese (`pt`, Brazilian), Japanese (`ja`), Russian (`ru`), Chinese (`zh`, Simplified), Korean (`ko`), Italian (`it`), Arabic (`ar`), Turkish (`tr`), Hindi (`hi`), Vietnamese (`vi`), Dutch (`nl`), Polish (`pl`), Ukrainian (`uk`), Swedish (`sv`), Malay (`ms`), and in beta Bengali (`bn`), Thai (`th`), Persian (`fa`), Hebrew (`he`), Czech (`cs`), Romanian (`ro`), Greek (`el`), Hungarian (`hu`), Danish (`da`), Finnish (`fi`) and Norwegian Bokmål (`nb`), plus the pseudo-locale (`pseudo`, below). Arabic, Hebrew and Persian read right to left, so set `dir="rtl"` on the page with them.
+
+### How the packs are checked
+
+`tools/test/label-packs.mjs` checks every pack on every build, and fails it when one:
+
+- **misses a word or has one English doesn't**, or gives a text where English gives a function;
+- **says nothing** for a case, or **leaves a word in English** (a loanword the language really uses, such as "Video", is listed as allowed);
+- **drops what the caller passes**: a name, a value or a count English shows must show in the translation, in the language's own digits if it has them;
+- **leaves a plural or format broken**: a `#`, `undefined`, `NaN` or `{name}` in the text;
+- **writes a large count the English way**: 1,240 must read 1.240, 1 240 or ১,২৪০ as the language groups it;
+- **has untidy text**: doubled or edge spaces, `...` for `…`, or `…` spaced two ways in one pack;
+- **changes how a text ends**: a sentence ends like a sentence (with Greek's `;` and Thai's missing full stop allowed), and a label doesn't gain one;
+- **risks overflow**: a short control word (16 characters or fewer in English) that grows past 24 characters and three times its English length;
+- **translates one term two ways**: the same English text gets the same words everywhere in a pack, unless it has its own sense there (a step that is "Done" beside a "Done" button).
+
+The words were also compared with the terms established design systems and operating systems use in each language. No pack has yet been read by a native speaker working with this package. The 11 added last (Bengali, Thai, Persian, Hebrew, Czech, Romanian, Greek, Hungarian, Danish, Finnish and Norwegian) are in beta until one has, so their words may still change in a minor release. That review matters most for the right-to-left Persian and Hebrew, then Bengali and Thai, whose scripts and counting words differ most from English. If you speak one of these languages, a correction is welcome as an issue or a pull request.
 
 ## One locale for everything
 
