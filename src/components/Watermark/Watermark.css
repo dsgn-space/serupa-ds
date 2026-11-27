@@ -1,0 +1,46 @@
+/* ---------------------------------------------------------------
+   Watermark: the content, with its words repeated faintly over it at an angle. The mark is one element filled
+   with --watermark-text and cut to the words by a repeated SVG mask, so it follows the theme and the mode with no
+   script, renders on the server, and holds no text to select, copy or find. Every value reads one of its own tokens
+   (watermark.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer srp.components {
+.srp-watermark {
+  position: relative;
+  isolation: isolate;
+}
+.srp-watermark__mark {
+  position: absolute;
+  inset: 0;
+  z-index: var(--watermark-z, var(--z-10));
+  font-size: var(--watermark-font-size, var(--text-lg));
+  background-color: var(--watermark-text, var(--text-muted));
+  opacity: var(--watermark-opacity, var(--opacity-5));
+  mask-image: var(--srp-watermark-image);
+  mask-repeat: repeat;
+  mask-position: center;
+  mask-size: calc(var(--srp-watermark-w) * 1em) calc(var(--srp-watermark-h) * 1em);
+  pointer-events: none;
+}
+/* Over the whole window: the root leaves its stacking context so the mark can sit above the page. */
+.srp-watermark--full-page {
+  isolation: auto;
+}
+.srp-watermark--full-page > .srp-watermark__mark {
+  position: fixed;
+  z-index: var(--watermark-full-page-z, var(--z-tooltip));
+}
+/* A printout is the copy most often passed on, so the mark prints, on every page with fullPage, even with
+   background graphics off. */
+@media print {
+  .srp-watermark__mark {
+    print-color-adjust: exact;
+  }
+}
+/* A system palette would draw the mark as strong as the text, so it goes. */
+@media (forced-colors: active) {
+  .srp-watermark__mark {
+    display: none;
+  }
+}
+}

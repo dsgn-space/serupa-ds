@@ -1,0 +1,63 @@
+{
+  "watermark": {
+    "$description": "Watermark's component tokens. Each one is an optional override: set the CSS variable (--watermark-<name>) on the page, a container or one Watermark, and every Watermark inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The mark's color, drawn at `opacity` (text over it keeps 4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--watermark-text"
+          }
+        }
+      }
+    },
+    "opacity": {
+      "opacity": {
+        "$type": "number",
+        "$value": "{opacity.opacity-5}",
+        "$description": "How strongly the mark shows (5%). Text over it keeps 4.5:1 in every theme.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--watermark-opacity"
+          }
+        }
+      }
+    },
+    "typography": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-lg}",
+        "$description": "The mark's text size (18px). The room between marks grows with it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--watermark-font-size"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-10}",
+        "$description": "The stacking level over its own content.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--watermark-z"
+          }
+        }
+      },
+      "full-page-z-index": {
+        "$type": "number",
+        "$value": "{layout.z-tooltip}",
+        "$description": "The stacking level with `fullPage`: over everything on the page. Modal dialogs, in the top layer, stay above it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--watermark-full-page-z"
+          }
+        }
+      }
+    }
+  }
+}

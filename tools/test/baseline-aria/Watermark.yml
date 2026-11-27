@@ -1,0 +1,182 @@
+# Draft
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# FullPage
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# LongText
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# OtherScripts
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# Playground
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# Rotation
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
+# Viewer
+- heading "Payslip, November 2026" [level=2]
+- paragraph: Your salary for November was paid into your account ending 4821 on 25 November. The breakdown below shows your base pay, allowances and deductions.
+- table:
+  - rowgroup:
+    - row "Item Amount":
+      - columnheader "Item"
+      - columnheader "Amount"
+  - rowgroup:
+    - row "Base pay Rp 18.500.000":
+      - cell "Base pay"
+      - cell "Rp 18.500.000"
+    - row "Transport allowance Rp 1.200.000":
+      - cell "Transport allowance"
+      - cell "Rp 1.200.000"
+    - row "Income tax −Rp 2.140.000":
+      - cell "Income tax"
+      - cell "−Rp 2.140.000"
+    - row "Paid Rp 17.560.000":
+      - cell "Paid"
+      - cell "Rp 17.560.000"
+- paragraph: "Questions about this payslip go to the payroll team. Keep it private: the mark shows it was opened by you."
+
