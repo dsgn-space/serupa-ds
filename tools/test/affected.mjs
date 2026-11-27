@@ -45,6 +45,13 @@ t('for Visual, a change to CI alone draws Button only (main and the branch are d
 t('for Visual, CI beside a component draws that component', list(affectedComponents(visualScope(['.github/workflows/ci.yml', 'src/components/Meter/Meter.css']))) === 'Meter');
 t('for Visual, CI beside shared code still draws everything', affectedComponents(visualScope(['.github/workflows/ci.yml', 'src/internal/provider.tsx'])) === null);
 t('for Visual, nothing changed is nothing to draw', visualScope([]).length === 0);
+const drawn = (files) => list(affectedComponents(visualScope(files), { shared: true }));
+t('for Visual, shared code draws the folders that import it (virtual.ts: Combobox, List, Table)', drawn(['src/internal/virtual.ts']) === 'Combobox, List, Table', drawn(['src/internal/virtual.ts']));
+t('for Visual, through other shared modules too (times.ts reaches TimePicker through its parser)', drawn(['src/internal/times.ts']).split(', ').includes('TimePicker'), drawn(['src/internal/times.ts']));
+t('for Visual, shared code beside a component draws both', drawn(['src/internal/virtual.ts', 'src/components/Meter/Meter.css']) === 'Combobox, List, Meter, Table', drawn(['src/internal/virtual.ts', 'src/components/Meter/Meter.css']));
+t('for Visual, a module Storybook\'s preview imports (the provider, the labels) still draws everything', drawn(['src/internal/provider.tsx']) === 'everything' && drawn(['src/internal/labels.ts']) === 'everything');
+t('for Visual, a shared story or a module no folder imports still draws everything', drawn(['src/internal/playground.stories.tsx']) === 'everything' && drawn(['src/internal/plural.ts']) === 'everything');
+t('the tests still test everything for shared code', affectedComponents(['src/internal/virtual.ts']) === null);
 t('a change that tests everything still names the components it edits itself (Kanban, and Sidebar by its size budget)', list(touched) === 'Kanban, Sidebar' && affectedComponents(['src/components/Kanban/Kanban.tsx', 'docs/LoadingAndWaiting.mdx']) === null, list(touched));
 t('a change to no component folder edits none', touchedComponents(['docs/LoadingAndWaiting.mdx', 'tokens.json']).size === 0);
 const deps = withDependents(new Set(['Button']));

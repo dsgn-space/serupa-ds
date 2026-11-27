@@ -64,7 +64,8 @@ if (arg('--since')) {
   const wide = storyWide && !['visual', 'storybook'].includes(arg('--group'));
   // Visual leaves out what draws main's pictures and the branch's alike (visualScope in lib.mjs).
   const scope = diff.status === 0 ? (arg('--group') === 'visual' ? visualScope(scopeFiles(diff.stdout)) : scopeFiles(diff.stdout)) : null;
-  const changed = scope && !wide ? affectedComponents(scope) : null;
+  // For Visual, shared code stands for the folders that import it (sharedReach in lib.mjs).
+  const changed = scope && !wide ? affectedComponents(scope, { shared: arg('--group') === 'visual' }) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   changedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && /^src\/.+\.test\.tsx?$/.test(f) && !/^src\/(components|blocks|patterns)\//.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
