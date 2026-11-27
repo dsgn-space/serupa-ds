@@ -95,7 +95,7 @@ Each is an optional override: set it on the page, a container or one DateField. 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--date-field-label` | `text` | The labels over the boxes (4.5:1 on the surface). |
-| `--date-field-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--date-field-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--date-field-label-size` | `text-sm` | The labels' text (14px). |
 | `--date-field-gap` | `spacing-4` | Space between the boxes (16px). |
 | `--date-field-label-gap` | `spacing-1` | Space between a label and its box (4px). |

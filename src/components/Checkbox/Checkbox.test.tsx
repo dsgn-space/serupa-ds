@@ -78,10 +78,10 @@ describe('Checkbox', () => {
     await settle(250);
     expect(input('c').checked).toBe(true);
     expect(changes).toEqual([true]);
-    expect(css(input('c')).backgroundColor).toBe(color('var(--primary)'));
-    expect(css(input('c')).borderTopColor).toBe(color('var(--primary-edge)'));   // the border is the fill's edge: transparent over it, but in Yellow Light
+    expect(css(input('c')).backgroundColor).toBe(color('var(--surface-brand)'));
+    expect(css(input('c')).borderTopColor).toBe(color('var(--border-brand)'));   // the border is the fill's edge: transparent over it, but in Yellow Light
     expect(css(icon).visibility).toBe('visible');
-    expect(css(icon).color).toBe(color('var(--on-primary)'));
+    expect(css(icon).color).toBe(color('var(--text-on-brand)'));
     expect(icon.getAttribute('aria-hidden')).toBe('true');
     input('c').focus();
     await userEvent.keyboard('[Space]');
@@ -120,7 +120,7 @@ describe('Checkbox', () => {
     expect(input('m').indeterminate).toBe(true);
     expect((icon().querySelector<HTMLElement>('[data-icon]'))?.dataset.icon).toBe('remove');
     expect(css(icon()).visibility).toBe('visible');
-    expect(css(input('m')).backgroundColor).toBe(color('var(--primary)'));
+    expect(css(input('m')).backgroundColor).toBe(color('var(--surface-brand)'));
     await page.getByText('Select all').click();
     expect(input('m').indeterminate).toBe(false);
     expect(input('m').checked).toBe(true);
@@ -223,9 +223,9 @@ describe('Checkbox', () => {
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
-      ['checked fill, or its edge where the theme has one', () => edged('var(--primary)'), 'var(--surface)', 3],
-      ['check on fill', 'var(--on-primary)', 'var(--primary)', 4.5],
-      ['check on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 4.5],
+      ['checked fill, or its edge where the theme has one', () => edged('var(--surface-brand)'), 'var(--surface)', 3],
+      ['check on fill', 'var(--text-on-brand)', 'var(--surface-brand)', 4.5],
+      ['check on hover fill', 'var(--text-on-brand)', 'var(--surface-brand-hover)', 4.5],
       ['focus ring', 'var(--focus-ring)', 'var(--surface)', 3],
       ['invalid border', 'var(--field-border-invalid)', 'var(--surface)', 3],
     ])).toEqual([]);
@@ -343,8 +343,8 @@ describe('CheckboxGroup', () => {
     const box = (id: string) => el(id).parentElement as HTMLElement;   // the control around the input
     const look = (id: string) => [css(el(id)).backgroundColor, css(el(id)).borderTopColor, css(box(id)).scale.replace('none', '1')];
     const rest = look('pd');
-    expect(await press(el('pc').closest('label')!, () => look('pc'))).toEqual([color('var(--secondary)'), color('var(--field-border-pressed)'), '1']);
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), color('var(--primary-edge)'), '1']);
+    expect(await press(el('pc').closest('label')!, () => look('pc'))).toEqual([color('var(--surface-secondary)'), color('var(--field-border-pressed)'), '1']);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--surface-brand-pressed)'), color('var(--border-brand)'), '1']);
     expect((await press(el('pi').closest('label')!, () => look('pi')))[1]).toBe(color('var(--field-border-invalid)'));
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
@@ -366,7 +366,7 @@ describe('CheckboxGroup', () => {
     document.body.append(host);
     try {
       const shown = (id: string) => [input(id).indeterminate, input(id).hasAttribute('data-indeterminate'), css(input(id)).backgroundColor, css(input(id).nextElementSibling).visibility];
-      expect([shown('ssr-m'), shown('ssr-all')]).toEqual([[false, true, color('var(--primary)'), 'visible'], [false, true, color('var(--primary)'), 'visible']]);
+      expect([shown('ssr-m'), shown('ssr-all')]).toEqual([[false, true, color('var(--surface-brand)'), 'visible'], [false, true, color('var(--surface-brand)'), 'visible']]);
     } finally { host.remove(); }
     await render(tree);
     expect([input('ssr-m').indeterminate, input('ssr-m').hasAttribute('data-indeterminate'), input('ssr-all').indeterminate]).toEqual([true, false, true]);
@@ -378,7 +378,7 @@ describe('CheckboxGroup', () => {
     </CheckboxGroup>);
     const [a, b] = page.getByRole('checkbox').elements().map((i) => i.closest('label') as HTMLElement);
     await userEvent.hover(a!);
-    await expect.poll(() => css(a!).borderTopColor).toBe(color('var(--primary)'));
+    await expect.poll(() => css(a!).borderTopColor).toBe(color('var(--surface-brand)'));
     await userEvent.hover(b!);
     await expect.poll(() => css(b!).borderTopColor).toBe(color('var(--field-border-hover)'));   // an unchecked one still answers
   });
@@ -397,7 +397,7 @@ describe('CheckboxGroup', () => {
     expect(page.getByRole('group').element().className).toMatch(/srp-checkbox-group--card/);
     const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary-text)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--text-brand)'));
     expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
     expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
     await userEvent.click(page.getByText('A printed note', { exact: true }));
@@ -412,7 +412,7 @@ describe('CheckboxGroup', () => {
     b!.blur();
     expect([b!.hasAttribute('data-key-focus'), css(card(b!)).outlineStyle]).toEqual([false, 'none']);
     await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
-    expect(lowContrast([['checked card border', 'var(--primary-text)', 'var(--surface)', 3]])).toEqual([]);
+    expect(lowContrast([['checked card border', 'var(--text-brand)', 'var(--surface)', 3]])).toEqual([]);
   });
 
   test('a card clicked in Safari, where the label passes the click on to its box with detail 0 as a key would, shows no keyboard ring', async () => {

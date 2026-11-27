@@ -63,7 +63,7 @@ Drawn from the `FooterLayouts` story.
 
 | State | Look |
 | --- | --- |
-| Rest | `surface` with a `border` border and `shadow-xs` (outline); `surface-raised` with `shadow-md` and a `border-raised` edge (elevated: the edge only shows in dark); `surface-muted` (filled), with a `border` edge in dark only, where that fill is the page's own |
+| Rest | `surface` with a `border` border and `shadow-xs` (outline); `surface-raised` with `shadow-md` and a `border-raised` edge (elevated: the edge only shows in dark); `surface-sunken` (filled), with a `border` edge in dark only, where that fill is the page's own |
 | Hover (a linked card) | A `border-strong` border |
 | Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
 
@@ -93,7 +93,7 @@ The hover border fades in 150ms (`duration-150`, `ease-move`), at once with `pre
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root element (`as`). |
-| `variant` | `'outline'` \| `'elevated'` \| `'filled'` | `'outline'` | A border and a hairline shadow; a raised shadow (for content over the page); or `surface-muted` and flat (a panel inside another surface; in dark it keeps a `border` edge, so it still shows on the page) |
+| `variant` | `'outline'` \| `'elevated'` \| `'filled'` | `'outline'` | A border and a hairline shadow; a raised shadow (for content over the page); or `surface-sunken` and flat (a panel inside another surface; in dark it keeps a `border` edge, so it still shows on the page) |
 | `padding` | `'none'` \| `'sm'` \| `'md'` \| `'lg'` | `'md'` | 0, 12px, 20px or 24px inside, and the parts sit 16px apart |
 | `as` | `'div'` \| `'section'` \| `'article'` \| `'li'` | `'div'` | The element. Use `article` for a self-contained item, `li` inside a list |
 | `href` | string | | Makes the whole card clickable through one link around the `CardHeader` title (the link component set with `configure({ link })`, `<a>` by default) |
@@ -125,10 +125,11 @@ Each is an optional override: set it on the page, a container or one card. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--card-row-bg-hover-elevated` | `surface-hover-raised` | A List or InlineEdit row on an elevated card, hovered or selected: a step up from the card in dark |
+| `--card-row-bg-hover-elevated` | `surface-raised-hover` | A List or InlineEdit row on an elevated card, hovered or selected: a step up from the card in dark |
 | `--card-field-bg-elevated` | `field-raised` | The fill of a form field on an elevated card: a step up from the card in dark, so the field stands out from it |
+| `--card-field-placeholder-elevated` | `field-raised-placeholder` | Placeholder and other gray text in a form field on an elevated card: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field. |
 | `--card-bg` | `surface` | The background of an outline card |
-| `--card-bg-filled` | `surface-muted` | The background of a filled card |
+| `--card-bg-filled` | `surface-sunken` | The background of a filled card |
 | `--card-border-filled` | `border` | A filled card's edge in dark, where its fill is the page's own; in light it has none. |
 | `--card-row-bg-hover` | `surface-hover` | A List or InlineEdit row on the card, hovered or selected |
 | `--card-row-bg-hover-filled` | `surface-raised` | A List or InlineEdit row on a filled card, hovered or selected: a step up, since surface-hover matches the filled card in light |
@@ -140,9 +141,9 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-text` | `text` | Text in the body and footer |
 | `--card-border-hover` | `border-strong` | A linked card's border on hover |
 | `--card-wash-pressed` | `text` | The color washed over a card with `href` while it's held down, at layer-pressed strength: darker in light themes, lighter in dark. |
-| `--card-text-muted-pressed` | `text-muted-shaded` | Muted text on a card with `href` while it's held down (4.5:1 on the washed fill). |
+| `--card-text-muted-pressed` | `text-secondary` | Muted text on a card with `href` while it's held down (4.5:1 on the washed fill). |
 | `--card-focus-ring` | `focus-ring` | A linked card's keyboard focus ring |
-| `--card-divider-elevated` | `border-elevated` | What a divider or separator inside an elevated card reads as `border`: `border-elevated`, the line for the raised surface, since in dark `border` is that surface's own color and a line in it vanished |
+| `--card-divider-elevated` | `border-raised` | What a divider or separator inside an elevated card reads as `border`: `border-raised`, the line for the raised surface, since in dark `border` is that surface's own color and a line in it vanished |
 
 **Shadow**
 

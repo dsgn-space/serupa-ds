@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "The background: the danger tint a danger Alert has.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The border, which marks it as errors.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "link": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Each error's link (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {

@@ -24,7 +24,7 @@
       },
       "bg-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "Fill and border when checked or indeterminate",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "bg-checked-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.surface-brand-hover}",
         "$description": "The same, on hover",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "bg-checked-pressed": {
         "$type": "color",
-        "$value": "{color.primary-pressed}",
+        "$value": "{color.surface-brand-pressed}",
         "$description": "The checked box's fill while held down, one step past bg-checked-hover.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The unchecked box's background while held down.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "icon-color": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "The check and the dash",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "card-border-checked": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A checked card's border, 2px.",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "fill-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-surface}",
+        "$value": "{color.surface-disabled}",
         "$description": "Disabled: the fill, whatever its color when enabled.",
         "$extensions": {
           "com.serupa": {
@@ -204,7 +204,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -214,7 +214,7 @@
       },
       "edge-checked": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

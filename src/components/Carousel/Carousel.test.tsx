@@ -318,11 +318,11 @@ describe('Carousel', () => {
     const d = dot('car', 2);
     const rest = getComputedStyle(d, '::before').backgroundColor;
     await userEvent.hover(d);
-    await expect.poll(() => getComputedStyle(d, '::before').backgroundColor).toBe(color('var(--border-control-hover)'));
+    await expect.poll(() => getComputedStyle(d, '::before').backgroundColor).toBe(color('var(--field-border-hover)'));
     const same: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      if (color('var(--border-control-hover)') === color('var(--border-control)')) same.push(th);
+      if (color('var(--field-border-hover)') === color('var(--border-strong)')) same.push(th);
     }
     document.documentElement.removeAttribute('data-theme');
     expect([rest === getComputedStyle(d, '::before').backgroundColor, same]).toEqual([false, []]);

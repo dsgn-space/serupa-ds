@@ -25,7 +25,7 @@
 .srp-drawer--bottom { align-items: flex-end; }
 .srp-drawer--sm { --srp-drawer-width: var(--drawer-width-sm, var(--container-xs)); }
 .srp-drawer--lg { --srp-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
-.srp-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
+.srp-drawer::backdrop { background: var(--drawer-overlay, var(--backdrop)); }
 :root:has(.srp-drawer:modal) { overflow: hidden; }
 /* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-srp-gutter). */
 :root[data-srp-gutter]:has(.srp-drawer:modal) { scrollbar-gutter: stable; }
@@ -43,9 +43,9 @@
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
   width: var(--srp-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--space-surface));
-  background: var(--drawer-bg, var(--surface-overlay)); --surface-behind: var(--drawer-bg, var(--surface-overlay)); --border: var(--drawer-divider, var(--border-overlay));
-  --srp-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
-  --field: var(--drawer-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
+  background: var(--drawer-bg, var(--surface-raised)); --surface-behind: var(--drawer-bg, var(--surface-raised)); --border: var(--drawer-divider, var(--border-raised));
+  --srp-row-hover: var(--drawer-row-bg-hover, var(--surface-raised-hover));   /* a List or InlineEdit row in it, hovered or selected */
+  --field: var(--drawer-field-bg, var(--field-raised)); --field-placeholder: var(--drawer-field-placeholder, var(--field-raised-placeholder));   /* its form fields, a step up from it in dark */
   box-shadow: var(--drawer-shadow, var(--srp-drawer-shadow, var(--elevation-modal)));
   position: relative;
 }

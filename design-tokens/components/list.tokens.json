@@ -44,7 +44,7 @@
       },
       "text-muted-shaded": {
         "$type": "color",
-        "$value": "{color.text-muted-shaded}",
+        "$value": "{color.text-secondary}",
         "$description": "Gray text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "avatar-bg-shaded": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A link or button item while it's pressed (not while its trailing action is), one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "indicator-selected": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

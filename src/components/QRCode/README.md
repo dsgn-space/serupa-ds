@@ -82,7 +82,7 @@ Each is an optional override: set it on the page, a container or one QRCode. The
 | `--qr-code-light` | `white` | The light modules and the quiet zone: white in every theme, dark mode included (most scanners can't read a light-on-dark code). |
 | `--qr-code-status-bg` | `surface` | Behind a status, where the faded code shows through. |
 | `--qr-code-status-text` | `text` | A status message over the faded code (4.5:1). |
-| `--qr-code-scanned-icon` | `success-text` | The check beside "Scanned". |
+| `--qr-code-scanned-icon` | `text-success` | The check beside "Scanned". |
 | `--qr-code-radius` | `radius-inner` | The corners, kept small: the quiet zone is part of the code. |
 | `--qr-code-size-sm` | `spacing-24` | size="sm", quiet zone included (96px): a code beside text, for a short URL. |
 | `--qr-code-size-md` | `spacing-40` | size="md", the default (160px). |

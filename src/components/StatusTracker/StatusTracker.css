@@ -12,10 +12,10 @@
 .srp-status-tracker__day { flex: auto; min-inline-size: var(--spacing-0\.5); block-size: var(--sizing-full); cursor: default; outline: none; }
 .srp-status-tracker__day:focus-visible { outline: var(--focus-ring-width) solid var(--status-tracker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (hover: hover) { .srp-status-tracker__day:hover { box-shadow: 0 0 0 var(--border-width-1) var(--status-tracker-text, var(--text)); } }
-.srp-status-tracker [data-state="up"] { --srp-st-fill: var(--status-tracker-up, var(--success)); }
-.srp-status-tracker [data-state="degraded"] { --srp-st-fill: repeating-linear-gradient(135deg, var(--status-tracker-degraded, var(--warning)) 0 var(--spacing-1), transparent var(--spacing-1) var(--spacing-1\.5)); }
-.srp-status-tracker__day[data-state="degraded"], .srp-status-tracker__key[data-state="degraded"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-degraded, var(--warning)); }
-.srp-status-tracker [data-state="down"] { --srp-st-fill: var(--status-tracker-down, var(--danger)); }
+.srp-status-tracker [data-state="up"] { --srp-st-fill: var(--status-tracker-up, var(--surface-success)); }
+.srp-status-tracker [data-state="degraded"] { --srp-st-fill: repeating-linear-gradient(135deg, var(--status-tracker-degraded, var(--surface-warning)) 0 var(--spacing-1), transparent var(--spacing-1) var(--spacing-1\.5)); }
+.srp-status-tracker__day[data-state="degraded"], .srp-status-tracker__key[data-state="degraded"] .srp-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-degraded, var(--surface-warning)); }
+.srp-status-tracker [data-state="down"] { --srp-st-fill: var(--status-tracker-down, var(--surface-danger)); }
 /* Half the strip's height, whatever --status-tracker-height is: the shape that says "down". */
 .srp-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
 .srp-status-tracker [data-state="none"] { --srp-st-fill: transparent; }

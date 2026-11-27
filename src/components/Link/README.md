@@ -84,8 +84,8 @@ Each is an optional override: set it on the page, a container or one link. The l
 <!-- token-table:start (made from link.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--link-text` | `primary-text` | tone="primary" text and underline (4.5:1 on surface). |
-| `--link-text-hover` | `primary-text-hover` | tone="primary" on hover. |
+| `--link-text` | `text-brand` | tone="primary" text and underline (4.5:1 on surface). |
+| `--link-text-hover` | `text-brand-hover` | tone="primary" on hover. |
 | `--link-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--link-on-dark` | `white` | surface="dark": the link, its hover and its focus ring over dark media. |
 | `--link-on-light` | `black` | surface="light": the link, its hover and its focus ring over light media. |

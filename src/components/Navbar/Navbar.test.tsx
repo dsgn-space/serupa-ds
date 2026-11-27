@@ -525,7 +525,7 @@ describe('Navbar', () => {
   test('pressed: a link held down fills with pressed at once, with no fade in (ED1)', async () => {
     await render(<Main />);
     await press(el('lp'), () => {
-      expect([css(el('lp')).backgroundColor, css(el('lp')).transitionDuration.split(',')[0]!.trim()]).toEqual([color('var(--pressed)'), '0s']);
+      expect([css(el('lp')).backgroundColor, css(el('lp')).transitionDuration.split(',')[0]!.trim()]).toEqual([color('var(--surface-pressed)'), '0s']);
     });
   });
 });
@@ -590,7 +590,7 @@ describe('NavbarMenu (RU14)', () => {
     await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
     await userEvent.hover(dash);
     // The panel floats, so the link pointed at takes the raised hover step, and never the current link's bar.
-    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([color('var(--surface-hover-raised)'), 'none']);
+    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([color('var(--surface-raised-hover)'), 'none']);
     document.documentElement.dir = 'rtl';
     try { await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/)); } finally { document.documentElement.dir = ''; }
     await away();

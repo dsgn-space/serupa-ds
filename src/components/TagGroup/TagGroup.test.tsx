@@ -123,7 +123,7 @@ describe('TagGroup', () => {
     expect(css(tag(off)).backgroundColor).toBe(color('var(--surface)'));
     await userEvent.hover(tag(off));
     await expect.poll(() => css(tag(off)).backgroundColor).toBe(color('var(--surface-hover)'));
-    expect(await press(tag(off), () => css(tag(off)).backgroundColor)).toBe(color('var(--pressed)'));
+    expect(await press(tag(off), () => css(tag(off)).backgroundColor)).toBe(color('var(--surface-pressed)'));
     const picked = css(tag(on)).backgroundColor;
     await userEvent.hover(tag(on));
     await new Promise((r) => setTimeout(r, 200));
@@ -243,9 +243,9 @@ describe('TagGroup', () => {
     await render(<Removable max={2} />);
     const more = page.getByRole('button', { name: 'Show more' });
     const look = () => { const c = css(more.element()); return [c.color, c.textDecorationThickness, c.textUnderlineOffset]; };
-    expect(look()).toEqual([color('var(--primary-text)'), '1px', '2px']);
+    expect(look()).toEqual([color('var(--text-brand)'), '1px', '2px']);
     await more.hover();
-    await expect.poll(look).toEqual([color('var(--primary-text-hover)'), '2px', '2px']);
+    await expect.poll(look).toEqual([color('var(--text-brand-hover)'), '2px', '2px']);
     await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 

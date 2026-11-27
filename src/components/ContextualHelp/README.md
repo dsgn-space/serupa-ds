@@ -75,6 +75,6 @@ Each is an optional override: set it on the page, a container or one ContextualH
 | Token | Default | Use |
 | --- | --- | --- |
 | `--contextual-help-icon` | `text-muted` | The "?" of variant help (3:1+ on surface). |
-| `--contextual-help-info-icon` | `info` | The "i" of variant info (3:1+ on surface). |
+| `--contextual-help-info-icon` | `surface-info` | The "i" of variant info (3:1+ on surface). |
 | `--contextual-help-offset` | `spacing-0.5` | The gap between the panel and the button (2px): the button is wider than its small glyph, so the panel sits about 7px from the glyph itself. |
 <!-- token-table:end -->

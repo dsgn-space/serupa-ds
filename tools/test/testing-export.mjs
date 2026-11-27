@@ -22,7 +22,7 @@ const seen = [];
 await forEachTheme(page, async () => {
   seen.push(await page.evaluate(() => ({
     theme: document.documentElement.getAttribute('data-theme'),
-    look: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + ' ' + getComputedStyle(document.getElementById('card')).backgroundColor,
+    look: getComputedStyle(document.documentElement).getPropertyValue('--surface-brand').trim() + ' ' + getComputedStyle(document.getElementById('card')).backgroundColor,
     transition: getComputedStyle(document.getElementById('card')).transitionDuration,
     dark: matchMedia('(prefers-color-scheme: dark)').matches,
   })));

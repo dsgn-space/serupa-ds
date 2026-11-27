@@ -14,21 +14,21 @@
   position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--file-upload-gap, var(--spacing-2)); text-align: center;
   padding: var(--file-upload-zone-padding, var(--spacing-6));
   border: var(--border-width-1) dashed var(--file-upload-zone-border, var(--field-border)); border-radius: var(--file-upload-zone-radius, var(--radius-surface));
-  background: var(--file-upload-zone-bg, var(--surface-control)); --surface-behind: var(--file-upload-zone-bg, var(--surface-control)); cursor: var(--cursor-interactive); touch-action: manipulation;
+  background: var(--file-upload-zone-bg, var(--control)); --surface-behind: var(--file-upload-zone-bg, var(--control)); cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }
 /* A click on the drop area browses for files, so pointing at it darkens its outline, as a field's does. */
 @media (hover: hover) { .srp-file-upload:not([data-disabled], [data-readonly], [data-invalid]) .srp-file-upload__zone:hover:not([data-over]) { border-color: var(--file-upload-zone-border-hover, var(--field-border-hover)); } }
 /* Pressed: it fills while held, then the file dialog opens. */
-.srp-file-upload:not([data-disabled], [data-readonly]) .srp-file-upload__zone:active:not([data-over]) { background: var(--file-upload-zone-bg-pressed, var(--field-hover)); transition-duration: var(--duration-0); }
-.srp-file-upload__zone:where([data-over]) { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary-text)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
+.srp-file-upload:not([data-disabled], [data-readonly]) .srp-file-upload__zone:active:not([data-over]) { background: var(--file-upload-zone-bg-pressed, var(--surface-raised-hover)); transition-duration: var(--duration-0); }
+.srp-file-upload__zone:where([data-over]) { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--text-brand)); background: var(--file-upload-zone-bg-active, var(--surface-brand-subtle)); }
 .srp-file-upload__zone:where([data-over]) .srp-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
 .srp-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }
 .srp-file-upload__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--font-medium); pointer-events: none; overflow-wrap: anywhere; }
 .srp-file-upload__hint { margin: var(--spacing-0); color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: none; overflow-wrap: anywhere; }
 .srp-file-upload__input, .srp-file-upload__required { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
 .srp-file-upload__errors { display: flex; flex-direction: column; gap: var(--spacing-1); }
-.srp-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1); margin: var(--spacing-0); color: var(--file-upload-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size */
+.srp-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1); margin: var(--spacing-0); color: var(--file-upload-error-color, var(--text-danger)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size */
 .srp-file-upload__error .srp-icon { flex: none; font-size: var(--spacing-3\.5); height: var(--text-xs--line-height); }   /* centered on the first line */
 .srp-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 /* Each file is an Attachment, as wide as the list; this component's own tokens still set its row's colors, corners
@@ -37,14 +37,14 @@
   display: flex; --srp-attachment-width: var(--sizing-full); --attachment-max-width: var(--sizing-full);
   --attachment-bg: var(--file-upload-item-bg, var(--surface)); --attachment-border: var(--file-upload-item-border, var(--border)); --attachment-radius: var(--file-upload-item-radius, var(--radius-control));
   --attachment-padding: var(--file-upload-item-padding, var(--spacing-2)); --attachment-gap: var(--spacing-3); --attachment-icon: var(--file-upload-icon-color, var(--text-muted));
-  --attachment-muted: var(--file-upload-hint-color, var(--text-muted)); --attachment-error: var(--file-upload-error-color, var(--danger-text)); --attachment-border-error: var(--file-upload-zone-border-invalid, var(--danger));
-  --attachment-done: var(--file-upload-done-color, var(--success-text)); --attachment-focus-ring: var(--file-upload-focus-ring, var(--focus-ring));
+  --attachment-muted: var(--file-upload-hint-color, var(--text-muted)); --attachment-error: var(--file-upload-error-color, var(--text-danger)); --attachment-border-error: var(--file-upload-zone-border-invalid, var(--surface-danger));
+  --attachment-done: var(--file-upload-done-color, var(--text-success)); --attachment-focus-ring: var(--file-upload-focus-ring, var(--focus-ring));
 }
 .srp-file-upload__thumbnail { flex: none; inline-size: var(--spacing-10); block-size: var(--spacing-10); border-radius: var(--radius-inner); }
-.srp-file-upload:where([data-disabled]) .srp-file-upload__zone, .srp-file-upload:where([data-disabled]) .srp-file-upload__zone * { border-color: var(--file-upload-border-disabled, var(--disabled-border)); color: var(--file-upload-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-file-upload:where([data-disabled]) .srp-file-upload__zone, .srp-file-upload:where([data-disabled]) .srp-file-upload__zone * { border-color: var(--file-upload-border-disabled, var(--border-disabled)); color: var(--file-upload-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 /* The area's fade covers the button in it: the disabled Button's own fade on top took it to a quarter. */
 .srp-file-upload:where([data-disabled]) .srp-file-upload__zone .srp-btn { opacity: var(--opacity-100); }
-.srp-file-upload:where([data-invalid]) .srp-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
+.srp-file-upload:where([data-invalid]) .srp-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--surface-danger)); }
 /* Read-only refuses nothing: the plain arrow over the whole area, its dimmed button too, as on every read-only control. */
 .srp-file-upload:where([data-readonly]) .srp-file-upload__zone, .srp-file-upload:where([data-readonly]) .srp-file-upload__zone * { cursor: default; }
 .srp-file-upload:where([data-readonly]) .srp-file-upload__zone .srp-btn[aria-disabled="true"] { cursor: default; }

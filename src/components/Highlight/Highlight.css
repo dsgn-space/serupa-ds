@@ -9,7 +9,7 @@
 .srp-highlight { overflow-wrap: anywhere; }
 .srp-highlight__mark {
   padding: var(--spacing-0); border-radius: var(--highlight-radius, var(--rounded-xs));
-  background: var(--highlight-bg, var(--warning-subtle)); color: var(--highlight-text, var(--text));
+  background: var(--highlight-bg, var(--surface-warning-subtle)); color: var(--highlight-text, var(--text));
   font-weight: var(--highlight-weight, var(--font-semibold));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }

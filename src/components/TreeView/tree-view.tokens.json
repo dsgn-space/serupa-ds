@@ -34,7 +34,7 @@
       },
       "item-bg-selected": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "The picked row's background.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "item-indicator": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "item-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A row's fill while it's held down.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "check-bg-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "With cascade: a checked or mixed box's fill and border (3:1 on the row).",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "check-mark": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "With cascade: the check or dash on a filled box.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "check-edge-checked": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

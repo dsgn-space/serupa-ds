@@ -4,7 +4,7 @@
     "color": {
       "row-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-hover-raised}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark",
         "$extensions": {
           "com.serupa": {
@@ -22,9 +22,19 @@
           }
         }
       },
+      "field-placeholder": {
+        "$type": "color",
+        "$value": "{color.field-raised-placeholder}",
+        "$description": "Placeholder and other gray text in a form field in the drawer: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-field-placeholder"
+          }
+        }
+      },
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +54,7 @@
       },
       "overlay": {
         "$type": "color",
-        "$value": "{color.overlay}",
+        "$value": "{color.backdrop}",
         "$description": "The dimmed backdrop over the page.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +114,7 @@
       },
       "divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

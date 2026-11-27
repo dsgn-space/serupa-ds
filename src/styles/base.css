@@ -16,7 +16,7 @@
 /* A section with its own data-mode, data-brand or data-theme: color is inherited as the parent's resolved value, so
    its plain text would keep the page's color on a transparent background. It takes its own text and page fill (no
    specificity: a class on the section still sets its background). <html> and <body> are left to the rule below. */
-:where([data-mode], [data-brand], [data-theme]):where(:not(html, body)) { color: var(--text); background-color: var(--surface-page); --surface-behind: var(--surface-page); }
+:where([data-mode], [data-brand], [data-theme]):where(:not(html, body)) { color: var(--text); background-color: var(--background); --surface-behind: var(--background); }
 
 :where(html) {
   -webkit-text-size-adjust: 100%;
@@ -27,10 +27,10 @@
 :where(body) {
   margin: var(--spacing-0);
   /* The page: in dark a step below the cards, bars and controls on it (surface-page). */
-  background-color: var(--surface-page);
+  background-color: var(--background);
   /* What sits behind, for the rings that set an avatar or a dot apart (Avatar, AvatarGroup, Badge's indicator): each
      surface (Card, Menu, Dialog, a table, a bar) sets it to its own fill, so the ring matches whatever it is on. */
-  --surface-behind: var(--surface-page);
+  --surface-behind: var(--background);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -66,13 +66,13 @@
    wraps instead of widening the page (WCAG 1.4.10). An <a> with no href (an anchor target, a router link before it
    hydrates) can't be focused or followed, so it reads as text. */
 :where(a[href]) {
-  color: var(--link-text, var(--primary-text));
+  color: var(--link-text, var(--text-brand));
   text-decoration-line: underline; text-decoration-thickness: var(--link-thickness, var(--decoration-1)); text-underline-offset: var(--link-offset, var(--underline-offset-2));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
   overflow-wrap: anywhere;
 }
 :where(td, th) :where(a[href]) { overflow-wrap: break-word; }   /* in a table cell the words stay whole, as for <Link> */
-@media (hover: hover) { :where(a[href]:hover) { color: var(--link-text-hover, var(--primary-text-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
+@media (hover: hover) { :where(a[href]:hover) { color: var(--link-text-hover, var(--text-brand-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 :where(a:not([href])) { color: inherit; text-decoration: none; }
 
 :where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
@@ -80,14 +80,14 @@
 :where(code, samp, pre) { font-family: var(--font-mono); }
 :where(kbd) { font-family: var(--font-sans); }   /* keys read as keycaps, like <Kbd> */
 
-::selection { background-color: var(--primary-subtle); color: var(--text); }   /* pseudo-elements can't go inside :where(); a utility on the element still wins */
+::selection { background-color: var(--surface-brand-subtle); color: var(--text); }   /* pseudo-elements can't go inside :where(); a utility on the element still wins */
 
-::placeholder { color: var(--placeholder); opacity: var(--opacity-100); }
+::placeholder { color: var(--field-placeholder); opacity: var(--opacity-100); }
 
 /* Native controls nobody styled (a bare checkbox, range or progress) and the text caret take the brand color. Set on
    every theme root too: both inherit, so a nested theme would otherwise keep its parent's color. Scrollbars are left
    alone: color-scheme already darkens them, and scrollbar-color swaps Chromium to thin scrollbars, which moves layout. */
-:where(:root, [data-theme], [data-brand], [data-mode]) { accent-color: var(--primary); caret-color: var(--primary-text); }
+:where(:root, [data-theme], [data-brand], [data-mode]) { accent-color: var(--surface-brand); caret-color: var(--text-brand); }
 
 /* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
 :where(:focus-visible) {

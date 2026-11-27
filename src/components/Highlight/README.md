@@ -69,7 +69,7 @@ Each is an optional override: set it on the page, a container or one highlight. 
 <!-- token-table:start (made from highlight.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--highlight-bg` | `warning-subtle` | Behind a match. |
+| `--highlight-bg` | `surface-warning-subtle` | Behind a match. |
 | `--highlight-text` | `text` | A match's text (4.5:1 on bg). |
 | `--highlight-weight` | `font-semibold` | A match's weight, so it isn't marked by color alone (not in an option or menu item, where it's underlined instead). |
 | `--highlight-radius` | `rounded-xs` | A match's corners (2px). |

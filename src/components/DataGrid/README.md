@@ -121,9 +121,9 @@ Each is an optional override: set it on the page, a container or one DataGrid. T
 | `--data-grid-text` | `text` | The cells' text (4.5:1 on bg, header-bg and selected-bg). |
 | `--data-grid-border` | `border` | The frame's border. |
 | `--data-grid-line` | `border` | The lines between cells. |
-| `--data-grid-header-bg` | `surface-muted` | The header row's background. |
+| `--data-grid-header-bg` | `surface-sunken` | The header row's background. |
 | `--data-grid-header-text` | `text-muted` | The header row's text (4.5:1 on header-bg). |
-| `--data-grid-bg-selected` | `primary-subtle` | The selected range's background. |
+| `--data-grid-bg-selected` | `surface-brand-subtle` | The selected range's background. |
 | `--data-grid-focus-ring` | `focus-ring` | The ring inside the active cell (3:1 on bg and selected-bg). |
 | `--data-grid-input-bg` | `field` | A cell's background while it's edited. |
 | `--data-grid-font-size` | `text-sm` | The cells' text (14px). |

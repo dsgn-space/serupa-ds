@@ -49,7 +49,7 @@ Drawn from the `ContrastCheck` story.
 
 | State | Look |
 | --- | --- |
-| Rest | Round swatches, each with a thin inset `border-control` edge (a soft line, 3:1 with more contrast), so white shows on white and black on black |
+| Rest | Round swatches, each with a thin inset `border-strong` edge (a soft line, 3:1 with more contrast), so white shows on white and black on black |
 | Picked | A `primary` ring outside the swatch and a check in white or black, whichever stands out on it |
 | Focus | A `focus-ring` outline around the swatch |
 | Invalid | Every swatch's edge turns into a 2px `danger` one, as a field's border does |
@@ -73,7 +73,7 @@ Drawn from the `ContrastCheck` story.
 
 - `role="radiogroup"` named by `aria-label`, `aria-labelledby` or a surrounding [Field](../Field/README.md)'s label, with a `role="radio"` swatch for each color and `aria-checked` on the picked one. In a Field, the hint and error describe the radiogroup, and `aria-required` and `aria-invalid` sit on it. The hex field is its own field, named "Hex code".
 - The picked swatch shows a ring (3:1 on the page in every theme) and a check in white or black, whichever stands out more on that color, so the choice doesn't rely on seeing the color.
-- Every swatch, and the native color well, has a thin border in `border-control`, a soft line by design (3:1 with more contrast). So a white swatch shows on a white page and a black one on a dark page (WCAG 1.4.11). In forced-colors mode the swatches keep their real colors and the ring uses Highlight.
+- Every swatch, and the native color well, has a thin border in `border-strong`, a soft line by design (3:1 with more contrast). So a white swatch shows on a white page and a black one on a dark page (WCAG 1.4.11). In forced-colors mode the swatches keep their real colors and the ring uses Highlight.
 - The contrast line is a polite live region, so a change is read out. The warning has an icon and words, not just a color.
 - With `contrastWith`, every swatch also says its ratio before it's picked, as its description ("Contrast 1.3:1, below 4.5:1, which can be hard to read"), and a swatch under `minContrast` is struck through with a diagonal line (`CanvasText` in forced-colors mode) and has `data-low-contrast`. The line goes away once it's picked, when the check and the contrast line take over.
 
@@ -118,13 +118,13 @@ Each is an optional override: set it on the page, a container or one picker. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--color-picker-text` | `text` | The picker's text. |
-| `--color-picker-swatch-border` | `border-control` | The thin inset border on every swatch and round the native color well (3:1 on the page). |
-| `--color-picker-ring` | `primary-text` | The ring around the picked swatch (3:1). |
-| `--color-picker-ring-hover` | `border-control` | The ring round a swatch the pointer is on, before it is picked (3:1 on the page). |
-| `--color-picker-invalid` | `danger` | The swatches' border while invalid (3:1), so the error shows on the swatches as well as in the Field's message. |
+| `--color-picker-swatch-border` | `border-strong` | The thin inset border on every swatch and round the native color well (3:1 on the page). |
+| `--color-picker-ring` | `text-brand` | The ring around the picked swatch (3:1). |
+| `--color-picker-ring-hover` | `border-strong` | The ring round a swatch the pointer is on, before it is picked (3:1 on the page). |
+| `--color-picker-invalid` | `surface-danger` | The swatches' border while invalid (3:1), so the error shows on the swatches as well as in the Field's message. |
 | `--color-picker-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--color-picker-contrast` | `text-muted` | The contrast line (4.5:1). |
-| `--color-picker-contrast-low` | `warning-text` | The contrast line below `minContrast` (4.5:1). |
+| `--color-picker-contrast-low` | `text-warning` | The contrast line below `minContrast` (4.5:1). |
 | `--color-picker-swatch-radius` | `radius-pill` | A swatch's shape. |
 | `--color-picker-gap` | `spacing-3` | Space between the swatches, the custom row and the contrast line (12px). |
 | `--color-picker-swatch-gap` | `spacing-2` | Space between swatches (8px). |

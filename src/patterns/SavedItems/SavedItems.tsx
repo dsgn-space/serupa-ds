@@ -142,7 +142,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
   };
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface-sunken text-text">
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>

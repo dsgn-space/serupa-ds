@@ -24,11 +24,21 @@
       },
       "placeholder": {
         "$type": "color",
-        "$value": "{color.placeholder}",
+        "$value": "{color.field-placeholder}",
         "$description": "The placeholder on the button.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--period-picker-placeholder"
+          }
+        }
+      },
+      "placeholder-readonly": {
+        "$type": "color",
+        "$value": "{color.text-secondary}",
+        "$description": "Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-placeholder-readonly"
           }
         }
       },
@@ -94,7 +104,7 @@
       },
       "panel-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The popup's background.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +114,7 @@
       },
       "panel-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The popup's outline.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +124,7 @@
       },
       "period-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +134,7 @@
       },
       "period-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "A period while pressed.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +144,7 @@
       },
       "current": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "This month, quarter or year (4.5:1 on panel-bg).",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +154,7 @@
       },
       "bg-selected": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The chosen period's fill.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +164,7 @@
       },
       "text-selected": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "The chosen period's text (4.5:1 on selected-bg).",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +174,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +184,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +194,7 @@
       },
       "panel-divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +204,7 @@
       },
       "edge-selected": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The selected period's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

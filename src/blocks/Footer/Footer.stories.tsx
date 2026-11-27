@@ -17,7 +17,7 @@ const groups: FooterLinkGroup[] = [
 const languages = [{ value: 'en', label: 'English' }, { value: 'id', label: 'Bahasa Indonesia' }, { value: 'ar', label: 'العربية' }, { value: 'ja', label: '日本語' }];
 
 function Page({ children }: { children: React.ReactNode }) {
-  return <div className="flex min-h-screen flex-col bg-surface-muted text-text"><SkipLink />
+  return <div className="flex min-h-screen flex-col bg-surface-sunken text-text"><SkipLink />
     <main id="main" className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 py-10 outline-none"><Heading level={1}>Acme</Heading><p className="text-text-muted">The page’s own content goes here.</p></main>
     {children}</div>;
 }

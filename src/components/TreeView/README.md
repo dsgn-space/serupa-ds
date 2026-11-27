@@ -129,17 +129,17 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-bg` | `surface` | The background. |
 | `--tree-view-text` | `text` | The labels (4.5:1 on bg). |
 | `--tree-view-item-bg-hover` | `surface-hover` | A row's background on hover: zinc-100 in light, like the selected row's. |
-| `--tree-view-item-bg-selected` | `highlight` | The picked row's background. |
-| `--tree-view-item-indicator` | `highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
+| `--tree-view-item-bg-selected` | `surface-highlight` | The picked row's background. |
+| `--tree-view-item-indicator` | `surface-highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--tree-view-icon-color` | `text-muted` | The chevrons and item icons. |
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
-| `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |
-| `--tree-view-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--tree-view-item-bg-pressed` | `surface-pressed` | A row's fill while it's held down. |
+| `--tree-view-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tree-view-check-border` | `field-border` | With cascade: an unchecked box's border, the soft field border, as Checkbox's. |
 | `--tree-view-check-bg` | `field` | With cascade: an unchecked box's fill. |
-| `--tree-view-check-bg-checked` | `primary` | With cascade: a checked or mixed box's fill and border (3:1 on the row). |
-| `--tree-view-check-mark` | `on-primary` | With cascade: the check or dash on a filled box. |
-| `--tree-view-check-edge-checked` | `primary-edge` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--tree-view-check-bg-checked` | `surface-brand` | With cascade: a checked or mixed box's fill and border (3:1 on the row). |
+| `--tree-view-check-mark` | `text-on-brand` | With cascade: the check or dash on a filled box. |
+| `--tree-view-check-edge-checked` | `border-brand` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Radius**
 

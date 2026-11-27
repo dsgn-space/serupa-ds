@@ -62,7 +62,7 @@ Drawn from the `Months` story.
 | Open | The popup under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
 | Read-only | `field-readonly` background; it doesn't open |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; it doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; it doesn't open |
 
 ## Accessibility
 
@@ -120,24 +120,25 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | --- | --- | --- |
 | `--period-picker-bg` | `field` | The button's background. |
 | `--period-picker-text` | `text` | The chosen period on the button, and the popup's text (4.5:1 on both backgrounds). |
-| `--period-picker-placeholder` | `placeholder` | The placeholder on the button. |
+| `--period-picker-placeholder` | `field-placeholder` | The placeholder on the button. |
+| `--period-picker-placeholder-readonly` | `text-secondary` | Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill. |
 | `--period-picker-border` | `field-border` | The button's outline (3:1 on the page). |
 | `--period-picker-border-hover` | `field-border-hover` | The button's outline on hover. |
 | `--period-picker-invalid` | `field-border-invalid` | The outline and focus ring when invalid. |
 | `--period-picker-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--period-picker-icon` | `text-muted` | The calendar icon on the button. |
 | `--period-picker-focus-ring` | `focus-ring` | The focus ring, on the button and on a period. |
-| `--period-picker-panel-bg` | `surface-overlay` | The popup's background. |
-| `--period-picker-panel-border` | `border-overlay` | The popup's outline. |
-| `--period-picker-period-bg-hover` | `secondary` | A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed. |
-| `--period-picker-period-bg-pressed` | `pressed` | A period while pressed. |
-| `--period-picker-current` | `primary-text` | This month, quarter or year (4.5:1 on panel-bg). |
-| `--period-picker-bg-selected` | `primary` | The chosen period's fill. |
-| `--period-picker-text-selected` | `on-primary` | The chosen period's text (4.5:1 on selected-bg). |
-| `--period-picker-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--period-picker-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--period-picker-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
-| `--period-picker-edge-selected` | `primary-edge` | The selected period's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--period-picker-panel-bg` | `surface-raised` | The popup's background. |
+| `--period-picker-panel-border` | `border-raised` | The popup's outline. |
+| `--period-picker-period-bg-hover` | `surface-secondary` | A period under the pointer, as in Calendar: a step lighter than the panel in dark, before pressed. |
+| `--period-picker-period-bg-pressed` | `surface-secondary-hover` | A period while pressed. |
+| `--period-picker-current` | `text-brand` | This month, quarter or year (4.5:1 on panel-bg). |
+| `--period-picker-bg-selected` | `surface-brand` | The chosen period's fill. |
+| `--period-picker-text-selected` | `text-on-brand` | The chosen period's text (4.5:1 on selected-bg). |
+| `--period-picker-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--period-picker-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--period-picker-panel-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--period-picker-edge-selected` | `border-brand` | The selected period's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Radius**
 

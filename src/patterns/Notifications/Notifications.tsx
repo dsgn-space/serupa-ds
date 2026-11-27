@@ -105,7 +105,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
   const bellName = unread ? `Notifications, ${formatNumber(unread, locale)} unread` : 'Notifications';
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface-sunken text-text">
       <SkipLink />
       <Navbar brand="Acme" actions={
         <Button variant="ghost" startIcon="notifications" aria-label={bellName} onClick={() => setOpen(true)}>

@@ -95,15 +95,15 @@ Each is an optional override: set it on the page, a container or one MentionInpu
 <!-- token-table:start (made from mention-input.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--mention-input-listbox-bg` | `surface-overlay` | The list's background. |
-| `--mention-input-listbox-border` | `border-overlay` | The list's outline. |
+| `--mention-input-listbox-bg` | `surface-raised` | The list's background. |
+| `--mention-input-listbox-border` | `border-raised` | The list's outline. |
 | `--mention-input-option-color` | `text` | An option's label, and its second line while it's highlighted. |
-| `--mention-input-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). |
-| `--mention-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--mention-input-option-bg-active` | `surface-highlight` | The highlighted option (hover or arrow keys). |
+| `--mention-input-option-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--mention-input-description-color` | `text-muted` | An option's second line and the no-match message. |
-| `--mention-input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--mention-input-listbox-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
-| `--mention-input-mention-bg` | `primary-subtle` | The tint behind each mention in the text, the brand's lightest; the text keeps 4.5:1 on it. |
+| `--mention-input-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--mention-input-listbox-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--mention-input-mention-bg` | `surface-brand-subtle` | The tint behind each mention in the text, the brand's lightest; the text keeps 4.5:1 on it. |
 | `--mention-input-listbox-shadow` | `elevation-overlay` | The list's shadow. |
 | `--mention-input-listbox-radius` | `radius-surface` | The list's corners (8px). |
 | `--mention-input-option-radius` | `radius-control` | An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius. |

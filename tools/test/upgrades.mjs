@@ -9,7 +9,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
-import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, EASINGS_16, EASINGS_NEAREST_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
+import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, EASINGS_16, EASINGS_NEAREST_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TOKENS_20, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
 import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
@@ -62,8 +62,9 @@ const known = new Set([...guide.map((m) => m.version), next]);
 t('each serupa-migrate change belongs to a major in the guide', TRANSFORMS.every((x) => known.has(x.version)), TRANSFORMS.filter((x) => !known.has(x.version)).map((x) => x.id).join(', '));
 
 // The renames.
-const fix = (src, file = 'a.tsx', from = null) => migrate(src, file, transformsAfter(from));
-const one = (label, src, want, file) => { const r = fix(src, file); t(label, r.text === want, `got: ${r.text}`); };
+// Up to a major (19 by default), so a test of an older rename shows that rename's own result, not 20.0.0's on top.
+const fix = (src, file = 'a.tsx', from = null, upTo = 19) => migrate(src, file, transformsAfter(from).filter((x) => Number(x.version.split('.')[0]) <= upTo));
+const one = (label, src, want, file, upTo, from = null) => { const r = fix(src, file, from, upTo); t(label, r.text === want, `got: ${r.text}`); };
 one('IconButton noTitle → hideTitle, also with a value', '<IconButton icon="x" noTitle label="Close" /><IconButton noTitle={!wide} />', '<IconButton icon="x" hideTitle label="Close" /><IconButton hideTitle={!wide} />');
 one('a > or quote inside a value doesn\'t end the tag', `<IconButton label={a > b ? "x>y" : 'it\\'s'} onClick={() => { if (a > 1) go(); }}\n  noTitle\n/>`, `<IconButton label={a > b ? "x>y" : 'it\\'s'} onClick={() => { if (a > 1) go(); }}\n  hideTitle\n/>`);
 one('the same word in a value or in another component is left', '<IconButton label="noTitle" /><IconButtonGroup noTitle /><Button noTitle />', '<IconButton label="noTitle" /><IconButtonGroup noTitle /><Button noTitle />');
@@ -74,7 +75,7 @@ one('15.0.0: variant="default" is "plain" on Checkbox, CheckboxGroup, Radio and 
 one('a rename leaves a tag that already has the new name (a wrapper passing both through)', '<Drawer placement={p.placement} side={p.side} />', '<Drawer placement={p.placement} side={p.side} />');
 one('15.0.0: component tokens put the state last, in CSS and in a style object', '.x { --button-disabled-bg: red; color: var(--stepper-active-text); --button-disabled-bg-extra: 1; }', '.x { --button-bg-disabled: red; color: var(--stepper-text-active); --button-disabled-bg-extra: 1; }', 'a.css');
 one('15.0.0: a file that already names the new token keeps the old one beside it (a fallback chain)', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a.css');
-one('15.0.0: border-raised is border, as a variable, a token reference and a utility class; a longer name is left', '.x { border-color: var(--border-raised); --my-border-raised: 1; } <div className="bg-border-raised hover:border-x-border-raised" /> {"$value": "{color.border-raised}"}', '.x { border-color: var(--border); --my-border-raised: 1; } <div className="bg-border hover:border-x-border" /> {"$value": "{color.border}"}');
+one('15.0.0: border-raised is border, as a variable, a token reference and a utility class; a longer name is left', '.x { border-color: var(--border-raised); --my-border-raised: 1; } <div className="bg-border-raised hover:border-x-border-raised" /> {"$value": "{color.border-raised}"}', '.x { border-color: var(--border); --my-border-raised: 1; } <div className="bg-border hover:border-x-border" /> {"$value": "{color.border}"}', 'a.tsx', 19, '14.0.0');
 one('15.0.0: a migration note naming `--border-raised` in its own code span keeps it', 'Rename `--border-raised` and `bg-border-raised` to `--border`.', 'Rename `--border-raised` and `bg-border-raised` to `--border`.');
 {
   const r = fix('<Button icon="settings" aria-label="Settings" />\n<Button leftIcon="add">Add</Button>\n<IconButton icon="x" label="Close" />');
@@ -102,6 +103,23 @@ one('15.0.0: a migration note naming `--border-raised` in its own code span keep
     const left = Object.keys(TOKENS_15).filter((a) => new RegExp(`${a}(?![\\w-])`).test(css));
     t(`the ${Object.keys(TOKENS_15).length} old token names serupa-migrate renames are gone from the component CSS (15.0.0)`, Object.keys(TOKENS_15).length === 20 && !left.length, left.join(', '));
   }
+}
+// 20.0.0: the color tokens name the thing first. Every old name tokens.json keeps as a deprecated alias is one
+// serupa-migrate renames, to the token the alias points at; and the component CSS reads only the new names.
+{
+  const tok = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8'));
+  const deprecated = tok.color.tokens.filter((x) => /in 20\.0\.0\. Removed in 21\.0\.0/.test(x.$deprecated ?? ''));
+  const wrong = deprecated.filter((x) => TOKENS_20[x.name] == null || x.value !== `{${TOKENS_20[x.name]}}`);
+  t(`serupa-migrate renames each of the ${deprecated.length} color tokens renamed in 20.0.0, to the token its alias names`, deprecated.length === Object.keys(TOKENS_20).length && !wrong.length, wrong.map((x) => x.name).join(', '));
+  const css = fs.readdirSync(path.join(PROJECT, 'src', 'components')).map((c) => path.join(PROJECT, 'src', 'components', c, `${c}.css`)).filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+  const left = Object.keys(TOKENS_20).filter((a) => new RegExp(`(?<![\\w-])--${a}(?![\\w-])`).test(css));
+  t('the component CSS reads none of the color token names 20.0.0 renamed', !left.length, left.join(', '));
+}
+one('20.0.0: a color token read, set by a theme of the project\'s own, or referenced, takes its new name; a longer name that ends the same is left', '.a { color: var(--primary-text); background: var(--surface-muted); border-color: var(--my-primary); } :root { --primary: #0f766e; } {"$value": "{color.surface-overlay}"}', '.a { color: var(--text-brand); background: var(--surface-sunken); border-color: var(--my-primary); } :root { --surface-brand: #0f766e; } {"$value": "{color.surface-raised}"}', 'x.css', 20);
+one('20.0.0: the utility classes take the new names, with their variants and opacity; a name in its own code span is left', '<div className="bg-primary hover:bg-primary-hover text-danger-text md:border-border-control/50" /> `bg-primary`', '<div className="bg-surface-brand hover:bg-surface-brand-hover text-text-danger md:border-border-strong/50" /> `bg-primary`', 'a.tsx', 20);
+{
+  const r = migrate('.c { border-color: var(--border-raised); }', 'x.css', transformsAfter(null));
+  t('with no --from, 15.0.0\'s border-raised rule leaves --border-raised, a token again from 20.0.0', r.text === '.c { border-color: var(--border-raised); }', r.text);
 }
 // 16.0.0: the tactile look is removed. A removed motion role read through var() takes what it always was in the flat
 // brands; what can't be rewritten (a depth token, a declaration of one, data-depth) is listed, one note a line.
@@ -134,7 +152,7 @@ one('16.0.0: the ease-toggle class and token reference are ease-move; the name i
   const themes = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).color.themes.map((x) => x.id);
   // tokens.css has blue; every other brand is in brands/ (17.0.0).
   const css = ['tokens.css', 'brands/all.css'].map((f) => fs.readFileSync(path.join(PROJECT, f), 'utf8')).join('\n');
-  t('teal and emerald are both themes, each in its own ramp', 'teal-light teal-dark emerald-light emerald-dark'.split(' ').every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
+  t('teal and emerald are both themes, each in its own ramp', 'teal-light teal-dark emerald-light emerald-dark'.split(' ').every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--surface-brand: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--surface-brand: var\(--emerald-700\)/.test(css), '');
 }
 // 16.0.0: the easing tokens are the roles. Each raw curve becomes the role with its curve, or the one that does its
 // job (listed, since the curve changes); a bare ease-in-out is the CSS keyword in a style file and prose elsewhere.

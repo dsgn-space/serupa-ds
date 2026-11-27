@@ -38,7 +38,7 @@
 .srp-dialog[open] { display: flex; }
 .srp-dialog--sm { --srp-dialog-width: var(--dialog-width-sm, var(--container-sm)); }
 .srp-dialog--lg { --srp-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
-.srp-dialog::backdrop { background: var(--dialog-overlay, var(--overlay)); }
+.srp-dialog::backdrop { background: var(--dialog-overlay, var(--backdrop)); }
 /* Only a modal one (showModal) locks the page: an open dialog drawn inside the page, such as the docs' anatomy
    pictures draw, is part of the page and must not stop it scrolling. */
 :root:has(.srp-dialog:modal) { overflow: hidden; }
@@ -53,9 +53,9 @@
   max-width: var(--sizing-full);
   max-height: var(--sizing-full);
   padding: var(--dialog-padding, var(--space-surface));
-  background: var(--dialog-bg, var(--surface-overlay)); --surface-behind: var(--dialog-bg, var(--surface-overlay)); --border: var(--dialog-divider, var(--border-overlay));
-  --srp-row-hover: var(--dialog-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
-  --field: var(--dialog-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
+  background: var(--dialog-bg, var(--surface-raised)); --surface-behind: var(--dialog-bg, var(--surface-raised)); --border: var(--dialog-divider, var(--border-raised));
+  --srp-row-hover: var(--dialog-row-bg-hover, var(--surface-raised-hover));   /* a List or InlineEdit row in it, hovered or selected */
+  --field: var(--dialog-field-bg, var(--field-raised)); --field-placeholder: var(--dialog-field-placeholder, var(--field-raised-placeholder));   /* its form fields, a step up from it in dark */
   border-radius: var(--dialog-radius, var(--radius-container));
   box-shadow: var(--dialog-shadow, var(--elevation-modal));
 }

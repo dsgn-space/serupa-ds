@@ -11,17 +11,17 @@
 .srp-notification-center__item + .srp-notification-center__item { border-top: var(--border-width-1) solid var(--notification-center-divider, var(--border)); }
 .srp-notification-center__item:focus-visible, .srp-notification-center__empty:focus-visible { outline: var(--focus-ring-width) solid var(--notification-center-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-notification-center__icon { display: flex; font-size: var(--spacing-5); }
-.srp-notification-center__item--info .srp-notification-center__icon { color: var(--notification-center-icon-info, var(--info)); }
-.srp-notification-center__item--success .srp-notification-center__icon { color: var(--notification-center-icon-success, var(--success)); }
-.srp-notification-center__item--warning .srp-notification-center__icon { color: var(--notification-center-icon-warning, var(--warning)); }
-.srp-notification-center__item--danger .srp-notification-center__icon { color: var(--notification-center-icon-danger, var(--danger)); }
+.srp-notification-center__item--info .srp-notification-center__icon { color: var(--notification-center-icon-info, var(--surface-info)); }
+.srp-notification-center__item--success .srp-notification-center__icon { color: var(--notification-center-icon-success, var(--surface-success)); }
+.srp-notification-center__item--warning .srp-notification-center__icon { color: var(--notification-center-icon-warning, var(--surface-warning)); }
+.srp-notification-center__item--danger .srp-notification-center__icon { color: var(--notification-center-icon-danger, var(--surface-danger)); }
 .srp-notification-center__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-notification-center__title, .srp-notification-center__description, .srp-notification-center__empty { margin: var(--spacing-0); }
 .srp-notification-center__item:not([data-read]) .srp-notification-center__title { font-weight: var(--notification-center-unread-weight, var(--font-semibold)); }
 .srp-notification-center__description, .srp-notification-center__time, .srp-notification-center__empty { font-size: var(--text-sm); color: var(--notification-center-description, var(--text-muted)); }
 .srp-notification-center__ask { inline-size: var(--sizing-full); margin: var(--spacing-0); font-size: var(--text-sm); }
 .srp-notification-center__settings { margin-inline-end: auto; }   /* the link starts the footer, the buttons stay at its end */
-.srp-notification-center__dot { flex-shrink: 0; width: var(--spacing-2); height: var(--spacing-2); margin-block: var(--spacing-2); border-radius: var(--rounded-full); background: var(--notification-center-unread, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--notification-center-unread-edge, var(--primary-edge)); }
+.srp-notification-center__dot { flex-shrink: 0; width: var(--spacing-2); height: var(--spacing-2); margin-block: var(--spacing-2); border-radius: var(--rounded-full); background: var(--notification-center-unread, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--notification-center-unread-edge, var(--border-brand)); }
 /* Forced colors paint every background Canvas, which would erase the dot: draw it in CanvasText, as Badge's indicator (GR27). */
 @media (forced-colors: active) { .srp-notification-center__dot { forced-color-adjust: none; background: CanvasText; } }
 }

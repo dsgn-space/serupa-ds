@@ -207,12 +207,12 @@ describe('Field', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['hint', 'var(--text-muted)', 'var(--surface)', 4.5],
-      ['error', 'var(--danger-text)', 'var(--surface)', 4.5],
-      ['error on muted', 'var(--danger-text)', 'var(--surface-muted)', 4.5],
-      ['warning', 'var(--warning-text)', 'var(--surface)', 4.5],
-      ['warning on muted', 'var(--warning-text)', 'var(--surface-muted)', 4.5],
+      ['error', 'var(--text-danger)', 'var(--surface)', 4.5],
+      ['error on muted', 'var(--text-danger)', 'var(--surface-sunken)', 4.5],
+      ['warning', 'var(--text-warning)', 'var(--surface)', 4.5],
+      ['warning on muted', 'var(--text-warning)', 'var(--surface-sunken)', 4.5],
       ['checking', 'var(--text-muted)', 'var(--surface)', 4.5],
-      ['required', 'var(--danger-text)', 'var(--surface)', 4.5],
+      ['required', 'var(--text-danger)', 'var(--surface)', 4.5],
     ])).toEqual([]);
   });
 
@@ -223,7 +223,7 @@ describe('Field', () => {
     const note = document.getElementById(described('warn')[1]!)!.parentElement!;
     expect(described('warn').map((i) => document.getElementById(i)?.textContent)).toEqual(['Shown to the team', 'A project with this name was archived last year']);
     expect([el('warn').getAttribute('aria-invalid'), el('warn').getAttribute('aria-errormessage'), f.classList.contains('srp-field--warning'), f.classList.contains('srp-field--invalid')]).toEqual([null, null, true, false]);
-    const probe = document.createElement('span'); probe.style.color = 'var(--warning-text)'; document.body.append(probe);
+    const probe = document.createElement('span'); probe.style.color = 'var(--text-warning)'; document.body.append(probe);
     expect(css(note).color).toBe(css(probe).color);
     probe.remove();
     expect(note.querySelector('svg')).not.toBeNull();

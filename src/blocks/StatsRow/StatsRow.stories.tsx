@@ -10,7 +10,7 @@ const meta = {
   title: 'Blocks/Stats row',
   component: StatsRow,
   parameters: { layout: 'fullscreen' },
-  decorators: [(Story) => <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none"><Heading level={1}>Dashboard</Heading><Story /></main></div>],
+  decorators: [(Story) => <div className="min-h-screen bg-surface-sunken text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none"><Heading level={1}>Dashboard</Heading><Story /></main></div>],
   args: {
     title: 'This month',
     period: 'vs last month',

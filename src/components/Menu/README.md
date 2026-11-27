@@ -193,18 +193,18 @@ Each is an optional override: set it on the page, a container or one menu. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--menu-bg` | `surface-overlay` | The menu's background. |
-| `--menu-border` | `border-overlay` | The menu's border. |
+| `--menu-bg` | `surface-raised` | The menu's background. |
+| `--menu-border` | `border-raised` | The menu's border. |
 | `--menu-item-text` | `text` | An item's label. |
-| `--menu-item-bg-active` | `highlight` | The highlighted item's background (hover and keyboard). |
-| `--menu-item-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
-| `--menu-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint. |
+| `--menu-item-bg-active` | `surface-highlight` | The highlighted item's background (hover and keyboard). |
+| `--menu-item-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--menu-item-bg-pressed` | `surface-pressed` | An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint. |
 | `--menu-muted` | `text-muted` | Icons, shortcuts and group labels (4.5:1 on surface; the highlighted item's shortcut turns to item-color). |
-| `--menu-danger` | `danger-text` | A destructive item's label and icon. |
-| `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |
+| `--menu-danger` | `text-danger` | A destructive item's label and icon. |
+| `--menu-danger-bg-active` | `surface-danger-subtle` | A highlighted destructive item's background. |
 | `--menu-separator` | `border` | The line between groups. |
-| `--menu-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--menu-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--menu-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--menu-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Shadow**
 

@@ -14,7 +14,7 @@
       },
       "indicator-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "An upcoming step's ring (3:1 on the surface).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "indicator-text-shaded": {
         "$type": "color",
-        "$value": "{color.text-muted-shaded}",
+        "$value": "{color.text-secondary}",
         "$description": "An upcoming step's number while its head is held down (4.5:1 on the washed fill).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "bg-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The current and completed steps' circle.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "text-active": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "The number or check on them.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "bg-error": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "A step with an error.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "text-error": {
         "$type": "color",
-        "$value": "{color.on-danger}",
+        "$value": "{color.text-on-danger}",
         "$description": "The mark on it.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "warning-bg": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "A step with a warning.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "warning-border": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "Its ring.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "warning-text": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "The mark on it.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "connector": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "The line to an upcoming step.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "connector-complete": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The line after a completed step.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "edge-active": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The current and complete steps' edge and the complete connector's, inside their fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

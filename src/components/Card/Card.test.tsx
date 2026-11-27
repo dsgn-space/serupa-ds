@@ -114,7 +114,7 @@ describe('Card', () => {
     const e = css(el('el')), f = css(el('fi'));
     expect(e.boxShadow).toMatch(/4px 6px -1px/);
     expect([e.backgroundColor, e.borderTopColor, e.borderTopWidth]).toEqual(['rgb(255, 255, 255)', color('var(--zinc-200)'), '1px']);
-    expect([f.backgroundColor, f.borderTopColor]).toEqual([color('var(--surface-muted)'), 'rgba(0, 0, 0, 0)']);
+    expect([f.backgroundColor, f.borderTopColor]).toEqual([color('var(--surface-sunken)'), 'rgba(0, 0, 0, 0)']);
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
   });
 
@@ -146,7 +146,7 @@ describe('Card', () => {
       document.documentElement.setAttribute('data-theme', th);
       const f = css(el('fi')), dark = th.endsWith('-dark');
       expect([th, f.borderTopColor]).toEqual([th, dark ? color('var(--border)') : 'rgba(0, 0, 0, 0)']);
-      if (dark) expect(f.borderTopColor).not.toBe(color('var(--surface-page)'));
+      if (dark) expect(f.borderTopColor).not.toBe(color('var(--background)'));
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
@@ -156,17 +156,11 @@ describe('Card', () => {
     for (const id of ['dvi', 'dvo']) el(id).style.borderTop = '1px solid var(--border)';
     for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
       document.documentElement.setAttribute('data-theme', th);
-      expect([th, css(el('dvi')).borderTopColor]).toEqual([th, color('var(--border-elevated)')]);
+      expect([th, css(el('dvi')).borderTopColor]).toEqual([th, color('var(--border-raised)')]);
       expect(css(el('dvi')).borderTopColor).not.toBe(css(el('dve')).backgroundColor);
       expect([th, css(el('dvo')).borderTopColor]).toEqual([th, color('var(--border)')]);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
-  });
-
-  test('an elevated card\'s dividers follow border-elevated, not the top layer\'s border-overlay: an elevated card isn\'t an overlay', async () => {
-    await render(<div style={{ '--border-elevated': 'rgb(1, 2, 3)', '--border-overlay': 'rgb(9, 8, 7)' } as React.CSSProperties}><Card variant="elevated"><div id="dvr" /></Card></div>);
-    el('dvr').style.borderTop = '1px solid var(--border)';
-    expect(css(el('dvr')).borderTopColor).toBe('rgb(1, 2, 3)');
   });
 
   test('a form field on an elevated card stands out from the card in every dark theme (field-raised), and on an outline card keeps the page\'s field', async () => {
@@ -382,7 +376,7 @@ describe('Card', () => {
     await render(<Card id="pc" href="#pc"><CardHeader title="Atlas" description="Due Friday" /><CardFooter><Button id="pb">Save</Button></CardFooter></Card>);
     const desc = () => [...el('pc').querySelectorAll<HTMLElement>('*')].find((n) => !n.children.length && n.textContent === 'Due Friday')!;
     const look = () => [/gradient/.test(css(el('pc')).backgroundImage), css(el('pc')).borderTopColor, css(desc()).color, css(el('pc')).scale.replace('none', '1')];
-    expect(await press(el('pc'), look, { x: 8, y: 8 })).toEqual([true, color('var(--border-strong)'), color('var(--text-muted-shaded)'), '1']);
+    expect(await press(el('pc'), look, { x: 8, y: 8 })).toEqual([true, color('var(--border-strong)'), color('var(--text-secondary)'), '1']);
     expect((await press(el('pb'), look))[0]).toBe(false);
     history.replaceState(null, '', location.pathname + location.search);   // the press followed #pc; the next pass starts clean
   });

@@ -310,12 +310,12 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
   const g = T[group];
   const show = (t: Token) => {
     const v = `var(--${t.name.replace(/[\\.]/g, '\\$&')})`;   // --spacing-0\.5: a dot in a custom property's name is escaped in CSS
-    if (preview === 'space') return <div style={{ height: 12, width: v, background: 'var(--primary)', borderRadius: 2 }} />;
-    if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--primary-text)', borderRadius: v }} />;
+    if (preview === 'space') return <div style={{ height: 12, width: v, background: 'var(--surface-brand)', borderRadius: 2 }} />;
+    if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--text-brand)', borderRadius: v }} />;
     // The tile sits in a muted well with room around it, so its shadow shows (and isn't clipped by the cell) on
     // every row, not only on the striped ones.
-    if (preview === 'shadow') return <div style={{ display: 'inline-block', padding: 16, borderRadius: 8, background: 'var(--surface-muted)' }}><div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div></div>;
-    if (preview === 'duration' && /^(duration|delay)-/.test(t.name)) return <span className="srp-sb-pulse" style={{ display: 'inline-block', height: 12, width: 12, borderRadius: 6, background: 'var(--primary)', animationDuration: `calc(${v} * 2 + 200ms)` }} />;
+    if (preview === 'shadow') return <div style={{ display: 'inline-block', padding: 16, borderRadius: 8, background: 'var(--surface-sunken)' }}><div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div></div>;
+    if (preview === 'duration' && /^(duration|delay)-/.test(t.name)) return <span className="srp-sb-pulse" style={{ display: 'inline-block', height: 12, width: 12, borderRadius: 6, background: 'var(--surface-brand)', animationDuration: `calc(${v} * 2 + 200ms)` }} />;
     return null;
   };
   return <div data-token-sheet={group}>
@@ -496,13 +496,13 @@ export function LabelTable() {
 /* eslint-enable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role */
 
 const LEVELS: [string, string, string, string][] = [
-  ['Page', 'surface-page', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
-  ['Floating', 'surface-overlay', 'border-overlay', 'shadow-lg'], ['Modal', 'surface-overlay', 'border-overlay', 'shadow-xl'],
+  ['Page', 'background', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
+  ['Floating', 'surface-raised', 'border-raised', 'shadow-lg'], ['Modal', 'surface-raised', 'border-raised', 'shadow-xl'],
 ];
 /** The elevation levels drawn with their tokens, on a light and a dark page side by side. */
 export function ElevationLevels() {
   return <div data-token-sheet="elevation-levels" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, margin: '16px 0 24px' }}>
-    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface-page)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
+    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--background)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
       {LEVELS.map(([name, bg, edge, shadow]) => <div key={name} style={{ background: `var(--${bg})`, border: `1px solid ${edge === 'transparent' ? 'transparent' : `var(--${edge})`}`, boxShadow: shadow === 'none' ? 'none' : `var(--${shadow})`, borderRadius: 8, padding: '12px 16px', fontSize: 14 }}>
         <strong>{name}</strong> <span style={{ color: 'var(--text-muted)' }}>{mode}: <code>{bg}</code>{shadow !== 'none' && <>, <code>{shadow}</code></>}</span>
       </div>)}

@@ -68,7 +68,7 @@ Drawn from the `LongText` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
-| `tone` | `'info'` \| `'success'` \| `'warning'` \| `'danger'` \| `'neutral'` | `'info'` | The background (each tone's `-subtle` color, `surface-muted` for neutral), the border tint and the icon |
+| `tone` | `'info'` \| `'success'` \| `'warning'` \| `'danger'` \| `'neutral'` | `'info'` | The background (each tone's `-subtle` color, `surface-sunken` for neutral), the border tint and the icon |
 | `title` | node | | A short first line in `font-semibold` |
 | `children` | node | | The message |
 | `icon` | icon name \| element \| `false` | the tone's | `info`, `check_circle`, `warning` or `error` by default; another name or element replaces it, `false` removes it |
@@ -85,15 +85,15 @@ Each is an optional override: set it on the page, a container or one alert. The 
 <!-- token-table:start (made from alert.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--alert-bg-info` | `info-subtle` | The background of a info alert. |
-| `--alert-icon-info` | `info-text` | The icon and the border tint of a info alert (3:1 on its background). |
-| `--alert-bg-success` | `success-subtle` | The background of a success alert. |
-| `--alert-icon-success` | `success` | The icon and the border tint of a success alert (3:1 on its background). |
-| `--alert-bg-warning` | `warning-subtle` | The background of a warning alert. |
-| `--alert-icon-warning` | `warning` | The icon and the border tint of a warning alert (3:1 on its background). |
-| `--alert-bg-danger` | `danger-subtle` | The background of a danger alert. |
-| `--alert-icon-danger` | `danger` | The icon and the border tint of a danger alert (3:1 on its background). |
-| `--alert-bg-neutral` | `surface-muted` | The background of a neutral alert. |
+| `--alert-bg-info` | `surface-info-subtle` | The background of a info alert. |
+| `--alert-icon-info` | `text-info` | The icon and the border tint of a info alert (3:1 on its background). |
+| `--alert-bg-success` | `surface-success-subtle` | The background of a success alert. |
+| `--alert-icon-success` | `surface-success` | The icon and the border tint of a success alert (3:1 on its background). |
+| `--alert-bg-warning` | `surface-warning-subtle` | The background of a warning alert. |
+| `--alert-icon-warning` | `surface-warning` | The icon and the border tint of a warning alert (3:1 on its background). |
+| `--alert-bg-danger` | `surface-danger-subtle` | The background of a danger alert. |
+| `--alert-icon-danger` | `surface-danger` | The icon and the border tint of a danger alert (3:1 on its background). |
+| `--alert-bg-neutral` | `surface-sunken` | The background of a neutral alert. |
 | `--alert-icon-neutral` | `text-muted` | The icon and the border tint of a neutral alert (3:1 on its background). |
 | `--alert-title-color` | `text` | The title. |
 | `--alert-text` | `text` | The message (4.5:1 on every tone's background). |

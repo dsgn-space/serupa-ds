@@ -7,7 +7,7 @@
 @layer srp.components {
 .srp-scroll-area {
   min-width: var(--spacing-0); min-height: var(--spacing-0);
-  scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--border-control)) transparent;
+  scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--border-strong)) transparent;
 }
 /* Each way it scrolls stops scroll chaining in the same rule, so reaching its end doesn't scroll the page. */
 .srp-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }

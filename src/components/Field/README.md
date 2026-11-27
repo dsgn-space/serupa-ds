@@ -99,12 +99,12 @@ Label, control, hint and error stack with 6px between them (`--field-gap`): the 
 | --- | --- | --- | --- |
 | `label` | text or element | | A `<label>` linked to the control; with `group`, the fieldset's `<legend>` |
 | `hint` | text or element | | Help under the control (with `group`, under the choices), above the error, in `text-muted`; added to the control's `aria-describedby` |
-| `warning` | text or element | | Advice under the control, in `warning-text` with an icon, that doesn't block sending: the control stays valid. Added to its `aria-describedby` and said politely. An error takes its place |
+| `warning` | text or element | | Advice under the control, in `text-warning` with an icon, that doesn't block sending: the control stays valid. Added to its `aria-describedby` and said politely. An error takes its place |
 | `checking` | text or element | | While the answer is being checked: the words ("Checking the address…") with a small spinner, under the control; `aria-busy` on the Field. Added to the description and said politely. Takes a warning's place; an error takes its place |
-| `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
+| `error` | text or element | | A message under the control, in `text-danger` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
 | `required` | boolean | `false` | A `*` after the label (hidden from screen readers) and `aria-required` on the control; with `group`, "Required" in words in the legend for screen readers. Add the control's own `required` too if you want the browser's check |
 | `optional` | boolean or text | `false` | "(optional)" after the label (the `fieldOptional` label, "(opsional)" in `idLabels`), or your own words. Ignored with `required` |
-| `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and draws the label and hint in `disabled-text` |
+| `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and draws the label and hint in `text-disabled` |
 | `group` | boolean | `false` | A `<fieldset>` and `<legend>` around a set of controls; the hint and error describe the fieldset |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | `'horizontal'`: the label in a column beside the control, the hint and error under the control. It stacks again when narrow. Not with `group` |
 | `id` | string | | The control's id; by default the control's own `id`, or a generated one |
@@ -129,11 +129,11 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--field-text` | `text` | Text with no token of its own (the label, hint and error have theirs) |
 | `--field-label-color` | `text` | Label |
 | `--field-hint-color` | `text-muted` | Hint and "(optional)" |
-| `--field-error-color` | `danger-text` | Error message and its icon |
-| `--field-warning-color` | `warning-text` | A warning message and its icon |
+| `--field-error-color` | `text-danger` | Error message and its icon |
+| `--field-warning-color` | `text-warning` | A warning message and its icon |
 | `--field-checking-color` | `text-muted` | The "checking…" message and its spinner |
-| `--field-required-color` | `danger-text` | The `*` |
-| `--field-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--field-required-color` | `text-danger` | The `*` |
+| `--field-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--field-label-weight` | `font-medium` | Label weight (500) |
 | `--field-gap` | `spacing-1.5` | Space between label, hint, control and error (6px) |
 | `--field-error-gap` | `spacing-1` | Error icon to text (4px) |

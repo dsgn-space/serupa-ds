@@ -14,7 +14,7 @@
       },
       "saved": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The check once saved.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "error": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "The error's icon, text and Try again (4.5:1 on the page).",
         "$extensions": {
           "com.serupa": {

@@ -153,7 +153,7 @@ export function PasswordReset({ start = 'request', email: email0 = '', onRequest
               </div>
               {/* Always there, so a reader is listening before the first ask; empty, it takes no room. */}
               <div role="status" className="text-sm text-text-muted">
-                {resent.n ? <p key={resent.n} className={resent.ok ? 'm-0' : 'm-0 text-danger-text'}>{resent.ok ? `We sent a new link. It works for ${linkLife}.` : 'Couldn’t send the link. Check your connection and try again.'}</p> : null}
+                {resent.n ? <p key={resent.n} className={resent.ok ? 'm-0' : 'm-0 text-text-danger'}>{resent.ok ? `We sent a new link. It works for ${linkLife}.` : 'Couldn’t send the link. Check your connection and try again.'}</p> : null}
               </div>
               {back}
             </>

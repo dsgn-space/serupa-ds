@@ -254,7 +254,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
                         <Button type="submit" size="sm" loading={saving}>{l.save}</Button>
                         <Button variant="ghost" size="sm" onClick={() => stopEdit(c.id)}>{l.cancel}</Button>
                       </div>
-                      {failed === 'save' && <p className="text-sm text-danger-text">{l.saveFailed}</p>}
+                      {failed === 'save' && <p className="text-sm text-text-danger">{l.saveFailed}</p>}
                     </form>
                   ) : <p className="whitespace-pre-wrap wrap-break-word">{people ? <Mentions text={c.body} people={people} /> : c.body}</p>}
                   {c.mine && editing !== c.id && (onEdit || onDelete) && (
@@ -275,7 +275,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
           <Box people={people} value={reply} onValue={(v) => { setReply(v); if (error && v.trim()) setError(false); }} maxLength={maxLength} rows={3} />
         </Field>
         <Button type="submit" className="self-start" loading={busy}>{l.post}</Button>
-        {failed === 'post' && <p className="text-sm text-danger-text">{l.postFailed}</p>}
+        {failed === 'post' && <p className="text-sm text-text-danger">{l.postFailed}</p>}
       </form>}
     </section>
   );

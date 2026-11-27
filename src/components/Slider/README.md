@@ -122,19 +122,19 @@ Each is an optional override: set it on the page, a container or one slider. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--slider-track` | `track` | The track: the light gray Apple uses, as Switch's, Meter's and Progress's. The fill and the thumb's ring carry the 3:1. |
-| `--slider-fill` | `primary` | The selected part of the track. |
+| `--slider-fill` | `surface-brand` | The selected part of the track. |
 | `--slider-thumb-bg` | `field` | The thumb's inside. |
-| `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |
+| `--slider-thumb-border` | `surface-brand` | The thumb's ring (3:1 on the surface). |
 | `--slider-focus-ring` | `focus-ring` | The thumb's keyboard focus ring. |
-| `--slider-invalid` | `danger` | The fill and the thumb's ring when invalid. |
+| `--slider-invalid` | `surface-danger` | The fill and the thumb's ring when invalid. |
 | `--slider-mark` | `field` | The marks' ticks, cut into the track. |
 | `--slider-mark-off` | `border-strong` | A mark's tick past the fill, on the light track. |
 | `--slider-mark-label` | `text-muted` | The marks' text under the track (4.5:1 on the surface). |
 | `--slider-value-bg` | `surface-inverse` | showValue's chip over the thumb. |
 | `--slider-value-text` | `text-inverse` | showValue's text (4.5:1 on value-bg). |
-| `--slider-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
-| `--slider-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--slider-fill-edge` | `primary-edge` | The filled range's and the thumb's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--slider-fill-disabled` | `surface-disabled` | Disabled: the fill, whatever its color when enabled. |
+| `--slider-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--slider-fill-edge` | `border-brand` | The filled range's and the thumb's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

@@ -1,5 +1,247 @@
 {
   "$description": "Tokens the W3C Design Tokens format (2025.10) has no type for yet: degrees, em, percentages of a box, viewport units, keywords, CSS shorthands, and text shadows (the shadow type in the format always has a spread, which CSS text-shadow does not allow). Use the CSS value as-is.",
+  "color": {
+    "surface-page": {
+      "css": "{background}",
+      "description": "Deprecated: the old name of `background`."
+    },
+    "surface-muted": {
+      "css": "{surface-sunken}",
+      "description": "Deprecated: the old name of `surface-sunken`."
+    },
+    "pressed": {
+      "css": "{surface-pressed}",
+      "description": "Deprecated: the old name of `surface-pressed`."
+    },
+    "surface-hover-raised": {
+      "css": "{surface-raised-hover}",
+      "description": "Deprecated: the old name of `surface-raised-hover`."
+    },
+    "disabled-surface": {
+      "css": "{surface-disabled}",
+      "description": "Deprecated: the old name of `surface-disabled`."
+    },
+    "highlight": {
+      "css": "{surface-highlight}",
+      "description": "Deprecated: the old name of `surface-highlight`."
+    },
+    "highlight-indicator": {
+      "css": "{surface-highlight-indicator}",
+      "description": "Deprecated: the old name of `surface-highlight-indicator`."
+    },
+    "secondary": {
+      "css": "{surface-secondary}",
+      "description": "Deprecated: the old name of `surface-secondary`."
+    },
+    "secondary-hover": {
+      "css": "{surface-secondary-hover}",
+      "description": "Deprecated: the old name of `surface-secondary-hover`."
+    },
+    "secondary-pressed": {
+      "css": "{surface-secondary-pressed}",
+      "description": "Deprecated: the old name of `surface-secondary-pressed`."
+    },
+    "primary": {
+      "css": "{surface-brand}",
+      "description": "Deprecated: the old name of `surface-brand`."
+    },
+    "primary-hover": {
+      "css": "{surface-brand-hover}",
+      "description": "Deprecated: the old name of `surface-brand-hover`."
+    },
+    "primary-pressed": {
+      "css": "{surface-brand-pressed}",
+      "description": "Deprecated: the old name of `surface-brand-pressed`."
+    },
+    "primary-subtle": {
+      "css": "{surface-brand-subtle}",
+      "description": "Deprecated: the old name of `surface-brand-subtle`."
+    },
+    "primary-subtle-pressed": {
+      "css": "{surface-brand-subtle-pressed}",
+      "description": "Deprecated: the old name of `surface-brand-subtle-pressed`."
+    },
+    "on-primary": {
+      "css": "{text-on-brand}",
+      "description": "Deprecated: the old name of `text-on-brand`."
+    },
+    "primary-text": {
+      "css": "{text-brand}",
+      "description": "Deprecated: the old name of `text-brand`."
+    },
+    "primary-text-hover": {
+      "css": "{text-brand-hover}",
+      "description": "Deprecated: the old name of `text-brand-hover`."
+    },
+    "surface-control": {
+      "css": "{control}",
+      "description": "Deprecated: the old name of `control`."
+    },
+    "placeholder": {
+      "css": "{field-placeholder}",
+      "description": "Deprecated: the old name of `field-placeholder`."
+    },
+    "text-muted-shaded": {
+      "css": "{text-secondary}",
+      "description": "Deprecated: the old name of `text-secondary`."
+    },
+    "disabled-text": {
+      "css": "{text-disabled}",
+      "description": "Deprecated: the old name of `text-disabled`."
+    },
+    "disabled-border": {
+      "css": "{border-disabled}",
+      "description": "Deprecated: the old name of `border-disabled`."
+    },
+    "border-overlay": {
+      "css": "{border-raised}",
+      "description": "Deprecated: the old name of `border-raised`."
+    },
+    "link-visited": {
+      "css": "{text-link-visited}",
+      "description": "Deprecated: the old name of `text-link-visited`."
+    },
+    "success": {
+      "css": "{surface-success}",
+      "description": "Deprecated: the old name of `surface-success`."
+    },
+    "success-hover": {
+      "css": "{surface-success-hover}",
+      "description": "Deprecated: the old name of `surface-success-hover`."
+    },
+    "success-subtle": {
+      "css": "{surface-success-subtle}",
+      "description": "Deprecated: the old name of `surface-success-subtle`."
+    },
+    "success-subtle-hover": {
+      "css": "{surface-success-subtle-hover}",
+      "description": "Deprecated: the old name of `surface-success-subtle-hover`."
+    },
+    "success-text": {
+      "css": "{text-success}",
+      "description": "Deprecated: the old name of `text-success`."
+    },
+    "on-success": {
+      "css": "{text-on-success}",
+      "description": "Deprecated: the old name of `text-on-success`."
+    },
+    "success-border": {
+      "css": "{border-success}",
+      "description": "Deprecated: the old name of `border-success`."
+    },
+    "warning": {
+      "css": "{surface-warning}",
+      "description": "Deprecated: the old name of `surface-warning`."
+    },
+    "warning-hover": {
+      "css": "{surface-warning-hover}",
+      "description": "Deprecated: the old name of `surface-warning-hover`."
+    },
+    "warning-subtle": {
+      "css": "{surface-warning-subtle}",
+      "description": "Deprecated: the old name of `surface-warning-subtle`."
+    },
+    "warning-subtle-hover": {
+      "css": "{surface-warning-subtle-hover}",
+      "description": "Deprecated: the old name of `surface-warning-subtle-hover`."
+    },
+    "warning-text": {
+      "css": "{text-warning}",
+      "description": "Deprecated: the old name of `text-warning`."
+    },
+    "on-warning": {
+      "css": "{text-on-warning}",
+      "description": "Deprecated: the old name of `text-on-warning`."
+    },
+    "warning-border": {
+      "css": "{border-warning}",
+      "description": "Deprecated: the old name of `border-warning`."
+    },
+    "danger": {
+      "css": "{surface-danger}",
+      "description": "Deprecated: the old name of `surface-danger`."
+    },
+    "danger-hover": {
+      "css": "{surface-danger-hover}",
+      "description": "Deprecated: the old name of `surface-danger-hover`."
+    },
+    "danger-subtle": {
+      "css": "{surface-danger-subtle}",
+      "description": "Deprecated: the old name of `surface-danger-subtle`."
+    },
+    "danger-subtle-hover": {
+      "css": "{surface-danger-subtle-hover}",
+      "description": "Deprecated: the old name of `surface-danger-subtle-hover`."
+    },
+    "danger-text": {
+      "css": "{text-danger}",
+      "description": "Deprecated: the old name of `text-danger`."
+    },
+    "on-danger": {
+      "css": "{text-on-danger}",
+      "description": "Deprecated: the old name of `text-on-danger`."
+    },
+    "danger-border": {
+      "css": "{border-danger}",
+      "description": "Deprecated: the old name of `border-danger`."
+    },
+    "info": {
+      "css": "{surface-info}",
+      "description": "Deprecated: the old name of `surface-info`."
+    },
+    "info-hover": {
+      "css": "{surface-info-hover}",
+      "description": "Deprecated: the old name of `surface-info-hover`."
+    },
+    "info-subtle": {
+      "css": "{surface-info-subtle}",
+      "description": "Deprecated: the old name of `surface-info-subtle`."
+    },
+    "info-subtle-hover": {
+      "css": "{surface-info-subtle-hover}",
+      "description": "Deprecated: the old name of `surface-info-subtle-hover`."
+    },
+    "info-text": {
+      "css": "{text-info}",
+      "description": "Deprecated: the old name of `text-info`."
+    },
+    "on-info": {
+      "css": "{text-on-info}",
+      "description": "Deprecated: the old name of `text-on-info`."
+    },
+    "info-border": {
+      "css": "{border-info}",
+      "description": "Deprecated: the old name of `border-info`."
+    },
+    "danger-pressed": {
+      "css": "{surface-danger-pressed}",
+      "description": "Deprecated: the old name of `surface-danger-pressed`."
+    },
+    "surface-overlay": {
+      "css": "{surface-raised}",
+      "description": "Deprecated: the old name of `surface-raised`."
+    },
+    "border-elevated": {
+      "css": "{border-raised}",
+      "description": "Deprecated: the old name of `border-raised`."
+    },
+    "border-control": {
+      "css": "{border-strong}",
+      "description": "Deprecated: the old name of `border-strong`."
+    },
+    "border-control-hover": {
+      "css": "{field-border-hover}",
+      "description": "Deprecated: the old name of `field-border-hover`."
+    },
+    "field-hover": {
+      "css": "{surface-raised-hover}",
+      "description": "Deprecated: the old name of `surface-raised-hover`."
+    },
+    "field-pressed": {
+      "css": "{surface-raised-pressed}",
+      "description": "Deprecated: the old name of `surface-raised-pressed`."
+    }
+  },
   "shadow": {
     "text-shadow-2xs": {
       "css": "0px 1px 0px rgb(0 0 0 / 0.15)",

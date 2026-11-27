@@ -100,7 +100,7 @@ Each is an optional override: set it on the page, a container or one FilterBar. 
 | `--filter-bar-chip-bg` | `surface` | A chip's background. |
 | `--filter-bar-chip-border` | `border-strong` | A chip's outline: the light one a tag and an outline Badge have (its words mark the chip). |
 | `--filter-bar-chip-bg-hover` | `surface-hover` | A chip's fill under the pointer. |
-| `--filter-bar-chip-open` | `pressed` | A chip's fill while held and while its editor is open (its text keeps 4.5:1 on it). |
+| `--filter-bar-chip-open` | `surface-pressed` | A chip's fill while held and while its editor is open (its text keeps 4.5:1 on it). |
 | `--filter-bar-focus-ring` | `focus-ring` | The ring around a focused chip. |
 | `--filter-bar-chip-radius` | `radius-control` | A chip's corners (6px). |
 | `--filter-bar-gap` | `spacing-2` | Space between chips, buttons and the count (8px). |

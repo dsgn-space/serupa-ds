@@ -132,6 +132,17 @@ function inClassList(src, at) {
   const open = /(["'`])[^"'`]*$/.exec(line);
   return !!open && /\bclass(?:Name)?\s*[=:]\s*\{?\s*$/.test(line.slice(0, open.index));
 }
+// The same, or inside a class-joining call (cn, clsx, cx, classNames, twMerge) that starts on the line.
+function inClasses(src, at) {
+  if (inClassList(src, at)) return true;
+  const line = src.slice(src.lastIndexOf('\n', at - 1) + 1, at);
+  const open = /(["'`])[^"'`]*$/.exec(line);
+  if (!open) return false;
+  const before = line.slice(0, open.index);
+  const call = [...before.matchAll(/\b(?:cn|clsx|cx|classNames|twMerge)\(/g)].pop();
+  // Still inside the call: no tag or statement has ended since it opened.
+  return !!call && !/[>;]/.test(before.slice(call.index));
+}
 const notesFor = (src, re, message) => [...src.matchAll(re)].map((m) => ({ line: lineOf(src, m.index), message }));
 
 // A prop renamed on one component. What's left of the old name in a file that names the component (a props
@@ -182,6 +193,39 @@ const DETAILS_17 = [
 
 // Component tokens that put the state before the property, renamed with the state last in 14.x (the old names read as
 // fallbacks until 15.0.0). tools/test/upgrades.mjs checks this list against each $deprecated token.
+// 20.0.0 names the color tokens thing first, then variant, then state (surface-raised-hover, text-danger): each old
+// name and its new one. The old names stay, deprecated, until 21.0.0. A token merged into another (surface-overlay into
+// surface-raised) maps to the one it joined.
+export const TOKENS_20 = {
+  'surface-page': 'background', 'surface-muted': 'surface-sunken', 'pressed': 'surface-pressed',
+  'surface-hover-raised': 'surface-raised-hover', 'disabled-surface': 'surface-disabled',
+  'highlight': 'surface-highlight', 'highlight-indicator': 'surface-highlight-indicator',
+  'secondary': 'surface-secondary', 'secondary-hover': 'surface-secondary-hover',
+  'secondary-pressed': 'surface-secondary-pressed', 'overlay': 'backdrop', 'primary': 'surface-brand',
+  'primary-hover': 'surface-brand-hover', 'primary-pressed': 'surface-brand-pressed',
+  'primary-subtle': 'surface-brand-subtle', 'primary-subtle-pressed': 'surface-brand-subtle-pressed',
+  'on-primary': 'text-on-brand', 'primary-text': 'text-brand', 'primary-text-hover': 'text-brand-hover',
+  'primary-edge': 'border-brand', 'surface-control': 'control', 'placeholder': 'field-placeholder',
+  'text-muted-shaded': 'text-secondary', 'disabled-text': 'text-disabled', 'disabled-border': 'border-disabled',
+  'border-overlay': 'border-raised', 'picture-edge': 'border-picture', 'link-visited': 'text-link-visited',
+  'success': 'surface-success', 'success-hover': 'surface-success-hover', 'success-subtle': 'surface-success-subtle',
+  'success-subtle-hover': 'surface-success-subtle-hover', 'success-text': 'text-success',
+  'on-success': 'text-on-success', 'success-border': 'border-success', 'warning': 'surface-warning',
+  'warning-hover': 'surface-warning-hover', 'warning-subtle': 'surface-warning-subtle',
+  'warning-subtle-hover': 'surface-warning-subtle-hover', 'warning-text': 'text-warning',
+  'on-warning': 'text-on-warning', 'warning-border': 'border-warning', 'danger': 'surface-danger',
+  'danger-hover': 'surface-danger-hover', 'danger-subtle': 'surface-danger-subtle',
+  'danger-subtle-hover': 'surface-danger-subtle-hover', 'danger-text': 'text-danger', 'on-danger': 'text-on-danger',
+  'danger-border': 'border-danger', 'info': 'surface-info', 'info-hover': 'surface-info-hover',
+  'info-subtle': 'surface-info-subtle', 'info-subtle-hover': 'surface-info-subtle-hover', 'info-text': 'text-info',
+  'on-info': 'text-on-info', 'info-border': 'border-info', 'danger-pressed': 'surface-danger-pressed',
+  'surface-overlay': 'surface-raised', 'border-elevated': 'border-raised', 'border-control': 'border-strong',
+  'border-control-hover': 'field-border-hover', 'field-hover': 'surface-raised-hover',
+  'field-pressed': 'surface-raised-pressed',
+};
+// The utility class families made from every color token (tools/utilities/families.mjs: bg-surface-brand).
+const COLOR_CLASSES = 'text|decoration|bg|border|divide|outline|shadow|ring-offset|ring|accent|caret|scrollbar-thumb|scrollbar-track|fill|stroke';
+
 export const TOKENS_15 = {
   '--avatar-group-more-hover-bg': '--avatar-group-more-bg-hover',
   '--button-disabled-bg': '--button-bg-disabled', '--button-disabled-text': '--button-text-disabled', '--button-disabled-border': '--button-border-disabled',
@@ -351,9 +395,11 @@ export const TRANSFORMS = [
   },
   {
     // 15.0.0 removes `border-raised`: a raised card's edge is `border`, as every card's is. 14.x has both names, so this is safe to run before upgrading.
-    version: '15.0.0', id: 'token-border-raised', exts: ALL,
+    // From 20.0.0 `border-raised` is a token again (the line on a raised surface), so with no --from this one is left.
+    version: '15.0.0', id: 'token-border-raised', exts: ALL, withFrom: true,
     title: '`border-raised` is `border` (`--border-raised`, `color.border-raised`, `bg-border-raised` and the other utility classes)',
-    run(src) {
+    run(src, file, listOnly = false) {
+      if (listOnly) return { text: src, count: 0, notes: [] };
       let count = 0;
       // The CSS variable, a token reference, or a utility class (`bg-`, `border-x-`, `hover:ring-`); a longer name that
       // only ends the same (`--my-border-raised`) is left.
@@ -721,6 +767,28 @@ export const TRANSFORMS = [
       // A theme of the project's own that sets the fill and not the text: serupa-brand makes both.
       const notes = /--primary-text\s*:/.test(text) ? [] : notesFor(text, /(?<![\w-])--primary\s*:/g, 'this sets `--primary` and not `--primary-text`, so brand text here stays blue: make the theme again with `npx serupa-brand`, or set `--primary-text` and `--primary-text-hover` (what `--primary` and `--primary-hover` were) and give `--primary` the light theme\'s shade in dark too, with `--on-primary: var(--white)`').slice(0, 1);
       return { text, count, notes };
+    },
+  },
+  {
+    // Safe to run before upgrading: 19.x has only the old names, and 20.x has both.
+    version: '20.0.0', id: 'token-names-thing-first', exts: ALL,
+    title: 'Color tokens name the thing first: `--primary` is `--surface-brand`, `--primary-text` `--text-brand`, `--surface-muted` `--surface-sunken`, `--danger-text` `--text-danger`, and 59 more (the CSS variable, `color.<name>` and the utility classes: `bg-primary` is `bg-surface-brand`)',
+    run(src) {
+      let count = 0;
+      const names = Object.keys(TOKENS_20).sort((a, b) => b.length - a.length).join('|');
+      // The CSS variable, where it's read and where a theme of the project's own sets it, and a token reference
+      // ({color.primary}); a longer name that only ends the same (--my-primary, --button-primary) is left.
+      let text = src.replace(new RegExp(`(?<![\\w-])(--|(?<![\\w.])color\\.)(${names})(?![\\w-])`, 'g'), (m, pre, name, at, all) => {
+        if (all[at - 1] === '`' && all[at + m.length] === '`') return m;
+        count++; return pre + TOKENS_20[name];
+      });
+      // A utility class, with its variants (hover:, md:) and an opacity (/50), in a class list: class="…", className,
+      // or a cn(), clsx() or cx() call on the same line. Elsewhere `text-danger` may be the new token's name.
+      text = text.replace(new RegExp(`(?<![\\w$./-])((?:[a-z0-9@[\\]-]+:)*(?:${COLOR_CLASSES})-)(${names})(?![\\w-])`, 'g'), (m, head, name, at, all) => {
+        if (!inClasses(all, at)) return m;
+        count++; return head + TOKENS_20[name];
+      });
+      return { text, count, notes: [] };
     },
   },
 ];

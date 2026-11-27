@@ -95,13 +95,13 @@ Each is an optional override: set it on the page, a container or one progress in
 | `--progress-track` | `track` | The empty part of the bar: the shared `track` gray, Apple's level (zinc-200 in light, zinc-700 in dark), with no edge. |
 | `--progress-track-border` | `track` | The bar's 1px edge: the track's own color by default, so no edge shows; set it to outline the bar. |
 | `--progress-ring-track` | `track` | The ring's empty part: the shared `track` gray, as the bar's (zinc-200 in light, zinc-700 in dark). The arc runs along the page on both sides, so it keeps 3:1 there. |
-| `--progress-fill` | `primary` | The done part, tone="primary" (the default; 3:1 on the track and the surface). |
-| `--progress-fill-success` | `success` | The done part, tone="success". |
-| `--progress-fill-warning` | `warning` | The done part, tone="warning". |
-| `--progress-fill-danger` | `danger` | The done part, tone="danger". |
+| `--progress-fill` | `surface-brand` | The done part, tone="primary" (the default; 3:1 on the track and the surface). |
+| `--progress-fill-success` | `surface-success` | The done part, tone="success". |
+| `--progress-fill-warning` | `surface-warning` | The done part, tone="warning". |
+| `--progress-fill-danger` | `surface-danger` | The done part, tone="danger". |
 | `--progress-label-color` | `text` | The label above the bar. |
 | `--progress-value-color` | `text-muted` | The value (45%) next to the label or inside the ring (4.5:1 on surface). |
-| `--progress-fill-edge` | `primary-edge` | The bar's and the ring's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--progress-fill-edge` | `border-brand` | The bar's and the ring's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

@@ -44,7 +44,7 @@
       },
       "header-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The header row's background.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "bg-selected": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The selected range's background.",
         "$extensions": {
           "com.serupa": {

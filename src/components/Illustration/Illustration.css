@@ -7,9 +7,9 @@
 .srp-illustration { display: block; flex-shrink: 0; width: var(--illustration-size-md, var(--spacing-40)); height: auto; overflow: visible; }
 .srp-illustration--sm { width: var(--illustration-size-sm, var(--spacing-24)); }
 .srp-illustration--lg { width: var(--illustration-size-lg, var(--spacing-56)); }
-.srp-illustration__fill { fill: var(--illustration-fill, var(--secondary)); }
+.srp-illustration__fill { fill: var(--illustration-fill, var(--surface-secondary)); }
 .srp-illustration__line { fill: none; stroke: var(--illustration-line, var(--text-muted)); stroke-linecap: round; stroke-linejoin: round; }
-.srp-illustration__accent { fill: none; stroke: var(--illustration-accent, var(--primary-text)); stroke-linecap: round; stroke-linejoin: round; }
+.srp-illustration__accent { fill: none; stroke: var(--illustration-accent, var(--text-brand)); stroke-linecap: round; stroke-linejoin: round; }
 @media (forced-colors: active) {
   .srp-illustration__fill { fill: Canvas; }
   .srp-illustration__line { stroke: CanvasText; }

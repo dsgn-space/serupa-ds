@@ -14,7 +14,7 @@
   position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--srp-seg-h); max-width: var(--sizing-full);
   padding: var(--segmented-control-padding, var(--spacing-0\.5)); column-gap: var(--segmented-control-padding, var(--spacing-0\.5));   /* the segments as far apart as from the track's edge */
   border: var(--border-width-1) solid var(--segmented-control-border, var(--field-border));
-  border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--surface-control));
+  border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
 }
 .srp-segmented--size-sm { --srp-seg-h: var(--segmented-control-height-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -68,17 +68,17 @@
 .srp-segmented__item:where([data-selected]) { color: var(--segmented-control-text-selected, var(--text)); }
 .srp-segmented__item:focus { outline: none; }
 .srp-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-segmented__item:disabled { cursor: var(--cursor-disabled); color: var(--segmented-control-text-disabled, var(--disabled-text)); }
+.srp-segmented__item:disabled { cursor: var(--cursor-disabled); color: var(--segmented-control-text-disabled, var(--text-disabled)); }
 /* Pressed: a held segment takes a wash of the text color over the track or the selection (its held fill) and the
    hover text, like a Button's held fill. Nothing shrinks by default; --segmented-control-press-scale opts in to
    one. Not read-only or disabled. */
 .srp-segmented:not([data-readonly]) .srp-segmented__item:active:not(:disabled) { background-color: color-mix(in srgb, var(--segmented-control-wash-pressed, var(--text)) var(--segmented-control-layer-pressed, var(--opacity-10)), transparent); color: var(--segmented-control-text-hover, var(--text)); scale: var(--segmented-control-press-scale, var(--scale-100)); transition: color var(--motion-hover) var(--ease-move), scale var(--motion-press) var(--ease-settle); }
-.srp-segmented:where([data-invalid]) { border-color: var(--segmented-control-invalid, var(--danger)); }
+.srp-segmented:where([data-invalid]) { border-color: var(--segmented-control-invalid, var(--surface-danger)); }
 .srp-segmented:where([data-readonly]) .srp-segmented__item { cursor: default; }
 /* Read-only: hovering an unselected segment doesn't brighten it, since a click won't choose it. */
 @media (hover: hover) { .srp-segmented:where([data-readonly]) .srp-segmented__item:not([data-selected]):hover { color: var(--segmented-control-text, var(--text-muted)); } }
-.srp-segmented:where([data-disabled]) { --segmented-control-indicator-border: var(--segmented-control-border-disabled, var(--disabled-border)); }
-.srp-segmented:where([data-disabled]) .srp-segmented__item { color: var(--segmented-control-text-disabled, var(--disabled-text)); }
+.srp-segmented:where([data-disabled]) { --segmented-control-indicator-border: var(--segmented-control-border-disabled, var(--border-disabled)); }
+.srp-segmented:where([data-disabled]) .srp-segmented__item { color: var(--segmented-control-text-disabled, var(--text-disabled)); }
 @media (prefers-reduced-motion: reduce) { .srp-segmented__indicator::before, .srp-segmented__indicator::after, .srp-segmented__item { transition: none; } .srp-segmented .srp-segmented__item:active { scale: none; } }
 /* The selected label keeps HighlightText on hover too: the hover color, kept as is, was dark on the dark Highlight. */
 @media (forced-colors: active) { .srp-segmented__indicator[data-slide]::before, .srp-segmented__indicator[data-slide]::after { background: Highlight; } .srp-segmented__indicator, .srp-segmented:not(:has(> .srp-segmented__indicator)) .srp-segmented__item:where([data-selected]) { background: Highlight; border-color: Highlight; } .srp-segmented__item:where([data-selected]) { color: HighlightText; forced-color-adjust: none; } @media (hover: hover) { .srp-segmented__item:where([data-selected]):hover:not(:disabled) { color: HighlightText; } } }

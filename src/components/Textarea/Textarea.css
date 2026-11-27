@@ -31,7 +31,7 @@
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
   position: relative;   /* its text paints over a positioned layer placed before it, such as MentionInput's mention tints */
 }
-.srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
+.srp-textarea__field::placeholder { color: var(--textarea-placeholder, var(--field-placeholder)); opacity: var(--opacity-100); }
 /* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */
 .srp-textarea__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--textarea-text, var(--text)); }
 /* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
@@ -90,9 +90,9 @@
 /* A native constraint that fails after people edit it or try to send the form: as Input (:user-invalid). */
 .srp-textarea:has(.srp-textarea__field:user-invalid) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --srp-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .srp-textarea:has(.srp-textarea__field:user-invalid):hover:not(:focus-within) { --srp-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
-.srp-textarea:where([data-readonly]) { background: var(--textarea-bg-readonly, var(--field-readonly)); }
+.srp-textarea:where([data-readonly]) { background: var(--textarea-bg-readonly, var(--field-readonly)); --field-placeholder: var(--textarea-placeholder-readonly, var(--text-secondary)); }   /* a placeholder keeps 4.5:1 on the fill */
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.srp-textarea:where([data-disabled]), .srp-textarea:where(:has(.srp-textarea__field:disabled)) { --srp-ta-bd: var(--textarea-border-disabled, var(--disabled-border)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-textarea:where([data-disabled]), .srp-textarea:where(:has(.srp-textarea__field:disabled)) { --srp-ta-bd: var(--textarea-border-disabled, var(--border-disabled)); background: var(--textarea-bg-readonly, var(--field-readonly)); color: var(--textarea-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 .srp-textarea:where([data-disabled]) .srp-textarea__field, .srp-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */

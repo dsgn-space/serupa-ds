@@ -22,7 +22,7 @@ t('it has every component, each with its group, status and first sentence', data
   data.components.filter((c) => !/[.!?]$/.test(c.summary)).map((c) => c.name).join(', '));
 t('Button\'s guide is its README, with links to other guides turned into the command that prints them', data.components.find((c) => c.name === 'Button').guide.startsWith('# Button\n') && !data.components.some((c) => /\]\(\.\.\/\w+\/README\.md/.test(c.guide)));
 t('the skill\'s sections are its topics, its component list left out', ['Install and load', 'Theme', 'Rules'].every((n) => data.topics.some((x) => x.name === n)) && !data.topics.some((x) => x.name === 'Components'), data.topics.map((x) => x.name).join(', '));
-t('every token with a description is searchable', data.tokens.length > 100 && data.tokens.some((x) => x.name === '--primary' && /brand/i.test(x.description)), String(data.tokens.length));
+t('every token with a description is searchable', data.tokens.length > 100 && data.tokens.some((x) => x.name === '--surface-brand' && /brand/i.test(x.description)), String(data.tokens.length));
 
 // Finding things.
 t('a component by its name, in any case', find(data, 'button').component?.name === 'Button');

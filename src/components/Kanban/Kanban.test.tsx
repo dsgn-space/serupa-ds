@@ -66,10 +66,10 @@ describe('Kanban', () => {
     const low: string[] = [];
     const check = (state: string) => { for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(b).color, css(b).backgroundColor); if (r < 3) low.push(`${state} ${th}: ${r.toFixed(2)}`); } document.documentElement.removeAttribute('data-theme'); };
     await h.hover();
-    await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary)'));
+    await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-secondary)'));
     check('hover');
     await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-secondary-hover)'));
       check('held');
     });
     expect(low).toEqual([]);
@@ -206,7 +206,7 @@ describe('Kanban', () => {
     await render(<Board />);
     const li = handle('Alpha').element().closest('li')!;
     const probe = document.body.appendChild(document.createElement('div'));
-    probe.style.cssText = 'border: 1px solid var(--primary-text); box-shadow: var(--elevation-raised)';
+    probe.style.cssText = 'border: 1px solid var(--text-brand); box-shadow: var(--elevation-raised)';
     handle('Alpha').element().focus();
     await userEvent.keyboard(' ');
     await expect.poll(() => li.dataset.state).toBe('dragging');

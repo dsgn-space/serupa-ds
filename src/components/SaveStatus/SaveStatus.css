@@ -26,6 +26,6 @@
 }
 .srp-save-status__icon { flex: none; font-size: var(--save-status-icon-size, var(--spacing-4)); }
 .srp-save-status__text { min-width: var(--spacing-0); overflow-wrap: anywhere; }
-.srp-save-status__face--saved .srp-save-status__icon { color: var(--save-status-saved, var(--success)); }
-.srp-save-status__face--error { color: var(--save-status-error, var(--danger-text)); }
+.srp-save-status__face--saved .srp-save-status__icon { color: var(--save-status-saved, var(--surface-success)); }
+.srp-save-status__face--error { color: var(--save-status-error, var(--text-danger)); }
 }

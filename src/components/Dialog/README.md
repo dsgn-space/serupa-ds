@@ -154,15 +154,16 @@ Each is an optional override: set it on the page, a container or one dialog. The
 <!-- token-table:start (made from dialog.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--dialog-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the dialog, hovered or selected: a step up from its surface in dark |
+| `--dialog-row-bg-hover` | `surface-raised-hover` | A List or InlineEdit row in the dialog, hovered or selected: a step up from its surface in dark |
 | `--dialog-field-bg` | `field-raised` | The fill of a form field in the dialog: a step up from its surface in dark, so the field stands out from it |
-| `--dialog-bg` | `surface-overlay` | The panel's background. |
+| `--dialog-field-placeholder` | `field-raised-placeholder` | Placeholder and other gray text in a form field in the dialog: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field. |
+| `--dialog-bg` | `surface-raised` | The panel's background. |
 | `--dialog-text` | `text` | The panel's text: the body and the footer. |
-| `--dialog-overlay` | `overlay` | The dimmed backdrop over the page. |
+| `--dialog-overlay` | `backdrop` | The dimmed backdrop over the page. |
 | `--dialog-title-color` | `text` | The title. |
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--dialog-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
-| `--dialog-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--dialog-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--dialog-shadow` | `elevation-modal` | The panel's shadow. |
 | `--dialog-radius` | `radius-container` | The panel's corners (12px). |
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |

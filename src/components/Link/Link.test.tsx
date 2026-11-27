@@ -62,10 +62,10 @@ describe('Link', () => {
 
   test('primary, underlined 1px, 2px below the text; on hover primary-hover and the underline thickens to 2px', async () => {
     await render(<Para />);
-    const primary = color('var(--primary-text)');
+    const primary = color('var(--text-brand)');
     expect(underline('ldef')).toEqual({ color: primary, line: 'underline', thickness: '1px', offset: '2px' });
     await userEvent.hover(el('ldef'));
-    await expect.poll(() => underline('ldef').color).toBe(color('var(--primary-text-hover)'));
+    await expect.poll(() => underline('ldef').color).toBe(color('var(--text-brand-hover)'));
     expect(underline('ldef').color).not.toBe(primary);
     expect(underline('ldef').thickness).toBe('2px');
     await away();
@@ -202,8 +202,8 @@ describe('Link', () => {
 
   test('contrast: link text (4.5:1), on hover, and its focus ring (3:1) on surface in every theme', () => {
     expect(lowContrast([
-      ['link', 'var(--link-text, var(--primary-text))', 'var(--surface)', 4.5],
-      ['hover', 'var(--link-text-hover, var(--primary-text-hover))', 'var(--surface)', 4.5],
+      ['link', 'var(--link-text, var(--text-brand))', 'var(--surface)', 4.5],
+      ['hover', 'var(--link-text-hover, var(--text-brand-hover))', 'var(--surface)', 4.5],
       ['focus ring', 'var(--link-focus-ring, var(--focus-ring))', 'var(--surface)', 3],
     ])).toEqual([]);
   });

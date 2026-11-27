@@ -276,7 +276,7 @@ describe('PhoneInput', () => {
     expect(document.activeElement).toBe(menu('one'));
     await settled();
     const ringed = css(box('one')).boxShadow;
-    expect([ringed !== rest, css(part('one')).outlineStyle, css(part('one')).backgroundColor]).toEqual([true, 'none', color('var(--field-hover)')]);
+    expect([ringed !== rest, css(part('one')).outlineStyle, css(part('one')).backgroundColor]).toEqual([true, 'none', color('var(--surface-raised-hover)')]);
     await userEvent.tab();
     expect(document.activeElement).toBe(field('one'));
     await settled();
@@ -517,7 +517,7 @@ describe('PhoneInput held state', () => {
     const b = page.getByRole('button', { name: /^Dialling code: / }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-raised-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

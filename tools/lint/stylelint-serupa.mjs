@@ -26,7 +26,7 @@
 //                                   border-width one, so the outline scale (and its contrast-more step) reaches it
 //   serupa/no-accent-on-current    where a selector marks an item as the selected, current or active one (aria-selected,
 //                                   aria-current, --selected, --current, --active, --highlighted), no declaration reads
-//                                   the accent (primary and its steps): the fill (--highlight) marks a row, a neutral
+//                                   the accent (primary and its steps): the fill (--surface-highlight) marks a row, a neutral
 //                                   line a tab, and the accent is kept for focus and for a chosen value. Option known:
 //                                   ['calendar-bg-selected', …], the component tokens of filled picks that stay accent
 //   serupa/own-block                a component's CSS styles its own blocks' elements (srp-block__element) only. Another
@@ -253,11 +253,11 @@ const outlineWidth = rule('serupa/outline-width-token', {
 // subject, so a selected parent's child (a tick inside a selected option) is the child's own business.
 const CURRENT = /\[aria-(?:selected|current)|--(?:selected|current|active|highlighted)(?![a-z0-9-])/;
 const noAccent = rule('serupa/no-accent-on-current', {
-  rejected: (n, token) => `var(--${n}) is the accent on a selected or current item${token ? ` (the default of --${token})` : ''}: mark it with the fill (--highlight), --highlight-indicator for a bar, or --text for a line; the accent is for focus`,
+  rejected: (n, token) => `var(--${n}) is the accent on a selected or current item${token ? ` (the default of --${token})` : ''}: mark it with the fill (--surface-highlight), --surface-highlight-indicator for a bar, or --text for a line; the accent is for focus`,
 }, (root, flag, m, opts) => {
   const known = new Set(opts.known || []);
   const name = (n) => (n.nodes[0]?.value || '').replace(/^--/, '');
-  // top: the component token a nested default is read through, var(--tabs-indicator, var(--old-name, var(--primary))).
+  // top: the component token a nested default is read through, var(--tabs-indicator, var(--old-name, var(--surface-brand))).
   const read = (decl, nodes, top) => {
     for (const n of nodes) {
       if (n.type !== 'function') continue;

@@ -11,7 +11,7 @@
   min-inline-size: 0; overflow: hidden;
   border: var(--border-width-1) solid var(--code-block-border, var(--border));
   border-radius: var(--code-block-radius, var(--radius-control));
-  background: var(--code-block-bg, var(--surface-muted)); color: var(--code-block-text, var(--text));
+  background: var(--code-block-bg, var(--surface-sunken)); color: var(--code-block-text, var(--text));
 }
 /* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
 .srp-card--padding-none > .srp-code-block { border: var(--spacing-0); border-radius: var(--srp-card-inner-radius); }
@@ -47,8 +47,8 @@
   user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
 }
 .srp-code-block__line--marked {
-  background: var(--code-block-mark-bg, var(--primary-subtle)); color: inherit;
-  box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--primary-text));
+  background: var(--code-block-mark-bg, var(--surface-brand-subtle)); color: inherit;
+  box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--text-brand));
 }
 /* text-muted is under 4.5:1 on the tint in Blue Light, so a marked line's number takes the code's color. */
 .srp-code-block--numbered .srp-code-block__line--marked::before { color: inherit; }

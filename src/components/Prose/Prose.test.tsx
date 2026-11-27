@@ -51,11 +51,11 @@ describe('Prose', () => {
   });
 
   test('text, headings, quotes and markers read 4.5:1, and the visited shade 4.5:1 on surface and surface-muted, in every theme', async () => {
-    await render(<><Prose dangerouslySetInnerHTML={{ __html: HTML }} /><span id="v" style={{ color: 'var(--prose-link-visited, var(--link-visited))' }}>v</span></>);
+    await render(<><Prose dangerouslySetInnerHTML={{ __html: HTML }} /><span id="v" style={{ color: 'var(--prose-link-visited, var(--text-link-visited))' }}>v</span></>);
     const page = (v: string) => { const d = document.createElement('div'); d.style.background = `var(--${v})`; document.body.appendChild(d); const c = getComputedStyle(d).backgroundColor; d.remove(); return c; };
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      for (const bg of ['surface', 'surface-muted']) {
+      for (const bg of ['surface', 'surface-sunken']) {
         const b = page(bg);
         for (const id of ['p1', 'h', 'q', 'v']) expect(contrast(css(el(id)).color, b), `${th} ${id} on ${bg}`).toBeGreaterThanOrEqual(4.5);
         expect(contrast(getComputedStyle(el('l1'), '::marker').color, b), `${th} marker`).toBeGreaterThanOrEqual(4.5);

@@ -9,17 +9,17 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-progress {
-  --srp-progress-fill: var(--progress-fill, var(--primary));
-  --srp-progress-edge: var(--progress-fill-edge, var(--primary-edge));   /* the primary fill's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere, and for the other tones */
+  --srp-progress-fill: var(--progress-fill, var(--surface-brand));
+  --srp-progress-edge: var(--progress-fill-edge, var(--border-brand));   /* the primary fill's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere, and for the other tones */
   --srp-progress-h: var(--progress-height-md, var(--spacing-2));
   --srp-progress-ring: var(--progress-circle-md, var(--spacing-10));
   color: var(--progress-label-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
 .srp-progress--size-sm { --srp-progress-h: var(--progress-height-sm, var(--spacing-1)); --srp-progress-ring: var(--progress-circle-sm, var(--spacing-6)); }
 .srp-progress--size-lg { --srp-progress-h: var(--progress-height-lg, var(--spacing-3)); --srp-progress-ring: var(--progress-circle-lg, var(--spacing-16)); }
-.srp-progress--success { --srp-progress-fill: var(--progress-fill-success, var(--success)); --srp-progress-edge: transparent; }
-.srp-progress--warning { --srp-progress-fill: var(--progress-fill-warning, var(--warning)); --srp-progress-edge: transparent; }
-.srp-progress--danger { --srp-progress-fill: var(--progress-fill-danger, var(--danger)); --srp-progress-edge: transparent; }
+.srp-progress--success { --srp-progress-fill: var(--progress-fill-success, var(--surface-success)); --srp-progress-edge: transparent; }
+.srp-progress--warning { --srp-progress-fill: var(--progress-fill-warning, var(--surface-warning)); --srp-progress-edge: transparent; }
+.srp-progress--danger { --srp-progress-fill: var(--progress-fill-danger, var(--surface-danger)); --srp-progress-edge: transparent; }
 .srp-progress--bar { display: flex; flex-direction: column; gap: var(--progress-gap, var(--spacing-1\.5)); width: var(--sizing-full); }
 .srp-progress__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
 .srp-progress__label { font-weight: var(--progress-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }

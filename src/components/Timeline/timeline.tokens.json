@@ -64,7 +64,7 @@
       },
       "icon-bg-neutral": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The circle behind a neutral event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "dot-primary": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The dot of a primary event.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "icon-primary": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The icon of a primary event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "icon-bg-primary": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The circle behind a primary event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "dot-success": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The dot of a success event.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "icon-success": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "The icon of a success event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "icon-bg-success": {
         "$type": "color",
-        "$value": "{color.success-subtle}",
+        "$value": "{color.surface-success-subtle}",
         "$description": "The circle behind a success event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "dot-warning": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The dot of a warning event.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "icon-warning": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "The icon of a warning event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "icon-bg-warning": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "The circle behind a warning event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "dot-danger": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The dot of a danger event.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "icon-danger": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "The icon of a danger event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "icon-bg-danger": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "The circle behind a danger event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "dot-info": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "The dot of a info event.",
         "$extensions": {
           "com.serupa": {
@@ -204,7 +204,7 @@
       },
       "icon-info": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "The icon of a info event (3:1 on its circle).",
         "$extensions": {
           "com.serupa": {
@@ -214,7 +214,7 @@
       },
       "icon-bg-info": {
         "$type": "color",
-        "$value": "{color.info-subtle}",
+        "$value": "{color.surface-info-subtle}",
         "$description": "The circle behind a info event's icon.",
         "$extensions": {
           "com.serupa": {
@@ -234,7 +234,7 @@
       },
       "dot-edge": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

@@ -24,7 +24,7 @@
       },
       "fill": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The filled part, without low and high zones (3:1 on the track and the surface).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "fill-optimum": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The filled part in the best zone.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "fill-suboptimal": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The filled part in the next zone.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "fill-poor": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The filled part in the worst zone.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "fill-edge": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The primary fill's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

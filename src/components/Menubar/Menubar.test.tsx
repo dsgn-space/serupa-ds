@@ -149,7 +149,7 @@ describe('Menubar', () => {
       const bg = css(bar).backgroundColor;
       expect(contrast(css(top('Edit')).color, bg), th + ' name').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(top('File')).color, css(top('File')).backgroundColor), th + ' open').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(top('Edit')).color, getComputedStyle(document.documentElement).getPropertyValue('--highlight').trim() || bg), th + ' hover').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(top('Edit')).color, getComputedStyle(document.documentElement).getPropertyValue('--surface-highlight').trim() || bg), th + ' hover').toBeGreaterThanOrEqual(4.5);
       expect(contrast(getComputedStyle(document.documentElement).getPropertyValue('--focus-ring').trim(), bg), th + ' ring').toBeGreaterThanOrEqual(3);
     }
   });

@@ -33,7 +33,7 @@ Don't use the full logo below 24px tall; use the mark alone.
 
 ## Color
 
-The mark and the one-color logo are filled with `currentColor`, so they take the color of the text around them. To follow the theme, set it to the brand color: `color: var(--primary)` for the mark (or `fill: var(--primary)` on an inline SVG), and `var(--on-primary)` when it sits on a brand-colored surface. In every one of the 34 themes the mark has at least 4.7:1 contrast on the surface and on the brand color, above the 3:1 that WCAG asks of a graphic.
+The mark and the one-color logo are filled with `currentColor`, so they take the color of the text around them. To follow the theme, set it to the brand color: `color: var(--surface-brand)` for the mark (or `fill: var(--surface-brand)` on an inline SVG), and `var(--text-on-brand)` when it sits on a brand-colored surface. In every one of the 34 themes the mark has at least 4.7:1 contrast on the surface and on the brand color, above the 3:1 that WCAG asks of a graphic.
 
 In forced-colors mode, draw it in `CanvasText`, as the docs site does.
 

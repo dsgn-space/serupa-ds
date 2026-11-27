@@ -44,7 +44,7 @@
       },
       "icon-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The pill behind the icon under the pointer (not on the current item, which keeps its own fill).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "icon-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill).",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "text-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The current page's icon and label (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "icon-bg-active": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The pill behind the current page's icon.",
         "$extensions": {
           "com.serupa": {

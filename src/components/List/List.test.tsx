@@ -167,7 +167,7 @@ describe('List', () => {
     const li = el('isel'), s = css(li);
     expect([li.querySelector('a')!.getAttribute('aria-current'), s.backgroundColor]).toEqual(['true', bg('var(--surface-hover)')]);
     expect(s.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);   // no width: nothing drawn, whatever the fill
-    await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--highlight-indicator)')); });
+    await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--surface-highlight-indicator)')); });
   });
 
   test('an Avatar in a selected row steps its fill up to secondary-hover, so it stays apart from the shade; a plain row keeps secondary', async () => {
@@ -176,7 +176,7 @@ describe('List', () => {
       <ListItem id="as" href="#grace" title="Grace Hopper" selected leading={<Avatar id="avs" name="Grace Hopper" size="sm" />} />
     </List>);
     const fill = (id: string) => css(el(id).firstElementChild).backgroundColor;   // the Avatar's frame
-    expect([fill('avp'), fill('avs')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect([fill('avp'), fill('avs')]).toEqual([bg('var(--surface-secondary)'), bg('var(--surface-secondary-hover)')]);
     expect(fill('avs')).not.toBe(css(el('as')).backgroundColor);
   });
 
@@ -236,10 +236,10 @@ describe('List', () => {
   test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in every theme', async () => {
     await render(<div style={{ width: '420px' }}>
       <SurfaceCard id="filled" variant="filled"><List aria-label="On a filled card"><ListItem id="sfill" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
-      <div id="muted" className="bg-surface-muted"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
-      <div id="raised" className="bg-surface-muted"><SurfaceCard id="inner"><List aria-label="On a card on a muted panel"><ListItem id="sinner" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard></div>
+      <div id="muted" className="bg-surface-sunken"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
+      <div id="raised" className="bg-surface-sunken"><SurfaceCard id="inner"><List aria-label="On a card on a muted panel"><ListItem id="sinner" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard></div>
       <SurfaceCard id="elev" variant="elevated"><List aria-label="On an elevated card"><ListItem id="selev" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
-      <div id="float" className="bg-surface-overlay"><List aria-label="On a floating surface"><ListItem id="sfloat" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
+      <div id="float" className="bg-surface-raised"><List aria-label="On a floating surface"><ListItem id="sfloat" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
     </div>);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -263,7 +263,7 @@ describe('List', () => {
       const title = css(titleOf('iada')).color, desc = css(titleOf('iada').nextElementSibling).color;
       for (const [name, fg, back, need] of [
         ['title', title, 'var(--surface)', 4.5], ['description', desc, 'var(--surface)', 4.5],
-        ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row (text-muted-shaded)', 'var(--text-muted-shaded)', 'var(--surface-hover)', 4.5],
+        ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row (text-muted-shaded)', 'var(--text-secondary)', 'var(--surface-hover)', 4.5],
       ] as const) {
         const r = contrast(fg, back);
         if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);
@@ -275,8 +275,8 @@ describe('List', () => {
   test('pressed: a link row held down fills with pressed; holding its trailing action doesn\'t', async () => {
     await render(<><People /><Card clicks={[]} /></>);
     const row = el('ilink');
-    await press(titleOf('ilink'), () => expect.poll(() => css(row).backgroundColor).toBe(color('var(--pressed)')));
-    await press(el('more'), () => expect.poll(() => css(row).backgroundColor).not.toBe(color('var(--pressed)')));
+    await press(titleOf('ilink'), () => expect.poll(() => css(row).backgroundColor).toBe(color('var(--surface-pressed)')));
+    await press(el('more'), () => expect.poll(() => css(row).backgroundColor).not.toBe(color('var(--surface-pressed)')));
   });
 
 });

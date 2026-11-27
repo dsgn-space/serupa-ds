@@ -45,11 +45,11 @@
   .srp-sortable-list__handle::after { --srp-under: calc(var(--z-10) * -1); --srp-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--srp-under); inset-block: var(--srp-reach-block); inset-inline: var(--spacing-0); }
 }
 .srp-sortable-list__item:where([data-dragging]) .srp-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
-@media (hover: hover) { .srp-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--surface-secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .srp-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { .srp-sortable-list__handle { transition: none; } }
-.srp-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
+.srp-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--surface-secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
 .srp-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-sortable-list--sorting { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
 .srp-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */

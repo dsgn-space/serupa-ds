@@ -14,7 +14,7 @@
 <script>
   var T = window.Serupa, h = React.createElement;
   var names = ['add','edit','delete','close','search','settings','more_vert','arrow_forward','expand_more','home','person','notifications','check_circle','error','warning','info'];
-  var tones = { check_circle: 'var(--success)', error: 'var(--danger)', warning: 'var(--warning)', info: 'var(--info)' };
+  var tones = { check_circle: 'var(--surface-success)', error: 'var(--surface-danger)', warning: 'var(--surface-warning)', info: 'var(--surface-info)' };
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h('div', { className: 'grid' }, names.map(function (n) {
       return h('div', { className: 'cell', key: n }, h(T.Icon, { name: n, style: tones[n] ? { color: tones[n] } : null }), h('span', null, n));

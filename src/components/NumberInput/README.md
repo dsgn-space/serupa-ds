@@ -48,11 +48,11 @@ Drawn from the `Controlled` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the − and + buttons in `text-muted` |
-| Hover | `field-border-hover`; the − or + under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the − or + under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; − and + are off with a plain cursor |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; − and + are off too |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; − and + are off too |
 
 ## Behavior
 
@@ -120,9 +120,9 @@ Each is an optional override: set it on the page, a container or one field. The 
 | --- | --- | --- |
 | `--number-input-stepper` | `text-muted` | The − and + icons (3:1 on the field). |
 | `--number-input-stepper-hover` | `text` | The icons on hover. |
-| `--number-input-stepper-bg-hover` | `field-hover` | The buttons' background on hover. |
-| `--number-input-stepper-bg-pressed` | `field-pressed` | A step button's background while it's held down, one step past hover. |
-| `--number-input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--number-input-stepper-bg-hover` | `surface-raised-hover` | The buttons' background on hover. |
+| `--number-input-stepper-bg-pressed` | `surface-raised-pressed` | A step button's background while it's held down, one step past hover. |
+| `--number-input-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--number-input-stepper-radius` | `radius-inner` | The buttons' corners (4px). |
 | `--number-input-stepper-padding` | `spacing-1` | Space around each button's icon (4px). |
 | `--number-input-stepper-gap` | `spacing-0.5` | Space between the − and + buttons (2px). |

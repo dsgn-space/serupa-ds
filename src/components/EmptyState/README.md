@@ -98,7 +98,7 @@ Each is an optional override: set it on the page, a container or one empty state
 | Token | Default | Use |
 | --- | --- | --- |
 | `--empty-state-icon-color` | `text-muted` | The icon (3:1 on icon-bg). |
-| `--empty-state-icon-bg` | `secondary` | The circle behind the icon. |
+| `--empty-state-icon-bg` | `surface-secondary` | The circle behind the icon. |
 | `--empty-state-title-color` | `text` | The title. |
 | `--empty-state-description-color` | `text-muted` | The description (4.5:1 on surface). |
 | `--empty-state-border` | `border` | The dashed frame of variant="dashed". |

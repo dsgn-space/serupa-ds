@@ -87,6 +87,6 @@ Each is an optional override: set it on the page, a container or one button. The
 <!-- token-table:start (made from copy-button.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--copy-button-done-color` | `success-text` | The check icon once it has copied (3:1 on the button). |
-| `--copy-button-failed-color` | `danger-text` | The error icon when the browser refused to copy (3:1 on the button). |
+| `--copy-button-done-color` | `text-success` | The check icon once it has copied (3:1 on the button). |
+| `--copy-button-failed-color` | `text-danger` | The error icon when the browser refused to copy (3:1 on the button). |
 <!-- token-table:end -->

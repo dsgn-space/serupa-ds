@@ -130,24 +130,24 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-line` | `border` | The line joining the markers. |
 | `--timeline-dot-neutral` | `border-strong` | The dot of a neutral event. |
 | `--timeline-icon-neutral` | `text-muted` | The icon of a neutral event (3:1 on its circle). |
-| `--timeline-icon-bg-neutral` | `surface-muted` | The circle behind a neutral event's icon. |
-| `--timeline-dot-primary` | `primary` | The dot of a primary event. |
-| `--timeline-icon-primary` | `primary-text` | The icon of a primary event (3:1 on its circle). |
-| `--timeline-icon-bg-primary` | `primary-subtle` | The circle behind a primary event's icon. |
-| `--timeline-dot-success` | `success` | The dot of a success event. |
-| `--timeline-icon-success` | `success-text` | The icon of a success event (3:1 on its circle). |
-| `--timeline-icon-bg-success` | `success-subtle` | The circle behind a success event's icon. |
-| `--timeline-dot-warning` | `warning` | The dot of a warning event. |
-| `--timeline-icon-warning` | `warning-text` | The icon of a warning event (3:1 on its circle). |
-| `--timeline-icon-bg-warning` | `warning-subtle` | The circle behind a warning event's icon. |
-| `--timeline-dot-danger` | `danger` | The dot of a danger event. |
-| `--timeline-icon-danger` | `danger-text` | The icon of a danger event (3:1 on its circle). |
-| `--timeline-icon-bg-danger` | `danger-subtle` | The circle behind a danger event's icon. |
-| `--timeline-dot-info` | `info` | The dot of a info event. |
-| `--timeline-icon-info` | `info-text` | The icon of a info event (3:1 on its circle). |
-| `--timeline-icon-bg-info` | `info-subtle` | The circle behind a info event's icon. |
+| `--timeline-icon-bg-neutral` | `surface-sunken` | The circle behind a neutral event's icon. |
+| `--timeline-dot-primary` | `surface-brand` | The dot of a primary event. |
+| `--timeline-icon-primary` | `text-brand` | The icon of a primary event (3:1 on its circle). |
+| `--timeline-icon-bg-primary` | `surface-brand-subtle` | The circle behind a primary event's icon. |
+| `--timeline-dot-success` | `surface-success` | The dot of a success event. |
+| `--timeline-icon-success` | `text-success` | The icon of a success event (3:1 on its circle). |
+| `--timeline-icon-bg-success` | `surface-success-subtle` | The circle behind a success event's icon. |
+| `--timeline-dot-warning` | `surface-warning` | The dot of a warning event. |
+| `--timeline-icon-warning` | `text-warning` | The icon of a warning event (3:1 on its circle). |
+| `--timeline-icon-bg-warning` | `surface-warning-subtle` | The circle behind a warning event's icon. |
+| `--timeline-dot-danger` | `surface-danger` | The dot of a danger event. |
+| `--timeline-icon-danger` | `text-danger` | The icon of a danger event (3:1 on its circle). |
+| `--timeline-icon-bg-danger` | `surface-danger-subtle` | The circle behind a danger event's icon. |
+| `--timeline-dot-info` | `surface-info` | The dot of a info event. |
+| `--timeline-icon-info` | `text-info` | The icon of a info event (3:1 on its circle). |
+| `--timeline-icon-bg-info` | `surface-info-subtle` | The circle behind a info event's icon. |
 | `--timeline-focus-ring` | `focus-ring` | The ring around a horizontal timeline's scrolling box when the keyboard is in it. |
-| `--timeline-dot-edge` | `primary-edge` | A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--timeline-dot-edge` | `border-brand` | A primary dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Border**
 

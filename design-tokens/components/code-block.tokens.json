@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The background.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "mark-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "A marked line's tint.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "mark-bar": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The bar at a marked line's start.",
         "$extensions": {
           "com.serupa": {

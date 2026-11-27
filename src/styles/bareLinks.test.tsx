@@ -30,7 +30,7 @@ describe('base.css: a bare link looks and behaves like Link (PT1)', () => {
   });
 
   test('a class still wins: zero specificity', () => {
-    mount('<a id="bl-cls" class="text-danger" href="#q">Danger</a><span id="bl-ref" class="text-danger">x</span>');
+    mount('<a id="bl-cls" class="text-surface-danger" href="#q">Danger</a><span id="bl-ref" class="text-surface-danger">x</span>');
     expect(css('bl-cls').color).toBe(css('bl-ref').color);
   });
 });

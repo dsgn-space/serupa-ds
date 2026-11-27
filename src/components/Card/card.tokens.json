@@ -4,7 +4,7 @@
     "color": {
       "row-bg-hover-elevated": {
         "$type": "color",
-        "$value": "{color.surface-hover-raised}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "A List or InlineEdit row on an elevated card, hovered or selected: a step up from the card in dark",
         "$extensions": {
           "com.serupa": {
@@ -22,6 +22,16 @@
           }
         }
       },
+      "field-placeholder-elevated": {
+        "$type": "color",
+        "$value": "{color.field-raised-placeholder}",
+        "$description": "Placeholder and other gray text in a form field on an elevated card: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-field-placeholder-elevated"
+          }
+        }
+      },
       "bg": {
         "$type": "color",
         "$value": "{color.surface}",
@@ -34,7 +44,7 @@
       },
       "bg-filled": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The background of a filled card",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +164,7 @@
       },
       "text-muted-pressed": {
         "$type": "color",
-        "$value": "{color.text-muted-shaded}",
+        "$value": "{color.text-secondary}",
         "$description": "Muted text on a card with `href` while it's held down (4.5:1 on the washed fill).",
         "$extensions": {
           "com.serupa": {
@@ -174,8 +184,8 @@
       },
       "divider-elevated": {
         "$type": "color",
-        "$value": "{color.border-elevated}",
-        "$description": "What a divider or separator inside an elevated card reads as `border`: `border-elevated`, the line for the raised surface, since in dark `border` is that surface's own color and a line in it vanished",
+        "$value": "{color.border-raised}",
+        "$description": "What a divider or separator inside an elevated card reads as `border`: `border-raised`, the line for the raised surface, since in dark `border` is that surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--card-divider-elevated"

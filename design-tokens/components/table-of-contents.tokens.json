@@ -44,7 +44,7 @@
       },
       "line-current": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The line beside the current section's link (3:1).",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "panel": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The rail's panel, over the page.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "panel-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The rail's panel's edge.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "panel-divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

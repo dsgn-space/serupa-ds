@@ -16,9 +16,9 @@
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
 .srp-number-input__step .srp-icon { font-size: var(--srp-input-icon); }
-@media (hover: hover) { .srp-number-input__step:hover:not(:disabled) { background: var(--number-input-stepper-bg-hover, var(--field-hover)); color: var(--number-input-stepper-hover, var(--text)); } }
-.srp-number-input__step:active:not(:disabled) { background: var(--number-input-stepper-bg-pressed, var(--field-pressed)); color: var(--number-input-stepper-hover, var(--text)); }
-.srp-number-input__step:disabled { color: var(--number-input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+@media (hover: hover) { .srp-number-input__step:hover:not(:disabled) { background: var(--number-input-stepper-bg-hover, var(--surface-raised-hover)); color: var(--number-input-stepper-hover, var(--text)); } }
+.srp-number-input__step:active:not(:disabled) { background: var(--number-input-stepper-bg-pressed, var(--surface-raised-pressed)); color: var(--number-input-stepper-hover, var(--text)); }
+.srp-number-input__step:disabled { color: var(--number-input-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 .srp-input:where([data-readonly]) .srp-number-input__step:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
 .srp-input:where([data-disabled]) .srp-number-input__step:disabled, .srp-input:where(:has(.srp-input__field:disabled)) .srp-number-input__step:disabled { opacity: var(--opacity-100); }
 @media (prefers-reduced-motion: reduce) { .srp-number-input__step { transition: none; } }

@@ -78,7 +78,7 @@ Draw the box around the toolbar and the editable area with the field tokens, so 
 @media (hover: hover) { [data-editor]:hover { border-color: var(--field-border-hover); } }
 [data-editor]:focus-within { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 [data-editor] .ProseMirror { min-height: var(--spacing-32); padding: var(--spacing-2) var(--spacing-3); outline: none; }
-[data-editor] .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--placeholder); float: inline-start; height: 0; pointer-events: none; }
+[data-editor] .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--field-placeholder); float: inline-start; height: 0; pointer-events: none; }
 ```
 
 The ring goes around the whole box while the focus is anywhere in it, toolbar included, so it's clear which field the buttons work on. The editable area draws no ring of its own.

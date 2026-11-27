@@ -141,9 +141,9 @@ describe('StatusTracker', () => {
 
   test('bars 3:1 on the page, the caption, summary and legend 4.5:1, in every theme', () => {
     expect(lowContrast([
-      ['up', 'var(--success)', 'var(--surface)', 3],
-      ['degraded', 'var(--warning)', 'var(--surface)', 3],
-      ['down', 'var(--danger)', 'var(--surface)', 3],
+      ['up', 'var(--surface-success)', 'var(--surface)', 3],
+      ['degraded', 'var(--surface-warning)', 'var(--surface)', 3],
+      ['down', 'var(--surface-danger)', 'var(--surface)', 3],
       ['caption', 'var(--text)', 'var(--surface)', 4.5],
       ['summary', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],

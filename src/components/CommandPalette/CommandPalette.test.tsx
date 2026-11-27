@@ -46,8 +46,8 @@ describe('CommandPalette', () => {
     await render(<CommandPalette id="pp" defaultOpen commands={COMMANDS} />);
     await expect.poll(() => options().length).toBe(5);
     const o = options()[0]!, off = options()[3]!;
-    expect(await press(off, () => css(off).backgroundColor)).not.toBe(color('var(--pressed)'));
-    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--pressed)'));   // last: letting go runs it and closes
+    expect(await press(off, () => css(off).backgroundColor)).not.toBe(color('var(--surface-pressed)'));
+    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--surface-pressed)'));   // last: letting go runs it and closes
   });
 
   test('a command\'s icon is 20px beside its 14px label, as a Sidebar item\'s, not an icon\'s 24px default; --command-palette-icon-size sets it (GR421)', async () => {

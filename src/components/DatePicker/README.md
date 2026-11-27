@@ -36,7 +36,7 @@ Drawn from the `Disabled` story.
 ## Usage
 
 - Always wrap it in [Field](../Field/README.md) with a label, and put the expected format in the `hint` ("mm/dd/yyyy") for people who type.
-- Set `min`, `max` or `isDateDisabled` rather than rejecting a date after it's entered: blocked days show in `disabled-text` and struck through in the calendar and a blocked typed date puts back the last good value.
+- Set `min`, `max` or `isDateDisabled` rather than rejecting a date after it's entered: blocked days show in `text-disabled` and struck through in the calendar and a blocked typed date puts back the last good value.
 - Leave `locale` unset in most products so the format follows the visitor's browser. Set it only when the whole product uses one locale.
 - Use `name` in a plain form: it sends `yyyy-mm-dd`, whatever the display format.
 - Keep a day from an API or database as the plain `"yyyy-mm-dd"` string and pass it as is: `value="2026-10-24"`, and store `iso` from `onValueChange`. `new Date("2026-10-24")` is UTC midnight, which is 23 October anywhere west of Greenwich; DatePicker warns once in the console when it's given such a Date there.
@@ -65,11 +65,11 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the calendar button in `text-muted` |
-| Hover | `field-border-hover`; the calendar button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the calendar button under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the calendar button is off with a plain cursor, so the calendar doesn't open |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
 
 ## Behavior
 
@@ -140,13 +140,13 @@ Each is an optional override: set it on the page, a container or one picker. The
 | --- | --- | --- |
 | `--date-picker-button` | `text-muted` | The calendar button's icon (3:1 on the field). |
 | `--date-picker-button-hover` | `text` | The calendar button's icon on hover. |
-| `--date-picker-button-bg-hover` | `field-hover` | The calendar button's background on hover, as the other buttons inside fields (PasswordInput's show and hide, NumberInput's steps). |
-| `--date-picker-button-bg-pressed` | `field-pressed` | The calendar button's background while it's held down, one step past hover. |
+| `--date-picker-button-bg-hover` | `surface-raised-hover` | The calendar button's background on hover, as the other buttons inside fields (PasswordInput's show and hide, NumberInput's steps). |
+| `--date-picker-button-bg-pressed` | `surface-raised-pressed` | The calendar button's background while it's held down, one step past hover. |
 | `--date-picker-focus-ring` | `focus-ring` | The calendar button's keyboard focus ring. |
-| `--date-picker-popup-bg` | `surface-overlay` | The calendar panel's background. |
+| `--date-picker-popup-bg` | `surface-raised` | The calendar panel's background. |
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
-| `--date-picker-popup-border` | `border-overlay` | Its outline. |
-| `--date-picker-popup-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--date-picker-popup-border` | `border-raised` | Its outline. |
+| `--date-picker-popup-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--date-picker-popup-shadow` | `elevation-overlay` | Its shadow. |
 | `--date-picker-popup-radius` | `radius-surface` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |

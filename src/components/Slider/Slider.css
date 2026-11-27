@@ -26,18 +26,18 @@
 .srp-slider--size-sm { --srp-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --srp-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
 .srp-slider--size-lg { --srp-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --srp-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
 .srp-slider__track { position: relative; flex: auto; block-size: var(--srp-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--track)); }   /* Meter's and Progress's track: the fill and the thumb carry the 3:1 */
-.srp-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
+.srp-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--surface-brand)); }
 .srp-slider__thumb {
   position: absolute; inset-block-start: var(--srp-slider-thumb-top); box-sizing: border-box; inline-size: var(--srp-slider-thumb); block-size: var(--srp-slider-thumb);
   margin-inline-start: calc(var(--spacing-0) - var(--srp-slider-half));
-  border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
+  border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--surface-brand));
   border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
   box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
   cursor: var(--cursor-grab); transition: scale var(--motion-change-sm) var(--ease-settle);
 }
 /* The fill's and the thumb ring's edge, for a theme whose primary is under 3:1 on the page (Yellow Light); transparent elsewhere. */
-.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__fill { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--primary-edge)); }
-.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__thumb { box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--primary-edge)), var(--slider-thumb-shadow, var(--elevation-part)); }
+.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__fill { box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--border-brand)); }
+.srp-slider:not([data-invalid], [data-disabled]) .srp-slider__thumb { box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--slider-fill-edge, var(--border-brand)), var(--slider-thumb-shadow, var(--elevation-part)); }
 .srp-slider__range {
   /* The native range over the drawn thumb: unseen and not in the way of presses, but the same box, so a screen
      reader's touch exploration finds it where the thumb is. */
@@ -88,10 +88,10 @@
    track and the chip to its left. */
 .srp-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
 .srp-slider--vertical .srp-slider__mark-label > span, .srp-slider--vertical .srp-slider__value > span, .srp-slider--vertical .srp-slider__input { writing-mode: horizontal-tb; }
-.srp-slider:where([data-invalid]) .srp-slider__fill { background: var(--slider-invalid, var(--danger)); }
-.srp-slider:where([data-invalid]) .srp-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
+.srp-slider:where([data-invalid]) .srp-slider__fill { background: var(--slider-invalid, var(--surface-danger)); }
+.srp-slider:where([data-invalid]) .srp-slider__thumb { border-color: var(--slider-invalid, var(--surface-danger)); }
 .srp-slider:where([data-readonly]), .srp-slider:where([data-readonly]) .srp-slider__thumb { cursor: default; }
-.srp-slider:where([data-disabled]) { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
+.srp-slider:where([data-disabled]) { --slider-fill: var(--slider-text-disabled, var(--text-disabled)); --slider-thumb-border: var(--slider-text-disabled, var(--text-disabled)); --slider-track: var(--slider-fill-disabled, var(--surface-disabled)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
 .srp-slider:where([data-disabled]) .srp-slider__thumb { cursor: var(--cursor-disabled); }
 @media (prefers-reduced-motion: reduce) { .srp-slider__thumb, .srp-slider__value { transition: none; } }
 @media (forced-colors: active) {

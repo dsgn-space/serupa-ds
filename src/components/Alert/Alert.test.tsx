@@ -75,7 +75,7 @@ describe('Alert', () => {
     await render(<Box><Tones /></Box>);
     const ti = css(tone('info').querySelector(':scope > div > p'));
     expect([ti.fontWeight, ti.marginTop, css(tone('info').querySelector('button')!.parentElement).display]).toEqual(['600', '0px', 'flex']);
-    for (const [t, bg] of [['info', 'info-subtle'], ['success', 'success-subtle'], ['warning', 'warning-subtle'], ['danger', 'danger-subtle'], ['neutral', 'surface-muted']]) {
+    for (const [t, bg] of [['info', 'surface-info-subtle'], ['success', 'surface-success-subtle'], ['warning', 'surface-warning-subtle'], ['danger', 'surface-danger-subtle'], ['neutral', 'surface-sunken']]) {
       expect([t, css(tone(t!)).backgroundColor]).toEqual([t, color(`var(--${bg})`)]);
     }
   });

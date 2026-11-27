@@ -96,8 +96,8 @@
 /* A closable tab's ×: a 24px target at the tab's end (pulled into its padding), with a fill on hover. */
 .srp-tabs__close { display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); margin-inline-end: calc(var(--spacing-0) - var(--spacing-1\.5)); border-radius: var(--tabs-close-radius, var(--radius-inner)); color: inherit; cursor: var(--cursor-interactive); }
 .srp-tabs__close .srp-icon { font-size: var(--spacing-4); }
-@media (hover: hover) { .srp-tabs__close:hover { background: var(--tabs-close-bg-hover, var(--secondary)); color: var(--tabs-text-hover, var(--text)); } }
-.srp-tabs__tab:not(:disabled) .srp-tabs__close:active { background: var(--tabs-close-bg-pressed, var(--pressed)); color: var(--tabs-text-hover, var(--text)); }
+@media (hover: hover) { .srp-tabs__close:hover { background: var(--tabs-close-bg-hover, var(--surface-secondary)); color: var(--tabs-text-hover, var(--text)); } }
+.srp-tabs__tab:not(:disabled) .srp-tabs__close:active { background: var(--tabs-close-bg-pressed, var(--surface-secondary-hover)); color: var(--tabs-text-hover, var(--text)); }
 .srp-tabs__tab:disabled .srp-tabs__close { cursor: var(--cursor-disabled); }
 /* The tab list and its + side by side: the list scrolls, the + stays. */
 .srp-tabs__bar { display: flex; align-items: center; gap: var(--tabs-gap, var(--spacing-1)); min-inline-size: var(--spacing-0); }
@@ -108,23 +108,23 @@
 .srp-tabs__icon .srp-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .srp-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }
 .srp-tabs__tab:focus-visible { outline: var(--focus-ring-width) solid transparent; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */
-.srp-tabs__tab:disabled { color: var(--tabs-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-tabs__tab:disabled { color: var(--tabs-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 
 /* line */
 .srp-tabs--line .srp-tabs__tab { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 .srp-tabs--line .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-text-selected, var(--text)); }
-.srp-tabs--line .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--primary-text)); }
+.srp-tabs--line .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--text-brand)); }
 
 /* pill */
-@media (hover: hover) { .srp-tabs--pill .srp-tabs__tab:hover:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
-.srp-tabs--pill .srp-tabs__tab:active:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-pressed, var(--pressed)); }
+@media (hover: hover) { .srp-tabs--pill .srp-tabs__tab:hover:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-hover, var(--surface-secondary)); } }
+.srp-tabs--pill .srp-tabs__tab:active:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-pressed, var(--surface-secondary-hover)); }
 /* The fill is a layer of its own under the label, so it can slide from the tab selected before (below). */
 .srp-tabs--pill .srp-tabs__tab { isolation: isolate; }
-.srp-tabs--pill .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-pill-text-selected, var(--on-primary)); }
+.srp-tabs--pill .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-pill-text-selected, var(--text-on-brand)); }
 /* The fill spans this tab and the one selected before it (Tabs.tsx sets the span), cut to this tab by clip-path with
    the tab's round corners (GO1). */
 .srp-tabs--pill .srp-tabs__tab:is([aria-selected="true"], [aria-current="page"])::before {
-  content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--tabs-pill-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--tabs-pill-edge-selected, var(--primary-edge));
+  content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--tabs-pill-bg-selected, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--tabs-pill-edge-selected, var(--border-brand));
   inset-block: calc(var(--spacing-0) - var(--srp-tabs-span-t, var(--spacing-0))) calc(var(--spacing-0) - var(--srp-tabs-span-b, var(--spacing-0)));
   inset-inline: calc(var(--spacing-0) - var(--srp-tabs-span-l, var(--spacing-0))) calc(var(--spacing-0) - var(--srp-tabs-span-r, var(--spacing-0)));
   clip-path: inset(var(--srp-tabs-span-t, var(--spacing-0)) var(--srp-tabs-span-r, var(--spacing-0)) var(--srp-tabs-span-b, var(--spacing-0)) var(--srp-tabs-span-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control)));

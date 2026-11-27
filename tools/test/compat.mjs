@@ -158,7 +158,7 @@ try {
 
   // base.css
   await wd.goto(writePage('compat-base.html', '<h1 id="h1">T</h1><input id="in" placeholder="x"><p id="u" class="m-4">u</p>', { base: true }));
-  const bs = await wd.evaluate(() => { const tmp = document.createElement('div'); document.body.appendChild(tmp); tmp.style.backgroundColor = 'var(--surface)'; tmp.style.color = 'var(--placeholder)';
+  const bs = await wd.evaluate(() => { const tmp = document.createElement('div'); document.body.appendChild(tmp); tmp.style.backgroundColor = 'var(--surface)'; tmp.style.color = 'var(--field-placeholder)';
     return { bg: getComputedStyle(document.body).backgroundColor === getComputedStyle(tmp).backgroundColor, font: /Inter/.test(getComputedStyle(document.body).fontFamily), m: getComputedStyle(document.body).margin, h1: getComputedStyle(document.getElementById('h1')).marginTop,
       // some engines can't report ::placeholder styles; then this check is skipped
       ph: (() => { const probe = document.createElement('style'); probe.textContent = '#in::placeholder{outline-color:rgb(1,2,3)}'; document.head.appendChild(probe);

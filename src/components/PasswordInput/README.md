@@ -48,12 +48,12 @@ Drawn from the `CapsLockOn` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the eye button in `text-muted` |
-| Hover | `field-border-hover`; the eye under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the eye under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Caps Lock on | While it has focus, a caps-lock icon shows before the eye |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the eye still shows and hides the password |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the eye is off |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the eye is off |
 
 ## Accessibility
 
@@ -99,10 +99,10 @@ The field uses Input's tokens. These style the show/hide button; each is an opti
 | --- | --- | --- |
 | `--password-input-toggle` | `text-muted` | The show/hide button's icon (3:1 on the field). |
 | `--password-input-toggle-hover` | `text` | The icon on hover. |
-| `--password-input-toggle-bg-hover` | `field-hover` | The button's background on hover. |
-| `--password-input-toggle-bg-pressed` | `field-pressed` | The show/hide button's background while it's held down, one step past hover. |
+| `--password-input-toggle-bg-hover` | `surface-raised-hover` | The button's background on hover. |
+| `--password-input-toggle-bg-pressed` | `surface-raised-pressed` | The show/hide button's background while it's held down, one step past hover. |
 | `--password-input-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
-| `--password-input-caps` | `placeholder` | The Caps Lock icon (3:1 or more on the field). |
+| `--password-input-caps` | `field-placeholder` | The Caps Lock icon (3:1 or more on the field). |
 | `--password-input-toggle-radius` | `radius-inner` | The button's corners (4px). |
 | `--password-input-toggle-padding` | `spacing-1` | Space around the button's icon (4px). |
 <!-- token-table:end -->

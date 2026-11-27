@@ -12,7 +12,7 @@
   white-space: pre-wrap; overflow-wrap: break-word; color: transparent; -webkit-user-select: none; user-select: none;
 }
 .srp-mention-input__mention {
-  border-radius: var(--mention-input-mention-radius, var(--radius-inner)); background: var(--mention-input-mention-bg, var(--primary-subtle)); color: transparent;
+  border-radius: var(--mention-input-mention-radius, var(--radius-inner)); background: var(--mention-input-mention-bg, var(--surface-brand-subtle)); color: transparent;
   box-decoration-break: clone; -webkit-box-decoration-break: clone;
 }
 /* An empty box at the caret, one line tall, that the list is placed against. */
@@ -25,8 +25,8 @@
   min-width: var(--spacing-60); max-width: min(calc(var(--sizing-full) - var(--spacing-4)), var(--mention-input-listbox-max-width, var(--container-md)));
   display: flex; flex-direction: column; max-height: var(--mention-input-listbox-max-height, var(--spacing-60)); overflow: hidden;
   margin: var(--spacing-0); padding: var(--mention-input-listbox-padding, var(--spacing-1));
-  border: var(--border-width-1) solid var(--mention-input-listbox-border, var(--border-overlay));
-  border-radius: var(--mention-input-listbox-radius, var(--radius-surface)); background: var(--mention-input-listbox-bg, var(--surface-overlay)); --surface-behind: var(--mention-input-listbox-bg, var(--surface-overlay)); --border: var(--mention-input-listbox-divider, var(--border-overlay));
+  border: var(--border-width-1) solid var(--mention-input-listbox-border, var(--border-raised));
+  border-radius: var(--mention-input-listbox-radius, var(--radius-surface)); background: var(--mention-input-listbox-bg, var(--surface-raised)); --surface-behind: var(--mention-input-listbox-bg, var(--surface-raised)); --border: var(--mention-input-listbox-divider, var(--border-raised));
   box-shadow: var(--mention-input-listbox-shadow, var(--elevation-overlay));
   color: var(--mention-input-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }
@@ -40,8 +40,8 @@
 }
 @media (pointer: coarse) { .srp-mention-input__option { min-height: max(var(--mention-input-option-height, var(--control-height-md)), var(--spacing-11)); } }   /* 44px to pick on a touch screen, as Menu's items */
 .srp-mention-input__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-mention-input__option:where([data-active]) { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
-.srp-mention-input__option[aria-disabled="true"], .srp-mention-input__option[aria-disabled="true"] * { color: var(--mention-input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-mention-input__option:where([data-active]) { background: var(--mention-input-option-bg-active, var(--surface-highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--mention-input-option-indicator, var(--surface-highlight-indicator)); }
+.srp-mention-input__option[aria-disabled="true"], .srp-mention-input__option[aria-disabled="true"] * { color: var(--mention-input-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 .srp-mention-input__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-mention-input__description { color: var(--mention-input-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-mention-input__option:where([data-active]) .srp-mention-input__description { color: var(--mention-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */

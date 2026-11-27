@@ -14,7 +14,7 @@
       },
       "more-bg": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The \"+N\" avatar's background.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "more-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "The \"+N\" button's background on hover, with `showMore` or `onMore`.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "more-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-pressed}",
+        "$value": "{color.surface-secondary-pressed}",
         "$description": "The \"+N\" button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {

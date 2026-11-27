@@ -60,7 +60,7 @@ Drawn from the `Actions` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change, no resize handle; still focusable and selectable |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor, no resize handle |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor, no resize handle |
 | Printed | Grows to all of its text, `rows` lines at least, so nothing is cut off at the visible lines (where the browser has `field-sizing: content`) |
 
 ### Do and don't
@@ -118,14 +118,14 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-text` | `text` | The typed text |
 | `--textarea-border` | `field-border` | Border |
 | `--textarea-border-hover` | `field-border-hover` | Border on hover |
-| `--textarea-placeholder` | `placeholder` | Placeholder text |
+| `--textarea-placeholder` | `field-placeholder` | Placeholder text |
+| `--textarea-placeholder-readonly` | `text-secondary` | Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill. |
 | `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--textarea-count` | `text-muted` | The character count under the box, as a Field hint. |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
-| `--textarea-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--textarea-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--textarea-resize-grip` | `text-muted` | Deprecated, removed in 20.0.0: the resize handle is the browser's own again, so this has no effect. |
+| `--textarea-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--textarea-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Spacing**
 

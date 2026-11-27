@@ -137,7 +137,7 @@ describe('PinInput', () => {
     const i = page.getByRole('textbox', { name: 'Verification code' }).element() as HTMLInputElement;
     expect([i.getAttribute('aria-invalid'), !!i.getAttribute('aria-describedby')]).toEqual(['true', true]);
     const box = i.closest('[data-component="pin-input"]')!.querySelector<HTMLElement>(':scope > span[aria-hidden] > span')!;
-    expect(css(box).borderTopColor).toBe(resolve('--danger'));
+    expect(css(box).borderTopColor).toBe(resolve('--surface-danger'));
   });
 
   test('a form submits the code by name, and a reset puts the default back', async () => {

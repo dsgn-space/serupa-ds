@@ -103,8 +103,8 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-item-border-active` | `focus-ring` | The ring around the row being moved, from the keyboard or the pointer: the focus ring, which its handle's own ring gives way to. |
 | `--sortable-list-handle` | `text-muted` | The handle (3:1 on the row). |
 | `--sortable-list-handle-active` | `text` | The handle on hover and while its row moves. |
-| `--sortable-list-handle-bg-hover` | `secondary` | The handle's background on hover. |
-| `--sortable-list-handle-bg-pressed` | `secondary-hover` | The drag handle's background while it's held down, one step past hover. |
+| `--sortable-list-handle-bg-hover` | `surface-secondary` | The handle's background on hover. |
+| `--sortable-list-handle-bg-pressed` | `surface-secondary-hover` | The drag handle's background while it's held down, one step past hover. |
 | `--sortable-list-focus-ring` | `focus-ring` | The handle's keyboard focus ring. |
 | `--sortable-list-item-shadow-active` | `elevation-raised` | The raised look of the row being moved. |
 | `--sortable-list-item-radius` | `radius-control` | A row's corners (6px). |

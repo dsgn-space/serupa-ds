@@ -30,13 +30,13 @@
 .srp-inline-edit__text--placeholder { color: var(--inline-edit-placeholder, var(--text-muted)); }
 .srp-inline-edit__icon { flex-shrink: 0; font-size: var(--srp-ie-icon); color: var(--inline-edit-icon, var(--text-muted)); opacity: var(--opacity-0); transition: opacity var(--motion-hover) var(--ease-move); }
 @media (hover: hover) {
-  .srp-inline-edit__view:not(.srp-inline-edit__view--static, :disabled):hover { background: var(--inline-edit-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--inline-edit-text-muted-shaded, var(--text-muted-shaded)); }
+  .srp-inline-edit__view:not(.srp-inline-edit__view--static, :disabled):hover { background: var(--inline-edit-bg-hover, var(--srp-row-hover, var(--surface-hover))); --text-muted: var(--inline-edit-text-muted-shaded, var(--text-secondary)); }
   .srp-inline-edit__view:not(:disabled):hover .srp-inline-edit__icon { opacity: var(--opacity-100); }
 }
 .srp-inline-edit__view:focus-visible { outline: var(--focus-ring-width) solid var(--inline-edit-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-inline-edit__view:focus-visible .srp-inline-edit__icon { opacity: var(--opacity-100); }
 /* Pressed: one step past hover while held, as a List or Sidebar row's. */
-.srp-inline-edit__view:not(.srp-inline-edit__view--static, :disabled):active { background: var(--inline-edit-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
+.srp-inline-edit__view:not(.srp-inline-edit__view--static, :disabled):active { background: var(--inline-edit-bg-pressed, var(--surface-pressed)); transition-duration: var(--duration-0); }
 /* Touch screens have no hover: the pencil always shows, so people can tell the text is editable. */
 @media (hover: none) { .srp-inline-edit__icon { opacity: var(--opacity-100); } }
 /* An empty value with no placeholder has no text to show: the pencil always shows, or the button would be invisible. */
@@ -46,7 +46,7 @@
 /* In a <fieldset disabled> the button is disabled: no pointer, and no pencil even on touch screens. */
 .srp-inline-edit__view:disabled { cursor: auto; }
 .srp-inline-edit__view:disabled .srp-inline-edit__icon { display: none; }
-.srp-inline-edit__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--inline-edit-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size, at every size */
+.srp-inline-edit__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--inline-edit-error, var(--text-danger)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }   /* a Field error's size, at every size */
 .srp-inline-edit__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-3\.5)); height: var(--text-xs--line-height); }   /* centered on the first line */
 /* As a value in a DescriptionList, its text lines up with the term beside it and the plain values above and below: the
    button's padding, border and extra height hang outside the row, and show only with its hover background. */

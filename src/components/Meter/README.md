@@ -68,7 +68,7 @@ Without `low` and `high` the bar is primary and `data-state` is `none`. `meterSt
 
 - `role="meter"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext` (the shown value). It's named by its `label`.
 - Outside the best zone, the value also says where it falls, shown with `showValue` and read out, so the warning the color gives is seen and heard in words too (WCAG 1.4.1): "92%, high", "12%, low" or "45%, medium". The words come from the `meterZone` label in `SerupaProvider`. With `formatValue`, your words are read as they are, so say the zone in them.
-- The track has a 1px `border-control` edge, a soft line by design (3:1 with more contrast), so the whole scale shows, and its inside is the page's surface. Every zone's fill keeps 3:1 against it, and the label and value 4.5:1, in every theme (`Meter.test.tsx`). In forced-colors mode the track gets a border and the fill uses Highlight.
+- The track has a 1px `border-strong` edge, a soft line by design (3:1 with more contrast), so the whole scale shows, and its inside is the page's surface. Every zone's fill keeps 3:1 against it, and the label and value 4.5:1, in every theme (`Meter.test.tsx`). In forced-colors mode the track gets a border and the fill uses Highlight.
 - **Keyboard:** none: it shows a value and isn't focusable. Use a Slider for a value people set.
 
 ## Props
@@ -98,13 +98,13 @@ Each is an optional override: set it on the page, a container or one meter. The 
 | --- | --- | --- |
 | `--meter-track` | `track` | The empty part of the bar: the shared `track` gray, Apple's level (zinc-200 in light, zinc-700 in dark), with no edge. |
 | `--meter-track-border` | `track` | The bar's 1px edge: the track's own color by default, so no edge shows; set it to outline the bar. |
-| `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the surface). |
-| `--meter-fill-optimum` | `success` | The filled part in the best zone. |
-| `--meter-fill-suboptimal` | `warning` | The filled part in the next zone. |
-| `--meter-fill-poor` | `danger` | The filled part in the worst zone. |
+| `--meter-fill` | `surface-brand` | The filled part, without low and high zones (3:1 on the track and the surface). |
+| `--meter-fill-optimum` | `surface-success` | The filled part in the best zone. |
+| `--meter-fill-suboptimal` | `surface-warning` | The filled part in the next zone. |
+| `--meter-fill-poor` | `surface-danger` | The filled part in the worst zone. |
 | `--meter-label-color` | `text` | The label. |
 | `--meter-value-color` | `text-muted` | The value at the end of the label row (4.5:1). |
-| `--meter-fill-edge` | `primary-edge` | The primary fill's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--meter-fill-edge` | `border-brand` | The primary fill's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--meter-height-sm` | `spacing-1` | The bar's thickness, size sm (4px). |
 | `--meter-height-md` | `spacing-2` | The bar's thickness, size md (8px, the default). |
 | `--meter-height-lg` | `spacing-3` | The bar's thickness, size lg (12px). |

@@ -82,12 +82,12 @@ Each is an optional override: set it on the page, a container or one CodeBlock. 
 <!-- token-table:start (made from code-block.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--code-block-bg` | `surface-muted` | The background. |
+| `--code-block-bg` | `surface-sunken` | The background. |
 | `--code-block-text` | `text` | The code and title (4.5:1 on bg). |
 | `--code-block-muted` | `text-muted` | The language and the line numbers (4.5:1 on bg). A marked line's number takes the text color. |
 | `--code-block-border` | `border` | The frame and the line under the header. |
-| `--code-block-mark-bg` | `primary-subtle` | A marked line's tint. |
-| `--code-block-mark-bar` | `primary-text` | The bar at a marked line's start. |
+| `--code-block-mark-bg` | `surface-brand-subtle` | A marked line's tint. |
+| `--code-block-mark-bar` | `text-brand` | The bar at a marked line's start. |
 | `--code-block-focus-ring` | `focus-ring` | The ring inside the frame when the code scrolls and has keyboard focus. |
 | `--code-block-radius` | `radius-control` | The corners (6px). |
 | `--code-block-padding` | `spacing-4` | Space around the code (16px). |

@@ -58,7 +58,7 @@ import { Text } from '@diki-stwn/serupa-ds';
 | `id` | string | none | Goes to the root element (`as`). |
 | `as` | `'p'` \| `'span'` \| `'div'` \| `'label'` \| `'strong'` \| `'em'` \| `'small'` \| `'li'` \| `'figcaption'` | `'p'` | The element |
 | `size` | `'xs'` \| `'sm'` \| `'base'` \| `'lg'` \| `'xl'` | inherited | A step of the type scale, with its line height |
-| `tone` | `'neutral'` \| `'muted'` \| `'primary'` \| `'danger'` | inherited | `text`, `text-muted`, `primary` or `danger-text` |
+| `tone` | `'neutral'` \| `'muted'` \| `'primary'` \| `'danger'` | inherited | `text`, `text-muted`, `primary` or `text-danger` |
 | `weight` | `'normal'` \| `'medium'` \| `'semibold'` \| `'bold'` | inherited | 400, 500, 600 or 700 |
 | `truncate` | boolean | `false` | One line, cut with an ellipsis. It becomes a block, so give it a width or a parent that has one |
 | `lines` | number | none | At most this many lines (1 to 6; more counts as 6), the last cut with an ellipsis (CSS line-clamp), for a preview of long text. It sets no style attribute, so it holds under a strict Content Security Policy. Ignored with `truncate` |
@@ -75,6 +75,6 @@ Each is an optional override: set it on the page, a container or one element. Th
 | --- | --- | --- |
 | `--text-color` | `text` | tone="neutral". |
 | `--text-color-muted` | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
-| `--text-color-primary` | `primary-text` | tone="primary". |
-| `--text-color-danger` | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
+| `--text-color-primary` | `text-brand` | tone="primary". |
+| `--text-color-danger` | `text-danger` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
 <!-- token-table:end -->

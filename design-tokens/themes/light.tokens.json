@@ -1,36 +1,36 @@
 {
   "color": {
-    "primary": {
+    "surface-brand": {
       "$type": "color",
       "$value": "{color.blue-600}",
-      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `on-primary` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `primary-edge`. Brand text, links, icons and lines are `primary-text`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
+      "$description": "Alias. Brand fill: primary buttons, checked boxes, the selected day, a Switch that's on, a Progress bar, with `text-on-brand` (white) on it. Light themes: brand 600 or 700, the lightest with 4.5:1 for white text. Dark themes: the same shade, lightened as far as 3:1 on a raised dark card asks and always a touch, 0.02 of OKLCH lightness, while white text keeps 4.5:1 (blue-600 #2563eb becomes #2b6af2), so a button is the same color in both modes. Yellow is the exception: yellow 500 in light and yellow 400 in dark, under yellow-950 text, since a yellow dark enough for white text reads as brown; Yellow Light's fill takes a `border-brand`. Brand text, links, icons and lines are `text-brand`. More contrast: brand 800 with white text in light, brand 300 with brand-950 text in dark.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary"
+          "cssVar": "--surface-brand"
         }
       }
     },
-    "primary-hover": {
+    "surface-brand-hover": {
       "$type": "color",
       "$value": "{color.blue-700}",
-      "$description": "Alias. `primary` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `primary`). More contrast: brand 900 in light, brand 200 in dark.",
+      "$description": "Alias. `surface-brand` under the pointer: one step darker, in light and dark themes alike (a dark theme's is lightened as much as its `surface-brand`). More contrast: brand 900 in light, brand 200 in dark.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-hover"
+          "cssVar": "--surface-brand-hover"
         }
       }
     },
-    "primary-pressed": {
+    "surface-brand-pressed": {
       "$type": "color",
       "$value": "{color.blue-800}",
-      "$description": "Alias. `primary` held down: one step past `primary-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
+      "$description": "Alias. `surface-brand` held down: one step past `surface-brand-hover`, darker in light and dark themes alike, so a held primary button reads as held without a shrink. More contrast: one step past its more-contrast hover where the scale goes on.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-pressed"
+          "cssVar": "--surface-brand-pressed"
         }
       }
     },
-    "primary-edge": {
+    "border-brand": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
@@ -42,170 +42,260 @@
         "hex": "#000000",
         "alpha": 0
       },
-      "$description": "Alias. A 1px edge just inside a `primary` fill that has no text on it (a checked box, a Switch that's on, a Slider or Progress fill, a dot), for a theme whose fill is under 3:1 on the page: Yellow Light's bright yellow 500 takes a yellow 700 edge (4.9:1 on white, WCAG 1.4.11). Transparent in every other theme, where the fill passes by itself, so nothing is drawn.",
+      "$description": "Alias. A 1px edge just inside a `surface-brand` fill that has no text on it (a checked box, a Switch that's on, a Slider or Progress fill, a dot), for a theme whose fill is under 3:1 on the page: Yellow Light's bright yellow 500 takes a yellow 700 edge (4.9:1 on white, WCAG 1.4.11). Transparent in every other theme, where the fill passes by itself, so nothing is drawn.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-edge"
+          "cssVar": "--border-brand"
         }
       }
     },
-    "primary-subtle": {
+    "surface-brand-subtle": {
       "$type": "color",
       "$value": "{color.blue-50}",
       "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-subtle"
+          "cssVar": "--surface-brand-subtle"
         }
       }
     },
-    "primary-subtle-pressed": {
+    "surface-brand-subtle-hover": {
       "$type": "color",
       "$value": "{color.blue-100}",
-      "$description": "Alias. Pressed state of a fill in `primary-subtle` (a secondary button held down): one step past it (brand 100 light, brand 900 dark). `primary-hover` keeps 4.5:1 on it.",
+      "$description": "Alias. `surface-brand-subtle` under the pointer: one brand step past it (100 in light, 900 in dark).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-subtle-pressed"
+          "cssVar": "--surface-brand-subtle-hover"
         }
       }
     },
-    "on-primary": {
+    "surface-brand-subtle-pressed": {
+      "$type": "color",
+      "$value": "{color.blue-200}",
+      "$description": "Alias. Pressed state of a fill in `surface-brand-subtle` (a secondary button held down): two brand steps past it (200 in light, 800 in dark; 900 in Red, Orange, Pink and Rose Dark, where 800 takes `text-brand-hover` under 4.5:1). `text-brand-hover` keeps 4.5:1 on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--surface-brand-subtle-pressed"
+        }
+      }
+    },
+    "text-on-brand": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `primary` fills: white in light and dark themes, yellow 950 in Yellow Light and Yellow Dark, whose fills are bright (brand 950 in dark with more contrast, where the fill is brand 300).",
+      "$description": "Alias. Text and icons on `surface-brand` fills: white in light and dark themes, yellow 950 in Yellow Light and Yellow Dark, whose fills are bright (brand 950 in dark with more contrast, where the fill is brand 300).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--on-primary"
+          "cssVar": "--text-on-brand"
         }
       }
     },
-    "primary-text": {
+    "text-brand": {
       "$type": "color",
       "$value": "{color.blue-600}",
-      "$description": "Alias. Brand text, links, icons, lines and borders: what `primary` is as a fill, 4.5:1 as text on `surface`, `surface-muted` and the tints. Light themes: the same shade as `primary`; dark themes: brand 400, which a dark page needs for text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
+      "$description": "Alias. Brand text, links, icons, lines and borders: what `surface-brand` is as a fill, 4.5:1 as text on `surface`, `surface-sunken` and the tints. Light themes: the same shade as `surface-brand`; dark themes: brand 400, which a dark page needs for text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `surface-brand-subtle`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-text"
+          "cssVar": "--text-brand"
         }
       }
     },
-    "primary-text-hover": {
+    "text-brand-hover": {
       "$type": "color",
       "$value": "{color.blue-700}",
-      "$description": "Alias. `primary-text` on hover: a link or a secondary button's text under the pointer. One step past `primary-text` (darker in light themes, lighter in dark).",
+      "$description": "Alias. `text-brand` on hover: a link or a secondary button's text under the pointer. One step past `text-brand` (darker in light themes, lighter in dark).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--primary-text-hover"
+          "cssVar": "--text-brand-hover"
         }
       }
     },
-    "secondary": {
+    "surface-secondary": {
       "$type": "color",
       "$value": "{color.zinc-100}",
       "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--secondary"
+          "cssVar": "--surface-secondary"
         }
       }
     },
-    "secondary-hover": {
+    "surface-secondary-hover": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Hover state of `secondary`.",
+      "$description": "Alias. Hover state of `surface-secondary`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--secondary-hover"
+          "cssVar": "--surface-secondary-hover"
         }
       }
     },
-    "secondary-pressed": {
+    "surface-secondary-pressed": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Pressed state of `secondary`, a step past `secondary-hover` (`pressed` is the same gray as `secondary-hover` in dark).",
+      "$description": "Alias. Pressed state of `surface-secondary`, a step past `surface-secondary-hover` (`surface-pressed` is the same gray as `surface-secondary-hover` in dark).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--secondary-pressed"
+          "cssVar": "--surface-secondary-pressed"
         }
       }
     },
-    "highlight": {
+    "surface-highlight": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. In light the same zinc-100 as `secondary` (about 1.1:1 on `surface`); in dark it shares `secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-overlay`), with no bar by default (`highlight-indicator`). Text on it keeps 4.5:1.",
+      "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. In light the same zinc-100 as `surface-secondary` (about 1.1:1 on `surface`); in dark it shares `surface-secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-raised`), with no bar by default (`surface-highlight-indicator`). Text on it keeps 4.5:1.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--highlight"
+          "cssVar": "--surface-highlight"
         }
       }
     },
-    "pressed": {
+    "surface-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-300}",
+      "$value": "{color.zinc-200}",
       "$description": "Alias. The fill while a row, tab, day or page button is held down (`:active`): one step past its hover. `text` keeps 7:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--pressed"
+          "cssVar": "--surface-pressed"
         }
       }
     },
     "surface": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Card, panel and bar background (white light, zinc-900 dark). The page behind them is `surface-page`.",
+      "$description": "Alias. Card, panel and bar background (white light, zinc-900 dark). The page behind them is `background`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface"
         }
       }
     },
-    "surface-page": {
+    "background": {
       "$type": "color",
       "$value": "{color.white}",
       "$description": "Alias. The page itself: the <html> and <body> background, and a data-mode or data-theme section's. White in light, as `surface`; in dark zinc-950, a step below the zinc-900 cards, panels and bars on it, so they and every control (fields, buttons, SegmentedControl's track) sit lighter than the page.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--surface-page"
+          "cssVar": "--background"
         }
       }
     },
-    "surface-muted": {
+    "surface-sunken": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark). A recess, so never the fill of something you press: controls use `surface-control`.",
+      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark). A recess, so never the fill of something you press: controls use `control`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--surface-muted"
+          "cssVar": "--surface-sunken"
         }
       }
     },
-    "surface-control": {
+    "control": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. zinc-50 in light, as `surface-muted`; in dark a step above the zinc-950 page (zinc-900), so a control is never darker than the surface it sits on.",
+      "$description": "Alias. The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. zinc-50 in light, as `surface-sunken`; in dark a step above the zinc-950 page (zinc-900), so a control is never darker than the surface it sits on.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--surface-control"
+          "cssVar": "--control"
+        }
+      }
+    },
+    "control-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. `control` under the pointer: one step up.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-hover"
+        }
+      }
+    },
+    "control-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. `control` while held down (FileUpload's drop zone): one step past `control-hover`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-pressed"
+        }
+      }
+    },
+    "control-raised": {
+      "$type": "color",
+      "$value": "{color.zinc-50}",
+      "$description": "Alias. `control` on a raised layer (a Dialog, Popover or Drawer): in dark the raised zinc-800, so the control is never darker than the layer under it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-raised"
+        }
+      }
+    },
+    "control-raised-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. `control-raised` under the pointer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-raised-hover"
+        }
+      }
+    },
+    "control-raised-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. `control-raised` while held down.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-raised-pressed"
+        }
+      }
+    },
+    "control-disabled": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. A disabled control's fill.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-disabled"
+        }
+      }
+    },
+    "control-raised-disabled": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. A disabled control's fill on a raised layer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--control-raised-disabled"
         }
       }
     },
     "surface-hover": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `highlight`; zinc-800 dark). Gray text on it reads `text-muted-shaded`.",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `surface-highlight`; zinc-800 dark). Gray text on it reads `text-secondary`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover"
         }
       }
     },
-    "surface-hover-raised": {
+    "surface-raised-hover": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark #333338, a step above zinc-800: zinc-800 and zinc-700 mixed half and half in sRGB (`color-mix(in srgb, zinc-800, zinc-700)`), so it sits between two palette steps rather than adding one, and muted text keeps 4.5:1 on it. Gray text on it reads `text-muted-shaded`.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark #333338, a step above zinc-800: zinc-800 and zinc-700 mixed half and half in sRGB (`color-mix(in srgb, zinc-800, zinc-700)`), so it sits between two palette steps rather than adding one, and muted text keeps 4.5:1 on it. Gray text on it reads `text-secondary`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--surface-hover-raised"
+          "cssVar": "--surface-raised-hover"
+        }
+      }
+    },
+    "surface-raised-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. A row or item on a raised layer while held down (`:active`): one step past `surface-raised-hover` (zinc-200 light, zinc-600 dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--surface-raised-pressed"
         }
       }
     },
@@ -216,16 +306,6 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-raised"
-        }
-      }
-    },
-    "surface-overlay": {
-      "$type": "color",
-      "$value": "{color.white}",
-      "$description": "Alias. Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast and the Combobox, DatePicker and TimePicker lists.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--surface-overlay"
         }
       }
     },
@@ -241,58 +321,88 @@
     },
     "field-readonly": {
       "$type": "color",
-      "$value": "{color.zinc-50}",
-      "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it.",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. Background of a read-only field: a step flatter than `field` (zinc-100 in light, zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it. The same as `field-disabled`; gray text in it (a placeholder, an affix, a count) reads `text-secondary`, since `field-placeholder` is 4.4:1 on it.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-readonly"
         }
       }
     },
-    "disabled-text": {
+    "field-disabled": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. The text, icon and mark of anything disabled, in place of fading it: the same neutral in every brand, so a disabled primary, danger or brand control reads as off, never as a faint version of itself. At least 3:1 on `disabled-surface` and the surfaces (4.5:1 with more contrast).",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. A disabled field's fill: the same as `field-readonly` (zinc-100 in light, zinc-900 in dark); the muted text and `field-border-disabled` tell them apart.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--disabled-text"
+          "cssVar": "--field-disabled"
         }
       }
     },
-    "disabled-surface": {
+    "field-raised-readonly": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. `field-readonly` on a raised layer: in dark the layer's own zinc-800, as a readonly field sinks to the layer under it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-raised-readonly"
+        }
+      }
+    },
+    "field-raised-disabled": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. `field-disabled` on a raised layer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-raised-disabled"
+        }
+      }
+    },
+    "text-disabled": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The text, icon and mark of anything disabled, in place of fading it: the same neutral in every brand, so a disabled primary, danger or brand control reads as off, never as a faint version of itself. At least 3:1 on `surface-disabled` and the surfaces (4.5:1 with more contrast).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--text-disabled"
+        }
+      }
+    },
+    "surface-disabled": {
       "$type": "color",
       "$value": "{color.zinc-100}",
       "$description": "Alias. The fill of a disabled control that has one (a checked box, a switch's track, a slider's fill, the selected segment): a neutral a step off the page, whatever its color when on.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--disabled-surface"
+          "cssVar": "--surface-disabled"
         }
       }
     },
-    "disabled-border": {
+    "border-disabled": {
       "$type": "color",
       "$value": "{color.zinc-300}",
       "$description": "Alias. The edge of a disabled control: a box, a track, a field's border.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--disabled-border"
+          "cssVar": "--border-disabled"
         }
       }
     },
-    "highlight-indicator": {
+    "surface-highlight-indicator": {
       "$type": "color",
       "$value": "{color.zinc-100}",
-      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the gray fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
+      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `surface-highlight` in every theme (change both together), so no bar shows and the gray fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `surface-highlight`, and forced colors outline the item in `Highlight`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--highlight-indicator"
+          "cssVar": "--surface-highlight-indicator"
         }
       }
     },
     "field-border": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-strong`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border"
@@ -319,60 +429,60 @@
         }
       }
     },
-    "border-control": {
-      "$type": "color",
-      "$value": "{color.zinc-300}",
-      "$description": "Alias. The edge of a control that isn't a text or choice field: Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. A soft line by design, zinc-300 in light and zinc-600 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge, as `field-border` is: more contrast (`data-contrast=\"more\"` or the system setting) brings back 3:1+.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--border-control"
-        }
-      }
-    },
-    "border-control-hover": {
-      "$type": "color",
-      "$value": "{color.zinc-400}",
-      "$description": "Alias. `border-control` on hover, one step stronger (Carousel's dots).",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--border-control-hover"
-        }
-      }
-    },
-    "border-control-pressed": {
-      "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. `border-control` while held down, one step past `border-control-hover`. Nothing in Serupa reads it.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--border-control-pressed"
-        }
-      }
-    },
-    "field-hover": {
-      "$type": "color",
-      "$value": "{color.zinc-100}",
-      "$description": "Alias. The fill of a button inside a field under the pointer (a calendar or clock button, Input's icon action, NumberInput's steppers, the country button): `secondary` in light, zinc-700 in dark, a step past the zinc-800 field.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--field-hover"
-        }
-      }
-    },
-    "field-pressed": {
+    "field-border-disabled": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. The fill of a button inside a field while it's held down, one step past `field-hover` (zinc-200 in light, zinc-600 in dark; text keeps 4.5:1 on it).",
+      "$description": "Alias. A disabled field's border: a step softer than `field-border` in light, so it reads as off.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--field-pressed"
+          "cssVar": "--field-border-disabled"
+        }
+      }
+    },
+    "field-border-raised": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. `field-border` on a raised layer: one step up in dark, as `field-raised` is.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-raised"
+        }
+      }
+    },
+    "field-border-raised-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. `field-border-raised` under the pointer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-raised-hover"
+        }
+      }
+    },
+    "field-border-raised-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. `field-border-raised` while held down.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-raised-pressed"
+        }
+      }
+    },
+    "field-border-raised-disabled": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. `field-border-disabled` on a raised layer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-raised-disabled"
         }
       }
     },
     "field-raised": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, zinc-800 and zinc-700 mixed half and half, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. `field-hover` and `field-pressed` already sit a step past it.",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, zinc-800 and zinc-700 mixed half and half, as `surface-raised-hover`), so a field in a dialog still stands out from it instead of matching it. `surface-raised-hover` and `surface-raised-pressed` already sit a step past it.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-raised"
@@ -382,24 +492,54 @@
     "field-border-invalid": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. An invalid field's border: `danger` (red 600), 3:1+ on `field` and `surface`. Its own alias so a theme whose field fill is lighter can take a lighter red.",
+      "$description": "Alias. An invalid field's border: `surface-danger` (red 600), 3:1+ on `field` and `surface`. Its own alias so a theme whose field fill is lighter can take a lighter red.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-invalid"
         }
       }
     },
-    "placeholder": {
+    "field-border-invalid-hover": {
+      "$type": "color",
+      "$value": "{color.red-700}",
+      "$description": "Alias. `field-border-invalid` under the pointer: one step stronger.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-invalid-hover"
+        }
+      }
+    },
+    "field-border-invalid-pressed": {
+      "$type": "color",
+      "$value": "{color.red-800}",
+      "$description": "Alias. `field-border-invalid` while held down.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-invalid-pressed"
+        }
+      }
+    },
+    "field-placeholder": {
       "$type": "color",
       "$value": "{color.zinc-500}",
       "$description": "Alias. Placeholder text in form fields, and the other muted text inside a field: a prefix or suffix, a character count, the Caps Lock hint (4.5:1+ on `field` and `field-readonly`). Placeholders are hints, never labels.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--placeholder"
+          "cssVar": "--field-placeholder"
         }
       }
     },
-    "overlay": {
+    "field-raised-placeholder": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. `field-placeholder` in a field on a raised layer: in dark a step lighter, as zinc-400 is 4.07:1 on the zinc-700 `field-raised`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-raised-placeholder"
+        }
+      }
+    },
+    "backdrop": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
@@ -414,11 +554,11 @@
       "$description": "Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--overlay"
+          "cssVar": "--backdrop"
         }
       }
     },
-    "picture-edge": {
+    "border-picture": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
@@ -433,7 +573,7 @@
       "$description": "Alias. A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color: black at 10% in light themes, white at 10% in dark.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--picture-edge"
+          "cssVar": "--border-picture"
         }
       }
     },
@@ -467,13 +607,13 @@
         }
       }
     },
-    "text-muted-shaded": {
+    "text-secondary": {
       "$type": "color",
       "$value": "{color.zinc-600}",
-      "$description": "Alias. Secondary text inside a shaded row (`surface-hover`, `surface-hover-raised`: hovered, selected or striped), where `text-muted` would fall under 4.5:1 on zinc-100: zinc-600 in light, `text-muted`'s zinc-400 in dark. 4.5:1+ on either fill in every theme.",
+      "$description": "Alias. Secondary text inside a shaded row (`surface-hover`, `surface-raised-hover`: hovered, selected or striped), where `text-muted` would fall under 4.5:1 on zinc-100: zinc-600 in light, `text-muted`'s zinc-400 in dark. 4.5:1+ on either fill in every theme.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--text-muted-shaded"
+          "cssVar": "--text-secondary"
         }
       }
     },
@@ -490,7 +630,7 @@
     "border": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines. A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
+      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines. A quiet line, never a control's boundary: those use `field-border` or `border-strong`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border"
@@ -500,7 +640,7 @@
     "border-strong": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design; `border-control` meets 3:1).",
+      "$description": "Alias. Emphasized dividers and outlines. Form fields use `field-border` (softer by design; `border-strong` meets 3:1).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"
@@ -537,23 +677,13 @@
         }
       }
     },
-    "border-overlay": {
+    "border-raised": {
       "$type": "color",
       "$value": "{color.zinc-200}",
       "$description": "Alias. The edge of a top-layer surface (Menu, Popover, Dialog, Drawer, Toast, the picker lists), and the lines inside it. In dark it is one step stronger than `border`, so a menu stands off the page.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--border-overlay"
-        }
-      }
-    },
-    "border-elevated": {
-      "$type": "color",
-      "$value": "{color.zinc-200}",
-      "$description": "Alias. A line on the raised step, `surface-raised`: the dividers inside an elevated Card and the outline Button's border (the button's fill is `surface-raised`). The same zinc-200 as `border` in light; in dark zinc-600, a step above the zinc-800 fill, where `border` (zinc-800) would match it and vanish. The same values as `border-overlay`, which is the top layer's. Not named border-raised: that name was removed in 15.0.0, and serupa-migrate still turns it into `border`.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--border-elevated"
+          "cssVar": "--border-raised"
         }
       }
     },
@@ -567,303 +697,303 @@
         }
       }
     },
-    "success": {
+    "surface-success": {
       "$type": "color",
       "$value": "{color.green-600}",
-      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `success-text`.",
+      "$description": "Alias. Success icons and fills (3:1): green-600 in light, a touch lighter in dark (#23a950), as every dark fill is (ADR-0026). For success text use `text-success`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success"
+          "cssVar": "--surface-success"
         }
       }
     },
-    "success-subtle": {
+    "surface-success-subtle": {
       "$type": "color",
       "$value": "{color.green-50}",
       "$description": "Alias. Success alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success-subtle"
+          "cssVar": "--surface-success-subtle"
         }
       }
     },
-    "success-text": {
+    "text-success": {
       "$type": "color",
       "$value": "{color.green-700}",
-      "$description": "Alias. Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+ in every theme).",
+      "$description": "Alias. Success text on `surface`, `surface-sunken` and `surface-success-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success-text"
+          "cssVar": "--text-success"
         }
       }
     },
-    "success-hover": {
+    "surface-success-hover": {
       "$type": "color",
       "$value": "{color.green-500}",
-      "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover / pressed state of `surface-success` fills; `text-on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success-hover"
+          "cssVar": "--surface-success-hover"
         }
       }
     },
-    "on-success": {
+    "text-on-success": {
       "$type": "color",
       "$value": "{color.green-950}",
-      "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
+      "$description": "Alias. Text and icons on `surface-success` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--on-success"
+          "cssVar": "--text-on-success"
         }
       }
     },
-    "success-subtle-hover": {
+    "surface-success-subtle-hover": {
       "$type": "color",
       "$value": "{color.green-100}",
-      "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover fill of an interactive `surface-success-subtle` surface; `text-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success-subtle-hover"
+          "cssVar": "--surface-success-subtle-hover"
         }
       }
     },
-    "success-border": {
+    "border-success": {
       "$type": "color",
       "$value": "{color.green-300}",
       "$description": "Alias. Border of a success outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--success-border"
+          "cssVar": "--border-success"
         }
       }
     },
-    "warning": {
+    "surface-warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
-      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `warning-text`.",
+      "$description": "Alias. Warning icons and fills: amber-600 in light, a touch lighter in dark (#e07d17); put dark text on it. For warning text use `text-warning`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning"
+          "cssVar": "--surface-warning"
         }
       }
     },
-    "warning-subtle": {
+    "surface-warning-subtle": {
       "$type": "color",
       "$value": "{color.amber-50}",
       "$description": "Alias. Warning alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning-subtle"
+          "cssVar": "--surface-warning-subtle"
         }
       }
     },
-    "warning-text": {
+    "text-warning": {
       "$type": "color",
       "$value": "{color.amber-700}",
-      "$description": "Alias. Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+ in every theme).",
+      "$description": "Alias. Warning text on `surface`, `surface-sunken` and `surface-warning-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning-text"
+          "cssVar": "--text-warning"
         }
       }
     },
-    "warning-hover": {
+    "surface-warning-hover": {
       "$type": "color",
       "$value": "{color.amber-500}",
-      "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover / pressed state of `surface-warning` fills; `text-on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning-hover"
+          "cssVar": "--surface-warning-hover"
         }
       }
     },
-    "on-warning": {
+    "text-on-warning": {
       "$type": "color",
       "$value": "{color.amber-950}",
-      "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
+      "$description": "Alias. Text and icons on `surface-warning` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--on-warning"
+          "cssVar": "--text-on-warning"
         }
       }
     },
-    "warning-subtle-hover": {
+    "surface-warning-subtle-hover": {
       "$type": "color",
       "$value": "{color.amber-100}",
-      "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover fill of an interactive `surface-warning-subtle` surface; `text-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning-subtle-hover"
+          "cssVar": "--surface-warning-subtle-hover"
         }
       }
     },
-    "warning-border": {
+    "border-warning": {
       "$type": "color",
       "$value": "{color.amber-300}",
       "$description": "Alias. Border of a warning outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--warning-border"
+          "cssVar": "--border-warning"
         }
       }
     },
-    "danger": {
+    "surface-danger": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `danger-text`.",
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.5:1+): red-600 in light, a touch lighter in dark (#e22e2c). For error text use `text-danger`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger"
+          "cssVar": "--surface-danger"
         }
       }
     },
-    "danger-hover": {
+    "surface-danger-hover": {
       "$type": "color",
       "$value": "{color.red-700}",
-      "$description": "Alias. Hover / pressed state of `danger`.",
+      "$description": "Alias. Hover / pressed state of `surface-danger`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-hover"
+          "cssVar": "--surface-danger-hover"
         }
       }
     },
-    "danger-pressed": {
+    "surface-danger-pressed": {
       "$type": "color",
       "$value": "{color.red-800}",
-      "$description": "Alias. Pressed state of `danger`: one step past `danger-hover`; `on-danger` keeps 4.5:1 on it.",
+      "$description": "Alias. Pressed state of `surface-danger`: one step past `surface-danger-hover`; `text-on-danger` keeps 4.5:1 on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-pressed"
+          "cssVar": "--surface-danger-pressed"
         }
       }
     },
-    "on-danger": {
+    "text-on-danger": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `danger` fills.",
+      "$description": "Alias. Text and icons on `surface-danger` fills.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--on-danger"
+          "cssVar": "--text-on-danger"
         }
       }
     },
-    "danger-subtle": {
+    "surface-danger-subtle": {
       "$type": "color",
       "$value": "{color.red-50}",
       "$description": "Alias. Error alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-subtle"
+          "cssVar": "--surface-danger-subtle"
         }
       }
     },
-    "danger-text": {
+    "text-danger": {
       "$type": "color",
       "$value": "{color.red-700}",
-      "$description": "Alias. Destructive text and icons on `surface`, `danger-subtle` and its hover (5.3:1+ in every theme).",
+      "$description": "Alias. Destructive text and icons on `surface`, `surface-danger-subtle` and its hover (5.3:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-text"
+          "cssVar": "--text-danger"
         }
       }
     },
-    "danger-subtle-hover": {
+    "surface-danger-subtle-hover": {
       "$type": "color",
       "$value": "{color.red-100}",
       "$description": "Alias. Hover fill for destructive secondary, outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-subtle-hover"
+          "cssVar": "--surface-danger-subtle-hover"
         }
       }
     },
-    "danger-border": {
+    "border-danger": {
       "$type": "color",
       "$value": "{color.red-300}",
       "$description": "Alias. Border of a destructive outline button.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--danger-border"
+          "cssVar": "--border-danger"
         }
       }
     },
-    "info": {
+    "surface-info": {
       "$type": "color",
       "$value": "{color.sky-700}",
-      "$description": "Alias. Informational icons and fills (3:1), with white `on-info` text: sky-700 in light, the same shade lightened only as far as 3:1 on a raised dark card in dark (#1e77b0). For info text use `info-text`.",
+      "$description": "Alias. Informational icons and fills (3:1), with white `text-on-info` text: sky-700 in light, the same shade lightened only as far as 3:1 on a raised dark card in dark (#1e77b0). For info text use `text-info`.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info"
+          "cssVar": "--surface-info"
         }
       }
     },
-    "info-subtle": {
+    "surface-info-subtle": {
       "$type": "color",
       "$value": "{color.sky-50}",
       "$description": "Alias. Info alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info-subtle"
+          "cssVar": "--surface-info-subtle"
         }
       }
     },
-    "info-text": {
+    "text-info": {
       "$type": "color",
       "$value": "{color.sky-700}",
-      "$description": "Alias. Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+ in every theme).",
+      "$description": "Alias. Info text on `surface`, `surface-sunken` and `surface-info-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info-text"
+          "cssVar": "--text-info"
         }
       }
     },
-    "info-hover": {
+    "surface-info-hover": {
       "$type": "color",
       "$value": "{color.sky-800}",
-      "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover / pressed state of `surface-info` fills; `text-on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info-hover"
+          "cssVar": "--surface-info-hover"
         }
       }
     },
-    "on-info": {
+    "text-on-info": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
+      "$description": "Alias. Text and icons on `surface-info` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--on-info"
+          "cssVar": "--text-on-info"
         }
       }
     },
-    "info-subtle-hover": {
+    "surface-info-subtle-hover": {
       "$type": "color",
       "$value": "{color.sky-100}",
-      "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
+      "$description": "Alias. Hover fill of an interactive `surface-info-subtle` surface; `text-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info-subtle-hover"
+          "cssVar": "--surface-info-subtle-hover"
         }
       }
     },
-    "info-border": {
+    "border-info": {
       "$type": "color",
       "$value": "{color.sky-300}",
       "$description": "Alias. Border of a info outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--info-border"
+          "cssVar": "--border-info"
         }
       }
     },
-    "link-visited": {
+    "text-link-visited": {
       "$type": "color",
       "$value": "{color.violet-700}",
-      "$description": "Alias. A visited link in reading content (Prose): a shade apart from primary, 4.5:1+ on `surface` and `surface-muted` in every theme.",
+      "$description": "Alias. A visited link in reading content (Prose): a shade apart from primary, 4.5:1+ on `surface` and `surface-sunken` in every theme.",
       "$extensions": {
         "com.serupa": {
-          "cssVar": "--link-visited"
+          "cssVar": "--text-link-visited"
         }
       }
     },

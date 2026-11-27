@@ -70,15 +70,15 @@ await tc('colors from tokens pass, and so do transparent, currentColor, color-mi
 .srp-card__fade { mask-image: linear-gradient(transparent, black); --srp-card-fade: color-mix(in srgb, black 16%, transparent); }`), []);
 
 const NA = { 'serupa/no-accent-on-current': [true, { known: ['x-bg-selected'] }], 'serupa/color-through-component-token': null };
-await t('no-accent-on-current: a current row marked by the fill, a neutral line and the shared bar token pass; so does a focus ring, a child of a selected item, and a known filled pick', layered(`.srp-x__item[aria-current="page"] { background: var(--x-item-bg-active, var(--highlight)); box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--highlight-indicator)); }
+await t('no-accent-on-current: a current row marked by the fill, a neutral line and the shared bar token pass; so does a focus ring, a child of a selected item, and a known filled pick', layered(`.srp-x__item[aria-current="page"] { background: var(--x-item-bg-active, var(--surface-highlight)); box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--surface-highlight-indicator)); }
 .srp-x__tab[aria-selected="true"]::after { background: var(--x-indicator, var(--text)); }
-.srp-x__tab[aria-selected="true"]:focus-visible { outline: var(--focus-ring-width) solid var(--x-ring, var(--primary)); }
-.srp-x__option--selected .srp-x__tick { color: var(--x-tick, var(--primary)); }
-.srp-x__day--selected { background: var(--x-bg-selected, var(--x-selected-bg, var(--primary))); }
-.srp-x__item:not(.srp-x__item--active):hover { color: var(--x-hover, var(--primary)); }`), [], NA);
-await t('no-accent-on-current: the accent on a selected, current, active or highlighted item is flagged, bare, as a default, and behind an old token name', layered(`.srp-x__item[aria-current="page"] { box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--primary)); }
-.srp-x__tab[aria-selected="true"]::after { background: var(--primary); }
-.srp-x__link--active { color: var(--x-text-active, var(--x-active-text, var(--primary-hover))); }
-.srp-x__option--highlighted { background: var(--x-option-bg, var(--primary-subtle)); }`), ['serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current'], NA);
+.srp-x__tab[aria-selected="true"]:focus-visible { outline: var(--focus-ring-width) solid var(--x-ring, var(--surface-brand)); }
+.srp-x__option--selected .srp-x__tick { color: var(--x-tick, var(--surface-brand)); }
+.srp-x__day--selected { background: var(--x-bg-selected, var(--x-selected-bg, var(--surface-brand))); }
+.srp-x__item:not(.srp-x__item--active):hover { color: var(--x-hover, var(--surface-brand)); }`), [], NA);
+await t('no-accent-on-current: the accent on a selected, current, active or highlighted item is flagged, bare, as a default, and behind an old token name', layered(`.srp-x__item[aria-current="page"] { box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--surface-brand)); }
+.srp-x__tab[aria-selected="true"]::after { background: var(--surface-brand); }
+.srp-x__link--active { color: var(--x-text-active, var(--x-active-text, var(--surface-brand-hover))); }
+.srp-x__option--highlighted { background: var(--x-option-bg, var(--surface-brand-subtle)); }`), ['serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current'], NA);
 
 done(report('Stylelint rules', R));

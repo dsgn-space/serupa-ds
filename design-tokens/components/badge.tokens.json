@@ -4,7 +4,7 @@
     "color": {
       "neutral-subtle-bg": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "Neutral subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "primary-subtle-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "Primary subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "primary-subtle-text": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Primary subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "primary-solid-bg": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "Primary solid: fill",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "primary-solid-text": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "Primary solid: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "primary-solid-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.surface-brand-hover}",
         "$description": "Primary solid: the color a clickable badge moves toward on hover and press",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "primary-outline-text": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Primary outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "primary-outline-border": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Primary outline: border",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "success-subtle-bg": {
         "$type": "color",
-        "$value": "{color.success-subtle}",
+        "$value": "{color.surface-success-subtle}",
         "$description": "Success subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "success-subtle-text": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "Success subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "success-solid-bg": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "Success solid: fill",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "success-solid-text": {
         "$type": "color",
-        "$value": "{color.on-success}",
+        "$value": "{color.text-on-success}",
         "$description": "Success solid: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "success-outline-text": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "Success outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "success-outline-border": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "Success outline: border",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "success-solid-hover": {
         "$type": "color",
-        "$value": "{color.success-hover}",
+        "$value": "{color.surface-success-hover}",
         "$description": "Success solid: the color a clickable badge moves toward on hover and press",
         "$extensions": {
           "com.serupa": {
@@ -204,7 +204,7 @@
       },
       "warning-subtle-bg": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "Warning subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -214,7 +214,7 @@
       },
       "warning-subtle-text": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "Warning subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -224,7 +224,7 @@
       },
       "warning-solid-bg": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "Warning solid: fill",
         "$extensions": {
           "com.serupa": {
@@ -234,7 +234,7 @@
       },
       "warning-solid-text": {
         "$type": "color",
-        "$value": "{color.on-warning}",
+        "$value": "{color.text-on-warning}",
         "$description": "Warning solid: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -244,7 +244,7 @@
       },
       "warning-outline-text": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "Warning outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -254,7 +254,7 @@
       },
       "warning-outline-border": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "Warning outline: border",
         "$extensions": {
           "com.serupa": {
@@ -264,7 +264,7 @@
       },
       "warning-solid-hover": {
         "$type": "color",
-        "$value": "{color.warning-hover}",
+        "$value": "{color.surface-warning-hover}",
         "$description": "Warning solid: the color a clickable badge moves toward on hover and press",
         "$extensions": {
           "com.serupa": {
@@ -274,7 +274,7 @@
       },
       "danger-subtle-bg": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "Danger subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -284,7 +284,7 @@
       },
       "danger-subtle-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Danger subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -294,7 +294,7 @@
       },
       "danger-solid-bg": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "Danger solid: fill",
         "$extensions": {
           "com.serupa": {
@@ -304,7 +304,7 @@
       },
       "danger-solid-text": {
         "$type": "color",
-        "$value": "{color.on-danger}",
+        "$value": "{color.text-on-danger}",
         "$description": "Danger solid: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -314,7 +314,7 @@
       },
       "danger-outline-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Danger outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -324,7 +324,7 @@
       },
       "danger-outline-border": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "Danger outline: border",
         "$extensions": {
           "com.serupa": {
@@ -334,7 +334,7 @@
       },
       "danger-solid-hover": {
         "$type": "color",
-        "$value": "{color.danger-hover}",
+        "$value": "{color.surface-danger-hover}",
         "$description": "Danger solid: the color a clickable badge moves toward on hover and press",
         "$extensions": {
           "com.serupa": {
@@ -344,7 +344,7 @@
       },
       "info-subtle-bg": {
         "$type": "color",
-        "$value": "{color.info-subtle}",
+        "$value": "{color.surface-info-subtle}",
         "$description": "Info subtle: fill",
         "$extensions": {
           "com.serupa": {
@@ -354,7 +354,7 @@
       },
       "info-subtle-text": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "Info subtle: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -364,7 +364,7 @@
       },
       "info-solid-bg": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "Info solid: fill",
         "$extensions": {
           "com.serupa": {
@@ -374,7 +374,7 @@
       },
       "info-solid-text": {
         "$type": "color",
-        "$value": "{color.on-info}",
+        "$value": "{color.text-on-info}",
         "$description": "Info solid: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -384,7 +384,7 @@
       },
       "info-outline-text": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "Info outline: text and icon",
         "$extensions": {
           "com.serupa": {
@@ -394,7 +394,7 @@
       },
       "info-outline-border": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "Info outline: border",
         "$extensions": {
           "com.serupa": {
@@ -404,7 +404,7 @@
       },
       "info-solid-hover": {
         "$type": "color",
-        "$value": "{color.info-hover}",
+        "$value": "{color.surface-info-hover}",
         "$description": "Info solid: the color a clickable badge moves toward on hover and press",
         "$extensions": {
           "com.serupa": {
@@ -424,7 +424,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -434,7 +434,7 @@
       },
       "fill-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-surface}",
+        "$value": "{color.surface-disabled}",
         "$description": "Disabled: the fill, whatever its color when enabled.",
         "$extensions": {
           "com.serupa": {
@@ -444,7 +444,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

@@ -214,7 +214,7 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
         </Field>
         <Link href={forgotHref} className="self-start text-sm">{l.forgot}</Link>
         <Button type="submit" loading={busy}>{l.signIn}</Button>
-        {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
+        {failure ? <p className="m-0 text-sm text-text-danger">{l.failed}</p> : null}
       </form>
     </Card>
   ) : step === 'code' ? (
@@ -226,13 +226,13 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
           <PinInput id={ids.code} name="code" length={6} value={code} onValueChange={setCode} />
         </Field>
         <Button type="submit" loading={busy}>{l.verify}</Button>
-        {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
+        {failure ? <p className="m-0 text-sm text-text-danger">{l.failed}</p> : null}
         <div className="flex flex-col">
           <Button type="button" variant="ghost" loading={resending} onClick={resend}>{l.resend}</Button>
           {/* Always there, so a reader is listening before the first ask; a new keyed line is added for each answer.
               Empty, it takes no room, so the step looks the same until a code is asked for. */}
           <div role="status" className="text-sm text-text-muted">
-            {sent ? <p key={sent} className={resendFailed ? 'm-0 mt-2 text-danger-text' : 'm-0 mt-2'}>{resendFailed ? l.resendFailed : l.resent}</p> : null}
+            {sent ? <p key={sent} className={resendFailed ? 'm-0 mt-2 text-text-danger' : 'm-0 mt-2'}>{resendFailed ? l.resendFailed : l.resent}</p> : null}
           </div>
           <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent(0); setFailure(false); setPassword(''); go('password'); }}>{l.back}</Button>
         </div>

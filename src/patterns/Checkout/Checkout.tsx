@@ -352,7 +352,7 @@ export function Checkout({
                 </form>
               ) : step === 'review' ? (
                 <div className="flex flex-col gap-4">
-                  {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or {method?.kind === 'card' ? 'use another card' : 'choose another way to pay'}.</p> : null}
+                  {failed ? <p className="m-0 text-text-danger">Your order wasn’t placed. Nothing was charged. Try again, or {method?.kind === 'card' ? 'use another card' : 'choose another way to pay'}.</p> : null}
                   <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                       <Heading level={3}>Delivery address</Heading>

@@ -39,7 +39,7 @@ function Live({ initial, labels }: { initial: readonly AIChatMessage[]; labels?:
 }
 
 function Page({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-6 outline-none">
+  return <div className="min-h-screen bg-surface-sunken text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-6 outline-none">
     <Heading level={1}>Help</Heading><Card padding="lg">{children}</Card></main></div>;
 }
 

@@ -77,11 +77,11 @@ Each is an optional override: set it on the page, a container or one OfflineBann
 <!-- token-table:start (made from offline-banner.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--offline-banner-bg` | `surface-overlay` | The bar's background. |
-| `--offline-banner-border-color` | `border-overlay` | Its border. |
+| `--offline-banner-bg` | `surface-raised` | The bar's background. |
+| `--offline-banner-border-color` | `border-raised` | Its border. |
 | `--offline-banner-text` | `text` | The words (4.5:1 on bg). |
 | `--offline-banner-icon` | `text-muted` | The icon while offline (3:1 on bg). |
-| `--offline-banner-icon-online` | `success` | The icon once it's back online (3:1 on bg). |
+| `--offline-banner-icon-online` | `surface-success` | The icon once it's back online (3:1 on bg). |
 | `--offline-banner-shadow` | `elevation-overlay` | Its shadow, which lifts it off the page. |
 | `--offline-banner-radius` | `radius-surface` | The corners (8px). |
 | `--offline-banner-padding-x` | `spacing-4` | Space inside, at the start and end (16px). |

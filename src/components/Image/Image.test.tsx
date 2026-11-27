@@ -90,7 +90,7 @@ describe('Image', () => {
     const f = frame('slow');
     // Hidden from the first frame after mount (server HTML shows it: below).
     await expect.poll(() => css(f.querySelector('img')).opacity).toBe('0');
-    expect([f.dataset.state, css(f).backgroundColor]).toEqual(['loading', color('var(--surface-muted)')]);
+    expect([f.dataset.state, css(f).backgroundColor]).toEqual(['loading', color('var(--surface-sunken)')]);
     await expect.poll(() => box('slow').state, { timeout: 5000 }).toBe('loaded');
     await expect.poll(() => css(f.querySelector('img')).opacity).toBe('1');
   });
@@ -188,7 +188,7 @@ describe('Image', () => {
     const stage = () => frame('set').querySelector<HTMLElement>('dialog [data-state]')!;
     await expect.poll(() => stage()).toBeTruthy();
     const r = stage().getBoundingClientRect();
-    expect([stage().querySelector('img')!.getAttribute('src'), stage().dataset.state, css(stage()).backgroundColor, Math.round(r.width / r.height)]).toEqual([slow, 'loading', color('var(--surface-muted)'), 2]);
+    expect([stage().querySelector('img')!.getAttribute('src'), stage().dataset.state, css(stage()).backgroundColor, Math.round(r.width / r.height)]).toEqual([slow, 'loading', color('var(--surface-sunken)'), 2]);
     await expect.poll(() => stage().dataset.state, { timeout: 5000 }).toBe('loaded');
   });
 

@@ -104,7 +104,7 @@ describe('Select', () => {
     const o = field('ph').options[0]!;
     expect([o.value, o.textContent, o.disabled, field('ph').value]).toEqual(['', 'Choose one', true, '']);
     expect(box('ph').className).toMatch(/srp-select--empty/);
-    expect(css(field('ph')).color).toBe(color('var(--placeholder)'));
+    expect(css(field('ph')).color).toBe(color('var(--field-placeholder)'));
     await userEvent.selectOptions(field('ph'), 'Two');
     await expect.poll(() => box('ph').className).not.toMatch(/srp-select--empty/);
     expect([field('ph').value, css(field('ph')).color]).toEqual(['Two', color('var(--text)')]);
@@ -164,7 +164,7 @@ describe('Select', () => {
   test('invalid: aria-invalid and a danger border; disabled: native disabled, disabled-text, not-allowed', async () => {
     await render(<Grid><Select id="inv" invalid options={['x']} aria-label="Invalid" /><Select id="dis" disabled options={['x']} aria-label="Disabled" /></Grid>);
     expect(field('inv').getAttribute('aria-invalid')).toBe('true');
-    await expect.poll(() => css(box('inv')).borderTopColor).toBe(color('var(--danger)'));
+    await expect.poll(() => css(box('inv')).borderTopColor).toBe(color('var(--surface-danger)'));
     expect([field('dis').disabled, disabledLook(field('dis')), css(field('dis')).cursor]).toEqual([true, 'neutral', 'not-allowed']);
     expect(box('dis').className).toMatch(/disabled/);
   });
@@ -225,7 +225,7 @@ describe('Select', () => {
   test('contrast in every theme: text and placeholder 4.5:1 on the field; chevron, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
-      ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
+      ['placeholder', 'var(--field-placeholder)', 'var(--field)', 4.5],
       ['chevron', 'var(--text-muted)', 'var(--field)', 3],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
@@ -290,7 +290,7 @@ describe('Select: the styled list', () => {
     await userEvent.click(s);
     const pick = getComputedStyle(s, '::picker(select)');
     expect([s.matches(':open'), pick.backgroundColor, pick.borderTopLeftRadius, getComputedStyle(s, '::picker-icon').display])
-      .toEqual([true, color('var(--surface-overlay)'), radius('var(--radius-surface)'), 'none']);
+      .toEqual([true, color('var(--surface-raised)'), radius('var(--radius-surface)'), 'none']);
     await userEvent.keyboard('{Escape}');
   });
 
@@ -345,7 +345,7 @@ describe('Select: the styled list', () => {
     s.focus();
     await userEvent.keyboard(OPEN + '{ArrowDown}');
     const act = document.activeElement as HTMLOptionElement;
-    expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--highlight)'), `${color('var(--highlight)')} 2px 0px 0px 0px inset`]);
+    expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--surface-highlight)'), `${color('var(--surface-highlight)')} 2px 0px 0px 0px inset`]);
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after, ::picker(select) { transition: none !important; }'; document.head.appendChild(still);
     const low: string[] = [];
     for (const th of THEMES) {

@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-control}",
+        "$value": "{color.control}",
         "$description": "The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The outline when invalid (3:1 on the surface).",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

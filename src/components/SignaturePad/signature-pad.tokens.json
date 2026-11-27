@@ -34,7 +34,7 @@
       },
       "border-invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The drawing box's outline while the signature is invalid (3:1).",
         "$extensions": {
           "com.serupa": {

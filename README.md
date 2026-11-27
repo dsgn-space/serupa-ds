@@ -533,7 +533,7 @@ Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in every theme
 
 ## Editor autocomplete
 
-The package carries [VS Code custom data](https://code.visualstudio.com/api/extension-guides/custom-data-extension) for the utility classes and the tokens. With it, VS Code offers every utility class in `class="…"` with what it sets, the themes in `data-theme`, and every token where a stylesheet sets one (`:root { --primary: … }`). Add this to the project's `.vscode/settings.json`:
+The package carries [VS Code custom data](https://code.visualstudio.com/api/extension-guides/custom-data-extension) for the utility classes and the tokens. With it, VS Code offers every utility class in `class="…"` with what it sets, the themes in `data-theme`, and every token where a stylesheet sets one (`:root { --surface-brand: … }`). Add this to the project's `.vscode/settings.json`:
 
 ```json
 {

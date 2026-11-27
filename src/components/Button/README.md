@@ -70,8 +70,8 @@ When an action succeeds (`success`), a check takes the loader's place for a mome
 
 | `variant` | Looks | Use for |
 | --- | --- | --- |
-| `primary` *(default)* | Solid `primary`, `on-primary` text | The one main action in a view. |
-| `secondary` | `primary` outline and text on `surface-raised`; `primary-subtle` tint on hover | Alternative actions beside a primary: on-brand, a step quieter. |
+| `primary` *(default)* | Solid `primary`, `text-on-brand` text | The one main action in a view. |
+| `secondary` | `primary` outline and text on `surface-raised`; `surface-brand-subtle` tint on hover | Alternative actions beside a primary: on-brand, a step quieter. |
 | `outline` | `surface-raised` with a `border` | Neutral actions, toolbars, "Cancel". |
 | `ghost` | No fill until hover | Low-emphasis actions, icon buttons in dense UI. |
 | `link` | `primary` text, underline on hover | Inline actions that read like a link. |
@@ -82,13 +82,13 @@ Add `destructive` to any variant to give it danger colors. Pick the variant by e
 
 | `variant` + `destructive` | Looks | Use for |
 | --- | --- | --- |
-| `primary` | Solid `danger`, `on-danger` text | The confirming button in a delete dialog. |
-| `secondary` | Solid `danger` outline, `danger-text`; `danger-subtle` tint on hover | A destructive action beside a primary one. |
-| `outline` | Softer `danger-border`, `danger-text` | "Delete" in a toolbar or settings row. |
-| `ghost` | `danger-text`, tint on hover | "Remove" on list rows and in dense UI. |
-| `link` | `danger-text`, underline on hover | Inline "Remove" or "Revoke" links. |
+| `primary` | Solid `danger`, `text-on-danger` text | The confirming button in a delete dialog. |
+| `secondary` | Solid `danger` outline, `text-danger`; `surface-danger-subtle` tint on hover | A destructive action beside a primary one. |
+| `outline` | Softer `border-danger`, `text-danger` | "Delete" in a toolbar or settings row. |
+| `ghost` | `text-danger`, tint on hover | "Remove" on list rows and in dense UI. |
+| `link` | `text-danger`, underline on hover | Inline "Remove" or "Revoke" links. |
 
-Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keyboard focus shows a `danger` ring.
+Hover fills use `surface-danger-hover`, `surface-danger-subtle-hover` and `surface-danger-subtle`; keyboard focus shows a `danger` ring.
 
 ### Sizes
 
@@ -98,7 +98,7 @@ Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keybo
 | `md` *(default)* | 32px (`control-height-md`) | 12px | `text-sm` (14px) | 16px | 6px |
 | `lg` | 44px (`control-height-lg`) | 20px | `text-base` (16px) | 20px | 8px |
 
-All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars. On a touch screen every size takes a press 44px across anyway, with nothing moving: an invisible box reaches past the button's edges. With other buttons in the same row it stops halfway into the gap (ButtonGroup and Toolbar tell it their gap; elsewhere it assumes 4px), so a press goes to the nearer button and never to a neighbor's face.
+All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-sunken` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars. On a touch screen every size takes a press 44px across anyway, with nothing moving: an invisible box reaches past the button's edges. With other buttons in the same row it stops halfway into the gap (ButtonGroup and Toolbar tell it their gap; elsewhere it assumes 4px), so a press goes to the nearer button and never to a neighbor's face.
 
 ### Content
 
@@ -184,7 +184,7 @@ Small motion that confirms what happened, all built in:
 
 | Interaction | What it does | Turn off or tune |
 | --- | --- | --- |
-| Press | While held (pointer, Space or Enter) the button takes its held fill, one step past hover: `primary-pressed`, `primary-subtle-pressed`, `secondary-hover` or `danger-pressed` and `danger-subtle-hover` when destructive. It never shrinks unless you ask: a shrink is hard to see under a finger and reads as a glitch on a small button | Fills: the `--button-…-bg-pressed` tokens. A shrink: `--button-press-scale: var(--scale-97)` |
+| Press | While held (pointer, Space or Enter) the button takes its held fill, one step past hover: `surface-brand-pressed`, `surface-brand-subtle-pressed`, `surface-secondary-hover` or `surface-danger-pressed` and `surface-danger-subtle-hover` when destructive. It never shrinks unless you ask: a shrink is hard to see under a finger and reads as a glitch on a small button | Fills: the `--button-…-bg-pressed` tokens. A shrink: `--button-press-scale: var(--scale-97)` |
 | Icon nudge (off by default) | When turned on, a right icon slides in its direction on hover (on devices that hover), mirrored in right-to-left text. Left icons stay still. It suits forward arrows ("Continue →"), not chevrons or other icons, so it's off unless you turn it on | On: `--button-icon-nudge: var(--spacing-0\.5)` (2px) |
 | Loading | The label and icons fade out while the spinner fades and grows in, in 150ms; both blur a little (`blur-xs`) as they cross, so it reads as one change; they fade back when done | `--button-loading-duration: 0ms` |
 
@@ -206,8 +206,8 @@ Small motion that confirms what happened, all built in:
 | State | Looks | Cursor |
 | --- | --- | --- |
 | Default | Variant colors, `shadow-xs` on filled and outline buttons | `pointer` |
-| Hover | `primary` darkens one step (`primary-hover`); secondary gains a `primary-subtle` tint and its text and border darken to `primary-hover`; outline and ghost gain a `secondary` fill; link underlines; a right icon slides 2px forward | `pointer` |
-| Pressed | One step past hover: `primary-pressed`; secondary `primary-subtle-pressed`; outline and ghost `secondary-hover`; destructive `danger-pressed` (primary) or `danger-subtle-hover`. Full size | `pointer` |
+| Hover | `primary` darkens one step (`surface-brand-hover`); secondary gains a `surface-brand-subtle` tint and its text and border darken to `surface-brand-hover`; outline and ghost gain a `secondary` fill; link underlines; a right icon slides 2px forward | `pointer` |
+| Pressed | One step past hover: `surface-brand-pressed`; secondary `surface-brand-subtle-pressed`; outline and ghost `surface-secondary-hover`; destructive `surface-danger-pressed` (primary) or `surface-danger-subtle-hover`. Full size | `pointer` |
 | Focus (keyboard) | A 2px `focus-ring` outline 2px out (`danger` when destructive). The gap is transparent, so it reads on tinted backgrounds; forced-colors (high-contrast) mode draws it in the system color | `pointer` |
 | Disabled | 50% opacity, no shadow, no hover change, ignores clicks | `not-allowed` |
 | Loading | Full color, the content fades into a spinner, no hover change, no press, ignores clicks, keeps focus | `progress` |
@@ -270,48 +270,48 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--button-primary-bg` | `primary` | Primary background. |
-| `--button-primary-bg-hover` | `primary-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker. |
-| `--button-primary-bg-pressed` | `primary-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker. |
-| `--button-primary-text` | `on-primary` | Primary text and icons. |
+| `--button-primary-bg` | `surface-brand` | Primary background. |
+| `--button-primary-bg-hover` | `surface-brand-hover` | Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker. |
+| `--button-primary-bg-pressed` | `surface-brand-pressed` | Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker. |
+| `--button-primary-text` | `text-on-brand` | Primary text and icons. |
 | `--button-secondary-bg` | `surface-raised` | Secondary background. |
-| `--button-secondary-bg-hover` | `primary-subtle` | Secondary background on hover. |
-| `--button-secondary-text` | `primary-text` | Secondary text and icons. |
-| `--button-secondary-text-hover` | `primary-text-hover` | Secondary text and icons on hover. |
-| `--button-secondary-border` | `primary-text` | Secondary border. |
-| `--button-secondary-border-hover` | `primary-text-hover` | Secondary border on hover. |
-| `--button-secondary-bg-pressed` | `primary-subtle-pressed` | Secondary background while held down, one step past hover. |
+| `--button-secondary-bg-hover` | `surface-brand-subtle` | Secondary background on hover. |
+| `--button-secondary-text` | `text-brand` | Secondary text and icons. |
+| `--button-secondary-text-hover` | `text-brand-hover` | Secondary text and icons on hover. |
+| `--button-secondary-border` | `text-brand` | Secondary border. |
+| `--button-secondary-border-hover` | `text-brand-hover` | Secondary border on hover. |
+| `--button-secondary-bg-pressed` | `surface-brand-subtle-pressed` | Secondary background while held down, one step past hover. |
 | `--button-outline-bg` | `surface-raised` | Outline background. |
-| `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
-| `--button-outline-bg-pressed` | `secondary-hover` | Outline background while held down, one step past hover. |
+| `--button-outline-bg-hover` | `surface-secondary` | Outline background on hover. |
+| `--button-outline-bg-pressed` | `surface-secondary-hover` | Outline background while held down, one step past hover. |
 | `--button-outline-text` | `text` | Outline text and icons. |
-| `--button-outline-border` | `border-elevated` | Outline border: border-elevated, the line for the raised fill the button has: the same as border in light and a step above that fill in dark, where border would match it. |
+| `--button-outline-border` | `border-raised` | Outline border: border-elevated, the line for the raised fill the button has: the same as border in light and a step above that fill in dark, where border would match it. |
 | `--button-ghost-bg` | `transparent` | Ghost background (transparent). |
-| `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
-| `--button-ghost-bg-pressed` | `secondary-hover` | Ghost background while held down, one step past hover. |
+| `--button-ghost-bg-hover` | `surface-secondary` | Ghost background on hover. |
+| `--button-ghost-bg-pressed` | `surface-secondary-hover` | Ghost background while held down, one step past hover. |
 | `--button-ghost-text` | `text` | Ghost text and icons. |
-| `--button-link-text` | `primary-text` | Link text. |
-| `--button-destructive-primary-bg` | `danger` | Destructive primary background. |
-| `--button-destructive-primary-bg-hover` | `danger-hover` | Destructive primary background on hover. |
-| `--button-destructive-primary-bg-pressed` | `danger-pressed` | Destructive primary background while held down, one step past hover. |
-| `--button-destructive-primary-text` | `on-danger` | Destructive primary text and icons. |
+| `--button-link-text` | `text-brand` | Link text. |
+| `--button-destructive-primary-bg` | `surface-danger` | Destructive primary background. |
+| `--button-destructive-primary-bg-hover` | `surface-danger-hover` | Destructive primary background on hover. |
+| `--button-destructive-primary-bg-pressed` | `surface-danger-pressed` | Destructive primary background while held down, one step past hover. |
+| `--button-destructive-primary-text` | `text-on-danger` | Destructive primary text and icons. |
 | `--button-destructive-secondary-bg` | `surface-raised` | Destructive secondary background. |
-| `--button-destructive-secondary-bg-hover` | `danger-subtle` | Destructive secondary background on hover. |
-| `--button-destructive-secondary-bg-pressed` | `danger-subtle-hover` | Destructive secondary background while held down, one step past hover. |
-| `--button-destructive-secondary-text` | `danger-text` | Destructive secondary text and icons. |
-| `--button-destructive-secondary-border` | `danger` | Destructive secondary border (solid red, stronger than the outline's). |
+| `--button-destructive-secondary-bg-hover` | `surface-danger-subtle` | Destructive secondary background on hover. |
+| `--button-destructive-secondary-bg-pressed` | `surface-danger-subtle-hover` | Destructive secondary background while held down, one step past hover. |
+| `--button-destructive-secondary-text` | `text-danger` | Destructive secondary text and icons. |
+| `--button-destructive-secondary-border` | `surface-danger` | Destructive secondary border (solid red, stronger than the outline's). |
 | `--button-destructive-outline-bg` | `surface-raised` | Destructive outline background. |
-| `--button-destructive-outline-bg-hover` | `danger-subtle` | Destructive outline background on hover. |
-| `--button-destructive-outline-bg-pressed` | `danger-subtle-hover` | Destructive outline background while held down, one step past hover. |
-| `--button-destructive-outline-text` | `danger-text` | Destructive outline text and icons. |
-| `--button-destructive-outline-border` | `danger-border` | Destructive outline border. |
-| `--button-destructive-ghost-bg-hover` | `danger-subtle` | Destructive ghost background on hover. |
-| `--button-destructive-ghost-bg-pressed` | `danger-subtle-hover` | Destructive ghost background while held down, one step past hover. |
-| `--button-destructive-ghost-text` | `danger-text` | Destructive ghost text and icons. |
-| `--button-destructive-link-text` | `danger-text` | Destructive link text. |
+| `--button-destructive-outline-bg-hover` | `surface-danger-subtle` | Destructive outline background on hover. |
+| `--button-destructive-outline-bg-pressed` | `surface-danger-subtle-hover` | Destructive outline background while held down, one step past hover. |
+| `--button-destructive-outline-text` | `text-danger` | Destructive outline text and icons. |
+| `--button-destructive-outline-border` | `border-danger` | Destructive outline border. |
+| `--button-destructive-ghost-bg-hover` | `surface-danger-subtle` | Destructive ghost background on hover. |
+| `--button-destructive-ghost-bg-pressed` | `surface-danger-subtle-hover` | Destructive ghost background while held down, one step past hover. |
+| `--button-destructive-ghost-text` | `text-danger` | Destructive ghost text and icons. |
+| `--button-destructive-link-text` | `text-danger` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
-| `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
-| `--button-bg-disabled` | `surface-muted` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
+| `--button-destructive-focus-ring` | `surface-danger` | Keyboard focus ring on a destructive button. |
+| `--button-bg-disabled` | `surface-sunken` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
 | `--button-text-disabled` | `text-muted` | A disabled button's label and icon, in every variant (at least 3:1 on bg-disabled, more with more contrast). |
 | `--button-border-disabled` | `border` | A disabled outline or secondary button's border. |
 | `--button-on-dark` | `white` | surface="dark": the ink every variant is drawn in over dark media (a primary button's fill; the others' text, border and ring). |
@@ -368,7 +368,7 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 
 | Part | Tokens |
 | --- | --- |
-| Colors | `primary`, `primary-hover`, `on-primary`, `secondary`, `secondary-hover`, `surface-raised`, `text`, `border`, `danger`, `danger-hover`, `on-danger`, `danger-subtle`, `danger-subtle-hover`, `danger-text`, `danger-border`, `focus-ring` |
+| Colors | `primary`, `surface-brand-hover`, `text-on-brand`, `secondary`, `surface-secondary-hover`, `surface-raised`, `text`, `border`, `danger`, `surface-danger-hover`, `text-on-danger`, `surface-danger-subtle`, `surface-danger-subtle-hover`, `text-danger`, `border-danger`, `focus-ring` |
 | Height | `control-height-sm` / `control-height-md` / `control-height-lg` (shared with every control, so a Button lines up with an Input) |
 | Padding, gap, icon size | `spacing-2` / `spacing-3` / `spacing-5`; `spacing-1`, `spacing-1.5`, `spacing-2`; `spacing-3.5`, `spacing-4`, `spacing-5` |
 | Type | `font-sans`, `font-medium`, `tracking-normal`, `text-xs`, `text-sm`, `text-base` (each with its `--line-height`) |

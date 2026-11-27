@@ -24,7 +24,7 @@
       },
       "column-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "A column's background.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "card-border-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The border of the card being moved, as in SortableList.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "target-border": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The outline of the column a moving card would land in (3:1).",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "over": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "A count over its column's limit (4.5:1 on the column).",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "handle-active": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "A picked-up card's handle.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "handle-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The drag handle's background on hover, as SortableList's.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "handle-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "The drag handle's background while held down, a step past its hover.",
         "$extensions": {
           "com.serupa": {

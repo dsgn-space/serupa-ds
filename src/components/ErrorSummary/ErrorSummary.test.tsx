@@ -150,7 +150,7 @@ describe('ErrorSummary', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(el('c')).backgroundColor;
-      expect([th, bg]).toEqual([th, color('var(--danger-subtle)')]);
+      expect([th, bg]).toEqual([th, color('var(--surface-danger-subtle)')]);
       expect(contrast(css(el('c')).color, bg), th).toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(el('c').querySelector('a')).color, bg), th + ' link').toBeGreaterThanOrEqual(4.5);
     }

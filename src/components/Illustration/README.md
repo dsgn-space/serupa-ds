@@ -32,7 +32,7 @@ Drawn from the `Search` story.
 
 - Pick the picture that matches the title: `empty` for nothing yet, `search` for no results, `error` for a failure, `offline` for no connection, `no-access` for a missing permission, `success` for done.
 - One per view. `md` (160px) suits a page, `sm` (96px) a side panel or a dialog, `lg` (224px) a full error page.
-- Recolor it with the tokens below, not by editing paths: `--illustration-accent` set to `var(--danger)` makes the error picture red.
+- Recolor it with the tokens below, not by editing paths: `--illustration-accent` set to `var(--surface-danger)` makes the error picture red.
 
 ### Do and don't
 
@@ -65,8 +65,8 @@ Each is an optional override: set it on the page, a container or one Illustratio
 | Token | Default | Use |
 | --- | --- | --- |
 | `--illustration-line` | `text-muted` | The outlines (3:1 on the surface behind). |
-| `--illustration-fill` | `secondary` | The shapes' soft fill. |
-| `--illustration-accent` | `primary-text` | The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind). |
+| `--illustration-fill` | `surface-secondary` | The shapes' soft fill. |
+| `--illustration-accent` | `text-brand` | The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind). |
 | `--illustration-size-sm` | `spacing-24` | size="sm" (96px wide). |
 | `--illustration-size-md` | `spacing-40` | size="md" (160px wide). |
 | `--illustration-size-lg` | `spacing-56` | size="lg" (224px wide). |

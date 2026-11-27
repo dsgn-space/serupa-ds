@@ -54,7 +54,7 @@
       },
       "chip-open": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A chip's fill while held and while its editor is open (its text keeps 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {

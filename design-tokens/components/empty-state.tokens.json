@@ -14,7 +14,7 @@
       },
       "icon-bg": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The circle behind the icon.",
         "$extensions": {
           "com.serupa": {

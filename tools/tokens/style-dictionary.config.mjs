@@ -1,5 +1,5 @@
 // Style Dictionary (v5) config for design-tokens/: builds one CSS file per theme with the same variable
-// names as tokens.css (--blue-600, --primary, --spacing-4…). Use it as a starting point for other
+// names as tokens.css (--blue-600, --surface-brand, --spacing-4…). Use it as a starting point for other
 // platforms (iOS, Android, Sass…): add platforms below.
 //
 //   npm i -D style-dictionary@5

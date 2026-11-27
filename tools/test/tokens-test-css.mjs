@@ -33,9 +33,9 @@ const read = async (sheet) => {
 };
 const test = await read(css), shipped = await read(real);
 // 17.0.0: tokens.css alone draws blue, and one brand's file is all a page needs for that brand. Each brand is read on
-// the root (data-brand) and as a flat theme (data-theme), with --primary worked out to a color.
+// the root (data-brand) and as a flat theme (data-theme), with --surface-brand worked out to a color.
 const primary = async (sheet, attrs) => {
-  await page.setContent(`<!doctype html><html ${attrs}><head><style>${sheet}</style></head><body><i style="color: var(--primary)"></i></body></html>`);
+  await page.setContent(`<!doctype html><html ${attrs}><head><style>${sheet}</style></head><body><i style="color: var(--surface-brand)"></i></body></html>`);
   return page.evaluate(() => getComputedStyle(document.querySelector('i')).color);
 };
 const file = (f) => fs.readFileSync(path.join(PROJECT, f), 'utf8');

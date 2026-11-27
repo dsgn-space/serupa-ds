@@ -99,7 +99,7 @@ Each is an optional override: set it on the page, a container or one FieldList. 
 | --- | --- | --- |
 | `--field-list-label-color` | `text` | The legend, the list's name (4.5:1 on the surface). |
 | `--field-list-hint-color` | `text-muted` | The hint under the legend and the note beside Add at the limit (4.5:1 on the surface). |
-| `--field-list-error-color` | `danger-text` | A row's error and the list's error (4.5:1 on the surface). |
+| `--field-list-error-color` | `text-danger` | A row's error and the list's error (4.5:1 on the surface). |
 | `--field-list-label-weight` | `font-medium` | The legend's weight. |
 | `--field-list-gap` | `spacing-3` | Space between the legend, the rows and Add (12px). |
 | `--field-list-row-gap` | `spacing-3` | Space between the fields of a row, and before its Remove button (12px). |

@@ -44,7 +44,7 @@
       },
       "link": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A linked name (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "link-hover": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "A linked name under the pointer.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "border-error": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The outline of a failed upload (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "error": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "A failed upload's message (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "done": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "\"Complete\" and its check once an upload is done (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {

@@ -8,7 +8,7 @@ Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded*
 import { Icon, Button, IconButton } from '@diki-stwn/serupa-ds';
 
 <Icon name="home" />                       // 24px, decorative
-<Icon name="warning" size={20} style={{ color: 'var(--warning)' }} />
+<Icon name="warning" size={20} style={{ color: 'var(--surface-warning)' }} />
 <Icon name="error" aria-label="Error" />   // meaningful: announced as "Error"
 <Button startIcon="add">New project</Button>
 <IconButton icon="settings" label="Settings" />

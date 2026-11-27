@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The menu's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border-color": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The menu's border.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "item-bg-active": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "The highlighted item's background (hover and keyboard).",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "item-indicator": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "item-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "danger": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "A destructive item's label and icon.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "danger-bg-active": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "A highlighted destructive item's background.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

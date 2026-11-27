@@ -30,7 +30,7 @@ const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) ||
 // A contrastMore keyed by theme id ({ "blue-light": …, "violet-dark": … }) rather than { light, dark }.
 const perTheme = (x) => !!x.contrastMore && typeof x.contrastMore === 'object' && !('light' in x.contrastMore);
 
-/** Each token's description from tokens.json, by its property name (--primary → "Main action color…"). */
+/** Each token's description from tokens.json, by its property name (--surface-brand → "Main action color…"). */
 export function tokenDescriptions(t) {
   const out = new Map();
   for (const g of Object.values(t)) if (g && Array.isArray(g.tokens)) for (const x of g.tokens) if (x.usage) out.set(`--${x.name}`, x.usage);
@@ -260,10 +260,10 @@ function roundness(all, line) {
 // Shadows tinted with the brand (73): data-shadow="brand" swaps each box shadow's black for a deep shade of the
 // brand color (its red, green and blue at 30%), at the same opacity, so a raised card or a menu reads as part of
 // the brand rather than grey. data-shadow="neutral" puts the black back in a section. The shade is worked out where
-// the attribute is, from that element's --primary. As color-mix() with black (30% of each channel, in sRGB) and then
-// with transparent (the opacity), not a relative rgb(from …): Chrome 129, the floor, can't take a light-dark() --primary
+// the attribute is, from that element's --surface-brand. As color-mix() with black (30% of each channel, in sRGB) and then
+// with transparent (the opacity), not a relative rgb(from …): Chrome 129, the floor, can't take a light-dark() --surface-brand
 // (a data-brand section's) as a relative color's origin, so every tinted shadow there was dropped.
-const TINT = (_, a) => `color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) ${Math.round(Number(a) * 100)}%, transparent)`;
+const TINT = (_, a) => `color-mix(in srgb, color-mix(in srgb, var(--surface-brand) 30%, black) ${Math.round(Number(a) * 100)}%, transparent)`;
 function tintedShadows(all, line) {
   // The directional modal shadows (elevation-modal-up, -left, -right) are box shadows of their own, tinted alike.
   const box = all.filter((x) => /^(?:shadow-(2xs|xs|sm|md|lg|xl|2xl)|elevation-modal-(?:up|left|right))$/.test(x.name));

@@ -40,7 +40,7 @@ describe('ToggleButton', () => {
     await userEvent.click(el('tbold'));
     const s = getComputedStyle(el('tbold')), on = [s.backgroundColor, s.color, s.borderTopColor];
     expect(pressed('tbold')).toBe('true');
-    expect(on).toEqual([color('var(--primary-subtle)'), color('var(--primary-text)'), color('var(--primary-text)')]);
+    expect(on).toEqual([color('var(--surface-brand-subtle)'), color('var(--text-brand)'), color('var(--text-brand)')]);
     await userEvent.hover(el('tbold'));
     expect(getComputedStyle(el('tbold')).backgroundColor).toBe(on[0]);
     el('tbold').focus();
@@ -57,7 +57,7 @@ describe('ToggleButton', () => {
         const rest = getComputedStyle(el(id)).backgroundColor;
         el(id).setAttribute('data-pressed', '');
         const s = getComputedStyle(el(id));
-        if (s.backgroundColor !== color('var(--primary-subtle-pressed)') || s.backgroundColor === rest) bad.push(`${th} ${id} fill ${s.backgroundColor}`);
+        if (s.backgroundColor !== color('var(--surface-brand-subtle-pressed)') || s.backgroundColor === rest) bad.push(`${th} ${id} fill ${s.backgroundColor}`);
         if (contrast(s.color, s.backgroundColor) < 4.5) bad.push(`${th} ${id} text ${contrast(s.color, s.backgroundColor).toFixed(2)}`);
         el(id).removeAttribute('data-pressed');
       }
@@ -115,11 +115,11 @@ describe('ToggleButton', () => {
     for (const theme of THEMES) {
       document.documentElement.setAttribute('data-theme', theme);
       const on = getComputedStyle(el('don')), off = getComputedStyle(el('doff')), ghost = getComputedStyle(el('dghost'));
-      expect([theme, on.backgroundColor, on.color, on.borderTopColor]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)'), color('var(--border-control)')]);
+      expect([theme, on.backgroundColor, on.color, on.borderTopColor]).toEqual([theme, color('var(--surface-highlight)'), color('var(--text-muted)'), color('var(--border-strong)')]);
       expect([theme, on.backgroundColor === off.backgroundColor, on.borderTopColor === off.borderTopColor]).toEqual([theme, false, false]);
       expect(contrast(on.color, on.backgroundColor), theme).toBeGreaterThanOrEqual(3.4);
       expect(contrast(on.borderTopColor, color('var(--surface)')), theme).toBeGreaterThanOrEqual(1.3);
-      expect([theme, ghost.backgroundColor, ghost.color]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)')]);
+      expect([theme, ghost.backgroundColor, ghost.color]).toEqual([theme, color('var(--surface-highlight)'), color('var(--text-muted)')]);
     }
     document.documentElement.removeAttribute('data-theme');
   });

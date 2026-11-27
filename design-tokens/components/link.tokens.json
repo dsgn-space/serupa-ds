@@ -4,7 +4,7 @@
     "color": {
       "color": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "tone=\"primary\" text and underline (4.5:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "color-hover": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "tone=\"primary\" on hover.",
         "$extensions": {
           "com.serupa": {

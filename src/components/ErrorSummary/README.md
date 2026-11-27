@@ -79,10 +79,10 @@ Each is an optional override: set it on the page, a container or one ErrorSummar
 <!-- token-table:start (made from error-summary.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--error-summary-bg` | `danger-subtle` | The background: the danger tint a danger Alert has. |
+| `--error-summary-bg` | `surface-danger-subtle` | The background: the danger tint a danger Alert has. |
 | `--error-summary-text` | `text` | The heading and description (4.5:1 on bg). |
-| `--error-summary-border` | `danger` | The border, which marks it as errors. |
-| `--error-summary-link` | `danger-text` | Each error's link (4.5:1 on bg). |
+| `--error-summary-border` | `surface-danger` | The border, which marks it as errors. |
+| `--error-summary-link` | `text-danger` | Each error's link (4.5:1 on bg). |
 | `--error-summary-focus-ring` | `focus-ring` | The focus ring, on the box when it takes focus and on each link. |
 | `--error-summary-border-width` | `border-width-2` | The border's width (2px). |
 | `--error-summary-radius` | `radius-control` | The corners (6px). |

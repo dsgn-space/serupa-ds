@@ -24,7 +24,7 @@
       },
       "color-primary": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "tone=\"primary\".",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "color-danger": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "tone=\"danger\": error text (4.5:1 on surface and danger-subtle).",
         "$extensions": {
           "com.serupa": {

@@ -7,12 +7,12 @@
 .srp-date-picker { --srp-dp-offset: var(--date-picker-offset, var(--spacing-1)); }
 /* The calendar button is an InputAction (Input's button inside the box), 4px from its edge; this picker's tokens still
    set its colors and focus ring. */
-.srp-date-picker, .srp-date-range-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--date-picker-button, var(--text-muted)); --input-action-hover: var(--date-picker-button-hover, var(--text)); --input-action-bg-hover: var(--date-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--date-picker-button-bg-pressed, var(--field-pressed)); --input-action-focus-ring: var(--date-picker-focus-ring, var(--focus-ring)); }
+.srp-date-picker, .srp-date-range-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--date-picker-button, var(--text-muted)); --input-action-hover: var(--date-picker-button-hover, var(--text)); --input-action-bg-hover: var(--date-picker-button-bg-hover, var(--surface-raised-hover)); --input-action-bg-pressed: var(--date-picker-button-bg-pressed, var(--surface-raised-pressed)); --input-action-focus-ring: var(--date-picker-focus-ring, var(--focus-ring)); }
 .srp-date-picker__popup {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--date-picker-z-index, var(--z-popover));
   margin: var(--spacing-0); padding: var(--date-picker-popup-padding, var(--spacing-3));
-  border: var(--border-width-1) solid var(--date-picker-popup-border, var(--border-overlay)); border-radius: var(--date-picker-popup-radius, var(--radius-surface));
-  background: var(--date-picker-popup-bg, var(--surface-overlay)); --surface-behind: var(--date-picker-popup-bg, var(--surface-overlay)); --border: var(--date-picker-popup-divider, var(--border-overlay)); color: var(--date-picker-popup-text, var(--text));
+  border: var(--border-width-1) solid var(--date-picker-popup-border, var(--border-raised)); border-radius: var(--date-picker-popup-radius, var(--radius-surface));
+  background: var(--date-picker-popup-bg, var(--surface-raised)); --surface-behind: var(--date-picker-popup-bg, var(--surface-raised)); --border: var(--date-picker-popup-divider, var(--border-raised)); color: var(--date-picker-popup-text, var(--text));
   box-shadow: var(--date-picker-popup-shadow, var(--elevation-overlay));
   cursor: default;
   transform-origin: var(--srp-layer-origin, top);

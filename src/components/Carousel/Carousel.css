@@ -76,12 +76,12 @@
   width: var(--srp-dot-w);
   height: var(--srp-dot-h);
   border-radius: var(--rounded-full);
-  background: var(--carousel-dot, var(--border-control));
+  background: var(--carousel-dot, var(--border-strong));
   clip-path: inset(var(--spacing-0) var(--srp-dot-clip) round var(--rounded-full));
   transition: clip-path var(--motion-change-sm) var(--ease-settle);
 }
-.srp-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--carousel-dot-edge-active, var(--primary-edge)); }
-@media (hover: hover) { .srp-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--border-control-hover)); } }
+.srp-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--carousel-dot-edge-active, var(--border-brand)); }
+@media (hover: hover) { .srp-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--field-border-hover)); } }
 .srp-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
 .srp-carousel__dot:focus { outline: none; }
 .srp-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }

@@ -17,7 +17,7 @@
 }
 /* Read-only, the box is a step flatter, as a read-only field is: the typed name's field above it goes the same. */
 .srp-signature-pad:where([data-readonly]) .srp-signature-pad__box { background: var(--signature-pad-bg-readonly, var(--field-readonly)); }
-.srp-signature-pad:where([data-invalid]) .srp-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--danger)); }
+.srp-signature-pad:where([data-invalid]) .srp-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--surface-danger)); }
 .srp-signature-pad__area { display: block; inline-size: var(--sizing-full); block-size: var(--sizing-full); touch-action: none; cursor: crosshair; user-select: none; -webkit-user-select: none; }
 .srp-signature-pad__area--typed, .srp-signature-pad:where([data-readonly]) .srp-signature-pad__area { cursor: default; }
 .srp-signature-pad:where([data-disabled]) .srp-signature-pad__area { cursor: var(--cursor-disabled); }

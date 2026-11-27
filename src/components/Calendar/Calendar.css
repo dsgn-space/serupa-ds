@@ -42,8 +42,8 @@
   white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation; transition: background-color var(--motion-hover) var(--ease-move);
 }
 .srp-calendar__heading-icon { color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--spacing-4); }
-@media (hover: hover) { button.srp-calendar__heading:hover { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+@media (hover: hover) { button.srp-calendar__heading:hover { background: var(--calendar-day-bg-hover, var(--surface-secondary)); } }
+button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed, var(--surface-secondary-hover)); }
 .srp-calendar__heading--static { cursor: default; }
 .srp-calendar__heading:focus { outline: none; }
 .srp-calendar__heading:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
@@ -61,15 +61,15 @@ button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed,
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .srp-calendar__period:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-.srp-calendar__period:active:not([aria-disabled="true"], [data-selected]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+@media (hover: hover) { .srp-calendar__period:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-secondary)); } }
+.srp-calendar__period:active:not([aria-disabled="true"], [data-selected]) { background: var(--calendar-day-bg-pressed, var(--surface-secondary-hover)); }
 .srp-calendar__period:focus { outline: none; }
 .srp-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-calendar__period:where([data-today]) { position: relative; color: var(--calendar-today-color, var(--primary-text)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
+.srp-calendar__period:where([data-today]) { position: relative; color: var(--calendar-today-color, var(--text-brand)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
 @media (hover: hover) { .srp-calendar__period:where([data-today]):hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
-.srp-calendar__period:where([data-selected]) { background: var(--calendar-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--primary-edge)); color: var(--calendar-color-selected, var(--on-primary)); }
-@media (hover: hover) { .srp-calendar__period:where([data-selected]):hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--primary-edge)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.srp-calendar__period:where([data-disabled]) { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.srp-calendar__period:where([data-selected]) { background: var(--calendar-bg-selected, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--border-brand)); color: var(--calendar-color-selected, var(--text-on-brand)); }
+@media (hover: hover) { .srp-calendar__period:where([data-selected]):hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--border-brand)); color: var(--calendar-color-selected, var(--text-on-brand)); } }
+.srp-calendar__period:where([data-disabled]) { color: var(--calendar-text-disabled, var(--text-disabled)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* weekNumbers: a narrow column of week numbers before the days, which take its width off their share of a narrow screen. */
 .srp-calendar--weeks { --srp-cal-weeks: var(--calendar-week-width, var(--spacing-7)); }
 .srp-calendar__grid .srp-calendar__week { width: var(--srp-cal-weeks); color: var(--calendar-week-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; text-align: center; }
@@ -79,33 +79,33 @@ button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed,
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .srp-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
-.srp-calendar__day:active:not([aria-disabled="true"], [data-selected], .srp-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+@media (hover: hover) { .srp-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-secondary)); } }
+.srp-calendar__day:active:not([aria-disabled="true"], [data-selected], .srp-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--surface-secondary-hover)); }
 .srp-calendar__day:focus { outline: none; }
 .srp-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .srp-calendar__day:where([data-outside]) { color: var(--calendar-outside-color, var(--text-muted)); }
 @media (hover: hover) { .srp-calendar__day:where([data-outside]):hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
-.srp-calendar__day:where([data-today]) { position: relative; color: var(--calendar-today-color, var(--primary-text)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
+.srp-calendar__day:where([data-today]) { position: relative; color: var(--calendar-today-color, var(--text-brand)); font-weight: var(--calendar-today-weight, var(--font-normal)); }
 /* More than color (1.4.1): a dot under today's number, in its color, so it shows on the hover fill and the selected fill too. */
 .srp-calendar__day:where([data-today])::after, .srp-calendar__period:where([data-today])::after {
   content: ""; position: absolute; inset-block-end: var(--spacing-1); inset-inline: var(--spacing-0); margin-inline: auto;
   width: var(--spacing-1); height: var(--spacing-1); border-radius: var(--rounded-full); background: currentColor;
 }
 @media (hover: hover) { .srp-calendar__day:where([data-today]):hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; today keeps its aria-current */
-.srp-calendar__day:where([data-selected]) { background: var(--calendar-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--primary-edge)); color: var(--calendar-color-selected, var(--on-primary)); }
-@media (hover: hover) { .srp-calendar__day:where([data-selected]):hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--primary-edge)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.srp-calendar__day:where([data-disabled]) { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.srp-calendar__day:where([data-selected]) { background: var(--calendar-bg-selected, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--border-brand)); color: var(--calendar-color-selected, var(--text-on-brand)); }
+@media (hover: hover) { .srp-calendar__day:where([data-selected]):hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--calendar-edge-selected, var(--border-brand)); color: var(--calendar-color-selected, var(--text-on-brand)); } }
+.srp-calendar__day:where([data-disabled]) { color: var(--calendar-text-disabled, var(--text-disabled)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
    turns both; stacked on a narrow screen, each keeps both. */
 @media (min-width: 640px) { .srp-calendar--paired-next .srp-calendar__nav--next, .srp-calendar--paired-previous .srp-calendar__nav--prev { visibility: hidden; } }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
-.srp-calendar__day--in-range { border-radius: var(--spacing-0); background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
+.srp-calendar__day--in-range { border-radius: var(--spacing-0); background: var(--calendar-range-bg, var(--surface-brand-subtle)); color: var(--calendar-range-color, var(--text)); }
 /* The ends join the band: square on the side it runs to, round on the outer side. A ring in the band sits over its
    neighbours. */
 .srp-calendar__day--range-start { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 .srp-calendar__day--range-end { border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
 .srp-calendar__day:focus-visible { position: relative; z-index: var(--z-10); }
-@media (hover: hover) { .srp-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }
+@media (hover: hover) { .srp-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--surface-brand-subtle)); color: var(--calendar-range-color, var(--text)); } }
 @media (forced-colors: active) { .srp-calendar__day:where([data-selected]), .srp-calendar__period:where([data-selected]) { background: Highlight; color: HighlightText; forced-color-adjust: none; } .srp-calendar__day:where([data-today]) { text-decoration: underline; } .srp-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
 /* Presets (RU11): shortcuts in a column after the days, past a divider, each a button as tall as a day. The one the
    value matches is pressed and filled like a range; one that can't be picked is faded. On a narrow screen they wrap
@@ -120,16 +120,16 @@ button.srp-calendar__heading:active { background: var(--calendar-day-bg-pressed,
   margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-3); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .srp-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .srp-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .srp-calendar__preset { transition: background-color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { .srp-calendar__preset, .srp-calendar__heading { transition: none; } }
-.srp-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.srp-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--surface-secondary-hover)); }
 .srp-calendar__preset:focus { outline: none; }
 .srp-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.srp-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
-@media (hover: hover) { .srp-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
-.srp-calendar__preset[aria-disabled="true"] { color: var(--calendar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--surface-brand-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
+@media (hover: hover) { .srp-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--surface-brand-subtle)); } }
+.srp-calendar__preset[aria-disabled="true"] { color: var(--calendar-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 @media (max-width: 639.98px) {
   .srp-calendar--presets { display: inline-flex; }
   .srp-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }

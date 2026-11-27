@@ -25,9 +25,9 @@
   overflow-y: auto; overscroll-behavior: contain;
   /* Its rows lay out and paint inside it (it scrolls, so it clips already): a row changing never relays out the page (I3). */
   contain: layout paint;
-  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-overlay));
+  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-raised));
   border-radius: var(--menu-radius, var(--radius-surface));
-  background: var(--menu-bg, var(--surface-overlay)); --surface-behind: var(--menu-bg, var(--surface-overlay)); --border: var(--menu-divider, var(--border-overlay));
+  background: var(--menu-bg, var(--surface-raised)); --surface-behind: var(--menu-bg, var(--surface-raised)); --border: var(--menu-divider, var(--border-raised));
   color: var(--menu-item-text, var(--text));
   box-shadow: var(--menu-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
@@ -84,12 +84,12 @@
 }
 .srp-menu__item:has(> .srp-menu__icon) { --srp-menu-add-icon: var(--spacing-0); }
 .srp-menu__item:has(> .srp-menu__check) { --srp-menu-add-check: var(--spacing-0); }
-.srp-menu__item:focus { outline: none; background: var(--menu-item-bg-active, var(--highlight)); }
+.srp-menu__item:focus { outline: none; background: var(--menu-item-bg-active, var(--surface-highlight)); }
 /* From the keyboard, a 2px bar at the item's start too, so low-vision keyboard users keep their place. */
 .srp-menu__item { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .srp-menu__item:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-menu__item:focus-visible { box-shadow: inset var(--srp-bar) 0 0 var(--menu-item-indicator, var(--highlight-indicator)); }
-.srp-menu__item:active:not([aria-disabled="true"], .srp-menu__item--destructive) { background: var(--menu-item-bg-pressed, var(--pressed)); }
+.srp-menu__item:focus-visible { box-shadow: inset var(--srp-bar) 0 0 var(--menu-item-indicator, var(--surface-highlight-indicator)); }
+.srp-menu__item:active:not([aria-disabled="true"], .srp-menu__item--destructive) { background: var(--menu-item-bg-pressed, var(--surface-pressed)); }
 .srp-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 /* MenuCheckboxItem and MenuRadioItem: a check before the label, its space kept while unchecked so labels line up. */
 .srp-menu__check { display: inline-flex; flex-shrink: 0; color: var(--menu-item-text, var(--text)); }
@@ -100,19 +100,19 @@
 .srp-menu__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-menu__shortcut { margin-inline-start: auto; padding-inline-start: var(--spacing-4); color: var(--menu-muted, var(--text-muted)); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); letter-spacing: var(--tracking-wide); }
 .srp-menu__item:focus .srp-menu__shortcut { color: var(--menu-item-text, var(--text)); }
-.srp-menu__item--destructive, .srp-menu__item--destructive .srp-menu__icon { color: var(--menu-danger, var(--danger-text)); }
-.srp-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--danger-subtle)); }
+.srp-menu__item--destructive, .srp-menu__item--destructive .srp-menu__icon { color: var(--menu-danger, var(--text-danger)); }
+.srp-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--surface-danger-subtle)); }
 /* A disabled item the pointer rests on takes focus, so the keys go on from there, but no highlight: it can't be chosen,
    so nothing lights up under the pointer, as in the system's menus. Reached with the keys, it shows the highlight. */
 @media (hover: hover) { .srp-menu__item[aria-disabled="true"]:focus:hover { background: transparent; } }
-.srp-menu__item[aria-disabled="true"], .srp-menu__item[aria-disabled="true"] * { color: var(--menu-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-menu__item[aria-disabled="true"], .srp-menu__item[aria-disabled="true"] * { color: var(--menu-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 /* MenuSub: a chevron at the end, pointing where the submenu opens; the submenu overlaps the menu's padding so
    its first item lines up with the item that opened it. */
 .srp-menu--sub { --srp-menu-sub-offset: var(--menu-sub-offset, var(--spacing-0)); }
 .srp-menu__chevron { display: inline-flex; flex-shrink: 0; margin-inline-start: auto; color: var(--menu-muted, var(--text-muted)); }
 .srp-menu__chevron .srp-icon { font-size: var(--spacing-4); }
 .srp-menu__item:focus .srp-menu__chevron, .srp-menu__item--sub[aria-expanded="true"] .srp-menu__chevron { color: var(--menu-item-text, var(--text)); }
-.srp-menu__item--sub[aria-expanded="true"]:not(:focus) { background: var(--menu-item-bg-active, var(--highlight)); }
+.srp-menu__item--sub[aria-expanded="true"]:not(:focus) { background: var(--menu-item-bg-active, var(--surface-highlight)); }
 .srp-menu__group, .srp-menu__group-label, .srp-menu__separator { display: block; }
 .srp-menu__group-label { padding: var(--spacing-1\.5) var(--menu-item-padding-x, var(--spacing-2)) var(--spacing-1); padding-inline-start: calc(var(--menu-item-padding-x, var(--spacing-2)) + var(--srp-menu-icon-room) + var(--srp-menu-check-room)); color: var(--menu-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
 /* A border, not a background: forced colors drops backgrounds, and the separator with them. */

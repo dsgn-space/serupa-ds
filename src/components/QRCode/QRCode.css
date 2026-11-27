@@ -22,7 +22,7 @@
 }
 .srp-qr-code--sm .srp-qr-code__status { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-qr-code__message { display: inline-flex; align-items: center; gap: var(--spacing-1); margin: var(--spacing-0); }
-.srp-qr-code__icon { flex: none; font-size: var(--spacing-5); color: var(--qr-code-scanned-icon, var(--success-text)); }
+.srp-qr-code__icon { flex: none; font-size: var(--spacing-5); color: var(--qr-code-scanned-icon, var(--text-success)); }
 @media (forced-colors: active) {
   .srp-qr-code { forced-color-adjust: none; }
   .srp-qr-code[data-status]:not([data-status="active"]) { background: Canvas; }

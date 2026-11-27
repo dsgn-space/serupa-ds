@@ -4,7 +4,7 @@
     "color": {
       "fill": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "A star's filled part (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "empty": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "A star's empty part (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The empty stars' color when invalid (3:1 on the page), so the error shows on the stars as well as in the Field's message.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

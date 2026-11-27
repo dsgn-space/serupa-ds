@@ -4,7 +4,7 @@
     "color": {
       "primary-bg": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "Primary background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "primary-bg-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.surface-brand-hover}",
         "$description": "Primary background on hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: a step darker.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "primary-bg-pressed": {
         "$type": "color",
-        "$value": "{color.primary-pressed}",
+        "$value": "{color.surface-brand-pressed}",
         "$description": "Primary background while held down, one step past hover. Unset on a button given its own `--button-primary-bg`, it is worked out from that one: two steps darker.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "primary-text": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "Primary text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "secondary-bg-hover": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "Secondary background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "secondary-text": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Secondary text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "secondary-text-hover": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "Secondary text and icons on hover.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "secondary-border": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Secondary border.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "secondary-border-hover": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "Secondary border on hover.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "secondary-bg-pressed": {
         "$type": "color",
-        "$value": "{color.primary-subtle-pressed}",
+        "$value": "{color.surface-brand-subtle-pressed}",
         "$description": "Secondary background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "outline-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "Outline background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "outline-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "Outline background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "outline-border": {
         "$type": "color",
-        "$value": "{color.border-elevated}",
+        "$value": "{color.border-raised}",
         "$description": "Outline border: border-elevated, the line for the raised fill the button has: the same as border in light and a step above that fill in dark, where border would match it.",
         "$extensions": {
           "com.serupa": {
@@ -183,7 +183,7 @@
       },
       "ghost-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "Ghost background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -193,7 +193,7 @@
       },
       "ghost-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "Ghost background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -213,7 +213,7 @@
       },
       "link-text": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Link text.",
         "$extensions": {
           "com.serupa": {
@@ -223,7 +223,7 @@
       },
       "destructive-primary-bg": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "Destructive primary background.",
         "$extensions": {
           "com.serupa": {
@@ -233,7 +233,7 @@
       },
       "destructive-primary-bg-hover": {
         "$type": "color",
-        "$value": "{color.danger-hover}",
+        "$value": "{color.surface-danger-hover}",
         "$description": "Destructive primary background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -243,7 +243,7 @@
       },
       "destructive-primary-bg-pressed": {
         "$type": "color",
-        "$value": "{color.danger-pressed}",
+        "$value": "{color.surface-danger-pressed}",
         "$description": "Destructive primary background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -253,7 +253,7 @@
       },
       "destructive-primary-text": {
         "$type": "color",
-        "$value": "{color.on-danger}",
+        "$value": "{color.text-on-danger}",
         "$description": "Destructive primary text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -273,7 +273,7 @@
       },
       "destructive-secondary-bg-hover": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "Destructive secondary background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -283,7 +283,7 @@
       },
       "destructive-secondary-bg-pressed": {
         "$type": "color",
-        "$value": "{color.danger-subtle-hover}",
+        "$value": "{color.surface-danger-subtle-hover}",
         "$description": "Destructive secondary background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -293,7 +293,7 @@
       },
       "destructive-secondary-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Destructive secondary text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -303,7 +303,7 @@
       },
       "destructive-secondary-border": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "Destructive secondary border (solid red, stronger than the outline's).",
         "$extensions": {
           "com.serupa": {
@@ -323,7 +323,7 @@
       },
       "destructive-outline-bg-hover": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "Destructive outline background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -333,7 +333,7 @@
       },
       "destructive-outline-bg-pressed": {
         "$type": "color",
-        "$value": "{color.danger-subtle-hover}",
+        "$value": "{color.surface-danger-subtle-hover}",
         "$description": "Destructive outline background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -343,7 +343,7 @@
       },
       "destructive-outline-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Destructive outline text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -353,7 +353,7 @@
       },
       "destructive-outline-border": {
         "$type": "color",
-        "$value": "{color.danger-border}",
+        "$value": "{color.border-danger}",
         "$description": "Destructive outline border.",
         "$extensions": {
           "com.serupa": {
@@ -363,7 +363,7 @@
       },
       "destructive-ghost-bg-hover": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "Destructive ghost background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -373,7 +373,7 @@
       },
       "destructive-ghost-bg-pressed": {
         "$type": "color",
-        "$value": "{color.danger-subtle-hover}",
+        "$value": "{color.surface-danger-subtle-hover}",
         "$description": "Destructive ghost background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -383,7 +383,7 @@
       },
       "destructive-ghost-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Destructive ghost text and icons.",
         "$extensions": {
           "com.serupa": {
@@ -393,7 +393,7 @@
       },
       "destructive-link-text": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Destructive link text.",
         "$extensions": {
           "com.serupa": {
@@ -413,7 +413,7 @@
       },
       "destructive-focus-ring": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "Keyboard focus ring on a destructive button.",
         "$extensions": {
           "com.serupa": {
@@ -423,7 +423,7 @@
       },
       "bg-disabled": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1.",
         "$extensions": {
           "com.serupa": {

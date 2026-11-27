@@ -11,13 +11,13 @@
 .srp-copy-btn__labels { display: grid; grid-template-areas: "label"; grid-template-columns: minmax(var(--spacing-0), auto); min-width: var(--spacing-0); }
 .srp-copy-btn__label { grid-area: label; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; transition: opacity var(--motion-change-sm) var(--ease-enter); }
 .srp-copy-btn__label--off { opacity: var(--opacity-0); }
-.srp-copy-btn__icon--done { color: var(--copy-button-done-color, var(--success-text)); }
+.srp-copy-btn__icon--done { color: var(--copy-button-done-color, var(--text-success)); }
 /* The copy icon and the check share one cell. The one going fades, shrinks a little and blurs; the one coming fades in,
    growing from 90% out of the same blur, over motion-change-sm, so it reads as one icon changing (KW18). Reduced
    motion: the fade alone. */
 .srp-copy-btn__icons { display: inline-grid; grid-template-areas: "icon"; }
 .srp-copy-btn__icons > * { grid-area: icon; transition: opacity var(--motion-change-sm) var(--ease-enter); }
-.srp-copy-btn__icon--failed { color: var(--copy-button-failed-color, var(--danger-text)); }
+.srp-copy-btn__icon--failed { color: var(--copy-button-failed-color, var(--text-danger)); }
 .srp-copy-btn:not([data-copied]) .srp-copy-btn__icon--done, .srp-copy-btn[data-copied] .srp-copy-btn__icon--copy,
 .srp-copy-btn:not([data-failed]) .srp-copy-btn__icon--failed, .srp-copy-btn[data-failed] .srp-copy-btn__icon--copy { opacity: var(--opacity-0); }
 @media (prefers-reduced-motion: no-preference) {

@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "A key's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "A key's outline, thicker at the bottom like a keycap.",
         "$extensions": {
           "com.serupa": {

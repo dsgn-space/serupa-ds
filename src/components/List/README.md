@@ -164,7 +164,7 @@ It draws the rows in view and 4 more on each side (`overscan`); an empty `<li>` 
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; its props (such as `to`) go in `linkProps`. Set it once for the app with `configure({ link })`; `as` wins for one link. |
 | `linkProps` | object | none | Extra props for the link or button |
 | `selected` | boolean | `false` | Shaded (with a bar at its start when more contrast is asked for); `aria-current="true"` on a link (an `aria-current` in `linkProps`, such as `"page"` for the current page of a nav list, wins), `aria-pressed` on a button |
-| `disabled` | boolean | `false` | Draws a link or button row in `disabled-text` and stops it; with `selectionMode`, it can't be picked |
+| `disabled` | boolean | `false` | Draws a link or button row in `text-disabled` and stops it; with `selectionMode`, it can't be picked |
 | `value` | string | | With `selectionMode`: what `onSelectedChange` reports for this row |
 
 `className`, `ref` and everything else go to the `<li>`.
@@ -218,13 +218,13 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-bg` | `surface` | The background of variant="card". |
 | `--list-title-color` | `text` | An item's title. |
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
-| `--list-text-muted-shaded` | `text-muted-shaded` | Gray text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill. |
-| `--list-avatar-bg-shaded` | `secondary-hover` | An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade. |
+| `--list-text-muted-shaded` | `text-secondary` | Gray text (descriptions, trailing text, a leading icon) in a hovered or selected item, where `text-muted` would fall under 4.5:1 on the shaded fill. |
+| `--list-avatar-bg-shaded` | `surface-secondary-hover` | An Avatar's fill in a hovered or selected item: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade. |
 | `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
-| `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
-| `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
+| `--list-bg-pressed` | `surface-pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
+| `--list-indicator-selected` | `surface-highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
-| `--list-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--list-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Type**
 

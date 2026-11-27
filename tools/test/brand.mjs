@@ -30,17 +30,17 @@ const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
   // white text reads as brown. Its text on the fill still passes 4.5:1.
   const BRIGHT = { 'yellow-dark': ['{yellow-400}', '{yellow-300}', '{yellow-200}'] };
   for (const [id, want] of Object.entries(BRIGHT)) {
-    const got = ['primary', 'primary-hover', 'primary-pressed'].map((n) => val(n)[id]);
-    const low = got.map((v) => contrast(hexOf(val('on-primary')[id]), hexOf(v))).filter((r) => r < 4.5);
+    const got = ['surface-brand', 'surface-brand-hover', 'surface-brand-pressed'].map((n) => val(n)[id]);
+    const low = got.map((v) => contrast(hexOf(val('text-on-brand')[id]), hexOf(v))).filter((r) => r < 4.5);
     t(`${id} keeps its bright fill (${want.join(', ')}) under dark text at 4.5:1`, got.join() === want.join() && !low.length, `${got.join(', ')}; ${low.map((r) => r.toFixed(2)).join(', ')}`);
   }
   for (const { id } of tokens.color.themes.filter((th) => th.id.endsWith('-dark') && !(th.id in BRIGHT))) {
     const lightId = id.replace(/-dark$/, '-light');
-    const d = darkFillShift(hexOf(val('primary')[lightId]), hexOf(val('surface-raised')[id]));
-    for (const n of ['primary', 'primary-hover', 'primary-pressed']) {
+    const d = darkFillShift(hexOf(val('surface-brand')[lightId]), hexOf(val('surface-raised')[id]));
+    for (const n of ['surface-brand', 'surface-brand-hover', 'surface-brand-pressed']) {
       const want = lighter(hexOf(val(n)[lightId]), d), got = hexOf(val(n)[id]);
       if (got !== want) off.push(`${id} ${n}: ${got}, not ${want}`);
-      if (contrast('#ffffff', got) < 4.5 || hexOf(val('on-primary')[id]) !== '#ffffff') off.push(`${id} ${n}: white text ${contrast('#ffffff', got).toFixed(2)}:1`);
+      if (contrast('#ffffff', got) < 4.5 || hexOf(val('text-on-brand')[id]) !== '#ffffff') off.push(`${id} ${n}: white text ${contrast('#ffffff', got).toFixed(2)}:1`);
     }
     near.push(d);
   }
@@ -71,8 +71,9 @@ for (const c of COLORS) {
   const y = brandTheme({ name: 'acme', color: '#ffff00', tokens });
   const blk = brandTheme({ name: 'acme', color: '#0a0a0a', tokens });
   const gry = brandTheme({ name: 'acme', color: '#808080', tokens });
-  t('#ffff00: primary-subtle stays a soft tint (chroma <= 0.05) instead of neon yellow', oklchOf(y.themes['acme-light']['primary-subtle'])[1] <= 0.05, y.themes['acme-light']['primary-subtle']);
-  t('#0a0a0a keeps a darker light-mode primary than #808080 instead of collapsing to mid-grey', oklchOf(blk.themes['acme-light'].primary)[0] < oklchOf(gry.themes['acme-light'].primary)[0] - 0.15, `${blk.themes['acme-light'].primary} vs ${gry.themes['acme-light'].primary}`);
+  t('#ffff00: surface-brand-subtle stays a soft tint (chroma <= 0.05) instead of neon yellow', oklchOf(y.themes['acme-light']['surface-brand-subtle'])[1] <= 0.05, y.themes['acme-light']['surface-brand-subtle']);
+  // #808080 takes its 700 (its hover text keeps 4.5:1 on brand 200, a held tint), so black's 900 is 0.1 darker, not 0.15.
+  t('#0a0a0a keeps a darker light-mode primary than #808080 instead of collapsing to mid-grey', oklchOf(blk.themes['acme-light']['surface-brand'])[0] < oklchOf(gry.themes['acme-light']['surface-brand'])[0] - 0.1, `${blk.themes['acme-light']['surface-brand']} vs ${gry.themes['acme-light']['surface-brand']}`);
 }
 // Every alias of the shipped themes has a value in both, so a brand theme nested in another sets them all.
 const shippedAliases = tokens.color.tokens.filter((x) => typeof x.value === 'object' && Object.keys(x.value).length > 1).map((x) => x.name);
@@ -80,11 +81,11 @@ const any = Object.values(made)[0];
 if (any) {
   const missing = Object.entries(any.themes).flatMap(([th, v]) => shippedAliases.filter((a) => !(a in v)).map((a) => `${th}: ${a}`));
   t('the themes set every alias the shipped themes set', !missing.length, missing.join(', '));
-  t('only the brand aliases name the brand shades', !/--(?!acme-|srp-more-|primary|on-primary|focus-ring|link-visited)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
-  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-pressed|primary-subtle|primary-subtle-pressed|on-primary|focus-ring|srp-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
+  t('only the brand aliases name the brand shades', !/--(?!acme-|srp-more-|surface-brand|text-on-brand|text-brand|focus-ring|text-link-visited)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
+  t('the CSS names no shipped brand hue for a brand alias', !/--(surface-brand[a-z-]*|text-on-brand|text-brand[a-z-]*|focus-ring|srp-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
 }
 // A violet brand's visited links turn fuchsia, as the violet theme's do, so they stay a hue apart.
-if (made['#7c3aed']) t('a violet brand gets fuchsia visited links', made['#7c3aed'].css.includes('--link-visited: var(--fuchsia-700)'));
+if (made['#7c3aed']) t('a violet brand gets fuchsia visited links', made['#7c3aed'].css.includes('--text-link-visited: var(--fuchsia-700)'));
 for (const [name, why] of [['blue', 'a theme Serupa ships'], ['red', "a palette color's name"], ['Acme', "can't be a theme name"], ['9a', "can't be a theme name"]]) {
   let msg = '';
   try { brandTheme({ name, color: '#0f766e', tokens }); } catch (e) { msg = e.message; }
@@ -134,14 +135,14 @@ try {
         const el = document.getElementById(id); const p = el.appendChild(document.createElement('span'));
         p.style.color = `var(--${prop})`; const c = getComputedStyle(p).color; p.remove(); return c;
       };
-      return { probe: Object.fromEntries(['l', 'd', 'nl', 'bd', 'm'].map((id) => [id, { primary: probe(id, 'primary'), surface: probe(id, 'surface'), text: probe(id, 'text') }])) };
+      return { probe: Object.fromEntries(['l', 'd', 'nl', 'bd', 'm'].map((id) => [id, { primary: probe(id, 'surface-brand'), surface: probe(id, 'surface'), text: probe(id, 'text') }])) };
     });
     const rgb = (hex) => `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
     const L = want['acme-light'], D = want['acme-dark'];
-    t('data-theme="acme-light" and "acme-dark" give the brand\'s primary and the system\'s surface', got.probe.l.primary === rgb(L.primary) && got.probe.d.primary === rgb(D.primary) && got.probe.d.surface === rgb(D.surface) && got.probe.l.surface === rgb(L.surface), JSON.stringify(got.probe));
-    t('acme-light nested in acme-dark is light again, text and all', got.probe.nl.primary === rgb(L.primary) && got.probe.nl.text === rgb(L.text), JSON.stringify(got.probe.nl));
-    t('data-brand="acme" with data-mode="dark" in another theme gives the dark brand', got.probe.bd.primary === rgb(D.primary), JSON.stringify(got.probe.bd));
-    t('more contrast gives the stronger primary', got.probe.m.primary === rgb(L['srp-more-primary']) && got.probe.m.primary !== got.probe.l.primary, JSON.stringify(got.probe.m));
+    t('data-theme="acme-light" and "acme-dark" give the brand\'s primary and the system\'s surface', got.probe.l.primary === rgb(L['surface-brand']) && got.probe.d.primary === rgb(D['surface-brand']) && got.probe.d.surface === rgb(D.surface) && got.probe.l.surface === rgb(L.surface), JSON.stringify(got.probe));
+    t('acme-light nested in acme-dark is light again, text and all', got.probe.nl.primary === rgb(L['surface-brand']) && got.probe.nl.text === rgb(L.text), JSON.stringify(got.probe.nl));
+    t('data-brand="acme" with data-mode="dark" in another theme gives the dark brand', got.probe.bd.primary === rgb(D['surface-brand']), JSON.stringify(got.probe.bd));
+    t('more contrast gives the stronger primary', got.probe.m.primary === rgb(L['srp-more-surface-brand']) && got.probe.m.primary !== got.probe.l.primary, JSON.stringify(got.probe.m));
     await b.close();
   }
 } finally {

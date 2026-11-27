@@ -4,7 +4,7 @@
     "color": {
       "stage-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The stage behind a picture while it loads, or if it fails.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "edge": {
         "$type": "color",
-        "$value": "{color.picture-edge}",
+        "$value": "{color.border-picture}",
         "$description": "A faint line around the picture, so a white one stays apart from a white dialog.",
         "$extensions": {
           "com.serupa": {

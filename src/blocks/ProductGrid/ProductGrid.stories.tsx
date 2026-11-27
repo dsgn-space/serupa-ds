@@ -23,7 +23,7 @@ const products: Product[] = [
 ];
 
 function Page({ children, title = 'Shirts', section = 'New this week' }: { children: React.ReactNode; title?: string; section?: string }) {
-  return <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 outline-none">
+  return <div className="min-h-screen bg-surface-sunken text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 outline-none">
     <Heading level={1}>{title}</Heading><Heading level={2} size="lg">{section}</Heading>{children}<Toaster /></main></div>;
 }
 

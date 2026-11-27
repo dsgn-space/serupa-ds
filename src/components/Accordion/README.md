@@ -115,8 +115,8 @@ Each is an optional override: set it on the page, a container or one accordion. 
 | `--accordion-icon-color` | `text-muted` | The chevron. |
 | `--accordion-bg` | `surface` | The background of variant="card". |
 | `--accordion-focus-ring` | `focus-ring` | The keyboard focus ring. |
-| `--accordion-trigger-bg-pressed` | `pressed` | A title's fill while it's held down. |
-| `--accordion-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--accordion-trigger-bg-pressed` | `surface-pressed` | A title's fill while it's held down. |
+| `--accordion-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--accordion-title-size` | `text-sm` | Title text (14px). |
 | `--accordion-title-weight` | `font-medium` | Title weight (500). |
 | `--accordion-content-size` | `text-sm` | Content text (14px). |

@@ -12,8 +12,8 @@ const THEME_MEDIA = ['(prefers-color-scheme: dark)', '(prefers-contrast: more)',
 
 const cssName = (name: string) => (name.startsWith('--') ? name : '--' + name);
 
-/** A token's value where `element` sits (default: the page), as CSS resolves it there now: `tokenValue('primary')` is
- *  the primary color of the theme in force (a color comes back as CSS computes it, such as `rgb(29, 78, 216)`, with
+/** A token's value where `element` sits (default: the page), as CSS resolves it there now: `tokenValue('surface-brand')` is
+ *  the brand fill of the theme in force (a color comes back as CSS computes it, such as `rgb(29, 78, 216)`, with
  *  light or dark already chosen), and inside a section with its own `data-theme`, that section's. Takes the
  *  token's name with or without `--`. '' on the server, or for a name no theme defines. For a one-off read in an
  *  event handler; to draw with it, use `useTokenValue`, which follows theme changes. */
@@ -55,9 +55,9 @@ function onThemeChange(on: () => void): () => void {
 
 /** A token's value as CSS resolves it now, kept up to date when the theme, mode, contrast, roundness or density
  *  changes (on the page or on a section around `ref`), or the system switches to dark or more contrast. For code that
- *  draws without CSS: `const line = useTokenValue('primary')` for a canvas chart. With `ref`, the value where that
+ *  draws without CSS: `const line = useTokenValue('surface-brand')` for a canvas chart. With `ref`, the value where that
  *  element sits, so a section with its own theme gets its own. '' in server HTML and until hydrated. Prefer CSS
- *  (`var(--primary)`) wherever the thing drawn can take it: it follows the theme with no re-render. */
+ *  (`var(--surface-brand)`) wherever the thing drawn can take it: it follows the theme with no re-render. */
 export function useTokenValue(name: string, ref?: React.RefObject<Element | null>  ): string {
   const get = () => tokenValue(name, ref ? ref.current : null);
   return React.useSyncExternalStore(onThemeChange, get, () => '');

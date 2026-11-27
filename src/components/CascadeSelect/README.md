@@ -42,7 +42,7 @@ Drawn from the `Open` story.
 1. **Button** (`.srp-cascade-select__button`): the chosen path, joined with ›, or the placeholder; a chevron at the end.
 2. **Panel** (`.srp-cascade-select__panel`): a dialog holding one column per level.
 3. **Column** (`.srp-cascade-select__column`): its level's name (`levels`, or "Level 2") over a listbox of options, scrolling on its own past 288px.
-4. **Option** (`.srp-cascade-select__option`): the highlighted one in each column is `primary-subtle`; one with children ends in a chevron, the chosen last step in a check.
+4. **Option** (`.srp-cascade-select__option`): the highlighted one in each column is `surface-brand-subtle`; one with children ends in a chevron, the chosen last step in a check.
 
 ## Usage
 
@@ -63,7 +63,7 @@ Drawn from the `Open` story.
 | Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the panel is open; inside the panel, an outline on the focused option or column |
 | Open | The panel under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; it doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; it doesn't open |
 | Loading | "Loading…" in the next column |
 
 ### Do and don't
@@ -125,25 +125,26 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | --- | --- | --- |
 | `--cascade-select-bg` | `field` | The button's background. |
 | `--cascade-select-text` | `text` | The chosen path and the options (4.5:1). |
-| `--cascade-select-placeholder` | `placeholder` | The placeholder (4.5:1 on bg). |
+| `--cascade-select-placeholder` | `field-placeholder` | The placeholder (4.5:1 on bg). |
+| `--cascade-select-placeholder-readonly` | `text-secondary` | Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill. |
 | `--cascade-select-border` | `field-border` | The button's outline (3:1). |
 | `--cascade-select-border-hover` | `field-border-hover` | Its outline under the pointer. |
 | `--cascade-select-invalid` | `field-border-invalid` | The outline when invalid. |
 | `--cascade-select-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--cascade-select-icon` | `text-muted` | The chevron (3:1). |
 | `--cascade-select-muted` | `text-muted` | Level names, notes and the children chevrons (4.5:1 on the panel). |
-| `--cascade-select-check` | `primary-text` | The chosen last step's check (3:1). |
+| `--cascade-select-check` | `text-brand` | The chosen last step's check (3:1). |
 | `--cascade-select-focus-ring` | `focus-ring` | The ring around the focused button, column or option. |
-| `--cascade-select-panel-bg` | `surface-overlay` | The panel's background. |
-| `--cascade-select-panel-border` | `border-overlay` | The panel's outline. |
+| `--cascade-select-panel-bg` | `surface-raised` | The panel's background. |
+| `--cascade-select-panel-border` | `border-raised` | The panel's outline. |
 | `--cascade-select-divider` | `border` | The line between columns. |
-| `--cascade-select-option-hover` | `highlight` | An option under the pointer, as Combobox's and Menu's. |
-| `--cascade-select-option-bg-pressed` | `pressed` | An option's background while it's held down, one step past hover. |
-| `--cascade-select-option-on` | `primary-subtle` | The highlighted option in each column. |
-| `--cascade-select-option-indicator` | `primary-text` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
-| `--cascade-select-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--cascade-select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--cascade-select-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--cascade-select-option-hover` | `surface-highlight` | An option under the pointer, as Combobox's and Menu's. |
+| `--cascade-select-option-bg-pressed` | `surface-pressed` | An option's background while it's held down, one step past hover. |
+| `--cascade-select-option-on` | `surface-brand-subtle` | The highlighted option in each column. |
+| `--cascade-select-option-indicator` | `text-brand` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
+| `--cascade-select-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--cascade-select-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--cascade-select-panel-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Radius**
 

@@ -88,7 +88,7 @@ Each is an optional override: set it on the page, a container or one AppShell. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--app-shell-bg` | `surface` | The page's background, and main's with background="plain". |
-| `--app-shell-bg-muted` | `surface-muted` | main's background with background="muted". |
+| `--app-shell-bg-muted` | `surface-sunken` | main's background with background="muted". |
 | `--app-shell-text` | `text` | The text (4.5:1 on bg and bg-muted). |
 | `--app-shell-border` | `border` | The line above the footer. |
 | `--app-shell-footer-text` | `text-muted` | The footer's text (4.5:1 on bg). |

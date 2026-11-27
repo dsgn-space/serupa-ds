@@ -11,7 +11,7 @@
   .srp-page-section--md { --srp-page-section-y: var(--page-section-padding-y-md-wide, var(--spacing-16)); }
   .srp-page-section--lg { --srp-page-section-y: var(--page-section-padding-y-lg-wide, var(--spacing-24)); }
 }
-.srp-page-section--muted { background: var(--page-section-bg-muted, var(--surface-muted)); --surface-behind: var(--page-section-bg-muted, var(--surface-muted)); }
+.srp-page-section--muted { background: var(--page-section-bg-muted, var(--surface-sunken)); --surface-behind: var(--page-section-bg-muted, var(--surface-sunken)); }
 .srp-page-section--divider { border-block-start: var(--border-width-1) solid var(--page-section-border, var(--border)); }
 .srp-page-section__inner { --srp-page-section-gap: initial; display: flex; flex-direction: column; gap: var(--srp-page-section-gap, var(--page-section-gap, var(--spacing-8))); }
 .srp-page-section--center .srp-page-section__inner { align-items: center; text-align: center; }

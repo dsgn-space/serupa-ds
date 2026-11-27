@@ -101,26 +101,59 @@ The panel's id is made for you unless you pass one, and the trigger's `aria-cont
 Each is an optional override: set it on the page, a container or one popover. The list lives in `src/components/Popover/popover.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from popover.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
-| `--popover-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the popover, hovered or selected: a step up from its surface in dark |
+| `--popover-row-bg-hover` | `surface-raised-hover` | A List or InlineEdit row in the popover, hovered or selected: a step up from its surface in dark |
 | `--popover-field-bg` | `field-raised` | The fill of a form field in the popover: a step up from its surface in dark, so the field stands out from it |
-| `--popover-bg` | `surface-overlay` | The panel's background. |
+| `--popover-field-placeholder` | `field-raised-placeholder` | Placeholder and other gray text in a form field in the popover: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field. |
+| `--popover-bg` | `surface-raised` | The panel's background. |
 | `--popover-text` | `text` | The panel's text. |
-| `--popover-border` | `border-overlay` | The panel's border. |
+| `--popover-border` | `border-raised` | The panel's border. |
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
-| `--popover-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--popover-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |
 | `--popover-sheet-radius` | `radius-container` | A sheet's top corners (12px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-title-size` | `text-sm` | The title (14px). |
 | `--popover-title-weight` | `font-semibold` | The title's weight (600). |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-width` | `container-3xs` | The panel's width (256px; it never gets wider than the screen). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-padding` | `space-content` | Space inside the panel (16px). |
 | `--popover-gap` | `spacing-2` | Space under the title (8px). |
 | `--popover-offset` | `spacing-2` | The gap between the panel and its trigger (8px). |
 | `--popover-sheet-gap` | `spacing-16` | The room a sheet leaves above it, at its tallest (64px). |
+
+**Layout**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--popover-z-index` | `z-popover` | The stacking level where the browser has no top layer (popover). |
 <!-- token-table:end -->

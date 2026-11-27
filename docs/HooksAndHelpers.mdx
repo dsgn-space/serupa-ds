@@ -102,7 +102,7 @@ function Navigation() {
 
 ## Tokens in JavaScript
 
-Code that draws without CSS (a canvas, a map, a chart library) can't write `var(--primary)`. `useTokenValue(name, ref?)` gives a token's value as CSS resolves it now, and updates when the theme, mode, contrast, roundness or density changes, on the page or on a section around `ref`, or when the system switches to dark or more contrast. A color comes back as CSS computes it (`rgb(37, 99, 235)`), with light or dark already chosen. `tokenValue(name, element?)` reads it once, in an event handler. Both are `''` in server HTML.
+Code that draws without CSS (a canvas, a map, a chart library) can't write `var(--surface-brand)`. `useTokenValue(name, ref?)` gives a token's value as CSS resolves it now, and updates when the theme, mode, contrast, roundness or density changes, on the page or on a section around `ref`, or when the system switches to dark or more contrast. A color comes back as CSS computes it (`rgb(37, 99, 235)`), with light or dark already chosen. `tokenValue(name, element?)` reads it once, in an event handler. Both are `''` in server HTML.
 
 ```tsx
 import { useTokenValue } from "@diki-stwn/serupa-ds";
@@ -115,7 +115,7 @@ function SignupLine({ points }: { points: number[] }) {
 }
 ```
 
-Use CSS wherever the thing drawn can take it (an SVG's `stroke="var(--primary-text)"`, a chart library's CSS colors): it follows the theme without a re-render.
+Use CSS wherever the thing drawn can take it (an SVG's `stroke="var(--text-brand)"`, a chart library's CSS colors): it follows the theme without a re-render.
 
 ## Copying
 

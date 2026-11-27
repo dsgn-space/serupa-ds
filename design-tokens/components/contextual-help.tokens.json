@@ -14,7 +14,7 @@
       },
       "info-icon": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "The \"i\" of variant info (3:1+ on surface).",
         "$extensions": {
           "com.serupa": {

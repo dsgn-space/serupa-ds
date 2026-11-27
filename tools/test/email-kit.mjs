@@ -128,7 +128,7 @@ try {
         return { button: s('.serupa-button', 'backgroundColor'), label: s('.serupa-button', 'color'), text: s('.serupa-text', 'color'), surface: s('.serupa-container', 'backgroundColor'), wide: document.documentElement.scrollWidth > innerWidth };
       });
       const c = colors[`${b}-${mode}`];
-      const exp = { button: c.primary, label: c['on-primary'], text: c.text, surface: c.surface, wide: false };
+      const exp = { button: c['surface-brand'], label: c['text-on-brand'], text: c.text, surface: c.surface, wide: false };
       for (const k of Object.keys(exp)) if (got[k] !== exp[k]) seen.push(`${b} ${mode} ${k}: ${got[k]}, want ${exp[k]}`);
     }
   }

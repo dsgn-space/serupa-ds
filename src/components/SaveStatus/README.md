@@ -72,8 +72,8 @@ Each is an optional override: set it on the page, a container or one SaveStatus.
 | Token | Default | Use |
 | --- | --- | --- |
 | `--save-status-text` | `text-muted` | The text and the ring (4.5:1 on the page). |
-| `--save-status-saved` | `success` | The check once saved. |
-| `--save-status-error` | `danger-text` | The error's icon, text and Try again (4.5:1 on the page). |
+| `--save-status-saved` | `surface-success` | The check once saved. |
+| `--save-status-error` | `text-danger` | The error's icon, text and Try again (4.5:1 on the page). |
 | `--save-status-icon-size` | `spacing-4` | The icon's size (16px). |
 | `--save-status-gap` | `spacing-1.5` | Space between the icon, the text and Try again (6px). |
 <!-- token-table:end -->

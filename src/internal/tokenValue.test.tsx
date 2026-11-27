@@ -26,11 +26,11 @@ describe('tokenValue', () => {
   });
 
   test('reads a token as the page resolves it, with or without the leading --; an unknown name is empty', () => {
-    const v = tokenValue('primary');
+    const v = tokenValue('surface-brand');
     expect(v).not.toBe('');
-    expect(v).toBe(resolved(html, 'primary'));
+    expect(v).toBe(resolved(html, 'surface-brand'));
     expect(tokenValue('spacing-4')).toMatch(/^\d/);
-    expect(tokenValue('--primary')).toBe(v);
+    expect(tokenValue('--surface-brand')).toBe(v);
     expect(tokenValue('space-not-a-token')).toBe('');
   });
 
@@ -87,13 +87,13 @@ describe('useTokenValue', () => {
   });
 
   test('server HTML has an empty value, and hydration fills it in without a mismatch', async () => {
-    function Peek() { return <b>{useTokenValue('primary') || 'none'}</b>; }
+    function Peek() { return <b>{useTokenValue('surface-brand') || 'none'}</b>; }
     expect(renderToString(<Peek />)).toBe('<b>none</b>');
     const host = document.body.appendChild(document.createElement('div'));
     host.innerHTML = renderToString(<Peek />);
     const errors: unknown[] = [];
     const root = hydrateRoot(host, <Peek />, { onRecoverableError: (e) => errors.push(e) });
-    await expect.poll(() => host.textContent).toBe(tokenValue('primary'));
+    await expect.poll(() => host.textContent).toBe(tokenValue('surface-brand'));
     expect(errors).toEqual([]);
     root.unmount(); host.remove();
   });

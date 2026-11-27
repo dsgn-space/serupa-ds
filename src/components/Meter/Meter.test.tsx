@@ -44,7 +44,7 @@ describe('Meter', () => {
     await render(<Wrap><Meter id="m1" value={72} label="Storage" showValue /><Meter id="m2" value={30} aria-label="Seats" /></Wrap>);
     await expect.poll(() => share('m1')).toBe(72);
     expect([value('m1'), thick('m1'), fill('m1'), mt('m2').getAttribute('aria-label'), mt('m2').hasAttribute('aria-labelledby'), el('m2').hasAttribute('aria-label'), value('m2')])
-      .toEqual(['72%', 8, color('var(--primary)'), 'Seats', false, false, null]);
+      .toEqual(['72%', 8, color('var(--surface-brand)'), 'Seats', false, false, null]);
   });
 
   test('min, max and clamping: 7.2 of 10 is 72%; values outside are clamped; formatValue gets (value, min, max) and is shown and read out', async () => {
@@ -70,7 +70,7 @@ describe('Meter', () => {
       ['i', { value: 10, low: 30 }, 'suboptimal'],
     ];
     await render(<Wrap>{cases.map(([id, p]) => <Meter key={id} id={id} value={0} aria-label={id} {...p} />)}</Wrap>);
-    const tone: Record<string, string> = { optimum: color('var(--success)'), suboptimal: color('var(--warning)'), poor: color('var(--danger)') };
+    const tone: Record<string, string> = { optimum: color('var(--surface-success)'), suboptimal: color('var(--surface-warning)'), poor: color('var(--surface-danger)') };
     expect(cases.map(([id]) => el(id).dataset.state)).toEqual(cases.map((c) => c[2]));
     expect(cases.map(([id]) => fill(id))).toEqual(cases.map((c) => tone[c[2]]));
   });

@@ -24,7 +24,7 @@
       },
       "error-color": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "A row's error and the list's error (4.5:1 on the surface).",
         "$extensions": {
           "com.serupa": {

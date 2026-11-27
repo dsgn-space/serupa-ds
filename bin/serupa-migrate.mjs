@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 import { ALL, migrate, renamePackage, transformsAfter } from './migrate/transforms.mjs';
 
-export { migrate, TRANSFORMS, transformsAfter, renameProp, removeProp, openTags, renamePackage, TOKENS_15, DEPTH_TOKENS_16, COMPONENT_TOKENS_REMOVED_16, MOTION_TOKENS_16, EASINGS_16, EASINGS_NEAREST_16 } from './migrate/transforms.mjs';
+export { migrate, TRANSFORMS, transformsAfter, renameProp, removeProp, openTags, renamePackage, TOKENS_15, TOKENS_20, DEPTH_TOKENS_16, COMPONENT_TOKENS_REMOVED_16, MOTION_TOKENS_16, EASINGS_16, EASINGS_NEAREST_16 } from './migrate/transforms.mjs';
 
 // The package this command came in. From 15.0.0 it is published under a scoped name (docs/rfcs/15.0.0.md), so its
 // serupa-migrate also rewrites `serupa-ds` in imports and paths to that name. Run from a package still called

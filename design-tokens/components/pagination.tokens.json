@@ -14,7 +14,7 @@
       },
       "bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "A page or arrow on hover.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "A page or arrow while it's pressed, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "bg-current": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The current page's background.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "text-current": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "The current page's number (4.5:1 on current-bg).",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Previous or next when there's no page that way (3:1 or more on the page).",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "edge-current": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The current page's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

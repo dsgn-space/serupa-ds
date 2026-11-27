@@ -579,7 +579,7 @@ describe('Menu', () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     const item = menuOf('mb').querySelectorAll<HTMLElement>('[role="menuitem"]')[1]!;
-    await press(item, () => expect.poll(() => getComputedStyle(item).backgroundColor).toBe(color('var(--pressed)')));
+    await press(item, () => expect.poll(() => getComputedStyle(item).backgroundColor).toBe(color('var(--surface-pressed)')));
   });
 
   test('a Tooltip around the trigger: the button still gets aria-haspopup, opens the menu on click and keeps its own onClick and ref', async () => {

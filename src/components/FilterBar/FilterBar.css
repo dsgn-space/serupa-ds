@@ -15,7 +15,7 @@
 }
 /* The chip answers as a button does: a gray fill under the pointer, a pressed one while held and while its editor is open. */
 @media (hover: hover) { .srp-filter-bar__chip:has(.srp-filter-bar__edit:hover) { background: var(--filter-bar-chip-bg-hover, var(--surface-hover)); } }
-.srp-filter-bar__chip:has(.srp-filter-bar__edit:active, .srp-filter-bar__edit[aria-expanded="true"]) { background: var(--filter-bar-chip-open, var(--pressed)); }
+.srp-filter-bar__chip:has(.srp-filter-bar__edit:active, .srp-filter-bar__edit[aria-expanded="true"]) { background: var(--filter-bar-chip-open, var(--surface-pressed)); }
 @media (prefers-reduced-motion: reduce) { .srp-filter-bar__chip { transition: none; } }
 .srp-filter-bar__chip:where([data-empty]) { border-style: dashed; }
 .srp-filter-bar__edit {
