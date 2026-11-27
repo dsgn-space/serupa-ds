@@ -243,7 +243,7 @@ describe('Input', () => {
 
   test('read-only: the prefix, suffix and count read text-secondary, 4.5:1 on the read-only fill in every theme (field-placeholder is 4.4:1 there)', async () => {
     await render(<Input id="rog" readOnly prefix="Rp" suffix="per bulan" showCount maxLength={20} placeholder="Harga" aria-label="Harga" />, { wrapper: EnUS });
-    const affix = box('rog').querySelector('.srp-input__affix')!;
+    const affix = [...box('rog').children].find((c) => c.textContent === 'Rp')!;
     expect([css(affix).color, css(count('rog')).color]).toEqual([color('var(--text-secondary)'), color('var(--text-secondary)')]);
     expect(lowContrast([['read-only gray text', 'var(--text-secondary)', 'var(--field-readonly)', 4.5]])).toEqual([]);
   });

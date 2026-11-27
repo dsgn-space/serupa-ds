@@ -263,7 +263,7 @@ const noAccent = rule('serupa/no-accent-on-current', {
       if (n.type !== 'function') continue;
       if (n.value !== 'var') { read(decl, n.nodes, top); continue; }
       const v = name(n);
-      if (/^primary(?:-|$)/.test(v)) { if (!known.has(top)) flag(decl, m.rejected(v, top), `--${v}`); } else read(decl, n.nodes.slice(1), top || v);
+      if (/^(?:surface-brand|text-brand|border-brand|primary)(?:-|$)/.test(v)) { if (!known.has(top)) flag(decl, m.rejected(v, top), `--${v}`); } else read(decl, n.nodes.slice(1), top || v);
     }
   };
   root.walkRules((r) => {

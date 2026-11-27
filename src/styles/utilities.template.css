@@ -1235,9 +1235,11 @@
    A surface painted inside gives its rows its own fill; Card, Popover, Dialog and Drawer do the same. Form fields on a
    raised or floating surface step up to field-raised the same way, so in dark they don't match the surface, and their
    placeholder to field-raised-placeholder, which keeps 4.5:1 on it. */
-:is(.bg-surface-sunken, .bg-surface-muted) { --srp-row-hover: var(--surface-raised); }
+.bg-surface-sunken { --srp-row-hover: var(--surface-raised); }
+.bg-surface-muted { --srp-row-hover: var(--surface-raised); }
 .bg-surface { --srp-row-hover: var(--surface-hover); }
-:is(.bg-surface-raised, .bg-surface-overlay) { --srp-row-hover: var(--surface-raised-hover); --field: var(--field-raised); --field-placeholder: var(--field-raised-placeholder); --border: var(--border-raised); }
+.bg-surface-raised { --srp-row-hover: var(--surface-raised-hover); --field: var(--field-raised); --field-placeholder: var(--field-raised-placeholder); --border: var(--border-raised); }
+.bg-surface-overlay { --srp-row-hover: var(--surface-raised-hover); --field: var(--field-raised); --field-placeholder: var(--field-raised-placeholder); --border: var(--border-raised); }
 /* background-image: none */
 .bg-none { background-image: none; }
 /* background-origin */
