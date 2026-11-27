@@ -317,7 +317,9 @@ function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttribut
   // aria-invalid goes on the native input, which forms and tests read.
   const errorId = invalid ? props['aria-errormessage'] : undefined;
   const given = props['aria-describedby'];
-  const described = cn(required && base + '-req', given, errorId && !(given || '').split(/\s+/).includes(errorId) && errorId, hasHint && base + '-hint', missing && base + '-missing') || undefined;
+  const errorMessage = errorId && !(given || '').split(/\s+/).includes(errorId) ? errorId : undefined;
+  const describedIds = cn(required && base + '-req', given, errorMessage, hasHint && base + '-hint', missing && base + '-missing');
+  const described = describedIds || undefined;
   const root = React.useRef<HTMLDivElement | null>(null);
   // Pasted with focus inside in Chrome before 125, which sends the paste to the body: handed on here.
   useClipboardHandOn(root);
