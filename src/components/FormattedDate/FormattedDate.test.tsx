@@ -68,6 +68,22 @@ describe('FormattedDate', () => {
     expect([/\d[\u00a0\u202f]PM/.test(en), /오후[\u00a0\u202f]3:45/.test(ko)]).toEqual([true, true]);
   });
 
+  test('the space before AM or PM is the same no-break one whichever space Intl writes, so a page from Node hydrates in Chrome before 119', () => {
+    // Chrome before 119 (ICU 72) writes a narrow no-break space there; Node and later browsers a plain one.
+    const real = Intl.DateTimeFormat.prototype.formatToParts;
+    const narrow = vi.spyOn(Intl.DateTimeFormat.prototype, 'formatToParts').mockImplementation(function (this: Intl.DateTimeFormat, d) {
+      const parts = real.call(this, d);
+      return parts.map((p, i) => (p.type === 'literal' && parts[i + 1]?.type === 'dayPeriod' ? { ...p, value: '\u202f' } : p));
+    });
+    const at = '2026-11-20T15:45:00Z';
+    try {
+      const old = formatDate(at, 'en-US', { dateStyle: false, timeStyle: 'short', timeZone: 'UTC' });
+      narrow.mockRestore();
+      expect(old).toBe(formatDate(at, 'en-US', { dateStyle: false, timeStyle: 'short', timeZone: 'UTC' }));
+      expect(old).toBe('3:45\u00a0PM');
+    } finally { narrow.mockRestore(); }
+  });
+
   test('a range that ends the same day is one <time>', async () => {
     await render(<FormattedDate id="s" value="2026-11-20" to="2026-11-20" locale="en" />);
     expect([el('s').tagName, el('s').getAttribute('datetime'), el('s').textContent]).toEqual(['TIME', '2026-11-20', 'Nov 20, 2026']);

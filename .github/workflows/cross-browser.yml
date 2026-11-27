@@ -3,8 +3,11 @@ name: Cross-browser
 # Every night, the component tests, the checks and the Storybook checks run in Firefox and WebKit (Safari's engine) as well as Chromium,
 # and the component tests in the oldest Chrome the package supports.
 # It doesn't block pull requests: a red run here is a browser difference to look at, not a broken main.
-# It also runs on demand from the Actions tab.
+# It also runs on demand from the Actions tab, and on a pull request labeled cross-browser: there only the components it
+# changes, in Firefox, WebKit and the oldest Chrome, so a browser difference can be checked and fixed before it merges.
 on:
+  pull_request:
+    types: [labeled, synchronize]
   schedule:
     # GitHub starts a scheduled run hours late when it falls on the hour (cron '0 3' began near 11:00, during the
     # working day, 17 to 20 Nov). An odd minute in the quiet evening hours (UTC) keeps it clear of pull requests
@@ -14,8 +17,9 @@ on:
 
 # Read the code; nothing here writes to the repository. The report job also writes one issue.
 # A newer run of this workflow on the same branch cancels the one before it.
+# Another label on a pull request starts a run of its own that does nothing, so it doesn't cancel the one testing it.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'cross-browser' && format('-{0}', github.event.label.name) || '' }}
   cancel-in-progress: true
 
 permissions:
@@ -26,6 +30,7 @@ jobs:
   # GitHub's runners otherwise. The burst VM deletes itself after two hours with nothing to do, and a job sent to it then waits a day
   # and is cancelled (Nightly and Cross-browser, 18 to 20 Nov). tools/runner-watch.mjs --pick.
   runner:
+    if: github.event_name != 'pull_request' || (contains(github.event.pull_request.labels.*.name, 'cross-browser') && (github.event.action != 'labeled' || github.event.label.name == 'cross-browser'))
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -54,6 +59,7 @@ jobs:
 
   components:
     needs: runner
+    if: github.event_name != 'pull_request'
     name: ${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} (${{ matrix.browser }})
     strategy:
       fail-fast: false
@@ -131,6 +137,7 @@ jobs:
   # script to it instead.
   floor:
     needs: runner
+    if: github.event_name != 'pull_request'
     name: components (Chrome floor)
     runs-on: ${{ fromJSON(needs.runner.outputs.x86) }}
     container:
@@ -175,6 +182,64 @@ jobs:
           path: test-output.txt
           retention-days: 7
           if-no-files-found: ignore
+  # A pull request labeled cross-browser: the component, block and pattern folders it changes, in each engine and the
+  # oldest Chrome. It doesn't block the merge.
+  pull-request:
+    needs: runner
+    if: github.event_name == 'pull_request'
+    name: changed components (${{ matrix.browser }})
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit, chrome-floor]
+    runs-on: ${{ fromJSON(needs.runner.outputs.x86) }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble@sha256:1507cbfc550a63a6b7396791ca4f00df17beb56342d2447b3f106c306f525579
+      options: --cpus 4
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      HOME: /root
+      SERUPA_LOCALE: en-US
+    timeout-minutes: 45
+    steps:
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: ./.github/actions/setup
+        with:
+          browsers: "false"
+      - run: apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null)
+      - name: Build the package
+        run: npm run build
+      - name: Changed components in ${{ matrix.browser }}
+        shell: bash
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          set -o pipefail
+          # The component, block and pattern folders the branch touches (the checkout is its merge onto the base, whose
+          # first parent is that base). Only those: a change to shared code would run the whole suite, which the
+          # nightly run does.
+          only="$(git diff --name-only HEAD^1 HEAD | sed -n -E 's#^src/(components|blocks|patterns)/([A-Z][A-Za-z0-9]*)/.*#\2#p' | sort -u | paste -sd, -)"
+          if [ -z "$only" ]; then echo "No component, block or pattern folder changed: nothing to test here." | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          echo "Testing $only in $BROWSER" | tee -a "$GITHUB_STEP_SUMMARY"
+          export SERUPA_ONLY="$only" SERUPA_PART=base
+          if [ "$BROWSER" = chrome-floor ]; then
+            node tools/browser-floor.mjs
+            SERUPA_CHROMIUM="$(node tools/browser-floor.mjs --chromium)" node tools/test/run.mjs --group components 2>&1 | tee test-output.txt
+          else
+            node tools/test/run.mjs --browser "$BROWSER" --group components 2>&1 | tee test-output.txt
+          fi
+      - name: List the failures
+        if: failure()
+        shell: bash
+        run: |
+          set +o pipefail
+          { echo "## Failing: changed components in ${{ matrix.browser }}"; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
   # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
   report:
     name: nightly issue

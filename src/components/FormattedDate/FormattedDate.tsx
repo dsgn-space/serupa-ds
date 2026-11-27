@@ -72,14 +72,15 @@ function formatter(locale: string | undefined, options: Intl.DateTimeFormatOptio
   }
 }
 
-// A time and its AM or PM stay on one line ("11:45 AM", "오후 3:00"): where Intl puts a breaking space between them
-// (older ICU does; newer writes a narrow no-break space), it becomes a no-break space. Found by part type, so it holds in every locale.
+// A time and its AM or PM stay on one line ("11:45 AM", "오후 3:00"): whatever space Intl puts between them (a plain one
+// in Node and current browsers, a narrow no-break one in Chrome before 119) becomes a no-break space, so the server and
+// every browser write the same text and hydration matches. Found by part type, so it holds in every locale.
 // module state: a fixed list of Intl part types, never written to, so every request reads the same one.
 const CLOCK = new Set(['hour', 'minute', 'second', 'fractionalSecond']);
 function keepTimeTogether<T extends { type: string; value: string }>(parts: T[]): T[] {
   return parts.map((p, i) => {
     const before = parts[i - 1]?.type, after = parts[i + 1]?.type;
-    const joins = p.type === 'literal' && /^[^\S\u00a0\u202f]+$/.test(p.value) && ((CLOCK.has(before!) && after === 'dayPeriod') || (before === 'dayPeriod' && CLOCK.has(after!)));
+    const joins = p.type === 'literal' && /^\s+$/.test(p.value) && ((CLOCK.has(before!) && after === 'dayPeriod') || (before === 'dayPeriod' && CLOCK.has(after!)));
     return joins ? { ...p, value: '\u00a0' } : p;
   });
 }
