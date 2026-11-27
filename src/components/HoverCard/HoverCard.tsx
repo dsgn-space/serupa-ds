@@ -14,6 +14,8 @@ import { useControllable } from '../../internal/controllable';
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
 type Handler = (e: React.SyntheticEvent<HTMLElement>) => void;
+/** Calls the trigger's own handler first, when it has one. */
+const theirs = (f: unknown, e: React.SyntheticEvent<HTMLElement>) => { if (typeof f === 'function') (f as Handler)(e); };
 
 export interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'content'> {
   /** The element it previews: one element that can take focus, usually a link to the page with the full details. */
@@ -43,6 +45,11 @@ export interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement
 // The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
 // trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
 const Panel = 'span' as 'div';
+// The trigger, given the card's handlers and ref. Cloned here, in its own component, so HoverCard's handlers reach it
+// as props rather than as arguments to a call the React Compiler can't see into (ADR-0017).
+function Trigger({ element, add }: { element: React.ReactElement<TriggerProps>; add: TriggerProps }) {
+  return React.cloneElement(element, add);
+}
 const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onBlur: 1, onFocus: 1, onPointerEnter: 1, onPointerLeave: 1 } as const;
 
 function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes<HTMLDivElement>) {
@@ -128,17 +135,16 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
   const triggerRefs = useMergedRef(childRef, (n) => { triggerRef.current = n; });
-  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const f: unknown = cp[name]; if (typeof f === 'function') (f as Handler)(e); fn(e); };
-  const trigger = React.cloneElement(child, {
+  const trigger = <Trigger element={child} add={{
     ref: triggerRefs,
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter and never a mouseleave. A touch pointer doesn't hover.
-    onPointerEnter: chain('onPointerEnter', (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); }),
-    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, 'hover'); } }),
+    onPointerEnter: (e: React.PointerEvent<HTMLElement>) => { theirs(cp.onPointerEnter, e); if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); },
+    onPointerLeave: (e: React.PointerEvent<HTMLElement>) => { theirs(cp.onPointerLeave, e); if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, 'hover'); } },
     // Keyboard focus only (focus-visible): a click on the link is on its way to the page it opens.
-    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } }),
-    onBlur: chain('onBlur', (e) => { focused.current = false; blurred(e); }),
-  });
+    onFocus: (e: React.FocusEvent<HTMLElement>) => { theirs(cp.onFocus, e); const t = e.target; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => { theirs(cp.onBlur, e); focused.current = false; blurred(e); },
+  }} />;
   const mergedRef = useMergedRef(ref, (n) => { cardRef.current = n; });
   return (
     <>
