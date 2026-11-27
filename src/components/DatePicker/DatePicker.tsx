@@ -90,21 +90,23 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   const box = React.useRef<HTMLSpanElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
   // The value and locale the text was last written for: state, so a render can compare without reading a ref.
-  const [seen, setSeen] = React.useState({ at: value ? value.getTime() : null, locale });
+  // Primitives, so writing the same one again draws nothing (a redraw would put the text back over what's typed).
+  const [seenAt, setSeenAt] = React.useState(value ? value.getTime() : null);
+  const [seenLocale, setSeenLocale] = React.useState(locale);
   useFormReset(field, () => {
     if (controlled) return;
     const d = toDay(props.defaultValue);
-    setSeen({ at: d ? d.getTime() : null, locale }); setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false, 'api');
+    setSeenAt(d ? d.getTime() : null); setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false, 'api');
   });
   // A new value from outside, or a new locale (the browser's, once a server-rendered page hydrates), rewrites the text.
-  if ((value ? value.getTime() : null) !== seen.at || locale !== seen.locale) {
-    setSeen({ at: value ? value.getTime() : null, locale });
+  if ((value ? value.getTime() : null) !== seenAt || locale !== seenLocale) {
+    setSeenAt(value ? value.getTime() : null); setSeenLocale(locale);
     const t = value ? formatDate(value, locale) : ''; if (t !== text) setText(t);
   }
 
   const allowed = (d: Date) => !(min && compare(d, min) < 0) && !(max && compare(d, max) > 0) && !(isDateDisabled && isDateDisabled(d));
   const commit = (d: Date | null) => {
-    setSeen({ at: d ? d.getTime() : null, locale });
+    setSeenAt(d ? d.getTime() : null);
     setText(d ? formatDate(d, locale) : '');
     if ((d ? d.getTime() : null) === (value ? value.getTime() : null)) return;
     if (!controlled) setOwn(d);
