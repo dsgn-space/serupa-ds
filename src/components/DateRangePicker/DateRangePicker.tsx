@@ -119,10 +119,14 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   const min = toDay(minIn, 'DateRangePicker') || undefined, max = toDay(maxIn, 'DateRangePicker') || undefined;
   const fmt = (d: Date | null) => (d ? formatDate(d, locale) : '');
   const [text, setText] = React.useState({ start: fmt(value.start), end: fmt(value.end) });
-  const shown = React.useRef({ start: key(value.start), end: key(value.end) });
-  const shownLocale = React.useRef(locale);   // a new locale (the browser's, after hydration) rewrites the text too
-  if (key(value.start) !== shown.current.start || key(value.end) !== shown.current.end || locale !== shownLocale.current) {
-    shown.current = { start: key(value.start), end: key(value.end) }; shownLocale.current = locale;
+  // The range and locale the text was last written for (a new locale, the browser's after hydration, rewrites it too):
+  // state, so a render can compare without reading a ref.
+  // Primitives, so writing the same one again draws nothing (a redraw would put the text back over what's typed).
+  const [seenStart, setSeenStart] = React.useState(key(value.start));
+  const [seenEnd, setSeenEnd] = React.useState(key(value.end));
+  const [seenLocale, setSeenLocale] = React.useState(locale);
+  if (key(value.start) !== seenStart || key(value.end) !== seenEnd || locale !== seenLocale) {
+    setSeenStart(key(value.start)); setSeenEnd(key(value.end)); setSeenLocale(locale);
     const t = { start: fmt(value.start), end: fmt(value.end) };
     if (t.start !== text.start || t.end !== text.end) setText(t);
   }
@@ -144,7 +148,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   useFormReset(startField, () => {
     if (controlled) return;
     const r = norm(props.defaultValue);
-    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false, 'api');
+    setSeenStart(key(r.start)); setSeenEnd(key(r.end)); setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false, 'api');
   });
   const button = React.useRef<HTMLButtonElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
@@ -152,7 +156,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
 
   const allowed = (d: Date) => !(min && compare(d, min) < 0) && !(max && compare(d, max) > 0) && !(isDateDisabled && isDateDisabled(d));
   const commit = (r: DateRange) => {
-    shown.current = { start: key(r.start), end: key(r.end) };
+    setSeenStart(key(r.start)); setSeenEnd(key(r.end));
     setText({ start: fmt(r.start), end: fmt(r.end) });
     if (key(r.start) === key(value.start) && key(r.end) === key(value.end)) return;
     if (!controlled) setOwn(r);

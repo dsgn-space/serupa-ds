@@ -9,6 +9,7 @@
 // screen-reader workflow, not in CI or the checks project. Everything that was said is written to
 // .test-tmp/screen-reader-<reader>.txt for the run's artifact.
 //   npm run build && node tools/test/screen-reader.mjs            (VoiceOver on macOS, NVDA on Windows)
+//   node tools/test/screen-reader.mjs --only Slider,Alert         (just these, by the name before the case's colon)
 import fs from 'node:fs';
 import path from 'node:path';
 import { PROJECT, writePage, report, done, fail } from './lib.mjs';
@@ -47,7 +48,32 @@ const CASES = [
   ['DatePicker: the field by its name, then the calendar button, which opens a dialog',
     "h(S.DatePicker, { 'aria-label': 'Due date', locale: 'en-US' })",
     [['Tab', ['due date']], ['Tab', ['choose a date', 'button']], ['Enter', ['choose a date', 'dialog']]]],
+  ['RadioGroup: the checked radio, its role and state; an arrow checks the next one',
+    "h(S.RadioGroup, { 'aria-label': 'Plan', defaultValue: 'free' }, h(S.Radio, { value: 'free' }, 'Free'), h(S.Radio, { value: 'pro' }, 'Pro'))",
+    [['Tab', ['free', 'radio', 'checked|selected']], ['ArrowDown', ['pro', 'checked|selected']]]],
+  ['Select: name and role of the native select',
+    "h(S.Select, { 'aria-label': 'Country', options: ['Indonesia', 'Japan', 'Kenya'] })",
+    [['Tab', ['country', 'combo box|combobox|pop-up|popup|menu button']]]],
+  ['Slider: name, role and value; an arrow says the new value',
+    "h(S.Slider, { 'aria-label': 'Volume', defaultValue: 50 })",
+    [['Tab', ['volume', 'slider', '50']], ['ArrowRight', ['51']]]],
+  ['Accordion: the header is a button that says whether it is open, and opening it says so',
+    "h(S.Accordion, null, h(S.AccordionItem, { value: 'shipping', title: 'How long does shipping take?' }, 'Orders ship within 2 business days.'))",
+    [['Tab', ['shipping', 'button', 'collapsed']], ['Enter', ['expanded']]]],
+  ['Field: a required field with an error says its name, that it is invalid, and the error',
+    "h(S.Field, { label: 'Email', required: true, error: 'Enter an email address like name@example.com' }, h(S.Input, { type: 'email' }))",
+    [['Tab', ['email', 'invalid', 'enter an email address']]]],
+  ['Alert: a danger alert that appears is read out at once, with focus left where it was',
+    "h(function () { var s = React.useState(false); return h(React.Fragment, null, h(S.Button, { onClick: function () { s[1](true); } }, 'Pay now'), s[0] ? h(S.Alert, { tone: 'danger', title: 'Payment failed' }, 'Your card was declined.') : null); })",
+    [['Tab', ['pay now', 'button']], ['Enter', ['payment failed']]]],
 ];
+
+// --only (or SERUPA_SR_ONLY, from the workflow's input) reads just the named components, for a quick run on demand.
+const onlyArg = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : process.env.SERUPA_SR_ONLY;
+const only = (onlyArg || '').split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+const unknown = only.filter((o) => !CASES.some(([name]) => String(name).split(':')[0].toLowerCase() === o));
+if (unknown.length) fail(`No screen reader case for ${unknown.join(', ')}: the names are ${CASES.map(([name]) => String(name).split(':')[0]).join(', ')}.`);
+const run = only.length ? CASES.filter(([name]) => only.includes(String(name).split(':')[0].toLowerCase())) : CASES;
 
 const said = [];
 const R = [];
@@ -61,7 +87,7 @@ const b = await engine.launch({ headless: false });
 // land on Start, the page's first control, in Checkbox and Tabs), as macOS gave focus back and forth on each close.
 const page = await b.newPage();
 try {
-  for (const [i, [name, tree, steps]] of CASES.entries()) {
+  for (const [i, [name, tree, steps]] of run.entries()) {
     const url = writePage('screen-reader.html', `<button id="start">Start</button><div id="root"></div><script>
 var h = React.createElement, S = Serupa;
 ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`, { react: true });

@@ -89,22 +89,24 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   const button = React.useRef<HTMLButtonElement | null>(null);
   const box = React.useRef<HTMLSpanElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
-  const shown = React.useRef(value ? value.getTime() : null);
+  // The value and locale the text was last written for: state, so a render can compare without reading a ref.
+  // Primitives, so writing the same one again draws nothing (a redraw would put the text back over what's typed).
+  const [seenAt, setSeenAt] = React.useState(value ? value.getTime() : null);
+  const [seenLocale, setSeenLocale] = React.useState(locale);
   useFormReset(field, () => {
     if (controlled) return;
     const d = toDay(props.defaultValue);
-    shown.current = d ? d.getTime() : null; setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false, 'api');
+    setSeenAt(d ? d.getTime() : null); setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false, 'api');
   });
   // A new value from outside, or a new locale (the browser's, once a server-rendered page hydrates), rewrites the text.
-  const shownLocale = React.useRef(locale);
-  if ((value ? value.getTime() : null) !== shown.current || locale !== shownLocale.current) {
-    shown.current = value ? value.getTime() : null; shownLocale.current = locale;
+  if ((value ? value.getTime() : null) !== seenAt || locale !== seenLocale) {
+    setSeenAt(value ? value.getTime() : null); setSeenLocale(locale);
     const t = value ? formatDate(value, locale) : ''; if (t !== text) setText(t);
   }
 
   const allowed = (d: Date) => !(min && compare(d, min) < 0) && !(max && compare(d, max) > 0) && !(isDateDisabled && isDateDisabled(d));
   const commit = (d: Date | null) => {
-    shown.current = d ? d.getTime() : null;
+    setSeenAt(d ? d.getTime() : null);
     setText(d ? formatDate(d, locale) : '');
     if ((d ? d.getTime() : null) === (value ? value.getTime() : null)) return;
     if (!controlled) setOwn(d);
@@ -129,7 +131,7 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
-    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} data-invalid={invalid ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
+    <span ref={box} className={cn('srp-input', 'srp-input--size-' + size, 'srp-date-picker', invalid && 'srp-input--invalid', disabled && 'srp-input--disabled', readOnly && 'srp-input--readonly', className)} data-invalid={invalid ? '' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={(e) => pressFocuses(field)(e)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode="numeric" autoComplete={rest.autoComplete || 'off'} className="srp-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : datePattern(locale)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}

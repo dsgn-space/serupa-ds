@@ -69,9 +69,6 @@
     },
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 6
     }
   },
   "src/components/DateRangePicker/DateRangePicker.tsx": {
@@ -80,9 +77,6 @@
     },
     "jsx-a11y-x/no-noninteractive-element-interactions": {
       "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 5
     }
   },
   "src/components/Dialog/Dialog.tsx": {

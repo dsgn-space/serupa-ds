@@ -3,8 +3,6 @@ src/components/Calendar/Calendar.tsx CalendarRender
 src/components/Chart/Chart.tsx ChartRender
 src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
 src/components/Combobox/Combobox.tsx ComboboxRender
-src/components/DatePicker/DatePicker.tsx DatePickerRender
-src/components/DateRangePicker/DateRangePicker.tsx DateRangePickerRender
 src/components/EventCalendar/EventCalendar.tsx Body
 src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
 src/components/FieldList/FieldList.tsx FieldListRender
