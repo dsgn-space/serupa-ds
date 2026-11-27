@@ -298,7 +298,7 @@ export function sharedReach(file) {
     const users = FOLDERS.flatMap((d) => {
       const dir = path.join(PROJECT, 'src', d);
       return fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => fs.statSync(path.join(dir, n)).isDirectory()).map((n) => {
-        const own = fs.readdirSync(path.join(dir, n), { recursive: true }).filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f));
+        const own = fs.readdirSync(path.join(dir, n), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f));
         return [n, readsThrough(own.flatMap((f) => importsOf(`src/${d}/${n}/${f}`)))];
       }) : [];
     });
