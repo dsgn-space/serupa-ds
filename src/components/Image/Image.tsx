@@ -149,7 +149,9 @@ function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLIma
   const ratio = typeof props.ratio === 'number' && props.ratio > 0 ? props.ratio : oneOf(RATIOS, props.ratio as string, 'auto');
   const fit = oneOf(['cover', 'contain'] as const, props.fit, 'cover');
   const [state, setState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
-  const [open, setOpen] = React.useState(false);
+  // The viewer, while open: the dark source the image chose and its natural size, read from the image when it opens.
+  const [viewing, setViewing] = React.useState<{ dark: string | undefined; natural: [number, number] | null } | null>(null);
+  const open = viewing != null;
   const img = React.useRef<HTMLImageElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { img.current = n; });
   // The picture is hidden while it loads only once the page's script runs (live), so server-rendered HTML paints
@@ -217,13 +219,13 @@ function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLIma
       className={cn('srp-image', 'srp-image--ratio-' + (typeof ratio === 'number' ? 'custom' : ratio.replace(':', '-')), sized && 'srp-image--sized', fill && 'srp-image--fill', 'srp-image--' + fit, dim && 'srp-image--dim', rounded !== false && 'srp-image--rounded', 'srp-image--' + state, live && !priority && 'srp-image--fades', frameProps && frameProps.className)}
       data-component="image" data-state={state}>
       {viewable && state !== 'error'
-        ? <button type="button" className="srp-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => setOpen(true)}>{shown}</button>
+        ? <button type="button" className="srp-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => { const i = img.current; setViewing({ dark: shownDark(i, darkSrc), natural: i && i.naturalWidth > 0 ? [i.naturalWidth, i.naturalHeight] : null }); }}>{shown}</button>
         : shown}
       {failed}
       {onRemove ? <IconButton className="srp-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.srp-image', '.srp-image__remove')} /> : null}
       {viewable ? (
-        <Dialog open={open} onOpenChange={setOpen} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="srp-image__viewer">
-          {open ? <Full src={fullSrc || shownDark(img.current, darkSrc) || largest(rest.srcSet) || src} alt={alt} fallback={fallback} shape={w > 0 && h > 0 ? [w, h] : img.current && img.current.naturalWidth > 0 ? [img.current.naturalWidth, img.current.naturalHeight] : null} /> : null}
+        <Dialog open={open} onOpenChange={(o) => { if (!o) setViewing(null); }} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="srp-image__viewer">
+          {viewing ? <Full src={fullSrc || viewing.dark || largest(rest.srcSet) || src} alt={alt} fallback={fallback} shape={w > 0 && h > 0 ? [w, h] : viewing.natural} /> : null}
         </Dialog>
       ) : null}
     </span>
