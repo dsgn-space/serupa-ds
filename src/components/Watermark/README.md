@@ -48,6 +48,7 @@ import { Watermark } from "@diki-stwn/serupa-ds";
 | `rotate` | `number` | `-22` | The angle in degrees, −90 to 90. |
 | `fullPage` | `boolean` | `false` | Cover the whole window instead of its own box. |
 | `children` | `ReactNode` | | The content under the mark. |
+| `id` | string | none | Goes to the root `<div>`. |
 
 `className`, `ref` and other props go to the `<div>` round the content.
 

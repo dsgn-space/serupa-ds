@@ -46,13 +46,12 @@ export function tile(lines: readonly string[], gap: number, rotate: number) {
   return { w: tw, h: th, url: `url("data:image/svg+xml,${encodeURIComponent(svg)}")` };
 }
 
-function WatermarkRender({ ref, className, style, text, gap = 'md', rotate = -22, fullPage = false, children, ...rest }: WatermarkProps & React.RefAttributes<HTMLDivElement>) {
+function WatermarkRender({ ref, className, text, gap, rotate, fullPage, children, ...rest }: WatermarkProps & React.RefAttributes<HTMLDivElement>) {
   const lines = (typeof text === 'string' ? [text] : [...text]).map((l) => l.trim()).filter(Boolean);
-  const angle = Math.max(-90, Math.min(90, Number.isFinite(rotate) ? rotate : -22));
-  const key = lines.join('\n');
-  const mark = React.useMemo(() => tile(key.split('\n'), GAP[gap] ?? GAP.md, angle), [key, gap, angle]);
+  const angle = Math.max(-90, Math.min(90, rotate != null && Number.isFinite(rotate) ? rotate : -22));
+  const mark = tile(lines, GAP[gap ?? 'md'] ?? GAP.md, angle);
   return (
-    <div {...rest} ref={ref} style={style} className={cn('srp-watermark', fullPage && 'srp-watermark--full-page', className)} data-component="watermark">
+    <div {...rest} ref={ref} className={cn('srp-watermark', fullPage && 'srp-watermark--full-page', className)} data-component="watermark">
       {children}
       {lines.length > 0 && (
         <div

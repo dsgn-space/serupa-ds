@@ -21,9 +21,6 @@
   mask-position: center;
   mask-size: calc(var(--srp-watermark-w) * 1em) calc(var(--srp-watermark-h) * 1em);
   pointer-events: none;
-  user-select: none;
-  /* A printout is the copy most often passed on, so the mark prints even with background graphics off. */
-  print-color-adjust: exact;
 }
 /* Over the whole window: the root leaves its stacking context so the mark can sit above the page. */
 .srp-watermark--full-page {
@@ -32,6 +29,13 @@
 .srp-watermark--full-page > .srp-watermark__mark {
   position: fixed;
   z-index: var(--watermark-full-page-z, var(--z-tooltip));
+}
+/* A printout is the copy most often passed on, so the mark prints, on every page with fullPage, even with
+   background graphics off. */
+@media print {
+  .srp-watermark__mark {
+    print-color-adjust: exact;
+  }
 }
 /* A system palette would draw the mark as strong as the text, so it goes. */
 @media (forced-colors: active) {

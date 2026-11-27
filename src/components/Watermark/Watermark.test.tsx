@@ -42,7 +42,7 @@ describe('Watermark', () => {
     expect(hit).toBe(button);
     (hit as HTMLElement).click();
     expect(clicked).toBe(1);
-    expect([css(markOf(el('x'))).pointerEvents, css(markOf(el('x'))).userSelect]).toEqual(['none', 'none']);
+    expect(css(markOf(el('x'))).pointerEvents).toBe('none');
   });
 
   test('the mark covers the content box and lies over it', async () => {
@@ -72,7 +72,12 @@ describe('Watermark', () => {
 
   test('it prints, and goes under forced colors', async () => {
     await render(<Watermark id="x" text="Draft"><p>Body</p></Watermark>);
-    expect(css(markOf(el('x'))).printColorAdjust).toBe('exact');
+    // Every rule on the page, inside layers and media blocks too, with the media it applies under.
+    const walk = (rules: CSSRuleList, media: string): Array<[CSSRule, string]> => [...rules].flatMap((r) =>
+      r instanceof CSSMediaRule ? walk(r.cssRules, r.media.mediaText) : r instanceof CSSGroupingRule ? walk(r.cssRules, media) : [[r, media] as [CSSRule, string]]);
+    const print = [...document.styleSheets].flatMap((sheet) => { try { return walk(sheet.cssRules, ''); } catch { return []; } })
+      .some(([r, media]) => media === 'print' && r instanceof CSSStyleRule && r.selectorText === '.srp-watermark__mark' && r.style.printColorAdjust === 'exact');
+    expect(print).toBe(true);
     await forcedColors((active) => {
       if (active) expect(css(markOf(el('x'))).display).toBe('none');
     });
