@@ -94,13 +94,12 @@ function score(c: Command, q: string): number {
   return (c.keywords || []).concat(c.description || []).some((k) => fold(k).includes(q)) ? 1 : 0;
 }
 
-function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.RefAttributes<HTMLDialogElement>) {
+function CommandPaletteRender({ ref, onOpenChange, commands, limit, ...props }: CommandPaletteProps & React.RefAttributes<HTMLDialogElement>) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, query: 1, onQueryChange: 1, filter: 1, loading: 1, loadingText: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   // null counts as not passed, as it always has here.
   const [openIn, setOwn, controlled] = useControllable(props.open == null ? undefined : props.open, !!props.defaultOpen, 'CommandPalette', 'open');
   const open = !!openIn;
-  const { onOpenChange } = props;
   const change = React.useCallback((next: boolean, details: OpenChangeDetails) => {
     if (!controlled) setOwn(next);
     if (onOpenChange) onOpenChange(next, details);
@@ -130,7 +129,6 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   };
 
   const q = fold(query.trim());
-  const { commands, limit } = props;
   const own = props.filter !== false, loading = !!props.loading;
   const rows: Row[] = React.useMemo(() => {
     if (!own) return commands.map((c, i) => ({ c, i, s: 1 }));
@@ -191,9 +189,8 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
   // Stable handlers for the memoised rows, reading the latest state through a ref: moving the highlight then redraws
   // the two rows it moves between, not every command.
   const handlers = { choose, hover: (r: Row) => { if (!r.c.disabled && current !== r) setActive(usable.indexOf(r)); } };
-  const live = React.useRef(handlers);
-  live.current = handlers;
-  const act = React.useMemo<OptionActs>(() => ({ choose: (r) => live.current.choose(r), hover: (r) => live.current.hover(r) }), []);
+  const live = useLatest(handlers);
+  const act = React.useMemo<OptionActs>(() => ({ choose: (r) => live.current.choose(r), hover: (r) => live.current.hover(r) }), [live]);
   const at = current ? usable.indexOf(current) : 0;
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isComposing(e)) return;

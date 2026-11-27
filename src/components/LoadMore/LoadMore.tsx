@@ -30,9 +30,8 @@ export interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
-function LoadMoreRender({ ref, ...props }: LoadMoreProps & React.RefAttributes<HTMLDivElement>) {
+function LoadMoreRender({ ref, onLoadMore, hasMore: more, loading, count: countIn, total: totalIn, infinite, label, endText, className, ...rest }: LoadMoreProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
-  const { onLoadMore, hasMore: more, loading, count: countIn, total: totalIn, infinite, label, endText, className, ...rest } = props;
   // NaN is no number: a count that never equals itself would load again and again.
   const count = Number.isNaN(countIn) ? undefined : countIn, total = Number.isNaN(totalIn) ? undefined : totalIn;
   const hasMore = more !== false;

@@ -51,12 +51,6 @@
     }
   },
   "src/components/CommandPalette/CommandPalette.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 5
-    },
-    "react-hooks/refs": {
-      "count": 1
-    },
     "react-hooks/set-state-in-effect": {
       "count": 1
     }
