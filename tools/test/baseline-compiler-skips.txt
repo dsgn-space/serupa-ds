@@ -9,7 +9,5 @@ src/components/EventCalendar/EventCalendar.tsx Body
 src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
 src/components/FieldList/FieldList.tsx FieldListRender
 src/components/Form/Form.tsx FormRender
-src/components/HoverCard/HoverCard.tsx HoverCardRender
-src/components/Image/Image.tsx ImageRender
 src/components/Kanban/Kanban.tsx KanbanRender
 src/components/Menu/Menu.tsx ContextMenuRender
