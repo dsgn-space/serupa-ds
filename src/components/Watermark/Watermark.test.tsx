@@ -5,7 +5,7 @@ import { THEMES, color, contrast, css, forcedColors } from '../../../tools/test/
 import { Watermark, tile } from './Watermark';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const markOf = (root: HTMLElement) => root.querySelector<HTMLElement>('.srp-watermark__mark');
+const markOf = (root: HTMLElement) => root.querySelector<HTMLElement>(':scope > [aria-hidden="true"]');
 const rgb = (c: string) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
 // The mark's color laid over the page at the mark's opacity: the darkest (or, in dark mode, the lightest) it gets.
 const blend = (mark: HTMLElement, page: string) => {

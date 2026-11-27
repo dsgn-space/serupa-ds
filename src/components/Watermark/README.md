@@ -22,6 +22,13 @@ import { Watermark } from "@diki-stwn/serupa-ds";
 - To say something the person must read, such as "This document has expired". Say it in an [Alert](../Alert/README.md), where screen readers find it too.
 - To brand a page with a logo. Use [Logo](../Logo/README.md) in the header.
 
+## Anatomy
+
+Drawn from the `Viewer` story.
+
+1. **Root** (`.srp-watermark`): the box around your content, which the mark covers. With `fullPage`, the whole window.
+2. **Mark** (`.srp-watermark__mark`): the repeated text, a faint tile over the content that clicks, selection and screen readers pass through.
+
 ## Usage
 
 - Name the viewer, not the product. A name and an email, or an employee ID, makes a leak traceable; a product name doesn't.
