@@ -227,7 +227,14 @@ jobs:
           if [ -f .bench-history/last.json ]; then PREVIOUS="--previous .bench-history/last.json"; fi
           # Tonight's times are tomorrow's "last night" whether or not tonight passed (see size-trend below).
           status=0
-          node tools/test/bench.mjs .bench --json bench.json $PREVIOUS || status=$?
+          node tools/test/bench.mjs .bench --json bench.json $PREVIOUS --recheck recheck.txt || status=$?
+          # A component that got slower is measured twice more, alone, and compared again on the fastest of four: one
+          # runner had every component's mount move up to three times either way on one night (27 Nov).
+          if [ "$status" != 0 ] && [ -s recheck.txt ]; then
+            for i in 1 2; do SERUPA_BENCH=.bench npx vitest run --project components src/internal/mountTime.test.tsx -t "$(cat recheck.txt)"; done
+            status=0
+            node tools/test/bench.mjs .bench --json bench.json $PREVIOUS || status=$?
+          fi
           if [ -f bench.json ]; then mkdir -p .bench-history && cp bench.json .bench-history/last.json; fi
           exit $status
       - if: ${{ !cancelled() && hashFiles('bench.json') != '' }}

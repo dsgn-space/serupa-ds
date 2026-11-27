@@ -8,6 +8,11 @@
 // time so they don't share the processor.
 //   node tools/test/bench.mjs .bench --json bench.json                         gather them
 //   node tools/test/bench.mjs .bench --json bench.json --previous last.json    and compare with an earlier run
+//   … --recheck recheck.txt    and write a Vitest -t pattern for the components that got slower, to measure them again
+// Nightly measures the components named in --recheck twice more into the same folder and compares again, so a
+// component only fails on times that stay slow over four runs: one night every component's mount moved up to three
+// times either way on one runner, and RangeCalendar's stories together took 13.5 → 21.3 ms with no change that reaches
+// it (Nightly, 27 Nov).
 // It fails when a component's stories together take half as long again to mount as before (and 3 ms more), when every
 // story together takes a fifth longer, or when an answer takes half as long again (and two frames more). Mount
 // times are compared a component at a time, not a story at a time: on one machine, two such nights an hour apart
@@ -74,6 +79,13 @@ export function compare(before, now) {
   return { slower, changes, all };
 }
 
+/** A Vitest -t pattern for the mountTime tests of the components that got slower, or '' when none did (or when only
+ *  answers, or every story together, did: those are measured again only whole). */
+export function recheck(slower) {
+  const names = [...new Set(slower.filter((c) => c.suite !== 'inp' && c.name.endsWith(' (its stories together)')).map((c) => c.name.split(' ')[0]))].sort();
+  return names.length ? `(^| )(${names.join('|')}) stories each ` : '';
+}
+
 const line = (c) => `${{ mount: 'mount ', update: 'update', inp: 'INP   ' }[c.suite]}  ${c.name}: ${c.was.toFixed(1)} → ${c.now.toFixed(1)} ms (×${c.ratio.toFixed(2)})`;
 
 const args = process.argv.slice(2);
@@ -90,6 +102,7 @@ if (dir) {
   if (!prevFile || !fs.existsSync(prevFile)) { console.log('No earlier run to compare with: this one is the first.'); process.exit(0); }
   const result = compare(JSON.parse(fs.readFileSync(prevFile, 'utf8')), now), { slower, changes } = result;
   for (const c of slower) console.log(`FAIL  ${line(c)}`);
+  if (value('--recheck')) fs.writeFileSync(value('--recheck'), recheck(slower));
   console.log('\nLargest changes:');
   for (const c of [...changes.slice(0, 10), ...changes.slice(-5).reverse()]) console.log(`      ${line(c)}`);
   console.log(`\nEvery story together: ${result.all.was.toFixed(0)} → ${result.all.now.toFixed(0)} ms`);
@@ -111,6 +124,10 @@ t('every story together a fifth slower is (22 → 29.5 ms)', names.includes('eve
 t('an answer under 16 ms counts as 16, so 0 → 40 ms is inside two frames', !names.includes('Menu: open'), JSON.stringify(names));
 t('an answer that goes from 24 to 80 ms is slower', names.includes('Dialog: open'), JSON.stringify(names));
 t('the same times are never slower', !compare(before, before).slower.length);
+const again = recheck(slower);
+t('the components that got slower are measured again by name, the answers and the total are not', again === '(^| )(A) stories each ', again);
+t('a pattern names the component, not one that ends with its name', new RegExp(again).test('Mount times A stories each mount within their budget') && !new RegExp(again).test('Mount times DataA stories each mount within their budget'), again);
+t('nothing slower, nothing to measure again', recheck([]) === '');
 const updates = compare({ update: { 'A/x': 0.4, 'A/y': 0.3, 'B/x': 2, 'B/y': 2 } }, { update: { 'A/x': 1.2, 'A/y': 0.9, 'B/x': 6, 'B/y': 2 } }).slower.map((c) => `${c.suite} ${c.name}`);
 t('updates are compared by component too: 4 → 8 ms is slower, 0.7 → 2.1 ms is inside the 2 ms floor', updates.includes('update B (its stories together)') && !updates.includes('update A (its stories together)'), JSON.stringify(updates));
 const twice = fs.mkdtempSync(path.join(PROJECT, '.bench-test-'));
