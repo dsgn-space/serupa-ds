@@ -62,7 +62,7 @@ export interface HelpCenterProps {
 const demoTopics: HelpTopic[] = [
   { id: 'start', title: 'Getting started', description: 'Set up a workspace, invite your team and make a first project.', href: '#help-start' },
   { id: 'account', title: 'Your account', description: 'Sign-in, two-step verification, and changing your email.', href: '#help-account' },
-  { id: 'billing', title: 'Billing', description: 'Plans, invoices, refunds and cancelling.', href: '#help-billing' },
+  { id: 'billing', title: 'Billing', description: 'Plans, invoices, refunds and canceling.', href: '#help-billing' },
   { id: 'data', title: 'Your data', description: 'Exports, imports, and where your data is kept.', href: '#help-data' },
 ];
 const demoQuestions: FaqGroup[] = [
