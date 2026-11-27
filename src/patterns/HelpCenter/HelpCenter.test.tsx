@@ -29,6 +29,8 @@ describe('Patterns/Help center', () => {
     expect(bg(document.querySelector('header'))).not.toBe('rgba(0, 0, 0, 0)');
     expect(bg(document.querySelector('header'))).not.toBe(bg(document.querySelector('header')!.parentElement));
     await expect.element(screen.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#help-billing');
+    // The copy is in American spelling, like the rest of the library's.
+    await expect.element(screen.getByText('Plans, invoices, refunds and canceling.')).toBeVisible();
     expect(screen.getByRole('heading', { level: 3 }).elements().map((h) => h.textContent).slice(0, 4))
       .toEqual(['Getting started', 'Your account', 'Billing', 'Your data']);
     await expect.element(screen.getByRole('button', { name: 'How do I cancel my plan?' })).toBeVisible();
