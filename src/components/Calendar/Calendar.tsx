@@ -401,8 +401,7 @@ function yearText(f: Formats, cal: Cal, y: number): string { return f.year.forma
 function Periods(p: { view: PeriodView; page: number; focus: number; value: Date | null; today: Date | null; min: number | null; max: number | null; fmt: Formats; cal: Cal; onPick: (n: number) => void; onFocus: (n: number) => void }) {
   const at = (d: Date | null) => (d ? (p.view === 'months' ? p.cal.index(d) : Math.floor(p.cal.index(d) / 12)) : null);
   const sel = at(p.value), now = at(p.today);
-  const rows: number[][] = [];
-  for (let r = 0; r < 4; r++) rows.push([0, 1, 2].map((i) => p.page + r * 3 + i));
+  const rows = Array.from({ length: 4 }, (_, r) => [0, 1, 2].map((i) => p.page + r * 3 + i));
   return (
       <tbody>
         {rows.map((row) => (

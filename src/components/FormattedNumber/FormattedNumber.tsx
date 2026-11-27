@@ -55,12 +55,11 @@ function FormattedNumberRender({ ref, ...props }: FormattedNumberProps & React.R
   const title = format === 'compact' && text ? formatNumber(props.value, locale) : undefined;
   // The last text shown and what changed in it. It moves on only when the text does, so a re-render with the same
   // value keeps the spans (and their animation) as they are; the first render, and the server's, is plain text.
-  const last = React.useRef<{ text: string; mask: boolean[] | null; change: number } | null>(null);
-  const seen = last.current;
-  const now = !props.animate || !seen ? { text, mask: null, change: 0 }
-    : seen.text === text ? seen : { text, mask: changedChars(seen.text, text), change: seen.change + 1 };
-  // every render: it keeps what was shown last, which a re-render with a new value must compare against.
-  React.useEffect(() => { last.current = now; });
+  // Kept in state and moved on during the render that brings a new text, as React's rules ask of a value derived from
+  // the last render (the React Compiler skipped a ref read here).
+  const [seen, setSeen] = React.useState<{ text: string; mask: boolean[] | null; change: number }>(() => ({ text, mask: null, change: 0 }));
+  if (seen.text !== text) setSeen({ text, mask: props.animate ? changedChars(seen.text, text) : null, change: seen.change + 1 });
+  const now = !props.animate ? { text, mask: null, change: 0 } : seen.text === text ? seen : { text, mask: changedChars(seen.text, text), change: seen.change + 1 };
   // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
   return <data lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('srp-formatted-number', props.className)}
     data-component="formatted-number" data-format={format}>{now.mask ? segments(text, now.mask, now.change) : text}</data>;

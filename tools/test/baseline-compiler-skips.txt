@@ -1,6 +1,5 @@
 src/components/Button/Button.tsx ButtonBaseRender
 src/components/Calendar/Calendar.tsx CalendarRender
-src/components/Calendar/Calendar.tsx Periods
 src/components/Chart/Chart.tsx ChartRender
 src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
 src/components/Combobox/Combobox.tsx ComboboxRender
@@ -12,9 +11,7 @@ src/components/Drawer/Drawer.tsx DrawerRender
 src/components/EventCalendar/EventCalendar.tsx Body
 src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
 src/components/FieldList/FieldList.tsx FieldListRender
-src/components/FileUpload/FileUpload.tsx FileUploadRender
 src/components/Form/Form.tsx FormRender
-src/components/FormattedNumber/FormattedNumber.tsx FormattedNumberRender
 src/components/HoverCard/HoverCard.tsx HoverCardRender
 src/components/Image/Image.tsx ImageRender
 src/components/Kanban/Kanban.tsx KanbanRender

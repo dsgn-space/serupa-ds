@@ -139,11 +139,6 @@
       "count": 1
     }
   },
-  "src/components/FormattedNumber/FormattedNumber.tsx": {
-    "react-hooks/refs": {
-      "count": 9
-    }
-  },
   "src/components/HoverCard/HoverCard.tsx": {
     "react-hooks/refs": {
       "count": 4
