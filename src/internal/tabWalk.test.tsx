@@ -36,6 +36,12 @@ async function walk(from: HTMLElement, to: HTMLElement, shift: boolean): Promise
       if (escapes++ >= 3) return `focus goes round ${describeEl(at)} and Escape doesn't let it out`;
       await userEvent.keyboard('{Escape}');
       await frame();
+      // The first Escape can go to a tooltip the focus showed (an IconButton's name): it hides that and stops there, so
+      // the modal around it stays open (WCAG 1.4.13). A second one, with focus still in place, is the modal's.
+      if (document.activeElement === at) {
+        await userEvent.keyboard('{Escape}');
+        await frame();
+      }
       seen.clear();
       continue;
     }

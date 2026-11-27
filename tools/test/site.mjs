@@ -511,10 +511,13 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   // A story's own page that names no story says so, rather than staying blank.
   const none = await openUrl(w.page, base + '/frame/patterns-nothing--default') || await ready(w.page, false);
   t('/frame/… with no such story says there is none', !none, none);
-  // An address with no page is a real 404, and still shows the site's own "no page here".
-  const response = await w.page.goto(base + '/components/no-such-component');
-  const missing = await ready(w.page, false);
-  const said = await w.page.evaluate(() => document.querySelector('main h1')?.textContent?.trim() ?? '');
+  // An address with no page is a real 404, and still shows the site's own "no page here". In a page of its own: the
+  // frame page above can still be navigating, which Firefox and WebKit let interrupt this one (the Cross-browser run).
+  const lost404 = await w.page.context().newPage();
+  const response = await lost404.goto(base + '/components/no-such-component');
+  const missing = await ready(lost404, false);
+  const said = await lost404.evaluate(() => document.querySelector('main h1')?.textContent?.trim() ?? '');
+  await lost404.close();
   t('an address with no page answers 404 and says there is no page', response?.status() === 404 && !missing && said === 'Page not found',
     `status ${response?.status()}, heading "${said}"${missing ? `, ${missing}` : ''}`);
 }

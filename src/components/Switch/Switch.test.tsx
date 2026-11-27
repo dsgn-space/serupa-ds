@@ -311,8 +311,14 @@ describe('Switch', () => {
     const reach = (id: string) => { const m = /^rgb\([^)]+\) (-?[\d.]+px) 0px 0px 0px/.exec(css(thumb(id)).boxShadow); return m ? m[1] : css(thumb(id)).boxShadow; };
     const look = (id: string) => [css(el(id)).backgroundColor, css(thumb(id)).scale.replace('none', '1'), css(thumb(id)).width, reach(id), ...edges(id)];
     const rest = look('pd');
+    // Each press starts with focus on the page. Under Playwright, Firefox doesn't make a label :active when the press
+    // takes focus from another switch's input (it does from the page, and from its own input); that one is in the work queue.
+    const fresh = () => (document.activeElement as HTMLElement | null)?.blur();
+    fresh();
     expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '16px', '4px', 2, 18]);
+    fresh();
     expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--surface-brand-pressed)'), '1', '16px', '-4px', 18, 2]);
+    fresh();
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });
 
