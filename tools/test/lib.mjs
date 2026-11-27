@@ -263,6 +263,52 @@ export function visualScope(files) {
   const rest = files.filter((f) => !DRAWN_ALIKE.test(f));
   return rest.length || !files.length ? rest : ['src/components/Button/Button.tsx'];
 }
+// Shared code reaches Visual's pictures only through the folders that import it: a change to src/internal/virtual.ts
+// can only change how List, Combobox and DataGrid look, but drew all 1,600 stories (VIS-NARROW). For Visual, a shared
+// module (src/internal/*.ts or .tsx, not a test or a story) stands for the component, block and pattern folders whose
+// code or stories import it, directly or through other shared modules; withDependents (run.mjs) then adds the folders
+// that use those. A module Storybook's own preview imports (the provider, the labels: .storybook/) wraps every story,
+// so it still draws everything, and so does one no folder imports, to be safe. The nightly and main draw everything.
+const SOURCE = /\.(tsx?|mjs|js)$/;
+const resolveImport = (from, spec) => {
+  if (!spec.startsWith('.')) return null;
+  const base = path.posix.normalize(path.posix.join(path.posix.dirname(from), spec));
+  return [base, `${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}.js`, `${base}.mjs`]
+    .find((c) => fs.existsSync(path.join(PROJECT, c)) && fs.statSync(path.join(PROJECT, c)).isFile()) ?? null;
+};
+const importsOf = (f) => [...fs.readFileSync(path.join(PROJECT, f), 'utf8').matchAll(/(?:\bfrom|\bimport\(?)\s*['"]([^'"]+)['"]/g)]
+  .map((m) => resolveImport(f, m[1])).filter((x) => x && SOURCE.test(x));
+// The files a set of files reads, followed through everything but the component, block and pattern folders.
+const readsThrough = (roots) => {
+  const seen = new Set(), todo = [...roots];
+  while (todo.length) {
+    const f = todo.pop();
+    if (seen.has(f)) continue;
+    seen.add(f);
+    if (!/^src\/(components|blocks|patterns)\//.test(f)) todo.push(...importsOf(f));
+  }
+  return seen;
+};
+let reach = null;
+/** The folders a shared module reaches (see above), or null when it reaches every story or none. */
+export function sharedReach(file) {
+  if (!/^src\/internal\/[\w-]+\.tsx?$/.test(file) || /\.(test|stories)\.tsx?$/.test(file)) return null;
+  reach ??= (() => {
+    const preview = readsThrough(fs.readdirSync(path.join(PROJECT, '.storybook')).filter((f) => SOURCE.test(f)).map((f) => `.storybook/${f}`));
+    const users = FOLDERS.flatMap((d) => {
+      const dir = path.join(PROJECT, 'src', d);
+      return fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => fs.statSync(path.join(dir, n)).isDirectory()).map((n) => {
+        const own = fs.readdirSync(path.join(dir, n), { recursive: true }).filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f));
+        return [n, readsThrough(own.flatMap((f) => importsOf(`src/${d}/${n}/${f}`)))];
+      }) : [];
+    });
+    return { preview, users };
+  })();
+  if (reach.preview.has(file)) return null;
+  const names = new Set(reach.users.filter(([, reads]) => reads.has(file)).map(([n]) => n));
+  return names.size ? names : null;
+}
+
 // A shared test (src/internal/*.test.tsx) changes no component: it runs itself (run.mjs adds it) and widens nothing.
 export const SHARED_TEST = /^src\/internal\/[\w-]+\.test\.tsx?$/;
 /** The changed files that decide the scope: rows of `git diff --numstat` ("added\tremoved\tfile"), without the
@@ -302,9 +348,12 @@ const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exe
 export function touchedComponents(files) {
   return new Set(files.map(ownerOf).filter((n) => n && n !== 'Introduction.mdx' && !/\.mdx$/.test(n)));
 }
-export function affectedComponents(files) {
+export function affectedComponents(files, { shared = false } = {}) {
   const names = new Set();
   for (const f of files) {
+    // For Visual (shared: true), a shared module stands for the folders that import it (sharedReach).
+    const reached = shared ? sharedReach(f) : null;
+    if (reached) { for (const n of reached) names.add(n); continue; }
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
       || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);

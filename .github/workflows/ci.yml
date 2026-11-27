@@ -214,6 +214,14 @@ jobs:
                 .include |= (keep("components"; "base"; $b) | keep("components"; "locale"; $l) | keep("visual"; ""; $v))')
               echo "Covers $covered components: $nb2 base, $nl2 locale, $nv2 Visual and $ns Storybook shards."
             fi
+            # Visual covers fewer folders than the tests when shared code changes (sharedReach in tools/test/lib.mjs): its
+            # shards follow its own count, one per ten folders drawn.
+            drawn=$(node tools/test/run.mjs --since "$since" --group visual --list | sed -n 's/^Testing the changed components and the ones that use them: \(.*\) (main runs everything)$/\1/p' | tr ',' '\n' | grep -c .) || drawn=""
+            nvnow=$(echo "$x86" | jq '[.include[] | select(.group == "visual")] | length')
+            if [ -n "$drawn" ] && [ "$drawn" -gt 0 ] && [ $(( (drawn + 9) / 10 )) -lt "$nvnow" ]; then
+              x86=$(echo "$x86" | jq -c --argjson v $(( (drawn + 9) / 10 )) '.include |= (map(select(.group != "visual" or ((.shard | split("/")[0] | tonumber) <= $v))) | map(if .group == "visual" then .shard = ((.shard | split("/")[0]) + "/" + ($v | tostring)) else . end))')
+              echo "Visual draws $drawn folders: $(( (drawn + 9) / 10 )) shards."
+            fi
             if ! has components; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "components"))'); fi
             if ! has visual; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "visual"))'); fi
             if ! has storybook; then storybook=""; fi
