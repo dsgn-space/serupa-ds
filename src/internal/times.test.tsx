@@ -17,6 +17,17 @@ describe('typed times', () => {
     }
   });
 
+  test('each locale and hour cycle is written its own way, whichever was written first (formatTime caches by both)', () => {
+    // Mutating the cache key so locales share one entry survived on CI's runner but not locally (Nightly, 27 Nov): the
+    // round trips above parse another locale's form too, so only the text itself shows it.
+    const texts = [formatTime(845, 'en-US'), formatTime(845, 'de'), formatTime(845, 'ko'), formatTime(845, 'en-US', false), formatTime(845, 'de', true)];
+    expect(texts[0]).toMatch(/^2:05\sPM$/u);
+    expect(texts[1]).toBe('14:05');
+    expect(texts[2]).toContain('오후');
+    expect(texts[3]).toBe('14:05');
+    expect(texts[4]).not.toBe('14:05');
+  });
+
   test('L8E9: seconds, as a database or <input type="time"> writes them and as a timestamp is pasted, are read and dropped', () => {
     expect([toMinutes('14:05:00'), toMinutes('09:30:45.250'), toMinutes('14:05'), toMinutes('14:05:60'), toMinutes('14:5:00')]).toEqual([845, 570, 845, null, null]);
     expect([parseTime('14:05:30', 'en-US'), parseTime('2:05:30 PM', 'en-US'), parseTime('14.05.30', 'id'), parseTime('14:05:61', 'en-US')]).toEqual([845, 845, 845, null]);

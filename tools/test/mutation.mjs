@@ -100,11 +100,19 @@ function mutants(file, text) {
 /** @type {any} */
 let vitest = null;
 const start = async () => { vitest = await createVitest('test', { project: ['components'], watch: false, reporters: [{}], silent: true }); };
-const passes = async (specs, ms) => {
+// A promise's value, or 'timeout' after ms. Vitest's close and start have no limit of their own: with --stop checked
+// only between mutants, shards 2 and 4 ran on past it into the step's 105-minute timeout (Nightly, 27 Nov).
+const within = async (promise, ms) => {
   let timer;
-  const hang = new Promise((r) => { timer = setTimeout(() => r('timeout'), ms); });
-  const result = await Promise.race([vitest.runTestSpecifications(specs), hang]);
+  const late = new Promise((r) => { timer = setTimeout(() => r('timeout'), Math.max(0, ms)); });
+  const result = await Promise.race([promise, late]);
   clearTimeout(timer);
+  return result;
+};
+// The time left before --stop, at most ms.
+const left = (ms) => Math.min(ms, began + stop * 60_000 - Date.now());
+const passes = async (specs, ms) => {
+  const result = await within(vitest.runTestSpecifications(specs), left(ms));
   if (result === 'timeout') return 'timeout';
   // The result holds every file this Vitest has run so far; only this run's count.
   const ids = new Set(specs.map((s) => s.moduleId)), mine = result.testModules.filter((m) => ids.has(m.moduleId));
@@ -127,8 +135,9 @@ function save() {
 let failed = false;
 console.log('…     starting Vitest');
 await start();
+const began = Date.now();
 try {
-  const began = Date.now(), all = targets();
+  const all = targets();
   for (const [i, { file, tests }] of all.entries()) {
     if (Date.now() - began > minutes * 60_000) { console.log(`STOP  ${minutes} minutes up: ${all.slice(i).map((t) => t.file).join(', ')} not run`); break; }
     const abs = path.join(PROJECT, file), text = fs.readFileSync(abs, 'utf8');
@@ -142,7 +151,9 @@ try {
     const list = mutants(file, text), survived = [];
     console.log(`…     ${file}: ${list.length} mutants`);
     const t0 = Date.now();
-    if ((await passes(specs, 300_000)) !== true) { console.log(`SKIP  ${file}: its tests fail without any mutant`); failed = true; continue; }
+    const clean = await passes(specs, 300_000);
+    if (left(1) <= 0) { console.log(`STOP  ${stop} minutes up: ${all.slice(i).map((t) => t.file).join(', ')} not run`); break; }
+    if (clean !== true) { console.log(`SKIP  ${file}: its tests fail without any mutant`); failed = true; continue; }
     const limit = Math.max(30_000, (Date.now() - t0) * 5);
     let killed = 0;
     restore.set(abs, text);
@@ -152,15 +163,20 @@ try {
       fs.writeFileSync(abs, text.slice(0, m.start) + m.to + text.slice(m.end));
       vitest.invalidateFile(abs);
       const ok = j + 1 === hangAt ? 'timeout' : await passes(specs, limit);
+      // Out of time while this mutant ran: it is no more killed than survived.
+      if (left(1) <= 0) { cut = true; break; }
       if (ok === 'timeout') {
         killed++;
-        await vitest.close();
+        console.log(`…     ${file}: ${m.label} gave no result in ${Math.round(limit / 1000)} s, so Vitest starts again`);
         fs.writeFileSync(abs, text);
-        await start();
+        if ((await within(vitest.close(), left(60_000))) === 'timeout') console.log('…     Vitest did not close in a minute; starting another beside it');
+        if ((await within(start(), left(120_000))) === 'timeout') { cut = true; break; }
         specs = await glob();
         // The new Vitest has to pass the file as it is before it scores anything, or every mutant after this one
         // would count as killed.
-        if ((await passes(specs, 300_000)) !== true) { broken = true; break; }
+        const again = await passes(specs, 300_000);
+        if (left(1) <= 0) { cut = true; break; }
+        if (again !== true) { broken = true; break; }
         continue;
       }
       if (ok) survived.push(m.label); else killed++;
@@ -184,7 +200,8 @@ try {
   }
 } finally {
   putBack();
-  await vitest?.close();
+  // A Vitest stuck on a hung mutant may never close; the results are saved by now, so wait a minute at most.
+  if (vitest) await within(vitest.close(), 60_000);
 }
 
 if (update) console.log(`Wrote ${Object.keys(results).length} scores to ${path.relative(PROJECT, BASELINE)}`);
