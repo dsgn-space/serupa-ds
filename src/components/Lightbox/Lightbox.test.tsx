@@ -182,3 +182,4 @@ describe('Lightbox', () => {
     }
   });
 });
+// TEMPORARY: touched so the cross-browser pull request run tests this folder; removed before merge.
