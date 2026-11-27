@@ -58,7 +58,8 @@ export function useModalDialog(o: ModalDialogOptions) {
     return () => window.removeEventListener('beforeunload', stay);
   }, [open, o.unsaved]);
   // Open on arrival: there from the first frame, so it doesn't fade or slide in; it closes, and opens again, with motion.
-  const arrivedRef = React.useRef(open); if (!open) arrivedRef.current = false;
+  // State, not a ref read in render, so the React Compiler can memoize the dialogs that use it.
+  const [arrived, setArrived] = React.useState(open); if (!open && arrived) setArrived(false);
 
   // Back to finalFocus, else to the opener, if either is still on the page. A confirmation that deletes the row it
   // was opened from took its button away, and focus fell to <body>, the top of the page for a keyboard (L8E19).
@@ -122,5 +123,5 @@ export function useModalDialog(o: ModalDialogOptions) {
     close('api');
     reopen((n) => n + 1);
   };
-  return { dialogRef, open, close, request, asking, setAsking, arrivedRef, unsavedRef, onCancel, onClose };
+  return { dialogRef, open, close, request, asking, setAsking, arrived, unsavedRef, onCancel, onClose };
 }

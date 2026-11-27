@@ -91,7 +91,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
   const modal = props.modal !== false;
   const backdrop = modal && props.closeOnBackdrop !== false;
   // Open and close, focus in and back, Escape and the browser asking to close, and "Discard changes?" (useModalDialog).
-  const { dialogRef, open, close, request, asking, setAsking, arrivedRef, unsavedRef, onCancel, onClose } = useModalDialog({
+  const { dialogRef, open, close, request, asking, setAsking, arrived, unsavedRef, onCancel, onClose } = useModalDialog({
     name: 'Drawer', open: props.open, defaultOpen: props.defaultOpen, onOpenChange: props.onOpenChange, initialFocus: props.initialFocus,
     finalFocus: props.finalFocus, unsaved: props.unsaved, modal, onCancel: rest.onCancel, onClose: rest.onClose,
   });
@@ -268,7 +268,7 @@ function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLD
       aria-modal={modal ? 'true' : undefined}
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
-      className={cn('srp-drawer', 'srp-drawer--' + side, 'srp-drawer--' + size, !modal && 'srp-drawer--nonmodal', snaps.length > 0 && 'srp-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrivedRef.current ? '' : undefined}
+      className={cn('srp-drawer', 'srp-drawer--' + side, 'srp-drawer--' + size, !modal && 'srp-drawer--nonmodal', snaps.length > 0 && 'srp-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived ? '' : undefined}
       onKeyDown={onKeyDown} onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
       <div ref={panel} className="srp-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--srp-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
         {snaps.length > 1 ? (
