@@ -204,13 +204,13 @@ function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<H
   // make React throw the server's calendar away. So hydration starts on the month the server drew, read from its
   // title, and the visitor's month follows right after, as their today does (GR396).
   const titleId = domId('srp-cal', React.useId()) + '-title';
-  const drawn = React.useRef<number | null>(null);
-  const [ownMonth, setOwnMonth] = React.useState(() => {
+  const [opening] = React.useState(() => {
     const given = props.defaultMonth || value;
     const server = given || controlledMonth ? null : serverMonth(titleId);
-    if (server) drawn.current = server.getTime();
-    return cal.start(given || server || home);
+    return { drawn: server ? server.getTime() : null, month: cal.start(given || server || home) };
   });
+  const drawn = React.useRef<number | null>(opening.drawn);
+  const [ownMonth, setOwnMonth] = React.useState(opening.month);
   const homeMonth = cal.start(home).getTime();
   const onMonthChange = props.onMonthChange;
   React.useEffect(() => {

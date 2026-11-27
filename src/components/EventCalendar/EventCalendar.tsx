@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { useBreakpoint } from '../../internal/media';
 import { named } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
@@ -220,7 +220,8 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   const first = startOfWeek(month, ws);
   const weeks: Date[][] = [];
   for (let w = 0; w < 6; w++) {
-    const row = Array.from({ length: 7 }, (_, i) => addDays(first, w * 7 + i));
+    const from = w * 7;   // the week's own first, so the loop's counter isn't captured below
+    const row = Array.from({ length: 7 }, (_, i) => addDays(first, from + i));
     if (w > 0 && row[0] && !sameMonth(row[0], month)) break;   // as many weeks as the month reaches
     weeks.push(row);
   }
@@ -228,8 +229,8 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   const stop = weeks.some((r) => r.some((d) => sameDay(d, focus))) ? focus : marked && sameMonth(marked, month) ? marked : month;
   const days = Array.from({ length: new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate() }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1));
   // The week or the day shown: the focused day's.
-  const span = view === 'week' ? Array.from({ length: 7 }, (_, i) => addDays(startOfWeek(focus, ws), i)) : view === 'day' ? [focus] : [];
-  const allDayRows = Math.max(0, ...span.map((d) => onDay(list, d).filter((s) => s.allDay).length));
+  const shownDays = view === 'week' ? Array.from({ length: 7 }, (_, i) => addDays(startOfWeek(focus, ws), i)) : view === 'day' ? [focus] : [];
+  const allDayRows = Math.max(0, ...shownDays.map((d) => onDay(list, d).filter((s) => s.allDay).length));
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
   return (
     view === 'month' ? (
@@ -270,11 +271,11 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
          The weekday names and the all-day events stay pinned at the top while the hours scroll under them. The
          hour scale and the time zone are drawn beside, hidden from screen readers: each event says its time. */
       <div ref={scroller} className="srp-event-calendar__scroll" style={{ '--srp-evc-all-day': allDayRows } as React.CSSProperties} onPointerDown={on.pointerDown}>
-        <table ref={grid} role="grid" lang={lang} className="srp-event-calendar__grid srp-event-calendar__hours-grid" aria-labelledby={titleId} onKeyDown={on.keyDown} data-days={span.length}>
+        <table ref={grid} role="grid" lang={lang} className="srp-event-calendar__grid srp-event-calendar__hours-grid" aria-labelledby={titleId} onKeyDown={on.keyDown} data-days={shownDays.length}>
           <thead>
             <tr>
               <td aria-hidden className="srp-event-calendar__zone">{zone}</td>
-              {span.map((d) => (
+              {shownDays.map((d) => (
                 <th key={d.getTime()} scope="col" className={cn('srp-event-calendar__head', marked && sameDay(d, marked) && 'srp-event-calendar__head--today')} data-today={(marked && sameDay(d, marked)) ? '' : undefined}>
                   <span aria-hidden>{fmt.short.format(d)} <span className="srp-event-calendar__head-date">{d.getDate()}</span></span>
                   <span className="srp-visually-hidden">{fmt.full.format(d)}</span>
@@ -288,7 +289,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
                 <div className="srp-event-calendar__pinned" />
                 <div className="srp-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--srp-evc-at': h } as React.CSSProperties}>{h ? <span dir={p.dir}>{fmt.hour.format(new Date(2000, 0, 1, h))}</span> : ''}</span>)}</div>
               </td>
-              {span.map((d) => {
+              {shownDays.map((d) => {
                 const mine = onDay(list, d), whole = mine.filter((s) => s.allDay), here = sameDay(d, focus), isToday = marked !== null && sameDay(d, marked);
                 return (
                   <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1} aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
@@ -331,42 +332,43 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   );
 });
 
-function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAttributes<HTMLDivElement>) {
+function EventCalendarRender({ ref, events, locale: ownLocale, className, defaultMonth, defaultView, headingLevel, maxPerDay, month: monthProp, onEventClick: onEventClickProp, onEventMove, onMonthChange, onSlotSelect, onViewChange, view: viewProp, weekStartsOn, ...props }: EventCalendarProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   // The hours place their events with style attributes, which a strict CSP blocks in server HTML: applied again on hydration.
   const rootRef = useServerStyles(ref);
-  const rest = omit(props, { events: 1, onEventClick: 1, onSlotSelect: 1, onEventMove: 1, month: 1, defaultMonth: 1, onMonthChange: 1, view: 1, defaultView: 1, onViewChange: 1, maxPerDay: 1, locale: 1, weekStartsOn: 1, headingLevel: 1, className: 1 });
-  const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
+  const rest = props;
+  const locale = useLocale(ownLocale), lang = useOwnLang(ownLocale);
+  const fmt = React.useMemo(() => formatsFor(locale), [locale]);
   // A locale of its own brings its direction to its words (the times, the heading), so "9:00 AM" in a right-to-left page
   // keeps its order; the grid itself stays in the page's direction, with the buttons around it. The dir goes on an inline
   // span around the words, so their box still lines up on the page's side, with the title.
-  const dir = props.locale ? localeDir(props.locale) : undefined;
-  const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
+  const dir = ownLocale ? localeDir(ownLocale) : undefined;
+  const ws = Number.isFinite(weekStartsOn) ? ((Math.floor(weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
-  const controlledMonth = props.month !== undefined;
+  const controlledMonth = monthProp !== undefined;
   const titleId = domId('srp-evc', React.useId()) + '-title';
   // With no month given, the month is today's, and the server's today may be in another month than the visitor's
   // (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws the month the
   // server's HTML shows (its title carries it), so nothing mismatches; then an effect moves to the visitor's (GR396).
-  const fromServer = React.useRef(false);
-  const [ownMonth, setOwnMonth] = React.useState(() => {
-    if (props.defaultMonth && isValid(props.defaultMonth)) return startOfMonth(props.defaultMonth);
+  const [opening] = React.useState(() => {
+    if (defaultMonth && isValid(defaultMonth)) return { fromServer: false, month: startOfMonth(defaultMonth) };
     const shown = when(typeof document === 'undefined' ? undefined : document.getElementById(titleId)?.dataset.month);
-    fromServer.current = !!shown;
-    return startOfMonth(shown ?? new Date());
+    return { fromServer: !!shown, month: startOfMonth(shown ?? new Date()) };
   });
-  const month = controlledMonth && isValid(props.month) ? startOfMonth(props.month) : ownMonth;
-  const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
-  const [ownView, setOwnView] = React.useState<EventCalendarView>(isView(props.defaultView) ? props.defaultView : 'month');
-  const chosen: EventCalendarView = isView(props.view) ? props.view : ownView;
+  const fromServer = React.useRef(opening.fromServer);
+  const [ownMonth, setOwnMonth] = React.useState(opening.month);
+  const month = controlledMonth && isValid(monthProp) ? startOfMonth(monthProp) : ownMonth;
+  const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (onMonthChange) onMonthChange(s); };
+  const [ownView, setOwnView] = React.useState<EventCalendarView>(isView(defaultView) ? defaultView : 'month');
+  const chosen: EventCalendarView = isView(viewProp) ? viewProp : ownView;
   // Under the sm breakpoint, the agenda for the month and the week, whose seven columns don't fit; a day does. The
   // server draws the chosen view, as wide.
   const narrow = !useBreakpoint('sm', { serverValue: true });
   const view: EventCalendarView = narrow && chosen !== 'day' ? 'agenda' : chosen;
   const hours = view === 'week' || view === 'day';
-  const setView = (v: EventCalendarView) => { if (props.view === undefined) setOwnView(v); if (props.onViewChange) props.onViewChange(v); };
-  const list = React.useMemo(() => toShown(props.events), [props.events]);
-  const max = Number.isFinite(props.maxPerDay) ? Math.max(1, Math.floor(props.maxPerDay!)) : 3;
+  const setView = (v: EventCalendarView) => { if (viewProp === undefined) setOwnView(v); if (onViewChange) onViewChange(v); };
+  const list = React.useMemo(() => toShown(events), [events]);
+  const max = Number.isFinite(maxPerDay) ? Math.max(1, Math.floor(maxPerDay!)) : 3;
 
   // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
   // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).
@@ -381,7 +383,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const marked = hydrated ? today : null;
   // The day with the grid's Tab stop: the one the keys or a click chose, kept inside the shown month (adjusted during
   // render, so a new month never draws without its Tab stop), else today in today's month, else the 1st.
-  const [chosenDay, setFocus] = React.useState<Date | null>(() => (props.defaultMonth && isValid(props.defaultMonth) ? day(props.defaultMonth) : null));
+  const [chosenDay, setFocus] = React.useState<Date | null>(() => (defaultMonth && isValid(defaultMonth) ? day(defaultMonth) : null));
   const focus = chosenDay ?? (marked && sameMonth(marked, month) ? marked : month);
   const monthTime = month.getTime();
   const [focusMonth, setFocusMonth] = React.useState(monthTime);
@@ -405,7 +407,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   const move = (d: Date) => { setFocus(d); if (!sameMonth(d, month)) showMonth(d); wantFocus.current = true; };
   // Creating and moving (onSlotSelect, onEventMove). A drag shows where it lands as it goes: the event drawn at its
   // new times (drag), or the slot being chosen (ghost). The events change only when the app updates them at its end.
-  const movable = !!props.onEventMove;
+  const movable = !!onEventMove;
   const [drag, setDrag] = React.useState<{ id: string; from: number; to: number } | null>(null);
   const [ghost, setGhost] = React.useState<Ghost | null>(null);
   const drawn = React.useMemo(() => (drag ? list.map((x) => (x.e.id === drag.id ? { ...x, from: new Date(drag.from), to: new Date(drag.to) } : x)).sort(byStart) : list), [list, drag]);
@@ -420,13 +422,13 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     const b = cell && cell.querySelector<HTMLElement>('[data-event-id="' + CSS.escape(w.id) + '"]');
     // Not there with new events (it went under "+N more"): its day takes focus.
     if (b) b.focus();
-    else if (props.events !== w.events && cell) cell.focus();
+    else if (events !== w.events && cell) cell.focus();
     else return;
     wantEvent.current = null;
   });
   const change = (x: Shown, from: Date, to: Date) => {
-    if (!props.onEventMove || (from.getTime() === x.from.getTime() && to.getTime() === x.to.getTime())) return;
-    props.onEventMove(x.e, { start: from, end: to, allDay: x.allDay });
+    if (!onEventMove || (from.getTime() === x.from.getTime() && to.getTime() === x.to.getTime())) return;
+    onEventMove(x.e, { start: from, end: to, allDay: x.allDay });
     announce(sds.labels.eventChanged(x.e.title, whenOf({ ...x, from, to }, fmt, sds.labels)));
   };
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
@@ -438,7 +440,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     const handle = t.closest<HTMLElement>('[data-resize]'), id = handle ? handle.dataset.resize : t.closest<HTMLElement>('[data-event-id]')?.dataset.eventId;
     // An event drags with a mouse or a pen; on a touch screen a drag scrolls, and a tap opens the event.
     const x = movable && e.pointerType !== 'touch' && id ? list.find((s) => s.e.id === id) : undefined;
-    if (!x && (id || t.closest('button') || !props.onSlotSelect)) return;
+    if (!x && (id || t.closest('button') || !onSlotSelect)) return;
     const inHours = hours && !!t.closest('.srp-event-calendar__hours');
     const hourAt = (td: HTMLElement, y: number) => { const r = td.querySelector('.srp-event-calendar__hours')!.getBoundingClientRect(); return Math.min(24, Math.max(0, ((y - r.top) / r.height) * 24)); };
     const cellAt = (cx: number, cy: number) => { const td = document.elementFromPoint(cx, cy)?.closest<HTMLElement>('td[data-date]'); return td && root.contains(td) ? td : null; };
@@ -478,7 +480,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     const onUp = () => {
       end();
       if (x) { if (last) { dragged.current = true; change(x, new Date(last.from), new Date(last.to)); } return; }
-      const pick = props.onSlotSelect!;
+      const pick = onSlotSelect!;
       if (chosen) pick({ start: shift(startDay, 0, chosen.at * 60), end: shift(startDay, 0, (chosen.at + chosen.len) * 60), allDay: false });
       // A press without a drag: the hour from the half hour pressed, or in the month (and the all-day row) the whole day.
       else if (!moved) { const a = Math.floor(h0 * 2) * 30; pick(inHours ? { start: shift(startDay, 0, a), end: shift(startDay, 0, a + 60), allDay: false } : { start: startDay, end: startDay, allDay: true }); }
@@ -508,7 +510,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
       const days = side + (hours ? 0 : vert * 7), minutes = hours && !moving.allDay ? vert * QUARTER : 0;
       if (!days && !minutes) return;
       const from = shift(moving.from, days, minutes), landing = addDays(when(target.closest('td')?.dataset.date) || day(moving.from), daysBetween(moving.from, from));
-      wantEvent.current = { id: moving.e.id, day: iso(landing), events: props.events };
+      wantEvent.current = { id: moving.e.id, day: iso(landing), events };
       go(landing);
       change(moving, from, shift(moving.to, days, minutes));
       return;
@@ -517,21 +519,20 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
     const k = gridKey(e);
     if (!k) return;
     // Enter or Space on a day chooses it whole, for a new event.
-    if (k === 'pick') { if (props.onSlotSelect) { e.preventDefault(); props.onSlotSelect({ start: focus, end: focus, allDay: true }); } return; }
+    if (k === 'pick') { if (onSlotSelect) { e.preventDefault(); onSlotSelect({ start: focus, end: focus, allDay: true }); } return; }
     e.preventDefault();
     // A page is the view's: a month, or in the week and day views a week or a day.
     const dir = k === 'pageUp' ? -1 : 1;
     move(dayCell(k, focus, ws) ?? (hours ? addDays(focus, dir * step) : addMonths(focus, dir)));
   };
 
-  const fmt = React.useMemo(() => formatsFor(locale), [locale]);
   // A press that started a drag isn't a click as well.
-  const onEventClick = (ev: CalendarEvent) => { if (dragged.current) dragged.current = false; else if (props.onEventClick) props.onEventClick(ev); };
+  const onEventClick = (ev: CalendarEvent) => { if (dragged.current) dragged.current = false; else if (onEventClickProp) onEventClickProp(ev); };
   // The days and events call the latest handlers through this, so Body's props stay the same while nothing it draws changes.
   const handlers = { keyDown: onKeyDown, pointerDown: onPointerDown, eventClick: onEventClick };
-  const live = React.useRef(handlers); live.current = handlers;
-  const on = React.useMemo<BodyHandlers>(() => ({ keyDown: (e) => live.current.keyDown(e), pointerDown: (e) => live.current.pointerDown(e), setFocus, eventClick: (e) => live.current.eventClick(e) }), []);
-  const level = props.headingLevel && props.headingLevel >= 2 && props.headingLevel <= 6 ? props.headingLevel : 2;
+  const live = useLatest(handlers);
+  const on = React.useMemo<BodyHandlers>(() => ({ keyDown: (e) => live.current.keyDown(e), pointerDown: (e) => live.current.pointerDown(e), setFocus, eventClick: (e) => live.current.eventClick(e) }), [live, setFocus]);
+  const level = headingLevel && headingLevel >= 2 && headingLevel <= 6 ? headingLevel : 2;
   const H = ('h' + level) as 'h2';
 
   // The week or the day shown: the focused day's.
@@ -559,7 +560,7 @@ function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAt
   }, [view, spanStart]);
 
   return (
-    <div {...rest} ref={rootRef} className={cn('srp-event-calendar', props.className)} data-component="event-calendar" data-view={view} data-dragging={drag ? '' : undefined}>
+    <div {...rest} ref={rootRef} className={cn('srp-event-calendar', className)} data-component="event-calendar" data-view={view} data-dragging={drag ? '' : undefined}>
       <div className="srp-event-calendar__toolbar">
         <div className="srp-event-calendar__nav">
           <Button variant="outline" size="sm" onClick={() => { showMonth(today); setFocus(today); }}>{sds.labels.goToToday}</Button>

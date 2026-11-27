@@ -1,11 +1,5 @@
 src/components/Button/Button.tsx ButtonBaseRender
-src/components/Calendar/Calendar.tsx CalendarRender
-src/components/Chart/Chart.tsx ChartRender
 src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
 src/components/Combobox/Combobox.tsx ComboboxRender
-src/components/EventCalendar/EventCalendar.tsx Body
-src/components/EventCalendar/EventCalendar.tsx EventCalendarRender
-src/components/FieldList/FieldList.tsx FieldListRender
 src/components/Form/Form.tsx FormRender
-src/components/Kanban/Kanban.tsx KanbanRender
 src/components/Menu/Menu.tsx ContextMenuRender
