@@ -204,7 +204,7 @@ interface Point { s: number; i: number; v: number }
 type Spot = { s: number; i: number };
 type Focused = Spot & { ring: boolean };
 
-function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLElement>) {
+function ChartRender({ ref, series: givenSeries, ...props }: ChartProps & React.RefAttributes<HTMLElement>) {
   const nameRef = useNameCheck<HTMLElement>('Chart', NAME_HOW.title, ref);
   const rest = omit(props, OWN);
   const locale = useLocale();
@@ -214,7 +214,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || NONE;
   const heat = type === 'heatmap';
-  const series = React.useMemo(() => (props.series || []).slice(0, heat ? ROWS : COLORS), [props.series, heat]);
+  const series = React.useMemo(() => (givenSeries || []).slice(0, heat ? ROWS : COLORS), [givenSeries, heat]);
   const n = categories.length;
   const waiting = busy && !n;   // nothing to draw yet: the placeholder
   const height = Math.max(80, Math.round(Number(props.height) || (heat ? series.length * ROW + PAD_TOP + AXIS : 240)));
@@ -385,7 +385,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
   const changeView = (v: ChartView) => { if (props.view === undefined) setOwnView(v); props.onViewChange?.(v); };
 
   const zero = yAt(Math.min(Math.max(0, t0), tN));
-  const fill = (s: number, count = series.length) => (s && count > 1 ? `url(#${base}-p${s})` : undefined);
+  const fill = (s: number, count: number) => (s && count > 1 ? `url(#${base}-p${s})` : undefined);
   // An area: from its line down to zero, or stacked, down to the series under it; a missing value breaks it (unstacked).
   const areaPath = (s: number) => {
     let d = '';
@@ -621,7 +621,7 @@ function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLEle
                   <svg className="srp-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
                     {linear
                       ? <><path className="srp-chart__line" d="M1 6H19" /><path className="srp-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
-                      : <rect className="srp-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
+                      : <rect className="srp-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s, series.length)} />}
                   </svg>
                   {sr.name}
                 </li>

@@ -1,7 +1,7 @@
 'use client';
 import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
-import { cn, domId, omit, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
+import { cn, domId, omit, useIsoLayoutEffect, useLatest, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { useControllable } from '../../internal/controllable';
 import { announce, ensureAnnouncer } from '../../internal/announce';
@@ -78,6 +78,12 @@ const shows = (v: React.ReactNode) => v != null && v !== false && v !== '';
    while the rows around it change. Add moves focus to the new row's first field, and Remove to the field of the row
    before, or to Add when the first row goes; each is said politely ("Phone 3 added"). At max, Add stays in the Tab
    order (aria-disabled) and says why; at min, Remove is gone. */
+// A row's fields, drawn from the caller's children as an element of their own: its state carries update, which reads
+// the newest rows when it's called, and JSX props hand it over without the render calling it.
+function RowFields({ fields, value, state }: { fields: FieldListProps<unknown>['children']; value: unknown; state: FieldListRow<unknown> }) {
+  return fields(value, state);
+}
+
 function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefAttributes<HTMLFieldSetElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(allWords).labels;
@@ -90,44 +96,52 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
   const [rows, setOwn] = useControllable<readonly unknown[]>(props.value, start, 'FieldList', 'value');
   // Each row's key, beside its value: kept in step by add, remove and move, and padded or cut when the caller
   // changes the number of rows some other way.
-  const next = React.useRef(0);
-  const keys = React.useRef<number[]>([]);
-  while (keys.current.length < rows.length) keys.current.push(next.current++);
-  if (keys.current.length > rows.length) keys.current.length = rows.length;
-  const latest = React.useRef(rows);
-  latest.current = rows;
+  // State, so a render compares without reading a ref; next is the key the next new row takes.
+  const [keyed, setKeyed] = React.useState(() => ({ keys: rows.map((_, i) => i), next: rows.length }));
+  let shown = keyed;
+  if (shown.keys.length !== rows.length) {
+    const padded = shown.keys.slice(0, rows.length);
+    let next = shown.next;
+    while (padded.length < rows.length) padded.push(next++);
+    shown = { keys: padded, next };
+    setKeyed(shown);
+  }
+  const keys = shown.keys;
+  // What the handlers build on: the newest rows and keys, set by commit too, so two changes in one event both count.
+  const latestRef = useLatest({ rows, keys, next: shown.next });
   const own = React.useRef<HTMLFieldSetElement | null>(null);
   const setRef = useMergedRef(ref, (n: HTMLFieldSetElement | null) => { own.current = n; });
   const addRef = React.useRef<HTMLButtonElement | null>(null);
   const focusNext = React.useRef<number | 'add' | null>(null);
   React.useEffect(() => { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
-  const commit = (list: unknown[], order: number[]) => {
-    keys.current = order;
-    latest.current = list;
+  const commit = (list: unknown[], order: number[], next: number) => {
+    latestRef.current = { rows: list, keys: order, next };
+    setKeyed({ keys: order, next });
     setOwn(list);
     if (onValueChange) onValueChange(list);
   };
   const add = () => {
     if (rows.length >= max || props.disabled) return;
-    const list = latest.current.concat([newItem()]);
-    const order = keys.current.concat([next.current++]);
-    focusNext.current = order[order.length - 1] as number;
-    commit(list, order);
+    const { rows: now, keys: order0, next } = latestRef.current;
+    const list = now.concat([newItem()]);
+    const order = order0.concat([next]);
+    focusNext.current = next;
+    commit(list, order, next + 1);
     announce(L.valueAdded(itemLabel(list.length - 1)));
   };
   const remove = (at: number) => {
     const label = itemLabel(at);
-    const list = latest.current.slice(), order = keys.current.slice();
+    const list = latestRef.current.rows.slice(), order = latestRef.current.keys.slice();
     list.splice(at, 1);
     order.splice(at, 1);
     focusNext.current = at > 0 ? order[at - 1] as number : 'add';
-    commit(list, order);
+    commit(list, order, latestRef.current.next);
     announce(L.valueRemoved(label));
   };
   const update = (at: number, value: unknown) => {
-    const list = latest.current.slice();
+    const list = latestRef.current.rows.slice();
     list[at] = typeof value === 'function' ? (value as (row: unknown) => unknown)(list[at]) : value;
-    commit(list, keys.current.slice());
+    commit(list, latestRef.current.keys.slice(), latestRef.current.next);
   };
   // every render: acts once, in the render that follows an add or a remove.
   useIsoLayoutEffect(() => {
@@ -143,7 +157,7 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
   const hintId = shows(props.hint) ? base + '-hint' : undefined, errorId = shows(props.error) ? base + '-error' : undefined;
   const rowFor = (value: unknown, at: number) => {
     const label = itemLabel(at), rowError = props.errors ? props.errors[at] : undefined;
-    const rowErrorId = shows(rowError) ? `${base}-${keys.current[at]}-error` : undefined;
+    const rowErrorId = shows(rowError) ? `${base}-${keys[at]}-error` : undefined;
     const state: FieldListRow<unknown> = {
       index: at,
       label,
@@ -152,18 +166,18 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
       error: rowError,
     };
     return (
-      <div className="srp-field-list__row" role="group" aria-label={label} aria-describedby={rowErrorId} data-row-key={keys.current[at]}>
-        <div className="srp-field-list__fields">{props.children(value, state)}</div>
+      <div className="srp-field-list__row" role="group" aria-label={label} aria-describedby={rowErrorId} data-row-key={keys[at]}>
+        <div className="srp-field-list__fields"><RowFields fields={props.children} value={value} state={state} /></div>
         {rows.length > min ? <IconButton className="srp-field-list__remove" icon={icons.Close} label={L.tagRemove(label)} onClick={() => remove(at)} /> : null}
         {rowErrorId ? <div className="srp-field-list__error srp-field-list__row-error"><Icon icon={icons.Error} className="srp-field-list__error-icon" /><span id={rowErrorId}>{rowError}</span></div> : null}
       </div>
     );
   };
   const list = props.reorderable
-    ? <SortableList className="srp-field-list__rows" items={rows.map((value, at) => ({ value, at, key: keys.current[at] as number }))} getKey={(r) => r.key} getLabel={(r) => itemLabel(r.at)} disabled={props.disabled}
+    ? <SortableList className="srp-field-list__rows" items={rows.map((value, at) => ({ value, at, key: keys[at] as number }))} getKey={(r) => r.key} getLabel={(r) => itemLabel(r.at)} disabled={props.disabled}
         renderItem={(r) => rowFor(r.value, r.at)}
-        onReorder={(moved) => commit(moved.map((r) => r.value), moved.map((r) => r.key))} />
-    : rows.length ? <ul role="list" className="srp-field-list__rows">{rows.map((value, at) => <li key={keys.current[at]}>{rowFor(value, at)}</li>)}</ul> : null;
+        onReorder={(moved) => commit(moved.map((r) => r.value), moved.map((r) => r.key), latestRef.current.next)} />
+    : rows.length ? <ul role="list" className="srp-field-list__rows">{rows.map((value, at) => <li key={keys[at]}>{rowFor(value, at)}</li>)}</ul> : null;
   return (
     <fieldset {...rest} ref={setRef} className={cn('srp-field-list', props.className)} data-component="field-list" aria-describedby={cn(hintId, errorId, rest['aria-describedby']) || undefined}>
       <legend className="srp-field-list__label">{props.label}</legend>

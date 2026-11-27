@@ -2,9 +2,6 @@
   "src/components/Calendar/Calendar.tsx": {
     "react-hooks/purity": {
       "count": 1
-    },
-    "react-hooks/refs": {
-      "count": 1
     }
   },
   "src/components/Carousel/Carousel.tsx": {
@@ -17,11 +14,6 @@
       "count": 1
     },
     "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/components/Chart/Chart.tsx": {
-    "react-hooks/preserve-manual-memoization": {
       "count": 1
     }
   },
@@ -93,12 +85,6 @@
     }
   },
   "src/components/EventCalendar/EventCalendar.tsx": {
-    "react-hooks/preserve-manual-memoization": {
-      "count": 2
-    },
-    "react-hooks/refs": {
-      "count": 2
-    },
     "react-hooks/set-state-in-effect": {
       "count": 1
     }
@@ -109,11 +95,6 @@
     },
     "jsx-a11y-x/no-noninteractive-element-interactions": {
       "count": 1
-    }
-  },
-  "src/components/FieldList/FieldList.tsx": {
-    "react-hooks/refs": {
-      "count": 11
     }
   },
   "src/components/FileUpload/FileUpload.tsx": {
@@ -129,11 +110,6 @@
   "src/components/Input/Input.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    }
-  },
-  "src/components/Kanban/Kanban.tsx": {
-    "react-hooks/refs": {
-      "count": 8
     }
   },
   "src/components/Link/Link.stories.tsx": {

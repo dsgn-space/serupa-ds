@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect, useLatest } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
@@ -127,8 +127,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   const columns = props.columns || [];
   const base = domId('srp-kb', React.useId());
   const [drag, setDrag] = React.useState<Drag | null>(null);
-  const current = React.useRef(drag);
-  current.current = drag;
+  const current = useLatest(drag);
   const board = React.useRef<HTMLDivElement | null>(null);
   const { pointerRef, draggedRef, begin } = useHandleDrag();
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
@@ -221,8 +220,7 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
   };
 
   // Pointer: press a handle and move a few pixels to drag; the card follows the pointer over the columns.
-  const latest = React.useRef({ columns, find, finish });
-  latest.current = { columns, find, finish };
+  const latest = useLatest({ columns, find, finish });
   const onPointerDown = (key: string | number, e: React.PointerEvent<HTMLButtonElement>) => {
     draggedRef.current = false;
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
@@ -285,21 +283,21 @@ function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttribu
       li.style.transform = 'translate(' + Math.round(p.x - p.gx - b.left) + 'px, ' + Math.round(p.y - p.gy - b.top) + 'px)';
     }
   };
-  const followRef = React.useRef(follow);
-  followRef.current = follow;
+  const followRef = useLatest(follow);
   // every render: a render moves the cards; outside a drag it only clears a transform left behind.
   useIsoLayoutEffect(() => { follow(); });
 
-  const api = React.useRef<KanbanCardApi>(null!);
-  api.current = {
+  const api = useLatest<KanbanCardApi>({
     click: onClick, keyDown: onKeyDown, blur: onBlur, pointerDown: onPointerDown, moveTo,
     handle: (key, n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); },
-  };
+  });
   // The "Move to…" columns, kept the same while their ids and titles are, so a drop doesn't redraw every card's menu.
-  const kept = React.useRef<{ id: string; title: string }[]>([]);
-  if (kept.current.length !== columns.length || columns.some((c, i) => c.id !== kept.current[i]?.id || c.title !== kept.current[i]?.title))
-    kept.current = columns.map((c) => ({ id: c.id, title: c.title }));
-  const targets = kept.current;
+  const [kept, setKept] = React.useState(() => columns.map((c) => ({ id: c.id, title: c.title })));
+  let targets = kept;
+  if (kept.length !== columns.length || columns.some((c, i) => c.id !== kept[i]?.id || c.title !== kept[i]?.title)) {
+    targets = columns.map((c) => ({ id: c.id, title: c.title }));
+    setKept(targets);
+  }
 
   const mergedRef = useMergedRef(ref, (n) => { board.current = n; });
   // Placeholders only for the first load: cards already shown stay while new ones load.
