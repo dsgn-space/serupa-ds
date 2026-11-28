@@ -2988,5 +2988,18 @@
    "as",
    "focusable"
   ]
+ },
+ "Watermark": {
+  "added": "20.0.0",
+  "changed": null,
+  "api": "168e563f5310",
+  "props": {},
+  "known": [
+   "children",
+   "fullPage",
+   "gap",
+   "rotate",
+   "text"
+  ]
  }
 }
