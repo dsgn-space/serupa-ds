@@ -1,10 +1,19 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { DateRangePicker, type DateRange } from './DateRangePicker';
+
+// DateRangePicker loads the months the first time its popup opens (ADR-0027): the first open shows them a moment after
+// the popup. These tests check what it shows, so one open before them has them loaded, as on a page where it opened once.
+beforeAll(async () => {
+  const r = await render(<DateRangePicker aria-label="Warm up" />);
+  await userEvent.click(page.getByRole('button', { name: 'Choose dates', exact: false }));
+  await vi.waitFor(() => { if (!document.querySelector('[role=dialog] [role=grid]')) throw new Error('no calendar yet'); });
+  await r.unmount();
+});
 
 const box = (tid: string) => document.querySelector(`[data-testid=${tid}]`) as HTMLElement;
 const fields = (tid: string) => [...box(tid).querySelectorAll<HTMLInputElement>('input[type=text]')];
@@ -436,6 +445,8 @@ describe('DateRangePicker: another calendar system (RX9)', () => {
     for (const calendar of ['gregory', 'buddhist', 'japanese', 'roc', 'persian', 'islamic-umalqura', 'islamic-civil', 'islamic-tbla', 'indian'] as const) {
       const r = await render(<DateRangePicker data-testid="all" aria-label="Stay" calendar={calendar} locale="en-US" defaultValue={{ start: new Date(2026, 10, 15), end: null }} />);
       await userEvent.click(btn('all'));
+      // The months come a moment after the popup the first time (ADR-0027).
+      await expect.poll(() => pop('all').querySelector('[role=grid]')).toBeTruthy();
       const g = pop('all').querySelector('[role=grid]')!;
       expect([calendar, document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent]).toEqual([calendar, new Intl.DateTimeFormat('en-US', { calendar, numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(new Date(2026, 10, 15))]);
       await r.unmount();
