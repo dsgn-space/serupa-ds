@@ -35,6 +35,7 @@
 @media print {
   .srp-watermark__mark {
     print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;   /* the prefix for Chrome before 136 */
   }
 }
 /* A system palette would draw the mark as strong as the text, so it goes. */
