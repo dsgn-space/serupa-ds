@@ -17,9 +17,10 @@ import { applyMask, digitsOnly, isPlain, parseMask, unmask } from '../../interna
 import { isComposing } from '../../internal/ime';
 
 const PLAIN = { useGrouping: false } as const;
-// Fields whose text isn't words: the phone keyboard shouldn't capitalize, correct or underline it.
+// Fields whose text isn't words: the phone keyboard shouldn't capitalize, correct or underline it. A card number,
+// expiry, security code or postcode isn't words either, nor is anything typed into a mask (an IBAN, a reference).
 const VERBATIM = /^(email|url)$/;
-const VERBATIM_AUTOCOMPLETE = /\b(username|email|url|one-time-code)\b/;
+const VERBATIM_AUTOCOMPLETE = /\b(username|email|url|one-time-code|cc-number|cc-exp|cc-csc|postal-code)\b/;
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'children' | 'prefix'> {
   /** 'sm' (24px, text-xs), 'md' (32px, text-sm, default) or 'lg' (44px, text-base): the control heights, like Button. */
@@ -103,7 +104,7 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.type === undefined) rest.type = 'text';
-  if (VERBATIM.test(rest.type) || VERBATIM_AUTOCOMPLETE.test(rest.autoComplete || '')) {
+  if (VERBATIM.test(rest.type) || VERBATIM_AUTOCOMPLETE.test(rest.autoComplete || '') || props.mask) {
     if (rest.autoCapitalize === undefined) rest.autoCapitalize = 'off';
     if (rest.autoCorrect === undefined) rest.autoCorrect = 'off';
     if (rest.spellCheck === undefined) rest.spellCheck = false;
@@ -141,7 +142,8 @@ function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInp
 /* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
    Button); invalid (a danger border and aria-invalid); startIcon / endIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
    showCount (a character count at the end, "12 / 50" with maxLength); maxLength (in characters as people see them,
-   applied by Input). Email, URL, username and one-time-code fields get autocapitalize, autocorrect and spellcheck off.
+   applied by Input). Email, URL, username, one-time-code, card, postcode and masked fields get autocapitalize,
+   autocorrect and spellcheck off.
    Renders <span class="srp-input"> around a native <input>: className and style go to the wrapper, every other
    prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
 /** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */

@@ -8,7 +8,7 @@ import { iconArg } from '../../../.storybook/icon-arg';
 const meta = {
   title: 'Components/Forms/Input',
   component: Input,
-  args: { placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
+  args: { type: 'email', autoComplete: 'email', placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, startIcon: iconArg, endIcon: iconArg },
 } satisfies Meta<typeof Input>;
 export default meta;
@@ -65,8 +65,8 @@ export const Count: Story = {
 /** mask: a card number, a date and an IBAN; type only the digits and letters. */
 export const Masked: Story = {
   render: () => <Col>
-    <Input mask="9999 9999 9999 9999" aria-label="Card number" defaultValue="4242424242424242" />
-    <Input mask="99/99" aria-label="Expiry date, MM/YY" placeholder="MM/YY" />
+    <Input mask="9999 9999 9999 9999" autoComplete="cc-number" aria-label="Card number" defaultValue="4242424242424242" />
+    <Input mask="99/99" autoComplete="cc-exp" aria-label="Expiry date, MM/YY" placeholder="MM/YY" />
     <Input mask="AA99 **** **** **** **** **" aria-label="IBAN" defaultValue="de89370400440532013000" />
   </Col>,
 };

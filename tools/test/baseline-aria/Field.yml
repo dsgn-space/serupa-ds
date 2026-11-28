@@ -54,8 +54,7 @@
 
 # Optional
 - text: Company(optional)
-- textbox "Company(optional)":
-  - /placeholder: you@example.com
+- textbox "Company(optional)"
 
 # OtherControls
 - text: Message

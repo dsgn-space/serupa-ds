@@ -292,17 +292,20 @@ describe('Input', () => {
     await expect.poll(() => [field('rs').value, count('rs').textContent]).toEqual(['ab', '2 / 10']);
   });
 
-  test('email, URL, username and one-time-code fields: no autocapitalize, autocorrect or spellcheck, unless set (idea 172)', async () => {
+  test('email, URL, username, one-time-code, card, postcode and masked fields: no autocapitalize, autocorrect or spellcheck, unless set (idea 172)', async () => {
     await render(<>
       <Input id="em" type="email" aria-label="Email" />
       <Input id="url" type="url" aria-label="URL" />
       <Input id="un" autoComplete="username" aria-label="User" />
       <Input id="otp" autoComplete="one-time-code" aria-label="Code" />
+      <Input id="cc" autoComplete="cc-number" aria-label="Card number" />
+      <Input id="pc" autoComplete="shipping postal-code" aria-label="Postcode" />
+      <Input id="iban" mask="AA99 **** **** **** **** **" aria-label="IBAN" />
       <Input id="own" type="email" spellCheck autoCapitalize="on" aria-label="Own" />
       <Input id="nm" aria-label="Name" />
     </>);
     const kb = (id: string) => [field(id).getAttribute('autocapitalize'), field(id).getAttribute('autocorrect'), field(id).getAttribute('spellcheck')];
-    for (const id of ['em', 'url', 'un', 'otp']) expect(kb(id)).toEqual(['off', 'off', 'false']);
+    for (const id of ['em', 'url', 'un', 'otp', 'cc', 'pc', 'iban']) expect(kb(id)).toEqual(['off', 'off', 'false']);
     expect(kb('own')).toEqual(['on', 'off', 'true']);
     expect(kb('nm')).toEqual([null, null, null]);
   });
