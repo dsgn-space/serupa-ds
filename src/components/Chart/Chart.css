@@ -129,7 +129,7 @@
   .srp-chart__cell--d7 { fill-opacity: var(--opacity-100); }
 }
 @media print {
-  .srp-chart { print-color-adjust: exact; break-inside: avoid; }
+  .srp-chart { print-color-adjust: exact; -webkit-print-color-adjust: exact; break-inside: avoid; }   /* the prefix for Chrome before 136 */
   .srp-chart__toggle, .srp-chart__tip, .srp-chart__cursor { display: none; }
 }
 }
