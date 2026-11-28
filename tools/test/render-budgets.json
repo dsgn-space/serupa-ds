@@ -1,0 +1,12 @@
+{
+  "mount": 20,
+  "update": 20,
+  "ownMount": {
+    "PhoneInput/Controlled": 40,
+    "PhoneInput/InAField": 40,
+    "PhoneInput/LongValue": 40,
+    "PhoneInput/Playground": 40,
+    "PhoneInput/States": 120,
+    "PhoneInput/ByArea": 280
+  }
+}

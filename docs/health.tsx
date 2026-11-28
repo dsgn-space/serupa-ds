@@ -25,6 +25,7 @@ export interface Health {
   components: {
     name: string; status: string; tests: number; stories: number; ariaBaseline: boolean;
     size: { budget: { alone: number | null; css: number | null } | null; measured: { alone: number | null; css: number | null } | null };
+    render?: { mount: number; mountMost: number; update: number };
     coverage: { lines: Pct; functions: Pct; branches: Pct } | null;
     a11y: { stories: number; passed: number; problems: string[] } | null;
     compilerSkipped: string[];
@@ -166,4 +167,25 @@ export function HealthIssues() {
     <p><a href={h.issues.url} target="_top">{h.issues.open} open</a>{labels.length ? `: ${labels.map(([k, v]) => `${v} ${k}`).join(', ')}.` : '.'}</p>
     {h.issues.newest.length > 0 && <ul>{h.issues.newest.map((i) => <li key={i.number}><a href={i.url} target="_top">#{i.number} {i.title}</a>, opened {day(i.opened)}</li>)}</ul>}
   </>;
+}
+
+const sizeText = (measured: number | null | undefined, budget: number | null | undefined) =>
+  measured != null ? `${kib(measured)}${budget != null ? ` (budget ${budget} KiB)` : ''}` : budget != null ? `at most ${budget} KiB` : null;
+
+/** A component's size and render budgets, under its guide: what CI holds it to, and its measured size when the file
+ *  is a nightly run's. Nothing until the health file has loaded, or for a name it doesn't list. */
+export function ComponentBudgets({ name }: { name: string }) {
+  const health = useHealth();
+  const c = health?.components.find((x) => x.name === name);
+  if (!c) return null;
+  const js = sizeText(c.size.measured?.alone, c.size.budget?.alone), css = sizeText(c.size.measured?.css, c.size.budget?.css);
+  const r = c.render;
+  return <section className="sb-tested" aria-labelledby={`budgets-${name}`}>
+    <h2 id={`budgets-${name}`}>Size and speed</h2>
+    <p>
+      {js && <>Imported alone, {name} adds {js} of JavaScript, gzipped{css ? <>, and its CSS {css}</> : null}. </>}
+      {r && <>Each of its stories mounts in under {r.mount} ms{r.mountMost > r.mount ? <> (its heaviest are allowed up to {r.mountMost} ms)</> : null} and renders again, with nothing changed, in under {r.update} ms, in React's development build. </>}
+      A pull request that takes it over any of these fails CI.
+    </p>
+  </section>;
 }
