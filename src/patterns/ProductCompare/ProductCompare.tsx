@@ -110,7 +110,9 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
   const [onlyDiff, setOnlyDiff] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
-  const rows = onlyDiff ? differingFeatures(list, features) : features;
+  // With one product left there's nothing to differ, and the switch is gone: every feature shows.
+  const showDiff = onlyDiff && list.length > 1;
+  const rows = showDiff ? differingFeatures(list, features) : features;
 
   const remove = (p: CompareProduct) => {
     const at = list.indexOf(p), next = list[at + 1] ?? list[at - 1];
@@ -148,7 +150,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
             {list.length ? (
               <>
                 <p id="compare-rows" role="status" className="m-0 text-sm text-text-muted">
-                  {onlyDiff ? `${formatNumber(rows.length, locale)} of ${formatNumber(features.length, locale)} features differ` : `All ${formatNumber(features.length, locale)} features`}
+                  {showDiff ? `${formatNumber(rows.length, locale)} of ${formatNumber(features.length, locale)} features differ` : `All ${formatNumber(features.length, locale)} features`}
                 </p>
                 <Table caption="The products side by side, a feature in each row" hideCaption layout="fixed" pinStart>
                   <TableHead>

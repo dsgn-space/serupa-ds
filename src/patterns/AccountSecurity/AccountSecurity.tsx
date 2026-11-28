@@ -202,7 +202,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
     requestAnimationFrame(() => (after ? document.getElementById(`sign-out-${after.id}`)?.focus() : devicesHeading.current?.focus()));
   };
   const signOutOthers = () => {
-    setGone(new Set(others.map((d) => d.id)));
+    setGone((g) => new Set([...g, ...others.map((d) => d.id)]));   // the ones signed out one by one stay out
     onSignOutOthers?.();
     toast({ title: others.length === 1 ? 'Signed out of 1 other device' : `Signed out of ${formatNumber(others.length, locale)} other devices` });
     requestAnimationFrame(() => devicesHeading.current?.focus());

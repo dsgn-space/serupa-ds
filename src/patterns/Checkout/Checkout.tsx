@@ -156,6 +156,8 @@ function checkoutProblems(d: CheckoutDetails, methods: readonly PaymentMethod[])
   const digits = d.cardNumber.replace(/[\s-]/g, '');
   const m = methodOf(methods, d.method);
   const newCard = m?.kind === 'card' && (d.savedCard === 'new' || !m.savedCards?.length);
+  // A saved card picked by id: one that has expired, or that's no longer in the list, can't pay.
+  const pickedCard = m?.kind === 'card' && d.savedCard && d.savedCard !== 'new' ? m.savedCards?.find((c) => c.id === d.savedCard) : undefined;
   const expiryForm = /^(0[1-9]|1[0-2])\/\d{2}$/.test(d.cardExpiry.trim());
   const rules: [keyof CheckoutDetails, boolean, string][] = [
     ['name', !d.name.trim(), 'Enter your full name'],
@@ -166,6 +168,8 @@ function checkoutProblems(d: CheckoutDetails, methods: readonly PaymentMethod[])
     ['email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim()), 'Enter an email address, like name@example.com'],
     ['method', !m || !!m.unavailable, 'Choose how you’d like to pay'],
     ['savedCard', m?.kind === 'card' && !!m.savedCards?.length && !d.savedCard, 'Choose a saved card, or a new card'],
+    ['savedCard', !!pickedCard && expired(pickedCard.expiry), 'This card has expired: choose another card, or a new card'],
+    ['savedCard', m?.kind === 'card' && !!m.savedCards?.length && !!d.savedCard && d.savedCard !== 'new' && !pickedCard, 'Choose a saved card, or a new card'],
     ['cardNumber', newCard && !/^\d{13,19}$/.test(digits), 'Enter the long number on the front of the card: 13 to 19 digits'],
     ['cardName', newCard && !d.cardName.trim(), 'Enter the name as it’s written on the card'],
     ['cardExpiry', newCard && !expiryForm, 'Enter the expiry date as MM/YY, like 08/27'],

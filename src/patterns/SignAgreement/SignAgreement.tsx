@@ -70,6 +70,8 @@ export function SignAgreement({ title = 'Design work agreement', children = demo
   const [signature, setSignature] = React.useState<SignatureValue | null>(null);
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
   const [tries, setTries] = React.useState(0);
+  // The summary takes focus for a submit; an answer that fixes an error after it doesn't pull focus out of the field.
+  const [editedAt, setEditedAt] = React.useState(-1);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [signed, setSigned] = React.useState(false);
@@ -112,14 +114,14 @@ export function SignAgreement({ title = 'Design work agreement', children = demo
                 <Prose>{children}</Prose>
               </ScrollArea>
               <form onSubmit={sign} noValidate aria-label="Sign" className="flex flex-col gap-4">
-                <ErrorSummary key={tries} errors={errors} />
+                <ErrorSummary key={tries} errors={errors} {...(editedAt === tries ? { autoFocus: false } : null)} />
                 <Field error={problem('sign-agree')}>
-                  <Checkbox id="sign-agree" checked={agreed} onCheckedChange={(on) => { setAgreed(on); setErrors((x) => x.filter((p) => p.field !== 'sign-agree')); }}>
+                  <Checkbox id="sign-agree" checked={agreed} onCheckedChange={(on) => { setAgreed(on); setEditedAt(tries); setErrors((x) => x.filter((p) => p.field !== 'sign-agree')); }}>
                     I’ve read the agreement and I agree to it
                   </Checkbox>
                 </Field>
                 <Field label="Your signature" id="sign-signature" error={problem('sign-signature')} required>
-                  <SignaturePad value={signature} onValueChange={(v) => { setSignature(v); if (v) setErrors((x) => x.filter((p) => p.field !== 'sign-signature')); }} />
+                  <SignaturePad value={signature} onValueChange={(v) => { setSignature(v); setEditedAt(tries); if (v) setErrors((x) => x.filter((p) => p.field !== 'sign-signature')); }} />
                 </Field>
                 <div className="flex flex-col items-start gap-3">
                   {failed ? <Alert tone="danger">Couldn’t send your signature. Try again; nothing is lost.</Alert> : null}

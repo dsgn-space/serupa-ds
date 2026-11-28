@@ -42,6 +42,18 @@ describe('Patterns/Approvals', () => {
     expect(norm(screen.getByRole('article', { name: /^Dewi/ }).element().textContent)).toContain('Approved');
   });
 
+  test('a decided request the app then takes out of requests still shows under Decided', async () => {
+    const all = [{ id: 'r1', who: 'Dewi Lestari', kind: 'expense' as const, what: 'Taxi', amount: 46.5, asked: '2026-11-14' }, { id: 'r2', who: 'Kofi Mensah', kind: 'leave' as const, what: 'Leave', days: 5, asked: '2026-11-13' }];
+    const errors = vi.spyOn(console, 'error');
+    const screen = await render(<Approvals requests={all} />);
+    await screen.getByRole('button', { name: /^Approve Dewi/ }).click();
+    await screen.rerender(<Approvals requests={all.slice(1)} />);
+    await screen.getByRole('radio', { name: 'Decided' }).click();
+    expect(screen.getByRole('article', { name: /^Dewi/ }).elements()).toHaveLength(1);
+    expect(errors).not.toHaveBeenCalled();
+    errors.mockRestore();
+  });
+
   test('Undo puts it back, focused, and sends nothing', async () => {
     const onDecide = vi.fn();
     const screen = await render(<Approvals onDecide={onDecide} />);

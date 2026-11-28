@@ -42,6 +42,17 @@ describe('Patterns/Sign agreement', () => {
     await expect.poll(() => problem('Sign: draw your signature, or choose Type and type your name.')).toBe(false);
   });
 
+  test('after a failed sign, typing a name keeps focus in the field: fixing one problem doesn\'t send focus to the summary', async () => {
+    const screen = await render(<SignAgreement />);
+    await screen.getByRole('button', { name: 'Sign the agreement' }).click();
+    await expect.poll(() => active().textContent).toMatch(/problem/i);
+    await screen.getByRole('radio', { name: 'Type' }).click();
+    const name = screen.getByRole('textbox', { name: /Full name/ }).element() as HTMLInputElement;
+    name.focus();
+    await userEvent.keyboard('Ana');
+    expect([name.value, active()]).toEqual(['Ana', name]);
+  });
+
   test('ticking the box and typing a name signs; a send that fails says so and keeps both; then the answer takes focus', async () => {
     const onSign = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
     const screen = await render(<SignAgreement onSign={onSign} />);

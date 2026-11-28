@@ -74,10 +74,13 @@ const demoHours: Week = { web: [6, 5, null, null, null, null, null], admin: [2, 
 const demoLast: Week = { web: [6, 6, 6, 4, 4, null, null], app: [null, null, null, 2, 3, null, null], admin: [2, 2, 2, 2, 1, null, null] };
 const blankDays = () => Array<number | null>(7).fill(null);
 
+// Hours as entered add up in binary fractions (6.4 + 9.8 + 7.8 is 24.000000000000004): rounded to a millionth, a
+// day of 24 is 24 and a week of 40 is 40.
+const roundHours = (n: number) => Math.round(n * 1e6) / 1e6;
 /** Each day's total, Monday first, and the week's. */
 export function weekTotals(week: Week) {
-  const days = blankDays().map((_, i) => Object.values(week).reduce((sum, row) => sum + (row[i] ?? 0), 0));
-  return { days, week: days.reduce((a, b) => a + b, 0) };
+  const days = blankDays().map((_, i) => roundHours(Object.values(week).reduce((sum, row) => sum + (row[i] ?? 0), 0)));
+  return { days, week: roundHours(days.reduce((a, b) => a + b, 0)) };
 }
 
 /** What's wrong with a week: a day over 24 hours, or no hours at all. Keyed by "day-<index>" or "empty". */
@@ -227,7 +230,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
                 </TableFoot>
               </Table>
               <p className="m-0" id="ts-total">
-                {hoursWords(totals.week)} this week{totals.week < expected ? `, ${hoursWords(expected - totals.week)} under the ${num(expected)} expected.` : '.'}
+                {hoursWords(totals.week)} this week{totals.week < expected ? `, ${hoursWords(roundHours(expected - totals.week))} under the ${num(expected)} expected.` : '.'}
               </p>
               <Field label="Note for your approver" id="ts-note" hint="Anything they should know, like time off or overtime." optional>
                 <Textarea rows={3} value={note} onChange={(e) => { setNote(e.target.value); setFailed(false); }} />

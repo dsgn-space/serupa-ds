@@ -315,6 +315,16 @@ describe('Patterns/Checkout: ways to pay', () => {
     expect(document.querySelector('main')!.textContent).toContain('Visa ending in 4242, expires 08/39');
   });
 
+  test('a saved card that has expired, or that\'s no longer in the list, stops at the details with a message, even from startAtReview', async () => {
+    const methods = [{ kind: 'card' as const, id: 'card', label: 'Card', savedCards: [{ id: 'c-exp', brand: 'Mastercard', last4: '1111', expiry: '01/20' }, { id: 'c-ok', brand: 'Visa', last4: '4242', expiry: '12/99' }] }];
+    for (const savedCard of ['c-exp', 'c-deleted']) {
+      const screen = await render(<Checkout startAtReview initial={{ ...base, method: 'card', savedCard }} methods={methods} />);
+      expect(document.querySelector('main')!.textContent).not.toContain('Check your order');
+      expect(screen.getByRole('button', { name: /^Place order/ }).elements()).toHaveLength(0);
+      await screen.unmount();
+    }
+  });
+
   test('a device wallet: nothing more to type, and the button says it pays with it', async () => {
     const screen = await render(<Checkout initial={{ ...base, method: 'apple-pay' }} />);
     expect(document.querySelector('main')!.textContent).toContain('Apple Pay opens for you to confirm');

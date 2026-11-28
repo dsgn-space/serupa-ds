@@ -99,11 +99,18 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
   const [tries, setTries] = React.useState(0);
   const [status, setStatus] = React.useState<SaveState>('idle');
   const [savedAt, setSavedAt] = React.useState<Date | undefined>(undefined);
-  // The new photo's preview: an object URL made once per file, and let go when the file changes or the page goes.
-  const preview = React.useMemo(() => (files[0] ? URL.createObjectURL(files[0]) : ''), [files]);
+  // The new photo's preview: an object URL made in the effect that lets it go, so each one made is let go (none leaks
+  // from a render React throws away), and one shown again (Activity, Strict Mode) is made again.
+  const [preview, setPreview] = React.useState('');
   // A saved one is the profile's photo now: it's let go when another is saved, or when the page goes.
   const kept = React.useRef('');
-  React.useEffect(() => () => { if (preview && preview !== kept.current) URL.revokeObjectURL(preview); }, [preview]);
+  React.useEffect(() => {
+    const file = files[0];
+    const url = file ? URL.createObjectURL(file) : '';
+    let on = true;
+    queueMicrotask(() => { if (on) setPreview(url); });
+    return () => { on = false; if (url && url !== kept.current) URL.revokeObjectURL(url); };
+  }, [files]);
   React.useEffect(() => () => { if (kept.current) URL.revokeObjectURL(kept.current); }, []);
   const photo = preview || draft.photo;
   const dirty = profileChanged(draft, saved) || files.length > 0;

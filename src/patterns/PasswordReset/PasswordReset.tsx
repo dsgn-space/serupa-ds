@@ -68,10 +68,12 @@ export function resetEmailProblem(email: string): string | null {
 
 /** The new password's rules, each met or not for this password and the account's email. */
 export function resetPasswordRules(password: string, email: string) {
-  const local = email.split('@')[0]?.toLowerCase() || '';
+  // The whole address is checked however short its name part ("jo@example.com"); the name part from 3 letters.
+  const address = email.trim().toLowerCase(), local = address.split('@')[0] || '', typed = password.toLowerCase();
+  const mine = (!!address && typed.includes(address)) || (local.length > 2 && typed.includes(local));
   return [
     { text: `At least ${MIN} characters`, met: password.length >= MIN },
-    { text: 'Not your email address or its name part', met: password.length > 0 && !(local.length > 2 && password.toLowerCase().includes(local)) },
+    { text: 'Not your email address or its name part', met: password.trim().length > 0 && !mine },
   ];
 }
 

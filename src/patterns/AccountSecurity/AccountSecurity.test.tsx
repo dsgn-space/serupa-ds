@@ -136,6 +136,20 @@ describe('Patterns/Account security', () => {
     expect(onSignOut.mock.calls).toEqual([['d2'], ['d3']]);
   });
 
+  test('a device signed out on its own stays signed out after Sign out everywhere else', async () => {
+    const t = Date.now();
+    const devices = ['d1', 'd2', 'd3', 'd4'].map((id, i) => ({ id, name: 'Device ' + id, place: 'Jakarta, Indonesia', lastActive: t - i * 3600_000, current: i === 0 }));
+    const screen = await render(<AccountSecurity devices={devices} />);
+    const others = () => screen.getByRole('button', { name: /^Sign out of/ }).elements().length;
+    const before = others();
+    await screen.getByRole('button', { name: /^Sign out of/ }).first().click();
+    await expect.poll(others).toBe(before - 1);
+    await screen.getByRole('button', { name: 'Sign out everywhere else' }).click();
+    await expect.poll(others).toBe(0);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(others()).toBe(0);
+  });
+
   test('Sign out everywhere else ends every other session at once', async () => {
     const onSignOutOthers = vi.fn();
     const screen = await render(<AccountSecurity onSignOutOthers={onSignOutOthers} />);
