@@ -642,6 +642,29 @@ describe('Toast: interrupted exits and a hidden page', () => {
     }
   });
 
+  test('a toast shown while the page is already hidden waits for it: its time starts only once the page is back', async () => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+    try {
+      await render(<App />);
+      React.act(() => { toast({ title: 'Background save', duration: 150 }); });
+      await settle(400);
+      expect(titles()).toEqual(['Background save']);
+    } finally {
+      delete (document as { hidden?: boolean }).hidden;
+    }
+  });
+
+  test('the same title with different descriptions made of elements is two toasts; an action that shows a new toast under its own id keeps it', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Upload failed', description: <span>file-a.png</span>, duration: 0 }); toast({ title: 'Upload failed', description: <span>file-b.png</span>, duration: 0 }); });
+    expect(toasts().map((x) => /×\d/.test(x.textContent ?? ''))).toEqual([false, false]);
+    expect(toasts().length).toBe(2);
+    React.act(() => toast.dismiss());
+    React.act(() => { toast({ id: 'step', title: 'Step 1', autoDismiss: false, action: { label: 'Next', onClick: () => { toast({ id: 'step', title: 'Step 2', autoDismiss: false }); } } }); });
+    await userEvent.click([...document.querySelectorAll('button')].find((b) => b.textContent === 'Next')!);
+    await expect.poll(() => titles()).toEqual(['Step 2']);
+  });
+
   test('a closing toast, or the waiting line, whose fade is cancelled midway is still taken off the page', async () => {
     await withMotion(async () => {
       await render(<Toaster limit={1} />);

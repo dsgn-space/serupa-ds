@@ -209,6 +209,17 @@ describe('Tabs', () => {
     expect(el('nomatch').querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.dataset.value).toBe('p');
   });
 
+  test('closing a focused tab next to the selected one (manual activation) puts focus on the selected tab, not the page', async () => {
+    function Man() {
+      const [open, setOpen] = React.useState(['a', 'b']);
+      return <Tabs id="man" activation="manual" defaultValue="a"><TabList aria-label="Docs">{open.map((x) => <Tab key={x} value={x} onClose={() => setOpen((o) => o.filter((y) => y !== x))}>{x.toUpperCase()}</Tab>)}</TabList></Tabs>;
+    }
+    await render(<Man />);
+    el('man').querySelector<HTMLElement>('[data-value="b"]')!.focus();
+    await userEvent.keyboard('{Delete}');
+    await expect.poll(() => document.activeElement === selected('man')).toBe(true);
+  });
+
   test('line: a 1px border under the row, 36px tabs (text-sm, font-medium, 12px sides), a 2px primary line under the selected one, whose label is darker; 16px icons', async () => {
     await setup();
     const r = el('un'), sel = selected('un'), other = r.querySelector('[aria-selected="false"]')!, a = getComputedStyle(sel, '::after'), s = css(sel);

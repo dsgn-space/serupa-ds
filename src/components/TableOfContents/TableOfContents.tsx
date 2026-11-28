@@ -61,7 +61,7 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
     const read = () => {
       frameId = 0;
       const used = new Set<string>();
-      const next = [...box.querySelectorAll<HTMLElement>(selector)].filter((h) => !h.closest("[data-component='table-of-contents']")).map((h) => {
+      const next = [...box.querySelectorAll<HTMLElement>(selector)].filter((h) => !h.closest("[data-component='table-of-contents']") && !h.closest('[hidden]:not([hidden="until-found"])')).map((h) => {
         // An id from the heading's text for a heading without one, kept unique on the page.
         if (!h.id) { const b = slug(h.textContent); let id = b, n = 2; while (document.getElementById(id) || used.has(id)) id = b + '-' + n++; h.id = id; }
         used.add(h.id);
@@ -85,7 +85,8 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
       if (frameId || list.every((m) => mine(m.target))) return;
       frameId = requestAnimationFrame(read);
     });
-    watch.observe(box, { childList: true, subtree: true, characterData: true });
+    // hidden too: a heading in a part of the page that's hidden isn't listed, and is once that part shows.
+    watch.observe(box, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['hidden'] });
     return () => { watch.disconnect(); if (frameId) cancelAnimationFrame(frameId); };
   }, [props.items, props.container, selector]);
 
@@ -115,7 +116,8 @@ function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.R
         else break;
       }
       // At the very bottom, the last section is current even when its heading can't reach the line.
-      const bottom = pane ? pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 2 : window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      // Only once scrolled: a page too short to scroll is at its bottom and its top, and the first section is current.
+      const bottom = pane ? pane.scrollTop > 0 && pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 2 : window.scrollY > 0 && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       if (bottom) { const last = list[list.length - 1]; if (last && document.getElementById(last)) at = last; }
       setCurrent(at);
     };

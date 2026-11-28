@@ -54,6 +54,18 @@ describe('DataGrid', () => {
     expect(focused()).toBe('G1');   // the grid keeps the cell it was on
   });
 
+  test('an edit left by a click on a field outside the grid is saved, and focus stays on that field', async () => {
+    const onChange = vi.fn();
+    await render(<><Live onChange={onChange} /><input id="ext" aria-label="Elsewhere" /></>);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard('{Control>}a{/Control}Susu');
+    await userEvent.click(document.getElementById('ext')!);
+    await expect.poll(() => onChange.mock.calls.length).toBe(1);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    expect(document.activeElement?.id).toBe('ext');
+  });
+
   test('Enter edits, Enter saves and moves down; F2 edits, Escape cancels; typing starts an edit with that key', async () => {
     const onChange = vi.fn();
     await render(<Live onChange={onChange} />);

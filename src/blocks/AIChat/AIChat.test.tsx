@@ -101,4 +101,12 @@ describe('Blocks/AI chat', () => {
     await expect.element(page.getByRole('button', { name: 'Salin jawaban' })).toBeEnabled();
     await expect.element(page.getByRole('button', { name: 'Buat ulang' })).toBeEnabled();
   });
+
+  test('a suggestion longer than a narrow column (320px with text at 125%) wraps onto more lines instead of pushing the page sideways', async () => {
+    const long = 'Which of your summer fabrics stays coolest on a humid day?';
+    await render(<div id="col" style={{ width: 220 }}><AIChat messages={[]} suggestions={[long]} onSend={() => {}} /></div>);
+    const b = page.getByRole('button', { name: long }).element() as HTMLElement;
+    expect([b.getBoundingClientRect().width <= 220, document.getElementById('col')!.scrollWidth <= 220, b.textContent]).toEqual([true, true, long]);
+    expect(b.getBoundingClientRect().height).toBeGreaterThan(40);
+  });
 });
