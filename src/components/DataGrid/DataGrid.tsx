@@ -137,11 +137,12 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
     });
     props.onRowsChange(next, { changes });
   };
-  const save = (text: string, then: Pos | null) => {
+  // refocus: back to the cell after Enter or Tab; not after a blur, when focus went to something else on purpose.
+  const save = (text: string, then: Pos | null, refocus = true) => {
     const row = rows[cur.r - 1], col = columns[cur.c];
     if (row && col && text !== textOf(col, row)) change([{ rowId: String(row[key]), column: col.key, value: text }]);
     setEdit(null);
-    focusCell.current = true;
+    focusCell.current = refocus;
     if (then) move(then, false);
   };
 
@@ -221,7 +222,7 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
     pick: (p, e) => latest.current.pick(p, e),
     begin: (p, text) => { if (latest.current.editable(p)) setEdit({ text }); },
     save: (text, then) => latest.current.save(text, then && { r: Math.min(then.r, latest.current.lastRow), c: Math.max(0, then.c) }),
-    blur: (text) => { if (latest.current.edit) latest.current.save(text, null); },
+    blur: (text) => { if (latest.current.edit) latest.current.save(text, null, false); },
     cancel: () => { setEdit(null); focusCell.current = true; },
   }), [latest]);
   const cp = props.containerProps || {};
@@ -269,7 +270,7 @@ function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<H
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const DataGrid = /* @__PURE__ */ named('DataGrid', DataGridRender) as <R extends object = DataGridRow>(props: DataGridProps<R> & { ref?: React.Ref<HTMLTableElement> | undefined }) => React.ReactElement;
 
-interface RowApi { pick: (p: Pos, e: React.MouseEvent) => void; begin: (p: Pos, text: string) => void; save: (text: string, then: Pos | null) => void; blur: (text: string) => void; cancel: () => void }
+interface RowApi { pick: (p: Pos, e: React.MouseEvent) => void; begin: (p: Pos, text: string) => void; save: (text: string, then: Pos | null, refocus?: boolean) => void; blur: (text: string) => void; cancel: () => void }
 // One body row. Memoised on what it shows: its row, the active column when the active cell is here (else -1), the
 // selected columns c1..c2 when the range crosses it (else -1), and the edit when it's here.
 const GridRow = /* @__PURE__ */ React.memo(function GridRow(p: { row: DataGridRow; r: number; columns: DataGridColumn[]; api: RowApi; active: number; c1: number; c2: number; edit: { text: string } | null; canEdit: boolean; editLabel: (header: string) => string }) {

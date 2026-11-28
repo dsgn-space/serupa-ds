@@ -226,6 +226,7 @@ ol.site-list { list-style: decimal; }
 .site-principles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--spacing-8) var(--spacing-6); padding: 0; list-style: none; }
 .site-principles--two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); margin-block-start: var(--spacing-8); }
 .site-principle { padding-block-start: var(--spacing-4); border-block-start: var(--border-width-2) solid var(--text-brand); }
+.site-principle__icon { display: inline-grid; place-items: center; inline-size: var(--spacing-12); block-size: var(--spacing-12); margin-block-end: var(--spacing-3); border-radius: var(--radius-control); background: var(--surface-brand-subtle); color: var(--text-brand); }
 .site-principle__n { display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-variant-numeric: tabular-nums; }
 .site-principle__name { margin-block-start: var(--spacing-1); font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
 .site-principle__line { margin-block-start: var(--spacing-2); color: var(--text-muted); line-height: var(--leading-relaxed); }

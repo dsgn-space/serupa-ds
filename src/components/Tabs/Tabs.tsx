@@ -121,7 +121,7 @@ function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivEl
       closed.current = null;
       const at = before.indexOf(gone), active = activeIn(self.current);
       const near = before.slice(at + 1).find((v) => enabled.includes(v)) ?? before.slice(0, at).reverse().find((v) => enabled.includes(v));
-      const t = near != null && near !== value ? tabs.find((x) => x.dataset.value === near) : undefined;
+      const t = near != null ? tabs.find((x) => x.dataset.value === near) : undefined;
       // Only when focus was lost with the tab: a selected tab's removal below hands focus to the newly selected one.
       if (t && value != null && all.includes(value) && focusedIn.current && (!active || active === document.body || !active.isConnected)) t.focus();
     }

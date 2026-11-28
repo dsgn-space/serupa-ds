@@ -138,3 +138,16 @@ describe('useSteps', () => {
     }
   });
 });
+
+test('a start step that isn\'t whole (NaN, 1.5) opens a real step; with no steps, next and goTo do nothing and nothing is checked or completed', async () => {
+  await render(<Form defaultStep={NaN} />);
+  expect(shown()).toEqual([true, false, false]);
+  await render(<Form defaultStep={1.5} />);
+  expect(api.current).toBe(1);
+  const calls: string[] = [];
+  let none: UseSteps | null = null;
+  function Empty() { none = useSteps({ steps: [], validate: () => { calls.push('validate'); return true; }, onComplete: () => calls.push('complete') }); return null; }
+  await render(<Empty />);
+  const r = await Promise.all([none!.goTo(0), none!.next()]);
+  expect([r, calls, none!.isLast, none!.current]).toEqual([[false, false], [], true, 0]);
+});

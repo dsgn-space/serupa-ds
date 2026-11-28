@@ -49,7 +49,8 @@ export interface UseSteps {
 export function useSteps(options: UseStepsOptions): UseSteps {
   const id = React.useId();
   const count = options.steps.length;
-  const [current, setCurrent] = React.useState(() => Math.min(Math.max(options.defaultStep ?? 0, 0), Math.max(count - 1, 0)));
+  // A whole step within the steps: NaN is the first, 1.5 the second (no step is halfway).
+  const [current, setCurrent] = React.useState(() => Math.min(Math.max(Math.floor(Number(options.defaultStep ?? 0)) || 0, 0), Math.max(count - 1, 0)));
   const [failed, setFailed] = React.useState<ReadonlySet<number>>(() => new Set());
   const opts = React.useRef(options);
   const now = React.useRef(current);
@@ -89,9 +90,9 @@ export function useSteps(options: UseStepsOptions): UseSteps {
     return true;
   };
   const goTo = async (index: number) => {
-    const to = Math.min(Math.max(index, 0), count - 1);
+    const to = Math.min(Math.max(Math.floor(index) || 0, 0), count - 1);
     const from = now.current;
-    if (to === from || busy.current) return false;
+    if (!count || to === from || busy.current) return false;
     if (to < from) { move(to); return true; }
     busy.current = true;
     try { const ok = await pass(from, to); if (ok) move(to); return ok; } finally { busy.current = false; }
@@ -99,7 +100,7 @@ export function useSteps(options: UseStepsOptions): UseSteps {
   const next = async () => {
     const from = now.current;
     if (from < count - 1) return goTo(from + 1);
-    if (busy.current) return false;
+    if (!count || busy.current) return false;   // no steps: nothing to check or complete
     busy.current = true;
     try { const ok = await pass(from, from + 1); if (ok && opts.current.onComplete) opts.current.onComplete(); return ok; } finally { busy.current = false; }
   };
@@ -109,7 +110,7 @@ export function useSteps(options: UseStepsOptions): UseSteps {
   return {
     current, next, back, goTo,
     isFirst: current === 0,
-    isLast: current === count - 1,
+    isLast: current >= count - 1,
     stepperProps: { steps, current, onStepClick: (i: number) => { void goTo(i); } },
     panelProps: (i) => ({
       id: `${id}-step-${i}`, hidden: i !== current, 'aria-labelledby': `${id}-title-${i}`,
