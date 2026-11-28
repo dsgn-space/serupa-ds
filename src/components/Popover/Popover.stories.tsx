@@ -106,7 +106,7 @@ export const DontLongForm: Story = { tags: ['!visual'],
   args: {
     open: true, title: 'Edit profile', trigger: <Button variant="outline" startIcon="edit">Edit profile</Button>,
     children: <div className="flex flex-col gap-3">
-      {['First name', 'Last name', 'Email', 'Phone', 'Company', 'Job title', 'City', 'Country'].map((l) => <Field key={l} label={l}><Input /></Field>)}
+      {([['First name', 'given-name'], ['Last name', 'family-name'], ['Email', 'email', 'email'], ['Phone', 'tel', 'tel'], ['Company', 'organization'], ['Job title', 'organization-title'], ['City', 'address-level2'], ['Country', 'country-name']] as const).map(([l, auto, type]) => <Field key={l} label={l}><Input type={type} autoComplete={auto} /></Field>)}
     </div>,
   },
   parameters: { centered: true }, decorators: [centered],
