@@ -1269,8 +1269,8 @@
  },
  "IconButton": {
   "added": null,
-  "changed": "17.0.0",
-  "api": "56730f3699b4",
+  "changed": "20.1.0",
+  "api": "d965407c711e",
   "props": {
    "hideTitle": "12.0.0"
   },
@@ -1338,9 +1338,33 @@
  },
  "ImageCropper": {
   "added": "17.0.0",
-  "changed": null,
-  "api": "2f2a85f968f8",
-  "props": {}
+  "changed": "20.1.0",
+  "api": "08fb7917e8a9",
+  "props": {
+   "aspect": "20.1.0",
+   "crop": "20.1.0",
+   "cropArea": "20.1.0",
+   "cropFailed": "20.1.0",
+   "cropHint": "20.1.0",
+   "cropZoom": "20.1.0",
+   "cropZoomIn": "20.1.0",
+   "cropZoomOut": "20.1.0",
+   "crossOrigin": "20.1.0",
+   "defaultCrop": "20.1.0",
+   "defaultZoom": "20.1.0",
+   "disabled": "20.1.0",
+   "height": "20.1.0",
+   "maxZoom": "20.1.0",
+   "onCropChange": "20.1.0",
+   "quality": "20.1.0",
+   "shape": "20.1.0",
+   "src": "20.1.0",
+   "type": "20.1.0",
+   "width": "20.1.0",
+   "x": "20.1.0",
+   "y": "20.1.0"
+  },
+  "known": []
  },
  "InlineEdit": {
   "added": "9.1.0",
@@ -2317,10 +2341,11 @@
  },
  "SortableList": {
   "added": "9.0.0",
-  "changed": "14.0.0",
-  "api": "9ff99942716f",
+  "changed": "20.1.0",
+  "api": "34b2a83466f9",
   "props": {
-   "orientation": "12.0.0"
+   "orientation": "12.0.0",
+   "item": "20.1.0"
   },
   "known": [
    "disabled",

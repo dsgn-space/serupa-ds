@@ -4,6 +4,56 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [20.1.0] - 2026-11-28
+
+### Added
+
+- DatePicker, DateRangePicker and FilterBar load their calendar or date-range picker the first time it opens, as a chunk of its own, instead of with the component. A project that imports DatePicker alone ships 14 KiB instead of 27, DateRangePicker 16 instead of 29, and FilterBar 31 instead of 49 (gzipped). The popup's contents can arrive a moment after the popup itself the first time it opens. `serupa-purge --components` keeps the styles of these parts.
+- IconButton and ImageCropper take `shape="circle"`, the name Avatar and Skeleton use for the same shape. `shape="round"` still works, with a warning in development, until the next major release. SortableList's `onReorder` now also says which item moved, `{ item, from, to }`, the same shape as Kanban's `onMove`.
+
+### Fixed
+
+- AIChat: a suggestion longer than the column wraps onto more lines instead of pushing the page sideways (320px wide with text at 125%).
+- Fixes in number, date and text entry, from a bug hunt:
+  - **NumberInput** with `formatOptions={{ notation: 'compact' }}` reads its own text back: 1500 shows "1.5K" and stays 1500, where it turned into 1.5. A controlled NumberInput tells the app the rounded value when the field is left (10.004 typed as dollars is reported as 10, as shown).
+  - **Typed numbers**: a currency prefix that ends in a dot ("Rs. 100", "Rp. 1.500") is no longer read as the decimal mark, which made 100 into 0.1.
+  - **Typed dates**: a Chinese month written in words ("2025年十一月15日") reads as that month, not January.
+  - **Input `mask`**: plain digits or letters inside the pattern ("0" in `99-0-99`) and an emoji at its start are no longer taken as typed characters.
+  - **PeriodPicker**: changing `unit` turns the chosen period into the new unit (November 2026 becomes Q4 2026, then 2026).
+  - **PhoneInput** with `countries` that leave out the locale's country and the US starts on the first listed country, not a US the menu doesn't offer.
+  - **MentionInput**: after picking a mention, typing on doesn't reopen the list or call `onSearch` again; `mentionsIn` with an empty trigger returns no mentions instead of never returning.
+  - **SegmentedControl**, **Form** and **FormErrors**: a value or field named like an object method ("toString") no longer crashes or shows as invalid.
+  - **Form**: a restored draft keeps Date and File values, and a list saved shorter stays shorter.
+  - **Input** with `type="email"` and `maxLength`: a paste past the limit is cut, counted and reported, where it threw.
+- Fixes in overlays, feedback and navigation, from a bug hunt:
+  - **Toast**: two toasts with the same title and different descriptions made of elements stay two; an action that shows a new toast under the same id keeps it; a toast shown while the tab is hidden waits for the tab.
+  - **Tooltip**: disabled while open, then enabled again with the pointer gone, it stays closed; a hover while disabled doesn't show it later.
+  - **Controlled overlays** (DatePicker, DateRangePicker, TimePicker, PeriodPicker and the rest built on the shared open state): every press asks `onOpenChange` again when the app keeps it open, not only the first.
+  - **Tabs**: closing a focused tab next to the selected one moves focus to the selected tab, not the page.
+  - **DataGrid**: an edit left by clicking a field outside the grid is saved and focus stays on that field.
+  - **FilterBar**: turning a switch filter off in its editor keeps the editor open; the filter goes when it closes.
+  - **Chart**: a heatmap with no series draws its labels at real positions.
+  - **useSteps**: a start step that isn't whole opens a real step; with no steps, `next` and `goTo` do nothing.
+  - **TableOfContents**: on a page too short to scroll, the first section is current; headings in a `hidden` part aren't listed until it shows.
+  - **Virtual lists** with a header above the rows: past the height limit, ArrowDown moves down, not back up.
+- Fixes in patterns, from a bug hunt:
+  - **AccountSecurity**: a device signed out on its own stays signed out after "Sign out everywhere else".
+  - **Checkout**: a saved card that has expired, or is no longer in the list, stops at the details with a message instead of going on to Place order.
+  - **ProductCompare**: with "Only what differs" on and one product left, every feature shows again.
+  - **Timesheet**: hours like 6.4 + 9.8 + 7.8 add up to exactly 24, so the day isn't rejected, and a 40-hour week doesn't say "0 hours under".
+  - **SignAgreement**, **Quiz** and **ReturnRequest**: fixing one problem after a failed submit keeps focus in the field instead of moving it to the error summary mid-word.
+  - **Approvals**: a decided request the app removes from `requests` still shows under Decided, where it crashed.
+  - **PasswordReset**: `resetPasswordRules` rejects the whole email address however short its name part, an email with spaces around it, and a password of only spaces.
+  - **Profile**: the photo preview's address is made and let go in step, so none leaks in Strict Mode and one shown again after `<Activity>` still loads.
+- Fixes in the scripts and files that ship beside the components, from a bug hunt:
+  - **theme.js**: a page's own `data-theme` with a brand of yours that has a digit in its name (`b2b-dark`) is kept instead of turning into `blue-light`, and `onChange` hears a change of mode that keeps the same colors (light to auto on a light system) when the switch crossfades too.
+  - **serupa-purge** keeps a rule whose attribute selector holds a dot (`a[href$='.pdf']`), a `/*` inside a string (`content: "/* … */"`), and an `@import` whose address holds braces.
+  - **serupa-migrate** leaves a prop value that is part of an expression (`{'left' === dir ? …}`) as it is, and a comment between props with an apostrophe in it (`// don't`) no longer stops it renaming the props after it.
+  - **design-tokens/**: font stacks have one family per entry (`"Times New Roman"` was split wrongly), the `icon-size-*` tokens are references to the spacing they use instead of CSS values, and the type styles with letter spacing in em keep it instead of 0.
+  - **dist/vscode/serupa.css-data.json** offers every token, the spacing, radius and type ones and the escaped names like `--spacing-0\.5` too, not only the colors.
+- Combobox and CheckboxGroup now build with the React Compiler, so a parent that draws again no longer redraws them when nothing they show changed. Their behavior is the same; the import of each is a little larger.
+- Button and Form are now optimized by the React Compiler, so they skip re-rendering when nothing they show has changed. Button's markup, events and form-status loading work as before.
+
 ## [20.0.0] - 2026-11-28
 
 ### Added
@@ -3375,7 +3425,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v20.0.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v20.1.0...HEAD
+[20.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v20.0.0...v20.1.0
 [20.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.2.0...v20.0.0
 [19.2.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.1.0...v19.2.0
 [19.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...v19.1.0
