@@ -22,9 +22,11 @@ import { feedbackHold, spinnerDelay } from '../../internal/timing';
 // Whether it's there never changes while the page runs, so the hook is called on every render or on none. No fallback
 // function: it would never run under React, and the coverage floor counts functions.
 const formStatus: (() => { pending: boolean }) | undefined = (ReactDOM as Partial<typeof ReactDOM>).useFormStatus;
-// Chosen once, for the module's life, so it's the same hook every render; named as a hook, so the compiler calls it
-// every render rather than keeping its first answer.
-const useFormPending = formStatus ? () => formStatus().pending : () => false;
+// Named as a hook, so the compiler calls it every render rather than keeping its first answer. formStatus is there or
+// not for the module's life, so it is called on every render or on none.
+function useFormPending() {
+  return formStatus ? formStatus().pending : false;
+}
 
 export { buttonClass };
 
