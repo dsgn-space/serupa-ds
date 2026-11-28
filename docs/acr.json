@@ -6,8 +6,8 @@
   ],
   "product": "Serupa (serupa-ds) React components, CSS and tokens",
   "reviewed": {
-    "version": "19.0.0",
-    "date": "2026-11-25"
+    "version": "20.0.0",
+    "date": "2026-11-28"
   },
   "criteria": [
     {
@@ -106,7 +106,7 @@
       "name": "Contrast (Minimum)",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Text and placeholder colors meet 4.5:1 in every theme: the foundation check measures every pair in all 34 themes, brand text on its tint and on the status tints included, and axe runs on every story in the six themes with pictures and with more contrast on each change. For 17.0.0 axe also ran on every story added since 12.0.0 in all 34 themes; it found brand text on a tint at 4.3:1 to 4.4:1 in the Red, Fuchsia and Rose light themes, fixed by moving their `primary` to the 700 shade."
+      "remarks": "Text and placeholder colors meet 4.5:1 in every theme: the foundation check measures every pair in all 34 themes, brand text on its tint and on the status tints included, and axe runs on every story in the six themes with pictures and with more contrast on each change. For 17.0.0 axe also ran on every story added since 12.0.0 in all 34 themes; it found brand text on a tint at 4.3:1 to 4.4:1 in the Red, Fuchsia and Rose light themes, fixed by moving their `primary` (now `surface-brand`) to the 700 shade."
     },
     {
       "id": "1.4.4",
@@ -134,7 +134,7 @@
       "name": "Non-text Contrast",
       "level": "AA",
       "conformance": "Partially Supports",
-      "remarks": "Focus rings, icons that carry meaning, and the thumbs and fills of Slider, Switch, Meter and Progress meet 3:1 in every theme, checked with the text pairs. The thin edges of other controls (border-control: Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches) are soft by design, like field borders, and more contrast brings back 3:1. Resting borders on text fields, Checkbox and Radio are soft by design (about 1.48:1 in light and 1.43:1 in dark), and list/menu highlight fills are subtle (about 1.10:1 in light and 1.43:1 in dark): the label, hover border and focus ring mark the control, and more contrast (data-contrast=\"more\" or the system setting) brings back 3:1 borders. An app that must conform without that setting sets --field-border to var(--border-strong)."
+      "remarks": "Focus rings, icons that carry meaning, and the thumbs and fills of Slider, Switch, Meter and Progress meet 3:1 in every theme, checked with the text pairs. The thin edges of other controls (border-strong: Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches) are soft by design, like field borders, and more contrast brings back 3:1. Resting borders on text fields, Checkbox and Radio are soft by design (about 1.48:1 in light and 1.43:1 in dark), and list/menu highlight fills are subtle (about 1.10:1 in light and 1.43:1 in dark): the label, hover border and focus ring mark the control, and more contrast (data-contrast=\"more\" or the system setting) brings back 3:1 borders. An app that must conform without that setting sets --field-border to var(--border-strong)."
     },
     {
       "id": "1.4.12",
