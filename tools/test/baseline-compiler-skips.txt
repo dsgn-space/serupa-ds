@@ -1,5 +1,3 @@
 src/components/Button/Button.tsx ButtonBaseRender
-src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
-src/components/Combobox/Combobox.tsx ComboboxRender
 src/components/Form/Form.tsx FormRender
 src/components/Menu/Menu.tsx ContextMenuRender
