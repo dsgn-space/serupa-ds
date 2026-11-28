@@ -1,0 +1,6 @@
+{
+  "All components (index.js)": [
+    0.3,
+    "+0.2 KiB on 28 Nov 2026: bug-hunt fixes: number, date and mask parsing, with the overlay fixes now on main; +0.1 KiB on 28 Nov 2026: bug-hunt fixes: number, date and mask parsing read prefixes, CJK months and inner literals"
+  ]
+}

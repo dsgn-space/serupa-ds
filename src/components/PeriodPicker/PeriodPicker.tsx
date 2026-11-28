@@ -77,6 +77,12 @@ export function periodValue(n: number, unit: PeriodUnit): string {
   const per = PER[unit], y = Math.floor(n / per), i = n - y * per;
   return String(y).padStart(4, '0') + (unit === 'month' ? '-' + String(i + 1).padStart(2, '0') : unit === 'quarter' ? '-Q' + (i + 1) : '');
 }
+// A period's number in another unit: the one that holds its first month (November 2026 is Q4 2026, and 2026).
+function convertIndex(n: number, from: PeriodUnit, to: PeriodUnit): number {
+  if (from === to) return n;
+  const y = Math.floor(n / PER[from]), month = (n - y * PER[from]) * (12 / PER[from]);
+  return y * PER[to] + Math.floor(month / (12 / PER[to]));
+}
 /** A period's first and last days, at local midnight. */
 function rangeOf(n: number, unit: PeriodUnit) {
   const months = 12 / PER[unit], y = Math.floor(n / PER[unit]), m = (n - y * PER[unit]) * months;
@@ -113,6 +119,14 @@ function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttr
   const [open, setOpenState] = useOpenState(props.open, props.defaultOpen, props.onOpenChange, 'PeriodPicker', !!props.disabled || !!props.readOnly);
   // The period in focus, kept within min..max when they change while the popup is open.
   const [held, setFocus] = React.useState<number>(() => clamp(value ?? current));
+  // The chosen period and the one in focus are numbers in the unit: when the unit changes, they're turned into it,
+  // so November 2026 becomes Q4 2026 and not a quarter 24322 periods from year 0.
+  const [seenUnit, setSeenUnit] = React.useState(unit);
+  if (seenUnit !== unit) {
+    setSeenUnit(unit);
+    if (!controlled && typeof chosen === 'number') setOwn(convertIndex(chosen, seenUnit, unit));
+    setFocus(convertIndex(held, seenUnit, unit));
+  }
   const focus = clamp(held);
   const page = pageOf(focus, unit), count = pageSize(unit), cols = COLS[unit];
 

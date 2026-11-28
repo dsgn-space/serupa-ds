@@ -120,10 +120,32 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
   const show = (v: number | null) => (v == null ? '' : formatNumber(v, locale, shownOptions));
   // A value is taken as it's shown (GR47): one with more decimals than the format writes (19.995 as US$20,00) is the
   // number shown, so the form sends what people see, and leaving the field without an edit changes nothing.
+  // Compact notation writes 1500 as 1.5K (1,5 rb in id-ID, 1500 as 1500 but 15000 as 1.5万 in ja): the words it uses,
+  // longest first, with what each multiplies by, so "1.5K" reads back as 1500 and not 1.5.
+  const compact = React.useMemo(() => {
+    const o = keyed(optionsKey);
+    if (o?.notation !== 'compact') return null;
+    const f = new Intl.NumberFormat(locale, { notation: 'compact', compactDisplay: o.compactDisplay, numberingSystem: 'latn' });
+    const words: [string, number][] = [];
+    for (let e = 3; e <= 15; e++) {
+      const w = f.formatToParts(10 ** e).find((p) => p.type === 'compact')?.value.trim().toLowerCase();
+      if (w && !words.some(([x]) => x === w)) words.push([w, 10 ** e]);
+    }
+    return words.sort((a, b) => b[0].length - a[0].length);
+  }, [locale, optionsKey]);
+  const parse = (s: string): number | null | undefined => {   // undefined: not a number (yet)
+    let t = s, times = 1;
+    const hit = compact?.find(([w]) => t.toLowerCase().includes(w));
+    if (hit) { const at = t.toLowerCase().indexOf(hit[0]); t = t.slice(0, at) + t.slice(at + hit[0].length); times = hit[1]; }
+    const n = parseNumber(t, locale);
+    if (n == null) return n;
+    const m = times === 1 ? n : Number((n * times).toPrecision(15));
+    return scale !== 1 ? m / scale : m;
+  };
   const asShown = (v: number | null | undefined): number | null => {
     if (v == null || !formatOptions) return v ?? null;
-    const n = parseNumber(show(v), locale);
-    return typeof n === 'number' ? n / scale : v;
+    const n = parse(show(v));
+    return typeof n === 'number' ? n : v;
   };
   const [held, setOwnValue, controlled] = useControllable<number | null>(props.value, asShown(major(props.defaultValue)), 'NumberInput', 'value');
   const value = controlled ? asShown(major(held)) : held;
@@ -158,19 +180,17 @@ function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttrib
     if (max !== undefined && n > max) n = max;
     return n;
   };
-  const parse = (s: string): number | null | undefined => {   // undefined: not a number (yet)
-    const n = parseNumber(s, locale);
-    return n != null && scale !== 1 ? n / scale : n;
-  };
   // A finished entry: a decimal mark left at the end ("5." or "7,") is read without it, since nothing more is coming.
   // While typing it stays "not a number yet", so the value doesn't move under the caret (GR235).
   const finished = (s: string): number | null | undefined => {
     const n = parse(s), t = s.trim();
     return n === undefined && /[.,\u066b]$/.test(t) ? parse(t.slice(0, -1)) : n;
   };
+  // Against the app's own value, not the one shown: a controlled 10.004 shown as $10.00 is told 10 when the field is
+  // left, so the app holds what people see.
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
-    if (v !== value && onValueChange) onValueChange(v == null ? v : out(v));
+    if (v !== (controlled ? major(held) : value) && onValueChange) onValueChange(v == null ? v : out(v));
   };
   const put = (v: number | null) => {   // a finished change: the field shows the value
     typing.current = false;

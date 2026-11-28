@@ -72,7 +72,7 @@ function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React
   const [value, setOwn, controlled] = useControllable<string | undefined>(props.value, props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value, 'SegmentedControl', 'value');
   const root = React.useRef<HTMLDivElement | null>(null);
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value); }, props.form);
-  const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const buttons = React.useRef<Record<string, HTMLButtonElement | null>>(Object.create(null) as Record<string, HTMLButtonElement | null>);   // no prototype: a value "toString" is no button
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const sized = useControlSize(props.size);
   const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');

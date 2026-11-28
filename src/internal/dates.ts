@@ -133,11 +133,13 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
   const nums = raw.split(/[^0-9]+/).filter(Boolean);
   const own = dateOrder(locale);
   // A month written as a word, as dates are pasted from an email or a document ("12 Mei 2025", "May 12, 2025",
-  // "12. März 2025"): the four-digit number (or else the last) is the year and the other is the day (L8E8).
-  const month = monthIn(text, locale);
+  // "12. März 2025", "2025年十一月15日"): the four-digit number (or else the last) is the year and the other is the
+  // day (L8E8). The month's own word is taken out first, so the 一 of 十一月 isn't read as a digit.
+  const { month, rest } = monthIn(text, locale);
   if (month) {
-    const [a, b] = nums;
-    if (a === undefined || b === undefined || nums.length !== 2) return null;
+    const left = latinDigits(rest).split(/[^0-9]+/).filter(Boolean);
+    const [a, b] = left;
+    if (a === undefined || b === undefined || left.length !== 2) return null;
     // The four-digit one is the year; with none, the last.
     const [day, year] = a.length === 4 ? [b, a] : [a, b];
     return fromParts([day, String(month), year], ['day', 'month', 'year'], now);
@@ -213,18 +215,27 @@ function monthsOf(locale?: string): string[][] {
   return m;
 }
 // The month (1–12) a word in text names, in full or by its first three or more letters ("Sept", "Des"), or 0 when
-// no word names one month.
-function monthIn(text: string, locale?: string): number {
+// no word names one month, with the text left once that word is out. Chinese, Japanese and Korean write the month
+// between the year and the day with no space ("2025年十一月15日"), so there its name is looked for inside the text,
+// the longest first (十一月 before 一月).
+const CJK_NAME = /^[\p{sc=Han}\p{sc=Hangul}]+$/u;
+function monthIn(text: string, locale?: string): { month: number; rest: string } {
+  const none = { month: 0, rest: text };
   const words = text.match(/\p{L}[\p{L}\p{M}]*/gu);
-  if (!words) return 0;
+  if (!words) return none;
   const months = monthsOf(locale);
-  let found = 0;
-  for (const w of words.map((x) => fold(x))) {
+  let found = 0, rest = text;
+  for (const word of words) {
+    const w = fold(word);
     const hits = months.map((names, i) => (names.some((n) => n === w || (w.length >= 3 && n.startsWith(w))) ? i + 1 : 0)).filter(Boolean);
     const [hit] = hits;
-    if (hit !== undefined && hits.length === 1) { if (found && found !== hit) return 0; found = hit; }
+    if (hit !== undefined && hits.length === 1) { if (found && found !== hit) return none; found = hit; rest = rest.replace(word, ' '); }
   }
-  return found;
+  if (found) return { month: found, rest };
+  const cjk = months.flatMap((names, i) => names.filter((n) => CJK_NAME.test(n)).map((n) => ({ n, month: i + 1 }))).sort((a, b) => b.n.length - a.n.length);
+  const folded = fold(text);
+  const hit = cjk.find((x) => folded.includes(x.n));
+  return hit ? { month: hit.month, rest: folded.replace(hit.n, ' ') } : none;
 }
 function fromParts(nums: string[], order: readonly string[], now: Date): Date | null {
   const part = (k: string) => nums[order.indexOf(k)] ?? '';

@@ -28,7 +28,8 @@ export function useOpenState(open: boolean | undefined, defaultOpen: boolean | u
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => {
     if (!controlled) setOwn(v);
     if (v === now.current) return;
-    now.current = v;
+    // Controlled, what shows is the app's to say: a close it turned down leaves it open, and the next press asks again.
+    if (!controlled) now.current = v;
     if (told.current) told.current(v, { reason });
   }, [controlled, setOwn]);
   return [shown, set];

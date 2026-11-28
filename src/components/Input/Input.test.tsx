@@ -257,6 +257,13 @@ describe('Input', () => {
     expect(css(count('cnt')).color).not.toBe(col0);
   });
 
+  test('an email field past maxLength (which can\'t set a caret) is cut, counted and reported like any other', async () => {
+    const seen: string[] = [];
+    await render(<Input id="em" type="email" showCount maxLength={20} aria-label="Email" onChange={(e) => seen.push(e.target.value)} />, { wrapper: EnUS });
+    await userEvent.fill(field('em'), 'user.longname@example.com');
+    expect([field('em').value, count('em').textContent, seen.at(-1)]).toEqual(['user.longname@exampl', '20 / 20', 'user.longname@exampl']);
+  });
+
   test('maxLength counts the characters people see: an emoji family and a flag are one each', async () => {
     await render(<Input id="emo" showCount maxLength={3} defaultValue="👨‍👩‍👧🇮🇩" aria-label="Emoji" />, { wrapper: EnUS });
     expect(count('emo').textContent).toBe('2 / 3');
@@ -513,6 +520,18 @@ describe('Input mask', () => {
     const seen: string[] = [];
     for (const v of ['+6281234567890', '+62-812-3456-7890', '+62  812 3456 7890', '81234567890']) { await userEvent.fill(field('p2'), v); seen.push(field('p2').value); }
     expect(seen).toEqual(Array(4).fill('+62 812-3456-7890'));
+  });
+
+  test('plain digits inside the mask and an emoji at its start aren\'t read as typed: "12-0-34" stays, "🚀62 123" keeps 123', async () => {
+    const seen: string[] = [];
+    await render(<><Input id="m0" aria-label="Code" mask="99-0-99" onChange={(e) => seen.push(e.target.value)} /><Input id="mr" aria-label="Rocket" mask="🚀62 999" /></>);
+    await userEvent.fill(field('m0'), '12-0-34');
+    await userEvent.fill(field('mr'), '🚀62 123');
+    expect([field('m0').value, field('mr').value]).toEqual(['12-0-34', '🚀62 123']);
+    field('m0').focus();
+    field('m0').setSelectionRange(7, 7);
+    await userEvent.keyboard('{Backspace}');
+    expect(field('m0').value).toBe('12-0-3');
   });
 });
 

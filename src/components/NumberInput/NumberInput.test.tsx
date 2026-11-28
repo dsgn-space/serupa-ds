@@ -517,6 +517,29 @@ describe('NumberInput', () => {
     await expect.poll(() => announcerIdle() && document.querySelector('[data-srp-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn’t accepted/);
   });
 
+  test('compact notation reads its own text back: 1500 shows 1.5K and stays 1500, and ↑ with step 100 is 1600', async () => {
+    const seen: (number | null)[] = [];
+    await render(<NumberInput id="cpt" aria-label="Views" step={100} formatOptions={{ notation: 'compact' }} defaultValue={1500} onValueChange={(v) => seen.push(v)} />);
+    expect([field('cpt').value, field('cpt').getAttribute('aria-valuenow')]).toEqual(['1.5K', '1500']);
+    await userEvent.click(field('cpt'));
+    await userEvent.keyboard('{ArrowUp}');
+    expect([field('cpt').value, seen]).toEqual(['1.6K', [1600]]);
+  });
+
+  test('controlled: a typed value the format rounds is told to the app as shown when the field is left (10.004 is $10.00, so 10)', async () => {
+    function Paid() {
+      const [v, setV] = React.useState<number | null>(10);
+      return <><NumberInput id="paid" aria-label="Paid" currency="USD" value={v} onValueChange={setV} /><output id="held">{String(v)}</output></>;
+    }
+    await render(<Paid />);
+    await userEvent.fill(field('paid'), '10.004');
+    await userEvent.tab();
+    expect([field('paid').value, document.getElementById('held')!.textContent]).toEqual(['$10.00', '10']);
+    await userEvent.fill(field('paid'), '10.006');
+    await userEvent.tab();
+    expect([field('paid').value, document.getElementById('held')!.textContent]).toEqual(['$10.01', '10.01']);
+  });
+
   test('steppers={false}: no buttons', async () => {
     await render(<NumberInput id="bare" aria-label="Bare" steppers={false} />);
     expect(field('bare').parentElement!.querySelector('button[aria-controls]')).toBe(null);

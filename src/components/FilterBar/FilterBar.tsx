@@ -90,7 +90,7 @@ function clean(fields: FilterField[], raw: FilterValues): FilterValues {
       const r = v as { start?: unknown; end?: unknown } | null;
       if (r && typeof r === 'object' && !Array.isArray(r) && isDayOrNull(r.start) && isDayOrNull(r.end)) ok = { start: (r.start as string | null | undefined) ?? null, end: (r.end as string | null | undefined) ?? null };
     } else if (f?.type === 'boolean') {
-      if (v === true) ok = true;
+      if (typeof v === 'boolean') ok = v;   // false: the switch turned off while its editor is open, removed when it closes
     } else if (f?.type === 'text') {
       if (typeof v === 'string') ok = v;
     }

@@ -95,6 +95,18 @@ describe('PeriodPicker', () => {
     expect(reachable.map((p) => [p.getAttribute('data-value'), p.getAttribute('aria-disabled')])).toEqual([['2025-03', null]]);
   });
 
+  test('a new unit turns the chosen period into it: November 2026 is Q4 2026, then 2026, in the button and the form', async () => {
+    const ui = (unit: 'month' | 'quarter' | 'year') => <EnUS><form><PeriodPicker aria-label="Period" unit={unit} name="period" defaultValue="2026-11" /></form></EnUS>;
+    const { rerender } = await render(ui('month'));
+    const sent = () => (document.querySelector('input[name=period]') as HTMLInputElement).value;
+    const seen = [[button().textContent, sent()]];
+    await rerender(ui('quarter'));
+    seen.push([button().textContent, sent()]);
+    await rerender(ui('year'));
+    seen.push([button().textContent, sent()]);
+    expect(seen.map(([t, v]) => [t!.includes('2026'), v])).toEqual([[true, '2026-11'], [true, '2026-Q4'], [true, '2026']]);
+  });
+
   test('picking a month calls onValueChange with "2025-05" and its first and last days, closes, and focus goes back to the button', async () => {
     const changed = vi.fn();
     await render(<EnUS><form id="f"><PeriodPicker aria-label="Report month" name="month" onValueChange={changed} /></form></EnUS>);

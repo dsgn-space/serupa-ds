@@ -42,6 +42,11 @@ describe('typed dates', () => {
     ]).toEqual(['2025-5-12', '2025-12-12', '2025-5-12', '2025-5-12', '2025-9-3', '2025-3-12', '2025-5-12', '2025-9-3', '2025-5-12', '2025-5-12']);
     expect([parseDate('May 2025', 'en-US'), parseDate('31 Feb 2025', 'en-US'), parseDate('Ma 12 2025', 'en-US')]).toEqual([null, null, null]);
   });
+  test('a Chinese month written in words between the year and the day reads as itself: 十一月 is November, not January', () => {
+    const iso = (t: string, locale: string) => { const d = parseDate(t, locale); return d && `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
+    expect([iso('2025年十一月15日', 'zh-CN'), iso('2025年十二月15日', 'zh-CN'), iso('2025年一月15日', 'zh-CN'), iso('一月 15, 2025', 'zh-CN'), iso('2025年11月15日', 'zh-CN')])
+      .toEqual(['2025-11-15', '2025-12-15', '2025-1-15', '2025-1-15', '2025-11-15']);
+  });
   test('a two-digit year is the one within 50 years of now: birth dates go back, deadlines go forward; four digits are kept', () => {
     const y = (text: string, now: Date) => parseDate(text, 'en-US', now)?.getFullYear();
     const in2026 = new Date(2026, 9, 25), in2081 = new Date(2081, 0, 1);

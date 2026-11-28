@@ -55,7 +55,11 @@ export function useTextLimit<E extends Field, P extends Handlers<E>>(input: P, f
      method's composition, which is cut once it's confirmed. */
   const limit = function (el: E) {
     const cut = max != null && !composing.current ? limitEdit(last.current, el.value, max) : null;
-    if (cut) { el.value = cut.value; el.setSelectionRange(cut.caret, cut.caret); }
+    if (cut) {
+      el.value = cut.value;
+      // An email or number field has no caret to set and throws (InvalidStateError): it's cut all the same.
+      try { el.setSelectionRange(cut.caret, cut.caret); } catch { /* no selection in this type */ }
+    }
     return !!cut;
   };
   const onChange = rest.onChange;
