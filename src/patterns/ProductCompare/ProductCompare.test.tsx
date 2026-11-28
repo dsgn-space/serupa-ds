@@ -42,6 +42,14 @@ describe('Patterns/Product compare', () => {
     expect(document.getElementById('compare-rows')?.textContent).toMatch(/ features differ$/);
   });
 
+  test('"Only what differs" on, then down to one product: every feature shows again, not none', async () => {
+    const screen = await render(<ProductCompare products={products} features={features} />);
+    await screen.getByRole('switch', { name: 'Only what differs' }).click();
+    while (screen.getByRole('button', { name: /^Remove: / }).elements().length > 1) await screen.getByRole('button', { name: /^Remove: / }).first().click();
+    await expect.poll(() => rowHeads().length).toBeGreaterThan(features.length);
+    expect(document.getElementById('compare-rows')!.textContent).toBe(`All ${features.length} features`);
+  });
+
   test('Add to cart says so; Remove moves focus to the next product\'s Remove, then the heading and an empty state', async () => {
     const onAddToCart = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue(undefined);
     const onRemove = vi.fn();

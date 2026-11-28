@@ -15,6 +15,12 @@ const status = () => document.querySelector('[role="status"]:not([data-srp-annou
 // Password reset: an email step that names a missing or malformed address, a sent step that says the same for every
 // address and can send again, a new-password step a password manager can fill, and focus on each step's heading.
 describe('Patterns/Password reset', () => {
+  test('a password that is the email (however short its name part, however it\'s typed) or only spaces breaks the rule', () => {
+    const second = (p: string, e: string) => resetPasswordRules(p, e)[1]!.met;
+    expect([second('jo@example.com', 'jo@example.com'), second('ana@example.com', ' Ana@Example.com '), second('            ', 'ana@example.com'), second('a long safe phrase', 'jo@example.com')])
+      .toEqual([false, false, false, true]);
+  });
+
   test('the email and the password are checked, in words', () => {
     expect(resetEmailProblem(' ')).toBe('Enter the email address you sign in with.');
     expect(resetEmailProblem('ana@')).toBe('Enter an email address in the right format, like name@example.com.');

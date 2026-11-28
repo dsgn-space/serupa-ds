@@ -103,13 +103,15 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
   const [refundTo, setRefundTo] = React.useState<ReturnChoice['refund']>('original');
   const [problems, setProblems] = React.useState<Record<string, string>>({});
   const [tries, setTries] = React.useState(0);
+  // The summary takes focus for a submit; an answer that fixes an error after it doesn't pull focus out of the field.
+  const [editedAt, setEditedAt] = React.useState(-1);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [sent, setSent] = React.useState<string | null>(null);
   const next = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
   const sums = refundOf(items, chosen, reasons, method === 'pickup', pickupFee);
-  const clear = (id: string) => setProblems((p) => { const n = { ...p }; delete n[id]; return n; });
+  const clear = (id: string) => { setEditedAt(tries); setProblems((p) => { const n = { ...p }; delete n[id]; return n; }); };
 
   const toggle = (ids: string[]) => {
     // Keep the items in their order, whatever order they were ticked in.
@@ -155,7 +157,7 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
               </section>
             ) : (
               <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-6 md:grid-cols-3">
-                <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
+                <ErrorSummary key={tries} errors={errors} {...(editedAt === tries ? { autoFocus: false } : null)} className="md:col-span-3" />
                 <div className="flex flex-col gap-6 md:col-span-2">
                   <p className="m-0 text-text-muted">Fields marked * are required.</p>
                   <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>

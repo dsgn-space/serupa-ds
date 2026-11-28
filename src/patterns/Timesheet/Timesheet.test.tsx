@@ -14,6 +14,12 @@ const total = () => document.getElementById('ts-total')!.textContent;
 // Timesheet: a table with project row headers and day column headers, each field named by both, totals as you type,
 // adding and removing projects with focus kept, a summary of what's wrong that takes focus, and an answer.
 describe('Patterns/Timesheet', () => {
+  test('hours that add up in binary fractions are still whole: 6.4 + 9.8 + 7.8 is a 24-hour day, and 12.2 + 19.9 + 7.9 a 40-hour week', () => {
+    const blank = [null, null, null, null, null, null];
+    expect(weekProblems({ a: [6.4, ...blank], b: [9.8, ...blank], c: [7.8, ...blank] }, names)).toEqual({});
+    expect(weekTotals({ a: [12.2, ...blank], b: [19.9, ...blank], c: [7.9, ...blank] }).week).toBe(40);
+  });
+
   test('totals, and what\'s wrong with a week', () => {
     expect(weekTotals({ a: [1, 2, null, null, null, null, null], b: [3, null, null, null, null, null, 1] })).toEqual({ days: [4, 2, 0, 0, 0, 0, 1], week: 7 });
     expect(weekProblems({}, names)).toEqual({ empty: 'Enter your hours for at least one day.' });

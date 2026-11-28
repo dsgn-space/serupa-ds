@@ -62,6 +62,25 @@ describe('Patterns/Profile', () => {
     expect(screen.getByRole('button', { name: 'Discard changes' }).elements()).toHaveLength(0);
   });
 
+  test('a new photo\'s preview in Strict Mode, hidden and shown again (Activity): every address made is let go but the one shown, which still loads', async () => {
+    const made: string[] = [], gone: string[] = [];
+    const create = URL.createObjectURL.bind(URL), revoke = URL.revokeObjectURL.bind(URL);
+    const c = vi.spyOn(URL, 'createObjectURL').mockImplementation((f) => { const u = create(f); made.push(u); return u; });
+    const r = vi.spyOn(URL, 'revokeObjectURL').mockImplementation((u) => { gone.push(u); revoke(u); });
+    try {
+      const ui = (mode: 'visible' | 'hidden') => <React.StrictMode><React.Activity mode={mode}><Profile profile={me} /></React.Activity></React.StrictMode>;
+      const screen = await render(ui('visible'));
+      await userEvent.upload(document.getElementById('profile-photo') as HTMLInputElement, [png()]);
+      const img = () => document.querySelector<HTMLImageElement>('[role="img"][aria-label="Photo of Ana Lima"] img');
+      await expect.poll(img).not.toBeNull();
+      await screen.rerender(ui('hidden'));
+      await screen.rerender(ui('visible'));
+      await expect.poll(() => img()?.src && !gone.includes(img()!.src)).toBe(true);
+      expect(made.filter((u) => !gone.includes(u))).toEqual([img()!.src]);
+      expect(await fetch(img()!.src).then((x) => x.ok, () => false)).toBe(true);
+    } finally { c.mockRestore(); r.mockRestore(); }
+  });
+
   test('Save sends the trimmed profile and the new photo, says Saved, and the new photo shows with its name', async () => {
     const onSave = vi.fn((_p: ProfileInfo, _f: File | null, _c?: unknown) => Promise.resolve());
     const screen = await render(<Profile profile={me} onSave={onSave} />);

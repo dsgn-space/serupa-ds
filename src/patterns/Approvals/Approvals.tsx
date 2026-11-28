@@ -75,7 +75,8 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
   const day = (iso: string) => formatDate(iso, locale, { options: { day: 'numeric', month: 'long' } });
-  const [decided, setDecided] = React.useState<Decision[]>([]);
+  // Each decision with the request as it was decided, so one the app takes out of requests still shows under Decided.
+  const [decided, setDecided] = React.useState<Array<{ d: Decision; r: ApprovalRequest }>>([]);
   const [show, setShow] = React.useState<'waiting' | 'decided'>('waiting');
   const [declining, setDeclining] = React.useState<ApprovalRequest | null>(null);
   const [reason, setReason] = React.useState('');
@@ -83,18 +84,18 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
   const [focusTo, setFocusTo] = React.useState<{ id: string | null } | null>(null);
   const listHeading = React.useRef<HTMLHeadingElement>(null);
   const after = React.useRef<HTMLElement | null>(null);
-  const waiting = requests.filter((r) => !decided.some((d) => d.id === r.id));
-  const done = decided.map((d) => ({ d, r: requests.find((r) => r.id === d.id)! }));
+  const waiting = requests.filter((r) => !decided.some((x) => x.d.id === r.id));
+  const done = decided.map(({ d, r: was }) => ({ d, r: requests.find((r) => r.id === d.id) ?? was }));
   const title = (r: ApprovalRequest) => `${r.who}: ${r.what}`;
   const heading = (id: string | null): HTMLElement | null => (id ? document.getElementById(`approval-${id}`) : listHeading.current);
 
   const decide = (r: ApprovalRequest, d: Decision) => {
     const next = nextAfter(waiting.map((w) => w.id), r.id);
-    setDecided((now) => [d, ...now]);
+    setDecided((now) => [{ d, r }, ...now]);
     toast.undo({
       title: `${d.approved ? 'Approved' : 'Declined'} ${r.who}’s ${KIND[r.kind].toLowerCase()}`,
       commit: () => onDecide?.(d),
-      onUndo: () => { setDecided((now) => now.filter((x) => x.id !== d.id)); setShow('waiting'); setFocusTo({ id: r.id }); announce(`${title(r)} is back in Waiting`); },
+      onUndo: () => { setDecided((now) => now.filter((x) => x.d.id !== d.id)); setShow('waiting'); setFocusTo({ id: r.id }); announce(`${title(r)} is back in Waiting`); },
     });
     return next;
   };

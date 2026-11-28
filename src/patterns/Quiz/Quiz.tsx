@@ -89,12 +89,14 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
   const [answers, setAnswers] = React.useState<QuizAnswers>({});
   const [missing, setMissing] = React.useState<string[]>([]);
   const [tries, setTries] = React.useState(0);
+  // The summary takes focus for a submit; an answer that fixes an error after it doesn't pull focus out of the field.
+  const [editedAt, setEditedAt] = React.useState(-1);
   const [score, setScore] = React.useState<number | null>(null);
   const result = React.useRef<HTMLHeadingElement>(null);
   const top = React.useRef<HTMLFormElement>(null);
   const answered = questions.filter((q) => answers[q.id]?.length).length;
   const n = (x: number) => formatNumber(x, locale);
-  const choose = (id: string, v: string[]) => { setAnswers((a) => ({ ...a, [id]: v })); setMissing((m) => m.filter((x) => x !== id)); };
+  const choose = (id: string, v: string[]) => { setAnswers((a) => ({ ...a, [id]: v })); setMissing((m) => m.filter((x) => x !== id)); setEditedAt(tries); };
   const errors: ErrorSummaryItem[] = missing.map((id) => ({ field: `quiz-${id}`, message: `Answer question ${n(questions.findIndex((q) => q.id === id) + 1)}.` }));
 
   const check = (e: React.FormEvent) => {
@@ -141,7 +143,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
               <p id="quiz-progress" role="status" className="m-0 text-sm text-text-muted">{n(answered)} of {n(questions.length)} answered</p>
             )}
             <form ref={top} onSubmit={check} noValidate aria-label="Quiz" className="flex flex-col gap-6">
-              <ErrorSummary key={tries} errors={errors} />
+              <ErrorSummary key={tries} errors={errors} {...(editedAt === tries ? { autoFocus: false } : null)} />
               <ol className="m-0 flex list-none flex-col gap-6 p-0">
                 {questions.map((q, i) => {
                   const many = q.answer.length > 1;
