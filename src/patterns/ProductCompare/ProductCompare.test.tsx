@@ -48,7 +48,7 @@ describe('Patterns/Product compare', () => {
     while (screen.getByRole('button', { name: /^Remove: / }).elements().length > 1) await screen.getByRole('button', { name: /^Remove: / }).first().click();
     await expect.poll(() => rowHeads().length).toBeGreaterThan(features.length);
     // Digits as the locale writes them (٣ in Arabic), read back as 0-9.
-    expect(document.getElementById('compare-rows')!.textContent!.replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660))).toBe(`All ${features.length} features`);
+    expect(document.getElementById('compare-rows')!.textContent.replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660))).toBe(`All ${features.length} features`);
   });
 
   test('Add to cart says so; Remove moves focus to the next product\'s Remove, then the heading and an empty state', async () => {
