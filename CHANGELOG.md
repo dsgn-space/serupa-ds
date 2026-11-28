@@ -4,6 +4,33 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [20.0.0] - 2026-11-28
+
+### Added
+
+- Language packs for Bengali (`bn`), Thai (`th`), Persian (`fa`), Hebrew (`he`), Czech (`cs`), Romanian (`ro`), Greek (`el`), Hungarian (`hu`), Danish (`da`), Finnish (`fi`) and Norwegian Bokmål (`nb`), each at `@diki-stwn/serupa-ds/labels/<language>`. Persian and Hebrew read right to left. These 11 are beta: machine-checked and compared with established UI terms, but not yet read by a native speaker, so their words may change in a minor release. Fixed: in every pack, the table's "Select all" and "All selected" now show the count as the table formats it. German puts a space before `…` throughout, and a few words now match the term used elsewhere in their pack (Dutch, Polish, Russian, Arabic, Hindi, Portuguese, French).
+- Watermark repeats the viewer's name, or a word such as "Draft", faintly across a document preview or the whole window (`fullPage`), so a screenshot or a printout shows where it came from. It is decorative: screen readers, find in page, selection, copy and clicks all pass through it. It follows the theme, renders on the server, prints, and steps aside under forced colors. Beta.
+
+### Changed
+
+- **Breaking.** The color tokens are named thing first, then variant, then state: `--primary` is `--surface-brand`, `--primary-text` `--text-brand`, `--on-primary` `--text-on-brand`, `--surface-muted` `--surface-sunken`, `--surface-page` `--background`, `--placeholder` `--field-placeholder`, `--danger-text` `--text-danger`, `--success-subtle` `--surface-success-subtle`, `--disabled-border` `--border-disabled`, and 54 more. `--surface-overlay` joins `--surface-raised`, `--border-overlay` and `--border-elevated` join `--border-raised`, `--border-control` joins `--border-strong`, and `--field-hover` and `--field-pressed` join `--surface-raised-hover` and the new `--surface-raised-pressed`. The old names, and their utility classes (`bg-primary`), still work and are deprecated until 21.0.0. `--border-control-pressed`, which nothing read, and `--textarea-resize-grip` (deprecated in 19.x) are removed.
+- **Breaking.** Some values move so each state is one step from the one before it: `--surface-pressed` is zinc-200 (zinc-700 in dark; `pressed` was zinc-300 and zinc-600), `--surface-inverse` is white in dark, `--text-secondary` (was `text-muted-shaded`) is zinc-300 in dark, `--field-readonly` is zinc-100 in light, `--field-raised` is zinc-700 in dark, `--field-border` is zinc-600 in dark with its hover a step lighter, and `--surface-brand-subtle-pressed` is brand 200 (brand 800 in dark, 900 in Red, Orange, Pink and Rose Dark). New: `--surface-raised-pressed`, `--surface-brand-subtle-hover`, the `--control` ladder, `--field-disabled`, the raised field tokens, and hover and pressed for `--field-border-invalid`. A read-only field's gray text is `--text-secondary`, and a field in a Dialog, Drawer, Popover or elevated Card takes `--field-raised-placeholder`, so both keep 4.5:1.
+
+**Migration:** run `npx serupa-migrate src --write` (`token-names-thing-first`): it renames each old token where it's read, where a theme of your own sets it, as `{color.<name>}`, and as a utility class in a class list. A theme of your own that set `--primary` keeps working once renamed; until then, `--surface-brand` and the rest are what components read.
+
+### Fixed
+
+- Calendar, Chart, EventCalendar, FieldList and Kanban are built by the React Compiler now, so they draw again only for the parts that change. Nothing they show or do is different.
+- DatePicker and DateRangePicker are compiled by the React Compiler now, like most components: they re-render less, and each grows by about 1 to 2 KiB.
+- Dialog and Drawer are now compiled by the React Compiler, so they re-render less. What they render and how they behave stay the same.
+- FileUpload, FormattedNumber and Calendar's month and year grids are now compiled by the React Compiler, so they re-render less. What they render and how they behave stay the same.
+- HoverCard and Image are compiled by the React Compiler now, like most components: they re-render less, and each grows by about 1.5 KiB.
+- LoadMore and CommandPalette are compiled by the React Compiler now, like most components: they re-render less, and each grows by about 1 KiB.
+- Input: card number, expiry, security code and postcode fields (by `autoComplete`), and masked fields such as an IBAN, now get `autoCapitalize="off"`, `autoCorrect="off"` and `spellCheck={false}` like email fields, so a phone doesn't capitalize, "correct" or underline a code. Any of the three you pass still wins. The Input, Field and Popover stories now give each field the type and autofill its label asks for.
+- FormattedDate: a time rendered on the server now hydrates in Chrome before 119 without a mismatch. That Chrome writes a narrow no-break space before AM and PM, and the space is now the same no-break one everywhere.
+- HelpCenter: the demo billing topic says "canceling", in American spelling like the rest of the copy.
+- Watermark and Chart print their colors in Chrome and Edge 129 to 135 too: they now set `-webkit-print-color-adjust` beside `print-color-adjust`, so the mark and the chart's fills stay on paper with background graphics off.
+
 ## [19.2.0] - 2026-11-26
 
 ### Added
@@ -3348,7 +3375,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v19.2.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v20.0.0...HEAD
+[20.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.2.0...v20.0.0
 [19.2.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.1.0...v19.2.0
 [19.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.1...v19.1.0
 [19.0.1]: https://github.com/dsgn-space/serupa-ds/compare/v19.0.0...v19.0.1
