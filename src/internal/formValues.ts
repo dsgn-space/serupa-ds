@@ -84,17 +84,27 @@ function setPath(root: Record<string, unknown>, key: string, value: unknown) {
 export function getPath(root: unknown, key: string): unknown {
   let at: unknown = root;
   for (const p of key.split('.')) {
-    if (at == null || typeof at !== 'object' || UNSAFE.has(p)) return undefined;
+    // Own keys only: a field named "toString" isn't Object.prototype's function.
+    if (at == null || typeof at !== 'object' || UNSAFE.has(p) || !Object.prototype.hasOwnProperty.call(at, p)) return undefined;
     at = (at as Record<string, unknown>)[p];
   }
   return at;
 }
 
-/** `over` laid on `base`: objects and arrays merged key by key, anything else from `over`. */
+// A plain object or an array, which merge lays key by key; a Date, a File or a class's object is a value as it is.
+const mergeable = (v: unknown): v is object => {
+  if (!v || typeof v !== 'object') return false;
+  if (Array.isArray(v)) return true;
+  const proto: unknown = Object.getPrototypeOf(v);
+  return proto === Object.prototype || proto === null;
+};
+
+/** `over` laid on `base`: plain objects merged key by key, anything else from `over`. An array from `over` keeps its
+    own length, so a list saved shorter (an item removed) doesn't get the default's items back at its end. */
 export function merge(base: unknown, over: unknown): unknown {
   if (over === undefined) return base;
-  if (!base || !over || typeof base !== 'object' || typeof over !== 'object') return over;
-  const out = (Array.isArray(base) ? base.slice() : { ...base }) as Record<string, unknown>;
+  if (!mergeable(base) || !mergeable(over) || Array.isArray(base) !== Array.isArray(over)) return over;
+  const out = (Array.isArray(base) ? base.slice(0, (over as unknown[]).length) : { ...base }) as Record<string, unknown>;
   for (const [k, v] of Object.entries(over)) {
     if (k === '__proto__' || k === 'constructor' || k === 'prototype') continue;
     out[k] = merge(Object.prototype.hasOwnProperty.call(out, k) ? out[k] : undefined, v);

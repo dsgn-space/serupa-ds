@@ -42,39 +42,53 @@ function afterLead(start: string, text: string): string {
   const want = Array.from(start).filter((c) => !LOOSE.test(c));
   if (!want.length) return text;
   let i = 0;
-  for (const c of want) {
-    while (i < text.length && LOOSE.test(text.charAt(i)) && text[i] !== c) i++;
-    if (text[i] !== c) return text;
-    i++;
+  for (const c of want) {   // c may be an emoji, two UTF-16 units
+    while (i < text.length && LOOSE.test(text.charAt(i)) && !text.startsWith(c, i)) i++;
+    if (!text.startsWith(c, i)) return text;
+    i += c.length;
   }
   return text.slice(i);
 }
 
 /** What was typed, without the mask's plain text: the letters and digits of text, after its leading plain text.
+    Plain text inside the mask is left out where it stands ("0" in "99-0-99"), so it isn't read as typed.
     Digits come back as 0-9 whatever keyboard typed them (full-width, Arabic-Indic…), so the value is one a server reads. */
 export function unmask(slots: Slot[], text: string): string {
   const t = latinDigits(text.normalize('NFKC'));
-  return Array.from(afterLead(lead(slots), t)).filter((c) => /[\p{L}\p{Nd}]/u.test(c)).join('');
+  const start = lead(slots), rest = slots.slice(Array.from(start).length);
+  let k = 0, out = '';
+  for (const c of Array.from(afterLead(start, t))) {
+    // Plain text the character isn't: it was left out (or deleted), so the character goes to the slot after it.
+    while (typeof rest[k] === 'string' && rest[k] !== c) k++;
+    const slot = rest[k];
+    if (typeof slot === 'string') { k++; continue; }
+    if (!/[\p{L}\p{Nd}]/u.test(c)) continue;
+    out += c;
+    if (slot && slot.take.test(c)) k++;
+  }
+  return out;
 }
 
 /** typed (letters and digits) laid into the mask: each character goes in the next slot it fits (others are dropped),
     plain text shows between them, and the text stops after the last character placed. Returns the text and where each
     placed character ends in it, for putting the caret back. */
-export function applyMask(slots: Slot[], typed: string): { text: string; ends: number[] } {
+export function applyMask(slots: Slot[], typed: string): { text: string; ends: number[]; starts: number[] } {
   const chars = Array.from(typed);
   let text = '', pending = '', i = 0;
-  const ends: number[] = [];
+  const ends: number[] = [], starts: number[] = [];
   for (const slot of slots) {
     if (typeof slot === 'string') { pending += slot; continue; }
     while (i < chars.length && !slot.take.test(chars[i] ?? '')) i++;
     const c = chars[i];
     if (c === undefined) break;
-    text += pending + (slot.upper ? c.toUpperCase() : c);
+    text += pending;
+    starts.push(text.length);
+    text += slot.upper ? c.toUpperCase() : c;   // may be two units: an astral letter, or ß as SS
     pending = '';
     ends.push(text.length);
     i++;
   }
-  return { text, ends };
+  return { text, ends, starts };
 }
 
 /** Whether the mask takes only digits, for a number keyboard on phones. */
@@ -82,6 +96,6 @@ export const digitsOnly = (slots: Slot[]): boolean => slots.every((x) => typeof 
 
 /** Whether the character at index i of masked text is the mask's plain text (not something typed). */
 export function isPlain(slots: Slot[], text: string, i: number): boolean {
-  const { ends } = applyMask(slots, unmask(slots, text));
-  return i >= 0 && i < text.length && !ends.includes(i + 1);
+  const { ends, starts } = applyMask(slots, unmask(slots, text));
+  return i >= 0 && i < text.length && !starts.some((s, k) => i >= s && i < (ends[k] ?? s));
 }

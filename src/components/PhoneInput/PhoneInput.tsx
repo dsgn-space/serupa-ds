@@ -105,7 +105,10 @@ function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttribut
     try { names = new Intl.DisplayNames([locale], { type: 'region' }); } catch { names = undefined; }
     return picked.map((c) => ({ c, name: (names && names.of(c.code)) || c.code })).sort((a, b) => order.compare(a.name, b.name));
   }, [countriesKey, table, locale]);
-  const fallback = find(props.defaultCountry) || find(regionOf(locale)) || find('US') || phoneCountry('US')!;
+  // Without a default, the locale's country or the US, when the list has it: with countries={['ID', 'SG']} in en-US,
+  // the first of them and not a US the menu doesn't offer.
+  const listed = (code: string | undefined) => (code ? list.find((x) => x.c.code === code.toUpperCase())?.c : undefined);
+  const fallback = find(props.defaultCountry) || listed(regionOf(locale)) || listed('US') || list[0]?.c || find('US') || phoneCountry('US')!;
   const start = parsePhone(props.value ?? props.defaultValue ?? '', props.country ?? props.defaultCountry, table);
 
   const [ownCountry, setOwnCountry] = React.useState<string>(() => (start ? start.country.code : fallback.code));

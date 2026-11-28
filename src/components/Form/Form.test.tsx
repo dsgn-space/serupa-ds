@@ -55,6 +55,15 @@ const fillAll = async () => {
 afterEach(() => { document.title = ''; window.localStorage.clear(); });
 
 describe('Form', () => {
+  test('a field named after an object\'s own method ("toString") starts valid, with no message, in a Form and with defaultValues', async () => {
+    const errors = vi.spyOn(console, 'error');
+    await render(<Form id="ts" defaultValues={{ other: 'x' }}><Field label="Method" name="toString"><Input name="toString" /></Field></Form>);
+    const input = document.querySelector('input[name="toString"]') as HTMLInputElement;
+    expect([input.getAttribute('aria-invalid'), input.value, input.getAttribute('aria-errormessage')]).toEqual([null, '', null]);
+    expect(errors).not.toHaveBeenCalled();
+    errors.mockRestore();
+  });
+
   test('a <form> that leaves checking to the schema; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLFormElement>();
     await render(<Form id="x" ref={ref} className="extra" data-x="y" aria-label="Profile">Hello</Form>);

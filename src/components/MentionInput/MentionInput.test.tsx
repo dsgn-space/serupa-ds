@@ -107,6 +107,21 @@ describe('MentionInput', () => {
     expect(box().value).toBe('@Ayu Lestari and @Ayu Lestari ');
   });
 
+  test('after a pick, typing on ("@Ayu Lestari hello") doesn\'t open the list again or search; an empty trigger finds no mentions', async () => {
+    const searched: (string | null)[] = [];
+    await render(<Box onSearch={(q) => searched.push(q)} />);
+    await userEvent.click(box());
+    await userEvent.keyboard('@ay');
+    await expect.poll(isOpen).toBe(true);
+    await userEvent.keyboard('{Enter}');
+    searched.length = 0;
+    await userEvent.keyboard('hello please');
+    expect([box().value, isOpen(), searched]).toEqual(['@Ayu Lestari hello please', false, []]);
+    await userEvent.keyboard(' @bu');
+    await expect.poll(isOpen).toBe(true);
+    expect(mentionsIn('Hi Ayu Lestari', PEOPLE, '')).toEqual([]);
+  });
+
   test('Escape closes the list for that mention only, and doesn\'t close a dialog the field is in; the next @ opens it again', async () => {
     const onOpenChange = vi.fn();
     await render(<Dialog open onOpenChange={onOpenChange} title="Reply"><Box /></Dialog>);
