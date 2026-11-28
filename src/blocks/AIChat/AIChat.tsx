@@ -136,7 +136,7 @@ export function AIChat({ messages, suggestions = [], onSend, onStop, onRegenerat
         <div className="flex flex-col gap-3">
           <p className="text-text-muted">{l.intro}</p>
           <ul role="list" aria-label={l.suggestions} className="flex flex-wrap gap-2">
-            {suggestions.map((s) => <li key={s}><Button variant="secondary" size="sm" onClick={() => suggest(s)}>{s}</Button></li>)}
+            {suggestions.map((s) => <li key={s} className="min-w-0 max-w-full"><Button variant="secondary" size="sm" wrap onClick={() => suggest(s)}>{s}</Button></li>)}
           </ul>
         </div>
       ) : null}
