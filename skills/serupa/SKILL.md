@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v19.2.0
+npm install github:dsgn-space/serupa-ds#v20.0.0
 ```
 
 Pin a release tag, never `#main`. Then load the CSS once, in this order, before any of your own CSS:
@@ -130,6 +130,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **SortableList**: A list people put in their own order: tasks by priority, steps in a flow, columns in a table. Also called: reorderable list, drag and drop list.
 - **Table**: A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Also called: data table.
 - **TagGroup** (beta): Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. Also called: chip group, tag list.
+- **Watermark** (beta): Repeats the viewer's name, or a word such as "Draft", faintly across a document preview or a whole screen, so a screenshot, a photo of the screen or a printout shows where it came from.
 
 ### Data display
 
