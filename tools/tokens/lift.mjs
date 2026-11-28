@@ -30,15 +30,15 @@ const set = (n, key, from, by) => {
 // The brand fills, theme by theme.
 for (const id of themes.filter((t) => t.endsWith('-dark') && t !== 'yellow-dark')) {
   const lightId = id.replace(/-dark$/, '-light');
-  const d = darkFillShift(hex(at('primary', lightId)), hex(at('surface-raised', id)));
-  for (const n of ['primary', 'primary-hover', 'primary-pressed']) set(n, id, at(n, lightId), d);
+  const d = darkFillShift(hex(at('surface-brand', lightId)), hex(at('surface-raised', id)));
+  for (const n of ['surface-brand', 'surface-brand-hover', 'surface-brand-pressed']) set(n, id, at(n, lightId), d);
 }
 // The status fills, the same in every dark theme (each has one raised surface, checked here).
 const raised = new Set(themes.filter((t) => t.endsWith('-dark')).map((t) => hex(at('surface-raised', t))));
 if (raised.size !== 1) throw new Error(`the dark themes' raised surfaces differ (${[...raised].join(', ')}): a status fill would need one per theme`);
 for (const s of ['success', 'warning', 'info', 'danger']) {
-  const d = darkFillShift(hex(C[s].$value), [...raised][0], hex(at(`on-${s}`, 'blue-dark')));
-  for (const n of [s, `${s}-hover`, `${s}-pressed`].filter((x) => C[x])) set(n, 'dark', C[n].$value, d);
+  const d = darkFillShift(hex(C[`surface-${s}`].$value), [...raised][0], hex(at(`text-on-${s}`, 'blue-dark')));
+  for (const n of [`surface-${s}`, `surface-${s}-hover`, `surface-${s}-pressed`].filter((x) => C[x])) set(n, 'dark', C[n].$value, d);
 }
 for (const [n, l] of Object.entries(lifts)) ext(n).lift = l;
 

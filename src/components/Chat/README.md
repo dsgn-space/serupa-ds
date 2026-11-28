@@ -234,12 +234,12 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | `--chat-text` | `text` | Message text and authors (4.5:1 on both bubbles). |
 | `--chat-muted` | `text-muted` | Times, day dividers and "Sending…" (4.5:1 on the page). |
 | `--chat-bubble-bg` | `surface-hover` | Others' message bubbles: a step above the card or page they sit on, in light and dark. |
-| `--chat-own-bubble-bg` | `primary-subtle` | The reader's own message bubbles. |
-| `--chat-failed-border` | `danger` | The outline of a message that didn't go. |
-| `--chat-error` | `danger-text` | "Not sent" (4.5:1 on the page). |
+| `--chat-own-bubble-bg` | `surface-brand-subtle` | The reader's own message bubbles. |
+| `--chat-failed-border` | `surface-danger` | The outline of a message that didn't go. |
+| `--chat-error` | `text-danger` | "Not sent" (4.5:1 on the page). |
 | `--chat-divider` | `border` | The day divider's lines. |
 | `--chat-focus-ring` | `focus-ring` | The ring around the focused conversation. |
-| `--chat-step-done` | `success-text` | ChatSteps: a done step's check (3:1 on the surface). |
+| `--chat-step-done` | `text-success` | ChatSteps: a done step's check (3:1 on the surface). |
 | `--chat-citation-bg` | `surface` | ChatCitation: a source chip's background, so it stands out on a bubble. |
 | `--chat-bubble-radius` | `radius-container` | A bubble's corners (12px). |
 | `--chat-padding` | `spacing-4` | Space around the conversation and the composer (16px). |

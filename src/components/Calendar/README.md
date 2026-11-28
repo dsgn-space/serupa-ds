@@ -64,7 +64,7 @@ Drawn from the `MonthYearPicker` story.
 
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
 - The heading button is named by the month it shows and described by what it does ("Choose a month", in the month grid "Choose a year"). The month and year grids are `role="grid"` too, named by the hidden title, which says "2025" or "2016–2027" as the view changes. Months are shown short and read in full ("March 2025").
-- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (in `disabled-text` and struck through).
+- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (in `text-disabled` and struck through).
 - Weekday headers show the short name, and screen readers read the full one ("Monday", from visually hidden text, and in `abbr`), since "Mon" or "M" is read letter by letter or not at all by some.
 - Text keeps 4.5:1 and the selected fill 3:1 in every theme (`Calendar.test.tsx`).
 - In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
@@ -127,17 +127,17 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
 | `--calendar-outside-color-hover` | `text` | A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill. |
-| `--calendar-day-bg-hover` | `secondary` | A day or preset under the pointer, as Pagination's pages. |
-| `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
-| `--calendar-today-color` | `primary-text` | Today's number (4.5:1 on surface). |
+| `--calendar-day-bg-hover` | `surface-secondary` | A day or preset under the pointer, as Pagination's pages. |
+| `--calendar-day-bg-pressed` | `surface-secondary-hover` | A day while it's pressed, one step past hover. |
+| `--calendar-today-color` | `text-brand` | Today's number (4.5:1 on surface). |
 | `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. |
-| `--calendar-bg-selected` | `primary` | The selected day. |
-| `--calendar-color-selected` | `on-primary` | Its number. |
-| `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
+| `--calendar-bg-selected` | `surface-brand` | The selected day. |
+| `--calendar-color-selected` | `text-on-brand` | Its number. |
+| `--calendar-range-bg` | `surface-brand-subtle` | Days between the start and end of a range (DateRangePicker). |
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
-| `--calendar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--calendar-edge-selected` | `primary-edge` | The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--calendar-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--calendar-edge-selected` | `border-brand` | The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

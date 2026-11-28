@@ -97,7 +97,7 @@ describe('Switch', () => {
     await userEvent.click(document.querySelector('label.extra > span + span > span:first-child')!);
     await away();
     expect([changes.join(), el('md').checked]).toEqual(['true', true]);
-    await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--primary)'), 2, color('var(--white)')]);
+    await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--surface-brand)'), 2, color('var(--white)')]);
     document.documentElement.setAttribute('data-theme', 'blue-dark');
     try { expect([box('md').thumbBg, css(document.querySelector('label:has(#md) input + span')).backgroundColor]).toEqual([color('var(--white)'), color('var(--white)')]); } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
   });
@@ -139,7 +139,7 @@ describe('Switch', () => {
     expect(box('bad').bg).toBe(color('var(--track-hover)'));
     await away();
     await userEvent.hover(el('lg'));
-    await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
+    await expect.poll(() => box('lg').bg).toBe(color('var(--surface-brand-hover)'));
     await away();
   });
 
@@ -157,7 +157,7 @@ describe('Switch', () => {
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
     await expect.poll(() => box('inv').bg).toBe(color('var(--track)'));
-    expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
+    expect(css(el('inv')).boxShadow).toBe(`${color('var(--surface-danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
 
@@ -289,7 +289,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['on track, or its edge', edged('var(--primary)'), 'var(--surface)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['on track, or its edge', edged('var(--surface-brand)'), 'var(--surface)', 3], ['invalid edge', 'var(--surface-danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);
@@ -317,7 +317,7 @@ describe('Switch', () => {
     fresh();
     expect(await press(el('ps').closest('label')!, () => look('ps'))).toEqual([color('var(--track-pressed)'), '1', '16px', '4px', 2, 18]);
     fresh();
-    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--primary-pressed)'), '1', '16px', '-4px', 18, 2]);
+    expect(await press(el('pk').closest('label')!, () => look('pk'))).toEqual([color('var(--surface-brand-pressed)'), '1', '16px', '-4px', 18, 2]);
     fresh();
     expect(await press(el('pd').closest('label')!, () => look('pd'))).toEqual(rest);
   });

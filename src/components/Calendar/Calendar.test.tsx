@@ -237,7 +237,7 @@ describe('Calendar', () => {
   test('pressed: a day held down fills with pressed, one step past hover', async () => {
     await render(<Cal />);
     const d = cal('[data-date="2025-03-12"]');
-    await press(d, () => expect.poll(() => css(d).backgroundColor).toBe(color('var(--pressed)')));
+    await press(d, () => expect.poll(() => css(d).backgroundColor).toBe(color('var(--surface-pressed)')));
   });
 
   test('a month arrow that reaches min or max hands focus to the other arrow, rather than drop it to the page (FJ1)', async () => {

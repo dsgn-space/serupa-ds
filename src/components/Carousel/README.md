@@ -109,12 +109,12 @@ Each is an optional override: set it on the page, a container or one carousel. T
 <!-- token-table:start (made from carousel.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--carousel-dot` | `border-control` | The dots for the slides not shown (3:1 on surface). |
-| `--carousel-dot-hover` | `border-control-hover` | A dot under the pointer, a step past dot, as a field's border darkens (text-muted is dot's own gray). |
+| `--carousel-dot` | `border-strong` | The dots for the slides not shown (3:1 on surface). |
+| `--carousel-dot-hover` | `field-border-hover` | A dot under the pointer, a step past dot, as a field's border darkens (text-muted is dot's own gray). |
 | `--carousel-dot-pressed` | `text` | A dot while it's held down, a step past hover. |
-| `--carousel-dot-active` | `primary` | The current slide's dot. |
+| `--carousel-dot-active` | `surface-brand` | The current slide's dot. |
 | `--carousel-focus-ring` | `focus-ring` | A dot's keyboard focus ring. |
-| `--carousel-dot-edge-active` | `primary-edge` | The current dot's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--carousel-dot-edge-active` | `border-brand` | The current dot's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--carousel-radius` | `radius-container` | The slides' corners (12px). |
 | `--carousel-dot-size` | `spacing-2` | A dot's size (8px). |
 | `--carousel-dot-width-active` | `spacing-6` | The current dot's width (24px). |

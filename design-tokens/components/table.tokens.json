@@ -34,7 +34,7 @@
       },
       "header-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The header row's background.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "text-muted-shaded": {
         "$type": "color",
-        "$value": "{color.text-muted-shaded}",
+        "$value": "{color.text-secondary}",
         "$description": "Gray text in a hovered, striped or selected row, where `text-muted` would fall under 4.5:1 on the shaded fill; it reaches muted text in your cells too.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "avatar-bg-shaded": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "An Avatar's fill in a hovered, striped or selected row: one step up, since in light themes `secondary`, its usual fill, is the same zinc-100 as the shade.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "row-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A linked row's background while it is held down, a step past its hover, as a List row's.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "row-indicator-selected": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The bar at the start of a selected row. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "sort-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A sortable header's fill while it's held down.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "action-bar-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "TableActionBar's background.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "resize-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A column's resize handle on hover, while dragged and on focus.",
         "$extensions": {
           "com.serupa": {

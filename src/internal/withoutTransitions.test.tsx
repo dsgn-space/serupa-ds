@@ -13,9 +13,9 @@ describe('withoutTransitions', () => {
   test('a section switched to another theme inside it changes its colors at once (no color transition runs), while motion started in the same tick runs on', async () => {
     const sec = document.body.appendChild(document.createElement('section'));
     sec.setAttribute('data-theme', 'blue-light');
-    sec.innerHTML = '<p style="transition: background-color 150ms, color 150ms; background: var(--surface-muted); color: var(--text)">Row</p>'.repeat(5)
-      + '<i style="display: block; transition: translate 200ms, opacity 200ms, background-color 200ms; background: var(--surface-muted)"></i>'
-      + '<b style="display: block; background: var(--surface-muted)"></b>';
+    sec.innerHTML = '<p style="transition: background-color 150ms, color 150ms; background: var(--surface-sunken); color: var(--text)">Row</p>'.repeat(5)
+      + '<i style="display: block; transition: translate 200ms, opacity 200ms, background-color 200ms; background: var(--surface-sunken)"></i>'
+      + '<b style="display: block; background: var(--surface-sunken)"></b>';
     const mover = sec.querySelector('i')!;
     void getComputedStyle(mover).translate;   // the light colors and the start position are in place
     withoutTransitions(() => { sec.setAttribute('data-theme', 'blue-dark'); mover.style.translate = '16px'; mover.style.opacity = '0'; }, sec);

@@ -24,7 +24,7 @@
       },
       "option-bg-active": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "The active row's background (its text stays 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "option-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "An option while it's held down, one step past option-bg-active, as a Menu item is.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "indicator-active": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

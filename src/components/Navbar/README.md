@@ -58,7 +58,7 @@ Drawn from the `Playground` story.
 ## Accessibility
 
 - It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
-- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link (`surface-hover`; `surface-hover-raised` in a menu panel; zinc-100 in light, like the current page) but never draws the bar; the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
+- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link (`surface-hover`; `surface-raised-hover` in a menu panel; zinc-100 in light, like the current page) but never draws the bar; the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
 - On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button. On a phone, the Back gesture or button closes it the same way, an open NavbarMenu panel first, before it leaves the page.
 - With the menu open, Tab goes from the button into the links, in the order they appear, since the panel opens under the bar: the links come after the button in the DOM while it's open. Tab past the last link, any move of focus out of the bar, or a press outside it closes the menu.
 - The panel fades in as it opens and unrolls down from the bar, over 150ms, and fades back out when it closes, as Popover and Menu do. While it fades out it stays after the button and can't be used. With reduced motion it only fades.
@@ -146,18 +146,18 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-text-hover` | `text` | A link on hover. |
 | `--navbar-link-text-active` | `text` | The current page's link. |
 | `--navbar-link-bg-hover` | `surface-hover` | A link's background on hover: zinc-100 in light, like the current page's; only the current page draws the bar. |
-| `--navbar-menu-link-bg-hover` | `surface-hover-raised` | A link in a menu panel on hover: the raised hover step, since the panel floats. |
-| `--navbar-link-bg-active` | `secondary` | The current page's link background. |
-| `--navbar-link-bg-active-hover` | `pressed` | The current page's link background under the pointer: one step past its rest. |
-| `--navbar-link-indicator` | `highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
+| `--navbar-menu-link-bg-hover` | `surface-raised-hover` | A link in a menu panel on hover: the raised hover step, since the panel floats. |
+| `--navbar-link-bg-active` | `surface-secondary` | The current page's link background. |
+| `--navbar-link-bg-active-hover` | `surface-secondary-hover` | The current page's link background under the pointer: one step past its rest. |
+| `--navbar-link-indicator` | `surface-highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--navbar-focus-ring` | `focus-ring` | The keyboard focus ring. |
-| `--navbar-link-bg-pressed` | `pressed` | A link's fill while it's held down. |
-| `--navbar-menu-bg` | `surface-overlay` | A dropdown panel's background (NavbarMenu). |
+| `--navbar-link-bg-pressed` | `surface-pressed` | A link's fill while it's held down. |
+| `--navbar-menu-bg` | `surface-raised` | A dropdown panel's background (NavbarMenu). |
 | `--navbar-menu-border` | `border` | A dropdown panel's border. |
 | `--navbar-menu-title-text` | `text-muted` | A group's title in a dropdown panel (4.5:1 on menu-bg). |
 | `--navbar-menu-link-text` | `text` | A dropdown link's text (4.5:1 on menu-bg). |
 | `--navbar-menu-desc-text` | `text-muted` | A dropdown link's description (4.5:1 on menu-bg). |
-| `--navbar-menu-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--navbar-menu-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Type**
 

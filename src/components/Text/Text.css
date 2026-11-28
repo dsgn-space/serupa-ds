@@ -17,8 +17,8 @@
 .srp-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
 .srp-text--neutral { color: var(--text-color, var(--text)); }
 .srp-text--muted { color: var(--text-color-muted, var(--text-muted)); }
-.srp-text--primary { color: var(--text-color-primary, var(--primary-text)); }
-.srp-text--danger { color: var(--text-color-danger, var(--danger-text)); }
+.srp-text--primary { color: var(--text-color-primary, var(--text-brand)); }
+.srp-text--danger { color: var(--text-color-danger, var(--text-danger)); }
 .srp-text--normal { font-weight: var(--font-normal); }
 .srp-text--medium { font-weight: var(--font-medium); }
 .srp-text--semibold { font-weight: var(--font-semibold); }

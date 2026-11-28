@@ -7,15 +7,15 @@
 .srp-time-picker { --srp-tp-offset: var(--time-picker-offset, var(--spacing-1)); }
 /* The clock button is an InputAction (Input's button inside the box), 4px from its edge; this picker's tokens still set
    its colors. */
-.srp-time-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--time-picker-button, var(--text-muted)); --input-action-hover: var(--time-picker-button-hover, var(--text)); --input-action-bg-hover: var(--time-picker-button-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--time-picker-button-bg-pressed, var(--field-pressed)); }
+.srp-time-picker { --input-actions-inset: var(--spacing-1); --input-action: var(--time-picker-button, var(--text-muted)); --input-action-hover: var(--time-picker-button-hover, var(--text)); --input-action-bg-hover: var(--time-picker-button-bg-hover, var(--surface-raised-hover)); --input-action-bg-pressed: var(--time-picker-button-bg-pressed, var(--surface-raised-pressed)); }
 .srp-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));
   min-width: var(--time-picker-list-min-width, var(--spacing-40)); max-height: var(--time-picker-list-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
   /* Its rows lay out and paint inside it (it scrolls, so it clips already): a row changing never relays out the page (I3). */
   contain: layout paint;
   margin: var(--spacing-0); padding: var(--time-picker-list-padding, var(--spacing-1)); list-style: none;
-  border: var(--border-width-1) solid var(--time-picker-list-border, var(--border-overlay)); border-radius: var(--time-picker-list-radius, var(--radius-surface));
-  background: var(--time-picker-list-bg, var(--surface-overlay)); --surface-behind: var(--time-picker-list-bg, var(--surface-overlay)); --border: var(--time-picker-list-divider, var(--border-overlay)); color: var(--time-picker-option-color, var(--text));
+  border: var(--border-width-1) solid var(--time-picker-list-border, var(--border-raised)); border-radius: var(--time-picker-list-radius, var(--radius-surface));
+  background: var(--time-picker-list-bg, var(--surface-raised)); --surface-behind: var(--time-picker-list-bg, var(--surface-raised)); --border: var(--time-picker-list-divider, var(--border-raised)); color: var(--time-picker-option-color, var(--text));
   box-shadow: var(--time-picker-list-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; cursor: default;
 }
@@ -48,8 +48,8 @@
 }
 .srp-time-picker__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .srp-time-picker__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-time-picker__option:where([data-active]) { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--time-picker-option-indicator, var(--highlight-indicator)); }
-.srp-time-picker__check { color: var(--time-picker-check, var(--primary-text)); font-size: var(--spacing-4); }
+.srp-time-picker__option:where([data-active]) { background: var(--time-picker-option-bg-active, var(--surface-highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--time-picker-option-indicator, var(--surface-highlight-indicator)); }
+.srp-time-picker__check { color: var(--time-picker-check, var(--text-brand)); font-size: var(--spacing-4); }
 @media (forced-colors: active) { .srp-time-picker__option:where([data-active]) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } .srp-time-picker__list { border-color: CanvasText; } }
 /* Touch: 44px options. */
 @media (pointer: coarse) {

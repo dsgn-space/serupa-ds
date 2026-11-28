@@ -74,7 +74,7 @@ Drawn from the `Icons` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), shown at once and faded out on blur; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor |
 
 ## Accessibility
 
@@ -124,7 +124,7 @@ Drawn from the `Icons` story.
 | --- | --- | --- | --- |
 | `label` | string | required | The action's name: the words on a text action, the accessible name of an icon action |
 | `icon` | icon name or element | | Makes it an icon action: the icon, at the field's icon size, in `text-muted`, with 4px round it. SearchInput's clear button, PasswordInput's eye and the buttons of Combobox, DatePicker, DateRangePicker and TimePicker are icon actions, so they all look and behave the same |
-| `disabled` | boolean | the Input's | Disabled on its own, drawn in `disabled-text` as a disabled Button is; a disabled Input disables it anyway |
+| `disabled` | boolean | the Input's | Disabled on its own, drawn in `text-disabled` as a disabled Button is; a disabled Input disables it anyway |
 
 Every other button attribute (`onClick`, `aria-*`) and `ref` go to the `<button>`, which has `data-component="input-action"`.
 
@@ -144,23 +144,24 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-text` | `text` | The typed text |
 | `--input-border` | `field-border` | Border |
 | `--input-border-hover` | `field-border-hover` | Border on hover |
-| `--input-placeholder` | `placeholder` | Placeholder text |
+| `--input-placeholder` | `field-placeholder` | Placeholder text |
+| `--input-placeholder-readonly` | `text-secondary` | Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill. |
 | `--input-icon-color` | `text-muted` | Left and right icons |
-| `--input-affix` | `placeholder` | The `prefix` and `suffix` text |
-| `--input-count` | `placeholder` | The character count |
+| `--input-affix` | `field-placeholder` | The `prefix` and `suffix` text |
+| `--input-count` | `field-placeholder` | The character count |
 | `--input-count-full` | `text` | The count once `maxLength` is reached |
 | `--input-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--input-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--input-action` | `text-muted` | An icon action's icon (3:1 on the field). |
 | `--input-action-hover` | `text` | An icon action's icon on hover. |
-| `--input-action-bg-hover` | `field-hover` | An icon action's background on hover. |
-| `--input-action-bg-pressed` | `field-pressed` | An icon action's background while it's held down, one step past hover. |
-| `--input-action-text` | `primary-text` | A text action's words, such as Apply (4.5:1 on the field). |
-| `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
+| `--input-action-bg-hover` | `surface-raised-hover` | An icon action's background on hover. |
+| `--input-action-bg-pressed` | `surface-raised-pressed` | An icon action's background while it's held down, one step past hover. |
+| `--input-action-text` | `text-brand` | A text action's words, such as Apply (4.5:1 on the field). |
+| `--input-action-text-bg-hover` | `surface-brand-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |
 | `--input-rejected-color` | `text-muted` | The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back. |
-| `--input-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--input-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--input-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

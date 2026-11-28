@@ -25,7 +25,7 @@
 .srp-data-grid__table tr > :last-child { border-inline-end: var(--spacing-0); }
 .srp-data-grid__table thead > tr > * { border-top: var(--spacing-0); }
 .srp-data-grid__table tbody > tr:last-child > * { border-bottom: var(--spacing-0); }
-.srp-data-grid__header { background: var(--data-grid-header-bg, var(--surface-muted)); --surface-behind: var(--data-grid-header-bg, var(--surface-muted)); color: var(--data-grid-header-text, var(--text-muted)); font-weight: var(--data-grid-header-weight, var(--font-medium)); }
+.srp-data-grid__header { background: var(--data-grid-header-bg, var(--surface-sunken)); --surface-behind: var(--data-grid-header-bg, var(--surface-sunken)); color: var(--data-grid-header-text, var(--text-muted)); font-weight: var(--data-grid-header-weight, var(--font-medium)); }
 /* stickyHeader: the header row stays at the top of a frame with a height while the rows scroll under it, over the
    rows (the selected range and the editing input sit above plain cells), and what the keyboard reaches scrolls in
    below it (DataGrid measures the header into --srp-data-grid-head; until then, one md row). */
@@ -33,7 +33,7 @@
 .srp-data-grid--sticky { scroll-padding-top: var(--srp-data-grid-head, var(--spacing-10)); }
 .srp-data-grid__cell--center { text-align: center; }
 .srp-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
-.srp-data-grid__cell:where([data-selected]) { background: var(--data-grid-bg-selected, var(--primary-subtle)); }
+.srp-data-grid__cell:where([data-selected]) { background: var(--data-grid-bg-selected, var(--surface-brand-subtle)); }
 /* A range of one cell is only the active cell: it's washed while focus is in the grid, as a spreadsheet shows where
    you are, and not on a grid nobody has reached yet or has left. A range of more cells stays washed. */
 .srp-data-grid[data-range="cell"]:not(:focus-within) .srp-data-grid__cell:where([data-selected]) { background: none; }

@@ -121,17 +121,18 @@ Each is an optional override: set it on the page, a container or one drawer. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--drawer-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark |
+| `--drawer-row-bg-hover` | `surface-raised-hover` | A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark |
 | `--drawer-field-bg` | `field-raised` | The fill of a form field in the drawer: a step up from its surface in dark, so the field stands out from it |
-| `--drawer-bg` | `surface-overlay` | The panel's background. |
+| `--drawer-field-placeholder` | `field-raised-placeholder` | Placeholder and other gray text in a form field in the drawer: `field-raised-placeholder`, lighter in dark so it keeps 4.5:1 on the raised field. |
+| `--drawer-bg` | `surface-raised` | The panel's background. |
 | `--drawer-text` | `text` | The panel's text: the body and the footer. |
-| `--drawer-overlay` | `overlay` | The dimmed backdrop over the page. |
+| `--drawer-overlay` | `backdrop` | The dimmed backdrop over the page. |
 | `--drawer-title-color` | `text` | The title. |
 | `--drawer-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
-| `--drawer-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--drawer-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Shadow**
 

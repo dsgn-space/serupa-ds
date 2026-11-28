@@ -77,8 +77,8 @@ Drawn from the `Extras` story.
 ### Tones
 
 - **`neutral`** (default): `secondary` fill and `text` (subtle, outlined in the text color at 20% like every subtle badge), `surface-inverse` and `text-inverse` (solid), `border-strong` and `text` (outline).
-- **`primary`**: the theme's brand color, through the alias colors (`primary-subtle`, `primary`, `on-primary`), so it follows Blue, Violet and Emerald.
-- **Statuses**: `success` (green), `warning` (amber), `danger` (red), `info` (sky), through the status roles (`success-subtle`, `success-text`, `success`, `on-success` and the same for the others), so a theme or page that sets `--success` or `--danger` moves its badges too.
+- **`primary`**: the theme's brand color, through the alias colors (`surface-brand-subtle`, `primary`, `text-on-brand`), so it follows Blue, Violet and Emerald.
+- **Statuses**: `success` (green), `warning` (amber), `danger` (red), `info` (sky), through the status roles (`surface-success-subtle`, `text-success`, `success`, `text-on-success` and the same for the others), so a theme or page that sets `--surface-success` or `--surface-danger` moves its badges too.
 - **Palette**: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`, for categories and tags.
 
 Palette tones use the fixed palette steps in the Styles table. Status tones use their roles: subtle is the status tint with its text color, solid the status fill with its `on-` color, outline the status text color on a border in the status fill. Solid uses 600 where white text keeps 4.5:1 on it (red, blue, indigo, violet, purple, fuchsia, pink, rose) and 700 for the lighter families. The steps follow the nearest theme: a badge in a dark area nested in a light page takes the dark steps.
@@ -103,7 +103,7 @@ Only a clickable badge (`onClick` or `href`) has hover, focus and active states,
 | Active (pressed) | The same layer at 15% |
 | Focus | Keyboard focus only: a 2px `focus-ring` outline 2px out, like Button. The gap is transparent, and forced-colors mode draws it too |
 | Loading | Any badge: a 12px ring in the text color, centered over the hidden content; the badge keeps its width and colors |
-| Disabled | A disabled clickable badge: `disabled-surface` fill, `disabled-border` edge and `disabled-text` label at full opacity, `not-allowed` cursor, no layer |
+| Disabled | A disabled clickable badge: `surface-disabled` fill, `border-disabled` edge and `text-disabled` label at full opacity, `not-allowed` cursor, no layer |
 
 ## Behavior
 
@@ -165,51 +165,51 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--badge-neutral-subtle-bg` | `secondary` | Neutral subtle: fill |
+| `--badge-neutral-subtle-bg` | `surface-secondary` | Neutral subtle: fill |
 | `--badge-neutral-subtle-text` | `text` | Neutral subtle: text and icon |
 | `--badge-neutral-solid-bg` | `surface-inverse` | Neutral solid: fill |
 | `--badge-neutral-solid-text` | `text-inverse` | Neutral solid: text and icon |
 | `--badge-neutral-outline-text` | `text` | Neutral outline: text and icon |
 | `--badge-neutral-outline-border` | `border-strong` | Neutral outline: border |
-| `--badge-primary-subtle-bg` | `primary-subtle` | Primary subtle: fill |
-| `--badge-primary-subtle-text` | `primary-text` | Primary subtle: text and icon |
-| `--badge-primary-solid-bg` | `primary` | Primary solid: fill |
-| `--badge-primary-solid-text` | `on-primary` | Primary solid: text and icon |
-| `--badge-primary-solid-hover` | `primary-hover` | Primary solid: the color a clickable badge moves toward on hover and press |
-| `--badge-primary-outline-text` | `primary-text` | Primary outline: text and icon |
-| `--badge-primary-outline-border` | `primary-text` | Primary outline: border |
-| `--badge-success-subtle-bg` | `success-subtle` | Success subtle: fill |
-| `--badge-success-subtle-text` | `success-text` | Success subtle: text and icon |
-| `--badge-success-solid-bg` | `success` | Success solid: fill |
-| `--badge-success-solid-text` | `on-success` | Success solid: text and icon |
-| `--badge-success-outline-text` | `success-text` | Success outline: text and icon |
-| `--badge-success-outline-border` | `success` | Success outline: border |
-| `--badge-success-solid-hover` | `success-hover` | Success solid: the color a clickable badge moves toward on hover and press |
-| `--badge-warning-subtle-bg` | `warning-subtle` | Warning subtle: fill |
-| `--badge-warning-subtle-text` | `warning-text` | Warning subtle: text and icon |
-| `--badge-warning-solid-bg` | `warning` | Warning solid: fill |
-| `--badge-warning-solid-text` | `on-warning` | Warning solid: text and icon |
-| `--badge-warning-outline-text` | `warning-text` | Warning outline: text and icon |
-| `--badge-warning-outline-border` | `warning` | Warning outline: border |
-| `--badge-warning-solid-hover` | `warning-hover` | Warning solid: the color a clickable badge moves toward on hover and press |
-| `--badge-danger-subtle-bg` | `danger-subtle` | Danger subtle: fill |
-| `--badge-danger-subtle-text` | `danger-text` | Danger subtle: text and icon |
-| `--badge-danger-solid-bg` | `danger` | Danger solid: fill |
-| `--badge-danger-solid-text` | `on-danger` | Danger solid: text and icon |
-| `--badge-danger-outline-text` | `danger-text` | Danger outline: text and icon |
-| `--badge-danger-outline-border` | `danger` | Danger outline: border |
-| `--badge-danger-solid-hover` | `danger-hover` | Danger solid: the color a clickable badge moves toward on hover and press |
-| `--badge-info-subtle-bg` | `info-subtle` | Info subtle: fill |
-| `--badge-info-subtle-text` | `info-text` | Info subtle: text and icon |
-| `--badge-info-solid-bg` | `info` | Info solid: fill |
-| `--badge-info-solid-text` | `on-info` | Info solid: text and icon |
-| `--badge-info-outline-text` | `info-text` | Info outline: text and icon |
-| `--badge-info-outline-border` | `info` | Info outline: border |
-| `--badge-info-solid-hover` | `info-hover` | Info solid: the color a clickable badge moves toward on hover and press |
+| `--badge-primary-subtle-bg` | `surface-brand-subtle` | Primary subtle: fill |
+| `--badge-primary-subtle-text` | `text-brand` | Primary subtle: text and icon |
+| `--badge-primary-solid-bg` | `surface-brand` | Primary solid: fill |
+| `--badge-primary-solid-text` | `text-on-brand` | Primary solid: text and icon |
+| `--badge-primary-solid-hover` | `surface-brand-hover` | Primary solid: the color a clickable badge moves toward on hover and press |
+| `--badge-primary-outline-text` | `text-brand` | Primary outline: text and icon |
+| `--badge-primary-outline-border` | `text-brand` | Primary outline: border |
+| `--badge-success-subtle-bg` | `surface-success-subtle` | Success subtle: fill |
+| `--badge-success-subtle-text` | `text-success` | Success subtle: text and icon |
+| `--badge-success-solid-bg` | `surface-success` | Success solid: fill |
+| `--badge-success-solid-text` | `text-on-success` | Success solid: text and icon |
+| `--badge-success-outline-text` | `text-success` | Success outline: text and icon |
+| `--badge-success-outline-border` | `surface-success` | Success outline: border |
+| `--badge-success-solid-hover` | `surface-success-hover` | Success solid: the color a clickable badge moves toward on hover and press |
+| `--badge-warning-subtle-bg` | `surface-warning-subtle` | Warning subtle: fill |
+| `--badge-warning-subtle-text` | `text-warning` | Warning subtle: text and icon |
+| `--badge-warning-solid-bg` | `surface-warning` | Warning solid: fill |
+| `--badge-warning-solid-text` | `text-on-warning` | Warning solid: text and icon |
+| `--badge-warning-outline-text` | `text-warning` | Warning outline: text and icon |
+| `--badge-warning-outline-border` | `surface-warning` | Warning outline: border |
+| `--badge-warning-solid-hover` | `surface-warning-hover` | Warning solid: the color a clickable badge moves toward on hover and press |
+| `--badge-danger-subtle-bg` | `surface-danger-subtle` | Danger subtle: fill |
+| `--badge-danger-subtle-text` | `text-danger` | Danger subtle: text and icon |
+| `--badge-danger-solid-bg` | `surface-danger` | Danger solid: fill |
+| `--badge-danger-solid-text` | `text-on-danger` | Danger solid: text and icon |
+| `--badge-danger-outline-text` | `text-danger` | Danger outline: text and icon |
+| `--badge-danger-outline-border` | `surface-danger` | Danger outline: border |
+| `--badge-danger-solid-hover` | `surface-danger-hover` | Danger solid: the color a clickable badge moves toward on hover and press |
+| `--badge-info-subtle-bg` | `surface-info-subtle` | Info subtle: fill |
+| `--badge-info-subtle-text` | `text-info` | Info subtle: text and icon |
+| `--badge-info-solid-bg` | `surface-info` | Info solid: fill |
+| `--badge-info-solid-text` | `text-on-info` | Info solid: text and icon |
+| `--badge-info-outline-text` | `text-info` | Info outline: text and icon |
+| `--badge-info-outline-border` | `surface-info` | Info outline: border |
+| `--badge-info-solid-hover` | `surface-info-hover` | Info solid: the color a clickable badge moves toward on hover and press |
 | `--badge-indicator-ring-color` | `surface` | The indicator's ring color. Unset, it takes the fill behind the dot (--surface-behind, which the page and every surface set), else surface. |
-| `--badge-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--badge-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
-| `--badge-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--badge-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--badge-fill-disabled` | `surface-disabled` | Disabled: the fill, whatever its color when enabled. |
+| `--badge-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

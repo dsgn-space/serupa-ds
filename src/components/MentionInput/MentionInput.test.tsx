@@ -239,7 +239,7 @@ describe('MentionInput', () => {
     const marks = [...document.querySelectorAll('[aria-hidden="true"] > mark')] as HTMLElement[];
     expect(marks.map((m) => m.textContent)).toEqual(['@Ayu Lestari', '@Budi Santoso']);
     expect(marks[0]!.closest('[aria-hidden="true"]')).not.toBeNull();   // a picture only: the text is the textarea's
-    expect(css(marks[0]!).backgroundColor).toBe(color('var(--primary-subtle)'));
+    expect(css(marks[0]!).backgroundColor).toBe(color('var(--surface-brand-subtle)'));
     // Lined up: the tint covers "@Ayu Lestari" where the textarea draws it, measured from a copy of the text.
     const el = box(), r = marks[0]!.getBoundingClientRect(), f = el.getBoundingClientRect();
     const probe = document.createElement('span');

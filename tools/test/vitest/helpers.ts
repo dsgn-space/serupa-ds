@@ -52,7 +52,7 @@ const opaque = (c: string) => !/^(transparent|rgba\(.*,\s*0\))$/.test(c);
  * Light, whose yellow 500 is under 3:1 on white), else the fill itself. For a contrast pair that names the token.
  */
 export function edged(fill: string): string {
-  const edge = color('var(--primary-edge)');
+  const edge = color('var(--border-brand)');
   return opaque(edge) ? edge : color(fill);
 }
 
@@ -272,7 +272,7 @@ export const pasteText = (target: HTMLElement, text: string) => {
  * How a disabled control looks: 'neutral' when it is drawn at full opacity in the disabled text color (the
  * disabled-text token, as Serupa draws disabled controls), otherwise the opacity and color it has.
  */
-export function disabledLook(el: Element | null, prop: 'color' | 'backgroundColor' | 'borderTopColor' = 'color', token = '--disabled-text'): string {
+export function disabledLook(el: Element | null, prop: 'color' | 'backgroundColor' | 'borderTopColor' = 'color', token = '--text-disabled'): string {
   const s = css(el);
   return s.opacity === '1' && s[prop] === color(`var(${token})`) ? 'neutral' : `${s.opacity} ${s[prop]}`;
 }

@@ -24,10 +24,10 @@
   -webkit-appearance: none; appearance: none;
 }
 .srp-phone-input__country:focus { outline: none; }
-@media (hover: hover) { .srp-phone-input__country:hover:not(:disabled) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
-.srp-phone-input__country:focus-visible:not(:disabled), .srp-phone-input[data-state="open"] .srp-phone-input__country { background: var(--phone-input-bg-hover, var(--field-hover)); }
+@media (hover: hover) { .srp-phone-input__country:hover:not(:disabled) { background: var(--phone-input-bg-hover, var(--surface-raised-hover)); } }
+.srp-phone-input__country:focus-visible:not(:disabled), .srp-phone-input[data-state="open"] .srp-phone-input__country { background: var(--phone-input-bg-hover, var(--surface-raised-hover)); }
 .srp-phone-input:not([data-invalid]):has(.srp-phone-input__country:focus-visible) { --srp-input-ring: var(--phone-input-focus-ring, var(--focus-ring)); }
-.srp-phone-input__country:active:not(:disabled) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
+.srp-phone-input__country:active:not(:disabled) { background: var(--phone-input-bg-pressed, var(--surface-raised-pressed)); }
 .srp-phone-input__country:disabled { cursor: var(--cursor-disabled); }
 /* The list: an overlay surface under the box, with a search field at its top and the countries under it. */
 .srp-phone-input__popup {
@@ -37,14 +37,14 @@
   width: var(--spacing-72); max-width: calc(var(--sizing-full) - var(--spacing-4));
   display: flex; flex-direction: column; max-height: var(--phone-input-listbox-max-height, var(--spacing-80)); overflow: hidden;
   margin: var(--spacing-0); padding: var(--spacing-1);
-  border: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-overlay)); border-radius: var(--phone-input-listbox-radius, var(--radius-surface));
-  background: var(--phone-input-listbox-bg, var(--surface-overlay)); --surface-behind: var(--phone-input-listbox-bg, var(--surface-overlay)); box-shadow: var(--phone-input-listbox-shadow, var(--elevation-overlay));
+  border: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-raised)); border-radius: var(--phone-input-listbox-radius, var(--radius-surface));
+  background: var(--phone-input-listbox-bg, var(--surface-raised)); --surface-behind: var(--phone-input-listbox-bg, var(--surface-raised)); box-shadow: var(--phone-input-listbox-shadow, var(--elevation-overlay));
   color: var(--phone-input-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-normal); text-align: start; cursor: default;
 }
 .srp-phone-input__popup[hidden] { display: none; }
 .srp-phone-input__search-box {
   display: flex; align-items: center; gap: var(--spacing-2); flex: none; min-height: var(--control-height-md);
-  margin-block-end: var(--spacing-1); padding-inline: var(--spacing-2); border-block-end: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-overlay));
+  margin-block-end: var(--spacing-1); padding-inline: var(--spacing-2); border-block-end: var(--border-width-1) solid var(--phone-input-listbox-border, var(--border-raised));
 }
 .srp-phone-input__search-icon { flex: none; font-size: var(--spacing-4); color: var(--phone-input-muted, var(--text-muted)); }
 .srp-phone-input__search { flex: auto; min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); border: 0; background: transparent; color: inherit; font: inherit; outline: none; }
@@ -57,7 +57,7 @@
 }
 @media (pointer: coarse) { .srp-phone-input__option { min-height: var(--spacing-11); } }   /* 44px to pick on a touch screen */
 .srp-phone-input__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-phone-input__option:where([data-active]) { background: var(--phone-input-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--phone-input-option-indicator, var(--highlight-indicator)); }
+.srp-phone-input__option:where([data-active]) { background: var(--phone-input-option-bg-active, var(--surface-highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--phone-input-option-indicator, var(--surface-highlight-indicator)); }
 .srp-phone-input__name { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-phone-input__code { flex: none; color: var(--phone-input-muted, var(--text-muted)); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
 .srp-phone-input__option:where([data-active]) .srp-phone-input__code { color: var(--phone-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
@@ -66,7 +66,7 @@
 @media print { .srp-phone-input__popup { display: none !important; } }
 /* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
    arrow, as on every read-only control (Combobox, Select). */
-.srp-input:where([data-disabled]) .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
+.srp-input:where([data-disabled]) .srp-phone-input__dial, .srp-input:where(:has(.srp-input__field:disabled)) .srp-phone-input__dial { color: var(--input-text-disabled, var(--text-disabled)); }
 .srp-input:where([data-readonly]) .srp-phone-input__country:disabled { cursor: default; }
 @media (forced-colors: active) {
   .srp-phone-input__popup { border-color: CanvasText; }

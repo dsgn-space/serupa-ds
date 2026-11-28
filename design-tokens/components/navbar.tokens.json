@@ -84,7 +84,7 @@
       },
       "menu-link-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-hover-raised}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "A link in a menu panel on hover: the raised hover step, since the panel floats.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "link-bg-active": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The current page's link background.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "link-bg-active-hover": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "The current page's link background under the pointer: one step past its rest.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "link-indicator": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "link-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A link's fill while it's held down.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "menu-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "A dropdown panel's background (NavbarMenu).",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "menu-divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

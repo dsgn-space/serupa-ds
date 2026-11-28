@@ -8,7 +8,7 @@
 .srp-image-cropper { display: flex; flex-direction: column; gap: var(--image-cropper-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); inline-size: var(--sizing-full); max-inline-size: var(--image-cropper-max-width, var(--container-xs)); }
 .srp-image-cropper__frame {
   position: relative; overflow: hidden; aspect-ratio: var(--srp-image-cropper-aspect); inline-size: var(--sizing-full);
-  border-radius: var(--image-cropper-radius, var(--radius-control)); background: var(--image-cropper-bg, var(--surface-muted));
+  border-radius: var(--image-cropper-radius, var(--radius-control)); background: var(--image-cropper-bg, var(--surface-sunken));
   touch-action: none; cursor: var(--cursor-grab); user-select: none; -webkit-user-select: none; isolation: isolate;
 }
 .srp-image-cropper__frame[data-dragging] { cursor: var(--cursor-grabbing); }
@@ -20,13 +20,13 @@
 /* The frame's edge: a hairline over the picture so a pale photo doesn't melt into the page, as Image and Lightbox draw it. */
 .srp-image-cropper__frame::after {
   content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
-  outline: var(--outline-width-1) solid var(--image-cropper-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
+  outline: var(--outline-width-1) solid var(--image-cropper-edge, var(--border-picture)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 .srp-image-cropper__mask { position: absolute; inset: var(--spacing-0); pointer-events: none; }
 /* Round: everything outside the circle under the scrim (a spread shadow far past the frame, which clips it), and a ring on the circle. */
 .srp-image-cropper__frame[data-shape="round"][data-state="ready"] .srp-image-cropper__mask {
   border-radius: var(--rounded-full);
-  box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--sizing-dvh) var(--image-cropper-scrim, var(--overlay));
+  box-shadow: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--sizing-dvh) var(--image-cropper-scrim, var(--backdrop));
   outline: var(--outline-width-2) solid var(--image-cropper-guide, var(--white)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2));
 }
 /* The thirds: the box's own sides are the two upright lines, its ::before the two across. */

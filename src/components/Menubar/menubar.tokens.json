@@ -34,7 +34,7 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "A menu name's background under the pointer.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "item-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "Its background while held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "item-bg-open": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "The background of the name whose menu is open.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

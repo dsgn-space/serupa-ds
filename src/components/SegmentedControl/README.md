@@ -106,7 +106,7 @@ Each is an optional override: set it on the page, a container or one control. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--segmented-control-bg` | `surface-control` | The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page. |
+| `--segmented-control-bg` | `control` | The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page. |
 | `--segmented-control-border` | `field-border` | The control's outline: the same soft hairline as a form field's (under 3:1 by design, as field-border is; more contrast brings back 3:1). |
 | `--segmented-control-indicator` | `field` | The selected segment's background: white in light, zinc-800 in dark, a step up from the track. |
 | `--segmented-control-indicator-border` | `field-border` | The selected segment's outline: the field's hairline, the selection standing out by its raised surface and shadow. |
@@ -115,9 +115,9 @@ Each is an optional override: set it on the page, a container or one control. Th
 | `--segmented-control-text-hover` | `text` | A segment's label on hover. |
 | `--segmented-control-wash-pressed` | `text` | The color washed over a segment while it's held down, at layer-pressed strength. |
 | `--segmented-control-focus-ring` | `focus-ring` | A segment's keyboard focus ring. |
-| `--segmented-control-invalid` | `danger` | The outline when invalid (3:1 on the surface). |
-| `--segmented-control-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--segmented-control-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--segmented-control-invalid` | `surface-danger` | The outline when invalid (3:1 on the surface). |
+| `--segmented-control-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--segmented-control-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Shadow**
 

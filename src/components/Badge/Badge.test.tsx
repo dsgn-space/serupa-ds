@@ -209,15 +209,15 @@ describe('Badge', () => {
     await show();
     const pal = ['violet', 'teal', 'amber'].map((t) => VARIANTS.map((v) => { const s = css(tv(t, v)); return v === 'outline' ? s.borderTopColor : s.backgroundColor; }));
     for (const k of [0, 1, 2]) expect(new Set(pal.map((x) => x[k])).size).toBe(3);
-    expect(css(tv('success', 'solid')).backgroundColor).toBe(color('var(--success)'));
-    expect(css(tv('success', 'solid')).color).toBe(color('var(--on-success)'));
-    expect(css(tv('warning', 'subtle')).color).toBe(color('var(--warning-text)'));
-    expect(css(tv('info', 'subtle')).backgroundColor).toBe(color('var(--info-subtle)'));
-    expect(css(tv('danger', 'outline')).borderTopColor).toBe(color('var(--danger)'));
+    expect(css(tv('success', 'solid')).backgroundColor).toBe(color('var(--surface-success)'));
+    expect(css(tv('success', 'solid')).color).toBe(color('var(--text-on-success)'));
+    expect(css(tv('warning', 'subtle')).color).toBe(color('var(--text-warning)'));
+    expect(css(tv('info', 'subtle')).backgroundColor).toBe(color('var(--surface-info-subtle)'));
+    expect(css(tv('danger', 'outline')).borderTopColor).toBe(color('var(--surface-danger)'));
     // A page that sets the role moves its badges.
-    document.documentElement.style.setProperty('--success', 'rgb(1, 2, 3)');
-    try { expect(css(tv('success', 'solid')).backgroundColor).toBe('rgb(1, 2, 3)'); } finally { document.documentElement.style.removeProperty('--success'); }
-    expect(css(tv('primary', 'solid')).backgroundColor).toBe(color('var(--primary)'));
+    document.documentElement.style.setProperty('--surface-success', 'rgb(1, 2, 3)');
+    try { expect(css(tv('success', 'solid')).backgroundColor).toBe('rgb(1, 2, 3)'); } finally { document.documentElement.style.removeProperty('--surface-success'); }
+    expect(css(tv('primary', 'solid')).backgroundColor).toBe(color('var(--surface-brand)'));
   });
 
   test('palette tones follow the nearest theme: dark steps inside a dark area, light steps in a light area nested in it', async () => {

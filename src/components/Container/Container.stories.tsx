@@ -6,7 +6,7 @@ const meta = {
   title: 'Components/Layout and type/Container',
   component: Container,
   parameters: { layout: 'fullscreen' },
-  args: { children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">The content stays this wide and centered, with padding at the sides.</div> },
+  args: { children: <div className="rounded-md bg-surface-sunken p-4 text-sm text-text">The content stays this wide and centered, with padding at the sides.</div> },
   argTypes: { size: { control: 'select', options: ['prose', 'md', 'lg', 'xl', '2xl', 'full'] }, children: { control: false } },
 } satisfies Meta<typeof Container>;
 export default meta;
@@ -17,7 +17,7 @@ export const Playground: Story = {};
 export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-3 py-4">
-      {(['prose', 'md', 'lg', 'xl', '2xl'] as const).map((s) => <Container key={s} size={s}><div className="rounded-md bg-surface-muted p-3 text-sm text-text">size="{s}"</div></Container>)}
+      {(['prose', 'md', 'lg', 'xl', '2xl'] as const).map((s) => <Container key={s} size={s}><div className="rounded-md bg-surface-sunken p-3 text-sm text-text">size="{s}"</div></Container>)}
     </div>
   ),
 };
@@ -28,20 +28,20 @@ export const Prose: Story = {
 
 export const FullWidth: Story = {
   name: 'Full width',
-  args: { size: 'full', children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">size="full" spans the page, keeping only the side padding.</div> },
+  args: { size: 'full', children: <div className="rounded-md bg-surface-sunken p-4 text-sm text-text">size="full" spans the page, keeping only the side padding.</div> },
 };
 
 export const NotPadded: Story = {
   name: 'No side padding',
-  args: { size: 'md', padded: false, children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">padded={'{false}'}: no padding at the sides, for content that brings its own.</div> },
+  args: { size: 'md', padded: false, children: <div className="rounded-md bg-surface-sunken p-4 text-sm text-text">padded={'{false}'}: no padding at the sides, for content that brings its own.</div> },
 };
 
 export const LongText: Story = {
-  args: { size: 'prose', children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text wrap-anywhere">A long paragraph keeps to the container's width and wraps, and with the wrap-anywhere utility an unbroken word like DonaudampfschifffahrtsgesellschaftskapitänskajüteDonaudampfschifffahrtsgesellschaftskapitänskajüte breaks rather than pushing the page sideways.</div> },
+  args: { size: 'prose', children: <div className="rounded-md bg-surface-sunken p-4 text-sm text-text wrap-anywhere">A long paragraph keeps to the container's width and wraps, and with the wrap-anywhere utility an unbroken word like DonaudampfschifffahrtsgesellschaftskapitänskajüteDonaudampfschifffahrtsgesellschaftskapitänskajüte breaks rather than pushing the page sideways.</div> },
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
-const band = (text: string) => <div className="rounded-md bg-surface-muted p-3 text-sm text-text">{text}</div>;
+const band = (text: string) => <div className="rounded-md bg-surface-sunken p-3 text-sm text-text">{text}</div>;
 /** Do: the same `size` for the header, main content and footer, so their edges line up. */
 export const DoSameSize: Story = {
   name: 'Do: one size for the page',

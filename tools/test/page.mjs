@@ -34,8 +34,8 @@ for (const [w, cols, disp, fs_] of expect) {
     const tmp = document.createElement('div'); document.body.appendChild(tmp);
     const col = (n) => { tmp.style.color = `var(${n})`; return getComputedStyle(tmp).color; };
     return { bodyBg: getComputedStyle(document.body).backgroundColor, surface: (() => { tmp.style.backgroundColor = 'var(--surface)'; return getComputedStyle(tmp).backgroundColor; })(), bodyColor: getComputedStyle(document.body).color, text: col('--text'),
-      bodyMargin: getComputedStyle(document.body).margin, font: getComputedStyle(document.body).fontFamily, h1Margin: cs('h1', 'margin-top'), link: cs('a', 'color'), primary: col('--primary'),
-      inputFont: cs('in', 'font-family'), ph: getComputedStyle(document.getElementById('in'), '::placeholder').color, placeholder: col('--placeholder'),
+      bodyMargin: getComputedStyle(document.body).margin, font: getComputedStyle(document.body).fontFamily, h1Margin: cs('h1', 'margin-top'), link: cs('a', 'color'), primary: col('--surface-brand'),
+      inputFont: cs('in', 'font-family'), ph: getComputedStyle(document.getElementById('in'), '::placeholder').color, placeholder: col('--field-placeholder'),
       imgW: document.getElementById('img').getBoundingClientRect().width, vw: document.body.clientWidth, boxSizing: cs('in', 'box-sizing'),
       utilMargin: cs('u', 'margin-top'), utilFont: cs('u', 'font-family'), scheme: getComputedStyle(document.documentElement).colorScheme };
   });
@@ -231,10 +231,10 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   // GD5, GF4: a theme switch changes every control's colors at once (each one's color transition finishes at once),
   // while motion started in the same tick runs on: a menu fading out as "Dark" is picked, a switch thumb sliding.
   const p = await b.newPage();
-  const rows = '<p class="row" style="transition: background-color 150ms, color 150ms; background: var(--surface-muted); color: var(--text)">Row</p>'.repeat(20)
+  const rows = '<p class="row" style="transition: background-color 150ms, color 150ms; background: var(--surface-sunken); color: var(--text)">Row</p>'.repeat(20)
     + '<div class="menu" style="transition: opacity 150ms, scale 150ms; background: var(--surface)">Menu</div>'
-    + '<div class="thumb" style="width: 16px; transition: translate 150ms, background-color 150ms; background: var(--surface-muted)"></div>'
-    + '<p class="still" style="background: var(--surface-muted)">Row</p>';
+    + '<div class="thumb" style="width: 16px; transition: translate 150ms, background-color 150ms; background: var(--surface-sunken)"></div>'
+    + '<p class="still" style="background: var(--surface-sunken)">Row</p>';
   await p.goto(writePage('theme-switch.html', rows, { theme: true, htmlAttrs: 'data-brand="blue" data-mode="light"', extraHead: '<link rel="stylesheet" href="../tokens.css">' }));
   const r = await p.evaluate(() => {
     document.querySelector('.menu').style.cssText += ';opacity: 0; scale: 0.95';   // closing as "Dark" is picked
@@ -293,7 +293,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
 // 3c. debug.js's contrast guard (203): the pairs foundation.mjs checks per theme, checked as drawn on the page, so an
 // app's token override that breaks one shows: in the console when it turns on, and in the panel on the component.
 {
-  const body = '<div id="root"></div><section id="s" style="--on-primary: #8aa4ff"></section><script>ReactDOM.createRoot(document.getElementById("s")).render(React.createElement(Serupa.Button, { id: "b" }, "Save"));</script>';
+  const body = '<div id="root"></div><section id="s" style="--text-on-brand: #8aa4ff"></section><script>ReactDOM.createRoot(document.getElementById("s")).render(React.createElement(Serupa.Button, { id: "b" }, "Save"));</script>';
   const url = writePage('debug-contrast.html', body, { react: true, extraHead: '<script src="../dist/debug.js"></script>' });
   const p = await b.newPage();
   const warned = [];
@@ -305,12 +305,12 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const body1 = page.find((c) => c.foreground === '--text' && c.background === '--surface');
   t('debug.js: a ratio is the one WCAG gives (text on surface, over 4.5:1)', body1 && body1.ratio > 4.5 && body1.ratio <= 21 && body1.needs === 4.5, JSON.stringify(body1));
   const scoped = await p.evaluate(() => Serupa.debug.contrast(document.getElementById('b')).filter((c) => !c.ok).map((c) => `${c.foreground} on ${c.background}`));
-  t('debug.js: a token set on a section counts on the components in it (light on-primary fails on primary)', scoped.includes('--on-primary on --primary'), scoped.join(', '));
+  t('debug.js: a token set on a section counts on the components in it (light on-primary fails on primary)', scoped.includes('--text-on-brand on --surface-brand'), scoped.join(', '));
   await p.evaluate(() => { document.documentElement.style.setProperty('--text-muted', 'rgb(0 0 0 / 0.2)'); Serupa.debug.on(); });
-  t('debug.js: turning it on warns in the console about each pair that fails on the page, a translucent color as it looks', warned.length === 1 && /--text-muted on --surface/.test(warned[0]) && !/--on-primary/.test(warned[0]), warned.join(' | '));
+  t('debug.js: turning it on warns in the console about each pair that fails on the page, a translucent color as it looks', warned.length === 1 && /--text-muted on --surface/.test(warned[0]) && !/--text-on-brand/.test(warned[0]), warned.join(' | '));
   await p.hover('#b');
   const panel = await p.evaluate(() => document.getElementById('serupa-debug-panel')?.textContent || '');
-  t('debug.js: the panel lists the pairs that fail on the component it points at, and not again the ones the console named', /low contrast/.test(panel) && /--on-primary on --primary/.test(panel) && !/--text-muted/.test(panel), panel);
+  t('debug.js: the panel lists the pairs that fail on the component it points at, and not again the ones the console named', /low contrast/.test(panel) && /--text-on-brand on --surface-brand/.test(panel) && !/--text-muted/.test(panel), panel);
   await p.evaluate(() => Serupa.debug.off());
   const border = await p.evaluate(() => {
     const host = document.createElement('div');

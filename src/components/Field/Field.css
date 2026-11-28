@@ -9,13 +9,13 @@
 .srp-field__label { display: block; padding: var(--spacing-0); color: var(--field-label-color, var(--text)); font-weight: var(--field-label-weight, var(--font-medium)); overflow-wrap: anywhere; }
 .srp-field--group > .srp-field__label { float: inline-start; width: var(--sizing-full); }   /* a floated legend lays out like the label of a single field */
 .srp-field--group > .srp-field__label + * { clear: both; }
-.srp-field__required { margin-inline-start: var(--spacing-0\.5); color: var(--field-required-color, var(--danger-text)); }
+.srp-field__required { margin-inline-start: var(--spacing-0\.5); color: var(--field-required-color, var(--text-danger)); }
 .srp-field__optional { unicode-bidi: isolate; margin-inline-start: var(--spacing-1); color: var(--field-hint-color, var(--text-muted)); font-weight: var(--font-normal); }
 .srp-field__hint { color: var(--field-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
 .srp-field__control { display: flex; flex-direction: column; gap: var(--spacing-2); min-width: var(--spacing-0); }
-.srp-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
+.srp-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--text-danger)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
 .srp-field__warning, .srp-field__checking { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
-.srp-field__warning { color: var(--field-warning-color, var(--warning-text)); }
+.srp-field__warning { color: var(--field-warning-color, var(--text-warning)); }
 .srp-field__checking { color: var(--field-checking-color, var(--text-muted)); }
 :is(.srp-field__error, .srp-field__warning, .srp-field__checking) .srp-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-3\.5)); height: var(--text-xs--line-height); line-height: var(--text-xs--line-height); }   /* centered on the first line */
 /* Horizontal: the label in a column of its own on the control's first line (baselines aligned), the control, hint and
@@ -24,7 +24,7 @@
 .srp-field--horizontal > .srp-field__label { flex: none; flex-basis: var(--field-label-width, var(--spacing-48)); max-width: var(--sizing-full); }
 .srp-field__body { display: flex; flex: auto; flex-basis: var(--field-control-min-width, var(--container-3xs)); flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
 /* The required mark dims with its label: a disabled field asks for nothing, so no red mark there either. */
-.srp-field:where([data-disabled]) > .srp-field__label, .srp-field:where([data-disabled]) .srp-field__required, .srp-field:where([data-disabled]) .srp-field__body > .srp-field__hint, .srp-field:where([data-disabled]) > .srp-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
+.srp-field:where([data-disabled]) > .srp-field__label, .srp-field:where([data-disabled]) .srp-field__required, .srp-field:where([data-disabled]) .srp-field__body > .srp-field__hint, .srp-field:where([data-disabled]) > .srp-field__hint { color: var(--field-text-disabled, var(--text-disabled)); }
 /* A control that brings something for the end of the message row, such as Textarea's count, wraps itself and that in
    [data-field-row] and marks it [data-field-end]: the Field then lays out as two columns, the hint and the message at
    the start, that item at the end of the first row under the control (dense placement). The columns follow the

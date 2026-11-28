@@ -5,21 +5,21 @@
 // brand shows as given. Then each brand alias takes the shade that passes its contrast, the same pairs
 // tools/test/foundation.mjs checks the shipped themes with:
 //
-//   light  primary          the color itself when it passes, else the lightest of 500 to 800: white text at 4.5:1,
-//                           4.5:1 on the surface, on surface-muted and on the tints (primary-subtle and the status
+//   light  surface-brand    the color itself when it passes, else the lightest of 500 to 800: white text at 4.5:1,
+//                           4.5:1 on the surface, on surface-sunken and on the tints (surface-brand-subtle and the status
 //                           ones, where it's a Badge's or an Alert link's text), and a hover one step darker that passes too (and 4.5:1 on
-//                           primary-subtle, brand 50); held down, primary steps once more (primary-pressed) and
-//                           primary-subtle to brand 100 (primary-subtle-pressed), where the hover text keeps 4.5:1
-//          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on primary-subtle
-//          more contrast    primary the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
+//                           surface-brand-subtle, brand 50); held down, surface-brand steps once more (surface-brand-pressed);
+//                           surface-brand-subtle takes brand 100 on hover and 200 held down, where the hover text keeps 4.5:1
+//          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on surface-brand-subtle
+//          more contrast    surface-brand the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
 //                           darker; focus ring the lightest at 4.5:1
-//          primary-text     primary itself: the shade is picked to pass as text too
-//   dark   primary          the light theme's primary, lightened as far as 3:1 on a raised card (zinc-800) asks, and a touch more,
+//          text-brand       surface-brand itself: the shade is picked to pass as text too
+//   dark   surface-brand    the light theme's, lightened as far as 3:1 on a raised card (zinc-800) asks, and a touch more,
 //                           with white text, so a button is the same color in both modes; hover and held down are the
 //                           light theme's, lightened as much
-//          primary-text     the darkest of 500 to 200 at 4.5:1 on zinc-900, zinc-950, zinc-800 and the tints, with a
+//          text-brand       the darkest of 500 to 200 at 4.5:1 on zinc-900, zinc-950, zinc-800 and the tints, with a
 //                           hover one step lighter that passes too
-//          more contrast    as before 18.0.0: primary the darkest of 400 to 100 at 7:1, with brand 950 text on it
+//          more contrast    as before 18.0.0: surface-brand the darkest of 400 to 100 at 7:1, with brand 950 text on it
 //
 // Every other alias is copied from the blue theme of the same mode, so the neutrals, the status colors and the
 // shadows are the system's own. A color too light or too dark for any step to pass is an error, with the reason.
@@ -28,22 +28,22 @@
 // promises. "more:" names the more-contrast value of the alias.
 /** @type {[string, string, number][]} */
 const PAIRS_FOR_BRAND = [
-  ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
-  ['primary', 'surface', 3], ['primary', 'surface-muted', 3], ['primary', 'surface-raised', 3], ['primary', 'surface-overlay', 3],
-  ['primary-text', 'surface', 4.5], ['primary-text', 'surface-muted', 4.5], ['primary-text', 'surface-raised', 4.5], ['primary-text', 'surface-overlay', 4.5],
-  ['primary-text-hover', 'surface', 4.5], ['primary-text-hover', 'surface-muted', 4.5], ['primary-text-hover', 'primary-subtle', 4.5], ['primary-text', 'primary-subtle', 4.5],
-  ['on-primary', 'primary-pressed', 4.5], ['primary-text-hover', 'primary-subtle-pressed', 4.5], ['more:on-primary', 'more:primary-pressed', 4.5],
-  ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
-  ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3], ['focus-ring', 'field', 3], ['primary-text', 'field', 4.5],
-  ['more:primary-text', 'surface', 7], ['more:primary-text', 'primary-subtle', 7], ['more:primary-text-hover', 'surface', 7],
-  ['more:on-primary', 'more:primary', 4.5], ['more:on-primary', 'more:primary-hover', 4.5], ['more:focus-ring', 'surface', 3],
+  ['text', 'surface-brand-subtle', 4.5], ['text-on-brand', 'surface-brand', 4.5], ['text-on-brand', 'surface-brand-hover', 4.5],
+  ['surface-brand', 'surface', 3], ['surface-brand', 'surface-sunken', 3], ['surface-brand', 'surface-raised', 3],
+  ['text-brand', 'surface', 4.5], ['text-brand', 'surface-sunken', 4.5], ['text-brand', 'surface-raised', 4.5],
+  ['text-brand-hover', 'surface', 4.5], ['text-brand-hover', 'surface-sunken', 4.5], ['text-brand-hover', 'surface-brand-subtle', 4.5], ['text-brand', 'surface-brand-subtle', 4.5],
+  ['text-on-brand', 'surface-brand-pressed', 4.5], ['text-brand-hover', 'surface-brand-subtle-hover', 4.5], ['text-brand-hover', 'surface-brand-subtle-pressed', 4.5], ['more:text-on-brand', 'more:surface-brand-pressed', 4.5],
+  ['text-link-visited', 'surface', 4.5], ['text-link-visited', 'surface-sunken', 4.5],
+  ['focus-ring', 'surface', 3], ['focus-ring', 'surface-raised', 3], ['focus-ring', 'surface-brand-subtle', 3], ['focus-ring', 'field', 3], ['text-brand', 'field', 4.5],
+  ['more:text-brand', 'surface', 7], ['more:text-brand', 'surface-brand-subtle', 7], ['more:text-brand-hover', 'surface', 7],
+  ['more:text-on-brand', 'more:surface-brand', 4.5], ['more:text-on-brand', 'more:surface-brand-hover', 4.5], ['more:focus-ring', 'surface', 3],
 ];
 
 const STEPS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950'];
 // Chroma at each step, as a share of the color's own (peaks at 600, like the shipped hues).
 const CHROMA = [0.06, 0.13, 0.24, 0.43, 0.67, 0.87, 1, 0.99, 0.81, 0.6, 0.37];
 // The aliases the brand sets; every other one is copied.
-export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'primary-text', 'primary-text-hover', 'focus-ring', 'link-visited'];
+export const BRAND_ALIASES = ['surface-brand', 'surface-brand-hover', 'surface-brand-pressed', 'surface-brand-subtle', 'surface-brand-subtle-hover', 'surface-brand-subtle-pressed', 'text-on-brand', 'text-brand', 'text-brand-hover', 'focus-ring', 'text-link-visited'];
 
 // --- color math: sRGB hex <-> OKLCH (Björn Ottosson's OKLab), WCAG 2.2 contrast ---
 const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -163,29 +163,31 @@ export function brandTheme({ name, color, tokens }) {
 
   for (const mode of ['light', 'dark']) {
     const b = base(mode);
-    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), raised = hexAt(b['surface-raised'], b), muted = hexAt(b['surface-muted'], b), field = hexAt(b.field, b);
+    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-raised'], b), raised = hexAt(b['surface-raised'], b), muted = hexAt(b['surface-sunken'], b), field = hexAt(b.field, b);
     const light = mode === 'light';
     // White on every fill. Only a dark theme with more contrast, whose fill is a light shade, takes brand 950.
     const on = palette.get('white'), onMore = light ? on : S('950');
-    // When a very bright saturated seed (like #ffff00) pins step 50, keep primary-subtle at a soft tint chroma
+    // When a very bright saturated seed (like #ffff00) pins step 50, keep surface-brand-subtle at a soft tint chroma
     // rather than neon yellow so badges and selected rows remain readable and chroma-monotonic.
-    const [L50, C50, h50] = oklchOf(S('50')), [L100, C100, h100] = oklchOf(S('100'));
+    // Hover is the next step on (100, 900 in dark) and held down the one after (200, 800).
+    const [L50, C50, h50] = oklchOf(S('50')), [L100, C100, h100] = oklchOf(S('100')), [L200, C200, h200] = oklchOf(S('200'));
     const subtleVal = light && C50 > 0.05 ? clip([L50, 0.03, h50]) : `{${name}-${light ? '50' : '950'}}`;
-    const subtleHeldVal = light && C100 > 0.08 ? clip([L100, 0.05, h100]) : `{${name}-${light ? '100' : '900'}}`;
-    const subtle = hexAt(subtleVal, b), subtleHeld = hexAt(subtleHeldVal, b);
+    const subtleHoverVal = light && C100 > 0.08 ? clip([L100, 0.05, h100]) : `{${name}-${light ? '100' : '900'}}`;
+    const subtleHeldVal = light && C200 > 0.12 ? clip([L200, 0.08, h200]) : `{${name}-${light ? '200' : '800'}}`;
+    const subtle = hexAt(subtleVal, b), subtleHover = hexAt(subtleHoverVal, b), subtleHeld = hexAt(subtleHeldVal, b);
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
     // Held down, a step past hover, stopping at the end of the scale.
     const held = (s) => next(s) ?? s;
-    // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
+    // A link is brand text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
     // It's text on the tints too: its own (a primary Badge, a selected tag) and the status ones (a link in an Alert).
-    const tints = [subtle, ...['info-subtle', 'success-subtle', 'warning-subtle', 'danger-subtle'].map((n) => hexAt(b[n], b))];
+    const tints = [subtle, ...['surface-info-subtle', 'surface-success-subtle', 'surface-warning-subtle', 'surface-danger-subtle'].map((n) => hexAt(b[n], b))];
     // In light the fill is the text shade too, so it carries white text; in dark the fill is worked out below. A text
     // action in a field (Input's Apply) is brand text too, so it needs 4.5:1 on the field.
     const okText = (s) => (!light || contrast(on, S(s)) >= 4.5) && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 4.5 && contrast(S(s), raised) >= 4.5 && contrast(S(s), field) >= 4.5
       && tints.every((x) => contrast(S(s), x) >= 4.5);
-    const passes = (s) => !!s && !!next(s) && okText(s) && okText(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && (!light || contrast(on, S(held(next(s)))) >= 4.5);
+    const passes = (s) => !!s && !!next(s) && okText(s) && okText(next(s)) && contrast(S(next(s)), subtle) >= 4.5 && contrast(S(next(s)), subtleHover) >= 4.5 && contrast(S(next(s)), subtleHeld) >= 4.5 && (!light || contrast(on, S(held(next(s)))) >= 4.5);
     // The color itself when it passes, so the buttons are the brand's own; for a near-black seed (950) use 900 in light
     // mode so a black brand doesn't collapse to the same mid-grey 500 as #808080.
     const cands = order(light ? '500' : '200', light ? '900' : '500');
@@ -208,15 +210,15 @@ export function brandTheme({ name, color, tokens }) {
     // A visited link stays a hue apart: violet, or fuchsia when the brand is violet-ish (as the violet theme does).
     const violetHue = oklchOf(palette.get('violet-600'))[2];
     const dist = Math.min(Math.abs(hue - violetHue), 360 - Math.abs(hue - violetHue));
-    const visited = dist < 30 ? (light ? '{fuchsia-700}' : '{fuchsia-300}') : b['link-visited'];
+    const visited = dist < 30 ? (light ? '{fuchsia-700}' : '{fuchsia-300}') : b['text-link-visited'];
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus, ...(light ? {} : { fill: fills[0], fillFrom: lp }) };
     Object.assign(b, {
-      primary: fills[0], 'primary-hover': fills[1], 'primary-pressed': fills[2],
-      'primary-subtle': subtleVal, 'primary-subtle-pressed': subtleHeldVal,
-      'on-primary': '{white}', 'primary-text': `{${name}-${primary}}`, 'primary-text-hover': `{${name}-${next(primary)}}`,
-      'focus-ring': `{${name}-${focus}}`, 'link-visited': visited,
-      'srp-more-primary': `{${name}-${more}}`, 'srp-more-primary-hover': `{${name}-${next(more)}}`, 'srp-more-primary-pressed': `{${name}-${held(next(more))}}`,
-      'srp-more-on-primary': light ? '{white}' : `{${name}-950}`, 'srp-more-primary-text': `{${name}-${more}}`, 'srp-more-primary-text-hover': `{${name}-${next(more)}}`, 'srp-more-focus-ring': `{${name}-${moreFocus}}`,
+      'surface-brand': fills[0], 'surface-brand-hover': fills[1], 'surface-brand-pressed': fills[2],
+      'surface-brand-subtle': subtleVal, 'surface-brand-subtle-hover': subtleHoverVal, 'surface-brand-subtle-pressed': subtleHeldVal,
+      'text-on-brand': '{white}', 'text-brand': `{${name}-${primary}}`, 'text-brand-hover': `{${name}-${next(primary)}}`,
+      'focus-ring': `{${name}-${focus}}`, 'text-link-visited': visited,
+      'srp-more-surface-brand': `{${name}-${more}}`, 'srp-more-surface-brand-hover': `{${name}-${next(more)}}`, 'srp-more-surface-brand-pressed': `{${name}-${held(next(more))}}`,
+      'srp-more-text-on-brand': light ? '{white}' : `{${name}-950}`, 'srp-more-text-brand': `{${name}-${more}}`, 'srp-more-text-brand-hover': `{${name}-${next(more)}}`, 'srp-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;
   }
@@ -238,7 +240,7 @@ export function brandTheme({ name, color, tokens }) {
   const v = (x) => { const r = ref(x); return r ? `var(--${r})` : x; };
   const block = (sel, own) => `${sel} {\n${Object.entries(own).map(([k, x]) => `  --${k}: ${v(x)};\n`).join('')}}\n`;
   const L = picks.light.values, D = picks.dark.values;
-  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-pressed', 'primary-subtle', 'primary-subtle-pressed', 'on-primary', 'primary-text', 'primary-text-hover', 'focus-ring', 'link-visited', 'srp-more-primary', 'srp-more-primary-hover', 'srp-more-primary-pressed', 'srp-more-on-primary', 'srp-more-primary-text', 'srp-more-primary-text-hover', 'srp-more-focus-ring']
+  const pair = Object.fromEntries(['surface-brand', 'surface-brand-hover', 'surface-brand-pressed', 'surface-brand-subtle', 'surface-brand-subtle-hover', 'surface-brand-subtle-pressed', 'text-on-brand', 'text-brand', 'text-brand-hover', 'focus-ring', 'text-link-visited', 'srp-more-surface-brand', 'srp-more-surface-brand-hover', 'srp-more-surface-brand-pressed', 'srp-more-text-on-brand', 'srp-more-text-brand', 'srp-more-text-brand-hover', 'srp-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
   const css = [
     `/* ${name}: a Serupa theme from ${hexOf(parseHex(color))} (${name}-${seedStep}), made by serupa-brand. Load it after tokens.css, then\n`,

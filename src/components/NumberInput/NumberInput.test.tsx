@@ -595,7 +595,7 @@ describe('NumberInput held state', () => {
     const b = page.getByRole('button', { name: 'One more guest' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-raised-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

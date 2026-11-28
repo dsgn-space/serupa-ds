@@ -13,7 +13,7 @@
 .srp-app-shell > .srp-app-shell__main { grid-area: main; min-width: var(--spacing-0); outline: none; }
 .srp-app-shell > .srp-app-shell__footer { grid-area: footer; }
 .srp-app-shell > .srp-app-shell__bottom { grid-area: bottom; }
-.srp-app-shell--muted .srp-app-shell__main { background: var(--app-shell-bg-muted, var(--surface-muted)); --surface-behind: var(--app-shell-bg-muted, var(--surface-muted)); }
+.srp-app-shell--muted .srp-app-shell__main { background: var(--app-shell-bg-muted, var(--surface-sunken)); --surface-behind: var(--app-shell-bg-muted, var(--surface-sunken)); }
 /* main's padding at each width, which the footer's sides follow, so its text starts where main's content does. */
 .srp-app-shell { --srp-app-shell-pad: var(--app-shell-padding, var(--spacing-4)); }
 .srp-app-shell__main--padded { padding: var(--srp-app-shell-pad); }

@@ -117,7 +117,7 @@ describe('BottomNav held state', () => {
     const b = links()[0]!;
     const f = () => b.firstElementChild;
     const low = await press(b, async () => {
-      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--secondary-hover)'));
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--surface-secondary-hover)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);
@@ -137,10 +137,10 @@ describe('BottomNav held state', () => {
     const look = (a: HTMLElement) => [css(a).color, css(a.firstElementChild).backgroundColor];
     await userEvent.hover(current);
     expect(current.matches(':hover')).toBe(true);
-    expect(look(current)).toEqual([color('var(--primary-text)'), color('var(--primary-subtle)')]);
+    expect(look(current)).toEqual([color('var(--text-brand)'), color('var(--surface-brand-subtle)')]);
     await userEvent.hover(other);
-    expect(look(other)).toEqual([color('var(--text)'), color('var(--secondary)')]);
-    expect(look(current)).toEqual([color('var(--primary-text)'), color('var(--primary-subtle)')]);
+    expect(look(other)).toEqual([color('var(--text)'), color('var(--surface-secondary)')]);
+    expect(look(current)).toEqual([color('var(--text-brand)'), color('var(--surface-brand-subtle)')]);
     await userEvent.unhover(other);
   });
 });

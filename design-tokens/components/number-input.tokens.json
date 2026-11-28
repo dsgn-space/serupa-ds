@@ -24,7 +24,7 @@
       },
       "stepper-bg-hover": {
         "$type": "color",
-        "$value": "{color.field-hover}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "The buttons' background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "stepper-bg-pressed": {
         "$type": "color",
-        "$value": "{color.field-pressed}",
+        "$value": "{color.surface-raised-pressed}",
         "$description": "A step button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

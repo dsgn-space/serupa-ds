@@ -7,7 +7,7 @@
 @layer srp.components {
 .srp-icon-tile {
   --srp-icon-tile-size: var(--spacing-10); --srp-icon-tile-icon: var(--spacing-5);
-  --srp-icon-tile-bg: var(--icon-tile-neutral-bg, var(--secondary)); --srp-icon-tile-fg: var(--icon-tile-neutral-icon, var(--text-muted));
+  --srp-icon-tile-bg: var(--icon-tile-neutral-bg, var(--surface-secondary)); --srp-icon-tile-fg: var(--icon-tile-neutral-icon, var(--text-muted));
   box-sizing: border-box; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
   width: var(--srp-icon-tile-size); height: var(--srp-icon-tile-size);
   border-radius: var(--icon-tile-radius, var(--radius-surface)); background: var(--srp-icon-tile-bg); color: var(--srp-icon-tile-fg);
@@ -19,10 +19,10 @@
 .srp-icon-tile--lg { --srp-icon-tile-size: var(--spacing-12); --srp-icon-tile-icon: var(--spacing-6); }
 .srp-icon-tile--xl { --srp-icon-tile-size: var(--spacing-16); --srp-icon-tile-icon: var(--spacing-8); border-radius: var(--icon-tile-radius-xl, var(--radius-container)); }
 .srp-icon-tile.srp-icon-tile--circle { border-radius: var(--radius-pill); }
-.srp-icon-tile--primary { --srp-icon-tile-bg: var(--icon-tile-primary-bg, var(--primary-subtle)); --srp-icon-tile-fg: var(--icon-tile-primary-icon, var(--primary-text)); }
-.srp-icon-tile--success { --srp-icon-tile-bg: var(--icon-tile-success-bg, var(--success-subtle)); --srp-icon-tile-fg: var(--icon-tile-success-icon, var(--success-text)); }
-.srp-icon-tile--warning { --srp-icon-tile-bg: var(--icon-tile-warning-bg, var(--warning-subtle)); --srp-icon-tile-fg: var(--icon-tile-warning-icon, var(--warning-text)); }
-.srp-icon-tile--danger { --srp-icon-tile-bg: var(--icon-tile-danger-bg, var(--danger-subtle)); --srp-icon-tile-fg: var(--icon-tile-danger-icon, var(--danger-text)); }
-.srp-icon-tile--info { --srp-icon-tile-bg: var(--icon-tile-info-bg, var(--info-subtle)); --srp-icon-tile-fg: var(--icon-tile-info-icon, var(--info-text)); }
+.srp-icon-tile--primary { --srp-icon-tile-bg: var(--icon-tile-primary-bg, var(--surface-brand-subtle)); --srp-icon-tile-fg: var(--icon-tile-primary-icon, var(--text-brand)); }
+.srp-icon-tile--success { --srp-icon-tile-bg: var(--icon-tile-success-bg, var(--surface-success-subtle)); --srp-icon-tile-fg: var(--icon-tile-success-icon, var(--text-success)); }
+.srp-icon-tile--warning { --srp-icon-tile-bg: var(--icon-tile-warning-bg, var(--surface-warning-subtle)); --srp-icon-tile-fg: var(--icon-tile-warning-icon, var(--text-warning)); }
+.srp-icon-tile--danger { --srp-icon-tile-bg: var(--icon-tile-danger-bg, var(--surface-danger-subtle)); --srp-icon-tile-fg: var(--icon-tile-danger-icon, var(--text-danger)); }
+.srp-icon-tile--info { --srp-icon-tile-bg: var(--icon-tile-info-bg, var(--surface-info-subtle)); --srp-icon-tile-fg: var(--icon-tile-info-icon, var(--text-info)); }
 @media (forced-colors: active) { .srp-icon-tile { outline: var(--outline-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-1)); } }
 }

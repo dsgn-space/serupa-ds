@@ -7,7 +7,7 @@
 @layer srp.components {
 /* The × and the chevron are InputActions (Input's buttons inside the box); the chevron's tokens still set their colors,
    and they sit 4px from the box's edge. The chevron turns while the list is open. */
-.srp-combobox { --input-actions-inset: var(--spacing-1); --input-action: var(--combobox-chevron, var(--text-muted)); --input-action-hover: var(--combobox-chevron-hover, var(--text)); --input-action-bg-hover: var(--combobox-chevron-bg-hover, var(--field-hover)); --input-action-bg-pressed: var(--combobox-chevron-bg-pressed, var(--field-pressed)); }
+.srp-combobox { --input-actions-inset: var(--spacing-1); --input-action: var(--combobox-chevron, var(--text-muted)); --input-action-hover: var(--combobox-chevron-hover, var(--text)); --input-action-bg-hover: var(--combobox-chevron-bg-hover, var(--surface-raised-hover)); --input-action-bg-pressed: var(--combobox-chevron-bg-pressed, var(--surface-raised-pressed)); }
 .srp-combobox__toggle .srp-icon { transition: rotate var(--motion-change-sm) var(--ease-move); }
 .srp-combobox[data-state="open"] .srp-combobox__toggle .srp-icon { --srp-combobox-turn: 180deg; rotate: var(--srp-combobox-turn); }
 /* An option's corners nest in the list's: its radius less the padding and border between them (8 - 4 - 1 = 3px). */
@@ -23,8 +23,8 @@
   /* Its rows lay out and paint inside it (it clips already): a row changing never relays out the page (I3). */
   contain: layout paint;
   margin: var(--spacing-0); padding: var(--combobox-listbox-padding, var(--spacing-1));
-  border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border-overlay));
-  border-radius: var(--combobox-listbox-radius, var(--radius-surface)); background: var(--combobox-listbox-bg, var(--surface-overlay)); --surface-behind: var(--combobox-listbox-bg, var(--surface-overlay)); --border: var(--combobox-listbox-divider, var(--border-overlay));
+  border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border-raised));
+  border-radius: var(--combobox-listbox-radius, var(--radius-surface)); background: var(--combobox-listbox-bg, var(--surface-raised)); --surface-behind: var(--combobox-listbox-bg, var(--surface-raised)); --border: var(--combobox-listbox-divider, var(--border-raised));
   box-shadow: var(--combobox-listbox-shadow, var(--elevation-overlay));
   color: var(--combobox-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }
@@ -68,15 +68,15 @@
 }
 .srp-combobox__option { --srp-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .srp-combobox__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-combobox__option:where([data-active]) { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--combobox-option-indicator, var(--highlight-indicator)); }
+.srp-combobox__option:where([data-active]) { background: var(--combobox-option-bg-active, var(--surface-highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--combobox-option-indicator, var(--surface-highlight-indicator)); }
 /* Held down: one step past the highlight, as a Menu item and a CascadeSelect option are, so a press shows before the list closes. */
-.srp-combobox__option:active:not([aria-disabled="true"]) { background: var(--combobox-option-bg-pressed, var(--pressed)); }
-.srp-combobox__option[aria-disabled="true"], .srp-combobox__option[aria-disabled="true"] * { color: var(--combobox-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-combobox__option:active:not([aria-disabled="true"]) { background: var(--combobox-option-bg-pressed, var(--surface-pressed)); }
+.srp-combobox__option[aria-disabled="true"], .srp-combobox__option[aria-disabled="true"] * { color: var(--combobox-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 .srp-combobox__group-label { padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); -webkit-user-select: none; user-select: none; }
 .srp-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .srp-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .srp-combobox__option:where([data-active]) .srp-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
-.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary-text)); font-size: var(--spacing-4); }
+.srp-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--text-brand)); font-size: var(--spacing-4); }
 .srp-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
 /* multiple: the tags and the text wrap inside the box, which grows a row at a time; the buttons stay at the end. */
 .srp-combobox--multiple { height: auto; min-height: var(--srp-input-h); }

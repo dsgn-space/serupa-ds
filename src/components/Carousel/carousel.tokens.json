@@ -4,7 +4,7 @@
     "color": {
       "dot": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "The dots for the slides not shown (3:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "dot-hover": {
         "$type": "color",
-        "$value": "{color.border-control-hover}",
+        "$value": "{color.field-border-hover}",
         "$description": "A dot under the pointer, a step past dot, as a field's border darkens (text-muted is dot's own gray).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "dot-active": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The current slide's dot.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "dot-edge-active": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The current dot's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

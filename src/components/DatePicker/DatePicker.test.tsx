@@ -275,7 +275,7 @@ describe('DatePicker', () => {
       const day = pop.querySelector<HTMLElement>('tbody tr:nth-child(3) td:not([aria-selected=true]) > button:not([aria-current])')!;
       const sel = cs('.srp-calendar__day--selected');
       const pairs: Array<[string, string, string, number]> = [['title', cs('.srp-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.srp-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', seen(pop.querySelector('td[aria-selected="true"] > button')!), bg, 3]];
-      day.style.background = 'var(--calendar-day-bg-hover, var(--surface-muted))';
+      day.style.background = 'var(--calendar-day-bg-hover, var(--surface-sunken))';
       pairs.push(['day on hover', getComputedStyle(day).color, getComputedStyle(day).backgroundColor, 4.5]);
       day.style.background = '';
       const tb = document.querySelector('[data-testid=today] td:not([aria-selected="true"]) > [aria-current="date"]');
@@ -382,7 +382,7 @@ describe('DatePicker held state', () => {
     const b = page.getByRole('button', { name: 'Pick the start date' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-raised-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

@@ -14,7 +14,7 @@
       },
       "fill": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The selected part of the track.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "thumb-border": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The thumb's ring (3:1 on the surface).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The fill and the thumb's ring when invalid.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "fill-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-surface}",
+        "$value": "{color.surface-disabled}",
         "$description": "Disabled: the fill, whatever its color when enabled.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "fill-edge": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The filled range's and the thumb's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

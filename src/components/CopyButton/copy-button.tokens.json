@@ -4,7 +4,7 @@
     "color": {
       "done-color": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "The check icon once it has copied (3:1 on the button).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "failed-color": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "The error icon when the browser refused to copy (3:1 on the button).",
         "$extensions": {
           "com.serupa": {

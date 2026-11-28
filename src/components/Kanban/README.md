@@ -119,15 +119,15 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | --- | --- | --- |
 | `--kanban-text` | `text` | Titles and card text (4.5:1 on the column and the card). |
 | `--kanban-muted` | `text-muted` | Counts, handles and the empty column's words (4.5:1 on the column). |
-| `--kanban-column-bg` | `surface-muted` | A column's background. |
+| `--kanban-column-bg` | `surface-sunken` | A column's background. |
 | `--kanban-card-bg` | `surface` | A card's background. |
 | `--kanban-card-border` | `border` | A card's outline. |
-| `--kanban-card-border-active` | `primary-text` | The border of the card being moved, as in SortableList. |
-| `--kanban-target-border` | `primary-text` | The outline of the column a moving card would land in (3:1). |
-| `--kanban-over` | `danger-text` | A count over its column's limit (4.5:1 on the column). |
-| `--kanban-handle-active` | `primary-subtle` | A picked-up card's handle. |
-| `--kanban-handle-bg-hover` | `secondary` | The drag handle's background on hover, as SortableList's. |
-| `--kanban-handle-bg-pressed` | `secondary-hover` | The drag handle's background while held down, a step past its hover. |
+| `--kanban-card-border-active` | `text-brand` | The border of the card being moved, as in SortableList. |
+| `--kanban-target-border` | `text-brand` | The outline of the column a moving card would land in (3:1). |
+| `--kanban-over` | `text-danger` | A count over its column's limit (4.5:1 on the column). |
+| `--kanban-handle-active` | `surface-brand-subtle` | A picked-up card's handle. |
+| `--kanban-handle-bg-hover` | `surface-secondary` | The drag handle's background on hover, as SortableList's. |
+| `--kanban-handle-bg-pressed` | `surface-secondary-hover` | The drag handle's background while held down, a step past its hover. |
 | `--kanban-focus-ring` | `focus-ring` | The ring around a focused handle. |
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |

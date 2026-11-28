@@ -24,10 +24,10 @@
   transition: background-color var(--motion-hover);
 }
 @media (pointer: coarse) { .srp-menubar__item { min-height: max(var(--menubar-item-height, var(--control-height-sm)), var(--spacing-11)); } }   /* 44px to press on a touch screen, as Menu's items */
-@media (hover: hover) { .srp-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
-.srp-menubar__item:active:not([aria-disabled="true"]) { background: var(--menubar-item-bg-pressed, var(--pressed)); }   /* held down: one step past hover */
-.srp-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--pressed)); }
+@media (hover: hover) { .srp-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--surface-highlight)); } }
+.srp-menubar__item:active:not([aria-disabled="true"]) { background: var(--menubar-item-bg-pressed, var(--surface-secondary-hover)); }   /* held down: one step past hover */
+.srp-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--surface-pressed)); }
 .srp-menubar__item:focus-visible { outline: var(--focus-ring-width) solid var(--menubar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.srp-menubar__item[aria-disabled="true"] { color: var(--menubar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-menubar__item[aria-disabled="true"] { color: var(--menubar-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 @media (forced-colors: active) { .srp-menubar__item[aria-expanded="true"] { background: Highlight; color: HighlightText; } }
 }

@@ -4,7 +4,7 @@
     "color": {
       "primary": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Color with `tone=\"primary\"`",
         "$extensions": {
           "com.serupa": {

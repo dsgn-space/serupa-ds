@@ -4,7 +4,7 @@
     "color": {
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The background while pressed (on).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "text-pressed": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Text and icon while pressed (4.5:1 on bg-pressed).",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "border-pressed": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The outline variant's border while pressed (3:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "bg-pressed-held": {
         "$type": "color",
-        "$value": "{color.primary-subtle-pressed}",
+        "$value": "{color.surface-brand-subtle-pressed}",
         "$description": "The background of an on toggle while held down, one step past bg-pressed.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "text-pressed-held": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "Text and icon of an on toggle while held down (4.5:1 on bg-pressed-held).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "bg-pressed-disabled": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "The background while on and disabled.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "border-pressed-disabled": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "The outline variant's border while on and disabled (3:1 on surface).",
         "$extensions": {
           "com.serupa": {

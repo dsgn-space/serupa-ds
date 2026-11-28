@@ -44,9 +44,9 @@
   align-items: flex-start;
   gap: var(--toast-gap, var(--spacing-3));
   padding: var(--toast-padding, var(--spacing-4));
-  border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border-overlay));
+  border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border-raised));
   border-radius: var(--toast-radius, var(--radius-surface));
-  background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); --border: var(--toast-divider, var(--border-overlay));
+  background: var(--toast-bg, var(--surface-raised)); --surface-behind: var(--toast-bg, var(--surface-raised)); --border: var(--toast-divider, var(--border-raised));
   color: var(--toast-title-color, var(--text));
   box-shadow: var(--toast-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
@@ -83,10 +83,10 @@
 .srp-toast:focus-visible { outline: var(--focus-ring-width) solid var(--toast-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-toast__icon { display: flex; flex-shrink: 0; }
 .srp-toast__icon .srp-icon { font-size: var(--spacing-5); }
-.srp-toast--info .srp-toast__icon { color: var(--toast-icon-info, var(--info)); }
-.srp-toast--success .srp-toast__icon { color: var(--toast-icon-success, var(--success)); }
-.srp-toast--warning .srp-toast__icon { color: var(--toast-icon-warning, var(--warning)); }
-.srp-toast--danger .srp-toast__icon { color: var(--toast-icon-danger, var(--danger)); }
+.srp-toast--info .srp-toast__icon { color: var(--toast-icon-info, var(--surface-info)); }
+.srp-toast--success .srp-toast__icon { color: var(--toast-icon-success, var(--surface-success)); }
+.srp-toast--warning .srp-toast__icon { color: var(--toast-icon-warning, var(--surface-warning)); }
+.srp-toast--danger .srp-toast__icon { color: var(--toast-icon-danger, var(--surface-danger)); }
 /* A long word in a narrow toast breaks where its language hyphenates it (191), with a hyphen, before
    overflow-wrap cuts it anywhere. It follows the nearest lang. */
 /* Only words of 10 letters or more hyphenate, 4 on each side, so ordinary words still wrap whole ("recur-ring"
@@ -97,7 +97,7 @@
 /* "×12": the same message came 12 times. */
 .srp-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
 /* "+2 more": toasts waiting past the Toaster's limit. */
-.srp-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
+.srp-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-raised)); --surface-behind: var(--toast-bg, var(--surface-raised)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
   transition: opacity var(--motion-enter-md) var(--ease-enter); }
 /* It fades in as toasts start to wait, and out once none do (FO1); there as the Toaster arrives, it's just there. */
 @starting-style { .srp-toaster__more:not([data-instant]) { opacity: var(--opacity-0); } }

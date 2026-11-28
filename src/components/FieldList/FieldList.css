@@ -15,7 +15,7 @@
 .srp-field-list__fields > * { flex: auto; flex-basis: var(--field-list-field-min-width, var(--spacing-40)); min-inline-size: var(--spacing-0); }
 .srp-field-list__remove { flex: none; }
 .srp-field-list__row-error { flex-basis: var(--sizing-full); }
-.srp-field-list__error { display: flex; align-items: flex-start; gap: var(--field-list-error-gap, var(--spacing-1)); color: var(--field-list-error-color, var(--danger-text)); overflow-wrap: anywhere; }
+.srp-field-list__error { display: flex; align-items: flex-start; gap: var(--field-list-error-gap, var(--spacing-1)); color: var(--field-list-error-color, var(--text-danger)); overflow-wrap: anywhere; }
 .srp-field-list__error-icon { flex: none; font-size: var(--spacing-4); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }
 .srp-field-list__add { display: flex; flex-wrap: wrap; align-items: center; gap: var(--field-list-row-gap, var(--spacing-3)); }
 }

@@ -27,8 +27,8 @@ export const Weights: Story = {
 export const Color: Story = {
   render: () => <div className="flex gap-4 text-2xl">
     <span style={{ color: 'var(--text)' }}><Icon name="info" /></span>
-    <span style={{ color: 'var(--primary-text)' }}><Icon name="check_circle" /></span>
-    <span style={{ color: 'var(--danger-text)' }}><Icon name="error" /></span>
+    <span style={{ color: 'var(--text-brand)' }}><Icon name="check_circle" /></span>
+    <span style={{ color: 'var(--text-danger)' }}><Icon name="error" /></span>
     <span style={{ color: 'var(--text-muted)' }}><Icon name="schedule" /></span>
   </div>,
 };

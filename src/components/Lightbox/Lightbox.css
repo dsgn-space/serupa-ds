@@ -13,7 +13,7 @@
   --srp-lightbox-max: calc(var(--sizing-dvh) - var(--lightbox-stage-max-height, var(--spacing-40)) - var(--spacing-20) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   position: relative; display: block; overflow: hidden; aspect-ratio: var(--srp-lightbox-ratio);
   inline-size: min(var(--sizing-full), var(--srp-lightbox-w), calc(var(--srp-lightbox-max) * (var(--srp-lightbox-ratio))));
-  border-radius: var(--lightbox-stage-radius, var(--radius-surface)); background: var(--lightbox-stage-bg, var(--surface-muted)); --surface-behind: var(--lightbox-stage-bg, var(--surface-muted));
+  border-radius: var(--lightbox-stage-radius, var(--radius-surface)); background: var(--lightbox-stage-bg, var(--surface-sunken)); --surface-behind: var(--lightbox-stage-bg, var(--surface-sunken));
 }
 .srp-lightbox__stage[data-state="loaded"] { background: transparent; }
 .srp-lightbox__img { display: block; inline-size: var(--sizing-full); block-size: var(--sizing-full); object-fit: contain; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
@@ -21,7 +21,7 @@
 .srp-lightbox__stage[data-fades][data-state="loaded"] .srp-lightbox__img { transition: opacity var(--motion-enter-md) var(--ease-enter); }
 .srp-lightbox__stage[data-state="loaded"]::after {
   content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
-  outline: var(--outline-width-1) solid var(--lightbox-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
+  outline: var(--outline-width-1) solid var(--lightbox-edge, var(--border-picture)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 .srp-lightbox__fallback { position: absolute; inset: var(--spacing-0); display: grid; place-items: center; color: var(--lightbox-fallback-color, var(--text-muted)); }
 .srp-lightbox__fallback .srp-icon { inline-size: var(--lightbox-fallback-icon, var(--spacing-6)); block-size: var(--lightbox-fallback-icon, var(--spacing-6)); }

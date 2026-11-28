@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "Behind a match.",
         "$extensions": {
           "com.serupa": {

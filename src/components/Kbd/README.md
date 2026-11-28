@@ -92,8 +92,8 @@ Each is an optional override: set it on the page, a container or one key. The li
 <!-- token-table:start (made from kbd.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--kbd-bg` | `surface-muted` | A key's background. |
-| `--kbd-border` | `border-control` | A key's outline, thicker at the bottom like a keycap. |
+| `--kbd-bg` | `surface-sunken` | A key's background. |
+| `--kbd-border` | `border-strong` | A key's outline, thicker at the bottom like a keycap. |
 | `--kbd-text` | `text` | The key's label (4.5:1 on bg). |
 | `--kbd-separator` | `text-muted` | The + between keys in a combination. |
 | `--kbd-border-sm` | `border` | size="sm"'s outline, quieter, for a key inside a control such as a search button. |

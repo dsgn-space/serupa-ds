@@ -6,22 +6,22 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]) {
-  background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary-text));
+  background: var(--toggle-button-bg-pressed, var(--surface-brand-subtle)); color: var(--toggle-button-text-pressed, var(--text-brand));
 }
 @media (hover: hover) {
   .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]):hover:not(:disabled, [aria-disabled="true"]) {
-    background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary-text));
+    background: var(--toggle-button-bg-pressed, var(--surface-brand-subtle)); color: var(--toggle-button-text-pressed, var(--text-brand));
   }
 }
-.srp-toggle-button.srp-btn--outline.srp-toggle-button:where([aria-pressed="true"]) { border-color: var(--toggle-button-border-pressed, var(--primary-text)); }
+.srp-toggle-button.srp-btn--outline.srp-toggle-button:where([aria-pressed="true"]) { border-color: var(--toggle-button-border-pressed, var(--text-brand)); }
 /* Held down, an on toggle takes a step past its fill, as every Button variant does (Button's held fills). */
 .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]):is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) {
-  background: var(--toggle-button-bg-pressed-held, var(--primary-subtle-pressed)); color: var(--toggle-button-text-pressed-held, var(--primary-text-hover));
+  background: var(--toggle-button-bg-pressed-held, var(--surface-brand-subtle-pressed)); color: var(--toggle-button-text-pressed-held, var(--text-brand-hover));
 }
 .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]):is(:disabled, [aria-disabled="true"]) {
-  background: var(--toggle-button-bg-pressed-disabled, var(--highlight)); color: var(--toggle-button-text-pressed-disabled, var(--text-muted));
+  background: var(--toggle-button-bg-pressed-disabled, var(--surface-highlight)); color: var(--toggle-button-text-pressed-disabled, var(--text-muted));
   --srp-btn-depth: var(--shadow-none);
 }
-.srp-toggle-button.srp-btn--outline.srp-toggle-button:where([aria-pressed="true"]):is(:disabled, [aria-disabled="true"]) { border-color: var(--toggle-button-border-pressed-disabled, var(--border-control)); }
+.srp-toggle-button.srp-btn--outline.srp-toggle-button:where([aria-pressed="true"]):is(:disabled, [aria-disabled="true"]) { border-color: var(--toggle-button-border-pressed-disabled, var(--border-strong)); }
 @media (forced-colors: active) { .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]) { background: Highlight; color: HighlightText; forced-color-adjust: none; } .srp-toggle-button.srp-toggle-button:where([aria-pressed="true"]):is(:disabled, [aria-disabled="true"]) { background: GrayText; color: Canvas; border-color: GrayText; } }
 }

@@ -46,11 +46,11 @@ Drawn from the `Disabled` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the calendar button in `text-muted` |
-| Hover | `field-border-hover`; the calendar button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the calendar button under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the calendar button is off with a plain cursor, so the calendar doesn't open |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
 
 ## Behavior
 
@@ -116,7 +116,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 <!-- token-table:start (made from date-range-picker.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--date-range-picker-dash` | `placeholder` | The dash between the two fields. |
+| `--date-range-picker-dash` | `field-placeholder` | The dash between the two fields. |
 | `--date-range-picker-status-color` | `text-muted` | "Choose the start date" under the months (4.5:1 on surface). |
 | `--date-range-picker-months-gap` | `spacing-6` | Space between the two months (24px). |
 | `--date-range-picker-field-width` | `spacing-24` | Each field's width (96px), enough for a full date. |

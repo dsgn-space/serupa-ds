@@ -129,13 +129,13 @@ describe('Loader', () => {
       <div data-theme="violet-dark"><Loader id="nested" tone="primary" delay={0} /></div>
     </>);
     const art = (id: string) => css(q(`#${id} > span`)).color;
-    expect(art('primary')).toBe(color('var(--primary-text)'));
-    expect(css(q('#primary svg > circle:last-of-type')).stroke).toBe(color('var(--primary-text)'));
+    expect(art('primary')).toBe(color('var(--text-brand)'));
+    expect(css(q('#primary svg > circle:last-of-type')).stroke).toBe(color('var(--text-brand)'));
     expect(art('muted')).toBe(color('var(--text-muted)'));
     expect(art('primary')).not.toBe(css(el('ring')).color);
     const probe = document.createElement('div');
     probe.setAttribute('data-theme', 'violet-dark');
-    probe.style.color = 'var(--primary-text)';
+    probe.style.color = 'var(--text-brand)';
     document.body.appendChild(probe);
     const violet = css(probe).color;
     probe.remove();

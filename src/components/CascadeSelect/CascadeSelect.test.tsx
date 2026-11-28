@@ -333,16 +333,16 @@ describe('CascadeSelect', () => {
   test('contrast in every theme: text and placeholder 4.5:1 on the field, chevron 3:1, the soft border 1.3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
-      ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
+      ['placeholder', 'var(--field-placeholder)', 'var(--field)', 4.5],
       ['chevron', 'var(--text-muted)', 'var(--field)', 3],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
-      ['option', 'var(--text)', 'var(--surface-overlay)', 4.5],
-      ['level', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
-      ['highlighted', 'var(--text)', 'var(--primary-subtle)', 4.5],
-      ['hovered', 'var(--text)', 'var(--surface-muted)', 4.5],
-      ['check', 'var(--primary-text)', 'var(--surface-overlay)', 3],
-      ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
+      ['option', 'var(--text)', 'var(--surface-raised)', 4.5],
+      ['level', 'var(--text-muted)', 'var(--surface-raised)', 4.5],
+      ['highlighted', 'var(--text)', 'var(--surface-brand-subtle)', 4.5],
+      ['hovered', 'var(--text)', 'var(--surface-sunken)', 4.5],
+      ['check', 'var(--text-brand)', 'var(--surface-raised)', 3],
+      ['focus', 'var(--focus-ring)', 'var(--surface-raised)', 3],
     ])).toEqual([]);
   });
 
@@ -376,7 +376,7 @@ describe('CascadeSelect held state', () => {
     const b = page.getByRole('option', { name: 'Bali' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

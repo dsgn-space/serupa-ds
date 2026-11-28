@@ -60,7 +60,7 @@
 .srp-btn .srp-icon { font-size: var(--button-icon-size-md, var(--spacing-4)); }
 
 /* Variants */
-.srp-btn--primary { background-color: var(--button-primary-bg, var(--primary)); color: var(--button-primary-text, var(--on-primary)); }
+.srp-btn--primary { background-color: var(--button-primary-bg, var(--surface-brand)); color: var(--button-primary-text, var(--text-on-brand)); }
 /* A primary button given its own background (--button-primary-bg) and no hover color gets one worked out from it
    (176): darker in both light and dark themes, the way the brand steps go under white text, so its text keeps its
    contrast. With no --button-primary-bg, --srp-btn-hover reads an unset variable, so it falls back to primary-hover. */
@@ -70,22 +70,22 @@
   /* stylelint-disable-next-line serupa/no-raw-value, function-disallowed-list -- the held fill, a second brand step past the hover one */
   --srp-btn-pressed: oklch(from var(--button-primary-bg) calc(l - 0.12) c h);
 }
-@media (hover: hover) { .srp-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--srp-btn-hover, var(--primary-hover))); } }
-.srp-btn--primary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-pressed, var(--srp-btn-pressed, var(--primary-pressed))); }
+@media (hover: hover) { .srp-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--srp-btn-hover, var(--surface-brand-hover))); } }
+.srp-btn--primary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-pressed, var(--srp-btn-pressed, var(--surface-brand-pressed))); }
 
-.srp-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-elevated)); }   /* border-elevated: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
-@media (hover: hover) { .srp-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
-.srp-btn--outline:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-pressed, var(--secondary-hover)); }
+.srp-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-raised)); }   /* border-elevated: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
+@media (hover: hover) { .srp-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--surface-secondary)); } }
+.srp-btn--outline:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-pressed, var(--surface-secondary-hover)); }
 
-.srp-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary-text)); border-color: var(--button-secondary-border, var(--primary-text)); }   /* an outline in the brand color */
-@media (hover: hover) { .srp-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-text-hover)); border-color: var(--button-secondary-border-hover, var(--primary-text-hover)); } }
-.srp-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--primary-subtle-pressed)); color: var(--button-secondary-text-hover, var(--primary-text-hover)); border-color: var(--button-secondary-border-hover, var(--primary-text-hover)); }
+.srp-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--text-brand)); border-color: var(--button-secondary-border, var(--text-brand)); }   /* an outline in the brand color */
+@media (hover: hover) { .srp-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-hover, var(--surface-brand-subtle)); color: var(--button-secondary-text-hover, var(--text-brand-hover)); border-color: var(--button-secondary-border-hover, var(--text-brand-hover)); } }
+.srp-btn--secondary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-secondary-bg-pressed, var(--surface-brand-subtle-pressed)); color: var(--button-secondary-text-hover, var(--text-brand-hover)); border-color: var(--button-secondary-border-hover, var(--text-brand-hover)); }
 
 .srp-btn--ghost { background-color: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
-@media (hover: hover) { .srp-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-hover, var(--secondary)); } }
-.srp-btn--ghost:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-pressed, var(--secondary-hover)); }
+@media (hover: hover) { .srp-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-hover, var(--surface-secondary)); } }
+.srp-btn--ghost:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-ghost-bg-pressed, var(--surface-secondary-hover)); }
 
-.srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary-text)); text-underline-offset: var(--underline-offset-4); }
+.srp-btn--link { background-color: transparent; color: var(--button-link-text, var(--text-brand)); text-underline-offset: var(--underline-offset-4); }
 @media (hover: hover) { .srp-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
 /* surface: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the
@@ -116,26 +116,26 @@
 .srp-btn:disabled, .srp-btn[aria-disabled="true"]:not([data-loading]) { --srp-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
-.srp-btn--destructive { --srp-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
-.srp-btn--primary.srp-btn--destructive { background-color: var(--button-destructive-primary-bg, var(--danger)); color: var(--button-destructive-primary-text, var(--on-danger)); }
-@media (hover: hover) { .srp-btn--primary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-hover, var(--danger-hover)); } }
-.srp-btn--primary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-pressed, var(--danger-pressed)); }
-.srp-btn--secondary.srp-btn--destructive { background-color: var(--button-destructive-secondary-bg, var(--surface-raised)); color: var(--button-destructive-secondary-text, var(--danger-text)); border-color: var(--button-destructive-secondary-border, var(--danger)); }
-@media (hover: hover) { .srp-btn--secondary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); } }
-.srp-btn--secondary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-pressed, var(--danger-subtle-hover)); color: var(--button-destructive-secondary-text, var(--danger-text)); }
-.srp-btn--outline.srp-btn--destructive { background-color: var(--button-destructive-outline-bg, var(--surface-raised)); color: var(--button-destructive-outline-text, var(--danger-text)); border-color: var(--button-destructive-outline-border, var(--danger-border)); }
-@media (hover: hover) { .srp-btn--outline.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); } }
-.srp-btn--outline.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-pressed, var(--danger-subtle-hover)); }
-.srp-btn--ghost.srp-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
-@media (hover: hover) { .srp-btn--ghost.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); } }
-.srp-btn--ghost.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-pressed, var(--danger-subtle-hover)); }
-.srp-btn--link.srp-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
+.srp-btn--destructive { --srp-btn-ring: var(--button-destructive-focus-ring, var(--surface-danger)); }
+.srp-btn--primary.srp-btn--destructive { background-color: var(--button-destructive-primary-bg, var(--surface-danger)); color: var(--button-destructive-primary-text, var(--text-on-danger)); }
+@media (hover: hover) { .srp-btn--primary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-hover, var(--surface-danger-hover)); } }
+.srp-btn--primary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-primary-bg-pressed, var(--surface-danger-pressed)); }
+.srp-btn--secondary.srp-btn--destructive { background-color: var(--button-destructive-secondary-bg, var(--surface-raised)); color: var(--button-destructive-secondary-text, var(--text-danger)); border-color: var(--button-destructive-secondary-border, var(--surface-danger)); }
+@media (hover: hover) { .srp-btn--secondary.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-hover, var(--surface-danger-subtle)); } }
+.srp-btn--secondary.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-secondary-bg-pressed, var(--surface-danger-subtle-hover)); color: var(--button-destructive-secondary-text, var(--text-danger)); }
+.srp-btn--outline.srp-btn--destructive { background-color: var(--button-destructive-outline-bg, var(--surface-raised)); color: var(--button-destructive-outline-text, var(--text-danger)); border-color: var(--button-destructive-outline-border, var(--border-danger)); }
+@media (hover: hover) { .srp-btn--outline.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-hover, var(--surface-danger-subtle)); } }
+.srp-btn--outline.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-outline-bg-pressed, var(--surface-danger-subtle-hover)); }
+.srp-btn--ghost.srp-btn--destructive { color: var(--button-destructive-ghost-text, var(--text-danger)); }
+@media (hover: hover) { .srp-btn--ghost.srp-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-hover, var(--surface-danger-subtle)); } }
+.srp-btn--ghost.srp-btn--destructive:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { background-color: var(--button-destructive-ghost-bg-pressed, var(--surface-danger-subtle-hover)); }
+.srp-btn--link.srp-btn--destructive { color: var(--button-destructive-link-text, var(--text-danger)); }
 /* After the variants and destructive ones, so it wins over each of them. */
 .srp-btn:disabled, .srp-btn[aria-disabled="true"]:not([data-loading]) {
   /* Disabled is drawn in muted colors, not by fading the button's own: a faded label fell to about 2.4:1, fainter than
      the disabled fields beside it (3.4:1 and up), and stayed there with more contrast. The muted pair follows the
      contrast axis like every other text. */
-  background: var(--button-bg-disabled, var(--surface-muted)); color: var(--button-text-disabled, var(--text-muted));
+  background: var(--button-bg-disabled, var(--surface-sunken)); color: var(--button-text-disabled, var(--text-muted));
   border-color: var(--button-border-disabled, var(--border));
   cursor: var(--cursor-disabled);          /* no hover change; disabled buttons ignore clicks */
 }

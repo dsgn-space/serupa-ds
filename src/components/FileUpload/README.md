@@ -117,22 +117,22 @@ Each is an optional override: set it on the page, a container or one upload. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--file-upload-zone-bg` | `surface-control` | The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press. |
+| `--file-upload-zone-bg` | `control` | The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press. |
 | `--file-upload-zone-border` | `field-border` | The drop area's dashed outline: a field's border, which darkens under the pointer (zone-border-hover). Its words and the Choose button mark it, as a field's label does. |
 | `--file-upload-zone-border-hover` | `field-border-hover` | The drop area's outline while the pointer is over it (a click there browses for files). |
-| `--file-upload-zone-bg-pressed` | `field-hover` | The drop area's fill while pressed (a click there browses for files), as a field's buttons fill. |
-| `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
-| `--file-upload-zone-border-active` | `primary-text` | Its outline then. |
-| `--file-upload-zone-border-invalid` | `danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |
+| `--file-upload-zone-bg-pressed` | `surface-raised-hover` | The drop area's fill while pressed (a click there browses for files), as a field's buttons fill. |
+| `--file-upload-zone-bg-active` | `surface-brand-subtle` | The drop area while files are dragged over it. |
+| `--file-upload-zone-border-active` | `text-brand` | Its outline then. |
+| `--file-upload-zone-border-invalid` | `surface-danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |
 | `--file-upload-icon-color` | `text-muted` | The upload icon and file icons (3:1). |
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |
 | `--file-upload-hint-color` | `text-muted` | The hint and file sizes (4.5:1 on zone-bg and the surface). |
-| `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |
-| `--file-upload-done-color` | `success-text` | A finished upload's "Complete" and its check (fileStatus). |
+| `--file-upload-error-color` | `text-danger` | Messages about files that weren't added. |
+| `--file-upload-done-color` | `text-success` | A finished upload's "Complete" and its check (fileStatus). |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
-| `--file-upload-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--file-upload-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--file-upload-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--file-upload-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--file-upload-focus-ring` | `focus-ring` | The ring around a file name that takes keyboard focus because it is cut. |
 
 **Radius**

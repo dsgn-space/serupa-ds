@@ -151,7 +151,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
   );
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface-sunken text-text">
       <SkipLink />
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>

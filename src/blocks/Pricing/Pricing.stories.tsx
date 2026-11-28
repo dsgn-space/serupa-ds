@@ -16,7 +16,7 @@ const plans: PricingPlan[] = [
 ];
 
 function Page({ children, title = 'Billing', section = 'Plans' }: { children: React.ReactNode; title?: string; section?: string }) {
-  return <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none">
+  return <div className="min-h-screen bg-surface-sunken text-text"><SkipLink /><main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none">
     <Heading level={1}>{title}</Heading><Heading level={2}>{section}</Heading>{children}</main></div>;
 }
 

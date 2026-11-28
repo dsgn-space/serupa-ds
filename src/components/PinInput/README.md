@@ -60,7 +60,7 @@ Drawn from the `Alphanumeric` story.
 | Focus | The box the caret is in takes the `focus-ring` color on its border and a ring hugging it (2px in all), and an empty one shows a caret line, steady under reduced motion; a visible outline in forced-colors mode |
 | Invalid | `danger` borders, and a `danger` ring on the box with the caret |
 | Read-only | `field-readonly` boxes, no hover change; still focusable |
-| Disabled | `field-readonly` boxes, `disabled-border` edges and `disabled-text`, `not-allowed` cursor |
+| Disabled | `field-readonly` boxes, `border-disabled` edges and `text-disabled`, `not-allowed` cursor |
 
 ## Accessibility
 
@@ -109,8 +109,8 @@ Each is an optional override: set it on the page, a container or one PinInput. T
 | `--pin-input-focus-ring` | `focus-ring` | The border and ring of the box the caret is in. |
 | `--pin-input-invalid` | `field-border-invalid` | Every box's border when invalid (3:1 on the surface). |
 | `--pin-input-bg-readonly` | `field-readonly` | The boxes' background when read-only or disabled. |
-| `--pin-input-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--pin-input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--pin-input-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--pin-input-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--pin-input-radius` | `radius-control` | A box's corners (6px). |
 | `--pin-input-box-sm` | `control-height-sm` | A box's width and height, size="sm" (24px). |
 | `--pin-input-box-md` | `control-height-md` | A box's width and height, size="md", the default (32px). |

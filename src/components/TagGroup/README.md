@@ -98,20 +98,20 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-text` | `text` | A tag's words (4.5:1 on bg). |
 | `--tag-group-border` | `border-strong` | A tag's border: the light one a field and an outline Badge have. Its words mark the tag, so the edge needn't be 3:1; a picked tag's border is. |
 | `--tag-group-bg-hover` | `surface-hover` | A tag that can be picked, under the pointer. A picked tag keeps its own colors, as a pressed ToggleButton does. |
-| `--tag-group-bg-pressed` | `pressed` | A tag that can be picked, while it's held down, one step past bg-hover. |
-| `--tag-group-bg-selected` | `primary-subtle` | A picked tag's background. |
-| `--tag-group-text-selected` | `primary-text` | A picked tag's words and tick (4.5:1 on bg-selected). |
-| `--tag-group-border-selected` | `primary-text` | A picked tag's border. |
+| `--tag-group-bg-pressed` | `surface-pressed` | A tag that can be picked, while it's held down, one step past bg-hover. |
+| `--tag-group-bg-selected` | `surface-brand-subtle` | A picked tag's background. |
+| `--tag-group-text-selected` | `text-brand` | A picked tag's words and tick (4.5:1 on bg-selected). |
+| `--tag-group-border-selected` | `text-brand` | A picked tag's border. |
 | `--tag-group-remove-hover` | `surface-hover` | The × button's background under the pointer. |
-| `--tag-group-remove-pressed` | `pressed` | The × while it's held down, one step past remove-hover. |
+| `--tag-group-remove-pressed` | `surface-pressed` | The × while it's held down, one step past remove-hover. |
 | `--tag-group-label` | `text` | The group's label. |
 | `--tag-group-muted` | `text-muted` | The empty text. |
 | `--tag-group-focus-ring` | `focus-ring` | The focus ring around the focused tag. |
-| `--tag-group-more` | `primary-text` | The Show more and Show less button's words (4.5:1 on the page). |
-| `--tag-group-more-hover` | `primary-text-hover` | The Show more and Show less button's words on hover, as a link's (4.5:1 on the page). |
+| `--tag-group-more` | `text-brand` | The Show more and Show less button's words (4.5:1 on the page). |
+| `--tag-group-more-hover` | `text-brand-hover` | The Show more and Show less button's words on hover, as a link's (4.5:1 on the page). |
 | `--tag-group-icon` | `text-muted` | A tag's leading icon (decorative; the words name the tag). |
-| `--tag-group-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--tag-group-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--tag-group-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--tag-group-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Radius**
 

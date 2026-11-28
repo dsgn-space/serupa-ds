@@ -54,11 +54,21 @@
       },
       "placeholder": {
         "$type": "color",
-        "$value": "{color.placeholder}",
+        "$value": "{color.field-placeholder}",
         "$description": "Placeholder text",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-placeholder"
+          }
+        }
+      },
+      "placeholder-readonly": {
+        "$type": "color",
+        "$value": "{color.text-secondary}",
+        "$description": "Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-placeholder-readonly"
           }
         }
       },
@@ -104,7 +114,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -114,22 +124,11 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--textarea-text-disabled"
-          }
-        }
-      },
-      "resize-grip": {
-        "$type": "color",
-        "$value": "{color.text-muted}",
-        "$description": "Deprecated, removed in 20.0.0: the resize handle is the browser's own again, so this has no effect.",
-        "$deprecated": "No effect since 19.2.0: the resize handle is the browser's own. Removed in 20.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--textarea-resize-grip"
           }
         }
       }

@@ -34,31 +34,31 @@ button.srp-stepper__head { cursor: var(--cursor-interactive); touch-action: mani
    fill, a step darker in light themes and lighter in dark, as a Button's held fill; its muted number turns
    text-muted-shaded to keep 4.5:1 on it. Nothing shrinks by default; --stepper-press-scale opts in to one. */
 button.srp-stepper__head .srp-stepper__indicator { transition: scale var(--motion-release) var(--ease-spring); }
-button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-muted-shaded)); background-image: linear-gradient(var(--srp-step-held), var(--srp-step-held)); --srp-step-held: color-mix(in srgb, var(--stepper-wash-pressed, var(--text)) var(--stepper-layer-pressed, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
+button.srp-stepper__head:active .srp-stepper__indicator { --text-muted: var(--stepper-indicator-text-shaded, var(--text-secondary)); background-image: linear-gradient(var(--srp-step-held), var(--srp-step-held)); --srp-step-held: color-mix(in srgb, var(--stepper-wash-pressed, var(--text)) var(--stepper-layer-pressed, var(--opacity-10)), transparent); scale: var(--stepper-press-scale, var(--scale-100)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { button.srp-stepper__head .srp-stepper__indicator { transition: none; } button.srp-stepper__head:active .srp-stepper__indicator { scale: none; } }
 .srp-stepper__head:focus { outline: none; }
 .srp-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .srp-stepper__indicator {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--srp-step-size); height: var(--srp-step-size);
-  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--border-control)); border-radius: var(--stepper-radius, var(--radius-pill));
+  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--border-strong)); border-radius: var(--stepper-radius, var(--radius-pill));
   background: var(--stepper-indicator-bg, var(--surface)); --surface-behind: var(--stepper-indicator-bg, var(--surface)); color: var(--stepper-indicator-text, var(--text-muted));
   font-weight: var(--font-semibold); font-variant-numeric: tabular-nums;
 }
 .srp-stepper__indicator .srp-icon { font-size: var(--spacing-4); }
 .srp-stepper--size-sm .srp-stepper__indicator .srp-icon { font-size: var(--spacing-3\.5); }
 .srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator, .srp-stepper__step:where([data-state="complete"]) .srp-stepper__indicator {
-  border-color: var(--stepper-edge-active, var(--primary-edge)); background: var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge (Yellow Light) */
+  border-color: var(--stepper-edge-active, var(--border-brand)); background: var(--stepper-bg-active, var(--surface-brand)); color: var(--stepper-text-active, var(--text-on-brand));   /* the border is the fill's edge: transparent over the fill, or the theme's primary-edge (Yellow Light) */
 }
-.srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
-.srp-stepper__step:where([data-state="error"]) .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
-.srp-stepper__step--warning .srp-stepper__indicator { border-color: var(--stepper-warning-border, var(--warning-text)); background: var(--stepper-warning-bg, var(--warning-subtle)); color: var(--stepper-warning-text, var(--warning-text)); }
+.srp-stepper__step:where([data-state="current"]) .srp-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--surface-brand)); outline-offset: var(--outline-offset-2); }
+.srp-stepper__step:where([data-state="error"]) .srp-stepper__indicator { border-color: var(--stepper-bg-error, var(--surface-danger)); background: var(--stepper-bg-error, var(--surface-danger)); color: var(--stepper-text-error, var(--text-on-danger)); }
+.srp-stepper__step--warning .srp-stepper__indicator { border-color: var(--stepper-warning-border, var(--text-warning)); background: var(--stepper-warning-bg, var(--surface-warning-subtle)); color: var(--stepper-warning-text, var(--text-warning)); }
 .srp-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--srp-step-text-pad); overflow-wrap: anywhere; }
 .srp-stepper { --srp-step-text-pad: calc((var(--srp-step-size) - var(--text-sm--line-height)) / 2); }
 .srp-stepper--size-sm { --srp-step-text-pad: calc((var(--srp-step-size) - var(--text-xs--line-height)) / 2); }
 .srp-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
 .srp-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.srp-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
-.srp-stepper__step:where([data-done]) .srp-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--stepper-edge-active, var(--primary-edge)); }
+.srp-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-strong)); }
+.srp-stepper__step:where([data-done]) .srp-stepper__connector { background: var(--stepper-connector-complete, var(--surface-brand)); box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--stepper-edge-active, var(--border-brand)); }
 .srp-stepper--horizontal .srp-stepper__connector {
   align-self: flex-start; min-width: var(--spacing-4); height: var(--srp-step-line);
   margin: var(--srp-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);

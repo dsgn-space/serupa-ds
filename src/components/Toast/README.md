@@ -136,16 +136,16 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 <!-- token-table:start (made from toast.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--toast-bg` | `surface-overlay` | A toast's background. |
-| `--toast-border` | `border-overlay` | A toast's border. |
+| `--toast-bg` | `surface-raised` | A toast's background. |
+| `--toast-border` | `border-raised` | A toast's border. |
 | `--toast-title-color` | `text` | The title. |
 | `--toast-description-color` | `text-muted` | The description (4.5:1 on surface). |
-| `--toast-icon-info` | `info` | The icon of an info toast (3:1 on surface). |
-| `--toast-icon-success` | `success` | The icon of a success toast. |
-| `--toast-icon-warning` | `warning` | The icon of a warning toast. |
-| `--toast-icon-danger` | `danger` | The icon of a danger toast. |
+| `--toast-icon-info` | `surface-info` | The icon of an info toast (3:1 on surface). |
+| `--toast-icon-success` | `surface-success` | The icon of a success toast. |
+| `--toast-icon-warning` | `surface-warning` | The icon of a warning toast. |
+| `--toast-icon-danger` | `surface-danger` | The icon of a danger toast. |
 | `--toast-focus-ring` | `focus-ring` | The ring around a toast that F8 moved focus to. |
-| `--toast-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--toast-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--toast-shadow` | `elevation-overlay` | A toast's shadow. |
 | `--toast-radius` | `radius-surface` | A toast's corners (8px). |
 | `--toast-border-width` | `border-width-1` | A toast's border. |

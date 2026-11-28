@@ -30,7 +30,7 @@ describe('InlineEdit', () => {
     const view = document.querySelector<HTMLButtonElement>('button')!;
     await userEvent.hover(view); await expect.poll(() => getComputedStyle(view).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     const hover = getComputedStyle(view).backgroundColor;
-    const probe = document.createElement('span'); probe.style.background = 'var(--pressed)'; document.body.append(probe); const want = getComputedStyle(probe).backgroundColor; probe.remove();
+    const probe = document.createElement('span'); probe.style.background = 'var(--surface-pressed)'; document.body.append(probe); const want = getComputedStyle(probe).backgroundColor; probe.remove();
     await press(view, () => { expect(getComputedStyle(view).backgroundColor).toBe(want); expect(want).not.toBe(hover); });
   });
 

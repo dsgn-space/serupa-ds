@@ -105,16 +105,6 @@ async function withRouter(run: (linkRef: React.RefObject<HTMLAnchorElement | nul
 }
 
 describe('Button', () => {
-  test('an outline button\'s border is border-elevated, the line for its raised fill, not the top layer\'s border-overlay: a button isn\'t an overlay', async () => {
-    await render(<div style={{ '--border-elevated': 'rgb(1, 2, 3)', '--border-overlay': 'rgb(9, 8, 7)' } as React.CSSProperties}><Button id="ob" variant="outline">Edit</Button></div>);
-    expect(getComputedStyle(el('ob')).borderTopColor).toBe('rgb(1, 2, 3)');
-    for (const th of THEMES) {
-      document.documentElement.setAttribute('data-theme', th);
-      expect([th, color('var(--border-elevated)')]).toEqual([th, color('var(--border-overlay)')]);   // the same values: nothing looks different
-    }
-    document.documentElement.setAttribute('data-theme', 'blue-light');
-  });
-
   test('type="submit" submits the form on click, and through Enter in a field; onClick runs; type defaults to "button" (never submits by accident)', async () => {
     await withRouter(async () => {
       await userEvent.click(el('sub'));
@@ -432,9 +422,9 @@ describe('Button', () => {
     expect(parseFloat(g('pb').borderTopLeftRadius)).toBeGreaterThan(1000);
     expect(g('pb').height).toBe('44px');
     expect(g('one').backgroundColor).toBe(probe(null, 'backgroundColor', 'var(--emerald-600)'));
-    expect(g('plainb').backgroundColor).toBe(color('var(--primary)'));
-    expect(g('nested').backgroundColor).toBe(probe('violet-dark', 'backgroundColor', 'var(--primary)'));
-    expect(g('nested-d').borderTopColor).toBe(probe('violet-dark', 'borderTopColor', 'var(--danger-border)'));
+    expect(g('plainb').backgroundColor).toBe(color('var(--surface-brand)'));
+    expect(g('nested').backgroundColor).toBe(probe('violet-dark', 'backgroundColor', 'var(--surface-brand)'));
+    expect(g('nested-d').borderTopColor).toBe(probe('violet-dark', 'borderTopColor', 'var(--border-danger)'));
   });
 
   test('a primary button given its own background and no hover color gets one from it (176): darker in both light and dark themes; a hover color given, or no background given, keeps its own', async () => {
@@ -452,7 +442,7 @@ describe('Button', () => {
     // Its own hue still (not the theme's blue), one step darker in both themes so white text keeps contrast.
     expect([ll! < l! - 0.05, dl! < l! - 0.05, Math.abs(lh! - h!) < 2, Math.abs(dh! - h!) < 2]).toEqual([true, true, true, true]);
     expect(await hovered('both')).toBe(color('var(--emerald-800)'));
-    expect(await hovered('plainh')).toBe(color('var(--primary-hover)'));
+    expect(await hovered('plainh')).toBe(color('var(--surface-brand-hover)'));
     await userEvent.unhover(el('plainh'));
   });
 
@@ -500,8 +490,8 @@ describe('Button micro-interactions', () => {
     take();
     const rest = getComputedStyle(el('press')).backgroundColor;
     const held = await hold(el('press'), () => { const s = getComputedStyle(el('press')); return { bg: s.backgroundColor, scale: s.scale }; }, { ms: 1500 });
-    expect(held.bg).toBe(color('var(--primary-subtle-pressed)'));
-    expect(held.bg).not.toBe(color('var(--primary-subtle)'));
+    expect(held.bg).toBe(color('var(--surface-brand-subtle-pressed)'));
+    expect(held.bg).not.toBe(color('var(--surface-brand-subtle)'));
     expect(still).toContain(held.scale);
     await eased(el('press'));
     expect([getComputedStyle(el('press')).backgroundColor === held.bg, rest === held.bg]).toEqual([false, false]);
@@ -531,12 +521,12 @@ describe('Button micro-interactions', () => {
     const variants = ['primary', 'outline', 'secondary', 'ghost'] as const;
     await render(<div id="vs" style={vars({ transition: 'none' })}>{variants.flatMap((v) => [false, true].map((d) => <Button key={v + d} id={`h-${v}${d ? '-d' : ''}`} variant={v} destructive={d} style={vars({ transition: 'none' })}>Save</Button>))}</div>);
     const want: Record<string, string> = {
-      primary: 'var(--primary-pressed)', outline: 'var(--secondary-hover)', secondary: 'var(--primary-subtle-pressed)', ghost: 'var(--secondary-hover)',
-      'primary-d': 'var(--danger-pressed)', 'outline-d': 'var(--danger-subtle-hover)', 'secondary-d': 'var(--danger-subtle-hover)', 'ghost-d': 'var(--danger-subtle-hover)',
+      primary: 'var(--surface-brand-pressed)', outline: 'var(--surface-secondary-hover)', secondary: 'var(--surface-brand-subtle-pressed)', ghost: 'var(--surface-secondary-hover)',
+      'primary-d': 'var(--surface-danger-pressed)', 'outline-d': 'var(--surface-danger-subtle-hover)', 'secondary-d': 'var(--surface-danger-subtle-hover)', 'ghost-d': 'var(--surface-danger-subtle-hover)',
     };
     const hover: Record<string, string> = {
-      primary: 'var(--primary-hover)', outline: 'var(--secondary)', secondary: 'var(--primary-subtle)', ghost: 'var(--secondary)',
-      'primary-d': 'var(--danger-hover)', 'outline-d': 'var(--danger-subtle)', 'secondary-d': 'var(--danger-subtle)', 'ghost-d': 'var(--danger-subtle)',
+      primary: 'var(--surface-brand-hover)', outline: 'var(--surface-secondary)', secondary: 'var(--surface-brand-subtle)', ghost: 'var(--surface-secondary)',
+      'primary-d': 'var(--surface-danger-hover)', 'outline-d': 'var(--surface-danger-subtle)', 'secondary-d': 'var(--surface-danger-subtle)', 'ghost-d': 'var(--surface-danger-subtle)',
     };
     const bad: string[] = [];
     for (const th of THEMES) {
@@ -589,7 +579,7 @@ describe('Button micro-interactions', () => {
     take();
     el('press').focus();
     await userEvent.keyboard('{Enter>}');
-    await expect.poll(() => getComputedStyle(el('press')).backgroundColor).toBe(color('var(--primary-subtle-pressed)'));
+    await expect.poll(() => getComputedStyle(el('press')).backgroundColor).toBe(color('var(--surface-brand-subtle-pressed)'));
     expect(el('press').hasAttribute('data-pressed')).toBe(true);
     await userEvent.keyboard('{/Enter}');
     expect(el('press').hasAttribute('data-pressed')).toBe(false);

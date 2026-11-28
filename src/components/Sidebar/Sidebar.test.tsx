@@ -502,7 +502,7 @@ describe('Sidebar', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const dot = css(el('iinbox').querySelector(DOT)).backgroundColor;
-      for (const [name, on] of [['sidebar', css(el('sb')).backgroundColor], ['highlight', color('var(--sidebar-item-bg-active, var(--highlight))')]]) {
+      for (const [name, on] of [['sidebar', css(el('sb')).backgroundColor], ['surface-highlight', color('var(--sidebar-item-bg-active, var(--surface-highlight))')]]) {
         const r = contrast(dot, on!); n++; if (r < 3) low.push(`${th} on ${name}: ${r.toFixed(2)}`);
       }
     }
@@ -530,7 +530,7 @@ describe('Sidebar', () => {
       document.documentElement.setAttribute('data-theme', th);
       const c = (v: string) => color(`var(--${v})`);
       if (c('surface') === c('surface-hover')) same.push(`${th}: surface and surface-hover are both ${c('surface')}`);
-      if (c('surface-overlay') === c('surface-hover-raised')) same.push(`${th}: surface-overlay and surface-hover-raised are both ${c('surface-overlay')}`);
+      if (c('surface-raised') === c('surface-raised-hover')) same.push(`${th}: surface-raised and surface-raised-hover are both ${c('surface-raised')}`);
     }
     document.documentElement.removeAttribute('data-theme');
     expect(same).toEqual([]);
@@ -539,7 +539,7 @@ describe('Sidebar', () => {
   test('pressed: an item held down fills with pressed, one step past hover', async () => {
     await render(<App />);
     const i = el('iinbox');
-    await press(i, () => expect.poll(() => css(i).backgroundColor).toBe(color('var(--pressed)')));
+    await press(i, () => expect.poll(() => css(i).backgroundColor).toBe(color('var(--surface-pressed)')));
     await away();
   });
 

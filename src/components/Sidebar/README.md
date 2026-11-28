@@ -129,12 +129,12 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-text` | `text-muted` | An item (4.5:1 on bg). |
 | `--sidebar-item-text-hover` | `text` | An item on hover. |
 | `--sidebar-item-text-active` | `text` | The current page's item. |
-| `--sidebar-dot` | `primary-text` | Collapsed: the dot on an item's icon when it has a badge (3:1 on bg and on the current page's highlight). |
+| `--sidebar-dot` | `text-brand` | Collapsed: the dot on an item's icon when it has a badge (3:1 on bg and on the current page's highlight). |
 | `--sidebar-item-bg-hover` | `surface-hover` | An item's background on hover: zinc-100 in light themes, as the current page's, so the shade shows on a white sidebar. Only the current page draws the bar, with more contrast. |
-| `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
-| `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
-| `--sidebar-item-bg-active-hover` | `pressed` | The current page's item background under the pointer: one step past its rest. |
-| `--sidebar-item-indicator` | `highlight-indicator` | The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
+| `--sidebar-item-bg-pressed` | `surface-pressed` | An item's background while it's pressed, one step past hover. |
+| `--sidebar-item-bg-active` | `surface-highlight` | The current page's item background. |
+| `--sidebar-item-bg-active-hover` | `surface-secondary-hover` | The current page's item background under the pointer: one step past its rest. |
+| `--sidebar-item-indicator` | `surface-highlight-indicator` | The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--sidebar-focus-gap-color` | `surface` | The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches. |

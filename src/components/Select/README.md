@@ -68,7 +68,7 @@ Drawn from the `WithIcon` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, default cursor, no hover change; the value at full contrast |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor |
 | Open, where the list is styled | `picker-bg` surface with a `picker-border` border, `picker-radius` corners and `picker-shadow`, at least as wide as the box and at most `picker-max-height` tall, then scrolling. Rows are `option-height` tall (`option-height-touch` on a touch screen) |
 | Option under the pointer or keyboard | `option-bg-active` fill; with more contrast also a 2px `option-indicator` bar at the start edge, and in forced-colors mode a `Highlight` outline |
 | Chosen option | A tick in `check` at the start |
@@ -83,7 +83,7 @@ Drawn from the `WithIcon` story.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
 - Every select needs a name: Field, a `<label htmlFor>` or `aria-label`. The placeholder isn't a label.
 - The chevron and left icon are decorative and don't take clicks: a click anywhere in the box opens the select.
-- Text and placeholder keep 4.5:1 on `field`; the chevron, focus ring and invalid border 3:1, in every theme. In a styled list, options and group labels keep 4.5:1 on the list and on the highlight fill, and the tick 3:1; with more contrast the bar keeps 3:1 on the fill (`Select.test.tsx`). The fill alone is under 3:1 on the list, by design, as in Combobox and Menu (see `highlight-indicator`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
+- Text and placeholder keep 4.5:1 on `field`; the chevron, focus ring and invalid border 3:1, in every theme. In a styled list, options and group labels keep 4.5:1 on the list and on the highlight fill, and the tick 3:1; with more contrast the bar keeps 3:1 on the fill (`Select.test.tsx`). The fill alone is under 3:1 on the list, by design, as in Combobox and Menu (see `surface-highlight-indicator`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Native constraints (`required` with an empty first option) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. Inside a Field, the Field then says which constraint fails, in its error slot (in the provider's words), with `aria-invalid` and the description, so the border is never the only sign; an `error` you pass wins. On its own, the border is only a color: set `invalid` and say the problem in text when you check it yourself. To keep the browser out of it, leave out the attribute and check the value in your own code.
 
 ### Keyboard
@@ -125,19 +125,20 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-text` | `text` | The chosen value, and the options where the browser draws them |
 | `--select-border` | `field-border` | Border |
 | `--select-border-hover` | `field-border-hover` | Border on hover |
-| `--select-placeholder` | `placeholder` | The placeholder |
+| `--select-placeholder` | `field-placeholder` | The placeholder |
+| `--select-placeholder-readonly` | `text-secondary` | Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill. |
 | `--select-icon-color` | `text-muted` | Chevron and left icon |
 | `--select-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--select-invalid` | `field-border-invalid` | Border and ring when invalid |
-| `--select-picker-bg` | `surface-overlay` | The list of options, where the browser draws it with the page's styles (appearance: base-select). |
-| `--select-picker-border` | `border-overlay` | The list's border. |
-| `--select-option-bg-active` | `highlight` | The option under the pointer or the keyboard, as Combobox's. |
-| `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
-| `--select-check` | `primary-text` | The tick by the chosen option. |
+| `--select-picker-bg` | `surface-raised` | The list of options, where the browser draws it with the page's styles (appearance: base-select). |
+| `--select-picker-border` | `border-raised` | The list's border. |
+| `--select-option-bg-active` | `surface-highlight` | The option under the pointer or the keyboard, as Combobox's. |
+| `--select-option-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--select-check` | `text-brand` | The tick by the chosen option. |
 | `--select-group-label` | `text-muted` | A group's name over its options. |
-| `--select-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--select-picker-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--select-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--select-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--select-picker-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Sizing**
 

@@ -4,7 +4,7 @@
     "color": {
       "neutral-bg": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "A neutral tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "primary-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "A primary tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "primary-icon": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A primary tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "success-bg": {
         "$type": "color",
-        "$value": "{color.success-subtle}",
+        "$value": "{color.surface-success-subtle}",
         "$description": "A success tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "success-icon": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "A success tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "warning-bg": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "A warning tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "warning-icon": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "A warning tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "danger-bg": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "A danger tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "danger-icon": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "A danger tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "info-bg": {
         "$type": "color",
-        "$value": "{color.info-subtle}",
+        "$value": "{color.surface-info-subtle}",
         "$description": "An info tile's fill.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "info-icon": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "An info tile's icon (3:1 on its fill).",
         "$extensions": {
           "com.serupa": {

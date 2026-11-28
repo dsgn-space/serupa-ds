@@ -4,7 +4,7 @@
     "color": {
       "up": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "An up day's bar (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "degraded": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "A degraded day's stripes and outline (3:1).",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "down": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "A down day's bar (3:1).",
         "$extensions": {
           "com.serupa": {

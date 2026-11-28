@@ -11,9 +11,9 @@
   box-sizing: border-box;
   max-inline-size: min(var(--container-sm), var(--sizing-full));
   padding: var(--offline-banner-padding-y, var(--spacing-2)) var(--offline-banner-padding-x, var(--spacing-4));
-  border: var(--border-width-1) solid var(--offline-banner-border-color, var(--border-overlay));
+  border: var(--border-width-1) solid var(--offline-banner-border-color, var(--border-raised));
   border-radius: var(--offline-banner-radius, var(--radius-surface));
-  background: var(--offline-banner-bg, var(--surface-overlay));
+  background: var(--offline-banner-bg, var(--surface-raised));
   color: var(--offline-banner-text, var(--text));
   box-shadow: var(--offline-banner-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
@@ -59,7 +59,7 @@
   color: var(--offline-banner-icon, var(--text-muted));
   transition: color var(--motion-change-md) var(--ease-move);
 }
-.srp-offline-banner[data-state="back"] .srp-offline-banner__icon { color: var(--offline-banner-icon-online, var(--success)); }
+.srp-offline-banner[data-state="back"] .srp-offline-banner__icon { color: var(--offline-banner-icon-online, var(--surface-success)); }
 .srp-offline-banner__title { text-wrap: balance; font-weight: var(--font-semibold); }
 @media (forced-colors: active) {
   .srp-offline-banner { border-color: CanvasText; }

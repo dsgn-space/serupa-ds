@@ -34,7 +34,7 @@
       },
       "today": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Today's date, in the month and the agenda.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "event-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "A primary event's fill (other tones use their own subtle color).",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "event-tone": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The bar at the start of an event with no tone.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "info-tone": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "The bar at the start of a tone=\"info\" event.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "info-bg": {
         "$type": "color",
-        "$value": "{color.info-subtle}",
+        "$value": "{color.surface-info-subtle}",
         "$description": "The fill of a tone=\"info\" event (its text stays event-text, 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "success-tone": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The bar at the start of a tone=\"success\" event.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +124,7 @@
       },
       "success-bg": {
         "$type": "color",
-        "$value": "{color.success-subtle}",
+        "$value": "{color.surface-success-subtle}",
         "$description": "The fill of a tone=\"success\" event (its text stays event-text, 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "warning-tone": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The bar at the start of a tone=\"warning\" event.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "warning-bg": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "The fill of a tone=\"warning\" event (its text stays event-text, 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "danger-tone": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The bar at the start of a tone=\"danger\" event.",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "danger-bg": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "The fill of a tone=\"danger\" event (its text stays event-text, 4.5:1 on it).",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "more-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "The \"+N more\" button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "now": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The line across today at the time now, in the week and day views.",
         "$extensions": {
           "com.serupa": {

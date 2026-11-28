@@ -180,7 +180,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
   );
 
   return (
-    <div className="min-h-screen bg-surface-muted text-text">
+    <div className="min-h-screen bg-surface-sunken text-text">
       <SkipLink />
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
@@ -229,7 +229,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
               : 'Give it only the access it needs. You can revoke it at any time.'}>
             {secret ? (
               <div className="flex flex-col gap-4">
-                <code id="key-secret" className="rounded-md border border-border bg-surface-muted p-3 font-mono text-sm break-all">{secret}</code>
+                <code id="key-secret" className="rounded-md border border-border bg-surface-sunken p-3 font-mono text-sm break-all">{secret}</code>
                 <div className="flex flex-wrap gap-2">
                   <CopyButton id="key-copy" value={secret} copiedLabel="Copied" aria-describedby="key-secret" size="md">Copy the key</CopyButton>
                   <Button variant="outline" onClick={() => openCreate(false)}>Done</Button>

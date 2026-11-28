@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The panel's edge.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "ring": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The ring round the element a step points at (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

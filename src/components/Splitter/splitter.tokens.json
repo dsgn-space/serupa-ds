@@ -4,7 +4,7 @@
     "color": {
       "line": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "The handle's line (3:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "line-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The line on hover, while dragged and on focus.",
         "$extensions": {
           "com.serupa": {

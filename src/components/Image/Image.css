@@ -10,7 +10,7 @@
 .srp-image {
   --srp-image-ratio: auto;
   position: relative; display: inline-block; box-sizing: border-box; max-width: var(--sizing-full);
-  aspect-ratio: var(--srp-image-ratio); overflow: hidden; vertical-align: middle; background: var(--image-bg, var(--surface-muted));
+  aspect-ratio: var(--srp-image-ratio); overflow: hidden; vertical-align: middle; background: var(--image-bg, var(--surface-sunken));
 }
 .srp-image--ratio-square { --srp-image-ratio: var(--aspect-square); }
 .srp-image--ratio-4-3 { --srp-image-ratio: 4 / 3; }
@@ -66,7 +66,7 @@
    wider or taller than the picture. */
 .srp-image--loaded:not(.srp-image--contain) .srp-image__img {
   border-radius: inherit;
-  outline: var(--outline-width-1) solid var(--image-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
+  outline: var(--outline-width-1) solid var(--image-edge, var(--border-picture)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 /* dim: in a dark color scheme, a layer of --image-dim at 20% over a loaded picture darkens it a shade (light-dark(), so it
    follows the frame's color-scheme: a *-dark theme, a data-mode or the screen's). The remove button stays above it. */
@@ -82,7 +82,7 @@
 .srp-image__stage {
   position: relative; display: block; overflow: hidden; aspect-ratio: var(--srp-image-ratio);
   width: min(var(--sizing-full), var(--srp-image-w), calc(var(--srp-image-full-max) * (var(--srp-image-ratio))));
-  border-radius: var(--image-radius, var(--radius-surface)); background: var(--image-bg, var(--surface-muted));
+  border-radius: var(--image-radius, var(--radius-surface)); background: var(--image-bg, var(--surface-sunken));
 }
 .srp-image__stage.srp-image--loaded { background: transparent; }
 .srp-image__full { position: relative; display: block; width: var(--sizing-full); height: var(--sizing-full); object-fit: contain; }

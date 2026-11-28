@@ -311,14 +311,14 @@ describe('AvatarGroup held state', () => {
     const b = more('held')!;
     const f = () => b.firstElementChild;
     const low = await press(b, async () => {
-      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--secondary-pressed)'));
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--surface-secondary-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);
         const r = contrast(css(f()).color, css(f()).backgroundColor);
         if (r < 4.5) out.push(`${th}: ${r.toFixed(2)}`);
         // pressed was secondary-hover's own zinc-600 in dark, so holding the button changed nothing.
-        if (css(f()).backgroundColor === color('var(--secondary-hover)')) out.push(`${th}: held is the hover fill`);
+        if (css(f()).backgroundColor === color('var(--surface-secondary-hover)')) out.push(`${th}: held is the hover fill`);
       }
       document.documentElement.removeAttribute('data-theme');
       return out;

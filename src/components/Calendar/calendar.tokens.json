@@ -94,7 +94,7 @@
       },
       "day-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "A day or preset under the pointer, as Pagination's pages.",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "day-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-secondary-hover}",
         "$description": "A day while it's pressed, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "today-color": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Today's number (4.5:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "bg-selected": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The selected day.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "color-selected": {
         "$type": "color",
-        "$value": "{color.on-primary}",
+        "$value": "{color.text-on-brand}",
         "$description": "Its number.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "range-bg": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "Days between the start and end of a range (DateRangePicker).",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "edge-selected": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The selected day's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

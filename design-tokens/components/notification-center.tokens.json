@@ -4,7 +4,7 @@
     "color": {
       "unread": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The unread dot (3:1 on the drawer).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "icon-info": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "The info tone's icon.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "icon-success": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The success tone's icon.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "icon-warning": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The warning tone's icon.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "icon-danger": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The danger tone's icon.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "unread-edge": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The unread dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

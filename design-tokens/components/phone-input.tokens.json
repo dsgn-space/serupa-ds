@@ -34,7 +34,7 @@
       },
       "bg-hover": {
         "$type": "color",
-        "$value": "{color.field-hover}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "The country part's background on hover, as the other buttons inside fields.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.field-pressed}",
+        "$value": "{color.surface-raised-pressed}",
         "$description": "The country picker's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "listbox-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The country list's background.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "listbox-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The country list's outline, and the line under its search field.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "option-bg-active": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "The highlighted country (hover or arrow keys).",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "option-indicator": {
         "$type": "color",
-        "$value": "{color.highlight-indicator}",
+        "$value": "{color.surface-highlight-indicator}",
         "$description": "The 2px bar at the highlighted country's start: none by default (the gray fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {

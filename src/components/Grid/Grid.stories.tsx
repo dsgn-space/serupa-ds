@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Grid } from './Grid';
 
-const Box = ({ children, wrap }: { children?: React.ReactNode; wrap?: boolean }) => <div className={`rounded-md bg-surface-muted p-3 text-sm text-text${wrap ? ' wrap-anywhere' : ''}`}>{children}</div>;
+const Box = ({ children, wrap }: { children?: React.ReactNode; wrap?: boolean }) => <div className={`rounded-md bg-surface-sunken p-3 text-sm text-text${wrap ? ' wrap-anywhere' : ''}`}>{children}</div>;
 const cells = (n: number) => Array.from({ length: n }, (_, i) => <Box key={i}>Cell {i + 1}</Box>);
 
 const meta = {

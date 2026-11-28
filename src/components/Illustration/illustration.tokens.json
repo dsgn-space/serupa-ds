@@ -14,7 +14,7 @@
       },
       "fill": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The shapes' soft fill.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "accent": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind).",
         "$extensions": {
           "com.serupa": {

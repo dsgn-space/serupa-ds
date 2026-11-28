@@ -447,7 +447,7 @@ describe('EventCalendar held state', () => {
     const b = page.getByRole('button', { name: '+3 more' }).element() as HTMLElement;
     const f = () => b;
     const low = await press(b, async () => {
-      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--pressed)'));
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--surface-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

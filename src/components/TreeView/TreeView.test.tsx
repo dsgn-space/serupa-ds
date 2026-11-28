@@ -323,8 +323,8 @@ describe('TreeView', () => {
 
   test('pressed: a row held down fills with pressed at once; a disabled row doesn\'t (ED1)', async () => {
     await render(<Tree />);
-    await press(row('c'), () => expect.poll(() => css(row('c')).backgroundColor).toBe(color('var(--pressed)')));
-    await press(row('b'), () => expect(css(row('b')).backgroundColor).not.toBe(color('var(--pressed)')));
+    await press(row('c'), () => expect.poll(() => css(row('c')).backgroundColor).toBe(color('var(--surface-pressed)')));
+    await press(row('b'), () => expect(css(row('b')).backgroundColor).not.toBe(color('var(--surface-pressed)')));
   });
   // The README's recipe for a folder whose children load when it opens: a disabled "Loading…" item holds its place,
   // which people can reach and read; when the children come, focus on it goes to the first of them; a failure says so

@@ -223,7 +223,7 @@ describe('FilterBar', () => {
     await userEvent.click(edit);
     await expect.element(page.getByRole('dialog', { name: 'Owner' })).toBeVisible();
     await userEvent.unhover(edit);
-    expect([css(edit).color, css(li).backgroundColor]).toEqual([color('var(--text)'), color('var(--pressed)')]);
+    expect([css(edit).color, css(li).backgroundColor]).toEqual([color('var(--text)'), color('var(--surface-pressed)')]);
     await userEvent.keyboard('{Escape}');
     still.remove();
   });
@@ -231,7 +231,7 @@ describe('FilterBar', () => {
   test('chip text 4.5:1 on the chip, the count 4.5:1 on the page, in every theme', () => {
     expect(lowContrast([
       ['chip text', 'var(--text)', 'var(--surface)', 4.5],
-      ['chip text, open', 'var(--text)', 'var(--pressed)', 4.5],
+      ['chip text, open', 'var(--text)', 'var(--surface-pressed)', 4.5],
       ['count', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);

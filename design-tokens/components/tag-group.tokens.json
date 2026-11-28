@@ -44,7 +44,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "A tag that can be picked, while it's held down, one step past bg-hover.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "bg-selected": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "A picked tag's background.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "text-selected": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A picked tag's words and tick (4.5:1 on bg-selected).",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "border-selected": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "A picked tag's border.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "remove-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "The × while it's held down, one step past remove-hover.",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "more": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The Show more and Show less button's words (4.5:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "more-hover": {
         "$type": "color",
-        "$value": "{color.primary-text-hover}",
+        "$value": "{color.text-brand-hover}",
         "$description": "The Show more and Show less button's words on hover, as a link's (4.5:1 on the page).",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

@@ -86,7 +86,7 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
           <Card as="section" aria-labelledby="camera-title" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="camera-title">Camera</Heading>
             {step === 'granted' ? (
-              <div className="flex min-h-40 items-center justify-center gap-2 rounded-md bg-surface-muted text-text-muted">
+              <div className="flex min-h-40 items-center justify-center gap-2 rounded-md bg-surface-sunken text-text-muted">
                 <Icon name="videocam" /> <span>Your camera is on. Others see you when you join.</span>
               </div>
             ) : step === 'denied' ? (

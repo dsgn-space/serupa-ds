@@ -116,23 +116,23 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-bg` | `surface` | The background. |
 | `--event-calendar-text` | `text` | The month's title and the dates (4.5:1 on bg). |
 | `--event-calendar-muted` | `text-muted` | Weekday names, the dates of other months, "+N more" and the empty agenda (4.5:1 on bg). |
-| `--event-calendar-today` | `primary-text` | Today's date, in the month and the agenda. |
+| `--event-calendar-today` | `text-brand` | Today's date, in the month and the agenda. |
 | `--event-calendar-border` | `border` | The lines between days. |
 | `--event-calendar-focus-ring` | `focus-ring` | The focus ring on a day and an event. |
-| `--event-calendar-event-bg` | `primary-subtle` | A primary event's fill (other tones use their own subtle color). |
+| `--event-calendar-event-bg` | `surface-brand-subtle` | A primary event's fill (other tones use their own subtle color). |
 | `--event-calendar-event-text` | `text` | An event's time and title (4.5:1 on each tone's fill). |
-| `--event-calendar-event-tone` | `primary-text` | The bar at the start of an event with no tone. |
-| `--event-calendar-info-tone` | `info-text` | The bar at the start of a tone="info" event. |
-| `--event-calendar-info-bg` | `info-subtle` | The fill of a tone="info" event (its text stays event-text, 4.5:1 on it). |
-| `--event-calendar-success-tone` | `success` | The bar at the start of a tone="success" event. |
-| `--event-calendar-success-bg` | `success-subtle` | The fill of a tone="success" event (its text stays event-text, 4.5:1 on it). |
-| `--event-calendar-warning-tone` | `warning` | The bar at the start of a tone="warning" event. |
-| `--event-calendar-warning-bg` | `warning-subtle` | The fill of a tone="warning" event (its text stays event-text, 4.5:1 on it). |
-| `--event-calendar-danger-tone` | `danger` | The bar at the start of a tone="danger" event. |
-| `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-event-tone` | `text-brand` | The bar at the start of an event with no tone. |
+| `--event-calendar-info-tone` | `text-info` | The bar at the start of a tone="info" event. |
+| `--event-calendar-info-bg` | `surface-info-subtle` | The fill of a tone="info" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-success-tone` | `surface-success` | The bar at the start of a tone="success" event. |
+| `--event-calendar-success-bg` | `surface-success-subtle` | The fill of a tone="success" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-warning-tone` | `surface-warning` | The bar at the start of a tone="warning" event. |
+| `--event-calendar-warning-bg` | `surface-warning-subtle` | The fill of a tone="warning" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-danger-tone` | `surface-danger` | The bar at the start of a tone="danger" event. |
+| `--event-calendar-danger-bg` | `surface-danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-more-bg-hover` | `surface-hover` | "+N more" under the pointer. |
-| `--event-calendar-more-bg-pressed` | `pressed` | The "+N more" button's background while it's held down, one step past hover. |
-| `--event-calendar-now` | `primary-text` | The line across today at the time now, in the week and day views. |
+| `--event-calendar-more-bg-pressed` | `surface-pressed` | The "+N more" button's background while it's held down, one step past hover. |
+| `--event-calendar-now` | `text-brand` | The line across today at the time now, in the week and day views. |
 
 **Radius**
 

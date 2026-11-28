@@ -4,7 +4,7 @@
     "color": {
       "zone-bg": {
         "$type": "color",
-        "$value": "{color.surface-control}",
+        "$value": "{color.control}",
         "$description": "The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "zone-bg-pressed": {
         "$type": "color",
-        "$value": "{color.field-hover}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "The drop area's fill while pressed (a click there browses for files), as a field's buttons fill.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "zone-bg-active": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The drop area while files are dragged over it.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "zone-border-active": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "Its outline then.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "zone-border-invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The drop area's outline when invalid (solid, 3:1 on the surface).",
         "$extensions": {
           "com.serupa": {
@@ -104,7 +104,7 @@
       },
       "error-color": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Messages about files that weren't added.",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +114,7 @@
       },
       "done-color": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "A finished upload's \"Complete\" and its check (fileStatus).",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

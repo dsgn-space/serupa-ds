@@ -116,15 +116,15 @@ Each is an optional override: set it on the page, a container or one pagination.
 | Token | Default | Use |
 | --- | --- | --- |
 | `--pagination-text` | `text` | A page number and the arrows. |
-| `--pagination-bg-hover` | `secondary` | A page or arrow on hover. |
-| `--pagination-bg-pressed` | `pressed` | A page or arrow while it's pressed, one step past hover. |
-| `--pagination-bg-current` | `primary` | The current page's background. |
-| `--pagination-text-current` | `on-primary` | The current page's number (4.5:1 on current-bg). |
+| `--pagination-bg-hover` | `surface-secondary` | A page or arrow on hover. |
+| `--pagination-bg-pressed` | `surface-secondary-hover` | A page or arrow while it's pressed, one step past hover. |
+| `--pagination-bg-current` | `surface-brand` | The current page's background. |
+| `--pagination-text-current` | `text-on-brand` | The current page's number (4.5:1 on current-bg). |
 | `--pagination-ellipsis` | `text-muted` | The … between page ranges (4.5:1 on surface). |
 | `--pagination-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--pagination-summary` | `text-muted` | The summary with total and pageSize, "21–30 of 245" (4.5:1 on surface). |
-| `--pagination-text-disabled` | `disabled-text` | Previous or next when there's no page that way (3:1 or more on the page). |
-| `--pagination-edge-current` | `primary-edge` | The current page's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--pagination-text-disabled` | `text-disabled` | Previous or next when there's no page that way (3:1 or more on the page). |
+| `--pagination-edge-current` | `border-brand` | The current page's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Type**
 

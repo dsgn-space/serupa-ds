@@ -130,7 +130,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-text` | `text` | The title and the table's text (4.5:1 on the surface). |
-| `--chart-tip-bg` | `surface-overlay` | The tooltip's background. |
+| `--chart-tip-bg` | `surface-raised` | The tooltip's background. |
 | `--chart-tip-text` | `text` | The tooltip's text (4.5:1 on tip-bg). |
 | `--chart-series-1` | `chart-1` | Series 1's line, markers and bars. Unset, the page's chart-1. |
 | `--chart-series-2` | `chart-2` | Series 2's line, markers and bars. Unset, the page's chart-2. |
@@ -145,7 +145,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | `--chart-label-text` | `chart-label` | The axis labels and the legend (4.5:1 on the surface). |
 | `--chart-separator` | `chart-gap` | The ring around markers and bars and the marks in a bar's pattern: the color behind the chart, so each series has 3:1 against it. Unset, it takes the fill behind (--surface-behind, which the page and every surface set), else chart-gap. |
 | `--chart-focus-ring` | `focus-ring` | The ring around a focused point or bar. |
-| `--chart-tip-border` | `border-overlay` | The tooltip's border. |
+| `--chart-tip-border` | `border-raised` | The tooltip's border. |
 | `--chart-tip-muted` | `text-muted` | A series' name in the tooltip (4.5:1 on tip-bg). |
 | `--chart-cell-seq-1` | `chart-seq-1` | A heatmap cell in step 1 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-1. |
 | `--chart-cell-seq-2` | `chart-seq-2` | A heatmap cell in step 2 of 5 of the sequential scale (low to high). Unset, the page's chart-seq-2. |

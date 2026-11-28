@@ -4,7 +4,7 @@
     "color": {
       "bg-muted": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The background with tone=\"muted\".",
         "$extensions": {
           "com.serupa": {

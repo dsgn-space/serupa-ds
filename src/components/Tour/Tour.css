@@ -11,8 +11,8 @@
   width: var(--tour-width, var(--container-2xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   margin: var(--spacing-0); padding: var(--tour-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; gap: var(--tour-gap, var(--spacing-3));
-  border: var(--tour-border-width, var(--border-width-1)) solid var(--tour-border, var(--border-overlay)); border-radius: var(--tour-radius, var(--radius-surface));
-  background: var(--tour-bg, var(--surface-overlay)); --surface-behind: var(--tour-bg, var(--surface-overlay)); --border: var(--tour-divider, var(--border-overlay)); color: var(--tour-text, var(--text));
+  border: var(--tour-border-width, var(--border-width-1)) solid var(--tour-border, var(--border-raised)); border-radius: var(--tour-radius, var(--radius-surface));
+  background: var(--tour-bg, var(--surface-raised)); --surface-behind: var(--tour-bg, var(--surface-raised)); --border: var(--tour-divider, var(--border-raised)); color: var(--tour-text, var(--text));
   box-shadow: var(--tour-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
   transform-origin: var(--srp-layer-origin, top);
@@ -47,7 +47,7 @@
 .srp-tour__count { color: var(--tour-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
 .srp-tour__actions { display: flex; gap: var(--spacing-2); margin-inline-start: auto; }
 /* The element the step points at. */
-[data-tour-target] { outline: var(--tour-ring-width, var(--outline-width-2)) solid var(--tour-ring, var(--primary-text)); outline-offset: var(--tour-ring-offset, var(--outline-offset-2)); }
+[data-tour-target] { outline: var(--tour-ring-width, var(--outline-width-2)) solid var(--tour-ring, var(--text-brand)); outline-offset: var(--tour-ring-offset, var(--outline-offset-2)); }
 @media (forced-colors: active) { [data-tour-target] { outline-color: Highlight; } }
 @media print { .srp-tour { display: none; } [data-tour-target] { outline: none; } }
 }

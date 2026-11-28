@@ -8,7 +8,7 @@
 .srp-empty-state { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: var(--empty-state-gap, var(--spacing-4)); padding: var(--empty-state-padding, var(--spacing-12)); text-align: center; font-family: var(--font-sans); }
 .srp-empty-state--sm { padding: var(--empty-state-padding-sm, var(--spacing-6)); }
 .srp-empty-state--dashed { border: var(--empty-state-border-width, var(--border-width-1)) dashed var(--empty-state-border, var(--border)); border-radius: var(--empty-state-radius, var(--radius-surface)); }
-.srp-empty-state__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--empty-state-icon-box, var(--spacing-12)); height: var(--empty-state-icon-box, var(--spacing-12)); border-radius: var(--rounded-full); background: var(--empty-state-icon-bg, var(--secondary)); color: var(--empty-state-icon-color, var(--text-muted)); }
+.srp-empty-state__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--empty-state-icon-box, var(--spacing-12)); height: var(--empty-state-icon-box, var(--spacing-12)); border-radius: var(--rounded-full); background: var(--empty-state-icon-bg, var(--surface-secondary)); color: var(--empty-state-icon-color, var(--text-muted)); }
 .srp-empty-state__icon .srp-icon { font-size: var(--empty-state-icon-size, var(--spacing-6)); }
 .srp-empty-state--sm .srp-empty-state__icon { width: var(--empty-state-icon-box-sm, var(--spacing-10)); height: var(--empty-state-icon-box-sm, var(--spacing-10)); }
 .srp-empty-state__icon--custom { width: auto; height: auto; border-radius: var(--spacing-0); background: transparent; }

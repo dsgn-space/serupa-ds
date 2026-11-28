@@ -16,10 +16,10 @@ describe('the focus ring adapts to a strong fill (74)', () => {
     test(`${theme}: a link on the brand, danger and inverse fills shows a ring 3:1 against the fill; a button's own ring, on the page, keeps the brand's`, async () => {
       root.setAttribute('data-theme', theme);
       await render(<div>
-        <div className="bg-primary" id="f-primary"><a href="#a" id="l-primary">On brand</a></div>
-        <div className="bg-danger" id="f-danger"><a href="#b" id="l-danger">On danger</a></div>
+        <div className="bg-surface-brand" id="f-primary"><a href="#a" id="l-primary">On brand</a></div>
+        <div className="bg-surface-danger" id="f-danger"><a href="#b" id="l-danger">On danger</a></div>
         <div className="bg-surface-inverse" id="f-inverse"><a href="#c" id="l-inverse">On inverse</a></div>
-        <Button id="b-page" className="bg-primary">On page</Button>
+        <Button id="b-page" className="bg-surface-brand">On page</Button>
       </div>);
       const ring = (id: string) => getComputedStyle(document.getElementById(id)!).outlineColor;
       const fill = (id: string) => getComputedStyle(document.getElementById(id)!).backgroundColor;
@@ -44,7 +44,7 @@ describe('the focus ring adapts to a strong fill (74)', () => {
     test(`${theme}: a button on a Card or a light bg- box inside a strong fill gets the page's ring back, 3:1 against the card (GR80)`, async () => {
       root.setAttribute('data-theme', theme);
       await render(<div>
-        <div className="bg-primary"><Card id="card"><Button variant="outline" id="b-card">Edit</Button></Card></div>
+        <div className="bg-surface-brand"><Card id="card"><Button variant="outline" id="b-card">Edit</Button></Card></div>
         <div className="bg-surface-inverse"><div className="bg-surface" id="box"><a href="#d" id="l-box">On a light box</a></div></div>
       </div>);
       const ratios: Record<string, number> = {};

@@ -197,7 +197,7 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
               </div>
               {/* Always there, so a reader is listening before the first ask; empty, it takes no room. */}
               <div role="status" className="text-sm text-text-muted">
-                {sent.n ? <p key={sent.n} className={sent.ok ? 'm-0' : 'm-0 text-danger-text'}>{sent.ok ? `We sent a new code to ${v.email || 'your email'}. It works for 10 minutes.` : 'Couldn’t send a new code. Check your connection and try again.'}</p> : null}
+                {sent.n ? <p key={sent.n} className={sent.ok ? 'm-0' : 'm-0 text-text-danger'}>{sent.ok ? `We sent a new code to ${v.email || 'your email'}. It works for 10 minutes.` : 'Couldn’t send a new code. Check your connection and try again.'}</p> : null}
               </div>
             </>
           ) : (

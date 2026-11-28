@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.surface-secondary}",
         "$description": "The background behind initials and the fallback icon.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "status-online": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The status dot for status=\"online\".",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "status-busy": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The status dot for status=\"busy\".",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "status-away": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The status dot for status=\"away\".",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "status-offline": {
         "$type": "color",
-        "$value": "{color.border-control}",
+        "$value": "{color.border-strong}",
         "$description": "The status dot for status=\"offline\".",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "edge": {
         "$type": "color",
-        "$value": "{color.picture-edge}",
+        "$value": "{color.border-picture}",
         "$description": "The hairline just inside the photo's edge, so a face on white keeps its shape on a white page.",
         "$extensions": {
           "com.serupa": {

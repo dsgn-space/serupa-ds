@@ -59,11 +59,11 @@ Drawn from the `ByArea` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the country and its calling code at the start |
-| Hover | `field-border-hover`; the country picker under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
-| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode. The box draws the one ring whether the country menu or the number has focus; the menu also takes its `field-hover` fill while it has focus |
+| Hover | `field-border-hover`; the country picker under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode. The box draws the one ring whether the country menu or the number has focus; the menu also takes its `surface-raised-hover` fill while it has focus |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the country can't be changed, and its picker keeps a plain cursor |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calling code is in `disabled-text` too, and the country can't be changed |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the calling code is in `text-disabled` too, and the country can't be changed |
 
 ## Accessibility
 
@@ -130,13 +130,13 @@ The box and the number use Input's tokens. These style the country part; each is
 | `--phone-input-dial` | `text` | The calling code (4.5:1 on the field). |
 | `--phone-input-chevron` | `text-muted` | The chevron (3:1 on the field). |
 | `--phone-input-divider` | `field-border` | The line between the country part and the number: the field's own edge color. |
-| `--phone-input-bg-hover` | `field-hover` | The country part's background on hover, as the other buttons inside fields. |
-| `--phone-input-bg-pressed` | `field-pressed` | The country picker's background while it's held down, one step past hover. |
-| `--phone-input-listbox-bg` | `surface-overlay` | The country list's background. |
-| `--phone-input-listbox-border` | `border-overlay` | The country list's outline, and the line under its search field. |
+| `--phone-input-bg-hover` | `surface-raised-hover` | The country part's background on hover, as the other buttons inside fields. |
+| `--phone-input-bg-pressed` | `surface-raised-pressed` | The country picker's background while it's held down, one step past hover. |
+| `--phone-input-listbox-bg` | `surface-raised` | The country list's background. |
+| `--phone-input-listbox-border` | `border-raised` | The country list's outline, and the line under its search field. |
 | `--phone-input-option-color` | `text` | A country's name, the search text, and the calling code of the highlighted country. |
-| `--phone-input-option-bg-active` | `highlight` | The highlighted country (hover or arrow keys). |
-| `--phone-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted country's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--phone-input-option-bg-active` | `surface-highlight` | The highlighted country (hover or arrow keys). |
+| `--phone-input-option-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted country's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--phone-input-muted` | `text-muted` | A country's calling code in the list, the search icon and the no-match message. |
 | `--phone-input-focus-ring` | `focus-ring` | The box's focus ring while the country button has keyboard focus (the field's own is Input's). |
 | `--phone-input-gap` | `spacing-1` | Space around the chevron (4px). |

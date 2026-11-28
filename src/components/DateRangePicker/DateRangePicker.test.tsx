@@ -14,7 +14,7 @@ const isOpen = (tid: string) => !pop(tid).hidden;
 const day = (tid: string, d: string) => pop(tid).querySelector(`[data-date="${d}"]`) as HTMLElement;
 const days = (tid: string) => [...pop(tid).querySelectorAll<HTMLElement>('button[data-date]')];
 // A day in the range is filled with the range color (--calendar-range-bg, primary-subtle by default), read off a probe in the popup.
-const rangeBg = (tid: string) => { const p = document.createElement('span'); p.style.background = 'var(--calendar-range-bg, var(--primary-subtle))'; pop(tid).appendChild(p); const c = getComputedStyle(p).backgroundColor; p.remove(); return c; };
+const rangeBg = (tid: string) => { const p = document.createElement('span'); p.style.background = 'var(--calendar-range-bg, var(--surface-brand-subtle))'; pop(tid).appendChild(p); const c = getComputedStyle(p).backgroundColor; p.remove(); return c; };
 const ranged = (tid: string) => { const c = rangeBg(tid); return days(tid).filter((b) => getComputedStyle(b).backgroundColor === c); };
 const inRange = (tid: string) => ranged(tid).map((b) => b.dataset.date!.slice(5)).join();
 // A day of another month than its grid's: each grid's month is the one its third week is in.

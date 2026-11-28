@@ -13,7 +13,7 @@ const check = (email: string, password: string) => later(email === 'ada@example.
 const verify = (code: string) => later(code === '123456');
 
 function Page({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-surface-muted text-text"><SkipLink /><main id="main" className="mx-auto grid max-w-4xl grid-cols-1 gap-8 px-4 py-12 outline-none md:grid-cols-2">
+  return <div className="min-h-screen bg-surface-sunken text-text"><SkipLink /><main id="main" className="mx-auto grid max-w-4xl grid-cols-1 gap-8 px-4 py-12 outline-none md:grid-cols-2">
     <div className="flex flex-col gap-4"><Heading level={1}>Welcome back to Acme</Heading><p className="text-text-muted">Your projects, files and team are where you left them.</p></div>
     {children}</main></div>;
 }

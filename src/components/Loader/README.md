@@ -146,7 +146,7 @@ Each is an optional override: set it on the page, a container or one loader. Uns
 <!-- token-table:start (made from loader.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--loader-primary` | `primary-text` | Color with `tone="primary"` |
+| `--loader-primary` | `text-brand` | Color with `tone="primary"` |
 | `--loader-muted` | `text-muted` | Color with `tone="muted"` |
 | `--loader-inverse` | `white` | Color with `tone="inverse"` (every variant) |
 | `--loader-size-sm` | `spacing-4` | Size sm (16px) |

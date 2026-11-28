@@ -100,10 +100,10 @@ Each is an optional override: set it on the page, a container or one Lightbox. T
 <!-- token-table:start (made from lightbox.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--lightbox-stage-bg` | `surface-muted` | The stage behind a picture while it loads, or if it fails. |
+| `--lightbox-stage-bg` | `surface-sunken` | The stage behind a picture while it loads, or if it fails. |
 | `--lightbox-caption-color` | `text-muted` | The caption and the count (4.5:1 on the dialog). |
 | `--lightbox-fallback-color` | `text-muted` | The broken-image icon when a picture fails. |
-| `--lightbox-edge` | `picture-edge` | A faint line around the picture, so a white one stays apart from a white dialog. |
+| `--lightbox-edge` | `border-picture` | A faint line around the picture, so a white one stays apart from a white dialog. |
 | `--lightbox-stage-radius` | `radius-surface` | The stage's corners (8px). |
 | `--lightbox-fallback-icon` | `spacing-6` | The broken-image icon's size (24px). |
 | `--lightbox-stage-max-height` | `spacing-40` | Space kept free above and below the stage: the title, the arrows and the screen's edges (160px). |

@@ -131,7 +131,7 @@ describe('TableOfContents', () => {
     expect(lowContrast([
       ['link', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['current', 'var(--text)', 'var(--surface)', 4.5],
-      ['current line', 'var(--primary-text)', 'var(--surface)', 3],
+      ['current line', 'var(--text-brand)', 'var(--surface)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
@@ -279,7 +279,7 @@ describe('TableOfContents rail', () => {
     await expect.poll(() => dashes().map((d) => 'current' in d.dataset)).toEqual([true, false, false]);
     const w = dashes().map((d) => d.getBoundingClientRect().width);
     expect([nav().dataset.variant, rail().getAttribute('aria-hidden'), w[0], w[1]! < w[0]!, w[2]]).toEqual(['rail', 'true', 12, true, 12]);
-    expect([css(dashes()[0]!).backgroundColor, css(dashes()[1]!).backgroundColor, nav().getBoundingClientRect().width]).toEqual([color('var(--primary-text)'), color('var(--border-strong)'), 24]);
+    expect([css(dashes()[0]!).backgroundColor, css(dashes()[1]!).backgroundColor, nav().getBoundingClientRect().width]).toEqual([color('var(--text-brand)'), color('var(--border-strong)'), 24]);
     expect(shown()).toBe(false);
   });
 
@@ -367,9 +367,9 @@ describe('TableOfContents rail', () => {
 
   test('the panel\'s links 4.5:1 on it, its edge and the dashes 3:1 against the page where they stand for something (the current one), in every theme', () => {
     expect(lowContrast([
-      ['panel link', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
-      ['panel current', 'var(--text)', 'var(--surface-overlay)', 4.5],
-      ['current dash', 'var(--primary-text)', 'var(--surface)', 3],
+      ['panel link', 'var(--text-muted)', 'var(--surface-raised)', 4.5],
+      ['panel current', 'var(--text)', 'var(--surface-raised)', 4.5],
+      ['current dash', 'var(--text-brand)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 });

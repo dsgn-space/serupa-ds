@@ -38,7 +38,7 @@ Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the
 
 Every theme shares **one set of foundations**: the same palette, type, spacing scale and components. A theme is a brand color and a mode, and nothing else: it only changes where the brand colors point, so every corner, shadow, border, surface, space, chart color and motion is the same in all of them. There is a theme for each accent color of the palette, light and dark, 34 in all. Blue is the default.
 
-| Brand | `primary` in light | `primary` in dark | `primary-text` in dark |
+| Brand | `surface-brand` in light | `surface-brand` in dark | `text-brand` in dark |
 | --- | --- | --- | --- |
 | `blue` *(default)* | `blue-600` | `#2b6af2` | `blue-400` |
 | `red` | `red-700` | `#d13832` | `red-400` |
@@ -62,9 +62,9 @@ A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-
 
 ### The brand shade
 
-`primary` is a fill with white text on it: a primary button, a checked box, the selected day. `primary-text` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `primary-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
+`surface-brand` is a fill with white text on it: a primary button, a checked box, the selected day. `text-brand` is the brand as text, a line or an icon: links, ghost and outline buttons, the line under the selected tab. In light themes the two are one shade, the first step of the brand ramp that reaches 4.5:1 every way: under white text, on a white page, and on the tints it sits on as text (its own `surface-brand-subtle` under a selected tag or a primary Badge, and the status tints under a link in an Alert). That is step 600 for `blue`, `indigo`, `violet` and `purple`, and step 700 for the rest: `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `fuchsia`, `pink` and `rose`. So Yellow Light is a deep, golden yellow rather than a bright one. 
 
-**Dark themes keep the light theme's fill.** A dark theme's `primary` is its light theme's shade under the same white text, lightened as far as 3:1 on a raised dark card asks, and always a touch (0.02 of OKLCH lightness) while white text on it keeps 4.5:1, as Apple's system colors are a touch brighter in dark: `blue-600` (#2563eb) becomes #2b6af2, and no brand moves more than a few points of lightness. The status fills (`success`, `warning`, `info`, `danger`) follow the same rule. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `primary-edge` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `primary-edge` is transparent and nothing is drawn. A custom mark filled with `primary` takes the same edge: `box-shadow: inset 0 0 0 1px var(--primary-edge)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `primary-text` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
+**Dark themes keep the light theme's fill.** A dark theme's `surface-brand` is its light theme's shade under the same white text, lightened as far as 3:1 on a raised dark card asks, and always a touch (0.02 of OKLCH lightness) while white text on it keeps 4.5:1, as Apple's system colors are a touch brighter in dark: `blue-600` (#2563eb) becomes #2b6af2, and no brand moves more than a few points of lightness. The status fills (`success`, `warning`, `info`, `danger`) follow the same rule. So a primary button, a Switch that's on and a Progress bar are the same color in both modes, the way a danger button is `red-600` in both. Hover and held down are the light theme's too, lightened as much. Yellow is the one exception, in both modes: a yellow dark enough for white text reads as brown, so Yellow Light fills with `yellow-500` and Yellow Dark with `yellow-400`, both under `yellow-950` text (hover is a little darker in light, a step lighter in dark). `yellow-500` is 1.9:1 on a white page, under the 3:1 a fill with no text on it needs (WCAG 1.4.11), so Yellow Light sets `border-brand` to `yellow-700` (4.9:1): a 1px edge just inside every such fill, a checked box, a Switch that's on, a Slider, Progress or Meter fill, the selected day or tab, a dot. In every other theme `border-brand` is transparent and nothing is drawn. A custom mark filled with `surface-brand` takes the same edge: `box-shadow: inset 0 0 0 1px var(--border-brand)`. Text can't do the same: `blue-600` on a dark card is 3.4:1, so `text-brand` is step 400 in every dark theme. `data-contrast="more"` steps each brand up within its own ramp, to 7:1; a dark theme's fill is then step 300 with its own 950 as the text on it.
 
 The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
@@ -79,9 +79,9 @@ Blue is in `tokens.css`. Each other brand is its own file, `brands/<brand>.css`,
 <div data-brand="emerald">…</div>                     <!-- another brand for one part of the page -->
 ```
 
-Each color that changes between themes is a `light-dark()` pair, and `data-mode` sets `color-scheme` (`auto` is `light dark`), so the light or dark value is chosen where the color is used. Server-rendered and React apps get dark mode with nothing to inject and no flash. With `base.css`, a section with its own `data-mode`, `data-brand` or `data-theme` also takes that theme's text color and `surface-page` background, so its plain text switches with it (a class on the section still sets its background). When printing, a `data-mode` page or section prints its light colors, since printers drop backgrounds; a flat `*-dark` theme has no light values, so it prints with its backgrounds. A page with neither attribute stays light. An element with `data-theme` keeps that flat theme, so it still wins; inside such a page, give a section both `data-brand` and `data-mode` to switch it. Needs `light-dark()`: Chrome and Edge 123, Safari 17.5, Firefox 120. Older browsers lose the colors of a page or section themed only by `data-brand` and `data-mode`; one with `data-theme` (which `theme.js` sets on the page) keeps them, since the flat themes don't use `light-dark()`.
+Each color that changes between themes is a `light-dark()` pair, and `data-mode` sets `color-scheme` (`auto` is `light dark`), so the light or dark value is chosen where the color is used. Server-rendered and React apps get dark mode with nothing to inject and no flash. With `base.css`, a section with its own `data-mode`, `data-brand` or `data-theme` also takes that theme's text color and `background` background, so its plain text switches with it (a class on the section still sets its background). When printing, a `data-mode` page or section prints its light colors, since printers drop backgrounds; a flat `*-dark` theme has no light values, so it prints with its backgrounds. A page with neither attribute stays light. An element with `data-theme` keeps that flat theme, so it still wins; inside such a page, give a section both `data-brand` and `data-mode` to switch it. Needs `light-dark()`: Chrome and Edge 123, Safari 17.5, Firefox 120. Older browsers lose the colors of a page or section themed only by `data-brand` and `data-mode`; one with `data-theme` (which `theme.js` sets on the page) keeps them, since the flat themes don't use `light-dark()`.
 
-**More contrast**: `data-contrast="more"` gives 7:1 body text (muted text and placeholders included), stronger borders and field outlines, and a 3px focus ring instead of 2px, in every theme. Status text (`success-text`, `warning-text`, `danger-text`, `info-text`) reaches 7:1 too, on the page, on cards and on its own subtle fill, and the status icon colors step up with it. The brand color steps up within its own hue (brand 800 in light themes, brand 300 in dark, so violet stays violet): links and secondary button labels reach 7:1 on the page and on the brand tint, so does the text on a primary fill, and the focus ring takes brand 700 / 300. Subtle badge labels keep their normal 4.5:1 colors for now. It also applies on its own when the visitor's system asks for more contrast (`prefers-contrast: more`); a page can opt out with `data-contrast="normal"` on `<html>`.
+**More contrast**: `data-contrast="more"` gives 7:1 body text (muted text and placeholders included), stronger borders and field outlines, and a 3px focus ring instead of 2px, in every theme. Status text (`text-success`, `text-warning`, `text-danger`, `text-info`) reaches 7:1 too, on the page, on cards and on its own subtle fill, and the status icon colors step up with it. The brand color steps up within its own hue (brand 800 in light themes, brand 300 in dark, so violet stays violet): links and secondary button labels reach 7:1 on the page and on the brand tint, so does the text on a primary fill, and the focus ring takes brand 700 / 300. Subtle badge labels keep their normal 4.5:1 colors for now. It also applies on its own when the visitor's system asks for more contrast (`prefers-contrast: more`); a page can opt out with `data-contrast="normal"` on `<html>`.
 
 **Density**: `data-density="compact"` is for dashboards and data-heavy screens. It makes `md` controls 28px and `lg` 36px (from 32 and 44); `sm` stays 24px, the WCAG 2.2 minimum target. It also halves the padding of rows and tightens surfaces: table and list rows (`space-row`, 12px to 6px), small tables, data grid cells and sidebar items (`space-item`, 8px to 4px), cards (`space-card`, 20px to 12px), accordions and popovers (`space-content`, 16px to 12px), and dialogs, drawers and large cards (`space-surface`, 24px to 16px). Components read these tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section, such as a settings form inside a compact dashboard. Put it on `<html>` for a whole app, or on one region.
 
@@ -110,108 +110,119 @@ After the first paint, where the browser has View Transitions, a switch crossfad
 
 ## Alias tokens
 
-Alias tokens give a color a **job** instead of a hue. Each one points to a palette color rather than holding its own value, and that pointer can differ per theme: `primary` is `{blue-600}` in Blue Light and `{violet-400}` in Violet Dark.
+Alias tokens give a color a **job** instead of a hue. Each one points to a palette color rather than holding its own value, and that pointer can differ per theme: `surface-brand` is `{blue-600}` in Blue Light and `{violet-400}` in Violet Dark.
 
-**Use aliases in your UI, the palette for the aliases.** Build screens with `primary`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
+**Use aliases in your UI, the palette for the aliases.** Build screens with `surface-brand`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
 
-`‹brand›` below is the theme's brand. The lighter ramps sit one step darker in light themes: `primary` is `‹brand›-700` and `primary-hover` `‹brand›-800`; see [The brand shade](#the-brand-shade).
+Every name reads the same way: the thing first (`background`, `surface`, `field`, `control`, `text`, `border`), then its variant (`raised`, `brand`, `danger`), then its state (`hover`, `pressed`, `disabled`): `surface-raised-hover`, `text-danger`, `field-border-invalid-pressed`. In dark each state is one step lighter than the one before it, and a border one step above its fill. The names before 20.0.0 (`primary`, `surface-muted`, `danger-text`) still work, deprecated until 21.0.0, and `npx serupa-migrate` renames them.
+
+`‹brand›` below is the theme's brand. The lighter ramps sit one step darker in light themes: `surface-brand` is `‹brand›-700` and `surface-brand-hover` `‹brand›-800`; see [The brand shade](#the-brand-shade).
+
+### Surfaces
 
 | Alias | Light themes | Dark themes | Use |
 | --- | --- | --- | --- |
-| `primary` | `‹brand›-600` | `‹brand›-600`, a little lighter | Brand fill: primary buttons, checked boxes, selected days, with `on-primary` on it. |
-| `primary-hover` | `‹brand›-700` | `‹brand›-700`, as much lighter | `primary` under the pointer. |
-| `primary-pressed` | `‹brand›-800` | `‹brand›-800`, as much lighter | `primary` held down. |
-| `primary-text` | `‹brand›-600` | `‹brand›-400` | Brand text, links, icons, lines and borders. |
-| `primary-text-hover` | `‹brand›-700` | `‹brand›-300` | `primary-text` under the pointer. |
-| `primary-subtle` | `‹brand›-50` | `‹brand›-950` | Brand tint for selected rows and badges. |
-| `on-primary` | `white` (`yellow-950` in Yellow Light) | `white` (`yellow-950` in Yellow Dark) | Text and icons on `primary` fills. |
-| `primary-edge` | transparent (`yellow-700` in Yellow Light) | transparent | A 1px edge inside a `primary` fill with no text on it, where the fill is under 3:1 on the page. |
-| `secondary` | `zinc-100` | `zinc-700` | Secondary button fill; hover fill for outline and ghost buttons. |
-| `secondary-hover` | `zinc-200` | `zinc-600` | Hover state of `secondary`. |
-| `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
-| `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
-| `surface-page` | `white` | `zinc-950` | The page itself: the `<html>` and `<body>` background, and a `data-mode` or `data-theme` section's. The same as `surface` in light; in dark a step below the cards, panels and bars on it, so they and every control sit lighter than the page. |
+| `background` | `white` | `zinc-950` | The page itself: the `<html>` and `<body>` background, and a `data-mode` or `data-theme` section's. In dark a step below the cards, panels and bars on it. |
 | `surface` | `white` | `zinc-900` | Card, panel and bar background. |
-| `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
-| `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
-| `surface-hover` | `zinc-100` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: a step off `surface`, in light the same as `highlight`. Gray text in such a row reads `text-muted-shaded`. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
-| `surface-hover-raised` | `zinc-100` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
-| `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
-| `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
-| `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
-| `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
-| `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
-| `text-muted-shaded` | `zinc-600` | `zinc-400` | Secondary text in a hovered, selected or striped row, where `text-muted` on `zinc-100` would be 4.4:1. List, Table and InlineEdit set it on their shaded rows. |
-| `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
-| `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. In dark a quiet step off the `zinc-900` cards and bars it outlines. Never a control's boundary: fields use `field-border`, other controls `border-control`. |
-| `border-strong` | `zinc-300` | `zinc-600` | Emphasized dividers and outlines. Form fields use `field-border`. |
-| `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface, and the lines inside it; one step stronger than `border` in dark. |
-| `border-elevated` | `zinc-200` | `zinc-600` | A line on `surface-raised`: an elevated Card's dividers, the outline Button's border. The same values as `border-overlay`, for the raised step rather than the top layer. |
+| `surface-hover` | `zinc-100` | `zinc-800` | A row or item under the pointer, a selected or striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer. Gray text in such a row reads `text-secondary`. |
+| `surface-pressed` | `zinc-200` | `zinc-700` | A row, tab, day or page button held down: one step past `surface-hover`. |
+| `surface-raised` | `white` | `zinc-800` | Anything raised or in the top layer: an elevated Card, Menu, Popover, Dialog, Drawer, Toast and the picker lists. In dark the lighter surface carries the lift. |
+| `surface-raised-hover` | `zinc-100` | `zinc-700` | `surface-hover` on a raised surface, and a button inside a field under the pointer. |
+| `surface-raised-pressed` | `zinc-200` | `zinc-600` | The same held down. |
+| `surface-sunken` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface`. Never the fill of a control. |
+| `surface-inverse` | `zinc-900` | `white` | Contrasting blocks: tooltips, inverse banners, with `text-inverse` on them. |
+| `surface-disabled` | `zinc-100` | `zinc-800` | The fill of a disabled control that has one (a checked box, a switch track). |
+| `surface-highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox option, the current Sidebar page. `surface-highlight-indicator` adds a bar at its start, with more contrast only. |
+| `surface-secondary` | `zinc-100` | `zinc-700` | Secondary button fill; the hover fill of outline and ghost buttons. |
+| `surface-secondary-hover` | `zinc-200` | `zinc-600` | `surface-secondary` under the pointer, and a step past a hover on it. |
+| `surface-secondary-pressed` | `zinc-300` | `zinc-500` | `surface-secondary` held down. |
+| `backdrop` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
+
+### Brand
+
+| Alias | Light themes | Dark themes | Use |
+| --- | --- | --- | --- |
+| `surface-brand` | `‹brand›-600` | `‹brand›-600`, a little lighter | Brand fill: primary buttons, checked boxes, selected days, with `text-on-brand` on it. |
+| `surface-brand-hover` | `‹brand›-700` | `‹brand›-700`, as much lighter | `surface-brand` under the pointer. |
+| `surface-brand-pressed` | `‹brand›-800` | `‹brand›-800`, as much lighter | `surface-brand` held down. |
+| `surface-brand-subtle` | `‹brand›-50` | `‹brand›-950` | Brand tint for selected rows, badges and the secondary button. |
+| `surface-brand-subtle-hover` | `‹brand›-100` | `‹brand›-900` | `surface-brand-subtle` under the pointer. |
+| `surface-brand-subtle-pressed` | `‹brand›-200` | `‹brand›-800` (900 in Red, Orange, Pink and Rose) | `surface-brand-subtle` held down; `text-brand-hover` keeps 4.5:1 on it. |
+| `text-brand` | `‹brand›-600` | `‹brand›-400` | Brand text, links, icons, lines and borders. |
+| `text-brand-hover` | `‹brand›-700` | `‹brand›-300` | `text-brand` under the pointer. |
+| `text-on-brand` | `white` (`yellow-950` in Yellow Light) | `white` (`yellow-950` in Yellow Dark) | Text and icons on `surface-brand`. |
+| `border-brand` | transparent (`yellow-700` in Yellow Light) | transparent | A 1px edge inside a `surface-brand` fill with no text on it, where the fill is under 3:1 on the page. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
-| `success` | `green-600` | `#23a950` | Success icons and fills (3:1): in dark, `green-600` a touch lighter. Not for text: use `success-text`. |
-| `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
-| `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
-| `success-hover` | `green-500` | `#2ecc64` | Hover / pressed state of `success` fills. |
-| `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
-| `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
-| `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
-| `warning` | `amber-600` | `#e07d17` | Warning icons and fills (in dark, `amber-600` a touch lighter); put dark text on it. Not for text: use `warning-text`. |
-| `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
-| `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
-| `warning-hover` | `amber-500` | `#fca41d` | Hover / pressed state of `warning` fills. |
-| `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
-| `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
-| `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
-| `danger` | `red-600` | `#e22e2c` | Errors, destructive buttons; white text on it. In dark, `red-600` a touch lighter. |
-| `danger-hover` | `red-700` | `#bf2422` | Hover / pressed state of `danger`. |
-| `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
-| `danger-subtle` | `red-50` | `red-950` | Error alert / badge background. |
-| `danger-text` | `red-700` | `red-300` | Destructive text and icons on `surface` and danger tints. |
-| `danger-subtle-hover` | `red-100` | `red-900` | Hover fill for destructive secondary, outline and ghost buttons. |
-| `danger-border` | `red-300` | `red-800` | Border of a destructive outline button. |
-| `info` | `sky-700` | `#1e77b0` | Informational icons and fills (3:1): in dark, `sky-700` lightened only as far as 3:1 on a raised card. Not for text: use `info-text`. |
-| `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
-| `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
-| `info-hover` | `sky-800` | `#1d6693` | Hover / pressed state of `info` fills. |
-| `on-info` | `white` | `white` | Text and icons on `info` fills (4.5:1+). |
-| `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
-| `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
-| `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |
-| `field-raised` | `white` | `#333338` | `field` on a raised or floating surface: Dialog, Drawer, Popover, an elevated Card and `bg-surface-raised` or `bg-surface-overlay` panels set `--field` to it, so in dark a field there steps up from the `zinc-800` surface instead of matching it. Emerald dark keeps `zinc-800` (its overlays are `zinc-900`). |
-| `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
-| `disabled-text` | `zinc-500` | `zinc-400` | Labels, marks and icons of a disabled control: at least 3:1 on every surface, `zinc-700` / `zinc-300` with more contrast. |
-| `disabled-surface` | `zinc-100` | `zinc-800` | Fill of a disabled control that has one (a checked box, a switch track, a slider fill's track). |
-| `disabled-border` | `zinc-300` | `zinc-700` | Edge of a disabled control or field. |
-| `field-border` | `zinc-300` | `zinc-700` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
-| `field-border-hover` | `zinc-400` | `zinc-600` | Field border on hover: the resting `field-border` one gray step stronger. The accent is kept for focus. |
-| `border-control` | `zinc-300` | `zinc-600` | The edge of a control that isn't a field: Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. A soft line by design, under 3:1 on `surface`, as `field-border` is; more contrast brings back 3:1+. |
-| `border-control-hover` | `zinc-400` | `zinc-500` | `border-control` on hover (Carousel's dots). |
-| `track` | `zinc-200` | `zinc-700` | The empty part of a track: Switch off, Slider, Meter and Progress. The thumb, fill or edge on it carries the 3:1. |
-| `track-hover` | `zinc-300` | `zinc-600` | `track` under the pointer (Switch off). A fill, not an edge. |
-| `track-pressed` | `zinc-500` | `zinc-400` | `track` while held down (Switch off), one step past `track-hover`. |
-| `field-hover` | `zinc-100` | `zinc-700` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
-| `field-pressed` | `zinc-200` | `zinc-600` | The same button held down. |
-| `field-border-invalid` | `red-600` | `red-600` | An invalid field's border: `danger`, 3:1+ on `field`. |
-| `placeholder` | `zinc-500` | `zinc-400` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
-| `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
-| `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |
+
+### Fields and controls
+
+| Alias | Light themes | Dark themes | Use |
+| --- | --- | --- | --- |
+| `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. |
+| `field-raised` | `white` | `zinc-700` | `field` on a raised surface: Dialog, Drawer, Popover, an elevated Card and `bg-surface-raised` panels set `--field` to it, and `--field-placeholder` to `field-raised-placeholder`. |
+| `field-readonly` | `zinc-100` | `zinc-900` | A read-only field. Its gray text (placeholder, affix, count) reads `text-secondary`, since `field-placeholder` is 4.4:1 on it. |
+| `field-disabled` | `zinc-100` | `zinc-900` | A disabled field: the same fill, told apart by `text-disabled` and `field-border-disabled`. |
+| `field-raised-readonly`, `field-raised-disabled` | `zinc-100` | `zinc-800` | The same on a raised surface. |
+| `field-placeholder` | `zinc-500` | `zinc-400` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
+| `field-raised-placeholder` | `zinc-500` | `zinc-300` | `field-placeholder` on `field-raised`, where zinc-400 would be 4.1:1. |
+| `field-border` | `zinc-300` | `zinc-600` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
+| `field-border-hover` | `zinc-400` | `zinc-500` | One gray step stronger on hover. The accent is kept for focus. |
+| `field-border-pressed` | `zinc-500` | `zinc-400` | A step past hover, held down. |
+| `field-border-disabled` | `zinc-200` | `zinc-700` | A disabled field's edge. |
+| `field-border-raised` (`-hover`, `-pressed`, `-disabled`) | `zinc-300`, `400`, `500`, `200` | `zinc-500`, `400`, `300`, `600` | The same ladder on `field-raised`, a step lighter in dark. |
+| `field-border-invalid` (`-hover`, `-pressed`) | `red-600`, `700`, `800` | `red-500`, `400`, `300` | An invalid field's border, 3:1+ on `field`. |
+| `control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. |
+| `control-hover`, `control-pressed` | `zinc-100`, `zinc-200` | `zinc-800`, `zinc-700` | `control` under the pointer and held down. |
+| `control-raised` (`-hover`, `-pressed`) | `zinc-50`, `100`, `200` | `zinc-800`, `700`, `600` | The same on a raised surface. |
+| `control-disabled`, `control-raised-disabled` | `zinc-100` | `zinc-900`, `zinc-800` | A disabled control's fill. |
+| `track` (`-hover`, `-pressed`) | `zinc-200`, `300`, `500` | `zinc-700`, `600`, `400` | The empty part of a track: Switch off, Slider, Meter and Progress. The thumb, fill or edge on it carries the 3:1. |
+
+### Text and borders
+
+| Alias | Light themes | Dark themes | Use |
+| --- | --- | --- | --- |
+| `text` | `zinc-900` | `zinc-50` | Body text and headings. A read-only field's value. |
+| `text-secondary` | `zinc-600` | `zinc-300` | Secondary text where `text-muted` would fall under 4.5:1: a hovered, selected or striped row, a read-only field. |
+| `text-muted` | `zinc-500` | `zinc-400` | Captions and other quiet text on `surface`. |
+| `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
+| `text-disabled` | `zinc-500` | `zinc-400` | Labels, marks and icons of a disabled control: at least 3:1 on every surface, `zinc-700` / `zinc-300` with more contrast. |
+| `text-link-visited` | `violet-700` | `violet-300` | A visited link (fuchsia in the violet themes, so it stays a hue apart). |
+| `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. Never a control's boundary: fields use `field-border`. |
+| `border-strong` | `zinc-300` | `zinc-700` | Emphasized dividers and outlines, and the edge of a control that isn't a field (Meter, Progress, Carousel dots, ColorPicker swatches), soft by design as `field-border` is; more contrast brings back 3:1+. |
+| `border-raised` | `zinc-200` | `zinc-700` | A line on a raised surface: the edge of a top-layer surface, an elevated Card's dividers, the outline Button's border. One step above `surface-raised` in dark. |
+| `border-disabled` | `zinc-300` | `zinc-700` | The edge of a disabled control. |
+| `border-picture` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape. |
+
+### Status
+
+Each status (`success`, `warning`, `danger`, `info`) has the same set. `danger` shown; the others follow the same steps (`green`, `amber`, `sky`).
+
+| Alias | Light themes | Dark themes | Use |
+| --- | --- | --- | --- |
+| `surface-danger` | `red-600` | `#e22e2c` | Errors and destructive buttons, with `text-on-danger` on it. In dark, `red-600` a touch lighter. Success, warning and info: `green-600`, `amber-600`, `sky-700`, lightened the same way. |
+| `surface-danger-hover` | `red-700` | `#bf2422` | `surface-danger` under the pointer (`surface-danger-pressed` held down). |
+| `surface-danger-subtle` | `red-50` | `red-950` | Alert and badge background. |
+| `surface-danger-subtle-hover` | `red-100` | `red-900` | The hover fill of an interactive tint: destructive secondary, outline and ghost buttons. |
+| `text-danger` | `red-700` | `red-300` | Status text on `surface`, `surface-sunken` and its tint (4.5:1+). Class `text-text-danger`. |
+| `text-on-danger` | `white` | `white` | Text and icons on `surface-danger` (`green-950` on success, `amber-950` on warning). |
+| `border-danger` | `red-300` | `red-800` | The border of a status outline control or callout. |
 
 ### Contrast, checked in every theme
 
-- `on-primary` on `primary`: 4.8–6.5:1, 7.6:1 in Yellow Light and 9.5:1 in Yellow Dark. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
+- `text-on-brand` on `surface-brand`: 4.8–6.5:1, 7.6:1 in Yellow Light and 9.5:1 in Yellow Dark. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
 - `focus-ring` on `surface`: 3.7:1 or more.
-- **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 fill) is about 1.5:1 in light and 1.4:1 to 1.9:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its fill in dark, the stronger border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-control)`. The checks hold the border to 1.3:1 so it never fades out entirely. Other controls' edges, `border-control` (zinc-300 in light, zinc-600 in dark), are soft the same way and held to the same 1.3:1; more contrast brings them back to 3:1+.
-- Dark themes fill with the light theme's `primary` under white text, a little lighter where 3:1 on a raised card asks it; brand text there is `primary-text` (brand 400), since the fill's shade is 3.4:1 as text on a dark card.
+- **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-600 in dark, a step lighter than the zinc-800 fill) is about 1.5:1 in light and about 1.4:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its fill in dark, the stronger border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-strong)`. The checks hold the border to 1.3:1 so it never fades out entirely. Other controls' edges, `border-strong` (zinc-300 in light, zinc-700 in dark), are soft the same way and held to the same 1.3:1; more contrast brings them back to 3:1+.
+- Dark themes fill with the light theme's `surface-brand` under white text, a little lighter where 3:1 on a raised card asks it; brand text there is `text-brand` (brand 400), since the fill's shade is 3.4:1 as text on a dark card.
 
 ### Naming
 
-- `<role>`: the main color for that job (`primary`, `surface`, `text`, `border`).
-- `<role>-hover`, `-muted`, `-strong`, `-subtle`: variants of the same job. `-subtle` is a light tint for backgrounds.
-- `on-<role>` / `<role>-inverse`: the color that goes **on top of** that role (`on-primary` text on a `primary` button).
+- `<thing>`: the main color for that job (`background`, `surface`, `field`, `control`, `text`, `border`).
+- `<thing>-<variant>`: the same job, in a variant (`surface-raised`, `surface-brand`, `text-secondary`, `border-strong`). `-subtle` is a light tint for backgrounds.
+- `<thing>-<variant>-<state>`: the state comes last (`surface-raised-hover`, `field-border-invalid-pressed`). `text-on-<fill>` is the text that goes **on top of** a fill (`text-on-brand` on a `surface-brand` button).
 
 ### Adding an alias
 
-1. Name it after its job, not its color (`danger`, not `red`).
+1. Name it after its job, not its color, thing first (`text-danger`, not `red-text`).
 2. Set its value to `{palette-token}`. The target must exist; an alias of a missing token, or of itself, is dropped.
 3. Check contrast: text aliases need 4.5:1 on the surface they sit on (3:1 for icons, borders and focus rings). The palette tokens' usage notes give the ratios.
 4. Only colors can be aliases: spacing, radius, shadow and type tokens hold their own values.
@@ -226,13 +237,13 @@ npx serupa-brand acme "#0f766e" -o src/acme-theme.css
 
 A theme is its colors: corners are their own setting (`data-radius`), and motion its own tokens. Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
-It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary-text` on the page at 4.5:1, the dark fill 3:1 on a raised card, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
+It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `surface-brand` and `text-brand` on the page at 4.5:1, the dark fill 3:1 on a raised card, the focus ring at 3:1, and 7:1 for more contrast. The color is `surface-brand` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
 ### Adding a theme
 
 1. Pick a brand hue from the palette.
 2. Give each alias a target in the new theme: copy a Light or Dark column and swap the brand hue.
-3. Check `on-primary` on `primary` (4.5:1), `primary-text` on `surface` (4.5:1) and `focus-ring` on `surface` (3:1). Step the brand one shade darker in light if one fails; `node tools/test/brand.mjs` says what the dark fills must be.
+3. Check `text-on-brand` on `surface-brand` (4.5:1), `text-brand` on `surface` (4.5:1) and `focus-ring` on `surface` (3:1). Step the brand one shade darker in light if one fails; `node tools/test/brand.mjs` says what the dark fills must be.
 4. Nothing else changes: palette, type, spacing, radius, shadows and components are shared.
 
 ## Typography
@@ -362,7 +373,7 @@ Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`s
 
 - **Sizes:** the `icon-size-*` tokens, `<Icon size="xs">` to `"xl"`: 14px (`sm` buttons, `text-xs`), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows, `text-base`), 24px (default, toolbars and navigation), 40px (empty states).
 - **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.
-- **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.
+- **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `surface-success`, `surface-warning`, `surface-danger` or `surface-info` for status.
 - **Meaning:** icons are decorative by default. Add an `aria-label` only when the icon carries meaning alone, and give icon-only buttons an `aria-label`.
 - **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another). The components already use these, so an app that uses them too matches:
 
@@ -413,7 +424,7 @@ Background utilities, as classes in `bundle.css`. Backgrounds have no scale of t
 | background-repeat | `bg-repeat`, `bg-repeat-x`, `bg-repeat-y`, `bg-repeat-space`, `bg-repeat-round`, `bg-no-repeat` |
 | background-size | `bg-auto`, `bg-cover`, `bg-contain` |
 
-There are no gradient classes (17.0.0): write a gradient in your own CSS from the role tokens, `background: linear-gradient(in oklab to right, var(--primary), var(--info))`. OKLab keeps blends between hues bright instead of gray.
+There are no gradient classes (17.0.0): write a gradient in your own CSS from the role tokens, `background: linear-gradient(in oklab to right, var(--surface-brand), var(--surface-info))`. OKLab keeps blends between hues bright instead of gray.
 
 Rules of thumb:
 
@@ -422,7 +433,7 @@ Rules of thumb:
 - Use gradients sparingly, for heroes and illustrations, not for UI controls.
 - Images: `bg-cover bg-center bg-no-repeat` fills a box without distortion.
 
-**The fill behind a ring.** Avatar's status dot, the avatars in an AvatarGroup, Badge's indicator dot and Chart's bars, slices and markers are set apart by a ring or gap in the color behind them, so the ring disappears into the surface they're on. `--surface-behind` says what that color is. The page sets it to `surface-page`, and every surface (Card, Menu, Popover, Dialog, Drawer, Table, List, Navbar, Sidebar and the other bars and panels) sets it to its own fill. On a box of your own with a background, set it there as well: `.my-panel { background: var(--primary-subtle); --surface-behind: var(--primary-subtle); }`.
+**The fill behind a ring.** Avatar's status dot, the avatars in an AvatarGroup, Badge's indicator dot and Chart's bars, slices and markers are set apart by a ring or gap in the color behind them, so the ring disappears into the surface they're on. `--surface-behind` says what that color is. The page sets it to `background`, and every surface (Card, Menu, Popover, Dialog, Drawer, Table, List, Navbar, Sidebar and the other bars and panels) sets it to its own fill. On a box of your own with a background, set it there as well: `.my-panel { background: var(--surface-brand-subtle); --surface-behind: var(--surface-brand-subtle); }`.
 
 ## Spacing
 
@@ -517,7 +528,7 @@ Width classes draw a solid line on the sides they set, so `border` alone draws a
 
 Rules of thumb:
 
-- Borders: `border border-border` for cards and dividers, `border-field-border` for form fields (`border-danger` when invalid, with the message in `danger-text`), `border-danger-border` for destructive outline buttons.
+- Borders: `border border-border` for cards and dividers, `border-field-border` for form fields (`border-danger` when invalid, with the message in `text-danger`), `border-danger-border` for destructive outline buttons.
 - Focus: one recipe everywhere, `outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset)` on `:focus-visible` (the utilities `outline-2 outline-offset-2 outline-focus-ring` give the same). An outline follows the corner radius and its gap is transparent, so the ring reads on tinted backgrounds such as an Alert, Card or Navbar, and forced-colors mode draws it. Use an inset ring only where an outline would be clipped, as in Tabs. Never remove a focus style without replacing it; prefer `outline-hidden` over `outline-none`.
 - Lists and tables: `divide-y divide-border` instead of a border on each row.
 
@@ -534,14 +545,14 @@ Effect utilities, as classes in `bundle.css`. Box shadows are tokens in the `sha
 
 **Stacking.** A shadow and a ring draw on one element at once: `shadow-md ring-1 ring-border` is a card with a hairline edge.
 
-**Colors.** A color class swaps the black for that color at full strength (rings default to the text color). For a soft tint, set the variable directly, e.g. `--srp-shadow-color: color-mix(in oklab, var(--primary) 30%, transparent)`.
+**Colors.** A color class swaps the black for that color at full strength (rings default to the text color). For a soft tint, set the variable directly, e.g. `--srp-shadow-color: color-mix(in oklab, var(--surface-brand) 30%, transparent)`.
 
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
-- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge (lines inside it use `border-elevated`), and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
+- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge (lines inside it use `border-raised`), and anything in the top layer on `surface-raised` with a `border-raised` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
-- `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`disabled-text`, `disabled-surface`, `disabled-border`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
+- `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`text-disabled`, `surface-disabled`, `border-disabled`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
 
 ## Elevation and layers
 
@@ -551,12 +562,12 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
-| 0 · Page | The page itself; Navbar, Sidebar and tables on it | `surface-page` behind; `surface` for the bars and tables | `border` between regions | none |
-| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or an inner shadow (`shadow-inner`) for an input well |
+| 0 · Page | The page itself; Navbar, Sidebar and tables on it | `background` behind; `surface` for the bars and tables | `border` between regions | none |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-sunken`, a step below `surface` in every theme | none | none, or an inner shadow (`shadow-inner`) for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border` | `shadow-md` |
-| 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
-| 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
+| 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-raised` | `border-raised` | `shadow-lg` |
+| 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-raised` | `border-raised` | `shadow-xl` |
 | Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
 
 - Higher means bigger shadow and, in dark themes, a lighter surface; recessed is darker than the page in both modes. Don't skip the surface and edge and rely on the shadow alone.
@@ -567,7 +578,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 **Light and dark**
 
-In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in every theme.
+In light themes, shadows carry the lift: `surface-raised` and `surface-raised` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in every theme.
 
 In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
 
@@ -627,8 +638,8 @@ Rules of thumb:
 - Micro-interactions: show a press as a darker color, one step past hover, not a shrink, as the components do (see States): a shrink is hard to see under a finger and breaks the look of small controls. In your own CSS (utilities have no `hover:` or `active:` prefix):
 
   ```css
-  @media (hover: hover) { .pressable:hover { background: var(--secondary); } }
-  .pressable:active { background: var(--secondary-hover); }
+  @media (hover: hover) { .pressable:hover { background: var(--surface-secondary); } }
+  .pressable:active { background: var(--surface-secondary-hover); }
   ```
 - Center an absolutely positioned element with `left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`.
 - Rotate a disclosure chevron in your own CSS (`rotate: 180deg`) instead of swapping icons.
@@ -1057,13 +1068,13 @@ Every interactive component moves through the same eight states, in this order o
 | State | When | How it looks | Tokens |
 | --- | --- | --- | --- |
 | Rest | Nothing is happening | The component's own colors | — |
-| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-hover` or `highlight`), or darker text | `secondary`, `surface-hover`, `highlight` |
-| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover, as a color, never a shrink: `pressed` for rows, tabs, days and page buttons; `primary-pressed`, `primary-subtle-pressed`, `secondary-hover` and `danger-pressed` for buttons; `field-border-pressed` and `border-control-pressed` for checkboxes, radios and switches; a wash of the text color over a linked card. A shrink is hard to see under a finger and reads as a glitch on a small control, so only Slider's thumb changes size, growing while it's dragged | `pressed`, `primary-pressed`, `danger-pressed`, the `…-bg-pressed` component tokens |
+| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-hover` or `highlight`), or darker text | `surface-secondary`, `surface-hover`, `surface-highlight` |
+| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover, as a color, never a shrink: `pressed` for rows, tabs, days and page buttons; `surface-brand-pressed`, `surface-brand-subtle-pressed`, `surface-secondary-hover` and `surface-danger-pressed` for buttons; `field-border-pressed` and `border-control-pressed` for checkboxes, radios and switches; a wash of the text color over a linked card. A shrink is hard to see under a finger and reads as a glitch on a small control, so only Slider's thumb changes size, growing while it's dragged | `surface-pressed`, `surface-brand-pressed`, `surface-danger-pressed`, the `…-bg-pressed` component tokens |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
-| Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
-| Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |
-| Disabled | It can't be used (`disabled`, `aria-disabled`) | Neutral colors at full opacity: `disabled-text` for labels and marks (at least 3:1 on every surface), `disabled-surface` for a fill, `disabled-border` for an edge; a `not-allowed` cursor and no hover or pressed | `disabled-text`, `disabled-surface`, `disabled-border` |
-| Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
+| Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `surface-brand` fill or indicator, or `surface-highlight` for the current page in a list | `surface-brand`, `text-on-brand`, `surface-highlight` |
+| Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `text-brand` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `text-brand`, `elevation-raised` |
+| Disabled | It can't be used (`disabled`, `aria-disabled`) | Neutral colors at full opacity: `text-disabled` for labels and marks (at least 3:1 on every surface), `surface-disabled` for a fill, `border-disabled` for an edge; a `not-allowed` cursor and no hover or pressed | `text-disabled`, `surface-disabled`, `border-disabled` |
+| Invalid | Its value is wrong (`aria-invalid`) | A `field-border-invalid` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `field-border-invalid`, `text-danger` |
 
 Focus shows on top of every other state, and disabled turns hover and pressed off. A component's README lists its own values under "States".
 

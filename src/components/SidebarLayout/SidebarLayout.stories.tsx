@@ -6,7 +6,7 @@ import { Heading } from '../Heading/Heading';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { Stack } from '../Stack/Stack';
 
-const Box = ({ children, tall }: { children?: React.ReactNode; tall?: boolean }) => <div className={`rounded-md bg-surface-muted p-3 text-sm text-text${tall ? ' min-h-40' : ''}`}>{children}</div>;
+const Box = ({ children, tall }: { children?: React.ReactNode; tall?: boolean }) => <div className={`rounded-md bg-surface-sunken p-3 text-sm text-text${tall ? ' min-h-40' : ''}`}>{children}</div>;
 
 const meta = {
   title: 'Components/Layout and type/SidebarLayout',

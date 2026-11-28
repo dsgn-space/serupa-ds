@@ -83,9 +83,9 @@ Each is an optional override: set it on the page, a container or one StatusTrack
 <!-- token-table:start (made from status-tracker.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--status-tracker-up` | `success` | An up day's bar (3:1 on the page). |
-| `--status-tracker-degraded` | `warning` | A degraded day's stripes and outline (3:1). |
-| `--status-tracker-down` | `danger` | A down day's bar (3:1). |
+| `--status-tracker-up` | `surface-success` | An up day's bar (3:1 on the page). |
+| `--status-tracker-degraded` | `surface-warning` | A degraded day's stripes and outline (3:1). |
+| `--status-tracker-down` | `surface-danger` | A down day's bar (3:1). |
 | `--status-tracker-none` | `border-strong` | A day without data: its outline, the light one a tag and an outline Badge have (the legend and the day's name say it, so it needn't be 3:1). |
 | `--status-tracker-text` | `text` | The caption (4.5:1). |
 | `--status-tracker-muted` | `text-muted` | The summary and legend (4.5:1). |

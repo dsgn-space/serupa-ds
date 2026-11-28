@@ -13,7 +13,7 @@
 /* sm: the 24px calendar button is taller than the box inside its border, as it always was; it overlaps the border
    rather than growing the box past the control height. */
 .srp-date-range-picker.srp-input--size-sm .srp-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
-.srp-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--placeholder)); }
+.srp-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--field-placeholder)); }
 /* Each field as wide as its date (or its pattern while empty), so the dates and the dash sit together at the start,
    the input gap either side of the dash, and any spare width goes before the calendar button, which stays at the end.
    Digits are tabular, so a date doesn't change width as it's typed. Where field-sizing isn't supported (Firefox), each

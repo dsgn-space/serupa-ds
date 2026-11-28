@@ -122,7 +122,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
             <Card as="li" key={plan.id} padding="lg" variant={plan.recommended ? 'elevated' : 'outline'} aria-labelledby={`${uid}-${plan.id}-name`}
-              className={plan.recommended ? 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere border-primary' : 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere'}>
+              className={plan.recommended ? 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere border-surface-brand' : 'grid row-span-5 grid-rows-subgrid min-w-0 gap-4 wrap-anywhere'}>
               <div className="flex flex-wrap items-center gap-2">
                 <Heading level={headingLevel} id={`${uid}-${plan.id}-name`}>{plan.name}</Heading>
                 {plan.recommended && <Badge tone="primary">{l.recommended}</Badge>}
@@ -136,7 +136,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
                 {shown === 'yearly' && plan.yearly > 0 && <span className="w-full text-sm text-text-muted">{l.billedYearly(money(plan.yearly))}</span>}
               </p>
               <ul role="list" aria-label={l.included(plan.name)} className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
-                {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" size="sm" className="shrink-0 text-success" />{f}</li>)}
+                {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" size="sm" className="shrink-0 text-surface-success" />{f}</li>)}
               </ul>
               <div className="self-center">
                 {plan.current

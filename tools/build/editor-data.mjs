@@ -2,8 +2,8 @@
 // tokens in a stylesheet, each with what it sets. npm run build writes them into dist/vscode/ (tools/build/build.mjs).
 //   serupa.html-data.json  class values (every utility class, with its declarations), data-theme, data-brand and
 //                          data-mode values, for html.customData
-//   serupa.css-data.json   every token as a property (--primary), with its description and blue-light value, for
-//                          css.customData: offered where a page sets a token (:root { --primary: … })
+//   serupa.css-data.json   every token as a property (--surface-brand), with its description and blue-light value, for
+//                          css.customData: offered where a page sets a token (:root { --surface-brand: … })
 // VS Code offers custom properties inside var() only from the stylesheet being edited, so custom data can't add them
 // there.
 

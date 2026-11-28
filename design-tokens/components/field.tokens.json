@@ -34,7 +34,7 @@
       },
       "error-color": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "Error message and its icon",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "warning-color": {
         "$type": "color",
-        "$value": "{color.warning-text}",
+        "$value": "{color.text-warning}",
         "$description": "A warning message and its icon",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "required-color": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "The `*`",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {

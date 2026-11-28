@@ -44,12 +44,12 @@ Drawn from the `Invalid` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the search icon in `text-muted` |
-| Hover | `field-border-hover`; the × that clears it takes a `field-hover` fill under the pointer |
+| Hover | `field-border-hover`; the × that clears it takes a `surface-raised-hover` fill under the pointer |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Loading | A small Loader in the search icon's place, announced as `loadingLabel` |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor |
 
 ## Behavior
 
@@ -103,8 +103,8 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--search-input-icon-color` | `text-muted` | The search icon (3:1 on the field). |
 | `--search-input-clear` | `text-muted` | The clear button's icon. |
 | `--search-input-clear-hover` | `text` | The clear button's icon on hover. |
-| `--search-input-clear-bg-hover` | `field-hover` | The clear button's background on hover. |
-| `--search-input-clear-bg-pressed` | `field-pressed` | The clear button's background while it's held down, one step past hover. |
+| `--search-input-clear-bg-hover` | `surface-raised-hover` | The clear button's background on hover. |
+| `--search-input-clear-bg-pressed` | `surface-raised-pressed` | The clear button's background while it's held down, one step past hover. |
 | `--search-input-focus-ring` | `focus-ring` | The clear button's keyboard focus ring. |
 | `--search-input-clear-radius` | `radius-inner` | The clear button's corners (4px). |
 | `--search-input-clear-padding` | `spacing-1` | Space around the clear button's icon (4px). |

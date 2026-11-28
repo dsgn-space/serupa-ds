@@ -70,18 +70,18 @@ Each is an optional override: set it on the page, a container or one tile. The l
 <!-- token-table:start (made from icon-tile.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--icon-tile-neutral-bg` | `secondary` | A neutral tile's fill. |
+| `--icon-tile-neutral-bg` | `surface-secondary` | A neutral tile's fill. |
 | `--icon-tile-neutral-icon` | `text-muted` | A neutral tile's icon (3:1 on its fill). |
-| `--icon-tile-primary-bg` | `primary-subtle` | A primary tile's fill. |
-| `--icon-tile-primary-icon` | `primary-text` | A primary tile's icon (3:1 on its fill). |
-| `--icon-tile-success-bg` | `success-subtle` | A success tile's fill. |
-| `--icon-tile-success-icon` | `success-text` | A success tile's icon (3:1 on its fill). |
-| `--icon-tile-warning-bg` | `warning-subtle` | A warning tile's fill. |
-| `--icon-tile-warning-icon` | `warning-text` | A warning tile's icon (3:1 on its fill). |
-| `--icon-tile-danger-bg` | `danger-subtle` | A danger tile's fill. |
-| `--icon-tile-danger-icon` | `danger-text` | A danger tile's icon (3:1 on its fill). |
-| `--icon-tile-info-bg` | `info-subtle` | An info tile's fill. |
-| `--icon-tile-info-icon` | `info-text` | An info tile's icon (3:1 on its fill). |
+| `--icon-tile-primary-bg` | `surface-brand-subtle` | A primary tile's fill. |
+| `--icon-tile-primary-icon` | `text-brand` | A primary tile's icon (3:1 on its fill). |
+| `--icon-tile-success-bg` | `surface-success-subtle` | A success tile's fill. |
+| `--icon-tile-success-icon` | `text-success` | A success tile's icon (3:1 on its fill). |
+| `--icon-tile-warning-bg` | `surface-warning-subtle` | A warning tile's fill. |
+| `--icon-tile-warning-icon` | `text-warning` | A warning tile's icon (3:1 on its fill). |
+| `--icon-tile-danger-bg` | `surface-danger-subtle` | A danger tile's fill. |
+| `--icon-tile-danger-icon` | `text-danger` | A danger tile's icon (3:1 on its fill). |
+| `--icon-tile-info-bg` | `surface-info-subtle` | An info tile's fill. |
+| `--icon-tile-info-icon` | `text-info` | An info tile's icon (3:1 on its fill). |
 | `--icon-tile-radius` | `radius-surface` | The corners at sizes md and lg (8px). |
 | `--icon-tile-radius-sm` | `radius-control` | The corners at size sm (6px). |
 | `--icon-tile-radius-xl` | `radius-container` | The corners at size xl (12px). |

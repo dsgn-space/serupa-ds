@@ -24,11 +24,21 @@
       },
       "placeholder": {
         "$type": "color",
-        "$value": "{color.placeholder}",
+        "$value": "{color.field-placeholder}",
         "$description": "The placeholder (4.5:1 on bg).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--cascade-select-placeholder"
+          }
+        }
+      },
+      "placeholder-readonly": {
+        "$type": "color",
+        "$value": "{color.text-secondary}",
+        "$description": "Gray text in a read-only field (the placeholder, an affix, a count): `text-secondary`, since `field-placeholder` is 4.4:1 on the read-only fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-placeholder-readonly"
           }
         }
       },
@@ -94,7 +104,7 @@
       },
       "check": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The chosen last step's check (3:1).",
         "$extensions": {
           "com.serupa": {
@@ -114,7 +124,7 @@
       },
       "panel-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -124,7 +134,7 @@
       },
       "panel-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The panel's outline.",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +154,7 @@
       },
       "option-hover": {
         "$type": "color",
-        "$value": "{color.highlight}",
+        "$value": "{color.surface-highlight}",
         "$description": "An option under the pointer, as Combobox's and Menu's.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +164,7 @@
       },
       "option-bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "An option's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +174,7 @@
       },
       "option-on": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.surface-brand-subtle}",
         "$description": "The highlighted option in each column.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +184,7 @@
       },
       "option-indicator": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The 2px bar at the start of each option on the chosen path (3:1 on option-on).",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +194,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +204,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -204,7 +214,7 @@
       },
       "panel-divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

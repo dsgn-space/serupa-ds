@@ -66,11 +66,11 @@ Drawn from the `Multiple` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the arrow in `text-muted` |
-| Hover | `field-border-hover`; the arrow under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the arrow under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the arrow is off with a plain cursor, and the list doesn't open |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the list doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the list doesn't open |
 
 ## Behavior
 
@@ -155,18 +155,18 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | --- | --- | --- |
 | `--combobox-chevron` | `text-muted` | The chevron button's icon (3:1 on the field). |
 | `--combobox-chevron-hover` | `text` | The chevron and × buttons' icon on hover. |
-| `--combobox-chevron-bg-hover` | `field-hover` | The chevron and × buttons' background on hover. |
-| `--combobox-chevron-bg-pressed` | `field-pressed` | The chevron button's background while it's held down, one step past hover. |
-| `--combobox-listbox-bg` | `surface-overlay` | The list's background. |
-| `--combobox-listbox-border` | `border-overlay` | The list's outline. |
+| `--combobox-chevron-bg-hover` | `surface-raised-hover` | The chevron and × buttons' background on hover. |
+| `--combobox-chevron-bg-pressed` | `surface-raised-pressed` | The chevron button's background while it's held down, one step past hover. |
+| `--combobox-listbox-bg` | `surface-raised` | The list's background. |
+| `--combobox-listbox-border` | `border-raised` | The list's outline. |
 | `--combobox-option-color` | `text` | An option's label. |
-| `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
-| `--combobox-option-bg-pressed` | `pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
-| `--combobox-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--combobox-option-bg-active` | `surface-highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
+| `--combobox-option-bg-pressed` | `surface-pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
+| `--combobox-option-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
-| `--combobox-check` | `primary-text` | The check next to the selected option. |
-| `--combobox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--combobox-listbox-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--combobox-check` | `text-brand` | The check next to the selected option. |
+| `--combobox-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--combobox-listbox-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Shadow**
 

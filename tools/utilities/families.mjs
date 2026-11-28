@@ -5,14 +5,17 @@
 // so a new token gets its utility classes without anyone editing the CSS. The families:
 //   color       every role color, white and black: not a palette step (red-500, which doesn't follow the theme;
 //               17.0.0) or a token marked "utilities": false (the chart colors, which a chart reads as variables);
-//               k is the token name (.bg-primary → var(--primary))
+//               k is the token name (.bg-surface-brand → var(--surface-brand))
 //   fraction    the sizing-a-b tokens; k is a/b (.w-1/2 → var(--sizing-1-2))
 //   <prefix>-   every token whose name starts with <prefix>-; k is the rest (.p-4 → var(--spacing-4))
 const esc = (s) => s.replace(/[./%]/g, (c) => '\\' + c);
 
 export function families(tokens) {
   const all = Object.values(tokens).filter((g) => g && Array.isArray(g.tokens)).flatMap((g) => g.tokens);
-  const item = (x, k) => ({ k: esc(k), t: esc(x.name), v: typeof x.value === 'string' ? x.value : '' });
+  // A deprecated alias's class reads the token it was renamed to (.bg-primary → var(--surface-brand)), so the old class
+  // keeps working and the CSS names no deprecated token.
+  const read = (x) => (x.$deprecated && /^\{([^{}]+)\}$/.exec(x.value)?.[1]) || x.name;
+  const item = (x, k) => ({ k: esc(k), t: esc(read(x)), v: typeof x.value === 'string' ? x.value : '' });
   const fams = {
     color: tokens.color.tokens.filter((x) => x.utilities !== false && !/-(?:50|[1-9]00|950)$/.test(x.name)).map((x) => item(x, x.name)),
     fraction: all.filter((x) => /^sizing-\d+-\d+$/.test(x.name)).map((x) => item(x, x.name.slice(7).replace('-', '/'))),

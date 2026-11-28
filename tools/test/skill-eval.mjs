@@ -132,7 +132,7 @@ const search = legacy.replace("import { Card, Heading, Stack, Text } from '@diki
   .replace('<Heading level={1}>Items</Heading>', '<Heading level={1}>Items</Heading>\n        <SearchInput aria-label="Search items" value={q} onChange={(e) => setQ(e.target.value)} />')
   .replace('{items.map((item) => (', '{items.filter((item) => item.name.toLowerCase().includes(q.toLowerCase())).map((item) => (');
 t("the start's own hand-built button and hex colors don't count against the change", !tidy(search, 'legacy-page').length, tidy(search, 'legacy-page').join(', '));
-const migrated = search.replace("background: '#0b3d91', color: '#ffffff'", "background: 'var(--primary)', color: 'var(--on-primary)'");
+const migrated = search.replace("background: '#0b3d91', color: '#ffffff'", "background: 'var(--surface-brand)', color: 'var(--text-on-brand)'");
 t('a change that also restyles the old header fails "surgical"', tidy(migrated, 'legacy-page').some((x) => x.startsWith('surgical')), tidy(migrated, 'legacy-page').join(', '));
 const newHex = search.replace('<SearchInput aria-label', '<SearchInput style={{ borderColor: \'#cccccc\' }} aria-label');
 t('a new hex color in the change still fails "tokens"', tidy(newHex, 'legacy-page').some((x) => x.startsWith('tokens')), tidy(newHex, 'legacy-page').join(', '));

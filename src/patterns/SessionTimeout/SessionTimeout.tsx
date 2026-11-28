@@ -244,7 +244,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
         </>}>
         <p className="m-0">You’ll be signed out in <strong>{timeLeft(left, locale)}</strong> because nothing has happened for a while.</p>
         <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you’ve typed is kept. Signing out clears it.</p>
-        {extendFailed ? <p className="m-0 mt-2 text-sm text-danger-text">Couldn’t keep you signed in. Check your connection and try again.</p> : null}
+        {extendFailed ? <p className="m-0 mt-2 text-sm text-text-danger">Couldn’t keep you signed in. Check your connection and try again.</p> : null}
       </Dialog>
     </div>
   );

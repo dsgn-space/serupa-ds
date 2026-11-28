@@ -118,15 +118,15 @@ Each is an optional override: set it on the page, a container or one Notificatio
 <!-- token-table:start (made from notification-center.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--notification-center-unread` | `primary` | The unread dot (3:1 on the drawer). |
+| `--notification-center-unread` | `surface-brand` | The unread dot (3:1 on the drawer). |
 | `--notification-center-divider` | `border` | The line between notifications. |
 | `--notification-center-description` | `text-muted` | A notification's description and time (4.5:1 on the drawer). |
-| `--notification-center-icon-info` | `info` | The info tone's icon. |
-| `--notification-center-icon-success` | `success` | The success tone's icon. |
-| `--notification-center-icon-warning` | `warning` | The warning tone's icon. |
-| `--notification-center-icon-danger` | `danger` | The danger tone's icon. |
+| `--notification-center-icon-info` | `surface-info` | The info tone's icon. |
+| `--notification-center-icon-success` | `surface-success` | The success tone's icon. |
+| `--notification-center-icon-warning` | `surface-warning` | The warning tone's icon. |
+| `--notification-center-icon-danger` | `surface-danger` | The danger tone's icon. |
 | `--notification-center-focus-ring` | `focus-ring` | The ring around a notification (or the empty line) focused after "Mark as read". |
-| `--notification-center-unread-edge` | `primary-edge` | The unread dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--notification-center-unread-edge` | `border-brand` | The unread dot's 1px edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 | `--notification-center-row-padding` | `spacing-3` | Space above and below each notification (12px). |
 | `--notification-center-unread-weight` | `font-semibold` | An unread notification's title. |
 <!-- token-table:end -->

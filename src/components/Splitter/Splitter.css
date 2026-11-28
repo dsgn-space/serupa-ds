@@ -12,7 +12,7 @@
 .srp-splitter__pane--second { flex: auto; flex-basis: var(--spacing-0); }
 .srp-splitter__pane[hidden] { display: none; }
 .srp-splitter__handle {
-  --srp-splitter-line: var(--splitter-line, var(--border-control));
+  --srp-splitter-line: var(--splitter-line, var(--border-strong));
   --srp-splitter-weight: var(--border-width-1);
   display: flex; justify-content: center; flex: none; box-sizing: border-box; touch-action: none; -webkit-user-select: none; user-select: none;
   width: var(--splitter-handle-size, var(--spacing-2)); cursor: col-resize;
@@ -24,11 +24,11 @@
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 .srp-splitter--vertical > .srp-splitter__handle::before { width: auto; height: var(--srp-splitter-weight); }
-@media (hover: hover) { .srp-splitter__handle:hover { --srp-splitter-line: var(--splitter-line-active, var(--primary-text)); --srp-splitter-weight: var(--border-width-2); } }
+@media (hover: hover) { .srp-splitter__handle:hover { --srp-splitter-line: var(--splitter-line-active, var(--text-brand)); --srp-splitter-weight: var(--border-width-2); } }
 /* Placing (a press on the handle that didn't drag it): the line stays active, and the Splitter shows where it can go. */
 .srp-splitter[data-placing] { cursor: col-resize; }
 .srp-splitter--vertical[data-placing] { cursor: row-resize; }
-.srp-splitter__handle:focus-visible, .srp-splitter__handle:active, .srp-splitter[data-placing] > .srp-splitter__handle { --srp-splitter-line: var(--splitter-line-active, var(--primary-text)); --srp-splitter-weight: var(--border-width-2); }
+.srp-splitter__handle:focus-visible, .srp-splitter__handle:active, .srp-splitter[data-placing] > .srp-splitter__handle { --srp-splitter-line: var(--splitter-line-active, var(--text-brand)); --srp-splitter-weight: var(--border-width-2); }
 .srp-splitter__pane:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .srp-splitter__handle:focus-visible { outline: var(--focus-ring-width) solid var(--splitter-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media (prefers-reduced-motion: reduce) { .srp-splitter__handle::before { transition: none; } }

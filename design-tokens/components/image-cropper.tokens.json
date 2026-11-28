@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The frame behind the picture, seen while it loads or when it can't.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "edge": {
         "$type": "color",
-        "$value": "{color.picture-edge}",
+        "$value": "{color.border-picture}",
         "$description": "The hairline round the frame, so a pale picture keeps its edge.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "scrim": {
         "$type": "color",
-        "$value": "{color.overlay}",
+        "$value": "{color.backdrop}",
         "$description": "A round crop: what dims the picture outside the circle.",
         "$extensions": {
           "com.serupa": {

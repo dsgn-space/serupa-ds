@@ -14,7 +14,7 @@
       },
       "text": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The link's text (4.5:1 on its background).",
         "$extensions": {
           "com.serupa": {

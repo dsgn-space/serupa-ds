@@ -230,8 +230,8 @@ check(`contrast: ${PAIRS.length} text, control and focus pairs pass WCAG in all 
 // A primary fill passes 3:1 on every surface by itself, or inside the theme's primary-edge (transparent where it isn't needed).
 const bare = [];
 for (const th of THEMES) for (const bg of FILL_SURFACES) {
-  const edge = resolve('primary-edge', th), solid = !/^#[0-9a-f]{6}00$/i.test(edge);
-  const r = ratio(resolve('primary', th), resolve(bg, th)), e = solid ? ratio(edge, resolve(bg, th)) : 0;
+  const edge = resolve('border-brand', th), solid = !/^#[0-9a-f]{6}00$/i.test(edge);
+  const r = ratio(resolve('surface-brand', th), resolve(bg, th)), e = solid ? ratio(edge, resolve(bg, th)) : 0;
   if (Math.max(r, e) < 3) bare.push(`${th}: primary on ${bg} ${r.toFixed(2)}:1${solid ? `, its edge ${e.toFixed(2)}:1` : ', no edge'}`);
   if (solid && r >= 3) bare.push(`${th}: primary is ${r.toFixed(2)}:1 on ${bg}, so primary-edge should be transparent`);
 }
@@ -275,8 +275,8 @@ check('tokens.json is exactly what tokens/serupa.tokens.json gives (npm run toke
   // A lifted dark fill names its palette step (ADR-0026): a hex changed without its lift, or the other way, is caught.
   const lifted = Object.entries(src.color).filter(([, x]) => x.$extensions?.['com.serupa']?.lift);
   const off = structuredClone(src);
-  off.color.success.$extensions['com.serupa'].dark = '#00ff00';
-  const caught = fromSource(off).problems.some((m) => m.startsWith('color.success: dark is #00ff00'));
+  off.color['surface-success'].$extensions['com.serupa'].dark = '#00ff00';
+  const caught = fromSource(off).problems.some((m) => m.startsWith('color.surface-success: dark is #00ff00'));
   check(`every dark fill says the palette step it is lifted from (${lifted.length} tokens), and a hex that isn't that step lifted is caught`, lifted.length >= 10 && !fromSource(src).problems.length && caught, caught ? '' : 'a wrong hex beside its lift went through');
 }
 

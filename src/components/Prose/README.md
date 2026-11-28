@@ -25,7 +25,7 @@ import { Prose } from "@diki-stwn/serupa-ds";
 - Each block is spaced from the one before it, with more space before a heading and none before the first block, so nothing needs a margin of its own. Lists, quotes, details, cells and definitions are spaced the same way inside.
 - The column is capped at about 65 characters a line (`container-prose`), the comfortable reading width. Give it a `className` such as `max-w-none` to fill its container.
 - Lists get their bullets and numbers back (disc, then circle and square when nested), indented with logical properties, so they sit on the right in RTL.
-- Links are base.css's bare links: Link's colors, underline and focus ring, and a long URL wraps. A visited link takes its own shade (`link-visited`), so readers can see what they've already read; app screens keep Link's one color.
+- Links are base.css's bare links: Link's colors, underline and focus ring, and a long URL wraps. A visited link takes its own shade (`text-link-visited`), so readers can see what they've already read; app screens keep Link's one color.
 - A wide table or code block scrolls in its own box instead of widening the page. Images and videos never overflow the column, and an image that fails to load shows its alt text in muted italics.
 
 ### Do and don't
@@ -37,7 +37,7 @@ import { Prose } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** none of its own. It's a `<div>` by default; use `as="article"` for content that stands on its own, such as a post. The headings inside keep their levels, so start them below the page's own.
 - **Keyboard:** none of its own. Links inside take the base focus ring, and a table or code block that scrolls can be scrolled with the trackpad or the scrollbar.
-- **Contrast:** body text, headings, quotes and list markers keep 4.5:1 on the page, and a visited link reads 4.5:1 on `surface` and `surface-muted` in every theme (`Prose.test.tsx`, and the foundation check for `link-visited`). Browsers allow only a color change on a visited link, so it's a reading aid, never the only way to tell something.
+- **Contrast:** body text, headings, quotes and list markers keep 4.5:1 on the page, and a visited link reads 4.5:1 on `surface` and `surface-sunken` in every theme (`Prose.test.tsx`, and the foundation check for `text-link-visited`). Browsers allow only a color change on a visited link, so it's a reading aid, never the only way to tell something.
 - **What's still yours:** sanitized HTML, sensible heading levels, and alt text on the images.
 
 ## Props
@@ -59,11 +59,11 @@ Each is an optional override: set it on the page, a container or one Prose. The 
 | --- | --- | --- |
 | `--prose-text` | `text` | The body text (4.5:1 on the page). |
 | `--prose-heading` | `text` | Headings. |
-| `--prose-link-visited` | `link-visited` | A visited link: a shade apart from primary, 4.5:1 on the page in every theme. |
+| `--prose-link-visited` | `text-link-visited` | A visited link: a shade apart from primary, 4.5:1 on the page in every theme. |
 | `--prose-marker` | `text-muted` | List bullets and numbers. |
 | `--prose-quote-text` | `text-muted` | A blockquote's text. |
 | `--prose-quote-border` | `border-strong` | The bar at a blockquote's start. |
-| `--prose-code-bg` | `surface-muted` | Behind inline code and code blocks. |
+| `--prose-code-bg` | `surface-sunken` | Behind inline code and code blocks. |
 | `--prose-table-border` | `border` | The line under each table row. |
 | `--prose-caption` | `text-muted` | Figure captions, and the alt text of an image that failed to load. |
 | `--prose-quote-border-width` | `border-width-4` | The width of a blockquote's bar (4px). |

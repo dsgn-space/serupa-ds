@@ -51,7 +51,7 @@ export function ContrastMatrix() {
                   {r.need >= 4.5 ? 'Aa' : <span style={{ width: 12, height: 12, borderRadius: 6, border: `2px solid ${t.f}` }} />}
                 </span>
                 <span>{fmt(t.normal)}</span>
-                <span style={{ color: ok ? 'var(--success-text)' : 'var(--danger-text)', fontWeight: 600 }}>{ok ? 'Pass' : 'Fail'}</span>
+                <span style={{ color: ok ? 'var(--text-success)' : 'var(--text-danger)', fontWeight: 600 }}>{ok ? 'Pass' : 'Fail'}</span>
               </div>
               {t.more !== t.normal && <div style={{ color: 'var(--text-muted)', fontSize: 12, whiteSpace: 'nowrap' }}>More contrast: {fmt(t.more)}</div>}
             </td>;

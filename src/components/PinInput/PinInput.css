@@ -54,7 +54,7 @@
 @media (prefers-reduced-motion: reduce) { .srp-pin-input__box--caret::after { animation: none; } }
 .srp-pin-input:where([data-invalid]) { --srp-pin-bd: var(--pin-input-invalid, var(--field-border-invalid)); --srp-pin-ring: var(--pin-input-invalid, var(--field-border-invalid)); }
 .srp-pin-input:where([data-readonly]) .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
-.srp-pin-input:where([data-disabled]) { --pin-input-text: var(--pin-input-text-disabled, var(--disabled-text)); --pin-input-border: var(--pin-input-border-disabled, var(--disabled-border)); }
+.srp-pin-input:where([data-disabled]) { --pin-input-text: var(--pin-input-text-disabled, var(--text-disabled)); --pin-input-border: var(--pin-input-border-disabled, var(--border-disabled)); }
 .srp-pin-input:where([data-disabled]) .srp-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
 .srp-pin-input:where([data-disabled]) .srp-pin-input__field { cursor: var(--cursor-disabled); }
 }

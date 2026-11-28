@@ -83,13 +83,13 @@ Drawn from the `LongLabel` story.
 | State | Look |
 | --- | --- |
 | Unchecked | `field` background, 1px `field-border` |
-| Checked | `primary` fill and border, a check in `on-primary` |
-| Indeterminate | `primary` fill and border, a dash in `on-primary` |
-| Hover | `field-border-hover`; a checked or indeterminate box turns `primary-hover` |
+| Checked | `primary` fill and border, a check in `text-on-brand` |
+| Indeterminate | `primary` fill and border, a dash in `text-on-brand` |
+| Hover | `field-border-hover`; a checked or indeterminate box turns `surface-brand-hover` |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
-| Disabled | Neutral colors at full opacity: a `disabled-border` box, filled `disabled-surface` with a `disabled-text` tick when checked, and a `disabled-text` label; `not-allowed` cursor; also when a parent fieldset (`Field group disabled`) is disabled |
+| Disabled | Neutral colors at full opacity: a `border-disabled` box, filled `surface-disabled` with a `text-disabled` tick when checked, and a `text-disabled` label; `not-allowed` cursor; also when a parent fieldset (`Field group disabled`) is disabled |
 | Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the tick shows it too); the focus ring goes around the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
@@ -161,14 +161,14 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | --- | --- | --- |
 | `--checkbox-bg` | `field` | The box while unchecked |
 | `--checkbox-bg-disabled` | `field-readonly` | The box when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
-| `--checkbox-bg-checked` | `primary` | Fill and border when checked or indeterminate |
-| `--checkbox-bg-checked-hover` | `primary-hover` | The same, on hover |
-| `--checkbox-bg-checked-pressed` | `primary-pressed` | The checked box's fill while held down, one step past bg-checked-hover. |
-| `--checkbox-bg-pressed` | `secondary` | The unchecked box's background while held down. |
+| `--checkbox-bg-checked` | `surface-brand` | Fill and border when checked or indeterminate |
+| `--checkbox-bg-checked-hover` | `surface-brand-hover` | The same, on hover |
+| `--checkbox-bg-checked-pressed` | `surface-brand-pressed` | The checked box's fill while held down, one step past bg-checked-hover. |
+| `--checkbox-bg-pressed` | `surface-secondary` | The unchecked box's background while held down. |
 | `--checkbox-border` | `field-border` | Border while unchecked |
 | `--checkbox-border-hover` | `field-border-hover` | Border on hover |
 | `--checkbox-border-pressed` | `field-border-pressed` | The unchecked box's border while held down, one step past border-hover. |
-| `--checkbox-icon-color` | `on-primary` | The check and the dash |
+| `--checkbox-icon-color` | `text-on-brand` | The check and the dash |
 | `--checkbox-label-color` | `text` | The label |
 | `--checkbox-description-color` | `text-muted` | The description |
 | `--checkbox-focus-ring` | `focus-ring` | The focus ring |
@@ -176,11 +176,11 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-card-bg` | `surface` | A card checkbox's background. |
 | `--checkbox-card-border` | `border` | A card's border. |
 | `--checkbox-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
-| `--checkbox-card-border-checked` | `primary-text` | A checked card's border, 2px. |
-| `--checkbox-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--checkbox-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
-| `--checkbox-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--checkbox-edge-checked` | `primary-edge` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--checkbox-card-border-checked` | `text-brand` | A checked card's border, 2px. |
+| `--checkbox-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--checkbox-fill-disabled` | `surface-disabled` | Disabled: the fill, whatever its color when enabled. |
+| `--checkbox-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--checkbox-edge-checked` | `border-brand` | A checked box's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

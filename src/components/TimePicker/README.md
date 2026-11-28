@@ -44,11 +44,11 @@ Drawn from the `Disabled` story.
 | State | Look |
 | --- | --- |
 | Rest | `field` background, 1px `field-border`, the clock button in `text-muted` |
-| Hover | `field-border-hover`; the clock button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Hover | `field-border-hover`; the clock button under the pointer takes a `surface-raised-hover` fill, `surface-raised-pressed` while pressed |
 | Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable; the clock button is off with a plain cursor, so the list of times doesn't open |
-| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the clock button is off and the list of times doesn't open |
+| Disabled | `field-readonly` background, `border-disabled` edge and `text-disabled` at full opacity, `not-allowed` cursor; the clock button is off and the list of times doesn't open |
 
 ## Behavior
 
@@ -115,15 +115,15 @@ Each is an optional override: set it on the page, a container or one picker. The
 | --- | --- | --- |
 | `--time-picker-button` | `text-muted` | The clock button's icon (3:1 on the field). |
 | `--time-picker-button-hover` | `text` | The clock button's icon on hover. |
-| `--time-picker-button-bg-hover` | `field-hover` | The clock button's background on hover, as the other buttons inside fields. |
-| `--time-picker-button-bg-pressed` | `field-pressed` | The clock button's background while it's held down, one step past hover. |
-| `--time-picker-list-bg` | `surface-overlay` | The list's background. |
-| `--time-picker-list-border` | `border-overlay` | The list's outline. |
+| `--time-picker-button-bg-hover` | `surface-raised-hover` | The clock button's background on hover, as the other buttons inside fields. |
+| `--time-picker-button-bg-pressed` | `surface-raised-pressed` | The clock button's background while it's held down, one step past hover. |
+| `--time-picker-list-bg` | `surface-raised` | The list's background. |
+| `--time-picker-list-border` | `border-raised` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
-| `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
-| `--time-picker-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
-| `--time-picker-check` | `primary-text` | The check by the chosen time (3:1 on surface). |
-| `--time-picker-list-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--time-picker-option-bg-active` | `surface-highlight` | The highlighted time (pointer or keyboard). |
+| `--time-picker-option-indicator` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--time-picker-check` | `text-brand` | The check by the chosen time (3:1 on surface). |
+| `--time-picker-list-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
 | `--time-picker-list-radius` | `radius-surface` | The list's corners (8px). |
 | `--time-picker-list-max-height` | `spacing-60` | The list's tallest before it scrolls (240px). |

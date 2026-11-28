@@ -22,10 +22,10 @@
   border-radius: var(--radius-control); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .srp-command-palette__option:dir(rtl) { --srp-bar: calc(var(--border-width-2) * -1); }
-.srp-command-palette__option:where([data-active]) { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
+.srp-command-palette__option:where([data-active]) { background: var(--command-palette-option-bg-active, var(--surface-highlight)); box-shadow: inset var(--srp-bar) 0 0 var(--command-palette-indicator-active, var(--surface-highlight-indicator)); }
 /* Held down: one step past the highlight, as a Menu item is, so a press shows before the palette closes. */
-.srp-command-palette__option:active:not([data-disabled]) { background: var(--command-palette-option-bg-pressed, var(--pressed)); }
-.srp-command-palette__option:where([data-disabled]), .srp-command-palette__option:where([data-disabled]) * { color: var(--command-palette-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.srp-command-palette__option:active:not([data-disabled]) { background: var(--command-palette-option-bg-pressed, var(--surface-pressed)); }
+.srp-command-palette__option:where([data-disabled]), .srp-command-palette__option:where([data-disabled]) * { color: var(--command-palette-text-disabled, var(--text-disabled)); cursor: var(--cursor-disabled); }
 .srp-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 /* 20px beside the 14px label in a 44px row, as Sidebar's items: an Icon's own default is 24px. */
 .srp-command-palette__icon .srp-icon { font-size: var(--command-palette-icon-size, var(--spacing-5)); }

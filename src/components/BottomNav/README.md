@@ -96,10 +96,10 @@ Each is an optional override: set it on the page, a container or one BottomNav. 
 | `--bottom-nav-border` | `border` | The hairline along its top. |
 | `--bottom-nav-text` | `text-muted` | A link's icon and label (4.5:1 on bg). |
 | `--bottom-nav-text-hover` | `text` | A link under the pointer (not the current one, which keeps its own color). |
-| `--bottom-nav-icon-bg-hover` | `secondary` | The pill behind the icon under the pointer (not on the current item, which keeps its own fill). |
-| `--bottom-nav-icon-bg-pressed` | `secondary-hover` | The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill). |
-| `--bottom-nav-text-active` | `primary-text` | The current page's icon and label (4.5:1 on bg). |
-| `--bottom-nav-icon-bg-active` | `primary-subtle` | The pill behind the current page's icon. |
+| `--bottom-nav-icon-bg-hover` | `surface-secondary` | The pill behind the icon under the pointer (not on the current item, which keeps its own fill). |
+| `--bottom-nav-icon-bg-pressed` | `surface-secondary-hover` | The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill). |
+| `--bottom-nav-text-active` | `text-brand` | The current page's icon and label (4.5:1 on bg). |
+| `--bottom-nav-icon-bg-active` | `surface-brand-subtle` | The pill behind the current page's icon. |
 | `--bottom-nav-focus-ring` | `focus-ring` | The keyboard focus ring, inside the link. |
 | `--bottom-nav-height` | `spacing-16` | The bar's height above the safe-area inset (64px); links fill it, so each is a 64px-tall target. |
 | `--bottom-nav-badge-offset-x` | `spacing-8` | How far from the icon pill's start edge a badge starts: 4px past the middle, so it sits on the icon's top-end corner. |

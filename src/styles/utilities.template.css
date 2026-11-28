@@ -1199,7 +1199,7 @@
 
 /* ---------------------------------------------------------------
    Backgrounds: Background utilities.
-   Colors are the role colors (bg-surface, bg-primary), white and black.
+   Colors are the role colors (bg-surface, bg-surface-brand), white and black; the names before 20.0.0 (bg-primary) still work.
    --------------------------------------------------------------- */
 
 /* background-attachment */
@@ -1221,23 +1221,25 @@
 /* On a strong fill, the focus ring of what's inside takes the fill's own text color (74): the brand-colored ring
    would all but vanish on the brand, and on the inverse surface. It's set on what's inside, not on the filled box,
    whose own ring sits outside it on the page. */
-:is(.bg-primary, .bg-primary-hover) * { --focus-ring: var(--on-primary); }
-:is(.bg-danger, .bg-danger-hover) * { --focus-ring: var(--on-danger); }
+:is(.bg-surface-brand, .bg-surface-brand-hover, .bg-primary, .bg-primary-hover) * { --focus-ring: var(--text-on-brand); }
+:is(.bg-surface-danger, .bg-surface-danger-hover, .bg-danger, .bg-danger-hover) * { --focus-ring: var(--text-on-danger); }
 .bg-surface-inverse * { --focus-ring: var(--text-inverse); }
 /* A light surface painted inside the fill (a Card, a menu, a table, a light bg- class) gives what's inside it the
    page's ring back (GR80): there the fill's text color would be white on white, or near-black on a dark card. The fill
    keeps the page's ring in --srp-page-focus-ring for them. The surface's own ring sits outside it, on the fill. */
-:is(.bg-primary, .bg-primary-hover, .bg-danger, .bg-danger-hover, .bg-surface-inverse) { --srp-page-focus-ring: var(--focus-ring); }
-:is(.bg-primary, .bg-primary-hover, .bg-danger, .bg-danger-hover, .bg-surface-inverse) :is(.bg-surface, .bg-surface-muted, .bg-surface-raised, .bg-surface-overlay, .bg-field, .bg-secondary, .bg-primary-subtle, .bg-danger-subtle, .bg-success-subtle, .bg-warning-subtle, .bg-info-subtle, .srp-card, .srp-accordion--card, .srp-list--card, .srp-dialog__panel, .srp-drawer__panel, .srp-popover, .srp-menu, .srp-combobox__popup, .srp-date-picker__popup, .srp-time-picker__list, .srp-sidebar, .srp-navbar, .srp-toolbar, .srp-table, .srp-tree-view, .srp-toast, .srp-error-summary, .srp-sortable-list__item, .srp-file-upload__zone) * { --focus-ring: var(--srp-page-focus-ring); }
+:is(.bg-surface-brand, .bg-surface-brand-hover, .bg-surface-danger, .bg-surface-danger-hover, .bg-primary, .bg-primary-hover, .bg-danger, .bg-danger-hover, .bg-surface-inverse) { --srp-page-focus-ring: var(--focus-ring); }
+:is(.bg-surface-brand, .bg-surface-brand-hover, .bg-surface-danger, .bg-surface-danger-hover, .bg-primary, .bg-primary-hover, .bg-danger, .bg-danger-hover, .bg-surface-inverse) :is(.bg-background, .bg-surface, .bg-surface-sunken, .bg-surface-raised, .bg-field, .bg-surface-secondary, .bg-surface-brand-subtle, .bg-surface-danger-subtle, .bg-surface-success-subtle, .bg-surface-warning-subtle, .bg-surface-info-subtle, .bg-surface-muted, .bg-surface-overlay, .bg-secondary, .bg-primary-subtle, .bg-danger-subtle, .bg-success-subtle, .bg-warning-subtle, .bg-info-subtle, .srp-card, .srp-accordion--card, .srp-list--card, .srp-dialog__panel, .srp-drawer__panel, .srp-popover, .srp-menu, .srp-combobox__popup, .srp-date-picker__popup, .srp-time-picker__list, .srp-sidebar, .srp-navbar, .srp-toolbar, .srp-table, .srp-tree-view, .srp-toast, .srp-error-summary, .srp-sortable-list__item, .srp-file-upload__zone) * { --focus-ring: var(--srp-page-focus-ring); }
 /* A row's hover and selected fill (List, InlineEdit: surface-hover, a step off the page) on a recessed surface: a
-   bg-surface-muted panel is already that colour in light, so rows there step up to surface-raised instead (white in
-   light, zinc-800 in dark). On a raised or floating surface (zinc-800 in dark) they step up to surface-hover-raised.
+   bg-surface-sunken panel is already that colour in light, so rows there step up to surface-raised instead (white in
+   light, zinc-800 in dark). On a raised or floating surface (zinc-800 in dark) they step up to surface-raised-hover.
    A surface painted inside gives its rows its own fill; Card, Popover, Dialog and Drawer do the same. Form fields on a
-   raised or floating surface step up to field-raised the same way, so in dark they don't match the surface. */
+   raised or floating surface step up to field-raised the same way, so in dark they don't match the surface, and their
+   placeholder to field-raised-placeholder, which keeps 4.5:1 on it. */
+.bg-surface-sunken { --srp-row-hover: var(--surface-raised); }
 .bg-surface-muted { --srp-row-hover: var(--surface-raised); }
 .bg-surface { --srp-row-hover: var(--surface-hover); }
-.bg-surface-raised { --srp-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
-.bg-surface-overlay { --srp-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
+.bg-surface-raised { --srp-row-hover: var(--surface-raised-hover); --field: var(--field-raised); --field-placeholder: var(--field-raised-placeholder); --border: var(--border-raised); }
+.bg-surface-overlay { --srp-row-hover: var(--surface-raised-hover); --field: var(--field-raised); --field-placeholder: var(--field-raised-placeholder); --border: var(--border-raised); }
 /* background-image: none */
 .bg-none { background-image: none; }
 /* background-origin */
@@ -3448,39 +3450,39 @@
 .placeholder-border::placeholder { color: var(--border); }
 .placeholder-border-strong::placeholder { color: var(--border-strong); }
 .placeholder-current::placeholder { color: currentColor; }
-.placeholder-danger::placeholder { color: var(--danger); }
-.placeholder-danger-border::placeholder { color: var(--danger-border); }
+.placeholder-danger::placeholder { color: var(--surface-danger); }
+.placeholder-danger-border::placeholder { color: var(--border-danger); }
 @each danger- not(text, border) {
   .placeholder-danger-{k}::placeholder { color: var(--{t}); }
 }
-.placeholder-danger-text::placeholder { color: var(--danger-text); }
+.placeholder-danger-text::placeholder { color: var(--text-danger); }
 .placeholder-focus-ring::placeholder { color: var(--focus-ring); }
-.placeholder-info::placeholder { color: var(--info); }
-.placeholder-info-subtle::placeholder { color: var(--info-subtle); }
+.placeholder-info::placeholder { color: var(--surface-info); }
+.placeholder-info-subtle::placeholder { color: var(--surface-info-subtle); }
 .placeholder-inherit::placeholder { color: inherit; }
-.placeholder-on-danger::placeholder { color: var(--on-danger); }
-.placeholder-on-primary::placeholder { color: var(--on-primary); }
-.placeholder-primary::placeholder { color: var(--primary); }
-.placeholder-primary-hover::placeholder { color: var(--primary-hover); }
-.placeholder-primary-subtle::placeholder { color: var(--primary-subtle); }
-.placeholder-secondary::placeholder { color: var(--secondary); }
-.placeholder-secondary-hover::placeholder { color: var(--secondary-hover); }
-.placeholder-success::placeholder { color: var(--success); }
-.placeholder-success-subtle::placeholder { color: var(--success-subtle); }
+.placeholder-on-danger::placeholder { color: var(--text-on-danger); }
+.placeholder-on-primary::placeholder { color: var(--text-on-brand); }
+.placeholder-primary::placeholder { color: var(--surface-brand); }
+.placeholder-primary-hover::placeholder { color: var(--surface-brand-hover); }
+.placeholder-primary-subtle::placeholder { color: var(--surface-brand-subtle); }
+.placeholder-secondary::placeholder { color: var(--surface-secondary); }
+.placeholder-secondary-hover::placeholder { color: var(--surface-secondary-hover); }
+.placeholder-success::placeholder { color: var(--surface-success); }
+.placeholder-success-subtle::placeholder { color: var(--surface-success-subtle); }
 .placeholder-surface::placeholder { color: var(--surface); }
 .placeholder-surface-inverse::placeholder { color: var(--surface-inverse); }
-.placeholder-surface-muted::placeholder { color: var(--surface-muted); }
+.placeholder-surface-muted::placeholder { color: var(--surface-sunken); }
 .placeholder-field::placeholder { color: var(--field); }
 .placeholder-field-border::placeholder { color: var(--field-border); }
 .placeholder-field-border-hover::placeholder { color: var(--field-border-hover); }
-.placeholder-placeholder::placeholder { color: var(--placeholder); }
-.placeholder-overlay::placeholder { color: var(--overlay); }
+.placeholder-placeholder::placeholder { color: var(--field-placeholder); }
+.placeholder-overlay::placeholder { color: var(--backdrop); }
 .placeholder-text::placeholder { color: var(--text); }
 .placeholder-text-inverse::placeholder { color: var(--text-inverse); }
 .placeholder-text-muted::placeholder { color: var(--text-muted); }
 .placeholder-transparent::placeholder { color: #0000; }
-.placeholder-warning::placeholder { color: var(--warning); }
-.placeholder-warning-subtle::placeholder { color: var(--warning-subtle); }
+.placeholder-warning::placeholder { color: var(--surface-warning); }
+.placeholder-warning-subtle::placeholder { color: var(--surface-warning-subtle); }
 .placeholder-white::placeholder { color: var(--white); }
 /* Spacing (negative zero aliases) */
 .-m-0 { margin: var(--spacing-0); }

@@ -112,14 +112,14 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-text` | `text` | The file name (4.5:1 on bg). |
 | `--attachment-muted` | `text-muted` | The kind and size (4.5:1 on bg). |
 | `--attachment-icon` | `text-muted` | The kind icon (3:1 on bg). |
-| `--attachment-link` | `primary-text` | A linked name (4.5:1 on bg). |
-| `--attachment-link-hover` | `primary-text-hover` | A linked name under the pointer. |
+| `--attachment-link` | `text-brand` | A linked name (4.5:1 on bg). |
+| `--attachment-link-hover` | `text-brand-hover` | A linked name under the pointer. |
 | `--attachment-border` | `border` | The outline. |
-| `--attachment-border-error` | `danger` | The outline of a failed upload (3:1 on the page). |
+| `--attachment-border-error` | `surface-danger` | The outline of a failed upload (3:1 on the page). |
 | `--attachment-error-gap` | `spacing-1.5` | The space between a failed file's box and its message under it, a Field's gap between its control and its error (6px). |
-| `--attachment-error` | `danger-text` | A failed upload's message (4.5:1 on bg). |
+| `--attachment-error` | `text-danger` | A failed upload's message (4.5:1 on bg). |
 | `--attachment-focus-ring` | `focus-ring` | The ring around a focused link, or around a cut name that takes keyboard focus. |
-| `--attachment-done` | `success-text` | "Complete" and its check once an upload is done (4.5:1 on bg). |
+| `--attachment-done` | `text-success` | "Complete" and its check once an upload is done (4.5:1 on bg). |
 | `--attachment-radius` | `radius-control` | The corners (6px). |
 | `--attachment-padding` | `spacing-2` | Space inside (8px). |
 | `--attachment-padding-start` | `spacing-3` | Space before the icon (12px). |

@@ -102,7 +102,7 @@ describe('Patterns/Notifications', () => {
     const rows = titles(), dot = (li: Element) => li.querySelector('span[aria-hidden="true"]:empty') as HTMLElement;
     const seen = rows.map((li) => getComputedStyle(dot(li)).visibility);
     expect(seen).toEqual(['visible', 'visible', 'visible', 'hidden', 'hidden']);
-    const probe = document.createElement('span'); probe.style.color = 'var(--primary)'; document.body.append(probe);
+    const probe = document.createElement('span'); probe.style.color = 'var(--surface-brand)'; document.body.append(probe);
     expect(getComputedStyle(dot(rows[0]!)).backgroundColor).toBe(getComputedStyle(probe).color);
     probe.remove();
     expect([dot(rows[0]!).getAttribute('aria-hidden'), dot(rows[0]!).getBoundingClientRect().width, dot(rows[0]!).getBoundingClientRect().left]).toEqual(['true', 8, dot(rows[3]!).getBoundingClientRect().left]);

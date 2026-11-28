@@ -103,11 +103,11 @@ Each is an optional override: set it on the page, a container or one TableOfCont
 | `--table-of-contents-title` | `text` | The title, and a link under the pointer (4.5:1). |
 | `--table-of-contents-current` | `text` | The current section's link (4.5:1). |
 | `--table-of-contents-line` | `border` | The line along the links. |
-| `--table-of-contents-line-current` | `primary-text` | The line beside the current section's link (3:1). |
+| `--table-of-contents-line-current` | `text-brand` | The line beside the current section's link (3:1). |
 | `--table-of-contents-focus-ring` | `focus-ring` | The ring around a focused link. |
 | `--table-of-contents-dash` | `border-strong` | The rail's dashes (decorative: the links are in its panel). |
-| `--table-of-contents-panel` | `surface-overlay` | The rail's panel, over the page. |
-| `--table-of-contents-panel-border` | `border-overlay` | The rail's panel's edge. |
-| `--table-of-contents-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
+| `--table-of-contents-panel` | `surface-raised` | The rail's panel, over the page. |
+| `--table-of-contents-panel-border` | `border-raised` | The rail's panel's edge. |
+| `--table-of-contents-panel-divider` | `border-raised` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--table-of-contents-panel-gap` | `spacing-16` | How much shorter than the window the rail's panel is at most (64px): room for a sticky column's offset above and a margin below. A longer list scrolls inside it. |
 <!-- token-table:end -->

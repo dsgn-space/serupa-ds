@@ -8,7 +8,7 @@ import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Stack } from '../Stack/Stack';
 
-const Box = ({ children }: { children?: React.ReactNode }) => <div className="rounded-md bg-surface-muted p-3 text-sm text-text">{children}</div>;
+const Box = ({ children }: { children?: React.ReactNode }) => <div className="rounded-md bg-surface-sunken p-3 text-sm text-text">{children}</div>;
 
 const meta = {
   title: 'Components/Layout and type/Center',

@@ -117,18 +117,18 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-text` | `text-muted` | A tab's label (4.5:1 on surface). |
 | `--tabs-text-hover` | `text` | A tab's label on hover. |
 | `--tabs-text-selected` | `text` | The selected tab's label (line). |
-| `--tabs-indicator` | `primary-text` | The line under the selected tab (3:1 on surface). |
+| `--tabs-indicator` | `text-brand` | The line under the selected tab (3:1 on surface). |
 | `--tabs-border` | `border` | The line under the whole tab list (line). |
-| `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
-| `--tabs-pill-bg-pressed` | `pressed` | A pill tab's background while it's pressed, before it's selected, one step past hover. |
-| `--tabs-pill-bg-selected` | `primary` | The selected pill tab's background. |
-| `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
+| `--tabs-pill-bg-hover` | `surface-secondary` | A pill tab's background on hover. |
+| `--tabs-pill-bg-pressed` | `surface-secondary-hover` | A pill tab's background while it's pressed, before it's selected, one step past hover. |
+| `--tabs-pill-bg-selected` | `surface-brand` | The selected pill tab's background. |
+| `--tabs-pill-text-selected` | `text-on-brand` | The selected pill tab's label. |
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
 | `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
-| `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--tabs-close-bg-hover` | `secondary` | A closable tab's × under the pointer. |
-| `--tabs-close-bg-pressed` | `pressed` | A closable tab's × while it's pressed, one step past hover. |
-| `--tabs-pill-edge-selected` | `primary-edge` | The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--tabs-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--tabs-close-bg-hover` | `surface-secondary` | A closable tab's × under the pointer. |
+| `--tabs-close-bg-pressed` | `surface-secondary-hover` | A closable tab's × while it's pressed, one step past hover. |
+| `--tabs-pill-edge-selected` | `border-brand` | The selected pill's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

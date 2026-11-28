@@ -51,7 +51,7 @@ describe('Combobox', () => {
     await render(<Countries />);
     await open();
     const o = activeOf('cb');
-    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--pressed)'));
+    expect(await press(o, () => css(o).backgroundColor)).toBe(color('var(--surface-pressed)'));
   });
 
   test('as the list narrows, the typed text is marked in each option, as it was matched: ignoring case and accents (185)', async () => {
@@ -723,7 +723,7 @@ describe('Combobox', () => {
     await open();
     await userEvent.keyboard('{ArrowDown}');
     const act = () => activeOf('cb');
-    const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--text)'; document.body.appendChild(probe);
+    const probe = document.createElement('div'); probe.style.background = 'var(--surface-highlight)'; probe.style.color = 'var(--text)'; document.body.appendChild(probe);
     const fill = () => getComputedStyle(probe).backgroundColor;
     await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(fill());
     expect(getComputedStyle(act()).boxShadow).toBe(`${fill()} 2px 0px 0px 0px inset`);
@@ -1275,7 +1275,7 @@ describe('Combobox held state', () => {
     const b = page.getByRole('button', { name: 'All countries' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-raised-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

@@ -79,14 +79,14 @@ Each is an optional override: set it on the page, a container or one avatar. The
 <!-- token-table:start (made from avatar.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--avatar-bg` | `secondary` | The background behind initials and the fallback icon. |
+| `--avatar-bg` | `surface-secondary` | The background behind initials and the fallback icon. |
 | `--avatar-text` | `text` | The initials and the fallback icon (4.5:1 on the background). |
 | `--avatar-ring` | `surface` | The ring that separates the status dot from the picture. Unset, it takes the fill behind the avatar (--surface-behind, which the page and every surface set), else surface. |
-| `--avatar-status-online` | `success` | The status dot for status="online". |
-| `--avatar-status-busy` | `danger` | The status dot for status="busy". |
-| `--avatar-status-away` | `warning` | The status dot for status="away". |
-| `--avatar-status-offline` | `border-control` | The status dot for status="offline". |
-| `--avatar-edge` | `picture-edge` | The hairline just inside the photo's edge, so a face on white keeps its shape on a white page. |
+| `--avatar-status-online` | `surface-success` | The status dot for status="online". |
+| `--avatar-status-busy` | `surface-danger` | The status dot for status="busy". |
+| `--avatar-status-away` | `surface-warning` | The status dot for status="away". |
+| `--avatar-status-offline` | `border-strong` | The status dot for status="offline". |
+| `--avatar-edge` | `border-picture` | The hairline just inside the photo's edge, so a face on white keeps its shape on a white page. |
 | `--avatar-size-xs` | `spacing-6` | size="xs" (24px). |
 | `--avatar-size-sm` | `spacing-8` | size="sm" (32px). |
 | `--avatar-size-md` | `spacing-10` | size="md", the default (40px). |

@@ -109,7 +109,7 @@ describe('ButtonGroup', () => {
     const low: string[] = [];
     for (const t of THEMES) {
       document.documentElement.setAttribute('data-theme', t);
-      const r = contrast('color-mix(in srgb, var(--on-primary) 40%, var(--primary))', 'var(--primary)');
+      const r = contrast('color-mix(in srgb, var(--text-on-brand) 40%, var(--surface-brand))', 'var(--surface-brand)');
       if (r < 3) low.push(`${t} ${r.toFixed(2)}`);
     }
     expect(low).toEqual([]);

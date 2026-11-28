@@ -142,23 +142,23 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--stepper-indicator-bg` | `surface` | An upcoming step's circle. |
-| `--stepper-indicator-border` | `border-control` | An upcoming step's ring (3:1 on the surface). |
+| `--stepper-indicator-border` | `border-strong` | An upcoming step's ring (3:1 on the surface). |
 | `--stepper-indicator-text` | `text-muted` | An upcoming step's number. |
-| `--stepper-indicator-text-shaded` | `text-muted-shaded` | An upcoming step's number while its head is held down (4.5:1 on the washed fill). |
+| `--stepper-indicator-text-shaded` | `text-secondary` | An upcoming step's number while its head is held down (4.5:1 on the washed fill). |
 | `--stepper-wash-pressed` | `text` | The color washed over a step's indicator while its head is held down, at layer-pressed strength. |
-| `--stepper-bg-active` | `primary` | The current and completed steps' circle. |
-| `--stepper-text-active` | `on-primary` | The number or check on them. |
-| `--stepper-bg-error` | `danger` | A step with an error. |
-| `--stepper-text-error` | `on-danger` | The mark on it. |
-| `--stepper-warning-bg` | `warning-subtle` | A step with a warning. |
-| `--stepper-warning-border` | `warning-text` | Its ring. |
-| `--stepper-warning-text` | `warning-text` | The mark on it. |
+| `--stepper-bg-active` | `surface-brand` | The current and completed steps' circle. |
+| `--stepper-text-active` | `text-on-brand` | The number or check on them. |
+| `--stepper-bg-error` | `surface-danger` | A step with an error. |
+| `--stepper-text-error` | `text-on-danger` | The mark on it. |
+| `--stepper-warning-bg` | `surface-warning-subtle` | A step with a warning. |
+| `--stepper-warning-border` | `text-warning` | Its ring. |
+| `--stepper-warning-text` | `text-warning` | The mark on it. |
 | `--stepper-title-color` | `text` | Step titles. |
 | `--stepper-description-color` | `text-muted` | The line under a title, and "Optional". |
-| `--stepper-connector` | `border-control` | The line to an upcoming step. |
-| `--stepper-connector-complete` | `primary` | The line after a completed step. |
+| `--stepper-connector` | `border-strong` | The line to an upcoming step. |
+| `--stepper-connector-complete` | `surface-brand` | The line after a completed step. |
 | `--stepper-focus-ring` | `focus-ring` | A clickable step's keyboard focus ring. |
-| `--stepper-edge-active` | `primary-edge` | The current and complete steps' edge and the complete connector's, inside their fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--stepper-edge-active` | `border-brand` | The current and complete steps' edge and the complete connector's, inside their fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

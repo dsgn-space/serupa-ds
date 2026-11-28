@@ -34,7 +34,7 @@
       },
       "track-checked": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.surface-brand}",
         "$description": "The track while on",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "track-checked-hover": {
         "$type": "color",
-        "$value": "{color.primary-hover}",
+        "$value": "{color.surface-brand-hover}",
         "$description": "The track while on, on hover",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "track-checked-pressed": {
         "$type": "color",
-        "$value": "{color.primary-pressed}",
+        "$value": "{color.surface-brand-pressed}",
         "$description": "The on track while held down, one step past track-checked-hover.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "icon": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The check on the thumb while on, with icon (3:1 on the thumb)",
         "$extensions": {
           "com.serupa": {
@@ -134,7 +134,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The track's edge and the focus ring, when invalid",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "pending": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The loading ring on the off thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "pending-checked": {
         "$type": "color",
-        "$value": "{color.primary-text}",
+        "$value": "{color.text-brand}",
         "$description": "The loading ring on the on thumb (3:1 on it)",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "border-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-border}",
+        "$value": "{color.border-disabled}",
         "$description": "Disabled: the edge.",
         "$extensions": {
           "com.serupa": {
@@ -174,7 +174,7 @@
       },
       "fill-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-surface}",
+        "$value": "{color.surface-disabled}",
         "$description": "Disabled: the fill, whatever its color when enabled.",
         "$extensions": {
           "com.serupa": {
@@ -184,7 +184,7 @@
       },
       "text-disabled": {
         "$type": "color",
-        "$value": "{color.disabled-text}",
+        "$value": "{color.text-disabled}",
         "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
         "$extensions": {
           "com.serupa": {
@@ -194,7 +194,7 @@
       },
       "track-edge-checked": {
         "$type": "color",
-        "$value": "{color.primary-edge}",
+        "$value": "{color.border-brand}",
         "$description": "The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page)",
         "$extensions": {
           "com.serupa": {

@@ -93,9 +93,9 @@ Each is an optional override: set it on the page, a container or one ImageCroppe
 <!-- token-table:start (made from image-cropper.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--image-cropper-bg` | `surface-muted` | The frame behind the picture, seen while it loads or when it can't. |
-| `--image-cropper-edge` | `picture-edge` | The hairline round the frame, so a pale picture keeps its edge. |
-| `--image-cropper-scrim` | `overlay` | A round crop: what dims the picture outside the circle. |
+| `--image-cropper-bg` | `surface-sunken` | The frame behind the picture, seen while it loads or when it can't. |
+| `--image-cropper-edge` | `border-picture` | The hairline round the frame, so a pale picture keeps its edge. |
+| `--image-cropper-scrim` | `backdrop` | A round crop: what dims the picture outside the circle. |
 | `--image-cropper-guide` | `white` | A round crop: the ring on the circle, over the picture. |
 | `--image-cropper-grid` | `white` | The lines in thirds shown while the picture is dragged. |
 | `--image-cropper-focus-ring` | `focus-ring` | The frame's focus ring. |

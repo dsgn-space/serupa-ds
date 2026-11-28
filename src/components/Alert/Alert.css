@@ -7,8 +7,8 @@
    --------------------------------------------------------------- */
 @layer srp.components {
 .srp-alert {
-  --srp-alert-bg: var(--alert-bg-info, var(--info-subtle));
-  --srp-alert-icon: var(--alert-icon-info, var(--info-text));
+  --srp-alert-bg: var(--alert-bg-info, var(--surface-info-subtle));
+  --srp-alert-icon: var(--alert-icon-info, var(--text-info));
   display: flex;
   align-items: flex-start;
   gap: var(--alert-gap, var(--spacing-3));
@@ -23,10 +23,10 @@
   line-height: var(--text-sm--line-height);
   text-align: start;
 }
-.srp-alert--success { --srp-alert-bg: var(--alert-bg-success, var(--success-subtle)); --srp-alert-icon: var(--alert-icon-success, var(--success)); }
-.srp-alert--warning { --srp-alert-bg: var(--alert-bg-warning, var(--warning-subtle)); --srp-alert-icon: var(--alert-icon-warning, var(--warning)); }
-.srp-alert--danger { --srp-alert-bg: var(--alert-bg-danger, var(--danger-subtle)); --srp-alert-icon: var(--alert-icon-danger, var(--danger)); }
-.srp-alert--neutral { --srp-alert-bg: var(--alert-bg-neutral, var(--surface-muted)); --srp-alert-icon: var(--alert-icon-neutral, var(--text-muted)); }
+.srp-alert--success { --srp-alert-bg: var(--alert-bg-success, var(--surface-success-subtle)); --srp-alert-icon: var(--alert-icon-success, var(--surface-success)); }
+.srp-alert--warning { --srp-alert-bg: var(--alert-bg-warning, var(--surface-warning-subtle)); --srp-alert-icon: var(--alert-icon-warning, var(--surface-warning)); }
+.srp-alert--danger { --srp-alert-bg: var(--alert-bg-danger, var(--surface-danger-subtle)); --srp-alert-icon: var(--alert-icon-danger, var(--surface-danger)); }
+.srp-alert--neutral { --srp-alert-bg: var(--alert-bg-neutral, var(--surface-sunken)); --srp-alert-icon: var(--alert-icon-neutral, var(--text-muted)); }
 
 .srp-alert__icon { display: flex; flex-shrink: 0; color: var(--srp-alert-icon); }
 .srp-alert__icon .srp-icon { font-size: var(--spacing-5); }

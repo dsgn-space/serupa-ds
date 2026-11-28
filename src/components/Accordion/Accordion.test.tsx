@@ -337,7 +337,7 @@ describe('Accordion', () => {
     await render(<Accordion id="pr" variant="card"><AccordionItem value="a" title="One">A</AccordionItem><AccordionItem value="b" title="Two" disabled>B</AccordionItem></Accordion>);
     const t = trigger('pr', 1);
     expect(css(t).backgroundColor).toBe('rgba(0, 0, 0, 0)');
-    await press(t, () => expect.poll(() => css(t).backgroundColor).toBe(color('var(--pressed)')));
+    await press(t, () => expect.poll(() => css(t).backgroundColor).toBe(color('var(--surface-pressed)')));
     const d = trigger('pr', 2);
     await press(d, () => expect(css(d).backgroundColor).toBe('rgba(0, 0, 0, 0)'));
   });

@@ -405,7 +405,7 @@ Every merge to `main` then rebuilds the live site, and every pull request gets a
 ## Rules the tests enforce
 
 - Components and utilities read tokens; no value is written out when a token holds it. The documented exceptions are breakpoints inside `@media` (which must still be `screen-*` values), shadow shapes (so color classes can recolor them) and `rounded-full` (9999px).
-- Shared tokens are read as `var(--token)`, with no fallback value: `tokens.css` always loads first. Component tokens keep their default: `var(--button-bg, var(--primary))`.
+- Shared tokens are read as `var(--token)`, with no fallback value: `tokens.css` always loads first. Component tokens keep their default: `var(--button-bg, var(--surface-brand))`.
 - Tokens, page defaults, components and utilities each sit in their cascade layer (`srp.tokens`, `srp.base`, `srp.components`, `srp.utilities`), declared in that order at the top of every file.
 - Utility classes keep the same names and effects; a change is deliberate and goes with an updated baseline.
 - The system loads nothing from other servers.

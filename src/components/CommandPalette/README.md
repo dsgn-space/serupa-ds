@@ -119,11 +119,11 @@ Each is an optional override: set it on the page, a container or one CommandPale
 | --- | --- | --- |
 | `--command-palette-heading` | `text-muted` | A group's heading (4.5:1 on the dialog). |
 | `--command-palette-divider` | `border` | The line under the search field. |
-| `--command-palette-option-bg-active` | `highlight` | The active row's background (its text stays 4.5:1 on it). |
-| `--command-palette-option-bg-pressed` | `pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
+| `--command-palette-option-bg-active` | `surface-highlight` | The active row's background (its text stays 4.5:1 on it). |
+| `--command-palette-option-bg-pressed` | `surface-pressed` | An option while it's held down, one step past option-bg-active, as a Menu item is. |
 | `--command-palette-muted` | `text-muted` | The placeholder, icons and the empty message (4.5:1 on the dialog). |
-| `--command-palette-indicator-active` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
-| `--command-palette-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--command-palette-indicator-active` | `surface-highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the gray fill marks it), `text`-dark with more contrast. |
+| `--command-palette-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--command-palette-list-height` | `spacing-80` | The most the list grows to before it scrolls (320px). |
 | `--command-palette-option-height` | `control-height-lg` | A row's least height (44px). |
 | `--command-palette-icon-size` | `spacing-5` | A command's icon (20px), beside the 14px label in a 44px row. |

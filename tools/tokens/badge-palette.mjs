@@ -54,10 +54,10 @@ export function rules(tokens) {
   const light = (f) => ({ sbg: v(`${f.name}-100`), sfg: v(`${f.name}-700`), xbg: v(`${f.name}-${f.solid}`), xfg: v('white'), o: v(`${f.name}-700`), obd: v(`${f.name}-700`) });
   const dark = (f) => ({ sbg: v(`${f.name}-950`), sfg: v(`${f.name}-300`), xbg: v(`${f.name}-${f.solid}`), xfg: v('white'), o: v(`${f.name}-300`), obd: v(`${f.name}-400`) });
   const both = (f) => { const l = light(f), d = dark(f); return Object.fromEntries(Object.keys(l).map((k) => [k, `light-dark(${l[k]}, ${d[k]})`])); };
-  // A status tone follows its roles (success-subtle, success-text, success, on-success), so a theme or page that sets
-  // --success or --danger moves its badges too (GR249); each is a --badge-<status>-* component token. A clickable solid one
-  // moves toward <status>-hover on hover and press, which keeps on-<status> at 4.5:1+ whether that is dark or white.
-  const statusTone = (t) => `.srp-badge--tone-${t} { --srp-badge-sbg: var(--badge-${t}-subtle-bg, var(--${t}-subtle)); --srp-badge-sfg: var(--badge-${t}-subtle-text, var(--${t}-text)); --srp-badge-xbg: var(--badge-${t}-solid-bg, var(--${t})); --srp-badge-xfg: var(--badge-${t}-solid-text, var(--on-${t})); --srp-badge-ofg: var(--badge-${t}-outline-text, var(--${t}-text)); --srp-badge-obd: var(--badge-${t}-outline-border, var(--${t})); --srp-badge-xhover: var(--badge-${t}-solid-hover, var(--${t}-hover)); }`;
+  // A status tone follows its roles (surface-success-subtle, text-success, surface-success, text-on-success), so a theme or page that sets
+  // --surface-success or --surface-danger moves its badges too (GR249); each is a --badge-<status>-* component token. A clickable solid one
+  // moves toward surface-<status>-hover on hover and press, which keeps text-on-<status> at 4.5:1+ whether that is dark or white.
+  const statusTone = (t) => `.srp-badge--tone-${t} { --srp-badge-sbg: var(--badge-${t}-subtle-bg, var(--surface-${t}-subtle)); --srp-badge-sfg: var(--badge-${t}-subtle-text, var(--text-${t})); --srp-badge-xbg: var(--badge-${t}-solid-bg, var(--surface-${t})); --srp-badge-xfg: var(--badge-${t}-solid-text, var(--text-on-${t})); --srp-badge-ofg: var(--badge-${t}-outline-text, var(--text-${t})); --srp-badge-obd: var(--badge-${t}-outline-border, var(--surface-${t})); --srp-badge-xhover: var(--badge-${t}-solid-hover, var(--surface-${t}-hover)); }`;
   const tone = (name, fam) => `.srp-badge--tone-${name} { --srp-badge-sbg: var(--srp-bdg-${fam}-sbg); --srp-badge-sfg: var(--srp-bdg-${fam}-sfg); --srp-badge-xbg: var(--srp-bdg-${fam}-xbg); --srp-badge-xfg: var(--srp-bdg-${fam}-xfg); --srp-badge-ofg: var(--srp-bdg-${fam}-o); --srp-badge-obd: var(--srp-bdg-${fam}-obd); }`;
   return [
     `:root, [data-theme$="-light"] { --srp-bdg-xlayer: var(--black); ${set(light)} }`,

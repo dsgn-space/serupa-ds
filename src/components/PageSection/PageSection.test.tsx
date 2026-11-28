@@ -31,7 +31,7 @@ describe('PageSection', () => {
   });
 
   test('tone="muted" with a divider: surface-muted, a line on top, and the text reads 4.5:1 on it in every theme', async () => {
-    await render(<><PageSection id="s" tone="muted" divider aria-label="a"><p id="t" className="text-text-muted">Muted text</p></PageSection><div id="probe" className="bg-surface-muted" /></>);
+    await render(<><PageSection id="s" tone="muted" divider aria-label="a"><p id="t" className="text-text-muted">Muted text</p></PageSection><div id="probe" className="bg-surface-sunken" /></>);
     const s = css(el('s'));
     expect([el('s').className, s.borderTopStyle, s.borderTopWidth]).toEqual(['srp-page-section srp-page-section--md srp-page-section--muted srp-page-section--divider', 'solid', '1px']);
     for (const th of THEMES) {

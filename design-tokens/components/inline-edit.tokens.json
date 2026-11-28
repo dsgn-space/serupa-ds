@@ -44,7 +44,7 @@
       },
       "text-muted-shaded": {
         "$type": "color",
-        "$value": "{color.text-muted-shaded}",
+        "$value": "{color.text-secondary}",
         "$description": "The placeholder and pencil icon on the hovered button, where `text-muted` would fall under 4.5:1 on the shaded fill.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "bg-pressed": {
         "$type": "color",
-        "$value": "{color.pressed}",
+        "$value": "{color.surface-pressed}",
         "$description": "The button's background while pressed, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "error": {
         "$type": "color",
-        "$value": "{color.danger-text}",
+        "$value": "{color.text-danger}",
         "$description": "The validation message.",
         "$extensions": {
           "com.serupa": {

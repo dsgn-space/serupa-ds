@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "A toast's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border-color": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "A toast's border.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "icon-info": {
         "$type": "color",
-        "$value": "{color.info}",
+        "$value": "{color.surface-info}",
         "$description": "The icon of an info toast (3:1 on surface).",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "icon-success": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The icon of a success toast.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "icon-warning": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The icon of a warning toast.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "icon-danger": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The icon of a danger toast.",
         "$extensions": {
           "com.serupa": {
@@ -94,7 +94,7 @@
       },
       "divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

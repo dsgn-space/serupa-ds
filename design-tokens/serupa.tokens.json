@@ -3797,6 +3797,36 @@
           "cssVar": "--rose-950"
         }
       }
+    },
+    "overlay": {
+      "$type": "color",
+      "$value": "{color.backdrop}",
+      "$description": "Deprecated: the old name of `backdrop`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--overlay"
+        }
+      }
+    },
+    "primary-edge": {
+      "$type": "color",
+      "$value": "{color.border-brand}",
+      "$description": "Deprecated: the old name of `border-brand`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--primary-edge"
+        }
+      }
+    },
+    "picture-edge": {
+      "$type": "color",
+      "$value": "{color.border-picture}",
+      "$description": "Deprecated: the old name of `border-picture`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--picture-edge"
+        }
+      }
     }
   },
   "spacing": {

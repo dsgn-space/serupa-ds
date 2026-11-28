@@ -24,7 +24,7 @@
       },
       "button-bg-hover": {
         "$type": "color",
-        "$value": "{color.field-hover}",
+        "$value": "{color.surface-raised-hover}",
         "$description": "The calendar button's background on hover, as the other buttons inside fields (PasswordInput's show and hide, NumberInput's steps).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "button-bg-pressed": {
         "$type": "color",
-        "$value": "{color.field-pressed}",
+        "$value": "{color.surface-raised-pressed}",
         "$description": "The calendar button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "popup-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The calendar panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "popup-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "Its outline.",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "popup-divider": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished",
         "$extensions": {
           "com.serupa": {

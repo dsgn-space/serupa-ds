@@ -72,7 +72,7 @@ export const WithBottomNav: Story = {
 };
 
 /** No sidebar and padded={false}: a header, a full-width main for content that brings its own padding, and the footer. */
-export const NoSidebar: Story = { name: 'No sidebar', args: { sidebar: undefined, padded: false, mainId: 'shell-nosidebar', children: <div className="bg-surface-muted p-6">{content}</div> } };
+export const NoSidebar: Story = { name: 'No sidebar', args: { sidebar: undefined, padded: false, mainId: 'shell-nosidebar', children: <div className="bg-surface-sunken p-6">{content}</div> } };
 
 /** The stress story: a long page title and a long footer wrap inside main and the footer, and the Sidebar stays put beside them. */
 export const LongText: Story = {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Stack } from './Stack';
 import { Button } from '../Button/Button';
 
-const Box = ({ children, wrap }: { children?: React.ReactNode; wrap?: boolean }) => <div className={`rounded-md bg-surface-muted p-3 text-sm text-text${wrap ? ' wrap-anywhere' : ''}`}>{children}</div>;
+const Box = ({ children, wrap }: { children?: React.ReactNode; wrap?: boolean }) => <div className={`rounded-md bg-surface-sunken p-3 text-sm text-text${wrap ? ' wrap-anywhere' : ''}`}>{children}</div>;
 
 const meta = {
   title: 'Components/Layout and type/Stack',
@@ -52,7 +52,7 @@ export const AsList: Story = {
 export const Align: Story = {
   render: () => <Stack gap={4}>{(['start', 'center', 'end', 'baseline', 'stretch'] as const).map((a) => (
     <Stack key={a} direction="row" gap={2} align={a} className="min-h-16 rounded-md border border-border p-2">
-      <Box>align="{a}"</Box><div className="rounded-md bg-surface-muted p-3 text-2xl text-text">Tall</div>
+      <Box>align="{a}"</Box><div className="rounded-md bg-surface-sunken p-3 text-2xl text-text">Tall</div>
     </Stack>
   ))}</Stack>,
 };

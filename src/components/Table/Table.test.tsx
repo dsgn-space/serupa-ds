@@ -60,7 +60,7 @@ describe('Table', () => {
     const [apples, pears] = screen.getByRole('rowheader').elements();
     const cell = screen.getByRole('cell').elements()[0]!;
     expect([css(apples!).color, css(apples!).backgroundColor]).toEqual([css(cell).color, 'rgba(0, 0, 0, 0)']);
-    expect(css(screen.getByRole('columnheader').elements()[0]!).backgroundColor).toBe(color('var(--surface-muted)'));
+    expect(css(screen.getByRole('columnheader').elements()[0]!).backgroundColor).toBe(color('var(--surface-sunken)'));
     expect(css(pears!.closest('tr')).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(css(pears!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
   });
@@ -128,7 +128,7 @@ describe('Table', () => {
   test('header: surface-muted, muted text, font-medium; align="end": right-aligned, tabular digits', async () => {
     await setup();
     const h = css(q('#tdef th')), e = css(q('#tdef td.srp-table__cell--end'));
-    expect([h.backgroundColor, h.color, h.fontWeight]).toEqual([bg('var(--surface-muted)'), color('var(--text-muted)'), '500']);
+    expect([h.backgroundColor, h.color, h.fontWeight]).toEqual([bg('var(--surface-sunken)'), color('var(--text-muted)'), '500']);
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
 
@@ -151,7 +151,7 @@ describe('Table', () => {
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
-    await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
+    await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--surface-highlight-indicator)')); });
   });
 
   test('an Avatar in a shaded row steps its fill up to secondary-hover, so it stays apart from the shade (the same zinc-100 as secondary in light themes); a plain row keeps secondary', async () => {
@@ -161,7 +161,7 @@ describe('Table', () => {
     </TableBody></Table>);
     const fill = (i: string) => css(q(`#av${i}`).firstElementChild).backgroundColor;   // the Avatar's frame
     await expect.poll(() => css(q('[data-i="s"]')).backgroundColor).toBe(bg('var(--surface-hover)'));
-    expect([fill('p'), fill('s')]).toEqual([bg('var(--secondary)'), bg('var(--secondary-hover)')]);
+    expect([fill('p'), fill('s')]).toEqual([bg('var(--surface-secondary)'), bg('var(--surface-secondary-hover)')]);
     expect(fill('s')).not.toBe(css(q('[data-i="s"]')).backgroundColor);
   });
 
@@ -380,7 +380,7 @@ describe('Table', () => {
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)'), shaded = bg('var(--surface-hover)');
+      const surf = bg('var(--surface)'), muted = bg('var(--surface-sunken)'), shaded = bg('var(--surface-hover)');
       // Muted text in a selected row (shaded like a hovered or striped one) is read from that row: it steps to text-muted-shaded.
       const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .srp-text')).color, mts = css(q('#tdef [data-i="1"] .srp-text')).color, hd = css(q('#tdef th')).color;
       const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
@@ -419,8 +419,8 @@ describe('Table: stickyHeader and focus', () => {
   test('pressed: a sortable header held down fills with pressed at once (ED1)', async () => {
     await render(<Sortable />);
     const b = el('hsort').querySelector('button') as HTMLButtonElement;
-    expect(css(b).backgroundColor).not.toBe(color('var(--pressed)'));
-    await press(b, () => expect.poll(() => css(b).backgroundColor).toBe(color('var(--pressed)')));
+    expect(css(b).backgroundColor).not.toBe(color('var(--surface-pressed)'));
+    await press(b, () => expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-pressed)')));
   });
 });
 
@@ -642,13 +642,13 @@ describe('TableRow href (TF3)', () => {
     expect(follow).toHaveBeenCalledTimes(1);
   });
 
-  test('held down, a linked row shades a step past its hover (--pressed), as a List row does; its words keep 4.5:1 on it in every theme', async () => {
+  test('held down, a linked row shades a step past its hover (--surface-pressed), as a List row does; its words keep 4.5:1 on it in every theme', async () => {
     const s = await render(<Linked />);
     const a = s.getByRole('link').element() as HTMLAnchorElement;
     a.addEventListener('click', (e) => e.preventDefault());
     const low: string[] = [];
     await press(el('c2'), async () => {
-      await expect.poll(() => css(el('r1')).backgroundColor).toBe(color('var(--pressed)'));
+      await expect.poll(() => css(el('r1')).backgroundColor).toBe(color('var(--surface-pressed)'));
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);
         for (const id of ['c1', 'c2']) { const r = contrast(css(el(id)).color, css(el('r1')).backgroundColor); if (r < 4.5) low.push(`${th} ${id}: ${r.toFixed(2)}`); }

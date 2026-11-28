@@ -338,13 +338,13 @@ describe('ColorPicker', () => {
     const ring = (b: HTMLElement) => { const c = css(b); return [c.outlineStyle, c.outlineWidth, c.outlineColor]; };
     expect(ring(swatch('Yellow'))[0]).toBe('none');
     await userEvent.hover(swatch('Yellow'));
-    await expect.poll(() => ring(swatch('Yellow'))).toEqual(['solid', '2px', color('var(--border-control)')]);
+    await expect.poll(() => ring(swatch('Yellow'))).toEqual(['solid', '2px', color('var(--border-strong)')]);
     const low: string[] = [];
     for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(swatch('Yellow')).outlineColor, css(document.body).backgroundColor); if (r < 1.3) low.push(`${th}: ${r.toFixed(2)}`); }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
     await userEvent.hover(swatch('Blue'));
-    expect(ring(swatch('Blue'))[2]).toBe(color('var(--primary-text)'));
+    expect(ring(swatch('Blue'))[2]).toBe(color('var(--text-brand)'));
     await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 

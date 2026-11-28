@@ -44,7 +44,7 @@
       },
       "scanned-icon": {
         "$type": "color",
-        "$value": "{color.success-text}",
+        "$value": "{color.text-success}",
         "$description": "The check beside \"Scanned\".",
         "$extensions": {
           "com.serupa": {

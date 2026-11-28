@@ -25,7 +25,7 @@ export const SkipLink: Story = {
     return (
       <div className="text-sm text-text">
         <p>Press Tab to show the skip link.</p>
-        <VisuallyHidden focusable as="div"><a href={`#${content}`} className="text-primary-text underline">Skip to content</a></VisuallyHidden>
+        <VisuallyHidden focusable as="div"><a href={`#${content}`} className="text-text-brand underline">Skip to content</a></VisuallyHidden>
         <div id={content} tabIndex={-1}>The content.</div>
       </div>
     );

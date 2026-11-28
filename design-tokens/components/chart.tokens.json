@@ -14,7 +14,7 @@
       },
       "tip-bg": {
         "$type": "color",
-        "$value": "{color.surface-overlay}",
+        "$value": "{color.surface-raised}",
         "$description": "The tooltip's background.",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "tip-border": {
         "$type": "color",
-        "$value": "{color.border-overlay}",
+        "$value": "{color.border-raised}",
         "$description": "The tooltip's border.",
         "$extensions": {
           "com.serupa": {

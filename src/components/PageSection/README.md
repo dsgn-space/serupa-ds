@@ -75,7 +75,7 @@ Each is an optional override: set it on the page, a container or one PageSection
 <!-- token-table:start (made from page-section.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--page-section-bg-muted` | `surface-muted` | The background with tone="muted". |
+| `--page-section-bg-muted` | `surface-sunken` | The background with tone="muted". |
 | `--page-section-border` | `border` | The line on top with divider. |
 | `--page-section-padding-y-sm` | `spacing-8` | Space above and below with spacing="sm" (32px). |
 | `--page-section-padding-y-md` | `spacing-12` | Space above and below with spacing="md", below 768px (48px). |

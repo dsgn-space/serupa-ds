@@ -58,12 +58,12 @@ Drawn from the `LongLabel` story.
 | --- | --- |
 | Off | A `track` track (the light gray Apple uses), a white thumb at the start, with the `elevation-part` shadow and no edge, as Apple's, in every theme |
 | On | A `primary` track, the white thumb at the end |
-| Hover | `border-strong` off, `primary-hover` on |
+| Hover | `border-strong` off, `surface-brand-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
 | Pending | A small `primary` ring turns on the thumb (3:1 on the thumb, on or off), with a `progress` cursor and no hover change |
-| Disabled | Neutral colors at full opacity: a `disabled-surface` track in a `disabled-border` edge, a `disabled-text` thumb and label, and a `not-allowed` cursor; also inside a disabled fieldset |
+| Disabled | Neutral colors at full opacity: a `surface-disabled` track in a `border-disabled` edge, a `text-disabled` thumb and label, and a `not-allowed` cursor; also inside a disabled fieldset |
 
 The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle takes 100ms or less) and jumps with `prefers-reduced-motion`. It follows the text direction: in right-to-left pages it starts on the right.
 
@@ -114,23 +114,23 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-track` | `track` | The track while off: Apple's light gray. |
 | `--switch-track-hover` | `track-hover` | The track while off, on hover: track-hover, a step darker than track. |
 | `--switch-track-pressed` | `track-pressed` | The off track while held down: track-pressed, one step past track-hover. |
-| `--switch-track-checked` | `primary` | The track while on |
-| `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
-| `--switch-track-checked-pressed` | `primary-pressed` | The on track while held down, one step past track-checked-hover. |
+| `--switch-track-checked` | `surface-brand` | The track while on |
+| `--switch-track-checked-hover` | `surface-brand-hover` | The track while on, on hover |
+| `--switch-track-checked-pressed` | `surface-brand-pressed` | The on track while held down, one step past track-checked-hover. |
 | `--switch-thumb` | `white` | The thumb while off: white in every theme, as Apple's. |
 | `--switch-thumb-checked` | `white` | The thumb while on: white in every theme, as Apple's. |
 | `--switch-thumb-ink-dark` | `text-inverse` | In a dark theme, the loading ring and the check on the white thumb: the dark inverse text, 3:1 or more on white in every brand (a dark theme's brand colors are light). |
-| `--switch-icon` | `primary-text` | The check on the thumb while on, with icon (3:1 on the thumb) |
+| `--switch-icon` | `text-brand` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
-| `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
-| `--switch-pending` | `primary-text` | The loading ring on the off thumb (3:1 on it) |
-| `--switch-pending-checked` | `primary-text` | The loading ring on the on thumb (3:1 on it) |
-| `--switch-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--switch-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
-| `--switch-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--switch-track-edge-checked` | `primary-edge` | The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--switch-invalid` | `surface-danger` | The track's edge and the focus ring, when invalid |
+| `--switch-pending` | `text-brand` | The loading ring on the off thumb (3:1 on it) |
+| `--switch-pending-checked` | `text-brand` | The loading ring on the on thumb (3:1 on it) |
+| `--switch-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--switch-fill-disabled` | `surface-disabled` | Disabled: the fill, whatever its color when enabled. |
+| `--switch-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--switch-track-edge-checked` | `border-brand` | The on track's 1px edge inside its fill (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Shadow**
 

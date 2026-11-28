@@ -12,7 +12,7 @@
 .srp-skip-link:focus {
   position: fixed; inset-block-start: var(--skip-link-offset, var(--spacing-3)); inset-inline-start: var(--skip-link-offset, var(--spacing-3)); z-index: var(--z-50);
   padding: var(--skip-link-padding-y, var(--spacing-2)) var(--skip-link-padding-x, var(--spacing-4));
-  background: var(--skip-link-bg, var(--surface-raised)); color: var(--skip-link-text, var(--primary-text));
+  background: var(--skip-link-bg, var(--surface-raised)); color: var(--skip-link-text, var(--text-brand));
   border: var(--skip-link-border-width, var(--border-width-1)) solid var(--skip-link-border, var(--border));
   border-radius: var(--skip-link-radius, var(--radius-control)); box-shadow: var(--skip-link-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium);

@@ -83,7 +83,7 @@ function rule(name, messages, check) {
 }
 
 const color = rule('serupa/no-raw-color', {
-  rejected: (v, p) => `${v} in ${p} is a color written out: use a color token, such as var(--text), var(--surface) or var(--primary), so it follows the theme and dark mode`,
+  rejected: (v, p) => `${v} in ${p} is a color written out: use a color token, such as var(--text), var(--surface) or var(--surface-brand), so it follows the theme and dark mode`,
 }, function* (decl) {
   const named = COLOR_PROPS.test(decl.prop);
   for (const { word, fn } of outsideVar(decl.value)) {

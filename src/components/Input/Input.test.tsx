@@ -159,14 +159,14 @@ describe('Input', () => {
     await expect.poll(() => css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
   });
 
-  test('the hover border is the resting border one gray step stronger, in every theme: zinc-400 on zinc-300 in light, zinc-600 on zinc-700 in dark', async () => {
+  test('the hover border is the resting border one gray step stronger, in every theme: zinc-400 on zinc-300 in light, zinc-500 on zinc-600 in dark', async () => {
     await render(<><Input id="hz" aria-label="Hover" /><Input id="rz" aria-label="Rest" /></>);
     await page.getByRole('textbox', { name: 'Hover' }).hover();
     const seen: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const dark = th.endsWith('dark');
-      const want = [color(dark ? 'var(--zinc-700)' : 'var(--zinc-300)'), color(dark ? 'var(--zinc-600)' : 'var(--zinc-400)')];
+      const want = [color(dark ? 'var(--zinc-600)' : 'var(--zinc-300)'), color(dark ? 'var(--zinc-500)' : 'var(--zinc-400)')];
       await expect.poll(() => css(box('hz')).borderTopColor).toBe(color('var(--field-border-hover)'));
       if ([css(box('rz')).borderTopColor, css(box('hz')).borderTopColor].join() !== want.join()) seen.push(th);
     }
@@ -232,13 +232,20 @@ describe('Input', () => {
   test('contrast in every theme: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
-      ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
-      ['prefix and suffix', 'var(--placeholder)', 'var(--field)', 4.5],
+      ['placeholder', 'var(--field-placeholder)', 'var(--field)', 4.5],
+      ['prefix and suffix', 'var(--field-placeholder)', 'var(--field)', 4.5],
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
       ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3],
     ])).toEqual([]);
+  });
+
+  test('read-only: the prefix, suffix and count read text-secondary, 4.5:1 on the read-only fill in every theme (field-placeholder is 4.4:1 there)', async () => {
+    await render(<Input id="rog" readOnly prefix="Rp" suffix="per bulan" showCount maxLength={20} placeholder="Harga" aria-label="Harga" />, { wrapper: EnUS });
+    const affix = [...box('rog').children].find((c) => c.textContent === 'Rp')!;
+    expect([css(affix).color, css(count('rog')).color]).toEqual([color('var(--text-secondary)'), color('var(--text-secondary)')]);
+    expect(lowContrast([['read-only gray text', 'var(--text-secondary)', 'var(--field-readonly)', 4.5]])).toEqual([]);
   });
 
   test('showCount: "2 / 5" at the end of the field, linked by aria-describedby after the field\'s own; stops at maxLength and turns text-colored', async () => {
@@ -572,10 +579,10 @@ describe('Input actions (RU15)', () => {
 
   test('contrast in every theme: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
     expect(lowContrast([
-      ['text action', 'var(--primary-text)', 'var(--field)', 4.5],
-      ['text action on hover', 'var(--primary-text)', 'var(--primary-subtle)', 4.5],
+      ['text action', 'var(--text-brand)', 'var(--field)', 4.5],
+      ['text action on hover', 'var(--text-brand)', 'var(--surface-brand-subtle)', 4.5],
       ['icon action', 'var(--text-muted)', 'var(--field)', 3],
-      ['icon action on hover', 'var(--text)', 'var(--field-hover)', 3],
+      ['icon action on hover', 'var(--text)', 'var(--surface-raised-hover)', 3],
       ['focus ring', 'var(--focus-ring)', 'var(--field)', 3],
     ])).toEqual([]);
   });
@@ -587,7 +594,7 @@ describe('Input held state', () => {
     const b = page.getByRole('button', { name: 'Copy invite link' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--surface-raised-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

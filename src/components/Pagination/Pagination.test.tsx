@@ -223,8 +223,8 @@ describe('Pagination', () => {
     expect([sq('pdef'), sq('psm'), sq('pdv'), sq('p88', 'Page 88')]).toEqual(['32x32', '24x24', '24x24', '24x24']);
     const cur = q('pdef', '[aria-current]');
     // The page buttons ease their background for 150ms.
-    await expect.poll(() => css(cur).backgroundColor).toBe(color('var(--primary)'));
-    expect([css(cur).color, css(cur).fontWeight]).toEqual([color('var(--on-primary)'), '600']);
+    await expect.poll(() => css(cur).backgroundColor).toBe(color('var(--surface-brand)'));
+    expect([css(cur).color, css(cur).fontWeight]).toEqual([color('var(--text-on-brand)'), '600']);
   });
 
   test('size lg: 44px squares with 16px text, and a large page-size select, like the other large controls', async () => {
@@ -299,8 +299,8 @@ describe('Pagination', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       // Colors ease for 150ms after a theme change; wait until the current page has its new background.
-      await expect.poll(() => css(cur).backgroundColor).toBe(color('var(--primary)'));
-      for (const [name, fg, bg] of [['page', css(pg).color, 'var(--surface)'], ['page on hover', css(pg).color, 'var(--secondary)'],
+      await expect.poll(() => css(cur).backgroundColor).toBe(color('var(--surface-brand)'));
+      for (const [name, fg, bg] of [['page', css(pg).color, 'var(--surface)'], ['page on hover', css(pg).color, 'var(--surface-secondary)'],
         ['current', css(cur).color, css(cur).backgroundColor], ['ellipsis', css(ell).color, 'var(--surface)']]) {
         const r = contrast(fg!, bg!); n++;
         if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`);
@@ -313,7 +313,7 @@ describe('Pagination', () => {
   test('pressed: a page held down fills with pressed, one step past hover', async () => {
     await render(<Pagination id="pprs" count={10} defaultPage={7} />, { wrapper: EnUS });
     const pg = named('pprs', 'Page 1');
-    await press(pg, () => expect.poll(() => css(pg).backgroundColor).toBe(color('var(--pressed)')));
+    await press(pg, () => expect.poll(() => css(pg).backgroundColor).toBe(color('var(--surface-pressed)')));
   });
 
   test('an arrow that reaches the first or last page hands focus to the other arrow, buttons and links alike (FJ1)', async () => {

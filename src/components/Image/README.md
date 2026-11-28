@@ -99,12 +99,12 @@ Each is an optional override: set it on the page, a container or one image. The 
 <!-- token-table:start (made from image.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--image-bg` | `surface-muted` | The frame's fill while the picture loads, and behind a failed one. |
+| `--image-bg` | `surface-sunken` | The frame's fill while the picture loads, and behind a failed one. |
 | `--image-shine` | `surface` | The lighter band that sweeps through the fill while the picture loads (at 60%). |
 | `--image-dim` | `black` | With dim, the layer that darkens a photo in a dark color scheme (at 20%). |
 | `--image-fallback-color` | `text-muted` | The broken-image icon (3:1 on bg). |
 | `--image-focus-ring` | `focus-ring` | A viewable picture's keyboard focus ring. |
-| `--image-edge` | `picture-edge` | The hairline just inside a loaded photo's edge, so a white or black picture keeps its shape on a page of the same color. Not with fit="contain". |
+| `--image-edge` | `border-picture` | The hairline just inside a loaded photo's edge, so a white or black picture keeps its shape on a page of the same color. Not with fit="contain". |
 | `--image-radius` | `radius-surface` | The frame's corners with rounded (8px). |
 | `--image-min-size` | `spacing-12` | The least width and height of an 'auto' frame before the picture arrives (48px). |
 | `--image-fallback-icon` | `spacing-6` | The broken-image icon's size (24px). |

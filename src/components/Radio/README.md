@@ -69,12 +69,12 @@ Drawn from the `Disabled` story.
 | State | Look |
 | --- | --- |
 | Unchecked | `field` background, 1px `field-border` |
-| Checked | `primary` fill and border, with a dot in `on-primary` (6, 6 or 8px) |
-| Hover | `field-border-hover`; a checked radio turns `primary-hover` |
+| Checked | `primary` fill and border, with a dot in `text-on-brand` (6, 6 or 8px) |
+| Hover | `field-border-hover`; a checked radio turns `surface-brand-hover` |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover or press change |
-| Disabled | Neutral colors at full opacity: a `disabled-border` circle with a `disabled-text` dot when chosen, and a `disabled-text` label; `not-allowed` cursor; also inside a disabled fieldset (`Field group disabled`) |
+| Disabled | Neutral colors at full opacity: a `border-disabled` circle with a `text-disabled` dot when chosen, and a `text-disabled` label; `not-allowed` cursor; also inside a disabled fieldset (`Field group disabled`) |
 | Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the dot shows it too); the focus ring goes around the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
@@ -140,14 +140,14 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | --- | --- | --- |
 | `--radio-bg` | `field` | The circle while unchecked |
 | `--radio-bg-disabled` | `field-readonly` | The circle when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it |
-| `--radio-bg-checked` | `primary` | Fill and border when checked |
-| `--radio-bg-checked-hover` | `primary-hover` | The same, on hover |
-| `--radio-bg-checked-pressed` | `primary-pressed` | The checked circle's fill while held down, one step past bg-checked-hover. |
-| `--radio-bg-pressed` | `secondary` | The unchecked circle's background while held down. |
+| `--radio-bg-checked` | `surface-brand` | Fill and border when checked |
+| `--radio-bg-checked-hover` | `surface-brand-hover` | The same, on hover |
+| `--radio-bg-checked-pressed` | `surface-brand-pressed` | The checked circle's fill while held down, one step past bg-checked-hover. |
+| `--radio-bg-pressed` | `surface-secondary` | The unchecked circle's background while held down. |
 | `--radio-border` | `field-border` | Border while unchecked |
 | `--radio-border-hover` | `field-border-hover` | Border on hover |
 | `--radio-border-pressed` | `field-border-pressed` | The unchecked circle's border while held down, one step past border-hover. |
-| `--radio-dot-color` | `on-primary` | The dot |
+| `--radio-dot-color` | `text-on-brand` | The dot |
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
@@ -155,11 +155,11 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-card-bg` | `surface` | A card radio's background. |
 | `--radio-card-border` | `border` | A card's border. |
 | `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
-| `--radio-card-border-checked` | `primary-text` | A checked card's border, 2px. |
-| `--radio-border-disabled` | `disabled-border` | Disabled: the edge. |
-| `--radio-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
-| `--radio-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--radio-edge-checked` | `primary-edge` | A checked circle's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
+| `--radio-card-border-checked` | `text-brand` | A checked card's border, 2px. |
+| `--radio-border-disabled` | `border-disabled` | Disabled: the edge. |
+| `--radio-fill-disabled` | `surface-disabled` | Disabled: the fill, whatever its color when enabled. |
+| `--radio-text-disabled` | `text-disabled` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--radio-edge-checked` | `border-brand` | A checked circle's edge (Yellow Light; transparent where the fill is 3:1 on the page) |
 
 **Sizing**
 

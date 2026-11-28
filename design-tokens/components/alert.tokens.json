@@ -4,7 +4,7 @@
     "color": {
       "bg-info": {
         "$type": "color",
-        "$value": "{color.info-subtle}",
+        "$value": "{color.surface-info-subtle}",
         "$description": "The background of a info alert.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "icon-info": {
         "$type": "color",
-        "$value": "{color.info-text}",
+        "$value": "{color.text-info}",
         "$description": "The icon and the border tint of a info alert (3:1 on its background).",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "bg-success": {
         "$type": "color",
-        "$value": "{color.success-subtle}",
+        "$value": "{color.surface-success-subtle}",
         "$description": "The background of a success alert.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "icon-success": {
         "$type": "color",
-        "$value": "{color.success}",
+        "$value": "{color.surface-success}",
         "$description": "The icon and the border tint of a success alert (3:1 on its background).",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "bg-warning": {
         "$type": "color",
-        "$value": "{color.warning-subtle}",
+        "$value": "{color.surface-warning-subtle}",
         "$description": "The background of a warning alert.",
         "$extensions": {
           "com.serupa": {
@@ -54,7 +54,7 @@
       },
       "icon-warning": {
         "$type": "color",
-        "$value": "{color.warning}",
+        "$value": "{color.surface-warning}",
         "$description": "The icon and the border tint of a warning alert (3:1 on its background).",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "bg-danger": {
         "$type": "color",
-        "$value": "{color.danger-subtle}",
+        "$value": "{color.surface-danger-subtle}",
         "$description": "The background of a danger alert.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "icon-danger": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.surface-danger}",
         "$description": "The icon and the border tint of a danger alert (3:1 on its background).",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "bg-neutral": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-sunken}",
         "$description": "The background of a neutral alert.",
         "$extensions": {
           "com.serupa": {
