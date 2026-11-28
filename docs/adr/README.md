@@ -29,6 +29,7 @@ Each record says why Serupa is built the way it is: the context, the options wei
 | [0024](0024-density-through-spacing-roles.md) | Density changes the spacing roles, and components read the roles | Accepted |
 | [0025](0025-state-as-attributes.md) | A state is an attribute, never a class: data-disabled, data-selected, data-current… beside data-state | Accepted |
 | [0026](0026-dark-fills-are-the-light-themes.md) | A dark theme fills with its light theme's brand shade, and brand text is its own token | Accepted |
+| [0027](0027-parts-shown-after-a-press-load-then.md) | A heavy part that shows only after a press loads then, as a chunk of its own | Accepted |
 
 There is no 0008: that number was never used.
 

@@ -15,10 +15,13 @@ import { Checkbox, CheckboxGroup } from '../Checkbox/Checkbox';
 import { Radio, RadioGroup } from '../Radio/Radio';
 import { Switch } from '../Switch/Switch';
 import { Input } from '../Input/Input';
-import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
 import * as icons from '../../material/builtin';
 import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
+
+// The date-range editor is the largest part of a filter bar and shows only once a date filter's chip is opened, so it
+// loads then, as a chunk of its own (ADR-0027): a bar without one, or before one is opened, doesn't carry it.
+const DateRangePicker = /* @__PURE__ */ React.lazy(() => import('../DateRangePicker/DateRangePicker').then((m) => ({ default: m.DateRangePicker })));
 import { useControllable } from '../../internal/controllable';
 
 /** One choice in a select filter: a string is both its value and its label. */
@@ -186,7 +189,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
     }
     if (f.type === 'date-range') {
       const r = (v && typeof v === 'object' && !Array.isArray(v) ? v : { start: null, end: null });
-      return <DateRangePicker aria-label={f.label} value={r} onValueChange={(_, { iso }) => put(iso)} />;
+      return <React.Suspense fallback={null}><DateRangePicker aria-label={f.label} value={r} onValueChange={(_, { iso }) => put(iso)} /></React.Suspense>;
     }
     if (f.type === 'boolean') return <Switch checked={v === true} onCheckedChange={(on) => put(on)}>{f.label}</Switch>;
     return <Input aria-label={f.label} placeholder={f.placeholder} value={typeof v === 'string' ? v : ''} onChange={(e) => put(e.target.value)}

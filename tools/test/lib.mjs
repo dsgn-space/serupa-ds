@@ -420,9 +420,10 @@ export function withDependents(names) {
     const DIR = path.join(PROJECT, 'src', d);
     return fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((n) => fs.statSync(path.join(DIR, n)).isDirectory()).map((n) => [n, path.join(DIR, n)]) : [];
   }));
-  // "../Button" from a component, "../../components/Button" or "../../blocks/AuthCard" from a block or pattern.
+  // "../Button" from a component, "../../components/Button" or "../../blocks/AuthCard" from a block or pattern, and a part
+  // loaded when it's first shown, import("../Calendar/Calendar") (ADR-0027).
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/(?:from |import\()["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
   // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .srp-input box, Fab
   // reads .srp-navbar--sticky. "srp-date-picker__x" is DatePicker's; a class no component is named after counts for none.

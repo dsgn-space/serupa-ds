@@ -11,6 +11,15 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const b = await browser();
 
+// A part a component loads only when it's first shown (import(), ADR-0027) is one it uses: its styles stay when the
+// component's are kept, or DatePicker's calendar would open unstyled in an app trimmed to the components it names.
+{
+  const uses = JSON.parse(fs.readFileSync(path.join(PROJECT, 'dist', 'components.json'), 'utf8')).components;
+  const lazy = { DatePicker: 'Calendar', DateRangePicker: 'RangeCalendar', FilterBar: 'DateRangePicker' };
+  const missing = Object.entries(lazy).filter(([n, part]) => !uses[n]?.uses.includes(part));
+  t('components.json counts a part loaded when first shown as used: DatePicker\'s Calendar, DateRangePicker\'s RangeCalendar, FilterBar\'s DateRangePicker', !missing.length, missing.map(([n, p]) => `${n} without ${p}`).join(', '));
+}
+
 // serupa-purge --components: each component's preview, named as its only source, renders identically with the
 // styles of every component it doesn't name dropped (components.json says which ones it needs)
 {

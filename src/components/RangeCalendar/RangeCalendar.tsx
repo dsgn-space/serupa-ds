@@ -1,6 +1,7 @@
 'use client';
 import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
+import { RangePickContext } from './pickContext';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
 import { compare, isoDate, sameDay, toDay } from '../../internal/dates';
@@ -52,9 +53,6 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   autoFocus?: boolean | undefined;
 }
 
-/** What DateRangePicker asks of the RangeCalendar in its popup: the start is its value the moment it's picked (so its
- *  start field shows it), and Escape closes the popup rather than dropping the start. */
-export const RangePickContext = /* @__PURE__ */ React.createContext<{ onStart: (start: Date) => void } | null>(null);
 
 const norm = (r: DateRangeInput | null | undefined): DateRange => ({ start: r ? toDay(r.start, 'RangeCalendar') : null, end: r ? toDay(r.end, 'RangeCalendar') : null });
 const between = (d: Date, s: Date, e: Date) => compare(d, s) > 0 && compare(d, e) < 0;

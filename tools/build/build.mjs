@@ -102,7 +102,8 @@ const manifest = {};
 for (const n of ALL) {
   const code = tsxOf(n);
   const exports = [...new Set([...code.matchAll(/^export (?:const|function|class) (\w+)/gm)].map((m) => m[1]))].sort();
-  const imported = [...code.matchAll(/from ["']\.\.\/(\w+)\//g)].map((m) => m[1]);
+  // A part loaded when it's first shown, import("../Calendar/Calendar") (ADR-0027), is used as much as an import is: its styles must stay.
+  const imported = [...code.matchAll(/(?:from |import\()["']\.\.\/(\w+)\//g)].map((m) => m[1]);
   // A class written out in the code ("srp-btn", or a "srp-btn--" prefix) belongs to the first component in the cascade
   // whose CSS has it: a component's own styles come before the ones that style it in context (index.css).
   const written = [...new Set([...code.matchAll(/srp-[a-z0-9_-]+/g)].map((m) => m[0]))];

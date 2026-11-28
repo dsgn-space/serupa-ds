@@ -7,7 +7,7 @@ import { compare, datePattern, formatDate, isoDate, parseDate, toDay } from '../
 import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
-import { Calendar, type DatePreset } from '../Calendar/Calendar';
+import type { DatePreset } from '../Calendar/Calendar';
 import type { CalendarSystem } from '../../internal/calendars';
 import { InputAction } from '../Input/Input';
 import { named } from '../../internal/component';
@@ -21,6 +21,10 @@ import { en as words } from './labels';
 import { windowBlur } from '../../internal/focus';
 import { useControllable } from '../../internal/controllable';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
+
+// The calendar shows only in the popup, so it loads the first time the popup opens, as a chunk of its own (ADR-0027):
+// a form with date fields that are only typed in never carries it.
+const Calendar = /* @__PURE__ */ React.lazy(() => import('../Calendar/Calendar').then((m) => ({ default: m.Calendar })));
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
@@ -152,8 +156,8 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-date-picker__popup"
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
-        {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
-          onValueChange={(d) => { commit(d); close(true, 'select'); }} /> : null}
+        {open || exit.leaving ? <React.Suspense fallback={null}><Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
+          onValueChange={(d) => { commit(d); close(true, 'select'); }} /></React.Suspense> : null}
       </div>
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
