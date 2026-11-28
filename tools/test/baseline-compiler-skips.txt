@@ -1,3 +1,1 @@
-src/components/Button/Button.tsx ButtonBaseRender
-src/components/Form/Form.tsx FormRender
 src/components/Menu/Menu.tsx ContextMenuRender

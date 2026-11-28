@@ -150,8 +150,8 @@ const FormContext = /* @__PURE__ */ React.createContext<FormHandle | null>(null)
 /** Steps in a form (FormSteps) check their own fields this way. */
 export const FormInternals = /* @__PURE__ */ React.createContext<{ show: (keys: readonly string[]) => Promise<boolean> } | null>(null);
 
-function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, ...props }: FormProps<S> & React.RefAttributes<HTMLFormElement>) {
-  const { schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onUnsavedChanges, onEdit, className, children, ...rest } = props;
+// The props are taken apart in the parameter: read from an object made in the body, the compiler counts them as mutable.
+function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, schema, defaultValues, onSubmit, checks, errors, message, draft, warnUnsaved, summary, onUnsavedChanges, onEdit, className, children, ...rest }: FormProps<S> & React.RefAttributes<HTMLFormElement>) {
   const sds = useSettings(words), say = useSettings(inputWords).labels.invalidValue, submitFailed = useSettings(errorWords).labels.errorTitle, locale = useLocale();
   // The server's answer it starts with (a form action's, rendered on the server) shows from the first render.
   const [st, setSt] = React.useState<State>(() => {
@@ -159,7 +159,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     return { ...START, server, failed: Object.keys(server).length > 0, message: shows(message) ? message : null };
   });
   const patch = React.useCallback((f: (s: State) => Partial<State> | null) => setSt((s) => { const p = f(s); return p ? { ...s, ...p } : s; }), []);
-  const latest = useLatest({ schema, onSubmit, checks, onEdit, say, submitFailed, locale, draft, summary });
+  const latestRef = useLatest({ schema, onSubmit, checks, onEdit, say, submitFailed, locale, draft, summary });
   const form = React.useRef<HTMLFormElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { form.current = n; });
 
@@ -180,7 +180,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   const restored = React.useMemo(() => parseDraft(taken), [taken]);
   const generation = (taken === SERVER ? 's' : 'c') + discards;
   const defaults = React.useMemo(() => (restored ? merge(defaultValues || {}, toNested(restored)) : defaultValues || {}) as Record<string, unknown>, [defaultValues, restored]);
-  const latestDefaults = useLatest(defaults);
+  const latestDefaultsRef = useLatest(defaults);
 
   // What the form knows that doesn't draw anything.
   const live = React.useRef<Live>({
@@ -202,7 +202,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
 
   // The schema's messages, and the controls' own constraints, by path (the first one for each).
   const validate = React.useCallback(async (flat: FlatValues) => {
-    const L = latest.current, nested = toNested(flat), issues: Record<string, React.ReactNode> = {};
+    const L = latestRef.current, nested = toNested(flat), issues: Record<string, React.ReactNode> = {};
     let output: unknown = nested;
     if (L.schema) {
       const r = await L.schema['~standard'].validate(nested);
@@ -218,11 +218,11 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     }
     live.current.issues = issues;
     return { issues, output };
-  }, [latest]);
+  }, [latestRef]);
 
   // A check's answer for the value a field has now: from before, from one running, or a new one.
   const check = React.useCallback((k: string, flat: FlatValues): Promise<React.ReactNode> | null => {
-    const fn = latest.current.checks && latest.current.checks[k];
+    const fn = latestRef.current.checks && latestRef.current.checks[k];
     if (!fn) return null;
     const L = live.current, value = flat.get(k), v = stamp(value);
     const known = L.found.get(k);
@@ -241,7 +241,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       patch((s) => { const c = new Set(s.checking); c.delete(k); return { checking: c }; });
     });
     return done;
-  }, [latest, patch]);
+  }, [latestRef, patch]);
 
   // Shows (or takes away) the messages of these fields from the latest issues and checks.
   const showFor = React.useCallback((keys: Iterable<string>, flat: FlatValues) => {
@@ -269,7 +269,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     if (run !== L.run) return;
     showFor(keys, flat);
     for (const k of keys) {
-      if (shows(L.issues[k]) || !(latest.current.checks && latest.current.checks[k])) continue;
+      if (shows(L.issues[k]) || !(latestRef.current.checks && latestRef.current.checks[k])) continue;
       const known = L.found.get(k);
       if (known && known.value === stamp(flat.get(k))) continue;
       window.clearTimeout(L.waits.get(k));
@@ -278,10 +278,10 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
         if (p) void p.then(() => showFor([k], L.flat));
       }, wait));
     }
-  }, [validate, showFor, check, latest]);
+  }, [validate, showFor, check, latestRef]);
 
   const saveDraft = React.useCallback(() => {
-    const L = live.current, key = latest.current.draft, el = form.current;
+    const L = live.current, key = latestRef.current.draft, el = form.current;
     if (!key || !el) return;
     window.clearTimeout(L.draftTimer);
     L.draftTimer = window.setTimeout(() => {
@@ -291,7 +291,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       try { window.localStorage.setItem(draftKey(key), JSON.stringify({ at: Date.now(), values: keep })); } catch { return; }
       patch(() => ({ draftSavedAt: Date.now() }));
     }, DRAFT_WAIT);
-  }, [latest, patch]);
+  }, [latestRef, patch]);
 
   // Reads the values after the event (or the hidden input's change) that moved them, once per batch.
   const changed = React.useCallback(() => {
@@ -319,7 +319,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
         for (const k of moved) if (prev.has(k) && flat.has(k)) server = without(server, k);
         return server === s.server && dirty === s.dirty ? null : { server, dirty };
       });
-      const cb = latest.current.onEdit;
+      const cb = latestRef.current.onEdit;
       if (cb) cb(L.nested);
       // A field showing a message is checked again as it changes, and so is every other one showing one: "Confirm
       // password" stops saying they don't match once the password is changed to match it.
@@ -327,7 +327,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
       // The first read is the form as it came, not an answer: a form nobody has typed in keeps no draft.
       if (!first) saveDraft();
     });
-  }, [patch, recheck, latest, saveDraft]);
+  }, [patch, recheck, latestRef, saveDraft]);
 
   // Watch the form: typing and changes, and hidden inputs whose value a component sets (Combobox, DatePicker).
   React.useEffect(() => {
@@ -358,20 +358,20 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   const fail = React.useCallback((issues: Record<string, React.ReactNode>, keys?: readonly string[]) => {
     const L = live.current, shown: Record<string, React.ReactNode> = {};
     for (const [k, m] of Object.entries(issues)) if (k && shows(m) && (!keys || keys.indexOf(k) >= 0)) { shown[k] = m; L.eager.add(k); }
-    first.current = latest.current.summary === false;
+    first.current = latestRef.current.summary === false;
     patch((s) => ({ shown: keys ? { ...s.shown, ...shown } : shown, failed: true, version: s.version + 1, message: keys ? s.message : issues[''] || null }));
-  }, [latest, patch]);
+  }, [latestRef, patch]);
 
   // Every check for the current values, the schema's issues first; the checks run for fields that pass it.
   const everything = React.useCallback(async (flat: FlatValues, keys?: readonly string[]) => {
     const res = await validate(flat);
     const issues = { ...res.issues };
-    const names = Object.keys(latest.current.checks || {}).filter((k) => flat.has(k) && !shows(issues[k]) && (!keys || keys.indexOf(k) >= 0));
+    const names = Object.keys(latestRef.current.checks || {}).filter((k) => flat.has(k) && !shows(issues[k]) && (!keys || keys.indexOf(k) >= 0));
     const answers = await Promise.all(names.map((k) => Promise.resolve(check(k, flat))));
     names.forEach((k, i) => { if (shows(answers[i])) issues[k] = answers[i]; });
     const bad = Object.keys(issues).filter((k) => shows(issues[k]) && (!keys || keys.indexOf(k) >= 0));
     return { issues, output: res.output, ok: !bad.length };
-  }, [validate, check, latest]);
+  }, [validate, check, latestRef]);
 
   const submit = async () => {
     const L = live.current, el = form.current;
@@ -380,31 +380,30 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     const flat = readFlat(el);
     L.flat = flat;
     patch((s) => ({ submitCount: s.submitCount + 1, message: null }));
-    try {
-      await (async () => {
-        const res = await everything(flat);
-        if (!res.ok) { fail(res.issues); return; }
-        patch(() => ({ shown: {}, server: {}, failed: false, submitting: true }));
-        const send = latest.current.onSubmit;
-        const answer = send ? await send(res.output as Out<S>, handleRef.current) : undefined;
-        if (answer && (shows(answer.message) || Object.keys(keyed(answer.errors)).length)) {
-          const server = keyed(answer.errors);
-          patch((s) => ({ server, failed: Object.keys(server).length > 0, version: s.version + 1, message: answer.message ?? null }));
-          return;
-        }
-        // Sent: this is how the form starts now, and the draft has done its job.
-        L.baseline = stamp(L.flat);
-        patch(() => ({ dirty: false, draftSavedAt: null }));
-        const key = latest.current.draft;
-        if (key) { window.clearTimeout(L.draftTimer); try { window.localStorage.removeItem(draftKey(key)); } catch { /* storage blocked: nothing saved */ } }
-      })().catch((err: unknown) => {
-        const msg = err instanceof Error && err.message ? err.message : submitFailed;
-        patch((s) => ({ failed: true, version: s.version + 1, message: msg }));
-      });
-    } finally {
+    // Done either way: a .finally rather than try/finally, which the compiler can't follow yet.
+    await (async () => {
+      const res = await everything(flat);
+      if (!res.ok) { fail(res.issues); return; }
+      patch(() => ({ shown: {}, server: {}, failed: false, submitting: true }));
+      const send = latestRef.current.onSubmit;
+      const answer = send ? await send(res.output as Out<S>, handleRef.current) : undefined;
+      if (answer && (shows(answer.message) || Object.keys(keyed(answer.errors)).length)) {
+        const server = keyed(answer.errors);
+        patch((s) => ({ server, failed: Object.keys(server).length > 0, version: s.version + 1, message: answer.message ?? null }));
+        return;
+      }
+      // Sent: this is how the form starts now, and the draft has done its job.
+      L.baseline = stamp(L.flat);
+      patch(() => ({ dirty: false, draftSavedAt: null }));
+      const key = latestRef.current.draft;
+      if (key) { window.clearTimeout(L.draftTimer); try { window.localStorage.removeItem(draftKey(key)); } catch { /* storage blocked: nothing saved */ } }
+    })().catch((err: unknown) => {
+      const msg = err instanceof Error && err.message ? err.message : submitFailed;
+      patch((s) => ({ failed: true, version: s.version + 1, message: msg }));
+    }).finally(() => {
       L.submitting = false;
       patch((s) => (s.submitting ? { submitting: false } : null));
-    }
+    });
   };
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -505,7 +504,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
     submit: () => { if (form.current) form.current.requestSubmit(); },
     reset: () => { if (form.current) form.current.reset(); },
     discardDraft: () => {
-      const key = latest.current.draft;
+      const key = latestRef.current.draft;
       if (key) { window.clearTimeout(live.current.draftTimer); try { window.localStorage.removeItem(draftKey(key)); } catch { /* storage blocked */ } }
       live.current.read = false;
       setTaken(null);
@@ -523,8 +522,8 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, .
   // Steps and values read the live store.
   const store = React.useMemo(() => ({
     subscribe: (f: () => void) => { live.current.listeners.add(f); return () => { live.current.listeners.delete(f); }; },
-    get: (name: string) => (live.current.read ? getPath(live.current.nested, pathKey(name)) : getPath(latestDefaults.current, pathKey(name))),
-  }), [latestDefaults]);
+    get: (name: string) => (live.current.read ? getPath(live.current.nested, pathKey(name)) : getPath(latestDefaultsRef.current, pathKey(name))),
+  }), [latestDefaultsRef]);
 
   return (
     <form noValidate {...rest} ref={mergedRef} className={cn('srp-form', className)} data-component="form" aria-busy={st.submitting || undefined}
