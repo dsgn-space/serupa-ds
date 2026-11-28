@@ -117,7 +117,7 @@ describe('SortableList', () => {
 
   test('rows taken away while one is held past them (another user deleted them): the drop reports the place it lands, and says so', async () => {
     const moves: Array<{ from: number; to: number }> = [];
-    const list = (items: Item[]) => <SortableList id="sl" aria-label="Missions" items={items} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={(_, m) => moves.push(m)} />;
+    const list = (items: Item[]) => <SortableList id="sl" aria-label="Missions" items={items} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={(_, m) => moves.push({ from: m.from, to: m.to })} />;
     const { rerender } = await render(list(ITEMS));
     handle('Apollo').focus();
     await userEvent.keyboard('{Enter}{End}');
@@ -171,7 +171,7 @@ describe('SortableList', () => {
     const many = Array.from({ length: 30 }, (_, i) => ({ id: 'm' + i, name: 'Mission ' + i }));
     const moves: Array<{ from: number; to: number }> = [];
     await render(<div id="box" style={{ width: '320px', height: '200px', overflowY: 'auto' }}><SortableList id="sl" aria-label="Missions" items={many} getKey={(i) => i.id} getLabel={(i) => i.name}
-      onReorder={(_next, m) => { moves.push(m); }} renderItem={(i) => <span>{i.name}</span>} /></div>);
+      onReorder={(_next, m) => { moves.push({ from: m.from, to: m.to }); }} renderItem={(i) => <span>{i.name}</span>} /></div>);
     const box = document.getElementById('box')!, h = handle('Mission 0'), r = h.getBoundingClientRect(), b = box.getBoundingClientRect();
     const at = (type: string, y: number, target: EventTarget = window) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, isPrimary: true, clientX: r.left + 4, clientY: y }));
     at('pointerdown', r.top + 4, h);
@@ -258,7 +258,7 @@ describe('SortableList', () => {
   test('horizontal: the items run in a row; a sideways drag moves one along it and drops it there', async () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<SortableList id="sl" aria-label="Missions" orientation="horizontal" items={ITEMS} getKey={(i) => i.id} getLabel={(i) => i.name}
-      renderItem={(i) => i.name} onReorder={(_n, m) => { moves.push(m); }} />);
+      renderItem={(i) => i.name} onReorder={(_n, m) => { moves.push({ from: m.from, to: m.to }); }} />);
     const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[], [a, b] = rows.map((r) => r.getBoundingClientRect());
     expect([document.getElementById('sl')!.dataset.orientation, a!.top === b!.top, b!.left > a!.right]).toEqual(['horizontal', true, true]);
     const h = handle('Apollo'), r = h.getBoundingClientRect(), third = rows[2]!.getBoundingClientRect();
@@ -275,7 +275,7 @@ describe('SortableList', () => {
   test('horizontal, right to left: ArrowLeft moves an item later and ArrowRight earlier; a drag to the left moves it later', async () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<div dir="rtl"><SortableList id="sl" aria-label="Missions" orientation="horizontal" items={ITEMS} getKey={(i) => i.id} getLabel={(i) => i.name}
-      renderItem={(i) => i.name} onReorder={(_n, m) => { moves.push(m); }} /></div>);
+      renderItem={(i) => i.name} onReorder={(_n, m) => { moves.push({ from: m.from, to: m.to }); }} /></div>);
     handle('Gemini').focus();
     await userEvent.keyboard(' {ArrowLeft}');
     await said('Gemini, position 3 of 4.');

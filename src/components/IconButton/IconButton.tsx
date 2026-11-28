@@ -29,7 +29,7 @@ type IconButtonElement = HTMLButtonElement | HTMLAnchorElement;
 function IconButtonRender({ ref, ...props }: IconButtonProps & React.RefAttributes<IconButtonElement>) {
   const { icon, label, shape, hideTitle, className, ...rest } = props;
   const round = shape === 'circle' || shape === 'round';
-  if (process.env.NODE_ENV !== 'production' && shape === 'round') warnOnce('shape-round', 'IconButton: shape="circle" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:IconButton');
+  if (process.env.NODE_ENV !== 'production' && shape === 'round') warnOnce('shape-round', 'IconButton: shape="round" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:IconButton');
   // The label shows in a Tooltip on hover and on keyboard focus, which a native title never does. None when a Tooltip
   // of yours (or anything else) already describes or names it, with hideTitle, or with a title of your own.
   const own = hideTitle || rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;

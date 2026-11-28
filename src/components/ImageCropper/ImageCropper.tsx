@@ -111,7 +111,7 @@ type Gesture = { x: number; y: number; cx: number; cy: number; moved: boolean };
 function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);
   const nameRef = useNameCheck('ImageCropper', NAME_HOW.group);
-  if (process.env.NODE_ENV !== 'production' && props.shape === 'round') warnOnce('shape-round', 'ImageCropper: shape="circle" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:ImageCropper');
+  if (process.env.NODE_ENV !== 'production' && props.shape === 'round') warnOnce('shape-round', 'ImageCropper: shape="round" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:ImageCropper');
   const fieldLabel = useFieldLabel(props.id);
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
