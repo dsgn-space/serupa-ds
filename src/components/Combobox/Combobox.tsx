@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
-import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, useLatest, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { warnOnce } from '../../internal/warn';
@@ -170,9 +170,8 @@ const Row = /* @__PURE__ */ React.memo(function Row(p: { o: Opt; id: string; ind
 });
 
 function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<HTMLInputElement>) {
-  let props = given as AnyProps;
   const nameRef = useNameCheck('Combobox', NAME_HOW.field);   // warns when it has no accessible name
-  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
+  const props = useFieldControl(given as AnyProps);   // the props a surrounding Field hands it, at any depth
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
@@ -193,8 +192,12 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   const source = props.loadOptions && loaded ? loaded : props.options;
   const opts: Opt[] = React.useMemo(() => toOpts(source), [source]);
   // Every option seen, by value, so a picked one keeps its label when a later answer doesn't include it.
-  const seen = React.useRef(new Map<string, string>());
-  for (const o of opts) seen.current.set(o.value, o.label);
+  // Kept as state, brought up to date while rendering when the options bring a new label (and used at once).
+  const [seenHeld, setSeen] = React.useState(() => new Map<string, string>());
+  let seen = seenHeld;
+  const seenNext = new Map(seenHeld);
+  for (const o of opts) seenNext.set(o.value, o.label);
+  if (seenNext.size !== seenHeld.size || [...seenNext].some(([k, v]) => seenHeld.get(k) !== v)) { setSeen(seenNext); seen = seenNext; }
   // Two options with one value: picking the second shows the first's label and marks both as selected (GR161).
   React.useEffect(() => {
     if (process.env.NODE_ENV !== 'production') {
@@ -207,10 +210,9 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   // loadOptions: one request at a time. A new one (after the debounce) aborts the one before, and an answer that
   // isn't for the latest request is dropped, so a slow answer never overwrites a newer one.
   const loader = React.useRef<{ timer: number; ctl: AbortController | null; n: number; q: string | null }>({ timer: 0, ctl: null, n: 0, q: null });
-  const loadFn = React.useRef(props.loadOptions);
-  loadFn.current = props.loadOptions;
+  const loadFnRef = useLatest(props.loadOptions);
   const load = (q: string, wait: number) => {
-    const l = loader.current, fn = loadFn.current;
+    const l = loader.current, fn = loadFnRef.current;
     if (!fn) return;
     window.clearTimeout(l.timer);
     if (l.ctl) l.ctl.abort();
@@ -243,42 +245,41 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   const values = multi ? list(held) : [];
   const chosen = new Set(values);
   const selected = multi ? null : opts.find((o) => (free ? o.label === value : o.value === value)) || null;
-  const pickedLabel = free ? value ?? '' : selected ? selected.label : value != null ? seen.current.get(value) ?? '' : '';
+  const pickedLabel = free ? value ?? '' : selected ? selected.label : value != null ? seen.get(value) ?? '' : '';
   // The field's text: inputValue when given (controlled), else its own. Every change goes through setText, which
   // tells onInputValueChange, so a controlled field follows picks, Escape and clearing as well as typing.
   const [textHeld, setOwnText] = useControllable<string>(props.inputValue, props.defaultInputValue ?? pickedLabel, 'Combobox', 'inputValue');
   const text = textHeld;
-  const textNow = React.useRef(text);
-  textNow.current = text;
-  const told = React.useRef(props.onInputValueChange);
-  told.current = props.onInputValueChange;
+  // The text as last set (a handler can set it twice before a render), and the newest onInputValueChange.
+  const textNowRef = useLatest(text);
+  const toldRef = useLatest(props.onInputValueChange);
   const setText = (t: string) => {
+    // The same text again queues nothing: a blur's "" waiting behind a new value from outside would otherwise land
+    // after the render that put the value's label in the field.
+    if (t === textNowRef.current) return;
     setOwnText(t);
-    if (t === textNow.current) return;
-    textNow.current = t;
-    if (told.current) told.current(t);
+    textNowRef.current = t;
+    if (toldRef.current) toldRef.current(t);
   };
   // A new value's label replaces the text while rendering (below); onInputValueChange hears of it after the render.
   const [synced, setSynced] = React.useState<string | null>(null);
   React.useEffect(() => {
     if (synced === null) return;
     setSynced(null);
-    if (told.current) told.current(synced);
-  }, [synced]);
+    if (toldRef.current) toldRef.current(synced);
+  }, [synced, toldRef]);
   const [typed, setTyped] = React.useState(false);   // false: show every option (just opened); true: filter by the text
   // Open: the open prop when given (controlled), else its own. Every change goes through setOpen, which tells
   // onOpenChange why; a disabled or read-only field never shows its list.
   const [openHeld, setOwnOpen] = useControllable(props.open, !!props.defaultOpen, 'Combobox', 'open');
   const open = !(rest.disabled || rest.readOnly) && !!openHeld;
-  const openNow = React.useRef(open);
-  openNow.current = open;
-  const askOpen = React.useRef(props.onOpenChange);
-  askOpen.current = props.onOpenChange;
+  const openNowRef = useLatest(open);
+  const askOpenRef = useLatest(props.onOpenChange);
   const setOpen = (v: boolean, reason: OpenChangeReason) => {
     setOwnOpen(v);
-    if (v === openNow.current) return;
-    openNow.current = v;
-    if (askOpen.current) askOpen.current(v, { reason });
+    if (v === openNowRef.current) return;
+    openNowRef.current = v;
+    if (askOpenRef.current) askOpenRef.current(v, { reason });
   };
   const [active, setActive] = React.useState(-1);    // index into opts
   const box = React.useRef<HTMLSpanElement | null>(null);
@@ -343,7 +344,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
     if (changed) changed(next);
     if (said) announce(said);
   };
-  const labelOf = (v: string) => seen.current.get(v) ?? v;
+  const labelOf = (v: string) => seen.get(v) ?? v;
   const remove = (v: string) => commitMany(values.filter((x) => x !== v), sds.labels.valueRemoved(labelOf(v)));
   const show = (to?: 'first' | 'last' | 'selected') => {
     if (locked) return;
@@ -368,8 +369,9 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
       // option arrives in options.
       const made = props.onCreate ? props.onCreate(o.add) : undefined;
       if (typeof made !== 'string') { hide(reason, !multi); if (multi) setText(''); return; }
-      seen.current.set(made, o.add);
-      pick({ value: made, label: o.add, i: -1, folded: fold(o.add) }, reason);
+      const added = o.add;
+      setSeen((m) => new Map(m).set(made, added));
+      pick({ value: made, label: added, i: -1, folded: fold(added) }, reason);
       return;
     }
     if (multi) {
@@ -532,9 +534,8 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   }, [open, typed, loading, said, text]);
 
   // Opened by the app (defaultOpen or the open prop) rather than show(): list what "" finds, as show() does.
-  const opened = React.useRef<() => void>(undefined);
-  opened.current = () => { if (!typed && loader.current.q !== '') load('', 0); };
-  React.useEffect(() => { if (open) opened.current?.(); }, [open]);
+  const openedRef = useLatest(() => { if (!typed && loader.current.q !== '') load('', 0); });
+  React.useEffect(() => { if (open) openedRef.current(); }, [open, openedRef]);
 
   // Place the list under the field, in the top layer, as wide as the field at least.
   // Closing: the options stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
@@ -557,11 +558,10 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   }, [shown]);
   const win = useVirtual({ count: shownList ? lay.items.length : 0, estimate: ROW });
   const attach = win.ref;
-  const setListbox = React.useCallback((n: HTMLDivElement | null) => { listbox.current = n; attach(n); }, [attach]);
+  const setListbox = (n: HTMLDivElement | null) => { listbox.current = n; attach(n); };   // memoized by the compiler, on attach
   const at = active >= 0 ? shown.findIndex((o) => o.i === active) : -1;
-  const toActive = React.useRef<() => void>(undefined);
-  toActive.current = () => { const s = lay.slot[at]; if (open && s !== undefined) win.scrollToIndex(s); };
-  React.useEffect(() => toActive.current?.(), [active, open]);
+  const toActiveRef = useLatest(() => { const s = lay.slot[at]; if (open && s !== undefined) win.scrollToIndex(s); });
+  React.useEffect(() => toActiveRef.current(), [active, open, toActiveRef]);
 
   // Inline completion's added part, selected once the field shows it.
   const select = React.useRef<[number, number] | null>(null);
@@ -577,10 +577,9 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
   const listId = base + '-list';
   // Stable handlers for the memoised rows, reading the latest state through a ref.
-  const latest = React.useRef({ pick, byIndex });
-  latest.current = { pick, byIndex };
-  const onMove = React.useCallback((i: number) => setActive(i), []);
-  const onPick = React.useCallback((i: number) => { const l = latest.current; const o = l.byIndex(i); if (o) l.pick(o); }, []);
+  const latestRef = useLatest({ pick, byIndex });
+  const onMove = setActive;   // stable already: a state setter
+  const onPick = React.useCallback((i: number) => { const l = latestRef.current; const o = l.byIndex(i); if (o) l.pick(o); }, [latestRef]);
   const activeShown = at >= 0;
   // The typed text, marked in each option's label as the list narrows (185): only with the default filter, which
   // matches the same way (a custom filter or the server's results may match on something else).
@@ -624,7 +623,7 @@ function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<H
   );
   return (
     <span ref={box} className={cn('srp-input srp-combobox', multi && 'srp-combobox--multiple', 'srp-input--size-' + size, invalid && 'srp-input--invalid', rest.disabled && 'srp-input--disabled', rest.readOnly && 'srp-input--readonly', props.className)} data-invalid={invalid ? '' : undefined} data-disabled={rest.disabled ? '' : undefined} data-readonly={rest.readOnly ? '' : undefined}
-      style={props.style} data-component="combobox" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={pressFocuses(input)}>
+      style={props.style} data-component="combobox" data-size={size} data-state={open ? 'open' : 'closed'} onMouseDown={(e) => pressFocuses(input)(e)}>
       {left != null && left !== false ? <span className="srp-input__icon srp-input__icon--start" aria-hidden>{left}</span> : null}
       {multi ? <span className="srp-combobox__values">
         {values.length ? <span className="srp-combobox__tags" onMouseDown={keep}>

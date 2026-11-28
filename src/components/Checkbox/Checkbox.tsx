@@ -123,6 +123,22 @@ function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<
   return out;
 }
 
+type GroupApi = Pick<GroupContextValue, 'register' | 'toggle' | 'toggleAll'>;
+
+/** The store a group's boxes subscribe to: get gives the last published state, publish replaces it and tells them. */
+function groupStore(first: GroupState, live: { readonly current: GroupApi }) {
+  let state = first;
+  const listeners = new Set<() => void>();
+  const ctx: GroupContextValue = {
+    get: () => state,
+    subscribe(l) { listeners.add(l); return () => { listeners.delete(l); }; },
+    register: (v, dis) => live.current.register(v, dis),
+    toggle: (v, on, e) => live.current.toggle(v, on, e),
+    toggleAll: (on, e) => live.current.toggleAll(on, e),
+  };
+  return { ctx, publish(next: GroupState) { state = next; listeners.forEach((l) => l()); } };
+}
+
 function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, GROUP_OWN);
   const autoName = domId('srp-cbg', React.useId());
@@ -135,9 +151,11 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
   const [, rerender] = React.useState(0);
   useFormReset(root, function () { if (!controlled) setOwn(props.defaultValue || []); rerender(function (n) { return n + 1; }); });
   // The boxes register as they mount, so select-all knows them all and the values come out in their order.
-  const boxes = React.useRef(new Map<string, boolean>()).current;
-  // The values as the caller gave them and the boxes hold them (numbers stay numbers), looked up by their text, which is what an <input> holds.
-  const typed = React.useRef(new Map<string, string | number>()).current;
+  const [boxes, setBoxes] = React.useState(() => new Map<string, boolean>());
+  // The values as the boxes hold them (numbers stay numbers), looked up by their text, which is what an <input> holds.
+  const [held, setHeld] = React.useState(() => new Map<string, string | number>());
+  // ...and as the caller gave them.
+  const typed = new Map(held);
   for (const v of raw) typed.set(String(v), v);
   const latest = useLatest(raw);
   const emit = function (next: Set<string>, e: React.ChangeEvent<HTMLInputElement>) {
@@ -151,8 +169,13 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
   const known = boxes.size ? boxes : childBoxes(props.children, !!props.disabled);
   const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
   const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: around, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly, boxes: known };
-  const api = {
-    register(v: string | number, dis: boolean) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
+  const api: GroupApi = {
+    register(v: string | number, dis: boolean) {
+      const k = String(v);
+      setBoxes((m) => new Map(m).set(k, dis));
+      setHeld((m) => (m.get(k) === v ? m : new Map(m).set(k, v)));
+      return () => setBoxes((m) => { const n = new Map(m); n.delete(k); return n; });
+    },
     toggle(v: string, on: boolean, e: React.ChangeEvent<HTMLInputElement>) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
     toggleAll(on: boolean, e: React.ChangeEvent<HTMLInputElement>) {
       const next = new Set(latest.current.map(String));
@@ -163,21 +186,9 @@ function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAt
   const live = useLatest(api);
   // One store for the group's life: the boxes read the state it holds and draw again only when their part of it
   // changes. The first render's state is there from the start; each later one is published once committed.
-  const store = React.useRef<{ ctx: GroupContextValue; state: GroupState; listeners: Set<() => void> } | null>(null);
-  if (!store.current) {
-    const st = { state, listeners: new Set<() => void>() } as { ctx: GroupContextValue; state: GroupState; listeners: Set<() => void> };
-    st.ctx = {
-      get: () => st.state,
-      subscribe(l) { st.listeners.add(l); return () => { st.listeners.delete(l); }; },
-      register: (v, dis) => live.current.register(v, dis),
-      toggle: (v, on, e) => live.current.toggle(v, on, e),
-      toggleAll: (on, e) => live.current.toggleAll(on, e),
-    };
-    store.current = st;
-  }
-  const st = store.current;
+  const [st] = React.useState(() => groupStore(state, live));
   // every render: the state is new each render, and the boxes compare their own part of it.
-  useIsoLayoutEffect(function () { st.state = state; st.listeners.forEach((l) => l()); });
+  useIsoLayoutEffect(function () { st.publish(state); });
   useAutoFocus(props.autoFocus, () => root.current);   // through the delegation below; the <div> ignored it
   // ref.current.focus() (a form library focusing the first invalid field) lands on the first box that can be
   // checked; the <div> took no focus (L8E91).

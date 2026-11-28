@@ -1,3 +1,1 @@
-src/components/Checkbox/Checkbox.tsx CheckboxGroupRender
-src/components/Combobox/Combobox.tsx ComboboxRender
 src/components/Menu/Menu.tsx ContextMenuRender
