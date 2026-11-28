@@ -5,7 +5,7 @@ import facts from 'virtual:site-facts';
 import story from '../content/story.md?raw';
 import { Button } from '../../src/components/Button/Button';
 import { Heading } from '../../src/components/Heading/Heading';
-import { PRINCIPLES } from './Home';
+import { Principle, PRINCIPLES } from './Home';
 import { Markdown } from './markdown';
 import { Shell } from './Shell';
 
@@ -29,11 +29,7 @@ export function About() {
       <Heading level={2} id="principles" className="site-h site-h2">The principles</Heading>
       <p className="site-p">These principles guide how the components, the tokens and the docs are made. When two of them pull apart, accessibility comes first.</p>
       <ol className="site-principles site-principles--two" role="list">
-        {PRINCIPLES.map((p, i) => <li key={p.name} className="site-principle">
-          <span className="site-principle__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <Heading level={3} className="site-principle__name">{p.name}</Heading>
-          <p className="site-principle__line">{p.line}</p>
-        </li>)}
+        {PRINCIPLES.map((p, i) => <Principle key={p.name} name={p.name} line={p.line} n={i + 1} />)}
       </ol>
       <p className="site-more"><Button href="/foundations/design-principles" variant="outline" endIcon="arrow_forward">Each principle, with examples</Button></p>
 
