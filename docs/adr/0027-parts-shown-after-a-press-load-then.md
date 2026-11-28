@@ -25,5 +25,6 @@ The audit's GR311 asked the same of Sidebar, which imports Menu and Tooltip for 
 ## Consequences
 
 - DatePicker, DateRangePicker and FilterBar imported alone are smaller by their calendar's or picker's size; their budgets in `tools/test/baseline-size/` are lowered to match.
-- The first time a popup opens, its contents arrive a moment after its frame, then come from the bundler's chunk cache. A project that bundles without code splitting gets one file, as before.
+- The first time a popup opens, its contents arrive a moment after its frame, then come from the bundler's chunk cache. A project that bundles without code splitting gets one file, as before, a little larger: esbuild wraps each late-starting module, which took the whole package bundled that way from 318.5 to 324.1 KB gzipped (`tools/test/package.mjs`'s backstop is 326).
+- A test that reads a popup's contents opens it once first, so they're loaded (DatePicker's and DateRangePicker's tests do this in `beforeAll`).
 - An app's server render shows the popups closed, as before, so the markup a server sends doesn't change.

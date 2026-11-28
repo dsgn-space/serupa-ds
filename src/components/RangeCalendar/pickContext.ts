@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 
 /** What DateRangePicker asks of the RangeCalendar in its popup: the start is its value the moment it's picked (so its
