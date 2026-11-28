@@ -22,6 +22,9 @@ import { feedbackHold, spinnerDelay } from '../../internal/timing';
 // Whether it's there never changes while the page runs, so the hook is called on every render or on none. No fallback
 // function: it would never run under React, and the coverage floor counts functions.
 const formStatus: (() => { pending: boolean }) | undefined = (ReactDOM as Partial<typeof ReactDOM>).useFormStatus;
+// Chosen once, for the module's life, so it's the same hook every render; named as a hook, so the compiler calls it
+// every render rather than keeping its first answer.
+const useFormPending = formStatus ? () => formStatus().pending : () => false;
 
 export { buttonClass };
 
@@ -139,7 +142,9 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   }, [working, busy]);
   const successText = props.successText;
   const own = rest.onClick;
-  if (own) rest.onClick = function (e: React.MouseEvent<HTMLElement>) {
+  // The handler is kept apart from rest until the end: the compiler won't let rest carry a function that reads refs.
+  let onClick = own;
+  if (own) onClick = function (e: React.MouseEvent<HTMLElement>) {
     if (pending.current) { block(e); return; }
     const r: unknown = own(e);
     if (!isThenable(r)) return;
@@ -160,7 +165,7 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
   // type="submit" in a <form action={fn}> that is being sent (React's form status): loading on its own, unless set.
   // …and in a Form whose onSubmit is running.
   const formSending = React.useContext(FormSubmittingContext);
-  const formPending = (formStatus ? formStatus().pending : false) || formSending;
+  const formPending = useFormPending() || formSending;
   const loading = (props.loading != null ? !!props.loading : !isLink && rest.type === 'submit' && formPending) || busy;
   const disabled = !!rest.disabled;
   const reasonId = domId('srp-btn-why', React.useId());
@@ -220,14 +225,14 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
     // Disabled, but focusable: aria-disabled instead of the disabled attribute, and clicks blocked.
     delete rest.disabled;
     rest['aria-disabled'] = true;
-    rest.onClick = block;
+    onClick = block;
   }
   if (loading) {
     classes = cn(classes, 'srp-btn--loading', 'srp-btn--loading-cover');
     rest['aria-busy'] = true;
     rest['aria-disabled'] = true;   // stays focusable (focus isn't lost mid-request), but announced as unavailable
     rest['data-loading'] = '';
-    rest.onClick = block;           // clicks, Space, Enter and Enter-key form submission do nothing
+    onClick = block;           // clicks, Space, Enter and Enter-key form submission do nothing
   }
 
   if (isLink) {
@@ -240,13 +245,15 @@ function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource |
       delete rest.href; delete rest.disabled;
       rest.role = 'link';
       rest['aria-disabled'] = true;
-      rest.onClick = block;          // and its handler doesn't run (screen readers and scripts can still click it)
+      onClick = block;          // and its handler doesn't run (screen readers and scripts can still click it)
     }
     delete rest.type;
-    return React.createElement(disabled ? 'a' : config.link, Object.assign({}, rest, { ref: setNode, className: classes }), ...content);
+    const Anchor = disabled ? 'a' : config.link;
+    return <Anchor {...rest} onClick={onClick} ref={setNode} className={classes}>{content}</Anchor>;
   }
   if (rest.type === undefined) rest.type = 'button';   // never submits a form by accident; pass type="submit" to submit
-  return React.createElement('button', Object.assign({}, rest, { ref: setNode, className: classes }), ...content);
+  // Every part has its key, so the parts go in as one list of children.
+  return <button {...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)} onClick={onClick} ref={setNode} className={classes}>{content}</button>;
 }
 
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
