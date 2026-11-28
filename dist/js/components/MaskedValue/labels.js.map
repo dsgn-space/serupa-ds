@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/MaskedValue/labels.ts"],
+  "sourcesContent": ["// MaskedValue's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface MaskedValueLabels {\n  /** MaskedValue: what screen readers hear while it's masked with an end kept (\"Card number ending in 1208\"). */\n  maskedEnding: (label: string, end: string) => string;\n  /** MaskedValue: what screen readers hear while it's masked with nothing kept (\"Balance, hidden\"). */\n  maskedHidden: (label: string) => string;\n  /** MaskedValue with revealable: the Show button's name (\"Show card number\"); it's pressed while the value shows. */\n  showValue: (label: string) => string;\n}\nexport const en: MaskedValueLabels = {\n  maskedEnding: (label, end) => label + ' ending in ' + end,\n  maskedHidden: (label) => label + ', hidden',\n  showValue: (label) => 'Show ' + label,\n};\nexport const id: MaskedValueLabels = {\n  maskedEnding: (label, end) => label + ' berakhiran ' + end,\n  maskedHidden: (label) => label + ', disembunyikan',\n  showValue: (label) => 'Tampilkan ' + label,\n};\n"],
+  "mappings": ";AAUO,IAAM,KAAwB;AAAA,EACnC,cAAc,CAAC,OAAO,QAAQ,QAAQ,gBAAgB;AAAA,EACtD,cAAc,CAAC,UAAU,QAAQ;AAAA,EACjC,WAAW,CAAC,UAAU,UAAU;AAClC;AACO,IAAM,KAAwB;AAAA,EACnC,cAAc,CAAC,OAAO,QAAQ,QAAQ,iBAAiB;AAAA,EACvD,cAAc,CAAC,UAAU,QAAQ;AAAA,EACjC,WAAW,CAAC,UAAU,eAAe;AACvC;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Watermark/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Watermark } from './Watermark';\nexport type { WatermarkProps } from './Watermark';\n"],
+  "mappings": ";AACA,SAAS,iBAAiB;",
+  "names": []
+}

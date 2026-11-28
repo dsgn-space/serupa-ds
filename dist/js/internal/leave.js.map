@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/leave.ts"],
+  "sourcesContent": ["/* Follows a link from code. location.assign runs a javascript: URL, which React's block on them in href doesn't\n   cover, so only a web page (http, https, or a path on this site), mailto: or tel: goes. False for anything else\n   (javascript:, data:, vbscript:, or no URL at all), and nothing happens. */\nexport function leave(href: string): boolean {\n  let u: URL;\n  try { u = new URL(href, window.location.href); } catch { return false; }\n  if (!/^(https?|mailto|tel):$/.test(u.protocol)) return false;\n  window.location.assign(u.href);\n  return true;\n}\n"],
+  "mappings": ";AAGO,SAAS,MAAM,MAAuB;AAC3C,MAAI;AACJ,MAAI;AAAE,QAAI,IAAI,IAAI,MAAM,OAAO,SAAS,IAAI;AAAA,EAAG,QAAQ;AAAE,WAAO;AAAA,EAAO;AACvE,MAAI,CAAC,yBAAyB,KAAK,EAAE,QAAQ,EAAG,QAAO;AACvD,SAAO,SAAS,OAAO,EAAE,IAAI;AAC7B,SAAO;AACT;",
+  "names": []
+}

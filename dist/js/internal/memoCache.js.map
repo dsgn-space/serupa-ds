@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/memoCache.ts"],
+  "sourcesContent": ["import * as React from 'react';\n\n// The React Compiler's cache for one component (ADR-0017). The compiled components (tools/build/react-compiler.mjs)\n// import this rather than react/compiler-runtime, which Preact's React compatibility doesn't have: a Preact app\n// failed to import the package at all. It is what react/compiler-runtime does on React 18: one array per component\n// instance, kept with useState, each slot marked empty until the component first fills it. Only compiled output\n// imports it, so knip.json lists it as an entry.\nconst EMPTY = Symbol.for('react.memo_cache_sentinel');\n\n/** An array of `size` slots that lives as long as the component that calls it. */\nfunction useMemoCache(size: number): unknown[] {\n  return React.useState(() => Array.from({ length: size }, () => EMPTY))[0];\n}\n\n// The compiler names the import `c`.\nexport { useMemoCache as c };\n"],
+  "mappings": ";AAAA,YAAY,WAAW;AAOvB,IAAM,QAAQ,uBAAO,IAAI,2BAA2B;AAGpD,SAAS,aAAa,MAAyB;AAC7C,SAAa,eAAS,MAAM,MAAM,KAAK,EAAE,QAAQ,KAAK,GAAG,MAAM,KAAK,CAAC,EAAE,CAAC;AAC1E;",
+  "names": []
+}

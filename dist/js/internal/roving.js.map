@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/roving.ts"],
+  "sourcesContent": ["// Moving with the arrow keys, shared by the composite widgets.\n\n/** Whether Alt, Ctrl or Meta is held: then an arrow key is the browser's or the system's (Alt+Left is Back), and a\n    widget that moves on arrows leaves it alone. Shift is left out, since lists extend a selection with it. */\nexport const modified = (e: { altKey: boolean; ctrlKey: boolean; metaKey: boolean }): boolean => e.altKey || e.ctrlKey || e.metaKey;\n"],
+  "mappings": ";AAIO,IAAM,WAAW,CAAC,MAAwE,EAAE,UAAU,EAAE,WAAW,EAAE;",
+  "names": []
+}
