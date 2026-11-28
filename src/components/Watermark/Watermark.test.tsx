@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { commands } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { Watermark, tile } from './Watermark';
 
@@ -70,14 +71,14 @@ describe('Watermark', () => {
     expect(Number(css(mark).zIndex)).toBeGreaterThan(Number(getComputedStyle(document.documentElement).getPropertyValue('--z-toast')));
   });
 
-  test('it prints, and goes under forced colors', async () => {
+  test('it prints, even with background graphics off, in every supported browser; and goes under forced colors', async () => {
     await render(<Watermark id="x" text="Draft"><p>Body</p></Watermark>);
-    // Every rule on the page, inside layers and media blocks too, with the media it applies under.
-    const walk = (rules: CSSRuleList, media: string): Array<[CSSRule, string]> => [...rules].flatMap((r) =>
-      r instanceof CSSMediaRule ? walk(r.cssRules, r.media.mediaText) : r instanceof CSSGroupingRule ? walk(r.cssRules, media) : [[r, media] as [CSSRule, string]]);
-    const print = [...document.styleSheets].flatMap((sheet) => { try { return walk(sheet.cssRules, ''); } catch { return []; } })
-      .some(([r, media]) => media === 'print' && r instanceof CSSStyleRule && r.selectorText === '.srp-watermark__mark' && r.style.printColorAdjust === 'exact');
-    expect(print).toBe(true);
+    // Chrome before 136 has only the prefixed property, which the CSS sets too (the Chrome floor's run, 28 Nov 2026).
+    const exact = (e: Element) => { const c = getComputedStyle(e) as CSSStyleDeclaration & { webkitPrintColorAdjust?: string }; return c.printColorAdjust ?? c.webkitPrintColorAdjust; };
+    await commands.printMedia(true);
+    try {
+      expect(exact(markOf(el('x'))!)).toBe('exact');
+    } finally { await commands.printMedia(false); }
     await forcedColors((active) => {
       if (active) expect(css(markOf(el('x'))).display).toBe('none');
     });

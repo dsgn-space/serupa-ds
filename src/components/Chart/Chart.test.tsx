@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render as draw } from 'vitest-browser-react';
 import { SerupaProvider } from '../../internal/provider';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { Chart, markerPath, niceTicks } from './Chart';
 import { Card } from '../Card/Card';
@@ -25,6 +25,16 @@ describe('Chart', () => {
   test('the key sets a numeric series name (a year) in tabular figures, so keys of years line up', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={[{ name: '2025', values: [1, 2, 3, 4] }, { name: '2026', values: [2, 3, 4, 5] }]} />);
     expect([...document.querySelectorAll('li')].filter((li) => /^202[56]/.test(li.textContent)).map((k) => css(k).fontVariantNumeric)).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
+  test('it prints its colors, even with background graphics off, in every supported browser', async () => {
+    await render(<Chart id="c" title="Visitors" categories={CATS} series={TWO} />);
+    // Chrome before 136 has only the prefixed property, which the CSS sets too.
+    const exact = (e: Element) => { const c = getComputedStyle(e) as CSSStyleDeclaration & { webkitPrintColorAdjust?: string }; return c.printColorAdjust ?? c.webkitPrintColorAdjust; };
+    await commands.printMedia(true);
+    try {
+      expect(exact(el('c'))).toBe('exact');
+    } finally { await commands.printMedia(false); }
   });
 
   test('a <figure> named by its title; ref, className and other props reach it', async () => {

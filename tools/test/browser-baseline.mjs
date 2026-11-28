@@ -30,8 +30,7 @@ const BASELINE = floor(P);
 const KNOWN = {
   // Progressive: without them, a page works and looks the same or near enough.
   'view-transition-name: match-element': { why: 'view transitions are progressive: the change happens without the animation' },
-  'property print-color-adjust': { why: 'Chart keeps its series colors and patterns when printed with background graphics off (Chrome and Edge 136); before, they print as the browser chooses' },
-  'print-color-adjust: exact': { why: 'as print-color-adjust' },
+  'print-color-adjust: exact': { why: 'the value is read through the prefixed -webkit-print-color-adjust that Chart, Watermark and base.css set beside it (Chrome and Edge before 136)' },
   'text-wrap: pretty': { why: 'line breaking only (Safari 26, not Firefox)' },
   'property hyphenate-limit-chars': { why: 'Card, Alert and Toast hyphenate only words of 10 letters or more (not Safari, nor Firefox before 137): shorter words hyphenate too there' },
   'property forced-color-adjust': { why: 'Safari has no forced colors mode, so there is nothing to adjust' },

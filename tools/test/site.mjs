@@ -18,6 +18,21 @@ import { siteRoutes } from '../site/head.mjs';
 import { componentProps } from '../site/props.mjs';
 import { components } from '../build/registry.mjs';
 
+// What sticks out past the right edge of a 320px screen, outside anything that scrolls by itself: the failure names it,
+// since it can show in one browser only (WebKit's /foundations/colors, 282px wider, Cross-browser on 28 Nov 2026).
+const STICKS_OUT = () => {
+  const name = (e) => e.tagName.toLowerCase() + (e.id ? `#${e.id}` : '') + [...e.classList].slice(0, 2).map((c) => `.${c}`).join('');
+  const out = [...document.querySelectorAll('body *')].filter((e) => {
+    const r = e.getBoundingClientRect();
+    if (!r.width || r.right <= document.documentElement.clientWidth + 1 || getComputedStyle(e).position === 'fixed') return false;
+    for (let a = e.parentElement; a && a !== document.body; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return false;
+    return true;
+  });
+  // The outermost ones: their children stick out because they do.
+  return out.filter((e) => !out.includes(e.parentElement)).slice(0, 3)
+    .map((e) => `${[e.parentElement, e].filter((x) => x && x !== document.body).map(name).join(' > ')} (${Math.round(e.getBoundingClientRect().width)}px)`).join(', ');
+};
+
 const R = [];
 const t = (name, ok, detail) => { R.push({ name, ok: !!ok, detail }); return !!ok; };
 
@@ -215,16 +230,21 @@ await inParallel(opened, workers, async (p, w) => {
   // Nor does an example's own box, unless what's wide scrolls by itself (a table, a grid, code): a story that shows a
   // narrow column gives it a max-width, not a width, so on a phone the column is the screen's.
   // What's drawn is measured, not the box's scroll width, which a closed popup waiting off to the side adds to.
-  const boxes = await w.page.evaluate(() => [...document.querySelectorAll('#article [data-site-demo]')].filter((d) => {
-    if (getComputedStyle(d).overflowX === 'visible') return false;
+  const boxes = await w.page.evaluate(() => [...document.querySelectorAll('#article [data-site-demo]')].map((d) => {
+    if (getComputedStyle(d).overflowX === 'visible') return '';
     const box = d.getBoundingClientRect();
-    return [...d.querySelectorAll('*')].some((e) => {
+    const e = [...d.querySelectorAll('*')].find((e) => {
       const r = e.getBoundingClientRect();
       if (!r.width || !r.height || (r.left >= box.left - 1 && r.right <= box.right + 1) || getComputedStyle(e).position === 'fixed' || getComputedStyle(e).visibility === 'hidden') return false;
       for (let a = e.parentElement; a && a !== d; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return false;
       return true;
     });
-  }).map((d) => d.closest('section, [id]')?.querySelector('h2, h3')?.textContent || 'an example'));
+    if (!e) return '';
+    // The first part that leaves the box, by tag and class, with how far it reaches past it.
+    const r = e.getBoundingClientRect();
+    const past = Math.round(Math.max(box.left - r.left, r.right - box.right));
+    return `${d.closest('section, [id]')?.querySelector('h2, h3')?.textContent || 'an example'} (${e.tagName.toLowerCase()}${[...e.classList].slice(0, 2).map((c) => `.${c}`).join('')}, ${past}px out)`;
+  }).filter(Boolean));
   // A written table of three columns or more stands each row as a block on a phone, each cell after the first under
   // its column's name: squeezed into 320px instead, it broke words a letter a line (site.css, markdown.tsx).
   const squeezed = await w.page.evaluate(() => [...document.querySelectorAll('#article .site-table:not(.site-table--props) table')]
@@ -232,8 +252,9 @@ await inParallel(opened, workers, async (p, w) => {
     .filter((t) => [...t.querySelectorAll('tbody tr')].some((tr) => getComputedStyle(tr).display !== 'block'
       || [...tr.children].slice(1).some((td) => td.textContent.trim() && !td.getAttribute('data-label'))))
     .map((t) => [...t.querySelectorAll('thead th')].map((th) => th.textContent.trim()).join(' | ')));
+  const sticks = wide > 0 ? await w.page.evaluate(STICKS_OUT) : '';
   await w.page.setViewportSize({ width: 1280, height: 800 });
-  t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
+  t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen: ${sticks}`);
   t(`${p.path}: no example scrolls sideways in its box at 320px`, !boxes.length, `wider than their box: ${boxes.join(', ')}`);
   t(`${p.path}: its written tables stack their rows at 320px`, !squeezed.length, `squeezed into the width: ${squeezed.slice(0, 3).join('; ')}`);
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
@@ -655,7 +676,7 @@ for (const at of FRAME) {
   const failed = await openUrl(w.page, base + at) || await ready(w.page, pages.some((p) => p.path === at));
   if (failed) { t(`${at} opens at 320px`, false, failed); continue; }
   const wide = await w.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  t(`${at} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
+  t(`${at} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen: ${wide > 0 ? await w.page.evaluate(STICKS_OUT) : ''}`);
 }
 
 for (const x of workers) await x.context.close();
