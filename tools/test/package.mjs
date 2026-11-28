@@ -170,8 +170,11 @@ if (D) {
   // about ten components are left, each around 1 KB); each component's line in size.mjs still holds it.
   // 28 Nov 2026: 320 KB. Button and Form compiled took it to 316 KB (Form about 2 KB); CheckboxGroup and Combobox
   // are the last two, and each component's line in size.mjs still holds it.
+  // 28 Nov 2026, later: 326 KB. Bundled whole without code splitting, as here, the parts DatePicker, DateRangePicker
+  // and FilterBar load on first open (ADR-0027) come wrapped to start late, 318.5 to 324.1 KB; a project that splits
+  // (size.mjs's lines) ships less, not more, and this stays a backstop.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 320 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 320 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 326 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 326 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;

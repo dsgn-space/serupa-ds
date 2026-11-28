@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
+import { beforeAll, afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { color, css, lowContrast, ringCut } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { FilterBar, type FilterField, type FilterValues } from './FilterBar';
+
+// The component loads the date-range picker the first time its popup opens (ADR-0027). These tests check what it shows, so it is
+// loaded once before them, as a page that has opened it once has it; the first open's short wait isn't what they test.
+beforeAll(async () => { await import('../DateRangePicker/DateRangePicker'); });
 
 const fields: FilterField[] = [
   { id: 'status', label: 'Status', type: 'select', multiple: true, options: [{ value: 'open', label: 'Open' }, { value: 'closed', label: 'Closed' }] },
