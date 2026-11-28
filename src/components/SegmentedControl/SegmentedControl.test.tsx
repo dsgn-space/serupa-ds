@@ -41,6 +41,11 @@ function Controlled({ calls, api }: { calls: string[]; api: { set?: (v: string) 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('SegmentedControl', () => {
+  test('a value no option has, even one named after an object\'s method ("toString"), renders with nothing selected', async () => {
+    await render(<SegmentedControl id="ts" aria-label="Mode" options={[{ value: 'a', label: 'A' }]} value="toString" />);
+    expect([...document.querySelectorAll('#ts [role=radio]')].map((b) => b.getAttribute('aria-checked'))).toEqual(['false']);
+  });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<SegmentedControl id="mk" aria-label="Period" options={PERIODS} defaultValue="day" />);
     const t = document.querySelector('#mk button') as HTMLElement;

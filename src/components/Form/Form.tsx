@@ -107,7 +107,10 @@ interface State {
 }
 const START: State = { shown: {}, server: {}, checking: new Set(), failed: false, version: 0, message: null, submitting: false, submitCount: 0, dirty: false, draftSavedAt: null };
 const shows = (m: React.ReactNode) => m != null && m !== false && m !== '';
-const without = <T,>(o: Readonly<Record<string, T>>, k: string) => { if (!(k in o)) return o; const n = { ...o }; delete n[k]; return n; };
+// Own keys only, in every map by field name: a field named "toString" isn't Object.prototype's function.
+const has = (o: object, k: string) => Object.prototype.hasOwnProperty.call(o, k);
+const at = <T,>(o: Readonly<Record<string, T>> | null | undefined, k: string): T | undefined => (o && has(o, k) ? o[k] : undefined);
+const without = <T,>(o: Readonly<Record<string, T>>, k: string) => { if (!has(o, k)) return o; const n = { ...o }; delete n[k]; return n; };
 const keyed = (errors: Readonly<Record<string, React.ReactNode>> | null | undefined) => {
   const out: Record<string, React.ReactNode> = {};
   for (const [k, v] of Object.entries(errors || {})) if (shows(v)) out[pathKey(k)] = v;
@@ -206,7 +209,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
     let output: unknown = nested;
     if (L.schema) {
       const r = await L.schema['~standard'].validate(nested);
-      if (r.issues) { for (const i of r.issues) { const k = issueKey(i.path); if (!(k in issues)) issues[k] = i.message; } }
+      if (r.issues) { for (const i of r.issues) { const k = issueKey(i.path); if (!has(issues, k)) issues[k] = i.message; } }
       else output = r.value;
     }
     // The schema's words win; a constraint it doesn't cover (maxLength, type="email") still counts.
@@ -214,7 +217,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
     if (el) for (const c of Array.from(el.elements) as HTMLInputElement[]) {
       if (!c.name || !c.willValidate || c.validity.valid || c.validity.customError) continue;
       const k = pathKey(c.name);
-      if (!(k in issues)) issues[k] = problemText(c, L.say, L.locale) || c.validationMessage;
+      if (!has(issues, k)) issues[k] = problemText(c, L.say, L.locale) || c.validationMessage;
     }
     live.current.issues = issues;
     return { issues, output };
@@ -222,7 +225,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
 
   // A check's answer for the value a field has now: from before, from one running, or a new one.
   const check = React.useCallback((k: string, flat: FlatValues): Promise<React.ReactNode> | null => {
-    const fn = latestRef.current.checks && latestRef.current.checks[k];
+    const fn = at(latestRef.current.checks, k);
     if (!fn) return null;
     const L = live.current, value = flat.get(k), v = stamp(value);
     const known = L.found.get(k);
@@ -248,7 +251,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
     const L = live.current, next: Record<string, React.ReactNode> = {};
     const gone: string[] = [];
     for (const k of keys) {
-      const own = L.issues[k];
+      const own = at(L.issues, k);
       if (shows(own)) { next[k] = own; L.eager.add(k); continue; }
       const known = L.found.get(k);
       if (known && known.value === stamp(flat.get(k)) && shows(known.message)) { next[k] = known.message; L.eager.add(k); continue; }
@@ -269,7 +272,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
     if (run !== L.run) return;
     showFor(keys, flat);
     for (const k of keys) {
-      if (shows(L.issues[k]) || !(latestRef.current.checks && latestRef.current.checks[k])) continue;
+      if (shows(at(L.issues, k)) || !at(latestRef.current.checks, k)) continue;
       const known = L.found.get(k);
       if (known && known.value === stamp(flat.get(k))) continue;
       window.clearTimeout(L.waits.get(k));
@@ -366,7 +369,7 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
   const everything = React.useCallback(async (flat: FlatValues, keys?: readonly string[]) => {
     const res = await validate(flat);
     const issues = { ...res.issues };
-    const names = Object.keys(latestRef.current.checks || {}).filter((k) => flat.has(k) && !shows(issues[k]) && (!keys || keys.indexOf(k) >= 0));
+    const names = Object.keys(latestRef.current.checks || {}).filter((k) => flat.has(k) && !shows(at(issues, k)) && (!keys || keys.indexOf(k) >= 0));
     const answers = await Promise.all(names.map((k) => Promise.resolve(check(k, flat))));
     names.forEach((k, i) => { if (shows(answers[i])) issues[k] = answers[i]; });
     const bad = Object.keys(issues).filter((k) => shows(issues[k]) && (!keys || keys.indexOf(k) >= 0));
@@ -473,8 +476,8 @@ function FormRender<S extends StandardSchemaV1 | undefined = undefined>({ ref, s
   }, [warnUnsaved, st.dirty, st.submitting]);
 
   const errorsValue: FormErrorsValue = {
-    message: (name) => { const k = pathKey(name); return shows(st.shown[k]) ? st.shown[k] : shows(st.server[k]) ? st.server[k] : null; },
-    clear: (name) => { const k = pathKey(name); patch((s) => (k in s.server ? { server: without(s.server, k) } : null)); },
+    message: (name) => { const k = pathKey(name), a = at(st.shown, k), b = at(st.server, k); return shows(a) ? a : shows(b) ? b : null; },
+    clear: (name) => { const k = pathKey(name); patch((s) => (has(s.server, k) ? { server: without(s.server, k) } : null)); },
     place,
     list: () => (st.failed ? list() : []),
     version: st.version,

@@ -38,6 +38,11 @@ afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); }
 const Wrap = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US"><div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>{children}</div></SerupaProvider>;
 
 describe('PhoneInput', () => {
+  test('countries without the locale\'s country or the US: the first of them is picked, not a US the menu doesn\'t offer', async () => {
+    await render(<SerupaProvider locale="en-US"><form><PhoneInput id="cl" aria-label="Phone" countries={['ID', 'SG']} name="phone" /></form></SerupaProvider>);
+    expect(code('cl')).toBe('ID');
+  });
+
   test('a press on the box past the number field focuses it with the caret at the end; a disabled box stays put (GG2)', async () => {
     await render(<Wrap><PhoneInput id="bx" size="lg" aria-label="Phone" defaultCountry="US" defaultValue="+12015550123" />
       <PhoneInput id="bx-off" size="lg" aria-label="Off" disabled /><button id="bx-away">away</button></Wrap>);

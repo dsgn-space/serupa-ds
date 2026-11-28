@@ -39,15 +39,18 @@ const grouped = (t: string, mark: string) => {
 export function parseNumber(text: string, locale?: string): number | null | undefined {
   const sym = symbolsOf(locale), { group, decimal } = sym;
   // NFKC first: a Japanese or Chinese IME in full-width mode types "－１，５００．５", which is -1500.5 (L8E1).
-  const s = arabic(latinDigits(text.normalize('NFKC')), sym).replace(/[\u200e\u200f\u061c]/g, '').replace(/\u2212/g, '-').replace(SPACE, '');
+  const s = arabic(latinDigits(text.normalize('NFKC')), sym).replace(/[\u200e\u200f\u061c]/g, '').replace(/\u2212/g, '-').replace(SPACE, ' ').replace(/ +/g, ' ').trim();
   if (s === '') return null;
   // No number anyone types is this long, and the split below backtracks on a long one: a pasted log line of 64k
   // characters took seconds per keystroke (GR277).
-  if (s.length > MAX_LENGTH) return undefined;
+  if (s.replace(/ /g, '').length > MAX_LENGTH) return undefined;
   // Text around the number (Rp, $, €, %, a minus) is fine; letters inside it are not. The text may hold dots away
   // from the digits, as unit abbreviations do ("กม.", "कि.मि.", "கி.மீ.").
-  const parts = /^((?:[^0-9]*[^0-9.,'\u2019])?)([0-9.,'\u2019]*)((?:[^0-9.,'\u2019][^0-9]*)?)$/.exec(s);
-  const [, before = '', digits = '', after = ''] = parts || [];
+  // Spaces stay until the number is found, so the dot of a prefix ("Rs. 100", "Rp. 1.500") isn't read as its decimal
+  // mark; spaces inside the digits group them ("1 500" in fr-FR) and go.
+  const parts = /^((?:[^0-9]*[^0-9.,'\u2019])?)((?:[0-9.,'\u2019](?:[0-9.,'\u2019 ]*[0-9.,'\u2019])?)?)((?:[^0-9.,'\u2019][^0-9]*)?)$/.exec(s);
+  const [, before = '', spaced = '', after = ''] = parts || [];
+  const digits = spaced.replace(/ /g, '');
   if (!parts || !/[0-9]/.test(digits)) return undefined;
   // A minus before or after the number ("1234.5-"), or accounting parentheses ("(Rp 1.500)"), make it negative.
   const neg = before.includes('-') || after.includes('-') || (before.includes('(') && after.includes(')'));

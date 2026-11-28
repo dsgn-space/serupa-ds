@@ -89,6 +89,7 @@ function byLength(options: readonly MentionOption[]): Named[] {
 // while an "@Ayu" further on still counts.
 function mentionSpans(text: string, longest: readonly Named[], trigger: string): { start: number; end: number; option: MentionOption }[] {
   const spans: { start: number; end: number; option: MentionOption }[] = [];
+  if (!trigger) return spans;   // an empty trigger is found everywhere and never moves on
   for (let at = text.indexOf(trigger); at >= 0; at = text.indexOf(trigger, at + trigger.length)) {
     const o = longest.find((x) => x.label && text.startsWith(x.label, at + trigger.length) && !/[\p{L}\p{N}]/u.test(text.charAt(at + trigger.length + x.label.length)));
     if (o) spans.push({ start: at, end: at + trigger.length + o.label.length, option: o.option });
@@ -152,7 +153,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
   const [active, setActive] = React.useState(0);
   const caret = React.useRef<number | null>(null);
   // The textarea's value comes from state, so a form reset puts the text back to defaultValue here.
-  useFormReset(field, () => { if (!controlled) setOwn(defaultValue || ''); setQuery(null); }, rest.form);   // where to put the caret after a pick, once the text is rendered
+  useFormReset(field, () => { if (!controlled) setOwn(defaultValue || ''); setQuery(null); setDismissed(-1); }, rest.form);   // where to put the caret after a pick, once the text is rendered
   const base = domId('srp-mention', React.useId()), listId = base + '-list';
   const fieldLabel = React.useContext(FieldContext)?.labelId;
 
@@ -188,7 +189,9 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     const next = at < 0 ? null : mentionQuery(el.value, at, trigger);
     setQuery((was) => (was && next && was.start === next.start && was.text === next.text ? was : next));
     if (!next || (query && next.start !== query.start)) setActive(0);
-    if (!next) setDismissed(-1);   // that mention is gone (its @ deleted, or the caret left it): a new @ there opens the list
+    // That mention is gone (its trigger deleted, or the caret back at or before it): a new trigger there opens the list.
+    // Words typed after it (a space, then more) don't bring it back.
+    if (dismissed >= 0 && (at <= dismissed || !el.value.startsWith(trigger, dismissed))) setDismissed(-1);
   };
   const change = (next: string) => { if (!controlled) setOwn(next); if (onValueChange) onValueChange(next); };
 
@@ -201,6 +204,7 @@ function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttr
     const next = text.slice(0, q.start) + put + after;
     caret.current = q.start + put.length + (after.startsWith(' ') ? 1 : 0);
     setQuery(null);
+    setDismissed(q.start);   // a picked mention is done: typing on after it ("@Ayu Lestari hello") doesn't search again
     change(next);
     if (onMention) onMention(o);
   };
