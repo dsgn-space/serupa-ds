@@ -59,7 +59,7 @@ describe('Form', () => {
     const errors = vi.spyOn(console, 'error');
     await render(<Form id="ts" defaultValues={{ other: 'x' }}><Field label="Method" name="toString"><Input name="toString" /></Field></Form>);
     const input = document.querySelector('input[name="toString"]') as HTMLInputElement;
-    expect([input.getAttribute('aria-invalid'), input.value, document.querySelector('.srp-field__error')]).toEqual([null, '', null]);
+    expect([input.getAttribute('aria-invalid'), input.value, input.getAttribute('aria-errormessage')]).toEqual([null, '', null]);
     expect(errors).not.toHaveBeenCalled();
     errors.mockRestore();
   });
