@@ -34,9 +34,9 @@ export const SizesAndShapes: Story = {
     <IconButton icon="edit" label="Edit" variant="secondary" size="sm" />
     <IconButton icon="edit" label="Edit" variant="secondary" />
     <IconButton icon="edit" label="Edit" variant="secondary" size="lg" />
-    <IconButton icon="edit" label="Edit" variant="secondary" size="sm" shape="round" />
-    <IconButton icon="edit" label="Edit" variant="secondary" shape="round" />
-    <IconButton icon="edit" label="Edit" variant="secondary" size="lg" shape="round" />
+    <IconButton icon="edit" label="Edit" variant="secondary" size="sm" shape="circle" />
+    <IconButton icon="edit" label="Edit" variant="secondary" shape="circle" />
+    <IconButton icon="edit" label="Edit" variant="secondary" size="lg" shape="circle" />
   </div>,
 };
 
@@ -55,7 +55,7 @@ export const AsALink: Story = {
   name: 'As a link',
   render: () => <div className="flex gap-3 items-center">
     <IconButton icon="open_in_new" label="Open the docs" variant="outline" href="#docs" />
-    <IconButton icon="help" label="Help" href="#help" shape="round" />
+    <IconButton icon="help" label="Help" href="#help" shape="circle" />
   </div>,
 };
 

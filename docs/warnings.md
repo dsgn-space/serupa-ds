@@ -142,6 +142,10 @@ A controlled Select got a `value` that none of its options has, so the `<select>
 
 A locale-dependent component (a date, a number) rendered on the server without a locale, so the server HTML uses en-US and the page switches to the browser's locale after hydration, which shows as a flash. Set `<SerupaProvider locale>` from the request. See Localization.
 
+## shape-round
+
+IconButton or ImageCropper was given `shape="round"`. The value is now `"circle"`, the name Avatar and Skeleton use for the same shape, so one word means one thing across the components. `"round"` still draws a circle, and goes in the next major release. Write `shape="circle"`.
+
 ## shortcut-keys
 
 useShortcut was given keys that aren't one key with its modifiers, such as `["G", "I"]` (two keys can't be pressed together) or `["mod"]` alone, so the shortcut isn't set up and isn't listed in KeyboardShortcuts. Give one key, plus `mod`, `ctrl`, `cmd`, `alt` or `shift` if it needs them: `["mod", "K"]`, `["?"]`.

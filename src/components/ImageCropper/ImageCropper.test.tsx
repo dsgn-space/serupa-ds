@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
@@ -233,9 +233,19 @@ describe('ImageCropper', () => {
     await expect.element(page.getByRole('group', { name: 'Profile photo' })).toBeInTheDocument();
   });
 
-  test('round: the picture outside the circle is dimmed with the overlay, and the circle is ringed', async () => {
+  test('shape="round", the old name for "circle", still dims outside a circle and warns in development', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const calls: CropArea[] = [];
+      await render(<ImageCropper aria-label="Photo" src={WIDE} shape="round" onCropChange={(a) => calls.push(a)} />);
+      await loaded(calls);
+      expect([frame().dataset.shape, warn.mock.calls.filter(([m]) => /ImageCropper: shape="round" is now shape="circle"/.test(String(m))).length]).toEqual(['round', 1]);
+    } finally { warn.mockRestore(); }
+  });
+
+  test('circle: the picture outside the circle is dimmed with the overlay, and the circle is ringed', async () => {
     const calls: CropArea[] = [];
-    await render(<ImageCropper aria-label="Photo" src={WIDE} shape="round" onCropChange={(a) => calls.push(a)} />);
+    await render(<ImageCropper aria-label="Photo" src={WIDE} shape="circle" onCropChange={(a) => calls.push(a)} />);
     await loaded(calls);
     const mask = frame().querySelector('img')!.nextElementSibling as HTMLElement;
     expect([css(mask).borderTopLeftRadius !== '0px', css(mask).boxShadow !== 'none', css(mask).outlineStyle]).toEqual([true, true, 'solid']);

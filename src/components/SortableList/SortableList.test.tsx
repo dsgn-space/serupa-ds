@@ -18,7 +18,7 @@ function List({ moves, disabled }: { moves?: Array<{ from: number; to: number }>
   const [items, setItems] = React.useState(ITEMS);
   return <div style={{ width: '320px' }}><SortableList id="sl" aria-label="Missions" items={items} getKey={(i) => i.id} getLabel={(i) => i.name} disabled={disabled}
     renderItem={(i, s) => <span data-index={s.index} data-dragging={s.dragging || undefined}>{i.name}</span>}
-    onReorder={(next, m) => { moves?.push(m); setItems(next); }} /><button id="after">After</button></div>;
+    onReorder={(next, m) => { moves?.push({ from: m.from, to: m.to }); setItems(next); }} /><button id="after">After</button></div>;
 }
 
 describe('SortableList', () => {
@@ -57,6 +57,16 @@ describe('SortableList', () => {
     await userEvent.keyboard('{ArrowDown}');
     expect(names().slice(0, 2)).toEqual(['Item 1', 'Item 0']);
     expect(drawn).toBeLessThanOrEqual(2);
+  });
+
+  test('onReorder says which item moved, as Kanban\'s onMove does: { item, from, to }', async () => {
+    const got: Array<{ item: Item; from: number; to: number }> = [];
+    await render(<SortableList id="sl" aria-label="Missions" items={ITEMS} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={(_, m) => { got.push(m); }} />);
+    handle('Gemini').focus();
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard(' ');
+    expect(got).toEqual([{ item: ITEMS[1], from: 1, to: 2 }]);
   });
 
   test('keyboard: Space picks up, the arrows move (focus stays on the handle), Space drops and reports the move once; each step is announced', async () => {

@@ -11,6 +11,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { useServerStyles } from '../../internal/serverStyles';
 import * as icons from '../../material/builtin';
 import { Icon } from '../Icon/Icon';
+import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Slider } from '../Slider/Slider';
 import { en as words } from './labels';
@@ -29,9 +30,10 @@ export interface ImageCropperProps extends Omit<React.HTMLAttributes<HTMLDivElem
   src: string;
   /** The crop's shape as width over height: 1 for a square or circle (default), 16 / 9 for a cover, 3 / 4 for a portrait. */
   aspect?: number | undefined;
-  /** 'rect' (default), or 'round' for a profile photo: the picture outside a circle (an ellipse, with another aspect)
-   *  is dimmed. The crop itself is still the rectangle around it, as a round avatar is drawn from a square picture. */
-  shape?: 'rect' | 'round' | undefined;
+  /** 'rect' (default), or 'circle' for a profile photo: the picture outside a circle (an ellipse, with another aspect)
+   *  is dimmed. The crop itself is still the rectangle around it, as a round avatar is drawn from a square picture.
+   *  'round' is the old name for 'circle': it still works, with a warning in development, until the next major release. */
+  shape?: 'rect' | 'circle' | 'round' | undefined;
   /** The zoom at first: 1 (default) is the whole width or height of the picture in the frame, 2 is half of it. */
   defaultZoom?: number | undefined;
   /** How far in it zooms. Default: 4. */
@@ -109,6 +111,7 @@ type Gesture = { x: number; y: number; cx: number; cy: number; moved: boolean };
 function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);
   const nameRef = useNameCheck('ImageCropper', NAME_HOW.group);
+  if (process.env.NODE_ENV !== 'production' && props.shape === 'round') warnOnce('shape-round', 'ImageCropper: shape="circle" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:ImageCropper');
   const fieldLabel = useFieldLabel(props.id);
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
@@ -250,7 +253,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
       className={cn('srp-image-cropper', disabled && 'srp-image-cropper--disabled', props.className)} data-disabled={disabled ? '' : undefined} data-component="image-cropper"
       style={{ ...props.style, '--srp-image-cropper-aspect': String(aspect) } as React.CSSProperties}>
       <FieldContext.Provider value={null}>
-        <div ref={frame} className="srp-image-cropper__frame" data-shape={props.shape === 'round' ? 'round' : 'rect'}
+        <div ref={frame} className="srp-image-cropper__frame" data-shape={props.shape === 'circle' || props.shape === 'round' ? 'round' : 'rect'}
           data-state={failed ? 'error' : area ? 'ready' : 'loading'} data-dragging={dragging || undefined}
           tabIndex={live ? 0 : undefined} role={live ? 'application' : undefined} aria-label={live ? L.cropArea : undefined} aria-describedby={live ? base + '-how' : undefined}
           onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onKeyDown={onKey}>

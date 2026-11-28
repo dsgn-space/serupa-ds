@@ -10,7 +10,7 @@
 <script>
   var T = window.Serupa, h = React.createElement;
   var PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600"><rect width="900" height="600" fill="#bae6fd"/><path d="M0 420 Q220 320 450 400 T900 380 V600 H0z" fill="#65a30d"/><circle cx="600" cy="230" r="80" fill="#f5d0a9"/></svg>');
-  ReactDOM.createRoot(document.getElementById('root')).render(h(T.ImageCropper, { src: PIC, shape: 'round', 'aria-label': 'Profile photo' }));
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.ImageCropper, { src: PIC, shape: 'circle', 'aria-label': 'Profile photo' }));
 </script>
 </body>
 </html>

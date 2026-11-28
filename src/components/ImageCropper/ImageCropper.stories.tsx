@@ -12,7 +12,7 @@ const STRIP = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www
 const meta = {
   title: 'Components/Forms/ImageCropper',
   component: ImageCropper,
-  args: { src: PHOTO, shape: 'round', 'aria-label': 'Profile photo' },
+  args: { src: PHOTO, shape: 'circle', 'aria-label': 'Profile photo' },
   // '' (the same as 'anonymous') would be a radio with no name in the controls.
   argTypes: { crossOrigin: { control: 'inline-radio', options: ['anonymous', 'use-credentials'] } },
 } satisfies Meta<typeof ImageCropper>;

@@ -10,7 +10,7 @@ import { Field, ImageCropper, cropImage, type CropArea } from "@diki-stwn/serupa
 const [area, setArea] = React.useState<CropArea | null>(null);
 
 <Field label="Profile photo" hint="Shown round, beside your name.">
-  <ImageCropper src={URL.createObjectURL(file)} shape="round" onCropChange={setArea} />
+  <ImageCropper src={URL.createObjectURL(file)} shape="circle" onCropChange={setArea} />
 </Field>
 
 // on Save: a 256px square PNG of the crop
@@ -39,7 +39,7 @@ Drawn from the `Playground` story.
 ## Usage
 
 - Name it: a [Field](../Field/README.md) label ("Profile photo") or `aria-label`.
-- Match `aspect` and `shape` to where the picture goes: `shape="round"` for an avatar, `aspect={16 / 9}` for a cover. A round crop is still a square picture; the avatar draws the circle.
+- Match `aspect` and `shape` to where the picture goes: `shape="circle"` for an avatar, `aspect={16 / 9}` for a cover. A round crop is still a square picture; the avatar draws the circle.
 - `onCropChange(area)` fires once the picture loads (centered, as large as fits) and after every move or zoom, with `{ x, y, width, height }` in the picture's own whole pixels. Keep the last one for Save.
 - `cropImage(src, area, { width, type, quality })` resolves to a Blob of the crop, `width` pixels wide (default: the crop's own width). A picture from another site needs CORS: give it `crossOrigin="anonymous"` here and in `cropImage`'s options, or crop on the server.
 - The picture always covers the frame, so a crop never has an empty edge, and zoom 1 is as far out as it goes.
@@ -73,7 +73,7 @@ Drawn from the `Playground` story.
 | --- | --- | --- | --- |
 | `src` | `string` | | The picture: a URL, or an object URL of a picked file. A new one starts over. |
 | `aspect` | `number` | `1` | The crop's width over its height: `16 / 9`, `3 / 4`. |
-| `shape` | `'rect' \| 'round'` | `'rect'` | `'round'` dims the picture outside a circle (an ellipse with another aspect). |
+| `shape` | `'rect' \| 'circle'` | `'rect'` | `'circle'` dims the picture outside a circle (an ellipse with another aspect). `'round'`, the old name, still works until the next major release. |
 | `crop` | `CropArea \| null` | | The crop (controlled), in the picture's pixels; use with `onCropChange`. |
 | `defaultCrop` | `CropArea \| null` | | The crop at first (uncontrolled), such as a saved one; centered when left out. |
 | `defaultZoom` | `number` | `1` | The zoom at first; 1 shows the whole width or height. |

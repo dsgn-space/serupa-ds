@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '../../internal/warn';
 import type { IconSource } from '../Icon/Icon';
 import { cn } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from '../Button/Button';
@@ -12,8 +13,9 @@ interface IconButtonOwnProps {
   icon: IconSource;
   /** What the button does: its name for screen readers (aria-label), and a Tooltip on hover and keyboard focus. Required: an icon alone has no name. */
   label: string;
-  /** 'square' (default, the Button's corners) or 'round'. */
-  shape?: 'square' | 'round' | undefined;
+  /** 'square' (default, the Button's corners) or 'circle', as Avatar and Skeleton name it. 'round' is the old name for
+   *  'circle': it still works, with a warning in development, until the next major release. */
+  shape?: 'square' | 'circle' | 'round' | undefined;
   /** Leaves out the tooltip, for when visible text next to it already shows the label. A Tooltip of your own around it (aria-describedby or aria-labelledby) replaces it by itself. Default: false. */
   hideTitle?: boolean | undefined;
 }
@@ -26,7 +28,8 @@ type IconButtonElement = HTMLButtonElement | HTMLAnchorElement;
 
 function IconButtonRender({ ref, ...props }: IconButtonProps & React.RefAttributes<IconButtonElement>) {
   const { icon, label, shape, hideTitle, className, ...rest } = props;
-  const round = shape === 'round';
+  const round = shape === 'circle' || shape === 'round';
+  if (process.env.NODE_ENV !== 'production' && shape === 'round') warnOnce('shape-round', 'IconButton: shape="circle" is now shape="circle", the name Avatar and Skeleton use. "round" goes in the next major release.', 'shape-round:IconButton');
   // The label shows in a Tooltip on hover and on keyboard focus, which a native title never does. None when a Tooltip
   // of yours (or anything else) already describes or names it, with hideTitle, or with a title of your own.
   const own = hideTitle || rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
@@ -39,7 +42,7 @@ function IconButtonRender({ ref, ...props }: IconButtonProps & React.RefAttribut
 }
 
 /* IconButton: a Button that shows only an icon, with a required label (its accessible name and a title tooltip).
-   Variant defaults to "ghost"; shape "square" (default) or "round". Every other Button prop (size, destructive,
+   Variant defaults to "ghost"; shape "square" (default) or "circle". Every other Button prop (size, destructive,
    loading, href, onClick, ref…) works the same. */
 /** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
 export const IconButton = /* @__PURE__ */ named('IconButton', IconButtonRender);
