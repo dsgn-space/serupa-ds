@@ -657,11 +657,11 @@ describe('Toast: interrupted exits and a hidden page', () => {
   test('the same title with different descriptions made of elements is two toasts; an action that shows a new toast under its own id keeps it', async () => {
     await render(<App />);
     React.act(() => { toast({ title: 'Upload failed', description: <span>file-a.png</span>, duration: 0 }); toast({ title: 'Upload failed', description: <span>file-b.png</span>, duration: 0 }); });
-    expect(toasts().map((x) => x.querySelector('.srp-toast__count'))).toEqual([null, null]);
+    expect(toasts().map((x) => /×\d/.test(x.textContent ?? ''))).toEqual([false, false]);
     expect(toasts().length).toBe(2);
     React.act(() => toast.dismiss());
     React.act(() => { toast({ id: 'step', title: 'Step 1', autoDismiss: false, action: { label: 'Next', onClick: () => { toast({ id: 'step', title: 'Step 2', autoDismiss: false }); } } }); });
-    await userEvent.click(q('.srp-toast__action'));
+    await userEvent.click([...document.querySelectorAll('button')].find((b) => b.textContent === 'Next')!);
     await expect.poll(() => titles()).toEqual(['Step 2']);
   });
 
