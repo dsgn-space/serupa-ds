@@ -222,7 +222,7 @@ function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLIma
         ? <button type="button" className="srp-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => { const i = img.current; setViewing({ dark: shownDark(i, darkSrc), natural: i && i.naturalWidth > 0 ? [i.naturalWidth, i.naturalHeight] : null }); }}>{shown}</button>
         : shown}
       {failed}
-      {onRemove ? <IconButton className="srp-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.srp-image', '.srp-image__remove')} /> : null}
+      {onRemove ? <IconButton className="srp-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="circle" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.srp-image', '.srp-image__remove')} /> : null}
       {viewable ? (
         <Dialog open={open} onOpenChange={(o) => { if (!o) setViewing(null); }} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="srp-image__viewer">
           {viewing ? <Full src={fullSrc || viewing.dark || largest(rest.srcSet) || src} alt={alt} fallback={fallback} shape={w > 0 && h > 0 ? [w, h] : viewing.natural} /> : null}

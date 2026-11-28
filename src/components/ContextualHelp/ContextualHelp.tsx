@@ -41,7 +41,7 @@ function ContextualHelpRender({ ref, ...props }: ContextualHelpProps & React.Ref
   const info = variant === 'info';
   const name = label || (info ? sds.labels.contextualInfo : sds.labels.contextualHelp);
   const trigger = (
-    <IconButton className={cn('srp-contextual-help__button', info && 'srp-contextual-help__button--info')} shape="round" size="sm"
+    <IconButton className={cn('srp-contextual-help__button', info && 'srp-contextual-help__button--info')} shape="circle" size="sm"
       icon={<Icon icon={info ? icons.Info : icons.Help} />} label={name} />
   );
   return (

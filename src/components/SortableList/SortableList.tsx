@@ -23,8 +23,9 @@ export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLULis
   getLabel: (item: T) => string;
   /** What each row shows, after its handle. dragging is true for the item being moved. */
   renderItem: (item: T, state: { index: number; dragging: boolean }) => React.ReactNode;
-  /** Called with the new order when an item is dropped somewhere new, and which positions it moved between (from 0). */
-  onReorder: (items: T[], move: { from: number; to: number }) => void;
+  /** Called with the new order when an item is dropped somewhere new: the item, and the positions it moved between
+   *  (from 0). The same shape as Kanban's onMove, whose from and to also name the column. */
+  onReorder: (items: T[], move: { item: T; from: number; to: number }) => void;
   /** Shows the items without handles. */
   disabled?: boolean | undefined;
   /** The word before an item's name on its handle. Default: "Reorder" (from SerupaProvider labels). */
@@ -70,7 +71,7 @@ function SortableListRender({ ref, ...props }: SortableListProps<unknown> & Reac
     const name = label(items[at]);
     if (drop) {
       announce(sds.labels.reorderDropped(name, d.to + 1, total));
-      if (d.to !== at) props.onReorder(move(items, at, d.to), { from: at, to: d.to });
+      if (d.to !== at) props.onReorder(move(items, at, d.to), { item: items[at], from: at, to: d.to });
     } else announce(sds.labels.reorderCancelled(name, at + 1, total));
   };
 

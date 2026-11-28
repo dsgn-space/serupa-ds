@@ -162,7 +162,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                     </Field>
                     {preview ? (
                       <Field label="Frame your photo" hint="Drag it, or use the arrow keys, to choose what shows in the circle; the slider zooms.">
-                        <ImageCropper key={preview} src={preview} aspect={1} shape="round" onCropChange={setCrop} />
+                        <ImageCropper key={preview} src={preview} aspect={1} shape="circle" onCropChange={setCrop} />
                       </Field>
                     ) : null}
                     <Field label="Name" id="profile-name" error={problems.name} required>

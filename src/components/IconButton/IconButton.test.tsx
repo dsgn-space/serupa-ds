@@ -17,7 +17,7 @@ let clicks = 0;
 function Icons({ ibRef }: { ibRef?: React.Ref<HTMLButtonElement | HTMLAnchorElement> }) {
   return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
     <IconButton id="ib" icon="more_vert" label="More actions" onClick={() => { clicks++; }} ref={ibRef} className="extra" />
-    <IconButton id="ibr" icon="edit" label="Edit" shape="round" variant="secondary" size="lg" />
+    <IconButton id="ibr" icon="edit" label="Edit" shape="circle" variant="secondary" size="lg" />
     <IconButton id="ibl" icon="open_in_new" label="Open" href="#x" />
     <IconButton id="ibt" icon="close" label="Close" hideTitle destructive />
     <IconButton id="ibtitle" icon="close" label="Close" title="Close (Esc)" />
@@ -36,11 +36,18 @@ describe('IconButton', () => {
     expect(box('ib').slice(2)).toEqual([32, 32]);
   });
 
-  test('shape round: a circle; variant and size pass through to Button', async () => {
+  test('shape circle: a circle; variant and size pass through to Button', async () => {
     await render(<Icons />);
     const s = css(el('ibr'));
     expect(parseFloat(s.borderTopLeftRadius)).toBeGreaterThanOrEqual(22);
     expect([s.width, s.height, el('ibr').dataset.variant]).toEqual(['44px', '44px', 'secondary']);
+  });
+
+  test('shape="round", the old name for "circle", still draws a circle and warns in development', async () => {
+    const before = warns.length;
+    await render(<IconButton id="iold" icon="edit" label="Edit" variant="secondary" shape="round" />);
+    expect([parseFloat(css(el('iold')).borderTopLeftRadius) >= 16, el('iold').dataset.shape]).toEqual([true, 'round']);
+    expect(warns.slice(before).filter((m) => /shape="round" is now shape="circle"/.test(m))).toHaveLength(1);
   });
 
   test('with href it is a link; hideTitle leaves out the tooltip; a given title wins; destructive passes through', async () => {

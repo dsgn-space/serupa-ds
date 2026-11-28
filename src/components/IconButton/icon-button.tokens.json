@@ -5,7 +5,7 @@
       "radius-round": {
         "$type": "dimension",
         "$value": "{radius.radius-pill}",
-        "$description": "The corners of a round icon button (shape=\"round\").",
+        "$description": "The corners of a round icon button (shape=\"circle\").",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--icon-button-radius-round"

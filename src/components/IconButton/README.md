@@ -8,7 +8,7 @@ A button that shows only an icon: a menu trigger, a close button, a toolbar acti
 import { IconButton } from '@diki-stwn/serupa-ds';
 
 <IconButton icon="more_vert" label="More actions" onClick={openMenu} />
-<IconButton icon="edit" label="Edit" variant="secondary" shape="round" />
+<IconButton icon="edit" label="Edit" variant="secondary" shape="circle" />
 <IconButton icon="delete" label="Delete file" destructive />
 <IconButton icon="open_in_new" label="Open in a new tab" href={url} target="_blank" />
 ```
@@ -31,7 +31,7 @@ import { IconButton } from '@diki-stwn/serupa-ds';
 - For a tooltip that says more than the label ("Delete file (can't be undone)"), wrap the button in your own Tooltip: it replaces the built-in one (the button then has `aria-describedby`), so only one shows.
 - Set `hideTitle` where visible text right beside the button already says the label, so the same words don't pop up next to themselves.
 - Give icon buttons in one row the same `size` and `variant`, and match the size of the buttons and fields beside them.
-- Use `shape="round"` only where round buttons are the pattern; square follows Button's corners.
+- Use `shape="circle"` only where round buttons are the pattern; square follows Button's corners.
 
 ### Do and don't
 
@@ -59,7 +59,7 @@ import { IconButton } from '@diki-stwn/serupa-ds';
 | `id` | string | none | Goes to the root `<button>`. |
 | `icon` | icon name \| element | required | A custom or Material Symbols name, or any element |
 | `label` | string | required | Its `aria-label`, and a Tooltip on hover and focus. An `aria-label` passed instead (from JavaScript, or props spread from a Button) is used as the label |
-| `shape` | `'square'` \| `'round'` | `'square'` | The Button's corners, or a circle |
+| `shape` | `'square'` \| `'circle'` | `'square'` | The Button's corners, or a circle. `'round'`, the old name for `'circle'`, still works until the next major release |
 | `hideTitle` | boolean | `false` | Leaves out the tooltip, when visible text beside it already shows the label (a Tooltip of your own replaces it by itself). |
 | `variant` | as Button | `'ghost'` | Ghost by default, the usual look for an icon on its own |
 | `surface` | as Button | none | Over a photo or a colored panel: white for dark media, black for light |
@@ -73,5 +73,5 @@ Each is an optional override: set it on the page, a container or one button. The
 <!-- token-table:start (made from icon-button.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--icon-button-radius-round` | `radius-pill` | The corners of a round icon button (shape="round"). |
+| `--icon-button-radius-round` | `radius-pill` | The corners of a round icon button (shape="circle"). |
 <!-- token-table:end -->

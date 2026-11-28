@@ -298,10 +298,10 @@ function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<H
           </div>
         </div>
         {props.arrows !== false && last > 0 ? <>
-          <IconButton className="srp-carousel__arrow srp-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" hideTitle
+          <IconButton className="srp-carousel__arrow srp-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="circle" hideTitle
             icon={<><Icon icon={icons.ChevronLeft} className="srp-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronRight} className="srp-carousel__rtl" mirror={false} /></>}
             ref={prevBtn} disabled={prevOff} onClick={() => arrow(-1)} />
-          <IconButton className="srp-carousel__arrow srp-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="round" hideTitle
+          <IconButton className="srp-carousel__arrow srp-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="circle" hideTitle
             icon={<><Icon icon={icons.ChevronRight} className="srp-carousel__ltr" mirror={false} /><Icon icon={icons.ChevronLeft} className="srp-carousel__rtl" mirror={false} /></>}
             ref={nextBtn} disabled={nextOff} onClick={() => arrow(1)} />
         </> : null}

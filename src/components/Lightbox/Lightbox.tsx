@@ -160,9 +160,9 @@ function LightboxRender({ ref, ...props }: LightboxProps & React.RefAttributes<H
           </figure>
           {count > 1 ? (
             <div className="srp-lightbox__nav">
-              <IconButton icon={prevIcon} label={sds.labels.previousImage} variant="secondary" shape="round" ref={prevNav} disabled={first} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); go(index - 1); }} />
+              <IconButton icon={prevIcon} label={sds.labels.previousImage} variant="secondary" shape="circle" ref={prevNav} disabled={first} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); go(index - 1); }} />
               <span className="srp-lightbox__count" id={countId}>{sds.labels.imageOf(index + 1, count)}</span>
-              <IconButton icon={nextIcon} label={sds.labels.nextImage} variant="secondary" shape="round" ref={nextNav} disabled={last} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); go(index + 1); }} />
+              <IconButton icon={nextIcon} label={sds.labels.nextImage} variant="secondary" shape="circle" ref={nextNav} disabled={last} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); go(index + 1); }} />
             </div>
           ) : null}
         </div>
