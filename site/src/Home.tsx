@@ -8,9 +8,12 @@ import { Badge } from '../../src/components/Badge/Badge';
 import { Button } from '../../src/components/Button/Button';
 import { Card, CardHeader } from '../../src/components/Card/Card';
 import { Heading } from '../../src/components/Heading/Heading';
+import { Icon } from '../../src/components/Icon/Icon';
 import { Progress } from '../../src/components/Progress/Progress';
 import { Select } from '../../src/components/Select/Select';
 import { Switch } from '../../src/components/Switch/Switch';
+import { Diversity3, Extension, Favorite, PartnerExchange, Target } from '../../src/material';
+import type { IconData } from '../../src/material';
 import { pages, pagesOf, sections } from './pages';
 import { InviteCard, ProjectCard, StatusBadges, WaitingAlert } from './Sample';
 import { DEVICES, Screen } from './Screen';
@@ -18,6 +21,19 @@ import { Shell } from './Shell';
 import { BRANDS, brandName, useTheme } from './theme';
 
 export const PRINCIPLES = facts.principles.filter((p) => p.name !== 'Influences');
+// Each principle's icon, by its heading on the principles page. A principle not named here shows without one.
+const PRINCIPLE_ICONS: Record<string, IconData> = { Purpose: Target, Trust: PartnerExchange, Familiarity: Extension, Inclusion: Diversity3, Craft: Favorite };
+
+/** One principle as the home and About pages list it: its icon, number, name and line. */
+export function Principle({ name, line, n }: { name: string; line: string; n: number }) {
+  const icon = PRINCIPLE_ICONS[name];
+  return <li className="site-principle">
+    {icon && <span className="site-principle__icon"><Icon icon={icon} size="lg" /></span>}
+    <span className="site-principle__n" aria-hidden="true">{String(n).padStart(2, '0')}</span>
+    <Heading level={3} className="site-principle__name">{name}</Heading>
+    <p className="site-principle__line">{line}</p>
+  </li>;
+}
 const number = (n: number) => n.toLocaleString('en');
 const STATS: Array<[string, string]> = [
   [number(pages.filter((p) => p.component).length), 'components'],
@@ -96,11 +112,7 @@ export function Home() {
       <Section id="home-principles" eyebrow="Principles" title="What every decision is held to" lead="When two of them pull apart, accessibility comes first."
         action={<Button href="/about" variant="outline" endIcon="arrow_forward">Read the story</Button>}>
         <ol className="site-principles" role="list">
-          {PRINCIPLES.map((p, i) => <li key={p.name} className="site-principle">
-            <span className="site-principle__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <Heading level={3} className="site-principle__name">{p.name}</Heading>
-            <p className="site-principle__line">{p.line}</p>
-          </li>)}
+          {PRINCIPLES.map((p, i) => <Principle key={p.name} name={p.name} line={p.line} n={i + 1} />)}
         </ol>
       </Section>
 
