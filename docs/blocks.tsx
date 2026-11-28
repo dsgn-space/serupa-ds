@@ -26,6 +26,7 @@ import since from './since.json';
 import { sinceText, type Since } from './since';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 import { DoDont, doDontAt } from './doDont';
+import { ComponentBudgets } from './health';
 // What the blocks need from every component folder at once (each one's docs page id, other names, label uses, tokens)
 // is read once by tools/build/registry.mjs, not here: a glob of every README, story file and stylesheet made each
 // page ask a development server for some 650 files.
@@ -127,6 +128,7 @@ export function Guide({ source }: { source: string }) {
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
+    {name && <ComponentBudgets name={name} />}
     {name && <ComponentChanges name={name} />}
   </>;
 }
