@@ -30,5 +30,7 @@ describe('steps', () => {
     expect([snap(5, 0, 10, 0), snap(5, 0, 10, -2), snap(5, 0, 10, Infinity), snap(5, 0, 10, NaN)]).toEqual([5, 5, 5, 5]);
     expect([snap(15, 0, 10, 0), snap(-3, 0, 10, Infinity), snap(5, 10, 0, 1)]).toEqual([10, 0, 5]);
     expect([snap(NaN, 2, 10, 1), snap(Infinity, 2, 10, 1), snap(-Infinity, 2, 10, 1)]).toEqual([2, 10, 2]);
+    // Inverted bounds hold for the ends too: NaN and -Infinity land on the lower one, Infinity on the last grid point.
+    expect([snap(NaN, 10, 2, 3), snap(-Infinity, 10, 2, 3), snap(Infinity, 10, 2, 3)]).toEqual([2, 2, 8]);
   });
 });

@@ -31,6 +31,11 @@ const skipList = fs.readFileSync(path.join(PROJECT, 'tools', 'test', 'baseline-c
 t('every function on the compiler\'s skip list is on its component', plain.components.reduce((s, c) => s + c.compilerSkipped.length, 0) === skipList.length, `${skipList.length} on the list`);
 const unbudgeted = plain.components.filter((c) => !c.size.budget);
 t('each component has its size budget', !unbudgeted.length, unbudgeted.map((c) => c.name).join(', '));
+const rb = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tools', 'test', 'render-budgets.json'), 'utf8'));
+const phone = plain.components.find((c) => c.name === 'PhoneInput'), plainOne = plain.components.find((c) => !Object.keys(rb.ownMount).some((k) => k.startsWith(`${c.name}/`)));
+t('each component has the render budgets its stories are held to, the highest of a story\'s own among them (PhoneInput\'s ByArea)',
+  plain.components.every((c) => c.render.mount === rb.mount && c.render.update === rb.update) && phone?.render.mountMost === Math.max(...Object.values(rb.ownMount)) && plainOne?.render.mountMost === rb.mount,
+  JSON.stringify(phone?.render));
 t('no run results in a repository-only file', plain.totals.coverage === null && plain.totals.a11y === null && plain.issues === null && plain.components.every((c) => !c.coverage && !c.a11y && !c.size.measured));
 
 // A run's results, made up: two files of the first component, one of the second, and stories of both.

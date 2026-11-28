@@ -46,6 +46,13 @@ function budgets(root) {
   return out;
 }
 
+/** Each component's render budgets (tools/test/render-budgets.json, which mountTime.test.tsx holds every story to):
+ *  the mount of each story, the highest a story of it is allowed when one has its own, and the render again. */
+function renderBudgets(b, n) {
+  const own = Object.entries(b.ownMount).filter(([k]) => k.startsWith(`${n}/`)).map(([, v]) => v);
+  return { mount: b.mount, mountMost: own.length ? Math.max(b.mount, ...own) : b.mount, update: b.update };
+}
+
 /** The compiler's skip list: each component's functions the React Compiler leaves as they are. */
 function compilerSkips(root) {
   const f = path.join(root, 'tools', 'test', 'baseline-compiler-skips.txt');
@@ -125,6 +132,7 @@ export function collectHealth(root = ROOT, { coverage, size, a11y, issues = null
   const names = folders(root).filter((n) => fs.existsSync(path.join(root, 'src', 'components', n, 'index.ts')));
   const bud = budgets(root);
   const skips = compilerSkips(root);
+  const renderBud = readJson(path.join(root, 'tools', 'test', 'render-budgets.json'));
   const cov = exists(coverage) ? readJson(coverage) : null;
   const covBy = cov ? coverageByFolder(cov) : {};
   const sizes = exists(size) ? readJson(size) : null;
@@ -142,6 +150,7 @@ export function collectHealth(root = ROOT, { coverage, size, a11y, issues = null
       ariaBaseline: fs.existsSync(path.join(aria, `${n}.yml`)),
       size: { budget: bud[n] ? { alone: bud[n].alone ?? null, css: bud[n].css ?? null } : null,
         measured: sizes ? { alone: sizes.alone?.[n] ?? null, css: sizes.css?.[n] ?? null } : null },
+      render: renderBudgets(renderBud, n),
       coverage: covBy[n] || null,
       a11y: axBy[n] || null,
       compilerSkipped: skips[n] || [],

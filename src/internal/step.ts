@@ -17,11 +17,12 @@ export const roundTo = (v: number, places: number) => Number(v.toFixed(Math.min(
 export function snap(v: number, min: number, max: number, step: number): number {
   const lo = Number.isFinite(min) ? min : 0;
   const hi = Number.isFinite(max) ? max : lo;
-  const [a, b] = lo <= hi ? [lo, hi] : [hi, lo];
+  const a = Math.min(lo, hi), b = Math.max(lo, hi);
   const s = Number.isFinite(step) && step > 0 ? step : 1;
   const places = gridPlaces(a, s);
   const top = roundTo(Math.floor(roundTo((b - a) / s, 9)) * s + a, places);
-  if (!Number.isFinite(v)) return v > 0 ? top : a;
+  // Infinity and -Infinity land on top and a below; NaN would come out as NaN.
+  if (Number.isNaN(v)) return a;
   const n = roundTo(Math.round((v - a) / s) * s + a, places);
   return Math.min(top, Math.max(a, n));
 }
