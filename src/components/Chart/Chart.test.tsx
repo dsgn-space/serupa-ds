@@ -22,6 +22,14 @@ async function tabIn(chart: Element = document.querySelector('figure[data-compon
 }
 
 describe('Chart', () => {
+  test('a heatmap with no series yet draws its category labels at real positions, not NaN', async () => {
+    const errors = vi.spyOn(console, 'error');
+    await render(<Chart id="hm" type="heatmap" title="Visits" categories={['Mon', 'Tue', 'Wed']} series={[]} />);
+    expect([...el('hm').querySelectorAll('text')].map((t) => t.getAttribute('x')).filter((x) => x === 'NaN')).toEqual([]);
+    expect(errors).not.toHaveBeenCalled();
+    errors.mockRestore();
+  });
+
   test('the key sets a numeric series name (a year) in tabular figures, so keys of years line up', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={[{ name: '2025', values: [1, 2, 3, 4] }, { name: '2026', values: [2, 3, 4, 5] }]} />);
     expect([...document.querySelectorAll('li')].filter((li) => /^202[56]/.test(li.textContent)).map((k) => css(k).fontVariantNumeric)).toEqual(['tabular-nums', 'tabular-nums']);

@@ -80,6 +80,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const unarm = () => { if (armed.current) document.removeEventListener('keydown', armed.current, true); armed.current = null; };
   const later = (v: boolean, ms: number) => {
     window.clearTimeout(timer.current); unarm();
+    if (v && off.current) return;   // disabled: a hover now doesn't show it later, once it's enabled again
     timer.current = window.setTimeout(() => { unarm(); set(v, 'hover'); }, ms);
     if (!v || shown.current) return;
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { window.clearTimeout(timer.current); unarm(); } };
@@ -87,6 +88,13 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     document.addEventListener('keydown', esc, true);
   };
   React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
+  // Disabled while shown: it's hidden for good, not only masked, so enabling it again with the pointer gone doesn't
+  // bring it back; a show waiting out its delay is called off.
+  React.useEffect(() => {
+    if (!props.disabled) return;
+    window.clearTimeout(timer.current); unarm();
+    if (!controlled) setInner(false);
+  }, [props.disabled, controlled, setInner]);
   // Interest invokers (174): the element points at the tooltip with interestfor, so where the browser has them, a
   // long press on a touch screen shows it (Chrome on Android), as a hover does with a mouse. The browser's own showing
   // is canceled and the tooltip shows itself; an interest while the pointer is over the element or it has keyboard

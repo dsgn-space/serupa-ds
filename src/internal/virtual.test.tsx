@@ -63,3 +63,28 @@ test('a list under the height limit leaves the wheel to the browser: no wheel li
     await expect.poll(() => wheels).toEqual([['s', true]]);
   } finally { HTMLElement.prototype.addEventListener = real; }
 });
+
+test('past the height limit with a header above the rows (origin), ArrowDown moves down the list, never back up', async () => {
+  function Headed(props: { out: { r?: VirtualRange } }) {
+    const r = useVirtual({ count: 1_000_000, estimate: 20, overscan: 0, origin: () => 80 });
+    props.out.r = r;
+    const rows: React.ReactNode[] = [];
+    for (let i = r.start; i < r.end; i++) rows.push(<div key={i} data-index={i} style={{ height: 20 }}>{i}</div>);
+    return <div ref={r.ref} id="s" tabIndex={0} style={{ height: 100, overflowY: 'auto' }}><div style={{ height: 80 }}>Header</div><div style={{ height: r.before }} />{rows}<div style={{ height: r.after }} /></div>;
+  }
+  const out: { r?: VirtualRange } = {};
+  await render(<Headed out={out} />);
+  const s = document.getElementById('s')!;
+  await expect.poll(() => s.scrollHeight).toBeGreaterThan(14_999_000);
+  s.scrollTop = 10_000;
+  s.dispatchEvent(new Event('scroll'));
+  await frame();
+  const first = () => Math.min(...shown());
+  const seen = [first()];
+  for (let k = 0; k < 2; k++) {
+    s.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    await frame();
+    seen.push(first());
+  }
+  expect(seen[1]! > seen[0]! && seen[2]! > seen[1]!, seen.join(' → ')).toBe(true);
+});

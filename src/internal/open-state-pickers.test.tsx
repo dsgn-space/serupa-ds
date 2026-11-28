@@ -29,6 +29,14 @@ describe('a popup field takes open, defaultOpen and onOpenChange, as every overl
       expect(expanded(name)).toBe('true');
       expect(box(name).contains(document.activeElement)).toBe(false);
     });
+    test(`${name}: controlled and kept open, every press of the button asks again to close, not only the first`, async () => {
+      const heard: boolean[] = [];
+      const ask = (o: boolean) => { heard.push(o); };
+      await render(<span id={name + '-kept'}>{ui({ open: true, onOpenChange: ask })}</span>);
+      await userEvent.click(box(name + '-kept').querySelector<HTMLElement>(trigger)!);
+      await userEvent.click(box(name + '-kept').querySelector<HTMLElement>(trigger)!);
+      expect(heard).toEqual([false, false]);
+    });
     test(`${name}: controlled, a press asks to open with reason 'trigger', and it shows only once the app says so`, async () => {
       const heard: Array<[boolean, string]> = [];
       function App() {

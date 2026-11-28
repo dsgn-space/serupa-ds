@@ -268,7 +268,7 @@ function ChartRender({ ref, series: givenSeries, ...props }: ChartProps & React.
   const ticks = niceTicks(lo, hi, Math.max(2, Math.floor((height - PAD_TOP - AXIS) / 48)));
   const t0 = ticks[0] ?? lo, tN = ticks[ticks.length - 1] ?? hi;
   const tickText = ticks.map(fmt);
-  const start = Math.ceil(Math.max(...(heat ? series.map((sr) => sr.name) : tickText).map((t) => t.length)) * CHAR) + 10;
+  const start = Math.ceil(Math.max(0, ...(heat ? series.map((sr) => sr.name) : tickText).map((t) => t.length)) * CHAR) + 10;
   const pw = Math.max(1, width - start - PAD_END), ph = Math.max(1, height - PAD_TOP - AXIS);
   const { band, flip, x: xAt, y: yAt, py, bar } = layout(series, n, type, stacked, start, pw, ph, t0, tN, width, rtl);
   const step = type === 'bar' || heat ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
