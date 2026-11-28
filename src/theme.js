@@ -29,7 +29,7 @@
   var BRANDS = ['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'], MODES = ['auto', 'light', 'dark'], KEY = 'serupa-theme';
   var root = document.documentElement;
   BRANDS = BRANDS.concat((root.getAttribute('data-brands') || '').match(/[a-z][a-z0-9]*/g) || []);
-  var own = !root.hasAttribute('data-brand') && !root.hasAttribute('data-mode') && /^([a-z]+)-(light|dark)$/.exec(root.getAttribute('data-theme') || '');
+  var own = !root.hasAttribute('data-brand') && !root.hasAttribute('data-mode') && /^([a-z][a-z0-9]*)-(light|dark)$/.exec(root.getAttribute('data-theme') || '');
   var page = own && BRANDS.indexOf(own[1]) >= 0 ? { brand: own[1], mode: own[2] }
     : { brand: pick(root.getAttribute('data-brand'), BRANDS, 'blue'), mode: pick(root.getAttribute('data-mode'), MODES, 'auto') };
   var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
@@ -74,10 +74,10 @@
     var i = info();
     if (root.getAttribute('data-theme') === i.theme && !always) return chrome();
     function go(crossfade) {
-      // The newest choice (a switch skips the crossfade before it); onChange hears each theme once.
+      // The newest choice (a switch skips the crossfade before it); onChange hears each choice (theme and mode) once.
       i = info();
-      if (root.getAttribute('data-theme') === i.theme && (!always || (crossfade && heard === i.theme))) return chrome();
-      heard = i.theme;
+      if (root.getAttribute('data-theme') === i.theme && (!always || (crossfade && heard === i.theme + ':' + i.mode))) return chrome();
+      heard = i.theme + ':' + i.mode;
       root.setAttribute('data-theme', i.theme);
       root.getAnimations({ subtree: true }).forEach(function (a) { if (/color|shadow|fill|stroke/.test(a.transitionProperty)) a.finish(); });
       chrome();

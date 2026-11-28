@@ -6678,6 +6678,56 @@
         }
       }
     },
+    "icon-size-xs": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-3_5}",
+      "$description": "14px. Icons in `sm` buttons and next to `text-xs`: `<Icon size=\"xs\">`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-size-xs"
+        }
+      }
+    },
+    "icon-size-sm": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-4}",
+      "$description": "16px. Icons in `md` buttons and next to `text-sm`: `<Icon size=\"sm\">`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-size-sm"
+        }
+      }
+    },
+    "icon-size-md": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-5}",
+      "$description": "20px. Icons in `lg` buttons, list rows and inputs, and next to `text-base`: `<Icon size=\"md\">`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-size-md"
+        }
+      }
+    },
+    "icon-size-lg": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-6}",
+      "$description": "24px, the Icon default: toolbars, navigation, icons on their own: `<Icon size=\"lg\">`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-size-lg"
+        }
+      }
+    },
+    "icon-size-xl": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-10}",
+      "$description": "40px. Empty states and illustrations: `<Icon size=\"xl\">`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-size-xl"
+        }
+      }
+    },
     "icon-weight-regular": {
       "$type": "number",
       "$value": 0,
@@ -8790,7 +8840,12 @@
     "sans": {
       "$type": "fontFamily",
       "$value": [
-        "Inter, \"Inter Fallback\", \"Noto Sans Arabic\", \"Noto Sans Hebrew\", \"Noto Sans Devanagari\", \"Noto Sans Thai",
+        "Inter",
+        "Inter Fallback",
+        "Noto Sans Arabic",
+        "Noto Sans Hebrew",
+        "Noto Sans Devanagari",
+        "Noto Sans Thai",
         "ui-sans-serif",
         "system-ui",
         "sans-serif"
@@ -8804,7 +8859,9 @@
     "serif": {
       "$type": "fontFamily",
       "$value": [
-        "Georgia, Cambria, \"Times New Roman",
+        "Georgia",
+        "Cambria",
+        "Times New Roman",
         "Times",
         "serif"
       ],
@@ -8817,7 +8874,11 @@
     "mono": {
       "$type": "fontFamily",
       "$value": [
-        "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono",
+        "ui-monospace",
+        "SFMono-Regular",
+        "Menlo",
+        "Consolas",
+        "Liberation Mono",
         "monospace"
       ],
       "$extensions": {
@@ -8948,8 +9009,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.0375,
+          "unit": "rem"
         },
         "lineHeight": 1.3333
       },
@@ -8970,8 +9031,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.0469,
+          "unit": "rem"
         },
         "lineHeight": 1.2
       },
@@ -8992,8 +9053,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.0563,
+          "unit": "rem"
         },
         "lineHeight": 1.1111
       },
@@ -9014,8 +9075,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.075,
+          "unit": "rem"
         },
         "lineHeight": 1
       },
@@ -9036,8 +9097,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.1875,
+          "unit": "rem"
         },
         "lineHeight": 1
       },
@@ -9058,8 +9119,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.225,
+          "unit": "rem"
         },
         "lineHeight": 1
       },
@@ -9080,8 +9141,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.3,
+          "unit": "rem"
         },
         "lineHeight": 1
       },
@@ -9102,8 +9163,8 @@
         },
         "fontWeight": 400,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.4,
+          "unit": "rem"
         },
         "lineHeight": 1
       },
@@ -9124,8 +9185,8 @@
         },
         "fontWeight": 600,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.075,
+          "unit": "rem"
         },
         "lineHeight": 1.0833
       },
@@ -9146,8 +9207,8 @@
         },
         "fontWeight": 600,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.0469,
+          "unit": "rem"
         },
         "lineHeight": 1.2
       },
@@ -9168,8 +9229,8 @@
         },
         "fontWeight": 600,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": -0.0375,
+          "unit": "rem"
         },
         "lineHeight": 1.3333
       },
@@ -9344,8 +9405,8 @@
         },
         "fontWeight": 600,
         "letterSpacing": {
-          "value": 0,
-          "unit": "px"
+          "value": 0.075,
+          "unit": "rem"
         },
         "lineHeight": 1.3333
       },

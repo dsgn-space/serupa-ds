@@ -55,7 +55,7 @@ function blocks(s) {
       j++;
     }
     const chunk = s.slice(i, j);
-    if (chunk.includes('{')) {
+    if (brace >= 0) {   // a { in a string (@import "a{b}.css";) opens no block
       const pre = s.slice(i, brace).trim();
       out.push({ kind: pre.startsWith('@') ? 'at' : 'rule', pre, body: s.slice(brace + 1, j - 1) });
     } else out.push({ kind: 'stmt', pre: chunk.trim() });
@@ -67,7 +67,8 @@ function blocks(s) {
 // "\32 xl\:flex" -> "2xl:flex". An escape for no character (zero, a surrogate, past U+10FFFF) is U+FFFD, as in CSS.
 const char = (h) => { const n = parseInt(h, 16); return n === 0 || (n >= 0xd800 && n <= 0xdfff) || n > 0x10ffff ? '\uFFFD' : String.fromCodePoint(n); };
 const unescape = (c) => c.replace(/\\([0-9a-fA-F]{1,6}) ?/g, (_, h) => char(h)).replace(/\\(.)/g, '$1');
-const classesIn = (sel) => [...sel.matchAll(/\.((?:[A-Za-z0-9_-]|\\[0-9a-fA-F]{1,6} ?|\\.)+)/g)].map((m) => unescape(m[1]));
+// The classes a selector names, not the text of an attribute selector or a string ([href$='.pdf'] names no class).
+const classesIn = (sel) => [...sel.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""').replace(/\[[^\]]*\]/g, '[]').matchAll(/\.((?:[A-Za-z0-9_-]|\\[0-9a-fA-F]{1,6} ?|\\.)+)/g)].map((m) => unescape(m[1]));
 
 // The srp-* classes to drop: those of the components in the manifest (dist/components.json) that the sources never
 // name, nor any component they name needs.
@@ -127,16 +128,29 @@ export function splitSelectors(list) {
 }
 
 // A scan, not /\/\*[\s\S]*?\*\//g: on a stylesheet full of unclosed "/*" that regex tries every one to the end
-// (quadratic), and this reads it once. An unclosed comment stays as it is, as the regex left it.
+// (quadratic), and this reads it once. An unclosed comment stays as it is, as the regex left it. A "/*" in a string
+// (content: "/* x */") is text, not a comment.
 function stripComments(css) {
-  let out = '', i = 0;
-  for (;;) {
-    const open = css.indexOf('/*', i);
-    const close = open < 0 ? -1 : css.indexOf('*/', open + 2);
-    if (close < 0) return out + css.slice(i);
-    out += css.slice(i, open);
-    i = close + 2;
+  let out = '', i = 0, from = 0;
+  const n = css.length;
+  while (i < n) {
+    const c = css[i];
+    if (c === '"' || c === "'") {
+      i++;
+      while (i < n && css[i] !== c && css[i] !== '\n') i += css[i] === '\\' ? 2 : 1;
+      i++;
+      continue;
+    }
+    if (c === '/' && css[i + 1] === '*') {
+      const close = css.indexOf('*/', i + 2);
+      if (close < 0) break;
+      out += css.slice(from, i);
+      i = from = close + 2;
+      continue;
+    }
+    i++;
   }
+  return out + css.slice(from);
 }
 
 export function usedClasses(sources, keep = []) {

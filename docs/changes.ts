@@ -16,8 +16,9 @@ export function changesFor(name: string, changelog: string): Change[] {
   const out: Change[] = [];
   let version = '', date = '', kind = '';
   for (const block of changelog.split(/\n(?=## |### |- )/)) {
-    const v = /^## \[([^\]]+)\](?: - (\S+))?/.exec(block);
-    if (v) { version = v[1]; date = v[2] || ''; kind = ''; continue; }
+    // A release heading, with its version in brackets (## [19.2.0] - date) or, in the older entries, without (## 7.1.0 - date).
+    const v = /^## (?:\[([^\]]+)\]|(\d\S*))(?: - (\S+))?/.exec(block);
+    if (v) { version = (v[1] ?? v[2])!; date = v[3] || ''; kind = ''; continue; }
     const k = /^### (\w+)/.exec(block);
     if (k) { kind = k[1]; continue; }
     if (!block.startsWith('- ') || !version || version === 'Unreleased') continue;

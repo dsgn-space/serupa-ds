@@ -72,6 +72,8 @@ refuses('a DOCTYPE / entity (XML bombs)', '<!DOCTYPE svg [<!ENTITY a "aaaa">]>' 
 refuses('another grid (viewBox 0 0 32 32)', svg('<path d="M0 0h32v32H0z"/>', 'viewBox="0 0 32 32"'), '24×24');
 refuses('a missing viewBox', svg('<path d="M0 0h24v24H0z"/>', 'width="24" height="24"'), 'missing');
 refuses('two colors (white shapes instead of holes)', svg('<circle cx="12" cy="12" r="10" fill="#000"/><circle cx="12" cy="12" r="4" fill="#fff"/>'), '2 colors');
+refuses('a white cutout on a shape filled black by default (no fill set)', svg('<rect x="2" y="2" width="20" height="20"/><circle cx="12" cy="12" r="5" fill="#ffffff"/>'), '2 colors');
+check('accepts black written three ways (no fill, fill="#000", fill="black") as one color', accepts(svg('<rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9" fill="#000"/><g fill="black"><rect x="2" y="13" width="9" height="9"/></g>'))[0] !== null, accepts(svg('<rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9" fill="#000"/><g fill="black"><rect x="2" y="13" width="9" height="9"/></g>'))[1]);
 refuses('a color in style="" plus a fill', svg('<path d="M0 0h9v9H0z" style="fill:#f00"/><path d="M9 9h9v9H9z" fill="#00f"/>'), '2 colors');
 refuses('bad path data', svg('<path d="M0 0 &quot;x"/>'), "isn't a value");
 refuses('non-numeric geometry', svg('<circle cx="calc(1)" cy="12" r="4"/>'), 'number');

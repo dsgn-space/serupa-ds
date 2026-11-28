@@ -102,6 +102,16 @@ for (const [, tree] of allFiles) for (const [, tok] of tokens(tree)) { const v =
 for (const v of Object.values(cssOnly)) if (isObj(v)) for (const n of Object.keys(v)) exported.add(n);
 const missing = Object.values(src).filter((g) => isObj(g) && Array.isArray(g.tokens)).flatMap((g) => g.tokens).map((x) => x.name).filter((n) => !exported.has(n));
 check('every token in tokens.json is exported (typed, as an alias, or as a CSS value)', !missing.length, missing.slice(0, 10).join(', '));
+// A font stack is one family per entry, even where a quoted name comes later ("Times New Roman"); a role naming a token
+// of another group (icon-size-md is {spacing-5}) is a reference, not a raw "{…}" CSS value; letter spacing in em is kept.
+const stacks = Object.entries(base.font || {}).filter(([, f]) => f.$value.some((x) => /[,"']/.test(x) || !x.trim())).map(([k]) => k);
+check('each font stack has one family per entry, quoted names unquoted', Object.keys(base.font || {}).length && !stacks.length, stacks.join(', '));
+// (A color naming a theme's alias, which differs by theme, stays a CSS value.)
+const rawRefs = Object.entries(cssOnly).filter(([g, v]) => g !== 'color' && isObj(v)).flatMap(([, g]) => Object.entries(g).filter(([, v]) => /^\{[^{}]+\}$/.test(v.css)).map(([k]) => k));
+check('a token that names another token is a reference, not a "{…}" CSS value', !rawRefs.length, rawRefs.slice(0, 8).join(', '));
+const styles = src.type.groups.flatMap((g) => g.styles).filter((x) => parseFloat(x.letterSpacing ?? '0') !== 0);
+const flat0 = styles.filter((x) => !base.type?.[x.name.replace(/\./g, '_')]?.$value.letterSpacing.value).map((x) => x.name);
+check(`the ${styles.length} type styles with letter spacing keep it`, styles.length && !flat0.length, flat0.join(', '));
 const nAlias = new Set(Object.values(themes).map((t) => Object.keys(t.color || {}).length));
 check(`each of the ${Object.keys(themes).length} themes, its mode with its brand's overlay, has the same aliases`, nAlias.size === 1, [...nAlias].join(', '));
 const light = Object.keys(load(path.join(D, 'themes', 'light.tokens.json')).color);

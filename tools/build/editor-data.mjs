@@ -28,11 +28,21 @@ export function utilityClasses(css) {
 }
 
 /** The tokens tokens.css sets on :root, with their value there and their description (from tokens.json: tokens.css
- * has no comments). */
+ * has no comments). The theme block (:root, [data-theme="blue-light"]) has the colors; the plain :root blocks have
+ * the rest (spacing, radius, type …). A name keeps its escapes as written (--spacing-0\.5), and its description is
+ * found under the name it stands for (--spacing-0.5). */
 export function tokenList(tokensCss, descriptions = new Map()) {
-  const root = /:root, \[data-theme="[^"]+"\] \{([\s\S]*?)\n\}/.exec(tokensCss);
-  if (!root) throw new Error('tokens.css: no :root block');
-  return [...root[1].matchAll(/^\s*(--[a-z0-9-]+): ([^;]+);$/gm)].map((m) => ({ name: m[1], value: m[2].trim(), description: (descriptions.get(m[1]) || '').replace(/^Alias\. /, '') }));
+  const blocks = [...tokensCss.matchAll(/^:root(?:, \[data-theme="[^"]+"\])? \{([\s\S]*?)\n\}/gm)];
+  if (!blocks.length) throw new Error('tokens.css: no :root block');
+  const seen = new Map();
+  for (const b of blocks) {
+    for (const m of b[1].matchAll(/^\s*(--(?:[a-z0-9-]|\\.)+): ([^;]+);$/gm)) {
+      if (seen.has(m[1])) continue;
+      const plain = m[1].replace(/\\(.)/g, '$1');
+      seen.set(m[1], { name: m[1], value: m[2].trim(), description: (descriptions.get(m[1]) || descriptions.get(plain) || '').replace(/^Alias\. /, '') });
+    }
+  }
+  return [...seen.values()];
 }
 
 const values = (list) => [...new Set(list)].sort().map((name) => ({ name }));

@@ -50,6 +50,12 @@ function dim(s) {
   const m = full(/(-?\d*\.?\d+)(px|rem)/, String(s).trim());
   return m ? { value: parseFloat(m[1]), unit: m[2] } : null;
 }
+// Letter spacing in em (the format's dimension has px and rem only) is that share of the style's font size.
+function spacing(v, fontSize) {
+  const em = full(/(-?\d*\.?\d+)em/, String(v ?? '0').trim());
+  if (em) return { value: round(parseFloat(em[1]) * fontSize.value, 4), unit: fontSize.unit };
+  return dim(String(v ?? '0')) || { value: 0, unit: 'px' };
+}
 function shadow(s) {
   const layers = [];
   for (let part of s.split(/,(?![^()]*\))/)) {
@@ -102,14 +108,16 @@ export function exportTokens(t, componentFiles) {
   const ALIAS = GROUPS.color.tokens.filter((x) => x.value && typeof x.value === 'object' && Object.keys(x.value).length > 1);
   const THEMES = Object.keys(ALIAS[0].value);
   const base = {}, cssOnly = {};
+  const GROUP_OF = new Map(Object.entries(GROUPS).flatMap(([g, grp]) => grp.tokens.map((y) => [y.name, [g, y]])));
   for (const [g, grp] of Object.entries(GROUPS)) {
     for (const x of grp.tokens) {
       if (g === 'color' && ALIAS.includes(x)) continue;
       const v = first(x.value);
-      // A role that names another token of its group (motion-hover is {duration-150}) is exported as a reference to it.
-      const to = full(/\{([^}]+)\}/, String(v)), target = to && grp.tokens.find((y) => y.name === to[1]);
-      const tr = target && typed(g, target.name, first(target.value));
-      const r = tr ? [tr[0], `{${g}.${pathName(target.name)}}`] : typed(g, x.name, v);
+      // A role that names another token (motion-hover is {duration-150}, icon-size-md is {spacing-5}, in another group)
+      // is exported as a reference to it.
+      const to = full(/\{([^}]+)\}/, String(v)), at = to && GROUP_OF.get(to[1]), target = at && at[1];
+      const tr = target && typed(at[0], target.name, first(target.value));
+      const r = tr ? [tr[0], `{${at[0]}.${pathName(target.name)}}`] : typed(g, x.name, v);
       if (!r) { setIn(cssOnly, g)[x.name] = { css: String(v), description: (x.usage || '').replace(/^Tailwind /, '') }; continue; }
       const tok = { $type: r[0], $value: r[1] };
       if (x.usage) tok.$description = x.usage;
@@ -119,7 +127,7 @@ export function exportTokens(t, componentFiles) {
   }
   // font families
   base.font = Object.fromEntries(Object.entries(t.type.families).map(([k, v]) => [k, {
-    $type: 'fontFamily', $value: v.split(/,(?![^"]*")/).map((f) => f.trim().replace(/^["']+|["']+$/g, '')), $extensions: ext('font-' + k) }]));
+    $type: 'fontFamily', $value: (v.match(/(?:"[^"]*"|'[^']*'|[^,])+/g) || []).map((f) => f.trim().replace(/^["']|["']$/g, '')).filter(Boolean), $extensions: ext('font-' + k) }]));
   // type styles as typography composites
   for (const grp of t.type.groups) {
     for (const s of grp.styles) {
@@ -130,7 +138,7 @@ export function exportTokens(t, componentFiles) {
       setIn(base, 'type')[pathName(s.name)] = {
         $type: 'typography',
         $value: { fontFamily: `{font.${fam}}`, fontSize: fs_, fontWeight: parseInt(s.fontWeight ?? 400, 10),
-          letterSpacing: dim(String(s.letterSpacing ?? '0')) || { value: 0, unit: 'px' }, lineHeight: ratio },
+          letterSpacing: spacing(s.letterSpacing, fs_), lineHeight: ratio },
         $description: s.usage || '', $extensions: { [NS]: { class: s.name } } };
     }
   }

@@ -138,6 +138,9 @@ function parseXml(text) {
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 const attrText = (a) => Object.keys(a).sort().map((k) => ` ${k}="${escapeAttr(a[k])}"`).join('');
 
+// Spellings of one color, so black written three ways is one color.
+const SAME = { '#000': '#000000', black: '#000000', 'rgb(0,0,0)': '#000000', 'rgb(0, 0, 0)': '#000000', '#fff': '#ffffff', white: '#ffffff', 'rgb(255,255,255)': '#ffffff', 'rgb(255, 255, 255)': '#ffffff' };
+
 /** SVG text -> the icon's inner markup (shapes only, drawn in currentColor). Throws IconError. */
 export function clean(svgText, name = 'icon') {
   if (!NAME.test(name)) throw new IconError(`"${name}": name the file in lowercase letters and digits, words joined by - or _ (e.g. serupa-sparkle.svg)`);
@@ -153,8 +156,16 @@ export function clean(svgText, name = 'icon') {
     v = v.trim().toLowerCase();
     if (v === 'none' || v === 'transparent') return 'none';
     if (v.includes('url(')) throw new IconError(`${name}: ${where} uses a gradient or pattern (url(...)); icons are one solid color`);
-    if (!['currentcolor', 'inherit', ''].includes(v)) colors.add(v);
+    if (!['currentcolor', 'inherit', ''].includes(v)) colors.add(SAME[v] || v);
     return null;   // drawn in the text color (currentColor)
+  };
+  // Whether an element sets its own fill (an attribute or style=""): one that doesn't, under nothing that does, is
+  // filled black, a color like any other.
+  const ownFill = (el) => {
+    const a = (el.attrs.find(([k]) => k.toLowerCase() === 'fill') || [])[1];
+    const st = /(?:^|;)\s*fill\s*:\s*([^;]+)/i.exec((el.attrs.find(([k]) => k === 'style') || [])[1] || '');
+    const v = (st ? st[1] : a ?? '').trim().toLowerCase();
+    return v !== '' && v !== 'inherit';
   };
 
   const attrs = (el, tag, allowed) => {
@@ -186,7 +197,7 @@ export function clean(svgText, name = 'icon') {
     return out;
   };
 
-  const walk = (el) => {
+  const walk = (el, filled) => {
     let parts = '';
     for (const child of el.children) {
       const tag = child.tag;
@@ -198,7 +209,9 @@ export function clean(svgText, name = 'icon') {
       if (tag !== 'g' && child.children.length) throw new IconError(`${name}: <${tag}> has children; only <g> can group shapes`);
       const a = attrs(child, tag, SHAPES[tag]);
       if (tag === 'path' && !a.d) continue;
-      const inner = tag === 'g' ? walk(child) : '';
+      const fills = filled || ownFill(child);
+      if (!fills && tag !== 'g' && tag !== 'line') colors.add('#000000');
+      const inner = tag === 'g' ? walk(child, fills) : '';
       if (tag === 'g' && !inner) continue;
       parts += tag === 'g' ? `<g${attrText(a)}>${inner}</g>` : `<${tag}${attrText(a)}/>`;
     }
@@ -207,7 +220,7 @@ export function clean(svgText, name = 'icon') {
 
   const ra = attrs(root, 'svg', []);   // paint and stroke settings on <svg> (stroke icons) apply to every shape
   delete ra.transform;
-  let body = walk(root);
+  let body = walk(root, ownFill(root));
   if (!body) throw new IconError(`${name}: no shapes found`);
   if (Object.keys(ra).length) body = `<g${attrText(ra)}>${body}</g>`;
   if (colors.size > 1) {
