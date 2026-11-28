@@ -24,7 +24,7 @@ import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../
 
 // The calendar shows only in the popup, so it loads the first time the popup opens, as a chunk of its own (ADR-0027):
 // a form with date fields that are only typed in never carries it.
-const Calendar = /* @__PURE__ */ React.lazy(() => import('../Calendar/Calendar').then((m) => ({ default: m.Calendar })));
+const CalendarPart = /* @__PURE__ */ React.lazy(() => import('../Calendar/Calendar').then((m) => ({ default: m.Calendar })));
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
@@ -156,7 +156,7 @@ function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttribut
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="srp-date-picker__popup"
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
-        {open || exit.leaving ? <React.Suspense fallback={null}><Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
+        {open || exit.leaving ? <React.Suspense fallback={null}><CalendarPart value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
           onValueChange={(d) => { commit(d); close(true, 'select'); }} /></React.Suspense> : null}
       </div>
     </span>

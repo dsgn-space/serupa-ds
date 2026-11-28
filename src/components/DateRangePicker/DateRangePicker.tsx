@@ -27,7 +27,7 @@ import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../
 // RangeCalendar ("Selected range").
 // The months show only in the popup, so RangeCalendar loads the first time the popup opens, as a chunk of its own
 // (ADR-0027): a form whose ranges are only typed never carries it.
-const RangeCalendar = /* @__PURE__ */ React.lazy(() => import('../RangeCalendar/RangeCalendar').then((m) => ({ default: m.RangeCalendar })));
+const RangeCalendarPart = /* @__PURE__ */ React.lazy(() => import('../RangeCalendar/RangeCalendar').then((m) => ({ default: m.RangeCalendar })));
 const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, /* @__PURE__ */ Object.assign({}, CalendarWords, RangeCalendarWords));
 
 /** A range of days; either end can be empty while it's being chosen. */
@@ -211,7 +211,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   const starts = { onStart: (d: Date) => { commit({ start: d, end: null }); } };
   const months = (
     <RangePickContext.Provider value={starts}><React.Suspense fallback={null}>
-      <RangeCalendar className="srp-date-range-picker__calendar" aria-label={buttonLabel || sds.labels.chooseDates} value={value} months={two ? 2 : 1} month={base} onMonthChange={setBase}
+      <RangeCalendarPart className="srp-date-range-picker__calendar" aria-label={buttonLabel || sds.labels.chooseDates} value={value} months={two ? 2 : 1} month={base} onMonthChange={setBase}
         min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={focusIn}
         onValueChange={(r) => { commit(r); close(true, 'select'); }} />
     </React.Suspense></RangePickContext.Provider>
