@@ -107,7 +107,7 @@ function go(L: Live, el: HTMLElement, v: number) {
   const i = find(L.offsets, v);
   L.pending = { i, at: at(L.offsets, i) - v, p: span ? (v / span) * room : 0 };
   L.top = v;
-  el.scrollTop = L.pending.p;
+  el.scrollTop = L.pending.p + L.origin;   // viewAt takes the origin (a header above the rows) back off
 }
 
 // The keys that scroll a list, and how far (px) they move the rows' top, for a view h tall.

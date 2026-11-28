@@ -28,6 +28,19 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); window.scrollTo(0, 0); }
 afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); window.scrollTo(0, 0); history.replaceState(null, '', location.pathname + location.search); });
 
 describe('TableOfContents', () => {
+  test('a page too short to scroll: the first section is current, not the last; a heading in a hidden part isn\'t listed until it shows', async () => {
+    function Short() {
+      const [open, setOpen] = React.useState(false);
+      return <><main id="sh"><h2 id="s1">First</h2><p style={{ height: 200 }}>…</p><h2 id="s2">Second</h2><section hidden={!open}><h2 id="s3">Hidden</h2></section></main>
+        <button id="show" onClick={() => setOpen(true)}>Show</button><TableOfContents id="toc" container="#sh" /></>;
+    }
+    await render(<Short />);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['First', 'Second']);
+    await expect.poll(current).toBe('First');
+    await userEvent.click(document.getElementById('show')!);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['First', 'Second', 'Hidden']);
+  });
+
   test('a navigation landmark named by its title, "On this page", listing the h2 and h3 headings of its container; props reach the <nav>', async () => {
     const ref = React.createRef<HTMLElement>();
     await render(<Page toc={<TableOfContents id="toc" ref={ref} className="extra" data-x="y" container="#art" />} />);

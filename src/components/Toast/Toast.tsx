@@ -70,6 +70,8 @@ const page = /* @__PURE__ */ pageShared('toast@1', () => ({
 // toast twice; when it unmounts, the one before it takes them over.
 const emit = () => { let left = page.listeners.size; page.listeners.forEach((l) => l(--left ? [] : page.items)); };
 const text = (n: React.ReactNode) => (typeof n === 'string' || typeof n === 'number' ? String(n) : '');
+// Words that can be compared: none, or text. Two descriptions made of elements can't be, so they never count as the same.
+const plain = (n: React.ReactNode) => n == null || n === false || typeof n === 'string' || typeof n === 'number';
 const TONES: readonly ToastTone[] = ['neutral', 'info', 'success', 'warning', 'danger'];
 // The key that moves focus to the newest toast and back (as in Radix), and the hint the first toast with an action
 // adds to what's announced, in the Toaster's words.
@@ -89,7 +91,7 @@ function show(options: ToastOptions | string): string {
   // The same message again (same words and tone, no id, no action), such as "Network error" in a burst: one toast
   // with a count ("×12") whose time starts over. It's said when it first shows, and once more with the count when
   // the burst stops, so screen reader users hear that it happened again without hearing it twelve times.
-  const same = o.id || o.action ? -1 : page.items.findIndex((x) => !x.action && x.tone === tone && text(x.title) !== '' && text(x.title) === text(o.title) && text(x.description) === text(o.description));
+  const same = o.id || o.action ? -1 : page.items.findIndex((x) => !x.action && x.tone === tone && text(x.title) !== '' && text(x.title) === text(o.title) && plain(x.description) && plain(o.description) && text(x.description) === text(o.description));
   const was = page.items[same];
   if (was) {
     const again = Object.assign({}, was, { count: was.count + 1 });
@@ -504,7 +506,8 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
   // Each reason to stop the time is kept apart, so leaving with the mouse doesn't restart it while focus is still inside.
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
+  // A toast shown while the tab is in the background waits for it: its time runs only once it can be seen.
+  const [hidden, setHidden] = React.useState(() => typeof document !== 'undefined' && document.hidden);
   const [held, setHeld] = React.useState(false);   // under a finger (a swipe)
   const paused = hovered || focused || hidden || held;
   // Back from the waiting line, it goes on with the time it had left.
@@ -588,7 +591,7 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
         <p className="srp-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="srp-toast__count"><span aria-hidden="true">{'×' + displayNumber(t.count, locale, { useGrouping: false })}</span><span className="srp-visually-hidden">{', ' + sds.labels.toastRepeated(t.count, displayNumber(t.count, locale))}</span></span> : null}</p>
         {t.description != null ? <p className="srp-toast__description" id={descId}>{t.description}</p> : null}
       </div>
-      {t.action ? <Button className="srp-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
+      {t.action ? <Button className="srp-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); if (page.items.includes(t)) toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
       <IconButton className="srp-toast__close" icon={icons.Close} label={props.dismissLabel} aria-describedby={titleId} size="sm" hideTitle onClick={() => toast.dismiss(t.id)} />
     </li>
   );

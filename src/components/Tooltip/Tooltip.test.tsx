@@ -235,6 +235,19 @@ describe('Tooltip', () => {
     expect(isOpen('e')).toBe(false);
   });
 
+  test('disabled while open, the pointer leaving, then enabled again: it stays closed rather than popping back open', async () => {
+    const ui = (off: boolean) => <Tooltip content="Hint" openDelay={0} disabled={off}><button id="dz">Hint</button></Tooltip>;
+    const screen = await render(ui(false));
+    await userEvent.hover(el('dz'));
+    await expect.poll(() => isOpen('dz')).toBe(true);
+    await screen.rerender(ui(true));
+    await away();
+    await settle(hoverLeave + 100);
+    await screen.rerender(ui(false));
+    await settle(100);
+    expect(isOpen('dz')).toBe(false);
+  });
+
   test('no room above: it flips below and stays on screen; an overflow: hidden parent can\'t clip it', async () => {
     await render(<>
       <div style={{ position: 'fixed', top: '0px', left: '300px' }}><Tooltip content="Flipped" openDelay={0}><button id="g">Top edge</button></Tooltip></div>

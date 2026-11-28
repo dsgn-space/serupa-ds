@@ -100,6 +100,16 @@ describe('FilterBar', () => {
     await expect.poll(focused).toBe('Add filter');
   });
 
+  test('a switch filter turned off in its editor stays open until the editor closes, then goes', async () => {
+    const log: FilterValues[] = [];
+    await render(<Bar start={{ archived: true }} log={log} />);
+    await userEvent.click(chip(/Archived/).first());
+    await userEvent.click(page.getByRole('switch', { name: 'Archived' }));
+    expect([log.at(-1), !!document.querySelector('[role=switch]')]).toEqual([{ archived: false }, true]);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => log.at(-1)).toEqual({});
+  });
+
   test('a single choice is a radio group; a switch filter is on as soon as it is added; a text filter closes on Enter', async () => {
     const log: FilterValues[] = [];
     await render(<Bar log={log} />);
