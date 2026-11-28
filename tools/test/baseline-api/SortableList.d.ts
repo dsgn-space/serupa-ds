@@ -16,6 +16,7 @@ interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElemen
         dragging: boolean;
     }) => React.ReactNode;
     onReorder: (items: T[], move: {
+        item: T;
         from: number;
         to: number;
     }) => void;
