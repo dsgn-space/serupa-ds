@@ -22,6 +22,7 @@ import { majorsIn, upcomingMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
 import { changesFor } from './changes';
+import { labelWord } from './labelWord';
 import since from './since.json';
 import { sinceText, type Since } from './since';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
@@ -477,11 +478,9 @@ const sharedLabelUse: Record<string, string> = {};
     if (doc) use = doc[1]; else if (key) sharedLabelUse[key[1]] = use;
   }
 }
-// A function label is shown with "n" for its first argument; one that takes a list (cascadePath) can't, so it says so.
-const word = (v: SerupaLabels[keyof SerupaLabels]) => {
-  if (typeof v !== 'function') return v;
-  try { return v('n' as unknown as number); } catch { return '(built from its arguments)'; }
-};
+// A function label is shown with a letter for each argument ("n of m"); one that takes a list (cascadePath), a key it
+// looks up (chartKind) or nothing it can show (invalidValue) can't be, so it says so (labelWord).
+const word = labelWord;
 /* eslint-disable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {

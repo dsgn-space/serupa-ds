@@ -5,6 +5,14 @@ const MARKUP = ['.html', '.htm', '.php', '.erb', '.hbs', '.njk', '.liquid', '.tw
 const STYLE = ['.css', '.scss', '.sass', '.less'];
 export const ALL = [...CODE, ...MARKUP, ...STYLE];
 
+// The length of a // or /* */ comment that starts at i (JSX allows them between attributes), or 0.
+function commentAt(s, i) {
+  if (s[i] !== '/') return 0;
+  if (s[i + 1] === '/') { const e = s.indexOf('\n', i); return (e < 0 ? s.length : e) - i; }
+  if (s[i + 1] === '*') { const e = s.indexOf('*/', i + 2); return (e < 0 ? s.length : e + 2) - i; }
+  return 0;
+}
+
 // The parts of an opening tag's text that are its own, not inside {…} or a quoted value: each other character is
 // replaced by a space, so a search in the result finds only attribute names, at the same offsets.
 function topLevel(s) {
@@ -12,6 +20,8 @@ function topLevel(s) {
   for (let i = 0; i < s.length; i++) {
     const c = s[i];
     if (q) { out += ' '; if (c === '\\') { out += s[i + 1] === undefined ? '' : ' '; i++; } else if (c === q) q = null; continue; }
+    const k = commentAt(s, i);
+    if (k) { out += s.slice(i, i + k).replace(/[^\n]/g, ' '); i += k - 1; continue; }
     if (c === '"' || c === "'" || (c === '`' && depth > 0)) { q = c; out += ' '; continue; }
     if (c === '{') { depth++; out += ' '; continue; }
     if (c === '}') { depth--; out += ' '; continue; }
@@ -31,6 +41,8 @@ export function openTags(src, name) {
     for (; i < src.length; i++) {
       const c = src[i];
       if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; }
+      const k = commentAt(src, i);
+      if (k) { i += k - 1; continue; }
       if (c === '"' || c === "'" || (c === '`' && depth > 0)) q = c;
       else if (c === '{') depth++;
       else if (c === '}') depth--;
@@ -63,14 +75,15 @@ export function renameProp(src, component, from, to) {
  * in braces around quotes. Gives back the new text and how many it changed. */
 export function renameValue(src, component, prop, from, to) {
   let n = 0;
-  const value = new RegExp(`^(\\s*=\\s*\\{?\\s*)(["'])${from}\\2`);
+  // In braces, only a value that is the string alone ({'default'}), not one in an expression ({'left' === dir ? …}).
+  const value = new RegExp(`^(\\s*=\\s*(?:\\{\\s*(?=(["'])${from}\\2\\s*\\})|(?=["'])))(["'])${from}\\3`);
   for (const [s, e] of openTags(src, component).reverse()) {
     const attrs = src.slice(s, e), mask = topLevel(attrs);
     let next = attrs;
     for (const m of [...mask.matchAll(attrAt(prop))].reverse()) {
       const at = m.index + prop.length, v = value.exec(next.slice(at));
       if (!v) continue;
-      next = next.slice(0, at) + v[1] + v[2] + to + v[2] + next.slice(at + v[0].length);
+      next = next.slice(0, at) + v[1] + v[3] + to + v[3] + next.slice(at + v[0].length);
       n++;
     }
     src = src.slice(0, s) + next + src.slice(e);
@@ -84,6 +97,8 @@ function closeBrace(s, i) {
   for (; i < s.length; i++) {
     const c = s[i];
     if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; }
+    const k = commentAt(s, i);
+    if (k) { i += k - 1; continue; }
     if (c === '"' || c === "'" || c === '`') q = c;
     else if (c === '{') depth++;
     else if (c === '}' && --depth === 0) return i;

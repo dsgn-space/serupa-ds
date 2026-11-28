@@ -14,8 +14,10 @@ export function compactCss(css) {
   const last = () => { const p = out[out.length - 1]; return p ? p[p.length - 1] : undefined; };
   const drop = () => { const p = out.pop(); if (p.length > 1) out.push(p.slice(0, -1)); };
   // A space between two tokens survives only where neither side is punctuation (a descendant combinator, a value list).
+  // An escape (the "\:" in ".sm\: .x") is part of a name, whatever character it escapes.
+  const escaped = () => { const p = out[out.length - 1]; return p && p.length > 1 && p[0] === '\\'; };
   const word = (next) => {
-    if (space && out.length && !PUNCT.includes(last()) && last() !== '\n' && last() !== ':' && !PUNCT.includes(next)) out.push(' ');
+    if (space && out.length && (escaped() || (!PUNCT.includes(last()) && last() !== '\n' && last() !== ':')) && !PUNCT.includes(next)) out.push(' ');
     space = false;
   };
   while (i < n) {

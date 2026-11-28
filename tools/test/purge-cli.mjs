@@ -62,6 +62,12 @@ try {
   const kept = purge('.srp-btn:is(.a, .b + :not(.c)), .srp-x[title="1,2"] { color: red }', new Set(['a', 'b', 'c']));
   t('keeps a selector whose parentheses or attribute value hold commas, whole', kept.includes('.srp-btn:is(.a, .b + :not(.c))') && kept.includes('.srp-x[title="1,2"]'), kept);
 
+  // An attribute selector's text is no class, a "/*" in a string is no comment, and a "{" in a string opens no block.
+  const strings = purge('a[href$=\'.pdf\'] { text-decoration: underline; } .srp-a::before { content: "/* keep me */"; } /* gone */ .b[data-x=".c"] { color: red }', new Set(['b']));
+  t('keeps a rule whose attribute selector holds a dot, and a "/*" inside a string', strings.includes("a[href$='.pdf'] {") && strings.includes('content: "/* keep me */"') && strings.includes('.b[data-x=".c"]') && !strings.includes('gone'), strings);
+  const imported = purge('@import "foo{bar}.css";\n.srp-a { color: red; }', new Set());
+  t('keeps an @import whose address holds braces as it is', imported === '@import "foo{bar}.css";\n.srp-a { color: red; }', imported);
+
   // @starting-style holds rules like @media does: a dropped component's or an unused class's go with it.
   const start = purge('@starting-style { .srp-dialog { opacity: 0 } .srp-btn { opacity: 0 } .grid { opacity: 0 } }', new Set(), new Set(['srp-dialog']));
   t('trims the rules inside @starting-style', start.includes('.srp-btn') && !start.includes('srp-dialog') && !start.includes('.grid'), start);
